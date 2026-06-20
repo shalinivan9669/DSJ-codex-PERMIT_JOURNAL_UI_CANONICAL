@@ -59,6 +59,7 @@ enum SignatureProvider {
   MOCK_PROVIDER
   NCALAYER_PROVIDER
   EGOV_MOBILE_QR_PROVIDER
+  TABLET_SIGNATURE_PROVIDER
   SMART_BRIDGE_PROVIDER
   DIGITAL_ID_PROVIDER
 }
@@ -276,6 +277,7 @@ model User {
   assignedTrainingAssignments TrainingAssignment[] @relation("TrainingAssigner")
   signatures         Signature[]      @relation("UserSignatures")
   signingSessions    SigningSession[] @relation("SigningSessionSignerUser")
+  initiatedSigningSessions SigningSession[] @relation("SigningSessionInitiatedByUser")
   verifiedEmployeeDocuments EmployeeDocument[] @relation("EmployeeDocumentVerifier")
   auditLogs          AuditLog[]       @relation("ActorAuditLogs")
   notificationJobs   NotificationJob[] @relation("NotificationAssignee")
@@ -802,6 +804,7 @@ model SigningSession {
   documentVersionId String?
   signerUserId      String?
   signerEmployeeId  String?
+  initiatedByUserId String?
   signerIinMasked   String?
   signerIinHash     String?
   provider          SignatureProvider
@@ -823,6 +826,7 @@ model SigningSession {
   documentVersion   DocumentVersion?     @relation(fields: [documentVersionId], references: [id], onDelete: SetNull)
   signerUser        User?                @relation("SigningSessionSignerUser", fields: [signerUserId], references: [id], onDelete: SetNull)
   signerEmployee    Employee?            @relation("SigningSessionSignerEmployee", fields: [signerEmployeeId], references: [id], onDelete: SetNull)
+  initiatedByUser   User?                @relation("SigningSessionInitiatedByUser", fields: [initiatedByUserId], references: [id], onDelete: SetNull)
   signatures        Signature[]
   evidence          SignatureEvidence[]
   callbackEvents    ProviderCallbackEvent[]
@@ -830,6 +834,7 @@ model SigningSession {
   @@unique([organizationId, idempotencyKey])
   @@index([organizationId, documentType, documentId])
   @@index([provider, providerSessionId])
+  @@index([initiatedByUserId])
   @@index([status, expiresAt])
   @@index([correlationId])
 }
@@ -898,9 +903,12 @@ model ProviderCallbackEvent {
   signingSessionId  String?
   provider          SignatureProvider
   providerSessionId String?
+  callbackKey       String?                         @unique
   validationStatus  SigningCallbackValidationStatus @default(RECEIVED)
   processingStatus  SigningCallbackProcessingStatus @default(PENDING)
   redactedPayloadJson Json?
+  rawPayloadEncrypted String?                       @db.Text
+  rawPayloadHash    String?
   rawPayloadStorageKey String?
   error             String?
   correlationId     String

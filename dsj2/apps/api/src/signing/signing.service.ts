@@ -12,13 +12,15 @@ import { ConfigService } from "@nestjs/config";
 import { Prisma } from "@prisma/client";
 import type {
   CancelSigningSessionInput,
+  CompleteLocalEgovSigningSessionInput,
   CreateSigningSessionInput,
   EgovMobileQrCallbackInput,
   MockSignInput,
   NcalayerBridgeSignature,
   SigningDocumentType,
+  SubmitTabletSigningSessionInput,
 } from "@dsj/types";
-import { hashSensitiveValue, maskIin } from "@dsj/database";
+import { decryptSensitiveValue, encryptSensitiveValue, hashSensitiveValue, maskIin } from "@dsj/database";
 import { hashDocumentPayload } from "@dsj/utils";
 import { AuditService } from "../audit/audit.service";
 import { assertOrganizationAccess } from "../common/utils/tenant-scope";
@@ -31,18 +33,32 @@ import { ProtocolsService } from "../protocols/protocols.service";
 import { ResponsibilityOrdersService } from "../responsibility-orders/responsibility-orders.service";
 import { EmployeeDocumentsService } from "../employee-documents/employee-documents.service";
 import { SigningProviderRegistry } from "./signing-provider.registry";
-import type {
-  CompleteSigningSessionInput,
-  ResolvedSigningTarget,
-  SigningRequestContext,
-} from "./signing.types";
+import { EgovMobileQrSigningProvider } from "./providers/egov-mobile-qr-signing.provider";
+import type { CompleteSigningSessionInput, ResolvedSigningTarget, SigningRequestContext } from "./signing.types";
 
-const TERMINAL_SESSION_STATUSES = new Set([
-  "COMPLETED",
-  "EXPIRED",
-  "FAILED",
-  "CANCELLED",
+const TERMINAL_SESSION_STATUSES = new Set(["COMPLETED", "EXPIRED", "FAILED", "CANCELLED"]);
+const BRIEFING_EMPLOYEE_PROVIDERS = new Set([
+  "EGOV_MOBILE_QR_PROVIDER",
+  "TABLET_SIGNATURE_PROVIDER",
 ]);
+
+type VerifiedBriefingEmployeeSignature = {
+  provider: "EGOV_MOBILE_QR_PROVIDER" | "TABLET_SIGNATURE_PROVIDER";
+  signerName: string | null;
+  signerIin: string | null;
+  certificateSerial: string;
+  certificateThumbprint: string | null;
+  certificateSubject: string | null;
+  certificateIssuer: string | null;
+  certificateValidFrom: string | null;
+  certificateValidTo: string | null;
+  signedAt: string;
+  signaturePayloadHash: string;
+  verificationMode: string;
+  source: "EGOV_MOBILE_QR_CALLBACK" | "TABLET_HANDWRITTEN_SIGNATURE";
+  evidenceReferenceId: string | null;
+  providerPayload: Prisma.JsonObject;
+};
 
 function parsePositiveInt(value: string | undefined, fallback: number) {
   const parsed = Number.parseInt(value ?? "", 10);
@@ -50,9 +66,7 @@ function parsePositiveInt(value: string | undefined, fallback: number) {
 }
 
 function jsonObject(value: Prisma.JsonValue | null | undefined) {
-  return value && typeof value === "object" && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : {};
+  return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
 }
 
 function signatureFormatForProvider(provider: CompleteSigningSessionInput["provider"]) {
@@ -78,6 +92,7 @@ export class SigningService {
     private readonly protocolsService: ProtocolsService,
     private readonly responsibilityOrdersService: ResponsibilityOrdersService,
     private readonly employeeDocumentsService: EmployeeDocumentsService,
+    private readonly egovMobileQrProvider: EgovMobileQrSigningProvider,
   ) {}
 
   private terminal(status: string) {
@@ -85,16 +100,10 @@ export class SigningService {
   }
 
   private getTtlSeconds() {
-    return parsePositiveInt(
-      this.configService.get<string>("SIGNING_SESSION_TTL_SECONDS"),
-      300,
-    );
+    return parsePositiveInt(this.configService.get<string>("SIGNING_SESSION_TTL_SECONDS"), 300);
   }
 
-  private async findProtocolTarget(
-    user: AuthenticatedUser,
-    documentId: string,
-  ): Promise<ResolvedSigningTarget> {
+  private async findProtocolTarget(user: AuthenticatedUser, documentId: string): Promise<ResolvedSigningTarget> {
     const protocol = await this.prisma.protocol.findUnique({
       where: { id: documentId },
       include: {
@@ -130,9 +139,7 @@ export class SigningService {
       title: `Protocol ${protocol.number}`,
       documentNumber: protocol.number,
       isReadyForSigning:
-        protocol.status === "SIGNING_READY" &&
-        envelope.status === "SIGNING_READY" &&
-        currentVersion.status === "FINAL",
+        protocol.status === "SIGNING_READY" && envelope.status === "SIGNING_READY" && currentVersion.status === "FINAL",
     };
   }
 
@@ -175,9 +182,7 @@ export class SigningService {
       title: order.title,
       documentNumber: order.number,
       isReadyForSigning:
-        order.status === "SIGNING_READY" &&
-        envelope.status === "SIGNING_READY" &&
-        currentVersion.status === "FINAL",
+        order.status === "SIGNING_READY" && envelope.status === "SIGNING_READY" && currentVersion.status === "FINAL",
     };
   }
 
@@ -224,8 +229,84 @@ export class SigningService {
       documentHash,
       title: document.title,
       documentNumber: document.documentNumber,
+      isReadyForSigning: envelope.status === "SIGNING_READY" && currentVersion.status === "FINAL",
+    };
+  }
+
+  private async findBriefingJournalEntryTarget(
+    user: AuthenticatedUser,
+    documentId: string,
+  ): Promise<ResolvedSigningTarget> {
+    const entry = await this.prisma.briefingJournalEntry.findUnique({
+      where: { id: documentId },
+      include: {
+        documentEnvelope: {
+          include: {
+            currentVersion: true,
+          },
+        },
+      },
+    });
+
+    if (!entry) {
+      throw new NotFoundException("Запись инструктажа не найдена.");
+    }
+
+    assertOrganizationAccess(user, entry.organizationId);
+
+    const employee = await this.prisma.employee.findFirst({
+      where: {
+        id: entry.employeeId,
+        companyId: entry.organizationId,
+        isArchived: false,
+      },
+      select: {
+        id: true,
+        fullName: true,
+        iinHash: true,
+        iinLast4: true,
+      },
+    });
+
+    if (!employee) {
+      throw new BadRequestException("Сотрудник инструктажа не найден в текущей компании.");
+    }
+
+    const envelope = entry.documentEnvelope;
+    const currentVersion = envelope?.currentVersion;
+    const documentHash = currentVersion?.renderedHash ?? entry.documentHash ?? null;
+
+    if (!envelope || !currentVersion || !documentHash) {
+      throw new BadRequestException("Сначала подготовьте инструктаж к подписанию.");
+    }
+
+    const existingEmployeeSignature = await this.prisma.signature.findFirst({
+      where: {
+        briefingJournalEntryId: entry.id,
+        signerRole: "BRIEFED_EMPLOYEE",
+        status: { in: ["SIGNED", "VERIFIED"] },
+      },
+      select: { id: true },
+    });
+
+    return {
+      documentType: "BRIEFING_JOURNAL_ENTRY",
+      documentId: entry.id,
+      organizationId: entry.organizationId,
+      envelopeId: envelope.id,
+      versionId: currentVersion.id,
+      documentHash,
+      title: `Инструктаж ${entry.registrationNo ?? `№${entry.entryNo}`}`,
+      documentNumber: entry.registrationNo,
       isReadyForSigning:
-        envelope.status === "SIGNING_READY" && currentVersion.status === "FINAL",
+        !existingEmployeeSignature &&
+        ["SIGNING_READY", "PARTIALLY_SIGNED"].includes(entry.status) &&
+        envelope.status === "SIGNING_READY" &&
+        currentVersion.status === "FINAL",
+      signerEmployeeId: employee.id,
+      signerEmployeeName: employee.fullName,
+      signerIinMasked: `********${employee.iinLast4}`,
+      signerIinHash: employee.iinHash,
     };
   }
 
@@ -233,7 +314,7 @@ export class SigningService {
     user: AuthenticatedUser,
     documentType: SigningDocumentType,
     documentId: string,
-  ) {
+  ): Promise<ResolvedSigningTarget> {
     switch (documentType) {
       case "PROTOCOL":
         return this.findProtocolTarget(user, documentId);
@@ -241,23 +322,29 @@ export class SigningService {
         return this.findResponsibilityOrderTarget(user, documentId);
       case "EMPLOYEE_DOCUMENT":
         return this.findEmployeeDocumentTarget(user, documentId);
+      case "BRIEFING_JOURNAL_ENTRY":
+        return this.findBriefingJournalEntryTarget(user, documentId);
       case "WORK_PERMIT":
         return this.workPermitsService.signingTarget(user, documentId);
       default:
-        throw new BadRequestException(
-          `${documentType} is not wired into generic signing sessions yet.`,
-        );
+        throw new BadRequestException(`${documentType} is not wired into generic signing sessions yet.`);
     }
   }
 
-  async createSession(
-    user: AuthenticatedUser,
-    input: CreateSigningSessionInput,
-    idempotencyKey?: string | null,
-  ) {
+  async createSession(user: AuthenticatedUser, input: CreateSigningSessionInput, idempotencyKey?: string | null) {
     const provider = this.providerRegistry.normalizeProvider(input.provider);
     this.providerRegistry.assertProviderEnabled(provider);
     const target = await this.resolveTarget(user, input.documentType, input.documentId);
+
+    if (target.documentType === "BRIEFING_JOURNAL_ENTRY" && !BRIEFING_EMPLOYEE_PROVIDERS.has(provider)) {
+      throw new BadRequestException(
+        "Сотрудник подписывает инструктаж через eGov Mobile QR или на планшете.",
+      );
+    }
+
+    if (target.documentType === "BRIEFING_JOURNAL_ENTRY" && input.signerUserId) {
+      throw new BadRequestException("Для подписи сотрудника по QR не требуется пользовательский аккаунт.");
+    }
 
     if (!target.isReadyForSigning) {
       throw new ConflictException("Document is not ready for signing.");
@@ -293,7 +380,7 @@ export class SigningService {
     const expiresAt = new Date(now.getTime() + this.getTtlSeconds() * 1000);
     const id = randomUUID();
     const correlationId = randomUUID();
-    const providerSession = this.providerRegistry.createProviderSession({
+    const providerSession = await this.providerRegistry.createProviderSession({
       provider,
       target,
       sessionId: id,
@@ -309,7 +396,11 @@ export class SigningService {
         documentId: target.documentId,
         documentEnvelopeId: target.envelopeId,
         documentVersionId: target.versionId,
-        signerUserId: input.signerUserId ?? user.userId,
+        signerUserId: target.documentType === "BRIEFING_JOURNAL_ENTRY" ? null : (input.signerUserId ?? user.userId),
+        signerEmployeeId: target.signerEmployeeId ?? null,
+        initiatedByUserId: user.userId,
+        signerIinMasked: target.signerIinMasked ?? null,
+        signerIinHash: target.signerIinHash ?? null,
         provider,
         status: providerSession.status,
         providerSessionId: providerSession.providerSessionId,
@@ -353,7 +444,7 @@ export class SigningService {
   }
 
   async getSession(user: AuthenticatedUser, id: string) {
-    const session = await this.prisma.signingSession.findUnique({
+    let session = await this.prisma.signingSession.findUnique({
       where: { id },
       include: {
         evidence: {
@@ -373,11 +464,32 @@ export class SigningService {
     }
 
     assertOrganizationAccess(user, session.organizationId);
+
+    if (!this.terminal(session.status) && session.expiresAt.getTime() <= Date.now()) {
+      session = await this.prisma.signingSession.update({
+        where: { id: session.id },
+        data: {
+          status: "EXPIRED",
+          failureReason: "Сессия подписания истекла.",
+        },
+        include: {
+          evidence: { orderBy: { createdAt: "desc" }, take: 1 },
+          signatures: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            include: { verification: true },
+          },
+        },
+      });
+    }
+
     return this.mapSession(session);
   }
 
   async cancelSession(user: AuthenticatedUser, id: string, input: CancelSigningSessionInput) {
-    const session = await this.prisma.signingSession.findUnique({ where: { id } });
+    const session = await this.prisma.signingSession.findUnique({
+      where: { id },
+    });
 
     if (!session) {
       throw new NotFoundException("Signing session not found.");
@@ -398,7 +510,11 @@ export class SigningService {
       },
       include: {
         evidence: { orderBy: { createdAt: "desc" }, take: 1 },
-        signatures: { orderBy: { createdAt: "desc" }, take: 1, include: { verification: true } },
+        signatures: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          include: { verification: true },
+        },
       },
     });
 
@@ -419,12 +535,7 @@ export class SigningService {
     return this.mapSession(updated);
   }
 
-  async submitMock(
-    user: AuthenticatedUser,
-    id: string,
-    payload: MockSignInput,
-    context?: SigningRequestContext,
-  ) {
+  async submitMock(user: AuthenticatedUser, id: string, payload: MockSignInput, context?: SigningRequestContext) {
     return this.completeSession(user, id, {
       provider: "MOCK_PROVIDER",
       payload,
@@ -445,12 +556,211 @@ export class SigningService {
     });
   }
 
-  private async completeSession(
+  async submitTablet(
     user: AuthenticatedUser,
     id: string,
-    input: CompleteSigningSessionInput,
+    payload: SubmitTabletSigningSessionInput,
+    context?: SigningRequestContext,
   ) {
     const session = await this.prisma.signingSession.findUnique({ where: { id } });
+
+    if (!session) {
+      throw new NotFoundException("Сессия подписи на планшете не найдена.");
+    }
+
+    assertOrganizationAccess(user, session.organizationId);
+    this.providerRegistry.assertProviderEnabled("TABLET_SIGNATURE_PROVIDER");
+
+    if (
+      session.provider !== "TABLET_SIGNATURE_PROVIDER" ||
+      session.documentType !== "BRIEFING_JOURNAL_ENTRY"
+    ) {
+      throw new BadRequestException("Сессия не предназначена для подписи сотрудника на планшете.");
+    }
+
+    if (this.terminal(session.status)) {
+      if (session.status === "COMPLETED") {
+        return this.getSession(user, id);
+      }
+
+      throw new ConflictException("Завершённая сессия не принимает подпись.");
+    }
+
+    if (session.expiresAt.getTime() <= Date.now()) {
+      await this.prisma.signingSession.update({
+        where: { id },
+        data: { status: "EXPIRED", failureReason: "Сессия подписи на планшете истекла." },
+      });
+      throw new ConflictException("Сессия подписи на планшете истекла.");
+    }
+
+    try {
+      await this.prisma.signingSession.update({
+        where: { id },
+        data: { status: "VERIFYING" },
+      });
+      const signedAt = new Date().toISOString();
+      const signaturePayloadHash = hashDocumentPayload(payload.signatureDataUrl);
+      const signature = await this.completeBriefingEmployeeSession(session, {
+        provider: "TABLET_SIGNATURE_PROVIDER",
+        signerName: null,
+        signerIin: null,
+        certificateSerial: `TABLET-${session.id.slice(0, 16).toUpperCase()}`,
+        certificateThumbprint: null,
+        certificateSubject: null,
+        certificateIssuer: null,
+        certificateValidFrom: null,
+        certificateValidTo: null,
+        signedAt,
+        signaturePayloadHash,
+        verificationMode: "IN_PERSON_TABLET_ATTESTATION",
+        source: "TABLET_HANDWRITTEN_SIGNATURE",
+        evidenceReferenceId: null,
+        providerPayload: {
+          signaturePayloadHash,
+          strokeCount: payload.strokeCount,
+          confirmed: payload.confirmed,
+          rawSignatureRetained: false,
+          ipAddress: context?.ipAddress ?? null,
+          userAgent: context?.userAgent ?? null,
+        },
+      });
+      const evidence = await this.prisma.signatureEvidence.create({
+        data: {
+          organizationId: session.organizationId,
+          signingSessionId: session.id,
+          signatureId: signature.id,
+          documentType: session.documentType,
+          documentId: session.documentId,
+          documentEnvelopeId: session.documentEnvelopeId,
+          documentVersionId: session.documentVersionId,
+          provider: session.provider,
+          documentHash: session.documentHash,
+          hashAlgorithm: session.hashAlgorithm,
+          signatureFormat: "HANDWRITTEN_SIGNATURE_HASH",
+          signaturePayloadLocation: "Raw tablet drawing discarded after hashing",
+          signaturePayloadHash,
+          certificateSerial: `TABLET-${session.id.slice(0, 16).toUpperCase()}`,
+          signedAt: new Date(signedAt),
+          verifiedAt: null,
+          verificationStatus: "INDETERMINATE",
+          redactedProviderResponse: {
+            verificationMode: "IN_PERSON_TABLET_ATTESTATION",
+            strokeCount: payload.strokeCount,
+            rawSignatureRetained: false,
+          },
+          correlationId: session.correlationId,
+        },
+      });
+
+      await this.prisma.signingSession.update({
+        where: { id },
+        data: { status: "COMPLETED", completedAt: new Date(signedAt) },
+      });
+      await this.prisma.auditLog.create({
+        data: {
+          companyId: session.organizationId,
+          actorUserId: user.userId,
+          action: "signing.session.completed",
+          entityType: "SigningSession",
+          entityId: session.id,
+          metadata: {
+            signatureId: signature.id,
+            evidenceId: evidence.id,
+            provider: session.provider,
+            correlationId: session.correlationId,
+          },
+        },
+      });
+
+      return this.getSession(user, id);
+    } catch (error) {
+      await this.prisma.signingSession.updateMany({
+        where: { id, status: { notIn: ["COMPLETED", "EXPIRED", "CANCELLED"] } },
+        data: {
+          status: "FAILED",
+          failureReason: error instanceof Error ? error.message : "Подпись на планшете не сохранена.",
+        },
+      });
+      throw error;
+    }
+  }
+
+  async completeLocalEgov(
+    user: AuthenticatedUser,
+    id: string,
+    _input: CompleteLocalEgovSigningSessionInput,
+  ) {
+    const localSimulationEnabled =
+      this.configService.get<string>("NODE_ENV") !== "production" &&
+      parseBoolean(
+        this.configService.get<string>("EGOV_MOBILE_QR_ALLOW_LOCAL_CALLBACK_SIMULATION"),
+        false,
+      );
+
+    if (!localSimulationEnabled) {
+      throw new ServiceUnavailableException("Локальная симуляция eGov Mobile отключена.");
+    }
+
+    const session = await this.prisma.signingSession.findUnique({ where: { id } });
+    if (!session) {
+      throw new NotFoundException("Сессия eGov Mobile QR не найдена.");
+    }
+
+    assertOrganizationAccess(user, session.organizationId);
+
+    if (session.provider !== "EGOV_MOBILE_QR_PROVIDER" || !session.signerEmployeeId) {
+      throw new BadRequestException("Сессия не предназначена для локальной eGov-симуляции.");
+    }
+
+    if (session.status === "COMPLETED") {
+      return this.getSession(user, id);
+    }
+
+    const employee = await this.prisma.employee.findFirst({
+      where: {
+        id: session.signerEmployeeId,
+        companyId: session.organizationId,
+        isArchived: false,
+      },
+      select: { fullName: true, iinEncrypted: true },
+    });
+
+    if (!employee) {
+      throw new NotFoundException("Сотрудник для eGov-симуляции не найден.");
+    }
+
+    const signedAt = new Date();
+    const signaturePayload = `LOCAL-EGOV-CMS:${session.id}:${session.documentHash}`;
+    await this.acceptEgovCallback(
+      {
+        callbackId: `local-${randomUUID()}`,
+        providerSessionId: session.providerSessionId ?? undefined,
+        sessionId: session.id,
+        correlationId: session.correlationId,
+        status: "SIGNED",
+        documentHash: session.documentHash,
+        signerName: employee.fullName,
+        signerIin: decryptSensitiveValue(employee.iinEncrypted),
+        certificateSerial: `LOCAL-EGOV-${session.id.slice(0, 12).toUpperCase()}`,
+        certificateThumbprint: hashDocumentPayload(signaturePayload),
+        certificateSubject: `CN=${employee.fullName}`,
+        certificateIssuer: "CN=DSJ LOCAL EGOV SIMULATION",
+        certificateValidFrom: new Date(signedAt.getTime() - 60_000).toISOString(),
+        certificateValidTo: new Date(signedAt.getTime() + 3_600_000).toISOString(),
+        signedAt: signedAt.toISOString(),
+        signaturePayload,
+      },
+      this.configService.get<string>("EGOV_MOBILE_QR_CALLBACK_SECRET"),
+    );
+
+    return this.getSession(user, id);
+  }
+
+  private async completeSession(user: AuthenticatedUser, id: string, input: CompleteSigningSessionInput) {
+    const session = await this.prisma.signingSession.findUnique({
+      where: { id },
+    });
 
     if (!session) {
       throw new NotFoundException("Signing session not found.");
@@ -479,7 +789,11 @@ export class SigningService {
         },
         include: {
           evidence: { orderBy: { createdAt: "desc" }, take: 1 },
-          signatures: { orderBy: { createdAt: "desc" }, take: 1, include: { verification: true } },
+          signatures: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            include: { verification: true },
+          },
         },
       });
       return this.mapSession(expired);
@@ -503,8 +817,7 @@ export class SigningService {
         data: { signingSessionId: session.id },
       });
 
-      const signerIin =
-        "payload" in input && "signerIin" in input.payload ? input.payload.signerIin : null;
+      const signerIin = "payload" in input && "signerIin" in input.payload ? input.payload.signerIin : null;
       const redactedProviderResponse = this.buildRedactedProviderResponse(input, signature);
 
       const evidence = await this.prisma.signatureEvidence.create({
@@ -522,10 +835,8 @@ export class SigningService {
           signatureFormat: signatureFormatForProvider(input.provider),
           signaturePayloadLocation: "Signature.payload",
           signaturePayloadHash: signature.signatureHash,
-          certificateSubject:
-            input.provider === "NCALAYER_PROVIDER" ? input.payload.certificateSubject : null,
-          certificateIssuer:
-            input.provider === "NCALAYER_PROVIDER" ? input.payload.certificateIssuer : null,
+          certificateSubject: input.provider === "NCALAYER_PROVIDER" ? input.payload.certificateSubject : null,
+          certificateIssuer: input.provider === "NCALAYER_PROVIDER" ? input.payload.certificateIssuer : null,
           certificateSerial: signature.certificateSerial,
           signedAt: signature.signedAt,
           verifiedAt: signature.verifiedAt,
@@ -599,29 +910,16 @@ export class SigningService {
         await this.protocolsService.sign(user, session.documentId, payload, input.context);
         return;
       case "RESPONSIBILITY_ORDER":
-        await this.responsibilityOrdersService.sign(
-          user,
-          session.documentId,
-          payload,
-          input.context,
-        );
+        await this.responsibilityOrdersService.sign(user, session.documentId, payload, input.context);
         return;
       case "EMPLOYEE_DOCUMENT":
         await this.employeeDocumentsService.sign(user, session.documentId, payload, input.context);
         return;
       case "WORK_PERMIT":
-        await this.workPermitsService.completeSigning(
-          user,
-          session,
-          input.provider,
-          payload,
-          input.context,
-        );
+        await this.workPermitsService.completeSigning(user, session, input.provider, payload, input.context);
         return;
       default:
-        throw new BadRequestException(
-          `${session.documentType} submit is not wired into generic signing sessions yet.`,
-        );
+        throw new BadRequestException(`${session.documentType} submit is not wired into generic signing sessions yet.`);
     }
   }
 
@@ -867,141 +1165,38 @@ export class SigningService {
     };
   }
 
-  async acceptEgovCallback(input: EgovMobileQrCallbackInput, secret?: string | null) {
-    const expectedSecret = this.configService.get<string>("EGOV_MOBILE_QR_CALLBACK_SECRET");
-    const hasExpectedSecret = Boolean(expectedSecret?.trim());
-    const isProduction = this.configService.get<string>("NODE_ENV") === "production";
-    const allowUnsignedLocalSimulation =
-      !isProduction &&
-      parseBoolean(
-        this.configService.get<string>("EGOV_MOBILE_QR_ALLOW_LOCAL_CALLBACK_SIMULATION"),
-        false,
-      );
-
-    if (!hasExpectedSecret && !allowUnsignedLocalSimulation) {
-      const event = await this.prisma.providerCallbackEvent.create({
-        data: {
-          provider: "EGOV_MOBILE_QR_PROVIDER",
-          providerSessionId: input.providerSessionId ?? null,
-          validationStatus: "REJECTED",
-          processingStatus: "FAILED",
-          redactedPayloadJson: this.redactCallbackPayload(input),
-          error: "Callback secret is not configured.",
-          correlationId: randomUUID(),
-        },
-      });
-
-      throw new ServiceUnavailableException({
-        code: "SIGNING_CALLBACK_SECRET_REQUIRED",
-        message: "Callback authentication is not configured.",
-        correlationId: event.correlationId,
-      });
-    }
-
-    if (hasExpectedSecret && secret !== expectedSecret) {
-      const event = await this.prisma.providerCallbackEvent.create({
-        data: {
-          provider: "EGOV_MOBILE_QR_PROVIDER",
-          providerSessionId: input.providerSessionId ?? null,
-          validationStatus: "REJECTED",
-          processingStatus: "FAILED",
-          redactedPayloadJson: this.redactCallbackPayload(input),
-          error: "Invalid callback secret.",
-          correlationId: randomUUID(),
-        },
-      });
-
-      throw new UnauthorizedException({
-        code: "SIGNING_CALLBACK_UNAUTHORIZED",
-        message: "Callback authentication failed.",
-        correlationId: event.correlationId,
-      });
-    }
-
-    const session = await this.findSessionForCallback(input);
-    const event = await this.prisma.providerCallbackEvent.create({
-      data: {
-        organizationId: session?.organizationId ?? null,
-        signingSessionId: session?.id ?? null,
-        provider: "EGOV_MOBILE_QR_PROVIDER",
-        providerSessionId: input.providerSessionId ?? null,
-        validationStatus: hasExpectedSecret ? "AUTHENTICATED" : "RECEIVED",
-        processingStatus: session ? "PENDING" : "IGNORED",
-        redactedPayloadJson: this.redactCallbackPayload(input),
-        error: session ? null : "No matching signing session.",
-        correlationId: session?.correlationId ?? randomUUID(),
-      },
-    });
-
-    if (
-      session &&
-      input.status === "SIGNED" &&
-      input.signerName &&
-      input.signerIin &&
-      input.certificateSerial
-    ) {
-      try {
-        const callbackUser = await this.resolveSessionUser(session.signerUserId);
-        await this.completeSession(callbackUser, session.id, {
-          provider: "EGOV_MOBILE_QR_PROVIDER",
-          payload: {
-            signerName: input.signerName,
-            signerIin: input.signerIin,
-            certificateSerial: input.certificateSerial,
-          },
-        });
-
-        await this.prisma.providerCallbackEvent.update({
-          where: { id: event.id },
-          data: { processingStatus: "PROCESSED", processedAt: new Date() },
-        });
-      } catch (error) {
-        await this.prisma.providerCallbackEvent.update({
-          where: { id: event.id },
-          data: {
-            processingStatus: "FAILED",
-            processedAt: new Date(),
-            error: error instanceof Error ? error.message : "Callback reconciliation failed.",
-          },
-        });
-      }
-    } else if (session && input.status && input.status !== "SIGNED") {
-      await this.prisma.signingSession.update({
-        where: { id: session.id },
-        data: {
-          status:
-            input.status === "CANCELLED"
-              ? "CANCELLED"
-              : input.status === "EXPIRED"
-                ? "EXPIRED"
-                : "FAILED",
-          failureReason: input.errorMessage ?? input.errorCode ?? `eGov callback ${input.status}`,
-        },
-      });
-
-      await this.prisma.providerCallbackEvent.update({
-        where: { id: event.id },
-        data: { processingStatus: "PROCESSED", processedAt: new Date() },
-      });
-    }
-
-    return {
-      accepted: true,
-      correlationId: event.correlationId,
-    };
+  private callbackKey(input: EgovMobileQrCallbackInput) {
+    return hashDocumentPayload(
+      JSON.stringify(
+        input.callbackId
+          ? {
+              provider: "EGOV_MOBILE_QR_PROVIDER",
+              providerSessionId: input.providerSessionId ?? null,
+              callbackId: input.callbackId,
+            }
+          : {
+              providerSessionId: input.providerSessionId ?? null,
+              sessionId: input.sessionId ?? null,
+              correlationId: input.correlationId ?? null,
+              status: input.status ?? null,
+              documentHash: input.documentHash ?? null,
+              signedAt: input.signedAt ?? null,
+              certificateSerial: input.certificateSerial ?? null,
+              signaturePayloadHash: input.signaturePayload ? hashDocumentPayload(input.signaturePayload) : null,
+            },
+      ),
+    );
   }
 
-  private async resolveSessionUser(userId: string | null): Promise<AuthenticatedUser> {
+  private async resolveInitiatingUser(userId: string | null): Promise<AuthenticatedUser> {
     if (!userId) {
-      throw new BadRequestException("Signing session has no signer user.");
+      throw new BadRequestException("У сессии не указан пользователь, инициировавший подписание.");
     }
 
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-    });
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
 
     if (!user || !user.isActive) {
-      throw new BadRequestException("Signing session signer is not available.");
+      throw new BadRequestException("Инициатор сессии больше недоступен.");
     }
 
     return {
@@ -1013,8 +1208,533 @@ export class SigningService {
     };
   }
 
+  private async completeBriefingEmployeeSession(
+    session: {
+      id: string;
+      organizationId: string;
+      documentId: string;
+      documentEnvelopeId: string | null;
+      documentVersionId: string | null;
+      documentHash: string;
+      provider: string;
+      signerEmployeeId: string | null;
+      initiatedByUserId: string | null;
+      correlationId: string;
+    },
+    verified: VerifiedBriefingEmployeeSignature,
+  ) {
+    if (!session.signerEmployeeId) {
+      throw new BadRequestException("В сессии не указан сотрудник-подписант.");
+    }
+
+    const actor = await this.resolveInitiatingUser(session.initiatedByUserId);
+    assertOrganizationAccess(actor, session.organizationId);
+
+    const [entry, employee] = await Promise.all([
+      this.prisma.briefingJournalEntry.findUnique({
+        where: { id: session.documentId },
+        include: {
+          documentEnvelope: {
+            include: {
+              currentVersion: true,
+            },
+          },
+          signatures: {
+            where: {
+              status: { in: ["SIGNED", "VERIFIED"] },
+            },
+          },
+        },
+      }),
+      this.prisma.employee.findFirst({
+        where: {
+          id: session.signerEmployeeId,
+          companyId: session.organizationId,
+          isArchived: false,
+        },
+        select: {
+          id: true,
+          fullName: true,
+          iinEncrypted: true,
+        },
+      }),
+    ]);
+
+    if (!entry || entry.organizationId !== session.organizationId) {
+      throw new NotFoundException("Запись инструктажа для сессии не найдена.");
+    }
+
+    if (!employee || entry.employeeId !== employee.id) {
+      throw new BadRequestException("Сотрудник сессии не совпадает с участником инструктажа.");
+    }
+
+    const envelope = entry.documentEnvelope;
+    const currentVersion = envelope?.currentVersion;
+
+    if (
+      !envelope ||
+      !currentVersion ||
+      envelope.id !== session.documentEnvelopeId ||
+      currentVersion.id !== session.documentVersionId ||
+      currentVersion.renderedHash !== session.documentHash ||
+      entry.documentHash !== session.documentHash
+    ) {
+      throw new ConflictException("Версия инструктажа изменилась после создания сессии подписи.");
+    }
+
+    if (
+      !["SIGNING_READY", "PARTIALLY_SIGNED"].includes(entry.status) ||
+      envelope.status !== "SIGNING_READY" ||
+      currentVersion.status !== "FINAL"
+    ) {
+      throw new ConflictException("Инструктаж больше не находится в состоянии подписания.");
+    }
+
+    if (session.provider !== verified.provider) {
+      throw new BadRequestException("Провайдер подписи не совпадает с провайдером сессии.");
+    }
+
+    const expectedIin = decryptSensitiveValue(employee.iinEncrypted).replace(/\D/g, "");
+    const signerIin = verified.signerIin?.replace(/\D/g, "") ?? expectedIin;
+    if (expectedIin !== signerIin) {
+      throw new BadRequestException("ИИН сертификата не совпадает с ИИН сотрудника.");
+    }
+
+    const existingEmployeeSignature = entry.signatures.find((signature) => signature.signerRole === "BRIEFED_EMPLOYEE");
+    if (existingEmployeeSignature) {
+      return this.prisma.signature.findUniqueOrThrow({
+        where: { id: existingEmployeeSignature.id },
+        include: { verification: true },
+      });
+    }
+
+    const instructorSigned = entry.signatures.some((signature) => signature.signerRole === "BRIEFING_INSTRUCTOR");
+    const hasCertificateMetadata = Boolean(
+      verified.certificateThumbprint &&
+        verified.certificateSubject &&
+        verified.certificateIssuer &&
+        verified.certificateValidFrom &&
+        verified.certificateValidTo,
+    );
+    const certificateMetadata = hasCertificateMetadata
+      ? await this.prisma.certificateMetadata.upsert({
+          where: {
+            organizationId_serial: {
+              organizationId: session.organizationId,
+              serial: verified.certificateSerial,
+            },
+          },
+          update: {
+            thumbprint: verified.certificateThumbprint!,
+            subjectDn: verified.certificateSubject!,
+            issuerDn: verified.certificateIssuer!,
+            validFrom: new Date(verified.certificateValidFrom!),
+            validTo: new Date(verified.certificateValidTo!),
+            source: "EGOV_MOBILE_QR_LOCAL_SIMULATION",
+          },
+          create: {
+            organizationId: session.organizationId,
+            provider: verified.provider,
+            serial: verified.certificateSerial,
+            thumbprint: verified.certificateThumbprint!,
+            subjectDn: verified.certificateSubject!,
+            issuerDn: verified.certificateIssuer!,
+            validFrom: new Date(verified.certificateValidFrom!),
+            validTo: new Date(verified.certificateValidTo!),
+            source: "EGOV_MOBILE_QR_LOCAL_SIMULATION",
+            isRevoked: false,
+          },
+        })
+      : null;
+    const signedAt = new Date(verified.signedAt);
+    const isTabletSignature = verified.provider === "TABLET_SIGNATURE_PROVIDER";
+    const signature = await this.corePlatformService.createSignature(actor, {
+      envelopeId: envelope.id,
+      versionId: currentVersion.id,
+      companyId: session.organizationId,
+      organizationId: session.organizationId,
+      briefingJournalEntryId: entry.id,
+      signerUserId: null,
+      signerEmployeeId: employee.id,
+      signerRole: "BRIEFED_EMPLOYEE",
+      provider: verified.provider,
+      signerName: verified.signerName ?? employee.fullName,
+      signerIinMasked: maskIin(signerIin),
+      certificateSerial: verified.certificateSerial,
+      certificateMetadataId: certificateMetadata?.id ?? null,
+      documentHash: session.documentHash,
+      signatureHash: verified.signaturePayloadHash,
+      signedAt: verified.signedAt,
+      status: isTabletSignature ? "PREPARED" : "SIGNED",
+      finalizeDocumentOnSign: isTabletSignature ? false : instructorSigned,
+      payload: {
+        subjectType: "BRIEFING_JOURNAL_ENTRY",
+        subjectId: entry.id,
+        signRole: "BRIEFED_EMPLOYEE",
+        source: verified.source,
+        evidenceReferenceId: verified.evidenceReferenceId,
+        correlationId: session.correlationId,
+        providerPayload: verified.providerPayload,
+      } as Prisma.JsonObject,
+    });
+    if (isTabletSignature) {
+      await this.prisma.$transaction(async (transaction) => {
+        await transaction.signature.update({
+          where: { id: signature.id },
+          data: {
+            signingSessionId: session.id,
+            status: "SIGNED",
+            signedAt,
+            verifiedAt: null,
+          },
+        });
+
+        if (instructorSigned) {
+          await transaction.documentVersion.update({
+            where: { id: currentVersion.id },
+            data: { status: "SIGNED", signedAt },
+          });
+          await transaction.documentEnvelope.update({
+            where: { id: envelope.id },
+            data: { currentVersionId: currentVersion.id, status: "SIGNED" },
+          });
+        }
+      });
+    } else {
+      await this.prisma.signature.update({
+        where: { id: signature.id },
+        data: { signingSessionId: session.id },
+      });
+    }
+
+    if (!instructorSigned) {
+      await this.prisma.briefingJournalEntry.update({
+        where: { id: entry.id },
+        data: {
+          status: "PARTIALLY_SIGNED",
+          employeeStatus: "SIGNED",
+          signedAt,
+          openedAt: entry.openedAt ?? signedAt,
+          acknowledgedAt: entry.acknowledgedAt ?? signedAt,
+          updatedByUserId: actor.userId,
+        },
+      });
+    } else {
+      const retention = await this.corePlatformService.ensureRetentionPolicyResolved(actor, {
+        organizationId: session.organizationId,
+        documentKind: "BRIEFING_JOURNAL_ENTRY",
+        scopeType: envelope.scopeType,
+        effectiveAt: verified.signedAt,
+      });
+
+      if (!retention) {
+        throw new BadRequestException("Не удалось определить срок хранения инструктажа.");
+      }
+
+      const archive = await this.corePlatformService.createArchiveRecord(actor, {
+        organizationId: session.organizationId,
+        envelopeId: envelope.id,
+        versionId: currentVersion.id,
+        retentionPolicyId: retention.policy.id,
+        status: "SEALED",
+        sealedAt: verified.signedAt,
+        archiveManifestHash: signature.signatureHash ?? signature.documentHash,
+        storageUri: null,
+      });
+
+      await this.prisma.briefingJournalEntry.update({
+        where: { id: entry.id },
+        data: {
+          status: "SIGNED",
+          employeeStatus: "SIGNED",
+          signedAt,
+          finalSignedAt: signedAt,
+          openedAt: entry.openedAt ?? signedAt,
+          acknowledgedAt: entry.acknowledgedAt ?? signedAt,
+          archiveRecordId: archive.id,
+          retentionPolicyId: retention.policy.id,
+          updatedByUserId: actor.userId,
+        },
+      });
+    }
+
+    await this.auditService.log({
+      actorUserId: actor.userId,
+      companyId: session.organizationId,
+      action:
+        verified.provider === "EGOV_MOBILE_QR_PROVIDER"
+          ? "briefing.entry_employee_signed_via_egov"
+          : "briefing.entry_employee_signed_on_tablet",
+      entityType: "BriefingJournalEntry",
+      entityId: entry.id,
+      metadata: {
+        signatureId: signature.id,
+        signingSessionId: session.id,
+        evidenceReferenceId: verified.evidenceReferenceId,
+        employeeId: employee.id,
+        provider: verified.provider,
+        verificationMode: verified.verificationMode,
+      },
+    });
+
+    return this.prisma.signature.findUniqueOrThrow({
+      where: { id: signature.id },
+      include: { verification: true },
+    });
+  }
+
+  async acceptEgovCallback(input: EgovMobileQrCallbackInput, secret?: string | null) {
+    const callbackKey = this.callbackKey(input);
+    const existingEvent = await this.prisma.providerCallbackEvent.findUnique({
+      where: { callbackKey },
+    });
+
+    if (existingEvent) {
+      return {
+        accepted: existingEvent.processingStatus === "PROCESSED",
+        replayed: true,
+        correlationId: existingEvent.correlationId,
+      };
+    }
+
+    const rawPayload = JSON.stringify(input);
+    const event = await this.prisma.providerCallbackEvent.create({
+      data: {
+        provider: "EGOV_MOBILE_QR_PROVIDER",
+        providerSessionId: input.providerSessionId ?? null,
+        callbackKey,
+        validationStatus: "RECEIVED",
+        processingStatus: "PENDING",
+        redactedPayloadJson: this.redactCallbackPayload(input),
+        rawPayloadEncrypted: encryptSensitiveValue(rawPayload),
+        rawPayloadHash: hashDocumentPayload(rawPayload),
+        correlationId: input.correlationId ?? randomUUID(),
+      },
+    });
+    let matchedSession: { id: string } | null = null;
+
+    try {
+      const expectedSecret = this.configService.get<string>("EGOV_MOBILE_QR_CALLBACK_SECRET");
+      this.egovMobileQrProvider.assertCallbackAuthorized(secret, expectedSecret);
+
+      const session = await this.findSessionForCallback(input);
+      matchedSession = session;
+      if (!session || session.provider !== "EGOV_MOBILE_QR_PROVIDER") {
+        throw new NotFoundException("Сессия eGov Mobile QR не найдена.");
+      }
+
+      await this.prisma.providerCallbackEvent.update({
+        where: { id: event.id },
+        data: {
+          organizationId: session.organizationId,
+          signingSessionId: session.id,
+          validationStatus: "AUTHENTICATED",
+          correlationId: session.correlationId,
+        },
+      });
+
+      if (input.providerSessionId !== session.providerSessionId || input.correlationId !== session.correlationId) {
+        throw new BadRequestException("Callback не соответствует providerSessionId/correlationId.");
+      }
+
+      if (session.status === "COMPLETED") {
+        await this.prisma.providerCallbackEvent.update({
+          where: { id: event.id },
+          data: { processingStatus: "PROCESSED", processedAt: new Date() },
+        });
+        return {
+          accepted: true,
+          replayed: true,
+          correlationId: session.correlationId,
+        };
+      }
+
+      if (this.terminal(session.status)) {
+        throw new ConflictException("Завершённая сессия не принимает callback.");
+      }
+
+      if (session.expiresAt.getTime() <= Date.now()) {
+        await this.prisma.signingSession.update({
+          where: { id: session.id },
+          data: {
+            status: "EXPIRED",
+            failureReason: "Сессия подписания истекла.",
+          },
+        });
+        throw new ConflictException("Сессия подписания истекла.");
+      }
+
+      await this.prisma.signingSession.update({
+        where: { id: session.id },
+        data: { status: "CALLBACK_RECEIVED" },
+      });
+
+      if (input.status !== "SIGNED") {
+        const status = input.status === "CANCELLED" ? "CANCELLED" : input.status === "EXPIRED" ? "EXPIRED" : "FAILED";
+        await this.prisma.signingSession.update({
+          where: { id: session.id },
+          data: {
+            status,
+            failureReason:
+              input.errorMessage ??
+              input.errorCode ??
+              (status === "CANCELLED" ? "Подписание отклонено сотрудником." : "Провайдер не завершил подписание."),
+          },
+        });
+      } else {
+        await this.prisma.signingSession.update({
+          where: { id: session.id },
+          data: { status: "VERIFYING" },
+        });
+        const verified = this.egovMobileQrProvider.verifyCallback({
+          callback: input,
+          callbackSecret: secret,
+          expectedCallbackSecret: expectedSecret,
+          expectedProviderSessionId: session.providerSessionId ?? "",
+          expectedCorrelationId: session.correlationId,
+          expectedDocumentHash: session.documentHash,
+        });
+
+        if (session.documentType !== "BRIEFING_JOURNAL_ENTRY") {
+          throw new BadRequestException("eGov callback для этого типа документа ещё не подключён.");
+        }
+
+        const signature = await this.completeBriefingEmployeeSession(session, {
+          provider: "EGOV_MOBILE_QR_PROVIDER",
+          signerName: verified.signerName,
+          signerIin: verified.signerIin,
+          certificateSerial: verified.certificateSerial,
+          certificateThumbprint: verified.certificateThumbprint,
+          certificateSubject: verified.certificateSubject,
+          certificateIssuer: verified.certificateIssuer,
+          certificateValidFrom: verified.certificateValidFrom,
+          certificateValidTo: verified.certificateValidTo,
+          signedAt: verified.signedAt,
+          signaturePayloadHash: verified.signaturePayloadHash,
+          verificationMode: verified.verificationMode,
+          source: "EGOV_MOBILE_QR_CALLBACK",
+          evidenceReferenceId: event.id,
+          providerPayload: {
+            certificateSerial: verified.certificateSerial,
+            certificateThumbprint: verified.certificateThumbprint,
+            certificateSubject: verified.certificateSubject,
+            certificateIssuer: verified.certificateIssuer,
+            certificateValidFrom: verified.certificateValidFrom,
+            certificateValidTo: verified.certificateValidTo,
+            signaturePayloadHash: verified.signaturePayloadHash,
+            verificationMode: verified.verificationMode,
+          },
+        });
+        const evidence = await this.prisma.signatureEvidence.create({
+          data: {
+            organizationId: session.organizationId,
+            signingSessionId: session.id,
+            signatureId: signature.id,
+            documentType: session.documentType,
+            documentId: session.documentId,
+            documentEnvelopeId: session.documentEnvelopeId,
+            documentVersionId: session.documentVersionId,
+            provider: session.provider,
+            documentHash: session.documentHash,
+            hashAlgorithm: session.hashAlgorithm,
+            signatureFormat: "CMS_OR_PROVIDER_SIGNATURE",
+            signaturePayloadLocation: `ProviderCallbackEvent:${event.id}`,
+            signaturePayloadHash: verified.signaturePayloadHash,
+            certificateSubject: verified.certificateSubject,
+            certificateIssuer: verified.certificateIssuer,
+            certificateSerial: verified.certificateSerial,
+            signedAt: new Date(verified.signedAt),
+            verifiedAt: new Date(),
+            verificationStatus: "PASS",
+            redactedProviderResponse: {
+              certificateSerial: verified.certificateSerial,
+              certificateThumbprint: verified.certificateThumbprint,
+              verificationMode: verified.verificationMode,
+            },
+            storageKey: `provider-callback-event:${event.id}`,
+            correlationId: session.correlationId,
+          },
+        });
+
+        await this.prisma.signingSession.update({
+          where: { id: session.id },
+          data: {
+            status: "COMPLETED",
+            completedAt: new Date(verified.signedAt),
+            signerIinMasked: maskIin(verified.signerIin),
+            signerIinHash: hashSensitiveValue(verified.signerIin),
+          },
+        });
+
+        await this.prisma.auditLog.create({
+          data: {
+            companyId: session.organizationId,
+            actorUserId: session.initiatedByUserId,
+            action: "signing.session.completed",
+            entityType: "SigningSession",
+            entityId: session.id,
+            metadata: {
+              signatureId: signature.id,
+              evidenceId: evidence.id,
+              callbackEventId: event.id,
+              correlationId: session.correlationId,
+            },
+          },
+        });
+      }
+
+      await this.prisma.providerCallbackEvent.update({
+        where: { id: event.id },
+        data: { processingStatus: "PROCESSED", processedAt: new Date() },
+      });
+
+      return {
+        accepted: true,
+        replayed: false,
+        correlationId: session.correlationId,
+      };
+    } catch (error) {
+      if (matchedSession && !(error instanceof UnauthorizedException)) {
+        await this.prisma.signingSession.updateMany({
+          where: {
+            id: matchedSession.id,
+            status: {
+              in: [
+                "CREATED",
+                "QR_GENERATED",
+                "WAITING_FOR_USER",
+                "CALLBACK_RECEIVED",
+                "SIGNATURE_RECEIVED",
+                "VERIFYING",
+              ],
+            },
+          },
+          data: {
+            status: "FAILED",
+            failureReason: error instanceof Error ? error.message : "Проверка подписи завершилась ошибкой.",
+          },
+        });
+      }
+
+      await this.prisma.providerCallbackEvent.update({
+        where: { id: event.id },
+        data: {
+          validationStatus: error instanceof UnauthorizedException ? "REJECTED" : undefined,
+          processingStatus: "FAILED",
+          processedAt: new Date(),
+          error: error instanceof Error ? error.message : "Callback reconciliation failed.",
+        },
+      });
+      throw error;
+    }
+  }
+
   private async findSessionForCallback(input: EgovMobileQrCallbackInput) {
-    if (input.sessionId) {
+    const allowLocalSessionId =
+      this.configService.get<string>("NODE_ENV") !== "production" &&
+      parseBoolean(this.configService.get<string>("EGOV_MOBILE_QR_ALLOW_LOCAL_CALLBACK_SIMULATION"), false);
+
+    if (allowLocalSessionId && input.sessionId) {
       return this.prisma.signingSession.findUnique({
         where: { id: input.sessionId },
       });
@@ -1034,12 +1754,16 @@ export class SigningService {
 
   private redactCallbackPayload(input: EgovMobileQrCallbackInput) {
     return {
+      callbackId: input.callbackId ?? null,
       providerSessionId: input.providerSessionId ?? null,
       sessionId: input.sessionId ?? null,
+      correlationId: input.correlationId ?? null,
       status: input.status ?? null,
+      documentHash: input.documentHash ?? null,
       signerName: input.signerName ?? null,
       signerIinMasked: input.signerIin ? maskIin(input.signerIin) : null,
       certificateSerial: input.certificateSerial ?? null,
+      certificateThumbprint: input.certificateThumbprint ?? null,
       signedAt: input.signedAt ?? null,
       hasSignaturePayload: Boolean(input.signaturePayload),
       errorCode: input.errorCode ?? null,
@@ -1077,11 +1801,7 @@ export class SigningService {
     return sessions.length;
   }
 
-  async listDocumentSignatures(
-    user: AuthenticatedUser,
-    documentType: SigningDocumentType,
-    documentId: string,
-  ) {
+  async listDocumentSignatures(user: AuthenticatedUser, documentType: SigningDocumentType, documentId: string) {
     const target = await this.resolveTarget(user, documentType, documentId);
     const signatures = await this.prisma.signature.findMany({
       where: {
@@ -1116,11 +1836,7 @@ export class SigningService {
     };
   }
 
-  async getDocumentSigningState(
-    user: AuthenticatedUser,
-    documentType: SigningDocumentType,
-    documentId: string,
-  ) {
+  async getDocumentSigningState(user: AuthenticatedUser, documentType: SigningDocumentType, documentId: string) {
     const target = await this.resolveTarget(user, documentType, documentId);
     const activeSession = await this.prisma.signingSession.findFirst({
       where: {
@@ -1145,13 +1861,14 @@ export class SigningService {
     return {
       documentType,
       documentId,
-      state: signed > 0
-        ? "SIGNED"
-        : activeSession
-          ? "SIGNING_IN_PROGRESS"
-          : target.isReadyForSigning
-            ? "READY_FOR_SIGNING"
-            : "DRAFT",
+      state:
+        signed > 0
+          ? "SIGNED"
+          : activeSession
+            ? "SIGNING_IN_PROGRESS"
+            : target.isReadyForSigning
+              ? "READY_FOR_SIGNING"
+              : "DRAFT",
       documentHash: target.documentHash,
       requiredSigners: [
         {
@@ -1206,9 +1923,9 @@ export class SigningService {
       failureReason: session.failureReason,
       qrUrl: typeof providerPublic.qrUrl === "string" ? providerPublic.qrUrl : null,
       deeplink: typeof providerPublic.deeplink === "string" ? providerPublic.deeplink : null,
-      pollAfterMs:
-        typeof providerPublic.pollAfterMs === "number" ? providerPublic.pollAfterMs : 2000,
+      pollAfterMs: typeof providerPublic.pollAfterMs === "number" ? providerPublic.pollAfterMs : 2000,
       correlationId: session.correlationId,
+      localSimulation: providerPublic.localSimulation === true,
       verification: {
         status: evidence?.verificationStatus ?? signature?.verification?.result ?? null,
         signatureId: signature?.id ?? null,

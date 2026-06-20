@@ -2,11 +2,13 @@ import { Body, Controller, Get, Headers, Param, Post, Req } from "@nestjs/common
 import { Throttle } from "@nestjs/throttler";
 import {
   cancelSigningSessionSchema,
+  completeLocalEgovSigningSessionSchema,
   createSigningSessionSchema,
   egovMobileQrCallbackSchema,
   signingDocumentTypeSchema,
   submitMockSigningSessionSchema,
   submitNcalayerSigningSessionSchema,
+  submitTabletSigningSessionSchema,
 } from "@dsj/types";
 import type { Request } from "express";
 import { CurrentUser } from "../common/decorators/current-user.decorator";
@@ -79,11 +81,34 @@ export class SigningController {
     return this.signingService.submitNcalayer(user, id, input, requestContext(request));
   }
 
+  @Post("signing/sessions/:id/tablet/submit")
+  @Roles("COMPANY_ADMIN", "SAFETY_ENGINEER")
+  async submitTablet(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param("id") id: string,
+    @Req() request: Request,
+    @Body(new ZodValidationPipe(submitTabletSigningSessionSchema))
+    input: Parameters<SigningService["submitTablet"]>[2],
+  ) {
+    return this.signingService.submitTablet(user, id, input, requestContext(request));
+  }
+
+  @Post("signing/sessions/:id/egov-local/complete")
+  @Roles("COMPANY_ADMIN", "SAFETY_ENGINEER")
+  async completeLocalEgov(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param("id") id: string,
+    @Body(new ZodValidationPipe(completeLocalEgovSigningSessionSchema))
+    input: Parameters<SigningService["completeLocalEgov"]>[2],
+  ) {
+    return this.signingService.completeLocalEgov(user, id, input);
+  }
+
   @Post("signing/providers/egov-mobile-qr/callback")
   @Public()
   @Throttle({ default: { limit: 20, ttl: 60_000 } })
   async acceptEgovCallback(
-    @Headers("x-egov-callback-secret") callbackSecret: string | undefined,
+    @Headers("x-dsj-local-callback-secret") localCallbackSecret: string | undefined,
     @Headers("authorization") authorization: string | undefined,
     @Body(new ZodValidationPipe(egovMobileQrCallbackSchema))
     input: Parameters<SigningService["acceptEgovCallback"]>[0],
@@ -91,7 +116,7 @@ export class SigningController {
     const bearer = authorization?.startsWith("Bearer ")
       ? authorization.slice("Bearer ".length)
       : null;
-    return this.signingService.acceptEgovCallback(input, callbackSecret ?? bearer);
+    return this.signingService.acceptEgovCallback(input, localCallbackSecret ?? bearer);
   }
 
   @Get("documents/:type/:id/signatures")

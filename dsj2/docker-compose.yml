@@ -10,6 +10,11 @@ services:
       - "5433:5432"
     volumes:
       - dsj-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dsj"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   redis:
     image: redis:7-alpine
@@ -18,6 +23,129 @@ services:
       - "6379:6379"
     volumes:
       - dsj-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    image: dsj-app-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      APP_URL: http://localhost:3000
+      CORS_ORIGIN: http://localhost:3000
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/dsj
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: local-dev-jwt-secret-0123456789abcdef
+      JWT_EXPIRES_IN: 8h
+      COOKIE_NAME: dsj_session
+      FIELD_ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef
+      FIELD_HASH_PEPPER: abcdef0123456789abcdef0123456789
+      SIGNING_PROVIDER: NCALAYER
+      SIGNING_TEST_MODE: "false"
+      NCALAYER_BRIDGE_URL: http://ncalayer-bridge:13580
+      NCALAYER_BRIDGE_TIMEOUT_MS: "15000"
+      ALLOW_PUBLIC_INVITE_MOCK_SIGNING: "false"
+      SIGNING_PROVIDER_DEFAULT: NCALAYER_PROVIDER
+      SIGNING_MOCK_ENABLED: "true"
+      SIGNING_REQUIRE_LEGAL_PROVIDER_IN_PROD: "true"
+      NCALAYER_ENABLED: "true"
+      EGOV_MOBILE_QR_ENABLED: "true"
+      EGOV_MOBILE_QR_ALLOW_LOCAL_CALLBACK_SIMULATION: "true"
+      EGOV_MOBILE_QR_CALLBACK_SECRET: local-egov-callback-secret
+      TABLET_SIGNATURE_ENABLED: "true"
+    command:
+      - sh
+      - -c
+      - pnpm db:deploy && pnpm --filter @dsj/api dev
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4000/v1').then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  ncalayer-bridge:
+    image: dsj-app-dev
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: 13580
+      NCALAYER_WS_URL: wss://host.docker.internal:13579
+      NCALAYER_TLS_REJECT_UNAUTHORIZED: "false"
+      NCALAYER_ALLOW_KMD_HTTP_API: "true"
+      NCALAYER_BRIDGE_ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    command:
+      - corepack
+      - pnpm
+      - --filter
+      - "@dsj/ncalayer-bridge"
+      - dev
+    ports:
+      - "13580:13580"
+
+  web:
+    image: dsj-app-dev
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: development
+      APP_URL: http://localhost:3000
+      API_URL: http://api:4000
+      COOKIE_NAME: dsj_session
+      SIGNING_PROVIDER: NCALAYER
+      SIGNING_TEST_MODE: "false"
+      NCALAYER_BRIDGE_URL: http://127.0.0.1:13580
+      NCALAYER_BRIDGE_TIMEOUT_MS: "15000"
+    command:
+      - corepack
+      - pnpm
+      - --filter
+      - "@dsj/web"
+      - exec
+      - next
+      - dev
+      - --hostname
+      - 0.0.0.0
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
 
 volumes:
   dsj-postgres-data:

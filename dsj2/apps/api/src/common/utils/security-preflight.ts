@@ -113,5 +113,35 @@ export function validateSecurityConfig(env: EnvLike = process.env) {
 
   if (egovEnabled && !allowLocalSimulation) {
     assertStrongSecret(env, "EGOV_MOBILE_QR_CALLBACK_SECRET", production ? 32 : 16);
+    assertStrongSecret(env, "EGOV_MOBILE_QR_CLIENT_SECRET", production ? 32 : 16);
+
+    const baseUrl = trim(env.EGOV_MOBILE_QR_BASE_URL);
+    const clientId = trim(env.EGOV_MOBILE_QR_CLIENT_ID);
+    const callbackUrl = trim(env.EGOV_MOBILE_QR_CALLBACK_URL);
+
+    if (!baseUrl) {
+      throw new Error("EGOV_MOBILE_QR_BASE_URL is required.");
+    }
+
+    if (!clientId) {
+      throw new Error("EGOV_MOBILE_QR_CLIENT_ID is required.");
+    }
+
+    if (!callbackUrl) {
+      throw new Error("EGOV_MOBILE_QR_CALLBACK_URL is required.");
+    }
+
+    assertHttpUrl("EGOV_MOBILE_QR_BASE_URL", baseUrl, production);
+    assertHttpUrl("EGOV_MOBILE_QR_CALLBACK_URL", callbackUrl, production);
+
+    const callback = new URL(callbackUrl);
+    if (
+      production &&
+      (callback.hostname === "localhost" ||
+        callback.hostname === "127.0.0.1" ||
+        callback.hostname === "::1")
+    ) {
+      throw new Error("EGOV_MOBILE_QR_CALLBACK_URL must be publicly reachable in production.");
+    }
   }
 }

@@ -1,11 +1,21 @@
 # Legal Signing Roadmap
 
-This document captures the current signing state and the target architecture for legally significant signing, eGov Mobile QR, NCALayer, and mock signing. It is a Phase 0 planning document: it does not claim that the generic signing session API or eGov adapter already exists.
+This document captures the current signing state and the target architecture for legally significant signing, eGov Mobile QR, NCALayer, and mock signing.
 
 ## Current State
 
 Implemented today:
 
+- Generic `SigningSession`, `ProviderCallbackEvent`, and `SignatureEvidence` persistence and API.
+- Provider registry with mock, NCALayer, and an isolated eGov Mobile QR adapter seam.
+- Briefing employee signing sessions with `signerEmployeeId` and no required `User` account.
+- Development/test-only eGov QR transport and callback simulation behind
+  `EGOV_MOBILE_QR_ALLOW_LOCAL_CALLBACK_SIMULATION=true`.
+- In-person employee signing on a tablet as a separate non-EDS method. The raw
+  handwritten drawing is discarded after hashing; the audit trail keeps the hash,
+  document revision, employee, initiator, timestamp, and device request context.
+- Encrypted raw callback storage, replay protection, polling, expiry, and canonical
+  `BRIEFED_EMPLOYEE` signature creation for briefing journal entries.
 - NCALayer bridge flow through `apps/ncalayer-bridge`.
 - Mock signing for local and controlled fallback paths.
 - Domain-specific signing for briefing records, public briefing invites, protocols, responsibility orders, employee documents, and prototype work permit paths.
@@ -15,11 +25,11 @@ Implemented today:
 
 Not implemented yet:
 
-- Generic `SigningSession` model and API.
-- Provider adapter registry that owns all provider flows.
-- eGov Mobile QR session creation, callback validation, callback reconciliation, or polling.
+- Production Smart Bridge transport and production callback verification for
+  `NITEC-S-5096` / `EGOVMOBILE_QR_SIGN_SERVICE`.
 - Signing-specific worker queues for session expiry, provider polling, callback reconciliation, and verification retry.
-- Provider-neutral immutable evidence storage separate from normal API responses.
+- External provider-neutral evidence object storage; callback payloads currently use the
+  encrypted signing evidence contour in the database.
 - Production-wide startup/request guard that rejects mock signing when a legal provider is required.
 
 ## Current API Surfaces
@@ -45,7 +55,11 @@ Existing signing routes include:
 - `/v1/core-platform/signatures/verification`
 - `/v1/core-platform/document-envelopes/:envelopeId/evidence-package`
 
-The target generic signing API should be added alongside these routes. Existing routes should remain as compatibility facades until each document flow is migrated and verified.
+The generic signing API is available alongside these routes. Existing routes remain as
+compatibility facades until each document flow is migrated and verified.
+
+The generic session routes below are now active. Briefing employee QR signing is the
+first employee-without-account flow migrated to them.
 
 ## Target Backend Architecture
 
@@ -75,7 +89,8 @@ interface SigningProvider {
 Provider constants should preserve the existing enum values during migration:
 
 - Existing: `MOCK_NCALAYER`, `NCALAYER`
-- Target aliases/new values: `MOCK_PROVIDER`, `NCALAYER_PROVIDER`, `EGOV_MOBILE_QR_PROVIDER`
+- Target aliases/new values: `MOCK_PROVIDER`, `NCALAYER_PROVIDER`,
+  `EGOV_MOBILE_QR_PROVIDER`, `TABLET_SIGNATURE_PROVIDER`
 - Reserved future values: `SMART_BRIDGE_PROVIDER`, `DIGITAL_ID_PROVIDER`
 
 Do not wire eGov directly into protocol, order, briefing, or employee-document services. The provider seam should be generic first.
@@ -245,6 +260,7 @@ Target variables:
 - `EGOV_MOBILE_QR_CALLBACK_URL`
 - `EGOV_MOBILE_QR_CALLBACK_SECRET`
 - `EGOV_MOBILE_QR_TIMEOUT_SECONDS`
+- `TABLET_SIGNATURE_ENABLED`
 - `SIGNING_SESSION_TTL_SECONDS`
 - `SIGNATURE_EVIDENCE_STORAGE_MODE`
 - `SIGNATURE_EVIDENCE_BUCKET`
@@ -283,9 +299,29 @@ Production safety rules:
 
 ## Known Risks
 
-- eGov Mobile QR official API and callback validation format are not present in this repository.
+- eGov Mobile QR official API and callback validation format are not present in this
+  repository or available from the public Smart Bridge passport page without the
+  required access. Production transport deliberately fails closed.
 - Current certificate verification appears metadata/digest focused; legal-grade chain and revocation strategy needs provider/legal confirmation.
 - Raw provider responses may contain personal data and must be redacted or stored in controlled evidence storage.
 - Raw IIN storage needs explicit legal basis; prefer masked, hashed, or encrypted fields.
 - Renaming provider enum values is migration-risky; preserve existing values until data migration is planned.
 - API CORS is currently single-origin oriented through `CORS_ORIGIN`; preview and production origins need deliberate handling.
+
+## Smart Bridge Contract Required From The Service Owner
+
+Before production activation, obtain the official technical passport for service
+`NITEC-S-5096`, key `EGOVMOBILE_QR_SIGN_SERVICE`, including:
+
+- exact create-session endpoint and HTTP/SOAP method;
+- request and response schemas, required headers, namespaces, and encodings;
+- client authentication and request-signing algorithm;
+- provider session, correlation, QR, deeplink, expiry, and status fields;
+- callback endpoint contract, callback identifier, authentication/signature rules, and
+  replay semantics;
+- CMS/signature container format and signed-content/document-hash binding;
+- certificate-chain, revocation, timestamp, and IIN extraction rules;
+- provider status mapping, error codes, retry policy, and timeout requirements.
+
+The local `dsj-egov-mock://` QR and callback schema are test fixtures only. They are not
+the Smart Bridge production contract.

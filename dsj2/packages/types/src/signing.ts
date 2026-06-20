@@ -22,6 +22,7 @@ export const signatureProviderSchema = z.preprocess(
     "MOCK_PROVIDER",
     "NCALAYER_PROVIDER",
     "EGOV_MOBILE_QR_PROVIDER",
+    "TABLET_SIGNATURE_PROVIDER",
     "SMART_BRIDGE_PROVIDER",
     "DIGITAL_ID_PROVIDER",
   ]),
@@ -29,7 +30,12 @@ export const signatureProviderSchema = z.preprocess(
 
 export const legalSigningProviderSchema = z.preprocess(
   normalizeSignatureProviderValue,
-  z.enum(["MOCK_PROVIDER", "NCALAYER_PROVIDER", "EGOV_MOBILE_QR_PROVIDER"]),
+  z.enum([
+    "MOCK_PROVIDER",
+    "NCALAYER_PROVIDER",
+    "EGOV_MOBILE_QR_PROVIDER",
+    "TABLET_SIGNATURE_PROVIDER",
+  ]),
 );
 
 export const signingSessionStatusSchema = z.enum([
@@ -94,6 +100,7 @@ export const ncalayerBridgeSignRequestSchema = z.object({
   context: z
     .object({
       briefingRecordId: z.string().optional(),
+      briefingJournalEntryId: z.string().optional(),
       employeeDocumentId: z.string().optional(),
       protocolId: z.string().optional(),
       responsibilityOrderId: z.string().optional(),
@@ -120,14 +127,35 @@ export const submitMockSigningSessionSchema = mockSignSchema;
 
 export const submitNcalayerSigningSessionSchema = ncalayerBridgeSignatureSchema;
 
+export const submitTabletSigningSessionSchema = z.object({
+  signatureDataUrl: z
+    .string()
+    .max(350_000)
+    .regex(/^data:image\/png;base64,[A-Za-z0-9+/=]+$/),
+  strokeCount: z.number().int().min(1).max(10_000),
+  confirmed: z.literal(true),
+});
+
+export const completeLocalEgovSigningSessionSchema = z.object({
+  confirmed: z.literal(true),
+});
+
 export const egovMobileQrCallbackSchema = z
   .object({
+    callbackId: z.string().min(1).optional(),
     providerSessionId: z.string().min(1).optional(),
     sessionId: z.string().min(1).optional(),
+    correlationId: z.string().min(1).optional(),
     status: z.enum(["SIGNED", "FAILED", "CANCELLED", "EXPIRED"]).optional(),
+    documentHash: documentHashSchema.optional(),
     signerName: z.string().min(2).optional(),
     signerIin: z.string().regex(/^\d{12}$/).optional(),
     certificateSerial: z.string().min(6).optional(),
+    certificateThumbprint: z.string().min(1).optional(),
+    certificateSubject: z.string().min(1).optional(),
+    certificateIssuer: z.string().min(1).optional(),
+    certificateValidFrom: z.string().datetime({ offset: true }).optional(),
+    certificateValidTo: z.string().datetime({ offset: true }).optional(),
     signedAt: z.string().datetime({ offset: true }).optional(),
     signaturePayload: z.string().optional(),
     errorCode: z.string().optional(),
@@ -260,6 +288,8 @@ export type CreateSigningSessionInput = z.infer<typeof createSigningSessionSchem
 export type CancelSigningSessionInput = z.infer<typeof cancelSigningSessionSchema>;
 export type SubmitMockSigningSessionInput = z.infer<typeof submitMockSigningSessionSchema>;
 export type SubmitNcalayerSigningSessionInput = z.infer<typeof submitNcalayerSigningSessionSchema>;
+export type SubmitTabletSigningSessionInput = z.infer<typeof submitTabletSigningSessionSchema>;
+export type CompleteLocalEgovSigningSessionInput = z.infer<typeof completeLocalEgovSigningSessionSchema>;
 export type EgovMobileQrCallbackInput = z.infer<typeof egovMobileQrCallbackSchema>;
 
 export type SigningSessionResponse = {
@@ -278,6 +308,7 @@ export type SigningSessionResponse = {
   deeplink: string | null;
   pollAfterMs: number;
   correlationId: string;
+  localSimulation: boolean;
   verification: {
     status: "PENDING" | "PASS" | "FAIL" | "INDETERMINATE" | null;
     signatureId: string | null;

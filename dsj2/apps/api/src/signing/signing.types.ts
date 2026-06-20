@@ -21,6 +21,10 @@ export type ResolvedSigningTarget = {
   title: string;
   documentNumber: string | null;
   isReadyForSigning: boolean;
+  signerEmployeeId?: string | null;
+  signerEmployeeName?: string | null;
+  signerIinMasked?: string | null;
+  signerIinHash?: string | null;
 };
 
 export type CompleteSigningSessionInput =

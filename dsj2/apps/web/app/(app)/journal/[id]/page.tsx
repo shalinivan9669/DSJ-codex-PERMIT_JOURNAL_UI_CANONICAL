@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 import type { BriefingJournalEntry } from "@dsj/types";
 import {
   Card,
@@ -19,7 +18,7 @@ import {
   replaceBriefingAction,
   signBriefingAction,
 } from "@/actions/briefing";
-import { EmployeePresenceSigningPanel } from "@/components/employee-presence-signing-panel";
+import { BriefingEmployeeSigningPanel } from "@/components/employee-presence-signing-panel";
 import { SigningForm } from "@/components/signing-form";
 import { StatusBadge } from "@/components/status-badge";
 import { SubmitButton } from "@/components/submit-button";
@@ -31,28 +30,11 @@ import {
   getBriefingSignerRoleLabel,
 } from "@/lib/labels";
 import { getSigningConfig } from "@/lib/signing-config";
-import { getEmployeeSigningReadiness } from "@/lib/employee-signing-readiness";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 function companyQuery(organizationId: string | null | undefined) {
   return organizationId ? `?companyId=${organizationId}` : "";
-}
-
-function appOriginFromHeaders(headerStore: { get(name: string): string | null }) {
-  const envOrigin = process.env.APP_URL?.trim().replace(/\/+$/, "");
-
-  if (envOrigin) {
-    return envOrigin;
-  }
-
-  const host =
-    headerStore.get("x-forwarded-host") ??
-    headerStore.get("host") ??
-    "localhost:3000";
-  const protocol = headerStore.get("x-forwarded-proto") ?? "http";
-
-  return `${protocol}://${host}`;
 }
 
 function signerState(record: BriefingJournalEntry, role: string) {
@@ -133,20 +115,14 @@ export default async function BriefingDetailPage({
   const signingConfig = getSigningConfig();
   const { id } = await params;
   const rawSearchParams = await searchParams;
-  const requestHeaders = await headers();
   const errorMessage =
     typeof rawSearchParams.error === "string" ? rawSearchParams.error : null;
   const record = await apiFetch<BriefingJournalEntry>(`briefing-records/${id}`);
   const query = companyQuery(record.organizationId);
   const signingConfigError = signingConfig.isConfigured ? null : signingConfig.configError;
+  const instructorNcalayerReady =
+    signingConfig.isConfigured && signingConfig.provider === "NCALAYER";
   const employeeSigner = signerState(record, "BRIEFED_EMPLOYEE");
-  const employeeSigningReadiness = getEmployeeSigningReadiness(record.employee);
-  const employeeEditParams = new URLSearchParams({
-    companyId: record.organizationId,
-    returnTo: `/journal/${record.id}${query}`,
-  });
-  const employeeEditHref = `/employees/${record.employeeId}/edit?${employeeEditParams.toString()}`;
-  const employeeInstructionUrl = `${appOriginFromHeaders(requestHeaders)}/my-instructions/${record.id}`;
   const canShowEmployeePresencePanel = Boolean(record.signingDigest && employeeSigner);
   const hasActionContent =
     record.allowedActions.canPrepareSign ||
@@ -300,31 +276,14 @@ export default async function BriefingDetailPage({
             </CardHeader>
             <CardContent className="space-y-3">
               {record.allowedActions.canPrepareSign ? (
-                <>
-                  {employeeSigningReadiness.key !== "ready" ? (
-                    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-                      <p className="font-medium">Подготовка к подписи недоступна</p>
-                      <p className="mt-1">{employeeSigningReadiness.label}.</p>
-                      <Link
-                        href={employeeEditHref}
-                        className="mt-3 inline-flex rounded-xl border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900"
-                      >
-                        {employeeSigningReadiness.key === "missing-account"
-                          ? "Создать кабинет сотрудника"
-                          : "Проверить кабинет сотрудника"}
-                      </Link>
-                    </div>
-                  ) : null}
-                  <form action={prepareBriefingForSigningAction}>
-                    <input type="hidden" name="briefingId" value={record.id} />
-                    <input type="hidden" name="companyId" value={record.organizationId} />
-                    <SubmitButton
-                      label="Подготовить к подписи"
-                      pendingLabel="Подготовка..."
-                      disabled={employeeSigningReadiness.key !== "ready"}
-                    />
-                  </form>
-                </>
+                <form action={prepareBriefingForSigningAction}>
+                  <input type="hidden" name="briefingId" value={record.id} />
+                  <input type="hidden" name="companyId" value={record.organizationId} />
+                  <SubmitButton
+                    label="Подготовить к подписи"
+                    pendingLabel="Подготовка..."
+                  />
+                </form>
               ) : null}
 
               {canShowEmployeePresencePanel ? (
@@ -332,11 +291,11 @@ export default async function BriefingDetailPage({
                   <h3 className="text-sm font-semibold text-slate-900">
                     Сотрудник на месте
                   </h3>
-                  <EmployeePresenceSigningPanel
+                  <BriefingEmployeeSigningPanel
+                    documentId={record.id}
                     employeeName={record.employee.fullName}
                     employeeNumber={record.employee.employeeNumber}
                     employeeJobTitle={record.employee.jobTitle}
-                    signUrl={employeeInstructionUrl}
                     isSigned={employeeSigner?.status === "SIGNED"}
                   />
                 </section>
@@ -347,33 +306,13 @@ export default async function BriefingDetailPage({
                   <h3 className="text-sm font-semibold text-slate-900">
                     Подпись инструктора
                   </h3>
-                  {signingConfig.isConfigured ? (
+                  {instructorNcalayerReady ? (
                     <SigningForm
-                      mode={signingConfig.provider}
+                      mode="NCALAYER"
                       action={signBriefingAction}
                       hiddenFields={[
                         { name: "briefingId", value: record.id },
                         { name: "companyId", value: record.organizationId },
-                      ]}
-                      fields={[
-                        {
-                          name: "signerName",
-                          label: "ФИО подписанта",
-                          defaultValue: session.user.fullName,
-                          required: true,
-                        },
-                        {
-                          name: "signerIin",
-                          label: "ИИН подписанта",
-                          placeholder: "980317350011",
-                          required: true,
-                        },
-                        {
-                          name: "certificateSerial",
-                          label: "Серийный номер сертификата",
-                          placeholder: "MOCKCERT-ALPINA-0002",
-                          required: true,
-                        },
                       ]}
                       digest={record.signingDigest ?? null}
                       bridgeUrl={signingConfig.bridgeUrl ?? ""}
@@ -382,17 +321,18 @@ export default async function BriefingDetailPage({
                         briefingJournalEntryId: record.id,
                         registrationNo: record.registrationNo ?? null,
                       }}
-                      title="Сформировать подпись инструктора"
-                      description="Бэкенд сохранит каноническую подпись с signerRole=BRIEFING_INSTRUCTOR."
-                      submitLabel="Подписать инструктором"
+                      title="Подпись инструктора через NCALayer"
+                      description={`Инструктор ${session.user.fullName} подпишет зафиксированную версию своей ЭЦП на этом компьютере.`}
+                      submitLabel="Подписать через NCALayer"
                       pendingLabel="Подписание..."
-                      mockHint="Режим mock создаст подпись инструктора по введённым данным сертификата."
-                      bridgeHint="Bridge запросит сертификат и CMS/PKCS#7 у локального NCALayer."
+                      bridgeHint="NCALayer запросит сертификат инструктора и сформирует CMS/PKCS#7 для текущего дайджеста."
                       testMode={signingConfig.testMode}
                     />
                   ) : (
                     <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                      {signingConfigError}
+                      {signingConfig.isConfigured
+                        ? "Инструктор может подписать только через NCALayer. Установите SIGNING_PROVIDER=NCALAYER."
+                        : signingConfigError}
                     </div>
                   )}
                 </section>
