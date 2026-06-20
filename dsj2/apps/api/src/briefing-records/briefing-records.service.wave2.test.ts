@@ -151,9 +151,7 @@ function createService(options?: {
     },
     site: {
       findFirst: async ({ where }: { where: { companyId: string; id: string } }) =>
-        where.companyId === "company-1" && sites.has(where.id)
-          ? { id: where.id, companyId: where.companyId }
-          : null,
+        where.companyId === "company-1" && sites.has(where.id) ? { id: where.id, companyId: where.companyId } : null,
     },
     briefingJournalEntry: {
       create: async ({ data }: { data: Record<string, unknown> }) => {
@@ -173,7 +171,13 @@ function createService(options?: {
     workSite: {
       findFirst: async ({ where }: { where: { organizationId: string; id: string } }) =>
         where.organizationId === "company-1" && sites.has(where.id)
-          ? { id: where.id, organizationId: where.organizationId, code: null, name: where.id, location: null }
+          ? {
+              id: where.id,
+              organizationId: where.organizationId,
+              code: null,
+              name: where.id,
+              location: null,
+            }
           : null,
     },
     $transaction: async (callback: (transaction: any) => Promise<unknown>) => {
@@ -326,7 +330,7 @@ test("briefing draft can be created before an employee account exists", async ()
   assert.equal(state.briefingCreateData[0]?.status, "DRAFT");
 });
 
-test("signing-ready create rejects a missing employee account before writing entries", async () => {
+test("signing-ready create does not require an employee account", async () => {
   const { service, state } = createService({
     employees: [
       createEmployee({
@@ -335,21 +339,21 @@ test("signing-ready create rejects a missing employee account before writing ent
       }),
     ],
   });
+  let prepareCalls = 0;
+  (service as any).prepareForSigning = async () => {
+    prepareCalls += 1;
+    return {};
+  };
 
-  await assert.rejects(
-    () =>
-      service.create(
-        adminUser,
-        createInput({
-          status: "SIGNING_READY",
-        }) as never,
-      ),
-    (error) =>
-      error instanceof BadRequestException &&
-      error.message.includes("создайте личный кабинет сотрудника"),
+  await service.create(
+    adminUser,
+    createInput({
+      status: "SIGNING_READY",
+    }) as never,
   );
 
-  assert.equal(state.briefingCreateData.length, 0);
+  assert.equal(state.briefingCreateData.length, 1);
+  assert.equal(prepareCalls, 1);
 });
 
 test("shop-chief persona scope still rejects employees from another department or site", async () => {
@@ -383,7 +387,7 @@ test("shop-chief persona scope still rejects employees from another department o
   assert.equal(state.briefingCreateData.length, 0);
 });
 
-test("prepare for signing rejects a draft without an employee account before artifacts", async () => {
+test("prepare for signing reaches canonical artifacts without an employee account", async () => {
   const employee = createEmployee({
     userId: null,
     user: null,
@@ -400,18 +404,21 @@ test("prepare for signing rejects a draft without an employee account before art
     departments: new Map(),
     workSites: new Map(),
   });
+  let envelopeCalls = 0;
+  (service as any).corePlatformService = {
+    createDocumentEnvelope: async () => {
+      envelopeCalls += 1;
+      throw new Error("core-platform-reached");
+    },
+  };
 
-  await assert.rejects(
-    () => service.prepareForSigning(instructorAdminUser, "record-1"),
-    (error) =>
-      error instanceof BadRequestException &&
-      error.message.includes("создайте личный кабинет сотрудника"),
-  );
+  await assert.rejects(() => service.prepareForSigning(instructorAdminUser, "record-1"), /core-platform-reached/);
 
   assert.equal(state.briefingUpdateData.length, 0);
+  assert.equal(envelopeCalls, 1);
 });
 
-test("active EMPLOYEE_SIGNER account passes the preparation account guard", async () => {
+test("active EMPLOYEE_SIGNER account also reaches canonical preparation", async () => {
   const employee = createEmployee();
   const { service } = createService({
     employees: [employee],
@@ -433,10 +440,7 @@ test("active EMPLOYEE_SIGNER account passes the preparation account guard", asyn
     },
   };
 
-  await assert.rejects(
-    () => service.prepareForSigning(instructorAdminUser, "record-1"),
-    /core-platform-reached/,
-  );
+  await assert.rejects(() => service.prepareForSigning(instructorAdminUser, "record-1"), /core-platform-reached/);
 
   assert.equal(envelopeCalls, 1);
 });
@@ -463,13 +467,9 @@ test("briefing update rejects a carried foreign site reference", async () => {
 
   await assert.rejects(
     () =>
-      service.update(
-        adminUser,
-        "record-1",
-        {
-          topic: "Updated topic",
-        } as never,
-      ),
+      service.update(adminUser, "record-1", {
+        topic: "Updated topic",
+      } as never),
     (error) => error instanceof BadRequestException,
   );
 
@@ -481,15 +481,11 @@ test("briefing update accepts same-company department and site", async () => {
     existingRecord: createExistingRecord(),
   });
 
-  const record = await service.update(
-    adminUser,
-    "record-1",
-    {
-      departmentId: "department-2",
-      siteId: "site-2",
-      topic: "Updated topic",
-    } as never,
-  );
+  const record = await service.update(adminUser, "record-1", {
+    departmentId: "department-2",
+    siteId: "site-2",
+    topic: "Updated topic",
+  } as never);
 
   assert.equal(state.briefingUpdateData.length, 1);
   assert.equal(state.briefingUpdateData[0]?.departmentId, "department-2");

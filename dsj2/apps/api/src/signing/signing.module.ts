@@ -7,6 +7,8 @@ import { ResponsibilityOrdersModule } from "../responsibility-orders/responsibil
 import { SigningController } from "./signing.controller";
 import { SigningProviderRegistry } from "./signing-provider.registry";
 import { SigningService } from "./signing.service";
+import { EgovMobileQrSigningProvider } from "./providers/egov-mobile-qr-signing.provider";
+import { EgovMobileQrTransportFactory } from "./providers/egov-mobile-qr.transport";
 
 @Module({
   imports: [
@@ -17,7 +19,12 @@ import { SigningService } from "./signing.service";
     EmployeeDocumentsModule,
   ],
   controllers: [SigningController],
-  providers: [SigningService, SigningProviderRegistry],
+  providers: [
+    SigningService,
+    SigningProviderRegistry,
+    EgovMobileQrSigningProvider,
+    EgovMobileQrTransportFactory,
+  ],
   exports: [SigningService],
 })
 export class SigningModule {}

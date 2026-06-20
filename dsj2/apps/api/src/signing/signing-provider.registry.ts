@@ -3,6 +3,7 @@ import { Injectable, ServiceUnavailableException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import type { LegalSigningProvider } from "@dsj/types";
 import type { CreateProviderSessionInput } from "./signing.types";
+import { EgovMobileQrSigningProvider } from "./providers/egov-mobile-qr-signing.provider";
 
 function parseBoolean(value: string | undefined, defaultValue: boolean) {
   if (value === undefined) {
@@ -20,7 +21,10 @@ function trim(value: string | undefined) {
 
 @Injectable()
 export class SigningProviderRegistry {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly egovMobileQrProvider: EgovMobileQrSigningProvider,
+  ) {}
 
   normalizeProvider(value?: string | null): LegalSigningProvider {
     const raw =
@@ -41,7 +45,8 @@ export class SigningProviderRegistry {
     if (
       normalized === "MOCK_PROVIDER" ||
       normalized === "NCALAYER_PROVIDER" ||
-      normalized === "EGOV_MOBILE_QR_PROVIDER"
+      normalized === "EGOV_MOBILE_QR_PROVIDER" ||
+      normalized === "TABLET_SIGNATURE_PROVIDER"
     ) {
       return normalized;
     }
@@ -109,25 +114,33 @@ export class SigningProviderRegistry {
         }
       }
     }
+
+    if (provider === "TABLET_SIGNATURE_PROVIDER") {
+      const enabled = parseBoolean(
+        this.configService.get<string>("TABLET_SIGNATURE_ENABLED"),
+        !isProduction,
+      );
+
+      if (!enabled) {
+        throw new ServiceUnavailableException("Подпись на планшете отключена.");
+      }
+    }
   }
 
-  createProviderSession(input: CreateProviderSessionInput) {
+  async createProviderSession(input: CreateProviderSessionInput) {
     this.assertProviderEnabled(input.provider);
 
     if (input.provider === "EGOV_MOBILE_QR_PROVIDER") {
-      const providerSessionId = `egov-local-${randomUUID()}`;
-      const deeplink = `egov-mobile://sign?sessionId=${encodeURIComponent(input.sessionId)}&correlationId=${encodeURIComponent(input.correlationId)}`;
+      return this.egovMobileQrProvider.createSigningSession(input);
+    }
 
+    if (input.provider === "TABLET_SIGNATURE_PROVIDER") {
       return {
-        status: "QR_GENERATED" as const,
-        providerSessionId,
+        status: "WAITING_FOR_USER" as const,
+        providerSessionId: `tablet-${randomUUID()}`,
         providerPublicJson: {
-          qrUrl: deeplink,
-          deeplink,
-          pollAfterMs: 2000,
-          expiresAt: input.expiresAt.toISOString(),
-          localCallbackHint:
-            "POST /v1/signing/providers/egov-mobile-qr/callback with sessionId/status=SIGNED for local simulation.",
+          pollAfterMs: 1500,
+          documentHash: input.target.documentHash,
         },
       };
     }

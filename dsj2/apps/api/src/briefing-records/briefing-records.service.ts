@@ -354,38 +354,6 @@ export class BriefingRecordsService {
     return employee?.user?.role === "EMPLOYEE_SIGNER" && employee.user.isActive;
   }
 
-  private assertEmployeeSigningAccountReady(employee: EmployeeRef | undefined) {
-    if (this.hasEmployeeSignerAccount(employee)) {
-      return;
-    }
-
-    if (!employee) {
-      throw new BadRequestException("Сотрудник инструктажа не найден.");
-    }
-
-    if (!employee.user) {
-      throw new BadRequestException(
-        `Перед подготовкой к подписи создайте личный кабинет сотрудника: ${employee.fullName} (${employee.employeeNumber}).`,
-      );
-    }
-
-    if (employee.user.role !== "EMPLOYEE_SIGNER") {
-      throw new BadRequestException(
-        `Текущий кабинет ${employee.fullName} не является кабинетом сотрудника. Для подписи нужен активный кабинет с ролью EMPLOYEE_SIGNER.`,
-      );
-    }
-
-    throw new BadRequestException(
-      `Перед подготовкой к подписи активируйте личный кабинет сотрудника: ${employee.fullName} (${employee.employeeNumber}).`,
-    );
-  }
-
-  private assertEmployeeSigningAccountsReady(employees: EmployeeRef[]) {
-    for (const employee of employees) {
-      this.assertEmployeeSigningAccountReady(employee);
-    }
-  }
-
   private normalizeStatus(
     status: RawBriefingEntry["status"],
   ): BriefingReadModelStatus {
@@ -448,7 +416,7 @@ export class BriefingRecordsService {
     );
     const canMutateEntry = this.canOperateOnEntry(user, policy, entry, refs);
     const canInstructorSign = Boolean(
-      canMutateEntry && readyForSigning && !hasInstructorSignature,
+      canMutateEntry && (readyForSigning || partiallySigned) && !hasInstructorSignature,
     );
 
     return {
@@ -1381,9 +1349,6 @@ export class BriefingRecordsService {
       briefingType: input.briefingType,
     });
     this.assertCreateInputAllowed(user, policy, input, employees, journalKind);
-    if (input.status === "SIGNING_READY" || input.status === "READY_FOR_SIGNING") {
-      this.assertEmployeeSigningAccountsReady(employees);
-    }
     await Promise.all([
       this.ensureInstructor(organizationId, input.instructorUserId),
       this.ensureDepartment(
@@ -1580,8 +1545,6 @@ export class BriefingRecordsService {
     const refs = await this.resolveScopeRefs(existing.organizationId, [existing]);
     const policy = await this.resolvePersonaPolicy(user);
     this.assertCanOperateOnEntry(user, policy, existing, refs);
-    this.assertEmployeeSigningAccountReady(refs.employees.get(existing.employeeId));
-
     const alreadyPrepared =
       this.normalizeStatus(existing.status) === "SIGNING_READY" &&
       existing.documentEnvelope?.status === "SIGNING_READY" &&

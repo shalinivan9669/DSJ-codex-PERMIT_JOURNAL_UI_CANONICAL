@@ -44,7 +44,7 @@ Current signing UI uses the shared `SigningForm` and the active server-side sign
 - `MOCK_NCALAYER` for explicit local/demo fallback paths
 - `NCALAYER` for the local NCALayer bridge flow
 
-The legal signing roadmap in `../../docs/signing.md` adds generic signing sessions, provider selection, eGov Mobile QR modal/polling, signing state badges, signer lists, signature history, and evidence panels. Those components are not implemented yet.
+The briefing journal now uses generic signing sessions for employee eGov Mobile QR and in-person tablet signing. Instructor signing remains an NCALayer-only computer flow. Production eGov transport still requires the official Smart Bridge technical passport and credentials described in `../../docs/signing.md`.
 
 When adding the roadmap UI:
 

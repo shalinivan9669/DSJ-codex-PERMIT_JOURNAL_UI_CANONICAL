@@ -29,6 +29,8 @@ export default async function SignBriefingPage({
   const errorMessage = typeof rawSearchParams.error === "string" ? rawSearchParams.error : null;
   const record = await apiFetch<BriefingJournalEntry>(`briefing-records/${id}`);
   const signingConfigError = signingConfig.isConfigured ? null : signingConfig.configError;
+  const instructorNcalayerReady =
+    signingConfig.isConfigured && signingConfig.provider === "NCALAYER";
   const detailHref = record.organizationId
     ? `/journal/${record.id}?companyId=${record.organizationId}`
     : `/journal/${record.id}`;
@@ -113,33 +115,13 @@ export default async function SignBriefingPage({
                   Вернуться к записи
                 </Link>
               </div>
-            ) : signingConfig.isConfigured ? (
+            ) : instructorNcalayerReady ? (
               <SigningForm
-                mode={signingConfig.provider}
+                mode="NCALAYER"
                 action={signBriefingAction}
                 hiddenFields={[
                   { name: "briefingId", value: record.id },
                   { name: "companyId", value: record.organizationId },
-                ]}
-                fields={[
-                  {
-                    name: "signerName",
-                    label: "ФИО подписанта",
-                    defaultValue: session.user.fullName,
-                    required: true,
-                  },
-                  {
-                    name: "signerIin",
-                    label: "ИИН подписанта",
-                    placeholder: "980317350011",
-                    required: true,
-                  },
-                  {
-                    name: "certificateSerial",
-                    label: "Серийный номер сертификата",
-                    placeholder: "MOCKCERT-ALPINA-0002",
-                    required: true,
-                  },
                 ]}
                 digest={record.signingDigest ?? null}
                 bridgeUrl={signingConfig.bridgeUrl ?? ""}
@@ -148,17 +130,18 @@ export default async function SignBriefingPage({
                   briefingJournalEntryId: record.id,
                   registrationNo: record.registrationNo ?? null,
                 }}
-                title="Сформировать подпись инструктора"
-                description="Бэкенд сохранит каноническую подпись с signerRole=BRIEFING_INSTRUCTOR."
-                submitLabel="Подписать инструктором"
+                title="Подпись инструктора через NCALayer"
+                description={`Инструктор ${session.user.fullName} подпишет зафиксированную версию своей ЭЦП на этом компьютере.`}
+                submitLabel="Подписать через NCALayer"
                 pendingLabel="Подписание..."
-                mockHint="Режим mock создаст подпись инструктора по введённым данным сертификата."
-                bridgeHint="Bridge запросит сертификат и CMS/PKCS#7 у локального NCALayer."
+                bridgeHint="NCALayer запросит сертификат инструктора и сформирует CMS/PKCS#7 для текущего дайджеста."
                 testMode={signingConfig.testMode}
               />
             ) : (
               <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                {signingConfigError}
+                {signingConfig.isConfigured
+                  ? "Инструктор может подписать только через NCALayer. Установите SIGNING_PROVIDER=NCALAYER."
+                  : signingConfigError}
               </div>
             )}
           </CardContent>

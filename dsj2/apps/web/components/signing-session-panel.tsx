@@ -28,6 +28,7 @@ const providerLabels: Record<LegalSigningProvider, string> = {
   MOCK_PROVIDER: "Mock",
   NCALAYER_PROVIDER: "NCALayer",
   EGOV_MOBILE_QR_PROVIDER: "eGov Mobile QR",
+  TABLET_SIGNATURE_PROVIDER: "Подпись на планшете",
 };
 
 async function readJson<T>(response: Response): Promise<T> {

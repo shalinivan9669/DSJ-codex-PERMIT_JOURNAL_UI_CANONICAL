@@ -3,7 +3,10 @@ import { test } from "node:test";
 import { ServiceUnavailableException, UnauthorizedException } from "@nestjs/common";
 import { SigningService } from "./signing.service";
 
-function createService(config: Record<string, string | undefined>) {
+process.env.FIELD_ENCRYPTION_KEY ??= "test-field-encryption-key";
+process.env.FIELD_HASH_PEPPER ??= "test-field-hash-pepper";
+
+function createService(config: Record<string, string | undefined>, authorizationError: Error) {
   const state = {
     providerCallbackEventCreates: 0,
     signingSessionReads: 0,
@@ -12,6 +15,7 @@ function createService(config: Record<string, string | undefined>) {
   const service = new SigningService(
     {
       providerCallbackEvent: {
+        findUnique: async () => null,
         create: async ({ data }: { data: Record<string, unknown> }) => {
           state.providerCallbackEventCreates += 1;
           return {
@@ -19,6 +23,7 @@ function createService(config: Record<string, string | undefined>) {
             correlationId: data.correlationId,
           };
         },
+        update: async () => undefined,
       },
       signingSession: {
         findUnique: async () => {
@@ -41,17 +46,25 @@ function createService(config: Record<string, string | undefined>) {
     {} as never,
     {} as never,
     {} as never,
+    {
+      assertCallbackAuthorized: () => {
+        throw authorizationError;
+      },
+    } as never,
   );
 
   return { service, state };
 }
 
 test("eGov callback rejects unsigned callbacks when no local simulation flag is set", async () => {
-  const { service, state } = createService({
-    NODE_ENV: "development",
-    EGOV_MOBILE_QR_CALLBACK_SECRET: "",
-    EGOV_MOBILE_QR_ALLOW_LOCAL_CALLBACK_SIMULATION: "false",
-  });
+  const { service, state } = createService(
+    {
+      NODE_ENV: "development",
+      EGOV_MOBILE_QR_CALLBACK_SECRET: "",
+      EGOV_MOBILE_QR_ALLOW_LOCAL_CALLBACK_SIMULATION: "false",
+    },
+    new ServiceUnavailableException("Official callback contract is unavailable."),
+  );
 
   await assert.rejects(
     () =>
@@ -70,10 +83,13 @@ test("eGov callback rejects unsigned callbacks when no local simulation flag is 
 });
 
 test("eGov callback rejects wrong callback secret before session completion", async () => {
-  const { service, state } = createService({
-    NODE_ENV: "production",
-    EGOV_MOBILE_QR_CALLBACK_SECRET: "expected-callback-secret",
-  });
+  const { service, state } = createService(
+    {
+      NODE_ENV: "production",
+      EGOV_MOBILE_QR_CALLBACK_SECRET: "expected-callback-secret",
+    },
+    new UnauthorizedException("Invalid callback secret."),
+  );
 
   await assert.rejects(
     () =>

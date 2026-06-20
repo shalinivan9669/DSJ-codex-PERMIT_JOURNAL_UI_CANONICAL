@@ -302,7 +302,7 @@ export class SignaturesService {
       throw new BadRequestException("Briefing entry is not prepared in the canonical document flow.");
     }
 
-    if (context.entry.status !== "SIGNING_READY") {
+    if (!["SIGNING_READY", "PARTIALLY_SIGNED"].includes(context.entry.status)) {
       throw new BadRequestException("Briefing entry must be prepared for instructor signature first.");
     }
 
@@ -618,6 +618,12 @@ export class SignaturesService {
     this.assertCanonicalInstructorSigner(user, canonical);
     this.ensureInstructorCanSign(canonical);
 
+    if (this.requireSigningRuntimeConfig().provider !== "NCALAYER") {
+      throw new ServiceUnavailableException(
+        "Инструктор подписывает инструктаж только через NCALayer на компьютере.",
+      );
+    }
+
     const envelope = canonical.entry.documentEnvelope!;
     const currentVersion = envelope.currentVersion!;
     const documentHash = currentVersion.renderedHash ?? canonical.entry.documentHash;
@@ -631,6 +637,11 @@ export class SignaturesService {
       input,
       documentHash,
     });
+    const employeeAlreadySigned = canonical.entry.signatures.some(
+      (candidate) =>
+        candidate.signerRole === "BRIEFED_EMPLOYEE" &&
+        this.isCompletedSignatureStatus(candidate.status),
+    );
 
     const signature = await this.requireCorePlatform().createSignature(user, {
       envelopeId: envelope.id,
@@ -659,16 +670,58 @@ export class SignaturesService {
         },
         providerPayload: signingResult.payload as Prisma.JsonValue,
       } as Prisma.JsonObject,
-      finalizeDocumentOnSign: false,
+      finalizeDocumentOnSign: employeeAlreadySigned,
     });
 
-    await this.prisma.briefingJournalEntry.update({
-      where: { id: canonical.entry.id },
-      data: {
-        status: "PARTIALLY_SIGNED",
-        updatedByUserId: user.userId,
-      },
-    });
+    if (employeeAlreadySigned) {
+      const resolvedRetention = await this.requireCorePlatform().ensureRetentionPolicyResolved(
+        user,
+        {
+          organizationId: canonical.entry.organizationId,
+          documentKind: "BRIEFING_JOURNAL_ENTRY",
+          scopeType: envelope.scopeType,
+          effectiveAt: signingResult.signedAt.toISOString(),
+        },
+      );
+
+      if (!resolvedRetention) {
+        throw new BadRequestException(
+          "Retention policy could not be resolved for the briefing entry.",
+        );
+      }
+
+      const archiveRecord = await this.requireCorePlatform().createArchiveRecord(user, {
+        organizationId: canonical.entry.organizationId,
+        envelopeId: envelope.id,
+        versionId: currentVersion.id,
+        retentionPolicyId: resolvedRetention.policy.id,
+        status: "SEALED",
+        sealedAt: signingResult.signedAt.toISOString(),
+        archiveManifestHash: signature.signatureHash ?? signature.documentHash,
+        storageUri: null,
+      });
+
+      await this.prisma.briefingJournalEntry.update({
+        where: { id: canonical.entry.id },
+        data: {
+          status: "SIGNED",
+          finalSignedAt: signingResult.signedAt,
+          signedAt: canonical.entry.signedAt ?? signingResult.signedAt,
+          employeeStatus: "SIGNED",
+          archiveRecordId: archiveRecord.id,
+          retentionPolicyId: resolvedRetention.policy.id,
+          updatedByUserId: user.userId,
+        },
+      });
+    } else {
+      await this.prisma.briefingJournalEntry.update({
+        where: { id: canonical.entry.id },
+        data: {
+          status: "PARTIALLY_SIGNED",
+          updatedByUserId: user.userId,
+        },
+      });
+    }
 
     await this.auditService.log({
       actorUserId: user.userId,
@@ -679,6 +732,7 @@ export class SignaturesService {
       metadata: {
         signatureId: signature.id,
         envelopeId: envelope.id,
+        completedBothSignatures: employeeAlreadySigned,
       },
       ipAddress: context?.ipAddress ?? null,
       userAgent: context?.userAgent ?? null,
