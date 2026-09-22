@@ -192,14 +192,54 @@ test("old assignments remain unchanged; explicit general categories identify ext
     kind: "PERSON",
     items: [{ id: "old-recipient", assignments: [old] }],
   });
-  assert.ok(
-    !validateDraft(draft, null).some((issue) => issue.code.startsWith("BIOT_")),
+  assert.deepEqual(
+    validateDraft(draft, null)
+      .filter((issue) => issue.code.startsWith("BIOT_"))
+      .map((issue) => [issue.code, issue.path]),
+    [["BIOT_CATEGORY_REQUIRED", "items.0.assignments.0.biotCategory"]],
   );
   for (const category of biotCategoryIds)
     assert.equal(
       BIOT_CATEGORIES[category].requiresExternalCertificate,
       BIOT_CATEGORIES[category].program === "GENERAL",
     );
+});
+
+test("every BIOT draft remains saveable but cannot be newly issued without an explicit category", () => {
+  for (const templateId of [
+    "biot-worker-card",
+    "biot-itr-certificate",
+    "biot-protocol",
+    "biot-itr-protocol",
+  ] as const) {
+    const draft = draftSchema.parse({
+      kind: "PERSON",
+      items: [
+        {
+          id: "legacy",
+          assignments: [
+            {
+              id: "legacy-document",
+              templateId,
+              hours: "8",
+              documentDate: "2028-02-29",
+            },
+          ],
+        },
+      ],
+    });
+    const before = JSON.stringify(draft);
+    assert.ok(
+      validateDraft(draft, null).some(
+        (issue) =>
+          issue.code === "BIOT_CATEGORY_REQUIRED" &&
+          issue.path === "items.0.assignments.0.biotCategory",
+      ),
+    );
+    assert.equal(JSON.stringify(draft), before);
+    assert.equal(draft.items[0].assignments[0].hours, "8");
+    assert.equal(draft.items[0].assignments[0].documentDate, "2028-02-29");
+  }
 });
 
 test("the new ITR protocol requires a category and actual score/proctoring facts", () => {
@@ -265,4 +305,46 @@ test("a supplied unique number and a linked certificate cannot ambiguously compe
         issue.code === "BIOT_UNIQUE_NUMBER_CONFLICT",
     ),
   );
+});
+
+test("ambiguous matching certificates are rejected for worker and special protocols", () => {
+  for (const [category, protocol, credential] of [
+    ["WORKER", "biot-protocol", "biot-worker-card"],
+    ["OHS_SPECIALIST_SPECIAL", "biot-itr-protocol", "biot-itr-certificate"],
+  ] as const) {
+    const draft = draftSchema.parse({
+      kind: "PERSON",
+      items: [
+        {
+          id: "recipient",
+          assignments: [
+            { id: "protocol", templateId: protocol, biotCategory: category },
+            {
+              id: "credential-a",
+              templateId: credential,
+              biotCategory: category,
+            },
+            {
+              id: "credential-b",
+              templateId: credential,
+              biotCategory: category,
+            },
+          ],
+        },
+      ],
+    });
+    assert.ok(
+      validateDraft(draft, null).some(
+        (issue) =>
+          issue.code === "BIOT_CREDENTIAL_AMBIGUOUS" &&
+          issue.path === "items.0.assignments.0.biotUniqueNumber",
+      ),
+    );
+    draft.items[0].assignments.pop();
+    assert.ok(
+      !validateDraft(draft, null).some(
+        (issue) => issue.code === "BIOT_CREDENTIAL_AMBIGUOUS",
+      ),
+    );
+  }
 });

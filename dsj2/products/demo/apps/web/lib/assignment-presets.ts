@@ -54,13 +54,13 @@ export function biotAssignmentDefaults(
 export function updateAssignment(
   assignment: Assignment,
   patch: Partial<Assignment>,
-  manuallyEdited: {
-    hours?: boolean;
-    productionHours?: boolean;
-    validUntil?: boolean;
-  } = {},
 ): Assignment {
   const next = { ...assignment, ...patch };
+  const manuallyEdited = new Set(next.biotManualFields || []);
+  for (const field of ["hours", "productionHours", "validUntil"] as const) {
+    if (Object.hasOwn(patch, field)) manuallyEdited.add(field);
+  }
+  if (manuallyEdited.size) next.biotManualFields = [...manuallyEdited];
   if (patch.templateId && patch.templateId !== assignment.templateId) {
     const allowed = biotCategoriesForTemplate(patch.templateId);
     next.biotCategory =
@@ -84,7 +84,7 @@ export function updateAssignment(
   if (
     categoryChanged &&
     !Object.hasOwn(patch, "hours") &&
-    !manuallyEdited.hours &&
+    !manuallyEdited.has("hours") &&
     (!assignment.hours ||
       (previousPreset &&
         assignment.hours === String(previousPreset.defaultHours)))
@@ -94,7 +94,7 @@ export function updateAssignment(
   if (
     categoryChanged &&
     !Object.hasOwn(patch, "productionHours") &&
-    !manuallyEdited.productionHours &&
+    !manuallyEdited.has("productionHours") &&
     (!assignment.productionHours ||
       (previousPreset?.defaultProductionHours &&
         assignment.productionHours ===
@@ -107,7 +107,7 @@ export function updateAssignment(
   if (
     (categoryChanged || Object.hasOwn(patch, "documentDate")) &&
     !Object.hasOwn(patch, "validUntil") &&
-    !manuallyEdited.validUntil
+    !manuallyEdited.has("validUntil")
   ) {
     const previousUntil = assignment.biotCategory
       ? biotValidUntil(assignment.documentDate, assignment.biotCategory)

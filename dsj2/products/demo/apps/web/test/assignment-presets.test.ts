@@ -6,6 +6,7 @@ import {
   updateAssignment,
 } from "../lib/assignment-presets";
 import { mapImportRow } from "../lib/imports";
+import { assignmentSchema } from "@demo/contracts";
 
 test("worker and ITR use distinct theory/production presets and calendar expiry", () => {
   const worker = updateAssignment(newAssignment(), {
@@ -105,13 +106,27 @@ test("category and date transitions preserve manually supplied hours and expiry"
     "2028-12-31",
   );
   const trackedManual = updateAssignment(
-    { ...worker, hours: "10", productionHours: "16", validUntil: "2029-02-28" },
+    assignmentSchema.parse(
+      JSON.parse(
+        JSON.stringify(
+          updateAssignment(worker, {
+            hours: "10",
+            productionHours: "16",
+            validUntil: "2029-02-28",
+          }),
+        ),
+      ),
+    ),
     { templateId: "biot-itr-certificate" },
-    { hours: true, productionHours: true, validUntil: true },
   );
   assert.equal(trackedManual.hours, "10");
   assert.equal(trackedManual.productionHours, "16");
   assert.equal(trackedManual.validUntil, "2029-02-28");
+  assert.deepEqual(trackedManual.biotManualFields, [
+    "hours",
+    "productionHours",
+    "validUntil",
+  ]);
 });
 
 test("editing other values leaves legacy category-less records unchanged; moving out of BIOT removes only defaults", () => {
@@ -188,6 +203,24 @@ test("import category is resolved before independent columns and never overwrite
   );
   assert.equal(blank.assignments[0].hours, "");
   assert.equal(blank.assignments[0].validUntil, "");
+  assert.deepEqual(blank.assignments[0].biotManualFields, [
+    "hours",
+    "validUntil",
+  ]);
+  const sameDefault = mapImportRow(
+    preview,
+    { sourceRow: 6, values: ["2028-02-29", "10", "2029-02-28"] },
+    ["documentDate", "hours", "validUntil"],
+    "biot-worker-card",
+  );
+  const reloaded = assignmentSchema.parse(
+    JSON.parse(JSON.stringify(sameDefault.assignments[0])),
+  );
+  const changedCategory = updateAssignment(reloaded, {
+    templateId: "biot-itr-certificate",
+  });
+  assert.equal(changedCategory.hours, "10");
+  assert.equal(changedCategory.validUntil, "2029-02-28");
   assert.throws(
     () =>
       mapImportRow(

@@ -192,5 +192,9 @@ export function mapImportRow(
     assignment.validUntil =
       biotValidUntil(assignment.documentDate, assignment.biotCategory) || "";
   }
+  const manualFields = (
+    ["hours", "productionHours", "validUntil"] as const
+  ).filter((field) => mapping.includes(field));
+  if (manualFields.length) assignment.biotManualFields = manualFields;
   return result;
 }

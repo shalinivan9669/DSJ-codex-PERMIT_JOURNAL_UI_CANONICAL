@@ -71,6 +71,40 @@ for (const form of ["biot-worker-card", "biot-itr-certificate"] as const) {
       path: path.join(evidence, `${form}-defaults.png`),
       fullPage: true,
     });
+    // An explicit value can equal the preset. Persist that intent, not just a
+    // component-local flag, before changing the category after a full reload.
+    await hours.fill(worker ? "11" : "41");
+    await hours.fill(worker ? "10" : "40");
+    await until.fill("2028-12-01");
+    await until.fill(worker ? "2029-02-28" : "2031-02-28");
+    if (worker) {
+      const production = page.getByLabel("Производственное обучение, часов", {
+        exact: true,
+      });
+      await production.fill("17");
+      await production.fill("16");
+    }
+    await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+    await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+    await page.reload();
+    if (worker) {
+      await page
+        .getByLabel("Форма документа", { exact: true })
+        .selectOption("biot-itr-certificate");
+      await expect(hours).toHaveValue("10");
+      await expect(until).toHaveValue("2029-02-28");
+      await expect(
+        page.getByLabel("Производственное обучение, часов", { exact: true }),
+      ).toHaveValue("16");
+      await page
+        .getByLabel("Форма документа", { exact: true })
+        .selectOption("biot-worker-card");
+    } else {
+      await category.selectOption("MANAGER_GENERAL");
+      await expect(hours).toHaveValue("40");
+      await expect(until).toHaveValue("2031-02-28");
+      await category.selectOption("OHS_SPECIALIST_SPECIAL");
+    }
     await hours.fill(worker ? "12" : "48");
     if (worker)
       await page
@@ -94,6 +128,11 @@ for (const form of ["biot-worker-card", "biot-itr-certificate"] as const) {
     expect(draft.issuances || []).toHaveLength(0);
     expect(draft.items[0].assignments[0].biotCategory).toBe(
       worker ? "WORKER" : "OHS_SPECIALIST_SPECIAL",
+    );
+    expect(draft.items[0].assignments[0].biotManualFields).toEqual(
+      worker
+        ? ["hours", "validUntil", "productionHours"]
+        : ["hours", "validUntil"],
     );
     await page.reload();
     await expect(category).toHaveValue(

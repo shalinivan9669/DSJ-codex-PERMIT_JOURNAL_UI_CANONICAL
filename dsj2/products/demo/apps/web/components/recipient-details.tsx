@@ -32,7 +32,6 @@ export function RecipientDetails({
 }) {
   const [photoOpen, setPhotoOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("documents");
-  const manuallyEdited = useRef(new Set<string>());
   useEffect(() => {
     function focusField(event: Event) {
       const path = (event as CustomEvent<string>).detail;
@@ -108,21 +107,10 @@ export function RecipientDetails({
     ) : null;
   }
   function changeAssignment(id: string, patch: Partial<Assignment>) {
-    for (const key of ["hours", "productionHours", "validUntil"] as const) {
-      if (Object.hasOwn(patch, key)) manuallyEdited.current.add(`${id}.${key}`);
-    }
     onChange({
       ...recipient,
       assignments: recipient.assignments.map((item) =>
-        item.id === id
-          ? updateAssignment(item, patch, {
-              hours: manuallyEdited.current.has(`${id}.hours`),
-              productionHours: manuallyEdited.current.has(
-                `${id}.productionHours`,
-              ),
-              validUntil: manuallyEdited.current.has(`${id}.validUntil`),
-            })
-          : item,
+        item.id === id ? updateAssignment(item, patch) : item,
       ),
     });
   }

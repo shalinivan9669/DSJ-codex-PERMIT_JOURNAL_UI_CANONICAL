@@ -207,6 +207,30 @@ class RenderTests(unittest.TestCase):
         result=import_table({'inputPath':str(OUT/'formula-only.xlsx')},OUT/'formula-only.json')
         self.assertFalse(result['canApply']);self.assertEqual(result['count'],1);self.assertEqual(result['rawRows'][0]['rowNumber'],2);self.assertIn('FORMULA_NOT_ALLOWED',result['rawRows'][0]['errors'])
 
+    def test_24_biot_current_columns_numbers_results_and_preflight(self):
+        from renderer import fields_for,preflight
+        from print_contracts import W,text,assert_docx_columns
+        from copy import deepcopy
+        for tid,columns in [('biot-protocol',7),('biot-itr-protocol',10)]:
+            snap=fixture(tid);item=snap['items'][0]
+            item.update(number='BIOT-PROTOCOL-888888888888',protocolNumber='BIOT-PROTOCOL-888888888888',credentialNumber='BIOT-CERTIFICATE-888888888888')
+            item['assignment'].update(biotKnowledgeResult='92 из 100',biotProctoringResult='прошел',result='сдал')
+            output=OUT/(tid+'-current-contract.docx');render_docx(snap,output);assert_docx_columns(output,tid)
+            with ZipFile(output) as archive:tree=E.fromstring(archive.read('word/document.xml'))
+            table=next(tree.iter(W+'tbl'));cells=table.findall(W+'tr')[2].findall(W+'tc');self.assertEqual(len(cells),columns)
+            fields=fields_for(snap,item)
+            expected=['1',fields['WORKPLACE_BOTH'],fields['FULL_NAME_BOTH'],fields['POSITION_BOTH'],fields['DEPARTMENT_BOTH'],'сдал',''] if columns==7 else ['1',fields['EMPLOYER_BIN'],fields['EMPLOYER_NAME_ADDRESS_BOTH'],fields['FULL_NAME_BOTH'],fields['POSITION_BOTH'],'BIOT-CERTIFICATE-888888888888','92 из 100','прошел','сдал','']
+            self.assertEqual([text(c).strip() for c in cells],expected)
+            item['assignment']['biotUniqueNumber']='EXTERNAL-CERT-003';self.assertEqual(fields_for(snap,item)['BIOT_UNIQUE_NUMBER'],'EXTERNAL-CERT-003')
+            item['assignment']['biotUniqueNumber']='';item['credentialNumber']='';self.assertEqual(fields_for(snap,item)['BIOT_UNIQUE_NUMBER'],'')
+            item['assignment']['biotProctoringResult']='';self.assertEqual(fields_for(snap,item)['BIOT_PROCTORING_RESULT'],'')
+        valid=fixture('biot-itr-protocol');valid['items'][0]['credentialNumber']='BIOT-CERTIFICATE-888888888888'
+        too_wide=deepcopy(valid);too_wide['items'][0]['credentialNumber']='W'*70
+        too_tall=fixture('biot-worker-card')
+        for member in too_tall['issuer']['commission']:member.update(name='Представитель комиссии '*20,position='Должность члена комиссии '*20)
+        result=preflight({'snapshots':[valid,too_wide,too_tall]},OUT/'biot-current-preflight.json')
+        self.assertEqual(result['issues'],[{'index':1,'code':'PRINT_LAYOUT_OVERFLOW'},{'index':2,'code':'PRINT_LAYOUT_OVERFLOW'}])
+
     def test_21_word_package_causes_are_rejected(self):
         from print_contracts import assert_package_contract
         from sanitize_templates import deterministic_zip

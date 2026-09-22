@@ -172,7 +172,10 @@ def main():
   path=OUT/(tid+f'.v{VERSIONS[tid]}.docx');build(path,builder());digest=hashlib.sha256(path.read_bytes()).hexdigest()
   with ZipFile(path) as z:
    tree=E.fromstring(z.read('word/document.xml'));fields=sorted(set(re.findall(r'\{\{([A-Z0-9_]+)\}\}',''.join(tree.itertext()))));sections=[dict(n.attrib) for n in tree.iter(W+'pgSz')]
-  changes.append({'id':tid,'version':VERSIONS[tid],'file':path.name,'sha256':digest,'fields':fields,'sections':sections,'formRevision':'BIOT_2026_223','sourceSha256':'864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d','verificationStatus':'NOT_RUN_USER_STOPPED_CHECKS'})
+  current=next((t for t in manifest['templates'] if t['id']==tid),None)
+  if args.activate and current and current['file']==path.name and current['sha256']!=digest:
+   raise ValueError('IMMUTABLE_TEMPLATE_VERSION_COLLISION: increment the affected VERSIONS entry')
+  changes.append({'id':tid,'version':VERSIONS[tid],'file':path.name,'sha256':digest,'fields':fields,'sections':sections,'formRevision':'BIOT_2026_223','sourceSha256':'864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d','verificationStatus':'NOT_RUN'})
  if args.activate:
   historical=ROOT/'docs/evidence/commercial-acceptance/printing/historical-inputs';historical.mkdir(exist_ok=True)
   old_manifest=historical/'manifest-before-biot-2026.json'
@@ -187,7 +190,7 @@ def main():
     change['previousTemplateSha256']=current['sha256']
    else:current={'languages':['ru','kk'],'photo':False,'exports':['DOCX','PDF'],'sourceImagesRemoved':True};manifest['templates'].append(current)
    current.update(change);current.pop('sample',None)
-   current.update(legalApproval='REQUIRED_BY_ISSUER',protocolSemantics='INDIVIDUAL' if change['id'].endswith('protocol') else None,regulatoryReview={'status':'CURRENT_PAPER_FORM_UNVERIFIED','effectiveFrom':'2026-07-12','source':'https://zan.gov.kz/api/documents/225864/rus/download/pdf','notice':'Бумажная форма по приказу №223. Проверки новых DOCX/PDF остановлены по просьбе пользователя; геометрия и совместимость не подтверждены. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС.'})
+   current.update(legalApproval='REQUIRED_BY_ISSUER',protocolSemantics='INDIVIDUAL' if change['id'].endswith('protocol') else None,regulatoryReview={'status':'CURRENT_PAPER_FORM_UNVERIFIED','effectiveFrom':'2026-07-12','source':'https://zan.gov.kz/api/documents/225864/rus/download/pdf','notice':'Бумажная форма по приказу №223. Геометрия и совместимость новой версии ещё не подтверждены. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС.'})
    shutil.copyfile(OUT/change['file'],catalog/change['file'])
   manifest['rendererVersion']='demo-ooxml-6';(catalog/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
   (catalog/'biot-2026-changes.json').write_text(json.dumps(changes,ensure_ascii=False,indent=2)+'\n',encoding='utf8')

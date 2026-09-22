@@ -67,6 +67,10 @@ export const assignmentSchema = z
     hours: z.string().max(30).default(""),
     productionHours: z.string().max(30).optional(),
     biotCategory: z.enum(biotCategoryIds).optional(),
+    biotManualFields: z
+      .array(z.enum(["hours", "productionHours", "validUntil"]))
+      .max(3)
+      .optional(),
     biotCheckType: z.enum(["", "PERIODIC", "REPEAT"]).optional(),
     biotIndustryRu: optionalText,
     biotIndustryKz: optionalText,
@@ -287,14 +291,11 @@ export function validateDraft(
             item.id,
           );
       }
-      if (
-        assignment.templateId === "biot-itr-protocol" &&
-        !assignment.biotCategory
-      )
+      if (assignment.templateId.startsWith("biot-") && !assignment.biotCategory)
         add(
           "BIOT_CATEGORY_REQUIRED",
           `${path}.biotCategory`,
-          "Выберите категорию специальных компетенций для протокола ИТР",
+          "Выберите категорию обучения БиОТ: от неё зависят форма, часы и срок",
           item.id,
         );
       if (assignment.biotCategory) {
@@ -385,6 +386,17 @@ export function validateDraft(
         };
         const isProtocol = assignment.templateId.endsWith("-protocol");
         if (isProtocol && !category.requiresExternalCertificate) {
+          if (
+            item.assignments.filter(
+              (linked) => linked.templateId === expectedTemplate,
+            ).length > 1
+          )
+            add(
+              "BIOT_CREDENTIAL_AMBIGUOUS",
+              `${path}.biotUniqueNumber`,
+              "К протоколу подходят несколько удостоверений или сертификатов этой строки. Оставьте один связанный документ или оформите отдельные строки получателя",
+              item.id,
+            );
           if (!assignment.biotCheckType)
             add(
               "BIOT_CHECK_TYPE_REQUIRED",

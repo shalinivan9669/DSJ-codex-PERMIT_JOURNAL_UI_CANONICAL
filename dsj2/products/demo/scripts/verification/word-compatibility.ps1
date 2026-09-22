@@ -4,13 +4,13 @@ param(
   [Parameter(Mandatory=$true)][string]$PythonPath,
   [string]$ReferencePdfDirectory,
   [string]$TemporaryFontDirectory,
-  [int]$ExpectedDocumentCount=20
+  [int]$ExpectedDocumentCount=22
 )
 $ErrorActionPreference = 'Stop'
 $inputRoot = (Resolve-Path -LiteralPath $InputDirectory).Path
 $outputRoot = [IO.Path]::GetFullPath($OutputDirectory)
-$auditScript = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '../../docs/evidence/commercial-acceptance/word/audit-word-pdf.py')).Path
-$canonical = '^(biot-worker-card|biot-itr-certificate|biot-protocol|ps-card|ps-protocol|ps-witness|ptm-card|ptm-protocol|pb-card|pb-protocol)-(short|long)\.docx$'
+$auditScript = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot 'audit-word-pdf.py')).Path
+$canonical = '^(biot-worker-card|biot-itr-certificate|biot-protocol|biot-itr-protocol|ps-card|ps-protocol|ps-witness|ptm-card|ptm-protocol|pb-card|pb-protocol)-(short|long)\.docx$'
 $files = @(Get-ChildItem -LiteralPath $inputRoot -File | Where-Object { $_.Name -match $canonical } | Sort-Object Name)
 if($files.Count -ne $ExpectedDocumentCount){throw "Expected $ExpectedDocumentCount canonical short/long documents; found $($files.Count). Exploratory files are excluded."}
 & $PythonPath -c 'import pdfplumber'

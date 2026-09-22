@@ -1051,14 +1051,15 @@ export async function preview(c: Context, id: string, input: unknown) {
     const v = await validation(tx, c, id, expectedRevision);
     if (!v.profile || !v.parsedProfile)
       fail(422, "ISSUER_REQUIRED", "Сохраните профиль центра");
-      const categoryIssues = v.issues.filter((issue) =>
-        [
-          "BIOT_ECS_REQUIRED",
-          "BIOT_CATEGORY_TEMPLATE",
-          "BIOT_CATEGORY_REQUIRED",
-          "BIOT_UNIQUE_NUMBER_CONFLICT",
-        ].includes(issue.code),
-      );
+    const categoryIssues = v.issues.filter((issue) =>
+      [
+        "BIOT_ECS_REQUIRED",
+        "BIOT_CATEGORY_TEMPLATE",
+        "BIOT_CATEGORY_REQUIRED",
+        "BIOT_UNIQUE_NUMBER_CONFLICT",
+        "BIOT_CREDENTIAL_AMBIGUOUS",
+      ].includes(issue.code),
+    );
     if (categoryIssues.length)
       fail(
         422,
