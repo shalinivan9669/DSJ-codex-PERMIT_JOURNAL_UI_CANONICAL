@@ -1,8 +1,0 @@
-{
-  "requestId": "f43fd5bf-9f34-4876-88ea-0d3a4fa5dc1d",
-  "browserReadFailure": "simulated HTTP503",
-  "originalArtifactId": "ee26bfae-06fd-403f-ae14-5f9aea8fc189",
-  "originalSha256": "8ab277605ee2949698582413bd54aa3eb79cf822be63d581b90dff18ddb6f518",
-  "numberingPreserved": true,
-  "reconstructedArtifacts": 1
-}
