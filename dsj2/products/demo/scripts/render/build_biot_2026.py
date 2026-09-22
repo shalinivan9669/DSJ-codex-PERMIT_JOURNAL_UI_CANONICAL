@@ -177,7 +177,7 @@ def main():
    raise ValueError('IMMUTABLE_TEMPLATE_VERSION_COLLISION: increment the affected VERSIONS entry')
   changes.append({'id':tid,'version':VERSIONS[tid],'file':path.name,'sha256':digest,'fields':fields,'sections':sections,'formRevision':'BIOT_2026_223','sourceSha256':'864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d','verificationStatus':'NOT_RUN'})
  if args.activate:
-  historical=ROOT/'docs/evidence/commercial-acceptance/printing/historical-inputs';historical.mkdir(exist_ok=True)
+  historical=ROOT/'docs/evidence/commercial-acceptance/printing/historical-inputs';historical.mkdir(parents=True,exist_ok=True)
   old_manifest=historical/'manifest-before-biot-2026.json'
   if not old_manifest.exists():shutil.copyfile(catalog/'manifest.json',old_manifest)
   for change in changes:

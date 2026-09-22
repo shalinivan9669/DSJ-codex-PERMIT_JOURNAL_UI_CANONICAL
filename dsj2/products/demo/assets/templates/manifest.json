@@ -45,13 +45,21 @@
       "sourceImagesRemoved": true,
       "previousTemplateSha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556",
       "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_UNVERIFIED",
+        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
         "effectiveFrom": "2026-07-12",
         "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Проверки новых DOCX/PDF остановлены по просьбе пользователя; геометрия и совместимость не подтверждены. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
       },
       "formRevision": "BIOT_2026_223",
-      "verificationStatus": "NOT_RUN_USER_STOPPED_CHECKS"
+      "verificationStatus": "BOUNDED_DOCX_PDF_WORD_PASS",
+      "verification": {
+        "scope": "Four BIOT forms: short/long RU/KZ; two-recipient column reset for both protocols; bounded preflight checks",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": "16.0.17932",
+        "evidence": "docs/evidence/biot-finish/summary.json",
+        "fullStressRerun": false
+      }
     },
     {
       "id": "biot-itr-certificate",
@@ -94,14 +102,22 @@
       "legalApproval": "REQUIRED_BY_ISSUER",
       "sourceImagesRemoved": true,
       "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_UNVERIFIED",
+        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
         "effectiveFrom": "2026-07-12",
         "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Проверки новых DOCX/PDF остановлены по просьбе пользователя; геометрия и совместимость не подтверждены. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
       },
       "previousTemplateSha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6",
       "formRevision": "BIOT_2026_223",
-      "verificationStatus": "NOT_RUN_USER_STOPPED_CHECKS"
+      "verificationStatus": "BOUNDED_DOCX_PDF_WORD_PASS",
+      "verification": {
+        "scope": "Four BIOT forms: short/long RU/KZ; two-recipient column reset for both protocols; bounded preflight checks",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": "16.0.17932",
+        "evidence": "docs/evidence/biot-finish/summary.json",
+        "fullStressRerun": false
+      }
     },
     {
       "id": "biot-protocol",
@@ -150,13 +166,21 @@
       "sourceImagesRemoved": true,
       "previousTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
       "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_UNVERIFIED",
+        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
         "effectiveFrom": "2026-07-12",
         "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Проверки новых DOCX/PDF остановлены по просьбе пользователя; геометрия и совместимость не подтверждены. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
       },
       "formRevision": "BIOT_2026_223",
-      "verificationStatus": "NOT_RUN_USER_STOPPED_CHECKS"
+      "verificationStatus": "BOUNDED_DOCX_PDF_WORD_PASS",
+      "verification": {
+        "scope": "Four BIOT forms: short/long RU/KZ; two-recipient column reset for both protocols; bounded preflight checks",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": "16.0.17932",
+        "evidence": "docs/evidence/biot-finish/summary.json",
+        "fullStressRerun": false
+      }
     },
     {
       "id": "ptm-card",
@@ -545,14 +569,22 @@
       ],
       "formRevision": "BIOT_2026_223",
       "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
-      "verificationStatus": "NOT_RUN_USER_STOPPED_CHECKS",
+      "verificationStatus": "BOUNDED_DOCX_PDF_WORD_PASS",
       "legalApproval": "REQUIRED_BY_ISSUER",
       "protocolSemantics": "INDIVIDUAL",
       "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_UNVERIFIED",
+        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
         "effectiveFrom": "2026-07-12",
         "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Проверки новых DOCX/PDF остановлены по просьбе пользователя; геометрия и совместимость не подтверждены. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+      },
+      "verification": {
+        "scope": "Four BIOT forms: short/long RU/KZ; two-recipient column reset for both protocols; bounded preflight checks",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": "16.0.17932",
+        "evidence": "docs/evidence/biot-finish/summary.json",
+        "fullStressRerun": false
       }
     }
   ]

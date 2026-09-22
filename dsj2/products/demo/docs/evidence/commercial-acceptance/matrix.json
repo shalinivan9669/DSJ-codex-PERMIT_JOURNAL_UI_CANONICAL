@@ -4,7 +4,7 @@
   "scope": "independent current working-tree acceptance; prior PASS not inherited",
   "acceptanceState": "STOPPED_BY_USER",
   "stoppedOn": "2026-09-22",
-  "currentSourceVerification": "NOT RUN: user stopped checks while BIOT categories and the 11-template catalog were being completed. Existing row results retain their original source/image/template scope; they do not certify the new BIOT templates or the unbuilt photo decoder fix.",
+  "currentSourceVerification": "LIMITED FINISH COMPLETED: see docs/BIOT_FINISH_RU.md. Four new BIOT forms passed bounded LibreOffice/Word checks; local3200 API/worker/templates were updated preserving existing data. Remaining browser scenarios stopped by user. Existing requirement-row results retain their original source/image scope; no full release or rebuilt-container acceptance is claimed.",
   "localEvidencePolicy": "Generated evidence is retained on disk and excluded from Git. Only this matrix and docs/evidence/progress.md remain versioned.",
   "requirements": [
     {

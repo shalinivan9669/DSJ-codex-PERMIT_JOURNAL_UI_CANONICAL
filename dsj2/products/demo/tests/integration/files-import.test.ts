@@ -190,6 +190,19 @@ test("real image/import/export/original/reconstruction integration", async (t) =
     await t.test(
       "API saves photo references, protocol link independent of selection order; actual saved DOCX hash stable",
       async () => {
+        const issuer = await db.issuerProfileVersion.findFirstOrThrow({
+          where: { tenantId: c.tenantId },
+          orderBy: { version: "desc" },
+        });
+        await saveProfile(c, {
+          ...(issuer.profile as object),
+          cityRu: "Кызылорда",
+          cityKz: "Қызылорда",
+          commission: Array.from({ length: 3 }, (_, i) => ({
+            name: `Синтетический Член Комиссии ${i + 1}`,
+            position: i === 0 ? "Председатель" : "Член комиссии",
+          })),
+        });
         const assignment = assignmentSchema.parse({
           id: "card",
           templateId: "biot-worker-card",
@@ -197,6 +210,11 @@ test("real image/import/export/original/reconstruction integration", async (t) =
           protocolDate: "2026-09-21",
           trainingSubject: "Синтетическая проверка",
           result: "Подтверждённое тестовое значение",
+          biotCategory: "WORKER",
+          hours: "10",
+          productionHours: "16",
+          validUntil: "2027-09-22",
+          biotCheckType: "PERIODIC",
         });
         const draft = draftSchema.parse({
           kind: "PERSON",
@@ -206,6 +224,8 @@ test("real image/import/export/original/reconstruction integration", async (t) =
               id: "p",
               fullNameRu: "=1+1",
               fullNameKz: "Ғалым Әділбек",
+              positionRu: "Синтетический инженер",
+              workplaceRu: "Синтетическое предприятие",
               photoAssetId: photoId,
               assignments: [
                 assignment,

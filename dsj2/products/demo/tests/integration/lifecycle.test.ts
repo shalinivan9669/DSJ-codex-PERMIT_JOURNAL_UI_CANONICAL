@@ -44,6 +44,8 @@ function fixture(n = 1): Draft {
         fullNameKz: `Ә Ғ Қ Ң Ө Ұ Ү Һ І ${i}`,
         positionRu: "Инженер",
         positionKz: "Маман",
+        workplaceRu: "Синтетическое предприятие",
+        workplaceKz: "Синтетикалық кәсіпорын",
         assignments: [
           assignmentSchema.parse({
             id: randomUUID(),
@@ -54,7 +56,11 @@ function fixture(n = 1): Draft {
             protocolDate: "2026-09-21",
             trainingSubject: "Синтетическая программа",
             result: "Тестовое значение",
-            hours: "8",
+            biotCategory: "WORKER",
+            hours: "10",
+            productionHours: "16",
+            validUntil: "2027-09-22",
+            biotCheckType: "PERIODIC",
           }),
         ],
       }),
@@ -83,6 +89,19 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
   });
   const ca = context(a.tenantId, a.userId),
     cb = context(b.tenantId, b.userId);
+  const issuer = await db.issuerProfileVersion.findFirstOrThrow({
+    where: { tenantId: ca.tenantId },
+    orderBy: { version: "desc" },
+  });
+  await saveProfile(ca, {
+    ...(issuer.profile as object),
+    cityRu: "Кызылорда",
+    cityKz: "Қызылорда",
+    commission: Array.from({ length: 3 }, (_, i) => ({
+      name: `Синтетический Член Комиссии ${i + 1}`,
+      position: i === 0 ? "Председатель" : "Член комиссии",
+    })),
+  });
   let issued: { id: string; revision: number };
   await t.test(
     "A06 two tenants and two customers, partial save, RU/KZ, stale revision",
@@ -225,6 +244,7 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
           ...draft.items[i].assignments[0],
           id: randomUUID(),
           templateId: i === 0 ? "ps-witness" : "biot-protocol",
+          biotCategory: i === 0 ? undefined : "WORKER",
         });
       const d = await createRequest(ca, draft);
       await finalize(ca, d.id, { expectedRevision: 0 }, randomUUID());
@@ -241,7 +261,10 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
     "protocol field mapping preserves reason/education and PS credential number independently of protocol registration",
     async () => {
       const draft = fixture();
-      const base = draft.items[0].assignments[0];
+      const base = {
+        ...draft.items[0].assignments[0],
+        biotCategory: undefined,
+      };
       draft.items[0].assignments = [
         {
           ...base,
