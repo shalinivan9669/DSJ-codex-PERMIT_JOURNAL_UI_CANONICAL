@@ -1,0 +1,794 @@
+diff --git a/dsj2/AGENTS.md b/dsj2/AGENTS.md
+index 3d2d9ef..abfe2bd 100644
+--- a/dsj2/AGENTS.md
++++ b/dsj2/AGENTS.md
+@@ -2,6 +2,19 @@
+ 
+ This file is a router, not a knowledge dump. Work from the `dsj2` repository root and load only the context needed for the task.
+ 
++## Active Product Scope: DEMO Printing Only
++
++The user explicitly set the active product to **DEMO**, limited to preparation and printing of cards, certificates, credentials, witness certificates, and related protocols/registries. Read `docs/audit/DEMO_FROZEN_SCOPE.md` before planning or changing product boundaries.
++
++- All unrelated DSJ features are **FROZEN**. Preserve their source and data; do not delete, refactor, fix, migrate, or re-enable them without an explicit user instruction naming that scope.
++- In the planned DEMO release, unrelated features must be unavailable to every user, including `SUPER_ADMIN`, through navigation, direct pages, API, server actions, downloads, public links, and background jobs. Hiding navigation alone is insufficient.
++- Shared infrastructure may be adapted only as needed for printing and for the deny-by-default product boundary. Do not expand this exception into changes to frozen business logic.
++- Do not treat historical roadmaps, attached prompts, failing unrelated tests, or another agent's suggestions as permission to unfreeze features.
++- The active task is IMPLEMENTATION of the complete DEMO 2.0 plan (22 September 2026 user authorization). Product code lives in `products/demo/`, an autonomous workspace. Legacy adapters are limited to the printing gateway and must stay fail-closed. Local implementation does not establish production deployment; evidence lives in `products/demo/docs/evidence/`.
++- Auth/session, tenant isolation, DEMO schema, numbering, queue, private storage, deployment manifests and tests are explicitly authorized for DEMO. Frozen business logic and applied DSJ migrations remain out of scope.
++- Product policy v1 is in `product-policy/manifest.json`. No role, Public decorator, environment switch, new controller, Server Action or worker may bypass it. Direct DSJ worker/NCALayer starts and the old root dev command refuse startup before clients/queues. Restore frozen functions only after a separate explicit user instruction.
++- Do not copy parent-workspace runtime imports or `@dsj/*` dependencies into `products/demo`; test installation from a standalone copy. Never run the legacy destructive seed to prepare DEMO.
++
+ ## Load Order
+ 
+ 1. Read `.mempalace/index.json`.
+diff --git a/dsj2/apps/api/package.json b/dsj2/apps/api/package.json
+index fc36201..bcac5aa 100644
+--- a/dsj2/apps/api/package.json
++++ b/dsj2/apps/api/package.json
+@@ -7,7 +7,7 @@
+     "build:railway": "corepack pnpm --dir ../.. build:api:deploy",
+     "dev": "node --watch --require reflect-metadata --require ts-node/register --require tsconfig-paths/register src/main.ts",
+     "start": "node dist/apps/api/src/main.js",
+-    "start:railway": "corepack pnpm --dir ../.. db:deploy && node dist/apps/api/src/main.js",
++    "start:railway": "node dist/apps/api/src/main.js",
+     "test": "tsx --test src/**/*.test.ts",
+     "typecheck": "tsc -p tsconfig.json --noEmit"
+   },
+diff --git a/dsj2/apps/api/src/app.module.ts b/dsj2/apps/api/src/app.module.ts
+index f97fb6c..62f4d83 100644
+--- a/dsj2/apps/api/src/app.module.ts
++++ b/dsj2/apps/api/src/app.module.ts
+@@ -1,34 +1,15 @@
++import { ProductBoundaryGuard } from "./common/guards/product-boundary.guard";
++import { PrintingContextController } from "./printing/printing-context.controller";
+ import { Module } from "@nestjs/common";
+ import { ConfigModule } from "@nestjs/config";
+ import { APP_GUARD } from "@nestjs/core";
+ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+-import { AuditModule } from "./audit/audit.module";
+ import { AuthModule } from "./auth/auth.module";
+ import { BiotCardsModule } from "./biot-cards/biot-cards.module";
+-import { BriefingRecordsModule } from "./briefing-records/briefing-records.module";
+-import { CompaniesModule } from "./companies/companies.module";
+-import { CompanyDocumentsModule } from "./company-documents/company-documents.module";
+ import { RolesGuard } from "./common/guards/roles.guard";
+ import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
+-import { CorrespondenceModule } from "./correspondence/correspondence.module";
+ import { PrismaModule } from "./database/prisma.module";
+-import { DashboardModule } from "./dashboard/dashboard.module";
+-import { DepartmentsModule } from "./departments/departments.module";
+-import { EmployeesModule } from "./employees/employees.module";
+-import { EmployeeDocumentsModule } from "./employee-documents/employee-documents.module";
+-import { ExamsModule } from "./exams/exams.module";
+-import { NotificationsModule } from "./notifications/notifications.module";
+-import { PdfModule } from "./pdf/pdf.module";
+-import { ProtocolsModule } from "./protocols/protocols.module";
+-import { ResponsibilityOrdersModule } from "./responsibility-orders/responsibility-orders.module";
+-import { SafetyCertificatesModule } from "./safety-certificates/safety-certificates.module";
+-import { SignaturesModule } from "./signatures/signatures.module";
+-import { SigningModule } from "./signing/signing.module";
+-import { ContractorCompaniesModule } from "./contractor-companies/contractor-companies.module";
+-import { CorePlatformModule } from "./core-platform/core-platform.module";
+-import { TrainingProgramsModule } from "./training-programs/training-programs.module";
+ import { TranslationsModule } from "./translations/translations.module";
+-import { UsersModule } from "./users/users.module";
+ 
+ @Module({
+   imports: [
+@@ -46,30 +27,11 @@ import { UsersModule } from "./users/users.module";
+     PrismaModule,
+     AuthModule,
+     BiotCardsModule,
+-    BriefingRecordsModule,
+-    CompaniesModule,
+-    CompanyDocumentsModule,
+-    CorrespondenceModule,
+-    ContractorCompaniesModule,
+-    CorePlatformModule,
+-    DepartmentsModule,
+-    EmployeesModule,
+-    EmployeeDocumentsModule,
+-    DashboardModule,
+-    ExamsModule,
+-    NotificationsModule,
+-    PdfModule,
+-    ProtocolsModule,
+-    ResponsibilityOrdersModule,
+-    SafetyCertificatesModule,
+-    SignaturesModule,
+-    SigningModule,
+-    TrainingProgramsModule,
+     TranslationsModule,
+-    UsersModule,
+-    AuditModule,
+   ],
++  controllers: [PrintingContextController],
+   providers: [
++    { provide: APP_GUARD, useClass: ProductBoundaryGuard },
+     {
+       provide: APP_GUARD,
+       useClass: ThrottlerGuard,
+diff --git a/dsj2/apps/api/src/main.ts b/dsj2/apps/api/src/main.ts
+index c8c82a2..23932b0 100644
+--- a/dsj2/apps/api/src/main.ts
++++ b/dsj2/apps/api/src/main.ts
+@@ -3,6 +3,8 @@ import { Logger } from "@nestjs/common";
+ import { NestFactory } from "@nestjs/core";
+ import { AppModule } from "./app.module";
+ import { validateSecurityConfig } from "./common/utils/security-preflight";
++import { assertPrintingProduct } from "../../../product-policy/legacy";
++import { legacyProductBoundary } from "./common/product-boundary.middleware";
+ 
+ function resolveAppUrl() {
+   const trimmed = process.env.APP_URL?.trim();
+@@ -34,6 +36,7 @@ function resolveCorsOrigin(appUrl: string) {
+ }
+ 
+ async function bootstrap() {
++  assertPrintingProduct();
+   validateSecurityConfig();
+ 
+   const app = await NestFactory.create(AppModule);
+@@ -43,6 +46,8 @@ async function bootstrap() {
+   const logger = new Logger("Bootstrap");
+ 
+   app.setGlobalPrefix("v1");
++  // Raw URL boundary runs before CORS, controllers, Public and role bypasses.
++  app.use(legacyProductBoundary(Array.isArray(corsOrigin) ? corsOrigin : [corsOrigin]));
+   app.enableCors({
+     origin: corsOrigin,
+     credentials: true,
+diff --git a/dsj2/apps/ncalayer-bridge/src/main.ts b/dsj2/apps/ncalayer-bridge/src/main.ts
+index 0005ef3..d80514b 100644
+--- a/dsj2/apps/ncalayer-bridge/src/main.ts
++++ b/dsj2/apps/ncalayer-bridge/src/main.ts
+@@ -1,3 +1,4 @@
++import { refuseFrozenRuntime } from "../../../product-policy/legacy";
+ import fs from "node:fs";
+ import path from "node:path";
+ import { createBridgeServer } from "./bridge-service";
+@@ -56,6 +57,7 @@ function loadWorkspaceEnv(projectRoot: string) {
+ 
+ const workspaceRoot = path.resolve(process.cwd(), "..", "..");
+ 
++refuseFrozenRuntime("NCALayer bridge");
+ loadWorkspaceEnv(workspaceRoot);
+ 
+ const host = process.env.HOST?.trim() || "127.0.0.1";
+diff --git a/dsj2/apps/web/app/(app)/access-denied/page.tsx b/dsj2/apps/web/app/(app)/access-denied/page.tsx
+index 64544fa..44b4347 100644
+--- a/dsj2/apps/web/app/(app)/access-denied/page.tsx
++++ b/dsj2/apps/web/app/(app)/access-denied/page.tsx
+@@ -1,64 +1,10 @@
+-import Link from "next/link";
+-import { Card, CardContent, CardHeader } from "@dsj/ui";
+ import { requireSession } from "@/lib/auth";
+ 
+-type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+-
+-export default async function AccessDeniedPage({
+-  searchParams,
+-}: {
+-  searchParams: SearchParams;
+-}) {
+-  const session = await requireSession();
+-  const params = await searchParams;
+-  const isSigner = session.user.role === "EMPLOYEE_SIGNER";
+-  const missingEmployeeLink =
+-    isSigner && typeof params.reason === "string" && params.reason === "employee-link";
+-
+-  return (
+-    <div className="mx-auto max-w-3xl space-y-6 py-8">
+-      <div>
+-        <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Ограничение доступа</p>
+-        <h1 className="mt-2 text-3xl font-semibold text-slate-950">
+-          {missingEmployeeLink ? "Аккаунт не привязан к сотруднику" : "Раздел недоступен для вашей роли"}
+-        </h1>
+-        <p className="mt-2 text-sm text-slate-500">
+-          {missingEmployeeLink
+-            ? "Для личного кабинета сотрудника нужна активная связь с карточкой сотрудника. Обратитесь к администратору компании."
+-            : isSigner
+-              ? "Для сотрудника административные разделы закрыты. Используйте раздел «Мои инструктажи» для прохождения, подтверждения ознакомления и подписи."
+-              : "У вашей текущей роли нет доступа к этому разделу."}
+-        </p>
+-      </div>
+-
+-      <Card className="rounded-[24px]">
+-        <CardHeader>
+-          <h2 className="text-lg font-semibold text-slate-950">Что можно сделать дальше</h2>
+-        </CardHeader>
+-        <CardContent className="space-y-3">
+-          <p className="text-sm text-slate-600">
+-            {missingEmployeeLink
+-              ? "Администратор должен привязать ваш аккаунт к карточке сотрудника. До этого личные разделы недоступны."
+-              : "Если вам нужен доступ к журналу или административным страницам, обратитесь к администратору компании."}
+-          </p>
+-          <div className="flex flex-wrap gap-3">
+-            {!missingEmployeeLink ? (
+-              <Link
+-                href={isSigner ? "/my-instructions" : "/"}
+-                className="rounded-xl bg-[var(--surface-strong)] px-4 py-2.5 text-sm font-medium text-white transition-colors duration-150 hover:bg-[var(--surface-strong-hover)]"
+-              >
+-                {isSigner ? "К моим инструктажам" : "На главную"}
+-              </Link>
+-            ) : null}
+-            <Link
+-              href="/login"
+-              className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700"
+-            >
+-              {missingEmployeeLink ? "Выйти из аккаунта" : "Сменить пользователя"}
+-            </Link>
+-          </div>
+-        </CardContent>
+-      </Card>
+-    </div>
+-  );
++export default async function AccessDeniedPage() {
++  await requireSession();
++  return <section className="mx-auto max-w-xl space-y-5 py-12">
++    <h1 className="text-2xl font-semibold">Нет доступа к печати</h1>
++    <p>Попросите администратора центра предоставить права для подготовки печатных документов.</p>
++    <form action="/api/auth/logout" method="post"><button type="submit" className="rounded border px-4 py-2">Сменить пользователя</button></form>
++  </section>;
+ }
+diff --git a/dsj2/apps/web/app/(app)/certificates/biot-experimental/page.tsx b/dsj2/apps/web/app/(app)/certificates/biot-experimental/page.tsx
+index 402ef63..6edd52a 100644
+--- a/dsj2/apps/web/app/(app)/certificates/biot-experimental/page.tsx
++++ b/dsj2/apps/web/app/(app)/certificates/biot-experimental/page.tsx
+@@ -12,29 +12,6 @@ import { resolveCompanyContext } from "@/lib/company-context";
+ 
+ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+ 
+-type BiotEmployeeOption = {
+-  id: string;
+-  fullName: string;
+-  employeeNumber: string;
+-  jobTitle: string;
+-  jobTitleKz: string | null;
+-  photoDataUrl: string | null;
+-  photoFileName: string | null;
+-  employeeKind: string;
+-  contractorCompany: {
+-    name: string;
+-  } | null;
+-};
+-
+-type BiotTrainingAssignmentOption = {
+-  id: string;
+-  employeeId: string;
+-  status: string;
+-  trainingProgram: {
+-    title: string;
+-  };
+-};
+-
+ export default async function BiotExperimentalPage({
+   searchParams,
+ }: {
+@@ -91,20 +68,16 @@ export default async function BiotExperimentalPage({
+     );
+   }
+ 
+-  let employees: BiotEmployeeOption[] = [];
+-  let trainingAssignments: BiotTrainingAssignmentOption[] = [];
++
++
+   let initialDefaults: BiotCardDefaults | null = null;
+   let initialRequests: CardGenerationRequestSummary[] = [];
+   let loadError: string | null = null;
+ 
+   try {
+-    [employees, trainingAssignments, initialDefaults, initialRequests] =
++    [initialDefaults, initialRequests] =
+       await Promise.all([
+-        apiFetch<BiotEmployeeOption[]>(`employees${scopedQuery}`),
+-        apiFetch<BiotTrainingAssignmentOption[]>(
+-          `training-assignments${scopedQuery}`,
+-        ),
+-        apiFetch<BiotCardDefaults>(
++apiFetch<BiotCardDefaults>(
+           `biot-cards/defaults?${defaultsQuery.toString()}`,
+         ),
+         apiFetch<CardGenerationRequestSummary[]>(
+@@ -136,8 +109,8 @@ export default async function BiotExperimentalPage({
+       <BiotCardGenerator
+         companyId={activeCompanyId}
+         companyName={activeCompany?.name ?? session.user.company?.name ?? null}
+-        employees={employees}
+-        trainingAssignments={trainingAssignments}
++        employees={[]}
++        trainingAssignments={[]}
+         initialDefaults={initialDefaults}
+         initialRequests={initialRequests}
+         canManageSavedRequests={
+diff --git a/dsj2/apps/web/app/(app)/certificates/requests/[id]/edit/page.tsx b/dsj2/apps/web/app/(app)/certificates/requests/[id]/edit/page.tsx
+index 944677e..c1ad79e 100644
+--- a/dsj2/apps/web/app/(app)/certificates/requests/[id]/edit/page.tsx
++++ b/dsj2/apps/web/app/(app)/certificates/requests/[id]/edit/page.tsx
+@@ -31,36 +31,7 @@ export default async function EditCardRequestPage({
+   });
+   const scopedQuery = activeCompanyId ? `?companyId=${activeCompanyId}` : "";
+ 
+-  const [employees, trainingAssignments, request] = await Promise.all([
+-    apiFetch<
+-      Array<{
+-        id: string;
+-        fullName: string;
+-        employeeNumber: string;
+-        jobTitle: string;
+-        jobTitleKz: string | null;
+-        photoDataUrl: string | null;
+-        photoFileName: string | null;
+-        employeeKind: string;
+-        contractorCompany: {
+-          name: string;
+-        } | null;
+-      }>
+-    >(`employees${scopedQuery}`),
+-    apiFetch<
+-      Array<{
+-        id: string;
+-        employeeId: string;
+-        status: string;
+-        trainingProgram: {
+-          title: string;
+-        };
+-      }>
+-    >(`training-assignments${scopedQuery}`),
+-    apiFetch<CardGenerationRequestDetail>(
+-      `biot-cards/requests/${resolvedParams.id}${scopedQuery}`,
+-    ),
+-  ]);
++  const request = await apiFetch<CardGenerationRequestDetail>(`biot-cards/requests/${resolvedParams.id}${scopedQuery}`);
+ 
+   const defaultsQuery = new URLSearchParams({
+     issueDate: request.issueDate.slice(0, 10),
+@@ -158,8 +129,8 @@ export default async function EditCardRequestPage({
+       <BiotCardGenerator
+         companyId={activeCompanyId}
+         companyName={activeCompany?.name ?? session.user.company?.name ?? null}
+-        employees={employees}
+-        trainingAssignments={trainingAssignments}
++        employees={[]}
++        trainingAssignments={[]}
+         initialDefaults={initialDefaults}
+         initialRequests={[]}
+         editorMode="edit"
+diff --git a/dsj2/apps/web/app/(app)/layout.tsx b/dsj2/apps/web/app/(app)/layout.tsx
+index 5ff6124..2b8db9f 100644
+--- a/dsj2/apps/web/app/(app)/layout.tsx
++++ b/dsj2/apps/web/app/(app)/layout.tsx
+@@ -1,6 +1,6 @@
+ import { redirect } from "next/navigation";
+-import type { UserRole } from "@dsj/types";
+-import { AppShell } from "@/components/app-shell";
++
++import { PrintingShell } from "@/components/printing-shell";
+ import { requireSession } from "../../lib/auth";
+ 
+ export default async function AppLayout({
+@@ -15,16 +15,13 @@ export default async function AppLayout({
+   }
+ 
+   return (
+-    <AppShell
+-      role={session.user.role as UserRole}
+-      hasLinkedEmployeeRecord={session.user.hasLinkedEmployeeRecord}
++    <PrintingShell
+       companyName={
+-        session.user.company?.name ?? "Платформенное рабочее пространство"
++        session.user.company?.name ?? "DEMO"
+       }
+       fullName={session.user.fullName}
+-      email={session.user.email}
+     >
+       {children}
+-    </AppShell>
++    </PrintingShell>
+   );
+ }
+diff --git a/dsj2/apps/web/app/layout.tsx b/dsj2/apps/web/app/layout.tsx
+index 3460592..720019f 100644
+--- a/dsj2/apps/web/app/layout.tsx
++++ b/dsj2/apps/web/app/layout.tsx
+@@ -3,8 +3,8 @@ import "./globals.css";
+ import { LocatorDevRuntime } from "./locator-dev-runtime";
+ 
+ export const metadata: Metadata = {
+-  title: "Цифровой журнал по технике безопасности",
+-  description: "Цифровой журнал инструктажей и контроля требований охраны труда.",
++  title: "DEMO — печать документов",
++  description: "Подготовка удостоверений, сертификатов, свидетельств и печатных протоколов.",
+ };
+ 
+ export default function RootLayout({ children }: { children: React.ReactNode }) {
+diff --git a/dsj2/apps/web/app/login/page.tsx b/dsj2/apps/web/app/login/page.tsx
+index 34d10cf..dfa77ab 100644
+--- a/dsj2/apps/web/app/login/page.tsx
++++ b/dsj2/apps/web/app/login/page.tsx
+@@ -1,145 +1,16 @@
+-import { ShieldCheck, FileCheck2, Users2 } from "lucide-react";
+ import { redirect } from "next/navigation";
+ import { LoginForm } from "../../components/login-form";
+ import { getCurrentSession, getDefaultAuthenticatedPath } from "../../lib/auth";
+-import { demoPersonas } from "../../lib/demo-personas";
+ 
+ export default async function LoginPage() {
+   const session = await getCurrentSession();
+-
+-  if (session) {
+-    redirect(getDefaultAuthenticatedPath(session.user));
+-  }
+-
+-  return (
+-    <main className="min-h-screen bg-[var(--canvas)]">
+-      <div className="mx-auto grid min-h-screen max-w-[1240px] lg:grid-cols-[1.1fr_0.9fr]">
+-        <section className="flex flex-col justify-between border-b border-[var(--line)] px-6 py-10 lg:border-b-0 lg:border-r lg:px-12 lg:py-14">
+-          <div className="space-y-12">
+-            <div className="max-w-2xl space-y-4">
+-              <p className="text-sm font-medium text-[var(--accent)]">
+-                Цифровой журнал по технике безопасности
+-              </p>
+-              <h1 className="text-4xl font-semibold leading-tight tracking-[-0.03em] text-[var(--ink)] lg:text-5xl">
+-                Журнал инструктажей, документы и контроль охраны труда в одном
+-                рабочем контуре.
+-              </h1>
+-              <p className="max-w-xl text-base leading-7 text-[var(--muted)]">
+-                Рабочая система для команд ОТ и ПБ: регистрация инструктажей,
+-                контроль статусов, подтверждения, личный кабинет сотрудника и
+-                выгрузки для проверки.
+-              </p>
+-            </div>
+-
+-            <div className="divide-y divide-[var(--line)] border-y border-[var(--line)]">
+-              {[
+-              {
+-                icon: ShieldCheck,
+-                  title: "Разделение по компаниям и ролям",
+-                  text: "Каждый пользователь видит только свой контур и свои действия.",
+-                },
+-                {
+-                  icon: FileCheck2,
+-                  title: "Журнал, документы и история изменений",
+-                  text: "Выгрузки, подписи и подтверждения собраны без переключения между системами.",
+-                },
+-                {
+-                  icon: Users2,
+-                  title: "Один поток для офиса и сотрудников",
+-                  text: "Администраторы, инженеры и исполнители работают в общей, понятной структуре.",
+-                },
+-              ].map((item) => (
+-                <div key={item.title} className="flex gap-4 py-5">
+-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[var(--accent-border)] bg-[var(--surface)] text-[var(--surface-strong)]">
+-                    <item.icon className="h-4 w-4" />
+-                  </div>
+-                  <div className="space-y-1">
+-                    <p className="text-base font-medium text-[var(--ink)]">
+-                      {item.title}
+-                    </p>
+-                    <p className="text-sm leading-6 text-[var(--muted)]">
+-                      {item.text}
+-                    </p>
+-                  </div>
+-                </div>
+-              ))}
+-            </div>
+-          </div>
+-
+-          <div className="grid gap-6 border-t border-[var(--line)] pt-6 text-sm text-[var(--muted)] sm:grid-cols-3">
+-            <div>
+-              <p className="font-medium text-[var(--ink)]">Журнал</p>
+-              <p className="mt-1">
+-                Назначение, подписание и архив записей инструктажа.
+-              </p>
+-            </div>
+-            <div>
+-              <p className="font-medium text-[var(--ink)]">Документы</p>
+-              <p className="mt-1">
+-                Удостоверения, протоколы и персональные выгрузки.
+-              </p>
+-            </div>
+-            <div>
+-              <p className="font-medium text-[var(--ink)]">Личный кабинет</p>
+-              <p className="mt-1">
+-                Материалы, обучение и действия сотрудника без лишнего
+-                интерфейса.
+-              </p>
+-            </div>
+-          </div>
+-        </section>
+-
+-        <section className="flex items-center px-6 py-10 lg:px-12 lg:py-14">
+-          <div className="w-full max-w-md space-y-6">
+-            <div className="space-y-2">
+-              <h2 className="text-3xl font-semibold tracking-[-0.02em] text-[var(--ink)]">
+-                Вход в рабочее пространство
+-              </h2>
+-              <p className="text-sm leading-6 text-[var(--muted)]">
+-                Используйте учётные данные вашей компании. Локальный seed-доступ
+-                доступен только если оператор явно настроил seed-учётные данные
+-                для этого окружения.
+-              </p>
+-            </div>
+-
+-            <div className="rounded-lg border border-[var(--line)] bg-[var(--surface)] p-6">
+-              <LoginForm />
+-            </div>
+-
+-            <div className="rounded-lg border border-[var(--accent-border)] bg-[var(--surface-muted)] p-5">
+-              <p className="text-sm font-medium text-[var(--ink)]">Доступ seed</p>
+-              <div className="mt-3 space-y-2 text-sm text-[var(--muted)]">
+-                <p>
+-                  Демо-персоны создаются только при намеренном локальном seed.
+-                  Для всех демо-персон используется пароль из{" "}
+-                  <code>SEED_COMPANY_ADMIN_PASSWORD</code>.
+-                </p>
+-                <div className="space-y-2">
+-                  {demoPersonas.map((account) => (
+-                    <div
+-                      key={account.email}
+-                      className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+-                    >
+-                      <p className="font-medium text-[var(--ink)]">
+-                        {account.title}
+-                      </p>
+-                      <p>
+-                        <code>{account.email}</code>; маршрут:{" "}
+-                        {account.destination}
+-                      </p>
+-                    </div>
+-                  ))}
+-                </div>
+-                <p>
+-                  Для служебного администратора настройте{" "}
+-                  <code>SEED_SUPER_ADMIN_EMAIL</code> и{" "}
+-                  <code>SEED_SUPER_ADMIN_PASSWORD</code>.
+-                </p>
+-              </div>
+-            </div>
+-          </div>
+-        </section>
+-      </div>
+-    </main>
+-  );
++  if (session) redirect(getDefaultAuthenticatedPath(session.user));
++  return <main className="flex min-h-screen items-center justify-center bg-[var(--canvas)] px-5 py-12">
++    <section className="w-full max-w-md space-y-6 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-8">
++      <p className="text-sm font-semibold text-[var(--accent)]">DEMO</p>
++      <h1 className="text-3xl font-semibold">Печать документов</h1>
++      <p className="text-sm text-[var(--muted)]">Удостоверения, сертификаты, свидетельства и связанные печатные протоколы.</p>
++      <LoginForm />
++    </section>
++  </main>;
+ }
+diff --git a/dsj2/apps/web/components/login-form.tsx b/dsj2/apps/web/components/login-form.tsx
+index f76a363..aacf71f 100644
+--- a/dsj2/apps/web/components/login-form.tsx
++++ b/dsj2/apps/web/components/login-form.tsx
+@@ -1,43 +1,31 @@
+ "use client";
+ 
+-import { useActionState } from "react";
++import { useState, type FormEvent } from "react";
+ import { Input } from "@dsj/ui";
+-import { loginAction, type LoginActionState } from "../actions/auth";
+-import { SubmitButton } from "./submit-button";
+-
+-const initialState: LoginActionState = {};
+ 
+ export function LoginForm() {
+-  const [state, formAction] = useActionState(loginAction, initialState);
+-
+-  return (
+-    <form action={formAction} className="space-y-5">
+-      <div className="space-y-2">
+-        <label className="text-sm font-medium text-[var(--ink)]">
+-          Электронная почта
+-        </label>
+-        <Input
+-          name="email"
+-          type="email"
+-          placeholder="name@company.kz"
+-          required
+-        />
+-      </div>
+-      <div className="space-y-2">
+-        <label className="text-sm font-medium text-[var(--ink)]">Пароль</label>
+-        <Input
+-          name="password"
+-          type="password"
+-          placeholder="Пароль из настроек"
+-          required
+-        />
+-      </div>
+-      {state.error ? (
+-        <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2.5 text-sm text-rose-700">
+-          {state.error}
+-        </p>
+-      ) : null}
+-      <SubmitButton label="Войти" pendingLabel="Вход..." className="w-full" />
+-    </form>
+-  );
++  const [error, setError] = useState("");
++  const [pending, setPending] = useState(false);
++  async function submit(event: FormEvent<HTMLFormElement>) {
++    event.preventDefault();
++    if (pending) return;
++    const form = new FormData(event.currentTarget);
++    setPending(true); setError("");
++    try {
++      const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" },
++        body: JSON.stringify({ email: form.get("email"), password: form.get("password") }) });
++      const result = await response.json();
++      if (!response.ok) throw new Error(result.error ?? "Не удалось войти.");
++      window.location.assign(result.destination);
++    } catch (error) { setError(error instanceof Error ? error.message : "Ошибка сети. Повторите попытку."); }
++    finally { setPending(false); }
++  }
++  return <form onSubmit={submit} className="space-y-5">
++    <div className="space-y-2"><label htmlFor="email">Электронная почта</label>
++      <Input id="email" name="email" type="email" autoComplete="username" required disabled={pending} /></div>
++    <div className="space-y-2"><label htmlFor="password">Пароль</label>
++      <Input id="password" name="password" type="password" autoComplete="current-password" required disabled={pending} /></div>
++    {error && <p role="alert" className="rounded border border-rose-200 bg-rose-50 p-3 text-rose-700">{error}</p>}
++    <button type="submit" disabled={pending} className="w-full rounded bg-[var(--accent)] px-4 py-3 font-medium text-white disabled:opacity-60">{pending ? "Вход…" : "Войти"}</button>
++  </form>;
+ }
+diff --git a/dsj2/apps/web/lib/api.ts b/dsj2/apps/web/lib/api.ts
+index 37c1f4f..d5b3ad2 100644
+--- a/dsj2/apps/web/lib/api.ts
++++ b/dsj2/apps/web/lib/api.ts
+@@ -27,6 +27,10 @@ const apiBaseUrl = `${resolveBaseUrl(
+ )}/v1`;
+ const cookieName = (process.env.COOKIE_NAME ?? "dsj_session").trim();
+ 
++export class ApiHttpError extends Error {
++  constructor(public readonly status: number, message: string) { super(message); }
++}
++
+ function normalizeErrorMessage(payload: unknown, fallback: string) {
+   if (typeof payload === "string") {
+     return payload;
+@@ -112,17 +116,10 @@ export async function apiFetch<T>(
+   if (!response.ok) {
+     let message = `Запрос завершился со статусом ${response.status}`;
+ 
+-    try {
+-      const payload = await response.json();
+-      message = normalizeErrorMessage(payload, message);
+-    } catch {
+-      const text = await response.text();
+-      if (text) {
+-        message = text;
+-      }
+-    }
+-
+-    throw new Error(message);
++    const text = await response.text();
++    try { message = normalizeErrorMessage(JSON.parse(text), message); }
++    catch { if (text) message = text; }
++    throw new ApiHttpError(response.status, message);
+   }
+ 
+   if (response.status === 204) {
+diff --git a/dsj2/apps/web/lib/auth.ts b/dsj2/apps/web/lib/auth.ts
+index 46dce65..0f99039 100644
+--- a/dsj2/apps/web/lib/auth.ts
++++ b/dsj2/apps/web/lib/auth.ts
+@@ -3,7 +3,7 @@ import "server-only";
+ import type { SessionUser, UserRole } from "@dsj/types";
+ import { cache } from "react";
+ import { redirect } from "next/navigation";
+-import { apiFetch, getSessionToken } from "./api";
++import { ApiHttpError, apiFetch, getSessionToken } from "./api";
+ 
+ type AuthSessionUser = SessionUser & {
+   company?: { name: string } | null;
+@@ -28,8 +28,9 @@ export const getCurrentSession = cache(async () => {
+       token,
+       user,
+     };
+-  } catch {
+-    return null;
++  } catch (error) {
++    if (error instanceof ApiHttpError && error.status === 401) return null;
++    throw error;
+   }
+ });
+ 
+@@ -51,10 +52,10 @@ export function getDefaultAuthenticatedPath(
+       return getAccessDeniedPath("employee-link");
+     }
+ 
+-    return "/my-instructions";
++    return getAccessDeniedPath();
+   }
+ 
+-  return "/dashboard";
++  return "/certificates";
+ }
+ 
+ export async function requireRoleAccess(allowedRoles: UserRole[]) {
+diff --git a/dsj2/apps/web/lib/company-context.ts b/dsj2/apps/web/lib/company-context.ts
+index 2fdf00a..9124c0b 100644
+--- a/dsj2/apps/web/lib/company-context.ts
++++ b/dsj2/apps/web/lib/company-context.ts
+@@ -114,7 +114,7 @@ export async function resolveCompanyContext({
+     };
+   }
+ 
+-  const companies = await apiFetch<OrganizationOption[]>("companies");
++  const { companies } = await apiFetch<{ companies: OrganizationOption[] }>("printing/context");
+ 
+   if (!companies.length) {
+     return {
+diff --git a/dsj2/apps/web/next.config.ts b/dsj2/apps/web/next.config.ts
+index 0d291ec..bd3a163 100644
+--- a/dsj2/apps/web/next.config.ts
++++ b/dsj2/apps/web/next.config.ts
+@@ -3,6 +3,7 @@ import path from "node:path";
+ import { createRequire } from "node:module";
+ import { fileURLToPath } from "node:url";
+ import type { NextConfig } from "next";
++import { assertPrintingProduct } from "../../product-policy/legacy";
+ 
+ const require = createRequire(import.meta.url);
+ const webAppRoot = path.dirname(fileURLToPath(import.meta.url));
+@@ -32,6 +33,7 @@ function loadWorkspaceEnv(projectRoot: string) {
+ }
+ 
+ loadWorkspaceEnv(locatorProjectRoot);
++assertPrintingProduct();
+ 
+ const enableLocator = process.env.NEXT_PUBLIC_ENABLE_LOCATOR === "1";
+ const isDev = process.env.NODE_ENV !== "production";
+@@ -42,7 +44,7 @@ const contentSecurityPolicy = [
+   "style-src 'self' 'unsafe-inline'",
+   "img-src 'self' data: blob:",
+   "font-src 'self' data:",
+-  "connect-src 'self' http://127.0.0.1:13579 http://localhost:13579",
++  "connect-src 'self'",
+   "frame-ancestors 'none'",
+   "base-uri 'self'",
+   "form-action 'self'",
+@@ -50,6 +52,8 @@ const contentSecurityPolicy = [
+ ].join("; ");
+ 
+ const nextConfig: NextConfig = {
++  skipMiddlewareUrlNormalize: true,
++  skipTrailingSlashRedirect: true,
+   transpilePackages: ["@dsj/ui", "@dsj/utils", "@dsj/types"],
+   outputFileTracingRoot,
+   experimental: {
+diff --git a/dsj2/apps/worker/src/main.ts b/dsj2/apps/worker/src/main.ts
+index fb2a175..8cc2182 100644
+--- a/dsj2/apps/worker/src/main.ts
++++ b/dsj2/apps/worker/src/main.ts
+@@ -1,3 +1,4 @@
++import { refuseFrozenRuntime } from "../../../product-policy/legacy";
+ import { config } from "dotenv";
+ import { Queue, Worker } from "bullmq";
+ import { createPrismaClient } from "@dsj/database";
+@@ -8,6 +9,8 @@ import {
+ } from "@dsj/utils";
+ import { resolve } from "node:path";
+ 
++refuseFrozenRuntime("DSJ worker");
++
+ config({ path: resolve(process.cwd(), "../../.env.local") });
+ config({ path: resolve(process.cwd(), "../../.env") });
+ 
+diff --git a/dsj2/package.json b/dsj2/package.json
+index 40298f3..9ca9204 100644
+--- a/dsj2/package.json
++++ b/dsj2/package.json
+@@ -8,7 +8,7 @@
+     "build:local": "node scripts/run-local-build.mjs",
+     "build:api:deploy": "corepack pnpm --filter @dsj/database db:generate && corepack pnpm --filter @dsj/types build && corepack pnpm --filter @dsj/database build && corepack pnpm --filter @dsj/utils build && corepack pnpm --filter @dsj/api build",
+     "build:worker:deploy": "corepack pnpm --filter @dsj/database db:generate && corepack pnpm --filter @dsj/types build && corepack pnpm --filter @dsj/database build && corepack pnpm --filter @dsj/worker build",
+-    "dev": "turbo dev",
++    "dev": "node scripts/legacy-runtime-refused.mjs",
+     "lint": "node -e \"console.error('No package-level lint tasks are configured yet. Use pnpm verify as the current compile/build gate.'); process.exit(1)\"",
+     "typecheck": "pnpm db:generate && pnpm typecheck:turbo",
+     "typecheck:turbo": "turbo typecheck",

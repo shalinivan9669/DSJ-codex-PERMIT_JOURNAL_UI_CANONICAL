@@ -3,8 +3,8 @@ import "./globals.css";
 import { LocatorDevRuntime } from "./locator-dev-runtime";
 
 export const metadata: Metadata = {
-  title: "Цифровой журнал по технике безопасности",
-  description: "Цифровой журнал инструктажей и контроля требований охраны труда.",
+  title: "DEMO — печать документов",
+  description: "Подготовка удостоверений, сертификатов, свидетельств и печатных протоколов.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

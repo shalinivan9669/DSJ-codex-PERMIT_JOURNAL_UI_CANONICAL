@@ -1,0 +1,52 @@
+[
+  {
+    "templateId": "biot-worker-card",
+    "docxSha256": "0005a94abee4328709e343517f07bab679c926a505b5d39684284f7a4f5c5afd",
+    "pdfSha256": "871e2e8f62c69e9e412fbe83887b90aa00ae2af3e635b1a3d3d4e31bcd81a091"
+  },
+  {
+    "templateId": "biot-itr-certificate",
+    "docxSha256": "7c51a7a46bda2957394f3703e68967c2cee290290c5c717d84fa1c06f1e9f73f",
+    "pdfSha256": "b7eddbb68f837bcb8316befb5c73d2cd485055f5305957f4be5bddd71a3a5f54"
+  },
+  {
+    "templateId": "biot-protocol",
+    "docxSha256": "5e2c9ba09efe8c1b71b40a44a38517bdf7314dd818b02bf531a379c30214605f",
+    "pdfSha256": "dd92141e5c7f34ad185d502686c2e028ff5161501d027a78a193e8f95f4ab5fc"
+  },
+  {
+    "templateId": "ptm-card",
+    "docxSha256": "f5a2e56592ee2320d883ccb19084990ec9b10a6819b374ec83529b3b6ead1f9c",
+    "pdfSha256": "f8d46386813f87ee9cad5896804e69366a2aad064501efcb7903cab341d94b0f"
+  },
+  {
+    "templateId": "ptm-protocol",
+    "docxSha256": "1f9defc88d267730cee694aaee6881d735d8b463e882a0b8588509fae050705e",
+    "pdfSha256": "e7975822ae634d72700f5c1f01fb657652ad26ab4d55192f4d11e44b5595a6b3"
+  },
+  {
+    "templateId": "pb-card",
+    "docxSha256": "842aaf562b2c9631807c443568ff48a606859229cab12e072bb61687d40495cf",
+    "pdfSha256": "9ed77c48e657beb7598ea2ae894d43a5d9694f3b48be138add1e9907e3eb6bf5"
+  },
+  {
+    "templateId": "pb-protocol",
+    "docxSha256": "b01523390ee30e2237addd3e8b8eef33bae0462e843cec37b6ec645411e0ad84",
+    "pdfSha256": "10352f022671651e2d6391417249fc4274dc606457c111c5a50fbdb14bebd266"
+  },
+  {
+    "templateId": "ps-card",
+    "docxSha256": "8504cea21a87ca29a0aacf7f5b029ee1631034aeeb192ed49746a4fba10f8034",
+    "pdfSha256": "eb0d835e52cd5c7bec94761deb6e3c57288b373f8eb1d0bdc387b323351b5aee"
+  },
+  {
+    "templateId": "ps-protocol",
+    "docxSha256": "81ff1b89f1e83d7d4783579c992c5dbc40809295d785224ffe4d44821f905209",
+    "pdfSha256": "c112e2b864370255363098010798edd117c45e13d879fb467be70ae055ea3de1"
+  },
+  {
+    "templateId": "ps-witness",
+    "docxSha256": "735b68152dae91a563f80df7f1880cc986b4572facded8809da609bf097e26c5",
+    "pdfSha256": "2b07d66dc60e4276454d2f0e424d4a295c66df4236f200030c2928af62091c96"
+  }
+]

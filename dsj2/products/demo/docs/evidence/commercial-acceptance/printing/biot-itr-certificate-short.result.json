@@ -1,0 +1,22 @@
+{
+  "name": "biot-itr-certificate-short",
+  "status": "PASS",
+  "template": "biot-itr-certificate",
+  "variant": "short",
+  "recipients": 1,
+  "docxSha256": "48202c85223e71232c87bfb7acb6aac1555aec56eed97838f3ae936c2b60bc60",
+  "pdfSha256": "792f4c77c8628ff46881b46fe954164c5ab12d1c95c9de56db5db7ed531743af",
+  "docxSeconds": 0.13634959992486984,
+  "renderSeconds": 29.478627300006337,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-short-page-001.png",
+      "sha256": "372d66819f74cb7179124d2026ab749374381ffc19fd79acca84f9c9d44ddbfd"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -1,0 +1,22 @@
+{
+  "name": "ptm-protocol-punctuation",
+  "status": "PASS",
+  "template": "ptm-protocol",
+  "variant": "punctuation",
+  "recipients": 1,
+  "docxSha256": "96c0944ede86e827aa1afd3c3dcb96af824ae2507246eaee279c6849f8b089ab",
+  "pdfSha256": "d1372dee6e5884fb3cc4226c30063a724dbcde32747f2525fd10e8e48440da46",
+  "docxSeconds": 1.4704930000007153,
+  "renderSeconds": 27.315816499991342,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-punctuation-page-001.png",
+      "sha256": "1816773530187e9690736d6a66db143c28d915665b33d08c489347c6b6565ecd"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

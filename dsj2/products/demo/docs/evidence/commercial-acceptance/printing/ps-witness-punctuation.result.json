@@ -1,0 +1,29 @@
+{
+  "name": "ps-witness-punctuation",
+  "status": "PASS",
+  "template": "ps-witness",
+  "variant": "punctuation",
+  "recipients": 1,
+  "docxSha256": "19e7e2facaf3e49332856728ce3dd700b04d152e6631968b125a4d3fdb682896",
+  "pdfSha256": "427c683761477ff1f6d8249c66c03cbb67fa8199a75479eb41dd8802302b9d03",
+  "docxSeconds": 0.22060729993972927,
+  "renderSeconds": 22.319212900009006,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-punctuation-page-001.png",
+      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-punctuation-page-002.png",
+      "sha256": "bc3de66c46d2884dac61eedf82a4315a4388fd397e6069f43249c065f4cbb413"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

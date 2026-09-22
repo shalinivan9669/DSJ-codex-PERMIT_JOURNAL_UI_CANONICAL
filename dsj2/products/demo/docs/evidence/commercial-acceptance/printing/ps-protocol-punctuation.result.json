@@ -1,0 +1,22 @@
+{
+  "name": "ps-protocol-punctuation",
+  "status": "PASS",
+  "template": "ps-protocol",
+  "variant": "punctuation",
+  "recipients": 1,
+  "docxSha256": "1c4d1c0e91c774298ec213ba97b879a1d1b597b46c3ead67d16023faf4d2dce2",
+  "pdfSha256": "7a6c3bc83c2aaf7c33555c1ac4e6e6f79f043a1b34f7c7332846e6bdea70a073",
+  "docxSeconds": 0.11506539990659803,
+  "renderSeconds": 29.792686000000685,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-punctuation-page-001.png",
+      "sha256": "c2b3ca09b2bbf38bc5effc66250ee1108174867ac67b1aa584666b60e2427ed7"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

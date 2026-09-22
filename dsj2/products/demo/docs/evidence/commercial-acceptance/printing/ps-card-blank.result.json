@@ -1,0 +1,29 @@
+{
+  "name": "ps-card-blank",
+  "status": "PASS",
+  "template": "ps-card",
+  "variant": "blank",
+  "recipients": 1,
+  "docxSha256": "9de14ad84e877f4bb536ab4dc6964fe8e0503f20ae5909cdd2528ee829f2b4eb",
+  "pdfSha256": "85a2e9f96f97b2d11f7058ae70d4a7bd67e44457e4fb1d5e2d8b11295abead50",
+  "docxSeconds": 0.7355172999668866,
+  "renderSeconds": 31.33065189991612,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-blank-page-001.png",
+      "sha256": "d6f6b42e6402affd2f6d36001e2ce3172ad21e1154c55439ea098ed8453659f1"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-blank-page-002.png",
+      "sha256": "d7fd55858b34e73971ca284a0ceb6bf9d251e756e9ba440cf8cebc84f6a28138"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

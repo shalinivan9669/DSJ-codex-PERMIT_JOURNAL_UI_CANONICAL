@@ -1,0 +1,29 @@
+{
+  "name": "pb-protocol-batch",
+  "status": "PASS",
+  "template": "pb-protocol",
+  "variant": "batch",
+  "recipients": 2,
+  "docxSha256": "0ff79623daf2d4f881a5f46487dfc3c622f10da1424dcdf83bf50057efc170ae",
+  "pdfSha256": "f5b4d2c3a74232c3ead8df6bdc18bf6742ef9e6f940167324be25715fbc8496f",
+  "docxSeconds": 1.2471830000868067,
+  "renderSeconds": 26.383986000088044,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-batch-page-001.png",
+      "sha256": "6a58c343fafeadfbab9f0b47cbb95fc6b19f73538bb6f909850108d41e372cf3"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-batch-page-002.png",
+      "sha256": "663a186075606d9ab68c921d54fe1e0690995583dbb1adfa59913273d191c3aa"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -1,0 +1,29 @@
+{
+  "name": "ptm-protocol-batch",
+  "status": "PASS",
+  "template": "ptm-protocol",
+  "variant": "batch",
+  "recipients": 2,
+  "docxSha256": "56a24a5d2a17f5620394bf9d70d69b9b7a3e92578601f1b8b2a86397da0b07a6",
+  "pdfSha256": "7abd0b189786531697b1ae79f75747b6f6740ad4e61d4912e0b436c83ae54757",
+  "docxSeconds": 1.0893914999905974,
+  "renderSeconds": 32.08406450005714,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-batch-page-001.png",
+      "sha256": "5c577afaf7afc542c7c4a77ee6298760f1c7d5096e0b113baefb14336801e057"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-batch-page-002.png",
+      "sha256": "17c73b0d64b875fc7f8175d51401dbebdcad515ac38d70446af66a514a75fc8c"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

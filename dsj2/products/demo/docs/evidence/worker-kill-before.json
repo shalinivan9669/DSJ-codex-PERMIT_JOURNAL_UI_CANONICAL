@@ -1,0 +1,45 @@
+{
+  "issuance": {
+    "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+    "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+    "revision": 0,
+    "documentIds": [
+      "8f94771a-3af8-4a83-97cb-7986b2d0f69b"
+    ],
+    "jobIds": [
+      "28780020-3773-4d87-aab7-9cdd5c81b54a",
+      "4b9130a9-b0aa-4438-bf66-a027ad5aeb0b",
+      "4f37befc-d5f7-461c-b38a-3f0af00e3cd5",
+      "8941448c-624c-46b7-9d5f-48597a1fd4a4"
+    ]
+  },
+  "observedAt": "2026-09-22T10:40:07.1670316Z",
+  "killedPid": 45252,
+  "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+  "before": {
+    "id": "28780020-3773-4d87-aab7-9cdd5c81b54a",
+    "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+    "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+    "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+    "documentId": null,
+    "snapshotId": "c9bc9d46-117e-4aaf-832b-a666f203dfa0",
+    "kind": "XLSX",
+    "status": "RUNNING",
+    "logicalKey": "f4fc2a05-46e2-4073-bb81-81020164ba2a:XLSX",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "runAfter": "2026-09-22T10:40:06.117Z",
+    "leaseUntil": "2026-09-22T10:40:36.585Z",
+    "leaseOwner": "017becff-3237-44fb-97cd-d2da5d546ec9",
+    "fencingToken": 1,
+    "heartbeatAt": "2026-09-22T10:40:06.585Z",
+    "errorCode": null,
+    "errorMessage": null,
+    "correlationId": "8154fd37-1a1d-4f1f-a26a-3323c37f39f2",
+    "progress": 0,
+    "artifactId": null,
+    "createdAt": "2026-09-22T10:40:06.117Z",
+    "updatedAt": "2026-09-22T10:40:06.585Z",
+    "sourceRevision": 0
+  }
+}

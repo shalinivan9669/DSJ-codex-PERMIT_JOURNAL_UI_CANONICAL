@@ -1,0 +1,43 @@
+{
+  "name": "ps-card-batch",
+  "status": "PASS",
+  "template": "ps-card",
+  "variant": "batch",
+  "recipients": 2,
+  "docxSha256": "32d5a0680692e2f5870bca52b121101e76fed9d85fbd05eaea55cc685eb393ff",
+  "pdfSha256": "9b35bd4585556677f17ea6ec2d6f32dd7e07a708d32f84f4334518626a907ada",
+  "docxSeconds": 1.5830558000598103,
+  "renderSeconds": 32.101443400024436,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-001.png",
+      "sha256": "e5ec3decd3a3f6cd6daea6fea6dd6c57e0e32b226161726351f8e161189fda3b"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-002.png",
+      "sha256": "d7fd55858b34e73971ca284a0ceb6bf9d251e756e9ba440cf8cebc84f6a28138"
+    },
+    {
+      "page": 3,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-003.png",
+      "sha256": "52b2d535d7942a236db0714c3e055ecead1400c42eddeb9b4553d06727a78b26"
+    },
+    {
+      "page": 4,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-004.png",
+      "sha256": "d7fd55858b34e73971ca284a0ceb6bf9d251e756e9ba440cf8cebc84f6a28138"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -31,36 +31,7 @@ export default async function EditCardRequestPage({
   });
   const scopedQuery = activeCompanyId ? `?companyId=${activeCompanyId}` : "";
 
-  const [employees, trainingAssignments, request] = await Promise.all([
-    apiFetch<
-      Array<{
-        id: string;
-        fullName: string;
-        employeeNumber: string;
-        jobTitle: string;
-        jobTitleKz: string | null;
-        photoDataUrl: string | null;
-        photoFileName: string | null;
-        employeeKind: string;
-        contractorCompany: {
-          name: string;
-        } | null;
-      }>
-    >(`employees${scopedQuery}`),
-    apiFetch<
-      Array<{
-        id: string;
-        employeeId: string;
-        status: string;
-        trainingProgram: {
-          title: string;
-        };
-      }>
-    >(`training-assignments${scopedQuery}`),
-    apiFetch<CardGenerationRequestDetail>(
-      `biot-cards/requests/${resolvedParams.id}${scopedQuery}`,
-    ),
-  ]);
+  const request = await apiFetch<CardGenerationRequestDetail>(`biot-cards/requests/${resolvedParams.id}${scopedQuery}`);
 
   const defaultsQuery = new URLSearchParams({
     issueDate: request.issueDate.slice(0, 10),
@@ -158,8 +129,8 @@ export default async function EditCardRequestPage({
       <BiotCardGenerator
         companyId={activeCompanyId}
         companyName={activeCompany?.name ?? session.user.company?.name ?? null}
-        employees={employees}
-        trainingAssignments={trainingAssignments}
+        employees={[]}
+        trainingAssignments={[]}
         initialDefaults={initialDefaults}
         initialRequests={[]}
         editorMode="edit"

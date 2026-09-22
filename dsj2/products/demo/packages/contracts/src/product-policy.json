@@ -1,0 +1,526 @@
+{
+  "demoProductId": "demo-product",
+  "productId": "DEMO",
+  "version": 1,
+  "demoRoutes": [
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/health"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/ready"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/auth/session"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/context"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/jobs"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/imports/template"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/settings/profile"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/settings/templates"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/settings/numbering"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/users"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/audit"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/artifacts/:id"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/photos/:id"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/auth/login"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/auth/logout"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/auth/password"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/photos"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/imports/preview"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/settings/profile"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/users"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/jobs/:id/retry"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/settings/templates/:id/approve"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/export"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/customers"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/customers"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/recipients"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/recipients"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/print-requests"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests"
+    },
+    {
+      "method": "PATCH",
+      "surface": "api",
+      "path": "/customers/:id"
+    },
+    {
+      "method": "PATCH",
+      "surface": "api",
+      "path": "/recipients/:id"
+    },
+    {
+      "method": "PATCH",
+      "surface": "api",
+      "path": "/settings/numbering"
+    },
+    {
+      "method": "PATCH",
+      "surface": "api",
+      "path": "/users/:id"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/print-requests/:id"
+    },
+    {
+      "method": "PATCH",
+      "surface": "api",
+      "path": "/print-requests/:id"
+    },
+    {
+      "method": "DELETE",
+      "surface": "api",
+      "path": "/print-requests/:id"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/validate"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/preview"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/finalize"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/correct"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/cancel"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/import"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/export"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/login"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/login"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/requests"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/requests"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/requests/new"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/requests/new"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/requests/:id"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/requests/:id"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/requests/:id/edit"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/requests/:id/edit"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/customers"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/customers"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/history"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/history"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/settings"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/settings"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/artifacts/:id/restore"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/imports/mappings"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/imports/mappings"
+    }
+  ],
+  "legacyRoutes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "surface": "web"
+    },
+    {
+      "method": "HEAD",
+      "path": "/",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/login",
+      "surface": "web"
+    },
+    {
+      "method": "HEAD",
+      "path": "/login",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/access-denied",
+      "surface": "web"
+    },
+    {
+      "method": "HEAD",
+      "path": "/access-denied",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/certificates",
+      "surface": "web"
+    },
+    {
+      "method": "HEAD",
+      "path": "/certificates",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/certificates/biot-experimental",
+      "surface": "web"
+    },
+    {
+      "method": "HEAD",
+      "path": "/certificates/biot-experimental",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/certificates/requests/:id/edit",
+      "surface": "web"
+    },
+    {
+      "method": "HEAD",
+      "path": "/certificates/requests/:id/edit",
+      "surface": "web"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "surface": "web"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/api/biot-cards/defaults",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/api/biot-cards/requests",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/api/biot-cards/requests/:id",
+      "surface": "web"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/biot-cards/requests/:id",
+      "surface": "web"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/biot-cards/requests/:id",
+      "surface": "web"
+    },
+    {
+      "method": "POST",
+      "path": "/api/biot-cards/generate",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/api/biot-cards/requests/:id/cards",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/api/biot-cards/requests/:id/protocol",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/api/biot-cards/requests/:id/witness",
+      "surface": "web"
+    },
+    {
+      "method": "GET",
+      "path": "/api/biot-cards/requests/:id/registry",
+      "surface": "web"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/auth/login",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/auth/me",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/printing/context",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/biot-cards/defaults",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/biot-cards/requests",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/biot-cards/requests/:id",
+      "surface": "api"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/biot-cards/requests/:id",
+      "surface": "api"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/biot-cards/requests/:id/update",
+      "surface": "api"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/biot-cards/generate-batch",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/biot-cards/requests/:id/export-cards",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/biot-cards/requests/:id/export-protocol",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/biot-cards/requests/:id/export-witness",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/biot-cards/requests/:id/export-registry",
+      "surface": "api"
+    },
+    {
+      "surface": "web",
+      "path": "/api/translations/job-title",
+      "method": "POST"
+    },
+    {
+      "surface": "api",
+      "path": "/v1/translations/job-title",
+      "method": "POST"
+    }
+  ],
+  "staticPolicy": "Next static js/css/font files only; no image optimizer or public storage",
+  "legacyProductId": "legacy-printing-gateway"
+}

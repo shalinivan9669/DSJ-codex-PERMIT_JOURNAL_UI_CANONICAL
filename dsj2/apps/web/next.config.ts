@@ -3,6 +3,7 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
+import { assertPrintingProduct } from "../../product-policy/legacy";
 
 const require = createRequire(import.meta.url);
 const webAppRoot = path.dirname(fileURLToPath(import.meta.url));
@@ -32,6 +33,7 @@ function loadWorkspaceEnv(projectRoot: string) {
 }
 
 loadWorkspaceEnv(locatorProjectRoot);
+assertPrintingProduct();
 
 const enableLocator = process.env.NEXT_PUBLIC_ENABLE_LOCATOR === "1";
 const isDev = process.env.NODE_ENV !== "production";
@@ -42,7 +44,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "connect-src 'self' http://127.0.0.1:13579 http://localhost:13579",
+  "connect-src 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -50,6 +52,8 @@ const contentSecurityPolicy = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  skipMiddlewareUrlNormalize: true,
+  skipTrailingSlashRedirect: true,
   transpilePackages: ["@dsj/ui", "@dsj/utils", "@dsj/types"],
   outputFileTracingRoot,
   experimental: {

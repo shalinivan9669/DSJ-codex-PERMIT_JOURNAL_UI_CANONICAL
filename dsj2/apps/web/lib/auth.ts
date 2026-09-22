@@ -3,7 +3,7 @@ import "server-only";
 import type { SessionUser, UserRole } from "@dsj/types";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { apiFetch, getSessionToken } from "./api";
+import { ApiHttpError, apiFetch, getSessionToken } from "./api";
 
 type AuthSessionUser = SessionUser & {
   company?: { name: string } | null;
@@ -28,8 +28,9 @@ export const getCurrentSession = cache(async () => {
       token,
       user,
     };
-  } catch {
-    return null;
+  } catch (error) {
+    if (error instanceof ApiHttpError && error.status === 401) return null;
+    throw error;
   }
 });
 
@@ -51,10 +52,10 @@ export function getDefaultAuthenticatedPath(
       return getAccessDeniedPath("employee-link");
     }
 
-    return "/my-instructions";
+    return getAccessDeniedPath();
   }
 
-  return "/dashboard";
+  return "/certificates";
 }
 
 export async function requireRoleAccess(allowedRoles: UserRole[]) {

@@ -1,0 +1,94 @@
+{
+  "name": "biot-protocol-punctuation",
+  "status": "PASS",
+  "template": "biot-protocol",
+  "variant": "punctuation",
+  "recipients": 1,
+  "docxSha256": "ba80467856f896b89f04fcfb8ed008cde895a09941d105a8807df3808589a5df",
+  "pdfSha256": "21c1872dbb2bdce01489ced8ce47776d5f993f4f170072ffc166d4f3a9a2316b",
+  "docxSeconds": 0.11374770000111312,
+  "renderSeconds": 25.152770299930125,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-punctuation-page-001.png",
+      "sha256": "b6d417f15495b368d64193f3e50f63a46778939cf9f75eed18e15bb140e917c7"
+    }
+  ],
+  "columnChecks": [
+    {
+      "page": 1,
+      "tableBox": [
+        50.4,
+        376.85076377952805,
+        587.4,
+        581.150763779528
+      ],
+      "cells": [
+        {
+          "column": 1,
+          "box": [
+            50.4,
+            527.450763779528,
+            84.9,
+            540.750763779528
+          ],
+          "value": "1"
+        },
+        {
+          "column": 2,
+          "box": [
+            84.9,
+            527.450763779528,
+            176.9,
+            540.750763779528
+          ],
+          "value": "2"
+        },
+        {
+          "column": 3,
+          "box": [
+            176.9,
+            527.450763779528,
+            303.9,
+            540.750763779528
+          ],
+          "value": "3"
+        },
+        {
+          "column": 4,
+          "box": [
+            303.9,
+            527.450763779528,
+            410.2,
+            540.750763779528
+          ],
+          "value": "4"
+        },
+        {
+          "column": 5,
+          "box": [
+            410.2,
+            527.450763779528,
+            515.925,
+            540.750763779528
+          ],
+          "value": "5"
+        },
+        {
+          "column": 6,
+          "box": [
+            515.925,
+            527.450763779528,
+            587.4,
+            540.750763779528
+          ],
+          "value": "6"
+        }
+      ]
+    }
+  ],
+  "problems": []
+}

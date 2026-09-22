@@ -1,0 +1,63 @@
+[
+  {
+    "output": "DEMO_biot_single.docx",
+    "exit_code": 0,
+    "stderr": "",
+    "bytes": 60285,
+    "synthetic_name_present": true,
+    "kazakh_letters_present": true,
+    "remaining_placeholders": [],
+    "external_relationships": 0,
+    "media_files": 0,
+    "manual_page_breaks": 0,
+    "mail_merge_settings": false
+  },
+  {
+    "output": "DEMO_biot_batch_2.docx",
+    "exit_code": 0,
+    "stderr": "",
+    "bytes": 100047,
+    "synthetic_name_present": true,
+    "kazakh_letters_present": true,
+    "remaining_placeholders": [],
+    "external_relationships": 0,
+    "media_files": 0,
+    "manual_page_breaks": 1,
+    "mail_merge_settings": false
+  },
+  {
+    "output": "DEMO_pb_photo.docx",
+    "exit_code": 0,
+    "stderr": "",
+    "bytes": 77888,
+    "synthetic_name_present": true,
+    "kazakh_letters_present": true,
+    "remaining_placeholders": [],
+    "external_relationships": 0,
+    "media_files": 1,
+    "manual_page_breaks": 0,
+    "mail_merge_settings": false
+  },
+  {
+    "output": "DEMO_ps_witness.docx",
+    "exit_code": 0,
+    "stderr": "",
+    "bytes": 171688,
+    "synthetic_name_present": true,
+    "kazakh_letters_present": true,
+    "remaining_placeholders": [],
+    "external_relationships": 0,
+    "media_files": 2,
+    "manual_page_breaks": 0,
+    "mail_merge_settings": false
+  },
+  {
+    "output": "DEMO_registry_formula_probe.xlsx",
+    "exit_code": 0,
+    "stderr": "",
+    "probe_cell": "Реестр!D2",
+    "probe_value": "=1+1",
+    "probe_data_type": "f",
+    "formula_injection_confirmed": true
+  }
+]

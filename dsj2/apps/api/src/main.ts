@@ -3,6 +3,8 @@ import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { validateSecurityConfig } from "./common/utils/security-preflight";
+import { assertPrintingProduct } from "../../../product-policy/legacy";
+import { legacyProductBoundary } from "./common/product-boundary.middleware";
 
 function resolveAppUrl() {
   const trimmed = process.env.APP_URL?.trim();
@@ -34,6 +36,7 @@ function resolveCorsOrigin(appUrl: string) {
 }
 
 async function bootstrap() {
+  assertPrintingProduct();
   validateSecurityConfig();
 
   const app = await NestFactory.create(AppModule);
@@ -43,6 +46,8 @@ async function bootstrap() {
   const logger = new Logger("Bootstrap");
 
   app.setGlobalPrefix("v1");
+  // Raw URL boundary runs before CORS, controllers, Public and role bypasses.
+  app.use(legacyProductBoundary(Array.isArray(corsOrigin) ? corsOrigin : [corsOrigin]));
   app.enableCors({
     origin: corsOrigin,
     credentials: true,

@@ -1,0 +1,6 @@
+
+> demo-print@2.0.0 format:check C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!

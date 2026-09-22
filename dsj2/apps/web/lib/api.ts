@@ -27,6 +27,10 @@ const apiBaseUrl = `${resolveBaseUrl(
 )}/v1`;
 const cookieName = (process.env.COOKIE_NAME ?? "dsj_session").trim();
 
+export class ApiHttpError extends Error {
+  constructor(public readonly status: number, message: string) { super(message); }
+}
+
 function normalizeErrorMessage(payload: unknown, fallback: string) {
   if (typeof payload === "string") {
     return payload;
@@ -112,17 +116,10 @@ export async function apiFetch<T>(
   if (!response.ok) {
     let message = `Запрос завершился со статусом ${response.status}`;
 
-    try {
-      const payload = await response.json();
-      message = normalizeErrorMessage(payload, message);
-    } catch {
-      const text = await response.text();
-      if (text) {
-        message = text;
-      }
-    }
-
-    throw new Error(message);
+    const text = await response.text();
+    try { message = normalizeErrorMessage(JSON.parse(text), message); }
+    catch { if (text) message = text; }
+    throw new ApiHttpError(response.status, message);
   }
 
   if (response.status === 204) {

@@ -1,0 +1,22 @@
+{
+  "name": "biot-itr-certificate-punctuation",
+  "status": "PASS",
+  "template": "biot-itr-certificate",
+  "variant": "punctuation",
+  "recipients": 1,
+  "docxSha256": "64c74d14f8a78a6be4208dd4568b09adf3ee92efa4a65541824e303d67a1e5a0",
+  "pdfSha256": "742139799610cd0233fe3a5b37148454064763430536209f461eeb02dfd7997c",
+  "docxSeconds": 0.09467070002574474,
+  "renderSeconds": 28.068381399963982,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-punctuation-page-001.png",
+      "sha256": "d47a31d7a28087fea295817702ed0a6e826886e24f25b41235a947a0b51ce9da"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "url": "https://old.adilet.zan.kz/rus/docs/V1500012665",
+    "error": "<urlopen error [WinError 10054] Удаленный хост принудительно разорвал существующее подключение>"
+  },
+  {
+    "url": "https://old.adilet.zan.kz/rus/docs/V1400009510",
+    "error": "<urlopen error [WinError 10054] Удаленный хост принудительно разорвал существующее подключение>"
+  },
+  {
+    "url": "https://old.adilet.zan.kz/rus/docs/V2100023461",
+    "error": "<urlopen error [WinError 10054] Удаленный хост принудительно разорвал существующее подключение>"
+  },
+  {
+    "url": "https://old.adilet.zan.kz/rus/docs/V2200029329",
+    "error": "<urlopen error [WinError 10054] Удаленный хост принудительно разорвал существующее подключение>"
+  }
+]

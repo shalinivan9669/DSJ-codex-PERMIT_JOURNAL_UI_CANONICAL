@@ -1,0 +1,22 @@
+{
+  "name": "ps-protocol-short",
+  "status": "PASS",
+  "template": "ps-protocol",
+  "variant": "short",
+  "recipients": 1,
+  "docxSha256": "e714263cd5fa3c249e65c801888831ecc2f3e67f54b8166a6716d78602365315",
+  "pdfSha256": "811b2d0cd2996869c4ff69bc924615d6e2cf144c3060fe679853bb5163a17135",
+  "docxSeconds": 0.18443599995225668,
+  "renderSeconds": 40.92313039989676,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-short-page-001.png",
+      "sha256": "5f7e5c044a086efbb640dc63542749d581b0df25b9d37921eb928cc9e9812c05"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

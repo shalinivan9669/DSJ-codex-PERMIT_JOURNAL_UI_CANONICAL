@@ -1,0 +1,32 @@
+{
+  "biot-worker-card": {
+    "removedDecorativeDuplicateIssuerParagraphs": 3,
+    "rebuiltRepeatPanels": 4,
+    "fontAttributesRaisedTo8pt": 88,
+    "sheetAndFrameGeometry": "preserved"
+  },
+  "ptm-card": {
+    "removedDecorativeDuplicateIssuerParagraphs": 1,
+    "rebuiltRepeatPanels": 0,
+    "fontAttributesRaisedTo8pt": 120,
+    "sheetAndFrameGeometry": "preserved"
+  },
+  "pb-card": {
+    "removedDecorativeDuplicateIssuerParagraphs": 4,
+    "rebuiltRepeatPanels": 0,
+    "fontAttributesRaisedTo8pt": 350,
+    "sheetAndFrameGeometry": "preserved"
+  },
+  "ps-card": {
+    "removedDecorativeDuplicateIssuerParagraphs": 5,
+    "rebuiltRepeatPanels": 12,
+    "fontAttributesRaisedTo8pt": 148,
+    "sheetAndFrameGeometry": "preserved"
+  },
+  "ps-witness": {
+    "removedDecorativeDuplicateIssuerParagraphs": 0,
+    "rebuiltRepeatPanels": 0,
+    "fontAttributesRaisedTo8pt": 8,
+    "sheetAndFrameGeometry": "preserved"
+  }
+}

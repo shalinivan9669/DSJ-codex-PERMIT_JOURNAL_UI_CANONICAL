@@ -114,7 +114,7 @@ export async function resolveCompanyContext({
     };
   }
 
-  const companies = await apiFetch<OrganizationOption[]>("companies");
+  const { companies } = await apiFetch<{ companies: OrganizationOption[] }>("printing/context");
 
   if (!companies.length) {
     return {

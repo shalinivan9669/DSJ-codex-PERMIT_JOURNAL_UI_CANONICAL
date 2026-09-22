@@ -1,0 +1,22 @@
+{
+  "name": "ptm-protocol-blank",
+  "status": "PASS",
+  "template": "ptm-protocol",
+  "variant": "blank",
+  "recipients": 1,
+  "docxSha256": "7bf39c9a837c49195de21cdfe08357aa0d6721af349c9d0f27d8441b8c959cf4",
+  "pdfSha256": "29f60ce8f24cb933c2fc9a4f05fb5bdaf51db939ef901d20e0883a9b5db1247d",
+  "docxSeconds": 1.2005871000001207,
+  "renderSeconds": 31.95810069993604,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-blank-page-001.png",
+      "sha256": "a7a21bee1a1771971959d40b5fc4903cc0cb9bd9b734b018b26a8d7cc3bc95b7"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

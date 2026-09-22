@@ -1,0 +1,83 @@
+
+> demo-print@2.0.0 format C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo
+> prettier --write .
+
+AGENTS.md 64ms (unchanged)
+apps/api/package.json 32ms
+apps/api/src/auth.ts 179ms
+apps/api/src/controller.ts 143ms (unchanged)
+apps/api/src/core.ts 26ms (unchanged)
+apps/api/src/files.ts 112ms
+apps/api/src/main.ts 21ms
+apps/api/src/requests.ts 166ms (unchanged)
+apps/api/src/settings.ts 49ms (unchanged)
+apps/api/src/storage.ts 28ms
+apps/api/tsconfig.json 3ms
+apps/render-worker/package.json 2ms
+apps/render-worker/src/main.ts 25ms
+apps/render-worker/src/queue.ts 49ms
+apps/render-worker/tsconfig.json 3ms
+apps/web/app/[[...path]]/page.tsx 5ms
+apps/web/app/api/[...path]/route.ts 26ms
+apps/web/app/globals.css 448ms
+apps/web/app/layout.tsx 7ms
+apps/web/components/customers.tsx 47ms
+apps/web/components/editor.tsx 138ms
+apps/web/components/files-panel.tsx 83ms
+apps/web/components/import-dialog.tsx 77ms
+apps/web/components/recipient-details.tsx 60ms
+apps/web/components/request-list.tsx 35ms
+apps/web/components/settings.tsx 76ms
+apps/web/components/workspace.tsx 29ms
+apps/web/e2e/demo.spec.ts 128ms
+apps/web/e2e/fixtures/README.md 12ms
+apps/web/lib/api.ts 26ms
+apps/web/lib/autosave.ts 15ms
+apps/web/lib/imports.ts 13ms
+apps/web/lib/types.ts 17ms
+apps/web/middleware.ts 20ms
+apps/web/next.config.ts 9ms
+apps/web/package.json 13ms (unchanged)
+apps/web/playwright.config.ts 6ms
+apps/web/test/autosave.test.ts 20ms
+apps/web/test/imports.test.ts 11ms
+apps/web/tsconfig.json 3ms
+deployment/backup.mjs 73ms (unchanged)
+deployment/compose.yaml 75ms (unchanged)
+docs/CUTOVER_ROLLBACK_RU.md 30ms
+docs/MIGRATION_RU.md 26ms
+docs/OPERATIONS_RU.md 23ms (unchanged)
+docs/OPERATOR_RU.md 27ms (unchanged)
+eslint.config.mjs 7ms
+package.json 3ms (unchanged)
+packages/contracts/package.json 2ms
+packages/contracts/src/index.ts 56ms
+packages/contracts/src/policy.ts 6ms (unchanged)
+packages/contracts/src/product-policy.json 17ms
+packages/contracts/tsconfig.json 1ms
+packages/database/package.json 1ms
+packages/database/src/index.ts 4ms
+packages/database/tsconfig.json 2ms
+packages/printing/package.json 1ms
+packages/printing/src/index.ts 102ms
+packages/printing/tsconfig.json 1ms
+packages/ui/package.json 1ms
+packages/ui/src/index.tsx 14ms
+pnpm-workspace.yaml 4ms (unchanged)
+scripts/dev.mjs 20ms
+scripts/maintenance/gc.ts 86ms
+scripts/migration/export-legacy.mjs 24ms (unchanged)
+scripts/migration/import-legacy.ts 103ms (unchanged)
+scripts/setup.ts 35ms
+scripts/verification/autonomy.mjs 14ms (unchanged)
+scripts/verification/backup-fixture.ts 20ms (unchanged)
+scripts/verification/render-check.ts 13ms
+tests/contracts.test.ts 21ms (unchanged)
+tests/integration/files-import.test.ts 81ms (unchanged)
+tests/integration/http.test.ts 34ms (unchanged)
+tests/integration/legacy-migration.test.ts 25ms (unchanged)
+tests/integration/lifecycle.test.ts 60ms (unchanged)
+tests/integration/worker.test.ts 46ms
+tests/migration.test.ts 7ms (unchanged)
+tsconfig.base.json 2ms
+tsconfig.json 1ms

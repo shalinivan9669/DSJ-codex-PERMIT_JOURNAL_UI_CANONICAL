@@ -1,0 +1,29 @@
+{
+  "name": "pb-card-long",
+  "status": "PASS",
+  "template": "pb-card",
+  "variant": "long",
+  "recipients": 1,
+  "docxSha256": "393510f88222092942cadf880a0c6e2af83236bbbb524d1d32081cec274c5b7b",
+  "pdfSha256": "61e70183d7ace644c69a8915a16061251bc2ca7f45e950b8c65a16b9e74d4758",
+  "docxSeconds": 0.5013167998986319,
+  "renderSeconds": 21.727787499898113,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-long-page-001.png",
+      "sha256": "723b7812c3e540909b5a93db261463422e7df6abfbfc4ba65cd8a86f5ca3408c"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-long-page-002.png",
+      "sha256": "48dfecd61b84ac6a9c5a20bfdcb208361598520b6f4f09de815db1089de2a4ec"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

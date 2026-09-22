@@ -1,0 +1,17 @@
+{
+  "name": "@demo/render-worker",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "start": "tsx src/main.ts",
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@demo/database": "workspace:*",
+    "@demo/contracts": "workspace:*",
+    "@demo/printing": "workspace:*",
+    "tsx": "4.23.15"
+  }
+}

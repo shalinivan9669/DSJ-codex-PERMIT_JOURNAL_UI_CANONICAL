@@ -12,29 +12,6 @@ import { resolveCompanyContext } from "@/lib/company-context";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-type BiotEmployeeOption = {
-  id: string;
-  fullName: string;
-  employeeNumber: string;
-  jobTitle: string;
-  jobTitleKz: string | null;
-  photoDataUrl: string | null;
-  photoFileName: string | null;
-  employeeKind: string;
-  contractorCompany: {
-    name: string;
-  } | null;
-};
-
-type BiotTrainingAssignmentOption = {
-  id: string;
-  employeeId: string;
-  status: string;
-  trainingProgram: {
-    title: string;
-  };
-};
-
 export default async function BiotExperimentalPage({
   searchParams,
 }: {
@@ -91,20 +68,16 @@ export default async function BiotExperimentalPage({
     );
   }
 
-  let employees: BiotEmployeeOption[] = [];
-  let trainingAssignments: BiotTrainingAssignmentOption[] = [];
+
+
   let initialDefaults: BiotCardDefaults | null = null;
   let initialRequests: CardGenerationRequestSummary[] = [];
   let loadError: string | null = null;
 
   try {
-    [employees, trainingAssignments, initialDefaults, initialRequests] =
+    [initialDefaults, initialRequests] =
       await Promise.all([
-        apiFetch<BiotEmployeeOption[]>(`employees${scopedQuery}`),
-        apiFetch<BiotTrainingAssignmentOption[]>(
-          `training-assignments${scopedQuery}`,
-        ),
-        apiFetch<BiotCardDefaults>(
+apiFetch<BiotCardDefaults>(
           `biot-cards/defaults?${defaultsQuery.toString()}`,
         ),
         apiFetch<CardGenerationRequestSummary[]>(
@@ -136,8 +109,8 @@ export default async function BiotExperimentalPage({
       <BiotCardGenerator
         companyId={activeCompanyId}
         companyName={activeCompany?.name ?? session.user.company?.name ?? null}
-        employees={employees}
-        trainingAssignments={trainingAssignments}
+        employees={[]}
+        trainingAssignments={[]}
         initialDefaults={initialDefaults}
         initialRequests={initialRequests}
         canManageSavedRequests={

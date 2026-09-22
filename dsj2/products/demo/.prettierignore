@@ -1,0 +1,13 @@
+node_modules/
+.runtime/
+data/
+storage/
+**/.next/
+**/.next-*/
+**/dist/
+**/test-results/
+**/next-env.d.ts
+**/generated/
+docs/evidence/
+assets/
+pnpm-lock.yaml

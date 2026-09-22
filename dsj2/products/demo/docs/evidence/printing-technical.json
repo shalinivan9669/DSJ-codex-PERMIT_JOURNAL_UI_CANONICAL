@@ -1,0 +1,18 @@
+{
+  "templates": 10,
+  "version": 4,
+  "problems": [],
+  "manifestSha256": "9a75d7d539c557d92326c6497b8d02854a017b7df8e19b01188b6625cc7bbdac",
+  "rendererSha256": "a4204438cbcd914576e6df2505751c3a2dc5710fe23c248994e12cc9b78b6ef0",
+  "overflowCases": [
+    {
+      "characters": 1200,
+      "result": "PRINT_LAYOUT_OVERFLOW"
+    },
+    {
+      "characters": 500,
+      "result": "PRINT_LAYOUT_OVERFLOW"
+    }
+  ],
+  "overflowRegressionLog": "docs/evidence/render-overflow-test.log"
+}

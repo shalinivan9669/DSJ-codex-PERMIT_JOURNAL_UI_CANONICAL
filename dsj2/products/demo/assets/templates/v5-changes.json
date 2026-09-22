@@ -1,0 +1,34 @@
+{
+  "biot-worker-card": [
+    "Kazakh position maps to POSITION_KZ"
+  ],
+  "biot-protocol": [
+    "individual recipient ordinal is explicit 1, independent from document numbers",
+    "six column labels use literal cells 1..6 and repeat with table header",
+    "notes cell is blank; protocol number is not a recipient note",
+    "removed repeated approval basis caused by generic source sanitizer"
+  ],
+  "ptm-protocol": [
+    "individual recipient ordinal is explicit 1, independent from document numbers",
+    "manual signature cell is blank, never a document number",
+    "removed repeated approval basis caused by generic source sanitizer"
+  ],
+  "pb-card": [
+    "redundant caption paragraphs replaced by inline bilingual field labels",
+    "protocol basis uses independent protocolDate",
+    "expiry uses independent validUntil day and month"
+  ],
+  "pb-protocol": [
+    "individual recipient ordinal is explicit 1, independent from document numbers"
+  ],
+  "ps-card": [
+    "compact bilingual field labels preserve photo clearance at 8pt"
+  ],
+  "ps-protocol": [
+    "individual recipient ordinal is explicit 1, independent from document numbers",
+    "certificate number appears once in its cell"
+  ],
+  "ps-witness": [
+    "commission decision date uses protocolDate, independently of issue/training dates"
+  ]
+}

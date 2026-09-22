@@ -1,0 +1,29 @@
+{
+  "name": "ptm-card-batch",
+  "status": "PASS",
+  "template": "ptm-card",
+  "variant": "batch",
+  "recipients": 2,
+  "docxSha256": "b74b9b9407a7127994aae66096170244162564bdbcff60a524ccbb4e02f450d1",
+  "pdfSha256": "e7bf00102d090ab90e8d9eb2d5950e4a377d99b68feadddeefdda7418b208784",
+  "docxSeconds": 0.3102500999812037,
+  "renderSeconds": 24.80363129999023,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-batch-page-001.png",
+      "sha256": "7a0a49e9f7efcdd5e1f0ac8b2ac694121e9b077e4a308c01b88c4e796c9b6a0b"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-batch-page-002.png",
+      "sha256": "afdc473604cfacb61a6a62c99d133c4ff984eaee0bbaf2c6a8810e55985f8e79"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

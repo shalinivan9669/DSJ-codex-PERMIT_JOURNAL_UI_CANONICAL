@@ -1,0 +1,14 @@
+▶ real image/import/export/original/reconstruction integration
+  ✔ PNG decoding, rotated crop, corrupt bytes, upload budget, private scope (36.2389ms)
+  ✔ same upload same batch; 100 rows applied, leading zeros/RUKZ/partials survive;101 visible (1297.655ms)
+  ✔ API saves photo references, protocol link independent of selection order; actual saved DOCX hash stable (1843.8332ms)
+  ✔ full XLSX retains literal formula text and all documents independent of pagination (1243.3893ms)
+✔ real image/import/export/original/reconstruction integration (4651.7662ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5467.6231

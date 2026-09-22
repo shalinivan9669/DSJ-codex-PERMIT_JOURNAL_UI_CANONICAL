@@ -1,0 +1,29 @@
+{
+  "name": "biot-worker-card-punctuation",
+  "status": "PASS",
+  "template": "biot-worker-card",
+  "variant": "punctuation",
+  "recipients": 1,
+  "docxSha256": "f0e72c77009e43eb920619984b5ac8f21d61cd268f196f649ff781c02fe8accd",
+  "pdfSha256": "bb93caa59274d8c95b8704404f0f8d1ac6b1c59a3456b98d712a08425fe7df5e",
+  "docxSeconds": 0.6616103000706062,
+  "renderSeconds": 29.514949000091292,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-001.png",
+      "sha256": "960791f1ffcb93825edd0dfbd894c24600b3a73ea8b8d8f9d5dc0f0ef2759a6b"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-002.png",
+      "sha256": "fd9b6f4b8cda52957446b7682815c7760a7422181b1e803f8cb2b352ea697b46"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -1,0 +1,22 @@
+{
+  "name": "pb-protocol-blank",
+  "status": "PASS",
+  "template": "pb-protocol",
+  "variant": "blank",
+  "recipients": 1,
+  "docxSha256": "44e8c5e562f3234af8e1abbd2a767c0ec387f44ed331df2a35c8d8372e6e8aee",
+  "pdfSha256": "231cefb4e8c5edf98b51d80a6940289c32e5390f06798f90ae549f1415b434b1",
+  "docxSeconds": 1.0376357999630272,
+  "renderSeconds": 26.66964650002774,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-blank-page-001.png",
+      "sha256": "afeaa3df24c3e154314ede3d1136094dd0e6bee313af3553e67ff6c1dbb482ee"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -1,0 +1,45 @@
+{
+  "name": "demo-print",
+  "version": "2.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22.16 <25"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "pnpm db:generate && pnpm -r build",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "pnpm db:generate && pnpm -r typecheck",
+    "test": "tsx --tsconfig tsconfig.base.json --test tests/*.test.ts && pnpm --filter @demo/web test",
+    "test:integration": "tsx --tsconfig tsconfig.base.json --test --test-concurrency=1 tests/integration/*.test.ts",
+    "test:render": "pnpm --filter @demo/printing test:render",
+    "test:e2e": "pnpm --filter @demo/web test:e2e",
+    "db:generate": "pnpm --filter @demo/database generate",
+    "db:deploy": "pnpm --filter @demo/database migrate",
+    "setup": "tsx scripts/setup.ts",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:integration && pnpm test:render && pnpm test:e2e && pnpm build",
+    "api": "pnpm --filter @demo/api dev",
+    "web": "pnpm --filter @demo/web dev",
+    "worker": "pnpm --filter @demo/render-worker dev"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.58.2",
+    "@types/node": "22.19.15",
+    "eslint": "10.11.0",
+    "prettier": "3.8.2",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.70.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "multer": "2.4.0",
+      "postcss": "8.5.28",
+      "deepmerge-ts": "8.0.2"
+    }
+  }
+}

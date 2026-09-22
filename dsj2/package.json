@@ -8,7 +8,7 @@
     "build:local": "node scripts/run-local-build.mjs",
     "build:api:deploy": "corepack pnpm --filter @dsj/database db:generate && corepack pnpm --filter @dsj/types build && corepack pnpm --filter @dsj/database build && corepack pnpm --filter @dsj/utils build && corepack pnpm --filter @dsj/api build",
     "build:worker:deploy": "corepack pnpm --filter @dsj/database db:generate && corepack pnpm --filter @dsj/types build && corepack pnpm --filter @dsj/database build && corepack pnpm --filter @dsj/worker build",
-    "dev": "turbo dev",
+    "dev": "node scripts/legacy-runtime-refused.mjs",
     "lint": "node -e \"console.error('No package-level lint tasks are configured yet. Use pnpm verify as the current compile/build gate.'); process.exit(1)\"",
     "typecheck": "pnpm db:generate && pnpm typecheck:turbo",
     "typecheck:turbo": "turbo typecheck",

@@ -1,0 +1,27 @@
+{
+  "baseline": "161c5ed022c9e2c643e80802d3f9dc2cd496a041",
+  "trackedLegacyFiles": 397,
+  "unchangedPreservedFiles": 381,
+  "authorizedBoundaryAdaptersChanged": 16,
+  "authorizedNewBoundaryFiles": 8,
+  "changedAdapters": [
+    "dsj2/apps/api/package.json",
+    "dsj2/apps/api/src/app.module.ts",
+    "dsj2/apps/api/src/main.ts",
+    "dsj2/apps/ncalayer-bridge/src/main.ts",
+    "dsj2/apps/web/app/(app)/access-denied/page.tsx",
+    "dsj2/apps/web/app/(app)/certificates/biot-experimental/page.tsx",
+    "dsj2/apps/web/app/(app)/certificates/requests/[id]/edit/page.tsx",
+    "dsj2/apps/web/app/(app)/layout.tsx",
+    "dsj2/apps/web/app/layout.tsx",
+    "dsj2/apps/web/app/login/page.tsx",
+    "dsj2/apps/web/components/login-form.tsx",
+    "dsj2/apps/web/lib/api.ts",
+    "dsj2/apps/web/lib/auth.ts",
+    "dsj2/apps/web/lib/company-context.ts",
+    "dsj2/apps/web/next.config.ts",
+    "dsj2/apps/worker/src/main.ts"
+  ],
+  "frozenBusinessLogicChanges": 0,
+  "missingPreservedFiles": 0
+}

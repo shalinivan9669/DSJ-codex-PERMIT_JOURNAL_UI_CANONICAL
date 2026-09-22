@@ -1,0 +1,94 @@
+{
+  "name": "biot-protocol-blank",
+  "status": "PASS",
+  "template": "biot-protocol",
+  "variant": "blank",
+  "recipients": 1,
+  "docxSha256": "69b3ab9888cb75840bf93bf4a94457dabc21ad34bfbd38d9de7f5b6c414722ab",
+  "pdfSha256": "be6e50ca9df5d9d0051f5bf9bf15c450c2ff3ae9c902f091857c270b12e66966",
+  "docxSeconds": 0.14209940005093813,
+  "renderSeconds": 27.39818080002442,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-blank-page-001.png",
+      "sha256": "5b8674bebeb18858faaa4665e9f3111b41caa00dec82f8e99f9bed818849f1e0"
+    }
+  ],
+  "columnChecks": [
+    {
+      "page": 1,
+      "tableBox": [
+        50.4,
+        376.85076377952805,
+        587.4,
+        567.950763779528
+      ],
+      "cells": [
+        {
+          "column": 1,
+          "box": [
+            50.4,
+            527.450763779528,
+            84.9,
+            540.875763779528
+          ],
+          "value": "1"
+        },
+        {
+          "column": 2,
+          "box": [
+            84.9,
+            527.450763779528,
+            176.9,
+            540.875763779528
+          ],
+          "value": "2"
+        },
+        {
+          "column": 3,
+          "box": [
+            176.9,
+            527.450763779528,
+            303.9,
+            540.875763779528
+          ],
+          "value": "3"
+        },
+        {
+          "column": 4,
+          "box": [
+            303.9,
+            527.450763779528,
+            410.2,
+            540.875763779528
+          ],
+          "value": "4"
+        },
+        {
+          "column": 5,
+          "box": [
+            410.2,
+            527.450763779528,
+            515.925,
+            540.875763779528
+          ],
+          "value": "5"
+        },
+        {
+          "column": 6,
+          "box": [
+            515.925,
+            527.450763779528,
+            587.4,
+            540.875763779528
+          ],
+          "value": "6"
+        }
+      ]
+    }
+  ],
+  "problems": []
+}

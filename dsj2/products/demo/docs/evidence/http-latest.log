@@ -1,0 +1,16 @@
+▶ real Nest HTTP authentication, role revocation, CSRF, uploads and tenant boundary
+  ✔ anonymous/old JWT/frozen route matrix before all auth (297.2272ms)
+  ✔ login, Origin and CSRF, logout invalidates persisted session (849.2515ms)
+  ✔ role changes revoke old session; viewer cannot mutate (556.5134ms)
+  ✔ direct HTTP foreign request/photo/job denied with admin role (115.6725ms)
+  ✔ malformed image, unsupported XLSM, oversized JSON and errors have correlation id (97.9522ms)
+  ✔ disabled user and password change invalidate every session (308.6455ms)
+✔ real Nest HTTP authentication, role revocation, CSRF, uploads and tenant boundary (5850.6726ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14938.0792

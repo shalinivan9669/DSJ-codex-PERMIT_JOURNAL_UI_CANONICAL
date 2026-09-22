@@ -1,0 +1,22 @@
+{
+  "name": "ptm-protocol-short",
+  "status": "PASS",
+  "template": "ptm-protocol",
+  "variant": "short",
+  "recipients": 1,
+  "docxSha256": "69eb223147a8de629fd3a6bcc72cc39955cd54f092e467ccc7600c1ec172a619",
+  "pdfSha256": "7a7e95e0f12d1aa9e8d93a5fd6e39bc33dab5edbf6d98db7deb8503043c80fc2",
+  "docxSeconds": 1.0268230999354273,
+  "renderSeconds": 23.328261999995448,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-short-page-001.png",
+      "sha256": "5c577afaf7afc542c7c4a77ee6298760f1c7d5096e0b113baefb14336801e057"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -1,0 +1,29 @@
+{
+  "name": "ps-card-punctuation",
+  "status": "PASS",
+  "template": "ps-card",
+  "variant": "punctuation",
+  "recipients": 1,
+  "docxSha256": "a8780d277ec1afd903684992a5cf021d3cedf8f04935963d27081e08c48d8c09",
+  "pdfSha256": "42396e06674d4916dfa1ced3976871bc11913b5af945ed9651c53adc14da900f",
+  "docxSeconds": 0.8410684000700712,
+  "renderSeconds": 42.89160150010139,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-punctuation-page-001.png",
+      "sha256": "5ad6eaf0da2b30cee0cffe5ae05b37f370713884c71cc03bec4f4d894eef071e"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-punctuation-page-002.png",
+      "sha256": "d7fd55858b34e73971ca284a0ceb6bf9d251e756e9ba440cf8cebc84f6a28138"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

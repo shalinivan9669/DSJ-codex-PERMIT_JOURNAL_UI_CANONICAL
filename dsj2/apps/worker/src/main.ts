@@ -1,3 +1,4 @@
+import { refuseFrozenRuntime } from "../../../product-policy/legacy";
 import { config } from "dotenv";
 import { Queue, Worker } from "bullmq";
 import { createPrismaClient } from "@dsj/database";
@@ -7,6 +8,8 @@ import {
   parsePositionComplianceMatrixPayload,
 } from "@dsj/utils";
 import { resolve } from "node:path";
+
+refuseFrozenRuntime("DSJ worker");
 
 config({ path: resolve(process.cwd(), "../../.env.local") });
 config({ path: resolve(process.cwd(), "../../.env") });

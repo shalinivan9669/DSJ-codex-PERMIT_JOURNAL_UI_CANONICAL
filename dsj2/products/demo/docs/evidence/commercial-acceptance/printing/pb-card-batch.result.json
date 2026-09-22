@@ -1,0 +1,43 @@
+{
+  "name": "pb-card-batch",
+  "status": "PASS",
+  "template": "pb-card",
+  "variant": "batch",
+  "recipients": 2,
+  "docxSha256": "105eff6d6bc03908ac2bfdd6b3bce1a0246f3664336c615f083a83d227c4d076",
+  "pdfSha256": "898c6e9006f08560f126a8a345579342e75564460681ed7dce2b8359172ead9b",
+  "docxSeconds": 1.3236618998926133,
+  "renderSeconds": 26.452326699974947,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-001.png",
+      "sha256": "3a02069f597a0afc9f2f253abe14428218c4efa73fc7f145227c55d46fb38d82"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-002.png",
+      "sha256": "48dfecd61b84ac6a9c5a20bfdcb208361598520b6f4f09de815db1089de2a4ec"
+    },
+    {
+      "page": 3,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-003.png",
+      "sha256": "84b66fd65df0e8de36e791ac2cebd1613b8b2f5b14446a79a8a95ca533bfabb5"
+    },
+    {
+      "page": 4,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-004.png",
+      "sha256": "48dfecd61b84ac6a9c5a20bfdcb208361598520b6f4f09de815db1089de2a4ec"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

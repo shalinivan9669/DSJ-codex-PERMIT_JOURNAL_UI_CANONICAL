@@ -1,0 +1,79 @@
+{
+  "productName": "DEMO",
+  "auditDate": "2026-09-22",
+  "sourceCommit": "161c5ed022c9e2c643e80802d3f9dc2cd496a041",
+  "sourceBranch": "main",
+  "environment": {
+    "os": "Windows",
+    "node": "24.16.0",
+    "pnpm": "9.15.4",
+    "sourceCiNodeMajor": 22,
+    "projectEnvFilePresent": false,
+    "dockerLinuxEngineAvailable": false,
+    "libreOfficeAvailable": false
+  },
+  "commands": {
+    "pnpm install --frozen-lockfile": { "exitCode": 0, "lockfileChanged": false },
+    "pnpm verify": {
+      "exitCode": 0,
+      "typecheckTasksPassed": 8,
+      "buildTasksPassed": 8,
+      "packageTestTasksPassed": 4,
+      "tests": 174,
+      "passed": 166,
+      "failed": 0,
+      "skipped": 8,
+      "packages": {
+        "api": { "tests": 148, "passed": 140, "skipped": 8 },
+        "database": { "tests": 16, "passed": 16, "skipped": 0 },
+        "web": { "tests": 8, "passed": 8, "skipped": 0 },
+        "ncalayerBridge": { "tests": 2, "passed": 2, "skipped": 0 }
+      }
+    },
+    "pnpm lint": { "exitCode": 1, "reason": "Intentionally failing placeholder script" },
+    "focused biot-cards.namespace-regression.test.ts with bundled Python": {
+      "tests": 3, "passed": 3, "failed": 0, "skipped": 0,
+      "proves": "Generator / OOXML structural regression checks; not page rendering"
+    }
+  },
+  "dependencyAudit": {
+    "scope": "Original DSJ workspace production dependency tree",
+    "advisoryEntries": 29,
+    "critical": 2,
+    "high": 14,
+    "moderate": 10,
+    "low": 3,
+    "note": "Scanner findings do not establish exploitability of every advisory in this deployment"
+  },
+  "generatorSmoke": {
+    "docxOutputs": 4,
+    "xlsxFormulaProbe": "Confirmed: input =1+1 stored as formula in Реестр!D2",
+    "resultFile": "DEMO_print_smoke/DEMO_smoke_results.json",
+    "templateInventory": "DEMO_print_smoke/DEMO_template_inventory.json",
+    "physicalDocxTemplates": 11,
+    "activeRuntimeDocxTemplates": 10,
+    "pageVisualQa": "NOT_VERIFIED: no LibreOffice soffice"
+  },
+  "nestBodyParserProbe": {
+    "scope": "Isolated default Nest app using installed dependencies; no DB/auth pipeline",
+    "cases": [
+      { "syntheticJsonBytes": 50041, "httpStatus": 201 },
+      { "syntheticJsonBytes": 150041, "httpStatus": 413 }
+    ]
+  },
+  "notPerformed": [
+    "Production database or actual issued-record audit",
+    "DB integration / migration deploy against live or disposable PostgreSQL",
+    "Authenticated browser E2E",
+    "Visual page rendering / physical print",
+    "Concurrency / crash recovery / backup restore",
+    "Production deployment or public-route shutdown"
+  ],
+  "changesMade": [
+    "Audit / implementation plan / execution prompt / QA evidence under dsj2/docs/audit",
+    "Explicit printing-only frozen-scope rule in dsj2/AGENTS.md"
+  ],
+  "applicationCodeChanged": false,
+  "accessRestrictionsImplemented": false,
+  "productionDataChanged": false
+}

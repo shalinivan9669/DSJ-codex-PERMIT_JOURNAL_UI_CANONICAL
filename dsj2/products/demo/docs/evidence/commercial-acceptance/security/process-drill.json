@@ -1,0 +1,113 @@
+[
+  {
+    "at": "2026-09-22T12:18:55.091Z",
+    "event": "worker.spawn",
+    "label": "before-crash",
+    "pid": 49636
+  },
+  {
+    "at": "2026-09-22T12:18:58.229Z",
+    "event": "worker.stdout",
+    "label": "before-crash",
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
+  },
+  {
+    "at": "2026-09-22T12:18:58.295Z",
+    "event": "claimed-before-kill",
+    "jobId": "e6f10bc0-c5fa-43f0-a918-369fbe5dc06a",
+    "status": "RUNNING",
+    "attempts": 1,
+    "fencingToken": 1,
+    "leaseUntil": "2026-09-22T12:19:28.234Z"
+  },
+  {
+    "at": "2026-09-22T12:18:58.758Z",
+    "event": "worker.killed",
+    "pid": 49636
+  },
+  {
+    "at": "2026-09-22T12:18:58.766Z",
+    "event": "crash-confirmed-before-publication",
+    "jobId": "e6f10bc0-c5fa-43f0-a918-369fbe5dc06a",
+    "status": "RUNNING",
+    "artifactCount": 0
+  },
+  {
+    "at": "2026-09-22T12:19:28.569Z",
+    "event": "worker.spawn",
+    "label": "recovery-a",
+    "pid": 66172
+  },
+  {
+    "at": "2026-09-22T12:19:28.578Z",
+    "event": "worker.spawn",
+    "label": "recovery-b",
+    "pid": 25336
+  },
+  {
+    "at": "2026-09-22T12:19:34.212Z",
+    "event": "worker.stdout",
+    "label": "recovery-b",
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
+  },
+  {
+    "at": "2026-09-22T12:19:34.307Z",
+    "event": "worker.stdout",
+    "label": "recovery-a",
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
+  },
+  {
+    "at": "2026-09-22T12:19:47.412Z",
+    "event": "recovered-once-with-two-workers",
+    "jobId": "e6f10bc0-c5fa-43f0-a918-369fbe5dc06a",
+    "attempts": 2,
+    "fencingToken": 2,
+    "artifactId": "40a55b93-1b46-4b0e-b20a-b6462ffa4ca6",
+    "sha256": "6f5f3c78b1d95f6d23f22bd7653f7a5b24057b380febe42f6aeb1da188ca4ced",
+    "bytes": 556994
+  },
+  {
+    "at": "2026-09-22T12:19:56.231Z",
+    "event": "actual-converter-killed",
+    "converterPid": 60856,
+    "jobId": "6210aee6-ef71-48e7-ad0e-5078fd6f1180"
+  },
+  {
+    "at": "2026-09-22T12:19:56.360Z",
+    "event": "worker.stderr",
+    "label": "recovery-b",
+    "message": "{\"event\":\"render.failed\",\"jobId\":\"6210aee6-ef71-48e7-ad0e-5078fd6f1180\",\"correlationId\":\"20511665-5ffb-4ef3-8852-8a711ad6a65e\"}"
+  },
+  {
+    "at": "2026-09-22T12:19:56.362Z",
+    "event": "converter-failure-recorded",
+    "jobId": "6210aee6-ef71-48e7-ad0e-5078fd6f1180",
+    "status": "RETRY",
+    "errorCode": "PDF_CONVERSION_FAILED",
+    "attempts": 1
+  },
+  {
+    "at": "2026-09-22T12:20:40.955Z",
+    "event": "pdf-recovery-complete",
+    "jobId": "6210aee6-ef71-48e7-ad0e-5078fd6f1180",
+    "attempts": 2,
+    "converterPid": 60856,
+    "sha256": "ec8f34a8aa9af77247a5e1b8e24f034b6d91a4a1f895fdbbdd58601f69ef1fba",
+    "originalDocxSha256": "6f5f3c78b1d95f6d23f22bd7653f7a5b24057b380febe42f6aeb1da188ca4ced",
+    "noNumbersReserved": true
+  },
+  {
+    "at": "2026-09-22T12:20:40.955Z",
+    "event": "PASS"
+  },
+  {
+    "at": "2026-09-22T12:20:41.641Z",
+    "event": "worker.killed",
+    "pid": 66172
+  },
+  {
+    "at": "2026-09-22T12:20:42.236Z",
+    "event": "worker.killed",
+    "pid": 25336
+  }
+]

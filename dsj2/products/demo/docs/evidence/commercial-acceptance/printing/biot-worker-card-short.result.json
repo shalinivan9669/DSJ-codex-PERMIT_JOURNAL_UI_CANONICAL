@@ -1,0 +1,29 @@
+{
+  "name": "biot-worker-card-short",
+  "status": "PASS",
+  "template": "biot-worker-card",
+  "variant": "short",
+  "recipients": 1,
+  "docxSha256": "c70e79ecce99cf04f32f4cc9fd3ab1aafee14d44ab44228d0a9dab58060ed5e7",
+  "pdfSha256": "70da05dd4e5b0bf407563fb66d7cc54c48b7330ea05091b1d6d80fc201c67531",
+  "docxSeconds": 0.7258216000627726,
+  "renderSeconds": 25.493007100070827,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-001.png",
+      "sha256": "541304063cbc6bbfb63abc5118e761b2cba27a66f83192e8c9b6b47d0bc3f1eb"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-002.png",
+      "sha256": "fd9b6f4b8cda52957446b7682815c7760a7422181b1e803f8cb2b352ea697b46"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

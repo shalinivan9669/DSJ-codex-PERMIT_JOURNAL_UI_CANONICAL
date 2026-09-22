@@ -1,0 +1,29 @@
+{
+  "name": "ps-witness-long",
+  "status": "PASS",
+  "template": "ps-witness",
+  "variant": "long",
+  "recipients": 1,
+  "docxSha256": "69ce37fe3e00f98df72c9fa5fc321fd7ddc8d27b0bbf9645e56e7c6be0f9a683",
+  "pdfSha256": "43ecb97b0589c01be662cc3eb18709807b5cf42f408f416e1961f4062f9e807a",
+  "docxSeconds": 0.36164890008512884,
+  "renderSeconds": 29.97085150005296,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-long-page-001.png",
+      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-long-page-002.png",
+      "sha256": "96a80cb2c75230dc648e76be59517363160bac666ba6167d72028770233ba59a"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -1,0 +1,8 @@
+{
+  "name": "ps-card-long",
+  "status": "FAIL",
+  "template": "ps-card",
+  "variant": "long",
+  "recipients": 1,
+  "error": "PRINT_LAYOUT_OVERFLOW"
+}

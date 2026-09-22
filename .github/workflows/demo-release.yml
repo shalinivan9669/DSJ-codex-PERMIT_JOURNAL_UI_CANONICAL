@@ -1,0 +1,166 @@
+name: DEMO autonomous release gates
+on:
+  push:
+    paths:
+      [
+        "dsj2/products/demo/**",
+        "dsj2/product-policy/**",
+        "dsj2/apps/**",
+        "dsj2/packages/**",
+        "dsj2/package.json",
+        "dsj2/docs/experimental/**",
+        "dsj2/scripts/**",
+        "dsj2/scripts/verify-demo-freeze.mjs",
+        ".github/workflows/demo-release.yml",
+      ]
+  pull_request:
+    paths:
+      [
+        "dsj2/products/demo/**",
+        "dsj2/product-policy/**",
+        "dsj2/apps/**",
+        "dsj2/packages/**",
+        "dsj2/package.json",
+        "dsj2/docs/experimental/**",
+        "dsj2/scripts/**",
+        "dsj2/scripts/verify-demo-freeze.mjs",
+        ".github/workflows/demo-release.yml",
+      ]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:18.3-bookworm@sha256:80630f83606d8db77d30b3851b16a9f78be2d0d4dda6f7b82a1fdca5ebe3acba
+        env:
+          {
+            POSTGRES_USER: demo,
+            POSTGRES_PASSWORD: disposable-ci-only,
+            POSTGRES_DB: demo_test_ci,
+          }
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U demo -d demo_test_ci" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://demo:disposable-ci-only@localhost:5432/demo_test_ci
+      DEMO_ORIGIN: http://localhost:3100
+      DEMO_API_ORIGIN: http://localhost:4100
+      DEMO_PYTHON: python3
+      DEMO_SOFFICE: /opt/libreoffice26.2/program/soffice
+      NEXT_TELEMETRY_DISABLED: "1"
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24.16.0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: 3.12.14 }
+      - name: Required legacy gateway and startup boundary tests
+        run: |
+          corepack enable
+          corepack pnpm --dir dsj2 install --frozen-lockfile
+          corepack pnpm --dir dsj2 --filter @dsj/api exec tsx --test src/common/product-boundary.test.ts
+      - name: Preserve legacy source and copy only autonomous product
+        run: |
+          node dsj2/scripts/verify-demo-freeze.mjs
+          mkdir -p "$RUNNER_TEMP/demo"
+          rsync -a --exclude=node_modules --exclude=.runtime --exclude=.next --exclude=dist --exclude=data --exclude=docs/evidence dsj2/products/demo/ "$RUNNER_TEMP/demo/"
+          echo "DEMO_ROOT=$RUNNER_TEMP/demo" >> "$GITHUB_ENV"
+          echo "DEMO_ARTIFACT_ROOT=$RUNNER_TEMP/demo-private" >> "$GITHUB_ENV"
+      - name: Install frozen workspace and pinned converter
+        run: |
+          cd "$DEMO_ROOT"
+          corepack enable
+          corepack prepare pnpm@9.15.9 --activate
+          pnpm install --frozen-lockfile
+          python3 -m pip install -r scripts/render/requirements.txt
+          curl --fail --location --retry 3 https://download.documentfoundation.org/libreoffice/stable/26.2.6/deb/x86_64/LibreOffice_26.2.6_Linux_x86-64_deb.tar.gz -o "$RUNNER_TEMP/lo.tar.gz"
+          echo "fd0e8f8f2408dd2e5b90286e60f3f97cf566ba441cd48cfc5bcc68067303e0bc  $RUNNER_TEMP/lo.tar.gz" | sha256sum --check
+          mkdir "$RUNNER_TEMP/lo"
+          tar -xzf "$RUNNER_TEMP/lo.tar.gz" -C "$RUNNER_TEMP/lo"
+          sudo apt-get update
+          sudo apt-get install -y "$RUNNER_TEMP"/lo/*/DEBS/*.deb fontconfig
+          sudo mkdir -p /usr/local/share/fonts/demo
+          sudo cp assets/fonts/*.ttf /usr/local/share/fonts/demo/
+          sudo fc-cache -f
+          "$DEMO_SOFFICE" --headless --version | grep 'LibreOffice 26.2.6'
+          pnpm exec playwright install --with-deps chromium
+      - name: Autonomous code, migrations, mandatory real render and dependency gates
+        run: |
+          cd "$DEMO_ROOT"
+          node scripts/verification/autonomy.mjs
+          pnpm db:deploy
+          pnpm lint
+          pnpm format:check
+          pnpm typecheck
+          pnpm test
+          pnpm test:render
+          pnpm test:integration
+          pnpm audit --prod --audit-level high
+          python3 -m venv "$RUNNER_TEMP/python-audit"
+          "$RUNNER_TEMP/python-audit/bin/python" -m pip install pip-audit==2.10.1
+          "$RUNNER_TEMP/python-audit/bin/python" -m pip_audit -r scripts/render/requirements.txt --format json --output docs/evidence/python-audit.json
+          pnpm build
+      - name: Real browser against isolated DEMO stack
+        env:
+          DATABASE_URL: postgresql://demo:disposable-ci-only@localhost:5432/demo_test_e2e_ci
+          DEMO_ADMIN_EMAIL: admin@demo.local
+          DEMO_ADMIN_PASSWORD: Local-Demo-2026-Print!
+          DEMO_E2E_EMAIL: admin@demo.local
+          DEMO_E2E_PASSWORD: Local-Demo-2026-Print!
+          DEMO_TENANT_NAME: Synthetic CI centre
+          DEMO_SAMPLE_DATA: "1"
+        run: |
+          cd "$DEMO_ROOT"
+          docker exec '${{ job.services.postgres.id }}' createdb -U demo demo_test_e2e_ci
+          pnpm db:deploy
+          pnpm run setup
+          pnpm api > "$RUNNER_TEMP/demo-api.log" 2>&1 & API_PID=$!
+          pnpm web > "$RUNNER_TEMP/demo-web.log" 2>&1 & WEB_PID=$!
+          pnpm worker > "$RUNNER_TEMP/demo-worker.log" 2>&1 & WORKER_PID=$!
+          trap 'kill "$API_PID" "$WEB_PID" "$WORKER_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 60); do if curl --fail --silent http://localhost:4100/health && curl --fail --silent http://localhost:3100/login > /dev/null; then break; fi; sleep 2; done
+          curl --fail --silent http://localhost:4100/health
+          curl --fail --silent http://localhost:3100/login > /dev/null
+          pnpm --filter @demo/web test:e2e
+      - name: Build shipping images from autonomous context
+        run: |
+          cd "$DEMO_ROOT"
+          docker build --target runtime -f deployment/Dockerfile -t demo-api:ci .
+          docker build --target web -f deployment/Dockerfile -t demo-web:ci .
+          docker run --rm --read-only --network none --tmpfs /tmp:rw,nosuid,size=64m demo-api:ci pnpm --version
+          docker run --rm --read-only --network none --tmpfs /tmp:rw,nosuid,size=64m demo-web:ci pnpm --version
+          docker run --rm --entrypoint /opt/libreoffice26.2/program/soffice demo-api:ci --headless --version
+      - name: Real shipping-runtime backup and empty restore
+        run: |
+          docker exec '${{ job.services.postgres.id }}' createdb -U demo demo_test_backup_ci
+          docker exec '${{ job.services.postgres.id }}' createdb -U demo demo_test_restore_ci
+          export DATABASE_URL=postgresql://demo:disposable-ci-only@localhost:5432/demo_test_backup_ci
+          docker run --rm --network host -e DATABASE_URL -e DEMO_ORIGIN -v demo-ci-source:/data demo-api:ci pnpm db:deploy
+          docker run --rm --network host -e DATABASE_URL -e DEMO_ORIGIN -v demo-ci-source:/data demo-api:ci pnpm exec tsx --tsconfig tsconfig.base.json scripts/verification/backup-fixture.ts
+          docker run --rm --network host -e DATABASE_URL -e DEMO_MAINTENANCE=1 -v demo-ci-source:/data -v demo-ci-backup:/backups demo-api:ci node deployment/backup.mjs backup /backups/baseline
+          export DATABASE_URL=postgresql://demo:disposable-ci-only@localhost:5432/demo_test_restore_ci
+          docker run --rm --network host -e DATABASE_URL -v demo-ci-restored:/data -v demo-ci-backup:/backups demo-api:ci node deployment/backup.mjs restore /backups/baseline
+          docker run --rm --network host -e DATABASE_URL -v demo-ci-restored:/data -v demo-ci-backup:/backups demo-api:ci node deployment/backup.mjs verify /backups/baseline
+          docker run --rm -v demo-ci-backup:/backups --entrypoint cat demo-api:ci /backups/baseline/manifest.json > "$DEMO_ROOT/docs/evidence/ci-backup-restore-manifest.json"
+      - name: Shipping-image vulnerability gate
+        run: |
+          for service in api web; do
+            docker save "demo-$service:ci" -o "$RUNNER_TEMP/demo-image.tar"
+            docker run --rm -v "$RUNNER_TEMP:/scan" aquasec/trivy:0.74.0@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969 image --input /scan/demo-image.tar --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --format json --output "/scan/demo-$service-cves.json"
+            cp "$RUNNER_TEMP/demo-$service-cves.json" "$DEMO_ROOT/docs/evidence/"
+            rm -f "$RUNNER_TEMP/demo-image.tar"
+          done
+      - name: Upload actual verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-release-evidence
+          path: |
+            ${{ runner.temp }}/demo/docs/evidence/
+            ${{ runner.temp }}/demo-*.log
+          if-no-files-found: error

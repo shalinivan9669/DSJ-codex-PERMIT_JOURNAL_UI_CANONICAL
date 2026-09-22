@@ -1,0 +1,59 @@
+{
+  "product": "DEMO",
+  "version": "2.0.0",
+  "verifiedAt": "2026-09-22T11:08:15.943Z",
+  "branch": "codex/demo-print-2-0",
+  "baseCommit": "161c5ed022c9e2c643e80802d3f9dc2cd496a041",
+  "workingTreeUncommitted": true,
+  "nextBuildId": "S_IvrtxRx-v_mRQLkIjV4",
+  "runtimeSourceDigest": "c88c4042db90e6ff983f294e13567fe1040eeacd2c989989605435b84402f64f",
+  "runtimeSourceFiles": 108,
+  "lockfileSha256": "5a6af8b21d2dfdded1e6b7ac9c00c6e4991b2b2ce6b987988b71e58f385e5cd0",
+  "checks": {
+    "unit": {
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "database": {
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0
+    },
+    "render": {
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    "browser": {
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 259443.07400000002
+    },
+    "legacyBoundary": {
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "httpProbeRequests": 90
+    }
+  },
+  "printSpecimens": {
+    "pairs": 40,
+    "pages": 70,
+    "problems": []
+  },
+  "dependencyAudits": {
+    "javascriptKnownVulnerabilities": 0,
+    "pythonKnownVulnerabilities": 0,
+    "containerOs": "UNVERIFIED_ENGINE_UNAVAILABLE"
+  },
+  "external": {
+    "standaloneRuntime": "BLOCKED_BY_APPROVAL_REVIEW",
+    "legacyBrowser": "BLOCKED_BY_APPROVAL_REVIEW",
+    "linuxImages": "UNVERIFIED_ENGINE_UNAVAILABLE",
+    "productionCutover": "BLOCKED_ENVIRONMENT_NOT_PROVIDED",
+    "physicalPrint": "NOT_PERFORMED",
+    "legalApproval": "ISSUER_REQUIRED"
+  }
+}

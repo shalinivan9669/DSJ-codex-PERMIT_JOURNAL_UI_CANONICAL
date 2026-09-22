@@ -1,0 +1,523 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "converter": "LibreOffice 26.2.6.3 8221e31b3ac356a1623c672912a3d2b492f7e3d1",
+  "rendererVersion": "demo-ooxml-3/libreoffice-26.2.6.3",
+  "sourceSha256": {
+    "scripts/render/entry.py": "c269bb00b1b4c0ad5b3827441b38947fa226538f8707dc52e91fab219d04b494",
+    "scripts/render/ooxml.py": "f899a56d04fe5405e4ae290332206df0035a456213ff7133aaceaec9426342fb",
+    "scripts/render/print_contracts.py": "95e08734b637ebc6b98cdf1af19ffa2ae30be19a6f38129d5178b40ece2ac5aa",
+    "scripts/render/renderer.py": "cfe05cca883eb572870e78fe3e267039e7ee094200884ac4d2b2e733c8ac36aa",
+    "scripts/render/sanitize_templates.py": "b240eed9e4638df944f8d88dba9049ade6c768e1b69e90257d936fa9199936da",
+    "scripts/render/upgrade_templates_v5.py": "a03da2a2e34f17ba36bd94a527456dfb43caf7638c3c1789392733d572f46c9d",
+    "scripts/verification/commercial_print.py": "a4366549a84665e5fb0c8b924cd54be45dcfa9676865e31d7e58bde097ef97eb",
+    "scripts/verification/print-calibration.py": "f6742df5e9d31f681379ca5ecd7869da22e4a9a109b2e2ba80f7610dad2e7300"
+  },
+  "fonts": {
+    "version": "2.1.5",
+    "source": "https://github.com/liberationfonts/liberation-fonts/releases/tag/2.1.5",
+    "license": "SIL Open Font License 1.1",
+    "files": {
+      "LiberationMono-Bold.ttf": "bd62a0672d0b9b6710b01df434c80ad54fa5f0835207eb7b17b7a761463067bb",
+      "LiberationMono-BoldItalic.ttf": "79451f3c09fe25116098853b7a2ca6e2436220ccc11af022979adbcf195be130",
+      "LiberationMono-Italic.ttf": "605c01c711b44480a7508d349dfbf3264e81fa43d69e61cfa7d10b86e764c4d1",
+      "LiberationMono-Regular.ttf": "f2b83c763e8afd21709333370bed4774337fae82267937e2b5aea7e2fbd922c1",
+      "LiberationSans-Bold.ttf": "788abee4c806d660e8aee46689dd8540cd4bb98da03dcc9d171ce3efd99a9173",
+      "LiberationSans-BoldItalic.ttf": "698da70fc191cc5f33ad4d6d3fe830fe4624b898ea2e3169955928b7c491f1ee",
+      "LiberationSans-Italic.ttf": "e5bae5c4cde31f22142753855f4f8fb86da6ff39955ed3c0a11248b0d16948b0",
+      "LiberationSans-Regular.ttf": "76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8",
+      "LiberationSerif-Bold.ttf": "d754ba427cfe0bca54ae052384baa8f842da5bd6550ad4da024ac441e7a7d5ce",
+      "LiberationSerif-BoldItalic.ttf": "f17db8af71e24d2066b587546021d4f0b296be389512b658dec3c09affeb11a7",
+      "LiberationSerif-Italic.ttf": "0e3dea9f8d613e006ccfa62201f33e265d19167bd0907725c3e145368b04fc2e",
+      "LiberationSerif-Regular.ttf": "058ea80864aef09a23f45cbec2bb5400bc3dfbdea01c3f10538a21fcb497fb74"
+    }
+  },
+  "templates": {
+    "version": 1,
+    "rendererVersion": "demo-ooxml-3",
+    "templates": [
+      {
+        "id": "biot-worker-card",
+        "version": 5,
+        "file": "biot-worker-card.v5.docx",
+        "sha256": "4c4018864da2ad09072fd2a6e5425655cbeed07e20673f418efc80de7772db22",
+        "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+        "fields": [
+          "CHAIR",
+          "FULL_NAME_KZ",
+          "FULL_NAME_RU",
+          "ISSUER_RU",
+          "MEMBER_1",
+          "NUMBER",
+          "POSITION_KZ",
+          "POSITION_RU",
+          "PROTOCOL_DAY_MONTH",
+          "PROTOCOL_NUMBER",
+          "PROTOCOL_YEAR",
+          "SUBJECT",
+          "WORKPLACE_KZ",
+          "WORKPLACE_RU"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+          },
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+          },
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": false,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/biot-worker-card.pdf",
+        "protocolSemantics": null,
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "cf81fd8f97455828c828ae66c237b2e92d7b15fdcff3c693417cfb2d8bc75e29",
+        "regulatoryReview": {
+          "status": "REQUIRES_CURRENT_FORM",
+          "effectiveFrom": "2026-07-12",
+          "source": "https://old.adilet.zan.kz/rus/docs/V1500012665",
+          "notice": "Исторический макет требует сверки с действующей формой и утверждения эмитентом. Юридическая пригодность текущей редакции не подтверждена."
+        }
+      },
+      {
+        "id": "biot-itr-certificate",
+        "version": 4,
+        "file": "biot-itr-certificate.v4.docx",
+        "sha256": "9f45958fc2548314ce5bae030efae2f93d0a89e1878e074214d18d748853b00d",
+        "sourceSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+        "fields": [
+          "CHAIR",
+          "CITY_RU",
+          "DOCUMENT_DATE",
+          "FULL_NAME_RU",
+          "NUMBER",
+          "RESULT"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16840",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11900",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": false,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/biot-itr-certificate.pdf",
+        "protocolSemantics": null,
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "regulatoryReview": {
+          "status": "REQUIRES_CURRENT_FORM",
+          "effectiveFrom": "2026-07-12",
+          "source": "https://old.adilet.zan.kz/rus/docs/V1500012665",
+          "notice": "Исторический макет требует сверки с действующей формой и утверждения эмитентом. Юридическая пригодность текущей редакции не подтверждена."
+        }
+      },
+      {
+        "id": "biot-protocol",
+        "version": 5,
+        "file": "biot-protocol.v5.docx",
+        "sha256": "c5f3a5b875b2740efc165ffd4b05548439d56cefe1a6918f0eba6d724250f363",
+        "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "fields": [
+          "ADDRESS_RU",
+          "APPROVAL_BASIS",
+          "CHAIR",
+          "EMPTY",
+          "FULL_NAME_RU",
+          "ISSUER_RU",
+          "MEMBER_1",
+          "MEMBER_2",
+          "POSITION_KZ",
+          "POSITION_RU",
+          "PROTOCOL_DATE",
+          "PROTOCOL_NUMBER",
+          "RESULT",
+          "WORKPLACE_KZ",
+          "WORKPLACE_RU"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": false,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/biot-protocol.pdf",
+        "protocolSemantics": "individual",
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "9cb183e598a4ba4d7110db134b256ee18b28e79cd2b0fcbef37e939289535610",
+        "regulatoryReview": {
+          "status": "REQUIRES_CURRENT_FORM",
+          "effectiveFrom": "2026-07-12",
+          "source": "https://old.adilet.zan.kz/rus/docs/V1500012665",
+          "notice": "Исторический макет требует сверки с действующей формой и утверждения эмитентом. В этом макете 6 колонок; в текущем приложении 3 предусмотрено 7."
+        }
+      },
+      {
+        "id": "ptm-card",
+        "version": 4,
+        "file": "ptm-card.v4.docx",
+        "sha256": "eecb030d026f586251e4b8b9d39830e3f323cff13720e9d8da50ff9ebaef3a18",
+        "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+        "fields": [
+          "CHAIR",
+          "FULL_NAME_BOTH",
+          "ISSUER_RU",
+          "NUMBER",
+          "POSITION_KZ",
+          "POSITION_RU",
+          "PROTOCOL_DAY_MONTH",
+          "PROTOCOL_NUMBER",
+          "PROTOCOL_YEAR",
+          "SUBJECT",
+          "VALID_DAY_MONTH",
+          "VALID_YEAR",
+          "WORKPLACE_KZ",
+          "WORKPLACE_RU"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}code": "9"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": true,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/ptm-card.pdf",
+        "protocolSemantics": null,
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true
+      },
+      {
+        "id": "ptm-protocol",
+        "version": 5,
+        "file": "ptm-protocol.v5.docx",
+        "sha256": "f2f276b3fc9f0f61bcae09f36488efbc8392da1a85b4d8102256f22d921cfebd",
+        "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+        "fields": [
+          "ADDRESS_RU",
+          "APPROVAL_BASIS",
+          "CHAIR",
+          "EMPTY",
+          "FULL_NAME_RU",
+          "ISSUER_RU",
+          "MEMBER_1",
+          "MEMBER_2",
+          "POSITION_KZ",
+          "POSITION_RU",
+          "PROTOCOL_DATE",
+          "PROTOCOL_NUMBER",
+          "REASON",
+          "RESULT",
+          "WORKPLACE_RU"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": false,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/ptm-protocol.pdf",
+        "protocolSemantics": "individual",
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "52b1b9f1b9aeac89d868dd25bba8efca2c8681520868cd009a18aeda63028e93"
+      },
+      {
+        "id": "pb-card",
+        "version": 5,
+        "file": "pb-card.v5.docx",
+        "sha256": "bfdca5596af8efc09dc3c21d138c315c71b5c9115bcfde9a2be29d640bf8547d",
+        "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+        "fields": [
+          "CHAIR",
+          "DOCUMENT_DAY",
+          "DOCUMENT_MONTH",
+          "DOCUMENT_YEAR",
+          "FULL_NAME_BOTH",
+          "ISSUER_RU",
+          "NUMBER",
+          "POSITION_BOTH",
+          "PROTOCOL_DAY",
+          "PROTOCOL_MONTH",
+          "PROTOCOL_NUMBER",
+          "PROTOCOL_YEAR",
+          "SUBJECT",
+          "VALID_DAY",
+          "VALID_MONTH",
+          "VALID_YEAR",
+          "WORKPLACE_BOTH"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}code": "9"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": true,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/pb-card.pdf",
+        "protocolSemantics": null,
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "dafea319b26ff9d8dd26312aa72a929e36daead1f14ea08399e0188399bbdce9"
+      },
+      {
+        "id": "pb-protocol",
+        "version": 5,
+        "file": "pb-protocol.v5.docx",
+        "sha256": "daa358acef4fbaf98b3f56547cc9165fd8859158c5da51180fb8745c7378f6a3",
+        "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+        "fields": [
+          "ADDRESS_RU",
+          "CHAIR",
+          "EDUCATION",
+          "EMPTY",
+          "FULL_NAME_RU",
+          "HOURS",
+          "ISSUER_RU",
+          "MEMBER_1",
+          "MEMBER_2",
+          "POSITION_BOTH",
+          "PROTOCOL_DATE",
+          "PROTOCOL_NUMBER",
+          "RESULT",
+          "WORKPLACE_BOTH"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": false,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/pb-protocol.pdf",
+        "protocolSemantics": "individual",
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "40fb97d1bf42983908d45b826b6122550169b8f76b91ae958f49b43f2692b0e3"
+      },
+      {
+        "id": "ps-card",
+        "version": 5,
+        "file": "ps-card.v5.docx",
+        "sha256": "e14b5db9a0607056a7ac3f2380d3b1b3ccb62661b5c7c95ba2cc07f8d899992c",
+        "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+        "fields": [
+          "FULL_NAME_BOTH",
+          "ISSUER_RU",
+          "NUMBER",
+          "ONE",
+          "POSITION_KZ",
+          "POSITION_RU",
+          "PROTOCOL_DAY_MONTH",
+          "PROTOCOL_NUMBER",
+          "PROTOCOL_YEAR",
+          "RESULT",
+          "SERIES",
+          "SUBJECT",
+          "TWO"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+          },
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+          },
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": true,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/ps-card.pdf",
+        "protocolSemantics": null,
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "04cffe8bede692f10fdb210abaa6b318471586ce9da3b91f36bab857395e4f1c"
+      },
+      {
+        "id": "ps-protocol",
+        "version": 5,
+        "file": "ps-protocol.v5.docx",
+        "sha256": "2153be9e90cb33a75a26292e3761535b2060c84e50275da6b14816d8255f24c8",
+        "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+        "fields": [
+          "ADDRESS_RU",
+          "APPROVAL_BASIS",
+          "CHAIR",
+          "EMPTY",
+          "FULL_NAME_BOTH",
+          "ISSUER_RU",
+          "MEMBER_1",
+          "MEMBER_2",
+          "NUMBER",
+          "POSITION_RU",
+          "PROTOCOL_DAY_MONTH",
+          "PROTOCOL_NUMBER",
+          "PROTOCOL_YEAR",
+          "RESULT"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": false,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/ps-protocol.pdf",
+        "protocolSemantics": "individual",
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "41400f11549ef676ad013d7d95419c686bf8674f841e568bd4b992b8a2b64111"
+      },
+      {
+        "id": "ps-witness",
+        "version": 5,
+        "file": "ps-witness.v5.docx",
+        "sha256": "b132b14cb7ac36a6cd9d8af745767b87d34742a19a8d7b1f50593888704041a6",
+        "sourceSha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+        "fields": [
+          "CHAIR",
+          "CITY_RU",
+          "EDU_ORG_KZ",
+          "EDU_ORG_RU",
+          "FULL_NAME_KZ",
+          "FULL_NAME_RU",
+          "ISSUE_DAY",
+          "ISSUE_MONTH_KZ",
+          "ISSUE_MONTH_RU",
+          "ISSUE_YEAR_SHORT",
+          "KB_NUMBER",
+          "PROFESSION_KZ",
+          "PROFESSION_RU",
+          "PROTOCOL_DAY",
+          "PROTOCOL_MONTH_KZ",
+          "PROTOCOL_MONTH_RU",
+          "PROTOCOL_NUMBER_DISPLAY",
+          "PROTOCOL_YEAR",
+          "REGISTRATION_NUMBER",
+          "RESULT",
+          "TRAINING_END_DAY",
+          "TRAINING_END_MONTH_KZ",
+          "TRAINING_END_MONTH_RU",
+          "TRAINING_END_YEAR_FULL",
+          "TRAINING_END_YEAR_SHORT",
+          "TRAINING_START_DAY",
+          "TRAINING_START_MONTH_KZ",
+          "TRAINING_START_MONTH_RU",
+          "TRAINING_START_YEAR_FULL",
+          "TRAINING_START_YEAR_SHORT"
+        ],
+        "sections": [
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+          },
+          {
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+            "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+          }
+        ],
+        "languages": [
+          "ru",
+          "kk"
+        ],
+        "photo": false,
+        "exports": [
+          "DOCX",
+          "PDF"
+        ],
+        "sample": "docs/evidence/render/ps-witness.pdf",
+        "protocolSemantics": null,
+        "legalApproval": "REQUIRED_BY_ISSUER",
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "1b50157593d79d63fb7e1ff0f507c3b46526351f6e6aedfccf415845473baf0e"
+      }
+    ]
+  }
+}

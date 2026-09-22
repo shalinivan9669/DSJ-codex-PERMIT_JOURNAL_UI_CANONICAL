@@ -1,0 +1,8 @@
+{
+  "name": "pb-protocol-long",
+  "status": "FAIL",
+  "template": "pb-protocol",
+  "variant": "long",
+  "recipients": 1,
+  "error": "[Errno 22] Invalid argument: 'C:\\\\Users\\\\Admin\\\\Documents\\\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\\\dsj2\\\\products\\\\demo\\\\docs\\\\evidence\\\\commercial-acceptance\\\\printing\\\\pb-protocol-long.docx'"
+}

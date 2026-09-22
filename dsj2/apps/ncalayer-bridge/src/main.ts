@@ -1,3 +1,4 @@
+import { refuseFrozenRuntime } from "../../../product-policy/legacy";
 import fs from "node:fs";
 import path from "node:path";
 import { createBridgeServer } from "./bridge-service";
@@ -56,6 +57,7 @@ function loadWorkspaceEnv(projectRoot: string) {
 
 const workspaceRoot = path.resolve(process.cwd(), "..", "..");
 
+refuseFrozenRuntime("NCALayer bridge");
 loadWorkspaceEnv(workspaceRoot);
 
 const host = process.env.HOST?.trim() || "127.0.0.1";

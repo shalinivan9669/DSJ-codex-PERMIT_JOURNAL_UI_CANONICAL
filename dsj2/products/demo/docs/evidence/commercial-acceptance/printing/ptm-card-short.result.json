@@ -1,0 +1,22 @@
+{
+  "name": "ptm-card-short",
+  "status": "PASS",
+  "template": "ptm-card",
+  "variant": "short",
+  "recipients": 1,
+  "docxSha256": "9dcc1d589c1eff337afc0f580c86f711c585527cf443bc77c5cd7601b0dc4984",
+  "pdfSha256": "8976d35b790a6ae8846d5720989dc421d1f7c817da0f290b87697d7c4f3a2643",
+  "docxSeconds": 0.15041560004465282,
+  "renderSeconds": 23.948450400028378,
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-short-page-001.png",
+      "sha256": "7a0a49e9f7efcdd5e1f0ac8b2ac694121e9b077e4a308c01b88c4e796c9b6a0b"
+    }
+  ],
+  "columnChecks": [],
+  "problems": []
+}

@@ -1,0 +1,388 @@
+{
+  "id": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+  "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+  "kind": "PERSON",
+  "title": "Контроль аварийного завершения worker",
+  "customerId": null,
+  "demoMode": true,
+  "status": "FINALIZED",
+  "revision": 0,
+  "draft": {
+    "kind": "PERSON",
+    "items": [
+      {
+        "id": "crash-person",
+        "fullNameKz": "Тексеру Әділ",
+        "fullNameRu": "Синтетический Проверочный",
+        "positionKz": "",
+        "positionRu": "",
+        "assignments": [
+          {
+            "id": "crash-document",
+            "hours": "",
+            "result": "Синтетический результат",
+            "templateId": "ptm-card",
+            "validUntil": "",
+            "trainingEnd": "",
+            "documentDate": "2026-09-22",
+            "protocolDate": "",
+            "protocolMode": "INDIVIDUAL",
+            "trainingStart": "",
+            "trainingSubject": "Контроль восстановления",
+            "externalBasisNumber": ""
+          }
+        ],
+        "workplaceKz": "",
+        "workplaceRu": "",
+        "photoAssetId": null
+      }
+    ],
+    "title": "Контроль аварийного завершения worker",
+    "demoMode": true,
+    "customerId": null
+  },
+  "itemCount": 1,
+  "searchText": "Контроль аварийного завершения worker Синтетический Проверочный Тексеру Әділ   PTM-CARD-00001   ",
+  "createdBy": "b05bd467-9615-42ae-b190-5e445273d961",
+  "createdAt": "2026-09-22T10:40:06.004Z",
+  "updatedAt": "2026-09-22T10:40:06.12Z",
+  "correctsIssuanceId": null,
+  "correctionReason": null,
+  "legacySourceId": null,
+  "items": [
+    {
+      "id": "crash-person",
+      "fullNameKz": "Тексеру Әділ",
+      "fullNameRu": "Синтетический Проверочный",
+      "positionKz": "",
+      "positionRu": "",
+      "assignments": [
+        {
+          "id": "crash-document",
+          "hours": "",
+          "result": "Синтетический результат",
+          "templateId": "ptm-card",
+          "validUntil": "",
+          "trainingEnd": "",
+          "documentDate": "2026-09-22",
+          "protocolDate": "",
+          "protocolMode": "INDIVIDUAL",
+          "trainingStart": "",
+          "trainingSubject": "Контроль восстановления",
+          "externalBasisNumber": ""
+        }
+      ],
+      "workplaceKz": "",
+      "workplaceRu": "",
+      "photoAssetId": null
+    }
+  ],
+  "issuances": [
+    {
+      "id": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+      "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+      "sourceRevision": 0,
+      "snapshot": {
+        "draft": {
+          "kind": "PERSON",
+          "items": [
+            {
+              "id": "crash-person",
+              "fullNameKz": "Тексеру Әділ",
+              "fullNameRu": "Синтетический Проверочный",
+              "positionKz": "",
+              "positionRu": "",
+              "assignments": [
+                {
+                  "id": "crash-document",
+                  "hours": "",
+                  "result": "Синтетический результат",
+                  "templateId": "ptm-card",
+                  "validUntil": "",
+                  "trainingEnd": "",
+                  "documentDate": "2026-09-22",
+                  "protocolDate": "",
+                  "protocolMode": "INDIVIDUAL",
+                  "trainingStart": "",
+                  "trainingSubject": "Контроль восстановления",
+                  "externalBasisNumber": ""
+                }
+              ],
+              "workplaceKz": "",
+              "workplaceRu": "",
+              "photoAssetId": null
+            }
+          ],
+          "title": "Контроль аварийного завершения worker",
+          "demoMode": true,
+          "customerId": null
+        },
+        "issuer": {
+          "cityKz": "Қызылорда",
+          "cityRu": "Кызылорда",
+          "nameKz": "Синтетикалық оқу орталығы",
+          "nameRu": "Синтетический учебный центр",
+          "approved": true,
+          "addressKz": "Көрнекі мекенжай",
+          "addressRu": "Демонстрационный адрес",
+          "commission": [
+            {
+              "name": "Тестовый Председатель",
+              "position": "Синтетические данные"
+            }
+          ],
+          "approvalBasis": "Учебный набор — не является выданным документом"
+        },
+        "photos": {},
+        "customer": null,
+        "templates": [
+          {
+            "id": "134c8c1f-6b3d-486a-bda8-6e758a0e3260",
+            "version": "4",
+            "approved": true,
+            "checksum": "eecb030d026f586251e4b8b9d39830e3f323cff13720e9d8da50ff9ebaef3a18",
+            "contract": {
+              "id": "ptm-card",
+              "file": "ptm-card.v4.docx",
+              "photo": true,
+              "fields": [
+                "CHAIR",
+                "FULL_NAME_BOTH",
+                "ISSUER_RU",
+                "NUMBER",
+                "POSITION_KZ",
+                "POSITION_RU",
+                "PROTOCOL_DAY_MONTH",
+                "PROTOCOL_NUMBER",
+                "PROTOCOL_YEAR",
+                "SUBJECT",
+                "VALID_DAY_MONTH",
+                "VALID_YEAR",
+                "WORKPLACE_KZ",
+                "WORKPLACE_RU"
+              ],
+              "sample": "docs/evidence/render/ptm-card.pdf",
+              "sha256": "eecb030d026f586251e4b8b9d39830e3f323cff13720e9d8da50ff9ebaef3a18",
+              "exports": [
+                "DOCX",
+                "PDF"
+              ],
+              "version": 4,
+              "sections": [
+                {
+                  "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838",
+                  "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+                  "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}code": "9"
+                }
+              ],
+              "languages": [
+                "ru",
+                "kk"
+              ],
+              "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+              "legalApproval": "REQUIRED_BY_ISSUER",
+              "protocolSemantics": null,
+              "sourceImagesRemoved": true
+            },
+            "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+            "createdAt": "2026-09-22T10:37:45.173Z",
+            "storageKey": "objects/ee/eecb030d026f586251e4b8b9d39830e3f323cff13720e9d8da50ff9ebaef3a18-e2b1e444-3775-4c06-be06-57380b028c3b.docx",
+            "templateId": "ptm-card"
+          }
+        ],
+        "profileVersionId": "92276099-34e5-48e6-b447-367177b6f081"
+      },
+      "inputHash": "713fee4624bfdd9996084f0ceac7d0353470cce9efa0e1ba4808400af143575a",
+      "profileVersionId": "92276099-34e5-48e6-b447-367177b6f081",
+      "createdBy": "b05bd467-9615-42ae-b190-5e445273d961",
+      "createdAt": "2026-09-22T10:40:06.092Z",
+      "correctsIssuanceId": null,
+      "correctionReason": null,
+      "legacySourceId": null
+    }
+  ],
+  "documents": [
+    {
+      "id": "8f94771a-3af8-4a83-97cb-7986b2d0f69b",
+      "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+      "rowId": "crash-person",
+      "assignmentId": "crash-document",
+      "templateVersionId": "134c8c1f-6b3d-486a-bda8-6e758a0e3260",
+      "templateId": "ptm-card",
+      "namespace": "PTM:CARD",
+      "number": "PTM-CARD-00001",
+      "registrationNumber": null,
+      "documentDate": "2026-09-22",
+      "replacesDocumentId": null,
+      "createdAt": "2026-09-22T10:40:06.102Z"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "8941448c-624c-46b7-9d5f-48597a1fd4a4",
+      "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+      "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "documentId": "8f94771a-3af8-4a83-97cb-7986b2d0f69b",
+      "snapshotId": "fe884cd0-cf73-4144-8e2b-5bf908a2e024",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "logicalKey": "8f94771a-3af8-4a83-97cb-7986b2d0f69b:DOCX",
+      "attempts": 1,
+      "maxAttempts": 3,
+      "runAfter": "2026-09-22T10:40:06.108Z",
+      "leaseUntil": null,
+      "leaseOwner": null,
+      "fencingToken": 1,
+      "heartbeatAt": "2026-09-22T10:40:06.566Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "correlationId": "756b7a17-1a14-4ca0-b15e-3c8c1062f1ff",
+      "progress": 100,
+      "artifactId": "b9ed8f16-8e46-48b9-9679-9b4ef0c4d4a9",
+      "createdAt": "2026-09-22T10:40:06.108Z",
+      "updatedAt": "2026-09-22T10:40:07.623Z",
+      "sourceRevision": 0
+    },
+    {
+      "id": "4f37befc-d5f7-461c-b38a-3f0af00e3cd5",
+      "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+      "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "documentId": "8f94771a-3af8-4a83-97cb-7986b2d0f69b",
+      "snapshotId": "fe884cd0-cf73-4144-8e2b-5bf908a2e024",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "logicalKey": "8f94771a-3af8-4a83-97cb-7986b2d0f69b:PDF",
+      "attempts": 1,
+      "maxAttempts": 3,
+      "runAfter": "2026-09-22T10:40:08.079Z",
+      "leaseUntil": null,
+      "leaseOwner": null,
+      "fencingToken": 2,
+      "heartbeatAt": "2026-09-22T10:42:44.522Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "correlationId": "cc836b4e-bb0b-4017-b795-685a0711d1ac",
+      "progress": 100,
+      "artifactId": "69be7a7f-9ca2-457b-a5ea-bf6135183c88",
+      "createdAt": "2026-09-22T10:40:06.113Z",
+      "updatedAt": "2026-09-22T10:42:47.908Z",
+      "sourceRevision": 0
+    },
+    {
+      "id": "28780020-3773-4d87-aab7-9cdd5c81b54a",
+      "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+      "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "documentId": null,
+      "snapshotId": "c9bc9d46-117e-4aaf-832b-a666f203dfa0",
+      "kind": "XLSX",
+      "status": "SUCCEEDED",
+      "logicalKey": "f4fc2a05-46e2-4073-bb81-81020164ba2a:XLSX",
+      "attempts": 1,
+      "maxAttempts": 3,
+      "runAfter": "2026-09-22T10:40:06.117Z",
+      "leaseUntil": null,
+      "leaseOwner": null,
+      "fencingToken": 1,
+      "heartbeatAt": "2026-09-22T10:40:06.585Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "correlationId": "8154fd37-1a1d-4f1f-a26a-3323c37f39f2",
+      "progress": 100,
+      "artifactId": "0e400852-d108-4c8f-8a13-96f5f85034df",
+      "createdAt": "2026-09-22T10:40:06.117Z",
+      "updatedAt": "2026-09-22T10:40:07.559Z",
+      "sourceRevision": 0
+    },
+    {
+      "id": "4b9130a9-b0aa-4438-bf66-a027ad5aeb0b",
+      "tenantId": "e2a5495b-d708-46d9-9b3d-b5b0adce5bfd",
+      "requestId": "18b3b3c7-f4ea-40ed-a751-9156f1817d4d",
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "documentId": null,
+      "snapshotId": "c9bc9d46-117e-4aaf-832b-a666f203dfa0",
+      "kind": "ZIP",
+      "status": "SUCCEEDED",
+      "logicalKey": "f4fc2a05-46e2-4073-bb81-81020164ba2a:ZIP",
+      "attempts": 1,
+      "maxAttempts": 3,
+      "runAfter": "2026-09-22T10:42:48.282Z",
+      "leaseUntil": null,
+      "leaseOwner": null,
+      "fencingToken": 11,
+      "heartbeatAt": "2026-09-22T10:42:48.32Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "correlationId": "67beed7b-70fb-4019-aa5c-f693ae724004",
+      "progress": 100,
+      "artifactId": "6cfd4289-ad5c-433d-a6f3-1f41fc77720c",
+      "createdAt": "2026-09-22T10:40:06.119Z",
+      "updatedAt": "2026-09-22T10:42:48.784Z",
+      "sourceRevision": 0
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "0e400852-d108-4c8f-8a13-96f5f85034df",
+      "jobId": "28780020-3773-4d87-aab7-9cdd5c81b54a",
+      "documentId": null,
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "format": "XLSX",
+      "sha256": "29c3f5e3834409714e68c8f6271abb86b8cce5c53539d8841a0e32a0ed61c558",
+      "size": 5781,
+      "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "fileName": "registry-18b3b3c7-f4ea-40ed-a751-9156f1817d4d.xlsx",
+      "createdAt": "2026-09-22T10:40:07.545Z",
+      "provenance": "ORIGINAL",
+      "availability": "AVAILABLE"
+    },
+    {
+      "id": "b9ed8f16-8e46-48b9-9679-9b4ef0c4d4a9",
+      "jobId": "8941448c-624c-46b7-9d5f-48597a1fd4a4",
+      "documentId": "8f94771a-3af8-4a83-97cb-7986b2d0f69b",
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "format": "DOCX",
+      "sha256": "7e7eda08b0a8b74c80e79bd8ce0a47dc5b0420db2edcc22bb731d91b3d911a22",
+      "size": 25314,
+      "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "fileName": "ptm-card-8f94771a-3af8-4a83-97cb-7986b2d0f69b.docx",
+      "createdAt": "2026-09-22T10:40:07.617Z",
+      "provenance": "ORIGINAL",
+      "availability": "AVAILABLE"
+    },
+    {
+      "id": "69be7a7f-9ca2-457b-a5ea-bf6135183c88",
+      "jobId": "4f37befc-d5f7-461c-b38a-3f0af00e3cd5",
+      "documentId": "8f94771a-3af8-4a83-97cb-7986b2d0f69b",
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "format": "PDF",
+      "sha256": "0e482cc4c6a9e8297f797551d351df0d5418605a05a92468bea383998c31844d",
+      "size": 56378,
+      "mimeType": "application/pdf",
+      "fileName": "ptm-card-8f94771a-3af8-4a83-97cb-7986b2d0f69b.pdf",
+      "createdAt": "2026-09-22T10:42:47.893Z",
+      "provenance": "ORIGINAL",
+      "availability": "AVAILABLE"
+    },
+    {
+      "id": "6cfd4289-ad5c-433d-a6f3-1f41fc77720c",
+      "jobId": "4b9130a9-b0aa-4438-bf66-a027ad5aeb0b",
+      "documentId": null,
+      "issuanceId": "f4fc2a05-46e2-4073-bb81-81020164ba2a",
+      "format": "ZIP",
+      "sha256": "c80d535bc2eb59a10b6a99fcb0044379db6bdf57bfae6ed028e7ad3e5ceead8d",
+      "size": 71284,
+      "mimeType": "application/zip",
+      "fileName": "registry-18b3b3c7-f4ea-40ed-a751-9156f1817d4d.zip",
+      "createdAt": "2026-09-22T10:42:48.783Z",
+      "provenance": "ORIGINAL",
+      "availability": "AVAILABLE"
+    }
+  ],
+  "events": []
+}

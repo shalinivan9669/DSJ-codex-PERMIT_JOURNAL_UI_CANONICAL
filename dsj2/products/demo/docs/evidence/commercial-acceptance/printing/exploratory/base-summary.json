@@ -1,0 +1,10 @@
+{
+  "documents": 50,
+  "recipients": 60,
+  "pages": 79,
+  "failures": [
+    "ptm-card-long",
+    "pb-card-long",
+    "ps-card-long"
+  ]
+}

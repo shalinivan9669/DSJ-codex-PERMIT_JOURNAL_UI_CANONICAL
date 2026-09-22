@@ -1,0 +1,315 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model Tenant {
+  id String @id @default(uuid())
+  name String
+  timezone String @default("Asia/Almaty")
+  active Boolean @default(true)
+  demoOnly Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+model User {
+  id String @id @default(uuid())
+  tenantId String
+  email String @unique
+  displayName String
+  passwordHash String
+  role String @default("VIEWER")
+  active Boolean @default(true)
+  sessionVersion Int @default(1)
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+}
+model Session {
+  id String @id
+  tenantId String
+  userId String
+  csrfHash String
+  sessionVersion Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+model IssuerProfileVersion {
+  id String @id @default(uuid())
+  tenantId String
+  version Int
+  profile Json
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,version])
+  @@unique([tenantId,id])
+}
+model CustomerOrganization {
+  id String @id @default(uuid())
+  tenantId String
+  nameRu String
+  nameKz String @default("")
+  bin String @default("")
+  addressRu String @default("")
+  addressKz String @default("")
+  archived Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,nameRu])
+}
+model Recipient {
+  id String @id @default(uuid())
+  tenantId String
+  data Json
+  archived Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+}
+model PrintRequest {
+  id String @id @default(uuid())
+  tenantId String
+  kind String
+  title String @default("")
+  customerId String?
+  demoMode Boolean @default(false)
+  status String @default("DRAFT")
+  revision Int @default(0)
+  draft Json
+  itemCount Int @default(0)
+  searchText String @default("")
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  correctsIssuanceId String?
+  correctionReason String?
+  legacySourceId String?
+  @@unique([tenantId,id])
+  @@unique([tenantId,legacySourceId])
+  @@index([tenantId,status,createdAt])
+}
+model RequestItem {
+  id String @id @default(uuid())
+  tenantId String
+  requestId String
+  rowId String
+  position Int
+  payload Json
+  @@unique([requestId,rowId])
+  @@index([tenantId,requestId])
+}
+model TemplateVersion {
+  id String @id @default(uuid())
+  tenantId String
+  templateId String
+  version String
+  checksum String
+  storageKey String
+  contract Json
+  approved Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@unique([tenantId,templateId,version])
+  @@unique([tenantId,id])
+}
+model Issuance {
+  id String @id @default(uuid())
+  tenantId String
+  requestId String
+  sourceRevision Int
+  snapshot Json
+  inputHash String
+  profileVersionId String
+  createdBy String
+  createdAt DateTime @default(now())
+  correctsIssuanceId String?
+  correctionReason String?
+  legacySourceId String?
+  @@unique([requestId,sourceRevision])
+  @@unique([tenantId,id])
+  @@unique([tenantId,legacySourceId])
+}
+model IssuanceEvent {
+  id String @id @default(uuid())
+  tenantId String
+  issuanceId String
+  kind String
+  reason String
+  actorId String
+  relatedIssuanceId String?
+  createdAt DateTime @default(now())
+  @@index([tenantId,issuanceId])
+}
+model IssuedDocument {
+  id String @id @default(uuid())
+  tenantId String
+  issuanceId String
+  requestId String
+  rowId String
+  assignmentId String
+  templateVersionId String
+  templateId String
+  namespace String
+  number String
+  registrationNumber String?
+  documentDate String
+  replacesDocumentId String?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([issuanceId,rowId,assignmentId])
+}
+model NumberSequence {
+  tenantId String
+  namespace String
+  value Int @default(0)
+  prefix String @default("")
+  suffix String @default("")
+  padding Int @default(5)
+  policyVersion Int @default(1)
+  @@id([tenantId,namespace])
+}
+model NumberReservation {
+  id String @id @default(uuid())
+  tenantId String
+  namespace String
+  sequence Int
+  formattedNumber String
+  documentId String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,namespace,sequence])
+  @@unique([tenantId,namespace,formattedNumber])
+  @@index([tenantId,documentId])
+}
+model RenderInputSnapshot {
+  id String @id @default(uuid())
+  tenantId String
+  requestId String
+  revision Int
+  issuanceId String?
+  templateVersionId String?
+  profileVersionId String
+  input Json
+  inputHash String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+}
+model GenerationJob {
+  id String @id @default(uuid())
+  tenantId String
+  requestId String
+  issuanceId String?
+  documentId String?
+  snapshotId String
+  kind String
+  status String @default("PENDING")
+  logicalKey String @unique
+  attempts Int @default(0)
+  maxAttempts Int @default(3)
+  runAfter DateTime @default(now())
+  leaseUntil DateTime?
+  leaseOwner String?
+  fencingToken Int @default(0)
+  heartbeatAt DateTime?
+  errorCode String?
+  errorMessage String?
+  correlationId String @default(uuid())
+  progress Int @default(0)
+  artifactId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@index([status,runAfter,leaseUntil])
+  @@index([tenantId,requestId])
+}
+model Artifact {
+  id String @id @default(uuid())
+  tenantId String
+  jobId String
+  requestId String
+  issuanceId String?
+  documentId String?
+  format String
+  storageKey String @unique
+  sha256 String
+  size Int
+  mimeType String
+  fileName String
+  templateVersion String?
+  rendererVersion String
+  inputHash String
+  provenance String @default("ORIGINAL")
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,requestId])
+}
+model PhotoAsset {
+  id String @id @default(uuid())
+  tenantId String
+  ownerId String
+  storageKey String @unique
+  originalStorageKey String
+  sha256 String
+  size Int
+  width Int
+  height Int
+  mimeType String @default("image/png")
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+}
+model IdempotencyOperation {
+  id String @id @default(uuid())
+  tenantId String
+  command String
+  idempotencyKey String
+  payloadHash String
+  result Json
+  createdAt DateTime @default(now())
+  @@unique([tenantId,command,idempotencyKey])
+}
+model ImportBatch {
+  id String @id @default(uuid())
+  tenantId String
+  checksum String
+  rows Json
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,checksum])
+}
+model ImportMapping {
+  id String @id @default(uuid())
+  tenantId String
+  name String
+  columns Json
+  mapping Json
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,name])
+}
+model AuditEvent {
+  id String @id @default(uuid())
+  tenantId String
+  actorId String
+  action String
+  entityId String
+  metadata Json
+  correlationId String
+  createdAt DateTime @default(now())
+  @@index([tenantId,createdAt])
+}
+model WorkerHeartbeat {
+  id String @id
+  seenAt DateTime @default(now())
+  version String
+}
+model LegacyMapping {
+  id String @id @default(uuid())
+  tenantId String
+  sourceSystem String
+  sourceId String
+  checksum String
+  entityId String
+  provenance String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,sourceSystem,sourceId])
+}
