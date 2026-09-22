@@ -4,17 +4,20 @@
   "template": "biot-itr-certificate",
   "variant": "blank",
   "recipients": 1,
-  "docxSha256": "d2a62d48412d5ead238efe04a1b7c704ddd6efcef447ee5259eeaac9e8ea3733",
-  "pdfSha256": "50d0f1e4526e141f1bce947d07dd8106ee8afd57e405440ec23279f57f842226",
-  "docxSeconds": 0.0910092000849545,
-  "renderSeconds": 24.39149660000112,
+  "docxSha256": "1ffcf32d84a4dcfafb40ab937976952e5405fc46dc751c76cb31bfd0ee893a47",
+  "pdfSha256": "107d30fda180b0c3a7675accc16fc340f9df4b9f0c848ec804dc908cf1d64a3a",
+  "docxSeconds": 0.2967043120006565,
+  "renderSeconds": 1.9550312190003751,
+  "conversionReusedAfterExactByteMatch": false,
+  "priorConversionSeconds": null,
   "pages": [
     {
       "page": 1,
       "widthPt": 841.8897705078125,
       "heightPt": 595.303955078125,
+      "minimumBodyFontPt": 14.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-blank-page-001.png",
-      "sha256": "56a34970a942c34a12dfca24947a198fe1ef029ed7dd1d7a6f60e1c818766c62"
+      "sha256": "fa5c2fb49f36f91a6d36ab1c0c489e07415ccde7a1fda945a818a267238c9dbb"
     }
   ],
   "columnChecks": [],

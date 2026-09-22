@@ -4,17 +4,20 @@
   "template": "biot-protocol",
   "variant": "punctuation",
   "recipients": 1,
-  "docxSha256": "ba80467856f896b89f04fcfb8ed008cde895a09941d105a8807df3808589a5df",
-  "pdfSha256": "21c1872dbb2bdce01489ced8ce47776d5f993f4f170072ffc166d4f3a9a2316b",
-  "docxSeconds": 0.11374770000111312,
-  "renderSeconds": 25.152770299930125,
+  "docxSha256": "b96a2e79b3f397ff7ec0805895e5e2404e40f4c038d59e53538b0d78b079df3c",
+  "pdfSha256": "f60d0c6704209e7dfe9bcbee61f4e90b672cdad6027181e4ec2810116c2699b9",
+  "docxSeconds": 0.3932527229999323,
+  "renderSeconds": 0.513744945000326,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 2.5122569730001487,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 10.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-punctuation-page-001.png",
-      "sha256": "b6d417f15495b368d64193f3e50f63a46778939cf9f75eed18e15bb140e917c7"
+      "sha256": "fd99cbf05afc8a462c910bd877d6ac842fc58622aec3cd7324738d0a33be76a8"
     }
   ],
   "columnChecks": [

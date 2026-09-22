@@ -14,7 +14,7 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
-export const RENDERER_VERSION = "demo-ooxml-3/libreoffice-26.2.6.3";
+export const RENDERER_VERSION = "demo-ooxml-6/libreoffice-26.2.6.3";
 export const PRODUCT_ROOT = resolve(__dirname, "../../..");
 export type RenderCommand =
   | "docx"
@@ -226,7 +226,7 @@ export async function runRender(
         };
         const timer = setTimeout(
           () => terminate("RENDER_TIMEOUT"),
-          Math.min(options.timeoutMs || 120_000, 180_000),
+          Math.min(options.timeoutMs || 120_000, 240_000),
         );
         const abort = () => terminate("RENDER_ABORTED");
         options.signal?.addEventListener("abort", abort, { once: true });

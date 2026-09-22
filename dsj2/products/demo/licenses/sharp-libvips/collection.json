@@ -1,0 +1,963 @@
+{
+  "package": "@img/sharp-libvips-linux-x64",
+  "version": "1.3.3",
+  "gitHead": "6e5971d333377743163edc3ad9e5d0b897abcbc9",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/lovell/sharp-libvips/6e5971d333377743163edc3ad9e5d0b897abcbc9/versions.properties",
+      "resolvedUrl": "https://raw.githubusercontent.com/lovell/sharp-libvips/6e5971d333377743163edc3ad9e5d0b897abcbc9/versions.properties",
+      "path": "licenses/sharp-libvips/build-versions.properties",
+      "sha256": "02253a2d39a6b1cfd2c1deacb0947f7d2a3398a522236f7efc4d57e82cbfe980"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lovell/sharp-libvips/6e5971d333377743163edc3ad9e5d0b897abcbc9/build/posix.sh",
+      "resolvedUrl": "https://raw.githubusercontent.com/lovell/sharp-libvips/6e5971d333377743163edc3ad9e5d0b897abcbc9/build/posix.sh",
+      "path": "licenses/sharp-libvips/build-build__posix.sh",
+      "sha256": "230a0b344ba78116c8dd230383141b1d3498fceeb8f5320c0b573ebf67a61267"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lovell/sharp-libvips/6e5971d333377743163edc3ad9e5d0b897abcbc9/npm/linux-x64/README.md",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "components": [
+    {
+      "name": "cgif",
+      "version": "0.5.3",
+      "repository": "https://github.com/dloebl/cgif",
+      "ref": "v0.5.3",
+      "files": [
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/dloebl/cgif/v0.5.3/LICENSE",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/dloebl/cgif/v0.5.3/LICENSE",
+          "localPath": "licenses/sharp-libvips/cgif/LICENSE",
+          "bytes": 1099,
+          "sha256": "7264dede477abab4ac3fe8236beb8153845c04ccd33b18f281085087e219fc6d"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "cgif",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "MIT License"
+    },
+    {
+      "name": "expat",
+      "version": "2.8.3",
+      "repository": "https://github.com/libexpat/libexpat",
+      "ref": "R_2_8_3",
+      "files": [
+        {
+          "path": "expat/COPYING",
+          "url": "https://raw.githubusercontent.com/libexpat/libexpat/R_2_8_3/expat/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/libexpat/libexpat/R_2_8_3/expat/COPYING",
+          "localPath": "licenses/sharp-libvips/expat/expat__COPYING",
+          "bytes": 1144,
+          "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "expat",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "MIT License"
+    },
+    {
+      "name": "freetype",
+      "version": "2.14.3",
+      "repository": "https://github.com/freetype/freetype",
+      "ref": "VER-2-14-3",
+      "files": [
+        {
+          "path": "LICENSE.TXT",
+          "url": "https://raw.githubusercontent.com/freetype/freetype/VER-2-14-3/LICENSE.TXT",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/freetype/freetype/VER-2-14-3/LICENSE.TXT",
+          "localPath": "licenses/sharp-libvips/freetype/LICENSE.TXT",
+          "bytes": 2149,
+          "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b"
+        },
+        {
+          "path": "docs/FTL.TXT",
+          "url": "https://raw.githubusercontent.com/freetype/freetype/VER-2-14-3/docs/FTL.TXT",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/freetype/freetype/VER-2-14-3/docs/FTL.TXT",
+          "localPath": "licenses/sharp-libvips/freetype/docs__FTL.TXT",
+          "bytes": 6743,
+          "sha256": "5a5ee54c5001bbad1cdc1a57cc3dd4c42199b2da09d39c7ee41fab002d02967f"
+        },
+        {
+          "path": "docs/GPLv2.TXT",
+          "url": "https://raw.githubusercontent.com/freetype/freetype/VER-2-14-3/docs/GPLv2.TXT",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/freetype/freetype/VER-2-14-3/docs/GPLv2.TXT",
+          "localPath": "licenses/sharp-libvips/freetype/docs__GPLv2.TXT",
+          "bytes": 17994,
+          "sha256": "c4120c6752c910c299e3bd9cb3a46ff262c268303ca2069b61f92f10a5656c18"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "freetype",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "[freetype License](https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like)"
+    },
+    {
+      "name": "fribidi",
+      "version": "1.0.16",
+      "repository": "https://github.com/fribidi/fribidi",
+      "ref": "v1.0.16",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/fribidi/fribidi/v1.0.16/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/fribidi/fribidi/v1.0.16/COPYING",
+          "localPath": "licenses/sharp-libvips/fribidi/COPYING",
+          "bytes": 26440,
+          "sha256": "32434afcc8666ba060e111d715bfdb6c2d5dd8a35fa4d3ab8ad67d8f850d2f2b"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [
+        {
+          "path": "COPYING.LIB",
+          "url": "https://raw.githubusercontent.com/fribidi/fribidi/v1.0.16/COPYING.LIB",
+          "status": "UNRESOLVED",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "fribidi",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "LGPLv3"
+    },
+    {
+      "name": "glib",
+      "version": "2.89.4",
+      "repository": "https://github.com/GNOME/glib",
+      "ref": "2.89.4",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/GNOME/glib/2.89.4/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/GNOME/glib/2.89.4/COPYING",
+          "localPath": "licenses/sharp-libvips/glib/COPYING",
+          "bytes": 30,
+          "sha256": "65986a89240f59896ce42a3779bbe5ed486a0bca7df636a8eef030fd2e1a0984"
+        },
+        {
+          "path": "LICENSES/LGPL-2.1-or-later.txt",
+          "url": "https://raw.githubusercontent.com/GNOME/glib/2.89.4/LICENSES/LGPL-2.1-or-later.txt",
+          "role": "upstream supplemental license or notice",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/GNOME/glib/2.89.4/LICENSES/LGPL-2.1-or-later.txt",
+          "localPath": "licenses/sharp-libvips/glib/LICENSES__LGPL-2.1-or-later.txt",
+          "bytes": 25967,
+          "sha256": "fa6f36630bb1e0c571d34b2bbdf188d08495c9dbf58f28cac112f303fc1f58fb"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [
+        {
+          "path": "COPYING.tests",
+          "url": "https://raw.githubusercontent.com/GNOME/glib/2.89.4/COPYING.tests",
+          "status": "UNRESOLVED",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution. COPYING is a symlink represented as path text by raw GitHub; LICENSES/LGPL-2.1-or-later.txt is its full target.",
+      "installedVersionKey": "glib",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "LGPLv3"
+    },
+    {
+      "name": "harfbuzz",
+      "version": "14.3.1",
+      "repository": "https://github.com/harfbuzz/harfbuzz",
+      "ref": "14.3.1",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/harfbuzz/harfbuzz/14.3.1/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/harfbuzz/harfbuzz/14.3.1/COPYING",
+          "localPath": "licenses/sharp-libvips/harfbuzz/COPYING",
+          "bytes": 1971,
+          "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "harfbuzz",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "MIT License"
+    },
+    {
+      "name": "highway",
+      "version": "1.4.0",
+      "repository": "https://github.com/google/highway",
+      "ref": "1.4.0",
+      "files": [
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/google/highway/1.4.0/LICENSE",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/google/highway/1.4.0/LICENSE",
+          "localPath": "licenses/sharp-libvips/highway/LICENSE",
+          "bytes": 20785,
+          "sha256": "e340270d4f64384569a91d546acb5b094d69ce47f0c015db77abb74dc6f815af"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "highway",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "BSD 3-Clause"
+    },
+    {
+      "name": "lcms",
+      "version": "2.19.1",
+      "repository": "https://github.com/mm2/Little-CMS",
+      "ref": "lcms2.19.1",
+      "files": [
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/mm2/Little-CMS/lcms2.19.1/LICENSE",
+          "role": "upstream supplemental license or notice",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/mm2/Little-CMS/lcms2.19.1/LICENSE",
+          "localPath": "licenses/sharp-libvips/lcms/LICENSE",
+          "bytes": 1080,
+          "sha256": "6dbd60437f8ef91d8de1f08ad75882547fd4931bfcc3566a0735f28db1484d31"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/mm2/Little-CMS/lcms2.19.1/COPYING",
+          "status": "UNRESOLVED",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "lcms",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "MIT License"
+    },
+    {
+      "name": "libarchive",
+      "version": "3.8.9",
+      "repository": "https://github.com/libarchive/libarchive",
+      "ref": "v3.8.9",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/libarchive/libarchive/v3.8.9/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/libarchive/libarchive/v3.8.9/COPYING",
+          "localPath": "licenses/sharp-libvips/libarchive/COPYING",
+          "bytes": 3089,
+          "sha256": "30e556b3959e3985d66efefec5eaac51d4995053caa1d3cffe6eb916f146f229"
+        },
+        {
+          "path": "libarchive/archive_read_support_filter_compress.c",
+          "url": "https://raw.githubusercontent.com/libarchive/libarchive/v3.8.9/libarchive/archive_read_support_filter_compress.c",
+          "role": "upstream supplemental license or notice",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/libarchive/libarchive/v3.8.9/libarchive/archive_read_support_filter_compress.c",
+          "localPath": "licenses/sharp-libvips/libarchive/libarchive__archive_read_support_filter_compress.c",
+          "bytes": 13469,
+          "sha256": "9cd45ac0ec6f498db1c6d5c9af28ac4788322526c451c33856e8f72e49d4cd9c"
+        },
+        {
+          "path": "libarchive/archive_write_add_filter_compress.c",
+          "url": "https://raw.githubusercontent.com/libarchive/libarchive/v3.8.9/libarchive/archive_write_add_filter_compress.c",
+          "role": "upstream supplemental license or notice",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/libarchive/libarchive/v3.8.9/libarchive/archive_write_add_filter_compress.c",
+          "localPath": "licenses/sharp-libvips/libarchive/libarchive__archive_write_add_filter_compress.c",
+          "bytes": 13122,
+          "sha256": "f0df99ae10b089dfe052fe40d75937d8ad6c442becb024542cefd55686be5f38"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "archive",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "BSD 2-Clause"
+    },
+    {
+      "name": "libexif",
+      "version": "0.6.26",
+      "repository": "https://github.com/libexif/libexif",
+      "ref": "v0.6.26",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/libexif/libexif/v0.6.26/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/libexif/libexif/v0.6.26/COPYING",
+          "localPath": "licenses/sharp-libvips/libexif/COPYING",
+          "bytes": 26434,
+          "sha256": "36b6d3fa47916943fd5fec313c584784946047ec1337a78b440e5992cb595f89"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "exif",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "LGPLv3"
+    },
+    {
+      "name": "libffi",
+      "version": "3.8.0",
+      "repository": "https://github.com/libffi/libffi",
+      "ref": "v3.8.0",
+      "files": [
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/libffi/libffi/v3.8.0/LICENSE",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/libffi/libffi/v3.8.0/LICENSE",
+          "localPath": "licenses/sharp-libvips/libffi/LICENSE",
+          "bytes": 1132,
+          "sha256": "17b64dc60f3b6897a60f971e288b973f655c2edcdf08b25f3c3dd5549857881c"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "ffi",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "MIT License"
+    },
+    {
+      "name": "libheif",
+      "version": "1.23.2",
+      "repository": "https://github.com/strukturag/libheif",
+      "ref": "v1.23.2",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/strukturag/libheif/v1.23.2/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/strukturag/libheif/v1.23.2/COPYING",
+          "localPath": "licenses/sharp-libvips/libheif/COPYING",
+          "bytes": 44366,
+          "sha256": "fa81ce652315b013359d6e8e4744335f31a50c7c192907176d3632f78a3b4596"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "heif",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "LGPLv3"
+    },
+    {
+      "name": "libimagequant",
+      "version": "2.4.1",
+      "repository": "https://github.com/lovell/libimagequant",
+      "ref": "v2.4.1",
+      "files": [
+        {
+          "path": "COPYRIGHT",
+          "url": "https://raw.githubusercontent.com/lovell/libimagequant/v2.4.1/COPYRIGHT",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/lovell/libimagequant/v2.4.1/COPYRIGHT",
+          "localPath": "licenses/sharp-libvips/libimagequant/COPYRIGHT",
+          "bytes": 1851,
+          "sha256": "7391bfbcde4404cefb9849553362c3ab436f929f5cc1abb57071ec045590ee99"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "imagequant",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "[BSD 2-Clause](https://github.com/lovell/libimagequant/blob/main/COPYRIGHT)"
+    },
+    {
+      "name": "libpng",
+      "version": "1.6.58",
+      "repository": "https://github.com/pnggroup/libpng",
+      "ref": "v1.6.58",
+      "files": [
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/pnggroup/libpng/v1.6.58/LICENSE",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/pnggroup/libpng/v1.6.58/LICENSE",
+          "localPath": "licenses/sharp-libvips/libpng/LICENSE",
+          "bytes": 5345,
+          "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "png",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "[libpng License](https://github.com/pnggroup/libpng/blob/master/LICENSE)"
+    },
+    {
+      "name": "librsvg",
+      "version": "2.62.91",
+      "repository": "https://github.com/GNOME/librsvg",
+      "ref": "2.62.91",
+      "files": [
+        {
+          "path": "COPYING.LIB",
+          "url": "https://raw.githubusercontent.com/GNOME/librsvg/2.62.91/COPYING.LIB",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/GNOME/librsvg/2.62.91/COPYING.LIB",
+          "localPath": "licenses/sharp-libvips/librsvg/COPYING.LIB",
+          "bytes": 26530,
+          "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/GNOME/librsvg/2.62.91/COPYING",
+          "status": "UNRESOLVED",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "rsvg",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "LGPLv3"
+    },
+    {
+      "name": "libultrahdr",
+      "version": "2.0.2",
+      "repository": "https://github.com/google/libultrahdr",
+      "ref": "v2.0.2",
+      "files": [
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/google/libultrahdr/v2.0.2/LICENSE",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/google/libultrahdr/v2.0.2/LICENSE",
+          "localPath": "licenses/sharp-libvips/libultrahdr/LICENSE",
+          "bytes": 12566,
+          "sha256": "c9247b5cb07866938643cc238292434e6f2af8642e1fce10771c0e4cc7909316"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "uhdr",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "MIT License"
+    },
+    {
+      "name": "libvips",
+      "version": "8.18.6",
+      "repository": "https://github.com/libvips/libvips",
+      "ref": "v8.18.6",
+      "files": [
+        {
+          "path": "LICENSE",
+          "url": "https://raw.githubusercontent.com/libvips/libvips/v8.18.6/LICENSE",
+          "role": "upstream supplemental license or notice",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/libvips/libvips/v8.18.6/LICENSE",
+          "localPath": "licenses/sharp-libvips/libvips/LICENSE",
+          "bytes": 26530,
+          "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/libvips/libvips/v8.18.6/COPYING",
+          "status": "UNRESOLVED",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "vips",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "LGPLv3"
+    },
+    {
+      "name": "libxml2",
+      "version": "2.15.3",
+      "repository": "https://github.com/GNOME/libxml2",
+      "ref": "v2.15.3",
+      "files": [
+        {
+          "path": "Copyright",
+          "url": "https://raw.githubusercontent.com/GNOME/libxml2/v2.15.3/Copyright",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/GNOME/libxml2/v2.15.3/Copyright",
+          "localPath": "licenses/sharp-libvips/libxml2/Copyright",
+          "bytes": 1314,
+          "sha256": "5d4873884a890122a4b9b20ad56ac6f7da1d796a5bfcf04a427970ac96217626"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "xml2",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "MIT License"
+    },
+    {
+      "name": "mozjpeg",
+      "version": "0826579",
+      "repository": "https://github.com/mozilla/mozjpeg",
+      "ref": "0826579",
+      "files": [
+        {
+          "path": "LICENSE.md",
+          "url": "https://raw.githubusercontent.com/mozilla/mozjpeg/0826579/LICENSE.md",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/mozilla/mozjpeg/0826579/LICENSE.md",
+          "localPath": "licenses/sharp-libvips/mozjpeg/LICENSE.md",
+          "bytes": 5620,
+          "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+        },
+        {
+          "path": "README.ijg",
+          "url": "https://raw.githubusercontent.com/mozilla/mozjpeg/0826579/README.ijg",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/mozilla/mozjpeg/0826579/README.ijg",
+          "localPath": "licenses/sharp-libvips/mozjpeg/README.ijg",
+          "bytes": 12715,
+          "sha256": "f4a85f8677ca4e41b185c0a9f7c31a30ddb9ce43c561483ee92ef12db37c2a10"
+        },
+        {
+          "path": "simd/nasm/jsimdext.inc",
+          "url": "https://raw.githubusercontent.com/mozilla/mozjpeg/0826579/simd/nasm/jsimdext.inc",
+          "status": "COLLECTED",
+          "role": "Exact source file containing full SIMD zlib license and copyrights",
+          "localPath": "licenses/sharp-libvips/mozjpeg/simd__nasm__jsimdext.inc",
+          "sha256": "000b2df5469d2f94ea20a1b3d638b94031dad296f006600e1dbff79eded5facb",
+          "bytes": 15399
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [
+        {
+          "path": "simd/README.md",
+          "url": "https://raw.githubusercontent.com/mozilla/mozjpeg/0826579/simd/README.md",
+          "role": "upstream supplemental license or notice",
+          "status": "UNRESOLVED",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "mozjpeg",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "[zlib License, IJG License, BSD 3-Clause](https://github.com/mozilla/mozjpeg/blob/master/LICENSE.md)"
+    },
+    {
+      "name": "pango",
+      "version": "1.58.2",
+      "repository": "https://github.com/GNOME/pango",
+      "ref": "1.58.2",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/GNOME/pango/1.58.2/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/GNOME/pango/1.58.2/COPYING",
+          "localPath": "licenses/sharp-libvips/pango/COPYING",
+          "bytes": 25292,
+          "sha256": "d245807f90032872d1438d741ed21e2490e1175dc8aa3afa5ddb6c8e529b58e5"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "pango",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "LGPLv3"
+    },
+    {
+      "name": "proxy-libintl",
+      "version": "0.5",
+      "repository": "https://github.com/frida/proxy-libintl",
+      "ref": "0.5",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://raw.githubusercontent.com/frida/proxy-libintl/0.5/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/frida/proxy-libintl/0.5/COPYING",
+          "localPath": "licenses/sharp-libvips/proxy-libintl/COPYING",
+          "bytes": 25292,
+          "sha256": "d245807f90032872d1438d741ed21e2490e1175dc8aa3afa5ddb6c8e529b58e5"
+        }
+      ],
+      "scope": "Generic README inventory; build/posix.sh enables this only for musl or Darwin, not glibc Linux.",
+      "status": "COLLECTED",
+      "attempts": [
+        {
+          "path": "COPYING.LIB",
+          "url": "https://raw.githubusercontent.com/frida/proxy-libintl/0.5/COPYING.LIB",
+          "status": "UNRESOLVED",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "proxy-libintl",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "LGPLv3"
+    },
+    {
+      "name": "zlib-ng",
+      "version": "2.3.3",
+      "repository": "https://github.com/zlib-ng/zlib-ng",
+      "ref": "2.3.3",
+      "files": [
+        {
+          "path": "LICENSE.md",
+          "url": "https://raw.githubusercontent.com/zlib-ng/zlib-ng/2.3.3/LICENSE.md",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/zlib-ng/zlib-ng/2.3.3/LICENSE.md",
+          "localPath": "licenses/sharp-libvips/zlib-ng/LICENSE.md",
+          "bytes": 867,
+          "sha256": "6c9f0d975b41afaa34d22f55bb8986ce69e5cb7ad327cb2b28820cd425edf5ee"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "zlib-ng",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "[zlib License](https://github.com/zlib-ng/zlib-ng/blob/develop/LICENSE.md)"
+    },
+    {
+      "name": "cairo",
+      "version": "1.18.4",
+      "repository": "https://gitlab.freedesktop.org/cairo/cairo",
+      "ref": "1.18.4",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://gitlab.freedesktop.org/cairo/cairo/-/raw/1.18.4/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://gitlab.freedesktop.org/cairo/cairo/-/raw/1.18.4/COPYING",
+          "localPath": "licenses/sharp-libvips/cairo/COPYING",
+          "bytes": 1576,
+          "sha256": "67228a9f7c5f9b67c58f556f1be178f62da4d9e2e6285318d8c74d567255abdf"
+        },
+        {
+          "path": "COPYING-MPL-1.1",
+          "url": "https://gitlab.freedesktop.org/cairo/cairo/-/raw/1.18.4/COPYING-MPL-1.1",
+          "role": "upstream supplemental license or notice",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://gitlab.freedesktop.org/cairo/cairo/-/raw/1.18.4/COPYING-MPL-1.1",
+          "localPath": "licenses/sharp-libvips/cairo/COPYING-MPL-1.1",
+          "bytes": 25755,
+          "sha256": "53692a2ed6c6a2c6ec9b32dd0b820dfae91e0a1fcdf625ca9ed0bdf8705fcc4f"
+        },
+        {
+          "path": "COPYING-LGPL-2.1",
+          "url": "https://gitlab.freedesktop.org/cairo/cairo/-/raw/1.18.4/COPYING-LGPL-2.1",
+          "role": "upstream supplemental license or notice",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://gitlab.freedesktop.org/cairo/cairo/-/raw/1.18.4/COPYING-LGPL-2.1",
+          "localPath": "licenses/sharp-libvips/cairo/COPYING-LGPL-2.1",
+          "bytes": 26533,
+          "sha256": "9e9e8608c4cdda51a78cc3a385f4ec9a2e4c96d5ecad74ac8bca5fca3e563b7d"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [
+        {
+          "path": "COPYING-MPL-2",
+          "url": "https://gitlab.freedesktop.org/cairo/cairo/-/raw/1.18.4/COPYING-MPL-2",
+          "status": "UNRESOLVED",
+          "error": "HTTP Error 404: "
+        }
+      ],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution. Upstream1.18.4 COPYING offers LGPL2.1/MPL1.1; sharp README declares MPL2.0. Both upstream terms and declared newer terms retained; no fabricated upstream MPL2.0 file.",
+      "installedVersionKey": "cairo",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "Mozilla Public License 2.0"
+    },
+    {
+      "name": "fontconfig",
+      "version": "2.18.3",
+      "repository": "https://gitlab.freedesktop.org/fontconfig/fontconfig",
+      "ref": "2.18.3",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/raw/2.18.3/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/raw/2.18.3/COPYING",
+          "localPath": "licenses/sharp-libvips/fontconfig/COPYING",
+          "bytes": 8616,
+          "sha256": "51a51aa9823704fd90bccc616cdd17ebabb5b2b3e9cbde886ca02c7002288067"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "fontconfig",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "[fontconfig License](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/main/COPYING) (BSD-like)"
+    },
+    {
+      "name": "pixman",
+      "version": "0.46.4",
+      "repository": "https://gitlab.freedesktop.org/pixman/pixman",
+      "ref": "pixman-0.46.4",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://gitlab.freedesktop.org/pixman/pixman/-/raw/pixman-0.46.4/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://gitlab.freedesktop.org/pixman/pixman/-/raw/pixman-0.46.4/COPYING",
+          "localPath": "licenses/sharp-libvips/pixman/COPYING",
+          "bytes": 2087,
+          "sha256": "fac9270f0987b96ff4533fca3548c633e02083cbba4a0172a3b149b2e4019793"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "pixman",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "MIT License"
+    },
+    {
+      "name": "libtiff",
+      "version": "4.7.2",
+      "repository": "https://gitlab.com/libtiff/libtiff",
+      "ref": "v4.7.2",
+      "files": [
+        {
+          "path": "LICENSE.md",
+          "url": "https://gitlab.com/libtiff/libtiff/-/raw/v4.7.2/LICENSE.md",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://gitlab.com/libtiff/libtiff/-/raw/v4.7.2/LICENSE.md",
+          "localPath": "licenses/sharp-libvips/libtiff/LICENSE.md",
+          "bytes": 2416,
+          "sha256": "0e27c2382d7b8147972bbb746e04059a1152c8d0fda9d03ef1399d1a433c4ade"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "tiff",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "[libtiff License](https://gitlab.com/libtiff/libtiff/blob/master/LICENSE.md) (BSD-like)"
+    },
+    {
+      "name": "aom",
+      "version": "3.15.0",
+      "repository": "https://aomedia.googlesource.com/aom",
+      "ref": "v3.15.0",
+      "files": [
+        {
+          "path": "LICENSE",
+          "url": "https://aomedia.googlesource.com/aom/+/refs/tags/v3.15.0/LICENSE?format=TEXT",
+          "encoding": "base64",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://aomedia.googlesource.com/aom/+/refs/tags/v3.15.0/LICENSE?format=TEXT",
+          "localPath": "licenses/sharp-libvips/aom/LICENSE",
+          "bytes": 1316,
+          "sha256": "4764a286d8b2faeaf42f4418e7d7a28d58fc8fd4d00a3d0a7f44b0a4099de7f2"
+        },
+        {
+          "path": "PATENTS",
+          "url": "https://aomedia.googlesource.com/aom/+/refs/tags/v3.15.0/PATENTS?format=TEXT",
+          "encoding": "base64",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://aomedia.googlesource.com/aom/+/refs/tags/v3.15.0/PATENTS?format=TEXT",
+          "localPath": "licenses/sharp-libvips/aom/PATENTS",
+          "bytes": 5701,
+          "sha256": "661fb8e504744e95587b556b94a58343448300606a41bea8c7a9b97125696e61"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "aom",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)"
+    },
+    {
+      "name": "libwebp",
+      "version": "1.6.0",
+      "repository": "https://chromium.googlesource.com/webm/libwebp",
+      "ref": "v1.6.0",
+      "files": [
+        {
+          "path": "COPYING",
+          "url": "https://chromium.googlesource.com/webm/libwebp/+/refs/tags/v1.6.0/COPYING?format=TEXT",
+          "encoding": "base64",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://chromium.googlesource.com/webm/libwebp/+/refs/tags/v1.6.0/COPYING?format=TEXT",
+          "localPath": "licenses/sharp-libvips/libwebp/COPYING",
+          "bytes": 1496,
+          "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+        },
+        {
+          "path": "PATENTS",
+          "url": "https://chromium.googlesource.com/webm/libwebp/+/refs/tags/v1.6.0/PATENTS?format=TEXT",
+          "encoding": "base64",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://chromium.googlesource.com/webm/libwebp/+/refs/tags/v1.6.0/PATENTS?format=TEXT",
+          "localPath": "licenses/sharp-libvips/libwebp/PATENTS",
+          "bytes": 1436,
+          "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+        }
+      ],
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution.",
+      "installedVersionKey": "webp",
+      "installedVersionMatches": true,
+      "packageDeclaredLicense": "New BSD License"
+    },
+    {
+      "name": "libnsgif",
+      "version": "bundled-in-libvips-8.18.6",
+      "repository": "https://github.com/libvips/libvips",
+      "ref": "v8.18.6",
+      "files": [
+        {
+          "path": "libvips/foreign/libnsgif/COPYING",
+          "url": "https://raw.githubusercontent.com/libvips/libvips/v8.18.6/libvips/foreign/libnsgif/COPYING",
+          "status": "COLLECTED",
+          "httpStatus": 200,
+          "resolvedUrl": "https://raw.githubusercontent.com/libvips/libvips/v8.18.6/libvips/foreign/libnsgif/COPYING",
+          "localPath": "licenses/sharp-libvips/libnsgif/libvips__foreign__libnsgif__COPYING",
+          "bytes": 1133,
+          "sha256": "1469b759cf18e43c6e1b4ff892307d3962cbbb337ac497620d6690a219fad10c"
+        }
+      ],
+      "scope": "No independent version pin in sharp build; embedded copy must be attributed by libvips tag.",
+      "status": "COLLECTED",
+      "attempts": [],
+      "note": "Exact upstream bytes collected. This status covers root/full license text collection, not all binary redistribution obligations or every per-file attribution. Embedded libvips8.18.6 copy; independent version not asserted.",
+      "installedVersionKey": null,
+      "installedVersionMatches": null,
+      "packageDeclaredLicense": "MIT License"
+    }
+  ],
+  "scope": "Collection of exact upstream license texts; not a claim of complete corresponding-source/relink compliance or exact README-to-binary linkage.",
+  "supplementalLicenseVersions": [
+    {
+      "path": "LGPL-3.0.txt",
+      "url": "https://www.gnu.org/licenses/lgpl-3.0.txt",
+      "role": "Full terms referenced by distribution README; source license upgrade applicability not independently certified.",
+      "status": "COLLECTED",
+      "httpStatus": 200,
+      "resolvedUrl": "https://www.gnu.org/licenses/lgpl-3.0.txt",
+      "localPath": "licenses/sharp-libvips/license-versions/LGPL-3.0.txt",
+      "bytes": 7652,
+      "sha256": "e3a994d82e644b03a792a930f574002658412f62407f5fee083f2555c5f23118"
+    },
+    {
+      "path": "GPL-3.0.txt",
+      "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
+      "role": "Full terms referenced by distribution README; source license upgrade applicability not independently certified.",
+      "status": "COLLECTED",
+      "httpStatus": 200,
+      "resolvedUrl": "https://www.gnu.org/licenses/gpl-3.0.txt",
+      "localPath": "licenses/sharp-libvips/license-versions/GPL-3.0.txt",
+      "bytes": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "path": "MPL-2.0.txt",
+      "url": "https://www.mozilla.org/media/MPL/2.0/index.txt",
+      "role": "Full terms referenced by distribution README; source license upgrade applicability not independently certified.",
+      "status": "COLLECTED",
+      "httpStatus": 200,
+      "resolvedUrl": "https://www.mozilla.org/media/MPL/2.0/index.txt",
+      "localPath": "licenses/sharp-libvips/license-versions/MPL-2.0.txt",
+      "bytes": 16726,
+      "sha256": "3f3d9e0024b1921b067d6f7f88deb4a60cbe7a78e76c64e3f1d7fc3b779b9d04"
+    }
+  ],
+  "installedVersions": {
+    "path": "docs/evidence/commercial-acceptance/sharp-libvips-linux-x64-1.3.3-versions.json",
+    "sha256": "adddf5e76ac1cc03b503a17c488b8591dd9eb5ec3faf689a3852d02d1b5fbb10",
+    "matchedEntries": 28,
+    "embeddedWithoutSeparateVersion": "libnsgif"
+  },
+  "collectionStatus": "PASS_29_ROOT_LICENSE_TEXTS_COLLECTED",
+  "distributionComplianceStatus": "NOT_CLEARED_BY_TEXT_COLLECTION",
+  "remaining": [
+    "Deliver full corresponding source including exact sharp build patches and scripts, and satisfy applicable LGPL replacement/relink requirements for the chosen distribution method; source is not collected by this bounded license-text task.",
+    "The generic package README names29 libraries; exact static-link contribution/per-file copyright coverage and transitive Rust crate notices are not proved solely by28 version entries.",
+    "Cairo upstream1.18.4 root COPYING says LGPL2.1/MPL1.1 while package README selects MPL2.0; both full versions preserved, legal applicability not silently inferred.",
+    "Bundled libnsgif is mapped to the exact libvips8.18.6 embedded source, without inventing a standalone version."
+  ],
+  "installedReadme": {
+    "inventoryPath": "docs/evidence/commercial-acceptance/npm-licenses-linux-final-r5-collected.json",
+    "inventorySha256": "0d3a2e2146fb9a92fb040b11d22c8fbbe1fd6b206301ec6f69a7e5b231cdb2bd",
+    "path": "licenses/sharp-libvips/installed-package-README.md",
+    "sha256": "ad3134c811aa24321d6fe4eaf2f38a49e5e547ad591983a52032193ba7c74d3e"
+  },
+  "collectionTotals": {
+    "inventoryComponents": 29,
+    "matchedInstalledVersionEntries": 28,
+    "upstreamComponentFiles": 40,
+    "supplementalFullLicenseVersions": 3,
+    "bytes": 503927
+  }
+}

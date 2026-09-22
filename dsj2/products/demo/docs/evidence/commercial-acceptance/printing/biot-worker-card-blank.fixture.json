@@ -2,7 +2,7 @@
   "mode": "issued-document",
   "demoMode": true,
   "templateId": "biot-worker-card",
-  "templateVersion": 5,
+  "templateVersion": 15,
   "issuer": {
     "nameRu": "Учебный центр «Образец»",
     "nameKz": "«Үлгі» оқу орталығы",

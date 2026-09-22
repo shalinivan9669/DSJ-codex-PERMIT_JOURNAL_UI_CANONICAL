@@ -1,0 +1,46 @@
+[
+  {
+    "template": "biot-worker-card",
+    "issuerBands": 3,
+    "fontPt": 8,
+    "heightPt": 13,
+    "content": "issuer.nameRu / issuer.nameKz",
+    "bounds": "inside original black frame",
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "1eba9913f1b8f1371482dc1423d9cd399c152bf0638ed2cdc89d2b2e42726248",
+    "sha256": "577545ab695128675ba1d11eff7ad1672d0fd8b9869f600a35ad99e8bb9de69d"
+  },
+  {
+    "template": "ptm-card",
+    "issuerBands": 1,
+    "fontPt": 8,
+    "heightPt": 13,
+    "content": "issuer.nameRu / issuer.nameKz",
+    "bounds": "inside original black frame",
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "3ad595d22216489138c71b1f732cfe7b34f536afc16d1a36e7def53270fa63aa",
+    "sha256": "3fb986099459c3ccf9192653d7b0bb4d1d148b2561621f6f0867600956835679"
+  },
+  {
+    "template": "pb-card",
+    "issuerBands": 4,
+    "fontPt": 8,
+    "heightPt": 13,
+    "content": "issuer.nameRu / issuer.nameKz",
+    "bounds": "inside original black frame",
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "c6f2d6950c4648f12a2ad5907e57118a249449c7ac96d053f76f21ea710ef49f",
+    "sha256": "2d6bf7765617d5900451e739f431fc89855092d23b2ef14cf6275960e047cb0e"
+  },
+  {
+    "template": "ps-card",
+    "issuerBands": 4,
+    "fontPt": 8,
+    "heightPt": 13,
+    "content": "issuer.nameRu / issuer.nameKz",
+    "bounds": "inside original black frame",
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "8234833a76bebbabaf513cd51aab4d9bd7c0fbc7c388108039feedbd37baecba",
+    "sha256": "7009575c914eba99eb75d78c2e99d6b02b98a61580e0e674d6dfc41b6c02c32a"
+  }
+]

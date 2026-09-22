@@ -1,12 +1,19 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 
 # Build output
 .next/
+.next-*/
+.next.broken.*/
 dist/
 out/
 build/
 *.tsbuildinfo
+.turbo/
+.cache/
+.eslintcache
+.stylelintcache
 
 # Environment
 .env
@@ -14,6 +21,11 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!.env.*.template
 
 # Logs
 *.log
@@ -28,9 +40,44 @@ coverage/
 # Runtime data and local storage
 /storage/
 /tmp/
+/temp/
+/data/
+/backups/
+/uploads/
+/pgdata/
+/secrets/
+/.secrets/
+.runtime/
+.codex-runtime/
+.runlogs/
+.playwright/
+.playwright-cli/
+.playwright-report/
+playwright-report/
+test-results/
+
+# Python environments and tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Editor and Office temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+~$*
 
 # Tooling
 .vercel/
 
 # OS files
 .DS_Store
+Thumbs.db
+Desktop.ini

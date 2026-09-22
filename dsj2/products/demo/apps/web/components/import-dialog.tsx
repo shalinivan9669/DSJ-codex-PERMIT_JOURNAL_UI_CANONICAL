@@ -1,7 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
-import { LIMITS } from "@demo/contracts";
+import { BIOT_CATEGORIES, LIMITS, type BiotCategory } from "@demo/contracts";
+import {
+  biotCategoriesForTemplate,
+  defaultBiotCategory,
+} from "@/lib/assignment-presets";
 import { api, errorText, json } from "@/lib/api";
 import {
   importFields,
@@ -44,6 +48,9 @@ export function ImportDialog({
   const [excluded, setExcluded] = useState<number[]>([]);
   const [templateId, setTemplateId] =
     useState<Assignment["templateId"]>("biot-worker-card");
+  const [biotCategory, setBiotCategory] = useState<BiotCategory | undefined>(
+    "WORKER",
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -125,7 +132,9 @@ export function ImportDialog({
       const expectedRevision = await flush();
       const rows = preview.rows
         .filter((row) => !excluded.includes(row.sourceRow))
-        .map((row) => mapImportRow(preview, row, mapping, templateId));
+        .map((row) =>
+          mapImportRow(preview, row, mapping, templateId, biotCategory),
+        );
       const result = await api<Draft>(`/print-requests/${requestId}/import`, {
         method: "POST",
         body: json({ expectedRevision, importId: preview.importId, rows }),
@@ -321,9 +330,12 @@ export function ImportDialog({
             Документ для импортируемых строк
             <select
               value={templateId}
-              onChange={(event) =>
-                setTemplateId(event.target.value as Assignment["templateId"])
-              }
+              onChange={(event) => {
+                const nextTemplate = event.target
+                  .value as Assignment["templateId"];
+                setTemplateId(nextTemplate);
+                setBiotCategory(defaultBiotCategory(nextTemplate));
+              }}
             >
               {Object.entries(templateLabels).map(([id, title]) => (
                 <option key={id} value={id}>
@@ -332,6 +344,28 @@ export function ImportDialog({
               ))}
             </select>
           </label>
+          {biotCategory && (
+            <label>
+              Категория БиОТ для импортируемых строк
+              <select
+                value={biotCategory}
+                onChange={(event) =>
+                  setBiotCategory(event.target.value as BiotCategory)
+                }
+              >
+                {biotCategoriesForTemplate(templateId).map((category) => (
+                  <option key={category} value={category}>
+                    {BIOT_CATEGORIES[category].label}
+                  </option>
+                ))}
+              </select>
+              <small>
+                {BIOT_CATEGORIES[biotCategory].hint} Если в таблице есть
+                категория, используются значения строк. Часы и даты из выбранных
+                колонок сохраняются.
+              </small>
+            </label>
+          )}
           {repeated && (
             <Notice kind="info">
               Этот файл уже добавлен в заявку. Повторные строки не будут

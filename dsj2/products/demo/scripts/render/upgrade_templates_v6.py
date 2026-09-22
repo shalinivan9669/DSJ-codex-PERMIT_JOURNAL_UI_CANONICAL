@@ -42,6 +42,9 @@ def main():
                 rebuild_box(box,['Емтиханды қайта тапсырғаны туралы мәліметтер','Сведения о повторной сдаче экзаменов','Лауазымы / Должность: __________________','Жұмыс орны / Место работы: ______________','Бойынша емтихан тапсырғаны туралы берілді','В том, что он сдал экзамены на знание: __________','Негіздеме / Основание: хаттама / протокол','№ ______ от «___» ______ 20__ г.','Емтихан комиссиясының төрағасы /','Председатель экзаменационной комиссии','__________________  Т.А.Ә. / Ф.И.О.','Комиссия мүшесі / Член комиссии','__________________  Т.А.Ә. / Ф.И.О.   М.О. / М.П.']);rebuilt+=1
         for p in tree.iter(W+'p'):
             nodes=p.xpath('./w:r/w:t',namespaces={'w':W[1:-1]});value=''.join(n.text or '' for n in nodes).strip()
+            if tid=='ps-card' and p.getparent().tag==W+'body' and value in ['М.О.','М.П.']:
+                for node in nodes:node.text=''
+                continue
             if value=='{{ISSUER_RU}}' and not any(n.tag==W+'txbxContent' for n in p.iterancestors()):
                 # Decorative stripe outside populated panels repeated the same name
                 # at 4–5pt. Keep its vector frame; retain the readable panel issuer.
@@ -51,9 +54,22 @@ def main():
                 if not any((n.text or '').strip() for n in run.findall(W+'t')):continue
                 rp=run.find(W+'rPr')
                 if rp is None:rp=E.Element(W+'rPr');run.insert(0,rp)
+                if tid=='ps-witness':
+                    # Source caption text was artificially superscripted: 9pt XML
+                    # became 5.2pt in the final PDF. Captions are not exponents.
+                    for node in rp.findall(W+'vertAlign'):rp.remove(node)
                 for key in ['sz','szCs']:
                     size=rp.find(W+key)
                     if size is not None and float(size.get(W+'val','16'))<16:size.set(W+'val','16');resized+=1
+        if tid in ['biot-worker-card','ps-card']:
+            # These source cards carried the issuer only in the decorative strip.
+            # Move it into each populated alternative panel at the readable size.
+            for box in tree.iter(W+'txbxContent'):
+                value=''.join(n.text or '' for n in box.iter(W+'t'))
+                if '{{FULL_NAME' in value and '{{ISSUER_RU}}' not in value:
+                    p=E.Element(W+'p');run=E.SubElement(p,W+'r');props=E.SubElement(run,W+'rPr');E.SubElement(props,W+'sz',{W+'val':'16'});E.SubElement(run,W+'t').text='{{ISSUER_RU}}';box.insert(0,p)
+                    if tid=='ps-card':
+                        p=E.SubElement(box,W+'p');run=E.SubElement(p,W+'r');E.SubElement(run,W+'t').text='М.О. / М.П.'
         files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf8')
         output=directory/(tid+'.v6.docx');deterministic_zip(output,files)
         template.update(version=6,file=output.name,sha256=hashlib.sha256(output.read_bytes()).hexdigest(),previousTemplateSha256=hashlib.sha256(source.read_bytes()).hexdigest())

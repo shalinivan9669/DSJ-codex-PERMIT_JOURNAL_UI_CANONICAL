@@ -4,24 +4,28 @@
   "template": "pb-card",
   "variant": "punctuation",
   "recipients": 1,
-  "docxSha256": "e14a083851a9ca6a3fa20077cc5f42471104965a4cf2a331f4fa7265a3af55d5",
-  "pdfSha256": "dc9100e71f6bb1aba68a6ba3e3d86eba853db6276974ac9eadf9e604effdcde0",
-  "docxSeconds": 0.5518989999545738,
-  "renderSeconds": 27.9663564999355,
+  "docxSha256": "0c921f124eea64b70caed0f7032a445591a45c3474c9bf425bc4c07a3a386b7b",
+  "pdfSha256": "1d2d210d24623947c451f2c1cd2bb5a308c515c0479016c1dc9eb4809782fdf0",
+  "docxSeconds": 1.1555417899999156,
+  "renderSeconds": 3.219631180999386,
+  "conversionReusedAfterExactByteMatch": false,
+  "priorConversionSeconds": null,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-punctuation-page-001.png",
-      "sha256": "676bd93450345e3a751fb041f6f23d285fbb6fdfed8e21a23ca4ecb78df72d6a"
+      "sha256": "360d0c6dfbda4ada0767ec8ec1d5ade4d94914ae94f79406b8a56831f2f98db3"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-punctuation-page-002.png",
-      "sha256": "48dfecd61b84ac6a9c5a20bfdcb208361598520b6f4f09de815db1089de2a4ec"
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
     }
   ],
   "columnChecks": [],

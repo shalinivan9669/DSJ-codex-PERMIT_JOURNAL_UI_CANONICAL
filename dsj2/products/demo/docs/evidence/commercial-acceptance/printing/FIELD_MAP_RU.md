@@ -27,7 +27,7 @@ box соответствующих значений. Это координаты
 | assignment.validUntil | VALID_*; в PB-card день и месяц берутся из validUntil |
 | assignment.trainingSubject | SUBJECT |
 | assignment.result / reason / education / hours | RESULT / REASON / EDUCATION / HOURS |
-| issuer.nameRu / nameKz | ISSUER_RU / ISSUER_KZ, EDU_ORG_RU / EDU_ORG_KZ |
+| issuer.nameRu / nameKz | ISSUER_RU / ISSUER_KZ, EDU_ORG_RU / EDU_ORG_KZ; ISSUER_BOTH — обе строки в верхней полосе BIOT/PTM/PB/PS карточек |
 | issuer.cityRu / cityKz, addressRu / addressKz | CITY_RU / CITY_KZ, ADDRESS_RU / ADDRESS_KZ |
 | issuer.approvalBasis | APPROVAL_BASIS, один блок в каждом использующем его протоколе |
 | issuer.commission[0..2] | CHAIR / MEMBER_1 / MEMBER_2: имя и должность; графические подписи не генерируются |
@@ -59,3 +59,14 @@ box соответствующих значений. Это координаты
 доказывает повтор заголовка `1..6` на следующей физической странице. Управляемая
 мутация второй копии на `7..12` обязана падать в DOCX и PDF. Историческое
 самопроизвольное продолжение списков не объявляется воспроизведённым.
+
+В PS-card заголовок `№ п.п.` относится к первой колонке дисциплин; третья —
+оценка знаний. В казахской таблице даты решения PS witness день и месяц
+заполняются раздельно: день — ячейка 4, месяц — ячейка 6. Дата решения берётся
+из protocolDate; дата выдачи, срок обучения и регистрационный номер независимы.
+
+Microsoft Word проверяется с установленными Liberation 2.1.5. При отсутствующих
+шрифтах Word подставлял Times New Roman и записывал казахскую `Ә` как латинскую
+`Ə` в таблицу ToUnicode PDF. Контроль с временно зарегистрированными штатными
+шрифтами сохранил точный Unicode. Это обязательное условие поддерживаемой Word
+среды; нормализация пользовательского текста для маскировки потери не применяется.

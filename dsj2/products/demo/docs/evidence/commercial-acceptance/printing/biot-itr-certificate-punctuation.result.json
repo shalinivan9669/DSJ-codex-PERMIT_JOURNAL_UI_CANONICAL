@@ -4,17 +4,20 @@
   "template": "biot-itr-certificate",
   "variant": "punctuation",
   "recipients": 1,
-  "docxSha256": "64c74d14f8a78a6be4208dd4568b09adf3ee92efa4a65541824e303d67a1e5a0",
-  "pdfSha256": "742139799610cd0233fe3a5b37148454064763430536209f461eeb02dfd7997c",
-  "docxSeconds": 0.09467070002574474,
-  "renderSeconds": 28.068381399963982,
+  "docxSha256": "8cb8f8bb200604729513035eddf2fd2443ac2f78e896983e74cb43eac286a044",
+  "pdfSha256": "6e376be005b9700867e1f3083c98b6d3e3e4dd14cd6c84ab394539d1853c657e",
+  "docxSeconds": 0.33343338499980746,
+  "renderSeconds": 1.9204836589997285,
+  "conversionReusedAfterExactByteMatch": false,
+  "priorConversionSeconds": null,
   "pages": [
     {
       "page": 1,
       "widthPt": 841.8897705078125,
       "heightPt": 595.303955078125,
+      "minimumBodyFontPt": 14.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-punctuation-page-001.png",
-      "sha256": "d47a31d7a28087fea295817702ed0a6e826886e24f25b41235a947a0b51ce9da"
+      "sha256": "0fc5b55a2b135368bc6adf6f101ccef5a5f4a16fd4f0dc0940456617ff32676c"
     }
   ],
   "columnChecks": [],

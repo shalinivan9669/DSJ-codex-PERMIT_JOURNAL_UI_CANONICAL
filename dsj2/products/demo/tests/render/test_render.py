@@ -22,12 +22,17 @@ STORE=Path(os.environ['DEMO_ARTIFACT_ROOT']);STORE.mkdir(parents=True,exist_ok=T
 MANIFEST=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf8'))
 
 def fixture(template_id):
-    return {'mode':'issued-document','demoMode':True,'templateId':template_id,'templateVersion':next(t['version'] for t in MANIFEST['templates'] if t['id']==template_id),
+    snap={'mode':'issued-document','demoMode':True,'templateId':template_id,'templateVersion':next(t['version'] for t in MANIFEST['templates'] if t['id']==template_id),
        'issuer':{'nameRu':'Учебный центр «Образец»','nameKz':'«Үлгі» оқу орталығы','cityRu':'Астана','cityKz':'Астана','approvalBasis':'ТЕСТ: приказ комиссии № 7 от 10.09.2026','commission':[{'name':'Тестова А. Б.','position':'Председатель'},{'name':'Үлгі Ә. Ө.','position':'Член комиссии'},{'name':'Примеров В. Г.','position':'Член комиссии'}]},
        'items':[{'id':'recipient-01','fullNameRu':'Тестов Иван Петрович','fullNameKz':'Әділбек Өмірсерік Қанатұлы','positionRu':'Инженер','positionKz':'Инженер','workplaceRu':'ТОО «Тестовый заказчик»','workplaceKz':'«Сынақ тапсырыс беруші» ЖШС','number':'ТЕСТ-00001','protocolNumber':'ПР-00001','registrationNumber':'00123','assignment':{'id':'a1','templateId':template_id,'documentDate':'2026-09-22','protocolDate':'2026-09-20','trainingStart':'2026-09-14','trainingEnd':'2026-09-19','trainingSubject':'Безопасность труда / Еңбек қауіпсіздігі','result':'ТЕСТ: хорошо / жақсы','reason':'ТЕСТ: первичное обучение','hours':40,'validUntil':'2027-09-22','externalBasisNumber':'ВНЕШНИЙ-01','protocolMode':'individual'}}], 'photos':{}}
+    if template_id.startswith('biot-'):
+        snap['issuer'].update(bin='990140000000',headName='Тестова А. Б.')
+        item=snap['items'][0];item.update(departmentRu='Испытательный участок',departmentKz='Сынақ учаскесі',employerBin='990240000000',employerAddressRu='Астана, Тестовая 1',employerAddressKz='Астана, Сынақ 1',credentialNumber='СЕРТ-00001')
+        item['assignment'].update(biotCategory='OHS_SPECIALIST_SPECIAL' if template_id.startswith('biot-itr-') else 'WORKER',productionHours='16',biotIndustryRu='промышленной',biotIndustryKz='өнеркәсіп',biotCheckType='PERIODIC',biotKnowledgeResult='90 / 100',biotProctoringResult='прошел / өткен',biotUniqueNumber='',biotNotes='')
+    return snap
 
 class RenderTests(unittest.TestCase):
-    def test_01_all_ten_original_forms_real_docx_pdf(self):
+    def test_01_all_active_forms_real_docx_pdf(self):
         results=[]
         for template in MANIFEST['templates']:
             with self.subTest(template=template['id']):
@@ -143,16 +148,16 @@ class RenderTests(unittest.TestCase):
         good=evidence/'numbering-good.docx';render_docx(snap,good);convert_pdf(good,good.with_suffix('.pdf'))
         assert_docx_columns(good,'biot-protocol',2);checks=assert_pdf_columns(good.with_suffix('.pdf'),2,2)
         with ZipFile(good) as archive:files={n:archive.read(n) for n in archive.namelist()}
-        tree=E.fromstring(files['word/document.xml']);tables=[t for t in tree.iter(W+'tbl') if len(t.findall(W+'tblGrid/'+W+'gridCol'))==6]
-        for index,cell in enumerate(tables[1].findall(W+'tr')[1].findall(W+'tc'),7):next(cell.iter(W+'t')).text=str(index)
-        files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf8');bad=evidence/'numbering-mutation-7-12.docx';deterministic_zip(bad,files);convert_pdf(bad,bad.with_suffix('.pdf'))
+        tree=E.fromstring(files['word/document.xml']);tables=[t for t in tree.iter(W+'tbl') if len(t.findall(W+'tblGrid/'+W+'gridCol'))==7]
+        for index,cell in enumerate(tables[1].findall(W+'tr')[1].findall(W+'tc'),8):next(cell.iter(W+'t')).text=str(index)
+        files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8');bad=evidence/'numbering-mutation-8-14.docx';deterministic_zip(bad,files);convert_pdf(bad,bad.with_suffix('.pdf'))
         with self.assertRaisesRegex(AssertionError,'DOCX_COLUMN_VALUES'):assert_docx_columns(bad,'biot-protocol',2)
         with self.assertRaisesRegex(AssertionError,'PDF_COLUMN_VALUES'):assert_pdf_columns(bad.with_suffix('.pdf'),2,2)
-        (evidence/'numbering-mutation-result.json').write_text(json.dumps({'status':'PASS','method':'controlled mutation of second document column cells to 7..12, not historical-bug reproduction','good':checks,'mutantDocxRejected':True,'mutantPdfRejected':True},indent=2),encoding='utf8')
+        (evidence/'numbering-mutation-result.json').write_text(json.dumps({'status':'PASS','method':'controlled mutation of second document column cells to 8..14, not historical-bug reproduction','good':checks,'mutantDocxRejected':True,'mutantPdfRejected':True},indent=2),encoding='utf8')
 
     def test_16_mapping_signature_basis_and_independent_dates(self):
         from print_contracts import W,text
-        for tid in ['biot-protocol','ptm-protocol','ps-protocol','ps-witness','biot-worker-card']:
+        for tid in ['biot-protocol','ptm-protocol','pb-protocol','ps-protocol','ps-witness','biot-worker-card']:
             snap=fixture(tid);item=snap['items'][0];item['credentialNumber']='КР-98765';item['assignment']['education']='ТЕСТ: высшее'
             output=OUT/(tid+'-mapping-regression.docx');render_docx(snap,output)
             with ZipFile(output) as archive:tree=E.fromstring(archive.read('word/document.xml'))
@@ -161,6 +166,13 @@ class RenderTests(unittest.TestCase):
                 table=next(tree.iter(W+'tbl'));cells=table.findall(W+'tr')[2 if tid=='biot-protocol' else 1].findall(W+'tc');self.assertEqual(text(cells[-1]).strip(),'')
             if tid=='ps-protocol':
                 table=next(tree.iter(W+'tbl'));cell=table.findall(W+'tr')[1].findall(W+'tc')[-1];self.assertEqual(text(cell),'КР-98765')
+            if tid=='pb-protocol':
+                table=next(tree.iter(W+'tbl'));cell=table.findall(W+'tr')[1].findall(W+'tc')[3];self.assertEqual(text(cell),'ТЕСТ: высшее')
+                import pdfplumber
+                convert_pdf(output,output.with_suffix('.pdf'))
+                with pdfplumber.open(output.with_suffix('.pdf')) as pdf:
+                    tables=[t for t in pdf.pages[0].find_tables() if len(t.extract()[0])==5 and any('Образование' in (c or '') for c in t.extract()[0])]
+                    self.assertEqual(len(tables),1);self.assertEqual(re.sub(r'\s+',' ',tables[0].extract()[1][3]).strip(),'ТЕСТ: высшее')
             if tid=='ps-witness':
                 decision=next(p for p in tree.iter(W+'p') if 'Решением квалификационной' in text(p));self.assertIn('20',text(decision));self.assertNotIn('«22»',text(decision))
 
@@ -175,7 +187,7 @@ class RenderTests(unittest.TestCase):
         for template in MANIFEST['templates']:
             snap=fixture(template['id']);snap['items'][0]['fullNameRu']='А'*81;snapshots.append(snap)
         result=preflight({'snapshots':snapshots},OUT/'preflight-overflow.json')
-        self.assertEqual(result['issues'],[{'index':i,'code':'PRINT_LAYOUT_OVERFLOW'} for i in range(10)])
+        self.assertEqual(result['issues'],[{'index':i,'code':'PRINT_LAYOUT_OVERFLOW'} for i in range(len(MANIFEST['templates']))])
 
     def test_19_numbered_header_repeated_on_physical_continuation(self):
         from print_contracts import assert_pdf_columns,W
@@ -185,8 +197,8 @@ class RenderTests(unittest.TestCase):
         output=evidence/'numbering-physical-continuation.docx';render_docx(fixture('biot-protocol'),output)
         with ZipFile(output) as archive:files={n:archive.read(n) for n in archive.namelist()}
         tree=E.fromstring(files['word/document.xml']);table=next(tree.iter(W+'tbl'));source=table.findall(W+'tr')[2]
-        for index in range(5):table.append(deepcopy(source))
-        files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf8');deterministic_zip(output,files);convert_pdf(output,output.with_suffix('.pdf'))
+        for index in range(12):table.append(deepcopy(source))
+        files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8');deterministic_zip(output,files);convert_pdf(output,output.with_suffix('.pdf'))
         checks=assert_pdf_columns(output.with_suffix('.pdf'));self.assertGreater(len(checks),1)
         (evidence/'physical-continuation-result.json').write_text(json.dumps({'status':'PASS','method':'engineering-only duplicated table row forces table continuation; not a supported group protocol','checks':checks},indent=2),encoding='utf8')
 
@@ -194,6 +206,80 @@ class RenderTests(unittest.TestCase):
         workbook=Workbook();worksheet=workbook.active;worksheet.append(['fullNameRu']);worksheet.append(['=1+1']);workbook.save(OUT/'formula-only.xlsx')
         result=import_table({'inputPath':str(OUT/'formula-only.xlsx')},OUT/'formula-only.json')
         self.assertFalse(result['canApply']);self.assertEqual(result['count'],1);self.assertEqual(result['rawRows'][0]['rowNumber'],2);self.assertIn('FORMULA_NOT_ALLOWED',result['rawRows'][0]['errors'])
+
+    def test_21_word_package_causes_are_rejected(self):
+        from print_contracts import assert_package_contract
+        from sanitize_templates import deterministic_zip
+        output=OUT/'word-contract.docx';render_docx(fixture('biot-protocol'),output);assert_package_contract(output)
+        with ZipFile(output) as archive:files={n:archive.read(n) for n in archive.namelist()}
+        tree=E.fromstring(files['word/document.xml']);tree.set('{http://schemas.openxmlformats.org/markup-compatibility/2006}Ignorable','undeclared')
+        files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8');mutant=OUT/'word-contract-mutant.docx';deterministic_zip(mutant,files)
+        with self.assertRaisesRegex(AssertionError,'OOXML_UNDECLARED_MC_PREFIX'):assert_package_contract(mutant)
+
+    def test_22_ps_title_not_painted_beneath_issuer_band(self):
+        from print_contracts import assert_card_title_visible,W,text
+        from sanitize_templates import deterministic_zip
+        from upgrade_templates_v10 import move_box
+        evidence=ROOT/'docs/evidence/commercial-acceptance/printing'
+        good=evidence/'ps-title-visible.docx';snap=fixture('ps-card');render_docx(snap,good);convert_pdf(good,good.with_suffix('.pdf'))
+        checks=assert_card_title_visible(good.with_suffix('.pdf'),'ps-card',1)
+        with ZipFile(good) as archive:files={n:archive.read(n) for n in archive.namelist()}
+        tree=E.fromstring(files['word/document.xml']);changed=0
+        for box in tree.iter(W+'txbxContent'):
+            if snap['items'][0]['fullNameRu'] in text(box):move_box(box,-9);changed+=1
+        self.assertEqual(changed,2)
+        files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8');bad=evidence/'ps-title-hidden-mutation.docx';deterministic_zip(bad,files);convert_pdf(bad,bad.with_suffix('.pdf'))
+        with self.assertRaisesRegex(AssertionError,'PS_TITLE_BEHIND_ISSUER_BAND'):assert_card_title_visible(bad.with_suffix('.pdf'),'ps-card',1)
+        (evidence/'ps-title-visibility-result.json').write_text(json.dumps({'status':'PASS','good':checks,'mutantRejected':True},indent=2)+'\n',encoding='utf8')
+
+    def test_23_biot_repeated_panel_and_issuer_divider(self):
+        from print_contracts import assert_biot_card_panels,W,text
+        from sanitize_templates import deterministic_zip
+        from upgrade_templates_v10 import V,value,put
+        from renderer import fields_for
+        WP='{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}'
+        A='{http://schemas.openxmlformats.org/drawingml/2006/main}'
+        evidence=ROOT/'docs/evidence/commercial-acceptance/printing'
+        snap=fixture('biot-worker-card')
+        # Keep this historic geometry regression pinned after the normative v16
+        # replaces the repeating panels with the complete Appendix 4 form.
+        import shutil
+        historical=ROOT/'tests/render/fixtures/biot-worker-card.v15.docx'
+        pinned=STORE/'biot-worker-card.v15.docx';shutil.copyfile(historical,pinned)
+        snap.update(templateVersion=15,templateStorageKey=pinned.name,templateChecksum=hashlib.sha256(pinned.read_bytes()).hexdigest())
+        snap['issuer']['commission']=[{'name':'Синтетический Председатель Әли','position':'Председатель контрольной комиссии'}]
+        snap['items'][0]['assignment']['trainingSubject']='Тестовая программа безопасности и охраны труда для инженерного персонала'
+        expected=fields_for(snap,snap['items'][0]);expected=[{k:expected[k] for k in ['CHAIR','SUBJECT']}]
+        good=evidence/'biot-panel-good.docx';render_docx(snap,good);convert_pdf(good,good.with_suffix('.pdf'))
+        checks=assert_biot_card_panels(good.with_suffix('.pdf'),1,expected)
+        with ZipFile(good) as archive:original={n:archive.read(n) for n in archive.namelist()}
+        tree=E.fromstring(original['word/document.xml'])
+        boxes=[b for b in tree.iter(W+'txbxContent') if 'Синтетический Председатель' in text(b)]
+        self.assertEqual(len(boxes),4)
+        for box in boxes[-2:]:
+            shape=next(n for n in box.iterancestors() if E.QName(n).localname in ['shape','anchor'])
+            if shape.tag==V+'shape':shape.set('style',put(put(shape.get('style'),'margin-left',282.9),'width',259.5))
+            else:
+                shape.find(WP+'positionH/'+WP+'posOffset').text='3592830'
+                shape.find(WP+'extent').set('cx','3295650');shape.find('.//'+A+'xfrm/'+A+'ext').set('cx','3295650')
+        files=dict(original);files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8')
+        bad=evidence/'biot-panel-wide-mutation.docx';deterministic_zip(bad,files);convert_pdf(bad,bad.with_suffix('.pdf'))
+        with self.assertRaisesRegex(AssertionError,'BIOT_RIGHT_PANEL_(CLIP|INSET)'):assert_biot_card_panels(bad.with_suffix('.pdf'),1,expected)
+        tree=E.fromstring(original['word/document.xml']);changed=0
+        for anchor in tree.iter(WP+'anchor'):
+            extent=anchor.find(WP+'extent')
+            if int(extent.get('cx','0'))!=4445:continue
+            offset=anchor.find(WP+'positionV/'+WP+'posOffset');offset.text=str(int(offset.text)-14*12700)
+            extent.set('cy',str(int(extent.get('cy'))+14*12700));extent=anchor.find('.//'+A+'xfrm/'+A+'ext');extent.set('cy',str(int(extent.get('cy'))+14*12700));changed+=1
+        for shape in tree.iter(V+'shape'):
+            style=shape.get('style','')
+            if abs(value(style,'width')-.35)>.001 or value(style,'height')<150:continue
+            shape.set('style',put(put(style,'margin-top',value(style,'margin-top')-14),'height',value(style,'height')+14));changed+=1
+        self.assertEqual(changed,4)
+        files=dict(original);files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8')
+        crossing=evidence/'biot-divider-crossing-mutation.docx';deterministic_zip(crossing,files);convert_pdf(crossing,crossing.with_suffix('.pdf'))
+        with self.assertRaisesRegex(AssertionError,'BIOT_DIVIDER_THROUGH_ISSUER'):assert_biot_card_panels(crossing.with_suffix('.pdf'),1,expected)
+        (evidence/'biot-panel-regression-result.json').write_text(json.dumps({'status':'PASS','good':checks,'widePanelMutantRejected':True,'dividerMutantRejected':True,'longChairAndProgram':expected},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 
     def test_12_photo_exif_and_decompression_limits(self):
         image=Image.new('RGB',(480,640),'#aabecc');exif=Image.Exif();exif[274]=6;image.save(OUT/'rotated.jpg',exif=exif)

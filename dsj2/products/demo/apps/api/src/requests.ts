@@ -33,6 +33,40 @@ export function namespace(templateId: string) {
         : "CARD";
   return `${family}:${kind}`;
 }
+function protocolTemplateFor(templateId: string) {
+  return templateId === "biot-itr-certificate" ||
+    templateId === "biot-itr-protocol"
+    ? "biot-itr-protocol"
+    : `${templateId.split("-")[0]}-protocol`;
+}
+function credentialTemplateFor(templateId: string) {
+  if (
+    templateId === "biot-itr-protocol" ||
+    templateId === "biot-itr-certificate"
+  )
+    return "biot-itr-certificate";
+  if (templateId === "biot-protocol" || templateId === "biot-worker-card")
+    return "biot-worker-card";
+  return `${templateId.split("-")[0]}-card`;
+}
+function employerFields(
+  item: Draft["items"][number],
+  customer: {
+    nameRu: string;
+    nameKz: string | null;
+    bin: string | null;
+    addressRu: string | null;
+    addressKz: string | null;
+  } | null,
+) {
+  return {
+    workplaceRu: item.workplaceRu || customer?.nameRu || "",
+    workplaceKz: item.workplaceKz || customer?.nameKz || "",
+    employerBin: item.employerBin || customer?.bin || "",
+    employerAddressRu: item.employerAddressRu || customer?.addressRu || "",
+    employerAddressKz: item.employerAddressKz || customer?.addressKz || "",
+  };
+}
 function searchable(draft: Draft) {
   return [
     draft.title,
@@ -325,7 +359,23 @@ async function validation(
     orderBy: { version: "desc" },
   });
   const parsedProfile = profile ? profileSchema.parse(profile.profile) : null;
-  const issues = validateDraft(draft, parsedProfile);
+  const customer = draft.customerId
+    ? await tx.customerOrganization.findFirst({
+        where: { id: draft.customerId, tenantId: c.tenantId },
+      })
+    : null;
+  // Validate exactly the fallback values that will be frozen into render inputs,
+  // without rewriting the operator's saved draft or a previous issuance snapshot.
+  const issues = validateDraft(
+    {
+      ...draft,
+      items: draft.items.map((item) => ({
+        ...item,
+        ...employerFields(item, customer),
+      })),
+    },
+    parsedProfile,
+  );
   const templates = await tx.templateVersion.findMany({
     where: { tenantId: c.tenantId },
   });
@@ -395,11 +445,10 @@ async function prepareLayout(
     item.assignments.map((assignment, column) => {
       const template = v.selected.get(assignment.templateId)!;
       const linkedProtocol = item.assignments.some(
-        (a) =>
-          a.templateId === `${assignment.templateId.split("-")[0]}-protocol`,
+        (a) => a.templateId === protocolTemplateFor(assignment.templateId),
       );
       const linkedCredential = item.assignments.some(
-        (a) => a.templateId === `${assignment.templateId.split("-")[0]}-card`,
+        (a) => a.templateId === credentialTemplateFor(assignment.templateId),
       );
       const snapshot = {
         mode: "issued-document",
@@ -435,11 +484,10 @@ async function prepareLayout(
                   ),
             credentialNumber: linkedCredential
               ? numberFor(
-                  assignment.templateId.split("-")[0].toUpperCase() + ":CARD",
+                  namespace(credentialTemplateFor(assignment.templateId)),
                 )
               : "",
-            workplaceRu: item.workplaceRu || customer?.nameRu || "",
-            workplaceKz: item.workplaceKz || customer?.nameKz || "",
+            ...employerFields(item, customer),
           },
         ],
       };
@@ -855,13 +903,13 @@ export async function finalize(
               (p) =>
                 p.item.id === item.id &&
                 p.assignment.templateId ===
-                  `${assignment.templateId.split("-")[0]}-protocol`,
+                  protocolTemplateFor(assignment.templateId),
             );
       const linkedCredential = planned.find(
         (p) =>
           p.item.id === item.id &&
           p.assignment.templateId ===
-            `${assignment.templateId.split("-")[0]}-card`,
+            credentialTemplateFor(assignment.templateId),
       );
       const renderedItem = {
         ...item,
@@ -875,8 +923,7 @@ export async function finalize(
         credentialNumber: linkedCredential?.number || "",
         linkedCredentialDocumentId: linkedCredential?.documentId,
         documentId,
-        workplaceRu: item.workplaceRu || customer?.nameRu || "",
-        workplaceKz: item.workplaceKz || customer?.nameKz || "",
+        ...employerFields(item, customer),
       };
       allItems.push(renderedItem);
       const renderInput = {
@@ -1004,6 +1051,21 @@ export async function preview(c: Context, id: string, input: unknown) {
     const v = await validation(tx, c, id, expectedRevision);
     if (!v.profile || !v.parsedProfile)
       fail(422, "ISSUER_REQUIRED", "Сохраните профиль центра");
+      const categoryIssues = v.issues.filter((issue) =>
+        [
+          "BIOT_ECS_REQUIRED",
+          "BIOT_CATEGORY_TEMPLATE",
+          "BIOT_CATEGORY_REQUIRED",
+          "BIOT_UNIQUE_NUMBER_CONFLICT",
+        ].includes(issue.code),
+      );
+    if (categoryIssues.length)
+      fail(
+        422,
+        "PREVIEW_VALIDATION",
+        "Выберите доступную форму для этой категории",
+        categoryIssues,
+      );
     const photos = await photoMap(tx, c, v.draft);
     const customer = v.draft.customerId
       ? await tx.customerOrganization.findFirst({
@@ -1040,8 +1102,14 @@ export async function preview(c: Context, id: string, input: unknown) {
               assignments: undefined,
               assignment,
               number: "ПРЕДПРОСМОТР",
-              workplaceRu: item.workplaceRu || customer?.nameRu || "",
-              workplaceKz: item.workplaceKz || customer?.nameKz || "",
+              credentialNumber: item.assignments.some(
+                (candidate) =>
+                  candidate.templateId ===
+                  credentialTemplateFor(assignment.templateId),
+              )
+                ? "ПРЕДПРОСМОТР"
+                : "",
+              ...employerFields(item, customer),
             },
           ],
           photos,

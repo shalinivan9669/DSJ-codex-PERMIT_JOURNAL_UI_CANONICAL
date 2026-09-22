@@ -4,24 +4,28 @@
   "template": "ps-witness",
   "variant": "punctuation",
   "recipients": 1,
-  "docxSha256": "19e7e2facaf3e49332856728ce3dd700b04d152e6631968b125a4d3fdb682896",
-  "pdfSha256": "427c683761477ff1f6d8249c66c03cbb67fa8199a75479eb41dd8802302b9d03",
-  "docxSeconds": 0.22060729993972927,
-  "renderSeconds": 22.319212900009006,
+  "docxSha256": "7e550003fdcdffa80b7a9d3af917dd275dfb7ca4b679b4fa4b4b6f3ee7a29329",
+  "pdfSha256": "2a3c169311bec48057a11022723773d2a7d3ce40fd877efaf2ad5055396aa55a",
+  "docxSeconds": 0.617254812000283,
+  "renderSeconds": 0.8652196060002098,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 2.789335683999525,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 20.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-punctuation-page-001.png",
-      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809"
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-punctuation-page-002.png",
-      "sha256": "bc3de66c46d2884dac61eedf82a4315a4388fd397e6069f43249c065f4cbb413"
+      "sha256": "48aea7e62ac4c601f50219bed9cecbf906bb6a4a8e38b25b3c4de27c83e5626f"
     }
   ],
   "columnChecks": [],

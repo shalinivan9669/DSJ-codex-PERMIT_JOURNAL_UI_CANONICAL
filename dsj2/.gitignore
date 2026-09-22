@@ -1,8 +1,10 @@
 # dependencies
 node_modules/
+.pnpm-store/
 
 # build output and compiler state
 .next/
+.next-*/
 .next.broken.*/
 dist/
 build/
@@ -23,21 +25,44 @@ tmp/
 .playwright-cli/
 .cache/
 storage/
+.runtime/
+playwright-report/
+test-results/
+/data/
+/backups/
+/uploads/
+/pgdata/
+/secrets/
+/.secrets/
+/temp/
+.eslintcache
+.stylelintcache
 
 # Python runtime artifacts
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
 
 # local environment
 .env
 .env.local
 .env.*.local
+.env.*
 !.env.example
 !.env.abtest.example
+!.env.*.example
+!.env.template
+!.env.*.template
 
 # database local-only files
 packages/database/generated/
 packages/database/prisma/dev.db
+packages/database/prisma/dev.db-*
 
 # deployment/tooling local state
 .vercel/
@@ -45,6 +70,13 @@ packages/database/prisma/dev.db
 # OS/editor
 .DS_Store
 Thumbs.db
+Desktop.ini
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+~$*
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json

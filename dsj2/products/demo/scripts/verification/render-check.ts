@@ -4,7 +4,18 @@ const root = resolve(__dirname, "../..");
 const result = spawnSync(
   process.env.DEMO_PYTHON ||
     (process.platform === "win32" ? "python" : "python3"),
-  ["-X", "utf8", resolve(root, "tests/render/test_render.py")],
+  [
+    "-X",
+    "utf8",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    resolve(root, "tests/render"),
+    "-p",
+    "test_*.py",
+    "-v",
+  ],
   { cwd: root, stdio: "inherit", windowsHide: true, env: process.env },
 );
 if (result.error)

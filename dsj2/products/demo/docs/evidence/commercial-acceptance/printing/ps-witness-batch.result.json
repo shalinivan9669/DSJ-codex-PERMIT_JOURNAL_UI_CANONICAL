@@ -4,38 +4,44 @@
   "template": "ps-witness",
   "variant": "batch",
   "recipients": 2,
-  "docxSha256": "561ab40bcf633d80fc461f1cf2f95703abf67272da0d58da4b091e99ead4e625",
-  "pdfSha256": "997800a0a6ebd9efbbfcd4c1ea72f2df0333c17fa9fe9e34c77d18fb68b83821",
-  "docxSeconds": 0.6472702000755817,
-  "renderSeconds": 25.53646120009944,
+  "docxSha256": "213b88caf7a9adc3adf1286f62c92178eb624e5c540aa27d21991f08e24f7d59",
+  "pdfSha256": "1ca571278000ac227f849c04c20326b62a8e60ec0a711049968849221552b228",
+  "docxSeconds": 1.5369691370005967,
+  "renderSeconds": 1.7185991430005743,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 3.7008993389999887,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 20.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-001.png",
-      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809"
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-002.png",
-      "sha256": "7990f7991ce5e4532b1156dfbefa7ed421ceee1c84618fa8a58b522662a1b3d7"
+      "sha256": "8097ebc1bfb00e6a2d390ea4ef439469b5cf3aaf51149277c3375e436b1d416d"
     },
     {
       "page": 3,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 20.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-003.png",
-      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809"
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
     },
     {
       "page": 4,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-004.png",
-      "sha256": "e5cc14195d22ed7c31c983c5efbce336fb970cbf12f976b4afca8c6a0f9b6657"
+      "sha256": "c8ba330d0a51068e0633d5ede00da21f3be2e628aaf54d3dad789f8cfdad3a68"
     }
   ],
   "columnChecks": [],

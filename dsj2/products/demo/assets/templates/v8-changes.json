@@ -1,0 +1,15 @@
+{
+  "ps-card": {
+    "table": 2,
+    "row": 0,
+    "ordinalHeaderCell": 0,
+    "gradeHeaderCell": 2
+  },
+  "ps-witness": {
+    "decisionDateRow": 0,
+    "yearCell": 1,
+    "dayCell": 4,
+    "monthCell": 6,
+    "reason": "month no longer wraps inside the 28.35pt day cell"
+  }
+}

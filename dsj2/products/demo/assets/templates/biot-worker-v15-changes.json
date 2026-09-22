@@ -1,0 +1,12 @@
+{
+  "previousSha256": "2fee01f02acc4a3dd4538e8330cc537031c44dba68f2ffda267d97e58784bf58",
+  "sha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556",
+  "lowerRightTextbox": {
+    "leftPt": 288.15,
+    "widthPt": 246,
+    "matchesUpper": true
+  },
+  "dividers": "start +14pt, height -14pt; unchanged bottom endpoints",
+  "font": "unchanged 8pt",
+  "outerFrames": "unchanged"
+}

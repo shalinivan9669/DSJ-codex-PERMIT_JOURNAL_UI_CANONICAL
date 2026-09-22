@@ -1,0 +1,10 @@
+{
+  "ps-card": {
+    "topOffsetPt": 9,
+    "outerFrames": "unchanged",
+    "fontPt": 8,
+    "reason": "keep Kazakh title below issuer band in both Word and LibreOffice",
+    "previousSha256": "21dfced97d5ade26a0087c613f862a8c75b8159c61778bd6c71d78c882c55446",
+    "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13"
+  }
+}

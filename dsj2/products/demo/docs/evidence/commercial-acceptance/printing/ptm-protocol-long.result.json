@@ -4,17 +4,20 @@
   "template": "ptm-protocol",
   "variant": "long",
   "recipients": 1,
-  "docxSha256": "ece732eae3031790c44545f09a55ed1270c5eb32cec4f2ce1e199b0562bc2f74",
-  "pdfSha256": "b8b6ad6a4118b20384162730bbda22452e13ffb3b6a4b90bb7921732c68a00f7",
-  "docxSeconds": 0.9893705999711528,
-  "renderSeconds": 23.29413759999443,
+  "docxSha256": "c68be733b7b252f912857d70d0492c5e89c3d3bbacd8774cd9df70a3542d8788",
+  "pdfSha256": "3aec0f64f9345fd6c414f562d4d7abcbd59b56945a170a452d4dfdac62585cdc",
+  "docxSeconds": 2.0413878150002347,
+  "renderSeconds": 2.2454594730006647,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 3.078996671999448,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 9.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-long-page-001.png",
-      "sha256": "01bf150122a3e8acdcd3959942ae8ce83ce77681e406aabd67aeae3b7e8b0db2"
+      "sha256": "078612feeb40b241fb6dbccb26e2b61ec7fcb0a05aef90c6e359feb611a6fa79"
     }
   ],
   "columnChecks": [],

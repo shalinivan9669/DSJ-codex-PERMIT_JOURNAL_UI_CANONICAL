@@ -1,0 +1,152 @@
+[
+  {
+    "template": "biot-worker-card",
+    "before": "biot-worker-card.v7.docx",
+    "beforeSha256": "6e393c6d3c66fa8125a79eddcd34690ecb64062322d921bd8bbf1d2fefcf693c",
+    "after": "biot-worker-card.v9.docx",
+    "afterSha256": "1eba9913f1b8f1371482dc1423d9cd399c152bf0638ed2cdc89d2b2e42726248",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "biot-itr-certificate",
+    "before": "biot-itr-certificate.v4.docx",
+    "beforeSha256": "9f45958fc2548314ce5bae030efae2f93d0a89e1878e074214d18d748853b00d",
+    "after": "biot-itr-certificate.v9.docx",
+    "afterSha256": "1c90dc992a161af6c7bbd09e1d98757c49c7f8c260da5ec8d12a85ecdc89450b",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "biot-protocol",
+    "before": "biot-protocol.v5.docx",
+    "beforeSha256": "c5f3a5b875b2740efc165ffd4b05548439d56cefe1a6918f0eba6d724250f363",
+    "after": "biot-protocol.v9.docx",
+    "afterSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "ptm-card",
+    "before": "ptm-card.v7.docx",
+    "beforeSha256": "9a0c700e928d8d0831f5560c432b3f07bb4780df50df61bbefb901878a121ee1",
+    "after": "ptm-card.v9.docx",
+    "afterSha256": "3ad595d22216489138c71b1f732cfe7b34f536afc16d1a36e7def53270fa63aa",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "ptm-protocol",
+    "before": "ptm-protocol.v5.docx",
+    "beforeSha256": "f2f276b3fc9f0f61bcae09f36488efbc8392da1a85b4d8102256f22d921cfebd",
+    "after": "ptm-protocol.v9.docx",
+    "afterSha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "pb-card",
+    "before": "pb-card.v7.docx",
+    "beforeSha256": "5e839d2b13f38def4c3a35beb1a7b3a7e1bbd3321f44ba8691908c26bcb291c9",
+    "after": "pb-card.v9.docx",
+    "afterSha256": "c6f2d6950c4648f12a2ad5907e57118a249449c7ac96d053f76f21ea710ef49f",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "pb-protocol",
+    "before": "pb-protocol.v5.docx",
+    "beforeSha256": "daa358acef4fbaf98b3f56547cc9165fd8859158c5da51180fb8745c7378f6a3",
+    "after": "pb-protocol.v9.docx",
+    "afterSha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "ps-card",
+    "before": "ps-card.v8.docx",
+    "beforeSha256": "bda3bf21c73aa1354eeaa62d532bc7c4abdeeed96af3d9145a52f92c4787dd3c",
+    "after": "ps-card.v9.docx",
+    "afterSha256": "8234833a76bebbabaf513cd51aab4d9bd7c0fbc7c388108039feedbd37baecba",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "ps-protocol",
+    "before": "ps-protocol.v5.docx",
+    "beforeSha256": "2153be9e90cb33a75a26292e3761535b2060c84e50275da6b14816d8255f24c8",
+    "after": "ps-protocol.v9.docx",
+    "afterSha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  },
+  {
+    "template": "ps-witness",
+    "before": "ps-witness.v8.docx",
+    "beforeSha256": "3c7e7fc436f76e92d16a58f072cc81ba1cd26ec5b78f2c9a4a543658d5e62026",
+    "after": "ps-witness.v9.docx",
+    "afterSha256": "8ee66b628736f46eb650d8c8c72a812f4e448bd6d142c4d4d052bb776994de24",
+    "changes": [
+      "declared-only MC Ignorable prefixes",
+      "remove invalid empty typed document metadata",
+      "remove content-type overrides of deleted parts",
+      "UTF-8 XML declarations",
+      "schema order of pPr/rPr/trPr/sectPr children"
+    ],
+    "physicalGeometry": "unchanged"
+  }
+]

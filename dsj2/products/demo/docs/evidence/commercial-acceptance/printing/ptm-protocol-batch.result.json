@@ -4,24 +4,28 @@
   "template": "ptm-protocol",
   "variant": "batch",
   "recipients": 2,
-  "docxSha256": "56a24a5d2a17f5620394bf9d70d69b9b7a3e92578601f1b8b2a86397da0b07a6",
-  "pdfSha256": "7abd0b189786531697b1ae79f75747b6f6740ad4e61d4912e0b436c83ae54757",
-  "docxSeconds": 1.0893914999905974,
-  "renderSeconds": 32.08406450005714,
+  "docxSha256": "141f751aa9c7d880a11023af5c3fa75c47ab44c5c3c9630f2f45607f75f6de88",
+  "pdfSha256": "11413131d9aab7a79640d381dc9defa2b5ec3398af05f363fb676ba462d2a6f9",
+  "docxSeconds": 2.448401992000072,
+  "renderSeconds": 2.7225012520002565,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 3.5773482790000344,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 9.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-batch-page-001.png",
-      "sha256": "5c577afaf7afc542c7c4a77ee6298760f1c7d5096e0b113baefb14336801e057"
+      "sha256": "345992b1eb0c8f3aea69da3a1c97aa4cd8ee1271079392ace6cc295a5acb52bf"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 9.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-batch-page-002.png",
-      "sha256": "17c73b0d64b875fc7f8175d51401dbebdcad515ac38d70446af66a514a75fc8c"
+      "sha256": "15b56ae9f99312f1bf2651bce06b4d016f490700ae76689b951ec7d96f526dbc"
     }
   ],
   "columnChecks": [],

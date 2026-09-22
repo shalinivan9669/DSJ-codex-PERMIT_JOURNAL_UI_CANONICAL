@@ -1,113 +1,113 @@
 [
   {
-    "at": "2026-09-22T12:18:55.091Z",
+    "at": "2026-09-22T12:36:23.867Z",
     "event": "worker.spawn",
     "label": "before-crash",
-    "pid": 49636
+    "pid": 59680
   },
   {
-    "at": "2026-09-22T12:18:58.229Z",
+    "at": "2026-09-22T12:36:29.008Z",
     "event": "worker.stdout",
     "label": "before-crash",
-    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-3/libreoffice-26.2.6.3\",\"concurrency\":1}"
   },
   {
-    "at": "2026-09-22T12:18:58.295Z",
+    "at": "2026-09-22T12:36:29.056Z",
     "event": "claimed-before-kill",
-    "jobId": "e6f10bc0-c5fa-43f0-a918-369fbe5dc06a",
+    "jobId": "d72bb7fa-ea64-4764-ba8b-cb1c62cfbb04",
     "status": "RUNNING",
     "attempts": 1,
     "fencingToken": 1,
-    "leaseUntil": "2026-09-22T12:19:28.234Z"
+    "leaseUntil": "2026-09-22T12:36:59.016Z"
   },
   {
-    "at": "2026-09-22T12:18:58.758Z",
+    "at": "2026-09-22T12:36:29.712Z",
     "event": "worker.killed",
-    "pid": 49636
+    "pid": 59680
   },
   {
-    "at": "2026-09-22T12:18:58.766Z",
+    "at": "2026-09-22T12:36:29.727Z",
     "event": "crash-confirmed-before-publication",
-    "jobId": "e6f10bc0-c5fa-43f0-a918-369fbe5dc06a",
+    "jobId": "d72bb7fa-ea64-4764-ba8b-cb1c62cfbb04",
     "status": "RUNNING",
     "artifactCount": 0
   },
   {
-    "at": "2026-09-22T12:19:28.569Z",
+    "at": "2026-09-22T12:36:59.350Z",
     "event": "worker.spawn",
     "label": "recovery-a",
-    "pid": 66172
+    "pid": 13172
   },
   {
-    "at": "2026-09-22T12:19:28.578Z",
+    "at": "2026-09-22T12:36:59.385Z",
     "event": "worker.spawn",
     "label": "recovery-b",
-    "pid": 25336
+    "pid": 9704
   },
   {
-    "at": "2026-09-22T12:19:34.212Z",
-    "event": "worker.stdout",
-    "label": "recovery-b",
-    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
-  },
-  {
-    "at": "2026-09-22T12:19:34.307Z",
+    "at": "2026-09-22T12:37:08.429Z",
     "event": "worker.stdout",
     "label": "recovery-a",
-    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-3/libreoffice-26.2.6.3\",\"concurrency\":1}"
   },
   {
-    "at": "2026-09-22T12:19:47.412Z",
+    "at": "2026-09-22T12:37:08.551Z",
+    "event": "worker.stdout",
+    "label": "recovery-b",
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-3/libreoffice-26.2.6.3\",\"concurrency\":1}"
+  },
+  {
+    "at": "2026-09-22T12:37:28.224Z",
     "event": "recovered-once-with-two-workers",
-    "jobId": "e6f10bc0-c5fa-43f0-a918-369fbe5dc06a",
+    "jobId": "d72bb7fa-ea64-4764-ba8b-cb1c62cfbb04",
     "attempts": 2,
     "fencingToken": 2,
-    "artifactId": "40a55b93-1b46-4b0e-b20a-b6462ffa4ca6",
+    "artifactId": "599acff0-6f50-4e2c-a958-9906191911b7",
     "sha256": "6f5f3c78b1d95f6d23f22bd7653f7a5b24057b380febe42f6aeb1da188ca4ced",
     "bytes": 556994
   },
   {
-    "at": "2026-09-22T12:19:56.231Z",
+    "at": "2026-09-22T12:37:35.676Z",
     "event": "actual-converter-killed",
-    "converterPid": 60856,
-    "jobId": "6210aee6-ef71-48e7-ad0e-5078fd6f1180"
+    "converterPid": 56008,
+    "jobId": "27dc16e7-2d19-4824-8692-71d8b05e46d3"
   },
   {
-    "at": "2026-09-22T12:19:56.360Z",
+    "at": "2026-09-22T12:37:35.792Z",
     "event": "worker.stderr",
     "label": "recovery-b",
-    "message": "{\"event\":\"render.failed\",\"jobId\":\"6210aee6-ef71-48e7-ad0e-5078fd6f1180\",\"correlationId\":\"20511665-5ffb-4ef3-8852-8a711ad6a65e\"}"
+    "message": "{\"event\":\"render.failed\",\"jobId\":\"27dc16e7-2d19-4824-8692-71d8b05e46d3\",\"correlationId\":\"c8867b4f-1487-4d37-8356-44ad57668aec\"}"
   },
   {
-    "at": "2026-09-22T12:19:56.362Z",
+    "at": "2026-09-22T12:37:35.794Z",
     "event": "converter-failure-recorded",
-    "jobId": "6210aee6-ef71-48e7-ad0e-5078fd6f1180",
+    "jobId": "27dc16e7-2d19-4824-8692-71d8b05e46d3",
     "status": "RETRY",
     "errorCode": "PDF_CONVERSION_FAILED",
     "attempts": 1
   },
   {
-    "at": "2026-09-22T12:20:40.955Z",
+    "at": "2026-09-22T12:38:48.379Z",
     "event": "pdf-recovery-complete",
-    "jobId": "6210aee6-ef71-48e7-ad0e-5078fd6f1180",
+    "jobId": "27dc16e7-2d19-4824-8692-71d8b05e46d3",
     "attempts": 2,
-    "converterPid": 60856,
-    "sha256": "ec8f34a8aa9af77247a5e1b8e24f034b6d91a4a1f895fdbbdd58601f69ef1fba",
+    "converterPid": 56008,
+    "sha256": "107d5bbdcf67befd540b896c2d3ed43a088a79f2ceb215e256ee73d778f1ed0e",
     "originalDocxSha256": "6f5f3c78b1d95f6d23f22bd7653f7a5b24057b380febe42f6aeb1da188ca4ced",
     "noNumbersReserved": true
   },
   {
-    "at": "2026-09-22T12:20:40.955Z",
+    "at": "2026-09-22T12:38:48.379Z",
     "event": "PASS"
   },
   {
-    "at": "2026-09-22T12:20:41.641Z",
+    "at": "2026-09-22T12:38:49.064Z",
     "event": "worker.killed",
-    "pid": 66172
+    "pid": 13172
   },
   {
-    "at": "2026-09-22T12:20:42.236Z",
+    "at": "2026-09-22T12:38:49.687Z",
     "event": "worker.killed",
-    "pid": 25336
+    "pid": 9704
   }
 ]

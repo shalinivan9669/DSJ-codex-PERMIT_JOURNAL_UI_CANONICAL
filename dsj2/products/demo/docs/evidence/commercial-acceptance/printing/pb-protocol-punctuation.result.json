@@ -4,17 +4,20 @@
   "template": "pb-protocol",
   "variant": "punctuation",
   "recipients": 1,
-  "docxSha256": "fe1f9abdc0ceaa5d8881c89c99fc15745cf62f5b652efb01dc7ccf7d93ef29f0",
-  "pdfSha256": "d27bb0216072832ead67082d66005b7e73a79174a27e6d1022c844040af9fa18",
-  "docxSeconds": 1.5521204000106081,
-  "renderSeconds": 29.11187050002627,
+  "docxSha256": "b2a7084eb16222f07d882360dab2e3c15c202970495ce911567fe66f28281c63",
+  "pdfSha256": "cef792bd8a16a1efa0ddeed1a7f3c5c10fe465b241889d767ef18e8843737214",
+  "docxSeconds": 1.8961497520003832,
+  "renderSeconds": 2.5043854800005647,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 5.122567649999837,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 10.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-punctuation-page-001.png",
-      "sha256": "00dd82c2b45594fc5dd227e50c2201cad445c8687f5392d8b86e2bec01e21f1a"
+      "sha256": "e777ecda74b13655fd6fabc0f6c5b4d5e552433277527787ba40744eca4dd5f7"
     }
   ],
   "columnChecks": [],

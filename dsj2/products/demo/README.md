@@ -2,7 +2,7 @@
 
 Самостоятельный продукт Next.js/React + NestJS + PostgreSQL/Prisma + Python. Рабочая папка — этот каталог `products/demo`. Для установки достаточно его копии; DSJ, Redis и старые JWT не используются.
 
-Пользовательский путь: **Заявки → Человек / Организация → получатели и документы → сохранить → проверить / предпросмотр → оформить → файлы → история**. Доступны десять форм БиОТ/ПТМ/ПБ/ПС, DOCX, PDF, XLSX и ZIP. История, номера, исходные файлы и аудит сохраняются; исправление и восстановление имеют отдельное происхождение.
+Пользовательский путь: **Заявки → Человек / Организация → получатели и документы → сохранить → проверить / предпросмотр → оформить → файлы → история**. Доступны одиннадцать форм БиОТ/ПТМ/ПБ/ПС, включая отдельные протоколы БиОТ для рабочих и ИТР, DOCX, PDF, XLSX и ZIP. История, номера, исходные файлы и аудит сохраняются; исправление и восстановление имеют отдельное происхождение.
 
 ## Конфигурация установки
 
@@ -28,7 +28,7 @@ Prisma может удерживать DLL. Это не разрешение о�
 
 ## Чистая самостоятельная установка
 
-Закреплённые компоненты: Node 24.16.0, pnpm 9.15.9, LibreOffice 26.2.6.3. Локальная приёмка использует PostgreSQL 17.11. Контейнерная поставка закрепляет PostgreSQL 18.3; её фактический прогон отмечен отдельно в отчёте. Python-пакеты и шрифты зафиксированы в `scripts/render/requirements.txt` и `assets/fonts/manifest.json`. Worker проверяет реальные версии/хеши и отказывается стартовать при расхождении.
+Закреплённые компоненты: Node 24.16.0, pnpm 11.27.1, LibreOffice 26.2.6.3. Windows-проверки используют PostgreSQL 17.11; контейнерная поставка — PostgreSQL 18.6. Фактические результаты для каждой среды отмечены отдельно в отчёте. Python-пакеты и шрифты зафиксированы в `scripts/render/requirements.txt` и `assets/fonts/manifest.json`. Worker проверяет реальные версии/хеши и отказывается стартовать при расхождении.
 
 1. Скопируйте весь этот каталог, исключив `node_modules`, `.runtime`, `data`, `.next`, `dist`, `.env` и другие локальные результаты. Установите закреплённые Node/pnpm, Python-пакеты, LibreOffice и шрифты согласно [эксплуатационной инструкции](docs/OPERATIONS_RU.md).
 2. Создайте отдельные PostgreSQL role/database и закрытый каталог файлов. Задайте переменные из `.env.example` в окружении процесса. `.env.example` — справочник; автоматическая загрузка `.env` в локальные CLI не выполняется.
@@ -36,7 +36,7 @@ Prisma может удерживать DLL. Это не разрешение о�
 
 ```text
 corepack enable
-corepack prepare pnpm@9.15.9 --activate
+corepack prepare pnpm@11.27.1 --activate
 pnpm install --frozen-lockfile
 pnpm db:generate
 pnpm db:deploy
@@ -74,6 +74,8 @@ node scripts/verification/autonomy.mjs
 - [Эксплуатация, настройка, backup/restore](docs/OPERATIONS_RU.md).
 - [Read-only перенос старых печатных данных](docs/MIGRATION_RU.md).
 - [Переключение и откат](docs/CUTOVER_ROLLBACK_RU.md).
-- [Доказательства и логи](docs/evidence/progress.md), [реальные печатные образцы](docs/evidence/render/acceptance/inventory.json).
+- [Доказательства и логи](docs/evidence/progress.md), [текущая проверка 96 печатных случаев](docs/evidence/commercial-acceptance/printing/final-artifact-audit.json) и [повторная проверка текущих исходников форм](docs/evidence/commercial-acceptance/printing/final-source-docx-revalidation.json).
+- [Контрольный комплект для печати](docs/evidence/commercial-acceptance/printing/control-print-set.zip): 20 DOCX, 20 PDF, реестр и контрольные суммы; [проверка состава и SHA ZIP](docs/evidence/commercial-acceptance/printing/control-print-set-verification.json). Бинарный комплект хранится среди локальных артефактов приёмки и не включается в исходный Git-репозиторий.
+- [Совместимость текущих форм с Microsoft Word](docs/evidence/commercial-acceptance/word/WORD_COMPATIBILITY_RU.md), [точные версии и SHA 20 проверенных документов](docs/evidence/commercial-acceptance/word/final-active.json).
 
 Другие функции DSJ остаются в исходниках и закрыты policy до авторизации. Рабочая DSJ БД, реальные подписи и очереди не изменялись. Локальная инженерная проверка, утверждение юридической пригодности форм, физическая печать и production cutover — отдельные результаты.

@@ -7,7 +7,13 @@
       "type": "application",
       "name": "DEMO",
       "version": "2.0.0"
-    }
+    },
+    "properties": [
+      {
+        "name": "demo:resolved-inventory",
+        "value": "linux-x64:npm-licenses-linux-final-r5-collected.json"
+      }
+    ]
   },
   "components": [
     {
@@ -19,6 +25,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -39,6 +51,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -57,6 +75,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -66,31 +90,19 @@
     },
     {
       "type": "library",
-      "name": "@esbuild/win32-x64",
-      "version": "0.25.12",
-      "bom-ref": "pkg:npm/%40esbuild/win32-x64@0.25.12",
-      "purl": "pkg:npm/%40esbuild/win32-x64@0.25.12",
+      "name": "@esbuild/linux-x64",
+      "version": "0.28.2",
+      "bom-ref": "pkg:npm/%40esbuild/linux-x64@0.28.2",
+      "purl": "pkg:npm/%40esbuild/linux-x64@0.28.2",
       "licenses": [
         {
           "expression": "MIT"
         }
       ],
-      "externalReferences": [
+      "properties": [
         {
-          "type": "website",
-          "url": "https://github.com/evanw/esbuild#readme"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "@esbuild/win32-x64",
-      "version": "0.28.2",
-      "bom-ref": "pkg:npm/%40esbuild/win32-x64@0.28.2",
-      "purl": "pkg:npm/%40esbuild/win32-x64@0.28.2",
-      "licenses": [
-        {
-          "expression": "MIT"
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -111,6 +123,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -127,6 +145,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -147,6 +171,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -163,6 +193,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -183,6 +219,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -199,6 +241,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -219,6 +267,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -235,6 +289,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -255,6 +315,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -271,6 +337,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -291,6 +363,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -307,6 +385,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -327,6 +411,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -345,6 +435,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -354,13 +450,43 @@
     },
     {
       "type": "library",
-      "name": "@img/sharp-win32-x64",
-      "version": "0.35.4",
-      "bom-ref": "pkg:npm/%40img/sharp-win32-x64@0.35.4",
-      "purl": "pkg:npm/%40img/sharp-win32-x64@0.35.4",
+      "name": "@img/sharp-libvips-linux-x64",
+      "version": "1.3.3",
+      "bom-ref": "pkg:npm/%40img/sharp-libvips-linux-x64@1.3.3",
+      "purl": "pkg:npm/%40img/sharp-libvips-linux-x64@1.3.3",
       "licenses": [
         {
-          "expression": "Apache-2.0 AND LGPL-3.0-or-later"
+          "expression": "LGPL-3.0-or-later"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://sharp.pixelplumbing.com"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linux-x64",
+      "version": "0.35.4",
+      "bom-ref": "pkg:npm/%40img/sharp-linux-x64@0.35.4",
+      "purl": "pkg:npm/%40img/sharp-linux-x64@0.35.4",
+      "licenses": [
+        {
+          "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -381,6 +507,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -397,6 +529,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -417,6 +555,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -433,6 +577,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -453,6 +603,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -469,6 +625,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -489,6 +651,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -498,13 +666,19 @@
     },
     {
       "type": "library",
-      "name": "@next/swc-win32-x64-msvc",
+      "name": "@next/swc-linux-x64-gnu",
       "version": "15.5.25",
-      "bom-ref": "pkg:npm/%40next/swc-win32-x64-msvc@15.5.25",
-      "purl": "pkg:npm/%40next/swc-win32-x64-msvc@15.5.25",
+      "bom-ref": "pkg:npm/%40next/swc-linux-x64-gnu@15.5.25",
+      "purl": "pkg:npm/%40next/swc-linux-x64-gnu@15.5.25",
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -525,6 +699,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -541,6 +721,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -561,6 +747,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -577,6 +769,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -597,6 +795,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -613,6 +817,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -633,6 +843,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -649,6 +865,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -669,6 +891,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -685,6 +913,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -705,6 +939,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -721,6 +961,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -741,6 +987,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -757,6 +1009,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -777,6 +1035,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -793,6 +1057,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -813,6 +1083,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -829,6 +1105,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -849,6 +1131,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -865,6 +1153,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -885,6 +1179,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -901,6 +1201,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -921,6 +1227,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -937,6 +1249,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -957,6 +1275,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -973,6 +1297,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -993,6 +1323,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1009,6 +1345,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1029,6 +1371,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1045,6 +1393,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1065,6 +1419,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1081,6 +1441,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1101,6 +1467,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1117,6 +1489,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1137,6 +1515,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1153,6 +1537,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1173,6 +1563,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1189,6 +1585,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1209,6 +1611,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1225,6 +1633,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1245,6 +1659,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1261,6 +1681,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1281,10 +1707,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/ajv-validator/ajv"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "aom",
+      "version": "3.15.0",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:aom",
+      "licenses": [
+        {
+          "license": {
+            "name": "BSD 2-Clause + [Alliance for Open Media Patent License 1.0](https://aomedia.org/license/patent-license/)"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://aomedia.googlesource.com/aom"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -1297,6 +1762,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1317,6 +1788,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1333,6 +1810,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1353,6 +1836,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1369,6 +1858,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1389,6 +1884,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1405,6 +1906,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1425,10 +1932,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/jaredwray/cacheable#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "cairo",
+      "version": "1.18.4",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:cairo",
+      "licenses": [
+        {
+          "license": {
+            "name": "Mozilla Public License 2.0"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://gitlab.freedesktop.org/cairo/cairo"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -1441,6 +1987,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1461,6 +2013,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1479,10 +2037,49 @@
           "expression": "CC-BY-4.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/browserslist/caniuse-lite#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "cgif",
+      "version": "0.5.3",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:cgif",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/dloebl/cgif"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -1495,6 +2092,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1515,6 +2118,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1531,6 +2140,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1551,6 +2166,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1567,6 +2188,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1587,6 +2214,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1603,6 +2236,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1623,6 +2262,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1639,6 +2284,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1659,6 +2310,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1675,6 +2332,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1695,6 +2358,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1711,6 +2380,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1731,6 +2406,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1747,6 +2428,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1767,6 +2454,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1783,6 +2476,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1803,6 +2502,12 @@
           "expression": "BSD-3-Clause"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1819,6 +2524,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1851,6 +2562,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1867,6 +2584,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1887,6 +2610,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1903,6 +2632,12 @@
       "licenses": [
         {
           "expression": "BSD-2-Clause"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1923,6 +2658,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1939,6 +2680,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1959,6 +2706,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -1975,6 +2728,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -1995,6 +2754,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2011,6 +2776,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2031,6 +2802,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2049,28 +2826,16 @@
           "expression": "MIT"
         }
       ],
-      "externalReferences": [
+      "properties": [
         {
-          "type": "website",
-          "url": "https://github.com/ljharb/es-object-atoms#readme"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "esbuild",
-      "version": "0.25.12",
-      "bom-ref": "pkg:npm/esbuild@0.25.12",
-      "purl": "pkg:npm/esbuild@0.25.12",
-      "licenses": [
-        {
-          "expression": "MIT"
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
         {
           "type": "website",
-          "url": "https://github.com/evanw/esbuild#readme"
+          "url": "https://github.com/ljharb/es-object-atoms#readme"
         }
       ]
     },
@@ -2083,6 +2848,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2103,6 +2874,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2119,6 +2896,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2139,6 +2922,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2155,6 +2944,12 @@
       "licenses": [
         {
           "expression": "BSD-2-Clause"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2175,6 +2970,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2191,6 +2992,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2211,6 +3018,12 @@
           "expression": "BSD-2-Clause"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2227,6 +3040,12 @@
       "licenses": [
         {
           "expression": "BSD-3-Clause"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2247,6 +3066,12 @@
           "expression": "BSD-2-Clause"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2265,6 +3090,12 @@
           "expression": "BSD-2-Clause"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2281,6 +3112,12 @@
       "licenses": [
         {
           "expression": "BSD-2-Clause"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2313,10 +3150,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/jshttp/etag#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "expat",
+      "version": "2.8.3",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:expat",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/libexpat/libexpat"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -2329,6 +3205,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2349,6 +3231,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2365,6 +3253,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2385,6 +3279,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2401,6 +3301,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2421,6 +3327,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2437,6 +3349,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2457,6 +3375,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2473,6 +3397,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2493,6 +3423,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2509,6 +3445,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2529,6 +3471,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2545,6 +3493,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2565,10 +3519,49 @@
           "expression": "ISC"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/WebReflection/flatted#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fontconfig",
+      "version": "2.18.3",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:fontconfig",
+      "licenses": [
+        {
+          "license": {
+            "name": "[fontconfig License](https://gitlab.freedesktop.org/fontconfig/fontconfig/blob/main/COPYING) (BSD-like)"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://gitlab.freedesktop.org/fontconfig/fontconfig"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -2583,10 +3576,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/jshttp/forwarded#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "freetype",
+      "version": "2.14.3",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:freetype",
+      "licenses": [
+        {
+          "license": {
+            "name": "[freetype License](https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT) (BSD-like)"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/freetype/freetype"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -2601,10 +3633,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/jshttp/fresh#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fribidi",
+      "version": "1.0.16",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:fribidi",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPLv3"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/fribidi/fribidi"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -2617,6 +3688,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2637,6 +3714,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2655,28 +3738,16 @@
           "expression": "MIT"
         }
       ],
-      "externalReferences": [
+      "properties": [
         {
-          "type": "website",
-          "url": "https://github.com/ljharb/get-proto#readme"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "get-tsconfig",
-      "version": "4.14.3",
-      "bom-ref": "pkg:npm/get-tsconfig@4.14.3",
-      "purl": "pkg:npm/get-tsconfig@4.14.3",
-      "licenses": [
-        {
-          "expression": "MIT"
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
         {
           "type": "website",
-          "url": "https://github.com/privatenumber/get-tsconfig#readme"
+          "url": "https://github.com/ljharb/get-proto#readme"
         }
       ]
     },
@@ -2691,10 +3762,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/unjs/giget#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "glib",
+      "version": "2.89.4",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:glib",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPLv3"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/GNOME/glib"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -2707,6 +3817,12 @@
       "licenses": [
         {
           "expression": "ISC"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2727,10 +3843,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/ljharb/gopd#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "harfbuzz",
+      "version": "14.3.1",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:harfbuzz",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/harfbuzz/harfbuzz"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -2743,6 +3898,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2763,6 +3924,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2781,10 +3948,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/inspect-js/hasOwn#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "highway",
+      "version": "1.4.0",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:highway",
+      "licenses": [
+        {
+          "license": {
+            "name": "BSD 3-Clause"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/google/highway"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -2797,6 +4003,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2817,6 +4029,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2833,6 +4051,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2853,6 +4077,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2869,6 +4099,12 @@
       "licenses": [
         {
           "expression": "BSD-3-Clause"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2889,6 +4125,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2905,6 +4147,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2925,6 +4173,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2941,6 +4195,12 @@
       "licenses": [
         {
           "expression": "ISC"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2961,6 +4221,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -2977,6 +4243,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -2997,6 +4269,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3013,6 +4291,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3033,6 +4317,12 @@
           "expression": "ISC"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3049,6 +4339,12 @@
       "licenses": [
         {
           "expression": "ISC"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3069,6 +4365,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3085,6 +4387,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3105,6 +4413,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3123,10 +4437,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/jaredwray/keyv"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lcms",
+      "version": "2.19.1",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:lcms",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/mm2/Little-CMS"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -3141,10 +4494,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/gkz/levn"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libarchive",
+      "version": "3.8.9",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libarchive",
+      "licenses": [
+        {
+          "license": {
+            "name": "BSD 2-Clause"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/libarchive/libarchive"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -3166,6 +4558,402 @@
     },
     {
       "type": "library",
+      "name": "libexif",
+      "version": "0.6.26",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libexif",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPLv3"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/libexif/libexif"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libffi",
+      "version": "3.8.0",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libffi",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/libffi/libffi"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libheif",
+      "version": "1.23.2",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libheif",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPLv3"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/strukturag/libheif"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libimagequant",
+      "version": "2.4.1",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libimagequant",
+      "licenses": [
+        {
+          "license": {
+            "name": "[BSD 2-Clause](https://github.com/lovell/libimagequant/blob/main/COPYRIGHT)"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/lovell/libimagequant"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libnsgif",
+      "version": "bundled-in-libvips-8.18.6",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libnsgif",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/libvips/libvips"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Embedded upstream source; no independent standalone version"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libpng",
+      "version": "1.6.58",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libpng",
+      "licenses": [
+        {
+          "license": {
+            "name": "[libpng License](https://github.com/pnggroup/libpng/blob/master/LICENSE)"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/pnggroup/libpng"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "librsvg",
+      "version": "2.62.91",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:librsvg",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPLv3"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/GNOME/librsvg"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libtiff",
+      "version": "4.7.2",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libtiff",
+      "licenses": [
+        {
+          "license": {
+            "name": "[libtiff License](https://gitlab.com/libtiff/libtiff/blob/master/LICENSE.md) (BSD-like)"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://gitlab.com/libtiff/libtiff"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libultrahdr",
+      "version": "2.0.2",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libultrahdr",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/google/libultrahdr"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libvips",
+      "version": "8.18.6",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libvips",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPLv3"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/libvips/libvips"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libwebp",
+      "version": "1.6.0",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libwebp",
+      "licenses": [
+        {
+          "license": {
+            "name": "New BSD License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://chromium.googlesource.com/webm/libwebp"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "libxml2",
+      "version": "2.15.3",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:libxml2",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/GNOME/libxml2"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
       "name": "load-esm",
       "version": "1.0.3",
       "bom-ref": "pkg:npm/load-esm@1.0.3",
@@ -3173,6 +4961,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3191,6 +4985,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3223,6 +5023,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3239,6 +5045,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3259,6 +5071,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3275,6 +5093,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3295,6 +5119,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3311,6 +5141,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3331,6 +5167,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3347,6 +5189,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3367,10 +5215,49 @@
           "expression": "BlueOak-1.0.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/isaacs/minimatch#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mozjpeg",
+      "version": "0826579",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:mozjpeg",
+      "licenses": [
+        {
+          "license": {
+            "name": "[zlib License, IJG License, BSD 3-Clause](https://github.com/mozilla/mozjpeg/blob/master/LICENSE.md)"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/mozilla/mozjpeg"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -3383,6 +5270,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3403,6 +5296,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3419,6 +5318,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3439,6 +5344,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3455,6 +5366,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3475,6 +5392,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3491,6 +5414,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3511,6 +5440,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3527,6 +5462,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3547,6 +5488,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3563,6 +5510,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3583,6 +5536,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3599,6 +5558,12 @@
       "licenses": [
         {
           "expression": "ISC"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3631,6 +5596,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3647,6 +5618,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3667,10 +5644,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/sindresorhus/p-locate#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pango",
+      "version": "1.58.2",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:pango",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPLv3"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/GNOME/pango"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -3683,6 +5699,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3703,6 +5725,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3719,6 +5747,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3739,6 +5773,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3755,6 +5795,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3775,6 +5821,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3793,6 +5845,12 @@
           "expression": "ISC"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3809,6 +5867,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3832,6 +5896,39 @@
     },
     {
       "type": "library",
+      "name": "pixman",
+      "version": "0.46.4",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:pixman",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT License"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://gitlab.freedesktop.org/pixman/pixman"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
+        }
+      ]
+    },
+    {
+      "type": "library",
       "name": "pkg-types",
       "version": "2.3.3",
       "bom-ref": "pkg:npm/pkg-types@2.3.3",
@@ -3839,6 +5936,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3859,6 +5962,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3875,6 +5984,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3895,6 +6010,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3911,6 +6032,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3931,6 +6058,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -3947,6 +6080,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -3967,10 +6106,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/jshttp/proxy-addr#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "proxy-libintl",
+      "version": "0.5",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:proxy-libintl",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPLv3"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/frida/proxy-libintl"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -3983,6 +6161,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4003,6 +6187,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4019,6 +6209,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4039,6 +6235,12 @@
           "expression": "BSD-3-Clause"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4055,6 +6257,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4075,6 +6283,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4091,6 +6305,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4111,6 +6331,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4127,6 +6353,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4147,6 +6379,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4165,28 +6403,16 @@
           "expression": "Apache-2.0"
         }
       ],
-      "externalReferences": [
+      "properties": [
         {
-          "type": "website",
-          "url": "http://rbuckton.github.io/reflect-metadata"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "resolve-pkg-maps",
-      "version": "1.0.0",
-      "bom-ref": "pkg:npm/resolve-pkg-maps@1.0.0",
-      "purl": "pkg:npm/resolve-pkg-maps@1.0.0",
-      "licenses": [
-        {
-          "expression": "MIT"
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
         {
           "type": "website",
-          "url": "https://github.com/privatenumber/resolve-pkg-maps#readme"
+          "url": "http://rbuckton.github.io/reflect-metadata"
         }
       ]
     },
@@ -4199,6 +6425,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4219,6 +6451,12 @@
           "expression": "Apache-2.0"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4235,6 +6473,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4255,6 +6499,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4271,6 +6521,12 @@
       "licenses": [
         {
           "expression": "ISC"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4291,6 +6547,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4307,6 +6569,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4327,6 +6595,12 @@
           "expression": "ISC"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4343,6 +6617,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4363,6 +6643,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4379,6 +6665,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4399,6 +6691,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4415,6 +6713,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4435,6 +6739,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4451,6 +6761,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4471,6 +6787,12 @@
           "expression": "BSD-3-Clause"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4487,6 +6809,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4507,6 +6835,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4523,6 +6857,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4543,6 +6883,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4559,6 +6905,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4579,6 +6931,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4595,6 +6953,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4615,6 +6979,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4631,6 +7001,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4651,28 +7027,16 @@
           "expression": "0BSD"
         }
       ],
-      "externalReferences": [
+      "properties": [
         {
-          "type": "website",
-          "url": "https://www.typescriptlang.org/"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "tsx",
-      "version": "4.20.6",
-      "bom-ref": "pkg:npm/tsx@4.20.6",
-      "purl": "pkg:npm/tsx@4.20.6",
-      "licenses": [
-        {
-          "expression": "MIT"
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
         {
           "type": "website",
-          "url": "https://tsx.hirok.io"
+          "url": "https://www.typescriptlang.org/"
         }
       ]
     },
@@ -4685,6 +7049,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4705,6 +7075,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4721,6 +7097,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4741,6 +7123,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4757,6 +7145,12 @@
       "licenses": [
         {
           "expression": "Apache-2.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4777,6 +7171,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4793,6 +7193,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4813,6 +7219,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4829,6 +7241,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4849,6 +7267,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4865,6 +7289,12 @@
       "licenses": [
         {
           "expression": "BSD-2-Clause"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4885,6 +7315,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4901,6 +7337,12 @@
       "licenses": [
         {
           "expression": "ISC"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4921,6 +7363,12 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
@@ -4937,6 +7385,12 @@
       "licenses": [
         {
           "expression": "ISC"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [
@@ -4957,10 +7411,49 @@
           "expression": "MIT"
         }
       ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
+        }
+      ],
       "externalReferences": [
         {
           "type": "website",
           "url": "https://github.com/sindresorhus/yocto-queue#readme"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "zlib-ng",
+      "version": "2.3.3",
+      "bom-ref": "urn:demo:sharp-libvips:1.3.3:zlib-ng",
+      "licenses": [
+        {
+          "license": {
+            "name": "[zlib License](https://github.com/zlib-ng/zlib-ng/blob/develop/LICENSE.md)"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/zlib-ng/zlib-ng"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:bundled-in",
+          "value": "@img/sharp-libvips-linux-x64@1.3.3"
+        },
+        {
+          "name": "demo:version-source",
+          "value": "Exact installed versions.json and upstream source"
+        },
+        {
+          "name": "demo:inventory-limitation",
+          "value": "Build inventory is preserved; static contribution/per-file and transitive attribution are not fully verified. Distribution review remains blocked."
         }
       ]
     },
@@ -4973,6 +7466,12 @@
       "licenses": [
         {
           "expression": "MIT"
+        }
+      ],
+      "properties": [
+        {
+          "name": "demo:resolved-platform",
+          "value": "linux-x64"
         }
       ],
       "externalReferences": [

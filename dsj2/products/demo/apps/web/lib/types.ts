@@ -5,6 +5,7 @@ import {
   type RequestItemInput,
   type Role,
 } from "@demo/contracts";
+import { biotAssignmentDefaults } from "./assignment-presets";
 export type { Assignment, Role };
 export type Recipient = RequestItemInput;
 export type Draft = DraftInput & {
@@ -38,6 +39,8 @@ export type Template = {
   contract?: Record<string, unknown>;
 };
 export type Profile = {
+  bin?: string;
+  headName?: string;
   nameRu: string;
   nameKz: string;
   addressRu: string;
@@ -143,6 +146,7 @@ export function newAssignment(
     validUntil: "",
     externalBasisNumber: "",
     protocolMode: "INDIVIDUAL",
+    ...biotAssignmentDefaults(templateId),
   };
 }
 export function newRecipient(): Recipient {

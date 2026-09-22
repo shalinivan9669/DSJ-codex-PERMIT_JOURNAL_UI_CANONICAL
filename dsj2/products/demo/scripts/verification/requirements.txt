@@ -1,0 +1,9 @@
+# Real PDF geometry and page-image acceptance; runtime engine requirements first.
+-r ../render/requirements.txt
+pdfplumber==0.11.9
+pypdfium2==5.13.0
+pdfminer.six==20251230
+charset-normalizer==3.5.1
+cryptography==50.0.1
+cffi==2.1.1
+pycparser==3.0

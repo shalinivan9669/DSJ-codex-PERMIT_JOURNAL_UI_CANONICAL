@@ -4,24 +4,28 @@
   "template": "ptm-card",
   "variant": "batch",
   "recipients": 2,
-  "docxSha256": "b74b9b9407a7127994aae66096170244162564bdbcff60a524ccbb4e02f450d1",
-  "pdfSha256": "e7bf00102d090ab90e8d9eb2d5950e4a377d99b68feadddeefdda7418b208784",
-  "docxSeconds": 0.3102500999812037,
-  "renderSeconds": 24.80363129999023,
+  "docxSha256": "1068bff721940092104767b4f22c0d3d7bc885fd138c6c72a9da7a67e0b41355",
+  "pdfSha256": "0343cf763c40a93235bcc645c9afeb1cbb8251bba7c374d4c11f18021807119a",
+  "docxSeconds": 0.8863562739998088,
+  "renderSeconds": 2.688325830999929,
+  "conversionReusedAfterExactByteMatch": false,
+  "priorConversionSeconds": null,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-batch-page-001.png",
-      "sha256": "7a0a49e9f7efcdd5e1f0ac8b2ac694121e9b077e4a308c01b88c4e796c9b6a0b"
+      "sha256": "dcd745f07fc326e0f56d4570ef9cc723914ebb68b0b3c289ca61ea063813207a"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-batch-page-002.png",
-      "sha256": "afdc473604cfacb61a6a62c99d133c4ff984eaee0bbaf2c6a8810e55985f8e79"
+      "sha256": "f7c5776b2c66c7cdd449379619bb0918082ac7406503e07f313099175333c79a"
     }
   ],
   "columnChecks": [],

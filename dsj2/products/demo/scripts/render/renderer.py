@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tempfile
 import importlib.metadata
+import threading
 from copy import deepcopy
 from datetime import date
 from pathlib import Path
@@ -22,16 +23,20 @@ from lxml import etree as E
 from PIL import Image, ImageOps, ImageFont
 from openpyxl import Workbook, load_workbook
 from sanitize_templates import replace_text_nodes, deterministic_zip
+from package_xml import normalize_package
+from xml_input import validate_xlsx_xml
 
 ROOT=Path(__file__).resolve().parents[2]
 W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 R='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
 NS={'w':W[1:-1]}
-RENDERER_VERSION='demo-ooxml-3/libreoffice-26.2.6.3'
+RENDERER_VERSION='demo-ooxml-6/libreoffice-26.2.6.3'
 RU=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']
 KZ=['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан']
 Image.MAX_IMAGE_PIXELS=20_000_000
+_converter_versions={}
+_converter_version_lock=threading.Lock()
 
 def date_parts(value):
     if not value: return dict.fromkeys(['DAY','MONTH','YEAR','YEAR_SHORT','DAY_MONTH','DATE','MONTH_RU','MONTH_KZ'],'')
@@ -58,6 +63,7 @@ def fields_for(snapshot,item):
         'SUBJECT':assignment.get('trainingSubject',''),'RESULT':assignment.get('result',''),
         'REASON':assignment.get('reason',''),'EDUCATION':assignment.get('education',''),'HOURS':str(assignment.get('hours','')),
         'ISSUER_RU':issuer.get('nameRu',''),'ISSUER_KZ':issuer.get('nameKz',''),
+        'ISSUER_BOTH':' / '.join(filter(None,[issuer.get('nameRu'),issuer.get('nameKz')])),
         'EDU_ORG_RU':issuer.get('nameRu',''),'EDU_ORG_KZ':issuer.get('nameKz',''),
         'CITY_RU':issuer.get('cityRu',''),'CITY_KZ':issuer.get('cityKz',''),
         'ADDRESS_RU':issuer.get('addressRu',''),'ADDRESS_KZ':issuer.get('addressKz',''),
@@ -65,6 +71,8 @@ def fields_for(snapshot,item):
     for prefix,key in [('DOCUMENT','documentDate'),('PROTOCOL','protocolDate'),('VALID','validUntil'),('TRAINING_START','trainingStart'),('TRAINING_END','trainingEnd'),('ISSUE','documentDate')]:
         for part,value in date_parts(assignment.get(key)).items(): fields[f'{prefix}_{part}']=value
     fields.update(PROFESSION_RU=fields['POSITION_RU'],PROFESSION_KZ=fields['POSITION_KZ'],PROTOCOL_NUMBER_DISPLAY=fields['PROTOCOL_NUMBER'])
+    from biot_2026 import current_fields
+    fields.update(current_fields(snapshot,item))
     fields['TRAINING_START_YEAR_FULL']=fields['TRAINING_START_YEAR']; fields['TRAINING_END_YEAR_FULL']=fields['TRAINING_END_YEAR']
     return fields
 
@@ -117,7 +125,8 @@ def fit_textboxes(tree,tid,has_photo):
     for box in tree.iter(W+'txbxContent'):
         text=''.join(box.itertext())
         if '{{' not in text: continue
-        shape=next((n for n in box.iterancestors() if E.QName(n).localname in ['shape','anchor']),None)
+        shape=next((n for n in box.iterancestors() if E.QName(n).localname in ['shape','rect','anchor']),None)
+        issuer_strip='{{ISSUER_BOTH}}' in text
         style=shape.get('style','') if shape is not None else ''
         width_match=re.search(r'(?:^|;)width:([\d.]+)pt',style)
         height_match=re.search(r'(?:^|;)height:([\d.]+)pt',style)
@@ -141,24 +150,26 @@ def fit_textboxes(tree,tid,has_photo):
             if p.tag!=W+'p': continue
             nodes=list(p.iter(W+'t'));value=re.sub(r'\s+',' ',''.join(n.text or '' for n in nodes)).strip()
             if value:paragraphs.append((p,value))
-            elif not any(E.QName(n).localname in ['drawing','pict'] for n in p.iter()):box.remove(p)
+            elif not any(E.QName(n).localname in ['drawing','pict','br'] for n in p.iter()):box.remove(p)
         for p,value in paragraphs:
             # Right/left insets apply only to the fields below the panel title.
             is_title=('NUMBER' in value and any(title in value.upper() for title in ['УДОСТОВЕРЕНИЕ','КУӘЛІК','КУƏЛІК']))
             inset=24 if tid=='biot-worker-card' and 'FULL_NAME' in text else 18 if tid=='ptm-card' and 'FULL_NAME' in text else 100 if tid=='pb-card' and 'FULL_NAME' in text and not is_title else 88 if photo_panel and tid=='ps-card' and not is_title else 0
+            if tid=='ps-card' and 'Тапсырылған емтихандар' in text:inset=24
             right=76 if photo_panel and tid=='ptm-card' and not is_title and 'ISSUER' not in value else 0
             for child in list(p):p.remove(child)
             pr=E.SubElement(p,W+'pPr');E.SubElement(pr,W+'spacing',{W+'before':'0',W+'after':'0',W+'line':'180',W+'lineRule':'exact'})
             E.SubElement(pr,W+'ind',{W+'left':str(round(inset*20)),W+'right':str(round(right*20)),W+'firstLine':'0'})
-            E.SubElement(pr,W+'jc',{W+'val':'center' if is_title and tid!='ptm-card' else 'left'})
+            E.SubElement(pr,W+'jc',{W+'val':'center' if issuer_strip or (is_title and tid!='ptm-card') else 'left'})
             run=E.SubElement(p,W+'r');rp=E.SubElement(run,W+'rPr')
             E.SubElement(rp,W+'rFonts',{W+'ascii':'Liberation Serif',W+'hAnsi':'Liberation Serif',W+'cs':'Liberation Serif'})
             E.SubElement(rp,W+'sz',{W+'val':'16'});E.SubElement(rp,W+'szCs',{W+'val':'16'})
             if is_title:E.SubElement(rp,W+'b')
             E.SubElement(run,W+'t').text=value
-        if photo_panel and tid=='ps-card':
+        if tid=='ps-card' and 'FULL_NAME' in text:
             spacer=E.Element(W+'p');pr=E.SubElement(spacer,W+'pPr');E.SubElement(pr,W+'spacing',{W+'line':'160',W+'lineRule':'exact'});box.insert(0,spacer)
         box.set('data-demo-width',str(width));box.set('data-demo-height',str(height))
+        if issuer_strip:box.set('data-demo-bottom-pad','2')
         if photo_panel:
             box.set('data-demo-photo-band',{'ptm-card':'48,124','pb-card':'25,116','ps-card':'42,138'}.get(tid,'0,0'))
             box.set('data-demo-photo-side','right' if tid=='ptm-card' else 'left')
@@ -167,6 +178,7 @@ def fit_rendered_textboxes(tree):
     for box in tree.iter(W+'txbxContent'):
         if 'data-demo-width' not in box.attrib:continue
         width=float(box.attrib.pop('data-demo-width'));height=float(box.attrib.pop('data-demo-height'))
+        bottom_pad=float(box.attrib.pop('data-demo-bottom-pad','6'))
         band=box.attrib.pop('data-demo-photo-band',None);side=box.attrib.pop('data-demo-photo-side',None)
         for size in [8]:
             font=ImageFont.truetype(str(ROOT/'assets/fonts/LiberationSerif-Regular.ttf'),round(size*10))
@@ -186,8 +198,8 @@ def fit_rendered_textboxes(tree):
                     if current and font.getlength(candidate)/10>avail:lines+=1;current=word
                     else:current=candidate
                 total+=lines*(size+1)
-            if total<=height-6 and not unbreakable_overflow:break
-        if total>height-6 or unbreakable_overflow:raise ValueError('PRINT_LAYOUT_OVERFLOW')
+            if total<=height-bottom_pad and not unbreakable_overflow:break
+        if total>height-bottom_pad or unbreakable_overflow:raise ValueError('PRINT_LAYOUT_OVERFLOW')
         for node in box.iter():
             if node.tag in [W+'sz',W+'szCs']:node.set(W+'val',str(round(size*2)))
             if node.tag==W+'spacing':node.set(W+'line',str(round((size+1)*20)))
@@ -263,14 +275,15 @@ def render_one(snapshot,item,template):
                     pr=p.find(W+'pPr')
                     if pr is None:pr=E.Element(W+'pPr');p.insert(0,pr)
                     for old in pr.findall(W+'spacing'):pr.remove(old)
-                    E.SubElement(pr,W+'spacing',{W+'before':'0',W+'after':'0',W+'line':'160',W+'lineRule':'exact'})
+                    E.SubElement(pr,W+'spacing',{W+'before':'0',W+'after':'0',W+'line':'180',W+'lineRule':'exact'})
                     for run in p.findall(W+'r'):
                         rp=run.find(W+'rPr')
                         if rp is None:rp=E.Element(W+'rPr');run.insert(0,rp)
                         for old in rp.findall(W+'sz'):rp.remove(old)
-                        E.SubElement(rp,W+'sz',{W+'val':'14'})
+                        E.SubElement(rp,W+'sz',{W+'val':'16'})
         fit_textboxes(root,snapshot['templateId'],bool(item.get('photoAssetId')))
-        if snapshot['templateId']=='biot-itr-certificate':fit_certificate_name(root,fields['FULL_NAME_RU'])
+        current_biot=any((n.get(W+'val') or '').startswith('BIOT2026_') for n in root.iter(W+'tblCaption'))
+        if snapshot['templateId']=='biot-itr-certificate' and not current_biot:fit_certificate_name(root,fields['FULL_NAME_RU'])
         if snapshot['templateId']=='pb-protocol':
             body=root.find(W+'body');previous_blank=False
             for paragraph in list(body) if body is not None else []:
@@ -283,6 +296,9 @@ def render_one(snapshot,item,template):
         leftovers=re.findall(r'\{\{[A-Z0-9_]+\}\}', ''.join(root.itertext()))
         if leftovers: raise ValueError('TEMPLATE_FIELDS_MISSING:'+','.join(sorted(set(leftovers))))
         fit_rendered_textboxes(root)
+        if current_biot:
+            from biot_2026 import assert_page_fit
+            assert_page_fit(root)
         files[name]=E.tostring(root,xml_declaration=True,encoding='utf-8')
     photo_id=item.get('photoAssetId'); tid=snapshot['templateId']
     if photo_id and tid in ['ptm-card','pb-card','ps-card']:
@@ -414,17 +430,26 @@ def render_docx(snapshot,out):
     files['word/document.xml']=E.tostring(root,xml_declaration=True,encoding='utf-8')
     files['word/_rels/document.xml.rels']=E.tostring(rels,xml_declaration=True,encoding='utf-8')
     if numbering is not None:files['word/numbering.xml']=E.tostring(numbering,xml_declaration=True,encoding='utf-8')
-    deterministic_zip(out,files)
+    deterministic_zip(out,normalize_package(files))
     return {'format':'DOCX','templateVersion':snapshot.get('templateVersion',template['version']),'rendererVersion':RENDERER_VERSION}
 
 def convert_pdf(docx,out):
     executable=os.environ.get('DEMO_SOFFICE') or shutil.which('soffice')
     if not executable: raise ValueError('CONVERTER_NOT_INSTALLED')
-    version=subprocess.run([executable,'--version'],capture_output=True,timeout=15,text=True).stdout
-    if not re.search(r'LibreOffice 26\.2\.6\.3(?:\s|$)',version): raise ValueError('CONVERTER_VERSION_MISMATCH')
+    # Concurrent batch checks must not race multiple default-profile --version
+    # processes. Revalidate whenever the selected executable changes on disk.
+    stat=Path(executable).stat();key=(str(Path(executable).resolve()),stat.st_mtime_ns,stat.st_size)
+    with _converter_version_lock:
+        if key not in _converter_versions:
+            version=subprocess.run([executable,'--version'],capture_output=True,timeout=30,text=True).stdout
+            if not re.search(r'LibreOffice 26\.2\.6\.3(?:\s|$)',version): raise ValueError('CONVERTER_VERSION_MISMATCH')
+            _converter_versions[key]=version
     with tempfile.TemporaryDirectory(prefix='demo-office-') as temp:
         profile=Path(temp)/'profile'; output=Path(temp)/'out'; output.mkdir()
-        result=subprocess.run([executable,'-env:UserInstallation='+profile.as_uri(),'--headless','--nologo','--nodefault','--nolockcheck','--norestore','--convert-to','pdf:writer_pdf_Export','--outdir',str(output),str(Path(docx).resolve())],capture_output=True,timeout=90)
+        # The supported 100-recipient cards contain 200 physical pages. A fresh
+        # two-converter Linux run exceeded 90s for PS; retain a bounded deadline
+        # below the API's PDF-specific 210s process timeout.
+        result=subprocess.run([executable,'-env:UserInstallation='+profile.as_uri(),'--headless','--nologo','--nodefault','--nolockcheck','--norestore','--convert-to','pdf:writer_pdf_Export','--outdir',str(output),str(Path(docx).resolve())],capture_output=True,timeout=180)
         pdf=output/(Path(docx).stem+'.pdf')
         if result.returncode or not pdf.exists(): raise ValueError('PDF_CONVERSION_FAILED')
         shutil.copyfile(pdf,out)
@@ -448,7 +473,7 @@ def runtime_health(out):
     result={'ready':True,'rendererVersion':RENDERER_VERSION,'templates':len(manifest['templates']),'fonts':len(fonts['files']),'converter':'26.2.6.3'}
     Path(out).write_text(json.dumps(result),encoding='utf8');return result
 
-COLUMNS=['requestId','status','revision','createdAt','id','fullNameRu','fullNameKz','positionRu','positionKz','workplaceRu','workplaceKz','templateId','direction','documentKind','number','protocolNumber','registrationNumber','documentDate','protocolDate','trainingStart','trainingEnd','trainingSubject','result','reason','education','hours','validUntil','externalBasisNumber']
+COLUMNS=['requestId','status','revision','createdAt','id','fullNameRu','fullNameKz','positionRu','positionKz','workplaceRu','workplaceKz','departmentRu','departmentKz','employerBin','employerAddressRu','employerAddressKz','templateId','direction','documentKind','number','protocolNumber','registrationNumber','documentDate','protocolDate','trainingStart','trainingEnd','trainingSubject','result','reason','education','hours','productionHours','validUntil','externalBasisNumber','biotCategory','biotIndustryRu','biotIndustryKz','biotCheckType','biotKnowledgeResult','biotProctoringResult','biotUniqueNumber','biotNotes']
 
 def export_registry(payload,out):
     wb=Workbook(); ws=wb.active; ws.title='Реестр'; ws.append(COLUMNS)
@@ -474,6 +499,7 @@ def import_table(payload,out):
         with ZipFile(path) as z:
             if sum(i.file_size for i in z.infolist())>30*1024*1024 or len(z.infolist())>2000: raise ValueError('IMPORT_ARCHIVE_LIMIT')
             if any('vbaProject' in n or 'externalLinks/' in n for n in z.namelist()): raise ValueError('IMPORT_ACTIVE_CONTENT')
+            validate_xlsx_xml(z)
         wb=load_workbook(path,read_only=True,data_only=False,keep_links=False); sheets=wb.sheetnames
         selected_sheet=payload.get('sheet') or sheets[0]
         if selected_sheet not in sheets: raise ValueError('IMPORT_SHEET_UNKNOWN')

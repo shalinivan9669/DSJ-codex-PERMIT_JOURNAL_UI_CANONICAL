@@ -31,6 +31,17 @@ export async function uploadPhoto(
   if (!file) fail(400, "FILE_REQUIRED", "Выберите PNG или JPEG");
   if (file.size > LIMITS.photoBytes)
     fail(413, "PHOTO_TOO_LARGE", "Фото больше 5 МиБ");
+  // Select the raster decoder before metadata(): otherwise SVG/XML is parsed
+  // by libvips even when its detected format is rejected afterwards.
+  const isPng = file.buffer
+    .subarray(0, 8)
+    .equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  const isJpeg =
+    file.buffer[0] === 0xff &&
+    file.buffer[1] === 0xd8 &&
+    file.buffer[2] === 0xff;
+  if (!isPng && !isJpeg)
+    fail(400, "PHOTO_TYPE", "Используйте обычное PNG или JPEG");
   const rotation = parse(
     z.coerce.number().refine((v) => [0, 90, 180, 270].includes(v)),
     input.rotation || 0,

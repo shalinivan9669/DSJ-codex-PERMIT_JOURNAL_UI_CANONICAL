@@ -4,38 +4,44 @@
   "template": "pb-card",
   "variant": "batch",
   "recipients": 2,
-  "docxSha256": "105eff6d6bc03908ac2bfdd6b3bce1a0246f3664336c615f083a83d227c4d076",
-  "pdfSha256": "898c6e9006f08560f126a8a345579342e75564460681ed7dce2b8359172ead9b",
-  "docxSeconds": 1.3236618998926133,
-  "renderSeconds": 26.452326699974947,
+  "docxSha256": "5cdd9bbb6c371df99ffb98a5b65fd6abe294f2ce1fde5a09f96136658892281e",
+  "pdfSha256": "965cb1a915d7ad0c6a969b752c439f9e8adbb08a30b88ebe5e90f328492be5fb",
+  "docxSeconds": 2.5672366600001624,
+  "renderSeconds": 4.6032897280001634,
+  "conversionReusedAfterExactByteMatch": false,
+  "priorConversionSeconds": null,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-001.png",
-      "sha256": "3a02069f597a0afc9f2f253abe14428218c4efa73fc7f145227c55d46fb38d82"
+      "sha256": "53cbbfc1eccfb9f28152895deebfe5eb5ff76a3293a6eac5bbab5eb1164f4ec5"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-002.png",
-      "sha256": "48dfecd61b84ac6a9c5a20bfdcb208361598520b6f4f09de815db1089de2a4ec"
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
     },
     {
       "page": 3,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-003.png",
-      "sha256": "84b66fd65df0e8de36e791ac2cebd1613b8b2f5b14446a79a8a95ca533bfabb5"
+      "sha256": "fa106b27f6e87d0b15a55e371e9e3e0f974ad02137e34e1fa33dc913781b0212"
     },
     {
       "page": 4,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-004.png",
-      "sha256": "48dfecd61b84ac6a9c5a20bfdcb208361598520b6f4f09de815db1089de2a4ec"
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
     }
   ],
   "columnChecks": [],

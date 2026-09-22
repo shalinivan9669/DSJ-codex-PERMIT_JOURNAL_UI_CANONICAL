@@ -1,17 +1,32 @@
 {
-  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
-  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.14 (main, Sep 19 2026, 01:05:48) [GCC 12.2.0]",
+  "platform": "Linux-6.18.33.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
   "converter": "LibreOffice 26.2.6.3 8221e31b3ac356a1623c672912a3d2b492f7e3d1",
-  "rendererVersion": "demo-ooxml-3/libreoffice-26.2.6.3",
+  "rendererVersion": "demo-ooxml-5/libreoffice-26.2.6.3",
   "sourceSha256": {
     "scripts/render/entry.py": "c269bb00b1b4c0ad5b3827441b38947fa226538f8707dc52e91fab219d04b494",
     "scripts/render/ooxml.py": "f899a56d04fe5405e4ae290332206df0035a456213ff7133aaceaec9426342fb",
-    "scripts/render/print_contracts.py": "95e08734b637ebc6b98cdf1af19ffa2ae30be19a6f38129d5178b40ece2ac5aa",
-    "scripts/render/renderer.py": "cfe05cca883eb572870e78fe3e267039e7ee094200884ac4d2b2e733c8ac36aa",
-    "scripts/render/sanitize_templates.py": "b240eed9e4638df944f8d88dba9049ade6c768e1b69e90257d936fa9199936da",
+    "scripts/render/package_xml.py": "777039b02cfadef1c77a196db7e3605f75dd68ef181a304ee943229ca056d917",
+    "scripts/render/print_contracts.py": "4a87bfeea6ede283056dc998c2814b8ee82f05847203b09f2ce36784ebbd9ae4",
+    "scripts/render/renderer.py": "a82569f76e489b611c8c784302464d1f358a0c2d2975f4705f2ad4f4e1aa8487",
+    "scripts/render/sanitize_templates.py": "2ede2af5cb45804c97bf255a967e02749023ec76f9b6b5c71795852459dadedb",
+    "scripts/render/upgrade_biot_worker_v15.py": "b3379ba1ccd49a775ea72946a40aef1d51126a036114f4f3c8e0149ff0621b5b",
+    "scripts/render/upgrade_templates_v10.py": "d3f1966dcb2b42d079f7b8d0f3899bb0de8c69648e2ba24410702fb9a6c2df7a",
+    "scripts/render/upgrade_templates_v11.py": "69140cd53b22b7fa56d27505234e0d9d24b8ad0066a8af965cc1a5b93c8a2fa8",
+    "scripts/render/upgrade_templates_v12.py": "e9e273c8702964b5c4bf0184dbcc998fd43778dcec254dc16f2ff099f8f3761b",
+    "scripts/render/upgrade_templates_v13.py": "4cbfc1a6aaa864003d49671558741b6d4e409c715438865ce3d1b60d86fee9b1",
+    "scripts/render/upgrade_templates_v14.py": "f5c3f276d9dc1269339cd8f89fc9b9688db64f1992bca4fc47b5317f9df10558",
+    "scripts/render/upgrade_templates_v15.py": "6e27db726f13885be4085ac6dce9ab9411690ccb99ed3e0a75ea275d3f1c3ff4",
     "scripts/render/upgrade_templates_v5.py": "a03da2a2e34f17ba36bd94a527456dfb43caf7638c3c1789392733d572f46c9d",
-    "scripts/verification/commercial_print.py": "a4366549a84665e5fb0c8b924cd54be45dcfa9676865e31d7e58bde097ef97eb",
-    "scripts/verification/print-calibration.py": "f6742df5e9d31f681379ca5ecd7869da22e4a9a109b2e2ba80f7610dad2e7300"
+    "scripts/render/upgrade_templates_v6.py": "fc7b390b6f0e3ea5061b6cfb34312d0c79c9e8870769663ec895dc2576ee2915",
+    "scripts/render/upgrade_templates_v7.py": "75be81a85b7eea09b4adbceab95ef72df231e48aa2938d70f077761bf6d1c9a9",
+    "scripts/render/upgrade_templates_v8.py": "8034bae603b752a26bde4d4cc1d8934f26b0f5e70153e7bcb6338eec59bbfc9d",
+    "scripts/render/upgrade_templates_v9.py": "b55d335433796e82302d57f2858220c064ab01a3d77de858036c8a10eda7731a",
+    "scripts/render/xml_input.py": "73158be2ab6d0c057869603a74c18fd630a44d63bb7face4bce9621795d0c232",
+    "scripts/verification/audit_print_outputs.py": "ee5e58db7cb279a96f2b220ec2c9dad2b5979dffcb852c1f2888cbe34264babf",
+    "scripts/verification/commercial_print.py": "9136747f4f62583f7f7ab1915372aba9268fa91059b656a4edaca63cc8dad18a",
+    "scripts/verification/print-calibration.py": "f6742df5e9d31f681379ca5ecd7869da22e4a9a109b2e2ba80f7610dad2e7300",
+    "scripts/verification/print_contact_sheets.py": "6d0f833947a7fd180534dfdcaeb04a476310a95d70cb2a1f387d9f2030288df1"
   },
   "fonts": {
     "version": "2.1.5",
@@ -34,19 +49,19 @@
   },
   "templates": {
     "version": 1,
-    "rendererVersion": "demo-ooxml-3",
+    "rendererVersion": "demo-ooxml-5",
     "templates": [
       {
         "id": "biot-worker-card",
-        "version": 5,
-        "file": "biot-worker-card.v5.docx",
-        "sha256": "4c4018864da2ad09072fd2a6e5425655cbeed07e20673f418efc80de7772db22",
+        "version": 15,
+        "file": "biot-worker-card.v15.docx",
+        "sha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556",
         "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
         "fields": [
           "CHAIR",
           "FULL_NAME_KZ",
           "FULL_NAME_RU",
-          "ISSUER_RU",
+          "ISSUER_BOTH",
           "MEMBER_1",
           "NUMBER",
           "POSITION_KZ",
@@ -85,7 +100,7 @@
         "protocolSemantics": null,
         "legalApproval": "REQUIRED_BY_ISSUER",
         "sourceImagesRemoved": true,
-        "previousTemplateSha256": "cf81fd8f97455828c828ae66c237b2e92d7b15fdcff3c693417cfb2d8bc75e29",
+        "previousTemplateSha256": "2fee01f02acc4a3dd4538e8330cc537031c44dba68f2ffda267d97e58784bf58",
         "regulatoryReview": {
           "status": "REQUIRES_CURRENT_FORM",
           "effectiveFrom": "2026-07-12",
@@ -95,9 +110,9 @@
       },
       {
         "id": "biot-itr-certificate",
-        "version": 4,
-        "file": "biot-itr-certificate.v4.docx",
-        "sha256": "9f45958fc2548314ce5bae030efae2f93d0a89e1878e074214d18d748853b00d",
+        "version": 13,
+        "file": "biot-itr-certificate.v13.docx",
+        "sha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6",
         "sourceSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
         "fields": [
           "CHAIR",
@@ -132,13 +147,14 @@
           "effectiveFrom": "2026-07-12",
           "source": "https://old.adilet.zan.kz/rus/docs/V1500012665",
           "notice": "Исторический макет требует сверки с действующей формой и утверждения эмитентом. Юридическая пригодность текущей редакции не подтверждена."
-        }
+        },
+        "previousTemplateSha256": "0eba4028526f6d7d5035a068c670363924505ced2f2771acf6404cea6f12bece"
       },
       {
         "id": "biot-protocol",
-        "version": 5,
-        "file": "biot-protocol.v5.docx",
-        "sha256": "c5f3a5b875b2740efc165ffd4b05548439d56cefe1a6918f0eba6d724250f363",
+        "version": 9,
+        "file": "biot-protocol.v9.docx",
+        "sha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
         "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
         "fields": [
           "ADDRESS_RU",
@@ -176,7 +192,7 @@
         "protocolSemantics": "individual",
         "legalApproval": "REQUIRED_BY_ISSUER",
         "sourceImagesRemoved": true,
-        "previousTemplateSha256": "9cb183e598a4ba4d7110db134b256ee18b28e79cd2b0fcbef37e939289535610",
+        "previousTemplateSha256": "c5f3a5b875b2740efc165ffd4b05548439d56cefe1a6918f0eba6d724250f363",
         "regulatoryReview": {
           "status": "REQUIRES_CURRENT_FORM",
           "effectiveFrom": "2026-07-12",
@@ -186,14 +202,14 @@
       },
       {
         "id": "ptm-card",
-        "version": 4,
-        "file": "ptm-card.v4.docx",
-        "sha256": "eecb030d026f586251e4b8b9d39830e3f323cff13720e9d8da50ff9ebaef3a18",
+        "version": 14,
+        "file": "ptm-card.v14.docx",
+        "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6",
         "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
         "fields": [
           "CHAIR",
           "FULL_NAME_BOTH",
-          "ISSUER_RU",
+          "ISSUER_BOTH",
           "NUMBER",
           "POSITION_KZ",
           "POSITION_RU",
@@ -225,13 +241,14 @@
         "sample": "docs/evidence/render/ptm-card.pdf",
         "protocolSemantics": null,
         "legalApproval": "REQUIRED_BY_ISSUER",
-        "sourceImagesRemoved": true
+        "sourceImagesRemoved": true,
+        "previousTemplateSha256": "f8d520db9d100e7024ed889ff151ff36b4efd45daaefccaa640b9285efb8fe41"
       },
       {
         "id": "ptm-protocol",
-        "version": 5,
-        "file": "ptm-protocol.v5.docx",
-        "sha256": "f2f276b3fc9f0f61bcae09f36488efbc8392da1a85b4d8102256f22d921cfebd",
+        "version": 9,
+        "file": "ptm-protocol.v9.docx",
+        "sha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c",
         "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
         "fields": [
           "ADDRESS_RU",
@@ -269,13 +286,13 @@
         "protocolSemantics": "individual",
         "legalApproval": "REQUIRED_BY_ISSUER",
         "sourceImagesRemoved": true,
-        "previousTemplateSha256": "52b1b9f1b9aeac89d868dd25bba8efca2c8681520868cd009a18aeda63028e93"
+        "previousTemplateSha256": "f2f276b3fc9f0f61bcae09f36488efbc8392da1a85b4d8102256f22d921cfebd"
       },
       {
         "id": "pb-card",
-        "version": 5,
-        "file": "pb-card.v5.docx",
-        "sha256": "bfdca5596af8efc09dc3c21d138c315c71b5c9115bcfde9a2be29d640bf8547d",
+        "version": 14,
+        "file": "pb-card.v14.docx",
+        "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380",
         "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
         "fields": [
           "CHAIR",
@@ -283,6 +300,7 @@
           "DOCUMENT_MONTH",
           "DOCUMENT_YEAR",
           "FULL_NAME_BOTH",
+          "ISSUER_BOTH",
           "ISSUER_RU",
           "NUMBER",
           "POSITION_BOTH",
@@ -316,13 +334,13 @@
         "protocolSemantics": null,
         "legalApproval": "REQUIRED_BY_ISSUER",
         "sourceImagesRemoved": true,
-        "previousTemplateSha256": "dafea319b26ff9d8dd26312aa72a929e36daead1f14ea08399e0188399bbdce9"
+        "previousTemplateSha256": "a12d971728f5e7568e295386d2a0061be32d30b7279222f8059fbb4b9d965379"
       },
       {
         "id": "pb-protocol",
-        "version": 5,
-        "file": "pb-protocol.v5.docx",
-        "sha256": "daa358acef4fbaf98b3f56547cc9165fd8859158c5da51180fb8745c7378f6a3",
+        "version": 9,
+        "file": "pb-protocol.v9.docx",
+        "sha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b",
         "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
         "fields": [
           "ADDRESS_RU",
@@ -359,17 +377,17 @@
         "protocolSemantics": "individual",
         "legalApproval": "REQUIRED_BY_ISSUER",
         "sourceImagesRemoved": true,
-        "previousTemplateSha256": "40fb97d1bf42983908d45b826b6122550169b8f76b91ae958f49b43f2692b0e3"
+        "previousTemplateSha256": "daa358acef4fbaf98b3f56547cc9165fd8859158c5da51180fb8745c7378f6a3"
       },
       {
         "id": "ps-card",
-        "version": 5,
-        "file": "ps-card.v5.docx",
-        "sha256": "e14b5db9a0607056a7ac3f2380d3b1b3ccb62661b5c7c95ba2cc07f8d899992c",
+        "version": 15,
+        "file": "ps-card.v15.docx",
+        "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13",
         "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
         "fields": [
           "FULL_NAME_BOTH",
-          "ISSUER_RU",
+          "ISSUER_BOTH",
           "NUMBER",
           "ONE",
           "POSITION_KZ",
@@ -409,13 +427,13 @@
         "protocolSemantics": null,
         "legalApproval": "REQUIRED_BY_ISSUER",
         "sourceImagesRemoved": true,
-        "previousTemplateSha256": "04cffe8bede692f10fdb210abaa6b318471586ce9da3b91f36bab857395e4f1c"
+        "previousTemplateSha256": "21dfced97d5ade26a0087c613f862a8c75b8159c61778bd6c71d78c882c55446"
       },
       {
         "id": "ps-protocol",
-        "version": 5,
-        "file": "ps-protocol.v5.docx",
-        "sha256": "2153be9e90cb33a75a26292e3761535b2060c84e50275da6b14816d8255f24c8",
+        "version": 9,
+        "file": "ps-protocol.v9.docx",
+        "sha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b",
         "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
         "fields": [
           "ADDRESS_RU",
@@ -453,13 +471,13 @@
         "protocolSemantics": "individual",
         "legalApproval": "REQUIRED_BY_ISSUER",
         "sourceImagesRemoved": true,
-        "previousTemplateSha256": "41400f11549ef676ad013d7d95419c686bf8674f841e568bd4b992b8a2b64111"
+        "previousTemplateSha256": "2153be9e90cb33a75a26292e3761535b2060c84e50275da6b14816d8255f24c8"
       },
       {
         "id": "ps-witness",
-        "version": 5,
-        "file": "ps-witness.v5.docx",
-        "sha256": "b132b14cb7ac36a6cd9d8af745767b87d34742a19a8d7b1f50593888704041a6",
+        "version": 11,
+        "file": "ps-witness.v11.docx",
+        "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94",
         "sourceSha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
         "fields": [
           "CHAIR",
@@ -516,7 +534,7 @@
         "protocolSemantics": null,
         "legalApproval": "REQUIRED_BY_ISSUER",
         "sourceImagesRemoved": true,
-        "previousTemplateSha256": "1b50157593d79d63fb7e1ff0f507c3b46526351f6e6aedfccf415845473baf0e"
+        "previousTemplateSha256": "8ee66b628736f46eb650d8c8c72a812f4e448bd6d142c4d4d052bb776994de24"
       }
     ]
   }

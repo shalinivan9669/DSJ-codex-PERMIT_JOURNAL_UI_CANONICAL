@@ -4,24 +4,28 @@
   "template": "pb-card",
   "variant": "blank",
   "recipients": 1,
-  "docxSha256": "f12c802d79cc85c40f10dfc297adf21795c9b8d4126a28ef6c64d1fbcade4b9d",
-  "pdfSha256": "4226921baa5b555e09f0835fe91afccc5d808fe28a9888ee49ef153e82b82d61",
-  "docxSeconds": 0.45058379997499287,
-  "renderSeconds": 20.178030899958685,
+  "docxSha256": "1a7f63407dbdc9189ef14eb97075b9f712017517d1cbf51cb756fe84ba88756d",
+  "pdfSha256": "283b5964774a7caaf0ff58065025ac7ec3966b63efd4d4af2c38757fca651c42",
+  "docxSeconds": 1.4611012860004848,
+  "renderSeconds": 3.999609545000567,
+  "conversionReusedAfterExactByteMatch": false,
+  "priorConversionSeconds": null,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-blank-page-001.png",
-      "sha256": "b7b031cf6629216ecd04e48f15ef4fb63a21f1e0d7b3cf36d91576043a911e1c"
+      "sha256": "cca7a7ea94b865683a0c7c46a47a1974c52f000d51ff5373b08be5f3495ba05c"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-blank-page-002.png",
-      "sha256": "48dfecd61b84ac6a9c5a20bfdcb208361598520b6f4f09de815db1089de2a4ec"
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
     }
   ],
   "columnChecks": [],

@@ -2,7 +2,7 @@
   "mode": "issued-document",
   "demoMode": true,
   "templateId": "pb-protocol",
-  "templateVersion": 5,
+  "templateVersion": 9,
   "issuer": {
     "nameRu": "Учебный центр «Образец»",
     "nameKz": "«Үлгі» оқу орталығы",
@@ -50,7 +50,8 @@
         "validUntil": "2027-09-22",
         "externalBasisNumber": "ВНЕШНИЙ-01",
         "protocolMode": "individual"
-      }
+      },
+      "credentialNumber": "КР-00001"
     }
   ],
   "photos": {}

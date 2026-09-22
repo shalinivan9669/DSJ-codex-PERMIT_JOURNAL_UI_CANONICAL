@@ -1,13 +1,84 @@
+# This product is also distributed independently of the parent repository.
 node_modules/
+.pnpm-store/
 dist/
+build/
+out/
 .next/
+.next-*/
+.next.broken.*/
+.turbo/
 *.tsbuildinfo
+coverage/
+
+# Local configuration and private runtime state. Keep safe configuration examples.
 .env
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!.env.*.template
 .runtime/
-storage/
-data/
+.codex-runtime/
+.runlogs/
+/storage/
+/data/
+/backups/
+/uploads/
+/pgdata/
+/secrets/
+/.secrets/
+/tmp/
+/temp/
+/packages/database/prisma/*.db
+/packages/database/prisma/*.db-*
+
+# Reproducible caches, test-runner output and virtual environments.
+.cache/
+.eslintcache
+.stylelintcache
 test-results/
 playwright-report/
+.playwright-report/
+.playwright/
+.playwright-cli/
 __pycache__/
-*.pyc
-!docs/evidence/*.log
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+.vercel/
+
+# Logs and generated acceptance output are local.
+*.log
+*.out
+*.err
+
+# Keep only the maintained progress record and requirement matrix in Git.
+# Screenshots, rendered documents, per-run JSON/CSV, logs, scans and temporary
+# audit helpers stay on disk. Reusable test sources belong in tests/ or scripts/.
+# Source templates, fonts, licenses and test fixtures are not covered here.
+/docs/evidence/*
+!/docs/evidence/progress.md
+!/docs/evidence/commercial-acceptance/
+/docs/evidence/commercial-acceptance/*
+!/docs/evidence/commercial-acceptance/matrix.json
+
+# Delivery archives and their generated manifests are local output.
+/docs/deliverables/*
+!/docs/deliverables/README.md
+
+# Temporary editor/Office files; source fixtures remain eligible for versioning.
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+~$*
+.DS_Store
+Thumbs.db
+Desktop.ini
+!/tests/fixtures/**

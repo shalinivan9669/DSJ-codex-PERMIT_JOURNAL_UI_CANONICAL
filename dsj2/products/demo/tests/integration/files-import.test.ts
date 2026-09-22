@@ -23,6 +23,7 @@ import {
   registryExport,
 } from "../../apps/api/src/files";
 import { openArtifact } from "../../apps/api/src/storage";
+import { saveProfile } from "../../apps/api/src/settings";
 import {
   draftSchema,
   itemSchema,
@@ -254,6 +255,51 @@ test("real image/import/export/original/reconstruction integration", async (t) =
         assert.equal(
           hash(first.buffer.toString("base64")),
           hash((await readArtifact(c, artifact.id)).buffer.toString("base64")),
+        );
+        const profileBefore = await db.issuerProfileVersion.findFirstOrThrow({
+          where: { tenantId: c.tenantId },
+          orderBy: { version: "desc" },
+        });
+        await saveProfile(c, {
+          ...(profileBefore.profile as object),
+          nameRu: "Изменённые после выпуска реквизиты синтетического центра",
+        });
+        const templateBefore = await db.templateVersion.findUniqueOrThrow({
+          where: { id: snapshot.templateVersionId! },
+        });
+        const changedTemplate = await store.put(
+          Buffer.concat([
+            await store.read(
+              templateBefore.storageKey,
+              templateBefore.checksum,
+            ),
+            Buffer.from("\nSynthetic later resource version\n"),
+          ]),
+          "docx",
+        );
+        await db.templateVersion.create({
+          data: {
+            tenantId: c.tenantId,
+            templateId: templateBefore.templateId,
+            version: `${templateBefore.version}-synthetic-later`,
+            storageKey: changedTemplate.storageKey,
+            checksum: changedTemplate.sha256,
+            contract: templateBefore.contract as any,
+            approved: false,
+          },
+        });
+        assert.notEqual(changedTemplate.sha256, templateBefore.checksum);
+        assert.deepEqual(
+          (await readArtifact(c, artifact.id)).buffer,
+          first.buffer,
+        );
+        assert.equal(
+          (
+            await db.renderInputSnapshot.findUniqueOrThrow({
+              where: { id: snapshot.id },
+            })
+          ).inputHash,
+          snapshot.inputHash,
         );
         const before = await db.numberReservation.count({
           where: { tenantId: c.tenantId },

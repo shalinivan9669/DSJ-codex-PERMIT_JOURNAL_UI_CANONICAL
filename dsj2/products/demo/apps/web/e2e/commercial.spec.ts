@@ -385,8 +385,31 @@ test("administrator settings and independent operator conflict preserve both dra
     .getByLabel("Юридическое название · KZ")
     .fill("Операторлық тексеру оқу орталығы");
   await page.getByLabel("Город · KZ").fill("Қызылорда");
+  await page
+    .getByLabel("ФИО", { exact: true })
+    .first()
+    .fill("Синтетический Председатель Әли");
+  await page
+    .getByLabel("Роль в комиссии / должность", { exact: true })
+    .first()
+    .fill("Председатель контрольной комиссии");
+  await page
+    .getByRole("textbox", {
+      name: "Основание утверждения / полномочий",
+      exact: true,
+    })
+    .fill(
+      "Синтетическая операторская приёмка — не юридическое утверждение формы",
+    );
   await page.getByRole("button", { name: "Сохранить новую версию" }).click();
   await expect(page.getByText(/Создана новая версия реквизитов/)).toBeVisible();
+  await page.reload();
+  await expect(page.getByLabel("ФИО", { exact: true }).first()).toHaveValue(
+    "Синтетический Председатель Әли",
+  );
+  await expect(
+    page.getByLabel("Роль в комиссии / должность", { exact: true }).first(),
+  ).toHaveValue("Председатель контрольной комиссии");
   await page.screenshot({
     path: path.join(evidence, "settings-issuer-commission.png"),
     fullPage: true,

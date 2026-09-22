@@ -2,7 +2,7 @@
   "mode": "issued-document",
   "demoMode": true,
   "templateId": "ps-card",
-  "templateVersion": 4,
+  "templateVersion": 15,
   "issuer": {
     "nameRu": "Учебный центр «Образец»",
     "nameKz": "«Үлгі» оқу орталығы",
@@ -51,6 +51,7 @@
         "externalBasisNumber": "ВНЕШНИЙ-01",
         "protocolMode": "individual"
       },
+      "credentialNumber": "КР-00001",
       "photoAssetId": "photo-001"
     },
     {
@@ -79,6 +80,7 @@
         "externalBasisNumber": "ВНЕШНИЙ-01",
         "protocolMode": "individual"
       },
+      "credentialNumber": "КР-00002",
       "photoAssetId": "photo-002"
     }
   ],

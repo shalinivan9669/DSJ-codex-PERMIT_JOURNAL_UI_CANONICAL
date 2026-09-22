@@ -1,0 +1,26 @@
+[
+  {
+    "id": "biot-worker-card",
+    "staticLabelReplacements": 12,
+    "from": "U+018F LATIN CAPITAL LETTER SCHWA",
+    "to": "U+04D8 CYRILLIC CAPITAL LETTER SCHWA",
+    "previousSha256": "48aa92d8a0686ec5b3231847e387b93c27b146b7b7d6031ba4f53d066b33bd78",
+    "sha256": "2fee01f02acc4a3dd4538e8330cc537031c44dba68f2ffda267d97e58784bf58"
+  },
+  {
+    "id": "ptm-card",
+    "staticLabelReplacements": 2,
+    "from": "U+018F LATIN CAPITAL LETTER SCHWA",
+    "to": "U+04D8 CYRILLIC CAPITAL LETTER SCHWA",
+    "previousSha256": "f8d520db9d100e7024ed889ff151ff36b4efd45daaefccaa640b9285efb8fe41",
+    "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6"
+  },
+  {
+    "id": "pb-card",
+    "staticLabelReplacements": 14,
+    "from": "U+018F LATIN CAPITAL LETTER SCHWA",
+    "to": "U+04D8 CYRILLIC CAPITAL LETTER SCHWA",
+    "previousSha256": "a12d971728f5e7568e295386d2a0061be32d30b7279222f8059fbb4b9d965379",
+    "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380"
+  }
+]

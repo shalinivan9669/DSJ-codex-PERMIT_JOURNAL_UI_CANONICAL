@@ -1,0 +1,147 @@
+[
+  {
+    "id": "biot-worker-card",
+    "version": 16,
+    "file": "biot-worker-card.v16.docx",
+    "sha256": "33e00e6897a2d10b138c41a8613d40a19b7c1ca2828526f3c512af724b7aa580",
+    "fields": [
+      "CHAIR_NAME",
+      "CHAIR_POSITION",
+      "CITY_KZ",
+      "CITY_RU",
+      "DOCUMENT_DATE",
+      "FULL_NAME_KZ",
+      "FULL_NAME_RU",
+      "ISSUER_KZ",
+      "ISSUER_RU",
+      "MEMBER_1_NAME",
+      "MEMBER_1_POSITION",
+      "MEMBER_2_NAME",
+      "MEMBER_2_POSITION",
+      "REGISTRATION_NUMBER_DISPLAY",
+      "SUBJECT"
+    ],
+    "sections": [
+      {
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+      }
+    ],
+    "formRevision": "BIOT_2026_223",
+    "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+    "verificationStatus": "NOT_RUN_USER_STOPPED_CHECKS",
+    "previousTemplateSha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556"
+  },
+  {
+    "id": "biot-itr-certificate",
+    "version": 14,
+    "file": "biot-itr-certificate.v14.docx",
+    "sha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+    "fields": [
+      "BIOT_INDUSTRY_KZ",
+      "BIOT_INDUSTRY_RU",
+      "CITY_KZ",
+      "CITY_RU",
+      "DOCUMENT_DATE",
+      "FULL_NAME_KZ",
+      "FULL_NAME_RU",
+      "HOURS",
+      "ISSUER_HEAD_NAME",
+      "ISSUER_KZ",
+      "ISSUER_RU",
+      "NUMBER",
+      "RESULT",
+      "VALID_DATE"
+    ],
+    "sections": [
+      {
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+      }
+    ],
+    "formRevision": "BIOT_2026_223",
+    "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+    "verificationStatus": "NOT_RUN_USER_STOPPED_CHECKS",
+    "previousTemplateSha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6"
+  },
+  {
+    "id": "biot-protocol",
+    "version": 10,
+    "file": "biot-protocol.v10.docx",
+    "sha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f",
+    "fields": [
+      "APPROVAL_BASIS",
+      "BIOT_CHECK_TYPE_KZ",
+      "BIOT_CHECK_TYPE_RU",
+      "BIOT_NOTES",
+      "CHAIR_NAME",
+      "CHAIR_POSITION",
+      "DEPARTMENT_BOTH",
+      "FULL_NAME_BOTH",
+      "ISSUER_KZ",
+      "ISSUER_RU",
+      "MEMBER_1_NAME",
+      "MEMBER_1_POSITION",
+      "MEMBER_2_NAME",
+      "MEMBER_2_POSITION",
+      "POSITION_BOTH",
+      "PROTOCOL_DATE",
+      "PROTOCOL_NUMBER",
+      "RESULT",
+      "WORKPLACE_BOTH"
+    ],
+    "sections": [
+      {
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+      }
+    ],
+    "formRevision": "BIOT_2026_223",
+    "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+    "verificationStatus": "NOT_RUN_USER_STOPPED_CHECKS",
+    "previousTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2"
+  },
+  {
+    "id": "biot-itr-protocol",
+    "version": 1,
+    "file": "biot-itr-protocol.v1.docx",
+    "sha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+    "fields": [
+      "APPROVAL_BASIS",
+      "BIOT_CATEGORY_KZ",
+      "BIOT_CATEGORY_RU",
+      "BIOT_CHECK_TYPE_KZ",
+      "BIOT_CHECK_TYPE_RU",
+      "BIOT_KNOWLEDGE_RESULT",
+      "BIOT_NOTES",
+      "BIOT_PROCTORING_RESULT",
+      "BIOT_UNIQUE_NUMBER",
+      "CHAIR_NAME",
+      "CHAIR_POSITION",
+      "EMPLOYER_BIN",
+      "EMPLOYER_NAME_ADDRESS_BOTH",
+      "FULL_NAME_BOTH",
+      "HOURS",
+      "ISSUER_BIN",
+      "ISSUER_KZ",
+      "ISSUER_RU",
+      "MEMBER_1_NAME",
+      "MEMBER_1_POSITION",
+      "MEMBER_2_NAME",
+      "MEMBER_2_POSITION",
+      "POSITION_BOTH",
+      "PROTOCOL_DATE",
+      "PROTOCOL_NUMBER",
+      "RESULT"
+    ],
+    "sections": [
+      {
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+      }
+    ],
+    "formRevision": "BIOT_2026_223",
+    "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+    "verificationStatus": "NOT_RUN_USER_STOPPED_CHECKS"
+  }
+]

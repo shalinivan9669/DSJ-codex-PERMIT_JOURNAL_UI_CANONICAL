@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import assert from "node:assert/strict";
+import { writeFile } from "node:fs/promises";
 import { db, type Context } from "../../apps/api/src/core";
 import { provision } from "../setup";
 import {
@@ -20,8 +21,9 @@ async function main() {
     "Dedicated disposable demo_test_* DB is mandatory",
   );
   const provisioned = await provision({
-    email: `backup-${randomUUID()}@example.invalid`,
-    password: randomUUID() + randomUUID(),
+    email:
+      process.env.DEMO_ADMIN_EMAIL || `backup-${randomUUID()}@example.invalid`,
+    password: process.env.DEMO_ADMIN_PASSWORD || randomUUID() + randomUUID(),
     name: "Синтетический центр проверки восстановления",
     sample: true,
   });
@@ -108,22 +110,30 @@ async function main() {
     assert.deepEqual(first, second);
   }
   await registryExport(context, {}, request.id);
-  console.log(
-    JSON.stringify({
-      tenantId: context.tenantId,
-      requestId: request.id,
-      artifacts: files.map((file) => ({
-        kind: file.format,
-        sha256: file.sha256,
-        size: file.size,
-      })),
-      photos: await db.photoAsset.count({
-        where: { tenantId: context.tenantId },
-      }),
-      templates: await db.templateVersion.count({
-        where: { tenantId: context.tenantId },
-      }),
+  const result = {
+    tenantId: context.tenantId,
+    requestId: request.id,
+    artifacts: files.map((file) => ({
+      id: file.id,
+      kind: file.format,
+      sha256: file.sha256,
+      size: file.size,
+    })),
+    photoIds: await db.photoAsset.findMany({
+      where: { tenantId: context.tenantId },
+      select: { id: true, sha256: true },
     }),
-  );
+    photos: await db.photoAsset.count({
+      where: { tenantId: context.tenantId },
+    }),
+    templates: await db.templateVersion.count({
+      where: { tenantId: context.tenantId },
+    }),
+  };
+  if (process.argv[2])
+    await writeFile(process.argv[2], JSON.stringify(result, null, 2), {
+      flag: "wx",
+    });
+  console.log(JSON.stringify(result));
 }
 void main().finally(() => db.$disconnect());

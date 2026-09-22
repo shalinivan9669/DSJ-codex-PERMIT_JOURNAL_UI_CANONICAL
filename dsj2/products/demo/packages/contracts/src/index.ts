@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { BIOT_CATEGORIES, biotCategoryIds, biotValidUntil } from "./biot";
 export { z } from "zod";
+export * from "./biot";
 export const LIMITS = {
   rows: 100,
   documents: 1000,
@@ -13,6 +15,7 @@ export const templateIds = [
   "biot-worker-card",
   "biot-itr-certificate",
   "biot-protocol",
+  "biot-itr-protocol",
   "ptm-card",
   "ptm-protocol",
   "pb-card",
@@ -30,6 +33,7 @@ const text = z
     "Максимум 500 символов. Проверьте поле без сокращения обязательных данных",
   )
   .default("");
+const optionalText = z.string().max(500, "Максимум 500 символов").optional();
 export function validDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const d = new Date(value + "T12:00:00Z");
@@ -61,6 +65,15 @@ export const assignmentSchema = z
     reason: text,
     education: text,
     hours: z.string().max(30).default(""),
+    productionHours: z.string().max(30).optional(),
+    biotCategory: z.enum(biotCategoryIds).optional(),
+    biotCheckType: z.enum(["", "PERIODIC", "REPEAT"]).optional(),
+    biotIndustryRu: optionalText,
+    biotIndustryKz: optionalText,
+    biotKnowledgeResult: optionalText,
+    biotProctoringResult: optionalText,
+    biotUniqueNumber: optionalText,
+    biotNotes: optionalText,
     externalBasisNumber: z.string().max(100).default(""),
     protocolMode: z
       .enum(["INDIVIDUAL", "EXTERNAL_REFERENCE"])
@@ -76,6 +89,11 @@ export const itemSchema = z
     positionKz: text,
     workplaceRu: text,
     workplaceKz: text,
+    departmentRu: optionalText,
+    departmentKz: optionalText,
+    employerBin: z.string().max(50).optional(),
+    employerAddressRu: optionalText,
+    employerAddressKz: optionalText,
     photoAssetId: z.string().max(80).nullable().default(null),
     assignments: z.array(assignmentSchema).max(10).default([]),
     sourceRow: z.number().int().positive().optional(),
@@ -145,6 +163,8 @@ export const profileSchema = z
     cityRu: text,
     cityKz: text,
     approvalBasis: text,
+    headName: optionalText,
+    bin: z.string().max(50).optional(),
     commission: z
       .array(
         z
@@ -267,6 +287,196 @@ export function validateDraft(
             item.id,
           );
       }
+      if (
+        assignment.templateId === "biot-itr-protocol" &&
+        !assignment.biotCategory
+      )
+        add(
+          "BIOT_CATEGORY_REQUIRED",
+          `${path}.biotCategory`,
+          "Выберите категорию специальных компетенций для протокола ИТР",
+          item.id,
+        );
+      if (assignment.biotCategory) {
+        const category = BIOT_CATEGORIES[assignment.biotCategory];
+        const expectedTemplate =
+          category.form === "WORKER"
+            ? "biot-worker-card"
+            : "biot-itr-certificate";
+        const expectedProtocol =
+          category.form === "WORKER" ? "biot-protocol" : "biot-itr-protocol";
+        if (
+          assignment.templateId !== expectedTemplate &&
+          assignment.templateId !== expectedProtocol
+        )
+          add(
+            "BIOT_CATEGORY_TEMPLATE",
+            `${path}.biotCategory`,
+            "Категория обучения не соответствует выбранной форме БиОТ",
+            item.id,
+          );
+        if (category.requiresExternalCertificate)
+          add(
+            "BIOT_ECS_REQUIRED",
+            `${path}.biotCategory`,
+            "Для этой категории требуется оригинал сертификата из ЕЦС. DEMO не присваивает номер ЕЦС и не заменяет выдачу в ЕЦС.",
+            item.id,
+          );
+        const numericHours = (value: string | undefined) =>
+          value && /^\d+(?:[.,]\d+)?$/.test(value.trim())
+            ? Number(value.replace(",", "."))
+            : NaN;
+        if (!(numericHours(assignment.hours) >= category.minimumHours))
+          add(
+            "BIOT_HOURS_MIN",
+            `${path}.hours`,
+            `${category.hoursLabel}: не менее ${category.minimumHours}`,
+            item.id,
+          );
+        if (
+          category.minimumProductionHours &&
+          !(
+            numericHours(assignment.productionHours) >=
+            category.minimumProductionHours
+          )
+        )
+          add(
+            "BIOT_PRODUCTION_HOURS_MIN",
+            `${path}.productionHours`,
+            `Производственное обучение: не менее ${category.minimumProductionHours} часов`,
+            item.id,
+          );
+        const until = biotValidUntil(
+          assignment.documentDate,
+          assignment.biotCategory,
+        );
+        if (
+          until &&
+          !assignment.validUntil &&
+          !assignment.templateId.endsWith("-protocol")
+        )
+          add(
+            "BIOT_VALID_UNTIL_REQUIRED",
+            `${path}.validUntil`,
+            "Укажите срок действия документа БиОТ",
+            item.id,
+          );
+        if (
+          validDate(assignment.documentDate) &&
+          validDate(assignment.validUntil) &&
+          ((until && assignment.validUntil > until) ||
+            assignment.validUntil < assignment.documentDate)
+        )
+          add(
+            "BIOT_VALID_UNTIL_RANGE",
+            `${path}.validUntil`,
+            until
+              ? `Срок должен быть от ${assignment.documentDate} до ${until}; более ранняя повторная проверка допустима`
+              : "Окончание срока не может быть раньше даты выдачи",
+            item.id,
+          );
+        const requireField = (
+          value: string | undefined,
+          field: string,
+          message: string,
+        ) => {
+          if (!value?.trim())
+            add("BIOT_FIELD_REQUIRED", field, message, item.id);
+        };
+        const isProtocol = assignment.templateId.endsWith("-protocol");
+        if (isProtocol && !category.requiresExternalCertificate) {
+          if (!assignment.biotCheckType)
+            add(
+              "BIOT_CHECK_TYPE_REQUIRED",
+              `${path}.biotCheckType`,
+              "Укажите вид проверки: периодическая или повторная",
+              item.id,
+            );
+          if (!profile || profile.commission.length < 3)
+            add(
+              "BIOT_COMMISSION_REQUIRED",
+              "issuer.commission",
+              "Для протокола БиОТ нужны председатель и не менее двух членов комиссии",
+              item.id,
+            );
+          requireField(
+            item.workplaceRu,
+            `items.${n}.workplaceRu`,
+            "Укажите наименование предприятия",
+          );
+          requireField(
+            item.positionRu,
+            `items.${n}.positionRu`,
+            "Укажите профессию или должность",
+          );
+          if (category.form === "WORKER")
+            requireField(
+              profile?.cityRu,
+              "issuer.cityRu",
+              "Укажите город учебной организации",
+            );
+        }
+        if (category.program === "SPECIAL") {
+          requireField(
+            assignment.biotIndustryRu,
+            `${path}.biotIndustryRu`,
+            "Укажите отрасль для специальных компетенций",
+          );
+          requireField(
+            profile?.headName,
+            "issuer.headName",
+            "Укажите ФИО руководителя учебной организации",
+          );
+          if (!/^\d{12}$/.test(profile?.bin?.trim() || ""))
+            add(
+              "BIOT_BIN_REQUIRED",
+              "issuer.bin",
+              "Укажите БИН учебной организации: 12 цифр",
+              item.id,
+            );
+          if (assignment.templateId === "biot-itr-protocol") {
+            const hasLinkedCertificate = item.assignments.some(
+              (linked) => linked.templateId === "biot-itr-certificate",
+            );
+            if (!/^\d{12}$/.test(item.employerBin?.trim() || ""))
+              add(
+                "BIOT_BIN_REQUIRED",
+                `items.${n}.employerBin`,
+                "Укажите БИН предприятия: 12 цифр",
+                item.id,
+              );
+            requireField(
+              item.employerAddressRu,
+              `items.${n}.employerAddressRu`,
+              "Укажите адрес предприятия",
+            );
+            requireField(
+              assignment.biotKnowledgeResult,
+              `${path}.biotKnowledgeResult`,
+              "Укажите фактический результат проверки знаний",
+            );
+            requireField(
+              assignment.biotProctoringResult,
+              `${path}.biotProctoringResult`,
+              "Укажите фактический результат прокторинга",
+            );
+            if (!assignment.biotUniqueNumber?.trim() && !hasLinkedCertificate)
+              add(
+                "BIOT_UNIQUE_NUMBER_REQUIRED",
+                `${path}.biotUniqueNumber`,
+                "Укажите подтверждённый уникальный номер либо добавьте связанный сертификат специальных компетенций",
+                item.id,
+              );
+            if (assignment.biotUniqueNumber?.trim() && hasLinkedCertificate)
+              add(
+                "BIOT_UNIQUE_NUMBER_CONFLICT",
+                `${path}.biotUniqueNumber`,
+                "Выберите одно основание: уникальный номер ранее выданного сертификата или связанный сертификат этой заявки",
+                item.id,
+              );
+          }
+        }
+      }
       if (!assignment.trainingSubject.trim())
         add(
           "SUBJECT_REQUIRED",
@@ -322,6 +532,7 @@ export const TEMPLATE_LABELS: Record<(typeof templateIds)[number], string> = {
   "biot-worker-card": "БиОТ — удостоверение рабочего",
   "biot-itr-certificate": "БиОТ — сертификат ИТР",
   "biot-protocol": "БиОТ — индивидуальный протокол",
+  "biot-itr-protocol": "БиОТ — протокол специальных компетенций ИТР",
   "ptm-card": "ПТМ — удостоверение",
   "ptm-protocol": "ПТМ — индивидуальный протокол",
   "pb-card": "ПБ — удостоверение",

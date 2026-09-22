@@ -4,17 +4,20 @@
   "template": "biot-protocol",
   "variant": "blank",
   "recipients": 1,
-  "docxSha256": "69b3ab9888cb75840bf93bf4a94457dabc21ad34bfbd38d9de7f5b6c414722ab",
-  "pdfSha256": "be6e50ca9df5d9d0051f5bf9bf15c450c2ff3ae9c902f091857c270b12e66966",
-  "docxSeconds": 0.14209940005093813,
-  "renderSeconds": 27.39818080002442,
+  "docxSha256": "38fd1b515658fc7a31e8f25a7c8bc9a832778f16f647dd07e7de7ffde213a438",
+  "pdfSha256": "2c69ebcd2b0bf75e3d1d61f6415608efd86efb3c85893d60a04ebfed8f1d1461",
+  "docxSeconds": 0.6746782139998686,
+  "renderSeconds": 0.9240513109998574,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 5.890388587000416,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 10.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-blank-page-001.png",
-      "sha256": "5b8674bebeb18858faaa4665e9f3111b41caa00dec82f8e99f9bed818849f1e0"
+      "sha256": "e63a97d4de50c59d5289b0a4666f08438dfcc5bc4b159a1eeacbededb8005137"
     }
   ],
   "columnChecks": [

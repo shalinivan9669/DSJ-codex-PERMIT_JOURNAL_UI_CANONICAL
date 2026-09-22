@@ -1,4 +1,5 @@
 "use client";
+import { updateAssignment } from "@/lib/assignment-presets";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -655,6 +656,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                           if (rowIndex && draft.items[Number(rowIndex)])
                             setSelectedId(draft.items[Number(rowIndex)].id);
                           requestAnimationFrame(() => {
+                            window.dispatchEvent(
+                              new CustomEvent("demo:focus-field", {
+                                detail: path,
+                              }),
+                            );
                             const input = document.querySelector<HTMLElement>(
                               `[data-field-path="${CSS.escape(path)}"]`,
                             );
@@ -757,10 +763,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 checked.includes(item.id)
                   ? {
                       ...item,
-                      assignments: item.assignments.map((assignment) => ({
-                        ...assignment,
-                        ...patch,
-                      })),
+                      assignments: item.assignments.map((assignment) =>
+                        updateAssignment(assignment, patch),
+                      ),
                     }
                   : item,
               ),

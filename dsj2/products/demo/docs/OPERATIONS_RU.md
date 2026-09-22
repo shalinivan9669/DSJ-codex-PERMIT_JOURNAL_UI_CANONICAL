@@ -4,7 +4,9 @@
 
 ## Сборка и первое включение
 
-Требуются Linux Docker Engine/Compose, x86_64, HTTPS reverse proxy, доступ к registry и Document Foundation на этапе сборки. Образы Node 24.16.0, Python 3.12.14, PostgreSQL 18.3 и nginx 1.28.2 закреплены digest; LibreOffice 26.2.6 — SHA256 архива. Python packages и Liberation fonts закреплены в печатном runtime. Рабочие API/worker запускаются как UID1000, nginx как UID101, PostgreSQL как postgres. БД/API/web не публикуют host ports; снаружи доступен только loopback8080 ingress, перед которым нужен HTTPS termination.
+Требуются Linux Docker Engine/Compose, x86_64, HTTPS reverse proxy, доступ к registry и Document Foundation на этапе сборки. Образы Node 24.16.0, Python 3.12.14 и nginx 1.30.5 закреплены digest; LibreOffice 26.2.6 — SHA256 архива. PostgreSQL 18.6 собирается из официального архива с проверкой SHA256 без неиспользуемой поддержки SQL/XML; описание и фактически выполненные проверки находятся в `docs/evidence/commercial-acceptance/POSTGRES_SECURITY_RU.md`. pnpm 11.27.1, Python packages и Liberation fonts закреплены в поставке. Рабочие API/worker запускаются как UID1000, nginx как UID101, PostgreSQL как UID70. БД/API/web не публикуют host ports; снаружи доступен только loopback8080 ingress, перед которым нужен HTTPS termination.
+
+Для PostgreSQL требуется новый volume. Нельзя подключать старый volume от другого образа к новому UID70 или менять права существующей рабочей БД ради запуска. Перенос выполняется через проверенную резервную копию и восстановление в новую среду.
 
 Задайте секреты через защищённый env/secret manager, не сохраняйте их в git:
 
@@ -24,6 +26,17 @@ docker compose -f deployment/compose.yaml up -d api worker web ingress
 `setup` в package manager запускается как `pnpm run setup`: `pnpm setup` является встроенной командой pnpm. Настройте реквизиты, комиссию и подтвердите подходящие формы в интерфейсе. Без этого нельзя оформлять действующие документы. `DEMO_SAMPLE_DATA=1` относится только к явно синтетической локальной среде, в production его не задают.
 
 `GET /api/health` сообщает liveness, `GET /api/ready` проверяется авторизованным администратором; readiness включает БД, актуальный worker heartbeat и доступность файлов. Отсутствие worker не является готовностью только потому, что HTTP отвечает.
+
+## HTTPS с предоставленным сертификатом
+
+Поставка включает дополнительный `deployment/compose.tls.yaml`. Задайте `DEMO_ORIGIN` как точный HTTPS origin, `DEMO_TLS_PORT` (по умолчанию 8443) и `DEMO_TLS_CERT_DIR` — абсолютный каталог вне исходников, содержащий `tls.crt` и `tls.key`. Ключ должен быть доступен на чтение UID/GID101, а каталог закрыт от записи сервисом. TLS завершается в отдельном nginx с TLS1.2/1.3, readonly filesystem и снятыми capabilities.
+
+```sh
+docker compose -f deployment/compose.yaml -f deployment/compose.tls.yaml config --quiet
+docker compose -f deployment/compose.yaml -f deployment/compose.tls.yaml up -d api worker web ingress tls
+```
+
+Порт остаётся привязан к loopback. Публикация домена, внешний маршрут и сертификат рабочего центра требуют отдельной настройки целевого хоста. Однодневный локальный CA из изолированного acceptance-стенда предназначен только для испытания; он не установлен в системное хранилище доверия и не является производственным сертификатом.
 
 На хосте приложения не следует запускать корневой DSJ `dev`, прежние API migrations/seed или старые workers. Старые данные и очереди сохраняются. Новый стек не имеет подключения к DSJ database/Redis.
 
@@ -59,7 +72,11 @@ node deployment/backup.mjs verify /encrypted-backups/demo-20260922
 
 ## Известные границы проверки поставки
 
-Compose config проверен. На машине реализации Docker Linux Engine недоступен (`dockerDesktopLinuxEngine` pipe отсутствует), поэтому сборка/запуск Linux image и nginx syntax inside image ещё требуют отдельного Linux runner. Portable PostgreSQL17.11 использован для настоящих локальных DB/migration/restore испытаний. PostgreSQL18.3 в Compose закреплён отдельно; до включения рабочей среды нужно прогнать тот же acceptance suite на этом образе. Это не утверждение о выполненной production-выкатке.
+Linux-стенд фактически запущен в изолированном Docker29.5.3 внутри WSL Ubuntu24.04: PostgreSQL18.6, API, worker, web и ingress имеют отдельные volumes и private network. Образы собраны из автономной копии продукта вне родительского DSJ. Промежуточные и итоговые сборки различаются хешами; точные версии и SHA находятся в `docs/evidence/commercial-acceptance/`. Первоначальный сбой Docker Desktop не означает отсутствие выполненной Linux-проверки: испытания использовали отдельный engine и не переустанавливали пользовательский Docker Desktop.
+
+Выполнено настоящее восстановление в новую БД и новые volumes: совпали counts и хеши содержимого 25 таблиц, 16 приватных файлов и 38 поставочных ресурсов; сохранены фото и 10 версий шаблонов. После restore выполнен вход по HTTP и повторное скачивание четырёх исходных файлов с проверкой SHA256. Для этой небольшой синтетической копии backup занял 4980мс, restore со сверкой — 3489мс; эти измерения не являются RTO для другой базы. Доказательства: `backup-restore/timing.json`, `backup-restore/http-readback.json` и `backup-restore/backup-manifest.json` в каталоге приёмки.
+
+На отдельном ограниченном tmpfs реально воспроизведены ENOSPC и EACCES под UID1000. Readiness отказала, незавершённые артефакты не выдавались; после восстановления хранилища очередь завершилась автоматически, номера сохранились, повторные скачивания совпали. При остановке БД и последующем перезапуске всех сервисов проверено восстановление очереди и сохранность файлов. Доказательства: `storage-faults/result.json` и `resilience/result.json`. Эти результаты относятся к записанным в них образам и синтетическим данным. Публичная production-выкатка, hosted CI и физическая печать на бумаге не подтверждены локальным стендом.
 
 Collector и backup/restore используют общий эксклюзивный lock рядом с хранилищем: DEMO_ARTIFACT_ROOT.maintenance.lock. В Compose volume монтируется целиком в /data, а документы находятся в /data/artifacts: sibling lock /data/artifacts.maintenance.lock тоже обязан быть доступен всем maintenance containers. При собственном bind mount монтируйте родительский каталог, а не только подкаталог artifacts. При занятом lock операция отказывает. Зависший lock не удаляется автоматически: сначала убедитесь, что владелец остановлен. Lock не заменяет остановку API/worker перед offline backup.
 

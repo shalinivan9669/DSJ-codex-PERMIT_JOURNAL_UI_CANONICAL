@@ -1,4 +1,13 @@
 import { newAssignment, type Recipient } from "./types";
+import {
+  BIOT_CATEGORIES,
+  biotValidUntil,
+  type BiotCategory,
+} from "@demo/contracts";
+import {
+  biotCategoriesForTemplate,
+  updateAssignment,
+} from "./assignment-presets";
 export type ImportRow = {
   sourceRow: number;
   values: string[];
@@ -46,6 +55,11 @@ export const importFields: [string, string][] = [
   ["positionKz", "Должность KZ"],
   ["workplaceRu", "Место работы RU"],
   ["workplaceKz", "Место работы KZ"],
+  ["departmentRu", "Подразделение RU"],
+  ["departmentKz", "Подразделение KZ"],
+  ["employerBin", "БИН работодателя"],
+  ["employerAddressRu", "Юридический адрес работодателя RU"],
+  ["employerAddressKz", "Юридический адрес работодателя KZ"],
   ["documentDate", "Дата документа"],
   ["trainingStart", "Начало обучения"],
   ["trainingEnd", "Окончание обучения"],
@@ -53,6 +67,15 @@ export const importFields: [string, string][] = [
   ["trainingSubject", "Программа / тема"],
   ["result", "Результат / оценка"],
   ["hours", "Часы"],
+  ["productionHours", "Производственное обучение, часов"],
+  ["biotCategory", "Категория обучения БиОТ"],
+  ["biotIndustryRu", "Отрасль специальных компетенций RU"],
+  ["biotIndustryKz", "Отрасль специальных компетенций KZ"],
+  ["biotCheckType", "Вид проверки знаний БиОТ"],
+  ["biotKnowledgeResult", "Фактический результат проверки знаний"],
+  ["biotProctoringResult", "Фактический результат прокторинга"],
+  ["biotUniqueNumber", "Уникальный номер сертификата БиОТ"],
+  ["biotNotes", "Примечание к протоколу БиОТ"],
   ["reason", "Причина проверки знаний"],
   ["education", "Образование"],
   ["validUntil", "Действителен до"],
@@ -90,9 +113,30 @@ export function mapImportRow(
   row: ImportRow,
   mapping: string[],
   templateId: Parameters<typeof newAssignment>[0],
+  category?: BiotCategory,
 ): Recipient {
   const id = `${preview.importId.slice(0, 55)}-${row.sourceRow}`;
-  const assignment = { ...newAssignment(templateId), id: `${id}-doc` };
+  let assignment = { ...newAssignment(templateId), id: `${id}-doc` };
+  const categoryColumn = mapping.indexOf("biotCategory");
+  const importedCategory =
+    categoryColumn < 0 ? "" : String(row.values[categoryColumn] ?? "").trim();
+  const selectedCategory = importedCategory || category;
+  if (selectedCategory) {
+    const known = (Object.keys(BIOT_CATEGORIES) as BiotCategory[]).find(
+      (key) =>
+        key === selectedCategory ||
+        BIOT_CATEGORIES[key].label === selectedCategory,
+    );
+    if (
+      !known ||
+      !biotCategoriesForTemplate(assignment.templateId).includes(known)
+    ) {
+      throw new Error(
+        `Исходная строка ${row.sourceRow}: категория БиОТ не соответствует выбранной форме. Проверьте категорию и документ.`,
+      );
+    }
+    assignment = updateAssignment(assignment, { biotCategory: known });
+  }
   const result: Recipient = {
     id,
     importId: preview.importId,
@@ -116,11 +160,37 @@ export function mapImportRow(
         "positionKz",
         "workplaceRu",
         "workplaceKz",
+        "departmentRu",
+        "departmentKz",
+        "employerBin",
+        "employerAddressRu",
+        "employerAddressKz",
       ].includes(field)
     )
       (result as unknown as Record<string, unknown>)[field] = value;
-    else if (importFields.some(([key]) => key === field))
+    else if (field === "biotCheckType") {
+      const checkType = (
+        {
+          PERIODIC: "PERIODIC",
+          REPEAT: "REPEAT",
+          Периодическая: "PERIODIC",
+          Повторная: "REPEAT",
+        } as const
+      )[value as "PERIODIC" | "REPEAT" | "Периодическая" | "Повторная"];
+      if (value && !checkType)
+        throw new Error(
+          `Исходная строка ${row.sourceRow}: выберите периодическую или повторную проверку знаний.`,
+        );
+      assignment.biotCheckType = checkType;
+    } else if (
+      field !== "biotCategory" &&
+      importFields.some(([key]) => key === field)
+    )
       (assignment as unknown as Record<string, unknown>)[field] = value;
   });
+  if (!mapping.includes("validUntil") && assignment.biotCategory) {
+    assignment.validUntil =
+      biotValidUntil(assignment.documentDate, assignment.biotCategory) || "";
+  }
   return result;
 }

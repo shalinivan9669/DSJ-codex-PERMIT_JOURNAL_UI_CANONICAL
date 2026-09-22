@@ -2,20 +2,35 @@
   "startedAt": "2026-09-22T12:01:10.938144+00:00",
   "baseRevision": "161c5ed022c9e2c643e80802d3f9dc2cd496a041",
   "scope": "independent current working-tree acceptance; prior PASS not inherited",
+  "acceptanceState": "STOPPED_BY_USER",
+  "stoppedOn": "2026-09-22",
+  "currentSourceVerification": "NOT RUN: user stopped checks while BIOT categories and the 11-template catalog were being completed. Existing row results retain their original source/image/template scope; they do not certify the new BIOT templates or the unbuilt photo decoder fix.",
+  "localEvidencePolicy": "Generated evidence is retained on disk and excluded from Git. Only this matrix and docs/evidence/progress.md remain versioned.",
   "requirements": [
     {
       "id": "A01",
       "requirement": "Копия DEMO вне DSJ",
       "expected": "Установка/миграция/сборка/запуск без DSJ files/env/БД",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Clean product-only copy outside DSJ, frozen install/build/checks, own Linux PostgreSQL and safe setup, actual production web/API/worker/readiness and browser issue.",
+      "environment": "External release5; exact sourceSHA93a82ecaa4d14e647dd03e3c6820c298844c2a457f0abbecd9d209ac00e6a131; Node24.16.0,pnpm11.27.1,PostgreSQL18.6,LibreOffice26.2.6.3.",
+      "result": "Both final images built and started.17unit+42integration PASS; HTTPS TLS1.2/1.3 live health PASS. Prior exact PS15 HTTPS issue files remain immutable; source/runtime delta reconciled separately.",
+      "artifact": "final-build-checks.json;standalone-stage-release5.json;container-final-r5-tls-update.log;security/integration-linux-final-r5.log;browser/generated-photo-ps-https/photo-result.json",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "limitation": "Independent local standalone environment, not production cutover.",
+      "observations": {
+        "operations": {
+          "status": "PASS",
+          "limitation": "Independent local standalone environment, not production cutover.",
+          "result": "Both final images built and started.17unit+42integration PASS; HTTPS TLS1.2/1.3 live health PASS. Prior exact PS15 HTTPS issue files remain immutable; source/runtime delta reconciled separately.",
+          "scenario": "Clean product-only copy outside DSJ, frozen install/build/checks, own Linux PostgreSQL and safe setup, actual production web/API/worker/readiness and browser issue.",
+          "id": "A01",
+          "environment": "External release5; exact sourceSHA93a82ecaa4d14e647dd03e3c6820c298844c2a457f0abbecd9d209ac00e6a131; Node24.16.0,pnpm11.27.1,PostgreSQL18.6,LibreOffice26.2.6.3.",
+          "artifact": "final-build-checks.json;standalone-stage-release5.json;container-final-r5-tls-update.log;security/integration-linux-final-r5.log;browser/generated-photo-ps-https/photo-result.json"
+        }
+      }
     },
     {
       "id": "A02",
@@ -36,28 +51,56 @@
       "requirement": "Обход frontend",
       "expected": "Прямой Nest origin, alternate methods, старый JWT, replay Next-Action/page POST не открывают frozen-функции",
       "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "scenario": "Direct Nest forbidden routes, old JWT, Next-Action; genuine authenticated roles",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "PASS for autonomous local API; web page POST/replay and external origins require their independent evidence",
+      "artifact": "security/security-http-final.log; security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+      "limitation": "Does not prove legacy deployed frontend/backend are closed.",
+      "observations": {
+        "security": {
+          "id": "A03",
+          "status": "NOT RUN",
+          "scenario": "Direct Nest forbidden routes, old JWT, Next-Action; genuine authenticated roles",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "PASS for autonomous local API; web page POST/replay and external origins require their independent evidence",
+          "artifact": "security/security-http-final.log; security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Does not prove legacy deployed frontend/backend are closed."
+        }
+      }
     },
     {
       "id": "A04",
       "requirement": "Новый случайный controller",
       "expected": "Без явного product allowlist закрыт, даже с Public; registered route manifest проверен",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Registered controller route map compared with exact allowlist; unknown routes denied before authentication",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Exact map matches; unknown method/path blocked with real sessions and anonymously",
+      "artifact": "security/integration-final.log; security/contracts-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Local autonomous product boundary.",
+      "observations": {
+        "security": {
+          "id": "A04",
+          "status": "PASS",
+          "scenario": "Registered controller route map compared with exact allowlist; unknown routes denied before authentication",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Exact map matches; unknown method/path blocked with real sessions and anonymously",
+          "artifact": "security/integration-final.log; security/contracts-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Local autonomous product boundary."
+        }
+      }
     },
     {
       "id": "A05",
@@ -77,841 +120,1872 @@
       "id": "A06",
       "requirement": "Два tenant и два customer",
       "expected": "Заказчики одного центра доступны по роли; чужие request/item/job/template/photo/artifact/search/export недоступны",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Two tenants × ADMIN/OPERATOR/VIEWER, genuine logins, 114 targeted cross-tenant probes plus scoped lists/search/downloads",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Foreign objects denied; own original downloads match SHA256; foreign lists/search empty",
+      "artifact": "security/security-http-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Direct loopback HTTP; production origins are separate.",
+      "observations": {
+        "security": {
+          "id": "A06",
+          "status": "PASS",
+          "scenario": "Two tenants × ADMIN/OPERATOR/VIEWER, genuine logins, 114 targeted cross-tenant probes plus scoped lists/search/downloads",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Foreign objects denied; own original downloads match SHA256; foreign lists/search empty",
+          "artifact": "security/security-http-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Direct loopback HTTP; production origins are separate."
+        }
+      }
     },
     {
       "id": "A07",
       "requirement": "Auth lifecycle",
       "expected": "Login/logout/отключение/смена роли/сброс пароля работают, старые сессии отзываются, 5xx не изображает «неверный пароль»",
       "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "scenario": "Genuine login/logout/password changes, admin reset, role revocation, disablement, expiry, cookies/Origin/CSRF/rate limit",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "All enumerated lifecycle checks PASS; two prior viewer sessions revoked; 403→201 own-password correction proven",
+      "artifact": "security/security-http-final.log; security/known-defects-before-after.json",
+      "defect": "Viewer could not change own password",
+      "fix": "Credential command uses authenticated context, not print-write capability.",
+      "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+      "limitation": "Real login during DB outage is not part of this agent's test; merge operations evidence.",
+      "observations": {
+        "security": {
+          "id": "A07",
+          "status": "NOT RUN",
+          "scenario": "Genuine login/logout/password changes, admin reset, role revocation, disablement, expiry, cookies/Origin/CSRF/rate limit",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "All enumerated lifecycle checks PASS; two prior viewer sessions revoked; 403→201 own-password correction proven",
+          "artifact": "security/security-http-final.log; security/known-defects-before-after.json",
+          "defect": "Viewer could not change own password",
+          "fix": "Credential command uses authenticated context, not print-write capability.",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Real login during DB outage is not part of this agent's test; merge operations evidence."
+        }
+      }
     },
     {
       "id": "A08",
       "requirement": "Заявка человека",
       "expected": "Создать без лишней организации, сохранить, оформить, получить DOCX/PDF и найти в истории",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Новый человек без заказчика: отдельные RU/KZ, дата, фото, refresh, validate, PDF preview, немедленный finalize, оригиналы и исправление.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Один документ, один выпуск, шесть файлов с двумя предпросмотрами. Повторное скачивание сохраняет SHA; исправление открывается отдельным черновиком.",
+      "artifact": "final-v2/person-result.json; final-v2/files-history.png; final-v2/pdf-preview.png; final-forms/person-retest.json; final-forms/person-result.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "14/14 complete suite, demo.spec.ts person; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA",
+      "limitation": "Полная серия использует сохранённые v5 формы; отдельный person retest подтверждает текущую biot-worker-card v7. Другие финальные формы проверяет print matrix.",
+      "observations": {
+        "browser": {
+          "id": "A08",
+          "status": "PASS",
+          "scenario": "Новый человек без заказчика: отдельные RU/KZ, дата, фото, refresh, validate, PDF preview, немедленный finalize, оригиналы и исправление.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Один документ, один выпуск, шесть файлов с двумя предпросмотрами. Повторное скачивание сохраняет SHA; исправление открывается отдельным черновиком.",
+          "artifact": "final-v2/person-result.json; final-v2/files-history.png; final-v2/pdf-preview.png; final-forms/person-retest.json; final-forms/person-result.json",
+          "defect": "",
+          "fix": "",
+          "retest": "14/14 complete suite, demo.spec.ts person; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA",
+          "limitation": "Полная серия использует сохранённые v5 формы; отдельный person retest подтверждает текущую biot-worker-card v7. Другие финальные формы проверяет print matrix."
+        }
+      }
     },
     {
       "id": "A09",
       "requirement": "Заявка компании",
       "expected": "12 синтетических участников с индивидуальными наборами, 18 назначений из test fixture; ожидаемый состав каждого файла сверён",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Компания: 12 синтетических получателей, 18 назначений, массовое заполнение явно выбранных строк, отдельная дата последнего получателя; скачивание всех 38 файлов.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "18 DOCX, 18 PDF, XLSX и ZIP. Хеш каждого файла совпал; каждый DOCX содержит только своего получателя на RU/KZ. XLSX и ZIP дополнительно проверены независимым скриптом.",
+      "artifact": "final-v2/company-12-18-result.json; final-v2/company-export-audit.json; final-v2/company-12.png",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Complete company test4.1m; audit_browser_artifacts.py",
+      "limitation": "Browser/data/package correctness; all-page print layout separate.",
+      "observations": {
+        "security": {
+          "id": "A09",
+          "status": "NOT RUN",
+          "scenario": "12-recipient company request with 18 distinct assignments, separate PS registration",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Database issuance plan and unique number mapping PASS",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "This subtest does not render and inspect all 18 files; merge browser/print evidence."
+        },
+        "browser": {
+          "id": "A09",
+          "status": "PASS",
+          "scenario": "Компания: 12 синтетических получателей, 18 назначений, массовое заполнение явно выбранных строк, отдельная дата последнего получателя; скачивание всех 38 файлов.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "18 DOCX, 18 PDF, XLSX и ZIP. Хеш каждого файла совпал; каждый DOCX содержит только своего получателя на RU/KZ. XLSX и ZIP дополнительно проверены независимым скриптом.",
+          "artifact": "final-v2/company-12-18-result.json; final-v2/company-export-audit.json; final-v2/company-12.png",
+          "defect": "",
+          "fix": "",
+          "retest": "Complete company test4.1m; audit_browser_artifacts.py",
+          "limitation": "Browser/data/package correctness; all-page print layout separate."
+        }
+      }
     },
     {
       "id": "A10",
       "requirement": "Серверный draft",
       "expected": "После сохранения нет финальных номеров/Issuance; refresh восстанавливает поля/фото/состав",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Сохранить серверный черновик, перезагрузить RU/KZ, дату и фото, затем отдельно оформить.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Данные черновика восстановлены до оформления. Финальный повтор дополнительно проверяет пустые documents/issuances до команды finalize.",
+      "artifact": "final-v2/results.json; final-v2/photo-crop.png; final-forms/person-retest.json; final-forms/person-result.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "person test; final forms retest adds explicit draft documents/issuances empty assertions; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA",
+      "limitation": "Focused person retest explicitly confirms DRAFT, documents=[], issuances=[] before finalize.",
+      "observations": {
+        "security": {
+          "id": "A10",
+          "status": "NOT RUN",
+          "scenario": "Create and patch partial drafts with RU/KZ and photo references; no issuance until finalize",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Server roundtrip and zero pre-finalization numbers PASS",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Browser refresh is owned by UI acceptance."
+        },
+        "browser": {
+          "id": "A10",
+          "status": "PASS",
+          "scenario": "Сохранить серверный черновик, перезагрузить RU/KZ, дату и фото, затем отдельно оформить.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Данные черновика восстановлены до оформления. Финальный повтор дополнительно проверяет пустые documents/issuances до команды finalize.",
+          "artifact": "final-v2/results.json; final-v2/photo-crop.png; final-forms/person-retest.json; final-forms/person-result.json",
+          "defect": "",
+          "fix": "",
+          "retest": "person test; final forms retest adds explicit draft documents/issuances empty assertions; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA",
+          "limitation": "Focused person retest explicitly confirms DRAFT, documents=[], issuances=[] before finalize."
+        }
+      }
     },
     {
       "id": "A11",
       "requirement": "Конфликт редактирования",
       "expected": "Два оператора: второй stale PATCH → 409, данные первого не затёрты",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Два пользователя ADMIN/OPERATOR в независимых браузерных сессиях: второй сохраняет устаревшую ревизию после первого.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Ответ 409 открывает диалог с управлением фокусом. Копия содержит ввод второго; первоначальная заявка сохраняет ввод первого.",
+      "artifact": "final-v2/two-operators-conflict.png; final-v2/results.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "commercial.spec.ts administrator settings and independent operator conflict",
+      "limitation": "Один tenant, две реальные сессии; межtenant authorization проверяется API агентом.",
+      "observations": {
+        "security": {
+          "id": "A11",
+          "status": "NOT RUN",
+          "scenario": "Conflicting expectedRevision on a persisted draft",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Stale service PATCH rejected and first content preserved",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "This service test alone is not two separate browser operators."
+        },
+        "browser": {
+          "id": "A11",
+          "status": "PASS",
+          "scenario": "Два пользователя ADMIN/OPERATOR в независимых браузерных сессиях: второй сохраняет устаревшую ревизию после первого.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Ответ 409 открывает диалог с управлением фокусом. Копия содержит ввод второго; первоначальная заявка сохраняет ввод первого.",
+          "artifact": "final-v2/two-operators-conflict.png; final-v2/results.json",
+          "defect": "",
+          "fix": "",
+          "retest": "commercial.spec.ts administrator settings and independent operator conflict",
+          "limitation": "Один tenant, две реальные сессии; межtenant authorization проверяется API агентом."
+        }
+      }
     },
     {
       "id": "A12",
       "requirement": "Несохранённая работа и связь",
       "expected": "Offline/API failure сохраняет ввод; последние символы при мгновенном finalize попадают в snapshot; autosave flush и stale preview работают",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "Реальный offline, ошибка PATCH, session 401, немедленный logout, немедленный finalize, устаревший preview и потеря ответа после настоящего commit.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "RU/KZ ввод сохранён; повторный вход не размонтирует редактор; logout ожидает сохранение последних символов. Два finalize используют один ключ и создают один выпуск.",
+      "artifact": "final-v2/expired-session.png; final-v2/field-errors-and-focus.png; final-v2/finalize-response-lost.png; final-v2/timeout-idempotency.json; final-v2/results.json; final-forms/person-retest.json; final-forms/person-result.json",
+      "defect": "Session401 required navigating away; logout bypassed autosave flush;400/422errors lacked fieldfocus.",
+      "fix": "Same-user inpage session dialog; await logout flush; normalize server details and field errors/focus.",
+      "retest": "Commercial offline/session/timeout plus original network/stale-preview/person allPASS; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA",
+      "limitation": "401 induced by cookie revocation, not8hour wait;504 injected after real upstream commit, not WAN benchmark.",
+      "observations": {
+        "browser": {
+          "id": "A12",
+          "status": "PASS",
+          "scenario": "Реальный offline, ошибка PATCH, session 401, немедленный logout, немедленный finalize, устаревший preview и потеря ответа после настоящего commit.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "RU/KZ ввод сохранён; повторный вход не размонтирует редактор; logout ожидает сохранение последних символов. Два finalize используют один ключ и создают один выпуск.",
+          "artifact": "final-v2/expired-session.png; final-v2/field-errors-and-focus.png; final-v2/finalize-response-lost.png; final-v2/timeout-idempotency.json; final-v2/results.json; final-forms/person-retest.json; final-forms/person-result.json",
+          "defect": "Session401 required navigating away; logout bypassed autosave flush;400/422errors lacked fieldfocus.",
+          "fix": "Same-user inpage session dialog; await logout flush; normalize server details and field errors/focus.",
+          "retest": "Commercial offline/session/timeout plus original network/stale-preview/person allPASS; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA",
+          "limitation": "401 induced by cookie revocation, not8hour wait;504 injected after real upstream commit, not WAN benchmark."
+        }
+      }
     },
     {
       "id": "A13",
       "requirement": "Concurrent finalize",
       "expected": "Не менее 20 конкурентных заявок: ни одного duplicate number в namespace, корректные links",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "20 concurrent different request finalizations",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "20 distinct numbers, no duplicates",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Synthetic service integration; not a full PDF throughput benchmark.",
+      "observations": {
+        "security": {
+          "id": "A13",
+          "status": "PASS",
+          "scenario": "20 concurrent different request finalizations",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "20 distinct numbers, no duplicates",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Synthetic service integration; not a full PDF throughput benchmark."
+        }
+      }
     },
     {
       "id": "A14",
       "requirement": "Повтор одного finalize",
       "expected": "20 повторов одного ключа и потеря ответа после commit → один issuance и прежние номера",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "20 identical keys; reuse persisted response after ignoring initial response",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "One issuance and identical response/number set",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Synthetic service integration; not a full PDF throughput benchmark.",
+      "observations": {
+        "security": {
+          "id": "A14",
+          "status": "PASS",
+          "scenario": "20 identical keys; reuse persisted response after ignoring initial response",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "One issuance and identical response/number set",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Synthetic service integration; not a full PDF throughput benchmark."
+        }
+      }
     },
     {
       "id": "A15",
       "requirement": "Key/payload mismatch",
       "expected": "Тот же key с другим payload → 409; результат первого не изменён",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Reuse key with different revision or different request",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "409; original result retained",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Synthetic service integration; not a full PDF throughput benchmark.",
+      "observations": {
+        "security": {
+          "id": "A15",
+          "status": "PASS",
+          "scenario": "Reuse key with different revision or different request",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "409; original result retained",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Synthetic service integration; not a full PDF throughput benchmark."
+        }
+      }
     },
     {
       "id": "A16",
       "requirement": "Уже оформленная revision",
       "expected": "Два concurrent finalize одной revision с разными keys дают один issuance; последующий новый key не создаёт повтор; PATCH зарегистрированного отклонён",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "20 different keys for one source revision and subsequent repeat",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "One issuance; registered PATCH denied",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Synthetic service integration; not a full PDF throughput benchmark.",
+      "observations": {
+        "security": {
+          "id": "A16",
+          "status": "PASS",
+          "scenario": "20 different keys for one source revision and subsequent repeat",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "One issuance; registered PATCH denied",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Synthetic service integration; not a full PDF throughput benchmark."
+        }
+      }
     },
     {
       "id": "A17",
       "requirement": "История >1000 выпусков",
       "expected": "Номера не зависят от окна audit, удаления draft, архивации или смены issuer/profile/policy version",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": ">1000 issuances, issuer profile replacement, old history search and sequence restart rejection",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Sequence remains monotonic; all reserved numbers unique; old request remains findable",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Synthetic service integration; not a full PDF throughput benchmark.",
+      "observations": {
+        "security": {
+          "id": "A17",
+          "status": "PASS",
+          "scenario": ">1000 issuances, issuer profile replacement, old history search and sequence restart rejection",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Sequence remains monotonic; all reserved numbers unique; old request remains findable",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Synthetic service integration; not a full PDF throughput benchmark."
+        }
+      }
     },
     {
       "id": "A18",
       "requirement": "Нет лишнего расхода номеров",
       "expected": "Save/validate/preview/download/PDF/retry не увеличивают sequence",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Save, validation/preflight, preview, download/retry/reconstruction",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "No extra number allocation; snapshot identity retained",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Synthetic service integration; not a full PDF throughput benchmark.",
+      "observations": {
+        "security": {
+          "id": "A18",
+          "status": "PASS",
+          "scenario": "Save, validation/preflight, preview, download/retry/reconstruction",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "No extra number allocation; snapshot identity retained",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Synthetic service integration; not a full PDF throughput benchmark."
+        }
+      }
     },
     {
       "id": "A19",
       "requirement": "RU/KZ roundtrip",
       "expected": "Отличающиеся ФИО/названия остаются самостоятельными после no-op edit, copy и import",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "Различающиеся RU/KZ, перезагрузка, сохранение, копия/исправление и CSV/XLSX; казахские буквы и ведущие нули 00123.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Языковые поля остаются независимыми в snapshot, импорте и экспорте. Ведущие нули сохранены.",
+      "artifact": "final-v2/results.json; final-v2/history-xlsx-audit.json; final-v2/import-report.csv; ui-unit-final.log",
+      "defect": "PTM reason/PB education unavailable in form/import.",
+      "fix": "Optional independent500char reason/education fields and import mappings; no default factual claims.",
+      "retest": "7UIunit +14realbrowser tests",
+      "limitation": "All-form printed field mapping is printing-agent gate.",
+      "observations": {
+        "security": {
+          "id": "A19",
+          "status": "NOT RUN",
+          "scenario": "Different RU/KZ values survive no-op patch, CSV/TSV import and immutable snapshots",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Independent language values preserved in API tests",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Merge browser copy/edit and print field-map results."
+        },
+        "browser": {
+          "id": "A19",
+          "status": "PASS",
+          "scenario": "Различающиеся RU/KZ, перезагрузка, сохранение, копия/исправление и CSV/XLSX; казахские буквы и ведущие нули 00123.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Языковые поля остаются независимыми в snapshot, импорте и экспорте. Ведущие нули сохранены.",
+          "artifact": "final-v2/results.json; final-v2/history-xlsx-audit.json; final-v2/import-report.csv; ui-unit-final.log",
+          "defect": "PTM reason/PB education unavailable in form/import.",
+          "fix": "Optional independent500char reason/education fields and import mappings; no default factual claims.",
+          "retest": "7UIunit +14realbrowser tests",
+          "limitation": "All-form printed field mapping is printing-agent gate."
+        }
+      }
     },
     {
       "id": "A20",
       "requirement": "Unicode/длинные поля",
       "expected": "Ә Ғ Қ Ң Ө Ұ Ү Һ І и строчные, длинные ФИО/должность/организация не теряются; все страницы проверены",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "10 forms: short, long RU/KZ, blank optional, punctuation/newlines and all Kazakh glyphs; >80-character unbroken values before issuance.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "All 84 base pages manually reviewed; every matrix page automatically checked. Names preserved without abbreviation; no RU/KZ substitution; valid layout tested and impossible values rejected by preflight.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; printing/template-structure-field-map.json; word/final-active.json; printing/biot-panel-regression-result.json; printing/biot-chair-v15/commission; browser/biot-v15-retest; word/biot-v15-browser",
+      "defect": "Microfonts/photo overlap and deferred layout errors. Actual issuer profile exposed BIOT lower repeated-panel chairman clipping and issuer-band divider overlap.",
+      "fix": "Minimum 8pt body, bounded field reflow and preflight with row issue. Word requires bundled Liberation fonts. BIOT worker v15 aligns lower right box to upper and starts both dividers14pt lower; no font shrink.",
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED.",
+      "observations": {
+        "security": {
+          "id": "A20",
+          "status": "NOT RUN",
+          "scenario": "Long but schema-valid unprintable input, and >80-character unbroken value",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "422 before issuance/reservation, row/field information, same draft correctable",
+          "artifact": "security/integration-final.log; security/contracts-final.log",
+          "defect": "Layout overflow used to fail only after numbering",
+          "fix": "Real bounded renderer preflight and transactional input fingerprint.",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "All-page glyph/layout/visual inspection belongs to print acceptance."
+        },
+        "browser": {
+          "id": "A20",
+          "status": "NOT RUN",
+          "scenario": "Браузерный roundtrip казахских символов Ә Ғ Қ Ң Ө Ұ Ү Һ І и длинного ввода; полная печатная матрица проверяется отдельным исполнителем.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Браузер, snapshot и импорт проходят Unicode-проверки. Этот результат не закрывает проверку длинных полей на каждой печатной странице.",
+          "artifact": "final-v2/results.json; final-v2/history-xlsx-audit.json",
+          "defect": "",
+          "fix": "",
+          "retest": "Browser checks PASS only",
+          "limitation": "Full expected long layout and everypage evidence not claimed by UI."
+        },
+        "printing": {
+          "id": "A20",
+          "status": "PASS",
+          "scenario": "10 forms: short, long RU/KZ, blank optional, punctuation/newlines and all Kazakh glyphs; >80-character unbroken values before issuance.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "All 84 base pages manually reviewed; every matrix page automatically checked. Names preserved without abbreviation; no RU/KZ substitution; valid layout tested and impossible values rejected by preflight.",
+          "artifact": "printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; printing/template-structure-field-map.json; word/final-active.json; printing/biot-panel-regression-result.json; printing/biot-chair-v15/commission; browser/biot-v15-retest; word/biot-v15-browser",
+          "defect": "Microfonts/photo overlap and deferred layout errors. Actual issuer profile exposed BIOT lower repeated-panel chairman clipping and issuer-band divider overlap.",
+          "fix": "Minimum 8pt body, bounded field reflow and preflight with row issue. Word requires bundled Liberation fonts. BIOT worker v15 aligns lower right box to upper and starts both dividers14pt lower; no font shrink.",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+        }
+      }
     },
     {
       "id": "A21",
       "requirement": "Календарные даты",
       "expected": "UI/snapshot/DOCX/PDF совпадают при timezone boundary, следующем дне, високосной дате; нет silent today",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "Four actual UI save/reload/issue/reload cases in Asia/Almaty and America/Los_Angeles: leap date2028-02-29/protocol2028-02-28; year boundary document2027-01-01/protocol2026-12-31.",
+      "environment": "Chrome152 via installed Playwright; localhost3200/4200, actual worker LibreOffice26.2.6.3; ps-witness v11, renderer5, exact template checksum; only four newly created synthetic requests.",
+      "result": "UI, saved draft and immutable issuance snapshot dates equal; 48 exact DOCX XPath checks and16 PDF regional checks PASS, no date shift or silent today. All8pages visually reviewed. Printed issue date and protocol date remain independent in RU/KZ.",
+      "artifact": "printing/date-roundtrip/date-roundtrip-proof.json; printing/date-roundtrip/visual-review.json; printing/date-roundtrip/*/issued-response.json; printing/date-roundtrip/*/ui-issued-reloaded.png",
+      "defect": "No product date defect in this run; helper navigation failure preserved separately.",
+      "fix": "No runtime/template modification needed; helper navigates through request list before creating next independent case.",
+      "retest": "Four actual browser roundtrips,4DOCX+4PDF/8pages,48DOCX assertions,16PDF regions and negative swapped-date checks PASS.",
+      "limitation": "Bounded calendar sweep of one form with separate issue/protocol date blocks; complements all10form date mapping and date parser regressions. Technical issuance timestamp is not the printed documentDate.",
+      "observations": {
+        "security": {
+          "id": "A21",
+          "status": "NOT RUN",
+          "scenario": "Leap day/date strings, tenant midnight and non-UTC database connection",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Date-only contracts and worker lease timestamps PASS",
+          "artifact": "security/integration-final.log; security/contracts-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Does not alone establish UI and PDF date equality at every boundary."
+        },
+        "browser": {
+          "id": "A21",
+          "status": "NOT RUN",
+          "scenario": "Дата 2028-02-29 через браузер и snapshot; индивидуальная дата 2026-10-02 для строки 12 компании.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Календарные значения в UI и snapshot совпали. Полный gate часовых границ и DOCX/PDF требует дополнительных доказательств API/печати.",
+          "artifact": "final-v2/timeout-idempotency.json; final-v2/company-12-18-result.json; final-v2/history-xlsx-audit.json",
+          "defect": "",
+          "fix": "",
+          "retest": "Timeout/company browser tests PASS",
+          "limitation": "No browser timezone-boundary sweep or printed date coordinate assertion in this subtask."
+        },
+        "printing": {
+          "id": "A21",
+          "status": "PASS",
+          "scenario": "Four actual UI save/reload/issue/reload cases in Asia/Almaty and America/Los_Angeles: leap date2028-02-29/protocol2028-02-28; year boundary document2027-01-01/protocol2026-12-31.",
+          "environment": "Chrome152 via installed Playwright; localhost3200/4200, actual worker LibreOffice26.2.6.3; ps-witness v11, renderer5, exact template checksum; only four newly created synthetic requests.",
+          "result": "UI, saved draft and immutable issuance snapshot dates equal; 48 exact DOCX XPath checks and16 PDF regional checks PASS, no date shift or silent today. All8pages visually reviewed. Printed issue date and protocol date remain independent in RU/KZ.",
+          "artifact": "printing/date-roundtrip/date-roundtrip-proof.json; printing/date-roundtrip/visual-review.json; printing/date-roundtrip/*/issued-response.json; printing/date-roundtrip/*/ui-issued-reloaded.png",
+          "defect": "No product date defect in this run; helper navigation failure preserved separately.",
+          "fix": "No runtime/template modification needed; helper navigates through request list before creating next independent case.",
+          "retest": "Four actual browser roundtrips,4DOCX+4PDF/8pages,48DOCX assertions,16PDF regions and negative swapped-date checks PASS.",
+          "limitation": "Bounded calendar sweep of one form with separate issue/protocol date blocks; complements all10form date mapping and date parser regressions. Technical issuance timestamp is not the printed documentDate."
+        }
+      }
     },
     {
       "id": "A22",
       "requirement": "Массовые defaults",
       "expected": "Применяются только явно выбранным строкам; индивидуальные значения не перезаписаны скрыто",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Массовые значения компании применяются только к выбранным получателям; последняя строка получает индивидуальную дату.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "В snapshot последнего получателя остаётся дата 2026-10-02; комплект содержит 12 получателей и 18 назначений.",
+      "artifact": "final-v2/results.json; final-v2/company-12.png; final-v2/company-12-18-result.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Company testPASS",
+      "limitation": "",
+      "observations": {
+        "browser": {
+          "id": "A22",
+          "status": "PASS",
+          "scenario": "Массовые значения компании применяются только к выбранным получателям; последняя строка получает индивидуальную дату.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "В snapshot последнего получателя остаётся дата 2026-10-02; комплект содержит 12 получателей и 18 назначений.",
+          "artifact": "final-v2/results.json; final-v2/company-12.png; final-v2/company-12-18-result.json",
+          "defect": "",
+          "fix": "",
+          "retest": "Company testPASS",
+          "limitation": ""
+        }
+      }
     },
     {
       "id": "A23",
       "requirement": "Translation race",
       "expected": "Старый ответ не перезаписывает новый source или ручной KZ текст; offline перевод не блокирует печать",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Inspect actual RU/KZ update paths and deployed legacy translation route; combine independent manual-copy/roundtrip/offline browser cases.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Autonomous DEMO has no asynchronous translator. Manual KZ values change only via explicit edit/copy; legacy POST translation route is404 over CA-verified HTTPS.",
+      "artifact": "operations/translation-boundary.json;browser/final-v2/results.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Code inspection only",
+      "limitation": "No invented translation service or simulated stale-response test claimed. Requirement risk removed by current supported synchronous architecture.",
+      "observations": {
+        "browser": {
+          "id": "A23",
+          "status": "NOT RUN",
+          "scenario": "Проверен реальный интерфейс: есть явно запускаемое синхронное копирование RU в KZ, сетевого переводчика нет.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Асинхронную гонку ответа нельзя воспроизвести у отсутствующего переводчика.",
+          "artifact": "apps/web/components/recipient-details.tsx",
+          "defect": "",
+          "fix": "",
+          "retest": "Code inspection only",
+          "limitation": "Do not label absence of asynchronous translation as a passed stale-response test; manualKZ/offline printing tested separately."
+        },
+        "operations": {
+          "id": "A23",
+          "status": "PASS",
+          "scenario": "Inspect actual RU/KZ update paths and deployed legacy translation route; combine independent manual-copy/roundtrip/offline browser cases.",
+          "result": "Autonomous DEMO has no asynchronous translator. Manual KZ values change only via explicit edit/copy; legacy POST translation route is404 over CA-verified HTTPS.",
+          "artifact": "operations/translation-boundary.json;browser/final-v2/results.json",
+          "limitation": "No invented translation service or simulated stale-response test claimed. Requirement risk removed by current supported synchronous architecture."
+        }
+      }
     },
     {
       "id": "A24",
       "requirement": "Import accounting",
       "expected": "Все source rows объяснимо applied/rejected/excluded; leading zeros и порядок сохранены; частичные строки не исчезают",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "CSV с точкой с запятой, вставка TSV из 101 строки, XLSX с двумя листами, сохранённое сопоставление, исходные номера строк и частичные строки.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Каждая строка явно выбрана, исключена или отклонена. 100 строк добавлены после исключения одной; частичная XLSX-строка и коды 00123/00456 сохранены.",
+      "artifact": "final-v2/results.json; final-v2/import-report.csv; final-v2/xlsx-formula-rejected.png",
+      "defect": "CSVsemicolon parsed as onecolumn; raw FORMULA_NOT_ALLOWED shown.",
+      "fix": "Delimiter sniff in parser(print agent); human-readable formula/source-row error in UI/report.",
+      "retest": "Commercial formula/CSV and original XLSX/100 testsPASS",
+      "limitation": "",
+      "observations": {
+        "security": {
+          "id": "A24",
+          "status": "PASS",
+          "scenario": "100 source rows, leading zeros, partial fields, sourceRow accounting including formula-only row",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "No silent truncation; formula-only row2 retained with FORMULA_NOT_ALLOWED",
+          "artifact": "security/integration-final.log; security/security-http-final.log",
+          "defect": "Formula-only row disappeared after clearing formula cell",
+          "fix": "Keep source rows carrying parse errors.",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "API/import layer; browser column mapping has separate evidence."
+        },
+        "browser": {
+          "id": "A24",
+          "status": "PASS",
+          "scenario": "CSV с точкой с запятой, вставка TSV из 101 строки, XLSX с двумя листами, сохранённое сопоставление, исходные номера строк и частичные строки.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Каждая строка явно выбрана, исключена или отклонена. 100 строк добавлены после исключения одной; частичная XLSX-строка и коды 00123/00456 сохранены.",
+          "artifact": "final-v2/results.json; final-v2/import-report.csv; final-v2/xlsx-formula-rejected.png",
+          "defect": "CSVsemicolon parsed as onecolumn; raw FORMULA_NOT_ALLOWED shown.",
+          "fix": "Delimiter sniff in parser(print agent); human-readable formula/source-row error in UI/report.",
+          "retest": "Commercial formula/CSV and original XLSX/100 testsPASS",
+          "limitation": ""
+        }
+      }
     },
     {
       "id": "A25",
       "requirement": "100/101 строка",
       "expected": "Лимит показан до финализации; нет частичной регистрации или silent truncation",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "До применения 101 строки видны объяснение и заблокированная кнопка. Исключить исходную строку 102, сохранить 100 и повторить тот же импорт.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "100 строк сохраняются после refresh. Нет молчаливого отсечения или повторных строк; для неполного импорта оформление не запускалось.",
+      "artifact": "final-v2/import-100-timing.json; final-v2/results.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "101/100 realbrowserPASS",
+      "limitation": "Server oversized finalize allocation guard independentlytested by API.",
+      "observations": {
+        "security": {
+          "id": "A25",
+          "status": "PASS",
+          "scenario": "100 rows accepted, 101 rejected before partial apply/finalization",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Existing 100-row draft remains unchanged after rejected 101-row apply",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "UI limit messaging supplied by browser report."
+        },
+        "browser": {
+          "id": "A25",
+          "status": "PASS",
+          "scenario": "До применения 101 строки видны объяснение и заблокированная кнопка. Исключить исходную строку 102, сохранить 100 и повторить тот же импорт.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "100 строк сохраняются после refresh. Нет молчаливого отсечения или повторных строк; для неполного импорта оформление не запускалось.",
+          "artifact": "final-v2/import-100-timing.json; final-v2/results.json",
+          "defect": "",
+          "fix": "",
+          "retest": "101/100 realbrowserPASS",
+          "limitation": "Server oversized finalize allocation guard independentlytested by API."
+        }
+      }
     },
     {
       "id": "A26",
       "requirement": "Import повтор/formulas",
       "expected": "Повтор не дублирует строки; формулы/macros/external links не исполняются; `=1+1` в XLSX export остаётся текстом",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "Concurrent re-upload same batch, repeated apply, literal formula export, macro/external-link/archive-bomb uploads",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "No duplicate rows; formula not executed; active-content inputs rejected",
+      "artifact": "security/integration-final.log; security/security-http-final.log",
+      "defect": "canApply ignored parser errors",
+      "fix": "canApply now includes global/row errors.",
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Specific tested inputs, not an exhaustive archive-format fuzzer.",
+      "observations": {
+        "security": {
+          "id": "A26",
+          "status": "PASS",
+          "scenario": "Concurrent re-upload same batch, repeated apply, literal formula export, macro/external-link/archive-bomb uploads",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "No duplicate rows; formula not executed; active-content inputs rejected",
+          "artifact": "security/integration-final.log; security/security-http-final.log",
+          "defect": "canApply ignored parser errors",
+          "fix": "canApply now includes global/row errors.",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Specific tested inputs, not an exhaustive archive-format fuzzer."
+        },
+        "browser": {
+          "id": "A26",
+          "status": "NOT RUN",
+          "scenario": "Настоящая формула XLSX C2 отклоняется до применения; строковый CSV =1+1 сохраняется как текст; повтор того же файла не дублирует строки.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Браузерная обработка формул и повторов PASS. Независимый аудит XLSX компании обнаружил ноль формульных ячеек.",
+          "artifact": "final-v2/results.json; final-v2/xlsx-formula-rejected.png; final-v2/company-export-audit.json",
+          "defect": "Raw formula error code; missing semicolonCSV support.",
+          "fix": "Human row explanation and parserdelimiter correction.",
+          "retest": "BrowserPASS; full macros/external links must merge parser evidence.",
+          "limitation": "Macro/external-link execution policy and export literal=1+1 celltype not independently asserted in browser subtask."
+        }
+      }
     },
     {
       "id": "A27",
       "requirement": "Фото",
       "expected": "Настоящие PNG/JPEG, повреждённые bytes, oversized/decompression bomb, EXIF/crop/rotation; читаемая печать, стабильный asset scope",
       "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "scenario": "Printed photo subset: distinct synthetic PNGs per recipient, no-photo samples, EXIF/crop/rotation and invalid bytes/size checks.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Print subset PASS. Every embedded photo SHA tied to its recipient fixture; all base pages and selected 100-person boundaries reviewed; generated portrait additionally verified in Word.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; word/generated-photo-pb/word-results.json",
+      "defect": "Photo/text overlap with long fields.",
+      "fix": "Reserved photo rectangle and text width reflow.",
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "This entry covers renderer and layout, not whole HTTP asset isolation; combine with API evidence. Physical photo quality remains unmeasured.",
+      "observations": {
+        "security": {
+          "id": "A27",
+          "status": "NOT RUN",
+          "scenario": "Real PNG crop/rotation; JPEG EXIF6; corrupt/SVG/HTML/oversize and 20.25MP image; cross-tenant photos",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Upload/storage/security checks PASS, JPEG normalized from40×20 to20×40",
+          "artifact": "security/integration-final.log; security/security-http-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Readable physical photo placement/quality requires print evidence."
+        },
+        "printing": {
+          "id": "A27",
+          "status": "NOT RUN",
+          "scenario": "Printed photo subset: distinct synthetic PNGs per recipient, no-photo samples, EXIF/crop/rotation and invalid bytes/size checks.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "Print subset PASS. Every embedded photo SHA tied to its recipient fixture; all base pages and selected 100-person boundaries reviewed; generated portrait additionally verified in Word.",
+          "artifact": "printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; word/generated-photo-pb/word-results.json",
+          "defect": "Photo/text overlap with long fields.",
+          "fix": "Reserved photo rectangle and text width reflow.",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "This entry covers renderer and layout, not whole HTTP asset isolation; combine with API evidence. Physical photo quality remains unmeasured."
+        }
+      }
     },
     {
       "id": "A28",
       "requirement": "Нагрузка transport",
       "expected": "Массовая заявка с фото references проходит согласованные лимиты; превышение → понятный 413/validation, без записей",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "100-row draft with private photo references; 2MiB JSON and 5MiB multipart limits",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Bounded transport, oversized requests rejected with correlation ID",
+      "artifact": "security/integration-final.log; security/security-http-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "One-node API environment; no distributed upload limiter claim.",
+      "observations": {
+        "security": {
+          "id": "A28",
+          "status": "PASS",
+          "scenario": "100-row draft with private photo references; 2MiB JSON and 5MiB multipart limits",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Bounded transport, oversized requests rejected with correlation ID",
+          "artifact": "security/integration-final.log; security/security-http-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "One-node API environment; no distributed upload limiter claim."
+        }
+      }
     },
     {
       "id": "A29",
       "requirement": "Renderer crash/timeout",
       "expected": "FAILED понятен, процесс ограничен/завершён, retry использует те же номера и snapshot",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Real converter --convert-to process killed; actual timeout/abort and retry exhaustion tests",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "PDF_CONVERSION_FAILED→RETRY→SUCCEEDED, same snapshot, one canonical PDF; bounded child terminated",
+      "artifact": "security/process-drill.json; security/process-drill.log; security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Process drill uses a synthetic immutable 100-recipient snapshot.",
+      "observations": {
+        "security": {
+          "id": "A29",
+          "status": "PASS",
+          "scenario": "Real converter --convert-to process killed; actual timeout/abort and retry exhaustion tests",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "PDF_CONVERSION_FAILED→RETRY→SUCCEEDED, same snapshot, one canonical PDF; bounded child terminated",
+          "artifact": "security/process-drill.json; security/process-drill.log; security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Process drill uses a synthetic immutable 100-recipient snapshot."
+        }
+      }
     },
     {
       "id": "A30",
       "requirement": "Worker crash/lease/GC race",
       "expected": "Recovery после kill, stale completion/fencing, crash после upload/до DB; stale worker/GC не меняют hash опубликованного файла; один canonical artifact",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Worker killed in RUNNING before publish; natural lease expiry; two concurrent recovery workers; stale fencing and GC guards",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "0 artifacts at kill; attempts2/fence2 recovery; exactly one canonical artifact; GC respects active leases and backup pins",
+      "artifact": "security/process-drill.json; security/process-drill.log; security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "DB/disk/volume faults are separate operations evidence.",
+      "observations": {
+        "security": {
+          "id": "A30",
+          "status": "PASS",
+          "scenario": "Worker killed in RUNNING before publish; natural lease expiry; two concurrent recovery workers; stale fencing and GC guards",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "0 artifacts at kill; attempts2/fence2 recovery; exactly one canonical artifact; GC respects active leases and backup pins",
+          "artifact": "security/process-drill.json; security/process-drill.log; security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "DB/disk/volume faults are separate operations evidence."
+        }
+      }
     },
     {
       "id": "A31",
       "requirement": "Частичный комплект",
       "expected": "X из Y; completed files сохранены; retry только failed; неполный ZIP не назван полным",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "Real DOCX/PDF/XLSX→ZIP, failed/missing/corrupt file cases, explicit partial consent",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "All entries match separately read originals; missing reasons present; 409 without consent; PARTIAL filename",
+      "artifact": "security/integration-final.log; security/known-defects-before-after.json",
+      "defect": "Completeness inferred from DB row count",
+      "fix": "Use verified manifest and include failed job reasons.",
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Three-format issuance bundle; stress packages covered elsewhere.",
+      "observations": {
+        "security": {
+          "id": "A31",
+          "status": "PASS",
+          "scenario": "Real DOCX/PDF/XLSX→ZIP, failed/missing/corrupt file cases, explicit partial consent",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "All entries match separately read originals; missing reasons present; 409 without consent; PARTIAL filename",
+          "artifact": "security/integration-final.log; security/known-defects-before-after.json",
+          "defect": "Completeness inferred from DB row count",
+          "fix": "Use verified manifest and include failed job reasons.",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Three-format issuance bundle; stress packages covered elsewhere."
+        }
+      }
     },
     {
       "id": "A32",
       "requirement": "Исходный файл",
       "expected": "Download дважды → тот же sha256, размер/MIME/имя; числа requests/documents не изменились",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Repeated original downloads through stream and HTTP with expected SHA256/size",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Byte equality and no new issuance/reservation",
+      "artifact": "security/integration-final.log; security/security-http-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Local private store.",
+      "observations": {
+        "security": {
+          "id": "A32",
+          "status": "PASS",
+          "scenario": "Repeated original downloads through stream and HTTP with expected SHA256/size",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Byte equality and no new issuance/reservation",
+          "artifact": "security/integration-final.log; security/security-http-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Local private store."
+        }
+      }
     },
     {
       "id": "A33",
       "requirement": "Изменение master/template",
       "expected": "Новые реквизиты/шаблон не меняют прошлые artifacts и snapshot",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "After issuing and reading original, create newer issuer profile and newer template with different bytes, then re-download old artifact",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Original bytes and immutable snapshot inputHash unchanged; immutable DB trigger tests passed",
+      "artifact": "security/files-immutability-final.log; security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "New template is a deliberately unapproved synthetic private resource, not a replacement shipping form.",
+      "observations": {
+        "security": {
+          "id": "A33",
+          "status": "PASS",
+          "scenario": "After issuing and reading original, create newer issuer profile and newer template with different bytes, then re-download old artifact",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Original bytes and immutable snapshot inputHash unchanged; immutable DB trigger tests passed",
+          "artifact": "security/files-immutability-final.log; security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "New template is a deliberately unapproved synthetic private resource, not a replacement shipping form."
+        }
+      }
     },
     {
       "id": "A34",
       "requirement": "Потеря storage",
       "expected": "READY не маскирует отсутствующий файл; восстановление отдельное, provenance честное",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Delete one synthetic original, inspect API availability, request reconstruction twice",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "503/MISSING, new RECONSTRUCTED artifact with original identity/hash; original row and numbers retained",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Reconstructed bytes are not asserted to equal lost originals.",
+      "observations": {
+        "security": {
+          "id": "A34",
+          "status": "PASS",
+          "scenario": "Delete one synthetic original, inspect API availability, request reconstruction twice",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "503/MISSING, new RECONSTRUCTED artifact with original identity/hash; original row and numbers retained",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Reconstructed bytes are not asserted to equal lost originals."
+        }
+      }
     },
     {
       "id": "A35",
       "requirement": "Исправление/отмена",
       "expected": "Причина, автор, link и старые bytes сохранены; audit не удаляется; новая нумерация по policy",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Correction and cancellation with reasons, replacement link and immutable audit",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "New corrected issuance gets own number; prior records retained",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Synthetic data only.",
+      "observations": {
+        "security": {
+          "id": "A35",
+          "status": "PASS",
+          "scenario": "Correction and cancellation with reasons, replacement link and immutable audit",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "New corrected issuance gets own number; prior records retained",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Synthetic data only."
+        }
+      }
     },
     {
       "id": "A36",
       "requirement": "Все формы",
       "expected": "BIOT worker/ITR, PTM, PB, PS card/protocol/witness: short/long/KZ/photo/blank optional/single/multi specimens",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "10 forms x5 base; protocols 1/2/3/10/13/50/100; other forms 1/2/100.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "96 DOCX/PDF pairs, 1394 recipient instances, 1830 pages PASS; 84 base pages and 186 selected stress pages manually reviewed.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED.",
+      "observations": {
+        "printing": {
+          "id": "A36",
+          "status": "PASS",
+          "scenario": "10 forms x5 base; protocols 1/2/3/10/13/50/100; other forms 1/2/100.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "96 DOCX/PDF pairs, 1394 recipient instances, 1830 pages PASS; 84 base pages and 186 selected stress pages manually reviewed.",
+          "artifact": "printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json",
+          "defect": "",
+          "fix": "",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+        }
+      }
     },
     {
       "id": "A37",
       "requirement": "Семантика протокола",
       "expected": "INDIVIDUAL/EXTERNAL сохранены; неподдерживаемый GROUP отклонён до финализации; если есть активная групповая форма — один номер/документ и верные участники/связи",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "Individual/external protocol contracts, GROUP rejected; PS card/protocol separate linkage",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "GROUP denied; PS credentialNumber is matching card number or blank, never its protocol number",
+      "artifact": "security/integration-final.log; security/contracts-final.log",
+      "defect": "Missing optional protocol fields and conflated credential number",
+      "fix": "Preserve reason/education and explicit credential linkage.",
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "Visual placement owned by print acceptance.",
+      "observations": {
+        "security": {
+          "id": "A37",
+          "status": "PASS",
+          "scenario": "Individual/external protocol contracts, GROUP rejected; PS card/protocol separate linkage",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "GROUP denied; PS credentialNumber is matching card number or blank, never its protocol number",
+          "artifact": "security/integration-final.log; security/contracts-final.log",
+          "defect": "Missing optional protocol fields and conflated credential number",
+          "fix": "Preserve reason/education and explicit credential linkage.",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Visual placement owned by print acceptance."
+        }
+      }
     },
     {
       "id": "A38",
       "requirement": "Полный XLSX/ZIP",
       "expected": "Все номера, включая PS witness/registration; export не зависит от pagination; manifest counts/hashes совпадают",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "Скачать 38 файлов компании; сверить XLSX, оба номера ПС, ZIP-манифест и историю после 55 новых черновиков.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Совпали 38 внешних и 37 внутренних хешей/размеров. ZIP содержит 39 записей с manifest/status. XLSX содержит 18 документов и оба номера ПС; история экспортирует один выпуск.",
+      "artifact": "final-v2/company-export-audit.json; final-v2/company-12-18-result.json; final-v2/history-xlsx-audit.json",
+      "defect": "History XLSX export included draft records.",
+      "fix": "UI export history:true; API filter correction byAPIagent.",
+      "retest": "audit_browser_artifacts.py PASS; historybrowserPASS",
+      "limitation": "No claim thatv5layoutisfinal; exporteddata/packageaudit remains valid.",
+      "observations": {
+        "security": {
+          "id": "A38",
+          "status": "PASS",
+          "scenario": "Complete history XLSX independent of pagination and real ZIP file-by-file hashes",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "102 exported rows vs1 list page; PS fields present; ZIP expectedCount and hashes validated",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Does not replace large-package print matrix."
+        },
+        "browser": {
+          "id": "A38",
+          "status": "PASS",
+          "scenario": "Скачать 38 файлов компании; сверить XLSX, оба номера ПС, ZIP-манифест и историю после 55 новых черновиков.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Совпали 38 внешних и 37 внутренних хешей/размеров. ZIP содержит 39 записей с manifest/status. XLSX содержит 18 документов и оба номера ПС; история экспортирует один выпуск.",
+          "artifact": "final-v2/company-export-audit.json; final-v2/company-12-18-result.json; final-v2/history-xlsx-audit.json",
+          "defect": "History XLSX export included draft records.",
+          "fix": "UI export history:true; API filter correction byAPIagent.",
+          "retest": "audit_browser_artifacts.py PASS; historybrowserPASS",
+          "limitation": "No claim thatv5layoutisfinal; exporteddata/packageaudit remains valid."
+        }
+      }
     },
     {
       "id": "A39",
       "requirement": "История 55+",
       "expected": "Старейшая запись находится и скачивается; total верный; detail не загружает фото во все list rows",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "После старого выпуска создать 55 новых черновиков, найти выпуск на третьей странице, отфильтровать историю и повторно скачать оригинал.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Всего 56 заявок, старый выпуск на странице 3, история содержит 1 выпуск; SHA оригинала и повторного скачивания совпал.",
+      "artifact": "final-v2/history-after-55.json; final-v2/history-after-55.png; final-v2/history-xlsx-audit.json",
+      "defect": "API ignoredhistory=true, misleading drafts inhistory.",
+      "fix": "StrictAPIhistoryfilter+matchingXLSXfilter.",
+      "retest": "RealbrowserPASS;55seededviaauthorizedHTTP",
+      "limitation": "55recordscreatedthroughAPI for deterministic setup; metadata-photo listshape requires API evidence.",
+      "observations": {
+        "security": {
+          "id": "A39",
+          "status": "PASS",
+          "scenario": "55 newer drafts, third page/search and original re-download, history-only XLSX",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Original hash unchanged; total57 all/history1; XLSX102 all/history2",
+          "artifact": "security/integration-final.log; security/files-immutability-final.log",
+          "defect": "History query silently ignored",
+          "fix": "Parse strict history query and use same export filter.",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "Browser navigation handled separately."
+        },
+        "browser": {
+          "id": "A39",
+          "status": "PASS",
+          "scenario": "После старого выпуска создать 55 новых черновиков, найти выпуск на третьей странице, отфильтровать историю и повторно скачать оригинал.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Всего 56 заявок, старый выпуск на странице 3, история содержит 1 выпуск; SHA оригинала и повторного скачивания совпал.",
+          "artifact": "final-v2/history-after-55.json; final-v2/history-after-55.png; final-v2/history-xlsx-audit.json",
+          "defect": "API ignoredhistory=true, misleading drafts inhistory.",
+          "fix": "StrictAPIhistoryfilter+matchingXLSXfilter.",
+          "retest": "RealbrowserPASS;55seededviaauthorizedHTTP",
+          "limitation": "55recordscreatedthroughAPI for deterministic setup; metadata-photo listshape requires API evidence."
+        }
+      }
     },
     {
       "id": "A40",
       "requirement": "Производительность ввода",
       "expected": "Defaults requests растут по unique configurations, не rows×types; измерен сценарий 100 строк и опубликованы условия/тайминги",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Импорт 101 строки с явным исключением одной, сохранение и refresh в Chrome 1366×768 на отдельном Windows-стенде.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Полный сценарий занял 10246 мс; запросов defaults 0; все 100 строк доступны.",
+      "artifact": "final-v2/import-100-timing.json; final-v2/environment.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "RealbrowserPASS",
+      "limitation": "Not generation100PDF benchmark; elapsedincludesUI/network/save/reload under sharedhost load.",
+      "observations": {
+        "browser": {
+          "id": "A40",
+          "status": "PASS",
+          "scenario": "Импорт 101 строки с явным исключением одной, сохранение и refresh в Chrome 1366×768 на отдельном Windows-стенде.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Полный сценарий занял 10246 мс; запросов defaults 0; все 100 строк доступны.",
+          "artifact": "final-v2/import-100-timing.json; final-v2/environment.json",
+          "defect": "",
+          "fix": "",
+          "retest": "RealbrowserPASS",
+          "limitation": "Not generation100PDF benchmark; elapsedincludesUI/network/save/reload under sharedhost load."
+        }
+      }
     },
     {
       "id": "A41",
       "requirement": "Browser/keyboard",
       "expected": "Полный сценарий keyboard, ошибки/диалоги/focus; 1366×768 и 1920×1080, узкий viewport без скрытых обязательных действий",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "PASS",
+      "scenario": "Создание, проверка и оформление клавиатурой; Tab/Shift+Tab/Escape в диалогах, переход от ошибки к полю; три размера окна.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "Фокус видим, ошибки объяснимы; при ширине 390px обязательные действия видимы, горизонтального переполнения всей страницы нет.",
+      "artifact": "final-v2/results.json; final-v2/field-errors-and-focus.png; final-v2/editor-1366.png; final-v2/editor-1920.png; final-v2/editor-390.png; final-forms/person-retest.json; final-forms/person-result.json",
+      "defect": "Fieldsummaryjump alwaysfocusedRU name; inlineerrorsnotshown.",
+      "fix": "field-specific path/aria-invalid/aria-describedby andfocused expandedassignment.",
+      "retest": "Keyboard+validation+3viewport realbrowserPASS; screenshots manuallyviewed; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA",
+      "limitation": "Chromeonly; mobile viewport emulation, notphysicaldevice.",
+      "observations": {
+        "browser": {
+          "id": "A41",
+          "status": "PASS",
+          "scenario": "Создание, проверка и оформление клавиатурой; Tab/Shift+Tab/Escape в диалогах, переход от ошибки к полю; три размера окна.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "Фокус видим, ошибки объяснимы; при ширине 390px обязательные действия видимы, горизонтального переполнения всей страницы нет.",
+          "artifact": "final-v2/results.json; final-v2/field-errors-and-focus.png; final-v2/editor-1366.png; final-v2/editor-1920.png; final-v2/editor-390.png; final-forms/person-retest.json; final-forms/person-result.json",
+          "defect": "Fieldsummaryjump alwaysfocusedRU name; inlineerrorsnotshown.",
+          "fix": "field-specific path/aria-invalid/aria-describedby andfocused expandedassignment.",
+          "retest": "Keyboard+validation+3viewport realbrowserPASS; screenshots manuallyviewed; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA",
+          "limitation": "Chromeonly; mobile viewport emulation, notphysicaldevice."
+        }
+      }
     },
     {
       "id": "A42",
       "requirement": "Print pages",
       "expected": "Все страницы DOCX/PDF через реальный renderer: размер/поля/таблицы/фото/переносы/глифы; нет старого центра/подписей/пустых лишних страниц",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "status": "FAIL",
+      "scenario": "Real DOCX to PDF, section/page geometry, fonts>=8pt, fields/photos/order/frames and base/stress visual review.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "All 1830 pages automatically checked; 84 base and 186 selected stress manually reviewed; Word20/20,28 pages viewed.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-render-tests.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; word/final-active.json",
+      "defect": "Additional real operator profile exposed BIOT-worker-card14 lower duplicate chairman clipping and missing inset. Standard96-case proof does not cover this additional commission text.",
+      "fix": "New immutable BIOT15 candidate aligns both right textboxes and stops divider below issuer band; Word probes PASS; Linux/current-pipeline retest pending.",
+      "retest": "NOT RUN: final activated version15 complete evidence pending.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED.",
+      "observations": {
+        "printing": {
+          "id": "A42",
+          "status": "PASS",
+          "scenario": "Real DOCX to PDF, section/page geometry, fonts>=8pt, fields/photos/order/frames and base/stress visual review.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "All 1830 pages automatically checked; 84 base and 186 selected stress manually reviewed; Word20/20,28 pages viewed.",
+          "artifact": "printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; word/final-active.json; printing/biot-panel-regression-result.json; printing/biot-chair-v15/commission; browser/biot-v15-retest; word/biot-v15-browser",
+          "defect": "Word package failures, clipped ITR signature, PS title behind issuer strip and right text beyond divider, PTM frame contact. Actual issuer profile exposed BIOT lower repeated-panel chairman clipping and issuer-band divider overlap.",
+          "fix": "OOXML package normalization; ITR textbox+14pt; PS y+9pt/right inset24pt; PTM left inset6pt; dynamic issuer strips restored. BIOT worker v15 aligns lower right box to upper and starts both dividers14pt lower; no font shrink.",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+        },
+        "lateRealProfileDefect": {
+          "status": "FAIL",
+          "artifact": "browser/generated-photo-four-preview-readback/root-photo-layout-review.json;word/generated-photo-four/word-results.json",
+          "currentTemplate": "biot-worker-card14"
+        }
+      }
     },
     {
       "id": "A43",
       "requirement": "Scan документов",
       "expected": "Нет unresolved merge fields, технических placeholders, внешних отношений, скрытого старого текста в XML/shapes/headers/изображениях",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Scan all XML/rels parts of all96 final DOCX, image ownership and original fixture sanitation.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "No unresolved fields, known legacy identity text, hidden gfxdata cache or external relationships in96 documents. All ten templates retain no old signatures/seals; visual review agrees.",
+      "artifact": "printing/final-docx-content-scan.json; printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED.",
+      "observations": {
+        "printing": {
+          "id": "A43",
+          "status": "PASS",
+          "scenario": "Scan all XML/rels parts of all96 final DOCX, image ownership and original fixture sanitation.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "No unresolved fields, known legacy identity text, hidden gfxdata cache or external relationships in96 documents. All ten templates retain no old signatures/seals; visual review agrees.",
+          "artifact": "printing/final-docx-content-scan.json; printing/final-artifact-audit.json; printing/final-render-tests-biot-v15.log; printing/final-visual-reconciliation.json",
+          "defect": "",
+          "fix": "",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+        }
+      }
     },
     {
       "id": "A44",
       "requirement": "Миграции",
       "expected": "Empty DB + upgrade rehearsal проходят; никакой `db push` вместо миграций и no destructive seed",
       "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "scenario": "Fresh isolated databases migrate with existing five migrations",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Empty install PASS, no db push/reset",
+      "artifact": "security/process-drill.json; security/process-drill.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+      "limitation": "Upgrade rehearsal requires separate operations evidence.",
+      "observations": {
+        "security": {
+          "id": "A44",
+          "status": "NOT RUN",
+          "scenario": "Fresh isolated databases migrate with existing five migrations",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Empty install PASS, no db push/reset",
+          "artifact": "security/process-drill.json; security/process-drill.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Upgrade rehearsal requires separate operations evidence."
+        }
+      }
     },
     {
       "id": "A45",
       "requirement": "Legacy import",
       "expected": "Dry-run, повтор, duplicate conflicts, source counts reconciliation; отсутствующие originals не объявлены сохранёнными",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Read-only synthetic legacy export/import dry-run, replay, source identities and conflicts",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Counts and identities reconcile; missing originals are not fabricated",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "No production legacy database was connected.",
+      "observations": {
+        "security": {
+          "id": "A45",
+          "status": "PASS",
+          "scenario": "Read-only synthetic legacy export/import dry-run, replay, source identities and conflicts",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Counts and identities reconcile; missing originals are not fabricated",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "No production legacy database was connected."
+        }
+      }
     },
     {
       "id": "A46",
       "requirement": "Backup restore",
       "expected": "В пустом окружении восстановлены records/templates/photos/artifacts, counts/hashes совпали; измерены RPO/RTO",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Offline backup and restore to new isolated PostgreSQL18.6 database/volumes; counts and table row hashes, private files and shipped resources; fresh HTTP login and repeated downloads.",
+      "environment": "Pinned r2 Linux API image and PostgreSQL18.6-no-XML; demo_test_backup_release_20260922b / demo_test_restore_release_20260922b.",
+      "result": "25 table counts+content hashes,16 private files,38 resources,1photo,10templateversions matched. All4 canonical artifacts downloaded twice after restore; identical SHA256/size. Backup4980ms;restore+reconcile3489ms.",
+      "artifact": "backup-restore/timing.json;backup-restore/backup-manifest.json;backup-restore/http-readback.json;backup-restore-run.log",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "limitation": "Small quiesced synthetic fixture. Zero logical data loss observed by full hash reconciliation; measured durations are not production RPO/RTO commitments. Original immutable r2 files intentionally preserved; no claim that they use later template layouts.",
+      "observations": {
+        "operations": {
+          "id": "A46",
+          "status": "PASS",
+          "scenario": "Offline backup and restore to new isolated PostgreSQL18.6 database/volumes; counts and table row hashes, private files and shipped resources; fresh HTTP login and repeated downloads.",
+          "environment": "Pinned r2 Linux API image and PostgreSQL18.6-no-XML; demo_test_backup_release_20260922b / demo_test_restore_release_20260922b.",
+          "result": "25 table counts+content hashes,16 private files,38 resources,1photo,10templateversions matched. All4 canonical artifacts downloaded twice after restore; identical SHA256/size. Backup4980ms;restore+reconcile3489ms.",
+          "artifact": "backup-restore/timing.json;backup-restore/backup-manifest.json;backup-restore/http-readback.json;backup-restore-run.log",
+          "limitation": "Small quiesced synthetic fixture. Zero logical data loss observed by full hash reconciliation; measured durations are not production RPO/RTO commitments. Original immutable r2 files intentionally preserved; no claim that they use later template layouts."
+        }
+      }
     },
     {
       "id": "A47",
       "requirement": "Security/deps/runtime",
       "expected": "Нет неразобранных applicable critical/high; версии зафиксированы; non-root/private storage/log redaction/request budgets",
       "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "scenario": "Authenticated storage/downloads, parser budgets and safe error responses",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "API security subchecks PASS",
+      "artifact": "security/security-http-final.log; security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+      "limitation": "Dependency/container CVEs, non-root and runtime resource enforcement belong to operations.",
+      "observations": {
+        "security": {
+          "id": "A47",
+          "status": "NOT RUN",
+          "scenario": "Authenticated storage/downloads, parser budgets and safe error responses",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "API security subchecks PASS",
+          "artifact": "security/security-http-final.log; security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Dependency/container CVEs, non-root and runtime resource enforcement belong to operations."
+        }
+      }
     },
     {
       "id": "A48",
       "requirement": "Production boundary",
       "expected": "Старые публичные origins и workers закрыты/остановлены при cutover; без доступа к ним статус BLOCKED, не PASS",
-      "status": "NOT RUN",
-      "scenario": "",
+      "status": "BLOCKED",
+      "scenario": "Production inventory, close old public origins and stop out-of-scope workers during cutover.",
       "environment": "",
-      "result": "",
-      "artifact": "",
+      "result": "No production inventory or environment-specific cutover authorization supplied. Local isolated engines and user preview remain separate from production.",
+      "artifact": "../../CUTOVER_ROLLBACK_RU.md",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "limitation": "No production cutover performed.",
+      "observations": {
+        "operations": {
+          "id": "A48",
+          "status": "BLOCKED",
+          "scenario": "Production inventory, close old public origins and stop out-of-scope workers during cutover.",
+          "result": "No production inventory or environment-specific cutover authorization supplied. Local isolated engines and user preview remain separate from production.",
+          "artifact": "../../CUTOVER_ROLLBACK_RU.md",
+          "limitation": "No production cutover performed."
+        }
+      }
     },
     {
       "id": "A49",
       "requirement": "Branding и freeze",
       "expected": "В интерфейсе/доках бренд DEMO; issuer отдельно; AGENTS и boundary tests запрещают случайное возвращение DSJ",
-      "status": "NOT RUN",
-      "scenario": "",
+      "status": "PASS",
+      "scenario": "Current autonomy and freeze verifier plus issuer/header and synthetic watermark print review.",
       "environment": "",
-      "result": "",
-      "artifact": "",
+      "result": "397 preserved legacy files:381 unchanged,16 authorized adapters,8 authorized new boundary files,0 frozen business changes,0 missing preserved files. Product brandDEMO separate from issuer strip; synthetic watermarks retained.",
+      "artifact": "freeze-release3.log;autonomy-final.log;printing/PRINTING_REPORT_RU.md;printing/final-visual-reconciliation.json;gitignore-audit.json",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "limitation": "Index-only removal of665 generated DEMO artifacts/caches preserves all320664555 bytes on disk;41 ignore rule checks PASS; no frozen source removed.",
+      "observations": {
+        "operations": {
+          "id": "A49",
+          "status": "PASS",
+          "scenario": "Current autonomy and freeze verifier plus issuer/header and synthetic watermark print review.",
+          "result": "397 preserved legacy files:381 unchanged,16 authorized adapters,8 authorized new boundary files,0 frozen business changes,0 missing preserved files. Product brandDEMO separate from issuer strip; synthetic watermarks retained.",
+          "artifact": "freeze-release3.log;autonomy-final.log;printing/PRINTING_REPORT_RU.md;printing/final-visual-reconciliation.json;gitignore-audit.json",
+          "limitation": "Index-only removal of665 generated DEMO artifacts/caches preserves all320664555 bytes on disk;41 ignore rule checks PASS; no frozen source removed."
+        }
+      }
     },
     {
       "id": "A50",
       "requirement": "Release gate",
       "expected": "lint/typecheck/unit/integration/render/e2e/build зелёные; required print tests не skipped; отчёт содержит commit, команды, counts и evidence",
       "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "scenario": "Current API/worker typecheck, scoped lint/format, contracts and complete integration suite",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "41/41 integration;7/7 contracts; no skips",
+      "artifact": "security/integration-final.log; security/contracts-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": "Независимая перепроверка ещё не завершена"
+      "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+      "limitation": "Full release gate requires root build, browser, final print and operations evidence.",
+      "observations": {
+        "security": {
+          "id": "A50",
+          "status": "NOT RUN",
+          "scenario": "Current API/worker typecheck, scoped lint/format, contracts and complete integration suite",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "41/41 integration;7/7 contracts; no skips",
+          "artifact": "security/integration-final.log; security/contracts-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Full release gate requires root build, browser, final print and operations evidence."
+        }
+      }
     },
     {
       "id": "C01",
       "requirement": "Номера колонок DOCX ячейки/PDF координаты на каждой странице",
       "expected": "Номера колонок DOCX ячейки/PDF координаты на каждой странице",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": ""
+      "status": "PASS",
+      "scenario": "BIOT historical six-column table exact cells, all final PDF physical pages, and artificial table continuation. Other nine forms do not receive invented number rows.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Every relevant DOCX numbering row contains literal1..6, per-cell PDF coordinates confirm restart1..6. Row number1 in individual protocols; registration/protocol numbers remain independent.",
+      "artifact": "printing/template-structure-field-map.json; printing/numbering-mutation-result.json; printing/physical-continuation-result.json; printing/biot-protocol-stress-100.result.json",
+      "defect": "No dedicated per-cell/per-page regression existed.",
+      "fix": "Literal values, numId0, tblHeader, cantSplit; structural and PDF coordinate assertions.",
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "PASS proves engineering behavior of historical N6. Current law has N7; normative suitability is BLOCKED, not claimed.",
+      "observations": {
+        "printing": {
+          "id": "C01",
+          "status": "PASS",
+          "scenario": "BIOT historical six-column table exact cells, all final PDF physical pages, and artificial table continuation. Other nine forms do not receive invented number rows.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "Every relevant DOCX numbering row contains literal1..6, per-cell PDF coordinates confirm restart1..6. Row number1 in individual protocols; registration/protocol numbers remain independent.",
+          "artifact": "printing/template-structure-field-map.json; printing/numbering-mutation-result.json; printing/physical-continuation-result.json; printing/biot-protocol-stress-100.result.json",
+          "defect": "No dedicated per-cell/per-page regression existed.",
+          "fix": "Literal values, numId0, tblHeader, cantSplit; structural and PDF coordinate assertions.",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "PASS proves engineering behavior of historical N6. Current law has N7; normative suitability is BLOCKED, not claimed."
+        }
+      }
     },
     {
       "id": "C02",
       "requirement": "Управляемая мутация нумерации: тест обязан упасть",
       "expected": "Управляемая мутация нумерации: тест обязан упасть",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Controlled mutation of second form numbering cells from1..6 to7..12; real converter.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Both DOCX cell test and PDF coordinate test reject mutant; good version passes.",
+      "artifact": "printing/numbering-good.docx; printing/numbering-good.pdf; printing/numbering-mutation-7-12.docx; printing/numbering-mutation-7-12.pdf; printing/numbering-mutation-result.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": ""
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "Historical spontaneous bug not reproduced; this is explicitly controlled mutation sensitivity evidence.",
+      "observations": {
+        "printing": {
+          "id": "C02",
+          "status": "PASS",
+          "scenario": "Controlled mutation of second form numbering cells from1..6 to7..12; real converter.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "Both DOCX cell test and PDF coordinate test reject mutant; good version passes.",
+          "artifact": "printing/numbering-good.docx; printing/numbering-good.pdf; printing/numbering-mutation-7-12.docx; printing/numbering-mutation-7-12.pdf; printing/numbering-mutation-result.json",
+          "defect": "",
+          "fix": "",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Historical spontaneous bug not reproduced; this is explicitly controlled mutation sensitivity evidence."
+        }
+      }
     },
     {
       "id": "C03",
       "requirement": "PTM подпись и повторы основания: до/после",
       "expected": "PTM подпись и повторы основания: до/после",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": ""
+      "status": "PASS",
+      "scenario": "New rendering of preserved PTM v4, comparison to fixed semantic template and final v9 regression.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Before: document number in signature cell and3 basis occurrences. After: blank signature and1 basis. Final test16 confirms active v9 unchanged semantics.",
+      "artifact": "printing/ptm-before-after-proof.json; printing/ptm-before-v4.docx; printing/ptm-before-v4.pdf; printing/ptm-protocol-short.docx; printing/ptm-protocol-short.pdf; printing/final-render-tests-biot-v15.log",
+      "defect": "Confirmed NUMBER in signature and duplicated APPROVAL_BASIS.",
+      "fix": "Empty signature cell and one basis; old original bytes preserved.",
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED.",
+      "observations": {
+        "printing": {
+          "id": "C03",
+          "status": "PASS",
+          "scenario": "New rendering of preserved PTM v4, comparison to fixed semantic template and final v9 regression.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "Before: document number in signature cell and3 basis occurrences. After: blank signature and1 basis. Final test16 confirms active v9 unchanged semantics.",
+          "artifact": "printing/ptm-before-after-proof.json; printing/ptm-before-v4.docx; printing/ptm-before-v4.pdf; printing/ptm-protocol-short.docx; printing/ptm-protocol-short.pdf; printing/final-render-tests-biot-v15.log",
+          "defect": "Confirmed NUMBER in signature and duplicated APPROVAL_BASIS.",
+          "fix": "Empty signature cell and one basis; old original bytes preserved.",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+        }
+      }
     },
     {
       "id": "C04",
       "requirement": "Карта всех полей 10 форм, языки и семантика номеров",
       "expected": "Карта всех полей 10 форм, языки и семантика номеров",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "All10 templates field-to-XML XPath/cell map and base PDF field coordinates; independent language, number and date values.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Corrected BIOT KZ position and blank notes, PTM signature/basis, PS credentialNumber once, witness protocol decision date/day/month, PB education and dates. Individual protocol recipient index1 remains separate from issuance numbers.",
+      "artifact": "printing/FIELD_MAP_RU.md; printing/template-structure-field-map.json; printing/*field-coordinates.json; printing/final-render-tests-biot-v15.log",
       "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": ""
+      "fix": "New immutable template versions; field mapping regressions; source originals retained.",
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED.",
+      "observations": {
+        "security": {
+          "id": "C04",
+          "status": "NOT RUN",
+          "scenario": "Protocol reason/education and PS credential/protocol semantic linkage",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Contract and immutable snapshot regression PASS",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "All 10 forms' cell/PDF mapping owned by print agent."
+        },
+        "printing": {
+          "id": "C04",
+          "status": "PASS",
+          "scenario": "All10 templates field-to-XML XPath/cell map and base PDF field coordinates; independent language, number and date values.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "Corrected BIOT KZ position and blank notes, PTM signature/basis, PS credentialNumber once, witness protocol decision date/day/month, PB education and dates. Individual protocol recipient index1 remains separate from issuance numbers.",
+          "artifact": "printing/FIELD_MAP_RU.md; printing/template-structure-field-map.json; printing/*field-coordinates.json; printing/final-render-tests-biot-v15.log",
+          "defect": "",
+          "fix": "New immutable template versions; field mapping regressions; source originals retained.",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+        }
+      }
     },
     {
       "id": "C05",
       "requirement": "Большие реальные PDF пакеты 1/2/3/10/13/50/100",
       "expected": "Большие реальные PDF пакеты 1/2/3/10/13/50/100",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": ""
+      "status": "PASS",
+      "scenario": "4 protocols x1/2/3/10/13/50/100,6 other forms x1/2/100; all actual PDF pages.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "46 stress documents,1334 recipients,1746 pages PASS. Final PS100=200pages,109.004s DOCX+converter (one measurement, concurrency2).",
+      "artifact": "printing/stress-summary.json; printing/stress-results.json; printing/final-v14-linux-run.log; printing/final-v15-ps-stress.log; printing/final-artifact-audit.json",
+      "defect": "PS100 initially exceeded90s converter timeout.",
+      "fix": "Bounded converter180s/API PDF210s; original failure log retained and actual retest passed.",
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "Renderer aggregate capacity measurement, not SLA or p95 of production queue; API normally issues per-recipient documents.",
+      "observations": {
+        "printing": {
+          "id": "C05",
+          "status": "PASS",
+          "scenario": "4 protocols x1/2/3/10/13/50/100,6 other forms x1/2/100; all actual PDF pages.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "46 stress documents,1334 recipients,1746 pages PASS. Final PS100=200pages,109.004s DOCX+converter (one measurement, concurrency2).",
+          "artifact": "printing/stress-summary.json; printing/stress-results.json; printing/final-v14-linux-run.log; printing/final-v15-ps-stress.log; printing/final-artifact-audit.json",
+          "defect": "PS100 initially exceeded90s converter timeout.",
+          "fix": "Bounded converter180s/API PDF210s; original failure log retained and actual retest passed.",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Renderer aggregate capacity measurement, not SLA or p95 of production queue; API normally issues per-recipient documents."
+        }
+      }
     },
     {
       "id": "C06",
       "requirement": "Фото/различающиеся получатели/101 отказ без выпуска",
       "expected": "Фото/различающиеся получатели/101 отказ без выпуска",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Distinct names, document/protocol numbers and photo bytes for every recipient;101 rows rejected on all10 forms.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Photo/recipient ownership and order checked on all1394 instances;101 gives ROW_LIMIT before creation with no partial file on all10 forms.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-source-docx-revalidation.json; printing/final-visual-reconciliation.json",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": ""
+      "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+      "limitation": "Print-side rejection proof; API numbering/transaction evidence is independently recorded by security agent.",
+      "observations": {
+        "security": {
+          "id": "C06",
+          "status": "NOT RUN",
+          "scenario": "100/101 API bounds, private photo references and dangerous/EXIF uploads",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "API/import/security subchecks PASS",
+          "artifact": "security/integration-final.log; security/security-http-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Distinct photo fixtures and every final printed recipient belong to print matrix."
+        },
+        "printing": {
+          "id": "C06",
+          "status": "PASS",
+          "scenario": "Distinct names, document/protocol numbers and photo bytes for every recipient;101 rows rejected on all10 forms.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "Photo/recipient ownership and order checked on all1394 instances;101 gives ROW_LIMIT before creation with no partial file on all10 forms.",
+          "artifact": "printing/final-artifact-audit.json; printing/final-source-docx-revalidation.json; printing/final-visual-reconciliation.json",
+          "defect": "",
+          "fix": "",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Print-side rejection proof; API numbering/transaction evidence is independently recorded by security agent."
+        }
+      }
     },
     {
       "id": "C07",
       "requirement": "Размеры, читаемый минимум, визуальный просмотр",
       "expected": "Размеры, читаемый минимум, визуальный просмотр",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": ""
+      "status": "FAIL",
+      "scenario": "Paper size/orientation and minimum8pt on all1830 pages, full84 base review and186 stress sample; Word28 pages.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "A4 portrait except ITR andPSprotocol landscape; title/frames/photos/signatures fit. Final manual reviews reconciled by SHA.",
+      "artifact": "printing/final-visual-reconciliation.json; printing/all-results.json; word/final-active.json; PHYSICAL_PRINT_RU.md",
+      "defect": "Additional real operator profile exposed BIOT-worker-card14 lower duplicate chairman clipping and missing inset. Standard96-case proof does not cover this additional commission text.",
+      "fix": "New immutable BIOT15 candidate aligns both right textboxes and stops divider below issuer band; Word probes PASS; Linux/current-pipeline retest pending.",
+      "retest": "NOT RUN: final activated version15 complete evidence pending.",
+      "limitation": "Digital layout PASS only. 7pt synthetic notice excluded from body threshold. Physical100% ruler/duplex measurement BLOCKED.",
+      "observations": {
+        "printing": {
+          "id": "C07",
+          "status": "PASS",
+          "scenario": "Paper size/orientation and minimum8pt on all1830 pages, full84 base review and186 stress sample; Word28 pages.",
+          "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+          "result": "A4 portrait except ITR andPSprotocol landscape; title/frames/photos/signatures fit. Final manual reviews reconciled by SHA.",
+          "artifact": "printing/final-visual-reconciliation.json; printing/all-results.json; word/final-active.json; PHYSICAL_PRINT_RU.md; printing/biot-panel-regression-result.json; printing/biot-chair-v15/commission; browser/biot-v15-retest; word/biot-v15-browser",
+          "defect": "Unreadable3–6pt labels, ITR clipping, PS overlap, PTM inset. Actual issuer profile exposed BIOT lower repeated-panel chairman clipping and issuer-band divider overlap.",
+          "fix": "Preserved frame geometry while expanding/offsetting internal blocks and restoring issuer strip. BIOT worker v15 aligns lower right box to upper and starts both dividers14pt lower; no font shrink.",
+          "retest": "Fresh final artifacts and current-source hashes; 23 render tests PASS; original failed evidence retained. BIOT8 freshly converted,8 fresh DOCX revalidation and88 exact-hash reuse with unchanged runtime modules; active Word20/20.",
+          "limitation": "Digital layout PASS only. 7pt synthetic notice excluded from body threshold. Physical100% ruler/duplex measurement BLOCKED."
+        },
+        "lateRealProfileDefect": {
+          "status": "FAIL",
+          "artifact": "browser/generated-photo-four-preview-readback/root-photo-layout-review.json;word/generated-photo-four/word-results.json",
+          "currentTemplate": "biot-worker-card14"
+        }
+      }
     },
     {
       "id": "C08",
       "requirement": "Microsoft Word совместимость",
       "expected": "Microsoft Word совместимость",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": ""
+      "status": "PASS",
+      "scenario": "Real Microsoft Word read-only open and PDF export for 10 active forms × short/long; all28 pages visually reviewed; exact-byte comparison to final Linux canonical set.",
+      "environment": "Windows; Microsoft Word16.0 build16.0.17932; bundled LiberationSerif/Sans2.1.5 registered session-only with AddFontResourceExW flags0 and all8 removed after Word exit.",
+      "result": "20/20 PASS;28pages; no missing source words, empty pages, page-size/count drift or text outside sheet. Body text min8.04pt. Final DOCX/template/WordPDF/LOPDF SHA recorded for every case. Two negative audit controls correctly fail wrong text/page count.",
+      "artifact": "word/final-active.json; word/WORD_COMPATIBILITY_RU.md; word/final-v11; word/final-v14-affected; word/final-current-ps; word/negative-controls/results.json; printing/word-final-biot-v15/manifest.json; word/final-biot-v15; word/biot-v15-browser",
+      "defect": "Word rejected transformed OOXML with undefined MC prefixes, empty typed properties and empty pictures. Without bundled fonts Word substituted TimesNewRoman and Ә/Ə text differed. Visual QA found clipped ITR signature and PS stamp over frame; separate LO comparison found PS title/right paragraph offsets. Actual v14 BIOT lower duplicate panel clipped long chairman text in both Word and LibreOffice.",
+      "fix": "OOXML hygiene and removal of empty picture containers by print agent; supported-font requirement documented; ITR signature box enlarged, PS first panel repositioned and right paragraphs inset; static Kazakh typos corrected in active cards. BIOT15 lower right box aligned to correctly wrapping upper box; issuer separators start below strip.",
+      "retest": "Current exact hashes: BIOTworker15, PB/PTM14, ITR13, PS15, witness11, protocols9. All20 canonical structural+visual PASS. Actual long-commission browser-issued BIOT15 Word/LibreOffice2pages each PASS;3 generated-photo forms Word/LibreOffice PASS. Original failures retained.",
+      "limitation": "Requires specified bundled fonts for supported Word environment. No-font mismatch is retained, not relabeled PASS. Physical printer/duplex and legal form approval remain separate gates.",
+      "observations": {
+        "word": {
+          "id": "C08",
+          "status": "PASS",
+          "scenario": "Real Microsoft Word read-only open and PDF export for 10 active forms × short/long; all28 pages visually reviewed; exact-byte comparison to final Linux canonical set.",
+          "environment": "Windows; Microsoft Word16.0 build16.0.17932; bundled LiberationSerif/Sans2.1.5 registered session-only with AddFontResourceExW flags0 and all8 removed after Word exit.",
+          "result": "20/20 PASS;28pages; no missing source words, empty pages, page-size/count drift or text outside sheet. Body text min8.04pt. Final DOCX/template/WordPDF/LOPDF SHA recorded for every case. Two negative audit controls correctly fail wrong text/page count.",
+          "artifact": "word/final-active.json; word/WORD_COMPATIBILITY_RU.md; word/final-v11; word/final-v14-affected; word/final-current-ps; word/negative-controls/results.json; printing/word-final-biot-v15/manifest.json; word/final-biot-v15; word/biot-v15-browser",
+          "defect": "Word rejected transformed OOXML with undefined MC prefixes, empty typed properties and empty pictures. Without bundled fonts Word substituted TimesNewRoman and Ә/Ə text differed. Visual QA found clipped ITR signature and PS stamp over frame; separate LO comparison found PS title/right paragraph offsets. Actual v14 BIOT lower duplicate panel clipped long chairman text in both Word and LibreOffice.",
+          "fix": "OOXML hygiene and removal of empty picture containers by print agent; supported-font requirement documented; ITR signature box enlarged, PS first panel repositioned and right paragraphs inset; static Kazakh typos corrected in active cards. BIOT15 lower right box aligned to correctly wrapping upper box; issuer separators start below strip.",
+          "retest": "Current exact hashes: BIOTworker15, PB/PTM14, ITR13, PS15, witness11, protocols9. All20 canonical structural+visual PASS. Actual long-commission browser-issued BIOT15 Word/LibreOffice2pages each PASS;3 generated-photo forms Word/LibreOffice PASS. Original failures retained.",
+          "limitation": "Requires specified bundled fonts for supported Word environment. No-font mismatch is retained, not relabeled PASS. Physical printer/duplex and legal form approval remain separate gates."
+        }
+      }
     },
     {
       "id": "C09",
       "requirement": "Физическая печать 100%/duplex и измерение",
       "expected": "Физическая печать 100%/duplex и измерение",
-      "status": "NOT RUN",
-      "scenario": "",
+      "status": "BLOCKED",
+      "scenario": "Physical100%print, ruler measurements and duplex alignment.",
       "environment": "",
-      "result": "",
-      "artifact": "",
+      "result": "Four-page calibration and control kit prepared and visually checked. No physical printer available beyond Microsoft Print to PDF; no paper print or ruler result claimed.",
+      "artifact": "../../PHYSICAL_PRINT_RU.md",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": ""
+      "limitation": "Requires an actual printer, stock and operator measurement.",
+      "observations": {
+        "operations": {
+          "id": "C09",
+          "status": "BLOCKED",
+          "scenario": "Physical100%print, ruler measurements and duplex alignment.",
+          "result": "Four-page calibration and control kit prepared and visually checked. No physical printer available beyond Microsoft Print to PDF; no paper print or ruler result claimed.",
+          "artifact": "../../PHYSICAL_PRINT_RU.md",
+          "limitation": "Requires an actual printer, stock and operator measurement."
+        }
+      }
     },
     {
       "id": "C10",
       "requirement": "Полный новый операторский браузерный цикл",
       "expected": "Полный новый операторский браузерный цикл",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
-      "defect": "",
-      "fix": "",
-      "retest": "",
-      "limitation": ""
+      "status": "PASS",
+      "scenario": "Свежий браузерный цикл из 14 сценариев: настройки, человек, компания, импорт, история, сбои, повторный вход, два оператора, клавиатура и восстановление файла.",
+      "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+      "result": "14 PASS, 0 FAIL, 0 SKIP, 0 flaky за 567571 мс; 38 файлов компании проверены. Дополнительно 7 unit tests, TypeScript и ESLint PASS.",
+      "artifact": "final-v2/results.json; final-v2-suite.log; OPERATOR_ACCEPTANCE_RU.md; ui-unit-final.log; ui-typecheck-final.log; ui-lint-final.log; final-forms/person-retest.json; final-forms/person-result.json; final-settings/results.json; final-settings/settings-issuer-commission.png",
+      "defect": "Sessionrecoverability/logoutflush/fieldfocus/importerrors/missingfields/historyexport defects fixed.",
+      "fix": "UI and API/parser fixes described inreport.",
+      "retest": "Entire14testmatrixretested; finalformsfocusedretest tofollow.; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA; комиссия, основание и реквизиты сохранены через UI и прочитаны после refresh: PASS",
+      "limitation": "14/14 полный набор плюс отдельные PASS person v7 и expanded settings. Первый expanded settings attempt использовал неверный exact label textarea; selector исправлен, отдельный повтор PASS. Исходный синтетический tenant/admin создан штатным setup CLI; обычная работа оператора SQL/CLI не требует.",
+      "observations": {
+        "browser": {
+          "id": "C10",
+          "status": "PASS",
+          "scenario": "Свежий браузерный цикл из 14 сценариев: настройки, человек, компания, импорт, история, сбои, повторный вход, два оператора, клавиатура и восстановление файла.",
+          "environment": "Windows; Chrome 152.0.7977.83 через Playwright; Node 24.16.0; Next:3200 / Nest:4200; PostgreSQL:55432, demo_test_browser_commercial_20260922; только синтетические данные; отдельные .next-commercial и storage. Полный набор final-v2 с 2026-09-22T12:26:02.553Z.",
+          "result": "14 PASS, 0 FAIL, 0 SKIP, 0 flaky за 567571 мс; 38 файлов компании проверены. Дополнительно 7 unit tests, TypeScript и ESLint PASS.",
+          "artifact": "final-v2/results.json; final-v2-suite.log; OPERATOR_ACCEPTANCE_RU.md; ui-unit-final.log; ui-typecheck-final.log; ui-lint-final.log; final-forms/person-retest.json; final-forms/person-result.json; final-settings/results.json; final-settings/settings-issuer-commission.png",
+          "defect": "Sessionrecoverability/logoutflush/fieldfocus/importerrors/missingfields/historyexport defects fixed.",
+          "fix": "UI and API/parser fixes described inreport.",
+          "retest": "Entire14testmatrixretested; finalformsfocusedretest tofollow.; актуальная biot-worker-card v7: PASS,104950ms,6 сохранённых файлов с SHA; комиссия, основание и реквизиты сохранены через UI и прочитаны после refresh: PASS",
+          "limitation": "14/14 полный набор плюс отдельные PASS person v7 и expanded settings. Первый expanded settings attempt использовал неверный exact label textarea; selector исправлен, отдельный повтор PASS. Исходный синтетический tenant/admin создан штатным setup CLI; обычная работа оператора SQL/CLI не требует."
+        }
+      }
     },
     {
       "id": "C11",
       "requirement": "Реальные сессии 2 организаций × все роли",
       "expected": "Реальные сессии 2 организаций × все роли",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Two actual organizations, real ADMIN/OPERATOR/VIEWER users created and logged in",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Six genuine sessions;114 cross-tenant object probes; own resources readable",
+      "artifact": "security/security-http-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": ""
+      "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+      "limitation": "No text role labels in invalid tokens counted.",
+      "observations": {
+        "security": {
+          "id": "C11",
+          "status": "PASS",
+          "scenario": "Two actual organizations, real ADMIN/OPERATOR/VIEWER users created and logged in",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Six genuine sessions;114 cross-tenant object probes; own resources readable",
+          "artifact": "security/security-http-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Executed on current source; final integration 41/41 and specific evidence listed",
+          "limitation": "No text role labels in invalid tokens counted."
+        }
+      }
     },
     {
       "id": "C12",
       "requirement": "Реальный отказ worker/converter/DB/disk/volume",
       "expected": "Реальный отказ worker/converter/DB/disk/volume",
-      "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "status": "PASS",
+      "scenario": "Actual worker SIGKILL, converter interruption, two recovery workers; actual DB stop/recovery and API/worker restarts; real ENOSPC and EACCES.",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Recovered without repeated issuance/renumbering; readiness503 on unavailable storage, eventual4/4documents per storage fault;16download SHA. DB interruption:10jobs auto-recovered,14artifacts unchanged after all-service restart.",
+      "artifact": "security/process-drill.json;security/process-drill.log;storage-faults/result.json;storage-fault-run.log;resilience/result.json;resilience/RESILIENCE_RU.md;security/integration-linux-final-r5.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": ""
+      "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+      "limitation": "Fault runs deliberately retain original immutable artifacts and recorded runtime versions. Later template/readiness-only changes do not retroactively rerender originals; applicable source differences are reconciled.",
+      "observations": {
+        "security": {
+          "id": "C12",
+          "status": "NOT RUN",
+          "scenario": "Actual worker crash and converter interruption with two recovery workers",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Worker/converter PASS with before-publication observation and recovery",
+          "artifact": "security/process-drill.json; security/process-drill.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "DB/API restart, full disk, unavailable volume must be merged from operations."
+        },
+        "operations": {
+          "status": "PASS",
+          "limitation": "Fault runs deliberately retain original immutable artifacts and recorded runtime versions. Later template/readiness-only changes do not retroactively rerender originals; applicable source differences are reconciled.",
+          "result": "Recovered without repeated issuance/renumbering; readiness503 on unavailable storage, eventual4/4documents per storage fault;16download SHA. DB interruption:10jobs auto-recovered,14artifacts unchanged after all-service restart.",
+          "scenario": "Actual worker SIGKILL, converter interruption, two recovery workers; actual DB stop/recovery and API/worker restarts; real ENOSPC and EACCES.",
+          "id": "C12",
+          "artifact": "security/process-drill.json;security/process-drill.log;storage-faults/result.json;storage-fault-run.log;resilience/result.json;resilience/RESILIENCE_RU.md;security/integration-linux-final-r5.log"
+        }
+      }
     },
     {
       "id": "C13",
       "requirement": "Backup/restore полный hash плюс скачивание",
       "expected": "Backup/restore полный hash плюс скачивание",
-      "status": "NOT RUN",
-      "scenario": "",
+      "status": "PASS",
+      "scenario": "Complete DB/storage/resources restore with HTTP readback of original immutable artifacts and photo.",
       "environment": "",
-      "result": "",
-      "artifact": "",
+      "result": "Counts alone were not used; hashes of all database rows and files reconciled, authenticated repeated downloads and photo matched source.",
+      "artifact": "backup-restore/backup-manifest.json;backup-restore/http-readback.json;backup-restore/timing.json",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": ""
+      "limitation": "Exact synthetic source/target DBs, volumes and image recorded in evidence. Production backup medium not supplied.",
+      "observations": {
+        "operations": {
+          "id": "C13",
+          "status": "PASS",
+          "scenario": "Complete DB/storage/resources restore with HTTP readback of original immutable artifacts and photo.",
+          "result": "Counts alone were not used; hashes of all database rows and files reconciled, authenticated repeated downloads and photo matched source.",
+          "artifact": "backup-restore/backup-manifest.json;backup-restore/http-readback.json;backup-restore/timing.json",
+          "limitation": "Exact synthetic source/target DBs, volumes and image recorded in evidence. Production backup medium not supplied."
+        }
+      }
     },
     {
       "id": "C14",
       "requirement": "Чистая внешняя копия frozen install/build/run",
       "expected": "Чистая внешняя копия frozen install/build/run",
-      "status": "NOT RUN",
-      "scenario": "",
+      "status": "PASS",
+      "scenario": "Frozen install/build/run from external product-only copy.",
       "environment": "",
-      "result": "",
-      "artifact": "",
+      "result": "Actual API+web Docker builds and6-service non-root read-only deployment; no parent DSJ source/runtime imports. Final17unit and42integration pass.",
+      "artifact": "standalone-stage-release5.json;final-build-checks.json;container-final-r5-tls-update.log",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": ""
+      "limitation": "Current runtime bound to r5 source manifest; later report/helper-only changes must be explicitly reconciled.",
+      "observations": {
+        "operations": {
+          "status": "PASS",
+          "limitation": "Current runtime bound to r5 source manifest; later report/helper-only changes must be explicitly reconciled.",
+          "result": "Actual API+web Docker builds and6-service non-root read-only deployment; no parent DSJ source/runtime imports. Final17unit and42integration pass.",
+          "scenario": "Frozen install/build/run from external product-only copy.",
+          "id": "C14",
+          "artifact": "standalone-stage-release5.json;final-build-checks.json;container-final-r5-tls-update.log"
+        }
+      }
     },
     {
       "id": "C15",
       "requirement": "Целевой Linux/container build/run/restart/TLS",
       "expected": "Целевой Linux/container build/run/restart/TLS",
-      "status": "NOT RUN",
-      "scenario": "",
+      "status": "PASS",
+      "scenario": "Pinned Linux images; actual build/run, non-root read-only/cap-drop/private volumes, service restart, reverse-proxy TLS.",
       "environment": "",
-      "result": "",
-      "artifact": "",
+      "result": "r5 runningAPIworker399a6212.../web3eb90b05...; public listeners limited127.0.0.1:8080/8443; DB/API/storage not published. TLS1.2/1.3 verified with local CA; browser PS15 photo issuance and independent untrusted-CA rejection; real restart14SHA unchanged.",
+      "artifact": "container-final-r5-tls-update.log;browser/generated-photo-ps-https/PHOTO_HTTPS_ACCEPTANCE_RU.md;resilience/result.json;final-build-checks.json",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": ""
+      "limitation": "Local WSL2 Linux target, temporary local CA, container restart tested; physical host reboot and public production certificate/domain not supplied. No production availability promise.",
+      "observations": {
+        "operations": {
+          "status": "PASS",
+          "limitation": "Local WSL2 Linux target, temporary local CA, container restart tested; physical host reboot and public production certificate/domain not supplied. No production availability promise.",
+          "result": "r5 runningAPIworker399a6212.../web3eb90b05...; public listeners limited127.0.0.1:8080/8443; DB/API/storage not published. TLS1.2/1.3 verified with local CA; browser PS15 photo issuance and independent untrusted-CA rejection; real restart14SHA unchanged.",
+          "scenario": "Pinned Linux images; actual build/run, non-root read-only/cap-drop/private volumes, service restart, reverse-proxy TLS.",
+          "id": "C15",
+          "artifact": "container-final-r5-tls-update.log;browser/generated-photo-ps-https/PHOTO_HTTPS_ACCEPTANCE_RU.md;resilience/result.json;final-build-checks.json"
+        }
+      }
     },
     {
       "id": "C16",
@@ -931,15 +2005,25 @@
       "id": "C17",
       "requirement": "Нормативные источники и отдельное утверждение эмитентом",
       "expected": "Нормативные источники и отдельное утверждение эмитентом",
-      "status": "NOT RUN",
-      "scenario": "",
+      "status": "FAIL",
+      "scenario": "Current primary regulations and separate issuer approval.",
       "environment": "",
-      "result": "",
-      "artifact": "",
+      "result": "Confirmed historical six-column BIOT protocol differs from current seven-column Appendix3. Applicable categories, issuer authorization and final form approval not supplied; legal approval remains BLOCKED separately.",
+      "artifact": "../../FORM_LEGAL_REVIEW_RU.md;legal/sources.json",
       "defect": "",
       "fix": "",
       "retest": "",
-      "limitation": ""
+      "limitation": "Engineering geometry/numbering PASS does not close legal mismatch. No fictitious issuer approval or ECS signature introduced.",
+      "observations": {
+        "operations": {
+          "id": "C17",
+          "status": "FAIL",
+          "scenario": "Current primary regulations and separate issuer approval.",
+          "result": "Confirmed historical six-column BIOT protocol differs from current seven-column Appendix3. Applicable categories, issuer authorization and final form approval not supplied; legal approval remains BLOCKED separately.",
+          "artifact": "../../FORM_LEGAL_REVIEW_RU.md;legal/sources.json",
+          "limitation": "Engineering geometry/numbering PASS does not close legal mismatch. No fictitious issuer approval or ECS signature introduced."
+        }
+      }
     },
     {
       "id": "C18",
@@ -960,28 +2044,59 @@
       "requirement": "Выпуск 1/10/50/100 и несколько операторов, ресурсы",
       "expected": "Выпуск 1/10/50/100 и несколько операторов, ресурсы",
       "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "scenario": "Independent benchmark script review and correction",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Script now creates two distinct OPERATOR accounts, records per-format ready observations/retries/failures and separates client host from server telemetry",
+      "artifact": "scripts/verification/benchmark-http.mjs",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": ""
+      "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+      "limitation": "No actual throughput result asserted by static review; root executes Linux benchmark.",
+      "observations": {
+        "security": {
+          "id": "C19",
+          "status": "NOT RUN",
+          "scenario": "Independent benchmark script review and correction",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Script now creates two distinct OPERATOR accounts, records per-format ready observations/retries/failures and separates client host from server telemetry",
+          "artifact": "scripts/verification/benchmark-http.mjs",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "No actual throughput result asserted by static review; root executes Linux benchmark."
+        }
+      }
     },
     {
       "id": "C20",
       "requirement": "Единый финальный gate и хешированный источник",
       "expected": "Единый финальный gate и хешированный источник",
       "status": "NOT RUN",
-      "scenario": "",
-      "environment": "",
-      "result": "",
-      "artifact": "",
+      "scenario": "Current source, final integration and scoped static checks; user commit preserved",
+      "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+      "result": "Latest actual evidence supplied, no production readiness claim",
+      "artifact": "security/integration-final.log",
       "defect": "",
       "fix": "",
-      "retest": "",
-      "limitation": ""
+      "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+      "limitation": "Root owns one final complete release gate and overall source/resource manifest.",
+      "observations": {
+        "security": {
+          "id": "C20",
+          "status": "NOT RUN",
+          "scenario": "Current source, final integration and scoped static checks; user commit preserved",
+          "environment": "Windows loopback; Node 24.16.0, Python 3.12.14, PostgreSQL 17.11 isolated demo_test*, LibreOffice 26.2.6.3; final manifest v6/v5/v4 and renderer v3",
+          "result": "Latest actual evidence supplied, no production readiness claim",
+          "artifact": "security/integration-final.log",
+          "defect": "",
+          "fix": "",
+          "retest": "Verified subchecks listed; merge independent evidence before promoting the whole requirement",
+          "limitation": "Root owns one final complete release gate and overall source/resource manifest."
+        }
+      }
     }
-  ]
+  ],
+  "currentBaseRevision": "3ad8e6bb5aba016df01da8f387c1bbe19a93011f",
+  "updatedAt": "2026-09-22T15:54:44.907Z",
+  "overall": "IN_PROGRESS: subsystem PASS is not unconditional commercial release approval"
 }

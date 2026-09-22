@@ -4,24 +4,28 @@
   "template": "ps-witness",
   "variant": "blank",
   "recipients": 1,
-  "docxSha256": "3bc361667b904099d2f7992e0370237265ec8b3d78e9c363d81fd2bf54baa704",
-  "pdfSha256": "072895732ee098570433576cf4977f5d8d16ab62395936655d35ea75a8013ca9",
-  "docxSeconds": 0.24234070000238717,
-  "renderSeconds": 25.980809399974532,
+  "docxSha256": "15e1dae21bcfa64367bce6de50a25a7e836c57a2b87f042974fdc750c61f770a",
+  "pdfSha256": "8052de248161f9fb25ddcb4aa3e17005d24c30be759d35dad55e3d2722ce6d75",
+  "docxSeconds": 1.1940482259997225,
+  "renderSeconds": 1.6151216179996482,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 3.069215894000081,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 20.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-blank-page-001.png",
-      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809"
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-blank-page-002.png",
-      "sha256": "f2d1101bb2079bccfea124e9d4c55c4eebeeabcb850a6a271aba4f4f3d335226"
+      "sha256": "afbe816af9118c3d757040d3384971105817601150e7d41d26ff233eee610aa4"
     }
   ],
   "columnChecks": [],

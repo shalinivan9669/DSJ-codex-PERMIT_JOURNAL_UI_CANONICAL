@@ -68,7 +68,8 @@ export class DemoController {
         tenantId: ctx(req).tenantId,
         templateId: { in: [...templateIds] },
       },
-      orderBy: { version: "desc" },
+      // Issuance chooses the latest installed row; version labels are strings.
+      orderBy: { createdAt: "desc" },
       distinct: ["templateId"],
     });
     if (

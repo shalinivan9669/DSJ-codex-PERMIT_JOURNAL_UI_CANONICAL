@@ -1,3 +1,29 @@
 packages:
   - apps/*
   - packages/*
+allowBuilds:
+  "@prisma/client@6.19.3": true
+  "@prisma/engines@6.19.3": true
+  esbuild@0.28.2: true
+  prisma@6.19.3: true
+strictPeerDependencies: false
+# A readonly runtime must fail on stale dependencies, never reinstall them.
+verifyDepsBeforeRun: error
+overrides:
+  multer: 2.4.0
+  postcss: 8.5.28
+  deepmerge-ts: 8.0.2
+# These exact versions were already pinned and verified in the release lockfile.
+# pnpm 11's default 24-hour age policy remains enabled for every other version.
+minimumReleaseAgeExclude:
+  - typescript-eslint@8.70.1
+  - "@typescript-eslint/eslint-plugin@8.70.1"
+  - "@typescript-eslint/parser@8.70.1"
+  - "@typescript-eslint/project-service@8.70.1"
+  - "@typescript-eslint/scope-manager@8.70.1"
+  - "@typescript-eslint/tsconfig-utils@8.70.1"
+  - "@typescript-eslint/type-utils@8.70.1"
+  - "@typescript-eslint/types@8.70.1"
+  - "@typescript-eslint/typescript-estree@8.70.1"
+  - "@typescript-eslint/utils@8.70.1"
+  - "@typescript-eslint/visitor-keys@8.70.1"

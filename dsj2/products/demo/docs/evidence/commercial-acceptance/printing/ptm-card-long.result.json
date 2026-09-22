@@ -4,17 +4,20 @@
   "template": "ptm-card",
   "variant": "long",
   "recipients": 1,
-  "docxSha256": "f065d82d8186cfcc41ed8e3706eacb09aa59a23b0c8ac90b12e4615c08c62333",
-  "pdfSha256": "2a9f00521de10f8698be97dda0829d9290950b3f740f817f0c08ea3526e0582c",
-  "docxSeconds": 0.13943270000163466,
-  "renderSeconds": 23.972036299994215,
+  "docxSha256": "71702bd14c526a0b6c973efcf064f7df272e30b136c831e33cf664ebbd28af21",
+  "pdfSha256": "19793850314b762bb17726f3c1c08060e3915d11fb94c0b5a0040703755f750a",
+  "docxSeconds": 0.6812531159994251,
+  "renderSeconds": 2.874917366999398,
+  "conversionReusedAfterExactByteMatch": false,
+  "priorConversionSeconds": null,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-long-page-001.png",
-      "sha256": "bf8bb98472b5a69fdfd3cf1f71fecf9ca9195a12b03e0999b39dee8f86635246"
+      "sha256": "d676448a071edfc1fd4084da71404ee1a58fd31459dd6d7a171c601141d28831"
     }
   ],
   "columnChecks": [],

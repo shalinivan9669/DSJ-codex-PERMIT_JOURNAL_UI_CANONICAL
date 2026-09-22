@@ -18,13 +18,13 @@ import pdfplumber
 import pypdfium2 as pdfium
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT/'docs/evidence/commercial-acceptance/printing'
+OUT = Path(os.environ.get('DEMO_PRINT_OUTPUT_DIR',str(ROOT/'docs/evidence/commercial-acceptance/printing')))
 OUT.mkdir(parents=True, exist_ok=True)
 os.environ['DEMO_ARTIFACT_ROOT'] = str(OUT/'photo-store')
 sys.path[:0] = [str(ROOT/'tests/render'),str(ROOT/'scripts/render')]
 from test_render import fixture, MANIFEST, render_docx, convert_pdf, STORE
 from renderer import fields_for, RENDERER_VERSION
-from print_contracts import assert_docx_columns, assert_pdf_columns, W, text
+from print_contracts import assert_docx_columns, assert_pdf_columns, assert_card_title_visible, assert_biot_card_panels, W, text
 
 
 def dump(path, value): path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
@@ -55,7 +55,8 @@ def snapshot(template, variant, count):
 def audit_template_maps():
     maps = []
     for template in MANIFEST['templates']:
-        result = {'id':template['id'],'file':template['file'],'sha256':template['sha256'],'columnNumbers':{'table':0,'row':1,'values':[1,2,3,4,5,6]} if template['id']=='biot-protocol' else None,'protocolSemantics':template['protocolSemantics'],'tables':[],'fieldLocations':[]}
+        columns=10 if template['id']=='biot-itr-protocol' else 7 if template.get('formRevision')=='BIOT_2026_223' else 6
+        result = {'id':template['id'],'file':template['file'],'sha256':template['sha256'],'columnNumbers':{'table':0,'row':1,'values':list(range(1,columns+1))} if template['id'] in ['biot-protocol','biot-itr-protocol'] else None,'protocolSemantics':template['protocolSemantics'],'tables':[],'fieldLocations':[]}
         with ZipFile(ROOT/'assets/templates'/template['file']) as archive:
             tree = E.fromstring(archive.read('word/document.xml'))
             result['sections'] = [{E.QName(k).localname:v for k,v in node.attrib.items()} for node in tree.iter(W+'pgSz')]
@@ -79,10 +80,20 @@ def verify_pdf(name, snap, pdf, baseline_pages=None):
     if baseline_pages is not None and len(doc)!=baseline_pages*count: problems.append({'code':'PAGE_COUNT','expected':baseline_pages*count,'actual':len(doc)})
     text_pages=[]
     for index,page in enumerate(doc):
-        content=page.get_textpage().get_text_range();text_pages.append(content)
+        text_page=page.get_textpage();content=text_page.get_text_range();text_pages.append(content)
+        font_sizes=[];out_of_page=[]
+        for char_index in range(text_page.count_chars()):
+            char=text_page.get_text_range(char_index,1)
+            if not char.strip():continue
+            x0,y0,x1,y1=text_page.get_charbox(char_index)
+            if page.get_height()-y1>55:
+                font_sizes.append(pdfium.raw.FPDFText_GetFontSize(text_page,char_index))
+                if x0<-.5 or x1>page.get_width()+.5 or y0<-.5 or y1>page.get_height()+.5:out_of_page.append(char_index)
+        if font_sizes and min(font_sizes)<7.99:problems.append({'code':'BODY_FONT_BELOW_8PT','page':index+1,'minimum':min(font_sizes)})
+        if out_of_page:problems.append({'code':'TEXT_OUTSIDE_PAGE','page':index+1,'characters':out_of_page})
         target=OUT/'pages'/f'{name}-page-{index+1:03}.png';target.parent.mkdir(exist_ok=True);page.render(scale=1.34).to_pil().save(target)
         if len(content.strip())<50: problems.append({'code':'EMPTY_PAGE','page':index+1})
-        pages.append({'page':index+1,'widthPt':page.get_width(),'heightPt':page.get_height(),'image':target.relative_to(ROOT).as_posix(),'sha256':sha(target)})
+        pages.append({'page':index+1,'widthPt':page.get_width(),'heightPt':page.get_height(),'minimumBodyFontPt':min(font_sizes) if font_sizes else None,'image':target.relative_to(ROOT).as_posix(),'sha256':sha(target)})
     per=len(doc)//count if len(doc)%count==0 else None
     if per:
         for i,item in enumerate(snap['items']):
@@ -92,9 +103,11 @@ def verify_pdf(name, snap, pdf, baseline_pages=None):
                 if value and normalize(value) not in own: problems.append({'code':'RECIPIENT_FIELD_MISSING','recipient':i+1,'field':field})
             for other in snap['items']:
                 if other['id'] != item['id'] and normalize(other['fullNameRu']) in own: problems.append({'code':'RECIPIENT_DATA_MIXED','recipient':i+1,'foreign':other['id']})
-            number=item['protocolNumber'] if tid.endswith('protocol') else item['number']
+            number=item['protocolNumber'] if tid.endswith('protocol') else (item.get('registrationNumber') or item['number']) if tid=='biot-worker-card' and next(t for t in MANIFEST['templates'] if t['id']==tid).get('formRevision')=='BIOT_2026_223' else item['number']
             if normalize(number) not in own: problems.append({'code':'DOCUMENT_NUMBER_MISSING','recipient':i+1,'number':number})
-    if tid=='biot-protocol': coordinates=assert_pdf_columns(pdf,count,baseline_pages*count if baseline_pages else None)
+    if tid in ['biot-protocol','biot-itr-protocol']: coordinates=assert_pdf_columns(pdf,count,baseline_pages*count if baseline_pages else None,10 if tid=='biot-itr-protocol' else 7)
+    if tid=='ps-card': coordinates=assert_card_title_visible(pdf,tid,count)
+    if tid=='biot-worker-card' and next(t for t in MANIFEST['templates'] if t['id']==tid).get('formRevision')!='BIOT_2026_223': coordinates=assert_biot_card_panels(pdf,count,[{key:fields_for(snap,item)[key] for key in ['CHAIR','SUBJECT']} for item in snap['items']])
     # Physical-page coordinates of every unique supplied field value in the base samples.
     if count<=2:
         with pdfplumber.open(pdf) as document:
@@ -115,36 +128,40 @@ def verify_pdf(name, snap, pdf, baseline_pages=None):
     return pages,problems,coordinates
 
 
-def run_one(template, variant, count, baseline_pages=None):
+def run_one(template, variant, count, baseline_pages=None, reuse_exact=False):
     name=f"{template['id']}-{variant}"+(f'-{count:03}' if variant=='stress' else '')
     snap=snapshot(template,variant,count);dump(OUT/(name+'.fixture.json'),snap)
     docx=OUT/(name+'.docx');pdf=OUT/(name+'.pdf');started=time.perf_counter()
     try:
         render_docx(snap,docx);docx_seconds=time.perf_counter()-started
         assert_docx_columns(docx,template['id'],count)
-        convert_pdf(docx,pdf);render_seconds=time.perf_counter()-started
+        prior_path=OUT/(name+'.result.json');prior=json.loads(prior_path.read_text(encoding='utf8')) if reuse_exact and prior_path.exists() else {}
+        reuse=bool(reuse_exact and pdf.exists() and prior.get('docxSha256')==sha(docx) and prior.get('pdfSha256')==sha(pdf))
+        if not reuse:convert_pdf(docx,pdf)
+        render_seconds=time.perf_counter()-started
         pages,problems,coordinates=verify_pdf(name,snap,pdf,baseline_pages)
-        result={'name':name,'status':'FAIL' if problems else 'PASS','template':template['id'],'variant':variant,'recipients':count,'docxSha256':sha(docx),'pdfSha256':sha(pdf),'docxSeconds':docx_seconds,'renderSeconds':render_seconds,'pages':pages,'columnChecks':coordinates,'problems':problems}
+        result={'name':name,'status':'FAIL' if problems else 'PASS','template':template['id'],'variant':variant,'recipients':count,'docxSha256':sha(docx),'pdfSha256':sha(pdf),'docxSeconds':docx_seconds,'renderSeconds':render_seconds,'conversionReusedAfterExactByteMatch':reuse,'priorConversionSeconds':prior.get('renderSeconds') if reuse else None,'pages':pages,'columnChecks':coordinates,'problems':problems}
     except Exception as error: result={'name':name,'status':'FAIL','template':template['id'],'variant':variant,'recipients':count,'error':str(error)}
     dump(OUT/(name+'.result.json'),result);print(json.dumps({k:result[k] for k in ['name','status','error','renderSeconds'] if k in result}),flush=True)
     return result
 
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--phase',choices=['base','stress','all'],default='all');parser.add_argument('--concurrency',type=int,default=2);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--phase',choices=['base','stress','all'],default='all');parser.add_argument('--concurrency',type=int,default=2);parser.add_argument('--reuse-exact',action='store_true');parser.add_argument('--template',action='append');parser.add_argument('--variant',action='append');args=parser.parse_args()
+    templates=[t for t in MANIFEST['templates'] if not args.template or t['id'] in args.template]
     audit_template_maps();dump(OUT/'environment.json',{'python':sys.version,'platform':platform.platform(),'converter':subprocess.check_output([os.environ['DEMO_SOFFICE'],'--version'],text=True).strip(),'rendererVersion':RENDERER_VERSION,'sourceSha256':{p.relative_to(ROOT).as_posix():sha(p) for p in [*sorted((ROOT/'scripts/render').glob('*.py')),*sorted((ROOT/'scripts/verification').glob('*print*.py'))]},'fonts':json.loads((ROOT/'assets/fonts/manifest.json').read_text()),'templates':MANIFEST})
     results=[]
     with ThreadPoolExecutor(max_workers=args.concurrency) as pool:
         if args.phase in ['base','all']:
-            jobs=[(template,variant,2 if variant=='batch' else 1) for template in MANIFEST['templates'] for variant in ['short','long','blank','batch','punctuation']]
-            results.extend(pool.map(lambda args:run_one(*args),jobs))
+            jobs=[(template,variant,2 if variant=='batch' else 1) for template in templates for variant in (args.variant or ['short','long','blank','batch','punctuation'])]
+            results.extend(pool.map(lambda job:run_one(*job,reuse_exact=args.reuse_exact),jobs))
         if args.phase in ['stress','all']:
             jobs=[]
-            for template in MANIFEST['templates']:
+            for template in templates:
                 baseline=json.loads((OUT/(template['id']+'-short.result.json')).read_text(encoding='utf8'));per=len(baseline.get('pages',[]))
                 if not per: continue
                 for count in ([1,2,3,10,13,50,100] if template['id'].endswith('protocol') else [1,2,100]): jobs.append((template,'stress',count,per))
-            results.extend(pool.map(lambda args:run_one(*args),jobs))
+            results.extend(pool.map(lambda job:run_one(*job,reuse_exact=args.reuse_exact),jobs))
     dump(OUT/(args.phase+'-results.json'),results)
     summary={'documents':len(results),'recipients':sum(r['recipients'] for r in results),'pages':sum(len(r.get('pages',[])) for r in results),'failures':[r['name'] for r in results if r['status']!='PASS']};dump(OUT/(args.phase+'-summary.json'),summary);print(json.dumps(summary),flush=True)
     return bool(summary['failures'])

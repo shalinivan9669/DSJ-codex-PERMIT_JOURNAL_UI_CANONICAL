@@ -1,0 +1,26 @@
+[
+  {
+    "id": "biot-itr-certificate",
+    "previousSha256": "0eba4028526f6d7d5035a068c670363924505ced2f2771acf6404cea6f12bece",
+    "sha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6",
+    "change": "signature textbox +14pt height",
+    "fontSize": "unchanged",
+    "outerFrames": "unchanged"
+  },
+  {
+    "id": "ptm-card",
+    "previousSha256": "b6fa06b6e821fa73bbf51168efe88273fb6b214194f809e042d6b243879f62cc",
+    "sha256": "f8d520db9d100e7024ed889ff151ff36b4efd45daaefccaa640b9285efb8fe41",
+    "change": "front textbox left inset +6pt (2.12mm), right edge unchanged",
+    "fontSize": "unchanged",
+    "outerFrames": "unchanged"
+  },
+  {
+    "id": "ps-card",
+    "previousSha256": "247599aef992668be86a85f1c33c1f929fdf13065388aba498b6d54f47691322",
+    "sha256": "21dfced97d5ade26a0087c613f862a8c75b8159c61778bd6c71d78c882c55446",
+    "change": "remove inherited leading blank line above first card title",
+    "fontSize": "unchanged",
+    "outerFrames": "unchanged"
+  }
+]

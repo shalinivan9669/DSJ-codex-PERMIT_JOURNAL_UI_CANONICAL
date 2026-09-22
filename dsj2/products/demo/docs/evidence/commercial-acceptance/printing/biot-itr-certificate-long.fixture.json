@@ -2,7 +2,7 @@
   "mode": "issued-document",
   "demoMode": true,
   "templateId": "biot-itr-certificate",
-  "templateVersion": 4,
+  "templateVersion": 13,
   "issuer": {
     "nameRu": "Учебный центр «Образец»",
     "nameKz": "«Үлгі» оқу орталығы",

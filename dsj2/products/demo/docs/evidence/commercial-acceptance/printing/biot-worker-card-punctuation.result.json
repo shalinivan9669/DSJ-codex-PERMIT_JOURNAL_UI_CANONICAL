@@ -4,26 +4,99 @@
   "template": "biot-worker-card",
   "variant": "punctuation",
   "recipients": 1,
-  "docxSha256": "f0e72c77009e43eb920619984b5ac8f21d61cd268f196f649ff781c02fe8accd",
-  "pdfSha256": "bb93caa59274d8c95b8704404f0f8d1ac6b1c59a3456b98d712a08425fe7df5e",
-  "docxSeconds": 0.6616103000706062,
-  "renderSeconds": 29.514949000091292,
+  "docxSha256": "ef7e4ad11c489a2bcb0fe24c58e34c571713e32ff3705a95dcbd4a5b896656fa",
+  "pdfSha256": "48ab5527987fc8457ada77dfcec3711aacdd98b4595db2fcd5fad689971af319",
+  "docxSeconds": 0.5134087919996091,
+  "renderSeconds": 1.4916054740006075,
+  "conversionReusedAfterExactByteMatch": false,
+  "priorConversionSeconds": null,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-001.png",
-      "sha256": "960791f1ffcb93825edd0dfbd894c24600b3a73ea8b8d8f9d5dc0f0ef2759a6b"
+      "sha256": "c615aa02bb57a9906636d26fc63e760fda6dd25b6c14c63dbd9ef97b56075f34"
     },
     {
       "page": 2,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-002.png",
-      "sha256": "fd9b6f4b8cda52957446b7682815c7760a7422181b1e803f8cb2b352ea697b46"
+      "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3"
     }
   ],
-  "columnChecks": [],
+  "columnChecks": [
+    {
+      "page": 1,
+      "frameBox": [
+        [
+          304.05,
+          248.75076377952803
+        ],
+        [
+          41.7,
+          248.75076377952803
+        ],
+        [
+          41.7,
+          76.50076377952803
+        ],
+        [
+          566.4,
+          76.50076377952803
+        ],
+        [
+          566.4,
+          248.75076377952803
+        ],
+        [
+          304.05,
+          248.75076377952803
+        ]
+      ],
+      "textLeftPt": 316.6,
+      "textRightPt": 544.128,
+      "frameRightPt": 566.4,
+      "dividerTopPt": 90.60076377952805,
+      "issuerBandBottomPt": 90.05076377952798
+    },
+    {
+      "page": 1,
+      "frameBox": [
+        [
+          304.05,
+          443.700763779528
+        ],
+        [
+          41.7,
+          443.700763779528
+        ],
+        [
+          41.7,
+          271.4507637795281
+        ],
+        [
+          566.4,
+          271.4507637795281
+        ],
+        [
+          566.4,
+          443.700763779528
+        ],
+        [
+          304.05,
+          443.700763779528
+        ]
+      ],
+      "textLeftPt": 316.6,
+      "textRightPt": 544.128,
+      "frameRightPt": 566.4,
+      "dividerTopPt": 286.00076377952803,
+      "issuerBandBottomPt": 285.00076377952803
+    }
+  ],
   "problems": []
 }

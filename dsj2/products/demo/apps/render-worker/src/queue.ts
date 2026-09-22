@@ -81,7 +81,9 @@ export async function executeJob(
     output = await runRender(
       "pdf",
       {},
-      { signal, inputBytes: bytes, inputExtension: "docx" },
+      // The converter has a 180s bound for a supported 100-page batch; leave
+      // 30s for Python startup, font checks and returning the finished bytes.
+      { signal, inputBytes: bytes, inputExtension: "docx", timeoutMs: 210_000 },
     );
   } else if (job.kind === "XLSX")
     output = await runRender("xlsx", input, { signal });

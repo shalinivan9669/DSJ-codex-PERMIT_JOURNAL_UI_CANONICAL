@@ -105,6 +105,8 @@ function ProfileForm({
     try {
       const {
         nameRu,
+        bin,
+        headName,
         nameKz,
         addressRu,
         addressKz,
@@ -120,6 +122,8 @@ function ProfileForm({
           method: "POST",
           body: json({
             nameRu,
+            bin,
+            headName,
             nameKz,
             addressRu,
             addressKz,
@@ -166,6 +170,8 @@ function ProfileForm({
         {[
           ["nameRu", "Юридическое название · RU"],
           ["nameKz", "Юридическое название · KZ"],
+          ["bin", "БИН учебного центра"],
+          ["headName", "ФИО руководителя учебного центра"],
           ["cityRu", "Город · RU"],
           ["cityKz", "Город · KZ"],
           ["addressRu", "Адрес · RU"],

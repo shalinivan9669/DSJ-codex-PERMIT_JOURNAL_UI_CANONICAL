@@ -582,6 +582,46 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
             ),
           );
         const python = process.env.DEMO_PYTHON || "python";
+        const excessivePixels = execFileSync(
+          python,
+          [
+            "-I",
+            "-c",
+            "import io,sys; from PIL import Image; b=io.BytesIO(); Image.new('RGB',(4500,4500),'white').save(b,format='PNG'); sys.stdout.buffer.write(b.getvalue())",
+          ],
+          { windowsHide: true },
+        );
+        assert.ok(excessivePixels.length < 5 * 1024 * 1024);
+        assert.equal(
+          (
+            await upload(
+              "/photos",
+              excessivePixels,
+              "too-many-pixels.png",
+              "image/png",
+            )
+          ).status,
+          400,
+        );
+        const orientedJpeg = execFileSync(
+          python,
+          [
+            "-I",
+            "-c",
+            "import io,sys; from PIL import Image; b=io.BytesIO(); im=Image.new('RGB',(40,20),'red'); exif=im.getexif(); exif[274]=6; im.save(b,format='JPEG',exif=exif); sys.stdout.buffer.write(b.getvalue())",
+          ],
+          { windowsHide: true },
+        );
+        const oriented = await readJson(
+          await upload(
+            "/photos",
+            orientedJpeg,
+            "orientation.jpg",
+            "image/jpeg",
+          ),
+        );
+        assert.equal(oriented.width, 20);
+        assert.equal(oriented.height, 40);
         const compressed = (name: string, size: number) =>
           execFileSync(
             python,

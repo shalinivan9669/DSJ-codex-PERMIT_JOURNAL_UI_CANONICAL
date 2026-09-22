@@ -1,8 +1,8 @@
 [
   {
     "id": "biot-worker-card",
-    "file": "biot-worker-card.v5.docx",
-    "sha256": "4c4018864da2ad09072fd2a6e5425655cbeed07e20673f418efc80de7772db22",
+    "file": "biot-worker-card.v15.docx",
+    "sha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556",
     "columnNumbers": null,
     "protocolSemantics": null,
     "tables": [
@@ -19,7 +19,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "№  {{NUMBER}}  КУƏЛІГІ УДОСТОВЕРЕНИЕ №   {{NUMBER}}  {{FULL_NAME_KZ}}                                              берілді                                         (ТАƏ)Выдано {{FULL_NAME_RU}}                                                                                                                                      (ФИО)Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                                                                                             Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              №  {{NUMBER}}  КУƏЛІГІ УДОСТОВЕРЕНИЕ №   {{NUMBER}}  {{FULL_NAME_KZ}}                                              берілді                                         (ТАƏ)Выдано {{FULL_NAME_RU}}                                                                                                                                      (ФИО)Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                                                                                             Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              {{ISSUER_RU}}",
+                "text": "№  {{NUMBER}}  КУӘЛІГІ УДОСТОВЕРЕНИЕ №   {{NUMBER}}  {{FULL_NAME_KZ}}                                              берілді                                         (ТАӘ)Выдано {{FULL_NAME_RU}}                                                                                                                                      (ФИО)Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                                                                                             Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              №  {{NUMBER}}  КУӘЛІГІ УДОСТОВЕРЕНИЕ №   {{NUMBER}}  {{FULL_NAME_KZ}}                                              берілді                                         (ТАӘ)Выдано {{FULL_NAME_RU}}                                                                                                                                      (ФИО)Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                                                                                             Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -40,7 +40,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "№  {{NUMBER}}  КУƏЛІГІ УДОСТОВЕРЕНИЕ №   {{NUMBER}}  {{FULL_NAME_KZ}} берілді                                         (ТАƏ)Выдано {{FULL_NAME_RU}}                                                                                    (ФИО)Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                             Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                           №  {{NUMBER}}  КУƏЛІГІ УДОСТОВЕРЕНИЕ №   {{NUMBER}}  {{FULL_NAME_KZ}} берілді                                         (ТАƏ)Выдано {{FULL_NAME_RU}}                                                                                    (ФИО)Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                             Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                           {{ISSUER_RU}}",
+                "text": "№  {{NUMBER}}  КУӘЛІГІ УДОСТОВЕРЕНИЕ №   {{NUMBER}}  {{FULL_NAME_KZ}} берілді                                         (ТАӘ)Выдано {{FULL_NAME_RU}}                                                                                    (ФИО)Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                             Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                           №  {{NUMBER}}  КУӘЛІГІ УДОСТОВЕРЕНИЕ №   {{NUMBER}}  {{FULL_NAME_KZ}} берілді                                         (ТАӘ)Выдано {{FULL_NAME_RU}}                                                                                    (ФИО)Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                             Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                           ",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -61,7 +61,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -72,105 +72,99 @@
     ],
     "fieldLocations": [
       {
-        "field": "ISSUER_RU",
-        "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
-      },
-      {
-        "field": "NUMBER",
-        "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[1]",
-        "block": "№  {{NUMBER}}  КУƏЛІГІ "
-      },
-      {
         "field": "NUMBER",
         "part": "word/document.xml",
         "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[2]",
+        "block": "№  {{NUMBER}}  КУӘЛІГІ "
+      },
+      {
+        "field": "NUMBER",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[3]",
         "block": "УДОСТОВЕРЕНИЕ №   {{NUMBER}}"
       },
       {
         "field": "FULL_NAME_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[3]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[4]",
         "block": "  {{FULL_NAME_KZ}}                                              берілді"
       },
       {
         "field": "FULL_NAME_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[5]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[6]",
         "block": "Выдано {{FULL_NAME_RU}}                                                  "
       },
       {
         "field": "POSITION_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[7]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[8]",
         "block": "Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "
       },
       {
         "field": "POSITION_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[8]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[9]",
         "block": "Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "
       },
       {
         "field": "WORKPLACE_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[9]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
         "block": "Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                                                                                             "
       },
       {
         "field": "WORKPLACE_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[11]",
         "block": "Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "
       },
       {
         "field": "NUMBER",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[1]",
-        "block": "№  {{NUMBER}}  КУƏЛІГІ "
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[2]",
+        "block": "№  {{NUMBER}}  КУӘЛІГІ "
       },
       {
         "field": "NUMBER",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[2]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[3]",
         "block": "УДОСТОВЕРЕНИЕ №   {{NUMBER}}"
       },
       {
         "field": "FULL_NAME_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[3]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[4]",
         "block": "  {{FULL_NAME_KZ}}                                              берілді"
       },
       {
         "field": "FULL_NAME_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[5]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[6]",
         "block": "Выдано {{FULL_NAME_RU}}                                                  "
       },
       {
         "field": "POSITION_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[7]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[8]",
         "block": "Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "
       },
       {
         "field": "POSITION_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[8]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[9]",
         "block": "Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "
       },
       {
         "field": "WORKPLACE_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[9]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
         "block": "Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                                                                                             "
       },
       {
         "field": "WORKPLACE_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[11]",
         "block": "Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "
       },
       {
@@ -282,105 +276,111 @@
         "block": "  Член комиссии {{MEMBER_1}}                                                                                               "
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[4]/w:r[3]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
-        "field": "NUMBER",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[1]",
-        "block": "№  {{NUMBER}}  КУƏЛІГІ "
+        "xpath": "/w:document/w:body/w:p[4]/w:r[3]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
         "field": "NUMBER",
         "part": "word/document.xml",
         "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[2]",
+        "block": "№  {{NUMBER}}  КУӘЛІГІ "
+      },
+      {
+        "field": "NUMBER",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[3]",
         "block": "УДОСТОВЕРЕНИЕ №   {{NUMBER}}"
       },
       {
         "field": "FULL_NAME_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[3]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[4]",
         "block": "  {{FULL_NAME_KZ}} берілді"
       },
       {
         "field": "FULL_NAME_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[5]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[6]",
         "block": "Выдано {{FULL_NAME_RU}}"
       },
       {
         "field": "POSITION_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[7]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[8]",
         "block": "Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       "
       },
       {
         "field": "POSITION_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[8]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[9]",
         "block": "Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   "
       },
       {
         "field": "WORKPLACE_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[9]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
         "block": "Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                             "
       },
       {
         "field": "WORKPLACE_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[11]",
         "block": "Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                           "
       },
       {
         "field": "NUMBER",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[1]",
-        "block": "№  {{NUMBER}}  КУƏЛІГІ "
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[2]",
+        "block": "№  {{NUMBER}}  КУӘЛІГІ "
       },
       {
         "field": "NUMBER",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[2]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[3]",
         "block": "УДОСТОВЕРЕНИЕ №   {{NUMBER}}"
       },
       {
         "field": "FULL_NAME_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[3]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[4]",
         "block": "  {{FULL_NAME_KZ}} берілді"
       },
       {
         "field": "FULL_NAME_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[5]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[6]",
         "block": "Выдано {{FULL_NAME_RU}}"
       },
       {
         "field": "POSITION_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[7]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[8]",
         "block": "Должность {{POSITION_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       "
       },
       {
         "field": "POSITION_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[8]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[9]",
         "block": "Лауазымы  {{POSITION_KZ}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   "
       },
       {
         "field": "WORKPLACE_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[9]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
         "block": "Жұмыс орны {{WORKPLACE_KZ}}                                                                                                                                                                                                                                                             "
       },
       {
         "field": "WORKPLACE_RU",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[10]",
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[11]",
         "block": "Место работы {{WORKPLACE_RU}}                                                                                                                                                                                                                                                                                                                                                                                                                                                           "
       },
       {
@@ -492,10 +492,28 @@
         "block": "  Член комиссии  {{MEMBER_1}}                                                        "
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[3]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[20]/w:r[3]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[20]/w:r[3]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[228]/w:r/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[228]/w:r/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       }
     ],
     "sections": [
@@ -544,8 +562,8 @@
   },
   {
     "id": "biot-itr-certificate",
-    "file": "biot-itr-certificate.v4.docx",
-    "sha256": "9f45958fc2548314ce5bae030efae2f93d0a89e1878e074214d18d748853b00d",
+    "file": "biot-itr-certificate.v13.docx",
+    "sha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6",
     "columnNumbers": null,
     "protocolSemantics": null,
     "tables": [],
@@ -656,8 +674,8 @@
   },
   {
     "id": "biot-protocol",
-    "file": "biot-protocol.v5.docx",
-    "sha256": "c5f3a5b875b2740efc165ffd4b05548439d56cefe1a6918f0eba6d724250f363",
+    "file": "biot-protocol.v9.docx",
+    "sha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
     "columnNumbers": {
       "table": 0,
       "row": 1,
@@ -1208,8 +1226,8 @@
   },
   {
     "id": "ptm-card",
-    "file": "ptm-card.v4.docx",
-    "sha256": "eecb030d026f586251e4b8b9d39830e3f323cff13720e9d8da50ff9ebaef3a18",
+    "file": "ptm-card.v14.docx",
+    "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6",
     "columnNumbers": null,
     "protocolSemantics": null,
     "tables": [
@@ -1226,7 +1244,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "         {{ISSUER_RU}} Өрт-техникалық минимум бойынша біліктілік куәлігі / Удостоверение по пожарно-техническому минимуму  № {{NUMBER}}Берілді/выдано: {{FULL_NAME_BOTH}} Должность:  {{POSITION_RU}}Лауазымы:   {{POSITION_KZ}}    Жұмыс орны: {{WORKPLACE_KZ}}                                                Место работы:{{WORKPLACE_RU}}                                    {{ISSUER_RU}} Өрт-техникалық минимум бойынша біліктілік куәлігі / Удостоверение по пожарно-техническому минимуму  № {{NUMBER}}Берілді/выдано: {{FULL_NAME_BOTH}} Должность:  {{POSITION_RU}}Лауазымы:   {{POSITION_KZ}}    Жұмыс орны: {{WORKPLACE_KZ}}                                                Место работы:{{WORKPLACE_RU}}                           {{ISSUER_RU}}",
+                "text": "          Өрт-техникалық минимум бойынша біліктілік куәлігі / Удостоверение по пожарно-техническому минимуму  № {{NUMBER}}Берілді/выдано: {{FULL_NAME_BOTH}} Должность:  {{POSITION_RU}}Лауазымы:   {{POSITION_KZ}}    Жұмыс орны: {{WORKPLACE_KZ}}                                                Место работы:{{WORKPLACE_RU}}                                     Өрт-техникалық минимум бойынша біліктілік куәлігі / Удостоверение по пожарно-техническому минимуму  № {{NUMBER}}Берілді/выдано: {{FULL_NAME_BOTH}} Должность:  {{POSITION_RU}}Лауазымы:   {{POSITION_KZ}}    Жұмыс орны: {{WORKPLACE_KZ}}                                                Место работы:{{WORKPLACE_RU}}                           ",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -1237,16 +1255,16 @@
     ],
     "fieldLocations": [
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[1]/w:r[1]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[2]",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[1]/w:r[1]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
         "field": "NUMBER",
@@ -1283,12 +1301,6 @@
         "part": "word/document.xml",
         "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[10]",
         "block": "Место работы:{{WORKPLACE_RU}}                           "
-      },
-      {
-        "field": "ISSUER_RU",
-        "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[2]",
-        "block": "{{ISSUER_RU}}"
       },
       {
         "field": "NUMBER",
@@ -1504,8 +1516,8 @@
   },
   {
     "id": "ptm-protocol",
-    "file": "ptm-protocol.v5.docx",
-    "sha256": "f2f276b3fc9f0f61bcae09f36488efbc8392da1a85b4d8102256f22d921cfebd",
+    "file": "ptm-protocol.v9.docx",
+    "sha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c",
     "columnNumbers": null,
     "protocolSemantics": "individual",
     "tables": [
@@ -1951,8 +1963,8 @@
   },
   {
     "id": "pb-card",
-    "file": "pb-card.v5.docx",
-    "sha256": "bfdca5596af8efc09dc3c21d138c315c71b5c9115bcfde9a2be29d640bf8547d",
+    "file": "pb-card.v14.docx",
+    "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380",
     "columnNumbers": null,
     "protocolSemantics": null,
     "tables": [
@@ -1969,7 +1981,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "КУƏЛІК/УДОСТОВЕРЕНИЕ № {{NUMBER}}   Берілді / Выдано: {{FULL_NAME_BOTH}}                                               Жұмыс орны / Место работы: {{WORKPLACE_BOTH}}                                                       Лауазымы / Должность: {{POSITION_BOTH}}                                                                                            Ол/он (она)    {{DOCUMENT_YEAR}}   ж. (г.) \"  {{DOCUMENT_DAY}}  \"    {{DOCUMENT_MONTH}}                                                                                                Курсын тыңдады/прослушал (ла) курс{{SUBJECT}} {{ISSUER_RU}}КУƏЛІК/УДОСТОВЕРЕНИЕ № {{NUMBER}}   Берілді / Выдано: {{FULL_NAME_BOTH}}                                               Жұмыс орны / Место работы: {{WORKPLACE_BOTH}}                                                       Лауазымы / Должность: {{POSITION_BOTH}}                                                                                            Ол/он (она)    {{DOCUMENT_YEAR}}   ж. (г.) \"  {{DOCUMENT_DAY}}  \"    {{DOCUMENT_MONTH}}                                                                                                Курсын тыңдады/прослушал (ла) курс{{SUBJECT}} {{ISSUER_RU}}{{ISSUER_RU}}",
+                "text": "КУӘЛІК/УДОСТОВЕРЕНИЕ № {{NUMBER}}   Берілді / Выдано: {{FULL_NAME_BOTH}}                                               Жұмыс орны / Место работы: {{WORKPLACE_BOTH}}                                                       Лауазымы / Должность: {{POSITION_BOTH}}                                                                                            Ол/он (она)    {{DOCUMENT_YEAR}}   ж. (г.) \"  {{DOCUMENT_DAY}}  \"    {{DOCUMENT_MONTH}}                                                                                                Курсын тыңдады/прослушал (ла) курс{{SUBJECT}} КУӘЛІК/УДОСТОВЕРЕНИЕ № {{NUMBER}}   Берілді / Выдано: {{FULL_NAME_BOTH}}                                               Жұмыс орны / Место работы: {{WORKPLACE_BOTH}}                                                       Лауазымы / Должность: {{POSITION_BOTH}}                                                                                            Ол/он (она)    {{DOCUMENT_YEAR}}   ж. (г.) \"  {{DOCUMENT_DAY}}  \"    {{DOCUMENT_MONTH}}                                                                                                Курсын тыңдады/прослушал (ла) курс{{SUBJECT}} {{ISSUER_BOTH}}{{ISSUER_BOTH}}",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -1990,7 +2002,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -2050,7 +2062,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -2071,7 +2083,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -2082,16 +2094,10 @@
     ],
     "fieldLocations": [
       {
-        "field": "ISSUER_RU",
-        "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
-      },
-      {
         "field": "NUMBER",
         "part": "word/document.xml",
         "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[1]",
-        "block": "КУƏЛІК/УДОСТОВЕРЕНИЕ № {{NUMBER}}   "
+        "block": "КУӘЛІК/УДОСТОВЕРЕНИЕ № {{NUMBER}}   "
       },
       {
         "field": "FULL_NAME_BOTH",
@@ -2136,16 +2142,10 @@
         "block": "{{SUBJECT}} "
       },
       {
-        "field": "ISSUER_RU",
-        "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p[18]",
-        "block": "{{ISSUER_RU}}"
-      },
-      {
         "field": "NUMBER",
         "part": "word/document.xml",
         "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[1]",
-        "block": "КУƏЛІК/УДОСТОВЕРЕНИЕ № {{NUMBER}}   "
+        "block": "КУӘЛІК/УДОСТОВЕРЕНИЕ № {{NUMBER}}   "
       },
       {
         "field": "FULL_NAME_BOTH",
@@ -2190,10 +2190,16 @@
         "block": "{{SUBJECT}} "
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[1]/mc:AlternateContent/mc:Fallback/w:pict/v:shape/v:textbox/w:txbxContent/w:p[18]",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[2]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:tbl[1]/w:tr/w:tc/w:p/w:r[2]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
         "field": "PROTOCOL_NUMBER",
@@ -2316,16 +2322,28 @@
         "block": "{{ISSUER_RU}} "
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr[1]/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[14]/w:r[3]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[3]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[14]/w:r[3]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[59]/w:r/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[59]/w:r/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
         "field": "ISSUER_RU",
@@ -2352,10 +2370,16 @@
         "block": "{{ISSUER_RU}} "
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[4]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[72]/w:r/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[72]/w:r/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
         "field": "ISSUER_RU",
@@ -2403,8 +2427,8 @@
   },
   {
     "id": "pb-protocol",
-    "file": "pb-protocol.v5.docx",
-    "sha256": "daa358acef4fbaf98b3f56547cc9165fd8859158c5da51180fb8745c7378f6a3",
+    "file": "pb-protocol.v9.docx",
+    "sha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b",
     "columnNumbers": null,
     "protocolSemantics": "individual",
     "tables": [
@@ -2812,8 +2836,8 @@
   },
   {
     "id": "ps-card",
-    "file": "ps-card.v5.docx",
-    "sha256": "e14b5db9a0607056a7ac3f2380d3b1b3ccb62661b5c7c95ba2cc07f8d899992c",
+    "file": "ps-card.v15.docx",
+    "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13",
     "columnNumbers": null,
     "protocolSemantics": null,
     "tables": [
@@ -2830,7 +2854,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "                                  №   {{NUMBER}} КУӘЛІК УДОСТОВЕРЕНИЕ №  {{NUMBER}} Берілді / Выдано: {{FULL_NAME_BOTH}}Біліктілік / Квалификация:{{POSITION_KZ}}{{POSITION_RU}}Негіздеме: хаттама Основание: протокол № {{PROTOCOL_NUMBER}} от «{{PROTOCOL_DAY_MONTH}} » {{PROTOCOL_YEAR}}г.                     Емтихан комиссиясының торағасыПредседатель экзаменационной комиссии                                                                                                (Қолы / Подпись)                                   Комиссия мүшелері                                                                     Члены комиссии                      (Қолы / Подпись)                                                                                                                                                                                                                                                                                                                                                             (Қолы / Подпись)                                  №   {{NUMBER}} КУӘЛІК УДОСТОВЕРЕНИЕ №  {{NUMBER}} Берілді / Выдано: {{FULL_NAME_BOTH}}Біліктілік / Квалификация:{{POSITION_KZ}}{{POSITION_RU}}Негіздеме: хаттама Основание: протокол № {{PROTOCOL_NUMBER}} от «{{PROTOCOL_DAY_MONTH}} » {{PROTOCOL_YEAR}}г.                     Емтихан комиссиясының торағасыПредседатель экзаменационной комиссии                                                                                                (Қолы / Подпись)                                   Комиссия мүшелері                                                                     Члены комиссии                      (Қолы / Подпись)                                                                                                                                                                                                                                                                                                                                                             (Қолы / Подпись)             Тапсырылған емтихандар туралы мәлімет        {{SERIES}}Сведения о сданных экзаменахОқыту процісінде пәндер зерделенді және келесі пәндер бойынша емтихандар тапсырылдыВ процессе обучения изучены дисциплины и сданы экзамены по следующим дисциплинамБітіру емтиханы / Выпускной экзамен                                                  {{RESULT}} / {{RESULT}}                                                                                                                                                 (баға/оценка)Практикалық оқыту / Практическое обучение                                      {{RESULT}} / {{RESULT}}                                                                                                                                                   (баға/оценка)                           Тапсырылған емтихандар туралы мәлімет        {{SERIES}}Сведения о сданных экзаменахОқыту процісінде пәндер зерделенді және келесі пәндер бойынша емтихандар тапсырылдыВ процессе обучения изучены дисциплины и сданы экзамены по следующим дисциплинамБітіру емтиханы / Выпускной экзамен                                                  {{RESULT}} / {{RESULT}}                                                                                                                                                 (баға/оценка)Практикалық оқыту / Практическое обучение                                      {{RESULT}} / {{RESULT}}                                                                                                                                                   (баға/оценка)                                     ",
+                "text": "                                  №   {{NUMBER}} КУӘЛІК УДОСТОВЕРЕНИЕ №  {{NUMBER}} Берілді / Выдано: {{FULL_NAME_BOTH}}Біліктілік / Квалификация:{{POSITION_KZ}}{{POSITION_RU}}Негіздеме: хаттама Основание: протокол № {{PROTOCOL_NUMBER}} от «{{PROTOCOL_DAY_MONTH}} » {{PROTOCOL_YEAR}}г.                     Емтихан комиссиясының торағасыПредседатель экзаменационной комиссии                                                                                                (Қолы / Подпись)                                   Комиссия мүшелері                                                                     Члены комиссии                      (Қолы / Подпись)                                                                                                                                                                                                                                                                                                                                                             (Қолы / Подпись)М.О. / М.П.                                  №   {{NUMBER}} КУӘЛІК УДОСТОВЕРЕНИЕ №  {{NUMBER}} Берілді / Выдано: {{FULL_NAME_BOTH}}Біліктілік / Квалификация:{{POSITION_KZ}}{{POSITION_RU}}Негіздеме: хаттама Основание: протокол № {{PROTOCOL_NUMBER}} от «{{PROTOCOL_DAY_MONTH}} » {{PROTOCOL_YEAR}}г.                     Емтихан комиссиясының торағасыПредседатель экзаменационной комиссии                                                                                                (Қолы / Подпись)                                   Комиссия мүшелері                                                                     Члены комиссии                      (Қолы / Подпись)                                                                                                                                                                                                                                                                                                                                                             (Қолы / Подпись)М.О. / М.П.             Тапсырылған емтихандар туралы мәлімет        {{SERIES}}Сведения о сданных экзаменахОқыту процісінде пәндер зерделенді және келесі пәндер бойынша емтихандар тапсырылдыВ процессе обучения изучены дисциплины и сданы экзамены по следующим дисциплинамБітіру емтиханы / Выпускной экзамен                                                  {{RESULT}} / {{RESULT}}                                                                                                                                                 (баға/оценка)Практикалық оқыту / Практическое обучение                                      {{RESULT}} / {{RESULT}}                                   Тапсырылған емтихандар туралы мәлімет        {{SERIES}}Сведения о сданных экзаменахОқыту процісінде пәндер зерделенді және келесі пәндер бойынша емтихандар тапсырылдыВ процессе обучения изучены дисциплины и сданы экзамены по следующим дисциплинамБітіру емтиханы / Выпускной экзамен                                                  {{RESULT}} / {{RESULT}}                                                                                                                                                 (баға/оценка)Практикалық оқыту / Практическое обучение                                      {{RESULT}} / {{RESULT}}                                             ",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -2851,7 +2875,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -2874,7 +2898,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "",
+                "text": "№ п.п.",
                 "gridSpan": 1,
                 "vMerge": null
               },
@@ -2886,7 +2910,7 @@
               },
               {
                 "cell": 2,
-                "text": "№ п.п.Білімді бағалау /Оценка знаний",
+                "text": "Білімді бағалау /Оценка знаний",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -3008,13 +3032,13 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               },
               {
                 "cell": 1,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -3035,7 +3059,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -3056,7 +3080,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "{{ISSUER_RU}}",
+                "text": "",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -3066,6 +3090,18 @@
       }
     ],
     "fieldLocations": [
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[1]/w:r[1]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[1]/w:r[1]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
       {
         "field": "NUMBER",
         "part": "word/document.xml",
@@ -3223,12 +3259,6 @@
         "block": "Практикалық оқыту / Практическое обучение                                      {{RESULT}} / {{RESULT}}                      "
       },
       {
-        "field": "ISSUER_RU",
-        "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
-      },
-      {
         "field": "ONE",
         "part": "word/document.xml",
         "xpath": "/w:document/w:body/w:tbl[3]/w:tr[2]/w:tc[1]/w:p",
@@ -3289,28 +3319,40 @@
         "block": "{{RESULT}} / {{RESULT}}"
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[4]/w:tr/w:tc[1]/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[20]/w:r[1]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[4]/w:tr/w:tc[2]/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[20]/w:r[1]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[5]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[65]/w:r[1]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       },
       {
-        "field": "ISSUER_RU",
+        "field": "ISSUER_BOTH",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[6]/w:tr/w:tc/w:p",
-        "block": "{{ISSUER_RU}}"
+        "xpath": "/w:document/w:body/w:p[65]/w:r[1]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[80]/w:r[1]/mc:AlternateContent[2]/mc:Choice/w:drawing/wp:anchor/a:graphic/a:graphicData/wps:wsp/wps:txbx/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
+      },
+      {
+        "field": "ISSUER_BOTH",
+        "part": "word/document.xml",
+        "xpath": "/w:document/w:body/w:p[80]/w:r[1]/mc:AlternateContent[2]/mc:Fallback/w:pict/v:rect/v:textbox/w:txbxContent/w:p",
+        "block": "{{ISSUER_BOTH}}"
       }
     ],
     "sections": [
@@ -3359,8 +3401,8 @@
   },
   {
     "id": "ps-protocol",
-    "file": "ps-protocol.v5.docx",
-    "sha256": "2153be9e90cb33a75a26292e3761535b2060c84e50275da6b14816d8255f24c8",
+    "file": "ps-protocol.v9.docx",
+    "sha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b",
     "columnNumbers": null,
     "protocolSemantics": "individual",
     "tables": [
@@ -3829,8 +3871,8 @@
   },
   {
     "id": "ps-witness",
-    "file": "ps-witness.v5.docx",
-    "sha256": "b132b14cb7ac36a6cd9d8af745767b87d34742a19a8d7b1f50593888704041a6",
+    "file": "ps-witness.v11.docx",
+    "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94",
     "columnNumbers": null,
     "protocolSemantics": null,
     "tables": [
@@ -3876,7 +3918,7 @@
             "cells": [
               {
                 "cell": 0,
-                "text": "Кәсіптік білім даярлау туралыКУӘЛІК{{KB_NUMBER}}Осы куәлік: {{FULL_NAME_KZ}}тегі, аты, әкесінің аты (болған жағдайда)берілдіол{{TRAINING_START_YEAR_FULL}}ж.«{{TRAINING_START_DAY}}»{{TRAINING_START_MONTH_KZ}} бастап {{TRAINING_END_YEAR_FULL}}ж. «{{TRAINING_END_DAY}}{{TRAINING_END_MONTH_KZ}}аралығында оқып,{{EDU_ORG_KZ}}(білім беру ұйымының толық атауы){{TRAINING_END_YEAR_FULL}}жылы{{PROFESSION_KZ}}                                 кәсібі бойыншатолық курсын бітіріп шықты және кәсіптік оқудын толық курсын бітіргеннен  кейін мынадай білімін көрсетті:Пәндердің атауыБағалары Жалпы кәсіби {{RESULT}}Арнайы мамандырылған  {{RESULT}}Емтихан{{RESULT}}Біліктілік комиссиясының{{PROTOCOL_YEAR}}жылғы«{{PROTOCOL_DAY}} {{PROTOCOL_MONTH_KZ}}»хаттама №{{PROTOCOL_NUMBER_DISPLAY}}шешімімен оған{{PROFESSION_KZ}}біліктілігі берілдіДиректор _______________ {{CHAIR}}М.О.«{{ISSUE_DAY}}»{{ISSUE_MONTH_KZ}}20{{ISSUE_YEAR_SHORT}}ж.{{CITY_RU}} Тіркеу нөмері № {{REGISTRATION_NUMBER}}",
+                "text": "Кәсіптік білім даярлау туралыКУӘЛІК{{KB_NUMBER}}Осы куәлік: {{FULL_NAME_KZ}}тегі, аты, әкесінің аты (болған жағдайда)берілдіол{{TRAINING_START_YEAR_FULL}}ж.«{{TRAINING_START_DAY}}»{{TRAINING_START_MONTH_KZ}} бастап {{TRAINING_END_YEAR_FULL}}ж. «{{TRAINING_END_DAY}}{{TRAINING_END_MONTH_KZ}}аралығында оқып,{{EDU_ORG_KZ}}(білім беру ұйымының толық атауы){{TRAINING_END_YEAR_FULL}}жылы{{PROFESSION_KZ}}                                 кәсібі бойыншатолық курсын бітіріп шықты және кәсіптік оқудын толық курсын бітіргеннен  кейін мынадай білімін көрсетті:Пәндердің атауыБағалары Жалпы кәсіби {{RESULT}}Арнайы мамандырылған  {{RESULT}}Емтихан{{RESULT}}Біліктілік комиссиясының{{PROTOCOL_YEAR}}жылғы«{{PROTOCOL_DAY}}»{{PROTOCOL_MONTH_KZ}}хаттама №{{PROTOCOL_NUMBER_DISPLAY}}шешімімен оған{{PROFESSION_KZ}}біліктілігі берілдіДиректор _______________ {{CHAIR}}М.О.«{{ISSUE_DAY}}»{{ISSUE_MONTH_KZ}}20{{ISSUE_YEAR_SHORT}}ж.{{CITY_RU}} Тіркеу нөмері № {{REGISTRATION_NUMBER}}",
                 "gridSpan": 1,
                 "vMerge": null
               },
@@ -4304,7 +4346,7 @@
               },
               {
                 "cell": 4,
-                "text": "{{PROTOCOL_DAY}} {{PROTOCOL_MONTH_KZ}}",
+                "text": "{{PROTOCOL_DAY}}",
                 "gridSpan": 3,
                 "vMerge": null
               },
@@ -4316,7 +4358,7 @@
               },
               {
                 "cell": 6,
-                "text": "",
+                "text": "{{PROTOCOL_MONTH_KZ}}",
                 "gridSpan": 1,
                 "vMerge": null
               }
@@ -5041,13 +5083,13 @@
         "field": "PROTOCOL_DAY",
         "part": "word/document.xml",
         "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[4]/w:tr[1]/w:tc[5]/w:p",
-        "block": "{{PROTOCOL_DAY}} {{PROTOCOL_MONTH_KZ}}"
+        "block": "{{PROTOCOL_DAY}}"
       },
       {
         "field": "PROTOCOL_MONTH_KZ",
         "part": "word/document.xml",
-        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[4]/w:tr[1]/w:tc[5]/w:p",
-        "block": "{{PROTOCOL_DAY}} {{PROTOCOL_MONTH_KZ}}"
+        "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[4]/w:tr[1]/w:tc[7]/w:p",
+        "block": "{{PROTOCOL_MONTH_KZ}}"
       },
       {
         "field": "PROTOCOL_NUMBER_DISPLAY",

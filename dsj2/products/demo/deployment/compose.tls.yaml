@@ -1,0 +1,20 @@
+# Optional supplied-certificate TLS termination. Set DEMO_ORIGIN to the exact
+# HTTPS origin and provide tls.crt/tls.key outside the release/source directory.
+# Default bind remains loopback; public routing requires an explicit host setup.
+services:
+  tls:
+    image: demo-ingress:2.0.0
+    user: "101:101"
+    entrypoint: [nginx, -g, "daemon off;"]
+    ports: ["127.0.0.1:${DEMO_TLS_PORT:-8443}:8443"]
+    volumes:
+      - ./nginx-tls.conf:/etc/nginx/nginx.conf:ro
+      - ${DEMO_TLS_CERT_DIR:?Set an absolute directory containing tls.crt and tls.key}:/etc/demo-tls:ro
+    tmpfs: ["/tmp:rw,nosuid,size=32m,uid=101,gid=101"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on: { ingress: { condition: service_started } }
+    restart: unless-stopped
+    mem_limit: 128m
+    networks: [private]

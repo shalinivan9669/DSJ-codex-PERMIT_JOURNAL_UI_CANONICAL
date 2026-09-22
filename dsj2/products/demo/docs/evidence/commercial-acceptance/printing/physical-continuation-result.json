@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "method": "engineering-only duplicated table row to force continuation; not a supported group protocol",
+  "method": "engineering-only duplicated table row forces table continuation; not a supported group protocol",
   "checks": [
     {
       "page": 1,

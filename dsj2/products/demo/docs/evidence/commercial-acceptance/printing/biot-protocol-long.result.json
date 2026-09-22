@@ -4,17 +4,20 @@
   "template": "biot-protocol",
   "variant": "long",
   "recipients": 1,
-  "docxSha256": "cc892d7b097c562703b32febfff40ee68bee36e609c3e56dcda5e905e59a20bb",
-  "pdfSha256": "e4fe5db179593d09b19b3691c4d5b2faf403cb5fdccd1f0387d160083005d0ca",
-  "docxSeconds": 0.47249099996406585,
-  "renderSeconds": 36.00533600000199,
+  "docxSha256": "5d700f6e220920599428a4b5ade14e764860cf01fe9347ba6cf9f0695e46c6dd",
+  "pdfSha256": "b8e5adbbcde75ccd1f097f2f84106c43e6e58362c5fc5a15ba5c03de035c9923",
+  "docxSeconds": 0.38258815100016363,
+  "renderSeconds": 0.7369992410003761,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 2.3048587499997666,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 10.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-long-page-001.png",
-      "sha256": "48edd94e73491e9aeb58e183e6dd9d341f0c0ef3f64731fa7749db2827868dc8"
+      "sha256": "5170d01fe9d5ff4f219546f2d114ea5a949e41e7eefc0db95ee8b9ee77fe7ed4"
     }
   ],
   "columnChecks": [

@@ -2,7 +2,7 @@
   "name": "demo-print",
   "version": "2.0.0",
   "private": true,
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@11.27.1",
   "engines": {
     "node": ">=22.16 <25"
   },
@@ -34,12 +34,5 @@
     "tsx": "4.23.15",
     "typescript": "5.9.3",
     "typescript-eslint": "8.70.1"
-  },
-  "pnpm": {
-    "overrides": {
-      "multer": "2.4.0",
-      "postcss": "8.5.28",
-      "deepmerge-ts": "8.0.2"
-    }
   }
 }

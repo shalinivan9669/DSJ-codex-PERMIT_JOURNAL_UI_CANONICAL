@@ -1,0 +1,56 @@
+[
+  {
+    "template": "biot-worker-card",
+    "issuerBands": 3,
+    "fontPt": 8,
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "577545ab695128675ba1d11eff7ad1672d0fd8b9869f600a35ad99e8bb9de69d",
+    "sha256": "48aa92d8a0686ec5b3231847e387b93c27b146b7b7d6031ba4f53d066b33bd78",
+    "package": "orphaned source pictures removed"
+  },
+  {
+    "template": "biot-itr-certificate",
+    "issuerBands": 0,
+    "fontPt": null,
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "1c90dc992a161af6c7bbd09e1d98757c49c7f8c260da5ec8d12a85ecdc89450b",
+    "sha256": "0eba4028526f6d7d5035a068c670363924505ced2f2771acf6404cea6f12bece",
+    "package": "orphaned source pictures removed"
+  },
+  {
+    "template": "ptm-card",
+    "issuerBands": 1,
+    "fontPt": 8,
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "3fb986099459c3ccf9192653d7b0bb4d1d148b2561621f6f0867600956835679",
+    "sha256": "b6fa06b6e821fa73bbf51168efe88273fb6b214194f809e042d6b243879f62cc",
+    "package": "orphaned source pictures removed"
+  },
+  {
+    "template": "pb-card",
+    "issuerBands": 4,
+    "fontPt": 8,
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "2d6bf7765617d5900451e739f431fc89855092d23b2ef14cf6275960e047cb0e",
+    "sha256": "a12d971728f5e7568e295386d2a0061be32d30b7279222f8059fbb4b9d965379",
+    "package": "orphaned source pictures removed"
+  },
+  {
+    "template": "ps-card",
+    "issuerBands": 4,
+    "fontPt": 8,
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "7009575c914eba99eb75d78c2e99d6b02b98a61580e0e674d6dfc41b6c02c32a",
+    "sha256": "7de8aeff961dbef24cfaec9c9cee4adba8fe3fe4da9a997c0da720ca40fb12c6",
+    "package": "orphaned source pictures removed"
+  },
+  {
+    "template": "ps-witness",
+    "issuerBands": 0,
+    "fontPt": null,
+    "outerFrameGeometry": "unchanged",
+    "previousSha256": "8ee66b628736f46eb650d8c8c72a812f4e448bd6d142c4d4d052bb776994de24",
+    "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94",
+    "package": "orphaned source pictures removed"
+  }
+]

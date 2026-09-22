@@ -1,8 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
-import { LIMITS } from "@demo/contracts";
+import { BIOT_CATEGORIES, LIMITS, type BiotCategory } from "@demo/contracts";
 import { api, errorText } from "@/lib/api";
+import {
+  biotCategoriesForTemplate,
+  updateAssignment,
+} from "@/lib/assignment-presets";
 import {
   newAssignment,
   templateLabels,
@@ -28,8 +32,30 @@ export function RecipientDetails({
 }) {
   const [photoOpen, setPhotoOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("documents");
+  const manuallyEdited = useRef(new Set<string>());
+  useEffect(() => {
+    function focusField(event: Event) {
+      const path = (event as CustomEvent<string>).detail;
+      if (!path?.startsWith(`items.${rowIndex}.`)) return;
+      setActiveTab(path.includes(".assignments.") ? "documents" : "person");
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          const input = document.querySelector<HTMLElement>(
+            `[data-field-path="${CSS.escape(path)}"]`,
+          );
+          const details = input?.closest("details");
+          if (details) details.open = true;
+          input?.focus();
+          input?.scrollIntoView({ block: "center" });
+        }),
+      );
+    }
+    window.addEventListener("demo:focus-field", focusField);
+    return () => window.removeEventListener("demo:focus-field", focusField);
+  }, [rowIndex]);
   function field(index: number, key: string) {
     const path = `items.${rowIndex}.assignments.${index}.${key}`;
+    const category = recipient.assignments[index].biotCategory;
     const labels: Record<string, string> = {
       documentDate: "Дата документа",
       validUntil: "Действителен до",
@@ -41,14 +67,32 @@ export function RecipientDetails({
       externalBasisNumber: "Внешний номер основания",
       reason: "Причина проверки знаний",
       education: "Образование",
+      biotCategory: "Категория обучения БиОТ",
+      hours: category
+        ? BIOT_CATEGORIES[category].hoursLabel
+        : "Объём обучения, часов",
+      productionHours: "Производственное обучение, часов",
+      biotCheckType: "Вид проверки знаний БиОТ",
+      biotIndustryRu: "Отрасль специальных компетенций · RU",
+      biotIndustryKz: "Отрасль специальных компетенций · KZ",
+      biotKnowledgeResult: "Фактический результат проверки знаний",
+      biotProctoringResult: "Фактический результат прокторинга",
+      biotUniqueNumber: "Уникальный номер сертификата БиОТ",
+      biotNotes: "Примечание к протоколу БиОТ",
     };
     return {
       "aria-label": labels[key],
       "data-field-path": path,
       "aria-invalid": !!fieldErrors[path],
-      "aria-describedby": fieldErrors[path]
-        ? `error-${recipient.id}-${index}-${key}`
-        : undefined,
+      "aria-describedby":
+        [
+          fieldErrors[path] ? `error-${recipient.id}-${index}-${key}` : "",
+          (category && key === "hours") || key === "productionHours"
+            ? `hint-${recipient.id}-${index}-${key}`
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" ") || undefined,
     };
   }
   function fieldError(index: number, key: string) {
@@ -64,10 +108,21 @@ export function RecipientDetails({
     ) : null;
   }
   function changeAssignment(id: string, patch: Partial<Assignment>) {
+    for (const key of ["hours", "productionHours", "validUntil"] as const) {
+      if (Object.hasOwn(patch, key)) manuallyEdited.current.add(`${id}.${key}`);
+    }
     onChange({
       ...recipient,
       assignments: recipient.assignments.map((item) =>
-        item.id === id ? { ...item, ...patch } : item,
+        item.id === id
+          ? updateAssignment(item, patch, {
+              hours: manuallyEdited.current.has(`${id}.hours`),
+              productionHours: manuallyEdited.current.has(
+                `${id}.productionHours`,
+              ),
+              validUntil: manuallyEdited.current.has(`${id}.validUntil`),
+            })
+          : item,
       ),
     });
   }
@@ -168,6 +223,50 @@ export function RecipientDetails({
               />
             </label>
           ))}
+          {recipient.assignments.some((assignment) =>
+            assignment.templateId.startsWith("biot-"),
+          ) && (
+            <details>
+              <summary>Реквизиты работодателя для форм БиОТ</summary>
+              <p className="muted">
+                Если в заявке организации реквизиты работодателя не заполнены,
+                используются сведения выбранного заказчика.
+              </p>
+              {[
+                ["departmentRu", "Подразделение · RU"],
+                ["departmentKz", "Подразделение · KZ"],
+                ["employerBin", "БИН работодателя"],
+                ["employerAddressRu", "Юридический адрес работодателя · RU"],
+                ["employerAddressKz", "Юридический адрес работодателя · KZ"],
+              ].map(([key, label]) => (
+                <label key={key}>
+                  {label}
+                  <input
+                    disabled={disabled}
+                    value={String(recipient[key as keyof Recipient] || "")}
+                    data-field-path={`items.${rowIndex}.${key}`}
+                    aria-invalid={!!fieldErrors[`items.${rowIndex}.${key}`]}
+                    aria-describedby={
+                      fieldErrors[`items.${rowIndex}.${key}`]
+                        ? `error-${recipient.id}-${key}`
+                        : undefined
+                    }
+                    onChange={(event) =>
+                      onChange({ ...recipient, [key]: event.target.value })
+                    }
+                  />
+                  {fieldErrors[`items.${rowIndex}.${key}`] && (
+                    <small
+                      className="field-error"
+                      id={`error-${recipient.id}-${key}`}
+                    >
+                      {fieldErrors[`items.${rowIndex}.${key}`]}
+                    </small>
+                  )}
+                </label>
+              ))}
+            </details>
+          )}
           <button
             className="text-button"
             disabled={disabled}
@@ -225,6 +324,46 @@ export function RecipientDetails({
                     ))}
                   </select>
                 </label>
+                {assignment.templateId.startsWith("biot-") && (
+                  <label>
+                    Категория обучения БиОТ
+                    <select
+                      {...field(index, "biotCategory")}
+                      disabled={disabled}
+                      value={assignment.biotCategory || ""}
+                      onChange={(event) =>
+                        changeAssignment(assignment.id, {
+                          biotCategory: event.target.value as BiotCategory,
+                        })
+                      }
+                    >
+                      {!assignment.biotCategory && (
+                        <option value="" disabled>
+                          Выберите категорию
+                        </option>
+                      )}
+                      {biotCategoriesForTemplate(assignment.templateId).map(
+                        (category) => (
+                          <option key={category} value={category}>
+                            {BIOT_CATEGORIES[category].label}
+                          </option>
+                        ),
+                      )}
+                    </select>
+                    {fieldError(index, "biotCategory")}
+                    {assignment.biotCategory &&
+                      (BIOT_CATEGORIES[assignment.biotCategory]
+                        .requiresExternalCertificate ? (
+                        <Notice kind="info">
+                          {BIOT_CATEGORIES[assignment.biotCategory].hint}
+                        </Notice>
+                      ) : (
+                        <small>
+                          {BIOT_CATEGORIES[assignment.biotCategory].hint}
+                        </small>
+                      ))}
+                  </label>
+                )}
                 <div className="form-grid compact">
                   <label>
                     Дата документа
@@ -255,6 +394,18 @@ export function RecipientDetails({
                       }
                     />
                     {fieldError(index, "validUntil")}
+                    {assignment.biotCategory &&
+                      BIOT_CATEGORIES[assignment.biotCategory]
+                        .validityYears && (
+                        <small>
+                          Срок по категории:{" "}
+                          {BIOT_CATEGORIES[assignment.biotCategory]
+                            .validityYears === 1
+                            ? "1 год"
+                            : "3 года"}{" "}
+                          от даты документа. Введённая вручную дата сохраняется.
+                        </small>
+                      )}
                   </label>
                   <label>
                     Начало обучения
@@ -302,8 +453,12 @@ export function RecipientDetails({
                     {fieldError(index, "protocolDate")}
                   </label>
                   <label>
-                    Объём обучения, часов
+                    {assignment.biotCategory
+                      ? BIOT_CATEGORIES[assignment.biotCategory].hoursLabel
+                      : "Объём обучения, часов"}
                     <input
+                      {...field(index, "hours")}
+                      inputMode="decimal"
                       disabled={disabled}
                       value={assignment.hours}
                       onChange={(event) =>
@@ -312,8 +467,165 @@ export function RecipientDetails({
                         })
                       }
                     />
+                    {fieldError(index, "hours")}
+                    {assignment.biotCategory && (
+                      <small id={`hint-${recipient.id}-${index}-hours`}>
+                        {BIOT_CATEGORIES[assignment.biotCategory].hoursLabel}:
+                        не менее{" "}
+                        {BIOT_CATEGORIES[assignment.biotCategory].minimumHours}{" "}
+                        ч. Укажите фактический объём.
+                      </small>
+                    )}
                   </label>
+                  {((assignment.biotCategory &&
+                    BIOT_CATEGORIES[assignment.biotCategory]
+                      .minimumProductionHours) ||
+                    assignment.productionHours) && (
+                    <label>
+                      Производственное обучение, часов
+                      <input
+                        {...field(index, "productionHours")}
+                        inputMode="decimal"
+                        disabled={disabled}
+                        value={assignment.productionHours || ""}
+                        onChange={(event) =>
+                          changeAssignment(assignment.id, {
+                            productionHours: event.target.value,
+                          })
+                        }
+                      />
+                      {fieldError(index, "productionHours")}
+                      <small
+                        id={`hint-${recipient.id}-${index}-productionHours`}
+                      >
+                        {assignment.biotCategory &&
+                        BIOT_CATEGORIES[assignment.biotCategory]
+                          .minimumProductionHours
+                          ? `Не менее ${BIOT_CATEGORIES[assignment.biotCategory].minimumProductionHours} часов производственного обучения. Учитываются отдельно от академических часов теории.`
+                          : "Укажите фактический объём производственного обучения отдельно от теории."}
+                      </small>
+                    </label>
+                  )}
                 </div>
+                {(assignment.biotCategory === "WORKER" ||
+                  assignment.templateId === "biot-itr-protocol") && (
+                  <label>
+                    Вид проверки знаний БиОТ
+                    <select
+                      {...field(index, "biotCheckType")}
+                      disabled={disabled}
+                      value={assignment.biotCheckType || ""}
+                      onChange={(event) =>
+                        changeAssignment(assignment.id, {
+                          biotCheckType: event.target
+                            .value as Assignment["biotCheckType"],
+                        })
+                      }
+                    >
+                      {!assignment.biotCheckType && (
+                        <option value="" disabled>
+                          Выберите вид проверки
+                        </option>
+                      )}
+                      <option value="PERIODIC">Периодическая</option>
+                      <option value="REPEAT">Повторная</option>
+                    </select>
+                    {fieldError(index, "biotCheckType")}
+                  </label>
+                )}
+                {assignment.biotCategory &&
+                  BIOT_CATEGORIES[assignment.biotCategory].program ===
+                    "SPECIAL" && (
+                    <div className="form-grid compact">
+                      {[
+                        [
+                          "biotIndustryRu",
+                          "Отрасль специальных компетенций · RU",
+                        ],
+                        [
+                          "biotIndustryKz",
+                          "Отрасль специальных компетенций · KZ",
+                        ],
+                      ].map(([key, label]) => (
+                        <label key={key}>
+                          {label}
+                          <input
+                            {...field(index, key)}
+                            disabled={disabled}
+                            maxLength={500}
+                            value={String(
+                              assignment[key as keyof Assignment] || "",
+                            )}
+                            onChange={(event) =>
+                              changeAssignment(assignment.id, {
+                                [key]: event.target.value,
+                              })
+                            }
+                          />
+                          {fieldError(index, key)}
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                {assignment.templateId === "biot-itr-protocol" && (
+                  <>
+                    {[
+                      [
+                        "biotKnowledgeResult",
+                        "Фактический результат проверки знаний",
+                      ],
+                      [
+                        "biotProctoringResult",
+                        "Фактический результат прокторинга",
+                      ],
+                      ["biotUniqueNumber", "Уникальный номер сертификата БиОТ"],
+                    ].map(([key, label]) => (
+                      <label key={key}>
+                        {label}
+                        <input
+                          {...field(index, key)}
+                          disabled={disabled}
+                          maxLength={500}
+                          value={String(
+                            assignment[key as keyof Assignment] || "",
+                          )}
+                          onChange={(event) =>
+                            changeAssignment(assignment.id, {
+                              [key]: event.target.value,
+                            })
+                          }
+                        />
+                        {fieldError(index, key)}
+                        {key === "biotUniqueNumber" && (
+                          <small>
+                            Если сертификат оформляется этому получателю в том
+                            же комплекте, поле можно оставить пустым. Номер
+                            протокола не заменяет номер сертификата.
+                          </small>
+                        )}
+                      </label>
+                    ))}
+                  </>
+                )}
+                {["biot-protocol", "biot-itr-protocol"].includes(
+                  assignment.templateId,
+                ) && (
+                  <label>
+                    Примечание к протоколу БиОТ
+                    <textarea
+                      {...field(index, "biotNotes")}
+                      disabled={disabled}
+                      maxLength={500}
+                      value={assignment.biotNotes || ""}
+                      onChange={(event) =>
+                        changeAssignment(assignment.id, {
+                          biotNotes: event.target.value,
+                        })
+                      }
+                    />
+                    {fieldError(index, "biotNotes")}
+                  </label>
+                )}
                 <label>
                   Программа / тема обучения
                   <textarea

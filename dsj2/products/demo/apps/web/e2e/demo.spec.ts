@@ -140,6 +140,14 @@ test("person: bilingual refresh, final characters, PDF/DOCX originals, immutable
   await expect(
     page.getByRole("img", { name: "Фото получателя" }),
   ).toBeVisible();
+  const savedDraft = await (
+    await page.request.get(
+      `/api/print-requests/${/requests\/([^/]+)/.exec(page.url())![1]}`,
+    )
+  ).json();
+  expect(savedDraft.status).toBe("DRAFT");
+  expect(savedDraft.documents).toHaveLength(0);
+  expect(savedDraft.issuances).toHaveLength(0);
   await page.getByRole("button", { name: "Проверить", exact: true }).click();
   await expect(
     page.getByText("Данные прошли проверку", { exact: true }),
@@ -228,6 +236,26 @@ test("person: bilingual refresh, final characters, PDF/DOCX originals, immutable
   expect(snapshot.issuances[0].snapshot.draft.items[0].fullNameKz).toBe(
     "Тексеру Әли Қасымұлы — соңғы әріп",
   );
+  const personArtifacts = [];
+  const personFolder = `person-${requestId}`;
+  await fs.mkdir(path.join(evidence, personFolder), { recursive: true });
+  for (const artifact of snapshot.artifacts) {
+    const response = await page.request.get(`/api/artifacts/${artifact.id}`);
+    expect(response.ok()).toBe(true);
+    const bytes = await response.body();
+    expect(createHash("sha256").update(bytes).digest("hex")).toBe(
+      artifact.sha256,
+    );
+    const file = path.join(personFolder, `${artifact.id}-${artifact.fileName}`);
+    await fs.writeFile(path.join(evidence, file), bytes);
+    personArtifacts.push({
+      file,
+      format: artifact.format,
+      provenance: artifact.provenance,
+      sha256: artifact.sha256,
+      size: bytes.length,
+    });
+  }
   await fs.writeFile(
     path.join(evidence, "person-result.json"),
     JSON.stringify(
@@ -239,6 +267,18 @@ test("person: bilingual refresh, final characters, PDF/DOCX originals, immutable
         originalSha256: createHash("sha256")
           .update(await first.body())
           .digest("hex"),
+        templates: snapshot.issuances[0].snapshot.templates.map(
+          (template: {
+            version: string;
+            checksum: string;
+            contract: { id: string };
+          }) => ({
+            id: template.contract.id,
+            version: template.version,
+            sha256: template.checksum,
+          }),
+        ),
+        artifacts: personArtifacts,
       },
       null,
       2,

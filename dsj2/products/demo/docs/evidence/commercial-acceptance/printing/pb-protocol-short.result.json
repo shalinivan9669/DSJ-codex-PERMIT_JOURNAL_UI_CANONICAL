@@ -4,17 +4,20 @@
   "template": "pb-protocol",
   "variant": "short",
   "recipients": 1,
-  "docxSha256": "006d23460940d9b3570e65ea1a65f6c604ad8549619acd26ebe34ff406669070",
-  "pdfSha256": "fe82aaaa98fa577c7cdb66fcfa1079fde520566d68a8d81c5115afbb67125df4",
-  "docxSeconds": 1.7156495000235736,
-  "renderSeconds": 24.12765949999448,
+  "docxSha256": "00fd283f13a99e03dddfdc5db6298d1c7f5f5c795d688cdd76cda4b139bf3de9",
+  "pdfSha256": "d869e959af239502192721bb95f223c95bcedc689cc1b3980beec5fc55208818",
+  "docxSeconds": 2.949130929000603,
+  "renderSeconds": 4.224356567000541,
+  "conversionReusedAfterExactByteMatch": true,
+  "priorConversionSeconds": 4.102835705999496,
   "pages": [
     {
       "page": 1,
       "widthPt": 595.303955078125,
       "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 10.0,
       "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-short-page-001.png",
-      "sha256": "6a58c343fafeadfbab9f0b47cbb95fc6b19f73538bb6f909850108d41e372cf3"
+      "sha256": "3cde00254336bc36442d54eb07ae86370aa68f88aadddb7eb9bda3fe3058f7ea"
     }
   ],
   "columnChecks": [],

@@ -12,6 +12,7 @@ from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 from lxml import etree as E
 from ooxml import replace_fields, extract_merge_field_name
+from package_xml import normalize_package
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 NS = {'w': W[1:-1]}
@@ -174,7 +175,7 @@ def sanitize(source, name):
                 tree=E.Element(W+'fonts',nsmap={'w':W[1:-1]})
                 for family in ['Liberation Serif','Liberation Sans','Liberation Mono']:E.SubElement(tree,W+'font',{W+'name':family})
         files[filename]=E.tostring(tree,xml_declaration=True,encoding='utf-8')
-    output=ROOT/'assets/templates'/f'{name}.v{TEMPLATE_VERSION}.docx'; deterministic_zip(output,files)
+    output=ROOT/'assets/templates'/f'{name}.v{TEMPLATE_VERSION}.docx'; deterministic_zip(output,normalize_package(files))
     tree=E.fromstring(files['word/document.xml'])
     text=''.join(''.join(E.fromstring(data).itertext()) for filename,data in files.items() if filename.endswith('.xml'))
     forbidden=re.findall(r'Стандарт|Солтанова|Флеглер|Баянов|Жакибеков|Есен Д\.|ТОО\s+Аттестац',text)
