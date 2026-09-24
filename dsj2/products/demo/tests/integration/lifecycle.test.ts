@@ -329,6 +329,10 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
     async () => {
       const draft = fixture();
       draft.items[0].fullNameRu = "Оченьдлинное ".repeat(35).trim();
+      // The current BIOT form is a flowing full-page bilingual table and this
+      // value fits it. Exercise real overflow on the fixed-size PB card.
+      draft.items[0].assignments[0].templateId = "pb-card";
+      delete draft.items[0].assignments[0].biotCategory;
       const request = await createRequest(ca, draft);
       const before = await db.numberReservation.count({
         where: { tenantId: ca.tenantId },

@@ -1,0 +1,57 @@
+{
+  "synthetic": true,
+  "customerId": "DEMO-CUSTOMER-A",
+  "name": "Тестовый реестр работодателя",
+  "rowMode": "PER_ASSIGNMENT",
+  "sort": "SOURCE_ORDER",
+  "columns": [
+    {
+      "field": "personnelNumber",
+      "title": "Табельный номер",
+      "type": "TEXT"
+    },
+    {
+      "field": "fullNameRu",
+      "title": "ФИО",
+      "type": "TEXT"
+    },
+    {
+      "field": "departmentRu",
+      "title": "Подразделение",
+      "type": "TEXT"
+    },
+    {
+      "field": "programLabel",
+      "title": "Направление",
+      "type": "TEXT"
+    },
+    {
+      "field": "documentNumber",
+      "title": "Номер документа",
+      "type": "TEXT"
+    },
+    {
+      "field": "documentDate",
+      "title": "Дата документа",
+      "type": "DATE_ONLY"
+    },
+    {
+      "field": "protocolNumber",
+      "title": "Номер протокола",
+      "type": "TEXT"
+    }
+  ],
+  "files": {
+    "grouping": "BY_PERSON",
+    "nameFields": [
+      "personnelNumber",
+      "fullNameRu",
+      "templateLabel",
+      "documentNumber"
+    ],
+    "includeRegistry": true,
+    "includeInventory": true,
+    "includeCoverText": true
+  },
+  "language": "ru"
+}

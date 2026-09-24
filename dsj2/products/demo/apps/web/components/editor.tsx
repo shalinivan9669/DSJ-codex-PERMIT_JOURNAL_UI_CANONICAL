@@ -1,10 +1,19 @@
 "use client";
-import { updateAssignment } from "@/lib/assignment-presets";
+import { BulkDialog } from "./bulk-dialog";
+import { RecordPicker } from "./record-picker";
+import { EventContext } from "./event-context";
+import { CustomerOutput } from "./customer-output";
+import { CustomerReview } from "./customer-review";
+import { RequestOperations } from "./request-operations";
+import { GridPasteDialog } from "./grid-paste-dialog";
+import type { GridField } from "@/lib/grid-paste";
+import { BulkPhotoDialog } from "./bulk-photo-dialog";
+import { TextQualityHint } from "./text-quality-hint";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
-import { LIMITS } from "@demo/contracts";
+import { LIMITS, resolveDraft, documentPlan } from "@demo/contracts";
 import { api, ApiError, errorText, json, BEFORE_LOGOUT_EVENT } from "@/lib/api";
 import { AutosaveLane } from "@/lib/autosave";
 import {
@@ -16,7 +25,6 @@ import {
   type Page,
   type Recipient,
   type Validation,
-  type Assignment,
 } from "@/lib/types";
 import { CustomerDialog } from "./customers";
 import { RecipientDetails } from "./recipient-details";
@@ -56,15 +64,37 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedId, setSelectedId] = useState("");
   const [checked, setChecked] = useState<string[]>([]);
+  const [rowSearch, setRowSearch] = useState("");
+  const [pastedRange, setPastedRange] = useState<{
+    startRow: number;
+    startField: GridField;
+    text: string;
+  } | null>(null);
+  const [undo, setUndo] = useState<{ before: Draft; revision: number } | null>(
+    null,
+  );
   const [saveState, setSaveState] = useState("saved");
+  const [rowScope, setRowScope] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
   const [validation, setValidation] = useState<Validation | null>(null);
+  const [serverResolution, setServerResolution] = useState<{
+    revision: number;
+    value: ReturnType<typeof resolveDraft>;
+  } | null>(null);
   const [validationRevision, setValidationRevision] = useState<number | null>(
     null,
   );
   const [dialog, setDialog] = useState<
-    "import" | "bulk" | "finalize" | "customer" | "conflict" | null
+    | "import"
+    | "bulk"
+    | "finalize"
+    | "customer"
+    | "customerPicker"
+    | "recipientPicker"
+    | "photos"
+    | "conflict"
+    | null
   >(null);
   const [refreshFiles, setRefreshFiles] = useState(0);
   const [previewRevision, setPreviewRevision] = useState<number | null>(null);
@@ -82,6 +112,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     (value: Draft) => {
       current.current = value;
       setDraft(value);
+      setServerResolution(null);
       setSelectedId(value.items[0]?.id || "");
       setSaveState("saved");
       lane.current = new AutosaveLane(
@@ -118,12 +149,27 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     alive.current = true;
     api<Draft>(`/print-requests/${id}`)
       .then((value) => {
-        if (alive.current) initialize(value);
+        if (alive.current) {
+          initialize(value);
+          if (value.customerId)
+            void api<Customer>(`/customers/${value.customerId}`)
+              .then((customer) =>
+                setCustomers((old) => [
+                  ...old.filter((c) => c.id !== customer.id),
+                  customer,
+                ]),
+              )
+              .catch(() => undefined);
+        }
       })
       .catch((caught) => setError(errorText(caught)));
     api<Page<Customer>>("/customers?page=1&pageSize=100")
       .then((result) => {
-        if (alive.current) setCustomers(result.items);
+        if (alive.current)
+          setCustomers((old) => [
+            ...result.items,
+            ...old.filter((c) => !result.items.some((row) => row.id === c.id)),
+          ]);
       })
       .catch((caught) => setError(errorText(caught)));
     return () => {
@@ -187,6 +233,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     setDraft(next);
     lane.current.edit(draftPayload(next));
     setValidation(null);
+    setServerResolution(null);
     setError("");
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
@@ -206,12 +253,61 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     if (!lane.current) throw new Error("Заявка ещё загружается.");
     return lane.current.flush();
   }
+  async function applyOperation(patch: Partial<Draft>) {
+    if (!current.current || busy) return;
+    setBusy("bulk");
+    setError("");
+    try {
+      const expectedRevision = await flush();
+      const before = structuredClone(current.current);
+      const next = { ...before, ...patch };
+      if (
+        JSON.stringify(draftPayload(before)) ===
+        JSON.stringify(draftPayload(next))
+      )
+        return true;
+      const result = await api<{ revision: number }>(`/print-requests/${id}`, {
+        method: "PATCH",
+        body: json({ expectedRevision, draft: draftPayload(next) }),
+      });
+      initialize({ ...next, revision: result.revision });
+      setUndo({ before, revision: result.revision });
+      setValidation(null);
+      return true;
+    } catch (caught) {
+      setError(errorText(caught));
+      return false;
+    } finally {
+      setBusy("");
+    }
+  }
+  async function rememberContextOperation(
+    previousEvents: NonNullable<Draft["events"]>,
+  ) {
+    try {
+      const revision = await flush();
+      if (current.current?.status === "DRAFT")
+        setUndo({
+          before: {
+            ...structuredClone(current.current),
+            events: previousEvents,
+          },
+          revision,
+        });
+    } catch (caught) {
+      setError(errorText(caught));
+    }
+  }
   async function command(kind: "save" | "validate" | "preview" | "finalize") {
     setBusy(kind);
     setError("");
     try {
       const revision = await flush();
       if (kind === "validate") {
+        const resolved = await api<ReturnType<typeof resolveDraft>>(
+          `/print-requests/${id}/resolved`,
+        );
+        setServerResolution({ revision, value: resolved });
         const result = await api<
           Validation & { issues?: Validation["errors"] }
         >(`/print-requests/${id}/validate`, {
@@ -302,11 +398,48 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       </>
     );
   const readonly = draft.status !== "DRAFT" || context.user.role === "VIEWER";
+  const visibleItems = draft.items.filter(
+    (item) =>
+      [
+        item.fullNameRu,
+        item.fullNameKz,
+        item.personnelNumber,
+        item.externalId,
+      ].some((value) =>
+        value
+          ?.toLocaleLowerCase("ru")
+          .includes(rowSearch.toLocaleLowerCase("ru")),
+      ) &&
+      (!rowScope ||
+        (rowScope === "selected"
+          ? checked.includes(item.id)
+          : rowScope === "errors"
+            ? validation?.errors.some(
+                (issue) =>
+                  typeof issue !== "string" &&
+                  (issue.itemId === item.id ||
+                    (issue as { rowId?: string }).rowId === item.id ||
+                    String(issue.path || "").startsWith(
+                      `items.${draft.items.indexOf(item)}.`,
+                    )),
+              )
+            : rowScope.startsWith("event:")
+              ? item.assignments.some((a) => a.eventId === rowScope.slice(6))
+              : item.assignments.some((a) =>
+                  a.templateId.startsWith(rowScope),
+                ))),
+  );
   const selected = draft.items.find((item) => item.id === selectedId);
-  const documentCount = draft.items.reduce(
+  const resolved =
+    serverResolution?.revision === draft.revision
+      ? serverResolution.value
+      : resolveDraft(draft);
+  const plan = documentPlan(resolved.draft);
+  const assignmentCount = draft.items.reduce(
     (sum, item) => sum + item.assignments.length,
     0,
   );
+  const documentCount = plan.documentCount;
   const dirty =
     saveState === "dirty" || saveState === "saving" || saveState === "error";
   const fieldErrors = Object.fromEntries(
@@ -336,7 +469,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             {draft.kind === "PERSON"
               ? "Заявка на человека"
               : "Заявка организации"}{" "}
-            · {draft.items.length} получателей · {documentCount} документов
+            · {draft.items.length} получателей · {assignmentCount} назначений ·{" "}
+            {plan.groups.length > 0
+              ? `${plan.groups.length} общих протоколов · `
+              : ""}
+            {documentCount} документов
           </p>
         </div>
         <span className={`save-indicator ${saveState}`} role="status">
@@ -416,6 +553,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             {!readonly && (
               <button
                 className="text-button"
+                onClick={() => setDialog("customerPicker")}
+              >
+                Найти в справочнике
+              </button>
+            )}
+            {!readonly && (
+              <button
+                className="text-button"
                 onClick={() => setDialog("customer")}
               >
                 Добавить заказчика
@@ -433,6 +578,52 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           Тестовый комплект
         </label>
       </section>
+      <EventContext
+        draft={draft}
+        selectedIds={checked}
+        disabled={readonly || !!busy}
+        onChange={edit}
+        onApply={applyOperation}
+        onContextCommit={rememberContextOperation}
+      />
+      {undo && !readonly && (
+        <Notice kind="info">
+          Последнее массовое изменение сохранено.{" "}
+          <button
+            disabled={!!busy || dirty || draft.revision !== undo.revision}
+            onClick={async () => {
+              setBusy("undo");
+              setError("");
+              try {
+                const result = await api<{ revision: number }>(
+                  `/print-requests/${id}`,
+                  {
+                    method: "PATCH",
+                    body: json({
+                      expectedRevision: undo.revision,
+                      draft: draftPayload(undo.before),
+                    }),
+                  },
+                );
+                initialize({ ...undo.before, revision: result.revision });
+                setUndo(null);
+              } catch (caught) {
+                setError(errorText(caught));
+              } finally {
+                setBusy("");
+              }
+            }}
+          >
+            Отменить массовое изменение
+          </button>
+          {(dirty || draft.revision !== undo.revision) && (
+            <span>
+              {" "}
+              После следующей правки автоматическая отмена недоступна.
+            </span>
+          )}
+        </Notice>
+      )}
       <section className="panel recipients-panel">
         <div className="toolbar">
           <div>
@@ -443,6 +634,18 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </div>
           {!readonly && (
             <div className="toolbar-actions">
+              <button
+                disabled={!!busy || !draft.items.length}
+                onClick={() => setDialog("photos")}
+              >
+                Сопоставить фото
+              </button>
+              <button
+                disabled={!!busy || draft.items.length >= LIMITS.rows}
+                onClick={() => setDialog("recipientPicker")}
+              >
+                Найти человека
+              </button>
               <button disabled={!!busy} onClick={() => setDialog("import")}>
                 <Icon name="upload" />
                 Импорт / вставка
@@ -465,6 +668,49 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 Получатель
               </button>
             </div>
+          )}
+        </div>
+        <div className="toolbar selection-toolbar">
+          <label className="search-field">
+            Поиск в заявке
+            <input
+              value={rowSearch}
+              onChange={(e) => setRowSearch(e.target.value)}
+              placeholder="ФИО или табельный номер"
+            />
+          </label>
+          <span aria-live="polite">
+            Показано: {visibleItems.length}. Выбрано: {checked.length}, из них
+            скрыто поиском:{" "}
+            {
+              checked.filter(
+                (id) => !visibleItems.some((item) => item.id === id),
+              ).length
+            }
+            .
+          </span>
+          <label>
+            Показать строки
+            <select
+              value={rowScope}
+              onChange={(e) => setRowScope(e.target.value)}
+            >
+              <option value="">Все</option>
+              <option value="selected">Выбранные</option>
+              <option value="errors">С ошибками последней проверки</option>
+              <option value="pb-">Промышленная безопасность</option>
+              <option value="ptm-">Пожарно-технический минимум</option>
+              <option value="biot-">БиОТ</option>
+              <option value="ps-">Промышленное свидетельство</option>
+              {draft.events?.map((event) => (
+                <option key={event.id} value={`event:${event.id}`}>
+                  Событие: {event.title}
+                </option>
+              ))}
+            </select>
+          </label>
+          {checked.length > 0 && (
+            <button onClick={() => setChecked([])}>Снять выбор</button>
           )}
         </div>
         <div className="editor-grid">
@@ -495,109 +741,136 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 </tr>
               </thead>
               <tbody>
-                {draft.items.map((item, index) => (
-                  <tr
-                    key={item.id}
-                    className={item.id === selectedId ? "selected" : ""}
-                  >
-                    <td>
-                      <input
-                        type="checkbox"
-                        aria-label={`Выбрать строку ${index + 1}`}
-                        checked={checked.includes(item.id)}
-                        onChange={(event) =>
-                          setChecked(
-                            event.target.checked
-                              ? [...checked, item.id]
-                              : checked.filter((value) => value !== item.id),
-                          )
-                        }
-                      />
-                      <small>{index + 1}</small>
-                    </td>
-                    <td>
-                      <input
-                        aria-label={`ФИО RU, строка ${index + 1}`}
-                        data-field-path={`items.${index}.fullNameRu`}
-                        aria-invalid={
-                          !!fieldErrors[`items.${index}.fullNameRu`]
-                        }
-                        aria-describedby={
-                          fieldErrors[`items.${index}.fullNameRu`]
-                            ? `name-error-${item.id}`
-                            : undefined
-                        }
-                        disabled={readonly || !!busy}
-                        value={item.fullNameRu}
-                        placeholder="ФИО на русском"
-                        onFocus={() => setSelectedId(item.id)}
-                        onChange={(event) =>
-                          editRecipient({
-                            ...item,
-                            fullNameRu: event.target.value,
-                          })
-                        }
-                      />
-                      {fieldErrors[`items.${index}.fullNameRu`] && (
-                        <small
-                          className="field-error"
-                          id={`name-error-${item.id}`}
-                        >
-                          {fieldErrors[`items.${index}.fullNameRu`]}
-                        </small>
-                      )}
-                      <input
-                        aria-label={`ФИО KZ, строка ${index + 1}`}
-                        disabled={readonly || !!busy}
-                        value={item.fullNameKz}
-                        placeholder="Қазақша аты-жөні"
-                        onFocus={() => setSelectedId(item.id)}
-                        onChange={(event) =>
-                          editRecipient({
-                            ...item,
-                            fullNameKz: event.target.value,
-                          })
-                        }
-                      />
-                    </td>
-                    <td>
-                      <button
-                        className="document-count"
-                        onClick={() => setSelectedId(item.id)}
-                        aria-label={`Документы и даты получателя ${index + 1}`}
-                      >
-                        {item.assignments.length}
-                        <Icon name="chevron" size={14} />
-                      </button>
-                    </td>
-                    <td>
-                      {!readonly && (
-                        <button
-                          className="icon-button"
-                          disabled={!!busy}
-                          aria-label={`Удалить получателя ${index + 1}`}
-                          onClick={() => {
-                            edit({
-                              items: draft.items.filter(
-                                (row) => row.id !== item.id,
-                              ),
-                            });
+                {visibleItems.map((item) => {
+                  const index = draft.items.indexOf(item);
+                  return (
+                    <tr
+                      key={item.id}
+                      className={item.id === selectedId ? "selected" : ""}
+                    >
+                      <td>
+                        <input
+                          type="checkbox"
+                          aria-label={`Выбрать строку ${index + 1}`}
+                          checked={checked.includes(item.id)}
+                          onChange={(event) =>
                             setChecked(
-                              checked.filter((value) => value !== item.id),
-                            );
-                            if (selectedId === item.id)
-                              setSelectedId(
-                                draft.items.find((row) => row.id !== item.id)
-                                  ?.id || "",
-                              );
+                              event.target.checked
+                                ? [...checked, item.id]
+                                : checked.filter((value) => value !== item.id),
+                            )
+                          }
+                        />
+                        <small>{index + 1}</small>
+                      </td>
+                      <td>
+                        <input
+                          aria-label={`ФИО RU, строка ${index + 1}`}
+                          onPaste={(event) => {
+                            const text = event.clipboardData.getData("text");
+                            if (/[\t\r\n]/.test(text)) {
+                              event.preventDefault();
+                              setPastedRange({
+                                startRow: index,
+                                startField: "fullNameRu",
+                                text,
+                              });
+                            }
                           }}
+                          data-field-path={`items.${index}.fullNameRu`}
+                          aria-invalid={
+                            !!fieldErrors[`items.${index}.fullNameRu`]
+                          }
+                          aria-describedby={
+                            fieldErrors[`items.${index}.fullNameRu`]
+                              ? `name-error-${item.id}`
+                              : undefined
+                          }
+                          disabled={readonly || !!busy}
+                          value={item.fullNameRu}
+                          placeholder="ФИО на русском"
+                          onFocus={() => setSelectedId(item.id)}
+                          onChange={(event) =>
+                            editRecipient({
+                              ...item,
+                              fullNameRu: event.target.value,
+                            })
+                          }
+                        />
+                        {fieldErrors[`items.${index}.fullNameRu`] && (
+                          <small
+                            className="field-error"
+                            id={`name-error-${item.id}`}
+                          >
+                            {fieldErrors[`items.${index}.fullNameRu`]}
+                          </small>
+                        )}
+                        <TextQualityHint value={item.fullNameRu} />
+                        <input
+                          aria-label={`ФИО KZ, строка ${index + 1}`}
+                          onPaste={(event) => {
+                            const text = event.clipboardData.getData("text");
+                            if (/[\t\r\n]/.test(text)) {
+                              event.preventDefault();
+                              setPastedRange({
+                                startRow: index,
+                                startField: "fullNameKz",
+                                text,
+                              });
+                            }
+                          }}
+                          disabled={readonly || !!busy}
+                          value={item.fullNameKz}
+                          placeholder="Қазақша аты-жөні"
+                          onFocus={() => setSelectedId(item.id)}
+                          onChange={(event) =>
+                            editRecipient({
+                              ...item,
+                              fullNameKz: event.target.value,
+                            })
+                          }
+                        />
+                        <TextQualityHint value={item.fullNameKz} />
+                      </td>
+                      <td>
+                        <button
+                          className="document-count"
+                          onClick={() => setSelectedId(item.id)}
+                          aria-label={`Документы и даты получателя ${index + 1}`}
                         >
-                          ×
+                          {item.assignments.length}
+                          <Icon name="chevron" size={14} />
                         </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td>
+                        {!readonly && (
+                          <button
+                            className="icon-button"
+                            disabled={!!busy}
+                            aria-label={`Удалить получателя ${index + 1}`}
+                            onClick={() => {
+                              edit({
+                                items: draft.items.filter(
+                                  (row) => row.id !== item.id,
+                                ),
+                              });
+                              setChecked(
+                                checked.filter((value) => value !== item.id),
+                              );
+                              if (selectedId === item.id)
+                                setSelectedId(
+                                  draft.items.find((row) => row.id !== item.id)
+                                    ?.id || "",
+                                );
+                            }}
+                          >
+                            ×
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             {!draft.items.length && (
@@ -610,6 +883,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             {selected ? (
               <RecipientDetails
                 recipient={selected}
+                resolvedRecipient={resolved.draft.items.find(
+                  (item) => item.id === selected.id,
+                )}
+                provenance={resolved.provenance}
                 disabled={readonly || !!busy}
                 onChange={editRecipient}
                 context={context}
@@ -681,11 +958,43 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             {validation.warnings?.map((warning, i) => (
               <p key={i}>
                 {typeof warning === "string" ? warning : warning.message}
+                {typeof warning !== "string" &&
+                  warning.candidates
+                    ?.filter((candidate) =>
+                      /^\/requests\/[^/]+(?:\/edit)?$/.test(
+                        candidate.historyPath,
+                      ),
+                    )
+                    .map((candidate) => (
+                      <Link
+                        className="button"
+                        key={candidate.historyPath + candidate.number}
+                        href={candidate.historyPath}
+                      >
+                        Открыть прежний документ
+                        {candidate.number ? ` № ${candidate.number}` : ""}
+                      </Link>
+                    ))}
               </p>
             ))}
           </Notice>
         </div>
       )}
+      <CustomerReview
+        draft={draft}
+        flush={flush}
+        canManage={context.user.role !== "VIEWER"}
+      />
+      <CustomerOutput
+        draft={draft}
+        canManage={context.user.role !== "VIEWER"}
+      />
+      <RequestOperations
+        draft={draft}
+        selected={selected}
+        flush={flush}
+        canManage={context.user.role !== "VIEWER"}
+      />
       <FilesPanel
         requestId={id}
         draft={draft}
@@ -727,6 +1036,63 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </div>
         </div>
       )}
+      {pastedRange && (
+        <GridPasteDialog
+          items={draft.items}
+          {...pastedRange}
+          onClose={() => setPastedRange(null)}
+          onApply={async (items) => {
+            if (await applyOperation({ items })) setPastedRange(null);
+          }}
+        />
+      )}
+      {dialog === "photos" && (
+        <BulkPhotoDialog
+          items={draft.items}
+          customerId={draft.customerId}
+          disabled={!!busy}
+          onClose={() => setDialog(null)}
+          onApply={async (updates) => {
+            const applied = await applyOperation({
+              items: draft.items.map((item) =>
+                updates[item.id]
+                  ? { ...item, photoAssetId: updates[item.id] }
+                  : item,
+              ),
+            });
+            if (applied) setDialog(null);
+          }}
+        />
+      )}
+      {dialog === "customerPicker" && (
+        <RecordPicker
+          kind="customers"
+          onClose={() => setDialog(null)}
+          onCustomer={(customer) => {
+            setCustomers((old) => [
+              ...old.filter((c) => c.id !== customer.id),
+              customer,
+            ]);
+            edit({ customerId: customer.id });
+            setDialog(null);
+          }}
+        />
+      )}
+      {dialog === "recipientPicker" && (
+        <RecordPicker
+          kind="recipients"
+          onClose={() => setDialog(null)}
+          onRecipient={(person) => {
+            const empty =
+              draft.items.length === 1 &&
+              !draft.items[0].fullNameRu &&
+              !draft.items[0].fullNameKz;
+            edit({ items: empty ? [person] : [...draft.items, person] });
+            setSelectedId(person.id);
+            setDialog(null);
+          }}
+        />
+      )}
       {dialog === "customer" && (
         <CustomerDialog
           customer={{}}
@@ -755,25 +1121,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       )}
       {dialog === "bulk" && (
         <BulkDialog
-          count={checked.length}
+          items={draft.items}
+          resolvedItems={resolved.draft.items}
+          selectedIds={checked}
           onClose={() => setDialog(null)}
-          onApply={(patch) => {
-            edit({
-              items: draft.items.map((item) =>
-                checked.includes(item.id)
-                  ? {
-                      ...item,
-                      assignments: item.assignments.map((assignment) =>
-                        updateAssignment(assignment, patch),
-                      ),
-                    }
-                  : item,
-              ),
-            });
-            setDialog(null);
+          onApply={async (items) => {
+            if (await applyOperation({ items })) setDialog(null);
           }}
         />
-      )}
+      )}{" "}
       {dialog === "finalize" && (
         <Modal
           title="Оформить комплект документов?"
@@ -834,90 +1190,5 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         </Modal>
       )}
     </>
-  );
-}
-function BulkDialog({
-  count,
-  onClose,
-  onApply,
-}: {
-  count: number;
-  onClose: () => void;
-  onApply: (patch: Partial<Assignment>) => void;
-}) {
-  const [documentDate, setDocumentDate] = useState("");
-  const [trainingSubject, setSubject] = useState("");
-  const [result, setResult] = useState("");
-  const [enabled, setEnabled] = useState<string[]>([]);
-  return (
-    <Modal title={`Общие значения для ${count} получателей`} onClose={onClose}>
-      <p>
-        Отметьте поля, которые нужно применить ко всем документам выбранных
-        получателей. Остальные данные не меняются.
-      </p>
-      {[
-        [
-          "documentDate",
-          "Дата документа",
-          documentDate,
-          setDocumentDate,
-          "date",
-        ],
-        [
-          "trainingSubject",
-          "Программа / тема",
-          trainingSubject,
-          setSubject,
-          "text",
-        ],
-        ["result", "Подтверждённый результат", result, setResult, "text"],
-      ].map(([key, title, value, setValue, type]) => (
-        <div className="bulk-field" key={String(key)}>
-          <label className="checkbox">
-            <input
-              type="checkbox"
-              checked={enabled.includes(String(key))}
-              onChange={(event) =>
-                setEnabled(
-                  event.target.checked
-                    ? [...enabled, String(key)]
-                    : enabled.filter((item) => item !== key),
-                )
-              }
-            />
-            {String(title)}
-          </label>
-          <input
-            aria-label={String(title)}
-            disabled={!enabled.includes(String(key))}
-            type={String(type)}
-            value={String(value)}
-            onChange={(event) =>
-              (setValue as (value: string) => void)(event.target.value)
-            }
-          />
-        </div>
-      ))}
-      <div className="modal-actions">
-        <button onClick={onClose}>Отмена</button>
-        <button
-          className="primary"
-          disabled={!enabled.length}
-          onClick={() =>
-            onApply(
-              Object.fromEntries(
-                Object.entries({
-                  documentDate,
-                  trainingSubject,
-                  result,
-                }).filter(([key]) => enabled.includes(key)),
-              ),
-            )
-          }
-        >
-          Применить к выбранным
-        </button>
-      </div>
-    </Modal>
   );
 }

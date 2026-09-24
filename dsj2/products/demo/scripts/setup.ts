@@ -39,7 +39,14 @@ export async function provision(input: {
     throw new Error("EXISTING_PRODUCTION_TENANT_CANNOT_BECOME_DEMO");
   const store = new ArtifactStore();
   const manifest = await templateManifest();
-  for (const template of manifest.templates) {
+  for (const template of [
+    ...manifest.templates,
+    ...((
+      manifest as typeof manifest & {
+        groupTemplates?: typeof manifest.templates;
+      }
+    ).groupTemplates || []),
+  ]) {
     const bytes = await readFile(
       join(PRODUCT_ROOT, "assets/templates", String(template.file)),
     );

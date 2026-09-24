@@ -16,6 +16,25 @@ import {
 } from "./core";
 import { passwordSchema, passwordHash } from "./auth";
 export async function context(c: Context, csrfToken: string) {
+  if (c.role === "EMPLOYER") {
+    const user = await db.user.findFirstOrThrow({
+      where: { id: c.userId, tenantId: c.tenantId },
+      select: { id: true, email: true, displayName: true, role: true },
+    });
+    const tenant = await db.tenant.findUniqueOrThrow({
+      where: { id: c.tenantId },
+      select: { id: true, name: true, timezone: true, demoOnly: true },
+    });
+    return {
+      user,
+      tenant,
+      profile: null,
+      profileVersionId: null,
+      templates: [],
+      numbering: [],
+      csrfToken,
+    };
+  }
   const [user, tenant, profile, templates, numbering] = await Promise.all([
     db.user.findFirstOrThrow({
       where: { id: c.userId, tenantId: c.tenantId },

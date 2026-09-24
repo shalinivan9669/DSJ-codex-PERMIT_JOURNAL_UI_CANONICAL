@@ -24,7 +24,7 @@ export const templateIds = [
   "ps-protocol",
   "ps-witness",
 ] as const;
-export const roleSchema = z.enum(["ADMIN", "OPERATOR", "VIEWER"]);
+export const roleSchema = z.enum(["ADMIN", "OPERATOR", "VIEWER", "EMPLOYER"]);
 export type Role = z.infer<typeof roleSchema>;
 const text = z
   .string()
@@ -51,6 +51,44 @@ export function today(timezone: string): string {
     .join("-");
 }
 const date = z.string().max(10).default("");
+export const commonFieldsSchema = z
+  .object({
+    documentDate: z.string().max(10).optional(),
+    trainingStart: z.string().max(10).optional(),
+    trainingEnd: z.string().max(10).optional(),
+    protocolDate: z.string().max(10).optional(),
+    validUntil: z.string().max(10).optional(),
+    trainingSubject: optionalText,
+    reason: optionalText,
+    education: optionalText,
+    externalBasisNumber: z.string().max(100).optional(),
+    hours: z.string().max(30).optional(),
+    productionHours: z.string().max(30).optional(),
+    biotCategory: z.enum(biotCategoryIds).optional(),
+    biotCheckType: z.enum(["", "PERIODIC", "REPEAT"]).optional(),
+    biotIndustryRu: optionalText,
+    biotIndustryKz: optionalText,
+  })
+  .strict();
+export const trainingEventSchema = z
+  .object({
+    id: z.string().min(1).max(80),
+    title: z.string().min(1).max(255),
+    protocolTemplateId: z.enum([
+      "biot-protocol",
+      "biot-itr-protocol",
+      "pb-protocol",
+      "ptm-protocol",
+      "ps-protocol",
+    ]),
+    revision: z.number().int().nonnegative().default(0),
+    commonFields: commonFieldsSchema,
+    profileVersionId: z.string().max(80).optional(),
+    serviceRuleVersionId: z.string().max(80).optional(),
+  })
+  .strict();
+export type CommonFields = z.infer<typeof commonFieldsSchema>;
+export type TrainingEventInput = z.infer<typeof trainingEventSchema>;
 export const assignmentSchema = z
   .object({
     id: z.string().min(1).max(80),
@@ -79,11 +117,44 @@ export const assignmentSchema = z
     biotUniqueNumber: optionalText,
     biotNotes: optionalText,
     externalBasisNumber: z.string().max(100).default(""),
+    eventId: z.string().max(80).optional(),
+    retakeOf: z
+      .object({
+        requestId: z.string().min(1).max(80),
+        rowId: z.string().min(1).max(80),
+        assignmentId: z.string().min(1).max(80),
+        reason: z.string().trim().min(3).max(1000),
+      })
+      .strict()
+      .optional(),
+    fieldOrigins: z
+      .record(
+        z.string().max(60),
+        z.enum(["MANUAL", "IMPORTED", "INHERITED", "CLEARED"]),
+      )
+      .optional(),
+    outcome: z
+      .object({
+        status: z.enum(["PASSED", "FAILED", "ABSENT", "UNKNOWN"]),
+        source: z.string().max(500).default(""),
+        confirmedBy: z.string().max(80).optional(),
+        confirmedAt: z.string().max(40).optional(),
+      })
+      .strict()
+      .optional(),
     protocolMode: z
-      .enum(["INDIVIDUAL", "EXTERNAL_REFERENCE"])
+      .enum(["INDIVIDUAL", "EXTERNAL_REFERENCE", "GROUP"])
       .default("INDIVIDUAL"),
   })
-  .strict();
+  .strict()
+  .superRefine((value, ctx) => {
+    if (value.protocolMode === "GROUP" && !value.eventId)
+      ctx.addIssue({
+        code: "custom",
+        path: ["eventId"],
+        message: "Групповой документ требует настоящее событие",
+      });
+  });
 export const itemSchema = z
   .object({
     id: z.string().min(1).max(80),
@@ -102,6 +173,12 @@ export const itemSchema = z
     assignments: z.array(assignmentSchema).max(10).default([]),
     sourceRow: z.number().int().positive().optional(),
     importId: z.string().max(100).optional(),
+    recipientId: z.string().max(80).optional(),
+    externalId: z.string().max(100).optional(),
+    personnelNumber: z.string().max(100).optional(),
+    employerId: z.string().max(80).optional(),
+    employmentPeriod: optionalText,
+    sourceOrder: z.number().int().nonnegative().optional(),
   })
   .strict();
 export const draftSchema = z
@@ -110,10 +187,21 @@ export const draftSchema = z
     title: z.string().max(255).default(""),
     customerId: z.string().max(80).nullable().default(null),
     demoMode: z.boolean().default(false),
+    schemaVersion: z.literal(2).optional(),
+    profileVersionId: z.string().max(80).optional(),
+    presetFields: commonFieldsSchema.optional(),
+    commonFields: commonFieldsSchema.optional(),
+    events: z.array(trainingEventSchema).max(30).optional(),
     items: z.array(itemSchema).max(LIMITS.rows).default([]),
   })
   .strict()
   .superRefine((v, ctx) => {
+    if (new Set(v.events?.map((e) => e.id)).size !== (v.events?.length || 0))
+      ctx.addIssue({
+        code: "custom",
+        path: ["events"],
+        message: "Идентификаторы событий повторяются",
+      });
     const ids = v.items.map((i) => i.id);
     if (new Set(ids).size !== ids.length)
       ctx.addIssue({
@@ -157,6 +245,8 @@ export const customerSchema = z
   .strict();
 export const profileSchema = z
   .object({
+    commonFields: commonFieldsSchema.optional(),
+    commissionTitle: z.string().max(255).optional(),
     nameRu: z
       .string()
       .min(1, "Введите название на русском")
@@ -186,6 +276,23 @@ export type Draft = z.infer<typeof draftSchema>;
 export type RequestItemInput = z.infer<typeof itemSchema>;
 export type Assignment = z.infer<typeof assignmentSchema>;
 export type IssuerProfile = z.infer<typeof profileSchema>;
+export function protocolTemplateFor(templateId: string) {
+  return templateId === "biot-itr-certificate" ||
+    templateId === "biot-itr-protocol"
+    ? "biot-itr-protocol"
+    : `${templateId.split("-")[0]}-protocol`;
+}
+export function credentialTemplateFor(templateId: string) {
+  if (
+    templateId === "biot-itr-protocol" ||
+    templateId === "biot-itr-certificate"
+  )
+    return "biot-itr-certificate";
+  if (templateId === "biot-protocol" || templateId === "biot-worker-card")
+    return "biot-worker-card";
+  return `${templateId.split("-")[0]}-card`;
+}
+export * from "./resolution";
 export type ValidationIssue = {
   code: string;
   path: string;

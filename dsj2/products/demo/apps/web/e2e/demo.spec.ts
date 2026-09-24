@@ -351,6 +351,41 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
 }) => {
   test.setTimeout(720000);
   await login(page);
+  // This scenario also runs alone on a freshly provisioned synthetic center.
+  // Its five individual BIOT protocols require a confirmed three-person commission.
+  await page.goto("/settings");
+  await expect(page.getByLabel("Юридическое название · RU")).toBeVisible();
+  const commissionCount = await page.locator(".commission-row").count();
+  if (commissionCount < 3) {
+    expect(process.env.DEMO_E2E_ISOLATED_TENANT).toBe("1");
+    while ((await page.locator(".commission-row").count()) < 3)
+      await page.getByRole("button", { name: "Добавить", exact: true }).click();
+    for (let index = commissionCount; index < 3; index++) {
+      const member = page.locator(".commission-row").nth(index);
+      await member
+        .getByLabel("ФИО", { exact: true })
+        .fill(`Синтетический член комиссии ${index + 1}`);
+      await member
+        .getByLabel("Роль в комиссии / должность", { exact: true })
+        .fill(
+          index
+            ? "Член синтетической комиссии"
+            : "Председатель синтетической комиссии",
+        );
+    }
+    await page
+      .getByLabel(
+        "Реквизиты и состав комиссии проверены уполномоченным сотрудником центра",
+      )
+      .check();
+    await page
+      .getByRole("button", { name: "Сохранить новую версию", exact: true })
+      .click();
+    await expect(
+      page.getByText(/Создана новая версия реквизитов/),
+    ).toBeVisible();
+  }
+  await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
   await page.getByRole("button", { name: /Организация Заказчик/ }).click();
   await page
@@ -391,6 +426,15 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
   await expect(page.getByLabel("ФИО KZ, строка 12")).toHaveValue(
     "Қабылдаушы 12",
   );
+  await page
+    .getByRole("button", { name: "Документы и даты получателя 2", exact: true })
+    .click();
+  const unchangedDate = await page
+    .getByLabel("Дата документа", { exact: true })
+    .inputValue();
+  await page
+    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
+    .click();
   await page.getByLabel("Выбрать строку 1", { exact: true }).check();
   await page
     .getByRole("button", { name: "Применить к выбранным (1)", exact: true })
@@ -399,10 +443,32 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
     .getByRole("dialog")
     .getByRole("checkbox", { name: "Дата документа", exact: true })
     .check();
-  await page.getByRole("dialog").locator("input[type=date]").fill("2026-10-01");
   await page
-    .getByRole("button", { name: "Применить к выбранным", exact: true })
+    .getByRole("dialog")
+    .getByLabel("Режим применения")
+    .selectOption("REPLACE");
+  await page
+    .getByRole("dialog")
+    .getByLabel("Общее значение: Дата документа", { exact: true })
+    .fill("2026-10-01");
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Показать изменения", exact: true })
     .click();
+  await expect(page.getByRole("dialog")).toContainText(
+    "1 человек · 1 назначений · 1 изменений",
+  );
+  await page
+    .getByRole("dialog")
+    .getByLabel(
+      "Подтверждаю замену отмеченных полей, включая индивидуальные значения",
+    )
+    .check();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Применить 1 изменений", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(page.getByLabel("Дата документа", { exact: true })).toHaveValue(
     "2026-10-01",
   );
@@ -410,7 +476,7 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
     .getByRole("button", { name: "Документы и даты получателя 2", exact: true })
     .click();
   await expect(page.getByLabel("Дата документа", { exact: true })).toHaveValue(
-    "",
+    unchangedDate,
   );
   await save(page);
   await page.reload();
@@ -427,37 +493,66 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
     await page
       .getByRole("button", { name: "Добавить документ", exact: true })
       .click();
-    const second = page.locator(".assignment-list details").nth(1);
+    const second = page.locator(".assignment-list > details").nth(1);
     await second.locator("summary").click();
     await second
       .getByLabel("Форма документа", { exact: true })
       .selectOption(i === 1 ? "ps-witness" : "biot-protocol");
   }
   await page.getByLabel("Выбрать всех получателей", { exact: true }).check();
-  await page
-    .getByRole("button", { name: "Применить к выбранным (12)", exact: true })
-    .click();
-  for (const name of [
-    "Дата документа",
-    "Программа / тема",
-    "Подтверждённый результат",
-  ])
+  // V2 scopes generic common values by direction and previews the exact mask.
+  // Actual results remain individual facts, outside these common-field edits.
+  for (const direction of ["biot", "ps"]) {
     await page
-      .getByRole("dialog")
-      .getByRole("checkbox", { name, exact: true })
+      .getByRole("button", { name: "Применить к выбранным (12)", exact: true })
+      .click();
+    const bulk = page.getByRole("dialog");
+    await bulk
+      .getByRole("combobox", { name: "Направление", exact: true })
+      .selectOption(direction);
+    await bulk.getByLabel("Режим применения").selectOption("REPLACE");
+    for (const name of ["Дата документа", "Программа / тема"])
+      await bulk.getByRole("checkbox", { name, exact: true }).check();
+    await bulk
+      .getByLabel("Общее значение: Дата документа", { exact: true })
+      .fill("2026-10-01");
+    await bulk
+      .getByLabel("Общее значение: Программа / тема", { exact: true })
+      .fill("Контрольная программа организации");
+    await bulk
+      .getByRole("button", { name: "Показать изменения", exact: true })
+      .click();
+    await bulk
+      .getByLabel(
+        "Подтверждаю замену отмеченных полей, включая индивидуальные значения",
+      )
       .check();
-  await page.getByRole("dialog").locator("input[type=date]").fill("2026-10-01");
-  await page
-    .getByRole("dialog")
-    .getByRole("textbox", { name: "Программа / тема", exact: true })
-    .fill("Контрольная программа организации");
-  await page
-    .getByRole("dialog")
-    .getByRole("textbox", { name: "Подтверждённый результат", exact: true })
-    .fill("Контрольный результат");
-  await page
-    .getByRole("button", { name: "Применить к выбранным", exact: true })
-    .click();
+    await bulk
+      .getByRole("button", { name: /^Применить \d+ изменений$/ })
+      .click();
+    await expect(bulk).toHaveCount(0);
+  }
+  for (let index = 1; index <= 12; index++) {
+    await page
+      .getByRole("button", {
+        name: `Документы и даты получателя ${index}`,
+        exact: true,
+      })
+      .click();
+    const assignments = page.locator(".assignment-list > details");
+    const count = await assignments.count();
+    expect(count).toBe(index <= 6 ? 2 : 1);
+    for (let assignmentIndex = 0; assignmentIndex < count; assignmentIndex++) {
+      const assignment = assignments.nth(assignmentIndex);
+      if ((await assignment.getAttribute("open")) === null)
+        await assignment.locator("summary").click();
+      await assignment
+        .getByLabel("Подтверждённый результат / оценка", { exact: true })
+        .fill(
+          `Контрольный результат получателя ${index}, документ ${assignmentIndex + 1}`,
+        );
+    }
+  }
   await page
     .getByRole("button", {
       name: "Документы и даты получателя 12",

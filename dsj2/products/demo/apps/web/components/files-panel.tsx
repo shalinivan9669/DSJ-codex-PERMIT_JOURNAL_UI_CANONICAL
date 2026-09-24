@@ -19,6 +19,7 @@ import {
   type Page,
 } from "@/lib/types";
 import { dateTime, Status } from "./request-list";
+import { VerificationLink } from "./verification-link";
 
 export function FilesPanel({
   requestId,
@@ -63,7 +64,11 @@ export function FilesPanel({
               documents?: (NonNullable<Issuance["documents"]>[number] & {
                 issuanceId: string;
               })[];
-              events?: { issuanceId: string; kind: string; reason: string }[];
+              issuanceEvents?: {
+                issuanceId: string;
+                kind: string;
+                reason: string;
+              }[];
             }
           >(`/print-requests/${requestId}`),
         ]);
@@ -75,7 +80,7 @@ export function FilesPanel({
             documents: detail.documents?.filter(
               (document) => document.issuanceId === issuance.id,
             ),
-            status: detail.events?.some(
+            status: detail.issuanceEvents?.some(
               (event) =>
                 event.issuanceId === issuance.id && event.kind === "CANCELLED",
             )
@@ -245,6 +250,11 @@ export function FilesPanel({
     );
   return (
     <section className="panel files-panel">
+      {canManage && issuances.some((i) => i.documents?.length) && (
+        <VerificationLink
+          documents={issuances.flatMap((i) => i.documents || [])}
+        />
+      )}
       <div className="section-heading">
         <div>
           <h2>Файлы и задания</h2>

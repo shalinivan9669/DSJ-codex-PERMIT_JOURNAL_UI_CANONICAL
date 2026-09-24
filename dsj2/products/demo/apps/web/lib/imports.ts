@@ -2,6 +2,7 @@ import { newAssignment, type Recipient } from "./types";
 import {
   BIOT_CATEGORIES,
   biotValidUntil,
+  commonFieldKeys,
   type BiotCategory,
 } from "@demo/contracts";
 import {
@@ -49,6 +50,9 @@ export function importRowIssueText(code: string): string {
   return "Строка содержит неподдерживаемые данные. Исправьте исходный файл.";
 }
 export const importFields: [string, string][] = [
+  ["externalId", "Внешний ID"],
+  ["personnelNumber", "Табельный номер"],
+  ["employerId", "ID работодателя"],
   ["fullNameRu", "ФИО RU"],
   ["fullNameKz", "ФИО KZ"],
   ["positionRu", "Должность RU"],
@@ -93,6 +97,7 @@ export function inferMapping(columns: string[]): string[] {
         field.toLowerCase() === lower || title.toLowerCase() === lower,
     );
     let field =
+      (lower === "externalpersonkey" ? "externalId" : "") ||
       match?.[0] ||
       (/фио|full.?name|аты.?жөні|ф\.и\.о/.test(lower)
         ? /kz|каз|қаз|аты/.test(lower)
@@ -154,6 +159,9 @@ export function mapImportRow(
     const value = String(row.values[index] ?? "");
     if (
       [
+        "externalId",
+        "personnelNumber",
+        "employerId",
         "fullNameRu",
         "fullNameKz",
         "positionRu",
@@ -196,5 +204,17 @@ export function mapImportRow(
     ["hours", "productionHours", "validUntil"] as const
   ).filter((field) => mapping.includes(field));
   if (manualFields.length) assignment.biotManualFields = manualFields;
+  assignment.fieldOrigins = {
+    ...assignment.fieldOrigins,
+    ...Object.fromEntries(
+      commonFieldKeys
+        .filter(
+          (field) =>
+            mapping.includes(field) &&
+            row.values[mapping.indexOf(field)]?.trim(),
+        )
+        .map((field) => [field, "IMPORTED" as const]),
+    ),
+  };
   return result;
 }

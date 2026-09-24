@@ -9,7 +9,13 @@ import {
   buildZip,
   selectBundleJobs,
 } from "@demo/printing";
-import { LIMITS, itemSchema, draftSchema, z } from "@demo/contracts";
+import {
+  LIMITS,
+  itemSchema,
+  draftSchema,
+  protocolTemplateFor,
+  z,
+} from "@demo/contracts";
 import {
   db,
   fail,
@@ -21,7 +27,16 @@ import {
   scopedRequest,
   type Context,
 } from "./core";
-import { patchRequest, requestFilter } from "./requests";
+import { patchRequest, requestFilter, resolvedRequest } from "./requests";
+import {
+  customerExportProfileSchema,
+  deliveryFileNames,
+  projectCustomerRegistry,
+  registryTsv,
+  resolveExportProfile,
+  safeFilePart,
+  type ExportRow,
+} from "./delivery";
 export const store = new ArtifactStore();
 export async function uploadPhoto(
   c: Context,
@@ -421,15 +436,68 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
         customerId: z.string().optional(),
         history: z.boolean().default(false),
         allowPartial: z.boolean().default(false),
-        format: z.enum(["XLSX", "ZIP"]).default("XLSX"),
+        format: z.enum(["XLSX", "ZIP", "TSV"]).default("XLSX"),
+        profileId: z.string().max(80).optional(),
+        profile: customerExportProfileSchema.optional(),
+        artifactIds: z.array(z.string().max(80)).max(1000).optional(),
       })
       .strict(),
     input || {},
   );
-  if (id) await scopedRequest(c, id);
+  const requested = id ? await scopedRequest(c, id) : null;
+  let profile = await resolveExportProfile(c, query.profileId, query.profile);
+  if (
+    profile?.customerId &&
+    query.customerId &&
+    query.customerId !== profile.customerId
+  )
+    fail(
+      422,
+      "EXPORT_CUSTOMER_SCOPE",
+      "Профиль выдачи относится к другому заказчику. Выберите профиль этой заявки",
+    );
+  const customerScope = profile?.customerId || query.customerId;
+  if (customerScope && !profile)
+    profile = customerExportProfileSchema.parse({
+      name: "Комплект компании",
+      customerId: customerScope,
+      columns: [
+        { field: "personnelNumber", title: "Табельный номер" },
+        { field: "fullNameRu", title: "ФИО" },
+        { field: "documentNumber", title: "Номер документа" },
+        { field: "protocolNumber", title: "Номер протокола" },
+        { field: "documentDate", title: "Дата документа", type: "DATE_ONLY" },
+      ],
+    });
+  let cachedData: Awaited<ReturnType<typeof collectRegistryRows>> | undefined;
+  const exportData = async () => {
+    if (cachedData) return cachedData;
+    const data = await collectRegistryRows(
+      c,
+      // A mixed request can contain the company even when another company is
+      // the order customer. Scope by frozen row employment, never today's person card.
+      { ...query, customerId: undefined },
+      id,
+    );
+    if (customerScope) {
+      data.rows = data.rows.filter((row) => row.employerId === customerScope);
+      const visibleRequests = new Set(data.rows.map((row) => row.requestId));
+      data.records = data.records.filter((record) =>
+        visibleRequests.has(record.id),
+      );
+      if (requested && !data.rows.length)
+        fail(
+          422,
+          "EXPORT_CUSTOMER_SCOPE",
+          "Профиль выдачи относится к другому заказчику. Выберите профиль этой заявки",
+        );
+    }
+    cachedData = data;
+    return data;
+  };
   if (query.format === "ZIP") {
     if (!id) fail(400, "REQUEST_REQUIRED", "Выберите заявку для комплекта");
-    const jobs = selectBundleJobs(
+    let jobs = selectBundleJobs(
       await db.generationJob.findMany({
         where: {
           tenantId: c.tenantId,
@@ -439,6 +507,78 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
         },
       }),
     );
+    if (query.artifactIds) {
+      const selected = new Set(query.artifactIds);
+      if (selected.size === 0)
+        fail(400, "BUNDLE_SELECTION", "Выберите файлы для передачи");
+      if (
+        [...selected].some(
+          (artifactId) => !jobs.some((job) => job.artifactId === artifactId),
+        )
+      )
+        fail(
+          404,
+          "ARTIFACT_NOT_FOUND",
+          "Выбранный файл не найден в этой заявке",
+        );
+      jobs = jobs.filter(
+        (job) => job.artifactId && selected.has(job.artifactId),
+      );
+    }
+    const scopeMissing: Array<{ format: string; reason: string }> = [];
+    if (customerScope) {
+      const ownRows = (await exportData()).rows;
+      const rowIds = new Set(ownRows.map((row) => row.id));
+      const documentIds = jobs.flatMap((job) =>
+        job.documentId ? [job.documentId] : [],
+      );
+      const [documents, members] = await Promise.all([
+        db.issuedDocument.findMany({
+          where: { tenantId: c.tenantId, id: { in: documentIds } },
+        }),
+        db.groupDocumentMember.findMany({
+          where: { tenantId: c.tenantId, documentId: { in: documentIds } },
+        }),
+      ]);
+      jobs = jobs.filter((job) => {
+        const document = documents.find((d) => d.id === job.documentId);
+        // The canonical whole-request registry is replaced by a scoped derivative.
+        if (!document) return false;
+        if (document.ownerKind !== "GROUP") {
+          const allowed = !!document.rowId && rowIds.has(document.rowId);
+          if (!allowed && query.artifactIds)
+            scopeMissing.push({
+              format: job.kind,
+              reason:
+                profile?.language === "kz"
+                  ? "Файл осы компанияға тиесілі емес"
+                  : "Файл не относится к выбранной компании",
+            });
+          return allowed;
+        }
+        const roster = members.filter(
+          (member) => member.documentId === document.id,
+        );
+        if (
+          roster.length &&
+          roster.every((member) => member.employerId === customerScope)
+        )
+          return true;
+        if (
+          roster.some((member) => member.employerId === customerScope) ||
+          query.artifactIds
+        )
+          scopeMissing.push({
+            format: job.kind,
+            reason:
+              profile?.language === "kz"
+                ? "Бірнеше компанияның ортақ топтық құжаты жинаққа қосылмады"
+                : "Общий групповой документ нескольких компаний исключён из комплекта",
+          });
+        return false;
+      });
+    }
+    const expectedCount = jobs.length + scopeMissing.length;
     const artifacts = await db.artifact.findMany({
       where: {
         tenantId: c.tenantId,
@@ -450,28 +590,84 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
         },
       },
     });
-    if (!query.allowPartial && artifacts.length < jobs.length)
+    if (!artifacts.length)
+      fail(
+        409,
+        "EMPTY_BUNDLE",
+        "Ни один выбранный файл пока не готов. Дождитесь генерации или повторите неудачное задание",
+      );
+    if (
+      !query.allowPartial &&
+      (artifacts.length < jobs.length || scopeMissing.length)
+    )
       fail(
         409,
         "PARTIAL_BUNDLE",
         "Комплект неполный. Подтвердите скачивание готовой части",
-        { ready: artifacts.length, total: jobs.length },
+        { ready: artifacts.length, total: expectedCount },
       );
-    const out = await buildZip(
-      artifacts,
-      jobs[0]?.issuanceId || id,
-      jobs.length,
-      jobs
-        .filter((job) => !artifacts.some((a) => a.id === job.artifactId))
-        .map((job) => ({
-          jobId: job.id,
-          documentId: job.documentId,
-          format: job.kind,
-          reason:
-            job.errorCode ||
-            (job.status === "SUCCEEDED" ? "ARTIFACT_MISSING" : job.status),
-        })),
-    );
+    const rows = profile ? (await exportData()).rows : [];
+    const attachments: { fileName: string; base64: string }[] = [];
+    if (profile?.files.includeRegistry) {
+      const projected = projectCustomerRegistry(rows, profile);
+      const registry = await exportRegistry(projected.items, projected.columns);
+      attachments.push({
+        fileName: profile.language === "kz" ? "Тізілім.xlsx" : "Реестр.xlsx",
+        base64: registry.buffer.toString("base64"),
+      });
+    }
+    const fileNames = profile
+      ? new Map(
+          deliveryFileNames(artifacts, rows, profile).map((named) => [
+            named.id,
+            named.fileName,
+          ]),
+        )
+      : undefined;
+    let out;
+    try {
+      out = await buildZip(
+        profile
+          ? artifacts.map((artifact) => ({
+              ...artifact,
+              fileName: fileNames!.get(artifact.id)!,
+            }))
+          : artifacts,
+        jobs[0]?.issuanceId || id,
+        expectedCount,
+        [
+          ...scopeMissing,
+          ...jobs
+            .filter((job) => !artifacts.some((a) => a.id === job.artifactId))
+            .map((job) => ({
+              jobId: job.id,
+              documentId: job.documentId,
+              format: job.kind,
+              reason:
+                job.errorCode ||
+                (job.status === "SUCCEEDED" ? "ARTIFACT_MISSING" : job.status),
+            })),
+        ],
+        {
+          attachments,
+          includeInventory: profile?.files.includeInventory,
+          profile,
+          coverText: profile?.files.includeCoverText
+            ? profile.language === "kz"
+              ? "Сақталған құжаттар жинағын ұсынамыз. Құрамы мен бақылау сомалары manifest.json файлында және тізімдемеде көрсетілген. Алынған файлдарды тексеріп, ескертулеріңізді хабарлаңыз. Тапсыру бастапқы құжаттарды өзгертпейді және төлемді растамайды."
+              : "Передаём комплект сохранённых документов. Состав и контрольные суммы приведены в manifest.json и описи. Проверьте полученные файлы и сообщите о замечаниях. Передача не изменяет исходные документы и не подтверждает оплату."
+            : undefined,
+        },
+      );
+    } catch (error) {
+      if (String(error).includes("EMPTY_BUNDLE"))
+        fail(
+          409,
+          "EMPTY_BUNDLE",
+          "Сохранённые файлы недоступны. Восстановите файлы перед передачей комплекта",
+        );
+      throw error;
+    }
     // Metadata rows may still exist when their immutable bytes were lost or
     // corrupted. The verified archive manifest is the authority on completeness.
     const complete = out.metadata.complete === true;
@@ -483,19 +679,82 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
         409,
         "PARTIAL_BUNDLE",
         "Некоторые сохранённые файлы недоступны. Подтвердите скачивание готовой части или восстановите файлы",
-        { ready, total: jobs.length },
+        { ready, total: expectedCount },
       );
     await audit(db, c, "BUNDLE_EXPORTED", id, {
       ready,
-      total: jobs.length,
+      total: expectedCount,
       complete,
+      profileId: query.profileId,
+      customerId: customerScope,
     });
     return {
       buffer: out.buffer,
       mimeType: MIME.ZIP,
-      fileName: complete ? "DEMO-complete.zip" : "DEMO-PARTIAL.zip",
+      fileName: profile
+        ? safeFilePart(profile.name) +
+          (complete ? " — комплект.zip" : " — НЕПОЛНЫЙ.zip")
+        : complete
+          ? "DEMO-complete.zip"
+          : "DEMO-PARTIAL.zip",
     };
   }
+  const { records, rows } = await exportData();
+  const projected = profile
+    ? projectCustomerRegistry(rows, profile)
+    : undefined;
+  const output =
+    query.format === "TSV"
+      ? {
+          buffer: Buffer.from(
+            registryTsv(
+              projected ||
+                projectCustomerRegistry(
+                  rows,
+                  customerExportProfileSchema.parse({
+                    name: "Реестр",
+                    columns: [
+                      { field: "personnelNumber", title: "Табельный номер" },
+                      { field: "fullNameRu", title: "ФИО" },
+                      { field: "programLabel", title: "Направление" },
+                      { field: "documentNumber", title: "Номер документа" },
+                      {
+                        field: "documentDate",
+                        title: "Дата документа",
+                        type: "DATE_ONLY",
+                      },
+                      { field: "protocolNumber", title: "Номер протокола" },
+                    ],
+                  }),
+                ),
+            ),
+            "utf8",
+          ),
+        }
+      : await exportRegistry(projected?.items || rows, projected?.columns);
+  await audit(db, c, "REGISTRY_EXPORTED", id || c.tenantId, {
+    rows: rows.length,
+    requests: records.length,
+    rendererVersion: RENDERER_VERSION,
+    profileId: query.profileId,
+    format: query.format,
+  });
+  return {
+    buffer: output.buffer,
+    mimeType:
+      query.format === "TSV"
+        ? "text/tab-separated-values; charset=utf-8"
+        : MIME.XLSX,
+    fileName:
+      (profile ? safeFilePart(profile.name) : "DEMO-registry") +
+      (query.format === "TSV" ? ".tsv" : ".xlsx"),
+  };
+}
+export async function collectRegistryRows(
+  c: Context,
+  query: Parameters<typeof requestFilter>[1],
+  id?: string,
+) {
   const records = await db.printRequest.findMany({
     where: {
       ...(await requestFilter(c, query)),
@@ -512,13 +771,41 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
       where: { tenantId: c.tenantId, requestId: { in: ids } },
     }),
   ]);
-  const rows = [];
+  const rows: ExportRow[] = [];
   for (const record of records) {
     const issuance = issuances.find((i) => i.requestId === record.id);
-    const draft = draftSchema.parse(
-      issuance ? (issuance.snapshot as { draft: unknown }).draft : record.draft,
-    );
-    for (const item of draft.items) {
+    const draft = issuance
+      ? draftSchema.parse((issuance.snapshot as { draft: unknown }).draft)
+      : (await resolvedRequest(c, record.id)).draft;
+    const customer = issuance
+      ? (
+          issuance.snapshot as {
+            customer?: {
+              nameRu?: string;
+              nameKz?: string;
+              bin?: string;
+              addressRu?: string;
+              addressKz?: string;
+            };
+          }
+        ).customer
+      : draft.customerId
+        ? await db.customerOrganization.findFirst({
+            where: { tenantId: c.tenantId, id: draft.customerId },
+          })
+        : null;
+    for (const sourceItem of draft.items) {
+      const item = {
+        ...sourceItem,
+        employerId: sourceItem.employerId || draft.customerId || undefined,
+        workplaceRu: sourceItem.workplaceRu || customer?.nameRu || "",
+        workplaceKz: sourceItem.workplaceKz || customer?.nameKz || "",
+        employerBin: sourceItem.employerBin || customer?.bin || "",
+        employerAddressRu:
+          sourceItem.employerAddressRu || customer?.addressRu || "",
+        employerAddressKz:
+          sourceItem.employerAddressKz || customer?.addressKz || "",
+      };
       if (!item.assignments.length)
         rows.push({
           ...item,
@@ -533,21 +820,28 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
             d.rowId === item.id &&
             d.assignmentId === assignment.id,
         );
+        const linkedProtocol =
+          assignment.protocolMode === "EXTERNAL_REFERENCE"
+            ? undefined
+            : documents.find(
+                (d) =>
+                  d.requestId === record.id &&
+                  (assignment.protocolMode === "GROUP"
+                    ? d.groupEventId === assignment.eventId
+                    : d.rowId === item.id) &&
+                  d.templateId === protocolTemplateFor(assignment.templateId),
+              );
         rows.push({
           ...item,
           assignment,
           number: document?.number || "",
           registrationNumber: document?.registrationNumber || "",
+          documentId: document?.id,
+          protocolDocumentId: linkedProtocol?.id,
           protocolNumber:
             assignment.protocolMode === "EXTERNAL_REFERENCE"
               ? assignment.externalBasisNumber
-              : documents.find(
-                  (d) =>
-                    d.requestId === record.id &&
-                    d.rowId === item.id &&
-                    d.templateId ===
-                      `${assignment.templateId.split("-")[0]}-protocol`,
-                )?.number || assignment.externalBasisNumber,
+              : linkedProtocol?.number || assignment.externalBasisNumber,
           requestId: record.id,
           status: record.status,
           revision: record.revision,
@@ -556,15 +850,5 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
       }
     }
   }
-  const output = await exportRegistry(rows);
-  await audit(db, c, "REGISTRY_EXPORTED", id || c.tenantId, {
-    rows: rows.length,
-    requests: records.length,
-    rendererVersion: RENDERER_VERSION,
-  });
-  return {
-    buffer: output.buffer,
-    mimeType: MIME.XLSX,
-    fileName: "DEMO-registry.xlsx",
-  };
+  return { records, rows };
 }

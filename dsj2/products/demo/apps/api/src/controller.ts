@@ -14,8 +14,8 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Response } from "express";
-import { z, LIMITS, itemSchema, templateIds } from "@demo/contracts";
-import { db, ctx, fail, parse, audit, json, type DemoRequest } from "./core";
+import { z, LIMITS, templateIds } from "@demo/contracts";
+import { db, ctx, fail, parse, audit, type DemoRequest } from "./core";
 import { login, logout, changePassword, cookies } from "./auth";
 import {
   context,
@@ -27,6 +27,9 @@ import {
 } from "./settings";
 import * as requests from "./requests";
 import * as files from "./files";
+import * as people from "./recipients";
+import * as imports from "./imports";
+import * as delivery from "./delivery";
 import { openArtifact } from "./storage";
 import { RENDERER_VERSION } from "@demo/printing";
 import { randomUUID } from "node:crypto";
@@ -189,35 +192,79 @@ export class DemoController {
   ) {
     return saveCustomer(ctx(req, true), body, id);
   }
-  @Get("recipients") async recipients(@Req() req: DemoRequest) {
-    const items = await db.recipient.findMany({
-      where: { tenantId: ctx(req).tenantId, archived: false },
-      take: 100,
-    });
-    return { items, total: items.length };
+  @Get("settings/profiles") async profiles(@Req() req: DemoRequest) {
+    return {
+      items: await db.issuerProfileVersion.findMany({
+        where: { tenantId: ctx(req).tenantId },
+        orderBy: { version: "desc" },
+        take: 100,
+      }),
+    };
   }
-  @Post("recipients") async recipient(
+  @Get("customers/:id") async customerDetail(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    const record = await db.customerOrganization.findFirst({
+      where: { id, tenantId: ctx(req).tenantId },
+    });
+    if (!record) fail(404, "NOT_FOUND", "Заказчик не найден");
+    return record;
+  }
+  @Get("recipients") recipients(
+    @Req() req: DemoRequest,
+    @Query() query: Record<string, unknown>,
+  ) {
+    return people.listRecipients(ctx(req), query);
+  }
+  @Get("recipients/:id") recipientDetail(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    return people.recipientDetail(ctx(req), id);
+  }
+  @Post("recipients") recipient(
     @Req() req: DemoRequest,
     @Body() body: unknown,
   ) {
-    const c = ctx(req, true);
-    const data = parse(itemSchema, body);
-    return db.recipient.create({
-      data: { tenantId: c.tenantId, data: json(data) },
-    });
+    return people.saveRecipient(ctx(req, true), body);
   }
-  @Patch("recipients/:id") async updateRecipient(
+  @Patch("recipients/:id") updateRecipient(
     @Req() req: DemoRequest,
     @Param("id") id: string,
     @Body() body: unknown,
   ) {
-    const c = ctx(req, true);
-    if (
-      !(await db.recipient.findFirst({ where: { id, tenantId: c.tenantId } }))
-    )
-      fail(404, "NOT_FOUND", "Получатель не найден");
-    const data = parse(itemSchema, body);
-    return db.recipient.update({ where: { id }, data: { data: json(data) } });
+    return people.saveRecipient(ctx(req, true), body, id);
+  }
+  @Get("print-requests/:id/resolved") resolved(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    return requests.resolvedRequest(ctx(req), id);
+  }
+  @Post("print-requests/:id/import-reconciliation/preview")
+  reconciliationPreview(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return imports.previewImportReconciliation(ctx(req), id, body);
+  }
+  @Post("print-requests/:id/import-reconciliation/apply") reconciliationApply(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return imports.applyImportReconciliation(ctx(req, true), id, body);
+  }
+  @Get("customer-export-profiles") exportProfiles(@Req() req: DemoRequest) {
+    return delivery.listExportProfiles(ctx(req));
+  }
+  @Post("customer-export-profiles") exportProfile(
+    @Req() req: DemoRequest,
+    @Body() body: unknown,
+  ) {
+    return delivery.saveExportProfile(ctx(req, true), body);
   }
   @Get("print-requests") requests(
     @Req() req: DemoRequest,
@@ -282,6 +329,13 @@ export class DemoController {
     @Body() body: unknown,
   ) {
     return requests.correction(ctx(req, true), id, body);
+  }
+  @Post("print-requests/:id/retake") retake(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return requests.retake(ctx(req, true), id, body);
   }
   @Post("print-requests/:id/cancel") cancel(
     @Req() req: DemoRequest,
@@ -453,6 +507,17 @@ export class DemoController {
             z.string().max(500),
             z.enum([
               "",
+              "personnelNumber",
+              "externalId",
+              "recipientId",
+              "employerId",
+              "employmentPeriod",
+              "sourceOrder",
+              "departmentRu",
+              "departmentKz",
+              "employerBin",
+              "employerAddressRu",
+              "employerAddressKz",
               "fullNameRu",
               "fullNameKz",
               "positionRu",

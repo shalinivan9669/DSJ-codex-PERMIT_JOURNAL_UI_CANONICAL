@@ -11,7 +11,7 @@ async function main() {
   );
   assert.equal(process.env.DEMO_CONTAINER_ACCEPTANCE, "SYNTHETIC_ONLY");
   const expected = JSON.parse(await readFile(process.argv[2], "utf8"));
-  const base = "http://127.0.0.1:4100";
+  const base = `http://127.0.0.1:${process.env.PORT || "4100"}`;
   process.env.DEMO_ORIGIN = base;
   process.env.HOST = "127.0.0.1";
   const app = await bootstrap();
@@ -72,12 +72,40 @@ async function main() {
       assert.equal(sha256, photo.sha256);
       photos.push({ id: photo.id, sha256, bytes: buffer.length });
     }
+    const attachments = [];
+    for (const file of expected.attachments || []) {
+      const response = await fetch(base + `/value-attachments/${file.id}`, {
+        headers: { cookie },
+      });
+      assert.equal(response.status, 200);
+      const bytes = Buffer.from(await response.arrayBuffer());
+      const sha256 = createHash("sha256").update(bytes).digest("hex");
+      assert.equal(sha256, file.sha256);
+      assert.equal(bytes.length, file.size);
+      attachments.push({ id: file.id, sha256, bytes: bytes.length });
+    }
+    const restoredEntities = [];
+    for (const [kind, id] of [
+      ["print-requests", expected.groupRequestId],
+      ["orders", expected.orderId],
+    ]) {
+      if (!id) continue;
+      const response = await fetch(`${base}/${kind}/${id}`, {
+        headers: { cookie },
+      });
+      assert.equal(response.status, 200);
+      const body = await response.json();
+      assert.equal(body.id, id);
+      restoredEntities.push({ kind, id });
+    }
     const result = {
       status: "PASS",
       restoredTenantId: expected.tenantId,
       requestId: expected.requestId,
       downloads,
       photos,
+      attachments,
+      restoredEntities,
       note: "Verified after row/file/template/font hash reconciliation; login intentionally creates a new session after the offline restore verification.",
     };
     await writeFile(process.argv[3], JSON.stringify(result, null, 2));

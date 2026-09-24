@@ -78,7 +78,16 @@ export async function authenticate(
   try {
     rateLimit(`api:${req.ip}`, 600);
     originCheck(req);
-    if (req.path === "/auth/login" || req.path === "/health") {
+    const publicVerification =
+      (req.method === "GET" &&
+        /^\/verification\/[a-f0-9]{64}$/.test(req.path)) ||
+      (req.method === "POST" &&
+        /^\/verification\/[a-f0-9]{64}\/corrections$/.test(req.path));
+    if (
+      req.path === "/auth/login" ||
+      req.path === "/health" ||
+      publicVerification
+    ) {
       next();
       return;
     }
@@ -98,6 +107,19 @@ export async function authenticate(
       user.sessionVersion !== s.sessionVersion
     )
       fail(401, "SESSION_REVOKED", "Сессия отозвана");
+    if (
+      user.role === "EMPLOYER" &&
+      !["/auth/session", "/auth/logout", "/auth/password", "/context"].includes(
+        req.path,
+      ) &&
+      req.path !== "/portal" &&
+      !req.path.startsWith("/portal/")
+    )
+      fail(
+        403,
+        "EMPLOYER_SCOPE",
+        "Кабинет доступен только в пределах работодателя",
+      );
     if (!["GET", "HEAD", "OPTIONS"].includes(req.method)) {
       const csrf = req.headers["x-csrf-token"];
       if (typeof csrf !== "string" || hash(csrf) !== s.csrfHash)

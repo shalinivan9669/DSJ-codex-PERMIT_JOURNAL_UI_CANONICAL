@@ -193,6 +193,9 @@ test("validation errors identify the field, focus the missing date and offline r
 }) => {
   await login(page);
   await person(page);
+  // V2 offers the center-local date. Intentionally clear it to exercise the
+  // missing-date path while preserving the new inheritance behavior.
+  await page.getByLabel("Дата документа", { exact: true }).fill("");
   await page.getByRole("button", { name: "Проверить", exact: true }).click();
   await expect(page.locator(".validation-result")).toBeFocused();
   await expect(page.getByLabel("ФИО RU, строка 1")).toHaveAttribute(
@@ -419,9 +422,14 @@ test("administrator settings and independent operator conflict preserve both dra
   expect(
     new Set(await page.locator(".template-list article h3").allTextContents())
       .size,
-  ).toBe(10);
+  ).toBe(16);
+  await expect(
+    page
+      .locator(".template-list article h3")
+      .filter({ hasText: "групповой протокол" }),
+  ).toHaveCount(5);
   await page.screenshot({
-    path: path.join(evidence, "settings-10-templates.png"),
+    path: path.join(evidence, "settings-16-templates.png"),
     fullPage: true,
   });
   await page.getByRole("button", { name: "Нумерация", exact: true }).click();

@@ -39,6 +39,7 @@ export type Template = {
   contract?: Record<string, unknown>;
 };
 export type Profile = {
+  commissionTitle?: string;
   bin?: string;
   headName?: string;
   nameRu: string;
@@ -117,7 +118,13 @@ export type Validation = {
     | { path?: string | string[]; message: string; itemId?: string }
     | string
   )[];
-  warnings?: ({ message: string } | string)[];
+  warnings?: (
+    | {
+        message: string;
+        candidates?: { historyPath: string; number?: string }[];
+      }
+    | string
+  )[];
   documents?: unknown[];
   documentCount?: number;
 };
@@ -163,6 +170,28 @@ export function newRecipient(): Recipient {
   };
 }
 export function draftPayload(draft: Draft) {
-  const { kind, title, customerId, demoMode, items } = draft;
-  return { kind, title, customerId, demoMode, items };
+  const {
+    kind,
+    title,
+    customerId,
+    demoMode,
+    items,
+    schemaVersion,
+    profileVersionId,
+    presetFields,
+    commonFields,
+    events,
+  } = draft;
+  return {
+    kind,
+    title,
+    customerId,
+    demoMode,
+    items,
+    schemaVersion,
+    profileVersionId,
+    presetFields,
+    commonFields,
+    events,
+  };
 }

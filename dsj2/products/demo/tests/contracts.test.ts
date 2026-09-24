@@ -154,18 +154,36 @@ test("registered API controller method/path map equals deny-by-default policy", 
     "OPTIONS",
     "HEAD",
   ];
-  const routes = Object.getOwnPropertyNames(DemoController.prototype)
-    .filter((k) => k !== "constructor")
-    .flatMap((k) => {
-      const fn =
-        DemoController.prototype[k as keyof typeof DemoController.prototype];
-      const path = Reflect.getMetadata("path", fn);
-      const method = Reflect.getMetadata("method", fn);
-      return typeof path === "string" && method !== undefined
-        ? [`${methods[method]} /${path}`]
-        : [];
-    })
+  const { OperatorValueController } =
+    await import("../apps/api/src/operator-value-controller");
+  const { DeliveryController } =
+    await import("../apps/api/src/delivery-controller");
+  const { PublicVerificationController } =
+    await import("../apps/api/src/public-verification-controller");
+  const routes = [
+    DemoController,
+    OperatorValueController,
+    DeliveryController,
+    PublicVerificationController,
+  ]
+    .flatMap((controller) =>
+      Object.getOwnPropertyNames(controller.prototype)
+        .filter((k) => k !== "constructor")
+        .flatMap((k) => {
+          const fn = (controller.prototype as any)[k];
+          const path = Reflect.getMetadata("path", fn);
+          const method = Reflect.getMetadata("method", fn);
+          return typeof path === "string" && method !== undefined
+            ? [`${methods[method]} /${path}`]
+            : [];
+        }),
+    )
     .sort();
+  assert.equal(
+    new Set(routes).size,
+    routes.length,
+    "No duplicate controller routes",
+  );
   assert.deepEqual(
     routes,
     PRODUCT_POLICY.demoRoutes

@@ -14,17 +14,19 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
-export const RENDERER_VERSION = "demo-ooxml-6/libreoffice-26.2.6.3";
+export const RENDERER_VERSION = "demo-ooxml-7/libreoffice-26.2.6.3";
 export const PRODUCT_ROOT = resolve(__dirname, "../../..");
 export type RenderCommand =
   | "docx"
   | "pdf"
   | "photo"
+  | "qr"
   | "import"
   | "xlsx"
   | "zip"
   | "health"
-  | "preflight";
+  | "preflight"
+  | "control-sheet";
 export const MIME: Record<string, string> = {
   DOCX: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   PDF: "application/pdf",
@@ -178,7 +180,13 @@ export async function runRender(
 ): Promise<RenderResult> {
   const work = await mkdtemp(join(tmpdir(), "demo-render-"));
   const extension =
-    command === "photo" ? "png" : command === "import" ? "json" : command;
+    command === "photo" || command === "qr"
+      ? "png"
+      : command === "import"
+        ? "json"
+        : command === "control-sheet"
+          ? "pdf"
+          : command;
   const output = join(work, "output." + extension);
   const input = { ...(payload as Record<string, unknown>) };
   if (options.inputBytes) {
@@ -323,16 +331,31 @@ export async function parseImport(
   );
   return JSON.parse(result.buffer.toString("utf8")) as Record<string, unknown>;
 }
-export async function exportRegistry(items: unknown[]) {
-  return runRender("xlsx", { items });
+export async function exportRegistry(
+  items: unknown[],
+  columns?: { field: string; title: string }[],
+) {
+  return runRender("xlsx", { items, columns });
 }
 export async function buildZip(
   artifacts: unknown[],
   issuanceId: string,
   expectedCount: number,
   missing: Array<Record<string, unknown>> = [],
+  options: {
+    attachments?: { fileName: string; base64: string }[];
+    coverText?: string;
+    includeInventory?: boolean;
+    profile?: unknown;
+  } = {},
 ) {
-  return runRender("zip", { artifacts, issuanceId, expectedCount, missing });
+  return runRender("zip", {
+    artifacts,
+    issuanceId,
+    expectedCount,
+    missing,
+    ...options,
+  });
 }
 
 /** Latest attempt for each logical document/format; restored outputs replace the bundle pointer only. */

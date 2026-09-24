@@ -145,8 +145,11 @@ model IssuedDocument {
   tenantId String
   issuanceId String
   requestId String
-  rowId String
-  assignmentId String
+  rowId String?
+  assignmentId String?
+  ownerKind String @default("INDIVIDUAL")
+  groupEventId String?
+  groupEventRevision Int?
   templateVersionId String
   templateId String
   namespace String
@@ -157,6 +160,57 @@ model IssuedDocument {
   createdAt DateTime @default(now())
   @@unique([tenantId,id])
   @@unique([issuanceId,rowId,assignmentId])
+  @@unique([tenantId,groupEventId,groupEventRevision])
+}
+model TrainingEvent {
+  id String @id
+  tenantId String
+  requestId String
+  revision Int @default(0)
+  title String
+  protocolTemplateId String
+  data Json
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,requestId])
+}
+model GroupDocumentMember {
+  id String @id @default(uuid())
+  tenantId String
+  documentId String
+  requestId String
+  rowId String
+  assignmentId String
+  recipientId String?
+  employerId String?
+  position Int
+  outcome Json
+  @@unique([documentId,requestId,rowId,assignmentId])
+  @@index([tenantId,recipientId])
+}
+model RecipientEmployment {
+  id String @id @default(uuid())
+  tenantId String
+  recipientId String
+  employerId String
+  personnelNumber String @default("")
+  positionRu String @default("")
+  period String @default("")
+  createdBy String
+  createdAt DateTime @default(now())
+  @@index([tenantId,recipientId])
+}
+model CustomerExportProfile {
+  id String @id @default(uuid())
+  tenantId String
+  customerId String?
+  name String
+  profile Json
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,name])
+  @@unique([tenantId,id])
 }
 model NumberSequence {
   tenantId String
@@ -312,4 +366,245 @@ model LegacyMapping {
   provenance String
   createdAt DateTime @default(now())
   @@unique([tenantId,sourceSystem,sourceId])
+}
+// Additive OT Center service workflow models. Integrated into schema.prisma.
+model ServiceOrder {
+  id String @id @default(uuid())
+  tenantId String
+  title String
+  customerId String?
+  payerId String?
+  contact String @default("")
+  ownerId String?
+  dueDate String?
+  status String @default("OPEN")
+  revision Int @default(0)
+  commercial Json @default("{}")
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@index([tenantId,status,createdAt])
+}
+model ServiceOrderRequest {
+  id String @id @default(uuid())
+  tenantId String
+  orderId String
+  requestId String
+  @@unique([tenantId,orderId,requestId])
+  @@index([tenantId,requestId])
+}
+model OrderMilestone {
+  id String @id @default(uuid())
+  tenantId String
+  orderId String
+  label String
+  category String
+  source String
+  sourceReference String
+  ownerId String?
+  dueDate String?
+  status String @default("PENDING")
+  evidence String @default("")
+  reason String @default("")
+  completedBy String?
+  completedAt DateTime?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,orderId,status])
+}
+model RenewalNeed {
+  id String @id @default(uuid())
+  tenantId String
+  customerId String?
+  recipientId String?
+  sourceRequestId String
+  sourceRowId String
+  assignmentId String
+  sourceKey String
+  policySource String
+  policyVersion String
+  basisDate String
+  documentValidUntil String?
+  nextCheckDate String?
+  contactAfter String?
+  confirmed Boolean @default(false)
+  state String @default("NEEDS_REVIEW")
+  reason String @default("")
+  ownerId String?
+  newRequestId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@unique([tenantId,sourceKey])
+  @@index([tenantId,state,contactAfter])
+}
+model RenewalContact {
+  id String @id @default(uuid())
+  tenantId String
+  renewalId String
+  occurredOn String
+  channel String
+  outcome String
+  note String
+  actorId String
+  createdAt DateTime @default(now())
+  @@index([tenantId,renewalId])
+}
+model ExternalEvidence {
+  id String @id @default(uuid())
+  tenantId String
+  customerId String
+  recipientId String
+  program String
+  issuer String
+  originalNumber String
+  documentDate String
+  validUntil String?
+  source String
+  status String @default("UNVERIFIED")
+  verificationNote String @default("")
+  verifiedBy String?
+  verifiedAt DateTime?
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,customerId,recipientId])
+}
+model ServiceRuleVersion {
+  id String @id @default(uuid())
+  tenantId String
+  serviceKey String
+  version Int
+  title String
+  status String @default("DRAFT")
+  source String
+  applicability String
+  checkedOn String?
+  checkedBy String?
+  effectiveFrom String?
+  effectiveTo String?
+  definition Json
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,serviceKey,version])
+}
+model DossierRecord {
+  id String @id @default(uuid())
+  tenantId String
+  title String
+  category String
+  version String
+  source String
+  applicability String
+  validUntil String?
+  ownerId String
+  customerVisible Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,category])
+}
+model EmployerMembership {
+  id String @id @default(uuid())
+  tenantId String
+  customerId String
+  userId String
+  permissions Json
+  recipientIds Json @default("[]")
+  active Boolean @default(true)
+  expiresAt DateTime?
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,customerId,userId])
+}
+model PortalProposal {
+  id String @id @default(uuid())
+  tenantId String
+  orderId String
+  requestId String
+  membershipId String
+  requestRevision Int
+  kind String
+  message String
+  changes Json
+  status String @default("PENDING")
+  resolution String @default("")
+  resolvedBy String?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,orderId,status])
+}
+model PaymentEvent {
+  id String @id @default(uuid())
+  tenantId String
+  orderId String
+  amountMinor String
+  occurredOn String
+  source String
+  reconciliationRequired Boolean @default(false)
+  createdBy String
+  createdAt DateTime @default(now())
+  @@index([tenantId,orderId])
+}
+model FinancialDocument {
+  id String @id @default(uuid())
+  tenantId String
+  orderId String
+  type String
+  number String
+  documentDate String
+  source String
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,type,number])
+}
+model ValueAttachment {
+  id String @id @default(uuid())
+  tenantId String
+  orderId String?
+  eventId String?
+  evidenceId String?
+  dossierId String?
+  financialDocumentId String?
+  category String
+  source String
+  fileName String
+  mimeType String
+  storageKey String @unique
+  sha256 String
+  size Int
+  customerVisible Boolean @default(false)
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,eventId])
+}
+// Source fragment for integration into the canonical schema by the root agent.
+model PublicDocumentVerification {
+  id String @id @default(uuid())
+  tenantId String
+  documentId String
+  tokenHash String @unique
+  active Boolean @default(true)
+  expiresAt DateTime?
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,documentId])
+}
+model DocumentCorrectionRequest {
+  id String @id @default(uuid())
+  tenantId String
+  verificationId String
+  message String
+  replyContact String @default("")
+  status String @default("NEW")
+  resolution String @default("")
+  resolvedBy String?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,status,createdAt])
 }

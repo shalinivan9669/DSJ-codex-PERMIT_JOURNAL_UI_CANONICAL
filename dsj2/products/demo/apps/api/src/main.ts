@@ -7,12 +7,22 @@ import type { Response, NextFunction } from "express";
 import { allowedRoute, PRODUCT_POLICY } from "@demo/contracts/src/policy";
 import { LIMITS } from "@demo/contracts";
 import { DemoController } from "./controller";
+import { OperatorValueController } from "./operator-value-controller";
+import { DeliveryController } from "./delivery-controller";
+import { PublicVerificationController } from "./public-verification-controller";
 import { authenticate } from "./auth";
 import { db, type DemoRequest } from "./core";
-@Module({ controllers: [DemoController] })
+@Module({
+  controllers: [
+    DemoController,
+    OperatorValueController,
+    DeliveryController,
+    PublicVerificationController,
+  ],
+})
 class DemoModule {}
 export async function bootstrap() {
-  if (PRODUCT_POLICY.productId !== "DEMO" || PRODUCT_POLICY.version !== 1)
+  if (PRODUCT_POLICY.productId !== "DEMO" || PRODUCT_POLICY.version !== 2)
     throw new Error("PRODUCT_MANIFEST_INVALID");
   const app = await NestFactory.create(DemoModule, {
     bodyParser: false,

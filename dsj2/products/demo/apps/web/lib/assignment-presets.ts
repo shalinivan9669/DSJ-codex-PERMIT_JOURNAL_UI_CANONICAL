@@ -1,6 +1,7 @@
 import {
   BIOT_CATEGORIES,
   biotValidUntil,
+  commonFieldKeys,
   type Assignment,
   type BiotCategory,
 } from "@demo/contracts";
@@ -56,6 +57,13 @@ export function updateAssignment(
   patch: Partial<Assignment>,
 ): Assignment {
   const next = { ...assignment, ...patch };
+  for (const field of commonFieldKeys) {
+    if (Object.hasOwn(patch, field))
+      next.fieldOrigins = {
+        ...next.fieldOrigins,
+        [field]: patch[field] === "" ? "CLEARED" : "MANUAL",
+      };
+  }
   const manuallyEdited = new Set(next.biotManualFields || []);
   for (const field of ["hours", "productionHours", "validUntil"] as const) {
     if (Object.hasOwn(patch, field)) manuallyEdited.add(field);

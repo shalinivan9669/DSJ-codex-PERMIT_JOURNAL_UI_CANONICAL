@@ -16,7 +16,7 @@ import tempfile
 import importlib.metadata
 import threading
 from copy import deepcopy
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED, ZipInfo
 from lxml import etree as E
@@ -31,7 +31,7 @@ W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 R='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
 NS={'w':W[1:-1]}
-RENDERER_VERSION='demo-ooxml-6/libreoffice-26.2.6.3'
+RENDERER_VERSION='demo-ooxml-7/libreoffice-26.2.6.3'
 RU=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']
 KZ=['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан']
 Image.MAX_IMAGE_PIXELS=20_000_000
@@ -343,7 +343,8 @@ def render_one(snapshot,item,template):
 
 def resolve_template(snapshot):
     manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
-    template=next((t for t in manifest['templates'] if t['id']==snapshot['templateId'] and (snapshot.get('templateStorageKey') or str(t['version'])==str(snapshot.get('templateVersion',1)))),None)
+    pool=manifest.get('groupTemplates',[]) if snapshot.get('groupEvent') else manifest['templates']
+    template=next((t for t in pool if t['id']==snapshot['templateId'] and (snapshot.get('templateStorageKey') or str(t['version'])==str(snapshot.get('templateVersion',1)))),None)
     if not template: raise ValueError('TEMPLATE_VERSION_UNKNOWN')
     if snapshot.get('templateStorageKey'):
         store=Path(os.environ['DEMO_ARTIFACT_ROOT']).resolve();path=(store/snapshot['templateStorageKey']).resolve()
@@ -360,8 +361,12 @@ def preflight(payload,out):
     issues=[]
     for index,snapshot in enumerate(snapshots):
         template,path=resolve_template(snapshot)
-        if len(snapshot['items'])!=1: raise ValueError('PREFLIGHT_SINGLE_RECIPIENT')
-        try: render_one(snapshot,snapshot['items'][0],path)
+        if not snapshot.get('groupEvent') and len(snapshot['items'])!=1: raise ValueError('PREFLIGHT_SINGLE_RECIPIENT')
+        try:
+            if snapshot.get('groupEvent'):
+                from group_protocol import render_group
+                render_group(snapshot,path,render_one)
+            else: render_one(snapshot,snapshot['items'][0],path)
         except ValueError as error:
             if str(error)!='PRINT_LAYOUT_OVERFLOW': raise
             issues.append({'index':index,'code':'PRINT_LAYOUT_OVERFLOW'})
@@ -370,6 +375,11 @@ def preflight(payload,out):
 
 def render_docx(snapshot,out):
     template,path=resolve_template(snapshot)
+    if snapshot.get('groupEvent'):
+        from group_protocol import render_group
+        files=render_group(snapshot,path,render_one)
+        deterministic_zip(out,normalize_package(files))
+        return {'format':'DOCX','groupContractVersion':1,'participants':len(snapshot['items']),'templateId':snapshot['templateId'],'rendererVersion':RENDERER_VERSION}
     items=snapshot['items']
     if not 1<=len(items)<=100: raise ValueError('ROW_LIMIT')
     files=render_one(snapshot,items[0],path)
@@ -441,7 +451,8 @@ def convert_pdf(docx,out):
     stat=Path(executable).stat();key=(str(Path(executable).resolve()),stat.st_mtime_ns,stat.st_size)
     with _converter_version_lock:
         if key not in _converter_versions:
-            version=subprocess.run([executable,'--version'],capture_output=True,timeout=30,text=True).stdout
+            with tempfile.TemporaryDirectory(prefix='demo-office-version-') as version_profile:
+                version=subprocess.run([executable,'-env:UserInstallation='+Path(version_profile).as_uri(),'--headless','--version'],capture_output=True,timeout=30,text=True).stdout
             if not re.search(r'LibreOffice 26\.2\.6\.3(?:\s|$)',version): raise ValueError('CONVERTER_VERSION_MISMATCH')
             _converter_versions[key]=version
     with tempfile.TemporaryDirectory(prefix='demo-office-') as temp:
@@ -456,10 +467,10 @@ def convert_pdf(docx,out):
     return {'format':'PDF','rendererVersion':RENDERER_VERSION}
 
 def runtime_health(out):
-    for package,version in [('Pillow','12.3.0'),('lxml','6.1.1'),('openpyxl','3.1.5'),('defusedxml','0.7.1')]:
+    for package,version in [('Pillow','12.3.0'),('lxml','6.1.1'),('openpyxl','3.1.5'),('defusedxml','0.7.1'),('qrcode','8.2')]:
         if importlib.metadata.version(package)!=version:raise ValueError('PYTHON_DEPENDENCY_VERSION_MISMATCH')
     manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf8'))
-    for t in manifest['templates']:
+    for t in [*manifest['templates'],*manifest.get('groupTemplates',[])]:
         if hashlib.sha256((ROOT/'assets/templates'/t['file']).read_bytes()).hexdigest()!=t['sha256']:raise ValueError('TEMPLATE_HASH_MISMATCH')
     fonts=json.loads((ROOT/'assets/fonts/manifest.json').read_text(encoding='utf8'))
     for filename,checksum in fonts['files'].items():
@@ -468,20 +479,24 @@ def runtime_health(out):
         if not installed.is_file() or hashlib.sha256(installed.read_bytes()).hexdigest()!=checksum:raise ValueError('PINNED_FONTS_NOT_INSTALLED')
     executable=os.environ.get('DEMO_SOFFICE') or shutil.which('soffice')
     if not executable:raise ValueError('CONVERTER_NOT_INSTALLED')
-    version=subprocess.run([executable,'--version'],capture_output=True,timeout=15,text=True).stdout
+    with tempfile.TemporaryDirectory(prefix='demo-office-version-') as version_profile:
+        version=subprocess.run([executable,'-env:UserInstallation='+Path(version_profile).as_uri(),'--headless','--version'],capture_output=True,timeout=15,text=True).stdout
     if not re.search(r'LibreOffice 26\.2\.6\.3(?:\s|$)',version):raise ValueError('CONVERTER_VERSION_MISMATCH')
     result={'ready':True,'rendererVersion':RENDERER_VERSION,'templates':len(manifest['templates']),'fonts':len(fonts['files']),'converter':'26.2.6.3'}
     Path(out).write_text(json.dumps(result),encoding='utf8');return result
 
-COLUMNS=['requestId','status','revision','createdAt','id','fullNameRu','fullNameKz','positionRu','positionKz','workplaceRu','workplaceKz','departmentRu','departmentKz','employerBin','employerAddressRu','employerAddressKz','templateId','direction','documentKind','number','protocolNumber','registrationNumber','documentDate','protocolDate','trainingStart','trainingEnd','trainingSubject','result','reason','education','hours','productionHours','validUntil','externalBasisNumber','biotCategory','biotIndustryRu','biotIndustryKz','biotCheckType','biotKnowledgeResult','biotProctoringResult','biotUniqueNumber','biotNotes']
+COLUMNS=['requestId','status','revision','createdAt','id','recipientId','externalId','personnelNumber','sourceRow','sourceOrder','employerId','employmentPeriod','fullNameRu','fullNameKz','positionRu','positionKz','workplaceRu','workplaceKz','departmentRu','departmentKz','employerBin','employerAddressRu','employerAddressKz','templateId','direction','documentKind','number','protocolNumber','registrationNumber','documentDate','protocolDate','trainingStart','trainingEnd','trainingSubject','result','reason','education','hours','productionHours','validUntil','externalBasisNumber','biotCategory','biotIndustryRu','biotIndustryKz','biotCheckType','biotKnowledgeResult','biotProctoringResult','biotUniqueNumber','biotNotes']
 
 def export_registry(payload,out):
-    wb=Workbook(); ws=wb.active; ws.title='Реестр'; ws.append(COLUMNS)
+    columns=payload.get('columns') or [{'field':key,'title':key} for key in COLUMNS]
+    if not 1<=len(columns)<=100: raise ValueError('EXPORT_COLUMNS_LIMIT')
+    wb=Workbook(); ws=wb.active; ws.title='Реестр'; ws.append([column['title'] for column in columns])
+    for cell in ws[1]: cell.data_type='s'; cell.number_format='@'
     for row in payload['items']:
         row={**row,**row.get('assignment',{})}
         row.setdefault('direction',str(row.get('templateId','')).split('-')[0].upper())
         row.setdefault('documentKind','-'.join(str(row.get('templateId','')).split('-')[1:]))
-        ws.append([str(row.get(key) or '') for key in COLUMNS])
+        ws.append([str(row.get(column['field']) if row.get(column['field']) is not None else '') for column in columns])
         for cell in ws[ws.max_row]: cell.data_type='s'; cell.number_format='@'
     ws.freeze_panes='A2'; ws.auto_filter.ref=ws.dimensions
     from openpyxl.styles import Font,PatternFill,Alignment
@@ -489,7 +504,7 @@ def export_registry(payload,out):
     for cells in ws.columns:
         ws.column_dimensions[cells[0].column_letter].width=min(46,max(16,max(len(str(c.value or '')) for c in cells)+2))
         for c in cells: c.alignment=Alignment(vertical='top',wrap_text=True)
-    wb.save(out); return {'rows':len(payload['items']),'columns':COLUMNS,'format':'XLSX'}
+    wb.save(out); return {'rows':len(payload['items']),'columns':[column['title'] for column in columns],'format':'XLSX'}
 
 def import_table(payload,out):
     path=Path(payload['inputPath']); mapping=payload.get('mapping',{}); errors=[]
@@ -511,6 +526,7 @@ def import_table(payload,out):
             for cell in cells:
                 if cell.data_type=='f': errors.append({'row':rowno,'column':cell.column,'code':'FORMULA_NOT_ALLOWED'}); row.append('')
                 elif cell.value is None: row.append('')
+                elif isinstance(cell.value,(datetime,date)): row.append(cell.value.date().isoformat() if isinstance(cell.value,datetime) else cell.value.isoformat())
                 elif isinstance(cell.value,(int,float)) and re.fullmatch('0+',cell.number_format or ''): row.append(str(int(cell.value)).zfill(len(cell.number_format)))
                 else: row.append(str(cell.value))
             table.append(row)
@@ -543,6 +559,15 @@ def import_table(payload,out):
     result={'headers':headers,'sheets':sheets,'sheet':selected_sheet,'rawRows':raw_rows,'rows':rows,'errors':errors,'count':len(rows),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'canApply':len(rows)<=100 and not errors and not any(r['errors'] for r in rows)}
     Path(out).write_text(json.dumps(result,ensure_ascii=False),encoding='utf-8'); return result
 
+def safe_bundle_name(value):
+    parts=[]
+    for part in str(value).replace('\\','/').split('/'):
+        part=re.sub(r'[<>:"|?*\x00-\x1f\x7f]',' ',part).replace('..',' ').strip(' .')
+        if not part: continue
+        if re.match(r'^(CON|PRN|AUX|NUL|COM[0-9]|LPT[0-9])(?:\.|$)',part,re.I): part='_'+part
+        parts.append(part[:150].rstrip(' .') or 'document')
+    return '/'.join(parts[-2:])[:230] or 'document'
+
 def build_bundle(payload,out):
     root=Path(os.environ['DEMO_ARTIFACT_ROOT']).resolve(); entries=[]; missing=list(payload.get('missing',[])); content={}
     for artifact in payload['artifacts']:
@@ -551,12 +576,43 @@ def build_bundle(payload,out):
         if not path.is_file(): missing.append({'id':artifact['id'],'reason':'FILE_MISSING'}); continue
         data=path.read_bytes(); digest=hashlib.sha256(data).hexdigest()
         if digest!=artifact['sha256']: missing.append({'id':artifact['id'],'reason':'HASH_MISMATCH'}); continue
-        name=re.sub(r'[^\w.\-]','_',artifact.get('fileName') or artifact['id']+'.'+artifact['format'].lower())
-        if name in content: name=artifact['id']+'-'+name
-        content[name]=data; entries.append({'id':artifact['id'],'file':name,'sha256':digest,'size':len(data),'format':artifact['format']})
-    manifest={'version':1,'issuanceId':payload.get('issuanceId'),'complete':not missing and len(entries)==payload.get('expectedCount',len(payload['artifacts'])),'files':entries,'missing':missing,'expectedCount':payload.get('expectedCount',len(payload['artifacts']))}
+        name=safe_bundle_name(artifact.get('fileName') or artifact['id']+'.'+artifact['format'].lower())
+        if name.casefold() in {n.casefold() for n in content}|{'manifest.json','status.txt'}:
+            name=safe_bundle_name(hashlib.sha256(str(artifact['id']).encode()).hexdigest()[:12]+'-'+name.replace('/',' — '))
+        content[name]=data; entries.append({'id':artifact['id'],'file':name,'sha256':digest,'size':len(data),'format':artifact['format'],
+            'documentId':artifact.get('documentId'),'provenance':artifact.get('provenance','UNKNOWN'),
+            'templateVersion':artifact.get('templateVersion'),'rendererVersion':artifact.get('rendererVersion'),'inputHash':artifact.get('inputHash')})
+    if not entries: raise ValueError('EMPTY_BUNDLE')
+    attachments=[]; kazakh=(payload.get('profile') or {}).get('language')=='kz'
+    def add_derivative(name,data):
+        if name.casefold() in {n.casefold() for n in content}|{'manifest.json','status.txt'}: raise ValueError('BUNDLE_ATTACHMENT_COLLISION')
+        if len(data)>10*1024*1024: raise ValueError('BUNDLE_ATTACHMENT_LIMIT')
+        content[name]=data;attachments.append({'file':name,'sha256':hashlib.sha256(data).hexdigest(),'size':len(data),'provenance':'DELIVERY_DERIVATIVE'})
+    for attachment in payload.get('attachments',[]):
+        name=safe_bundle_name(attachment['fileName'])
+        data=base64.b64decode(attachment['base64'],validate=True)
+        add_derivative(name,data)
+    complete=not missing and len(entries)==payload.get('expectedCount',len(payload['artifacts']))
+    if payload.get('coverText'):
+        expected=payload.get('expectedCount',len(payload['artifacts']))
+        status=('ТОЛЫҚ ЖИНАҚ' if complete else 'ТОЛЫҚ ЕМЕС ЖИНАҚ') if kazakh else ('ПОЛНЫЙ КОМПЛЕКТ' if complete else 'НЕПОЛНЫЙ КОМПЛЕКТ')
+        summary=[status, (f'Дайын файлдар: {len(entries)} / {expected}.' if kazakh else f'Готовых файлов: {len(entries)} из {expected}.')]
+        summary.extend(('Дайын: ' if kazakh else 'Готов: ')+entry['file'] for entry in entries)
+        reason_labels={'FILE_MISSING':('Файл жоқ' if kazakh else 'Файл отсутствует'), 'HASH_MISMATCH':('Файлдың тұтастығы расталмады' if kazakh else 'Целостность файла не подтверждена')}
+        summary.extend(('Жоқ: ' if kazakh else 'Не включено: ')+str(entry.get('format',''))+' — '+reason_labels.get(entry.get('reason'),str(entry.get('reason',''))) for entry in missing)
+        cover=str(payload['coverText']).rstrip()+'\n\n'+'\n'.join(summary)+'\n'
+        add_derivative('Ілеспе хат.txt' if kazakh else 'Сопроводительное письмо.txt',cover.encode('utf8'))
+    if payload.get('includeInventory'):
+        inventory=io.StringIO();writer=csv.writer(inventory,delimiter='\t',lineterminator='\r\n');writer.writerow(['Күйі','Файл','SHA-256','Өлшемі','Себебі'] if kazakh else ['Статус','Файл','SHA-256','Размер','Причина'])
+        for entry in entries: writer.writerow(['Дайын' if kazakh else 'Готов',"'"+entry['file'] if re.match(r'^[\s]*[=+\-@]',entry['file']) else entry['file'],entry['sha256'],entry['size'],''])
+        for entry in missing: writer.writerow(['Жоқ' if kazakh else 'Отсутствует',entry.get('format',''),'', '',entry.get('reason','')])
+        add_derivative('Тізімдеме.tsv' if kazakh else 'Опись.tsv',inventory.getvalue().encode('utf8'))
+    manifest={'version':2,'issuanceId':payload.get('issuanceId'),'complete':complete,'files':entries,'missing':missing,'expectedCount':payload.get('expectedCount',len(payload['artifacts'])),'readyCount':len(entries),'attachments':attachments,'deliveryProfile':payload.get('profile')}
     content['manifest.json']=json.dumps(manifest,ensure_ascii=False,indent=2).encode()
-    content['STATUS.txt']=(('ПОЛНЫЙ КОМПЛЕКТ' if manifest['complete'] else 'НЕПОЛНЫЙ КОМПЛЕКТ')+f"\nФайлов: {len(entries)} из {manifest['expectedCount']}.\nПроверьте manifest.json: состав, контрольные суммы и причины отсутствия файлов.\n").encode('utf8')
+    if kazakh:
+        content['STATUS.txt']=(('ТОЛЫҚ ЖИНАҚ' if manifest['complete'] else 'ТОЛЫҚ ЕМЕС ЖИНАҚ')+f"\nФайлдар: {len(entries)} / {manifest['expectedCount']}.\nҚұрамы, бақылау сомалары және жетіспейтін файлдардың себептері manifest.json файлында.\n").encode('utf8')
+    else:
+        content['STATUS.txt']=(('ПОЛНЫЙ КОМПЛЕКТ' if manifest['complete'] else 'НЕПОЛНЫЙ КОМПЛЕКТ')+f"\nФайлов: {len(entries)} из {manifest['expectedCount']}.\nПроверьте manifest.json: состав, контрольные суммы и причины отсутствия файлов.\n").encode('utf8')
     deterministic_zip(out,content)
     return manifest
 
@@ -567,8 +623,14 @@ def main():
     elif command=='docx': result=render_docx(payload,out)
     elif command=='pdf': result=convert_pdf(payload['docxPath'],out)
     elif command=='photo': result=photo_normalize(payload['inputPath'],out,payload)
+    elif command=='qr':
+        from verification_qr import verification_qr
+        result=verification_qr(payload,out)
     elif command=='import': result=import_table(payload,out)
     elif command=='xlsx': result=export_registry(payload,out)
+    elif command=='control-sheet':
+        from control_sheet import control_sheet
+        result=control_sheet(payload,out,convert_pdf)
     elif command=='zip': result=build_bundle(payload,out)
     else: raise ValueError('UNKNOWN_COMMAND')
     if Path(out).exists(): result.update(size=Path(out).stat().st_size,sha256=hashlib.sha256(Path(out).read_bytes()).hexdigest())

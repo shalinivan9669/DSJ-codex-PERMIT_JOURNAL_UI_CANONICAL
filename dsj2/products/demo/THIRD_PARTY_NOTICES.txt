@@ -30858,3 +30858,5 @@ FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM OTHER
 DEALINGS IN THE FONT SOFTWARE.
 
 
+
+OT Center 2026-09-24 additions: Python qrcode 8.2 (BSD-3-Clause; legacy MIT notices) and Windows-only colorama 0.4.6 (BSD-3-Clause). Full upstream notices: licenses/operator-value/. zxing-cpp is a local verification tool, not an application dependency.

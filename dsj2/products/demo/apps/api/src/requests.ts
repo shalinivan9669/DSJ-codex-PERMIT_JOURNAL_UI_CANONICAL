@@ -6,6 +6,11 @@ import {
   validateDraft,
   profileSchema,
   type Draft,
+  protocolTemplateFor,
+  credentialTemplateFor,
+  resolveDraft,
+  documentPlan,
+  eventProtocolAssignment,
   z,
 } from "@demo/contracts";
 import { Prisma } from "@demo/database";
@@ -22,6 +27,11 @@ import {
   type Context,
 } from "./core";
 import { artifactAvailability } from "./storage";
+import { duplicateIssuanceWarnings } from "./duplicate-issuance";
+import {
+  validatePinnedServiceRule,
+  ruleApplicabilityIssues,
+} from "./service-rule-applicability";
 export function namespace(templateId: string) {
   const family = templateId.split("-")[0].toUpperCase();
   const kind = templateId.endsWith("protocol")
@@ -32,22 +42,6 @@ export function namespace(templateId: string) {
         ? "CERTIFICATE"
         : "CARD";
   return `${family}:${kind}`;
-}
-function protocolTemplateFor(templateId: string) {
-  return templateId === "biot-itr-certificate" ||
-    templateId === "biot-itr-protocol"
-    ? "biot-itr-protocol"
-    : `${templateId.split("-")[0]}-protocol`;
-}
-function credentialTemplateFor(templateId: string) {
-  if (
-    templateId === "biot-itr-protocol" ||
-    templateId === "biot-itr-certificate"
-  )
-    return "biot-itr-certificate";
-  if (templateId === "biot-protocol" || templateId === "biot-worker-card")
-    return "biot-worker-card";
-  return `${templateId.split("-")[0]}-card`;
 }
 function employerFields(
   item: Draft["items"][number],
@@ -67,7 +61,7 @@ function employerFields(
     employerAddressKz: item.employerAddressKz || customer?.addressKz || "",
   };
 }
-function searchable(draft: Draft) {
+export function searchable(draft: Draft) {
   return [
     draft.title,
     ...draft.items.flatMap((i) => [
@@ -75,10 +69,12 @@ function searchable(draft: Draft) {
       i.fullNameKz,
       i.positionRu,
       i.positionKz,
+      i.personnelNumber || "",
+      i.externalId || "",
     ]),
   ].join(" ");
 }
-async function checkReferences(
+export async function checkReferences(
   tx: Prisma.TransactionClient,
   c: Context,
   draft: Draft,
@@ -90,6 +86,59 @@ async function checkReferences(
     }))
   )
     fail(404, "CUSTOMER_NOT_FOUND", "Заказчик не найден");
+  for (const [field, table] of [
+    ["recipientId", "recipient"],
+    ["employerId", "customerOrganization"],
+  ] as const) {
+    const ids = [
+      ...new Set(draft.items.flatMap((i) => (i[field] ? [i[field]!] : []))),
+    ];
+    const count =
+      table === "recipient"
+        ? await tx.recipient.count({
+            where: { tenantId: c.tenantId, id: { in: ids } },
+          })
+        : await tx.customerOrganization.count({
+            where: { tenantId: c.tenantId, id: { in: ids } },
+          });
+    if (count !== ids.length)
+      fail(
+        404,
+        "REFERENCE_NOT_FOUND",
+        "Человек или работодатель не найден в центре",
+      );
+  }
+  const profileIds = [
+    ...new Set(
+      [
+        draft.profileVersionId,
+        ...(draft.events || []).map((e) => e.profileVersionId),
+      ].filter((x): x is string => !!x),
+    ),
+  ];
+  if (
+    (await tx.issuerProfileVersion.count({
+      where: { tenantId: c.tenantId, id: { in: profileIds } },
+    })) !== profileIds.length
+  )
+    fail(404, "PROFILE_NOT_FOUND", "Версия центра не найдена");
+  const ruleIds = [
+    ...new Set(
+      (draft.events || []).flatMap((event) =>
+        event.serviceRuleVersionId ? [event.serviceRuleVersionId] : [],
+      ),
+    ),
+  ];
+  if (
+    (await tx.serviceRuleVersion.count({
+      where: { tenantId: c.tenantId, id: { in: ruleIds } },
+    })) !== ruleIds.length
+  )
+    fail(
+      404,
+      "SERVICE_RULE_NOT_FOUND",
+      "Версия паспорта услуги не найдена в этом центре",
+    );
   const photoIds = [
     ...new Set(
       draft.items.flatMap((i) => (i.photoAssetId ? [i.photoAssetId] : [])),
@@ -102,13 +151,112 @@ async function checkReferences(
     }))
   )
     fail(404, "PHOTO_NOT_FOUND", "Фотография не найдена");
+  for (const item of draft.items)
+    for (const assignment of item.assignments) {
+      const ref = assignment.retakeOf;
+      if (!ref) continue;
+      const previous = await scopedRequest(c, ref.requestId, tx);
+      if (previous.status === "DRAFT" || previous.status === "CANCELLED")
+        fail(
+          409,
+          "RETAKE_HISTORY_REQUIRED",
+          "Пересдача требует сохранённую действующую историю попытки",
+        );
+      const previousIssuance = await tx.issuance.findFirst({
+        where: { tenantId: c.tenantId, requestId: previous.id },
+        orderBy: { createdAt: "desc" },
+      });
+      if (
+        !previousIssuance ||
+        (await tx.issuanceEvent.count({
+          where: {
+            tenantId: c.tenantId,
+            issuanceId: previousIssuance.id,
+            kind: { in: ["CANCELLED", "REPLACED"] },
+          },
+        }))
+      )
+        fail(
+          409,
+          "RETAKE_SOURCE_INACTIVE",
+          "Предыдущая попытка отменена или заменена; откройте её актуальную версию",
+        );
+      const previousDraft = draftSchema.parse(
+        (previousIssuance.snapshot as { draft: unknown }).draft,
+      );
+      const previousItem = previousDraft.items.find(
+        (row) => row.id === ref.rowId,
+      );
+      const attempt = previousItem?.assignments.find(
+        (a) => a.id === ref.assignmentId,
+      );
+      if (
+        !attempt ||
+        !["FAILED", "ABSENT"].includes(attempt.outcome?.status || "") ||
+        attempt.templateId !== assignment.templateId ||
+        (previousItem?.recipientId
+          ? previousItem.recipientId !== item.recipientId
+          : !!item.recipientId ||
+            previousItem?.fullNameRu !== item.fullNameRu) ||
+        (assignment.eventId && assignment.eventId === attempt.eventId)
+      )
+        fail(
+          409,
+          "RETAKE_REFERENCE_INVALID",
+          "Выберите отдельную попытку того же получателя после неуспешной проверки или неявки",
+        );
+    }
 }
-async function persistItems(
+export async function persistItems(
   tx: Prisma.TransactionClient,
   c: Context,
   id: string,
   draft: Draft,
 ) {
+  for (const event of draft.events || []) {
+    const existing = await tx.trainingEvent.findUnique({
+      where: { id: event.id },
+    });
+    if (
+      existing &&
+      (existing.tenantId !== c.tenantId || existing.requestId !== id)
+    )
+      fail(
+        409,
+        "EVENT_OWNERSHIP",
+        "Событие принадлежит другой заявке; выберите самостоятельное событие",
+      );
+    if (
+      existing &&
+      hash(existing.data) !== hash(event) &&
+      (await tx.issuedDocument.count({
+        where: { tenantId: c.tenantId, groupEventId: event.id },
+      }))
+    )
+      fail(
+        409,
+        "EVENT_IMMUTABLE",
+        "Оформленное событие изменяется только отдельным исправлением",
+      );
+    await tx.trainingEvent.upsert({
+      where: { id: event.id },
+      create: {
+        id: event.id,
+        tenantId: c.tenantId,
+        requestId: id,
+        title: event.title,
+        revision: event.revision,
+        protocolTemplateId: event.protocolTemplateId,
+        data: json(event),
+      },
+      update: {
+        title: event.title,
+        revision: event.revision,
+        protocolTemplateId: event.protocolTemplateId,
+        data: json(event),
+      },
+    });
+  }
   await tx.requestItem.deleteMany({
     where: { requestId: id, tenantId: c.tenantId },
   });
@@ -125,10 +273,25 @@ async function persistItems(
 }
 export async function createRequest(c: Context, input: unknown) {
   const draft = parse(draftSchema, input);
+  for (const item of draft.items)
+    for (const assignment of item.assignments)
+      if (assignment.outcome)
+        assignment.outcome = {
+          ...assignment.outcome,
+          confirmedBy: c.userId,
+          confirmedAt: new Date().toISOString(),
+        };
   if (
     (await db.tenant.findUniqueOrThrow({ where: { id: c.tenantId } })).demoOnly
   )
     draft.demoMode = true;
+  if (draft.schemaVersion === 2 && !draft.profileVersionId) {
+    const profile = await db.issuerProfileVersion.findFirst({
+      where: { tenantId: c.tenantId },
+      orderBy: { version: "desc" },
+    });
+    if (profile) draft.profileVersionId = profile.id;
+  }
   return transaction(async (tx) => {
     await checkReferences(tx, c, draft);
     const record = await tx.printRequest.create({
@@ -168,6 +331,25 @@ export async function patchRequest(c: Context, id: string, input: unknown) {
       fail(409, "REVISION_CONFLICT", "Заявка изменена другим оператором", {
         revision: record.revision,
       });
+    for (const item of draft.items)
+      for (const assignment of item.assignments) {
+        if (!assignment.outcome) continue;
+        const old = draftSchema
+          .parse(record.draft)
+          .items.find((i) => i.id === item.id)
+          ?.assignments.find((a) => a.id === assignment.id);
+        assignment.outcome =
+          old?.outcome &&
+          old.outcome.status === assignment.outcome.status &&
+          old.outcome.source === assignment.outcome.source &&
+          old.result === assignment.result
+            ? old.outcome
+            : {
+                ...assignment.outcome,
+                confirmedBy: c.userId,
+                confirmedAt: new Date().toISOString(),
+              };
+      }
     await checkReferences(tx, c, draft);
     const updated = await tx.printRequest.updateMany({
       where: {
@@ -216,6 +398,28 @@ export async function requestFilter(
               searchText: { contains: q.search, mode: "insensitive" as const },
             },
             { id: { contains: q.search } },
+            {
+              id: {
+                in: (
+                  await db.requestItem.findMany({
+                    where: {
+                      tenantId: c.tenantId,
+                      OR: [
+                        {
+                          payload: {
+                            path: ["personnelNumber"],
+                            equals: q.search,
+                          },
+                        },
+                        { payload: { path: ["externalId"], equals: q.search } },
+                      ],
+                    },
+                    select: { requestId: true },
+                    distinct: ["requestId"],
+                  })
+                ).map((item) => item.requestId),
+              },
+            },
             {
               customerId: {
                 in: (
@@ -338,7 +542,7 @@ export async function requestDetail(c: Context, id: string) {
       sourceRevision: snapshots.find((s) => s.id === j.snapshotId)?.revision,
     })),
     artifacts: publicArtifacts,
-    events,
+    issuanceEvents: events,
   };
 }
 async function validation(
@@ -352,13 +556,20 @@ async function validation(
     fail(409, "REVISION_CONFLICT", "Сначала сохраните актуальную версию", {
       revision: record.revision,
     });
-  const draft = draftSchema.parse(record.draft);
+  const savedDraft = draftSchema.parse(record.draft);
+  let resolved = resolveDraft(savedDraft);
+  let draft = resolved.draft;
   await checkReferences(tx, c, draft);
   const profile = await tx.issuerProfileVersion.findFirst({
-    where: { tenantId: c.tenantId },
+    where: {
+      tenantId: c.tenantId,
+      ...(draft.profileVersionId ? { id: draft.profileVersionId } : {}),
+    },
     orderBy: { version: "desc" },
   });
   const parsedProfile = profile ? profileSchema.parse(profile.profile) : null;
+  resolved = resolveDraft(savedDraft, parsedProfile?.commonFields);
+  draft = resolved.draft;
   const customer = draft.customerId
     ? await tx.customerOrganization.findFirst({
         where: { id: draft.customerId, tenantId: c.tenantId },
@@ -376,11 +587,21 @@ async function validation(
     },
     parsedProfile,
   );
+  issues.push(...resolved.issues);
+  if (documentPlan(draft).documentCount === 0 && draft.items.length)
+    issues.push({
+      code: "NO_ISSUABLE_DOCUMENTS",
+      path: "items",
+      message: "Нет документов с подтверждённым положительным результатом",
+    });
   const templates = await tx.templateVersion.findMany({
     where: { tenantId: c.tenantId },
   });
   const selected = new Map(
     templates
+      .filter(
+        (t) => (t.contract as Record<string, unknown>).ownerKind !== "GROUP",
+      )
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
       .map((t) => [t.templateId, t]),
   );
@@ -395,7 +616,110 @@ async function validation(
           message: `Подтвердите форму ${assignment.templateId} в настройках`,
         });
     }
-  return { record, draft, profile, parsedProfile, selected, issues };
+  const groupSelected = new Map(
+    templates
+      .filter(
+        (t) => (t.contract as Record<string, unknown>).ownerKind === "GROUP",
+      )
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .map((t) => [t.templateId, t]),
+  );
+  const eventProfiles = new Map<
+    string,
+    { id: string; profile: ReturnType<typeof profileSchema.parse> }
+  >();
+  const eventRules = new Map<
+    string,
+    NonNullable<Awaited<ReturnType<typeof validatePinnedServiceRule>>["rule"]>
+  >();
+  for (const event of draft.events || []) {
+    const row = event.profileVersionId
+      ? await tx.issuerProfileVersion.findFirst({
+          where: { tenantId: c.tenantId, id: event.profileVersionId },
+        })
+      : profile;
+    if (row)
+      eventProfiles.set(event.id, {
+        id: row.id,
+        profile: profileSchema.parse(row.profile),
+      });
+    const template = groupSelected.get(event.protocolTemplateId);
+    if (!template?.approved)
+      issues.push({
+        code: "TEMPLATE_NOT_APPROVED",
+        path: "events",
+        message: `Подтвердите форму ${event.protocolTemplateId}`,
+      });
+    const members = draft.items.flatMap((item) =>
+      item.assignments
+        .filter((a) => a.protocolMode === "GROUP" && a.eventId === event.id)
+        .map((assignment) => ({ item, assignment })),
+    );
+    if (event.serviceRuleVersionId) {
+      const binding = await validatePinnedServiceRule(
+        c,
+        event.serviceRuleVersionId,
+        {
+          templateIds: [event.protocolTemplateId],
+          category: members[0]?.assignment.biotCategory,
+          basisDate:
+            members[0]?.assignment.protocolDate ||
+            members[0]?.assignment.trainingEnd ||
+            "",
+        },
+        tx,
+      );
+      if (binding.rule) eventRules.set(event.id, binding.rule);
+      else issues.push(...binding.issues);
+    }
+    for (const member of members) {
+      const protocol = eventProtocolAssignment(event, member.assignment);
+      issues.push(
+        ...validateDraft(
+          {
+            ...draft,
+            items: [
+              {
+                ...member.item,
+                ...employerFields(member.item, customer),
+                assignments: [member.assignment, protocol],
+              },
+            ],
+          },
+          row ? profileSchema.parse(row.profile) : null,
+        ),
+      );
+      const pinnedRule = eventRules.get(event.id);
+      if (pinnedRule) {
+        issues.push(
+          ...ruleApplicabilityIssues(pinnedRule, {
+            templateIds: [
+              member.assignment.templateId,
+              event.protocolTemplateId,
+            ],
+            category: member.assignment.biotCategory,
+            basisDate: protocol.protocolDate || protocol.trainingEnd,
+          }).map((issue) => ({
+            ...issue,
+            path: `events.${event.id}.serviceRuleVersionId`,
+            rowId: member.item.id,
+          })),
+        );
+      }
+    }
+  }
+  return {
+    record,
+    draft,
+    profile,
+    parsedProfile,
+    selected,
+    groupSelected,
+    issues,
+    eventProfiles,
+    eventRules,
+    provenance: resolved.provenance,
+  };
 }
 
 // Cache only successful geometry checks keyed by every visual input and immutable
@@ -442,58 +766,105 @@ async function prepareLayout(
     );
   };
   const plans = v.draft.items.flatMap((item, row) =>
-    item.assignments.map((assignment, column) => {
-      const template = v.selected.get(assignment.templateId)!;
-      const linkedProtocol = item.assignments.some(
-        (a) => a.templateId === protocolTemplateFor(assignment.templateId),
-      );
-      const linkedCredential = item.assignments.some(
-        (a) => a.templateId === credentialTemplateFor(assignment.templateId),
-      );
-      const snapshot = {
+    item.assignments
+      .filter(
+        (a) => a.protocolMode !== "GROUP" || a.outcome?.status === "PASSED",
+      )
+      .map((assignment, column) => {
+        const template = v.selected.get(assignment.templateId)!;
+        const linkedProtocol =
+          assignment.protocolMode === "GROUP" ||
+          item.assignments.some(
+            (a) => a.templateId === protocolTemplateFor(assignment.templateId),
+          );
+        const linkedCredential = item.assignments.some(
+          (a) => a.templateId === credentialTemplateFor(assignment.templateId),
+        );
+        const snapshot = {
+          mode: "issued-document",
+          demoMode: v.draft.demoMode,
+          templateId: template.templateId,
+          templateVersion: template.version,
+          templateStorageKey: template.storageKey,
+          templateChecksum: template.checksum,
+          issuer:
+            (assignment.eventId &&
+              v.eventProfiles.get(assignment.eventId)?.profile) ||
+            v.parsedProfile,
+          photos: item.photoAssetId
+            ? { [item.photoAssetId]: photos[item.photoAssetId] }
+            : {},
+          items: [
+            {
+              ...item,
+              id: undefined,
+              assignments: undefined,
+              sourceRow: undefined,
+              importId: undefined,
+              assignment: { ...assignment, id: undefined },
+              number: numberFor(namespace(assignment.templateId)),
+              registrationNumber:
+                assignment.templateId === "ps-witness"
+                  ? numberFor("PS:REGISTRATION")
+                  : "",
+              protocolNumber:
+                assignment.protocolMode === "EXTERNAL_REFERENCE" ||
+                !linkedProtocol
+                  ? assignment.externalBasisNumber
+                  : numberFor(
+                      assignment.templateId.split("-")[0].toUpperCase() +
+                        ":PROTOCOL",
+                    ),
+              credentialNumber: linkedCredential
+                ? numberFor(
+                    namespace(credentialTemplateFor(assignment.templateId)),
+                  )
+                : "",
+              ...employerFields(item, customer),
+            },
+          ],
+        };
+        return { snapshot, row, column, rowId: item.id, template };
+      }),
+  );
+  for (const { event, members } of documentPlan(v.draft).groups) {
+    const template = v.groupSelected.get(event.protocolTemplateId)!;
+    const rows = members.map(({ item, assignment }) => ({
+      ...item,
+      ...employerFields(item, customer),
+      assignment: eventProtocolAssignment(event, assignment),
+      number: numberFor(namespace(event.protocolTemplateId)),
+      credentialNumber:
+        assignment.outcome?.status === "PASSED"
+          ? numberFor(namespace(assignment.templateId))
+          : "",
+      protocolNumber: numberFor(namespace(event.protocolTemplateId)),
+    }));
+    plans.push({
+      row: 0,
+      column: 0,
+      rowId: members[0].item.id,
+      template,
+      snapshot: {
         mode: "issued-document",
         demoMode: v.draft.demoMode,
         templateId: template.templateId,
         templateVersion: template.version,
         templateStorageKey: template.storageKey,
         templateChecksum: template.checksum,
-        issuer: v.parsedProfile,
-        photos: item.photoAssetId
-          ? { [item.photoAssetId]: photos[item.photoAssetId] }
-          : {},
-        items: [
-          {
-            ...item,
-            id: undefined,
-            assignments: undefined,
-            sourceRow: undefined,
-            importId: undefined,
-            assignment: { ...assignment, id: undefined },
-            number: numberFor(namespace(assignment.templateId)),
-            registrationNumber:
-              assignment.templateId === "ps-witness"
-                ? numberFor("PS:REGISTRATION")
-                : "",
-            protocolNumber:
-              assignment.protocolMode === "EXTERNAL_REFERENCE" ||
-              !linkedProtocol
-                ? assignment.externalBasisNumber
-                : numberFor(
-                    assignment.templateId.split("-")[0].toUpperCase() +
-                      ":PROTOCOL",
-                  ),
-            credentialNumber: linkedCredential
-              ? numberFor(
-                  namespace(credentialTemplateFor(assignment.templateId)),
-                )
-              : "",
-            ...employerFields(item, customer),
+        issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
+        photos: {},
+        items: rows,
+        ...{
+          groupEvent: {
+            ...event,
+            contractVersion: 1,
+            serviceRule: v.eventRules.get(event.id),
           },
-        ],
-      };
-      return { snapshot, row, column, rowId: item.id, template };
-    }),
-  );
+        },
+      } as unknown as (typeof plans)[number]["snapshot"],
+    });
+  }
   return { plans, fingerprint: hash(plans.map((p) => p.snapshot)) };
 }
 async function checkLayout(
@@ -591,14 +962,17 @@ export async function validateRequest(c: Context, id: string, input: unknown) {
     issues: v.issues,
     revision: expectedRevision,
     recipientCount: v.draft.items.length,
-    documentCount: v.draft.items.reduce((n, i) => n + i.assignments.length, 0),
-    protocolCount: v.draft.items.reduce(
-      (n, i) =>
-        n +
-        i.assignments.filter((a) => a.templateId.endsWith("-protocol")).length,
-      0,
-    ),
-    warnings: [],
+    documentCount: documentPlan(v.draft).documentCount,
+    protocolCount:
+      documentPlan(v.draft).groups.length +
+      v.draft.items.reduce(
+        (n, i) =>
+          n +
+          i.assignments.filter((a) => a.templateId.endsWith("-protocol"))
+            .length,
+        0,
+      ),
+    warnings: await duplicateIssuanceWarnings(c, v.draft, db, id),
   };
 }
 async function reserve(
@@ -770,15 +1144,16 @@ export async function finalize(
         v.issues,
       );
     const ns = [
-      ...new Set(
-        v.draft.items.flatMap((i) =>
+      ...new Set([
+        ...(v.draft.events || []).map((e) => namespace(e.protocolTemplateId)),
+        ...v.draft.items.flatMap((i) =>
           i.assignments.flatMap((a) =>
             a.templateId === "ps-witness"
               ? [namespace(a.templateId), "PS:REGISTRATION"]
               : [namespace(a.templateId)],
           ),
         ),
-      ),
+      ]),
     ].sort();
     for (const name of ns)
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":" + name},0))`;
@@ -806,10 +1181,14 @@ export async function finalize(
         sourceRevision: data.expectedRevision,
         snapshot: json({
           draft: v.draft,
+          serviceRules: [...v.eventRules.values()],
           issuer: v.parsedProfile,
           profileVersionId: v.profile.id,
           customer,
-          templates: [...v.selected.values()].filter((t) =>
+          templates: [
+            ...v.selected.values(),
+            ...v.groupSelected.values(),
+          ].filter((t) =>
             v.draft.items.some((i) =>
               i.assignments.some((a) => a.templateId === t.templateId),
             ),
@@ -834,57 +1213,102 @@ export async function finalize(
       number: string;
       registrationNumber: string | undefined;
     }> = [];
-    for (const item of v.draft.items)
-      for (const assignment of item.assignments) {
-        const documentId = randomUUID();
-        const template = v.selected.get(assignment.templateId)!;
-        const number = await reserve(
-          tx,
-          c,
-          namespace(assignment.templateId),
-          documentId,
-        );
-        const registrationNumber =
-          assignment.templateId === "ps-witness"
-            ? await reserve(tx, c, "PS:REGISTRATION", documentId)
-            : undefined;
-        const old = record.correctsIssuanceId
-          ? await tx.issuedDocument.findFirst({
-              where: {
-                tenantId: c.tenantId,
-                issuanceId: record.correctsIssuanceId,
-                rowId: item.id,
-                assignmentId: assignment.id,
-              },
-            })
-          : null;
-        await tx.issuedDocument.create({
-          data: {
-            id: documentId,
-            tenantId: c.tenantId,
-            issuanceId: issued.id,
-            requestId: id,
-            rowId: item.id,
-            assignmentId: assignment.id,
-            templateVersionId: template.id,
-            templateId: template.templateId,
-            namespace: namespace(assignment.templateId),
-            number,
-            registrationNumber,
-            documentDate: assignment.documentDate,
-            replacesDocumentId: old?.id,
-          },
-        });
-        documentIds.push(documentId);
-        planned.push({
-          item,
-          assignment,
-          template,
-          documentId,
+    for (const { item, assignment } of documentPlan(v.draft).individuals) {
+      const documentId = randomUUID();
+      const template = v.selected.get(assignment.templateId)!;
+      const number = await reserve(
+        tx,
+        c,
+        namespace(assignment.templateId),
+        documentId,
+      );
+      const registrationNumber =
+        assignment.templateId === "ps-witness"
+          ? await reserve(tx, c, "PS:REGISTRATION", documentId)
+          : undefined;
+      const old = record.correctsIssuanceId
+        ? await tx.issuedDocument.findFirst({
+            where: {
+              tenantId: c.tenantId,
+              issuanceId: record.correctsIssuanceId,
+              rowId: item.id,
+              assignmentId: assignment.id,
+            },
+          })
+        : null;
+      await tx.issuedDocument.create({
+        data: {
+          id: documentId,
+          tenantId: c.tenantId,
+          issuanceId: issued.id,
+          requestId: id,
+          rowId: item.id,
+          assignmentId: assignment.id,
+          templateVersionId: template.id,
+          templateId: template.templateId,
+          namespace: namespace(assignment.templateId),
           number,
           registrationNumber,
-        });
-      }
+          documentDate: assignment.documentDate,
+          replacesDocumentId: old?.id,
+        },
+      });
+      documentIds.push(documentId);
+      planned.push({
+        item,
+        assignment,
+        template,
+        documentId,
+        number,
+        registrationNumber,
+      });
+    }
+    const groupPlans = [];
+    for (const group of documentPlan(v.draft).groups) {
+      const { event, members } = group;
+      const documentId = randomUUID();
+      const template = v.groupSelected.get(event.protocolTemplateId)!;
+      const number = await reserve(
+        tx,
+        c,
+        namespace(event.protocolTemplateId),
+        documentId,
+      );
+      const documentDate =
+        members[0].assignment.protocolDate ||
+        members[0].assignment.documentDate;
+      await tx.issuedDocument.create({
+        data: {
+          id: documentId,
+          tenantId: c.tenantId,
+          issuanceId: issued.id,
+          requestId: id,
+          ownerKind: "GROUP",
+          groupEventId: event.id,
+          groupEventRevision: event.revision,
+          templateVersionId: template.id,
+          templateId: template.templateId,
+          namespace: namespace(template.templateId),
+          number,
+          documentDate,
+        },
+      });
+      await tx.groupDocumentMember.createMany({
+        data: members.map(({ item, assignment }, position) => ({
+          tenantId: c.tenantId,
+          documentId,
+          requestId: id,
+          rowId: item.id,
+          assignmentId: assignment.id,
+          recipientId: item.recipientId,
+          employerId: item.employerId || v.draft.customerId,
+          position,
+          outcome: json(assignment.outcome!),
+        })),
+      });
+      documentIds.push(documentId);
+      groupPlans.push({ ...group, documentId, template, number });
+    }
     // Allocate the complete document plan first: a card may precede its linked
     // individual protocol in the operator's selection order.
     for (const plannedItem of planned) {
@@ -897,14 +1321,16 @@ export async function finalize(
         registrationNumber,
       } = plannedItem;
       const linkedProtocol =
-        assignment.protocolMode === "EXTERNAL_REFERENCE"
-          ? undefined
-          : planned.find(
-              (p) =>
-                p.item.id === item.id &&
-                p.assignment.templateId ===
-                  protocolTemplateFor(assignment.templateId),
-            );
+        assignment.protocolMode === "GROUP"
+          ? groupPlans.find((g) => g.event.id === assignment.eventId)
+          : assignment.protocolMode === "EXTERNAL_REFERENCE"
+            ? undefined
+            : planned.find(
+                (p) =>
+                  p.item.id === item.id &&
+                  p.assignment.templateId ===
+                    protocolTemplateFor(assignment.templateId),
+              );
       const linkedCredential = planned.find(
         (p) =>
           p.item.id === item.id &&
@@ -933,7 +1359,10 @@ export async function finalize(
         templateVersion: template.version,
         templateStorageKey: template.storageKey,
         templateChecksum: template.checksum,
-        issuer: v.parsedProfile,
+        issuer:
+          (assignment.eventId &&
+            v.eventProfiles.get(assignment.eventId)?.profile) ||
+          v.parsedProfile,
         items: [renderedItem],
         photos,
       };
@@ -963,6 +1392,81 @@ export async function finalize(
         });
         jobIds.push(job.id);
       }
+    }
+    for (const group of groupPlans) {
+      const { event, members, documentId, template, number } = group;
+      const items = members.map(({ item, assignment }) => {
+        const credential = planned.find(
+          (p) => p.item.id === item.id && p.assignment.id === assignment.id,
+        );
+        return {
+          ...item,
+          ...employerFields(item, customer),
+          assignments: undefined,
+          assignment: eventProtocolAssignment(event, assignment),
+          number,
+          documentId,
+          protocolNumber: number,
+          credentialNumber: credential?.number || "",
+          linkedCredentialDocumentId: credential?.documentId,
+        };
+      });
+      const renderInput = {
+        mode: "issued-document",
+        schemaVersion: 2,
+        groupEvent: {
+          ...event,
+          contractVersion: 1,
+          serviceRule: v.eventRules.get(event.id),
+        },
+        demoMode: v.draft.demoMode,
+        templateId: template.templateId,
+        templateVersion: template.version,
+        templateStorageKey: template.storageKey,
+        templateChecksum: template.checksum,
+        issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
+        items,
+        photos: {},
+      };
+      const snapshot = await tx.renderInputSnapshot.create({
+        data: {
+          tenantId: c.tenantId,
+          requestId: id,
+          revision: data.expectedRevision,
+          issuanceId: issued.id,
+          templateVersionId: template.id,
+          profileVersionId: v.eventProfiles.get(event.id)?.id || v.profile.id,
+          input: json(renderInput),
+          inputHash: hash(renderInput),
+        },
+      });
+      for (const kind of ["DOCX", "PDF"]) {
+        const job = await tx.generationJob.create({
+          data: {
+            tenantId: c.tenantId,
+            requestId: id,
+            issuanceId: issued.id,
+            documentId,
+            snapshotId: snapshot.id,
+            kind,
+            logicalKey: `${documentId}:${kind}`,
+          },
+        });
+        jobIds.push(job.id);
+      }
+      allItems.push({
+        documentId,
+        number,
+        groupEventId: event.id,
+        assignment: {
+          templateId: template.templateId,
+          documentDate:
+            members[0].assignment.protocolDate ||
+            members[0].assignment.documentDate,
+          trainingSubject: members[0].assignment.trainingSubject,
+        },
+        memberCount: members.length,
+      });
     }
     const aggregate = {
       mode: "issued-document",
@@ -1139,6 +1643,68 @@ export async function preview(c: Context, id: string, input: unknown) {
             }),
           );
       }
+    for (const { event, members } of documentPlan(v.draft).groups) {
+      const template = v.groupSelected.get(event.protocolTemplateId);
+      if (!template)
+        fail(422, "TEMPLATE_REQUIRED", "Групповой шаблон отсутствует");
+      const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:group:${event.id}`;
+      const existing = await tx.generationJob.findMany({
+        where: {
+          tenantId: c.tenantId,
+          logicalKey: { startsWith: logicalKey + ":" },
+        },
+      });
+      if (existing.length) {
+        jobs.push(...existing);
+        continue;
+      }
+      const renderInput = {
+        mode: "draft-preview",
+        demoMode: true,
+        groupEvent: {
+          ...event,
+          contractVersion: 1,
+          serviceRule: v.eventRules.get(event.id),
+        },
+        templateId: template.templateId,
+        templateVersion: template.version,
+        templateStorageKey: template.storageKey,
+        templateChecksum: template.checksum,
+        issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
+        photos: {},
+        items: members.map(({ item, assignment }) => ({
+          ...item,
+          ...employerFields(item, customer),
+          assignment: eventProtocolAssignment(event, assignment),
+          number: "ПРЕДПРОСМОТР",
+          credentialNumber: "",
+          protocolNumber: "",
+        })),
+      };
+      const snapshot = await tx.renderInputSnapshot.create({
+        data: {
+          tenantId: c.tenantId,
+          requestId: id,
+          revision: expectedRevision,
+          templateVersionId: template.id,
+          profileVersionId: v.eventProfiles.get(event.id)?.id || v.profile.id,
+          input: json(renderInput),
+          inputHash: hash(renderInput),
+        },
+      });
+      for (const kind of ["DOCX", "PDF"])
+        jobs.push(
+          await tx.generationJob.create({
+            data: {
+              tenantId: c.tenantId,
+              requestId: id,
+              snapshotId: snapshot.id,
+              kind,
+              logicalKey: `${logicalKey}:${kind}`,
+            },
+          }),
+        );
+    }
     await audit(tx, c, "PREVIEW_QUEUED", id, {
       revision: expectedRevision,
       jobs: jobs.length,
@@ -1146,6 +1712,125 @@ export async function preview(c: Context, id: string, input: unknown) {
     return { jobs, revision: expectedRevision };
   });
 }
+export async function retake(c: Context, id: string, input: unknown) {
+  const data = parse(
+    z
+      .object({
+        expectedRevision: z.number().int().nonnegative(),
+        rowId: z.string().min(1).max(80),
+        assignmentId: z.string().min(1).max(80),
+        reason: z.string().trim().min(3).max(1000),
+      })
+      .strict(),
+    input,
+  );
+  return transaction(async (tx) => {
+    const original = await scopedRequest(c, id, tx);
+    if (original.revision !== data.expectedRevision)
+      fail(409, "REVISION_CONFLICT", "Редакция изменилась");
+    if (original.status === "DRAFT" || original.status === "CANCELLED")
+      fail(409, "RETAKE_HISTORY_REQUIRED", "Сначала оформите исходную попытку");
+    const source = draftSchema.parse(original.draft);
+    const row = source.items.find((i) => i.id === data.rowId);
+    const old = row?.assignments.find((a) => a.id === data.assignmentId);
+    if (
+      !row ||
+      !old ||
+      !["FAILED", "ABSENT"].includes(old.outcome?.status || "")
+    )
+      fail(
+        409,
+        "RETAKE_OUTCOME_REQUIRED",
+        "Пересдача доступна после неуспешной проверки или неявки",
+      );
+    const sourceEvent = source.events?.find((e) => e.id === old.eventId);
+    const assignment = structuredClone(old);
+    assignment.id = randomUUID();
+    assignment.retakeOf = {
+      requestId: id,
+      rowId: row.id,
+      assignmentId: old.id,
+      reason: data.reason,
+    };
+    assignment.outcome = { status: "UNKNOWN", source: "" };
+    assignment.result = "";
+    assignment.externalBasisNumber = "";
+    assignment.biotKnowledgeResult = "";
+    assignment.biotProctoringResult = "";
+    assignment.biotUniqueNumber = "";
+    assignment.biotNotes = "";
+    assignment.fieldOrigins = {};
+    for (const key of [
+      "documentDate",
+      "protocolDate",
+      "trainingStart",
+      "trainingEnd",
+      "validUntil",
+    ] as const)
+      assignment[key] = "";
+    if (assignment.templateId.startsWith("biot-"))
+      assignment.biotCheckType = "REPEAT";
+    const event = sourceEvent ? structuredClone(sourceEvent) : undefined;
+    if (event) {
+      event.id = randomUUID();
+      event.revision = 0;
+      event.title = `Пересдача: ${event.title}`.slice(0, 255);
+      for (const key of [
+        "documentDate",
+        "protocolDate",
+        "trainingStart",
+        "trainingEnd",
+        "validUntil",
+        "externalBasisNumber",
+      ] as const)
+        delete event.commonFields[key];
+      assignment.eventId = event.id;
+      if (assignment.biotCheckType)
+        event.commonFields.biotCheckType = assignment.biotCheckType;
+    }
+    const draft = draftSchema.parse({
+      kind: source.kind,
+      title: `Пересдача: ${source.title || row.fullNameRu}`.slice(0, 255),
+      customerId: source.customerId,
+      demoMode: source.demoMode,
+      schemaVersion: 2,
+      commonFields: {
+        documentDate: "",
+        protocolDate: "",
+        trainingStart: "",
+        trainingEnd: "",
+        validUntil: "",
+        externalBasisNumber: "",
+      },
+      profileVersionId: source.profileVersionId,
+      events: event ? [event] : [],
+      items: [{ ...row, id: randomUUID(), assignments: [assignment] }],
+    });
+    await checkReferences(tx, c, draft);
+    const created = await tx.printRequest.create({
+      data: {
+        tenantId: c.tenantId,
+        kind: draft.kind,
+        title: draft.title,
+        customerId: draft.customerId,
+        demoMode: draft.demoMode,
+        draft: json(draft),
+        itemCount: 1,
+        searchText: searchable(draft),
+        createdBy: c.userId,
+      },
+    });
+    await persistItems(tx, c, created.id, draft);
+    await audit(tx, c, "RETAKE_DRAFT_CREATED", created.id, {
+      sourceRequestId: id,
+      sourceRowId: row.id,
+      sourceAssignmentId: old.id,
+      reason: data.reason,
+    });
+    return { ...created, ...draft };
+  });
+}
+
 export async function correction(c: Context, id: string, input: unknown) {
   const data = parse(
     z
@@ -1167,6 +1852,19 @@ export async function correction(c: Context, id: string, input: unknown) {
     if (!issued)
       fail(409, "NOT_REGISTERED", "Сначала оформите исходную заявку");
     const draft = draftSchema.parse(record.draft);
+    const eventIds = new Map(
+      (draft.events || []).map((e) => [e.id, randomUUID()]),
+    );
+    draft.events = draft.events?.map((e) => ({
+      ...e,
+      id: eventIds.get(e.id)!,
+      revision: 0,
+    }));
+    for (const item of draft.items)
+      for (const assignment of item.assignments)
+        if (assignment.eventId)
+          assignment.eventId =
+            eventIds.get(assignment.eventId) || assignment.eventId;
     const next = await tx.printRequest.create({
       data: {
         tenantId: c.tenantId,
@@ -1249,4 +1947,10 @@ export async function deleteDraft(c: Context, id: string) {
     await audit(tx, c, "DRAFT_ARCHIVED", id);
     return { ok: true };
   });
+}
+
+export async function resolvedRequest(c: Context, id: string) {
+  const record = await scopedRequest(c, id);
+  const v = await validation(db, c, id, record.revision);
+  return { draft: v.draft, provenance: v.provenance, issues: v.issues };
 }

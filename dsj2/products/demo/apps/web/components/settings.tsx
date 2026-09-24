@@ -28,6 +28,7 @@ export function Settings({
           ["templates", "Формы"],
           ["numbering", "Нумерация"],
           ["users", "Пользователи"],
+          ["export", "Полная выгрузка"],
           ["account", "Мой пароль"],
         ]
       : [["account", "Мой пароль"]];
@@ -63,6 +64,22 @@ export function Settings({
             <Numbering />
           ) : tab === "users" ? (
             <Users currentUserId={context.user.id} />
+          ) : tab === "export" && context.user.role === "ADMIN" ? (
+            <>
+              <h2>Полная копия данных центра</h2>
+              <p>
+                Архив содержит данные заказчиков и получателей, историю,
+                связанные записи и доступные файлы центра. Сохраните его в
+                защищённом месте с доступом только уполномоченных сотрудников.
+              </p>
+              <p className="fine-print">
+                Это выгрузка данных для сохранения и переноса. Проверка
+                восстановления выполняется отдельно.
+              </p>
+              <a className="button primary" href="/api/tenant-export" download>
+                Скачать полную копию центра (ZIP)
+              </a>
+            </>
           ) : (
             <PasswordForm />
           )}
@@ -114,6 +131,7 @@ function ProfileForm({
         cityKz,
         commission,
         approvalBasis,
+        commissionTitle,
         approved,
       } = value;
       const result = await api<Profile & { profile?: Profile }>(
@@ -131,6 +149,7 @@ function ProfileForm({
             cityKz,
             commission,
             approvalBasis,
+            commissionTitle,
             approved,
           }),
         },
@@ -188,8 +207,17 @@ function ProfileForm({
         ))}
       </div>
       <label>
+        Название комиссии / версии профиля
+        <input
+          value={value.commissionTitle || ""}
+          onChange={(event) => change({ commissionTitle: event.target.value })}
+          placeholder="Например: комиссия ПБ, состав от 24.09.2026"
+        />
+      </label>
+      <label>
         Основание утверждения / полномочий
         <textarea
+          aria-label="Основание утверждения / полномочий"
           value={value.approvalBasis}
           onChange={(event) => change({ approvalBasis: event.target.value })}
         />
@@ -319,10 +347,12 @@ function Templates({ initial }: { initial: Template[] }) {
           <article key={template.id}>
             <div>
               <h3>
-                {templateLabels[template.templateId || template.id] ||
-                  template.title ||
-                  template.name ||
-                  template.id}
+                {template.contract?.ownerKind === "GROUP"
+                  ? `${({ "biot-protocol": "БиОТ рабочих", "biot-itr-protocol": "БиОТ ИТР", "pb-protocol": "ПБ", "ptm-protocol": "ПТМ", "ps-protocol": "ПС" } as Record<string, string>)[template.templateId || template.id] || "Событие"} — групповой протокол`
+                  : templateLabels[template.templateId || template.id] ||
+                    template.title ||
+                    template.name ||
+                    template.id}
               </h3>
               <p>
                 Версия {template.version || "1"} ·{" "}
@@ -580,6 +610,7 @@ function Users({ currentUserId }: { currentUserId: string }) {
                     {
                       ADMIN: "Администратор",
                       OPERATOR: "Оператор",
+                      EMPLOYER: "Представитель заказчика",
                       VIEWER: "Просмотр",
                     }[user.role]
                   }
@@ -690,6 +721,7 @@ function UserDialog({
             <option value="ADMIN">Администратор</option>
             <option value="OPERATOR">Оператор</option>
             <option value="VIEWER">Просмотр</option>
+            <option value="EMPLOYER">Представитель заказчика</option>
           </select>
         </label>
         <label>

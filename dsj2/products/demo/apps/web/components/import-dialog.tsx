@@ -16,6 +16,19 @@ import {
   type ImportPreview,
 } from "@/lib/imports";
 import { templateLabels, type Assignment, type Draft } from "@/lib/types";
+type Reconciliation = {
+  retainedTotal: number;
+  revision: number;
+  importId: string;
+  counts: Record<string, number>;
+  rows: {
+    sourceRow?: number;
+    targetId?: string;
+    category: "added" | "changed" | "unchanged" | "missing" | "ambiguous";
+    changes: { field: string; oldValue: unknown; newValue: unknown }[];
+    candidates: string[];
+  }[];
+};
 
 export function ImportDialog({
   requestId,
@@ -53,6 +66,19 @@ export function ImportDialog({
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [revisionMode, setRevisionMode] = useState(false);
+  const [blankMode, setBlankMode] = useState<"RETAIN" | "CLEAR">("RETAIN");
+  const [reconciliation, setReconciliation] = useState<Reconciliation | null>(
+    null,
+  );
+  const [exclusions, setExclusions] = useState<string[]>([]);
+  const [exclusionReason, setExclusionReason] = useState("");
+  const [overwriteConfirmed, setOverwriteConfirmed] = useState(false);
+  const [operationKey, setOperationKey] = useState("");
+  useEffect(() => {
+    setReconciliation(null);
+    setOverwriteConfirmed(false);
+  }, [mapping, excluded, templateId, biotCategory, blankMode]);
   useEffect(() => {
     let active = true;
     void api<{ items: SavedMapping[] }>("/imports/mappings")
@@ -112,6 +138,8 @@ export function ImportDialog({
         body,
       });
       setPreview(result);
+      setReconciliation(null);
+      setOperationKey(crypto.randomUUID());
       setMapping(inferMapping(result.columns));
       setExcluded(
         result.rows
@@ -135,6 +163,67 @@ export function ImportDialog({
         .map((row) =>
           mapImportRow(preview, row, mapping, templateId, biotCategory),
         );
+      if (revisionMode) {
+        const input = {
+          expectedRevision,
+          importId: preview.importId,
+          rows,
+          fieldMask: mapping.filter((field) =>
+            [
+              "fullNameRu",
+              "fullNameKz",
+              "positionRu",
+              "positionKz",
+              "workplaceRu",
+              "workplaceKz",
+              "departmentRu",
+              "departmentKz",
+              "employerBin",
+              "employerAddressRu",
+              "employerAddressKz",
+              "personnelNumber",
+              "externalId",
+              "employerId",
+            ].includes(field),
+          ),
+          blankMode,
+        };
+        if (!reconciliation) {
+          setReconciliation(
+            await api<Reconciliation>(
+              `/print-requests/${requestId}/import-reconciliation/preview`,
+              { method: "POST", body: json(input) },
+            ),
+          );
+          return;
+        }
+        if (expectedRevision !== reconciliation.revision)
+          throw new Error(
+            "Черновик изменился после сравнения. Повторите сравнение актуальной редакции.",
+          );
+        const result = await api<Draft>(
+          `/print-requests/${requestId}/import-reconciliation/apply`,
+          {
+            method: "POST",
+            body: json({
+              ...input,
+              operationKey,
+              selectedSourceRows: reconciliation.rows
+                .filter(
+                  (row) =>
+                    row.sourceRow &&
+                    row.category !== "ambiguous" &&
+                    !excluded.includes(row.sourceRow),
+                )
+                .map((row) => row.sourceRow),
+              excludeMissingIds: exclusions,
+              exclusionReason,
+            }),
+          },
+        );
+        onApplied(result);
+        return;
+      }
       const result = await api<Draft>(`/print-requests/${requestId}/import`, {
         method: "POST",
         body: json({ expectedRevision, importId: preview.importId, rows }),
@@ -182,7 +271,11 @@ export function ImportDialog({
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   const repeated = !!preview && existingImportIds.includes(preview.importId);
-  const total = existingCount + (repeated ? 0 : selected.length);
+  const total = revisionMode
+    ? reconciliation
+      ? reconciliation.retainedTotal - exclusions.length
+      : existingCount
+    : existingCount + (repeated ? 0 : selected.length);
   const mappedFields = mapping.filter(Boolean);
   const duplicateMapping = new Set(mappedFields).size !== mappedFields.length;
   return (
@@ -199,6 +292,20 @@ export function ImportDialog({
         назначаются.
       </p>
       {error && <Notice>{error}</Notice>}
+      {existingCount > 0 && (
+        <label className="checkbox">
+          <input
+            type="checkbox"
+            checked={revisionMode}
+            disabled={busy}
+            onChange={(e) => {
+              setRevisionMode(e.target.checked);
+              setReconciliation(null);
+            }}
+          />
+          Это исправленный список для существующей заявки
+        </label>
+      )}
       {!preview ? (
         <>
           <label className="upload-zone">
@@ -264,6 +371,144 @@ export function ImportDialog({
           {preview.errors?.map((message, index) => (
             <Notice key={index}>{importIssueText(message)}</Notice>
           ))}
+          {revisionMode && (
+            <>
+              <label>
+                Пустые ячейки в исправленном списке
+                <select
+                  value={blankMode}
+                  disabled={busy}
+                  onChange={(e) => {
+                    setBlankMode(e.target.value as typeof blankMode);
+                    setReconciliation(null);
+                    setOverwriteConfirmed(false);
+                  }}
+                >
+                  <option value="RETAIN">Сохранить прежние значения</option>
+                  <option value="CLEAR">
+                    Очистить значения в сопоставленных полях
+                  </option>
+                </select>
+              </label>
+              <p className="fine-print">
+                Сопоставляем по ID человека, внешнему или табельному номеру.
+                Совпадение ФИО не объединяет людей. Назначения и результаты
+                сохраняются.
+              </p>
+            </>
+          )}
+          {reconciliation && (
+            <section aria-label="Сравнение исправленного списка">
+              <h3>Изменения редакции {reconciliation.revision}</h3>
+              <div className="import-summary">
+                {Object.entries(reconciliation.counts).map(([key, count]) => (
+                  <span key={key}>
+                    {(
+                      {
+                        added: "Новые",
+                        changed: "Изменились",
+                        unchanged: "Без изменений",
+                        missing: "Нет в новом файле",
+                        ambiguous: "Неоднозначные",
+                      } as Record<string, string>
+                    )[key] || key}
+                    : {count}
+                  </span>
+                ))}
+              </div>
+              <div className="table-scroll bulk-preview">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Строка</th>
+                      <th>Состояние</th>
+                      <th>Изменения</th>
+                      <th>Действие</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reconciliation.rows.map((row, index) => (
+                      <tr key={index}>
+                        <td>{row.sourceRow || "—"}</td>
+                        <td>
+                          {
+                            {
+                              added: "Добавить",
+                              changed: "Обновить",
+                              unchanged: "Сохранить",
+                              missing: "Отсутствует",
+                              ambiguous: "Требует уточнения",
+                            }[row.category]
+                          }
+                        </td>
+                        <td>
+                          {row.changes.map((c) => (
+                            <div key={c.field}>
+                              {importFields.find(
+                                ([field]) => field === c.field,
+                              )?.[1] || c.field}
+                              : {String(c.oldValue ?? "пусто")} →{" "}
+                              {String(c.newValue ?? "пусто")}
+                            </div>
+                          ))}
+                        </td>
+                        <td>
+                          {row.category === "missing" && row.targetId ? (
+                            <label className="checkbox">
+                              <input
+                                type="checkbox"
+                                checked={exclusions.includes(row.targetId)}
+                                onChange={(e) =>
+                                  setExclusions(
+                                    e.target.checked
+                                      ? [...exclusions, row.targetId!]
+                                      : exclusions.filter(
+                                          (id) => id !== row.targetId,
+                                        ),
+                                  )
+                                }
+                              />
+                              Исключить из черновика
+                            </label>
+                          ) : row.category === "ambiguous" ? (
+                            "Не применяется: уточните устойчивый идентификатор"
+                          ) : (
+                            "По сравнению"
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {exclusions.length > 0 && (
+                <label>
+                  Причина исключения
+                  <input
+                    value={exclusionReason}
+                    onChange={(e) => setExclusionReason(e.target.value)}
+                  />
+                </label>
+              )}
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  checked={overwriteConfirmed}
+                  onChange={(e) => setOverwriteConfirmed(e.target.checked)}
+                />
+                Проверил изменения и сохраняемый состав
+              </label>
+              <button
+                className="text-button"
+                onClick={() => {
+                  setReconciliation(null);
+                  setOverwriteConfirmed(false);
+                }}
+              >
+                Повторить сравнение
+              </button>
+            </section>
+          )}
           <div className="form-grid">
             <label>
               Сохранённое сопоставление
@@ -396,13 +641,15 @@ export function ImportDialog({
                         aria-label={`Поле для колонки ${column || index + 1}`}
                         value={mapping[index]}
                         disabled={busy}
-                        onChange={(event) =>
+                        onChange={(event) => {
+                          setReconciliation(null);
+                          setOverwriteConfirmed(false);
                           setMapping(
                             mapping.map((field, i) =>
                               i === index ? event.target.value : field,
                             ),
-                          )
-                        }
+                          );
+                        }}
                       >
                         <option value="">Не импортировать колонку</option>
                         {importFields.map(([field, label]) => (
@@ -482,15 +729,27 @@ export function ImportDialog({
                 !selected.length ||
                 total > LIMITS.rows ||
                 duplicateMapping ||
-                !mappedFields.length
+                !mappedFields.length ||
+                (revisionMode &&
+                  !!reconciliation &&
+                  (!overwriteConfirmed ||
+                    (exclusions.length > 0 && !exclusionReason.trim())))
               }
-              onClick={() => (repeated ? onClose() : void apply())}
+              onClick={() =>
+                repeated && !revisionMode ? onClose() : void apply()
+              }
             >
-              {repeated
-                ? "Закрыть повторный импорт"
-                : busy
-                  ? "Сохраняем строки…"
-                  : `Добавить ${selected.length} строк в черновик`}
+              {revisionMode
+                ? busy
+                  ? "Проверяем и сохраняем…"
+                  : reconciliation
+                    ? "Применить согласованные изменения"
+                    : "Сравнить с текущим списком"
+                : repeated
+                  ? "Закрыть повторный импорт"
+                  : busy
+                    ? "Сохраняем строки…"
+                    : `Добавить ${selected.length} строк в черновик`}
             </button>
           </div>
         </>

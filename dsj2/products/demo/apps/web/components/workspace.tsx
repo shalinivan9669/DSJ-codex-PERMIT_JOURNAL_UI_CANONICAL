@@ -17,6 +17,9 @@ import { RequestList, NewRequest } from "./request-list";
 import { Editor } from "./editor";
 import { Customers } from "./customers";
 import { Settings } from "./settings";
+import { Workbench } from "./workbench";
+import { EmployerPortal } from "./employer-portal";
+import { PublicVerification } from "./public-verification";
 import { SessionDialog } from "./session-dialog";
 
 export function Workspace() {
@@ -56,10 +59,13 @@ export function Workspace() {
     }
   }, []);
   useEffect(() => {
-    void load();
+    if (!pathname.startsWith("/verify/")) void load();
   }, [load]);
   useEffect(() => {
-    if (context && pathname === "/login") router.replace("/requests");
+    if (context && pathname === "/login")
+      router.replace(
+        context.user.role === "EMPLOYER" ? "/portal" : "/requests",
+      );
   }, [context, pathname, router]);
   async function logout() {
     try {
@@ -79,6 +85,8 @@ export function Workspace() {
       setError(errorText(caught));
     }
   }
+  if (pathname.startsWith("/verify/"))
+    return <PublicVerification token={pathname.slice("/verify/".length)} />;
   if (loading)
     return (
       <main className="initial-state" aria-busy="true">
@@ -95,13 +103,15 @@ export function Workspace() {
         <button onClick={() => void load()}>Повторить подключение</button>
       </main>
     );
-  const section = pathname.startsWith("/customers")
-    ? "customers"
-    : pathname.startsWith("/history")
-      ? "history"
-      : pathname.startsWith("/settings")
-        ? "settings"
-        : "requests";
+  const section = pathname.startsWith("/workbench")
+    ? "workbench"
+    : pathname.startsWith("/customers")
+      ? "customers"
+      : pathname.startsWith("/history")
+        ? "history"
+        : pathname.startsWith("/settings")
+          ? "settings"
+          : "requests";
   const requestMatch = /^\/requests\/([^/]+)(?:\/edit)?$/.exec(pathname);
   return (
     <>
@@ -117,12 +127,16 @@ export function Workspace() {
           <Brand />
         </Link>
         <nav aria-label="Основная навигация">
-          {[
-            ["requests", "Заявки"],
-            ["customers", "Заказчики"],
-            ["history", "История"],
-            ["settings", "Настройки"],
-          ].map(([path, label]) => (
+          {(context.user.role === "EMPLOYER"
+            ? [["portal", "Мои заказы"]]
+            : [
+                ["requests", "Заявки"],
+                ["workbench", "Работа центра"],
+                ["customers", "Заказчики"],
+                ["history", "История"],
+                ["settings", "Настройки"],
+              ]
+          ).map(([path, label]) => (
             <Link
               key={path}
               href={`/${path}`}
@@ -151,7 +165,11 @@ export function Workspace() {
             <button onClick={() => setSessionDialog(true)}>Войти снова</button>
           </Notice>
         )}
-        {pathname === "/requests/new" ? (
+        {context.user.role === "EMPLOYER" ? (
+          <EmployerPortal />
+        ) : pathname === "/portal" ? (
+          <EmployerPortal />
+        ) : pathname === "/requests/new" ? (
           <NewRequest context={context} />
         ) : requestMatch ? (
           <Editor
@@ -159,6 +177,8 @@ export function Workspace() {
             id={requestMatch[1]}
             context={context}
           />
+        ) : section === "workbench" ? (
+          <Workbench context={context} />
         ) : section === "customers" ? (
           <Customers context={context} />
         ) : section === "settings" ? (

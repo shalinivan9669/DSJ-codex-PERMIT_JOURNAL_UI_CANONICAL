@@ -27,7 +27,10 @@ export function fail(
 export function ctx(req: DemoRequest, write = false, admin = false): Context {
   const c = req.context;
   if (!c) fail(401, "SESSION_REQUIRED", "Войдите в DEMO");
-  if ((admin && c.role !== "ADMIN") || (write && c.role === "VIEWER"))
+  if (
+    (admin && c.role !== "ADMIN") ||
+    (write && (c.role === "VIEWER" || c.role === "EMPLOYER"))
+  )
     fail(403, "ROLE_DENIED", "Недостаточно прав");
   return c;
 }

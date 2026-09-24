@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
 import { BIOT_CATEGORIES, LIMITS, type BiotCategory } from "@demo/contracts";
 import { api, errorText } from "@/lib/api";
+import { TextQualityHint } from "./text-quality-hint";
+import { RecipientRecord } from "./recipient-record";
 import {
   biotCategoriesForTemplate,
   updateAssignment,
@@ -22,6 +24,8 @@ export function RecipientDetails({
   context,
   rowIndex,
   fieldErrors,
+  resolvedRecipient,
+  provenance,
 }: {
   recipient: Recipient;
   disabled: boolean;
@@ -29,6 +33,8 @@ export function RecipientDetails({
   context: AppContext;
   rowIndex: number;
   fieldErrors: Record<string, string>;
+  resolvedRecipient?: Recipient;
+  provenance?: Record<string, Record<string, string>>;
 }) {
   const [photoOpen, setPhotoOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("documents");
@@ -162,25 +168,34 @@ export function RecipientDetails({
       </div>
       {activeTab === "person" ? (
         <div className="person-fields">
+          <RecipientRecord
+            recipient={recipient}
+            disabled={disabled}
+            onChange={onChange}
+          />
           <label>
             ФИО · RU
             <input
               disabled={disabled}
               value={recipient.fullNameRu}
+              aria-label="ФИО · RU"
               onChange={(event) =>
                 onChange({ ...recipient, fullNameRu: event.target.value })
               }
             />
+            <TextQualityHint value={recipient.fullNameRu} />
           </label>
           <label>
             ФИО · KZ
             <input
               disabled={disabled}
               value={recipient.fullNameKz}
+              aria-label="ФИО · KZ"
               onChange={(event) =>
                 onChange({ ...recipient, fullNameKz: event.target.value })
               }
             />
+            <TextQualityHint value={recipient.fullNameKz} />
           </label>
           <div className="helper-line">
             <small>Поля RU и KZ независимы.</small>
@@ -203,11 +218,15 @@ export function RecipientDetails({
             <label key={key}>
               {label}
               <input
+                aria-label={label}
                 disabled={disabled}
                 value={String(recipient[key as keyof Recipient] || "")}
                 onChange={(event) =>
                   onChange({ ...recipient, [key]: event.target.value })
                 }
+              />
+              <TextQualityHint
+                value={String(recipient[key as keyof Recipient] || "")}
               />
             </label>
           ))}
@@ -286,9 +305,83 @@ export function RecipientDetails({
                 data-field-path={`items.${rowIndex}.assignments.${index}`}
               >
                 {templateLabels[assignment.templateId] || assignment.templateId}
-                <span>{assignment.documentDate || "Дата не указана"}</span>
+                <span>
+                  {resolvedRecipient?.assignments[index]?.documentDate ||
+                    assignment.documentDate ||
+                    "Дата не указана"}
+                </span>
               </summary>
               <div className="assignment-fields">
+                {assignment.eventId && (
+                  <details className="field-provenance">
+                    <summary>Источники общих значений</summary>
+                    <dl>
+                      {Object.entries(
+                        provenance?.[`${recipient.id}:${assignment.id}`] || {},
+                      ).map(([key, origin]) => (
+                        <div key={key}>
+                          <dt>
+                            {(
+                              {
+                                documentDate: "Дата документа",
+                                trainingStart: "Начало обучения",
+                                trainingEnd: "Окончание обучения",
+                                protocolDate: "Дата протокола",
+                                trainingSubject: "Программа",
+                                hours: "Часы",
+                                validUntil: "Действителен до",
+                                reason: "Причина",
+                                biotCategory: "Категория",
+                                productionHours: "Производственные часы",
+                                biotCheckType: "Вид проверки",
+                              } as Record<string, string>
+                            )[key] || key}
+                          </dt>
+                          <dd>
+                            {(
+                              {
+                                EVENT: "Из события",
+                                REQUEST: "Из заявки",
+                                PRESET: "Из набора",
+                                CENTER: "Из настроек центра",
+                                MANUAL: "Введено вручную",
+                                IMPORTED: "Импортировано",
+                                CLEARED: "Очищено вручную",
+                              } as Record<string, string>
+                            )[origin] || origin}
+                            {["MANUAL", "IMPORTED", "CLEARED"].includes(
+                              origin,
+                            ) && (
+                              <button
+                                className="text-button"
+                                disabled={disabled}
+                                onClick={() =>
+                                  onChange({
+                                    ...recipient,
+                                    assignments: recipient.assignments.map(
+                                      (a) =>
+                                        a.id !== assignment.id
+                                          ? a
+                                          : {
+                                              ...a,
+                                              fieldOrigins: {
+                                                ...a.fieldOrigins,
+                                                [key]: "INHERITED",
+                                              },
+                                            },
+                                    ),
+                                  })
+                                }
+                              >
+                                Вернуть общее значение
+                              </button>
+                            )}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </details>
+                )}
                 <label>
                   Форма документа
                   <select
@@ -318,7 +411,10 @@ export function RecipientDetails({
                     <select
                       {...field(index, "biotCategory")}
                       disabled={disabled}
-                      value={assignment.biotCategory || ""}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .biotCategory || ""
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           biotCategory: event.target.value as BiotCategory,
@@ -359,7 +455,10 @@ export function RecipientDetails({
                       {...field(index, "documentDate")}
                       type="date"
                       disabled={disabled}
-                      value={assignment.documentDate}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .documentDate
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           documentDate: event.target.value,
@@ -374,7 +473,10 @@ export function RecipientDetails({
                       {...field(index, "validUntil")}
                       type="date"
                       disabled={disabled}
-                      value={assignment.validUntil}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .validUntil
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           validUntil: event.target.value,
@@ -401,7 +503,10 @@ export function RecipientDetails({
                       {...field(index, "trainingStart")}
                       type="date"
                       disabled={disabled}
-                      value={assignment.trainingStart}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .trainingStart
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           trainingStart: event.target.value,
@@ -416,7 +521,10 @@ export function RecipientDetails({
                       {...field(index, "trainingEnd")}
                       type="date"
                       disabled={disabled}
-                      value={assignment.trainingEnd}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .trainingEnd
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           trainingEnd: event.target.value,
@@ -431,7 +539,10 @@ export function RecipientDetails({
                       {...field(index, "protocolDate")}
                       type="date"
                       disabled={disabled}
-                      value={assignment.protocolDate}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .protocolDate
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           protocolDate: event.target.value,
@@ -448,7 +559,10 @@ export function RecipientDetails({
                       {...field(index, "hours")}
                       inputMode="decimal"
                       disabled={disabled}
-                      value={assignment.hours}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .hours
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           hours: event.target.value,
@@ -475,7 +589,10 @@ export function RecipientDetails({
                         {...field(index, "productionHours")}
                         inputMode="decimal"
                         disabled={disabled}
-                        value={assignment.productionHours || ""}
+                        value={
+                          (resolvedRecipient?.assignments[index] || assignment)
+                            .productionHours || ""
+                        }
                         onChange={(event) =>
                           changeAssignment(assignment.id, {
                             productionHours: event.target.value,
@@ -502,7 +619,10 @@ export function RecipientDetails({
                     <select
                       {...field(index, "biotCheckType")}
                       disabled={disabled}
-                      value={assignment.biotCheckType || ""}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .biotCheckType || ""
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           biotCheckType: event.target
@@ -619,7 +739,10 @@ export function RecipientDetails({
                   <textarea
                     {...field(index, "trainingSubject")}
                     disabled={disabled}
-                    value={assignment.trainingSubject}
+                    value={
+                      (resolvedRecipient?.assignments[index] || assignment)
+                        .trainingSubject
+                    }
                     onChange={(event) =>
                       changeAssignment(assignment.id, {
                         trainingSubject: event.target.value,
@@ -650,7 +773,10 @@ export function RecipientDetails({
                       {...field(index, "reason")}
                       disabled={disabled}
                       maxLength={500}
-                      value={assignment.reason || ""}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .reason || ""
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           reason: event.target.value,
@@ -670,7 +796,10 @@ export function RecipientDetails({
                       {...field(index, "education")}
                       disabled={disabled}
                       maxLength={500}
-                      value={assignment.education || ""}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .education || ""
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           education: event.target.value,
@@ -698,6 +827,9 @@ export function RecipientDetails({
                     }
                   >
                     <option value="INDIVIDUAL">Индивидуальный документ</option>
+                    {assignment.eventId && (
+                      <option value="GROUP">Общий протокол события</option>
+                    )}
                     <option value="EXTERNAL_REFERENCE">
                       Внешний протокол / основание
                     </option>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon, Notice } from "@demo/ui";
+import { today } from "@demo/contracts";
 import { api, downloadExport, errorText, json } from "@/lib/api";
 import {
   newRecipient,
@@ -286,6 +287,8 @@ export function NewRequest({ context }: { context: AppContext }) {
         method: "POST",
         body: json({
           kind,
+          schemaVersion: 2,
+          commonFields: { documentDate: today(context.tenant.timezone) },
           title:
             kind === "PERSON"
               ? "Новая заявка на человека"

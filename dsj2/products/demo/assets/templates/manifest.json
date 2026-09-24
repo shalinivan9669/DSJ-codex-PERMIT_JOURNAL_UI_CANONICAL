@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "rendererVersion": "demo-ooxml-6",
+  "rendererVersion": "demo-ooxml-7",
   "templates": [
     {
       "id": "biot-worker-card",
@@ -585,6 +585,328 @@
         "word": "16.0.17932",
         "evidence": "docs/evidence/biot-finish/summary.json",
         "fullStressRerun": false
+      }
+    }
+  ],
+  "groupTemplates": [
+    {
+      "id": "biot-protocol",
+      "version": "10-group-2",
+      "file": "biot-protocol.group-v1.docx",
+      "sha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f",
+      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+      "fields": [
+        "APPROVAL_BASIS",
+        "BIOT_CHECK_TYPE_KZ",
+        "BIOT_CHECK_TYPE_RU",
+        "BIOT_NOTES",
+        "CHAIR_NAME",
+        "CHAIR_POSITION",
+        "DEPARTMENT_BOTH",
+        "FULL_NAME_BOTH",
+        "ISSUER_KZ",
+        "ISSUER_RU",
+        "MEMBER_1_NAME",
+        "MEMBER_1_POSITION",
+        "MEMBER_2_NAME",
+        "MEMBER_2_POSITION",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+      "regulatoryReview": {
+        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
+        "effectiveFrom": "2026-07-12",
+        "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
+        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+      },
+      "formRevision": "BIOT_2026_223",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "approvalScope": "Synthetic engineering review; legal approval required per center",
+      "groupRenderer": "group_protocol.py:v1",
+      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verification": {
+        "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": null,
+        "evidence": "docs/evidence/import-delivery/verification.md",
+        "fullStressRerun": false,
+        "templateBytesChanged": false,
+        "previousContractVersion": "10-group-1"
+      }
+    },
+    {
+      "id": "ptm-protocol",
+      "version": "9-group-2",
+      "file": "ptm-protocol.group-v1.docx",
+      "sha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c",
+      "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "fields": [
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "CHAIR",
+        "EMPTY",
+        "FULL_NAME_RU",
+        "ISSUER_RU",
+        "MEMBER_1",
+        "MEMBER_2",
+        "POSITION_KZ",
+        "POSITION_RU",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "REASON",
+        "RESULT",
+        "WORKPLACE_RU"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "sample": "docs/evidence/render/ptm-protocol.pdf",
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "f2f276b3fc9f0f61bcae09f36488efbc8392da1a85b4d8102256f22d921cfebd",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "approvalScope": "Synthetic engineering review; legal approval required per center",
+      "groupRenderer": "group_protocol.py:v1",
+      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verification": {
+        "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": null,
+        "evidence": "docs/evidence/import-delivery/verification.md",
+        "fullStressRerun": false,
+        "templateBytesChanged": false,
+        "previousContractVersion": "9-group-1"
+      }
+    },
+    {
+      "id": "pb-protocol",
+      "version": "9-group-2",
+      "file": "pb-protocol.group-v1.docx",
+      "sha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b",
+      "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "fields": [
+        "ADDRESS_RU",
+        "CHAIR",
+        "EDUCATION",
+        "EMPTY",
+        "FULL_NAME_RU",
+        "HOURS",
+        "ISSUER_RU",
+        "MEMBER_1",
+        "MEMBER_2",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "sample": "docs/evidence/render/pb-protocol.pdf",
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "daa358acef4fbaf98b3f56547cc9165fd8859158c5da51180fb8745c7378f6a3",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "approvalScope": "Synthetic engineering review; legal approval required per center",
+      "groupRenderer": "group_protocol.py:v1",
+      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verification": {
+        "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": null,
+        "evidence": "docs/evidence/import-delivery/verification.md",
+        "fullStressRerun": false,
+        "templateBytesChanged": false,
+        "previousContractVersion": "9-group-1"
+      }
+    },
+    {
+      "id": "ps-protocol",
+      "version": "9-group-2",
+      "file": "ps-protocol.group-v1.docx",
+      "sha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b",
+      "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "fields": [
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "CHAIR",
+        "EMPTY",
+        "FULL_NAME_BOTH",
+        "ISSUER_RU",
+        "MEMBER_1",
+        "MEMBER_2",
+        "NUMBER",
+        "POSITION_RU",
+        "PROTOCOL_DAY_MONTH",
+        "PROTOCOL_NUMBER",
+        "PROTOCOL_YEAR",
+        "RESULT"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "sample": "docs/evidence/render/ps-protocol.pdf",
+      "protocolSemantics": "GROUP",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "2153be9e90cb33a75a26292e3761535b2060c84e50275da6b14816d8255f24c8",
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "approvalScope": "Synthetic engineering review; legal approval required per center",
+      "groupRenderer": "group_protocol.py:v1",
+      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verification": {
+        "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": null,
+        "evidence": "docs/evidence/import-delivery/verification.md",
+        "fullStressRerun": false,
+        "templateBytesChanged": false,
+        "previousContractVersion": "9-group-1"
+      }
+    },
+    {
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "sourceImagesRemoved": true,
+      "id": "biot-itr-protocol",
+      "version": "1-group-2",
+      "file": "biot-itr-protocol.group-v1.docx",
+      "sha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+      "fields": [
+        "APPROVAL_BASIS",
+        "BIOT_CATEGORY_KZ",
+        "BIOT_CATEGORY_RU",
+        "BIOT_CHECK_TYPE_KZ",
+        "BIOT_CHECK_TYPE_RU",
+        "BIOT_KNOWLEDGE_RESULT",
+        "BIOT_NOTES",
+        "BIOT_PROCTORING_RESULT",
+        "BIOT_UNIQUE_NUMBER",
+        "CHAIR_NAME",
+        "CHAIR_POSITION",
+        "EMPLOYER_BIN",
+        "EMPLOYER_NAME_ADDRESS_BOTH",
+        "FULL_NAME_BOTH",
+        "HOURS",
+        "ISSUER_BIN",
+        "ISSUER_KZ",
+        "ISSUER_RU",
+        "MEMBER_1_NAME",
+        "MEMBER_1_POSITION",
+        "MEMBER_2_NAME",
+        "MEMBER_2_POSITION",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+        }
+      ],
+      "formRevision": "BIOT_2026_223",
+      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "protocolSemantics": "GROUP",
+      "regulatoryReview": {
+        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
+        "effectiveFrom": "2026-07-12",
+        "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
+        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+      },
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1,
+      "approvalScope": "Synthetic engineering review; legal approval required per center",
+      "groupRenderer": "group_protocol.py:v1",
+      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verification": {
+        "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
+        "platform": "Windows",
+        "libreoffice": "26.2.6.3",
+        "word": null,
+        "evidence": "docs/evidence/import-delivery/verification.md",
+        "fullStressRerun": false,
+        "templateBytesChanged": false,
+        "previousContractVersion": "1-group-1"
       }
     }
   ]

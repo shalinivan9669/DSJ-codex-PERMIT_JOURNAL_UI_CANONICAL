@@ -76,6 +76,21 @@ export function errorText(error: unknown) {
       : "Не удалось выполнить действие.";
 }
 export const json = (body: unknown) => JSON.stringify(body);
+export async function copyRegistry(path: string, payload: unknown) {
+  const response = await fetch(`/api${path}`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "content-type": "application/json", "x-csrf-token": csrf },
+    body: json(payload),
+  });
+  if (!response.ok)
+    throw new ApiError(
+      response.status,
+      "Не удалось подготовить таблицу. Проверьте состав и профиль колонок.",
+    );
+  const value = await response.text();
+  await navigator.clipboard.writeText(value.replace(/^\uFEFF/, ""));
+}
 export async function downloadArtifact(id: string, fileName: string) {
   let response: Response;
   try {
@@ -104,6 +119,30 @@ export async function downloadArtifact(id: string, fileName: string) {
   link.download = fileName;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+export function exportFileName(
+  disposition: string | null,
+  fallbackName: string,
+) {
+  if (!disposition) return fallbackName;
+  const encoded = /filename\*=UTF-8''([^;]+)/i.exec(disposition)?.[1];
+  const plain = /filename="([^"]+)"/i.exec(disposition)?.[1];
+  try {
+    const value = encoded ? decodeURIComponent(encoded.trim()) : plain;
+    const baseName = value?.split(/[\\/]/).pop();
+    const name = baseName
+      ? Array.from(baseName)
+          .filter(
+            (character) =>
+              character.charCodeAt(0) >= 32 && character.charCodeAt(0) !== 127,
+          )
+          .join("")
+          .trim()
+      : undefined;
+    return name && name !== "." && name !== ".." ? name : fallbackName;
+  } catch {
+    return fallbackName;
+  }
 }
 export async function downloadExport(
   path: string,
@@ -137,7 +176,10 @@ export async function downloadExport(
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = fallbackName;
+  link.download = exportFileName(
+    response.headers.get("content-disposition"),
+    fallbackName,
+  );
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

@@ -8,11 +8,12 @@ import {
   expireExhausted,
   heartbeat,
   settleFailure,
+  DeferredJob,
 } from "./queue";
 
 if (
   productPolicy.productId !== "DEMO" ||
-  productPolicy.version !== 1 ||
+  productPolicy.version !== 2 ||
   productPolicy.demoProductId !== "demo-product"
 )
   throw new Error("INVALID_PRODUCT_POLICY");
@@ -58,6 +59,9 @@ async function loop() {
         await executeJob(db, store, job, owner, controller.signal);
       } catch (error) {
         await settleFailure(db, job, owner, error);
+        // PDF/ZIP dependencies waiting for their source are normal queue work.
+        // settleFailure releases the lease without consuming a retry.
+        if (error instanceof DeferredJob) continue;
         console.error(
           JSON.stringify({
             event: "render.failed",
