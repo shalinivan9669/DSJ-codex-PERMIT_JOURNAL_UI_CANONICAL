@@ -1,0 +1,91 @@
+{
+  "sourceCommit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+  "branch": "codex/ot-center-business-value",
+  "baseCommit": "59a961a07b4f8103db9fbdbe0fe4dc09406816f1",
+  "scope": "Local synthetic OT Center V2. Generated logs and binary evidence remain local.",
+  "implementation": {
+    "features": 32,
+    "state": "IMPLEMENTED_LOCAL",
+    "acceptance": {
+      "PARTIAL": 88,
+      "PASS": 96
+    }
+  },
+  "checks": {
+    "unitCorePass": 40,
+    "unitWebPass": 28,
+    "integrationMainPass": 89,
+    "integrationMainSkipped": 0,
+    "integrationDaily": {
+      "pass": 1,
+      "scenarios": 10,
+      "realIssuedDocuments": 9,
+      "sourceBoundary": "Executed source hashes preserved; later optional backup-reference metadata has separate unit coverage"
+    },
+    "integrationRaces": {
+      "pass": 3,
+      "includesParentTest": true
+    },
+    "integrationImportAndCustomerScope": {
+      "pass": 8,
+      "overlapWithMainSuite": 7
+    },
+    "browser": {
+      "pass": 27,
+      "liveApi": 21,
+      "mockApi": 6,
+      "optionalSkipped": 1,
+      "aggregatedReruns": true
+    },
+    "renderMainPass": 33,
+    "renderAdditional": [
+      "five group forms x 1/2/25/100 DOCX",
+      "PTM100 PDF10pages",
+      "customerBundle4tests",
+      "QR independent roundtrip"
+    ],
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "formatChangedSource": "PASS",
+    "formatWholeRepository": "FAIL_EXISTING_BASELINE_STYLE_86_WARNINGS",
+    "vendorLicenseWhitespace": "Upstream qrcode license retained verbatim, including one trailing space."
+  },
+  "dataSafety": {
+    "oldIndividualTemplatesUnchanged": 11,
+    "oldMigrationFilesUnchanged": 6,
+    "populatedUpgradeRows": 51,
+    "populatedUpgradeFiles": 22,
+    "restoredTables": 44,
+    "restoredStoredFiles": 33,
+    "restoredAssets": 49,
+    "originalCheckout": "main@161c5ed022c9e2c643e80802d3f9dc2cd496a041 unchanged",
+    "productionTouched": false
+  },
+  "largeRuns": {
+    "G1": {
+      "documents": 101,
+      "canonicalArtifacts": 204,
+      "customerDocxPdf": 202,
+      "explicitReconstructed": 2
+    },
+    "G2": {
+      "documents": 203,
+      "canonicalArtifacts": 408,
+      "customerDocxPdf": 406,
+      "explicitReconstructed": 0
+    }
+  },
+  "notClaimed": [
+    "all184fullPASS",
+    "new group Microsoft Word acceptance",
+    "physical printing",
+    "legal approval",
+    "paid customer pilot",
+    "human-active-time or ROI",
+    "production deployment",
+    "full original V07 operator fixture as one browser journey",
+    "application rollback/cutover"
+  ],
+  "liveCheck": "final-local-readiness.json"
+}

@@ -67,6 +67,20 @@ venv/
 /docs/evidence/commercial-acceptance/*
 !/docs/evidence/commercial-acceptance/matrix.json
 
+# Maintained OT Center V2 requirements and release record only.
+# Raw runs, logs, screenshots, databases and generated documents stay local.
+!/docs/evidence/operator-value/
+/docs/evidence/operator-value/*
+!/docs/evidence/operator-value/Plan.md
+!/docs/evidence/operator-value/Decisions.md
+!/docs/evidence/operator-value/Progress.md
+!/docs/evidence/operator-value/Verification.md
+!/docs/evidence/operator-value/acceptance-matrix.json
+!/docs/evidence/operator-value/feature-matrix.json
+!/docs/evidence/operator-value/business-scenarios.json
+!/docs/evidence/operator-value/business-value-map.json
+!/docs/evidence/operator-value/release-checks.json
+
 # Delivery archives and their generated manifests are local output.
 /docs/deliverables/*
 !/docs/deliverables/README.md
