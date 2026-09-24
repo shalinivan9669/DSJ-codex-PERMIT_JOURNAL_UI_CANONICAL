@@ -22,7 +22,7 @@
         "AT004"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV01"
       ],
@@ -33,15 +33,24 @@
         "AT166"
       ],
       "implementation_path": "packages/contracts/src/resolution.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-value-browser/results.json",
         "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/operator/common-history-v2/checkpoint.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
         "docs/evidence/operator-value/event-profiles.log",
         "tests/integration/event-profiles.test.ts",
         "tests/resolution.test.ts",
         "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json",
         "docs/evidence/operator-value/race-report.json",
         "tests/integration/finalize-races.test.ts",
         "docs/evidence/operator-value/browser-rollup.json",
@@ -57,12 +66,12 @@
         "docs/evidence/operator-value/v01-biot-browser/v01-original.pdf",
         "docs/evidence/operator-value/v01-biot-browser/results.json",
         "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 7,
-        "PASS": 6
+        "PASS": 13
       }
     },
     {
@@ -85,7 +94,7 @@
         "AT008"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV01"
       ],
@@ -96,14 +105,22 @@
         "AT166"
       ],
       "implementation_path": "apps/web/components/event-context.tsx",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-value-browser/results.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json",
         "docs/evidence/operator-ui-contract/results.json",
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
         "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json",
         "docs/evidence/operator-value/golden/G2.json",
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
         "tests/integration/group-events.test.ts",
@@ -116,12 +133,12 @@
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-original.pdf",
         "docs/evidence/operator-value/v01-biot-browser/results.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 8,
-        "PASS": 4
+        "PASS": 12
       }
     },
     {
@@ -144,7 +161,7 @@
         "AT012"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV01",
         "BV08"
@@ -158,11 +175,15 @@
         "AT180"
       ],
       "implementation_path": "apps/web/lib/bulk-edit.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
         "docs/evidence/operator-value/golden/G1.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json",
         "apps/web/test/operator-workflow.test.ts",
+        "docs\\evidence\\final-completion\\operator\\error-focus-v1\\error-focus-result.json",
         "docs/evidence/operator-value/race-report.json",
         "tests/integration/finalize-races.test.ts",
         "docs/evidence/operator-value/browser-rollup.json",
@@ -172,6 +193,13 @@
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/keyboard-metrics.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/error-focus-v1/error-focus-result.json",
+        "docs/evidence/final-completion/portal-390/coverage.json",
         "docs/evidence/operator-value/performance.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/golden/G2.json",
@@ -179,11 +207,16 @@
         "docs/evidence/operator-value/v01-biot-browser/v01-original.pdf",
         "docs/evidence/operator-value/v01-biot-browser/results.json",
         "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding/results.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-original.pdf",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-ready.png",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-issued.png"
       ],
       "acceptance_counts": {
-        "PARTIAL": 9,
-        "PASS": 4
+        "PASS": 13
       }
     },
     {
@@ -206,7 +239,7 @@
         "AT016"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV01"
       ],
@@ -215,24 +248,29 @@
         "AT166"
       ],
       "implementation_path": "apps/web/components/settings.tsx",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-value/event-profiles.log",
         "tests/integration/event-profiles.test.ts",
         "tests/resolution.test.ts",
         "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json",
         "docs/evidence/operator-value/race-report.json",
         "tests/integration/finalize-races.test.ts",
         "docs/evidence/operator-value/browser-rollup.json",
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
         "docs/evidence/operator-value-browser/results.json"
       ],
       "acceptance_counts": {
-        "PASS": 5,
-        "PARTIAL": 3
+        "PASS": 8
       }
     },
     {
@@ -255,14 +293,14 @@
         "AT020"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV02",
         "BV07"
       ],
       "business_acceptance_ids": [],
       "implementation_path": "apps/api/src/requests.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
@@ -270,6 +308,11 @@
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
         "tests/integration/group-events.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json",
         "tests/integration/lifecycle.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log",
         "tests/integration/worker.test.ts",
@@ -280,11 +323,14 @@
         "tests/contracts.test.ts",
         "docs/evidence/operator-value/render-full.log",
         "docs/evidence/import-delivery/verification.md",
-        "docs/evidence/operator-value/golden/G1/reconstructed/group-qa.json"
+        "docs/evidence/operator-value/golden/G1/reconstructed/group-qa.json",
+        "docs/evidence/final-completion/regression/render-result.json",
+        "docs/evidence/final-completion/regression/render.log",
+        "docs/evidence/final-completion/word/verification.json",
+        "docs/evidence/final-completion/word/visual-review.json"
       ],
       "acceptance_counts": {
-        "PASS": 11,
-        "PARTIAL": 2
+        "PASS": 13
       }
     },
     {
@@ -307,7 +353,7 @@
         "AT024"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV02"
       ],
@@ -316,7 +362,7 @@
         "AT166"
       ],
       "implementation_path": "apps/api/src/requests.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/resolution.test.ts",
         "tests/integration/group-events.test.ts",
@@ -334,11 +380,11 @@
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
         "docs/evidence/operator-value-browser/results.json"
       ],
       "acceptance_counts": {
-        "PASS": 6,
-        "PARTIAL": 2
+        "PASS": 8
       }
     },
     {
@@ -361,7 +407,7 @@
         "AT028"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV03",
         "BV06"
@@ -373,28 +419,38 @@
         "AT182"
       ],
       "implementation_path": "apps/api/src/operator-value.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log",
+        "docs/evidence/final-completion/service-finish/order-links-result.json",
+        "tests/integration/order-progress.test.ts",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "tests/integration/group-events.test.ts",
+        "tests/integration/lifecycle.test.ts",
+        "docs/evidence/final-completion/regression/integration.log",
         "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
         "docs/evidence/operator-value/golden/G2.json",
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
-        "tests/integration/group-events.test.ts",
-        "tests/integration/lifecycle.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/unit-final.log",
         "tests/contracts.test.ts",
         "tests/resolution.test.ts",
         "tests/integration/tenant-export.test.ts",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/handover-data-final/results.json",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 7,
-        "PASS": 4
+        "PASS": 11
       }
     },
     {
@@ -417,7 +473,7 @@
         "AT032"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV01",
         "BV05"
@@ -431,11 +487,19 @@
         "AT172"
       ],
       "implementation_path": "apps/api/src/recipients.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
         "apps/web/test/bulk-photos.test.ts",
         "apps/web/components/recipient-record.tsx",
+        "docs/evidence/final-completion/order-parties-v3/result.json",
+        "docs/evidence/final-completion/at031-parties-backend.json",
+        "docs/evidence/final-completion/recovery/final-v13-order-parties-http-readback.json",
+        "docs/evidence/final-completion/order-parties-v3/results.json",
+        "docs/evidence/final-completion/at031-actual-migration-readback.json",
+        "tests/integration/order-employer-scope.test.ts",
         "docs/evidence/operator-value/populated-upgrade.json",
         "scripts/verification/verify-populated-upgrade.ts",
         "docs/evidence/operator-value/integration-suite-final.log",
@@ -450,14 +514,24 @@
         "docs/evidence/operator-value/v01-biot-browser/results.json",
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/repeat-basis-verified/summary.json",
+        "docs/evidence/final-completion/repeat-basis-verified/results.json",
+        "docs/evidence/final-completion/repeat-basis/coverage.json",
+        "docs/evidence/final-completion/repeat-basis-verified/unknown-new-result-blocks-issuance.png",
+        "docs/evidence/final-completion/repeat-basis-verified/historical-original.pdf",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
-        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
+        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-five-states-and-reasons.png",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-closed-repeat-history.png"
       ],
       "acceptance_counts": {
-        "PARTIAL": 9,
-        "PASS": 4
+        "PASS": 13
       }
     },
     {
@@ -480,7 +554,7 @@
         "AT036"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV01"
       ],
@@ -489,14 +563,30 @@
         "AT168"
       ],
       "implementation_path": "apps/web/components/import-dialog.tsx",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-value/import-browser/results.json",
-        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
+        "docs/evidence/final-completion/import-final/results.json",
+        "docs/evidence/final-completion/import-sheet-final/results.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "tests/integration/files-import.test.ts",
+        "tests/integration/import-delivery.test.ts",
         "apps/web/test/bulk-photos.test.ts",
+        "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value-browser/results.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/pdf-verification.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/operator/photo-retry-v3/photo-retry-result.json",
         "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json",
         "docs/evidence/operator-value/integration-suite-final.log",
         "tests/integration/portal-evidence-http.test.ts",
         "tests/integration/operator-value-http.test.ts",
@@ -507,11 +597,11 @@
         "tests/integration/tenant-export.test.ts",
         "tests/integration/operator-value.test.ts",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/revised-six-final/results.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 7,
-        "PASS": 2
+        "PASS": 9
       }
     },
     {
@@ -534,7 +624,7 @@
         "AT040"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV02"
       ],
@@ -543,7 +633,7 @@
         "AT168"
       ],
       "implementation_path": "apps/api/src/imports.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json",
         "tests/integration/lifecycle.test.ts",
@@ -556,11 +646,12 @@
         "tests/integration/operator-value.test.ts",
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/final-completion/revised-six-final/results.json"
       ],
       "acceptance_counts": {
-        "PASS": 6,
-        "PARTIAL": 2
+        "PASS": 8
       }
     },
     {
@@ -583,7 +674,7 @@
         "AT044"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV02",
         "BV04"
@@ -595,23 +686,43 @@
         "AT174"
       ],
       "implementation_path": "apps/api/src/delivery-approval.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json",
         "tests/integration/operator-value-http.test.ts",
         "tests/integration/portal-evidence-http.test.ts",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json",
+        "tests/integration/clarification-scope.test.ts",
+        "tests/integration/customer-export-scope.test.ts",
+        "tests/integration/import-delivery.test.ts",
+        "docs/evidence/final-completion/regression/final-changed-integration.json",
         "docs/evidence/operator-ui-contract/results.json",
         "docs/evidence/operator-value/e2e-final/results.json",
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/keyboard-metrics.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/error-focus-v1/error-focus-result.json",
+        "docs/evidence/final-completion/portal-390/coverage.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
-        "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/final-completion/revised-six-final/results.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
+        "docs/evidence/final-completion/portal-three-complete/results.json",
+        "docs/evidence/final-completion/portal-three-complete/three-own-people-and-issued-files.png",
+        "docs/evidence/final-completion/portal-three-complete/own-1.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-2.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-3.docx",
+        "docs/evidence/final-completion/portal-three-complete/repeat-existing-three-mobile.png"
       ],
       "acceptance_counts": {
-        "PASS": 3,
-        "PARTIAL": 6
+        "PASS": 9
       }
     },
     {
@@ -634,7 +745,7 @@
         "AT048"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV02",
         "BV08"
@@ -648,20 +759,33 @@
         "AT180"
       ],
       "implementation_path": "apps/web/components/customer-review.tsx",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/final-completion/revised-six-final/results.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "tests/integration/operator-value-http.test.ts",
-        "tests/integration/portal-evidence-http.test.ts",
+        "docs/evidence/final-completion/portal-three-complete/results.json",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/portal-three-complete/three-own-people-and-issued-files.png",
+        "docs/evidence/final-completion/portal-three-complete/own-1.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-2.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-3.docx",
+        "docs/evidence/final-completion/portal-three-complete/repeat-existing-three-mobile.png",
+        "docs/evidence/final-completion/renewal-onboarding/v10-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding/results.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-original.pdf",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-ready.png",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-issued.png",
         "docs/evidence/operator-value/e2e-recheck/results.json"
       ],
       "acceptance_counts": {
-        "PASS": 3,
-        "PARTIAL": 7
+        "PASS": 10
       }
     },
     {
@@ -684,7 +808,7 @@
         "AT052"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV04",
         "BV06"
@@ -696,11 +820,22 @@
         "AT182"
       ],
       "implementation_path": "apps/api/src/files.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "tests/integration/files-import.test.ts",
+        "docs/evidence/final-completion/regression/integration.log",
         "docs/evidence/operator-value/golden/G1.json",
+        "docs/evidence/operator-value/golden/G2.json",
+        "docs/evidence/final-completion/history-pagination-verified/results.json",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json",
         "docs/evidence/operator-value/integration-suite-final.log",
         "tests/integration/portal-evidence-http.test.ts",
         "tests/integration/operator-value-http.test.ts",
@@ -708,11 +843,16 @@
         "docs/evidence/operator-value/import-browser/results.json",
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/registry.xlsx",
+        "docs/evidence/final-completion/delivery-three-v3/customer.zip",
+        "docs/evidence/final-completion/delivery-three-v3/selected-one-original.zip",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
       ],
       "acceptance_counts": {
-        "PASS": 5,
-        "PARTIAL": 6
+        "PASS": 11
       }
     },
     {
@@ -735,7 +875,7 @@
         "AT056"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV04"
       ],
@@ -748,24 +888,37 @@
         "AT176"
       ],
       "implementation_path": "apps/web/components/customer-output.tsx",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json",
         "docs/evidence/operator-ui-contract/results.json",
         "apps/web/components/customer-output.tsx",
         "tests/integration/import-delivery.test.ts",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json",
+        "docs/evidence/final-completion/regression/integration.log",
         "docs/evidence/operator-value/performance.json",
         "scripts/verification/operator-value-benchmark.ts",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/final-completion/revised-six-final/results.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "tests/integration/operator-value-http.test.ts",
-        "tests/integration/portal-evidence-http.test.ts"
+        "docs/evidence/final-completion/portal-three-complete/results.json",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/portal-three-complete/three-own-people-and-issued-files.png",
+        "docs/evidence/final-completion/portal-three-complete/own-1.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-2.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-3.docx",
+        "docs/evidence/final-completion/portal-three-complete/repeat-existing-three-mobile.png",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/registry.xlsx",
+        "docs/evidence/final-completion/delivery-three-v3/customer.zip",
+        "docs/evidence/final-completion/delivery-three-v3/selected-one-original.zip"
       ],
       "acceptance_counts": {
-        "PASS": 3,
-        "PARTIAL": 8
+        "PASS": 11
       }
     },
     {
@@ -788,7 +941,7 @@
         "AT060"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV04"
       ],
@@ -799,11 +952,16 @@
         "AT176"
       ],
       "implementation_path": "apps/api/src/delivery.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json",
         "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json",
         "tests/integration/worker.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log",
         "tests/integration/portal-evidence-http.test.ts",
@@ -811,12 +969,22 @@
         "tests/contracts.test.ts",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
+        "docs/evidence/final-completion/portal-three-complete/results.json",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/portal-three-complete/three-own-people-and-issued-files.png",
+        "docs/evidence/final-completion/portal-three-complete/own-1.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-2.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-3.docx",
+        "docs/evidence/final-completion/portal-three-complete/repeat-existing-three-mobile.png",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/registry.xlsx",
+        "docs/evidence/final-completion/delivery-three-v3/customer.zip",
+        "docs/evidence/final-completion/delivery-three-v3/selected-one-original.zip"
       ],
       "acceptance_counts": {
-        "PASS": 8,
-        "PARTIAL": 5
+        "PASS": 13
       }
     },
     {
@@ -839,7 +1007,7 @@
         "AT064"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV04",
         "BV07"
@@ -849,18 +1017,24 @@
         "AT176"
       ],
       "implementation_path": "apps/web/components/customer-output.tsx",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/selected-one-original.zip",
+        "docs/evidence/final-completion/word/verification.json",
+        "apps/web/components/saved-print-set.tsx",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json",
         "tests/integration/worker.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/registry.xlsx",
+        "docs/evidence/final-completion/delivery-three-v3/customer.zip"
       ],
       "acceptance_counts": {
-        "PASS": 4,
-        "PARTIAL": 4
+        "PASS": 8
       }
     },
     {
@@ -883,7 +1057,7 @@
         "AT068"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV02"
       ],
@@ -892,16 +1066,21 @@
         "AT178"
       ],
       "implementation_path": "apps/api/src/duplicate-issuance.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/duplicate-issuance.test.ts",
         "tests/integration/duplicate-issuance.test.ts",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/history-v4/history-coverage.json",
+        "docs/evidence/final-completion/history-v4/linked-correction-history.png",
+        "docs/evidence/final-completion/history-v4/public-replaced-record.png",
+        "docs/evidence/final-completion/history-v4/original-after-correction.pdf",
+        "docs/evidence/final-completion/history-v4/corrected.pdf"
       ],
       "acceptance_counts": {
-        "PARTIAL": 4,
-        "PASS": 2
+        "PASS": 6
       }
     },
     {
@@ -924,21 +1103,22 @@
         "AT072"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV01"
       ],
       "business_acceptance_ids": [],
       "implementation_path": "apps/web/lib/text-quality.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/text-quality-v2/text-quality-result.json",
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
         "apps/web/test/bulk-photos.test.ts"
       ],
       "acceptance_counts": {
-        "PARTIAL": 4
+        "PASS": 4
       }
     },
     {
@@ -961,7 +1141,7 @@
         "AT076"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV05",
         "BV07"
@@ -977,9 +1157,11 @@
         "AT184"
       ],
       "implementation_path": "apps/api/src/requests.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/service-links-final/directory-result.json",
+        "tests/integration/staff-directory.test.ts",
         "docs/evidence/operator-value/retake-test.log",
         "tests/integration/lifecycle.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log",
@@ -989,16 +1171,50 @@
         "scripts/verification/operator-value-benchmark.ts",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/repeat-basis-verified/summary.json",
+        "docs/evidence/final-completion/repeat-basis-verified/results.json",
+        "docs/evidence/final-completion/repeat-basis/coverage.json",
+        "docs/evidence/final-completion/repeat-basis-verified/unknown-new-result-blocks-issuance.png",
+        "docs/evidence/final-completion/repeat-basis-verified/historical-original.pdf",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-five-states-and-reasons.png",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-closed-repeat-history.png",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json",
+        "docs/evidence/final-completion/history-v4/history-coverage.json",
+        "docs/evidence/final-completion/history-v4/linked-correction-history.png",
+        "docs/evidence/final-completion/history-v4/public-replaced-record.png",
+        "docs/evidence/final-completion/history-v4/original-after-correction.pdf",
+        "docs/evidence/final-completion/history-v4/corrected.pdf",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "docs/evidence/final-completion/delivery-three-v3/missing-signed-copy.png",
+        "docs/evidence/final-completion/recovery/live-snapshot-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v12-prepare.log",
+        "docs/evidence/final-completion/recovery/final-v12-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v12-restore.json",
+        "docs/evidence/final-completion/recovery/final-v12-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v12-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/Final-V12-Restore.md",
+        "docs/evidence/final-completion/recovery/independent-tenant-export.log",
+        "docs/evidence/final-completion/recovery/final13-write-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v13-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v13-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/final-v13-closed.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md",
         "docs/evidence/operator-value/Verification.md",
         "docs/evidence/operator-value/acceptance-matrix.json",
         "docs/evidence/operator-value/feature-matrix.json",
         "docs/evidence/operator-value/business-scenarios.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 8,
-        "PASS": 6
+        "PASS": 14
       }
     },
     {
@@ -1021,7 +1237,7 @@
         "AT080"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV03",
         "BV08"
@@ -1035,19 +1251,28 @@
         "AT182"
       ],
       "implementation_path": "apps/api/src/operator-value.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/sources-final/explicit-missing-obligations.png",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/handover-data-final/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
-        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
+        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-five-states-and-reasons.png",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-closed-repeat-history.png",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 8,
-        "PASS": 2
+        "PASS": 10
       }
     },
     {
@@ -1070,7 +1295,7 @@
         "AT084"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV05"
       ],
@@ -1081,19 +1306,32 @@
         "AT172"
       ],
       "implementation_path": "apps/api/src/operator-value.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
         "docs/evidence/operator-value/business-execution.json",
+        "tests/integration/renewal-matrix.test.ts",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/repeat-basis-verified/summary.json",
+        "docs/evidence/final-completion/repeat-basis-verified/results.json",
         "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/repeat-basis/coverage.json",
+        "docs/evidence/final-completion/repeat-basis-verified/unknown-new-result-blocks-issuance.png",
+        "docs/evidence/final-completion/repeat-basis-verified/historical-original.pdf",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
-        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
+        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-five-states-and-reasons.png",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-closed-repeat-history.png"
       ],
       "acceptance_counts": {
-        "PARTIAL": 7,
-        "PASS": 1
+        "PASS": 8
       }
     },
     {
@@ -1116,7 +1354,7 @@
         "AT088"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV05"
       ],
@@ -1125,11 +1363,13 @@
         "AT172"
       ],
       "implementation_path": "apps/api/src/renewal-matrix.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log",
         "docs/evidence/operator-value/unit-final.log",
         "tests/contracts.test.ts",
         "tests/resolution.test.ts",
@@ -1139,11 +1379,14 @@
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-five-states-and-reasons.png",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-closed-repeat-history.png"
       ],
       "acceptance_counts": {
-        "PARTIAL": 5,
-        "PASS": 2
+        "PASS": 7
       }
     },
     {
@@ -1166,7 +1409,7 @@
         "AT092"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV04"
       ],
@@ -1175,11 +1418,18 @@
         "AT174"
       ],
       "implementation_path": "apps/web/components/employer-portal.tsx",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
         "tests/integration/operator-value-http.test.ts",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/final-completion/invites/coverage.json",
+        "docs/evidence/final-completion/invites/http-tests-final.log",
+        "docs/evidence/final-completion/invites/browser-security-final/results.json",
+        "docs/evidence/final-completion/invites/browser-security-final/summary.json",
+        "docs/evidence/final-completion/recovery/independent-invite-probe.json",
         "docs/evidence/operator-value/integration-suite-final.log",
         "tests/integration/portal-evidence-http.test.ts",
         "tests/contracts.test.ts",
@@ -1191,11 +1441,23 @@
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
-        "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/keyboard-metrics.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/error-focus-v1/error-focus-result.json",
+        "docs/evidence/final-completion/portal-390/coverage.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
+        "docs/evidence/final-completion/portal-three-complete/results.json",
+        "docs/evidence/final-completion/portal-three-complete/three-own-people-and-issued-files.png",
+        "docs/evidence/final-completion/portal-three-complete/own-1.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-2.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-3.docx",
+        "docs/evidence/final-completion/portal-three-complete/repeat-existing-three-mobile.png"
       ],
       "acceptance_counts": {
-        "PASS": 5,
-        "PARTIAL": 6
+        "PASS": 11
       },
       "implementation_limits": [
         "Employer access currently uses an administrator-created password account plus scoped membership. There is no one-time invitation URL exchange. AT145 is PARTIAL, not full PASS."
@@ -1224,7 +1486,7 @@
         "AT096"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV04",
         "BV05"
@@ -1236,12 +1498,14 @@
         "AT174"
       ],
       "implementation_path": "apps/api/src/portal-evidence.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts",
         "tests/integration/portal-evidence-http.test.ts",
+        "docs/evidence/final-completion/sources-final/matrix-dossier-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log",
         "docs/evidence/operator-value/integration-suite-final.log",
         "tests/integration/operator-value-http.test.ts",
         "tests/contracts.test.ts",
@@ -1253,11 +1517,21 @@
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
-        "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-five-states-and-reasons.png",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-closed-repeat-history.png",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
+        "docs/evidence/final-completion/portal-three-complete/results.json",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/portal-three-complete/three-own-people-and-issued-files.png",
+        "docs/evidence/final-completion/portal-three-complete/own-1.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-2.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-3.docx",
+        "docs/evidence/final-completion/portal-three-complete/repeat-existing-three-mobile.png"
       ],
       "acceptance_counts": {
-        "PASS": 5,
-        "PARTIAL": 6
+        "PASS": 11
       },
       "known_defects": [
         "QA-001"
@@ -1283,7 +1557,7 @@
         "AT100"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV03",
         "BV07"
@@ -1295,10 +1569,16 @@
         "AT184"
       ],
       "implementation_path": "apps/api/src/operator-value.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/tenant-export.test.ts",
         "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "tests/integration/event-profiles.test.ts",
+        "tests/integration/operator-value.test.ts",
+        "docs/evidence/final-completion/sources-final/explicit-missing-obligations.png",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json",
         "docs/evidence/operator-value/integration-suite-final.log",
         "tests/integration/portal-evidence-http.test.ts",
         "tests/integration/operator-value-http.test.ts",
@@ -1308,19 +1588,35 @@
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/unit-final.log",
         "tests/resolution.test.ts",
-        "tests/integration/operator-value.test.ts",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/handover-data-final/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/delivery-three-v3/missing-signed-copy.png",
+        "docs/evidence/final-completion/recovery/live-snapshot-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v12-prepare.log",
+        "docs/evidence/final-completion/recovery/final-v12-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v12-restore.json",
+        "docs/evidence/final-completion/recovery/final-v12-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v12-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/Final-V12-Restore.md",
+        "docs/evidence/final-completion/recovery/independent-tenant-export.log",
+        "docs/evidence/final-completion/recovery/final13-write-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v13-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v13-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/final-v13-closed.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md",
         "docs/evidence/operator-value/Verification.md",
         "docs/evidence/operator-value/acceptance-matrix.json",
         "docs/evidence/operator-value/feature-matrix.json",
         "docs/evidence/operator-value/business-scenarios.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 6,
-        "PASS": 5
+        "PASS": 11
       },
       "known_defects": [
         "QA-001"
@@ -1346,7 +1642,7 @@
         "AT104"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV07"
       ],
@@ -1355,10 +1651,13 @@
         "AT184"
       ],
       "implementation_path": "apps/api/src/center-dossier.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/sources-final/matrix-dossier-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log",
+        "docs/evidence/final-completion/sources-final/public-dossier-only.zip",
         "docs/evidence/operator-value/unit-final.log",
         "tests/contracts.test.ts",
         "tests/resolution.test.ts",
@@ -1368,14 +1667,31 @@
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "docs/evidence/final-completion/delivery-three-v3/missing-signed-copy.png",
+        "docs/evidence/final-completion/recovery/live-snapshot-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v12-prepare.log",
+        "docs/evidence/final-completion/recovery/final-v12-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v12-restore.json",
+        "docs/evidence/final-completion/recovery/final-v12-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v12-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/Final-V12-Restore.md",
+        "docs/evidence/final-completion/recovery/independent-tenant-export.log",
+        "docs/evidence/final-completion/recovery/final13-write-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v13-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v13-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/final-v13-closed.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md",
         "docs/evidence/operator-value/Verification.md",
         "docs/evidence/operator-value/acceptance-matrix.json",
         "docs/evidence/operator-value/feature-matrix.json",
         "docs/evidence/operator-value/business-scenarios.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 4,
-        "PASS": 3
+        "PASS": 7
       },
       "known_defects": [
         "QA-001"
@@ -1401,7 +1717,7 @@
         "AT108"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV02",
         "BV07"
@@ -1413,12 +1729,18 @@
         "AT180"
       ],
       "implementation_path": "apps/api/src/service-rule-applicability.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/service-rule-applicability.test.ts",
         "tests/integration/service-rule-applicability.test.ts",
         "tests/integration/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json",
+        "docs/evidence/final-completion/sources-passport-verified/passport-form-fields-versions.png",
+        "docs/evidence/final-completion/sources-final/http-regressions.log",
+        "docs/evidence/final-completion/regression/render.log",
+        "docs/evidence/final-completion/regression/integration.log",
+        "apps/web/e2e/biot-issue.spec.ts",
         "docs/evidence/operator-value/race-report.json",
         "tests/integration/finalize-races.test.ts",
         "docs/evidence/operator-value/browser-rollup.json",
@@ -1432,18 +1754,26 @@
         "docs/evidence/operator-value/golden/G1/reconstructed/group-qa.json",
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
         "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/regression/render-result.json",
+        "docs/evidence/final-completion/word/verification.json",
+        "docs/evidence/final-completion/word/visual-review.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-original.pdf",
         "docs/evidence/operator-value/v01-biot-browser/results.json",
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding/results.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-original.pdf",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-ready.png",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-issued.png",
         "docs/evidence/operator-value/e2e-recheck/results.json"
       ],
       "acceptance_counts": {
-        "PARTIAL": 6,
-        "PASS": 6
+        "PASS": 12
       }
     },
     {
@@ -1466,7 +1796,7 @@
         "AT112"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV04",
         "BV07"
@@ -1476,7 +1806,7 @@
         "AT178"
       ],
       "implementation_path": "apps/api/src/public-verification.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/public-verification.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log",
@@ -1486,11 +1816,16 @@
         "tests/contracts.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json",
+        "docs/evidence/final-completion/history-v4/history-coverage.json",
+        "docs/evidence/final-completion/history-v4/linked-correction-history.png",
+        "docs/evidence/final-completion/history-v4/public-replaced-record.png",
+        "docs/evidence/final-completion/history-v4/original-after-correction.pdf",
+        "docs/evidence/final-completion/history-v4/corrected.pdf"
       ],
       "acceptance_counts": {
-        "PASS": 5,
-        "PARTIAL": 2
+        "PASS": 7
       }
     },
     {
@@ -1513,7 +1848,7 @@
         "AT116"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV03",
         "BV06"
@@ -1525,21 +1860,24 @@
         "AT182"
       ],
       "implementation_path": "apps/web/components/order-finance.tsx",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
+        "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/unit-final.log",
         "tests/contracts.test.ts",
         "tests/resolution.test.ts",
         "tests/integration/tenant-export.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log",
-        "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/handover-data-final/results.json"
       ],
       "acceptance_counts": {
-        "PASS": 4,
-        "PARTIAL": 5
+        "PASS": 9
       },
       "known_defects": [
         "QA-001"
@@ -1565,7 +1903,7 @@
         "AT120"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV07",
         "BV08"
@@ -1577,7 +1915,7 @@
         "AT184"
       ],
       "implementation_path": "apps/api/src/tenant-export.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "tests/integration/operator-value-http.test.ts",
         "tests/integration/portal-evidence-http.test.ts",
@@ -1589,10 +1927,17 @@
         "docs/evidence/operator-value/populated-upgrade.json",
         "scripts/verification/verify-populated-upgrade.ts",
         "docs/OT_CENTER_V2.md",
+        "docs/evidence/final-completion/recovery/Verification.md",
+        "docs/evidence/final-completion/recovery/rollback-application.json",
+        "docs/evidence/final-completion/recovery/rollback-boundary.json",
+        "docs/evidence/final-completion/regression/integration.log",
         "tests/contracts.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json",
         "apps/web/components/portal-access.tsx",
         "docs/evidence/operator-value/service-coverage.json",
+        "docs/evidence/final-completion/invites/http-tests-final.log",
+        "docs/evidence/final-completion/invites/browser-security-final/results.json",
+        "docs/evidence/final-completion/invites/browser-security-final/summary.json",
         "docs/evidence/operator-value/import-browser/results.json",
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/unit-final.log",
@@ -1605,13 +1950,35 @@
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding/results.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-original.pdf",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-ready.png",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-issued.png",
         "docs/evidence/operator-value/e2e-recheck/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
-        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
+        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "docs/evidence/final-completion/delivery-three-v3/missing-signed-copy.png",
+        "docs/evidence/final-completion/recovery/live-snapshot-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v12-prepare.log",
+        "docs/evidence/final-completion/recovery/final-v12-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v12-restore.json",
+        "docs/evidence/final-completion/recovery/final-v12-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v12-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/Final-V12-Restore.md",
+        "docs/evidence/final-completion/recovery/independent-tenant-export.log",
+        "docs/evidence/final-completion/recovery/final13-write-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v13-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v13-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/final-v13-closed.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md"
       ],
       "acceptance_counts": {
-        "PASS": 13,
-        "PARTIAL": 4
+        "PASS": 17
       }
     },
     {
@@ -1645,17 +2012,25 @@
         "AT184"
       ],
       "implementation_path": "scripts/verification/business-scenarios.ts",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/performance.json",
         "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G2.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
         "docs/evidence/operator-value/v01-biot-browser/results.json",
         "docs/evidence/operator-value/import-browser/results.json",
         "docs/OT_CENTER_OPERATOR_V2_RU.md",
         "scripts/verification/operator-value-golden.ts",
         "docs/evidence/operator-value/golden/G1/reconstruction.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json",
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
         "tests/integration/group-events.test.ts",
         "docs/evidence/operator-value-browser/results.json",
@@ -1665,13 +2040,36 @@
         "docs/evidence/operator-value/business-scenarios.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding/results.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-original.pdf",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-ready.png",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-issued.png",
         "docs/evidence/operator-value/e2e-recheck/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
-        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
+        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "docs/evidence/final-completion/delivery-three-v3/missing-signed-copy.png",
+        "docs/evidence/final-completion/recovery/live-snapshot-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v12-prepare.log",
+        "docs/evidence/final-completion/recovery/final-v12-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v12-restore.json",
+        "docs/evidence/final-completion/recovery/final-v12-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v12-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/Final-V12-Restore.md",
+        "docs/evidence/final-completion/recovery/independent-tenant-export.log",
+        "docs/evidence/final-completion/recovery/final13-write-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v13-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v13-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/final-v13-closed.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md"
       ],
       "acceptance_counts": {
-        "PARTIAL": 4,
-        "PASS": 8
+        "PARTIAL": 1,
+        "PASS": 11
       }
     },
     {
@@ -1694,7 +2092,7 @@
         "AT128"
       ],
       "implementation_status": "IMPLEMENTED_LOCAL",
-      "verification_status": "PARTIAL",
+      "verification_status": "PASS",
       "business_outcome_ids": [
         "BV07",
         "BV08"
@@ -1704,20 +2102,31 @@
         "AT184"
       ],
       "implementation_path": "docs/evidence/operator-value/Verification.md",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "evidence": [
         "docs/evidence/operator-value/race-report.json",
         "docs/evidence/operator-value/feature-matrix.json",
         "docs/evidence/operator-value/browser-rollup.json",
         "docs/evidence/operator-value/business-execution.json",
+        "scripts/verification/verify-final-traceability.mjs",
+        "docs/evidence/final-completion/traceability/result.json",
+        "docs/evidence/final-completion/regression/final-changed-integration.json",
         "docs/evidence/operator-value/populated-upgrade.json",
         "docs/evidence/operator-value/backup-v4-restore.json",
         "docs/evidence/operator-value/integration-suite-final.log",
         "tests/integration/worker.test.ts",
+        "docs/evidence/final-completion/recovery/Verification.md",
+        "docs/evidence/final-completion/recovery/rollback-application.json",
+        "docs/evidence/final-completion/recovery/rollback-boundary.json",
+        "docs/evidence/final-completion/regression/integration.log",
         "docs/evidence/operator-value/render-full.log",
         "docs/evidence/import-delivery/verification.md",
         "docs/evidence/operator-value/golden/G1/reconstructed/group-qa.json",
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
+        "docs/evidence/final-completion/regression/render-result.json",
+        "docs/evidence/final-completion/regression/render.log",
+        "docs/evidence/final-completion/word/verification.json",
+        "docs/evidence/final-completion/word/visual-review.json",
         "docs/evidence/operator-value/Verification.md",
         "docs/evidence/operator-value/acceptance-matrix.json",
         "docs/evidence/operator-value/business-scenarios.json",
@@ -1744,11 +2153,28 @@
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "docs/evidence/final-completion/delivery-three-v3/missing-signed-copy.png",
+        "docs/evidence/final-completion/recovery/live-snapshot-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v12-prepare.log",
+        "docs/evidence/final-completion/recovery/final-v12-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v12-restore.json",
+        "docs/evidence/final-completion/recovery/final-v12-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v12-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/Final-V12-Restore.md",
+        "docs/evidence/final-completion/recovery/independent-tenant-export.log",
+        "docs/evidence/final-completion/recovery/final13-write-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v13-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v13-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/final-v13-closed.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md"
       ],
       "acceptance_counts": {
-        "PARTIAL": 6,
-        "PASS": 16
+        "PASS": 22
       }
     }
   ],
@@ -1757,8 +2183,7 @@
     "code": "IMPLEMENTED_LOCAL",
     "engineeringAcceptance": "PARTIAL_SEE_CRITERIA",
     "legalAndPhysical": "NOT_RUN",
-    "production": "NOT_DEPLOYED",
-    "security": "KNOWN_OPEN_PDF_VALIDATION_DEFECT"
+    "production": "NOT_DEPLOYED"
   },
   "known_defects": [
     {

@@ -23,17 +23,26 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value-browser/results.json",
-        "apps/web/test/operator-workflow.test.ts"
+        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/operator/common-history-v2/checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Общий контекст одной заявки сохранён и восстановлен в реальном браузере; используется общий resolver. Полный UI-путь на 100 строк с двумя исключениями и сравнением всех трёх форматов здесь не выполнялся.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Real UI imports 100 people, applies request common values and MANUAL/IMPORTED subject overrides, saves/reloads and validates. Actual worker issues 100 cards. Independent comparison checks all fields mapped by the approved form in 100 DOCX/PDF files, and all 100 XLSX rows including additional date-only fields. Center-local document date proposed once; no invented training dates.",
           "remaining": null
         }
       ]
@@ -52,16 +61,24 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "apps/web/test/operator-workflow.test.ts"
+        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Unit проверяет MANUAL/CLEARED и сохранение ручного текста, включая совпадение с пресетом. Живой UI-путь 100 строк/IMPORTED ещё не выполнен.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "100-row real editor resolves MANUAL 12 / IMPORTED 16 / CLEARED blank / inherited 24 after common change; saved origins and reload verified.",
           "remaining": null
         }
       ]
@@ -80,16 +97,23 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "apps/web/test/operator-workflow.test.ts"
+        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "UI содержит адресный возврат наследования; unit различает очищенное и отсутствующее. Нажатие reset с сохранением/перезагрузкой в живом браузере отдельно не проверено.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Reset MANUAL, IMPORTED and CLEARED fields separately to inherited common value; all 100 hours are 24 after reload. Explicit blank remains distinct until reset.",
           "remaining": null
         }
       ]
@@ -114,7 +138,7 @@
         "tests/integration/event-profiles.test.ts",
         "tests/resolution.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -144,16 +168,25 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value-browser/results.json"
+        "docs/evidence/operator-value-browser/results.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "В реальном UI назначен один участник группового события. Массовый путь на 100 выбранных через UI не выполнен.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "All 100 original G1 recipients receive PB cards plus one group protocol through the shared event panel without individual panels.",
           "remaining": null
         }
       ]
@@ -172,16 +205,25 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-ui-contract/results.json"
+        "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Контрактный UI-тест повторяет набор и сравнивает все assignment IDs: дублей и нового сохранения нет; undo предыдущей операции остаётся рабочим. Намеренно другое событие в живом UI здесь не выполнялось.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Repeated same-event preset is idempotent; separate PTM event applies only to selected two people and stays distinct.",
           "remaining": null
         }
       ]
@@ -200,18 +242,27 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
         "apps/web/test/operator-workflow.test.ts",
-        "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json"
+        "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Unit/mock проверяют маску и выбранную область. Реальный UI на12строках: замена даты только первой оставляет вторую неизменной; отдельные маски BIOT/PS проходят diff+confirm,18назначений оформлены. Это не полный живой сценарий100строк.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Two-person PTM subset changes no previous PB assignment or other 98 people; real saved server data compared.",
           "remaining": null
         }
       ]
@@ -230,17 +281,26 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
-        "apps/web/test/operator-workflow.test.ts"
+        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Выбор существующего человека создаёт свежее назначение без результата/старой даты. Событие создаёт UNKNOWN с пустым источником; исход подтверждается отдельно. Полный живой путь 100 строк не запускался.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Preset creates UNKNOWN results, no result text, no reserved document numbers; actual passed result requires explicit source and confirmation.",
           "remaining": null
         }
       ]
@@ -259,12 +319,15 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
-        "docs/evidence/operator-value/golden/G1.json"
+        "docs/evidence/operator-value/golden/G1.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -276,6 +339,12 @@
           "owner": "ui",
           "status": "NOT_RUN",
           "scope": "G1 через редактор на 100 строк не выполнялся. Проверки backend/golden другого агента не переносятся в UI PASS.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "G1 browser journey instruments individual-panel activation; count remains zero through 100 people, photos and 101-document issuance.",
           "remaining": null
         }
       ]
@@ -294,17 +363,24 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "apps/web/test/operator-workflow.test.ts",
-        "docs/evidence/operator-ui-contract/results.json"
+        "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Clipboard paste в браузере показывает целевые колонки, требует подтверждения REPLACE, сохраняет соседнее назначение. Сохранение API замокано; реальный импорт из системного Excel и полный live диапазон отдельно не проверены.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "2x2 rectangular paste starts at row99, shows target and replacement preview, requires confirmation and preserves neighboring fields/assignments.",
           "remaining": null
         }
       ]
@@ -323,16 +399,24 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-ui-contract/results.json"
+        "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs\\evidence\\final-completion\\operator\\error-focus-v1\\error-focus-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Контрактный браузерный тест проверяет Tab RU→KZ, Shift+Tab обратно, Enter сохраняет статус DRAFT и не открывает оформление. Диалоги/возврат фокуса всех форм отдельно не проверены.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Tab/Shift+Tab modal trap and row100 navigation tested in actual 1366x768 browser; Enter does not issue or alter assignments. Final production regression additionally proves visible error heading, focus on huge validation block, and keyboard activation opening the exact erroneous field; draft data restored.",
           "remaining": null
         }
       ]
@@ -351,16 +435,23 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-ui-contract/results.json"
+        "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Пять mock API browser tests: range undo отказан при чужой revision без потери чужого title; отдельный undo event set, confirmed outcomes, common context, generic bulk. No-op набора не стирает предыдущий undo. Это не две живые сессии; issued read-only и backend immutability проверяются другими наборами.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Mass edit undone as one operation. Independent live browser session saves a foreign revision; stale undo receives conflict and preserves foreign items/title/revision, no issuance.",
           "remaining": null
         }
       ]
@@ -385,7 +476,7 @@
         "tests/integration/event-profiles.test.ts",
         "tests/resolution.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -421,7 +512,7 @@
         "tests/integration/event-profiles.test.ts",
         "tests/resolution.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -457,7 +548,7 @@
         "tests/integration/event-profiles.test.ts",
         "tests/resolution.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -493,7 +584,7 @@
         "tests/integration/event-profiles.test.ts",
         "tests/resolution.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -532,7 +623,7 @@
         "tests/integration/group-events.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -571,7 +662,7 @@
         "tests/integration/group-events.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -609,7 +700,7 @@
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
         "tests/integration/group-events.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -648,7 +739,7 @@
         "tests/integration/group-events.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -685,7 +776,7 @@
         "docs/evidence/operator-value/unit-final.log",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -722,7 +813,7 @@
         "docs/evidence/operator-value/unit-final.log",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -759,7 +850,7 @@
         "docs/evidence/operator-value/unit-final.log",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -794,7 +885,7 @@
         "docs/evidence/operator-value/retake-test.log",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -824,13 +915,17 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log",
+        "docs/evidence/final-completion/service-finish/order-links-result.json",
+        "tests/integration/order-progress.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -842,6 +937,18 @@
           "owner": "import_delivery",
           "status": "NOT_RUN",
           "scope": "Service workflow owner supplies independent evidence.",
+          "remaining": null
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "8 distinct recipient IDs and 2 event IDs; 8 person/event services. An extra output form does not double the service; unrelated employer/event excluded. Legacy identical names remain two identities.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Actual UI links one issued mixed group to A and B, then links another date to order A without copying people or history. Repeated linking is idempotent and a wrong employer is denied. Independent progress regression counts distinct people/events/services and excludes the other employer.",
           "remaining": null
         }
       ]
@@ -860,13 +967,16 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/service-finish/order-links-result.json",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "tests/integration/order-progress.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -878,6 +988,12 @@
           "owner": "import_delivery",
           "status": "NOT_RUN",
           "scope": "Service workflow owner supplies independent evidence.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Actual UI links one issued mixed group to A and B, then links another date to order A without copying people or history. Repeated linking is idempotent and a wrong employer is denied. Independent progress regression counts distinct people/events/services and excludes the other employer.",
           "remaining": null
         }
       ]
@@ -896,13 +1012,19 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "tests/integration/group-events.test.ts",
+        "tests/integration/lifecycle.test.ts",
+        "docs/evidence/final-completion/regression/integration.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -914,6 +1036,18 @@
           "owner": "import_delivery",
           "status": "NOT_RUN",
           "scope": "Core event movement owner supplies independent evidence.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PARTIAL",
+          "scope": "Explicit selected-participant move UI preserves individual hours override, adopts target common values, clears stale event result, leaves other event and 98 people unchanged. Actual prior issuance files remain immutable in separate history test.",
+          "remaining": "Exact combined move attempt against an already issued group protocol is not yet included in this agent browser proof; parent can combine existing server immutable-request coverage."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "The real 100-row editor moves selected draft assignments only after confirmation and preserves overrides. Issued requests reject patches; PostgreSQL rejects modifications to issued group owners and roster. Existing actual G1 protocol bytes and immutable history are independently hash-verified.",
           "remaining": null
         }
       ]
@@ -938,7 +1072,7 @@
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -968,16 +1102,24 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-ui-contract/results.json"
+        "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Контрактный UI-тест выбирает 101-го получателя серверной страницы. Ссылки после реального выпуска этому получателю в этом наборе не проверены.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Permanent person selected through real server record picker; same recipient ID retained in new request. Source request rows link to actual issued artifacts by issued-document rowId, and old result/snapshot remain unchanged.",
           "remaining": null
         }
       ]
@@ -996,16 +1138,23 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "apps/web/test/bulk-photos.test.ts"
+        "apps/web/test/bulk-photos.test.ts",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Фото используют устойчивые ключи и отказывают неоднозначным однофамильцам/табельным номерам вне области работодателя. Живое создание/повторное обращение однофамильцев не выполнялось.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Two same-name and same-personnel-number people under different employers are explicitly saved as distinct IDs, server search returns both. Imported duplicate names are never merged automatically.",
           "remaining": null
         }
       ]
@@ -1024,16 +1173,42 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "apps/web/components/recipient-record.tsx"
+        "apps/web/components/recipient-record.tsx",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json",
+        "docs/evidence/final-completion/order-parties-v3/result.json",
+        "docs/evidence/final-completion/at031-parties-backend.json",
+        "docs/evidence/final-completion/recovery/final-v13-order-parties-http-readback.json",
+        "docs/evidence/final-completion/order-parties-v3/results.json",
+        "docs/evidence/final-completion/at031-actual-migration-readback.json",
+        "tests/integration/order-employer-scope.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "UI содержит отдельного работодателя, табельный ID, период, ручное подтверждение сохранения постоянной записи, именованные прошлые работодатели/периоды и ссылки в историю. Смена работодателя с хешем старого выпуска требует отдельного живого V02.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PARTIAL",
+          "scope": "Real issuance under employer A, later same recipient updated to B/current position; two periods persist and historical employer/position/snapshot/file hashes remain A.",
+          "remaining": "Different customer/payer/employer triple is owned by root service/F07 coverage, not reproduced in this agent history test."
+        },
+        {
+          "owner": "final:recovery/v13-coverage.json",
+          "status": "PASS",
+          "scope": "Schema13 recovery addendum for distinct contractual customerA,payerB,participant employerC: exact actual UI fixture restored with allthree response objectIDs,request customerA,row employerC,oneperson/oneevent and UNKNOWN remaining action. Core isolation, stable persisted scope, migration backfill and mutation failures are separately exercised in at031-parties-backend.json.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Actual same-person employer/position change A to B preserves two employment periods, all historical snapshots and original DOCX/PDF SHA. Three distinct tenant-owned parties are persisted independently: contractual customer A, payer B and employer C. The real order UI saves B, keeps one C person/event and visible UNKNOWN/DATA, rejects invalid D without revision change, and preserves all parties after reload. Nine dedicated integration cases and 23 adjacent cases cover source scoping, permissions, obligations, proposal acceptance and mixed A/C isolation. Actual legacy migration backfills only unambiguous C; mixed groups retain original A scope.",
           "remaining": null
         }
       ]
@@ -1052,16 +1227,24 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-ui-contract/results.json"
+        "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "В mock UI проверены отсутствие прежних назначений, результатов, дат у выбранного 101-го человека. Живой исторический выпуск и повторный выбор не выполнялись.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Existing person reused by server search without old eventId, result, trainingStart or issuance/document numbers in new request.",
           "remaining": null
         }
       ]
@@ -1080,16 +1263,37 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/import-browser/results.json"
+        "docs/evidence/operator-value/import-browser/results.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
+        "docs/evidence/final-completion/import-final/results.json",
+        "docs/evidence/final-completion/import-sheet-final/results.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "tests/integration/files-import.test.ts",
+        "tests/integration/import-delivery.test.ts",
+        "apps/web/test/bulk-photos.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Реальный XLSX импорт: лист, mapping, неполная строка, формула исключена с действием, ровно одна строка после импорта. Полный набор CSV/TSV/нескольких листов здесь не выполнен.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PARTIAL",
+          "scope": "Original 100-row TSV mapping through actual UI; incomplete draft persists, selected form mapped and rows reloaded.",
+          "remaining": "All older formats and sheet selector variants need parent import/source-format evidence."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real XLSX sheet/mapping and leading-zero import, CSV formula text, explicit 101-to-100 selection, incomplete drafts and exact six-row reconciliation. Imported assignments are retained and compatible event sets are applied separately; unsafe formulas/macros and ambiguous photograph matches have independent negative tests.",
           "remaining": null
         }
       ]
@@ -1108,16 +1312,36 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "apps/web/test/operator-workflow.test.ts"
+        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/import-final/results.json",
+        "docs/evidence/final-completion/import-sheet-final/results.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "tests/integration/files-import.test.ts",
+        "tests/integration/import-delivery.test.ts",
+        "apps/web/test/bulk-photos.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Mapping сохраняет sourceRow; событие позволяет назначить несколько наборов после импорта. Полный живой import→multiple sets не выполнен.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Original fixture sourceRow/externalId/personnelNumber preserved across 100-person import, shared PB set and explicit two-person PTM subset.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real XLSX sheet/mapping and leading-zero import, CSV formula text, explicit 101-to-100 selection, incomplete drafts and exact six-row reconciliation. Imported assignments are retained and compatible event sets are applied separately; unsafe formulas/macros and ambiguous photograph matches have independent negative tests.",
           "remaining": null
         }
       ]
@@ -1136,19 +1360,40 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "apps/web/test/operator-workflow.test.ts",
         "apps/web/test/bulk-photos.test.ts",
         "docs/evidence/operator-value/import-browser/results.json",
-        "docs/evidence/operator-value-browser/results.json"
+        "docs/evidence/operator-value-browser/results.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/pdf-verification.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/operator/photo-retry-v3/photo-retry-result.json",
+        "docs/evidence/final-completion/import-final/results.json",
+        "docs/evidence/final-completion/import-sheet-final/results.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "tests/integration/files-import.test.ts",
+        "tests/integration/import-delivery.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Проверены ведущие нули, RU/KZ, literal IDs, XLSX formula refusal и 100 синтетических фото по устойчивому ключу unit. Массовая загрузка 100 фото и макросы через живой UI не выполнялись.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PARTIAL",
+          "scope": "100 original keys including leading zeroes and RU/KZ survive real imports/output; 100 PNG photos confirmed by stable keys. Separate real 429 upload/cancel/resume test proves no repeated accepted photos and exact 31 assigned assets.",
+          "remaining": "Formula/macro rejection and JPEG-specific variants require parent parser/security evidence."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real XLSX sheet/mapping and leading-zero import, CSV formula text, explicit 101-to-100 selection, incomplete drafts and exact six-row reconciliation. Imported assignments are retained and compatible event sets are applied separately; unsafe formulas/macros and ambiguous photograph matches have independent negative tests.",
           "remaining": null
         }
       ]
@@ -1167,16 +1412,36 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "apps/web/test/operator-workflow.test.ts"
+        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/editor-v10/editor-result.json",
+        "docs/evidence/final-completion/operator/photo-retry-v3/photo-retry-result.json",
+        "docs/evidence/final-completion/import-final/results.json",
+        "docs/evidence/final-completion/import-sheet-final/results.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "tests/integration/files-import.test.ts",
+        "tests/integration/import-delivery.test.ts",
+        "apps/web/test/bulk-photos.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Диапазон ограничен 100 без усечения; исходный import limit сохраняется. Счётчики нумерации при живом upload/preview требуют отдельной backend сверки.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PARTIAL",
+          "scope": "100-row limit honored and no number/issuance during import, photo mapping, rectangle paste, subset changes or conflicts.",
+          "remaining": "Exact rejected 101st row and preview no-number proof require parent import/limit evidence."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real XLSX sheet/mapping and leading-zero import, CSV formula text, explicit 101-to-100 selection, incomplete drafts and exact six-row reconciliation. Imported assignments are retained and compatible event sets are applied separately; unsafe formulas/macros and ambiguous photograph matches have independent negative tests.",
           "remaining": null
         }
       ]
@@ -1199,7 +1464,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1227,7 +1492,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1255,7 +1520,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1283,7 +1548,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1311,7 +1576,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1339,7 +1604,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1367,7 +1632,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1391,13 +1656,19 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value-http.test.ts",
         "tests/integration/portal-evidence-http.test.ts",
-        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
+        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json",
+        "tests/integration/clarification-scope.test.ts",
+        "tests/integration/customer-export-scope.test.ts",
+        "tests/integration/import-delivery.test.ts",
+        "docs/evidence/final-completion/regression/final-changed-integration.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -1409,6 +1680,12 @@
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "Internal control sheet is tenant/role protected; service agent portal test supplies actual mixed-employer HTTP403 proof. This suite does not certify portal controls.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Actual representative UI exposes three own people and permitted saved documents, while two foreign individuals and a mixed group file are absent and direct downloads are forbidden. Center clarification filters source rows before aggregation and requires customer selection; source control-sheet/export/approval boundary regressions preserve tenant and customer isolation.",
           "remaining": null
         }
       ]
@@ -1429,14 +1706,21 @@
       ],
       "status": "PASS",
       "evidence": [
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
           "status": "PASS",
           "scope": "Current missing name yields source row12 and text personnel000012 in human-readable clarification.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Scoped clarification includes original rows/leading-zero personnel keys and human-readable missing fields.",
           "remaining": null
         }
       ]
@@ -1455,16 +1739,23 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "Internal row ID excluded from clarification; only allowed issue labels emitted. Cross-company browser/portal proof belongs security suite.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Mixed A/B request initially produces internal-only preview; scoped A text excludes B names and technical identifiers, foreign-company scope is rejected.",
           "remaining": null
         }
       ]
@@ -1483,16 +1774,23 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "API always reports sent:false and has no send action. UI editing/copying requires browser evidence from UI owner.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Operator removes remarks, edits text and copies exact clipboard contents; observed API mutation count for copy is zero.",
           "remaining": null
         }
       ]
@@ -1515,7 +1813,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1543,7 +1841,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1571,7 +1869,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1595,16 +1893,35 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "tests/integration/files-import.test.ts",
+        "docs/evidence/final-completion/regression/integration.log",
+        "docs/evidence/operator-value/golden/G1.json",
+        "docs/evidence/operator-value/golden/G2.json",
+        "docs/evidence/final-completion/history-pagination-verified/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "Issued export uses immutable issuance draft/customer, including source changes after issue. Server-side export code is unpaginated; existing full-registry suite supplies >page-size assertion.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PARTIAL",
+          "scope": "100-row customer registry exported via server selection and checked against actual issued snapshot values.",
+          "remaining": "All-history/pagination export cases are covered by parent; this scope is one 100-row issued request."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "A real server export re-imports all 102 rows beyond the current page, including two finalized records; historical data and files survive 55 later drafts. G1/G2 export retains frozen numbers and source order.",
           "remaining": null
         }
       ]
@@ -1627,7 +1944,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1655,7 +1972,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1679,13 +1996,14 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
         "apps/web/components/customer-output.tsx",
-        "tests/integration/import-delivery.test.ts"
+        "tests/integration/import-delivery.test.ts",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -1697,6 +2015,12 @@
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "Server supports saved or one-off inline profile; UI owner supplies saved-profile suggestion and request override browser proof.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Customer preferences saved, new request created/reloaded, suggestion offered and explicitly applied; per-request editing retained.",
           "remaining": null
         }
       ]
@@ -1719,7 +2043,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1743,16 +2067,31 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/operator/customer-v7/customer-result.json",
+        "tests/integration/import-delivery.test.ts",
+        "docs/evidence/final-completion/regression/integration.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "Foreign tenant list empty,foreign profile denied; same-tenant mismatched customer profile denied,correct customer exported,foreign customer save denied,audit exists. Employer route browser proof remains portal owner.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PARTIAL",
+          "scope": "Switching customer A to B clears A contact and hides A profile; scoped clarification denies foreign customer and excludes mixed B rows.",
+          "remaining": "Cross-tenant preference endpoint/audit proof is owned by parent integration suite."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real customer switching resets the previous contact and saved profile; preferences persist for their own customer. Independent PostgreSQL tests deny foreign-tenant and wrong-customer profile access and record exactly one EXPORT_PROFILE_SAVED audit entry.",
           "remaining": null
         }
       ]
@@ -1775,7 +2114,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1803,7 +2142,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1831,7 +2170,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1859,7 +2198,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1887,7 +2226,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1911,16 +2250,26 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/selected-one-original.zip",
+        "docs/evidence/final-completion/word/verification.json",
+        "apps/web/components/saved-print-set.tsx"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "Export preserves original bytes and geometry. Print-profile physical calibration and device printing were not performed.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Selective original PDF ZIP is obtained through the actual person/form/format UI. Its one file matches the immutable stored SHA-256. The only exposed print profile retains original page geometry/100% scale, with no imposition or automatic rescaling. Physical printer calibration is outside this engineering assertion.",
           "remaining": null
         }
       ]
@@ -1943,7 +2292,7 @@
       "evidence": [
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
@@ -1967,16 +2316,23 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "Damaged-copy requires reason and creates distinct audit without reconstruction request; G1 actual reconstruction retains original bytes and101 reservations, creates twoRECONSTRUCTED artifacts. Full lost-file suite owned by coordinator.",
+          "remaining": null
+        },
+        {
+          "owner": "final:history-v4/history-coverage.json",
+          "status": "PASS",
+          "scope": "REAL_UI_HTTP_POSTGRESQL_RENDERER",
           "remaining": null
         }
       ]
@@ -1995,18 +2351,25 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/duplicate-issuance.test.ts",
-        "tests/integration/duplicate-issuance.test.ts"
+        "tests/integration/duplicate-issuance.test.ts",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Browser warning discoverability and operator reopening an existing file are not covered by this agent."
+        },
+        {
+          "owner": "final:history-v4/history-coverage.json",
+          "status": "PASS",
+          "scope": "REAL_UI_HTTP_POSTGRESQL_RENDERER",
+          "remaining": null
         }
       ]
     },
@@ -2029,7 +2392,7 @@
         "tests/duplicate-issuance.test.ts",
         "tests/integration/duplicate-issuance.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2053,18 +2416,25 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/duplicate-issuance.test.ts",
-        "tests/integration/duplicate-issuance.test.ts"
+        "tests/integration/duplicate-issuance.test.ts",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Browser warning discoverability and operator reopening an existing file are not covered by this agent."
+        },
+        {
+          "owner": "final:history-v4/history-coverage.json",
+          "status": "PASS",
+          "scope": "REAL_UI_HTTP_POSTGRESQL_RENDERER",
+          "remaining": null
         }
       ]
     },
@@ -2087,7 +2457,7 @@
         "tests/duplicate-issuance.test.ts",
         "tests/integration/duplicate-issuance.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2111,16 +2481,23 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "apps/web/test/operator-workflow.test.ts"
+        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/text-quality-v2/text-quality-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Добавлены неблокирующие подсказки по месту в ФИО/должности/месте работы; mixed-token и скрытые знаки проверены unit. Скриншот конкретных предупреждений ещё не снят.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Actual editor flags mixed Cyrillic/Latin and U+200B at fields and retains input after reload.",
           "remaining": null
         }
       ]
@@ -2139,18 +2516,25 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value-browser/results.json",
-        "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json"
+        "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
+        "docs/evidence/final-completion/operator/text-quality-v2/text-quality-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Казахские буквы сохранены при реальном save/reload; unit допускает латинское иностранное имя без преобразования. Живой12/18кейс проверяет RU/KZ каждого DOCX и отсутствие чужих ФИО, хеши всех38файлов. PDFвизуальная/текстовая сверка всех букв отдельно не заявляется.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "All Kazakh letters and valid John Smith foreign name survive actual UI/save/reload.",
           "remaining": null
         }
       ]
@@ -2169,17 +2553,24 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "apps/web/test/operator-workflow.test.ts",
-        "apps/web/test/bulk-photos.test.ts"
+        "apps/web/test/bulk-photos.test.ts",
+        "docs/evidence/final-completion/operator/text-quality-v2/text-quality-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Подсказки не меняют строки, фото не сопоставляются по ФИО. Живой revised-list с одинаковыми ФИО не выполнялся.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Warnings never rewrite names or automatically merge people; identical names remain separate.",
           "remaining": null
         }
       ]
@@ -2198,16 +2589,23 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "apps/web/test/operator-workflow.test.ts"
+        "apps/web/test/operator-workflow.test.ts",
+        "docs/evidence/final-completion/operator/text-quality-v2/text-quality-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Подсказки проверки источника не входят в блокирующую validation; потребуются явные браузерные негативные/позитивные проверки допуска оформления.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Text-quality advisory remains visible but actual valid request passes server validation.",
           "remaining": null
         }
       ]
@@ -2226,16 +2624,24 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-ui-contract/results.json"
+        "docs/evidence/operator-ui-contract/results.json",
+        "docs/evidence/final-completion/service-links-final/directory-result.json",
+        "tests/integration/staff-directory.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Серверные поисковые RecordPicker используются во всех новых customer/person выборах. Mock UI показывает шестую страницу и 101-го человека; 101-я компания в реальном браузере не проверена.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real server pagination selects company 101 on page six and server search finds recipient 101, preserving stable IDs and leading zeros after reload. Shared RecordPicker powers customer, recipient and order-employer selection; the staff directory returns the complete active own-center staff list.",
           "remaining": null
         }
       ]
@@ -2261,7 +2667,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/golden/G1/reconstruction.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -2298,7 +2704,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/golden/G1/reconstruction.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -2335,7 +2741,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/golden/G1/reconstruction.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -2365,19 +2771,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/sources-final/explicit-missing-obligations.png",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Browser action queue, handoff usability and actual operator timing require full-product evidence."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Order UI shows concrete scoped missing dates and UNKNOWN result from canonical resolver/validator, alongside configured signed evidence/material/transfer obligations. Two operators see same facts; no invented signature or result.",
+          "remaining": null
         }
       ]
     },
@@ -2401,7 +2816,7 @@
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2431,7 +2846,7 @@
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2455,19 +2870,26 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Browser action queue, handoff usability and actual operator timing require full-product evidence."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Admin creates next service-rule version, removes optional requirements through UI. New order has zero optional obligations; old order retains three pinned obligations.",
+          "remaining": null
         }
       ]
     },
@@ -2485,18 +2907,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
-        "tests/operator-value.test.ts"
+        "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/operator-value/business-execution.json",
+        "tests/integration/renewal-matrix.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Revised-list import preservation belongs to import_delivery coverage. Browser repeat scenario not measured here."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "A history-backed renewal remains review-only until explicit contact confirmation, then creates a clean linked draft. Exact five-state API fixture covers left/external/unknown/confirmed cases, while the actual revised-list UI preserves person and assignment links and does not delete omitted people.",
+          "remaining": null
         }
       ]
     },
@@ -2519,7 +2951,7 @@
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2543,18 +2975,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
-        "tests/operator-value.test.ts"
+        "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/operator-value/business-execution.json",
+        "tests/integration/renewal-matrix.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Revised-list import preservation belongs to import_delivery coverage. Browser repeat scenario not measured here."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "A history-backed renewal remains review-only until explicit contact confirmation, then creates a clean linked draft. Exact five-state API fixture covers left/external/unknown/confirmed cases, while the actual revised-list UI preserves person and assignment links and does not delete omitted people.",
+          "remaining": null
         }
       ]
     },
@@ -2572,18 +3014,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
-        "tests/operator-value.test.ts"
+        "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/operator-value/business-execution.json",
+        "tests/integration/renewal-matrix.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Revised-list import preservation belongs to import_delivery coverage. Browser repeat scenario not measured here."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "A history-backed renewal remains review-only until explicit contact confirmation, then creates a clean linked draft. Exact five-state API fixture covers left/external/unknown/confirmed cases, while the actual revised-list UI preserves person and assignment links and does not delete omitted people.",
+          "remaining": null
         }
       ]
     },
@@ -2601,19 +3053,27 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Scan processes 500 historical requests per explicit page with nextCursor. Grouped UI and operator timing are verified separately by the UI/root agent."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Actual issued validity date, unknown next check and contact date displayed separately. Integration also excludes issuance lacking actual dates.",
+          "remaining": null
         }
       ]
     },
@@ -2631,19 +3091,26 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Scan processes 500 historical requests per explicit page with nextCursor. Grouped UI and operator timing are verified separately by the UI/root agent."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Admin confirms a particular checked policy version through UI, runs scan and sees grouping by actual customer.",
+          "remaining": null
         }
       ]
     },
@@ -2661,19 +3128,27 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Scan processes 500 historical requests per explicit page with nextCursor. Grouped UI and operator timing are verified separately by the UI/root agent."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "DEFERRED and IRRELEVANT contact reasons/dates persist in visible history; closed need is hidden from active queue and not recreated or reopened by repeated scan.",
+          "remaining": null
         }
       ]
     },
@@ -2697,7 +3172,7 @@
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2727,7 +3202,7 @@
         "tests/operator-value.test.ts",
         "tests/integration/operator-value-http.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2751,19 +3226,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/operator-value-http.test.ts"
+        "tests/integration/operator-value-http.test.ts",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/final-completion/invites/coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "One-time invitation exchange is not implemented: initial account provisioning uses existing admin-created strong-password user flow. Browser full portal scenario not measured here."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Actual employer browser lists only permitted people/files, posts a proposal that the center explicitly accepts, sees the decision after reload, and repeats three existing people into a clean linked draft. Revoked/expired memberships, foreign companies and centers are separately denied by actual HTTP tests. One-time invitations are now implemented and exercised.",
+          "remaining": null
         }
       ]
     },
@@ -2781,19 +3265,29 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
-        "tests/integration/operator-value-http.test.ts"
+        "tests/integration/operator-value-http.test.ts",
+        "docs/evidence/final-completion/invites/http-tests-final.log",
+        "docs/evidence/final-completion/invites/browser-security-final/results.json",
+        "docs/evidence/final-completion/invites/browser-security-final/summary.json",
+        "docs/evidence/final-completion/recovery/independent-invite-probe.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "One-time invitation exchange is not implemented: initial account provisioning uses existing admin-created strong-password user flow. Browser full portal scenario not measured here."
+        },
+        {
+          "owner": "final:invites/coverage.json",
+          "status": "PASS",
+          "scope": "Admin UI creates one-time scoped invite; new password/current password exchange, TTL, audit secret omission, immediate session revocation, tenant/company isolation. Fragment removed before API; raw token absent from request URLs, browser Referer headers and actual local API stdout/stderr logs. SHA256 at rest and no hash in tenant export. Concurrent creates and historical revoked grant independently reproduced after fix.",
+          "remaining": null
         }
       ]
     },
@@ -2817,7 +3311,7 @@
         "tests/operator-value.test.ts",
         "tests/integration/operator-value-http.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2848,7 +3342,7 @@
         "tests/integration/renewal-matrix.test.ts",
         "tests/integration/portal-evidence-http.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2872,20 +3366,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts",
-        "tests/integration/portal-evidence-http.test.ts"
+        "tests/integration/portal-evidence-http.test.ts",
+        "docs/evidence/final-completion/sources-final/matrix-dossier-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Browser portal and matrix usability require UI/root evidence; real operator acceptance is not claimed by this backend record."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Actual API matrix with own saved issuance and external/no evidence covered by integration; real UI distinctly displays six external/no-data states including near expiry and verified-no-expiry.",
+          "remaining": null
         }
       ]
     },
@@ -2903,20 +3405,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts",
         "tests/integration/renewal-matrix.test.ts",
-        "tests/integration/portal-evidence-http.test.ts"
+        "tests/integration/portal-evidence-http.test.ts",
+        "docs/evidence/final-completion/sources-final/matrix-dossier-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Browser portal and matrix usability require UI/root evidence; real operator acceptance is not claimed by this backend record."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Matrix selects approved program profile and requires applicability confirmation; date or verification state does not claim permission to work.",
+          "remaining": null
         }
       ]
     },
@@ -2941,7 +3451,7 @@
         "tests/integration/renewal-matrix.test.ts",
         "tests/integration/portal-evidence-http.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -2965,18 +3475,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/tenant-export.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "tests/integration/event-profiles.test.ts",
+        "tests/integration/operator-value.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Explicit event attachment ownership, dossier references and unchanged bytes verified after migration010. Cryptographic signature authenticity and physical signed originals remain separate external acceptance."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "The real three-participant issued event retains program, dates, recipients, outcomes and pinned issuer/commission snapshot. Actual UI stores event-specific source material, downloads the order dossier and explicitly lists the missing signed copy. The archive retains actual originals and permission/audit regressions cover independent tenant and customer boundaries.",
+          "remaining": null
         }
       ]
     },
@@ -2994,18 +3514,26 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/tenant-export.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-final/explicit-missing-obligations.png",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Explicit event attachment ownership, dossier references and unchanged bytes verified after migration010. Cryptographic signature authenticity and physical signed originals remain separate external acceptance."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Pinned signed-sheet obligation remains explicitly pending after real issuance; system does not create a signed source or mark agreement fulfilled itself.",
+          "remaining": null
         }
       ]
     },
@@ -3023,18 +3551,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/tenant-export.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "tests/integration/event-profiles.test.ts",
+        "tests/integration/operator-value.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Explicit event attachment ownership, dossier references and unchanged bytes verified after migration010. Cryptographic signature authenticity and physical signed originals remain separate external acceptance."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "The real three-participant issued event retains program, dates, recipients, outcomes and pinned issuer/commission snapshot. Actual UI stores event-specific source material, downloads the order dossier and explicitly lists the missing signed copy. The archive retains actual originals and permission/audit regressions cover independent tenant and customer boundaries.",
+          "remaining": null
         }
       ]
     },
@@ -3057,7 +3595,7 @@
         "tests/integration/tenant-export.test.ts",
         "tests/integration/renewal-matrix.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -3081,18 +3619,25 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
-        "tests/operator-value.test.ts"
+        "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/sources-final/matrix-dossier-summary.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Root implemented center-dossier reminders and explicitly selected public packet export, separately tested in tests/integration/center-dossier.test.ts. Browser delivery and legal qualification acceptance require separate evidence."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Real UI creates PROGRAM and QUALIFICATION records with version, source, applicability, expiry, owner and actual source uploads.",
+          "remaining": null
         }
       ]
     },
@@ -3110,18 +3655,26 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
-        "tests/operator-value.test.ts"
+        "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/sources-final/matrix-dossier-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Root implemented center-dossier reminders and explicitly selected public packet export, separately tested in tests/integration/center-dossier.test.ts. Browser delivery and legal qualification acceptance require separate evidence."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Actual UI date reminders explicitly disclaim automatic termination of authority/accreditation. API assertions cover due and past dates.",
+          "remaining": null
         }
       ]
     },
@@ -3139,18 +3692,27 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
-        "tests/operator-value.test.ts"
+        "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/sources-final/matrix-dossier-summary.json",
+        "docs/evidence/final-completion/sources-final/public-dossier-only.zip",
+        "docs/evidence/final-completion/sources-final/http-regressions.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Root implemented center-dossier reminders and explicitly selected public packet export, separately tested in tests/integration/center-dossier.test.ts. Browser delivery and legal qualification acceptance require separate evidence."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Real UI downloads selected allowed dossier ZIP. Private qualification/source is absent from ZIP entries and inventory; public PNG SHA256 preserved. Forbidden private/cross-tenant/EMPLOYER exports tested through API.",
+          "remaining": null
         }
       ]
     },
@@ -3173,7 +3735,7 @@
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -3197,20 +3759,28 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/service-rule-applicability.test.ts",
         "tests/integration/service-rule-applicability.test.ts",
         "tests/integration/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json",
+        "docs/evidence/final-completion/sources-passport-verified/passport-form-fields-versions.png"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Independent legal approval and approved real-template applicability are external acceptance; browser selection evidence is separate."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Passport displays program/category, applicable form IDs, installed form versions, human-readable actual fields, DOCX/PDF outputs, checked source and separate normative/contract/recommendation requirements. Creates new version in UI.",
+          "remaining": null
         }
       ]
     },
@@ -3233,14 +3803,22 @@
         "tests/service-rule-applicability.test.ts",
         "tests/integration/service-rule-applicability.test.ts",
         "tests/integration/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json",
+        "docs/evidence/final-completion/sources-final/http-regressions.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PASS",
           "scope": "BACKEND_ENGINEERING_ONLY",
+          "remaining": null
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Source, checked date/checker, applicability period and limitations displayed; new version begins DRAFT and requires fresh checked date. Missing approval/form/period/tenant rejected by validation.",
           "remaining": null
         }
       ]
@@ -3259,20 +3837,29 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/service-rule-applicability.test.ts",
         "tests/integration/service-rule-applicability.test.ts",
         "tests/integration/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/regression/render.log",
+        "docs/evidence/final-completion/regression/integration.log",
+        "apps/web/e2e/biot-issue.spec.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Independent legal approval and approved real-template applicability are external acceptance; browser selection evidence is separate."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Actual current BiOT form issue/render regressions and template-approval negative tests keep the ECS restrictions and current required fields enforced. Service passports cannot silently approve an unapproved form. This asserts enforcement, not an independent legal opinion.",
+          "remaining": null
         }
       ]
     },
@@ -3290,20 +3877,27 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/service-rule-applicability.test.ts",
         "tests/integration/service-rule-applicability.test.ts",
         "tests/integration/operator-value.test.ts",
-        "tests/integration/renewal-matrix.test.ts"
+        "tests/integration/renewal-matrix.test.ts",
+        "docs/evidence/final-completion/sources-passport-verified/passport-renewal-summary.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Independent legal approval and approved real-template applicability are external acceptance; browser selection evidence is separate."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "After creating version 2 through UI, original issued snapshot and numbers are identical; old requirements remain pinned and new order follows version 2 only.",
+          "remaining": null
         }
       ]
     },
@@ -3328,7 +3922,7 @@
         "docs/evidence/operator-value/qr-roundtrip.json",
         "tests/integration/operator-value-http.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3365,7 +3959,7 @@
         "docs/evidence/operator-value/qr-roundtrip.json",
         "tests/integration/operator-value-http.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3402,7 +3996,7 @@
         "docs/evidence/operator-value/qr-roundtrip.json",
         "tests/integration/operator-value-http.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3439,7 +4033,7 @@
         "docs/evidence/operator-value/qr-roundtrip.json",
         "tests/integration/operator-value-http.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3474,7 +4068,7 @@
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -3503,7 +4097,7 @@
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -3527,18 +4121,27 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value.test.ts",
-        "tests/operator-value.test.ts"
+        "tests/operator-value.test.ts",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
+        "docs/evidence/operator-value/business-execution.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
           "status": "PARTIAL",
           "scope": "BACKEND_ENGINEERING_ONLY",
           "remaining": "Contract/invoice/act references and private original attachments satisfy the specification record-or-file alternative. Financial template generation and legal tax configuration are not claimed. V11 operator timing is separate."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real UI records financial document references and confirmed payment with exact minor-unit amounts. Three units at 10000 produce 30000; two produce 20000 while null tax remains unknown. Duplicate invoice gives a friendly conflict without another row. Training, transfer and money states remain independent; the simple V01/V10 path needs neither finance nor portal.",
+          "remaining": null
         }
       ]
     },
@@ -3561,7 +4164,7 @@
         "tests/integration/operator-value.test.ts",
         "tests/operator-value.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "service",
@@ -3595,7 +4198,7 @@
         "tests/integration/tenant-export.test.ts",
         "docs/evidence/operator-value/build-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3635,7 +4238,7 @@
         "tests/integration/tenant-export.test.ts",
         "docs/evidence/operator-value/build-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3675,7 +4278,7 @@
         "tests/integration/tenant-export.test.ts",
         "docs/evidence/operator-value/build-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3715,7 +4318,7 @@
         "tests/integration/tenant-export.test.ts",
         "docs/evidence/operator-value/build-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3750,15 +4353,35 @@
         "docs/evidence/operator-value/business-execution.json",
         "docs/evidence/operator-value/performance.json",
         "docs/evidence/operator-value/golden/G1.json",
+        "docs/evidence/operator-value/golden/G2.json",
+        "docs/evidence/final-completion/operator/g1-v5-resume-v3/g1-result.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
+        "docs/evidence/final-completion/operator/g1-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/operator-value/business-execution.json",
+        "docs/evidence/operator-value/performance.json",
+        "docs/evidence/operator-value/golden/G1.json",
         "docs/evidence/operator-value/golden/G2.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
           "status": "PARTIAL",
           "scope": "Measured automation and renderer timings are separate. Live human active/reentry times and customer-wait baseline were not measured; those remain null, not zero.",
           "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PARTIAL",
+          "scope": "Actual G1 keyboard counters (Tab, ShiftTab, activations, text, selections, file choice/download) and staged preparation/verification measured separately; renderer maintenance prevents a clean whole-run clock. V03 automation timing recorded. Human/baseline/client-wait values remain null.",
+          "remaining": "No human operator baseline, active labor measurement or client-wait measurement was supplied. No ROI claim."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PARTIAL",
+          "scope": "Synthetic API/browser action counters and renderer/automation durations are recorded with explicit layers. Human active time, manual re-entry, external manual work and customer waiting have not all been measured for every V01-V12 and G1/G2; missing measurements stay null. This is an unperformed operator measurement, not a known functional defect.",
+          "remaining": "Run the supplied measurement log with a real operator; do not report automation time as human savings."
         }
       ]
     },
@@ -3784,7 +4407,7 @@
         "docs/OT_CENTER_OPERATOR_V2_RU.md",
         "scripts/verification/operator-value-golden.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3816,7 +4439,7 @@
         "docs/OT_CENTER_OPERATOR_V2_RU.md",
         "scripts/verification/operator-value-golden.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3848,7 +4471,7 @@
         "docs/OT_CENTER_OPERATOR_V2_RU.md",
         "scripts/verification/operator-value-golden.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -3872,19 +4495,29 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/race-report.json",
         "docs/evidence/operator-value/feature-matrix.json",
         "docs/evidence/operator-value/browser-rollup.json",
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/operator-value/business-execution.json",
+        "scripts/verification/verify-final-traceability.mjs",
+        "docs/evidence/final-completion/traceability/result.json",
+        "docs/evidence/operator-value/feature-matrix.json",
+        "docs/evidence/final-completion/regression/final-changed-integration.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
           "status": "PARTIAL",
           "scope": "32 actual implementation paths reviewed and linked with scoped executed proofs; full commercial operator acceptance remains partial.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "All original 184 criteria and 32 feature paths retain their supplied identity, link to existing implementation and concrete evidence, and preserve partial/external states honestly. The full implementation was reviewed across UI, API, storage, source files and executed regressions; traceability validation is separate from blanket acceptance.",
           "remaining": null
         }
       ]
@@ -3903,20 +4536,30 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/populated-upgrade.json",
         "docs/evidence/operator-value/backup-v4-restore.json",
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/race-report.json",
-        "tests/integration/worker.test.ts"
+        "tests/integration/worker.test.ts",
+        "docs/evidence/final-completion/recovery/Verification.md",
+        "docs/evidence/final-completion/recovery/rollback-application.json",
+        "docs/evidence/final-completion/recovery/rollback-boundary.json",
+        "docs/evidence/final-completion/regression/integration.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
           "status": "PARTIAL",
           "scope": "Populated old-schema fixture, real concurrency/retries/fencing and missing/corrupt file checks executed. Evidence covers the explicitly recorded synthetic histories and does not claim arbitrary customer databases or app rollback cutover.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real upgrade 001-005 to 012 preserves 51 old rows/22 files and continues numbering. Snapshot restore reconciles all 45 tables, 33 files and 49 assets. The actual base application API/Next/worker runs on its separate old restored snapshot, while new V2 records remain preserved in the upgraded database/post-upgrade backup. Fencing, retries, races and missing resources have actual integration evidence.",
           "remaining": null
         }
       ]
@@ -3935,19 +4578,29 @@
         "assertions/снимок данных или разрешённого результата",
         "для UI — браузерный прогон; для печати — фактический файл"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/render-full.log",
         "docs/evidence/import-delivery/verification.md",
         "docs/evidence/operator-value/golden/G1/reconstructed/group-qa.json",
-        "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json"
+        "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
+        "docs/evidence/final-completion/regression/render-result.json",
+        "docs/evidence/final-completion/regression/render.log",
+        "docs/evidence/final-completion/word/verification.json",
+        "docs/evidence/final-completion/word/visual-review.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
           "status": "PARTIAL",
           "scope": "Actual individual forms and five group DOCX forms, saved G1/G2/PТM100 LibreOffice pages verified. Newly added group forms were not opened in Word or physically printed. Group metadata explicitly says WORD_NOT_RUN.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "37 actual renderer tests plus Microsoft Word 16.0.17932 conversion of all 11 individual templates and five group forms at 1/2/25/100 participants. All 31 DOCX and 97 Word PDF pages were checked for source hashes, long RU/KZ, participant order, repeated headings and page bounds; all nine contact sheets were visually inspected. Physical printing remains separately NOT_RUN.",
           "remaining": null
         }
       ]
@@ -3973,7 +4626,7 @@
         "docs/evidence/operator-value/feature-matrix.json",
         "docs/evidence/operator-value/business-scenarios.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4003,12 +4656,17 @@
         "команда/шаги, environment и итоговый SHA",
         "реальные assertions, файлы/скриншоты по смыслу"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/golden/G1.json",
-        "docs/evidence/operator-value/golden/G1/reconstruction.json"
+        "docs/evidence/operator-value/golden/G1/reconstruction.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/scoped-worker.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4020,6 +4678,12 @@
           "owner": "ui",
           "status": "NOT_RUN",
           "scope": "Полный G1 UI путь и счёт повторных вводов/панелей не выполнен.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Fresh synthetic tenant: all100original people/photos through keyboard UI, zero individual panels/manual numbers; sharedPB event and explicit sourced result. Real pipeline produces101documents/204files. Parent-coordinated migration interrupts file waiting; keyboard continuation downloads same issuance, verifies all hashes/content and immutable reload. No repeated issue.",
           "remaining": null
         }
       ]
@@ -4049,7 +4713,7 @@
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
         "tests/integration/group-events.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4085,7 +4749,7 @@
         "tests/integration/group-events.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4115,7 +4779,7 @@
         "tests/integration/group-events.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4146,7 +4810,7 @@
         "tests/integration/group-events.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4177,7 +4841,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4217,7 +4881,7 @@
         "docs/evidence/operator-ui-contract/results.json",
         "docs/evidence/operator-value/e2e-recheck/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4254,7 +4918,7 @@
         "tests/integration/finalize-races.test.ts",
         "docs/evidence/operator-value/browser-rollup.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4285,7 +4949,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/golden/G1/reconstruction.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4315,7 +4979,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/golden/G1/reconstruction.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4346,7 +5010,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/golden/G1/reconstruction.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4377,7 +5041,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "docs/evidence/operator-value/golden/G1/reconstruction.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4414,7 +5078,7 @@
         "docs/evidence/operator-value/populated-upgrade.json",
         "scripts/verification/verify-populated-upgrade.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4444,18 +5108,28 @@
         "команда/шаги, environment и итоговый SHA",
         "реальные assertions, файлы/скриншоты по смыслу"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/OT_CENTER_V2.md",
         "docs/evidence/operator-value/backup-v4-restore.json",
-        "docs/evidence/operator-value/backup-v4-http-readback.json"
+        "docs/evidence/operator-value/backup-v4-http-readback.json",
+        "docs/evidence/final-completion/recovery/Verification.md",
+        "docs/evidence/final-completion/recovery/rollback-application.json",
+        "docs/evidence/final-completion/recovery/rollback-boundary.json",
+        "docs/evidence/final-completion/regression/integration.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
           "status": "PARTIAL",
           "scope": "Independent restore drill executed; rollback procedures and old worker incompatibility documented. Application rollback/cutover itself not performed.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real upgrade 001-005 to 012 preserves 51 old rows/22 files and continues numbering. Snapshot restore reconciles all 45 tables, 33 files and 49 assets. The actual base application API/Next/worker runs on its separate old restored snapshot, while new V2 records remain preserved in the upgraded database/post-upgrade backup. Fencing, retries, races and missing resources have actual integration evidence.",
           "remaining": null
         }
       ]
@@ -4483,7 +5157,7 @@
         "tests/contracts.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4522,7 +5196,7 @@
         "tests/contracts.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4546,20 +5220,29 @@
         "команда/шаги, environment и итоговый SHA",
         "реальные assertions, файлы/скриншоты по смыслу"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "tests/integration/operator-value-http.test.ts",
         "tests/integration/portal-evidence-http.test.ts",
         "apps/web/components/portal-access.tsx",
-        "docs/evidence/operator-value/service-coverage.json"
+        "docs/evidence/operator-value/service-coverage.json",
+        "docs/evidence/final-completion/invites/http-tests-final.log",
+        "docs/evidence/final-completion/invites/browser-security-final/results.json",
+        "docs/evidence/final-completion/invites/browser-security-final/summary.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
           "status": "PARTIAL",
           "scope": "Actual employer password login, membership expiry/revocation and revocation of active sessions were verified. This does not execute the expired/reused invitation scenario required by AT145.",
           "remaining": "No one-time portal invitation exchange exists in this version. Existing admin-created strong-password principal plus membership is the implemented access mode; invitation expiry/replay/token log/referrer assertions are NOT RUN."
+        },
+        {
+          "owner": "final:invites/coverage.json",
+          "status": "PASS",
+          "scope": "Actual expired/replayed/revoked/superseded invitation rejection, one successful concurrent exchange, active-cookie rejection after membership/invite revoke, safe regrant using current password and new pinned scope. Token does not enter URL requests, referrers or server logs.",
+          "remaining": null
         }
       ]
     },
@@ -4586,7 +5269,7 @@
         "tests/contracts.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4622,7 +5305,7 @@
         "docs/evidence/operator-value/import-browser/results.json",
         "apps/web/test/operator-workflow.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4661,7 +5344,7 @@
         "tests/contracts.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4702,7 +5385,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "apps/web/test/operator-workflow.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4743,7 +5426,7 @@
         "docs/evidence/operator-value/integration-suite-final.log",
         "apps/web/test/operator-workflow.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4785,7 +5468,7 @@
         "docs/evidence/operator-value-browser/results.json",
         "apps/web/test/operator-workflow.test.ts"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4825,7 +5508,7 @@
         "tests/integration/operator-value.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4858,7 +5541,7 @@
         "tests/integration/operator-value.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4891,7 +5574,7 @@
         "tests/integration/operator-value.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4926,7 +5609,7 @@
         "tests/integration/operator-value.test.ts",
         "docs/evidence/operator-value/integration-suite-final.log"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4951,15 +5634,19 @@
         "команда/шаги, environment и итоговый SHA",
         "реальные assertions, файлы/скриншоты по смыслу"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/render-full.log",
         "docs/evidence/import-delivery/verification.md",
         "docs/evidence/operator-value/golden/G1/reconstructed/group-qa.json",
         "docs/evidence/operator-value/golden/G2/original-groups/group-qa.json",
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "docs/evidence/import-delivery/acceptance-coverage.json",
+        "docs/evidence/final-completion/regression/render-result.json",
+        "docs/evidence/final-completion/regression/render.log",
+        "docs/evidence/final-completion/word/verification.json",
+        "docs/evidence/final-completion/word/visual-review.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -4971,6 +5658,12 @@
           "owner": "import_delivery",
           "status": "PARTIAL",
           "scope": "All5 actual25-person PDF forms inspected; final PTM100 and correctedG1 allpages inspected. DOCX structure1/2/25/100 all5forms passed. Microsoft Word,physical printing and legal approval not performed.",
+          "remaining": null
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "37 actual renderer tests plus Microsoft Word 16.0.17932 conversion of all 11 individual templates and five group forms at 1/2/25/100 participants. All 31 DOCX and 97 Word PDF pages were checked for source hashes, long RU/KZ, participant order, repeated headings and page bounds; all nine contact sheets were visually inspected. Physical printing remains separately NOT_RUN.",
           "remaining": null
         }
       ]
@@ -4996,7 +5689,7 @@
         "scripts/verification/operator-value-benchmark.ts",
         "docs/evidence/operator-ui-contract/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -5027,15 +5720,22 @@
         "команда/шаги, environment и итоговый SHA",
         "реальные assertions, файлы/скриншоты по смыслу"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
         "docs/evidence/operator-value/e2e-final/results.json",
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
-        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
+        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
+        "docs/evidence/final-completion/operator/keyboard-acceptance.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/g1-checkpoint.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-v5/keyboard-metrics.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/g1-result.json",
+        "docs/evidence/final-completion/operator/g1-keyboard-resume-v2/pdf-verification.json",
+        "docs/evidence/final-completion/operator/error-focus-v1/error-focus-result.json",
+        "docs/evidence/final-completion/portal-390/coverage.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -5047,6 +5747,12 @@
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Реальный браузер 1366px/390px: editor, finance, dossier, portal без горизонтального переполнения документа; широкие таблицы прокручиваются внутри панели. Проверены сохранение и скачивание внешнего вложения работодателя. Полный accessibility audit всех диалогов не заявляется.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Exact desktop1366x768 keyboard G1 plus errors/dialogs and portal390x844, on real Edge/production app/API/worker. Same G1 issuance is verified in two recorded stages around parent-coordinated migration maintenance. All100rows/photos, mass set, save/reopen, preflight and explicit confirmation completed with zero mouse activation; accidental Enter did not issue. File download, immutable reopen, final error heading/exact field focus and portal width/focus independently verified.",
           "remaining": null
         }
       ]
@@ -5074,7 +5780,7 @@
         "docs/evidence/operator-value/golden/G2.json",
         "docs/evidence/operator-value-browser/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -5112,7 +5818,7 @@
         "docs/evidence/operator-value/feature-matrix.json",
         "docs/evidence/operator-value/business-scenarios.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -5152,7 +5858,7 @@
         "docs/evidence/operator-value/v01-biot-browser/v01-original.pdf",
         "docs/evidence/operator-value/v01-biot-browser/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5187,19 +5893,26 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/e2e-company-recheck/company-12-18-result.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json",
         "docs/evidence/operator-value/v01-biot-browser/results.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
           "status": "PARTIAL",
           "scope": "Реальный UI создал12записейлюдей и18индивидуальных назначений; первые6имеют по2документа, все оформлены без второй записи человека. Индивидуальные результаты введены отдельно, DOCX проверены по владельцу. Полный V01 с двумя услугами одним общим событием и всеми вариантами независимости результатов не выполнен.",
+          "remaining": null
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "One person receives BIOT/PB compatible forms using shared identity/common subject. Actual known result in first assignment is not copied into second.",
           "remaining": null
         }
       ],
@@ -5228,12 +5941,16 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/repeat-basis-verified/summary.json",
+        "docs/evidence/final-completion/repeat-basis-verified/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5246,9 +5963,15 @@
           "status": "PARTIAL",
           "scope": "V02: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Same permanent recipient reused after real issuance. Employer and position change to B, previous A snapshot and downloaded old DOCX/PDF SHA256 stay identical, employment periods=2.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "REAL_EDGE_EXISTING_IDENTITY_EMPLOYMENT_HISTORY_AND_REPEAT_FINALIZE_DENIAL"
     },
     {
       "id": "AT164",
@@ -5273,13 +5996,20 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-ui-contract/results.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/repeat-basis/coverage.json",
+        "docs/evidence/final-completion/repeat-basis-verified/summary.json",
+        "docs/evidence/final-completion/repeat-basis-verified/results.json",
+        "docs/evidence/final-completion/repeat-basis-verified/unknown-new-result-blocks-issuance.png",
+        "docs/evidence/final-completion/repeat-basis-verified/historical-original.pdf"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5292,9 +6022,21 @@
           "status": "PARTIAL",
           "scope": "V02: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Combined operator common-history A→B two employment periods and immutable100issued files with portal agent exact repeat-from-history→new confirmed contact/current employer→clean repeat→UNKNOWN validation and real422 finalize denial. Original100numbers/snapshot/PDF hash unchanged; no repeated people or issued documents.",
+          "remaining": null
+        },
+        {
+          "owner": "final:repeat-basis/coverage.json",
+          "status": "PASS",
+          "scope": "Existing stable P001 identity has two persisted A/B employment periods and unchanged real100-person issued history. Actual history UI creates an unconfirmed need from the selected historical employer; explicit contact confirms a new current-B inquiry. UI creates one clean linked repeat without identity re-entry, operator explicitly chooses current employerB and current position/period, saves and reloads. Old dates/results/numbers are absent. UI validation includes RESULT_REQUIRED; actual UI finalize returns422 FINALIZE_VALIDATION. Reloaded repeat has0documents/issuances/artifacts. Original100numbers, snapshot, PDF SHA256 and two employment periods remain identical.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "REAL_EDGE_EXISTING_IDENTITY_EMPLOYMENT_HISTORY_AND_REPEAT_FINALIZE_DENIAL"
     },
     {
       "id": "AT165",
@@ -5320,13 +6062,14 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5339,9 +6082,15 @@
           "status": "PARTIAL",
           "scope": "V03: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Exact DAILY_WORKFLOWS V03 three people/two services/P003 individual position: one PB common change preserves override and other PTM service.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "EXACT_THREE_PERSON_TWO_SERVICE_REAL_UI_RELOAD"
     },
     {
       "id": "AT166",
@@ -5367,13 +6116,14 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value-browser/results.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5386,9 +6136,15 @@
           "status": "PARTIAL",
           "scope": "V03: actual persisted API/worker assertions PASS",
           "remaining": "Backend reopen and resolved provenance checked; browser reload/focus not exercised here."
+        },
+        {
+          "owner": "final:operator/coverage.json",
+          "status": "PASS",
+          "scope": "Exact V03 reload retains all people/assignments/common context/override, UNKNOWN results and explicit remaining-action notice; no external note reentry.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "EXACT_THREE_PERSON_TWO_SERVICE_REAL_UI_RELOAD"
     },
     {
       "id": "AT167",
@@ -5414,12 +6170,14 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/final-completion/revised-six-final/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5432,9 +6190,15 @@
           "status": "PARTIAL",
           "scope": "V04: actual persisted API/worker assertions PASS",
           "remaining": "Revised TSV was parsed; initial six-person state was created through API from the same fixture, not through a second upload."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Exact DAILY_WORKFLOWS V04 source and revised lists both pass through real UI import: 1 added, 1 changed, 4 unchanged, 1 missing. Explicit approval retains stable IDs/assignments and the missing person; reload proves seven retained rows. A separately introduced missing-name branch produces actionable editable clarification, and clipboard copying performs zero API mutations.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "EXACT_FIXTURE_LIVE_UI_REAL_API"
     },
     {
       "id": "AT168",
@@ -5460,12 +6224,14 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/revised-six-final/result.json",
+        "docs/evidence/final-completion/revised-six-final/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5478,9 +6244,15 @@
           "status": "PARTIAL",
           "scope": "V04: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Exact DAILY_WORKFLOWS V04 source and revised lists both pass through real UI import: 1 added, 1 changed, 4 unchanged, 1 missing. Explicit approval retains stable IDs/assignments and the missing person; reload proves seven retained rows. A separately introduced missing-name branch produces actionable editable clarification, and clipboard copying performs zero API mutations.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "EXACT_FIXTURE_LIVE_UI_REAL_API"
     },
     {
       "id": "AT169",
@@ -5505,21 +6277,29 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/handover-data-final/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "daily_workflows",
           "status": "PARTIAL",
           "scope": "V05: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Exact V05 8 people/2 events/1 UNKNOWN/1 untransferred material, actual two-OPERATOR browser handover; clear remaining actions, persisted owner/contact/due date and no re-entry of eight people.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "REAL_EDGE_TWO_OPERATOR_UI_AND_POSTGRESQL"
     },
     {
       "id": "AT170",
@@ -5544,21 +6324,29 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/handover-data-final/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "daily_workflows",
           "status": "PARTIAL",
           "scope": "V05: actual persisted API/worker assertions PASS",
           "remaining": "Second persisted user and OPERATOR Context exercised; browser session login not exercised here."
+        },
+        {
+          "owner": "final:sources-final/coverage.json",
+          "status": "PASS",
+          "scope": "Colleague B reads actual handover and confirms material through UI; UNKNOWN result remains unchanged. Saved draft still has 8 people and 2 events, no issuance fabricated.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "REAL_EDGE_TWO_OPERATOR_UI_AND_POSTGRESQL"
     },
     {
       "id": "AT171",
@@ -5585,14 +6373,17 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-five-states-and-reasons.png"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5605,9 +6396,15 @@
           "status": "PARTIAL",
           "scope": "V06: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:renewal-onboarding/coverage.json",
+          "status": "PASS",
+          "scope": "Exact DAILY_WORKFLOWS V06 five existing identities and real finalized history. UI records P001/P002 current confirmed need, leaves P003 unknown, closes P004 with a verified external evidence reference and P005 with explicit employment-end evidence. Reload preserves exactly two repeat actions, three excluded/unknown cases and null next-check dates; all source links point to real history.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "REAL_EDGE_FIVE_STATE_UI_AND_INDEPENDENT_HTTP_RETRIES_POSTGRESQL"
     },
     {
       "id": "AT172",
@@ -5634,12 +6431,15 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-closed-repeat-history.png"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5652,9 +6452,15 @@
           "status": "PARTIAL",
           "scope": "V06: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:renewal-onboarding/coverage.json",
+          "status": "PASS",
+          "scope": "Two confirmed needs create linked drafts through real UI without identity re-entry. Two concurrent HTTP retries per need return each original new request ID. UNKNOWN/external/employment-ended needs reject direct repeat with409. After reload closed cases stay closed, five recipients and historical snapshot/numbers are unchanged, exactly two requests and no issuance/number/order are added; no automatic revenue claim.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "REAL_EDGE_FIVE_STATE_UI_AND_INDEPENDENT_HTTP_RETRIES_POSTGRESQL"
     },
     {
       "id": "AT173",
@@ -5681,23 +6487,34 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "tests/integration/operator-value-http.test.ts",
-        "tests/integration/portal-evidence-http.test.ts"
+        "docs/evidence/final-completion/portal-three-complete/results.json",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/portal-three-complete/three-own-people-and-issued-files.png",
+        "docs/evidence/final-completion/portal-three-complete/own-1.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-2.docx",
+        "docs/evidence/final-completion/portal-three-complete/own-3.docx"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
           "status": "PARTIAL",
           "scope": "Live employer login, scoped external evidence upload/reload/download and staff no-portal issuance completed; supplied multi-person V07 fixture was not replayed as one complete operator journey.",
           "remaining": null
+        },
+        {
+          "owner": "final:portal-three-complete/coverage.json",
+          "status": "PASS",
+          "scope": "Exact V07: issued mixed group with three company-A people and two company-B people. Representative independently downloads three permitted individual DOCX files through actual UI links. Each actual file hash equals stored SHA256, main document XML contains an own name and no foreign name. Two B individual DOCX and mixed group protocol are absent from UI and forbidden by direct artifact API. Foreign rows, company orders, internal notes and customer evidence are absent/denied; center/staff endpoints denied.",
+          "remaining": null
         }
       ],
-      "execution_layer": "LIVE_BROWSER_PORTAL_AND_HTTP_MEMBERSHIP_BOUNDARIES"
+      "execution_layer": "REAL_EDGE_EMPLOYER_SELF_SERVICE_AND_SAVED_DOCX"
     },
     {
       "id": "AT174",
@@ -5724,23 +6541,31 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "tests/integration/operator-value-http.test.ts",
-        "tests/integration/portal-evidence-http.test.ts"
+        "docs/evidence/final-completion/portal-three-complete/results.json",
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/portal-three-complete/repeat-existing-three-mobile.png"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
           "status": "PARTIAL",
           "scope": "Live employer login, scoped external evidence upload/reload/download and staff no-portal issuance completed; supplied multi-person V07 fixture was not replayed as one complete operator journey.",
           "remaining": null
+        },
+        {
+          "owner": "final:portal-three-complete/coverage.json",
+          "status": "PASS",
+          "scope": "Representative sees three already populated people, submits repeat through UI without retyping identity data, cannot supply result/number fields. Center accepts repeat through UI. New draft contains exactly those three existing recipient IDs with empty dates/results, no issuance/documents. Original issued snapshot and numbers unchanged. Reloaded portal shows new repeat; 375px no global overflow.",
+          "remaining": null
         }
       ],
-      "execution_layer": "LIVE_BROWSER_PORTAL_AND_HTTP_MEMBERSHIP_BOUNDARIES"
+      "execution_layer": "REAL_EDGE_EMPLOYER_SELF_SERVICE_AND_SAVED_DOCX"
     },
     {
       "id": "AT175",
@@ -5765,21 +6590,31 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/registry.xlsx",
+        "docs/evidence/final-completion/delivery-three-v3/customer.zip",
+        "docs/evidence/final-completion/delivery-three-v3/selected-one-original.zip"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "daily_workflows",
           "status": "PARTIAL",
           "scope": "V08: actual persisted API/worker assertions PASS",
           "remaining": "Independent XLSX/ZIP readback and hashes; human recipient visual review not run here."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Actual three-person P003/P001/P002 UI applies the saved output profile and downloads XLSX plus six original DOCX/PDF in the named ZIP, including inventory and cover text. A one-person PDF selection downloads exactly one unchanged original. Repeat downloads preserve issuance/number and create no handover; an explicit selected-file transfer survives reload.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "EXACT_THREE_PERSON_LIVE_UI_REAL_FILES"
     },
     {
       "id": "AT176",
@@ -5804,21 +6639,31 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/registry.xlsx",
+        "docs/evidence/final-completion/delivery-three-v3/customer.zip",
+        "docs/evidence/final-completion/delivery-three-v3/selected-one-original.zip"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "daily_workflows",
           "status": "PARTIAL",
           "scope": "V08: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Actual three-person P003/P001/P002 UI applies the saved output profile and downloads XLSX plus six original DOCX/PDF in the named ZIP, including inventory and cover text. A one-person PDF selection downloads exactly one unchanged original. Repeat downloads preserve issuance/number and create no handover; an explicit selected-file transfer survives reload.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "EXACT_THREE_PERSON_LIVE_UI_REAL_FILES"
     },
     {
       "id": "AT177",
@@ -5842,12 +6687,18 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json",
+        "docs/evidence/final-completion/history-v4/history-coverage.json",
+        "docs/evidence/final-completion/history-v4/linked-correction-history.png",
+        "docs/evidence/final-completion/history-v4/public-replaced-record.png",
+        "docs/evidence/final-completion/history-v4/original-after-correction.pdf",
+        "docs/evidence/final-completion/history-v4/corrected.pdf"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5860,9 +6711,15 @@
           "status": "PARTIAL",
           "scope": "V09: actual persisted API/worker assertions PASS",
           "remaining": "Person lookup and known-number registry readback; dedicated direct number-search UX not exercised here."
+        },
+        {
+          "owner": "final:history-v4/history-coverage.json",
+          "status": "PASS",
+          "scope": "REAL_UI_HTTP_POSTGRESQL_RENDERER",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "REAL_CHROME_HISTORY_SEARCH_CORRECTION_AND_ORIGINAL_FILES"
     },
     {
       "id": "AT178",
@@ -5886,12 +6743,18 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json",
+        "docs/evidence/final-completion/history-v4/history-coverage.json",
+        "docs/evidence/final-completion/history-v4/linked-correction-history.png",
+        "docs/evidence/final-completion/history-v4/public-replaced-record.png",
+        "docs/evidence/final-completion/history-v4/original-after-correction.pdf",
+        "docs/evidence/final-completion/history-v4/corrected.pdf"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5904,9 +6767,15 @@
           "status": "PARTIAL",
           "scope": "V09: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:history-v4/history-coverage.json",
+          "status": "PASS",
+          "scope": "REAL_UI_HTTP_POSTGRESQL_RENDERER",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "REAL_CHROME_HISTORY_SEARCH_CORRECTION_AND_ORIGINAL_FILES"
     },
     {
       "id": "AT179",
@@ -5932,13 +6801,18 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding/results.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-original.pdf",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-ready.png",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-document-issued.png"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -5951,9 +6825,15 @@
           "status": "PARTIAL",
           "scope": "V10: actual persisted API/worker assertions PASS",
           "remaining": "Supported synthetic provision path and real first issuance; real operator onboarding not measured."
+        },
+        {
+          "owner": "final:renewal-onboarding/coverage.json",
+          "status": "PASS",
+          "scope": "Fresh disposable synthetic center provisioned through supported scripts/setup.ts sample mode with real approved synthetic form/profile. From zero requests the actual UI selects one BiOT form, shows missing-result validation without reserving numbers, saves an explicit synthetic result, reloads, issues, renders and downloads the first original PDF whose SHA256 matches storage. Final counts: one request/issuance/number; zero customer/order/membership/service-rule/dossier records. No production data or legal approval is inferred from sample setup.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "SUPPORTED_FRESH_SYNTHETIC_PROVISION_REAL_EDGE_FIRST_ISSUANCE_AND_SAVED_PDF"
     },
     {
       "id": "AT180",
@@ -5984,9 +6864,12 @@
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json",
         "docs/evidence/operator-value/e2e-recheck/results.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-original.pdf",
+        "docs/evidence/final-completion/renewal-onboarding/results.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -6001,7 +6884,7 @@
           "remaining": "Server messages/path and save correction exercised; actual focus retention and human explanation not measured."
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "SUPPORTED_FRESH_SYNTHETIC_PROVISION_REAL_EDGE_FIRST_ISSUANCE_AND_SAVED_PDF"
     },
     {
       "id": "AT181",
@@ -6026,21 +6909,29 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "daily_workflows",
           "status": "PARTIAL",
           "scope": "V11: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real UI records financial document references and confirmed payment with exact minor-unit amounts. Three units at 10000 produce 30000; two produce 20000 while null tax remains unknown. Duplicate invoice gives a friendly conflict without another row. Training, transfer and money states remain independent; the simple V01/V10 path needs neither finance nor portal.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "LIVE_UI_EXACT_QUANTITY_AND_MONEY_WITH_API_NEGATIVES"
     },
     {
       "id": "AT182",
@@ -6065,21 +6956,29 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json",
+        "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "daily_workflows",
           "status": "PARTIAL",
           "scope": "V11: actual persisted API/worker assertions PASS",
           "remaining": "Persisted API semantics checked; human/browser action count and manual re-entry were not measured by this run."
+        },
+        {
+          "owner": "final:root-coverage.json",
+          "status": "PASS",
+          "scope": "Real UI records financial document references and confirmed payment with exact minor-unit amounts. Three units at 10000 produce 30000; two produce 20000 while null tax remains unknown. Duplicate invoice gives a friendly conflict without another row. Training, transfer and money states remain independent; the simple V01/V10 path needs neither finance nor portal.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "LIVE_UI_EXACT_QUANTITY_AND_MONEY_WITH_API_NEGATIVES"
     },
     {
       "id": "AT183",
@@ -6106,14 +7005,32 @@
         "проверка сохранённых связей/прав и наблюдаемого результата",
         "количество повторных вводов и внешних ручных действий; времена отдельно"
       ],
-      "status": "PARTIAL",
+      "status": "PASS",
       "evidence": [
         "docs/evidence/operator-value/library-portal-browser/library-result.json",
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/delivery-three-v3/dossier.zip",
+        "docs/evidence/final-completion/delivery-three-v3/missing-signed-copy.png",
+        "docs/evidence/final-completion/recovery/live-snapshot-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v12-prepare.log",
+        "docs/evidence/final-completion/recovery/final-v12-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v12-restore.json",
+        "docs/evidence/final-completion/recovery/final-v12-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v12-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/Final-V12-Restore.md",
+        "docs/evidence/final-completion/recovery/independent-tenant-export.log",
+        "docs/evidence/final-completion/recovery/final13-write-boundary.json",
+        "docs/evidence/final-completion/recovery/final-v13-snapshot.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/final-v13-restored-dossier.zip",
+        "docs/evidence/final-completion/recovery/final-v13-closed.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "ui",
@@ -6126,9 +7043,21 @@
           "status": "PARTIAL",
           "scope": "V12: actual persisted API/worker assertions PASS",
           "remaining": "Current customer dossier and scope checked; full restore evidence is a separate previous run, not restoration of this newly created tenant."
+        },
+        {
+          "owner": "final:recovery/v12-coverage.json",
+          "status": "PASS",
+          "scope": "The actual V12 three-person order from delivery-three-v3/result.json has one separately uploaded source image and one explicitly missing agreed signed copy. Its real UI dossier download contains the available originals and missing record. After all 647 source jobs succeeded and coordinator verified the write boundary, the full containing database and file store were backed up and restored into a fresh isolated database. All 45 table counts/row hashes, 2152 files and 49 assets matched. The restored actual API served the same eight stored artifacts twice (16 downloads), photo and source attachment with exact SHA256/sizes. Restored dossier HTTP and ZIP preserve complete issuance snapshots, three people, event bindings, original/source provenance and the missing signed copy with complete=false. Tenant and secret isolation were independently regression-tested. No signed document or substitute original was manufactured.",
+          "remaining": null
+        },
+        {
+          "owner": "final:recovery/v13-coverage.json",
+          "status": "PASS",
+          "scope": "Exact actual V12 three-person order, source image and missing signed copy followed through schema13 final snapshot and fresh restore. All45 table counts/canonical row hashes,3188 private files and49 assets match twice. Actual restored HTTP served eight stored originals twice (16downloads), photo and source attachment with exact SHA256/sizes. Restored dossier preserves three people, original issuance snapshots, event bindings, source provenance and missing signed copy complete=false. No signature or replacement original was manufactured.",
+          "remaining": null
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "EXACT_THREE_PERSON_LIVE_UI_WITH_POINT_IN_TIME_RESTORE_AND_REAL_HTTP_FILES"
     },
     {
       "id": "AT184",
@@ -6162,9 +7091,13 @@
         "docs/evidence/operator-value/feature-matrix.json",
         "docs/evidence/operator-value/business-scenarios.json",
         "docs/evidence/operator-value/business-execution.json",
-        "docs/evidence/operator-value/business-execution-coverage.json"
+        "docs/evidence/operator-value/business-execution-coverage.json",
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md"
       ],
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
       "verification_scope": [
         {
           "owner": "root",
@@ -6185,16 +7118,16 @@
           "remaining": "Scoped execution/measurement/source evidence prepared; parent owns final common matrices and readiness aggregation."
         }
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER"
+      "execution_layer": "EXACT_THREE_PERSON_LIVE_UI_WITH_POINT_IN_TIME_RESTORE_AND_REAL_HTTP_FILES"
     }
   ],
   "businessAcceptance": "V01–V12 plus G1/G2; large-volume output is not the sole definition of product value",
-  "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+  "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
   "counts": {
-    "PARTIAL": 89,
-    "PASS": 95
+    "PASS": 183,
+    "PARTIAL": 1
   },
-  "commercialAcceptance": "NOT_COMPLETE: 95 PASS/89 PARTIAL and one confirmed open PDF attachment validation defect; full operator, Word/physical/legal/pilot acceptance incomplete",
+  "commercialAcceptance": "See per-criterion engineering evidence. Physical printing, legal sign-off, a real paid customer pilot and human ROI are not claimed. Microsoft Word and isolated application rollback have now been executed.",
   "supplemental_findings": [
     {
       "id": "QA-001",

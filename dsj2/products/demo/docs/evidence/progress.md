@@ -87,3 +87,5 @@ Current print matrix96/1394recipients/1830PDFpagesPASS; manual84basepages+186sel
 В отдельные пустые БД выполнены обновление старой наполненной схемы и полное восстановление резервной копии с authenticated HTTP readback. Локальный стенд http://localhost:3109/login использует отдельную синтетическую БД; доступ находится только в `.runtime/LOCAL_ACCESS.txt`.
 
 Функциональная реализация не означает PASS всех 184 составных критериев. Новые групповые формы не открывались в Word и не печатались физически; юридическое утверждение, реальные клиенты/пилот, человеческое время/ROI и production не заявлены. Предыдущие записи этого журнала сохранены как история и не переносят прежние PASS на новую версию.
+
+- 2026-09-25: OT Center V2 final completion, source 789c68116826899faa18253a99c9f8deff9c8781,183/184 engineering criteria PASS; AT121 human measurement PARTIAL. See operator-value/Verification.md; local source only, no production deployment.

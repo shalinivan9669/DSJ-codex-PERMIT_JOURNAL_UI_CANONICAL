@@ -1,111 +1,131 @@
 {
-  "sourceCommit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
+  "sourceCommit": "789c68116826899faa18253a99c9f8deff9c8781",
   "branch": "codex/ot-center-business-value",
   "baseCommit": "59a961a07b4f8103db9fbdbe0fe4dc09406816f1",
-  "scope": "Local synthetic OT Center V2. Generated logs and binary evidence remain local.",
+  "scope": "Local synthetic OT Center V2; integrated source commit, separate explicitly recorded execution runs. Generated evidence is local and not an external production acceptance.",
   "implementation": {
     "features": 32,
-    "state": "IMPLEMENTED_MODULES_WITH_INCOMPLETE_SPECIFICATION_ACCEPTANCE",
+    "state": "IMPLEMENTED_LOCAL",
     "acceptance": {
-      "PASS": 95,
-      "PARTIAL": 89
-    }
+      "PASS": 183,
+      "PARTIAL": 1
+    },
+    "remaining": [
+      {
+        "id": "AT121",
+        "title": "На V01–V12 и G1/G2 фиксируются действия, повторные вводы и внешняя ручная работа; активное время отделено от ожидания клиента и рендера.",
+        "status": "PARTIAL"
+      }
+    ]
   },
   "checks": {
-    "unitCorePass": 40,
-    "unitWebPass": 28,
-    "integrationMainPass": 89,
+    "unitCorePass": 72,
+    "unitWebPass": 35,
+    "unitSkipped": 0,
+    "integrationMainPass": 100,
     "integrationMainSkipped": 0,
-    "integrationDaily": {
-      "pass": 1,
-      "scenarios": 10,
-      "realIssuedDocuments": 9,
-      "sourceBoundary": "Executed source hashes preserved; later optional backup-reference metadata has separate unit coverage"
+    "changedIntegrationPass": 40,
+    "changedIntegrationOverlapsMain": true,
+    "orderPartiesFocusedPass": 9,
+    "orderPartiesAdjacentPass": 23,
+    "adjacentIntegrationOverlapsOtherRuns": true,
+    "renderMainPass": 37,
+    "word": {
+      "docx": 31,
+      "pdfPages": 97,
+      "individualTemplates": 11,
+      "groupForms": 5,
+      "groupSizes": [
+        1,
+        2,
+        25,
+        100
+      ],
+      "visualContactSheetsReviewed": 9
     },
-    "integrationRaces": {
-      "pass": 3,
-      "includesParentTest": true
-    },
-    "integrationImportAndCustomerScope": {
-      "pass": 8,
-      "overlapWithMainSuite": 7
-    },
-    "browser": {
-      "pass": 27,
-      "liveApi": 21,
-      "mockApi": 6,
-      "optionalSkipped": 1,
-      "aggregatedReruns": true
-    },
-    "renderMainPass": 33,
-    "renderAdditional": [
-      "five group forms x 1/2/25/100 DOCX",
-      "PTM100 PDF10pages",
-      "customerBundle4tests",
-      "QR independent roundtrip"
-    ],
     "lint": "PASS",
     "typecheck": "PASS",
     "build": "PASS",
     "formatChangedSource": "PASS",
-    "formatWholeRepository": "FAIL_EXISTING_BASELINE_STYLE_86_WARNINGS",
-    "vendorLicenseWhitespace": "Upstream qrcode license retained verbatim, including one trailing space."
+    "formatWholeRepository": "EXISTING_BASELINE_STYLE_WARNINGS_PRESERVED",
+    "runtimeBuild": ".next-release-13-final",
+    "evidence": [
+      "docs/evidence/final-completion/regression/final13-static.json",
+      "docs/evidence/final-completion/regression/final13-types-generated.json",
+      "docs/evidence/final-completion/regression/final13-maintenance-typecheck.json",
+      "docs/evidence/final-completion/regression/release-build-13.json",
+      "docs/evidence/final-completion/regression/release-web-13-final.json",
+      "docs/evidence/final-completion/at031-parties-backend.json"
+    ],
+    "changedSourceFormatting": {
+      "status": "PASS",
+      "evidence": "docs/evidence/final-completion/regression/final13-format-final.json"
+    },
+    "dependencyAudit": {
+      "status": "PASS",
+      "knownAdvisories": 0,
+      "evidence": "docs/evidence/final-completion/regression/dependency-audit.json"
+    },
+    "keyboardG1": {
+      "status": "PASS",
+      "recordedStages": 2,
+      "maintenanceInterruption": true,
+      "evidence": "docs/evidence/final-completion/operator/keyboard-acceptance.json"
+    },
+    "whitespaceBoundary": "Source diff check PASS excluding unchanged upstream license whitespace and fixed-width encrypted PDF fixture xref records"
   },
   "dataSafety": {
+    "schemaMigrations": 13,
     "oldIndividualTemplatesUnchanged": 11,
     "oldMigrationFilesUnchanged": 6,
     "populatedUpgradeRows": 51,
     "populatedUpgradeFiles": 22,
-    "restoredTables": 44,
-    "restoredStoredFiles": 33,
+    "latestRestore": "docs/evidence/final-completion/recovery/final-v13-restore.json",
+    "restoredDatabase": "demo_test_restore_final_v13",
+    "actualOldApplicationRollback": "PASS_ISOLATED_PREMIGRATION_SNAPSHOT",
+    "originalCheckout": "main@161c5ed022c9e2c643e80802d3f9dc2cd496a041; two concurrent original .gitignore edits observed at 00:35:14 local and preserved; no source-worktree files outside DEMO",
+    "productionTouched": false,
+    "originalTrackedClean": false,
+    "restoredTables": 45,
+    "restoredStoredFiles": 3188,
     "restoredAssets": 49,
-    "originalCheckout": "main@161c5ed022c9e2c643e80802d3f9dc2cd496a041 unchanged",
-    "productionTouched": false
+    "sourceIsolation": "Candidate sources PASS; aggregate audit retains FAIL for concurrent original ignore-file changes, which were preserved",
+    "sourceIsolationEvidence": "docs/evidence/final-completion/source-isolation.json"
   },
   "largeRuns": {
     "G1": {
       "documents": 101,
-      "canonicalArtifacts": 204,
+      "artifacts": 204,
       "customerDocxPdf": 202,
-      "explicitReconstructed": 2
+      "explicitReconstructed": 0,
+      "additionalKeyboardRun": true
     },
     "G2": {
       "documents": 203,
-      "canonicalArtifacts": 408,
+      "artifacts": 408,
       "customerDocxPdf": 406,
       "explicitReconstructed": 0
     }
   },
+  "knownOpenDefects": [],
+  "closedDefects": [
+    {
+      "id": "QA-001",
+      "status": "FIXED_AND_REGRESSION_VERIFIED",
+      "description": "Escaped active PDF names are rejected by structural parsing with fail-closed resource limits.",
+      "evidence": "docs/evidence/final-completion/pdf/Verification.md"
+    }
+  ],
+  "securityAssurance": "Confirmed defect fixed and scoped negative tests executed; no claim of zero vulnerabilities.",
   "notClaimed": [
     "all184fullPASS",
-    "new group Microsoft Word acceptance",
     "physical printing",
     "legal approval",
+    "real training confirmation",
     "paid customer pilot",
     "human-active-time or ROI",
     "production deployment",
-    "full original V07 operator fixture as one browser journey",
-    "application rollback/cutover"
+    "one uninterrupted test run at one timestamp"
   ],
-  "liveCheck": "final-local-readiness.json",
-  "assuranceCorrection": {
-    "criterion": "AT145",
-    "previousStatus": "PASS",
-    "correctedStatus": "PARTIAL",
-    "reason": "Membership/session revoke was tested; expired/reused one-time invitation was not implemented or exercised. Password-based employer account access is available."
-  },
-  "knownOpenDefects": [
-    {
-      "id": "QA-001",
-      "status": "CONFIRMED_OPEN",
-      "area": "Private source PDF attachment validation",
-      "source": "apps/api/src/operator-value.ts:1034",
-      "affectedCaller": "apps/api/src/portal-evidence.ts:283",
-      "description": "Literal raw-byte matching misses equivalent escaped PDF names. A PDF parser recognizes an active action in the same bytes accepted by the current filter.",
-      "proof": "docs/evidence/operator-value/assurance-pdf-validation.json",
-      "proofScope": "Safe inert PDF parsed in memory; no upload, no DB changes, no JavaScript or viewer execution; no tenant/customer leakage demonstrated.",
-      "resolution": "NOT_FIXED_IN_THIS_ASSURANCE_REVIEW"
-    }
-  ],
-  "securityAssurance": "KNOWN_OPEN_VALIDATION_DEFECT; no assertion of zero vulnerabilities"
+  "liveCheck": "docs/evidence/final-completion/local-ready-delivered/result.json"
 }

@@ -38,7 +38,7 @@
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
       ],
       "execution_layer": "LIVE_BROWSER_REAL_API_AND_SAVED_PDF",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781"
     },
     {
       "id": "V02",
@@ -66,20 +66,30 @@
       ],
       "fixture_path": "tests/fixtures/operator-value/DAILY_WORKFLOWS.json",
       "fixture_case_key": "V02",
-      "scope": "MANDATORY_SINGLE_DELIVERY",
+      "scope": "Combined actual common-history A→B two-period identity and immutable files proof with one-person history→review→current-employer repeat UI and actual unknown-result finalize denial. Automated steps are recorded separately from unmeasured human timing.",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/operator/common-history-resume-v3/common-history-result.json",
+        "docs/evidence/final-completion/operator/common-history-resume-v3/file-verification.json",
+        "docs/evidence/final-completion/repeat-basis-verified/summary.json",
+        "docs/evidence/final-completion/repeat-basis-verified/results.json"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
-      "measurements": {
-        "apiActionCount": 7,
-        "automationActiveMs": 80.16,
-        "renderWorkerMs": 0,
-        "humanActiveMs": null,
-        "manualReentryCount": null
+      "execution_layer": "REAL_EDGE_EXISTING_IDENTITY_EMPLOYMENT_HISTORY_AND_REPEAT_FINALIZE_DENIAL",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "earlierExecutionMeasurements": {
+        "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+        "evidence": [
+          "docs/evidence/operator-value/business-execution.json"
+        ],
+        "values": {
+          "apiActionCount": 7,
+          "automationActiveMs": 80.16,
+          "renderWorkerMs": 0,
+          "humanActiveMs": null,
+          "manualReentryCount": null
+        }
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "remaining": null
     },
     {
       "id": "V03",
@@ -108,20 +118,27 @@
       ],
       "fixture_path": "tests/fixtures/operator-value/DAILY_WORKFLOWS.json",
       "fixture_case_key": "V03",
-      "scope": "MANDATORY_SINGLE_DELIVERY",
+      "scope": "Three supplied people and two services; shared PB change preserves the individual position exception and separate PTM event; UNKNOWN and saved context survive reload.",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/operator/v03-v6/v03-result.json"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
-      "measurements": {
-        "apiActionCount": 4,
-        "automationActiveMs": 70.47,
-        "renderWorkerMs": 0,
-        "humanActiveMs": null,
-        "manualReentryCount": null
+      "execution_layer": "EXACT_THREE_PERSON_TWO_SERVICE_REAL_UI_RELOAD",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "earlierExecutionMeasurements": {
+        "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+        "evidence": [
+          "docs/evidence/operator-value/business-execution.json"
+        ],
+        "values": {
+          "apiActionCount": 4,
+          "automationActiveMs": 70.47,
+          "renderWorkerMs": 0,
+          "humanActiveMs": null,
+          "manualReentryCount": null
+        }
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "remaining": null
     },
     {
       "id": "V04",
@@ -153,17 +170,24 @@
       "scope": "MANDATORY_SINGLE_DELIVERY",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/revised-six-final/result.json"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
-      "measurements": {
-        "apiActionCount": 12,
-        "automationActiveMs": 1679.92,
-        "renderWorkerMs": 0,
-        "humanActiveMs": null,
-        "manualReentryCount": null
+      "execution_layer": "EXACT_FIXTURE_LIVE_UI_REAL_API",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "earlierExecutionMeasurements": {
+        "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+        "evidence": [
+          "docs/evidence/operator-value/business-execution.json"
+        ],
+        "values": {
+          "apiActionCount": 12,
+          "automationActiveMs": 1679.92,
+          "renderWorkerMs": 0,
+          "humanActiveMs": null,
+          "manualReentryCount": null
+        }
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "remaining": null
     },
     {
       "id": "V05",
@@ -191,20 +215,28 @@
       ],
       "fixture_path": "tests/fixtures/operator-value/DAILY_WORKFLOWS.json",
       "fixture_case_key": "V05",
-      "scope": "MANDATORY_SINGLE_DELIVERY",
+      "scope": "Exact eight existing people, two events, one UNKNOWN result and one untransferred material. A second OPERATOR opens the saved handover and explicitly confirms material through the UI; UNKNOWN remains unchanged. No re-entry of the eight identities. Browser automation timing is not measured human active time.",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/handover-data-final/summary.json",
+        "docs/evidence/final-completion/handover-data-final/results.json"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
-      "measurements": {
-        "apiActionCount": 13,
-        "automationActiveMs": 397.75,
-        "renderWorkerMs": 0,
-        "humanActiveMs": null,
-        "manualReentryCount": null
+      "execution_layer": "REAL_EDGE_TWO_OPERATOR_UI_AND_POSTGRESQL",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "earlierExecutionMeasurements": {
+        "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+        "evidence": [
+          "docs/evidence/operator-value/business-execution.json"
+        ],
+        "values": {
+          "apiActionCount": 13,
+          "automationActiveMs": 397.75,
+          "renderWorkerMs": 0,
+          "humanActiveMs": null,
+          "manualReentryCount": null
+        }
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "remaining": null
     },
     {
       "id": "V06",
@@ -234,20 +266,28 @@
       ],
       "fixture_path": "tests/fixtures/operator-value/DAILY_WORKFLOWS.json",
       "fixture_case_key": "V06",
-      "scope": "MANDATORY_SINGLE_DELIVERY",
+      "scope": "Exact five synthetic historical cases, four actual UI contact decisions and two UI repeats, negative access to repeat for other three states, reload and original-history preservation. Human timing remains unmeasured.",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/renewal-onboarding-v06/v06-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding-v06/results.json"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
-      "measurements": {
-        "apiActionCount": 22,
-        "automationActiveMs": 261.77,
-        "renderWorkerMs": 0,
-        "humanActiveMs": null,
-        "manualReentryCount": null
+      "execution_layer": "REAL_EDGE_FIVE_STATE_UI_AND_INDEPENDENT_HTTP_RETRIES_POSTGRESQL",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "earlierExecutionMeasurements": {
+        "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+        "evidence": [
+          "docs/evidence/operator-value/business-execution.json"
+        ],
+        "values": {
+          "apiActionCount": 22,
+          "automationActiveMs": 261.77,
+          "renderWorkerMs": 0,
+          "humanActiveMs": null,
+          "manualReentryCount": null
+        }
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "remaining": null
     },
     {
       "id": "V07",
@@ -277,16 +317,20 @@
       ],
       "fixture_path": "tests/fixtures/operator-value/DAILY_WORKFLOWS.json",
       "fixture_case_key": "V07",
-      "scope": "MANDATORY_SINGLE_DELIVERY",
-      "status": "PARTIAL",
+      "scope": "Exact three own and two foreign people. Three stored individual DOCX files downloaded through the employer UI and hash checked, foreign and mixed GROUP files denied. Repeat submitted without identity re-entry and accepted by the center into a clean draft; original snapshot and numbers remain unchanged. Browser automation timing is not measured human active time.",
+      "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json",
-        "tests/integration/operator-value-http.test.ts",
-        "tests/integration/portal-evidence-http.test.ts"
+        "docs/evidence/final-completion/portal-three-complete/summary.json",
+        "docs/evidence/final-completion/portal-three-complete/results.json"
       ],
-      "execution_layer": "LIVE_BROWSER_PORTAL_AND_HTTP_MEMBERSHIP_BOUNDARIES",
-      "remaining": "Portal identity/evidence upload/reload/download and rights tested; the complete supplied multi-person V07 operator fixture was not replayed as one browser journey.",
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "execution_layer": "REAL_EDGE_EMPLOYER_SELF_SERVICE_AND_SAVED_DOCX",
+      "remaining": null,
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "ownPeople": 3,
+      "foreignPeople": 2,
+      "realIndividualFilesDownloaded": 3,
+      "downloadedFormat": "DOCX",
+      "foreignOrMixedFilesDenied": 3
     },
     {
       "id": "V08",
@@ -317,17 +361,24 @@
       "scope": "MANDATORY_SINGLE_DELIVERY",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/delivery-three-v3/result.json"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
-      "measurements": {
-        "apiActionCount": 7,
-        "automationActiveMs": 2154.94,
-        "renderWorkerMs": 0,
-        "humanActiveMs": null,
-        "manualReentryCount": null
+      "execution_layer": "EXACT_THREE_PERSON_LIVE_UI_REAL_FILES",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "earlierExecutionMeasurements": {
+        "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+        "evidence": [
+          "docs/evidence/operator-value/business-execution.json"
+        ],
+        "values": {
+          "apiActionCount": 7,
+          "automationActiveMs": 2154.94,
+          "renderWorkerMs": 0,
+          "humanActiveMs": null,
+          "manualReentryCount": null
+        }
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "remaining": null
     },
     {
       "id": "V09",
@@ -354,20 +405,26 @@
       ],
       "fixture_path": "tests/fixtures/operator-value/DAILY_WORKFLOWS.json",
       "fixture_case_key": "V09",
-      "scope": "MANDATORY_SINGLE_DELIVERY",
+      "scope": "Actual issued original found by number, downloaded with exact SHA without a new request; duplicate warning opens the old record. Authorized correction requires a reason, copies existing details and changes only one position field. Original and corrected UI link in both directions; immutable old snapshot/number/files persist. Anonymous registry shows replaced/new-number state without recipient PII and explicitly disclaims signature/authenticity guarantees.",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/history-v4/history-coverage.json",
+        "docs/evidence/final-completion/history-v4/history-checkpoint.json",
+        "docs/evidence/final-completion/history-v4/linked-correction-history.png",
+        "docs/evidence/final-completion/history-v4/public-replaced-record.png",
+        "docs/evidence/final-completion/history-v4/original-after-correction.pdf",
+        "docs/evidence/final-completion/history-v4/corrected.pdf"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+      "execution_layer": "REAL_CHROME_HISTORY_SEARCH_CORRECTION_AND_ORIGINAL_FILES",
       "measurements": {
-        "apiActionCount": 14,
-        "automationActiveMs": 1516.14,
-        "renderWorkerMs": 56408.85,
+        "correctionFieldsEdited": 1,
         "humanActiveMs": null,
-        "manualReentryCount": null
+        "automationWallMs": 212965,
+        "externalManualActions": 0,
+        "identityFieldsReentered": 0
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "remaining": null
     },
     {
       "id": "V10",
@@ -396,20 +453,29 @@
       ],
       "fixture_path": "tests/fixtures/operator-value/DAILY_WORKFLOWS.json",
       "fixture_case_key": "V10",
-      "scope": "MANDATORY_SINGLE_DELIVERY",
+      "scope": "First supported real UI document from a fresh demoOnly center with no optional business-module records; explicit synthetic approved profile, no production onboarding or human-timing claim.",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/renewal-onboarding/v10-summary.json",
+        "docs/evidence/final-completion/renewal-onboarding/v10-first-original.pdf",
+        "docs/evidence/final-completion/renewal-onboarding/results.json"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
-      "measurements": {
-        "apiActionCount": 8,
-        "automationActiveMs": 1729.75,
-        "renderWorkerMs": 26284.86,
-        "humanActiveMs": null,
-        "manualReentryCount": null
+      "execution_layer": "SUPPORTED_FRESH_SYNTHETIC_PROVISION_REAL_EDGE_FIRST_ISSUANCE_AND_SAVED_PDF",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "earlierExecutionMeasurements": {
+        "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+        "evidence": [
+          "docs/evidence/operator-value/business-execution.json"
+        ],
+        "values": {
+          "apiActionCount": 8,
+          "automationActiveMs": 1729.75,
+          "renderWorkerMs": 26284.86,
+          "humanActiveMs": null,
+          "manualReentryCount": null
+        }
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "remaining": null
     },
     {
       "id": "V11",
@@ -440,17 +506,24 @@
       "scope": "MANDATORY_SINGLE_DELIVERY",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/service-finish/service-ui-verification.json"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
-      "measurements": {
-        "apiActionCount": 12,
-        "automationActiveMs": 131.64,
-        "renderWorkerMs": 0,
-        "humanActiveMs": null,
-        "manualReentryCount": null
+      "execution_layer": "LIVE_UI_EXACT_QUANTITY_AND_MONEY_WITH_API_NEGATIVES",
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "earlierExecutionMeasurements": {
+        "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+        "evidence": [
+          "docs/evidence/operator-value/business-execution.json"
+        ],
+        "values": {
+          "apiActionCount": 12,
+          "automationActiveMs": 131.64,
+          "renderWorkerMs": 0,
+          "humanActiveMs": null,
+          "manualReentryCount": null
+        }
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "remaining": null
     },
     {
       "id": "V12",
@@ -480,20 +553,28 @@
       ],
       "fixture_path": "tests/fixtures/operator-value/DAILY_WORKFLOWS.json",
       "fixture_case_key": "V12",
-      "scope": "MANDATORY_SINGLE_DELIVERY",
+      "scope": "Same actual three-person event, source material and missing signed copy are followed from live UI dossier assembly through a full isolated backup/restore and real HTTP readback. Engineering/UI evidence is explicit; production, real human time, payment, physical printing and commercial superiority are not inferred. The integrating parent owns the overall AT184 readiness and matrix synthesis.",
       "status": "PASS",
       "evidence": [
-        "docs/evidence/operator-value/business-execution.json"
+        "docs/evidence/final-completion/delivery-three-v3/result.json",
+        "docs/evidence/final-completion/recovery/final-v13-restore.json",
+        "docs/evidence/final-completion/recovery/final-v13-http-readback.json",
+        "docs/evidence/final-completion/recovery/Final-V13-Restore.md"
       ],
-      "execution_layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+      "execution_layer": "EXACT_THREE_PERSON_LIVE_UI_WITH_POINT_IN_TIME_RESTORE_AND_REAL_HTTP_FILES",
       "measurements": {
-        "apiActionCount": 13,
-        "automationActiveMs": 816.34,
-        "renderWorkerMs": 0,
+        "backupMs": 38083,
+        "restoreAndOfflineVerifyMs": 56127,
         "humanActiveMs": null,
-        "manualReentryCount": null
+        "externalManualDossierAssemblyActions": 0,
+        "restorePerformedBy": "authorized technical recovery procedure",
+        "people": 3,
+        "missingSignedCopies": 1,
+        "dossierOriginalAndSourceFiles": 8,
+        "storedArtifactHttpDownloads": 16
       },
-      "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa"
+      "tested_commit": "789c68116826899faa18253a99c9f8deff9c8781",
+      "remaining": null
     }
   ],
   "measurementLimits": {
