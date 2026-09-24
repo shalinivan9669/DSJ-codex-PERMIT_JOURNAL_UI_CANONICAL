@@ -4546,21 +4546,20 @@
         "команда/шаги, environment и итоговый SHA",
         "реальные assertions, файлы/скриншоты по смыслу"
       ],
-      "status": "PASS",
+      "status": "PARTIAL",
       "evidence": [
-        "docs/evidence/operator-value/integration-suite-final.log",
-        "tests/integration/portal-evidence-http.test.ts",
         "tests/integration/operator-value-http.test.ts",
-        "tests/contracts.test.ts",
-        "docs/evidence/import-delivery/acceptance-coverage.json"
+        "tests/integration/portal-evidence-http.test.ts",
+        "apps/web/components/portal-access.tsx",
+        "docs/evidence/operator-value/service-coverage.json"
       ],
       "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
       "verification_scope": [
         {
           "owner": "root",
-          "status": "PASS",
-          "scope": "HTTP+DB tenant/customer/role negatives, mixed-group restricted downloads, access expiry/revoke, exact allowlist parity, safe formula/XML/image/import handling and collision/traversal-safe customer output.",
-          "remaining": null
+          "status": "PARTIAL",
+          "scope": "Actual employer password login, membership expiry/revocation and revocation of active sessions were verified. This does not execute the expired/reused invitation scenario required by AT145.",
+          "remaining": "No one-time portal invitation exchange exists in this version. Existing admin-created strong-password principal plus membership is the implemented access mode; invitation expiry/replay/token log/referrer assertions are NOT RUN."
         }
       ]
     },
@@ -6192,8 +6191,21 @@
   "businessAcceptance": "V01–V12 plus G1/G2; large-volume output is not the sole definition of product value",
   "tested_commit": "2fb329b46cacd102cf9c67401d7672e7a0e509aa",
   "counts": {
-    "PARTIAL": 88,
-    "PASS": 96
+    "PARTIAL": 89,
+    "PASS": 95
   },
-  "commercialAcceptance": "NOT_COMPLETE: exact full operator acceptance, new group Word/physical print, legal review and customer pilot are not claimed"
+  "commercialAcceptance": "NOT_COMPLETE: 95 PASS/89 PARTIAL and one confirmed open PDF attachment validation defect; full operator, Word/physical/legal/pilot acceptance incomplete",
+  "supplemental_findings": [
+    {
+      "id": "QA-001",
+      "status": "CONFIRMED_OPEN",
+      "area": "Private source PDF attachment validation",
+      "source": "apps/api/src/operator-value.ts:1034",
+      "affectedCaller": "apps/api/src/portal-evidence.ts:283",
+      "description": "Literal raw-byte matching misses equivalent escaped PDF names. A PDF parser recognizes an active action in the same bytes accepted by the current filter.",
+      "proof": "docs/evidence/operator-value/assurance-pdf-validation.json",
+      "proofScope": "Safe inert PDF parsed in memory; no upload, no DB changes, no JavaScript or viewer execution; no tenant/customer leakage demonstrated.",
+      "resolution": "NOT_FIXED_IN_THIS_ASSURANCE_REVIEW"
+    }
+  ]
 }

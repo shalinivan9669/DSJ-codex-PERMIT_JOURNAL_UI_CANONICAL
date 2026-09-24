@@ -1184,6 +1184,8 @@
         "tests/integration/portal-evidence-http.test.ts",
         "tests/contracts.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json",
+        "apps/web/components/portal-access.tsx",
+        "docs/evidence/operator-value/service-coverage.json",
         "docs/evidence/operator-ui-contract/results.json",
         "docs/evidence/operator-value/e2e-final/results.json",
         "docs/evidence/operator-value-browser/results.json",
@@ -1192,9 +1194,15 @@
         "docs/evidence/operator-value/v01-biot-browser/v01-result.json"
       ],
       "acceptance_counts": {
-        "PASS": 6,
-        "PARTIAL": 5
-      }
+        "PASS": 5,
+        "PARTIAL": 6
+      },
+      "implementation_limits": [
+        "Employer access currently uses an administrator-created password account plus scoped membership. There is no one-time invitation URL exchange. AT145 is PARTIAL, not full PASS."
+      ],
+      "known_defects": [
+        "QA-001"
+      ]
     },
     {
       "id": "F24",
@@ -1250,7 +1258,10 @@
       "acceptance_counts": {
         "PASS": 5,
         "PARTIAL": 6
-      }
+      },
+      "known_defects": [
+        "QA-001"
+      ]
     },
     {
       "id": "F25",
@@ -1310,7 +1321,10 @@
       "acceptance_counts": {
         "PARTIAL": 6,
         "PASS": 5
-      }
+      },
+      "known_defects": [
+        "QA-001"
+      ]
     },
     {
       "id": "F26",
@@ -1362,7 +1376,10 @@
       "acceptance_counts": {
         "PARTIAL": 4,
         "PASS": 3
-      }
+      },
+      "known_defects": [
+        "QA-001"
+      ]
     },
     {
       "id": "F27",
@@ -1523,7 +1540,10 @@
       "acceptance_counts": {
         "PASS": 4,
         "PARTIAL": 5
-      }
+      },
+      "known_defects": [
+        "QA-001"
+      ]
     },
     {
       "id": "F30",
@@ -1571,6 +1591,8 @@
         "docs/OT_CENTER_V2.md",
         "tests/contracts.test.ts",
         "docs/evidence/import-delivery/acceptance-coverage.json",
+        "apps/web/components/portal-access.tsx",
+        "docs/evidence/operator-value/service-coverage.json",
         "docs/evidence/operator-value/import-browser/results.json",
         "apps/web/test/operator-workflow.test.ts",
         "docs/evidence/operator-value/unit-final.log",
@@ -1588,8 +1610,8 @@
         "docs/evidence/operator-value/library-portal-browser/portal-retake-result.json"
       ],
       "acceptance_counts": {
-        "PASS": 14,
-        "PARTIAL": 3
+        "PASS": 13,
+        "PARTIAL": 4
       }
     },
     {
@@ -1735,6 +1757,20 @@
     "code": "IMPLEMENTED_LOCAL",
     "engineeringAcceptance": "PARTIAL_SEE_CRITERIA",
     "legalAndPhysical": "NOT_RUN",
-    "production": "NOT_DEPLOYED"
-  }
+    "production": "NOT_DEPLOYED",
+    "security": "KNOWN_OPEN_PDF_VALIDATION_DEFECT"
+  },
+  "known_defects": [
+    {
+      "id": "QA-001",
+      "status": "CONFIRMED_OPEN",
+      "area": "Private source PDF attachment validation",
+      "source": "apps/api/src/operator-value.ts:1034",
+      "affectedCaller": "apps/api/src/portal-evidence.ts:283",
+      "description": "Literal raw-byte matching misses equivalent escaped PDF names. A PDF parser recognizes an active action in the same bytes accepted by the current filter.",
+      "proof": "docs/evidence/operator-value/assurance-pdf-validation.json",
+      "proofScope": "Safe inert PDF parsed in memory; no upload, no DB changes, no JavaScript or viewer execution; no tenant/customer leakage demonstrated.",
+      "resolution": "NOT_FIXED_IN_THIS_ASSURANCE_REVIEW"
+    }
+  ]
 }

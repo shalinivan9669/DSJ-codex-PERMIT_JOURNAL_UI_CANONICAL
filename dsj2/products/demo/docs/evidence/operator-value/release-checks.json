@@ -5,10 +5,10 @@
   "scope": "Local synthetic OT Center V2. Generated logs and binary evidence remain local.",
   "implementation": {
     "features": 32,
-    "state": "IMPLEMENTED_LOCAL",
+    "state": "IMPLEMENTED_MODULES_WITH_INCOMPLETE_SPECIFICATION_ACCEPTANCE",
     "acceptance": {
-      "PARTIAL": 88,
-      "PASS": 96
+      "PASS": 95,
+      "PARTIAL": 89
     }
   },
   "checks": {
@@ -87,5 +87,25 @@
     "full original V07 operator fixture as one browser journey",
     "application rollback/cutover"
   ],
-  "liveCheck": "final-local-readiness.json"
+  "liveCheck": "final-local-readiness.json",
+  "assuranceCorrection": {
+    "criterion": "AT145",
+    "previousStatus": "PASS",
+    "correctedStatus": "PARTIAL",
+    "reason": "Membership/session revoke was tested; expired/reused one-time invitation was not implemented or exercised. Password-based employer account access is available."
+  },
+  "knownOpenDefects": [
+    {
+      "id": "QA-001",
+      "status": "CONFIRMED_OPEN",
+      "area": "Private source PDF attachment validation",
+      "source": "apps/api/src/operator-value.ts:1034",
+      "affectedCaller": "apps/api/src/portal-evidence.ts:283",
+      "description": "Literal raw-byte matching misses equivalent escaped PDF names. A PDF parser recognizes an active action in the same bytes accepted by the current filter.",
+      "proof": "docs/evidence/operator-value/assurance-pdf-validation.json",
+      "proofScope": "Safe inert PDF parsed in memory; no upload, no DB changes, no JavaScript or viewer execution; no tenant/customer leakage demonstrated.",
+      "resolution": "NOT_FIXED_IN_THIS_ASSURANCE_REVIEW"
+    }
+  ],
+  "securityAssurance": "KNOWN_OPEN_VALIDATION_DEFECT; no assertion of zero vulnerabilities"
 }
