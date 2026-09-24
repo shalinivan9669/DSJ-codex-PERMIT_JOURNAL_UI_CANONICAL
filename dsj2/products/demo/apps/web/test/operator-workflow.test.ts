@@ -8,6 +8,46 @@ import { kztToMinor, minorToKzt } from "../lib/money";
 import { resolveDraft } from "@demo/contracts";
 import { parseClipboardRange, previewGridPaste } from "../lib/grid-paste";
 import { textQualityHints } from "../lib/text-quality";
+import { eligibleForEvent, joinEventAssignment } from "../lib/event-assignment";
+
+test("joining an explicitly selected existing form preserves imported/manual/cleared exceptions and rejects existing events or outcomes", () => {
+  const imported = {
+    ...newAssignment("pb-card"),
+    hours: "16",
+    trainingSubject: "Manual",
+    documentDate: "",
+    fieldOrigins: {
+      hours: "IMPORTED" as const,
+      trainingSubject: "MANUAL" as const,
+      documentDate: "CLEARED" as const,
+    },
+  };
+  assert.equal(eligibleForEvent(imported, "pb-card"), true);
+  const joined = joinEventAssignment(imported, "event-1");
+  assert.equal(joined.id, imported.id);
+  assert.equal(joined.hours, "16");
+  assert.equal(joined.fieldOrigins?.hours, "IMPORTED");
+  assert.equal(joined.fieldOrigins?.documentDate, "CLEARED");
+  assert.equal(joined.fieldOrigins?.trainingSubject, "MANUAL");
+  assert.equal(joined.fieldOrigins?.trainingStart, "INHERITED");
+  assert.equal(eligibleForEvent(joined, "pb-card"), false);
+  assert.equal(
+    eligibleForEvent({ ...imported, result: "Сдал" }, "pb-card"),
+    false,
+  );
+  assert.equal(
+    eligibleForEvent(
+      { ...imported, outcome: { status: "FAILED", source: "known" } },
+      "pb-card",
+    ),
+    false,
+  );
+  assert.equal(
+    eligibleForEvent({ ...imported, externalBasisNumber: "OLD-01" }, "pb-card"),
+    false,
+  );
+  assert.equal(eligibleForEvent(imported, "ptm-card"), false);
+});
 
 test("text quality identifies mixed-script tokens and hidden marks without rewriting valid Kazakh or foreign names", () => {
   assert.equal(

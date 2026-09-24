@@ -20,6 +20,7 @@ export const statusNames: Record<string, string> = {
   REGISTERED: "Зарегистрировано",
   CANCELLED: "Отменено",
   CORRECTED: "Исправлено",
+  REPLACED: "Заменён исправленным выпуском",
   READY: "Готово",
   QUEUED: "В очереди",
   PENDING: "В очереди",
@@ -131,7 +132,7 @@ export function RequestList({
             <Icon name="search" />
             <input
               aria-label="Поиск по заявкам"
-              placeholder="Название, получатель или заказчик"
+              placeholder="Номер документа, название, получатель или заказчик"
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value);

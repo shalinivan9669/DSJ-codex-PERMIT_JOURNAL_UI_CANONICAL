@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import { templateLabels, type Draft, type Recipient } from "@/lib/types";
+import { RequestOrderLink } from "./order-links";
 export function RequestOperations({
   draft,
   selected,
@@ -178,6 +179,7 @@ export function RequestOperations({
             обязательства, передачу комплекта или расчёты. Он не обязателен для
             оформления одного человека.
           </p>
+          {canManage && <RequestOrderLink draft={draft} flush={flush} />}
           {canManage && draft.status !== "DRAFT" && selected && (
             <details>
               <summary>
@@ -247,7 +249,7 @@ export function RequestOperations({
                       api("/renewals", {
                         method: "POST",
                         body: json({
-                          customerId: draft.customerId,
+                          customerId: selected.employerId || draft.customerId,
                           recipientId: selected.recipientId || null,
                           sourceRequestId: draft.id,
                           sourceRowId: selected.id,

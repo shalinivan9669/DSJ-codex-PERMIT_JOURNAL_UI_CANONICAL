@@ -5,3 +5,4 @@ defusedxml==0.7.1
 et_xmlfile==2.0.0
 qrcode==8.2
 colorama==0.4.6; sys_platform == "win32"
+pypdf==6.19.0

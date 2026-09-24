@@ -312,7 +312,9 @@ export function RecipientDetails({
                 </span>
               </summary>
               <div className="assignment-fields">
-                {assignment.eventId && (
+                {!!Object.keys(
+                  provenance?.[`${recipient.id}:${assignment.id}`] || {},
+                ).length && (
                   <details className="field-provenance">
                     <summary>Источники общих значений</summary>
                     <dl>

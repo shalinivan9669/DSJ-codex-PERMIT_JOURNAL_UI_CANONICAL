@@ -41,6 +41,10 @@ const fields: [string, string][] = [
   ["fullNameKz", "ФИО KZ"],
   ["positionRu", "Должность"],
   ["departmentRu", "Подразделение"],
+  ["trainingSubject", "Программа / тема обучения"],
+  ["hours", "Объём обучения, часов"],
+  ["trainingStart", "Начало обучения"],
+  ["trainingEnd", "Окончание обучения"],
   ["templateLabel", "Документ"],
   ["documentNumber", "Номер документа"],
   ["protocolNumber", "Номер протокола"],
@@ -625,9 +629,12 @@ export function CustomerOutput({
                         {
                           field: e.target.value,
                           title: fields.find(([f]) => f === e.target.value)![1],
-                          type: ["documentDate", "validUntil"].includes(
-                            e.target.value,
-                          )
+                          type: [
+                            "documentDate",
+                            "validUntil",
+                            "trainingStart",
+                            "trainingEnd",
+                          ].includes(e.target.value)
                             ? "DATE_ONLY"
                             : "TEXT",
                         },

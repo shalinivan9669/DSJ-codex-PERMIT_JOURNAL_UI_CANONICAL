@@ -2,12 +2,18 @@ import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 
 const evidence = process.env.DEMO_E2E_EVIDENCE
   ? path.resolve(process.env.DEMO_E2E_EVIDENCE)
   : path.resolve(__dirname, "../../../docs/evidence/browser");
 const email = process.env.DEMO_E2E_EMAIL || "admin@demo.local";
 const password = process.env.DEMO_E2E_PASSWORD || "Local-Demo-2026-Print!";
+test.beforeEach(async ({ context }) => {
+  await context.routeWebSocket("**/_next/webpack-hmr", (socket) =>
+    socket.close(),
+  );
+});
 async function login(page: Page, user = email, secret = password) {
   await page.goto("/login");
   await page.getByLabel("Электронная почта", { exact: true }).fill(user);
@@ -98,6 +104,29 @@ test("oldest file survives 55 newer drafts, page three, history search and compl
     .getByRole("button", { name: "Оформить комплект", exact: true })
     .click();
   await page.getByRole("button", { name: "Оформить", exact: true }).click();
+  if (process.env.DEMO_E2E_SCOPED_RENDER === "1") {
+    await expect(page.locator(".title-with-status .status")).toHaveText(
+      "Оформлено",
+    );
+    const proof = execFileSync(
+      process.execPath,
+      [
+        "--import",
+        "tsx",
+        "scripts/verification/drain-delivery-test-request.ts",
+        process.env.DEMO_E2E_TENANT_ID!,
+        requestId(page),
+      ],
+      {
+        cwd: path.resolve("../.."),
+        env: process.env,
+        windowsHide: true,
+        encoding: "utf8",
+        timeout: 360000,
+      },
+    );
+    await fs.writeFile(path.join(evidence, "oldest-scoped-worker.json"), proof);
+  }
   await expect(page.locator(".files-panel")).toContainText("Готово 4 из 4", {
     timeout: 240000,
   });

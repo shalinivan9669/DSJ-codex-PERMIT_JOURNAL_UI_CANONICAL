@@ -16,6 +16,7 @@ export const serviceOrderSchema = z
     title: z.string().trim().min(1).max(255),
     customerId: id.nullable().default(null),
     payerId: id.nullable().default(null),
+    employerId: id.nullable().optional(),
     contact: z.string().max(500).default(""),
     ownerId: id.nullable().default(null),
     dueDate: date.nullable().default(null),
@@ -26,6 +27,8 @@ export const orderPatchSchema = z
   .object({
     expectedRevision: z.number().int().nonnegative(),
     title: z.string().trim().min(1).max(255).optional(),
+    payerId: id.nullable().optional(),
+    employerId: id.nullable().optional(),
     contact: z.string().max(500).optional(),
     ownerId: id.nullable().optional(),
     dueDate: date.nullable().optional(),

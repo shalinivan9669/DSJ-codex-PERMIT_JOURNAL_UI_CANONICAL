@@ -28,6 +28,12 @@ export function middleware(request: NextRequest) {
         "Content-Type": "text/plain; charset=utf-8",
       },
     });
-  return NextResponse.next();
+  const response = NextResponse.next();
+  if (path === "/invite" || path.startsWith("/api/auth/employer-invite/")) {
+    response.headers.set("Referrer-Policy", "no-referrer");
+    response.headers.set("Cache-Control", "no-store");
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
+  return response;
 }
 export const config = { matcher: "/:path*" };

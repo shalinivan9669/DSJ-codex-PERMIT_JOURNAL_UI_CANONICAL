@@ -117,7 +117,7 @@ export function OrderEvidence({
               <a href={`/api/value-attachments/${file.id}`} download>
                 {file.fileName}
               </a>
-              <small>
+              <small style={{ display: "block" }}>
                 {file.eventId
                   ? `Событие: ${events.find((e) => e.id === file.eventId)?.title || "связано с заявкой"}`
                   : "Заказ в целом"}

@@ -61,6 +61,11 @@
     {
       "method": "GET",
       "surface": "api",
+      "path": "/staff-directory"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
       "path": "/audit"
     },
     {
@@ -378,9 +383,21 @@
       "method": "GET",
       "path": "/portal"
     },
-    { "method": "GET", "surface": "api", "path": "/portal/evidence" },
-    { "method": "POST", "surface": "api", "path": "/portal/evidence" },
-    { "method": "GET", "surface": "api", "path": "/portal/matrix" },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/portal/evidence"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/portal/evidence"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/portal/matrix"
+    },
     {
       "method": "POST",
       "surface": "api",
@@ -471,8 +488,16 @@
       "method": "PATCH",
       "path": "/renewals/:id"
     },
-    { "method": "POST", "surface": "api", "path": "/renewals/scan" },
-    { "method": "POST", "surface": "api", "path": "/evidence/matrix" },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/renewals/scan"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/evidence/matrix"
+    },
     {
       "surface": "api",
       "method": "POST",
@@ -571,32 +596,32 @@
     {
       "surface": "api",
       "method": "GET",
-      "path": "/control-sheet"
+      "path": "/print-requests/:id/control-sheet"
     },
     {
       "surface": "api",
       "method": "POST",
-      "path": "/control-sheet/confirm"
+      "path": "/print-requests/:id/control-sheet/confirm"
     },
     {
       "surface": "api",
       "method": "POST",
-      "path": "/control-sheet/export"
+      "path": "/print-requests/:id/control-sheet/export"
     },
     {
       "surface": "api",
       "method": "GET",
-      "path": "/clarification"
+      "path": "/print-requests/:id/clarification"
     },
     {
       "surface": "api",
       "method": "GET",
-      "path": "/transfers"
+      "path": "/print-requests/:id/transfers"
     },
     {
       "surface": "api",
       "method": "POST",
-      "path": "/transfers"
+      "path": "/print-requests/:id/transfers"
     },
     {
       "surface": "api",
@@ -662,6 +687,41 @@
       "method": "POST",
       "surface": "api",
       "path": "/dossier/export"
+    },
+    {
+      "path": "/employer-invites",
+      "method": "GET",
+      "surface": "api"
+    },
+    {
+      "path": "/employer-invites",
+      "method": "POST",
+      "surface": "api"
+    },
+    {
+      "path": "/employer-invites/:id/revoke",
+      "method": "POST",
+      "surface": "api"
+    },
+    {
+      "path": "/auth/employer-invite/inspect",
+      "method": "POST",
+      "surface": "api"
+    },
+    {
+      "path": "/auth/employer-invite/exchange",
+      "method": "POST",
+      "surface": "api"
+    },
+    {
+      "path": "/invite",
+      "method": "GET",
+      "surface": "web"
+    },
+    {
+      "path": "/invite",
+      "method": "HEAD",
+      "surface": "web"
     }
   ],
   "legacyRoutes": [

@@ -4,6 +4,7 @@ export class ApiError extends Error {
     message: string,
     public details?: unknown,
     public correlationId?: string,
+    public retryAfterMs?: number,
   ) {
     super(message);
   }
@@ -34,7 +35,18 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
       "Нет связи с сервером. Ваши изменения остаются на этой странице. Восстановите связь и повторите сохранение.",
     );
   }
-  const raw = await response.text();
+  let raw = "";
+  try {
+    raw = await response.text();
+  } catch {
+    // Preserve a known HTTP failure even when its optional error body is lost.
+    // A successful status without its body is still a failed network read.
+    if (response.ok)
+      throw new ApiError(
+        0,
+        "Нет связи с сервером. Ваши изменения остаются на этой странице. Восстановите связь и повторите сохранение.",
+      );
+  }
   let value: unknown;
   try {
     value = raw ? JSON.parse(raw) : undefined;
@@ -52,6 +64,12 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
       | { message?: string | string[]; error?: string; correlationId?: string }
       | undefined;
     const message = body?.message;
+    const retryAfter = response.headers.get("retry-after");
+    const retryAfterMs = retryAfter
+      ? /^\d+(?:\.\d+)?$/.test(retryAfter)
+        ? Number(retryAfter) * 1000
+        : Math.max(0, Date.parse(retryAfter) - Date.now())
+      : undefined;
     throw new ApiError(
       response.status,
       Array.isArray(message)
@@ -64,6 +82,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
       body?.correlationId ||
         response.headers.get("x-correlation-id") ||
         undefined,
+      Number.isFinite(retryAfterMs) ? retryAfterMs : undefined,
     );
   }
   return value as T;

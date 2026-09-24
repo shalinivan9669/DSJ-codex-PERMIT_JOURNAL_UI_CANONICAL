@@ -1,3 +1,4 @@
+import { syntheticPdf } from "../fixtures/pdf";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -261,7 +262,7 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
   await t.test(
     "order attachments retain an exact event binding and reject an unrelated event even inside the same tenant",
     async () => {
-      const bytes = Buffer.from("%PDF-1.4\nSynthetic event signed scan\n%%EOF");
+      const bytes = syntheticPdf("Synthetic event signed scan");
       const attached = await value.addValueAttachment(c, {
         orderId: orderA.id,
         eventId,

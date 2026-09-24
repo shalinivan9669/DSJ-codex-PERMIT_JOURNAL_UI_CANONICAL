@@ -15,6 +15,7 @@ type PortalOrder = {
   id: string;
   title: string;
   customerId?: string;
+  employerId?: string;
   status: string;
   dueDate?: string;
   permissions: string[];
@@ -25,7 +26,7 @@ type PortalOrder = {
     fullRosterAllowed: boolean;
     rows: Row[];
   }[];
-  artifacts: { id: string; fileName: string; format: string }[];
+  artifacts: { id: string; fileName: string; format: string; label?: string }[];
   proposals: {
     id: string;
     kind: string;
@@ -161,7 +162,7 @@ export function EmployerPortal() {
                     href={`/api/portal/artifacts/${a.id}`}
                     download
                   >
-                    {a.fileName}
+                    {a.label || a.fileName}
                   </a>
                 ))
               ) : (
@@ -214,10 +215,10 @@ export function EmployerPortal() {
         customers={[
           ...new Map(
             orders
-              .filter((o) => o.customerId)
+              .filter((o) => o.employerId ?? o.customerId)
               .map((o) => [
-                o.customerId!,
-                { id: o.customerId!, label: o.title },
+                (o.employerId ?? o.customerId)!,
+                { id: (o.employerId ?? o.customerId)!, label: o.title },
               ]),
           ).values(),
         ]}

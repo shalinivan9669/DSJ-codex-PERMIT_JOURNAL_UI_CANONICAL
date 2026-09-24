@@ -30,6 +30,7 @@ import * as files from "./files";
 import * as people from "./recipients";
 import * as imports from "./imports";
 import * as delivery from "./delivery";
+import { staffDirectory } from "./staff-directory";
 import { openArtifact } from "./storage";
 import { RENDERER_VERSION } from "@demo/printing";
 import { randomUUID } from "node:crypto";
@@ -640,6 +641,9 @@ export class DemoController {
     @Body() body: unknown,
   ) {
     return updateNumbering(ctx(req, true, true), body);
+  }
+  @Get("staff-directory") staffDirectory(@Req() req: DemoRequest) {
+    return staffDirectory(ctx(req));
   }
   @Get("users") async users(@Req() req: DemoRequest) {
     const items = await db.user.findMany({

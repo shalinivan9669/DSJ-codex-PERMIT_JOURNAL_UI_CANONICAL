@@ -1,3 +1,4 @@
+import { syntheticPdf, objectStreamPdf } from "../fixtures/pdf";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -233,7 +234,7 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
     );
     let evidenceId = "",
       attachmentId = "";
-    const bytes = Buffer.from("%PDF-1.4\nSynthetic source fixture\n%%EOF");
+    const bytes = syntheticPdf("Synthetic source fixture");
     await t.test(
       "explicit context returns only permitted roster and agreed services; no general center catalog access",
       async () => {
@@ -389,6 +390,61 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
         );
         assert.equal(upload.status, 201);
         attachmentId = (await upload.json()).id;
+        const beforeRejected = await db.valueAttachment.count({
+          where: { tenantId: tenant.id },
+        });
+        for (const unsafe of [
+          syntheticPdf(
+            "",
+            "/Open#41ction << /S /Java#53cript /J#53 (void 0) >>",
+          ),
+          objectStreamPdf(true),
+          syntheticPdf(
+            "",
+            "",
+            "/Annots [<< /Subtype /Widget /AA << /E << /S /Launch /F (synthetic.txt) >> >> >>]",
+          ),
+        ]) {
+          const rejected = await call(
+            `/portal/evidence/${evidenceId}/attachments`,
+            "POST",
+            { ...attachment, contentBase64: unsafe.toString("base64") },
+            employer,
+          );
+          assert.equal(rejected.status, 400);
+          assert.equal((await rejected.json()).code, "ACTIVE_PDF_REJECTED");
+        }
+        const malformed = await call(
+          `/portal/evidence/${evidenceId}/attachments`,
+          "POST",
+          {
+            ...attachment,
+            contentBase64: Buffer.from(
+              "%PDF-1.4\ninvalid source\n%%EOF",
+            ).toString("base64"),
+          },
+          employer,
+        );
+        assert.equal(malformed.status, 400);
+        assert.equal((await malformed.json()).code, "PDF_INVALID");
+        const invalidImage = await call(
+          `/portal/evidence/${evidenceId}/attachments`,
+          "POST",
+          {
+            ...attachment,
+            fileName: "false.png",
+            contentBase64: Buffer.from([
+              137, 80, 78, 71, 13, 10, 26, 10,
+            ]).toString("base64"),
+          },
+          employer,
+        );
+        assert.equal(invalidImage.status, 400);
+        assert.equal((await invalidImage.json()).code, "IMAGE_INVALID");
+        assert.equal(
+          await db.valueAttachment.count({ where: { tenantId: tenant.id } }),
+          beforeRejected,
+        );
         assert.equal(
           (
             await call(

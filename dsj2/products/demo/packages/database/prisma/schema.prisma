@@ -374,6 +374,7 @@ model ServiceOrder {
   title String
   customerId String?
   payerId String?
+  employerId String?
   contact String @default("")
   ownerId String?
   dueDate String?
@@ -385,6 +386,7 @@ model ServiceOrder {
   updatedAt DateTime @updatedAt
   @@unique([tenantId,id])
   @@index([tenantId,status,createdAt])
+  @@index([tenantId,employerId])
 }
 model ServiceOrderRequest {
   id String @id @default(uuid())
@@ -518,6 +520,27 @@ model EmployerMembership {
   createdAt DateTime @default(now())
   @@unique([tenantId,id])
   @@unique([tenantId,customerId,userId])
+}
+model EmployerInvite {
+  id String @id @default(uuid())
+  tenantId String
+  customerId String
+  email String
+  displayName String
+  secretHash String @unique
+  existingUserId String?
+  userSessionVersion Int?
+  permissions Json
+  recipientIds Json @default("[]")
+  accessExpiresAt DateTime
+  expiresAt DateTime
+  consumedAt DateTime?
+  revokedAt DateTime?
+  membershipId String?
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,createdAt])
 }
 model PortalProposal {
   id String @id @default(uuid())

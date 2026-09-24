@@ -1,3 +1,4 @@
+import { syntheticPdf } from "../fixtures/pdf";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -54,7 +55,7 @@ test("center dossier: calendar review reminders and explicitly selected public-o
       category: "QUALIFICATION",
       customerVisible: false,
     });
-    const pdf = Buffer.from("%PDF-1.4\nsynthetic-only-document\n%%EOF");
+    const pdf = syntheticPdf("synthetic-only-document");
     await addValueAttachment(c, {
       dossierId: visible.id,
       category: "SOURCE",

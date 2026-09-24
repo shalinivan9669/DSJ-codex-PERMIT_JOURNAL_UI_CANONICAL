@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
 import { bootstrap } from "../../apps/api/src/main";
-import { db, type Context } from "../../apps/api/src/core";
+import { db, json, type Context } from "../../apps/api/src/core";
 import { passwordHash } from "../../apps/api/src/auth";
 import { draftSchema, itemSchema } from "../../packages/contracts/src";
 import { createRequest } from "../../apps/api/src/requests";
@@ -57,6 +57,12 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
     csrfHash: "test",
     correlationId: suffix,
   };
+  const currentPerson = await db.recipient.create({
+    data: {
+      tenantId: tenant.id,
+      data: { fullNameRu: "Текущее имя в справочнике" },
+    },
+  });
   const request = await createRequest(
     c,
     draftSchema.parse({
@@ -65,6 +71,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
       items: [
         itemSchema.parse({
           id: "own",
+          recipientId: currentPerson.id,
           employerId: customer.id,
           fullNameRu: "Свой сотрудник",
         }),
@@ -113,7 +120,19 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
       tenantId: tenant.id,
       requestId: request.id,
       sourceRevision: 0,
-      snapshot: { private: "Закрытое ФИО" },
+      snapshot: json({
+        private: "Закрытое ФИО",
+        draft: {
+          ...draftSchema.parse(request.draft),
+          items: draftSchema
+            .parse(request.draft)
+            .items.map((row) =>
+              row.id === "own"
+                ? { ...row, fullNameRu: "Имя на дату выдачи" }
+                : row,
+            ),
+        },
+      }),
       inputHash: "test",
       profileVersionId: profile.id,
       createdBy: admin.id,
@@ -180,6 +199,71 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
     });
   }
   const individual = await artifact(doc.id, "own.pdf", "OWN_ONLY");
+  const foreignDoc = await db.issuedDocument.create({
+    data: {
+      tenantId: tenant.id,
+      issuanceId: issuance.id,
+      requestId: request.id,
+      rowId: "foreign",
+      assignmentId: "foreign-doc",
+      templateVersionId: template.id,
+      templateId: "biot-worker-card",
+      namespace: "BIOT:CARD",
+      number: "SECRET-FOREIGN-NUMBER",
+      documentDate: "2026-09-24",
+    },
+  });
+  const foreignArtifact = await artifact(
+    foreignDoc.id,
+    "private-foreign.pdf",
+    "FOREIGN_ONLY",
+  );
+  const event = await db.trainingEvent.create({
+    data: {
+      id: randomUUID(),
+      tenantId: tenant.id,
+      requestId: request.id,
+      title: "SECRET-GROUP-TITLE",
+      protocolTemplateId: "biot-protocol",
+      data: {},
+    },
+  });
+  const groupDoc = await db.$transaction(async (tx) => {
+    const group = await tx.issuedDocument.create({
+      data: {
+        tenantId: tenant.id,
+        issuanceId: issuance.id,
+        requestId: request.id,
+        ownerKind: "GROUP",
+        groupEventId: event.id,
+        groupEventRevision: 0,
+        templateVersionId: template.id,
+        templateId: "biot-protocol",
+        namespace: "BIOT:PROTOCOL",
+        number: "SECRET-GROUP-NUMBER",
+        documentDate: "2026-09-24",
+      },
+    });
+    await tx.groupDocumentMember.createMany({
+      data: ["own", "foreign"].map((rowId, position) => ({
+        tenantId: tenant.id,
+        documentId: group.id,
+        requestId: request.id,
+        rowId,
+        assignmentId: `${rowId}-doc`,
+        recipientId: rowId === "own" ? currentPerson.id : null,
+        employerId: rowId === "own" ? customer.id : other.id,
+        position,
+        outcome: { status: "PASSED", source: "Synthetic group" },
+      })),
+    });
+    return group;
+  });
+  const groupArtifact = await artifact(
+    groupDoc.id,
+    "private-mixed-group.pdf",
+    "FOREIGN_GROUP_DATA",
+  );
   const bundle = await artifact(
     null,
     "private-whole-roster.pdf",
@@ -272,7 +356,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
       },
     );
     await t.test(
-      "authorized individual document in mixed roster downloads; full roster remains private",
+      "authorized immutable document label and bytes are stable; foreign individual/group labels stay private",
       async () => {
         const response = await call(
           "/portal",
@@ -286,6 +370,52 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
         assert.ok(!text.includes("Тайна другого заказчика"));
         assert.ok(!text.includes(bundle.fileName));
         assert.ok(text.includes(individual.id));
+        const visibleFile = portal.orders[0].artifacts.find(
+          (file: { id: string }) => file.id === individual.id,
+        );
+        assert.match(visibleFile.label, /БиОТ/);
+        assert.match(visibleFile.label, /Имя на дату выдачи/);
+        assert.match(visibleFile.label, /№ HTTP-1 · PDF$/);
+        assert.ok(
+          !visibleFile.label.includes("Свой сотрудник") &&
+            !visibleFile.label.includes("Текущее имя"),
+        );
+        assert.equal(visibleFile.fileName, "own.pdf");
+        assert.equal(visibleFile.sha256, individual.sha256);
+        for (const secret of [
+          foreignArtifact.id,
+          groupArtifact.id,
+          "SECRET-FOREIGN-NUMBER",
+          "SECRET-GROUP-NUMBER",
+          "SECRET-GROUP-TITLE",
+          "Закрытое ФИО",
+        ])
+          assert.ok(!text.includes(secret));
+        for (const deniedFile of [foreignArtifact, groupArtifact])
+          assert.equal(
+            (
+              await call(
+                `/portal/artifacts/${deniedFile.id}`,
+                "GET",
+                undefined,
+                employerSession,
+              )
+            ).status,
+            403,
+          );
+        await db.recipient.update({
+          where: { id: currentPerson.id },
+          data: { data: { fullNameRu: "Ещё одно текущее имя" } },
+        });
+        const again = await (
+          await call("/portal", "GET", undefined, employerSession)
+        ).json();
+        assert.equal(
+          again.orders[0].artifacts.find(
+            (file: { id: string }) => file.id === individual.id,
+          ).label,
+          visibleFile.label,
+        );
         const download = await call(
           `/portal/artifacts/${individual.id}`,
           "GET",
@@ -293,7 +423,22 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
           employerSession,
         );
         assert.equal(download.status, 200);
-        assert.match(await download.text(), /OWN_ONLY/);
+        const downloadedBytes = Buffer.from(await download.arrayBuffer());
+        assert.match(downloadedBytes.toString(), /OWN_ONLY/);
+        assert.equal(
+          createHash("sha256").update(downloadedBytes).digest("hex"),
+          individual.sha256,
+        );
+        assert.match(
+          download.headers.get("content-disposition") || "",
+          /own\.pdf/,
+        );
+        const unchanged = await db.artifact.findUniqueOrThrow({
+          where: { id: individual.id },
+        });
+        assert.equal(unchanged.fileName, individual.fileName);
+        assert.equal(unchanged.storageKey, individual.storageKey);
+        assert.equal(unchanged.sha256, individual.sha256);
         assert.equal(
           download.headers.get("cache-control"),
           "private, no-store",

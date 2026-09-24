@@ -10,6 +10,7 @@ import { DemoController } from "./controller";
 import { OperatorValueController } from "./operator-value-controller";
 import { DeliveryController } from "./delivery-controller";
 import { PublicVerificationController } from "./public-verification-controller";
+import { EmployerInviteController } from "./employer-invite-controller";
 import { authenticate } from "./auth";
 import { db, type DemoRequest } from "./core";
 @Module({
@@ -18,6 +19,7 @@ import { db, type DemoRequest } from "./core";
     OperatorValueController,
     DeliveryController,
     PublicVerificationController,
+    EmployerInviteController,
   ],
 })
 class DemoModule {}
@@ -33,6 +35,10 @@ export async function bootstrap() {
     res.setHeader("X-Correlation-ID", req.correlationId);
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Cache-Control", "no-store");
+    if (req.path.startsWith("/auth/employer-invite/")) {
+      res.setHeader("Referrer-Policy", "no-referrer");
+      res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    }
     if (!allowedRoute("api", req.method, req.originalUrl, req.headers)) {
       res.status(404).json({
         code: "NOT_FOUND",
@@ -43,6 +49,10 @@ export async function bootstrap() {
     }
     next();
   });
+  app.use(
+    ["/auth/employer-invite/inspect", "/auth/employer-invite/exchange"],
+    bodyJson({ limit: 4096, strict: true }),
+  );
   app.use(bodyJson({ limit: LIMITS.jsonBytes, strict: true }));
   app.use((req: DemoRequest, res: Response, next: NextFunction) => {
     void authenticate(req, res, next);

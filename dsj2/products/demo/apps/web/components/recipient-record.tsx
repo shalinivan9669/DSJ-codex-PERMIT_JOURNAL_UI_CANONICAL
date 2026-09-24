@@ -35,11 +35,14 @@ export function RecipientRecord({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   useEffect(() => {
+    setSuccess("");
+    setError("");
+  }, [recipient.id, recipient.employerId]);
+  useEffect(() => {
     let active = true;
     setHistory(null);
     setEmployer(null);
     setConfirmed(false);
-    setSuccess("");
     if (recipient.recipientId)
       void api<History>(`/recipients/${recipient.recipientId}`)
         .then((r) => {
@@ -203,11 +206,11 @@ export function RecipientRecord({
             onChange({
               ...recipient,
               employerId: value.id,
-              workplaceRu: recipient.workplaceRu || value.nameRu,
-              workplaceKz: recipient.workplaceKz || value.nameKz,
-              employerBin: recipient.employerBin || value.bin,
-              employerAddressRu: recipient.employerAddressRu || value.addressRu,
-              employerAddressKz: recipient.employerAddressKz || value.addressKz,
+              workplaceRu: value.nameRu,
+              workplaceKz: value.nameKz,
+              employerBin: value.bin,
+              employerAddressRu: value.addressRu,
+              employerAddressKz: value.addressKz,
             });
           }}
         />

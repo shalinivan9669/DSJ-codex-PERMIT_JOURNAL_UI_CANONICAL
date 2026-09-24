@@ -2,6 +2,10 @@ import { randomUUID } from "node:crypto";
 import {
   draftSchema,
   assignmentSchema,
+  resolveDraft,
+  validateDraft,
+  profileSchema,
+  TEMPLATE_LABELS,
   today,
   z,
   type Draft,
@@ -29,6 +33,10 @@ import {
 } from "../../../packages/contracts/src/operator-value";
 import { Prisma } from "@demo/database";
 import { ArtifactStore, buildZip } from "@demo/printing";
+import {
+  validatePdfAttachment,
+  validateRasterAttachment,
+} from "./pdf-attachment";
 import {
   db,
   fail,
@@ -99,24 +107,63 @@ async function lockOrder(c: Context, id: string, tx: Tx) {
   await tx.$executeRaw`SELECT id FROM "ServiceOrder" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
   return order(c, id, tx);
 }
+function orderEmployer(value: {
+  customerId: string | null;
+  employerId: string | null;
+}) {
+  return value.employerId ?? value.customerId;
+}
+function orderRows(draft: Draft, employerId: string | null) {
+  return draft.items.filter(
+    (row) => (row.employerId || draft.customerId || null) === employerId,
+  );
+}
+async function inferredOrderEmployer(
+  c: Context,
+  ids: string[],
+  customerId: string | null,
+  tx: Tx,
+) {
+  const employers = new Set<string | null>();
+  for (const id of new Set(ids)) {
+    const request = await scopedRequest(c, id, tx);
+    const draft = draftSchema.parse(request.draft);
+    for (const row of draft.items)
+      employers.add(row.employerId || draft.customerId || null);
+  }
+  if (employers.size > 1 && !employers.has(customerId))
+    fail(
+      409,
+      "EMPLOYER_SCOPE_REQUIRED",
+      "В заявках несколько работодателей. Выберите работодателя участников этого заказа.",
+    );
+  const only = employers.size === 1 ? [...employers][0] : null;
+  return only !== customerId ? only : null;
+}
 async function linkRequests(
   c: Context,
   orderId: string,
   ids: string[],
   customerId: string | null,
+  employerId: string | null,
   tx: Tx,
 ) {
   for (const requestId of new Set(ids)) {
     const request = await scopedRequest(c, requestId, tx);
     const draft = draftSchema.parse(request.draft);
-    const scopedRows = draft.items.filter(
-      (row) => (row.employerId || request.customerId) === customerId,
-    );
+    const scopedRows = orderRows(draft, employerId ?? customerId);
     if (request.customerId !== customerId && !scopedRows.length)
       fail(
         409,
         "CUSTOMER_MISMATCH",
         "В заявке нет участников выбранного заказчика",
+      );
+    if (draft.items.length && !scopedRows.length)
+      fail(
+        409,
+        "EMPLOYER_SCOPE_MISMATCH",
+        "В заявке нет участников выбранного работодателя. Уточните работодателя заказа или состав связанных заявок.",
+        { requestId },
       );
     await tx.serviceOrderRequest.upsert({
       where: {
@@ -190,11 +237,22 @@ export async function createServiceOrder(c: Context, input: unknown) {
   return transaction(async (tx) => {
     await customer(c, data.customerId, tx);
     await customer(c, data.payerId, tx);
+    const employerId =
+      data.employerId ??
+      (await inferredOrderEmployer(c, requestIds, data.customerId, tx));
+    await customer(c, employerId, tx);
     await operator(c, data.ownerId, tx);
     const value = await tx.serviceOrder.create({
-      data: { ...data, tenantId: c.tenantId, createdBy: c.userId },
+      data: { ...data, employerId, tenantId: c.tenantId, createdBy: c.userId },
     });
-    await linkRequests(c, value.id, requestIds, value.customerId, tx);
+    await linkRequests(
+      c,
+      value.id,
+      requestIds,
+      value.customerId,
+      value.employerId,
+      tx,
+    );
     await audit(tx, c, "ORDER_CREATED", value.id, {
       requestCount: requestIds.length,
     });
@@ -277,27 +335,173 @@ async function orderDetail(c: Context, id: string) {
         where: { tenantId: c.tenantId, id: value.customerId },
       })
     : null;
+  const [employerRecord, payerRecord] = await Promise.all(
+    [orderEmployer(value), value.payerId].map((id) =>
+      id
+        ? db.customerOrganization.findFirst({
+            where: { tenantId: c.tenantId, id },
+          })
+        : null,
+    ),
+  );
+  const people = new Set<string>();
+  const scopedEvents = new Set<string>();
+  const personEvents = new Set<string>();
+  let legacyAssignments = 0;
+  let assignmentCount = 0;
+  const resultActions = new Map<
+    string,
+    {
+      id: string;
+      label: string;
+      requestId: string;
+      category: string;
+      source: string;
+      ownerId: string | null;
+      dueDate: string | null;
+    }
+  >();
+  const dataActions: typeof resultActions = new Map();
+  const profiles = requests.length
+    ? await db.issuerProfileVersion.findMany({
+        where: { tenantId: c.tenantId },
+        orderBy: { version: "desc" },
+        select: { id: true, profile: true },
+      })
+    : [];
+  const dataCodes = new Set([
+    "NAME_REQUIRED",
+    "DOCUMENT_REQUIRED",
+    "CUSTOMER_REQUIRED",
+    "DATE_INVALID",
+    "SUBJECT_REQUIRED",
+    "DATE_ORDER",
+    "BASIS_REQUIRED",
+    "ISSUER_NOT_APPROVED",
+  ]);
+  const fieldNames: Record<string, string> = {
+    documentDate: "Дата оформления",
+    trainingStart: "Начало обучения",
+    trainingEnd: "Окончание обучения",
+    protocolDate: "Дата протокола",
+    validUntil: "Срок документа",
+    trainingSubject: "Программа обучения",
+    fullNameRu: "ФИО",
+    externalBasisNumber: "Внешнее основание",
+  };
+  for (const request of requests) {
+    const saved = draftSchema.parse(request.draft);
+    const profileRecord = saved.profileVersionId
+      ? profiles.find((profile) => profile.id === saved.profileVersionId)
+      : profiles[0];
+    const parsedProfile = profileSchema.safeParse(profileRecord?.profile);
+    const profile = parsedProfile.success ? parsedProfile.data : null;
+    const draft = resolveDraft(saved, profile?.commonFields).draft;
+    const scopedRows = orderRows(draft, orderEmployer(value));
+    if (draft.items.length && !scopedRows.length)
+      dataActions.set(`scope:${request.id}`, {
+        id: `scope:${request.id}`,
+        label:
+          "Выберите работодателя участников заказа: в связанной заявке нет участников текущего работодателя.",
+        requestId: request.id,
+        category: "DATA",
+        source: "PARTICIPANT_SCOPE",
+        ownerId: value.ownerId,
+        dueDate: value.dueDate,
+      });
+    if (request.status === "DRAFT") {
+      // Use the same resolver/validator as issuance. Validate the customer's
+      // projected rows so another employer's missing fields never surface here.
+      for (const issue of validateDraft(
+        { ...draft, items: scopedRows },
+        profile,
+      )) {
+        if (!dataCodes.has(issue.code)) continue;
+        const row = scopedRows.find((item) => item.id === issue.rowId);
+        const field = fieldNames[issue.path.split(".").at(-1) || ""];
+        const assignmentIndex = Number(
+          issue.path.match(/\.assignments\.(\d+)\./)?.[1],
+        );
+        const assignment = row?.assignments[assignmentIndex];
+        const event = draft.events?.find(
+          (entry) => entry.id === assignment?.eventId,
+        );
+        const key = `${request.id}:${row?.id || "request"}:${event?.id || assignment?.id || "row"}:${issue.path.split(".").at(-1)}:${issue.code}`;
+        dataActions.set(key, {
+          id: `data:${key}`,
+          label: `Уточнить данные${row ? `: ${row.fullNameRu || "Получатель без ФИО"}` : ""}${event ? ` (${event.title})` : ""}${field ? ` — ${field}` : ""}. ${issue.message}`,
+          requestId: request.id,
+          category: "DATA",
+          source: "DATA_REVIEW",
+          ownerId: value.ownerId,
+          dueDate: value.dueDate,
+        });
+      }
+    }
+    for (const row of scopedRows) {
+      // Identity is explicit. A coincident name never merges two people.
+      const personKey = row.recipientId || `${request.id}:${row.id}`;
+      people.add(personKey);
+      for (const assignment of row.assignments) {
+        assignmentCount++;
+        const event = draft.events?.find(
+          (entry) => entry.id === assignment.eventId,
+        );
+        const serviceKey = event
+          ? `${personKey}:${event.id}`
+          : `${request.id}:${row.id}:${assignment.id}`;
+        if (event) {
+          scopedEvents.add(event.id);
+          personEvents.add(serviceKey);
+        } else legacyAssignments++;
+        const unknown = assignment.outcome
+          ? assignment.outcome.status === "UNKNOWN"
+          : !assignment.result.trim();
+        const unsupported =
+          assignment.outcome &&
+          assignment.outcome.status !== "UNKNOWN" &&
+          !assignment.outcome.source.trim();
+        if (unknown || unsupported)
+          resultActions.set(serviceKey, {
+            id: `result:${serviceKey}`,
+            label: `${unknown ? "Получить фактический результат" : "Подтвердить источник результата"}: ${row.fullNameRu} — ${event?.title || assignment.trainingSubject || assignment.templateId}`,
+            requestId: request.id,
+            category: "RESULTS",
+            source: "RESULT_REVIEW",
+            ownerId: value.ownerId,
+            dueDate: value.dueDate,
+          });
+      }
+    }
+  }
   return {
     ...value,
     customer: customerRecord,
-    events,
+    employer: employerRecord,
+    payer: payerRecord,
+    events: events.filter((event) => scopedEvents.has(event.id)),
+    summary: {
+      people: people.size,
+      events: scopedEvents.size,
+      personEventServices: personEvents.size,
+      legacyAssignments,
+    },
     requests: requests.map((r) => ({
       requestId: r.id,
       id: r.id,
       title: r.title,
       status: r.status,
       revision: r.revision,
-      itemCount: draftSchema
-        .parse(r.draft)
-        .items.filter(
-          (row) => (row.employerId || r.customerId) === value.customerId,
-        ).length,
+      itemCount: orderRows(draftSchema.parse(r.draft), orderEmployer(value))
+        .length,
     })),
     milestones,
     proposals,
     financialDocuments,
     attachments,
     nextActions: [
+      ...resultActions.values(),
+      ...dataActions.values(),
       ...blocking.map((m) => ({
         id: m.id,
         label: m.label,
@@ -328,7 +532,10 @@ async function orderDetail(c: Context, id: string) {
         })),
     ],
     completion: {
-      training: byCategory("RESULTS"),
+      training:
+        assignmentCount > 0 &&
+        resultActions.size === 0 &&
+        byCategory("RESULTS"),
       documents:
         requests.length > 0 &&
         requests.every((r) => r.status === "FINALIZED") &&
@@ -386,6 +593,25 @@ export async function patchServiceOrder(
     const old = await lockOrder(c, id, tx);
     if (old.revision !== expectedRevision)
       fail(409, "REVISION_CONFLICT", "Заказ изменён другим сотрудником");
+    const nextEmployerId =
+      data.employerId === undefined ? old.employerId : data.employerId;
+    const scopeChanged =
+      (nextEmployerId ?? old.customerId) !== orderEmployer(old);
+    const partiesChanged =
+      scopeChanged ||
+      (data.payerId !== undefined && data.payerId !== old.payerId);
+    if (
+      old.status !== "OPEN" &&
+      partiesChanged &&
+      (data.status !== "OPEN" || !reason?.trim())
+    )
+      fail(
+        409,
+        "ORDER_REOPEN_REQUIRED",
+        "Откройте заказ с причиной изменения перед сменой работодателя или плательщика",
+      );
+    await customer(c, data.employerId, tx);
+    await customer(c, data.payerId, tx);
     if (
       old.status === "COMPLETED" &&
       requestIds?.length &&
@@ -397,7 +623,28 @@ export async function patchServiceOrder(
         "Откройте заказ с причиной изменения перед добавлением заявок",
       );
     await operator(c, data.ownerId, tx);
-    if (requestIds) await linkRequests(c, id, requestIds, old.customerId, tx);
+    if (requestIds || scopeChanged) {
+      const existing = scopeChanged
+        ? await tx.serviceOrderRequest.findMany({
+            where: { tenantId: c.tenantId, orderId: id },
+          })
+        : [];
+      // Existing obligations/evidence are retained. Newly applicable rule
+      // requirements are added through the same idempotent materialization.
+      await linkRequests(
+        c,
+        id,
+        [
+          ...new Set([
+            ...existing.map((link) => link.requestId),
+            ...(requestIds || []),
+          ]),
+        ],
+        old.customerId,
+        nextEmployerId,
+        tx,
+      );
+    }
     if (data.status === "CANCELLED" && !reason?.trim())
       fail(400, "REASON_REQUIRED", "Укажите причину отмены заказа");
     if (data.status === "COMPLETED") {
@@ -445,6 +692,14 @@ export async function patchServiceOrder(
       revision: value.revision,
       status: value.status,
       reason: reason || "",
+      ...(partiesChanged
+        ? {
+            previousEmployerId: orderEmployer(old),
+            employerId: orderEmployer(value),
+            previousPayerId: old.payerId,
+            payerId: value.payerId,
+          }
+        : {}),
     });
     return value;
   });
@@ -564,9 +819,29 @@ export async function recordFinancialDocument(
   const data = parse(financialDocumentSchema, input);
   return transaction(async (tx) => {
     await order(c, id, tx);
-    const value = await tx.financialDocument.create({
-      data: { ...data, tenantId: c.tenantId, orderId: id, createdBy: c.userId },
-    });
+    const value = await tx.financialDocument
+      .create({
+        data: {
+          ...data,
+          tenantId: c.tenantId,
+          orderId: id,
+          createdBy: c.userId,
+        },
+      })
+      .catch((error: unknown) => {
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "code" in error &&
+          error.code === "P2002"
+        )
+          fail(
+            409,
+            "FINANCIAL_DOCUMENT_EXISTS",
+            "Документ такого вида с этим номером уже сохранён. Проверьте номер и существующий документ.",
+          );
+        throw error;
+      });
     await audit(tx, c, "FINANCIAL_DOCUMENT_RECORDED", id, {
       documentId: value.id,
       type: value.type,
@@ -676,6 +951,21 @@ export async function listRenewals(c: Context) {
     where: { tenantId: c.tenantId, renewalId: { in: values.map((v) => v.id) } },
     orderBy: { createdAt: "desc" },
   });
+  const customers = await db.customerOrganization.findMany({
+    where: {
+      tenantId: c.tenantId,
+      id: {
+        in: [
+          ...new Set(
+            values.flatMap((value) =>
+              value.customerId ? [value.customerId] : [],
+            ),
+          ),
+        ],
+      },
+    },
+    select: { id: true, nameRu: true },
+  });
   return {
     items: values.map((v) => {
       const source = sources.find((s) => s.id === v.sourceRequestId);
@@ -687,6 +977,8 @@ export async function listRenewals(c: Context) {
       return {
         ...v,
         fullNameRu: row?.fullNameRu ?? "",
+        customer:
+          customers.find((customer) => customer.id === v.customerId) || null,
         contacts: contacts.filter((contact) => contact.renewalId === v.id),
         manualText: `Просим уточнить актуальность сотрудника ${row?.fullNameRu ?? ""} и потребность в повторном обращении. Сведения о следующей проверке: ${v.nextCheckDate || "срок не подтверждён"}. Основание: ${v.policySource}.`,
       };
@@ -871,10 +1163,26 @@ export async function listExternalEvidence(c: Context, customerId?: string) {
     },
     select: { ...attachmentSelect, evidenceId: true },
   });
+  const verifiers = await db.user.findMany({
+    where: {
+      tenantId: c.tenantId,
+      id: {
+        in: [
+          ...new Set(
+            items.flatMap((item) => (item.verifiedBy ? [item.verifiedBy] : [])),
+          ),
+        ],
+      },
+    },
+    select: { id: true, displayName: true },
+  });
   return {
     items: items.map((item) => ({
       ...item,
       state: evidenceState(item, asOf),
+      verifiedByName:
+        verifiers.find((user) => user.id === item.verifiedBy)?.displayName ||
+        null,
       attachments: attachments
         .filter((attachment) => attachment.evidenceId === item.id)
         .map(({ evidenceId: _evidenceId, ...attachment }) => attachment),
@@ -935,12 +1243,31 @@ export async function createServiceRule(c: Context, input: unknown) {
 }
 export async function listServiceRules(c: Context) {
   center(c);
+  const items = await db.serviceRuleVersion.findMany({
+    where: { tenantId: c.tenantId },
+    orderBy: [{ serviceKey: "asc" }, { version: "desc" }],
+    take: 500,
+  });
+  const reviewers = await db.user.findMany({
+    where: {
+      tenantId: c.tenantId,
+      id: {
+        in: [
+          ...new Set(
+            items.flatMap((item) => (item.checkedBy ? [item.checkedBy] : [])),
+          ),
+        ],
+      },
+    },
+    select: { id: true, displayName: true },
+  });
   return {
-    items: await db.serviceRuleVersion.findMany({
-      where: { tenantId: c.tenantId },
-      orderBy: [{ serviceKey: "asc" }, { version: "desc" }],
-      take: 500,
-    }),
+    items: items.map((item) => ({
+      ...item,
+      checkedByName:
+        reviewers.find((user) => user.id === item.checkedBy)?.displayName ||
+        null,
+    })),
   };
 }
 export async function createDossierRecord(c: Context, input: unknown) {
@@ -975,9 +1302,18 @@ export async function listDossier(c: Context) {
     },
     select: { ...attachmentSelect, dossierId: true },
   });
+  const owners = await db.user.findMany({
+    where: {
+      tenantId: c.tenantId,
+      id: { in: [...new Set(items.map((item) => item.ownerId))] },
+    },
+    select: { id: true, displayName: true },
+  });
   return {
     items: items.map((item) => ({
       ...item,
+      ownerName:
+        owners.find((user) => user.id === item.ownerId)?.displayName || null,
       attachments: attachments
         .filter((attachment) => attachment.dossierId === item.id)
         .map(({ dossierId: _dossierId, ...attachment }) => attachment),
@@ -1029,17 +1365,8 @@ export async function persistValueAttachment(c: Context, input: unknown) {
       "FILE_TYPE_REJECTED",
       "Допустимы PDF, PNG или JPEG по содержимому",
     );
-  if (
-    pdf &&
-    /\/(JavaScript|JS|Launch|EmbeddedFile|RichMedia|XFA|OpenAction)\b/.test(
-      bytes.toString("latin1"),
-    )
-  )
-    fail(
-      400,
-      "ACTIVE_PDF_REJECTED",
-      "PDF с активным содержимым не принимается",
-    );
+  if (pdf) await validatePdfAttachment(bytes);
+  else await validateRasterAttachment(bytes);
   if (data.orderId) await order(c, data.orderId);
   if (data.eventId) {
     const event = await db.trainingEvent.findFirst({
@@ -1408,13 +1735,21 @@ export async function employerPortal(c: Context) {
   const member = await memberships(c);
   const customerIds = member.map((m) => m.customerId);
   const orders = await db.serviceOrder.findMany({
-    where: { tenantId: c.tenantId, customerId: { in: customerIds } },
+    where: {
+      tenantId: c.tenantId,
+      OR: [
+        { employerId: { in: customerIds } },
+        { employerId: null, customerId: { in: customerIds } },
+      ],
+    },
     orderBy: { createdAt: "desc" },
     take: 100,
   });
   const result = [];
   for (const value of orders) {
-    const membership = member.find((m) => m.customerId === value.customerId)!;
+    const membership = member.find(
+      (m) => m.customerId === orderEmployer(value),
+    )!;
     const links = await db.serviceOrderRequest.findMany({
       where: { tenantId: c.tenantId, orderId: value.id },
     });
@@ -1482,7 +1817,10 @@ export async function employerPortal(c: Context) {
         )
       ) {
         const { documentId: _documentId, ...safe } = candidate;
-        artifacts.push(safe);
+        artifacts.push({
+          ...safe,
+          label: await portalArtifactLabel(c, candidate),
+        });
       }
     }
     const proposals = await db.portalProposal.findMany({
@@ -1506,6 +1844,7 @@ export async function employerPortal(c: Context) {
       status: value.status,
       dueDate: value.dueDate,
       customerId: value.customerId,
+      employerId: orderEmployer(value),
       requests: visible,
       artifacts,
       proposals,
@@ -1522,6 +1861,54 @@ export async function employerPortal(c: Context) {
     limitation:
       "Подтверждение относится к показанному составу и редакции. Результаты комиссии и выпуск утверждает учебный центр.",
   };
+}
+// Called only after the existing artifact authorization succeeds. Names come
+// from this immutable issuance, never from the current recipient directory.
+async function portalArtifactLabel(
+  c: Context,
+  artifact: { documentId: string | null; format: string },
+): Promise<string | undefined> {
+  if (!artifact.documentId) return undefined;
+  const document = await db.issuedDocument.findFirst({
+    where: { tenantId: c.tenantId, id: artifact.documentId },
+    select: {
+      rowId: true,
+      ownerKind: true,
+      templateId: true,
+      number: true,
+      issuanceId: true,
+      requestId: true,
+    },
+  });
+  if (!document) return undefined;
+  const template =
+    TEMPLATE_LABELS[document.templateId as keyof typeof TEMPLATE_LABELS] ||
+    "Документ";
+  const title =
+    document.ownerKind === "GROUP"
+      ? template.replace("индивидуальный протокол", "общий протокол события")
+      : template;
+  let name: string | undefined;
+  if (document.ownerKind !== "GROUP" && document.rowId) {
+    const issuance = await db.issuance.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        id: document.issuanceId,
+        requestId: document.requestId,
+      },
+      select: { snapshot: true },
+    });
+    const frozen = z
+      .object({ draft: draftSchema })
+      .safeParse(issuance?.snapshot);
+    if (frozen.success)
+      name = frozen.data.draft.items.find(
+        (row) => row.id === document.rowId,
+      )?.fullNameRu;
+  }
+  return [title, name?.trim(), `№ ${document.number}`, artifact.format]
+    .filter(Boolean)
+    .join(" · ");
 }
 export async function employerArtifactAccess(c: Context, id: string) {
   const artifact = await db.artifact.findFirst({
@@ -1565,9 +1952,16 @@ export async function submitEmployerProposal(
       c,
       data.kind === "CONFIRM_LIST" ? "APPROVE_DATA" : "PROPOSE",
     )
-  ).find((m) => m.customerId === value.customerId);
+  ).find((m) => m.customerId === orderEmployer(value));
   if (!member) fail(404, "NOT_FOUND", "Заказ не найден");
   return transaction(async (tx) => {
+    const currentOrder = await lockOrder(c, id, tx);
+    if (orderEmployer(currentOrder) !== member.customerId)
+      fail(
+        409,
+        "ORDER_SCOPE_CHANGED",
+        "Работодатель участников заказа изменён. Откройте актуальный заказ.",
+      );
     await tx.$executeRaw`SELECT id FROM "EmployerMembership" WHERE id=${member.id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
     const currentMembership = await tx.employerMembership.findFirst({
       where: {
@@ -1658,7 +2052,7 @@ export async function resolveEmployerProposal(
     input,
   );
   return transaction(async (tx) => {
-    await lockOrder(c, id, tx);
+    const currentOrder = await lockOrder(c, id, tx);
     const proposal = await tx.portalProposal.findFirst({
       where: { tenantId: c.tenantId, orderId: id, id: proposalId },
     });
@@ -1676,6 +2070,44 @@ export async function resolveEmployerProposal(
         "REVISION_CONFLICT",
         "Предложение относится к прежней редакции; требуется повторное согласование",
       );
+    if (data.status === "ACCEPTED") {
+      const membership = await tx.employerMembership.findFirst({
+        where: { tenantId: c.tenantId, id: proposal.membershipId },
+      });
+      if (!membership || membership.customerId !== orderEmployer(currentOrder))
+        fail(
+          409,
+          "PROPOSAL_SCOPE_CHANGED",
+          "Предложение относится к прежнему работодателю участников; требуется повторное согласование.",
+        );
+      const draft = draftSchema.parse(request.draft);
+      const permitted = allowedRows(
+        draft,
+        membership.recipientIds as string[],
+        membership.customerId,
+      );
+      const changes = proposalSchema.shape.changes.parse(proposal.changes);
+      if (
+        !permitted.length ||
+        changes.some(
+          (change) => !permitted.some((row) => row.id === change.rowId),
+        )
+      )
+        fail(
+          409,
+          "PROPOSAL_SCOPE_CHANGED",
+          "Состав предоставленного доступа изменён; требуется повторное согласование.",
+        );
+      if (
+        proposal.kind === "CONFIRM_LIST" &&
+        permitted.length !== draft.items.length
+      )
+        fail(
+          403,
+          "FULL_ROSTER_DENIED",
+          "Подтверждение всего списка требует доступа ко всему составу",
+        );
+    }
     if (data.status === "ACCEPTED" && proposal.kind === "UPDATE_LIST") {
       if (request.status !== "DRAFT")
         fail(

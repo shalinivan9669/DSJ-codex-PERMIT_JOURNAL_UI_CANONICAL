@@ -58,7 +58,66 @@ const sourceRecords = [
     })),
   ],
 ];
-const order = { NOT_RUN: 0, PARTIAL: 1, PASS: 2 };
+// Later completion reports supersede earlier scoped findings only when they
+// explicitly assess the complete criterion. Preserve the earlier evidence.
+const finalReports = [
+  "operator/coverage.json",
+  "invites/coverage.json",
+  "sources-final/coverage.json",
+  "portal-three-complete/coverage.json",
+  "history-v4/history-coverage.json",
+  "recovery/v12-coverage.json",
+  "renewal-onboarding/coverage.json",
+  "repeat-basis/coverage.json",
+  "portal-390/coverage.json",
+  "recovery/v13-coverage.json",
+  // The coordinating report explicitly synthesizes complementary UI/API evidence.
+  "root-coverage.json",
+];
+for (const file of finalReports) {
+  const fullPath = `docs/evidence/final-completion/${file}`;
+  if (!existsSync(fullPath)) continue;
+  const report = await read(fullPath);
+  const resolveReference = (reference) =>
+    existsSync(reference)
+      ? reference
+      : path
+          .relative(
+            process.cwd(),
+            path.resolve(path.dirname(fullPath), reference),
+          )
+          .split(path.sep)
+          .join("/");
+  sourceRecords.push([
+    `final:${file}`,
+    (report.tests || report.acceptance || []).map((entry) => ({
+      ...entry,
+      evidence: (Array.isArray(entry.evidence)
+        ? entry.evidence
+        : entry.evidence
+          ? [entry.evidence]
+          : []
+      ).map(resolveReference),
+      scope: entry.scope || entry.layer,
+    })),
+  ]);
+  for (const update of report.scenarios || []) {
+    const target = business.scenarios.find((item) => item.id === update.id);
+    if (target)
+      target.finalCompletion = {
+        ...update,
+        evidence: (update.evidence || []).map(resolveReference),
+      };
+  }
+}
+const order = {
+  NOT_RUN: 0,
+  BLOCKED: 1,
+  BLOCKED_EXTERNAL: 1,
+  PARTIAL: 2,
+  PASS: 3,
+  FAIL: 4,
+};
 for (const test of matrix.tests) {
   const proposal = audit.acceptanceProposals.find(
     (item) => item.id === test.id,
@@ -78,7 +137,9 @@ for (const test of matrix.tests) {
           : [],
       })),
   );
-  const rootRecord = records.find((item) => item.owner === "root");
+  const rootRecord =
+    [...records].reverse().find((item) => item.owner.startsWith("final:")) ||
+    records.find((item) => item.owner === "root");
   test.status =
     rootRecord?.status ||
     records.reduce(
@@ -145,6 +206,23 @@ for (const scenario of business.scenarios) {
       "Portal identity/evidence upload/reload/download and rights tested; the complete supplied multi-person V07 operator fixture was not replayed as one browser journey.";
   }
   scenario.tested_commit = commit;
+  if (scenario.finalCompletion) {
+    // Keep prior API timing with its actual layer when a later UI journey
+    // supersedes the scenario; it is not the duration of the browser journey.
+    if (
+      scenario.measurements &&
+      !Object.hasOwn(scenario.finalCompletion, "measurements")
+    ) {
+      scenario.earlierExecutionMeasurements = {
+        execution_layer: scenario.execution_layer,
+        evidence: [...scenario.evidence],
+        values: scenario.measurements,
+      };
+      delete scenario.measurements;
+    }
+    Object.assign(scenario, scenario.finalCompletion);
+    delete scenario.finalCompletion;
+  }
 }
 // Backend daily fixtures are real integrations, but do not stand in for the
 // explicitly requested complete operator journey and human time measurement.
@@ -197,9 +275,10 @@ for (const [index, feature] of features.features.entries()) {
     test.feature_ids?.includes(feature.id),
   );
   feature.implementation_status = "IMPLEMENTED_LOCAL";
-  feature.verification_status = checks.every((test) => test.status === "PASS")
-    ? "PASS"
-    : "PARTIAL";
+  feature.verification_status =
+    checks.length > 0 && checks.every((test) => test.status === "PASS")
+      ? "PASS"
+      : "PARTIAL";
   feature.implementation_path = modules[index];
   feature.tested_commit = commit;
   feature.evidence = [...new Set(checks.flatMap((test) => test.evidence))];
@@ -222,7 +301,7 @@ matrix.counts = matrix.tests.reduce(
   {},
 );
 matrix.commercialAcceptance =
-  "NOT_COMPLETE: exact full operator acceptance, new group Word/physical print, legal review and customer pilot are not claimed";
+  "See per-criterion engineering evidence. Physical printing, legal sign-off, a real paid customer pilot and human ROI are not claimed. Microsoft Word and isolated application rollback have now been executed.";
 business.executionStatus = "EXECUTED_WITH_EXPLICIT_LAYER_AND_SCOPE_LIMITS";
 business.measurementLimits = {
   humanActiveMs: null,
@@ -232,7 +311,9 @@ business.measurementLimits = {
 };
 features.readiness = {
   code: "IMPLEMENTED_LOCAL",
-  engineeringAcceptance: "PARTIAL_SEE_CRITERIA",
+  engineeringAcceptance: matrix.tests.every((test) => test.status === "PASS")
+    ? "PASS"
+    : "PARTIAL_SEE_CRITERIA",
   legalAndPhysical: "NOT_RUN",
   production: "NOT_DEPLOYED",
 };
@@ -251,6 +332,9 @@ console.log(
   JSON.stringify({
     criteria: matrix.tests.length,
     counts: matrix.counts,
+    partial: matrix.tests
+      .filter((item) => item.status === "PARTIAL")
+      .map((item) => ({ id: item.id, title: item.title })),
     notRun: matrix.tests
       .filter((item) => item.status === "NOT_RUN")
       .map((item) => ({ id: item.id, title: item.title })),

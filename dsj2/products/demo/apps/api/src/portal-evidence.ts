@@ -54,7 +54,10 @@ async function access(
   if (!(membership.permissions as string[]).includes(permission))
     fail(403, "PERMISSION_DENIED", "Недостаточно прав представителя");
   const orders = await tx.serviceOrder.findMany({
-    where: { tenantId: c.tenantId, customerId },
+    where: {
+      tenantId: c.tenantId,
+      OR: [{ employerId: customerId }, { employerId: null, customerId }],
+    },
     select: { id: true },
   });
   const links = await tx.serviceOrderRequest.findMany({

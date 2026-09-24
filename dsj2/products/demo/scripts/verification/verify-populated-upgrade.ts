@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { randomUUID, createHash } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { PrismaClient } from "@demo/database";
 import { ArtifactStore } from "@demo/printing";
@@ -241,7 +241,19 @@ async function verify() {
   const migrations = await db.$queryRawUnsafe<{ migration_name: string }[]>(
     'SELECT migration_name FROM "_prisma_migrations" WHERE finished_at IS NOT NULL ORDER BY migration_name',
   );
-  assert.equal(migrations.length, 11);
+  const requiredMigrations = (
+    await readdir(
+      resolve(__dirname, "../../packages/database/prisma/migrations"),
+      { withFileTypes: true },
+    )
+  )
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  assert.deepEqual(
+    migrations.map((row) => row.migration_name).sort(),
+    requiredMigrations,
+  );
   for (const table of expected.tables)
     assert.equal(
       hash(await rowsForProof(table)),

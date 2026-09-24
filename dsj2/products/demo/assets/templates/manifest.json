@@ -646,16 +646,19 @@
       "groupContractVersion": 1,
       "approvalScope": "Synthetic engineering review; legal approval required per center",
       "groupRenderer": "group_protocol.py:v1",
-      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verificationStatus": "GROUP_DOCX_PDF_WORD_ENGINEERING_VERIFIED",
       "verification": {
         "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
         "platform": "Windows",
         "libreoffice": "26.2.6.3",
-        "word": null,
+        "word": "Microsoft Word 16.0.17932, Windows",
         "evidence": "docs/evidence/import-delivery/verification.md",
         "fullStressRerun": false,
         "templateBytesChanged": false,
-        "previousContractVersion": "10-group-1"
+        "previousContractVersion": "10-group-1",
+        "wordEvidence": "docs/evidence/final-completion/word/verification.json",
+        "wordScope": "All five group forms at 1/2/25/100 participants; 20 DOCX files, 83 exported PDF pages, all-page visual review; source hashes unchanged",
+        "physicalPrint": "NOT_RUN"
       }
     },
     {
@@ -705,16 +708,19 @@
       "groupContractVersion": 1,
       "approvalScope": "Synthetic engineering review; legal approval required per center",
       "groupRenderer": "group_protocol.py:v1",
-      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verificationStatus": "GROUP_DOCX_PDF_WORD_ENGINEERING_VERIFIED",
       "verification": {
         "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
         "platform": "Windows",
         "libreoffice": "26.2.6.3",
-        "word": null,
+        "word": "Microsoft Word 16.0.17932, Windows",
         "evidence": "docs/evidence/import-delivery/verification.md",
         "fullStressRerun": false,
         "templateBytesChanged": false,
-        "previousContractVersion": "9-group-1"
+        "previousContractVersion": "9-group-1",
+        "wordEvidence": "docs/evidence/final-completion/word/verification.json",
+        "wordScope": "All five group forms at 1/2/25/100 participants; 20 DOCX files, 83 exported PDF pages, all-page visual review; source hashes unchanged",
+        "physicalPrint": "NOT_RUN"
       }
     },
     {
@@ -763,16 +769,19 @@
       "groupContractVersion": 1,
       "approvalScope": "Synthetic engineering review; legal approval required per center",
       "groupRenderer": "group_protocol.py:v1",
-      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verificationStatus": "GROUP_DOCX_PDF_WORD_ENGINEERING_VERIFIED",
       "verification": {
         "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
         "platform": "Windows",
         "libreoffice": "26.2.6.3",
-        "word": null,
+        "word": "Microsoft Word 16.0.17932, Windows",
         "evidence": "docs/evidence/import-delivery/verification.md",
         "fullStressRerun": false,
         "templateBytesChanged": false,
-        "previousContractVersion": "9-group-1"
+        "previousContractVersion": "9-group-1",
+        "wordEvidence": "docs/evidence/final-completion/word/verification.json",
+        "wordScope": "All five group forms at 1/2/25/100 participants; 20 DOCX files, 83 exported PDF pages, all-page visual review; source hashes unchanged",
+        "physicalPrint": "NOT_RUN"
       }
     },
     {
@@ -822,16 +831,19 @@
       "groupContractVersion": 1,
       "approvalScope": "Synthetic engineering review; legal approval required per center",
       "groupRenderer": "group_protocol.py:v1",
-      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verificationStatus": "GROUP_DOCX_PDF_WORD_ENGINEERING_VERIFIED",
       "verification": {
         "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
         "platform": "Windows",
         "libreoffice": "26.2.6.3",
-        "word": null,
+        "word": "Microsoft Word 16.0.17932, Windows",
         "evidence": "docs/evidence/import-delivery/verification.md",
         "fullStressRerun": false,
         "templateBytesChanged": false,
-        "previousContractVersion": "9-group-1"
+        "previousContractVersion": "9-group-1",
+        "wordEvidence": "docs/evidence/final-completion/word/verification.json",
+        "wordScope": "All five group forms at 1/2/25/100 participants; 20 DOCX files, 83 exported PDF pages, all-page visual review; source hashes unchanged",
+        "physicalPrint": "NOT_RUN"
       }
     },
     {
@@ -897,16 +909,19 @@
       "groupContractVersion": 1,
       "approvalScope": "Synthetic engineering review; legal approval required per center",
       "groupRenderer": "group_protocol.py:v1",
-      "verificationStatus": "GROUP_DOCX_PDF_VERIFIED_WORD_NOT_RUN",
+      "verificationStatus": "GROUP_DOCX_PDF_WORD_ENGINEERING_VERIFIED",
       "verification": {
         "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
         "platform": "Windows",
         "libreoffice": "26.2.6.3",
-        "word": null,
+        "word": "Microsoft Word 16.0.17932, Windows",
         "evidence": "docs/evidence/import-delivery/verification.md",
         "fullStressRerun": false,
         "templateBytesChanged": false,
-        "previousContractVersion": "1-group-1"
+        "previousContractVersion": "1-group-1",
+        "wordEvidence": "docs/evidence/final-completion/word/verification.json",
+        "wordScope": "All five group forms at 1/2/25/100 participants; 20 DOCX files, 83 exported PDF pages, all-page visual review; source hashes unchanged",
+        "physicalPrint": "NOT_RUN"
       }
     }
   ]

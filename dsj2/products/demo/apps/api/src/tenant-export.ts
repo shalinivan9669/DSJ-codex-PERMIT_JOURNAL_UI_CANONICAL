@@ -53,7 +53,12 @@ export async function tenantExportSnapshot(c: Context) {
           );
         tables[model.name] = rows.map((row) => {
           const clean = { ...row };
-          for (const secret of ["passwordHash", "tokenHash", "csrfHash"])
+          for (const secret of [
+            "passwordHash",
+            "tokenHash",
+            "csrfHash",
+            "secretHash",
+          ])
             delete clean[secret];
           return clean;
         });
@@ -63,7 +68,12 @@ export async function tenantExportSnapshot(c: Context) {
         createdAt: new Date().toISOString(),
         tenant,
         tables,
-        excluded: ["Sessions", "Password hashes", "Public bearer token hashes"],
+        excluded: [
+          "Sessions",
+          "Password hashes",
+          "Public bearer token hashes",
+          "Invitation secret hashes",
+        ],
         limitation:
           "Переносимая выгрузка данных и файлов владельца. Для восстановления работающей установки используется проверенный backup/restore с секретами в отдельном защищённом процессе.",
       };

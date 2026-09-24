@@ -1,7 +1,7 @@
 "use client";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
-import { api, errorText } from "@/lib/api";
+import { api, ApiError, errorText } from "@/lib/api";
 import { matchBulkPhotos, photoEmployerScope } from "@/lib/bulk-photos";
 import type { Recipient } from "@/lib/types";
 
@@ -15,7 +15,7 @@ export function BulkPhotoDialog({
   items: Recipient[];
   customerId?: string | null;
   disabled?: boolean;
-  onApply: (updates: Record<string, string>) => void;
+  onApply: (updates: Record<string, string>) => Promise<boolean | undefined>;
   onClose: () => void;
 }) {
   const [files, setFiles] = useState<File[]>([]);
@@ -28,6 +28,16 @@ export function BulkPhotoDialog({
   const [busy, setBusy] = useState(false);
   const [uploaded, setUploaded] = useState<Record<number, string>>({});
   const [error, setError] = useState("");
+  const [throttled, setThrottled] = useState(false);
+  const cancelled = useRef(false);
+  const resumeWait = useRef<(() => void) | undefined>(undefined);
+  useEffect(
+    () => () => {
+      cancelled.current = true;
+      resumeWait.current?.();
+    },
+    [],
+  );
   const errorRef = useRef<HTMLDivElement>(null);
   const matches = useMemo(
     () =>
@@ -55,30 +65,65 @@ export function BulkPhotoDialog({
   async function apply() {
     if (!confirmed || matches.errors.length || !selected.length) return;
     setBusy(true);
+    cancelled.current = false;
     setError("");
     const ready = { ...uploaded };
     try {
       // Bounded sequential uploads preserve completed assets for a safe retry.
       for (const row of selected) {
+        if (cancelled.current) throw new Error("Загрузка остановлена.");
         if (ready[row.fileIndex]) continue;
         const data = new FormData();
         data.set("file", files[row.fileIndex]);
-        const result = await api<{ assetId?: string; id?: string }>("/photos", {
-          method: "POST",
-          body: data,
-        });
+        let result: { assetId?: string; id?: string } | undefined;
+        for (let attempt = 0; !result; attempt++) {
+          if (cancelled.current) throw new Error("Загрузка остановлена.");
+          try {
+            result = await api<{ assetId?: string; id?: string }>("/photos", {
+              method: "POST",
+              body: data,
+            });
+          } catch (cause) {
+            if (
+              !(cause instanceof ApiError) ||
+              cause.status !== 429 ||
+              attempt >= 3
+            )
+              throw cause;
+            // The API deliberately limits upload traffic. Keep the same file and
+            // already accepted assets while waiting for its minute-long window.
+            setThrottled(true);
+            await new Promise<void>((resolve) => {
+              const timeout = setTimeout(
+                resolve,
+                Math.max(1000, cause.retryAfterMs ?? 61_000),
+              );
+              resumeWait.current = () => {
+                clearTimeout(timeout);
+                resolve();
+              };
+            });
+            resumeWait.current = undefined;
+            setThrottled(false);
+          }
+        }
         const assetId = result.assetId || result.id;
         if (!assetId)
           throw new Error("Сервер не вернул сохранённую фотографию");
         ready[row.fileIndex] = assetId;
         setUploaded({ ...ready });
       }
-      onApply(
+      if (cancelled.current) throw new Error("Загрузка остановлена.");
+      const applied = await onApply(
         Object.fromEntries(
           selected.map((row) => [row.rowId!, ready[row.fileIndex]]),
         ),
       );
-      onClose();
+      if (applied) onClose();
+      else
+        throw new Error(
+          "Не удалось сохранить сопоставление в заявку. Проверьте сообщение о редакции и повторите применение.",
+        );
     } catch (cause) {
       setError(
         errorText(cause) +
@@ -86,6 +131,7 @@ export function BulkPhotoDialog({
       );
       setTimeout(() => errorRef.current?.focus(), 0);
     } finally {
+      setThrottled(false);
       setBusy(false);
     }
   }
@@ -225,11 +271,24 @@ export function BulkPhotoDialog({
           {busy && (
             <p role="status">
               Загрузка: {Object.keys(uploaded).length} из {selected.length}
+              {throttled &&
+                ". Сервер ограничил частоту загрузки. Продолжим автоматически после паузы; загруженные фото сохранены."}
             </p>
           )}
         </>
       )}
       <div className="actions">
+        {busy && (
+          <button
+            type="button"
+            onClick={() => {
+              cancelled.current = true;
+              resumeWait.current?.();
+            }}
+          >
+            Остановить загрузку
+          </button>
+        )}
         <button
           type="button"
           className="secondary"

@@ -102,11 +102,19 @@ export type Issuance = {
   correctionReason?: string;
   correctionOfId?: string;
   correctsIssuanceId?: string;
+  correctsRequestId?: string | null;
+  events?: {
+    kind: string;
+    reason: string;
+    createdAt: string;
+    relatedRequestId?: string | null;
+  }[];
   documents?: {
     id: string;
     number: string;
     registrationNumber?: string;
     templateId: string;
+    rowId?: string;
     artifacts?: Artifact[];
   }[];
   jobs?: Job[];

@@ -472,6 +472,7 @@ pre {
   font-size: 13px;
 }
 .table-scroll {
+  position: relative;
   overflow: auto;
 }
 table {

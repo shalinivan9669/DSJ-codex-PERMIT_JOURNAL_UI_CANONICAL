@@ -215,9 +215,30 @@ export async function exportControlSheet(
     mimeType: MIME[data.format],
   };
 }
-export async function clarificationRequest(c: Context, id: string) {
+export async function clarificationRequest(
+  c: Context,
+  id: string,
+  customerId?: string,
+) {
   const record = await scopedRequest(c, id);
   const { draft, issues: resolvedIssues } = await resolvedRequest(c, id);
+  if (customerId) {
+    parse(z.string().uuid(), customerId);
+    if (
+      !(await db.customerOrganization.findFirst({
+        where: { id: customerId, tenantId: c.tenantId },
+      }))
+    )
+      fail(404, "NOT_FOUND", "Заказчик не найден");
+  }
+  const permittedItems = customerId
+    ? draft.items.filter(
+        (item) => (item.employerId || draft.customerId) === customerId,
+      )
+    : draft.items;
+  const scopes = new Set(
+    draft.items.map((item) => item.employerId || draft.customerId || ""),
+  );
   const profile = await db.issuerProfileVersion.findFirst({
     where: { tenantId: c.tenantId },
     orderBy: { version: "desc" },
@@ -251,7 +272,13 @@ export async function clarificationRequest(c: Context, id: string) {
   >();
   let operatorIssueCount = 0;
   for (const issue of issues) {
-    const item = draft.items.find((row) => row.id === issue.rowId);
+    if (
+      customerId &&
+      issue.rowId &&
+      !permittedItems.some((row) => row.id === issue.rowId)
+    )
+      continue;
+    const item = permittedItems.find((row) => row.id === issue.rowId);
     const field = issue.path.split(".").at(-1)!;
     if (!item || !customerFields.has(field)) {
       operatorIssueCount++;
@@ -285,6 +312,8 @@ export async function clarificationRequest(c: Context, id: string) {
     text,
     items,
     operatorIssueCount,
+    customerId: customerId || null,
+    readyToCopy: !!customerId || scopes.size <= 1,
     sent: false,
   };
 }

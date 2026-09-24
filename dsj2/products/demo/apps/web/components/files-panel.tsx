@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Icon, Modal, Notice } from "@demo/ui";
 import {
   api,
@@ -20,6 +21,8 @@ import {
 } from "@/lib/types";
 import { dateTime, Status } from "./request-list";
 import { VerificationLink } from "./verification-link";
+import { SavedPrintSet } from "./saved-print-set";
+import { filePollingRetryDelay } from "@/lib/file-polling";
 
 export function FilesPanel({
   requestId,
@@ -53,6 +56,7 @@ export function FilesPanel({
   const [reload, setReload] = useState(0);
   useEffect(() => {
     let active = true;
+    let failures = 0;
     let timer: ReturnType<typeof setTimeout>;
     async function load() {
       try {
@@ -68,11 +72,14 @@ export function FilesPanel({
                 issuanceId: string;
                 kind: string;
                 reason: string;
+                createdAt: string;
+                relatedRequestId?: string | null;
               }[];
             }
           >(`/print-requests/${requestId}`),
         ]);
         if (!active) return;
+        failures = 0;
         setJobs(result.items);
         setIssuances(
           (detail.issuances || []).map((issuance) => ({
@@ -80,12 +87,21 @@ export function FilesPanel({
             documents: detail.documents?.filter(
               (document) => document.issuanceId === issuance.id,
             ),
+            events: detail.issuanceEvents?.filter(
+              (event) => event.issuanceId === issuance.id,
+            ),
             status: detail.issuanceEvents?.some(
               (event) =>
                 event.issuanceId === issuance.id && event.kind === "CANCELLED",
             )
               ? "CANCELLED"
-              : "REGISTERED",
+              : detail.issuanceEvents?.some(
+                    (event) =>
+                      event.issuanceId === issuance.id &&
+                      event.kind === "REPLACED",
+                  )
+                ? "REPLACED"
+                : "REGISTERED",
           })),
         );
         setArtifacts(detail.artifacts || []);
@@ -105,7 +121,10 @@ export function FilesPanel({
         )
           timer = setTimeout(() => void load(), 2500);
       } catch (caught) {
-        if (active) setError(errorText(caught));
+        if (!active) return;
+        setError(errorText(caught));
+        const delay = filePollingRetryDelay(caught, ++failures);
+        if (delay !== null) timer = setTimeout(() => void load(), delay);
       }
     }
     void load();
@@ -309,6 +328,11 @@ export function FilesPanel({
         </div>
       </div>
       {error && <Notice>{error}</Notice>}
+      <SavedPrintSet
+        draft={draft}
+        issuances={issuances}
+        artifacts={allArtifacts}
+      />
       {(previewStale ||
         (lastPreviewRevision >= 0 &&
           lastPreviewRevision !== draft.revision)) && (
@@ -440,10 +464,38 @@ export function FilesPanel({
           )}
           {(issuance.correctionOfId || issuance.correctsIssuanceId) && (
             <p>
-              Исправление выпуска{" "}
-              {issuance.correctionOfId || issuance.correctsIssuanceId}
+              {issuance.correctsRequestId ? (
+                <Link href={`/requests/${issuance.correctsRequestId}`}>
+                  Открыть исходный выпуск
+                </Link>
+              ) : (
+                <>
+                  Исправление выпуска{" "}
+                  {issuance.correctionOfId || issuance.correctsIssuanceId}
+                </>
+              )}
             </p>
           )}
+          {issuance.events?.map((event, index) => (
+            <p key={index}>
+              {event.kind === "REPLACED"
+                ? "Выпуск заменён"
+                : event.kind === "CANCELLED"
+                  ? "Выпуск отменён"
+                  : event.kind}
+              {" · "}
+              {dateTime(event.createdAt)}. Причина: {event.reason}
+              {event.relatedRequestId && (
+                <>
+                  {" "}
+                  ·{" "}
+                  <Link href={`/requests/${event.relatedRequestId}`}>
+                    Открыть исправленный выпуск
+                  </Link>
+                </>
+              )}
+            </p>
+          ))}
           <ul>
             {issuance.documents?.map((document) => (
               <li key={document.id}>

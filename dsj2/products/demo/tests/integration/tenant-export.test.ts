@@ -1,3 +1,4 @@
+import { syntheticPdf } from "../fixtures/pdf";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -65,7 +66,7 @@ test("tenant export includes new data and verified files, excludes foreign tenan
       createdBy: user.id,
     },
   });
-  const bytes = Buffer.from("%PDF-1.4\nSYNTHETIC_PRESERVED_BYTES\n%%EOF");
+  const bytes = syntheticPdf("SYNTHETIC_PRESERVED_BYTES");
   const stored = await new ArtifactStore().put(bytes, "pdf");
   const attachment = await db.valueAttachment.create({
     data: {

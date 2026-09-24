@@ -2,7 +2,22 @@
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, downloadExport, errorText, json } from "@/lib/api";
-import type { Artifact, Draft } from "@/lib/types";
+import type { Artifact, Customer, Draft } from "@/lib/types";
+
+type Clarification = {
+  revision: number;
+  text: string;
+  readyToCopy: boolean;
+  items: { sourceRow?: number; personnelNumber?: string; message: string }[];
+};
+const clarificationLine = (item: Clarification["items"][number]) =>
+  [
+    item.sourceRow ? `Строка ${item.sourceRow}` : "Получатель",
+    item.personnelNumber ? `таб. № ${item.personnelNumber}` : "",
+    item.message,
+  ]
+    .filter(Boolean)
+    .join(" — ");
 type Sheet = {
   revision: number;
   meaningfulHash: string;
@@ -14,6 +29,18 @@ type Sheet = {
     source: string;
     current: boolean;
   }[];
+};
+type Transfer = {
+  id: string;
+  action: string;
+  createdAt: string;
+  metadata: {
+    recipient: string;
+    occurredOn: string;
+    method: string;
+    reason?: string;
+    files: { id: string; format: string; sha256: string }[];
+  };
 };
 export function CustomerReview({
   draft,
@@ -27,6 +54,7 @@ export function CustomerReview({
   const [open, setOpen] = useState(false);
   const [sheet, setSheet] = useState<Sheet | null>(null);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
+  const [transfers, setTransfers] = useState<Transfer[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [person, setPerson] = useState("");
   const [source, setSource] = useState("");
@@ -38,16 +66,49 @@ export function CustomerReview({
   const [success, setSuccess] = useState("");
   const [busy, setBusy] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [clarification, setClarification] = useState<Clarification | null>(
+    null,
+  );
+  const [clarificationText, setClarificationText] = useState("");
+  const [omittedIssues, setOmittedIssues] = useState<number[]>([]);
+  const [clarificationCustomer, setClarificationCustomer] = useState("");
+  const [clarificationCustomers, setClarificationCustomers] = useState<
+    Customer[]
+  >([]);
+  const clarificationCustomerKey = [
+    ...new Set(
+      draft.items
+        .map((item) => item.employerId || draft.customerId)
+        .filter(Boolean),
+    ),
+  ].join("|");
+  useEffect(() => {
+    if (!open) return;
+    let active = true;
+    const ids = clarificationCustomerKey.split("|").filter(Boolean);
+    void Promise.all(ids.map((id) => api<Customer>(`/customers/${id}`)))
+      .then((customers) => {
+        if (active) setClarificationCustomers(customers);
+      })
+      .catch((caught) => {
+        if (active) setError(errorText(caught));
+      });
+    return () => {
+      active = false;
+    };
+  }, [open, clarificationCustomerKey]);
   useEffect(() => {
     if (!open) return;
     let active = true;
     void Promise.all([
       api<Sheet>(`/print-requests/${draft.id}/control-sheet`),
       api<Draft & { artifacts: Artifact[] }>(`/print-requests/${draft.id}`),
+      api<{ items: Transfer[] }>(`/print-requests/${draft.id}/transfers`),
     ])
-      .then(([s, d]) => {
+      .then(([s, d, history]) => {
         if (active) {
           setSheet(s);
+          setTransfers(history.items);
           setArtifacts(
             (d.artifacts || []).filter(
               (a) => a.issuanceId && a.availability !== "MISSING",
@@ -131,16 +192,109 @@ export function CustomerReview({
               disabled={busy}
               onClick={() =>
                 void run(async () => {
-                  const r = await api<{ text: string }>(
-                    `/print-requests/${draft.id}/clarification`,
+                  const query = clarificationCustomer
+                    ? `?customerId=${encodeURIComponent(clarificationCustomer)}`
+                    : "";
+                  const r = await api<Clarification>(
+                    `/print-requests/${draft.id}/clarification${query}`,
                   );
-                  await navigator.clipboard.writeText(r.text);
-                }, "Запрос уточнений скопирован. Отправьте его согласованным способом.")
+                  setClarification(r);
+                  setClarificationText(r.text);
+                  setOmittedIssues([]);
+                }, "Запрос подготовлен. Проверьте замечания и текст перед копированием.")
               }
             >
-              Копировать запрос уточнений
+              Подготовить запрос уточнений
             </button>
           </div>
+          {!!clarificationCustomers.length && (
+            <label>
+              Организация для запроса уточнений
+              <select
+                value={clarificationCustomer}
+                onChange={(event) => {
+                  setClarificationCustomer(event.target.value);
+                  setClarification(null);
+                  setClarificationText("");
+                }}
+              >
+                <option value="">Внутренняя проверка всего состава</option>
+                {clarificationCustomers.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.nameRu}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          {clarification && (
+            <div className="clarification-editor">
+              {!clarification.readyToCopy && (
+                <Notice>
+                  В составе несколько работодателей. Выберите одну организацию и
+                  подготовьте её отдельный запрос. Общий текст доступен только
+                  для внутренней проверки.
+                </Notice>
+              )}
+              {clarification.revision !== draft.revision && (
+                <Notice>
+                  Данные заявки изменились. Подготовьте актуальный запрос
+                  заново.
+                </Notice>
+              )}
+              {clarification.items.map((item, index) => (
+                <label className="checkbox-label" key={index}>
+                  <input
+                    type="checkbox"
+                    checked={!omittedIssues.includes(index)}
+                    onChange={(event) => {
+                      const omitted = event.target.checked
+                        ? omittedIssues.filter((value) => value !== index)
+                        : [...omittedIssues, index];
+                      setOmittedIssues(omitted);
+                      const lines = clarification.items
+                        .filter((_, i) => !omitted.includes(i))
+                        .map(clarificationLine);
+                      setClarificationText(
+                        lines.length
+                          ? `Здравствуйте! Просим уточнить сведения для подготовки документов:\n${lines.join("\n")}\nПришлите, пожалуйста, уточнённые значения. Спасибо!`
+                          : "Сейчас уточнений сведений у заказчика не требуется.",
+                      );
+                    }}
+                  />
+                  {clarificationLine(item)}
+                </label>
+              ))}
+              <label>
+                Текст запроса уточнений
+                <textarea
+                  rows={8}
+                  value={clarificationText}
+                  onChange={(event) => setClarificationText(event.target.value)}
+                />
+              </label>
+              <small>
+                Изменение выбранных замечаний собирает текст заново. После
+                выбора можно отредактировать готовый текст. Копирование не
+                отправляет сообщение.
+              </small>
+              <button
+                disabled={
+                  busy ||
+                  !clarification.readyToCopy ||
+                  clarification.revision !== draft.revision ||
+                  !clarificationText.trim()
+                }
+                onClick={() =>
+                  void run(async () => {
+                    await navigator.clipboard.writeText(clarificationText);
+                  }, "Проверенный текст скопирован. Сообщение не отправлялось.")
+                }
+              >
+                Копировать запрос уточнений
+              </button>
+            </div>
+          )}
           <p className="fine-print">
             Контрольный список не является выданным документом. Изменение
             существенных данных делает прежнее согласование неактуальным.
@@ -304,6 +458,61 @@ export function CustomerReview({
               </button>
             </details>
           )}
+          <details>
+            <summary>
+              История передачи и перепечатки ({transfers.length})
+            </summary>
+            {transfers.length ? (
+              <ul>
+                {transfers.map((transfer) => (
+                  <li key={transfer.id}>
+                    <strong>
+                      {transfer.action === "DAMAGED_COPY_REPRINT"
+                        ? "Перепечатка испорченного экземпляра"
+                        : "Передача комплекта"}
+                    </strong>
+                    <p>
+                      {transfer.metadata.occurredOn} ·{" "}
+                      {transfer.metadata.recipient} ·{" "}
+                      {(
+                        {
+                          EMAIL: "Электронная почта",
+                          PORTAL: "Кабинет заказчика",
+                          PAPER: "Бумажные экземпляры",
+                          OTHER: "Другой согласованный способ",
+                        } as Record<string, string>
+                      )[transfer.metadata.method] || transfer.metadata.method}
+                    </p>
+                    {transfer.metadata.reason && (
+                      <p>Причина: {transfer.metadata.reason}</p>
+                    )}
+                    <p>Выбранных файлов: {transfer.metadata.files.length}.</p>
+                    <details>
+                      <summary>Состав переданного комплекта</summary>
+                      <ul>
+                        {transfer.metadata.files.map((file) => (
+                          <li key={file.id}>
+                            <a
+                              href={`/api/artifacts/${encodeURIComponent(file.id)}`}
+                              download
+                            >
+                              Скачать сохранённый {file.format}
+                            </a>
+                            <span className="hash">
+                              {" "}
+                              SHA-256: {file.sha256}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Передача и перепечатка ещё не зафиксированы.</p>
+            )}
+          </details>
         </div>
       )}
     </section>

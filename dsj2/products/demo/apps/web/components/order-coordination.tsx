@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import type { AppContext } from "@/lib/types";
+import { OrderRequests } from "./order-links";
+import { OrderParties, type OrderPartiesData } from "./order-parties";
 export type Proposal = {
   id: string;
   kind: string;
@@ -26,7 +28,7 @@ export function OrderCoordination({
   context,
   onChanged,
 }: {
-  order: {
+  order: OrderPartiesData & {
     id: string;
     revision: number;
     ownerId?: string | null;
@@ -36,7 +38,7 @@ export function OrderCoordination({
     proposals?: Proposal[];
   };
   context: AppContext;
-  onChanged: () => void;
+  onChanged: () => void | Promise<void>;
 }) {
   const [users, setUsers] = useState<{ id: string; displayName: string }[]>([
     { id: context.user.id, displayName: context.user.displayName },
@@ -50,11 +52,11 @@ export function OrderCoordination({
   const [busy, setBusy] = useState(false);
   const readonly = context.user.role === "VIEWER";
   useEffect(() => {
-    if (context.user.role === "ADMIN")
-      void api<{ items: { id: string; displayName: string; role: string }[] }>(
-        "/users",
+    if (["ADMIN", "OPERATOR"].includes(context.user.role))
+      void api<{ items: { id: string; displayName: string }[] }>(
+        "/staff-directory",
       )
-        .then((r) => setUsers(r.items.filter((u) => u.role !== "EMPLOYER")))
+        .then((r) => setUsers(r.items))
         .catch((c) => setError(errorText(c)));
   }, [context.user.role]);
   async function run(action: () => Promise<unknown>) {
@@ -62,7 +64,7 @@ export function OrderCoordination({
     setError("");
     try {
       await action();
-      onChanged();
+      await onChanged();
     } catch (c) {
       setError(errorText(c));
     } finally {
@@ -72,6 +74,13 @@ export function OrderCoordination({
   return (
     <>
       {error && <Notice>{error}</Notice>}
+      <OrderParties
+        key={order.id}
+        order={order}
+        readonly={readonly}
+        onChanged={onChanged}
+      />
+      {!readonly && <OrderRequests orderId={order.id} onChanged={onChanged} />}
       {!readonly && (
         <details className="outcome-entry">
           <summary>Ответственный, срок и завершение заказа</summary>

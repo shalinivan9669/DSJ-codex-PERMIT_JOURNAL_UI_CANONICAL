@@ -85,6 +85,11 @@ export async function authenticate(
         /^\/verification\/[a-f0-9]{64}\/corrections$/.test(req.path));
     if (
       req.path === "/auth/login" ||
+      (req.method === "POST" &&
+        [
+          "/auth/employer-invite/inspect",
+          "/auth/employer-invite/exchange",
+        ].includes(req.path)) ||
       req.path === "/health" ||
       publicVerification
     ) {
@@ -159,6 +164,18 @@ const passwordSchema = z
   .min(12, "Пароль должен содержать не менее 12 символов")
   .max(256);
 export { passwordSchema };
+export function sessionCookies(
+  res: Response,
+  token: string,
+  csrf: string,
+  maxAge = 28800,
+) {
+  const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+  res.setHeader("Set-Cookie", [
+    `demo_session=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}${secure}`,
+    `demo_csrf=${csrf}; Path=/; SameSite=Strict; Max-Age=${maxAge}${secure}`,
+  ]);
+}
 export async function login(req: DemoRequest, res: Response, input: unknown) {
   rateLimit(`login:${req.ip}`, 10, 60_000);
   const data = parse(
@@ -195,11 +212,7 @@ export async function login(req: DemoRequest, res: Response, input: unknown) {
       expiresAt: new Date(Date.now() + 8 * 3600_000),
     },
   });
-  const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
-  res.setHeader("Set-Cookie", [
-    `demo_session=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800${secure}`,
-    `demo_csrf=${csrf}; Path=/; SameSite=Strict; Max-Age=28800${secure}`,
-  ]);
+  sessionCookies(res, token, csrf);
   await audit(
     db,
     {

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
+import { BIOT_CATEGORIES, type BiotCategory } from "@demo/contracts";
 import { api, errorText, json } from "@/lib/api";
 import {
   templateLabels,
@@ -12,6 +13,7 @@ import { RecordPicker } from "./record-picker";
 import { PortalAccess } from "./portal-access";
 import { EvidenceMatrix } from "./evidence-matrix";
 import { DossierActions } from "./dossier-actions";
+import { ServiceFormDetails } from "./service-form-details";
 import {
   SourceAttachment,
   type SourceAttachmentRecord,
@@ -30,6 +32,27 @@ type Entry = {
   applicability?: string;
   customerVisible?: boolean;
   category?: string;
+  ownerName?: string;
+  checkedOn?: string | null;
+  checkedByName?: string | null;
+  effectiveFrom?: string | null;
+  effectiveTo?: string | null;
+  serviceKey?: string;
+  verifiedAt?: string | null;
+  verifiedByName?: string | null;
+  verificationNote?: string;
+  definition?: {
+    programVersion: string;
+    category: string;
+    compatibleTemplateIds: string[];
+    requirements: {
+      key: string;
+      label: string;
+      source: string;
+      stage: string;
+    }[];
+    limitation?: string;
+  };
   attachments?: SourceAttachmentRecord[];
 };
 export function ValueLibrary({ context }: { context: AppContext }) {
@@ -45,6 +68,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
   const [picker, setPicker] = useState<"customers" | "recipients" | null>(null);
   const [form, setForm] = useState<Record<string, string>>({});
   const [verify, setVerify] = useState<Record<string, string>>({});
+  const [verifyStatus, setVerifyStatus] = useState<Record<string, string>>({});
   const [extraTemplates, setExtraTemplates] = useState<string[]>([]);
   const [requirements, setRequirements] = useState<
     { key: string; label: string; source: string; stage: string }[]
@@ -161,6 +185,29 @@ export function ValueLibrary({ context }: { context: AppContext }) {
     setExtraTemplates([]);
     setRequirements([]);
   }
+  function newVersion(entry: Entry) {
+    if (!entry.definition) return;
+    setForm({
+      title: entry.title || "",
+      serviceKey: entry.serviceKey || "",
+      source: entry.source,
+      applicability: entry.applicability || "",
+      status: "DRAFT",
+      checkedOn: "",
+      version: entry.definition.programVersion,
+      category: entry.definition.category,
+      templateId: entry.definition.compatibleTemplateIds[0] || "",
+      effectiveFrom: entry.effectiveFrom || "",
+      effectiveTo: entry.effectiveTo || "",
+      limitation: entry.definition.limitation || "",
+    });
+    setExtraTemplates(entry.definition.compatibleTemplateIds.slice(1));
+    setRequirements(entry.definition.requirements.map((r) => ({ ...r })));
+    setOpen(true);
+    setSuccess(
+      "Подготовлена следующая версия как проект. Проверьте изменения и заново подтвердите источник. Ранее сохранённая версия остаётся неизменной.",
+    );
+  }
   return (
     <section className="panel workbench-detail">
       <div className="tabs" role="tablist" aria-label="Источники и правила">
@@ -219,6 +266,109 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                     {entry.originalNumber ? ` · № ${entry.originalNumber}` : ""}
                     {entry.version ? ` · версия ${entry.version}` : ""}
                   </small>
+                  {section === "service-rules" && entry.definition && (
+                    <details>
+                      <summary>Состав паспорта и применимость</summary>
+                      <p>
+                        Код: {entry.serviceKey}. Версия программы:{" "}
+                        {entry.definition.programVersion || "Не указана"}.
+                        Категория:{" "}
+                        {BIOT_CATEGORIES[
+                          entry.definition.category as BiotCategory
+                        ]?.label ||
+                          entry.definition.category ||
+                          "Без ограничения категории получателя"}
+                        .
+                      </p>
+                      <p>
+                        Проверка источника:{" "}
+                        {entry.checkedOn || "Не подтверждена"}
+                        {entry.checkedByName ? ` · ${entry.checkedByName}` : ""}
+                        .
+                      </p>
+                      <p>
+                        Период применимости:{" "}
+                        {entry.effectiveFrom || "Начало не задано"} —{" "}
+                        {entry.effectiveTo || "Окончание не задано"}.
+                      </p>
+                      <p>
+                        Совместимые формы:{" "}
+                        {entry.definition.compatibleTemplateIds
+                          .map((id) => templateLabels[id] || id)
+                          .join("; ") || "Не выбраны"}
+                        .
+                      </p>
+                      <ServiceFormDetails
+                        ids={entry.definition.compatibleTemplateIds}
+                        templates={context.templates}
+                      />
+                      {entry.definition.requirements.length ? (
+                        <ul>
+                          {entry.definition.requirements.map((requirement) => (
+                            <li key={requirement.key}>
+                              {requirement.label} ·{" "}
+                              {
+                                (
+                                  {
+                                    NORMATIVE: "Нормативное",
+                                    CONTRACT: "Договорное",
+                                    RECOMMENDATION: "Рекомендованное",
+                                  } as Record<string, string>
+                                )[requirement.source]
+                              }{" "}
+                              ·{" "}
+                              {
+                                (
+                                  {
+                                    DATA: "Список и данные",
+                                    RESULTS: "Результаты",
+                                    DOCUMENTS: "Документы",
+                                    TRANSFER: "Передача",
+                                    SETTLEMENT: "Расчёты",
+                                    EVIDENCE: "Основания",
+                                  } as Record<string, string>
+                                )[requirement.stage]
+                              }
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>
+                          Дополнительные обязательства не заданы. Общие проверки
+                          данных, результата и допустимости выдачи сохраняются.
+                        </p>
+                      )}
+                      <p>
+                        {entry.definition.limitation ||
+                          "Дополнительные ограничения не указаны; применимость подтверждается по источнику."}
+                      </p>
+                      {context.user.role === "ADMIN" && (
+                        <button onClick={() => newVersion(entry)}>
+                          Создать следующую версию
+                        </button>
+                      )}
+                    </details>
+                  )}
+                  {section === "dossier" && (
+                    <small>
+                      Категория:{" "}
+                      {(
+                        {
+                          PROGRAM: "Программа",
+                          AUTHORIZATION: "Разрешительный документ",
+                          QUALIFICATION: "Квалификация",
+                          FACILITY: "Материальная база",
+                          INTERNAL_CONTROL: "Внутренний контроль",
+                        } as Record<string, string>
+                      )[entry.category || ""] || entry.category}
+                      . Ответственный: {entry.ownerName || "Не указан"}.{" "}
+                      {entry.customerVisible &&
+                      entry.category !== "QUALIFICATION"
+                        ? "Разрешён для выбранного пакета заказчика"
+                        : "Внутренний документ центра"}
+                      .
+                    </small>
+                  )}
                   {(section === "dossier" || section === "evidence") && (
                     <SourceAttachment
                       owner={
@@ -255,8 +405,34 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                       RETIRED: "Архив",
                     } as Record<string, string>
                   )[entry.state || entry.status || ""] || "Запись сохранена"}
+                  {section === "evidence" && entry.verifiedAt && (
+                    <small>
+                      Последнее рассмотрение:{" "}
+                      {new Date(entry.verifiedAt).toLocaleString("ru-RU")}
+                      {entry.verifiedByName ? ` · ${entry.verifiedByName}` : ""}
+                      . Основание: {entry.verificationNote || "Не указано"}
+                    </small>
+                  )}
                   {section === "evidence" && !readonly && (
                     <>
+                      <label>
+                        Результат проверки
+                        <select
+                          value={verifyStatus[entry.id] || "VERIFIED"}
+                          onChange={(e) =>
+                            setVerifyStatus({
+                              ...verifyStatus,
+                              [entry.id]: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="VERIFIED">Источник проверен</option>
+                          <option value="UNVERIFIED">
+                            Требуется повторная проверка
+                          </option>
+                          <option value="SUPERSEDED">Документ заменён</option>
+                        </select>
+                      </label>
                       <label>
                         Основание проверки
                         <input
@@ -269,20 +445,24 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                       <button
                         disabled={busy || !verify[entry.id]?.trim()}
                         onClick={() =>
-                          void run(
-                            () =>
-                              api(`/evidence/${entry.id}/verify`, {
-                                method: "POST",
-                                body: json({
-                                  status: "VERIFIED",
-                                  verificationNote: verify[entry.id],
-                                }),
+                          void run(async () => {
+                            await api(`/evidence/${entry.id}/verify`, {
+                              method: "POST",
+                              body: json({
+                                status: verifyStatus[entry.id] || "VERIFIED",
+                                verificationNote: verify[entry.id],
                               }),
-                            "Статус и основание проверки сохранены.",
-                          )
+                            });
+                            setVerify((values) => ({
+                              ...values,
+                              [entry.id]: "",
+                            }));
+                          }, "Статус и основание проверки сохранены.")
                         }
                       >
-                        Подтвердить проверку
+                        {(verifyStatus[entry.id] || "VERIFIED") === "VERIFIED"
+                          ? "Подтвердить проверку"
+                          : "Сохранить состояние источника"}
                       </button>
                     </>
                   )}
@@ -406,7 +586,34 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                   </select>
                 </label>
                 {field("serviceKey", "Постоянный код услуги")}
-                {field("category", "Категория применимости", "text", false)}
+                <label>
+                  Категория применимости
+                  <select
+                    value={form.category || ""}
+                    onChange={(e) =>
+                      setForm({ ...form, category: e.target.value })
+                    }
+                  >
+                    <option value="">
+                      Без ограничения категории получателя
+                    </option>
+                    {Object.entries(BIOT_CATEGORIES).map(([key, value]) => (
+                      <option key={key} value={key}>
+                        {value.label}
+                      </option>
+                    ))}
+                    {form.category && !(form.category in BIOT_CATEGORIES) && (
+                      <option value={form.category}>
+                        Сохранённая категория: {form.category}
+                      </option>
+                    )}
+                  </select>
+                </label>
+                <p className="fine-print">
+                  Категория ограничивает состав получателей БиОТ. Для форм без
+                  категории оставьте «Без ограничения категории получателя»;
+                  направление задаётся совместимыми формами и программой.
+                </p>
                 {field("effectiveFrom", "Применяется с", "date", false)}
                 {field("effectiveTo", "Применяется до", "date", false)}
                 {field(

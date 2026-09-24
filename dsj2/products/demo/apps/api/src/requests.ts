@@ -519,6 +519,23 @@ export async function requestDetail(c: Context, id: string) {
       issuanceId: { in: issuances.map((i) => i.id) },
     },
   });
+  const relatedIssuanceIds = [
+    ...new Set([
+      ...issuances.flatMap((issuance) =>
+        issuance.correctsIssuanceId ? [issuance.correctsIssuanceId] : [],
+      ),
+      ...events.flatMap((event) =>
+        event.relatedIssuanceId ? [event.relatedIssuanceId] : [],
+      ),
+    ]),
+  ];
+  const relatedIssuances = await db.issuance.findMany({
+    where: { tenantId: c.tenantId, id: { in: relatedIssuanceIds } },
+    select: { id: true, requestId: true },
+  });
+  const relatedRequests = new Map(
+    relatedIssuances.map((issuance) => [issuance.id, issuance.requestId]),
+  );
   const snapshots = await db.renderInputSnapshot.findMany({
     where: { tenantId: c.tenantId, id: { in: jobs.map((j) => j.snapshotId) } },
     select: { id: true, revision: true },
@@ -535,14 +552,24 @@ export async function requestDetail(c: Context, id: string) {
   return {
     ...record,
     ...(record.draft as object),
-    issuances,
+    issuances: issuances.map((issuance) => ({
+      ...issuance,
+      correctsRequestId: issuance.correctsIssuanceId
+        ? relatedRequests.get(issuance.correctsIssuanceId) || null
+        : null,
+    })),
     documents,
     jobs: jobs.map((j) => ({
       ...j,
       sourceRevision: snapshots.find((s) => s.id === j.snapshotId)?.revision,
     })),
     artifacts: publicArtifacts,
-    issuanceEvents: events,
+    issuanceEvents: events.map((event) => ({
+      ...event,
+      relatedRequestId: event.relatedIssuanceId
+        ? relatedRequests.get(event.relatedIssuanceId) || null
+        : null,
+    })),
   };
 }
 async function validation(

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import type { AppContext } from "@/lib/types";
@@ -25,14 +25,31 @@ type Order = {
   revision: number;
   commercial: Commercial;
   title: string;
-  customer?: { nameRu: string };
+  customer?: { id: string; nameRu: string } | null;
+  customerId?: string | null;
+  employerId?: string | null;
+  payerId?: string | null;
+  employer?: { id: string; nameRu: string } | null;
+  payer?: { id: string; nameRu: string } | null;
   contact?: string;
   ownerId?: string;
   dueDate?: string;
   status: string;
   requests: { requestId: string; request?: { title: string } }[];
   milestones: Milestone[];
-  nextActions?: { label: string; reason?: string }[];
+  nextActions?: {
+    id?: string;
+    label: string;
+    reason?: string;
+    requestId?: string;
+    source?: string;
+  }[];
+  summary?: {
+    people: number;
+    events: number;
+    personEventServices: number;
+    legacyAssignments: number;
+  };
   completion?: Record<string, boolean>;
   proposals?: Proposal[];
   events?: { id: string; title: string; requestId: string }[];
@@ -55,18 +72,24 @@ type Renewal = {
   state: string;
   fullNameRu?: string;
   manualText?: string;
-  customer?: { nameRu: string };
+  customer?: { id?: string; nameRu: string };
+  customerId?: string | null;
   recipient?: { data?: { fullNameRu?: string } };
   sourceRequestId: string;
   contactAfter?: string;
   nextContactDate?: string;
   documentValidUntil?: string;
+  nextCheckDate?: string;
+  policyVersion?: string;
+  basisDate?: string;
+  reason?: string;
   policySource?: string;
   contacts?: {
     id: string;
     occurredOn: string;
     outcome: string;
     note: string;
+    channel?: string;
   }[];
 };
 const statuses: Record<string, string> = {
@@ -102,6 +125,7 @@ export function Workbench({ context }: { context: AppContext }) {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [refresh, setRefresh] = useState(0);
+  const [showArchivedRenewals, setShowArchivedRenewals] = useState(false);
   const [label, setLabel] = useState("");
   const [category, setCategory] = useState("TRANSFER");
   const [source, setSource] = useState("CONTRACT");
@@ -142,6 +166,31 @@ export function Workbench({ context }: { context: AppContext }) {
     };
   }, [refresh]);
   const selected = orders.find((o) => o.id === selectedId);
+  async function reloadOrders() {
+    const result = await api<{ items: Order[] }>("/orders");
+    setOrders(result.items);
+  }
+  const renewalGroups = Object.values(
+    renewals
+      .filter(
+        (r) =>
+          showArchivedRenewals ||
+          !["IRRELEVANT", "ORDER_AGREED"].includes(r.state),
+      )
+      .reduce<Record<string, { id: string; name: string; items: Renewal[] }>>(
+        (groups, renewal) => {
+          const key = renewal.customerId || "individual";
+          groups[key] ||= {
+            id: key,
+            name: renewal.customer?.nameRu || "Без организации заказчика",
+            items: [],
+          };
+          groups[key].items.push(renewal);
+          return groups;
+        },
+        {},
+      ),
+  ).sort((a, b) => a.name.localeCompare(b.name, "ru"));
   async function run(action: () => Promise<unknown>, message: string) {
     setBusy(true);
     setError("");
@@ -257,6 +306,49 @@ export function Workbench({ context }: { context: AppContext }) {
             <section className="panel workbench-detail">
               <h2>{selected.title}</h2>
               <p>{statuses[selected.status] || selected.status}</p>
+              {selected.summary && (
+                <p>
+                  Состав заказа: {selected.summary.people} чел. ·{" "}
+                  {selected.summary.events} событий ·{" "}
+                  {selected.summary.personEventServices} услуг «человек +
+                  событие»
+                  {selected.summary.legacyAssignments
+                    ? ` · ${selected.summary.legacyAssignments} назначений без события`
+                    : ""}
+                  . Число файлов не считается числом услуг.
+                </p>
+              )}
+              {selected.completion && (
+                <div
+                  className="form-grid"
+                  aria-label="Состояния исполнения заказа"
+                >
+                  <p>
+                    Результаты обучения:{" "}
+                    {selected.completion.training
+                      ? "исходы зафиксированы"
+                      : "требуют подтверждения"}
+                  </p>
+                  <p>
+                    Документы:{" "}
+                    {selected.completion.documents
+                      ? "оформлены"
+                      : "требуют действия"}
+                  </p>
+                  <p>
+                    Передача:{" "}
+                    {selected.completion.transfer
+                      ? "подтверждена"
+                      : "не подтверждена"}
+                  </p>
+                  <p>
+                    Расчёты:{" "}
+                    {selected.completion.settlement
+                      ? "нет невыполненных обязательств"
+                      : "требуют действия"}
+                  </p>
+                </div>
+              )}
               <p className="muted">
                 Ответственный:{" "}
                 {selected.ownerId === context.user.id
@@ -278,6 +370,29 @@ export function Workbench({ context }: { context: AppContext }) {
                 ))}
               </div>
               <h3>Обязательства и основания выполнения</h3>
+              {selected.nextActions
+                ?.filter((action) =>
+                  ["RESULT_REVIEW", "DATA_REVIEW"].includes(
+                    action.source || "",
+                  ),
+                )
+                .map((action) => (
+                  <article className="milestone" key={action.id}>
+                    <strong>{action.label}</strong>
+                    <p>
+                      {action.source === "RESULT_REVIEW"
+                        ? "Исход не подтверждается автоматически. Укажите фактический результат и источник в заявке."
+                        : "Проверьте указанные данные в связанной заявке. Сохранённые сведения и документы не изменяются автоматически."}
+                    </p>
+                    {action.requestId && (
+                      <Link href={`/requests/${action.requestId}`}>
+                        {action.source === "RESULT_REVIEW"
+                          ? "Уточнить результат в заявке"
+                          : "Уточнить данные в заявке"}
+                      </Link>
+                    )}
+                  </article>
+                ))}
               {selected.milestones.map((m) => (
                 <article className="milestone" key={m.id}>
                   <strong>{m.label}</strong>
@@ -396,12 +511,12 @@ export function Workbench({ context }: { context: AppContext }) {
                 </details>
               )}
               <OrderFinance
-                key={selected.id}
+                key={`finance-${selected.id}`}
                 orderId={selected.id}
                 revision={selected.revision}
                 commercial={selected.commercial || {}}
                 context={context}
-                onChanged={() => setRefresh((v) => v + 1)}
+                onChanged={reloadOrders}
               />
               {!!selected.financialDocuments?.length && (
                 <details className="outcome-entry">
@@ -422,10 +537,10 @@ export function Workbench({ context }: { context: AppContext }) {
                 </details>
               )}
               <OrderCoordination
-                key={selected.id}
+                key={`coordination-${selected.id}`}
                 order={selected}
                 context={context}
-                onChanged={() => setRefresh((v) => v + 1)}
+                onChanged={reloadOrders}
               />
               <OrderEvidence
                 key={`evidence-${selected.id}`}
@@ -456,6 +571,14 @@ export function Workbench({ context }: { context: AppContext }) {
             Перед новой заявкой уточните актуальность человека и направления.
             Дата документа сама по себе не означает потребность в продаже.
           </p>
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              checked={showArchivedRenewals}
+              onChange={(e) => setShowArchivedRenewals(e.target.checked)}
+            />
+            Показывать завершённые и неактуальные потребности
+          </label>
           <div className="table-scroll">
             <table>
               <thead>
@@ -466,74 +589,111 @@ export function Workbench({ context }: { context: AppContext }) {
                 </tr>
               </thead>
               <tbody>
-                {renewals.map((r) => (
-                  <tr key={r.id}>
-                    <td>
-                      {r.fullNameRu ||
-                        r.recipient?.data?.fullNameRu ||
-                        r.customer?.nameRu ||
-                        "Потребность из истории"}
-                      <small>{r.policySource}</small>
-                      <Link href={`/requests/${r.sourceRequestId}`}>
-                        Исходная заявка
-                      </Link>
-                    </td>
-                    <td>
-                      {statuses[r.state] || r.state}
-                      <small>
-                        {r.nextContactDate ||
-                          r.contactAfter ||
-                          "Дата обращения не задана"}
-                      </small>
-                    </td>
-                    <td>
-                      {!readonly && (
-                        <>
-                          <button
-                            disabled={busy}
-                            onClick={() =>
-                              setContact({
-                                id: r.id,
-                                outcome: "CONTACTED",
-                                note: "",
-                                occurredOn: "",
-                                nextContactDate: "",
-                              })
-                            }
-                          >
-                            Записать результат контакта
-                          </button>
-                          {r.state === "CONFIRMED" && (
-                            <button
-                              disabled={busy}
-                              onClick={() =>
-                                void run(async () => {
-                                  const result = await api<{
-                                    id?: string;
-                                    requestId?: string;
-                                  }>(`/renewals/${r.id}/repeat`, {
-                                    method: "POST",
-                                    body: json({ confirmedCurrent: true }),
-                                  });
-                                  if (result.requestId || result.id)
-                                    window.location.assign(
-                                      `/requests/${result.requestId || result.id}`,
-                                    );
-                                }, "Создана связанная повторная заявка.")
-                              }
-                            >
-                              Создать повторную заявку
-                            </button>
+                {renewalGroups.map((group) => (
+                  <Fragment key={group.id}>
+                    <tr>
+                      <th colSpan={3} scope="rowgroup">
+                        {group.name} · потребностей: {group.items.length}
+                      </th>
+                    </tr>
+                    {group.items.map((r) => (
+                      <tr key={r.id}>
+                        <td>
+                          {r.fullNameRu ||
+                            r.recipient?.data?.fullNameRu ||
+                            r.customer?.nameRu ||
+                            "Потребность из истории"}
+                          <small>{r.policySource}</small>
+                          <small>
+                            Политика: {r.policyVersion || "Версия не указана"}.
+                            Дата основания: {r.basisDate || "Не указана"}.
+                          </small>
+                          <Link href={`/requests/${r.sourceRequestId}`}>
+                            Исходная заявка
+                          </Link>
+                        </td>
+                        <td>
+                          {statuses[r.state] || r.state}
+                          <small>
+                            Обращение:{" "}
+                            {r.nextContactDate ||
+                              r.contactAfter ||
+                              "Дата обращения не задана"}
+                          </small>
+                          <small>
+                            Срок документа:{" "}
+                            {r.documentValidUntil || "Не подтверждён"}
+                          </small>
+                          <small>
+                            Следующая проверка знаний:{" "}
+                            {r.nextCheckDate || "Не подтверждена"}
+                          </small>
+                          {r.reason && <p>Основание состояния: {r.reason}</p>}
+                          {!!r.contacts?.length && (
+                            <details>
+                              <summary>
+                                История контактов ({r.contacts.length})
+                              </summary>
+                              {r.contacts.map((contact) => (
+                                <p key={contact.id}>
+                                  {contact.occurredOn} ·{" "}
+                                  {statuses[contact.outcome] || contact.outcome}
+                                  <small>{contact.note}</small>
+                                </p>
+                              ))}
+                            </details>
                           )}
-                        </>
-                      )}
-                    </td>
-                  </tr>
+                        </td>
+                        <td>
+                          {!readonly && (
+                            <>
+                              <button
+                                disabled={busy}
+                                onClick={() =>
+                                  setContact({
+                                    id: r.id,
+                                    outcome: "CONTACTED",
+                                    note: "",
+                                    occurredOn: "",
+                                    nextContactDate: "",
+                                  })
+                                }
+                              >
+                                Записать результат контакта
+                              </button>
+                              {r.state === "CONFIRMED" && (
+                                <button
+                                  disabled={busy}
+                                  onClick={() =>
+                                    void run(async () => {
+                                      const result = await api<{
+                                        id?: string;
+                                        requestId?: string;
+                                      }>(`/renewals/${r.id}/repeat`, {
+                                        method: "POST",
+                                        body: json({ confirmedCurrent: true }),
+                                      });
+                                      if (result.requestId || result.id)
+                                        window.location.assign(
+                                          `/requests/${result.requestId || result.id}`,
+                                        );
+                                    }, "Создана связанная повторная заявка.")
+                                  }
+                                >
+                                  Создать повторную заявку
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </Fragment>
                 ))}
               </tbody>
             </table>
           </div>
-          {!renewals.length && !busy && (
+          {!renewalGroups.length && !busy && (
             <p>
               Потребности пока не подтверждены. Добавляйте их из истории
               оформленной заявки с проверенным источником срока.

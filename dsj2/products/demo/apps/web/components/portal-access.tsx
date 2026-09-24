@@ -14,7 +14,22 @@ type Membership = {
   revokedAt?: string;
   active?: boolean;
 };
+type Invite = {
+  id: string;
+  email: string;
+  displayName: string;
+  expiresAt: string;
+  consumedAt?: string;
+  revokedAt?: string;
+};
 export function PortalAccess() {
+  const [mode, setMode] = useState("PASSWORD");
+  const [invites, setInvites] = useState<Invite[]>([]);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteName, setInviteName] = useState("");
+  const [inviteHours, setInviteHours] = useState(24);
+  const [inviteUrl, setInviteUrl] = useState("");
+  const [copied, setCopied] = useState(false);
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -33,11 +48,13 @@ export function PortalAccess() {
     Promise.all([
       api<{ items: Membership[] }>("/employer-memberships"),
       api<{ items: User[] }>("/users"),
+      api<{ items: Invite[] }>("/employer-invites"),
     ])
-      .then(([m, u]) => {
+      .then(([m, u, i]) => {
         if (active) {
           setMemberships(m.items);
           setUsers(u.items.filter((user) => user.role === "EMPLOYER"));
+          setInvites(i.items);
         }
       })
       .catch((c) => {
@@ -69,6 +86,90 @@ export function PortalAccess() {
         заказчика». Здесь доступ ограничивается выбранной организацией и
         указанными действиями.
       </p>
+      <label>
+        Способ предоставления доступа
+        <select
+          value={mode}
+          onChange={(e) => {
+            setMode(e.target.value);
+            setConfirmed(false);
+            setInviteUrl("");
+          }}
+        >
+          <option value="PASSWORD">Существующая учётная запись</option>
+          <option value="INVITE">Одноразовое приглашение</option>
+        </select>
+      </label>
+      {inviteUrl && (
+        <div className="notice" role="status">
+          <p>
+            Ссылка показана только сейчас. Передайте её выбранному представителю
+            лично; отправка по почте не выполняется.
+          </p>
+          <label>
+            Одноразовая ссылка
+            <input
+              readOnly
+              value={inviteUrl}
+              onFocus={(e) => e.target.select()}
+            />
+          </label>
+          <button
+            onClick={() => {
+              void navigator.clipboard
+                .writeText(inviteUrl)
+                .then(() => setCopied(true))
+                .catch(() =>
+                  setError("Выделите ссылку и скопируйте её вручную."),
+                );
+            }}
+          >
+            {copied ? "Ссылка скопирована" : "Скопировать приглашение"}
+          </button>
+          <button onClick={() => setInviteUrl("")}>Скрыть ссылку</button>
+        </div>
+      )}
+      {invites.length > 0 && (
+        <details>
+          <summary>Выданные приглашения ({invites.length})</summary>
+          {invites.map((invite) => (
+            <div className="outcome-entry" key={invite.id}>
+              <strong>{invite.displayName}</strong>
+              <p>
+                {invite.email} · до{" "}
+                {new Date(invite.expiresAt).toLocaleString("ru-RU")}
+              </p>
+              <p>
+                {invite.revokedAt
+                  ? "Отозвано"
+                  : invite.consumedAt
+                    ? "Принято"
+                    : Date.parse(invite.expiresAt) <= Date.now()
+                      ? "Истекло"
+                      : "Ожидает принятия"}
+              </p>
+              {!invite.revokedAt && (
+                <button
+                  disabled={busy}
+                  onClick={() =>
+                    void run(async () => {
+                      await api(`/employer-invites/${invite.id}/revoke`, {
+                        method: "POST",
+                        body: "{}",
+                      });
+                      setInviteUrl("");
+                    })
+                  }
+                >
+                  {invite.consumedAt
+                    ? "Отозвать приглашение и доступ"
+                    : "Отозвать приглашение"}
+                </button>
+              )}
+            </div>
+          ))}
+        </details>
+      )}
       <div className="table-scroll">
         <table>
           <thead>
@@ -138,23 +239,67 @@ export function PortalAccess() {
             {customer?.nameRu || "Выбрать организацию"}
           </button>
         </div>
-        <label>
-          Представитель
-          <select
-            value={userId}
-            onChange={(e) => {
-              setUserId(e.target.value);
-              setConfirmed(false);
-            }}
-          >
-            <option value="">Выберите учётную запись</option>
-            {users.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.displayName} · {u.email}
-              </option>
-            ))}
-          </select>
-        </label>
+        {mode === "PASSWORD" ? (
+          <label>
+            Представитель
+            <select
+              value={userId}
+              onChange={(e) => {
+                setUserId(e.target.value);
+                setConfirmed(false);
+              }}
+            >
+              <option value="">Выберите учётную запись</option>
+              {users.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.displayName} · {u.email}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : (
+          <>
+            <label>
+              Имя представителя
+              <input
+                value={inviteName}
+                maxLength={255}
+                onChange={(e) => {
+                  setInviteName(e.target.value);
+                  setConfirmed(false);
+                }}
+              />
+            </label>
+            <label>
+              Адрес представителя
+              <input
+                type="email"
+                autoComplete="off"
+                value={inviteEmail}
+                maxLength={255}
+                onChange={(e) => {
+                  setInviteEmail(e.target.value);
+                  setConfirmed(false);
+                }}
+              />
+            </label>
+            <label>
+              Срок приглашения
+              <select
+                value={inviteHours}
+                onChange={(e) => {
+                  setInviteHours(Number(e.target.value));
+                  setConfirmed(false);
+                }}
+              >
+                <option value={1}>1 час</option>
+                <option value={24}>24 часа</option>
+                <option value={72}>3 суток</option>
+                <option value={168}>7 суток</option>
+              </select>
+            </label>
+          </>
+        )}
         <label>
           Доступ до
           <input
@@ -248,13 +393,43 @@ export function PortalAccess() {
           busy ||
           !confirmed ||
           !customer ||
-          !userId ||
+          (mode === "PASSWORD"
+            ? !userId
+            : !inviteEmail || !inviteName.trim()) ||
           !expiry ||
           (scope === "SELECTED" && !recipients.length)
         }
         onClick={() =>
-          void run(() =>
-            api("/employer-memberships", {
+          void run(async () => {
+            if (mode === "INVITE") {
+              const result = await api<{ inviteUrl: string }>(
+                "/employer-invites",
+                {
+                  method: "POST",
+                  body: json({
+                    customerId: customer!.id,
+                    email: inviteEmail,
+                    displayName: inviteName,
+                    permissions,
+                    accessExpiresAt: new Date(expiry).toISOString(),
+                    expiresAt: new Date(
+                      Math.min(
+                        Date.now() + inviteHours * 3600_000,
+                        new Date(expiry).getTime(),
+                      ),
+                    ).toISOString(),
+                    recipientIds:
+                      scope === "SELECTED"
+                        ? recipients.map((p) => p.recipientId)
+                        : [],
+                  }),
+                },
+              );
+              setInviteUrl(result.inviteUrl);
+              setCopied(false);
+              return;
+            }
+            return api("/employer-memberships", {
               method: "POST",
               body: json({
                 customerId: customer!.id,
@@ -266,13 +441,15 @@ export function PortalAccess() {
                     ? recipients.map((p) => p.recipientId)
                     : [],
               }),
-            }),
-          )
+            });
+          })
         }
       >
-        Открыть доступ представителю
+        {mode === "INVITE"
+          ? "Создать одноразовое приглашение"
+          : "Открыть доступ представителю"}
       </button>
-      {!users.length && (
+      {mode === "PASSWORD" && !users.length && (
         <p>Создайте учётную запись представителя в настройках пользователей.</p>
       )}
       {picker && (

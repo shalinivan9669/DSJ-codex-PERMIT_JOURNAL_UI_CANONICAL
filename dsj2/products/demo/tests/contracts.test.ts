@@ -160,11 +160,14 @@ test("registered API controller method/path map equals deny-by-default policy", 
     await import("../apps/api/src/delivery-controller");
   const { PublicVerificationController } =
     await import("../apps/api/src/public-verification-controller");
+  const { EmployerInviteController } =
+    await import("../apps/api/src/employer-invite-controller");
   const routes = [
     DemoController,
     OperatorValueController,
     DeliveryController,
     PublicVerificationController,
+    EmployerInviteController,
   ]
     .flatMap((controller) =>
       Object.getOwnPropertyNames(controller.prototype)
@@ -172,9 +175,16 @@ test("registered API controller method/path map equals deny-by-default policy", 
         .flatMap((k) => {
           const fn = (controller.prototype as any)[k];
           const path = Reflect.getMetadata("path", fn);
+          const prefix = Reflect.getMetadata("path", controller);
           const method = Reflect.getMetadata("method", fn);
           return typeof path === "string" && method !== undefined
-            ? [`${methods[method]} /${path}`]
+            ? [
+                `${methods[method]} /${[prefix, path]
+                  .filter((value) => typeof value === "string" && value !== "/")
+                  .map((value) => value.replace(/^\/+|\/+$/g, ""))
+                  .filter(Boolean)
+                  .join("/")}`,
+              ]
             : [];
         }),
     )

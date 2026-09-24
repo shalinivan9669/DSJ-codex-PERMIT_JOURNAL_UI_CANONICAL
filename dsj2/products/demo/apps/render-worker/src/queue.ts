@@ -17,6 +17,7 @@ export async function claimJob(
   scopeTenantId?: string,
 ): Promise<GenerationJob | null> {
   // Every acquisition, including recovery after a crash, consumes an attempt and fences the old owner.
+  // runAfter controls eligibility; older deferred bundles keep priority over newer bulk jobs.
   return db.$transaction(async (tx) => {
     await tx.$executeRaw`SELECT pg_advisory_xact_lock_shared(1145392463)`;
     const rows = await tx.$queryRaw<GenerationJob[]>`
@@ -27,7 +28,7 @@ export async function claimJob(
       ((status IN ('PENDING','RETRY') AND "runAfter"<=(clock_timestamp() AT TIME ZONE 'UTC')) OR
        (status='RUNNING' AND "leaseUntil"<(clock_timestamp() AT TIME ZONE 'UTC'))) AND attempts<"maxAttempts"
       AND (${scopeTenantId ?? null}::text IS NULL OR "tenantId"=${scopeTenantId ?? null})
-      ORDER BY "runAfter","createdAt" FOR UPDATE SKIP LOCKED LIMIT 1)
+      ORDER BY "createdAt","runAfter" FOR UPDATE SKIP LOCKED LIMIT 1)
     RETURNING *`;
     return rows[0] || null;
   });

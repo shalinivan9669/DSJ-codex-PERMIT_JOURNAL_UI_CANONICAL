@@ -11,6 +11,7 @@ import {
 import { api, errorText } from "@/lib/api";
 import { bulkFields } from "@/lib/bulk-edit";
 import { newAssignment, type Assignment, type Draft } from "@/lib/types";
+import { eligibleForEvent, joinEventAssignment } from "@/lib/event-assignment";
 
 const directions = [
   {
@@ -42,10 +43,11 @@ const directions = [
 export function EventContext({
   draft,
   selectedIds,
-  disabled,
+  disabled: externalDisabled,
   onChange,
   onApply,
   onContextCommit,
+  onBusyChange,
 }: {
   draft: Draft;
   selectedIds: string[];
@@ -53,8 +55,12 @@ export function EventContext({
   onChange: (patch: Partial<Draft>) => void;
   onApply: (patch: Partial<Draft>) => Promise<boolean | undefined>;
   onContextCommit: (previousEvents: TrainingEventInput[]) => Promise<void>;
+  onBusyChange: (busy: boolean) => void;
 }) {
   const [expanded, setExpanded] = useState(!!draft.events?.length);
+  const [contextBusy, setContextBusy] = useState(false);
+  const applying = useRef(false);
+  const disabled = externalDisabled || contextBusy;
   const contextBefore = useRef<TrainingEventInput[] | null>(null);
   async function commitContext() {
     const before = contextBefore.current;
@@ -62,8 +68,18 @@ export function EventContext({
     if (before) await onContextCommit(before);
   }
   async function apply(patch: Partial<Draft>) {
-    await commitContext();
-    await onApply(patch);
+    if (applying.current) return false;
+    applying.current = true;
+    setContextBusy(true);
+    onBusyChange(true);
+    try {
+      await commitContext();
+      return await onApply(patch);
+    } finally {
+      applying.current = false;
+      setContextBusy(false);
+      onBusyChange(false);
+    }
   }
   const [direction, setDirection] = useState("pb");
   const [activeId, setActiveId] = useState(draft.events?.[0]?.id || "");
@@ -75,6 +91,14 @@ export function EventContext({
   const [proctoring, setProctoring] = useState("");
   const [review, setReview] = useState(false);
   const [replaceEmpty, setReplaceEmpty] = useState(false);
+  const [joinExisting, setJoinExisting] = useState(false);
+  const [moveTarget, setMoveTarget] = useState("");
+  const [moveConfirmed, setMoveConfirmed] = useState(false);
+  const [requestCommon, setRequestCommon] = useState(draft.commonFields || {});
+  const commonKey = JSON.stringify(draft.commonFields || {});
+  useEffect(() => {
+    setRequestCommon(JSON.parse(commonKey));
+  }, [commonKey]);
   const pristine = (assignment: Assignment) =>
     !assignment.eventId &&
     !assignment.documentDate &&
@@ -134,6 +158,21 @@ export function EventContext({
   );
   const selectedAssignments = eventAssignments.filter(({ item }) =>
     selectedIds.includes(item.id),
+  );
+  const moveTargets = event
+    ? events.filter(
+        (target) =>
+          target.id !== event.id &&
+          target.protocolTemplateId === event.protocolTemplateId &&
+          target.commonFields.biotCategory === event.commonFields.biotCategory,
+      )
+    : [];
+  const moveConflicts = selectedAssignments.filter(({ item, assignment }) =>
+    item.assignments.some(
+      (other) =>
+        other.eventId === moveTarget &&
+        other.templateId === assignment.templateId,
+    ),
   );
   function updateEvent(patch: Partial<TrainingEventInput>) {
     if (!contextBefore.current) contextBefore.current = structuredClone(events);
@@ -200,6 +239,16 @@ export function EventContext({
           )
         )
           return item;
+        const candidates = item.assignments.filter((a) =>
+          eligibleForEvent(a, choice.card),
+        );
+        if (joinExisting && candidates.length === 1)
+          return {
+            ...item,
+            assignments: item.assignments.map((a) =>
+              a.id === candidates[0].id ? joinEventAssignment(a, event.id) : a,
+            ),
+          };
         const assignment: Assignment = {
           ...newAssignment(choice.card),
           eventId: event.id,
@@ -256,6 +305,83 @@ export function EventContext({
             Общие сведения вводятся один раз. Для нового курса создайте другое
             событие. Результаты участников подтверждаются отдельно.
           </p>
+          <details>
+            <summary>Общие значения заявки</summary>
+            <p>
+              Наследуются назначениями без личного исключения. Сведения события
+              имеют приоритет. Пустое поле задаёт пустое общее значение; «Убрать
+              значение» возвращает наследование из профиля центра.
+            </p>
+            <div className="form-grid">
+              {bulkFields
+                .filter(([field]) =>
+                  [
+                    "documentDate",
+                    "trainingStart",
+                    "trainingEnd",
+                    "protocolDate",
+                    "trainingSubject",
+                    "hours",
+                  ].includes(field),
+                )
+                .map(([field, label, type]) => (
+                  <div key={field}>
+                    <label>
+                      {label} для заявки
+                      <input
+                        aria-label={`${label} для заявки`}
+                        type={type}
+                        disabled={disabled}
+                        value={String(
+                          requestCommon[field as keyof typeof requestCommon] ||
+                            "",
+                        )}
+                        onChange={(e) =>
+                          setRequestCommon((old) => ({
+                            ...old,
+                            [field]: e.target.value,
+                          }))
+                        }
+                      />
+                    </label>
+                    <button
+                      disabled={
+                        disabled || !Object.hasOwn(requestCommon, field)
+                      }
+                      aria-label={`Убрать общее значение: ${label}`}
+                      onClick={() =>
+                        setRequestCommon((old) => {
+                          const next = { ...old };
+                          delete next[field as keyof typeof next];
+                          return next;
+                        })
+                      }
+                    >
+                      Убрать значение
+                    </button>
+                  </div>
+                ))}
+            </div>
+            <button
+              disabled={disabled || JSON.stringify(requestCommon) === commonKey}
+              onClick={() =>
+                void apply({ schemaVersion: 2, commonFields: requestCommon })
+              }
+            >
+              Сохранить общие значения заявки
+            </button>
+          </details>
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={joinExisting}
+              disabled={disabled}
+              onChange={(e) => setJoinExisting(e.target.checked)}
+            />
+            Присоединить к событию существующее назначение той же формы без
+            результата и основания, если оно одно. Импортированные и ручные
+            исключения сохраняются.
+          </label>
           <label className="checkbox-label">
             <input
               type="checkbox"
@@ -580,6 +706,134 @@ export function EventContext({
                   оформлении
                 </span>
               </div>
+              {draft.status === "DRAFT" &&
+                eventAssignments.some(
+                  ({ assignment }) =>
+                    !assignment.outcome ||
+                    assignment.outcome.status === "UNKNOWN",
+                ) && (
+                  <Notice kind="info">
+                    Не подтверждены результаты:{" "}
+                    {
+                      eventAssignments.filter(
+                        ({ assignment }) =>
+                          !assignment.outcome ||
+                          assignment.outcome.status === "UNKNOWN",
+                      ).length
+                    }
+                    . Удостоверения этих участников не включаются в комплект.
+                    Для их оформления откройте «Подтвердить фактические
+                    результаты события» и укажите проверенный результат с
+                    источником.
+                  </Notice>
+                )}
+              <details className="outcome-entry">
+                <summary>
+                  Перенести выбранных участников в другое событие
+                </summary>
+                <p>
+                  Перенос доступен только в черновике и в совместимое событие.
+                  Индивидуальные и импортированные исключения сохраняются;
+                  наследуемые значения берутся из нового события. Результаты
+                  старого события снимаются и требуют нового подтверждения.
+                </p>
+                <label>
+                  Событие назначения
+                  <select
+                    value={moveTarget}
+                    disabled={disabled}
+                    onChange={(e) => {
+                      setMoveTarget(e.target.value);
+                      setMoveConfirmed(false);
+                    }}
+                  >
+                    <option value="">Выберите совместимое событие</option>
+                    {moveTargets.map((target) => (
+                      <option key={target.id} value={target.id}>
+                        {target.title} ·{" "}
+                        {target.commonFields.trainingStart || "дата не задана"}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <p>
+                  Будет перенесено: {selectedAssignments.length} назначений из
+                  события «{event.title}».
+                </p>
+                {moveConflicts.length > 0 && (
+                  <Notice>
+                    У {moveConflicts.length} выбранных участников уже есть эта
+                    форма в целевом событии. Уберите этих людей из выбора, чтобы
+                    не создать дубли.
+                  </Notice>
+                )}
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={moveConfirmed}
+                    disabled={disabled}
+                    onChange={(e) => setMoveConfirmed(e.target.checked)}
+                  />
+                  Подтверждаю перенос выбранных участников и снятие прежних
+                  результатов. Состав и общие параметры нового события
+                  проверены.
+                </label>
+                <button
+                  disabled={
+                    disabled ||
+                    !moveConfirmed ||
+                    !moveTargets.some((target) => target.id === moveTarget) ||
+                    !selectedAssignments.length ||
+                    !!moveConflicts.length
+                  }
+                  onClick={async () => {
+                    const sourceId = event.id;
+                    const applied = await apply({
+                      events: events.map((value) =>
+                        [sourceId, moveTarget].includes(value.id)
+                          ? { ...value, revision: value.revision + 1 }
+                          : value,
+                      ),
+                      items: draft.items.map((item) =>
+                        !selectedIds.includes(item.id)
+                          ? item
+                          : {
+                              ...item,
+                              assignments: item.assignments.map((assignment) =>
+                                assignment.eventId !== sourceId
+                                  ? assignment
+                                  : {
+                                      ...assignment,
+                                      eventId: moveTarget,
+                                      result: "",
+                                      outcome: {
+                                        status: "UNKNOWN",
+                                        source: "",
+                                      },
+                                      ...(assignment.templateId.startsWith(
+                                        "biot-",
+                                      )
+                                        ? {
+                                            biotKnowledgeResult: "",
+                                            biotProctoringResult: "",
+                                            biotUniqueNumber: "",
+                                          }
+                                        : {}),
+                                    },
+                              ),
+                            },
+                      ),
+                    });
+                    if (applied) {
+                      setActiveId(moveTarget);
+                      setMoveTarget("");
+                      setMoveConfirmed(false);
+                    }
+                  }}
+                >
+                  Перенести выбранные назначения
+                </button>
+              </details>
               <details className="outcome-entry">
                 <summary>Подтвердить фактические результаты события</summary>
                 <p>

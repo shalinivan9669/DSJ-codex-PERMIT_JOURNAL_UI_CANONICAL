@@ -77,6 +77,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [rowScope, setRowScope] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
+  const [contextBusy, setContextBusy] = useState(false);
+  const operationBusy = !!busy || contextBusy;
   const [validation, setValidation] = useState<Validation | null>(null);
   const [serverResolution, setServerResolution] = useState<{
     revision: number;
@@ -105,7 +107,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const idempotency = useRef<{ revision: number; key: string } | null>(null);
   const errorsRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (validation) errorsRef.current?.focus();
+    if (validation) {
+      errorsRef.current?.focus({ preventScroll: true });
+      errorsRef.current?.scrollIntoView({ block: "start" });
+    }
   }, [validation]);
   const alive = useRef(true);
   const initialize = useCallback(
@@ -113,7 +118,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       current.current = value;
       setDraft(value);
       setServerResolution(null);
-      setSelectedId(value.items[0]?.id || "");
+      setSelectedId((previous) =>
+        value.items.some((item) => item.id === previous)
+          ? previous
+          : value.items[0]?.id || "",
+      );
       setSaveState("saved");
       lane.current = new AutosaveLane(
         draftPayload(value),
@@ -524,7 +533,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           Название заявки
           <input
             aria-label="Название заявки"
-            disabled={readonly || !!busy}
+            disabled={readonly || operationBusy}
             value={draft.title}
             maxLength={255}
             onChange={(event) => edit({ title: event.target.value })}
@@ -535,7 +544,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             <label>
               Заказчик
               <select
-                disabled={readonly || !!busy}
+                disabled={readonly || operationBusy}
                 value={draft.customerId || ""}
                 onChange={(event) =>
                   edit({ customerId: event.target.value || null })
@@ -571,7 +580,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         <label className="checkbox">
           <input
             type="checkbox"
-            disabled={readonly || !!busy || context.tenant.demoOnly}
+            disabled={readonly || operationBusy || context.tenant.demoOnly}
             checked={draft.demoMode}
             onChange={(event) => edit({ demoMode: event.target.checked })}
           />
@@ -581,16 +590,19 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       <EventContext
         draft={draft}
         selectedIds={checked}
-        disabled={readonly || !!busy}
+        disabled={readonly || operationBusy}
         onChange={edit}
         onApply={applyOperation}
         onContextCommit={rememberContextOperation}
+        onBusyChange={setContextBusy}
       />
       {undo && !readonly && (
         <Notice kind="info">
           Последнее массовое изменение сохранено.{" "}
           <button
-            disabled={!!busy || dirty || draft.revision !== undo.revision}
+            disabled={
+              operationBusy || dirty || draft.revision !== undo.revision
+            }
             onClick={async () => {
               setBusy("undo");
               setError("");
@@ -635,29 +647,32 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           {!readonly && (
             <div className="toolbar-actions">
               <button
-                disabled={!!busy || !draft.items.length}
+                disabled={operationBusy || !draft.items.length}
                 onClick={() => setDialog("photos")}
               >
                 Сопоставить фото
               </button>
               <button
-                disabled={!!busy || draft.items.length >= LIMITS.rows}
+                disabled={operationBusy || draft.items.length >= LIMITS.rows}
                 onClick={() => setDialog("recipientPicker")}
               >
                 Найти человека
               </button>
-              <button disabled={!!busy} onClick={() => setDialog("import")}>
+              <button
+                disabled={operationBusy}
+                onClick={() => setDialog("import")}
+              >
                 <Icon name="upload" />
                 Импорт / вставка
               </button>
               <button
-                disabled={!checked.length || !!busy}
+                disabled={!checked.length || operationBusy}
                 onClick={() => setDialog("bulk")}
               >
                 Применить к выбранным ({checked.length})
               </button>
               <button
-                disabled={draft.items.length >= LIMITS.rows || !!busy}
+                disabled={draft.items.length >= LIMITS.rows || operationBusy}
                 onClick={() => {
                   const row = newRecipient();
                   edit({ items: [...draft.items, row] });
@@ -786,7 +801,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                               ? `name-error-${item.id}`
                               : undefined
                           }
-                          disabled={readonly || !!busy}
+                          disabled={readonly || operationBusy}
                           value={item.fullNameRu}
                           placeholder="ФИО на русском"
                           onFocus={() => setSelectedId(item.id)}
@@ -819,7 +834,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                               });
                             }
                           }}
-                          disabled={readonly || !!busy}
+                          disabled={readonly || operationBusy}
                           value={item.fullNameKz}
                           placeholder="Қазақша аты-жөні"
                           onFocus={() => setSelectedId(item.id)}
@@ -846,7 +861,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                         {!readonly && (
                           <button
                             className="icon-button"
-                            disabled={!!busy}
+                            disabled={operationBusy}
                             aria-label={`Удалить получателя ${index + 1}`}
                             onClick={() => {
                               edit({
@@ -887,7 +902,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   (item) => item.id === selected.id,
                 )}
                 provenance={resolved.provenance}
-                disabled={readonly || !!busy}
+                disabled={readonly || operationBusy}
                 onChange={editRecipient}
                 context={context}
                 rowIndex={draft.items.indexOf(selected)}
@@ -1016,18 +1031,27 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             <small>Номера будут назначены при оформлении</small>
           </div>
           <div className="action-buttons">
-            <button disabled={!!busy} onClick={() => void command("save")}>
+            <button
+              disabled={operationBusy}
+              onClick={() => void command("save")}
+            >
               {busy === "save" ? "Сохраняем…" : "Сохранить"}
             </button>
-            <button disabled={!!busy} onClick={() => void command("validate")}>
+            <button
+              disabled={operationBusy}
+              onClick={() => void command("validate")}
+            >
               {busy === "validate" ? "Проверяем…" : "Проверить"}
             </button>
-            <button disabled={!!busy} onClick={() => void command("preview")}>
+            <button
+              disabled={operationBusy}
+              onClick={() => void command("preview")}
+            >
               {busy === "preview" ? "Готовим…" : "Предпросмотр"}
             </button>
             <button
               className="primary"
-              disabled={!!busy || !draft.items.length}
+              disabled={operationBusy || !draft.items.length}
               onClick={() => setDialog("finalize")}
             >
               <Icon name="print" />
@@ -1050,7 +1074,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         <BulkPhotoDialog
           items={draft.items}
           customerId={draft.customerId}
-          disabled={!!busy}
+          disabled={operationBusy}
           onClose={() => setDialog(null)}
           onApply={async (updates) => {
             const applied = await applyOperation({
@@ -1061,6 +1085,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               ),
             });
             if (applied) setDialog(null);
+            return applied;
           }}
         />
       )}
@@ -1148,12 +1173,12 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </p>
           {error && <Notice>{error}</Notice>}
           <div className="modal-actions">
-            <button disabled={!!busy} onClick={() => setDialog(null)}>
+            <button disabled={operationBusy} onClick={() => setDialog(null)}>
               Вернуться к данным
             </button>
             <button
               className="primary"
-              disabled={!!busy}
+              disabled={operationBusy}
               onClick={() => void command("finalize")}
             >
               {busy === "finalize" ? "Оформляем…" : "Оформить"}
@@ -1176,12 +1201,12 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </p>
           {error && <Notice>{error}</Notice>}
           <div className="modal-actions">
-            <button disabled={!!busy} onClick={() => void reload()}>
+            <button disabled={operationBusy} onClick={() => void reload()}>
               Загрузить версию сервера
             </button>
             <button
               className="primary"
-              disabled={!!busy}
+              disabled={operationBusy}
               onClick={() => void copyConflict()}
             >
               Сохранить мой ввод в копию

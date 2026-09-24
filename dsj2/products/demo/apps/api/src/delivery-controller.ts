@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Req, Res } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  Res,
+} from "@nestjs/common";
 import type { Response } from "express";
 import { ctx, type DemoRequest } from "./core";
 import {
@@ -43,8 +52,9 @@ export class DeliveryController {
   @Get("clarification") clarification(
     @Req() req: DemoRequest,
     @Param("id") id: string,
+    @Query("customerId") customerId?: string,
   ) {
-    return clarificationRequest(ctx(req), id);
+    return clarificationRequest(ctx(req), id, customerId);
   }
   @Get("transfers") transfers(
     @Req() req: DemoRequest,

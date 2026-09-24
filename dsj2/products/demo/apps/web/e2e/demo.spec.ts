@@ -6,6 +6,11 @@ import { inflateRawSync } from "node:zlib";
 const evidence = process.env.DEMO_E2E_EVIDENCE
   ? path.resolve(process.env.DEMO_E2E_EVIDENCE)
   : path.resolve(__dirname, "../../../docs/evidence/browser");
+test.beforeEach(async ({ context }) => {
+  await context.routeWebSocket("**/_next/webpack-hmr", (socket) =>
+    socket.close(),
+  );
+});
 test.beforeAll(async ({ browser }) => {
   await fs.mkdir(evidence, { recursive: true });
   await fs.writeFile(

@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { basename, dirname, join, resolve } from "node:path";
 import { bootstrap } from "../../apps/api/src/main";
 import { db } from "../../apps/api/src/core";
 
@@ -41,6 +43,50 @@ async function main() {
       { headers: { cookie } },
     );
     assert.equal(request.status, 200);
+    const requestBody = await request.json();
+    let orderParties = null;
+    if (expected.parties) {
+      const response = await fetch(base + `/orders/${expected.orderId}`, {
+        headers: { cookie },
+      });
+      assert.equal(response.status, 200);
+      const order = await response.json();
+      assert.equal(order.id, expected.orderId);
+      assert.deepEqual(
+        [order.customerId, order.payerId, order.employerId],
+        expected.parties,
+      );
+      assert.deepEqual(
+        [order.customer.id, order.payer.id, order.employer.id],
+        expected.parties,
+      );
+      assert.equal(order.summary.people, expected.people);
+      assert.equal(order.summary.events, expected.events);
+      assert.equal(order.requests.length, 1);
+      assert.equal(order.requests[0].id, expected.requestId);
+      assert.equal(order.requests[0].itemCount, expected.people);
+      assert.equal(requestBody.customerId, expected.parties[0]);
+      assert.equal(requestBody.items.length, expected.people);
+      assert.equal(requestBody.items[0].employerId, expected.parties[2]);
+      assert.equal(
+        requestBody.items[0].assignments[0].outcome.status,
+        "UNKNOWN",
+      );
+      assert.ok(
+        order.nextActions.some(
+          (item: { source: string }) => item.source === "RESULT_REVIEW",
+        ),
+      );
+      orderParties = {
+        orderId: order.id,
+        parties: [order.customerId, order.payerId, order.employerId],
+        people: order.summary.people,
+        events: order.summary.events,
+        requestCustomerAndRowEmployerPreserved: true,
+        unknownResultStillRequiresAction: true,
+        sourceUiEvidence: expected.sourceUiEvidence,
+      };
+    }
     const downloads = [];
     for (const artifact of expected.artifacts) {
       for (let repeat = 1; repeat <= 2; repeat++) {
@@ -98,6 +144,117 @@ async function main() {
       assert.equal(body.id, id);
       restoredEntities.push({ kind, id });
     }
+    const invitations = [];
+    if (expected.invitations?.length) {
+      const response = await fetch(base + "/employer-invites", {
+        headers: { cookie },
+      });
+      assert.equal(response.status, 200);
+      const { items } = await response.json();
+      for (const expectedInvite of expected.invitations) {
+        const row = items.find(
+          (item: { id: string }) => item.id === expectedInvite.id,
+        );
+        assert.ok(row);
+        assert.equal(row.customerId, expectedInvite.customerId);
+        for (const field of [
+          "expiresAt",
+          "accessExpiresAt",
+          "consumedAt",
+          "revokedAt",
+        ])
+          assert.equal(row[field], expectedInvite[field]);
+        assert.equal(row.secretHash, undefined);
+        invitations.push({
+          id: row.id,
+          state: expectedInvite.state,
+          restored: true,
+        });
+      }
+    }
+    let dossier = null;
+    if (expected.dossier) {
+      const response = await fetch(
+        base + `/orders/${expected.orderId}/dossier`,
+        { headers: { cookie } },
+      );
+      assert.equal(response.status, 200);
+      const current = await response.json();
+      for (const key of [
+        "artifacts",
+        "attachments",
+        "events",
+        "issuances",
+        "missing",
+      ])
+        assert.deepEqual(
+          current[key].sort((a: { id: string }, b: { id: string }) =>
+            a.id.localeCompare(b.id),
+          ),
+          expected.dossier.detail[key].sort(
+            (a: { id: string }, b: { id: string }) => a.id.localeCompare(b.id),
+          ),
+        );
+      const order = await fetch(base + `/orders/${expected.orderId}`, {
+        headers: { cookie },
+      });
+      assert.equal(order.status, 200);
+      assert.equal((await order.json()).summary.people, expected.people);
+      const download = await fetch(
+        base + `/orders/${expected.orderId}/dossier/export`,
+        { headers: { cookie } },
+      );
+      assert.equal(download.status, 200);
+      const zipPath = join(
+        dirname(resolve(process.argv[3])),
+        `${basename(process.argv[3], ".json").replace(/-http-readback$/, "")}-restored-dossier.zip`,
+      );
+      await writeFile(zipPath, Buffer.from(await download.arrayBuffer()));
+      assert.ok(process.env.DEMO_PYTHON);
+      dossier = JSON.parse(
+        execFileSync(
+          process.env.DEMO_PYTHON,
+          [
+            resolve("scripts/verification/verify-restored-dossier.py"),
+            zipPath,
+            resolve(process.argv[2]),
+          ],
+          { encoding: "utf8", windowsHide: true, timeout: 30000 },
+        ),
+      );
+    }
+    const webChecks = [];
+    if (process.env.DEMO_RECOVERY_WEB_ORIGIN) {
+      const webBase = process.env.DEMO_RECOVERY_WEB_ORIGIN;
+      assert.match(webBase, /^http:\/\/127\.0\.0\.1:[0-9]+$/);
+      const loginPage = await fetch(webBase + "/login");
+      assert.equal(loginPage.status, 200);
+      assert.match(await loginPage.text(), /<html/);
+      const proxiedContext = await fetch(webBase + "/api/context", {
+        headers: { cookie },
+      });
+      assert.equal(proxiedContext.status, 200);
+      assert.equal((await proxiedContext.json()).tenant.id, expected.tenantId);
+      const file = expected.artifacts.find(
+        (item: { kind: string }) => item.kind === "PDF",
+      );
+      assert.ok(file);
+      const downloaded = await fetch(webBase + `/api/artifacts/${file.id}`, {
+        headers: { cookie },
+      });
+      assert.equal(downloaded.status, 200);
+      const bytes = Buffer.from(await downloaded.arrayBuffer());
+      assert.equal(
+        createHash("sha256").update(bytes).digest("hex"),
+        file.sha256,
+      );
+      webChecks.push({
+        loginPageStatus: 200,
+        authenticatedProxyContext: true,
+        pdfId: file.id,
+        sha256: file.sha256,
+      });
+    }
     const result = {
       status: "PASS",
       restoredTenantId: expected.tenantId,
@@ -106,6 +263,10 @@ async function main() {
       photos,
       attachments,
       restoredEntities,
+      orderParties,
+      invitations,
+      dossier,
+      webChecks,
       note: "Verified after row/file/template/font hash reconciliation; login intentionally creates a new session after the offline restore verification.",
     };
     await writeFile(process.argv[3], JSON.stringify(result, null, 2));

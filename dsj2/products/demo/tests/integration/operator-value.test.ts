@@ -1,6 +1,10 @@
+import { syntheticPdf, objectStreamPdf } from "../fixtures/pdf";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { PRODUCT_ROOT } from "@demo/printing";
 import { db, json, type Context } from "../../apps/api/src/core";
 import { createRequest, patchRequest } from "../../apps/api/src/requests";
 import {
@@ -219,6 +223,21 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         source: "Исходный счёт бухгалтерии",
       });
       assert.equal(receipt.orderId, serviceOrder.id);
+      await assert.rejects(
+        value.recordFinancialDocument(ca, serviceOrder.id, {
+          type: "INVOICE",
+          number: `TEST-${suffix}`,
+          documentDate: "2026-09-24",
+          source: "Повтор исходного счёта",
+        }),
+        code("FINANCIAL_DOCUMENT_EXISTS"),
+      );
+      assert.equal(
+        await db.financialDocument.count({
+          where: { tenantId: ca.tenantId, orderId: serviceOrder.id },
+        }),
+        1,
+      );
       assert.equal(
         (await db.printRequest.findUniqueOrThrow({ where: { id: request.id } }))
           .status,
@@ -377,8 +396,16 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         }),
         code("FILE_TYPE_REJECTED"),
       );
-      const pdf = Buffer.from(
-        "%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\n%%EOF",
+      const pdf = syntheticPdf();
+      await assert.rejects(
+        value.addValueAttachment(ca, {
+          evidenceId: evidence.id,
+          category: "SOURCE",
+          source: "Синтетическая проверка",
+          fileName: "compressed.pdf",
+          contentBase64: objectStreamPdf(true).toString("base64"),
+        }),
+        code("ACTIVE_PDF_REJECTED"),
       );
       const attachment = await value.addValueAttachment(ca, {
         evidenceId: evidence.id,
@@ -390,6 +417,34 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
       assert.deepEqual(
         (await value.readValueAttachment(ca, attachment.id)).bytes,
         pdf,
+      );
+      for (const extension of ["png", "jpeg"]) {
+        const image = readFileSync(
+          join(PRODUCT_ROOT, `tests/fixtures/source.${extension}`),
+        );
+        const stored = await value.addValueAttachment(ca, {
+          evidenceId: evidence.id,
+          category: "SOURCE",
+          source: "Синтетический скан",
+          fileName: `source.${extension}`,
+          contentBase64: image.toString("base64"),
+        });
+        assert.deepEqual(
+          (await value.readValueAttachment(ca, stored.id)).bytes,
+          image,
+        );
+      }
+      await assert.rejects(
+        value.addValueAttachment(ca, {
+          evidenceId: evidence.id,
+          category: "SOURCE",
+          source: "Синтетическая проверка",
+          fileName: "false.png",
+          contentBase64: Buffer.from([
+            137, 80, 78, 71, 13, 10, 26, 10,
+          ]).toString("base64"),
+        }),
+        code("IMAGE_INVALID"),
       );
       await assert.rejects(
         value.readValueAttachment(cb, attachment.id),

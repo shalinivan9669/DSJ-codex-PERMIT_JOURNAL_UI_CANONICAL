@@ -34,7 +34,7 @@ export function OrderFinance({
   revision: number;
   commercial: Commercial;
   context: AppContext;
-  onChanged: () => void;
+  onChanged: () => void | Promise<void>;
 }) {
   const [lines, setLines] = useState<Line[]>(commercial.lines || []);
   const [tax, setTax] = useState(
@@ -57,7 +57,7 @@ export function OrderFinance({
     setBusy(true);
     try {
       await action();
-      onChanged();
+      await onChanged();
     } catch (c) {
       setError(errorText(c));
     } finally {
@@ -68,6 +68,15 @@ export function OrderFinance({
     <details className="outcome-entry">
       <summary>Расчёты и финансовые основания</summary>
       {error && <Notice>{error}</Notice>}
+      {commercial.subtotalMinor !== undefined && (
+        <p>
+          Стоимость услуг до налога: {minorToKzt(commercial.subtotalMinor)} KZT
+          · Налог:{" "}
+          {commercial.taxMinor === null || commercial.taxMinor === undefined
+            ? "требует уточнения"
+            : `${minorToKzt(commercial.taxMinor)} KZT`}
+        </p>
+      )}
       <p>
         Согласовано: {minorToKzt(commercial.totalMinor)} KZT · Оплачено:{" "}
         {minorToKzt(commercial.paidMinor || "0")} KZT
