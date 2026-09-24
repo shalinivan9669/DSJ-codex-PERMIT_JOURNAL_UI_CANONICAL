@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "scenario": "person: bilingual refresh, final characters, PDF/DOCX originals, immutable history and correction",
+  "startTime": "2026-09-22T12:49:37.856Z",
+  "durationMs": 104950,
+  "retry": 0,
+  "requestId": "61f43e07-9d5a-4900-8654-ba95f60aff40",
+  "template": {
+    "id": "biot-worker-card",
+    "version": "7",
+    "sha256": "6e393c6d3c66fa8125a79eddcd34690ecb64062322d921bd8bbf1d2fefcf693c"
+  },
+  "files": 6,
+  "sourceResults": "results.json",
+  "note": "This extracts only the successful person scenario. The first expanded settings test in that run failed because of an exact textarea label selector; it was corrected and independently passed in final-settings/results.json. No combined 2/2 success is claimed for final-forms/results.json."
+}

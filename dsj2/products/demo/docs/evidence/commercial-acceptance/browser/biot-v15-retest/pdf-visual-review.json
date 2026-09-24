@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "requestId": "6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070",
+  "artifactCount": 6,
+  "matches": [
+    {
+      "file": "bed75497-e78d-41e5-8ef3-f76dcd72fec8-biot-worker-card-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.docx",
+      "provenance": "PREVIEW",
+      "exactPhotoMatches": []
+    },
+    {
+      "file": "aac046d2-965d-4e15-965c-e6d83f9c9589-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.docx",
+      "provenance": "ORIGINAL",
+      "exactPhotoMatches": []
+    }
+  ],
+  "pages": [
+    {
+      "pdf": "4a933c8b-4dc4-464e-8c30-91033d6fb156-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.pdf",
+      "page": 1,
+      "png": "4a933c8b-4dc4-464e-8c30-91033d6fb156-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.page-1.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 1392,
+      "images": [],
+      "outsideSheetCharacters": [],
+      "visualStatus": "PASS",
+      "reviewNotes": "Explicitly viewed: lower duplicate right block now wraps full original chairman and program inside frame; upper/reverse blocks fit and issuer bands intact."
+    },
+    {
+      "pdf": "4a933c8b-4dc4-464e-8c30-91033d6fb156-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.pdf",
+      "page": 2,
+      "png": "4a933c8b-4dc4-464e-8c30-91033d6fb156-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.page-2.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 1129,
+      "images": [],
+      "outsideSheetCharacters": [],
+      "visualStatus": "PASS",
+      "reviewNotes": "Explicitly viewed: lower duplicate right block now wraps full original chairman and program inside frame; upper/reverse blocks fit and issuer bands intact."
+    }
+  ],
+  "manuallyReviewedAt": "2026-09-22T15:43:50.603Z",
+  "manualScreens": [
+    "pdf-preview.png",
+    "issued-portrait.png"
+  ]
+}

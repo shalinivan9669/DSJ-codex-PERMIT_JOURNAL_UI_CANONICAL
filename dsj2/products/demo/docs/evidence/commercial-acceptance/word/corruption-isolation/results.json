@@ -1,0 +1,55 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "Read-only; macro execution and external link updates disabled",
+  "documents": [
+    {
+      "file": "biot-card-template.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 2,
+      "bodyCharacters": 1251,
+      "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+      "pdf": "biot-card-template.word.pdf",
+      "pdfBytes": 143115
+    },
+    {
+      "file": "biot-worker-card.v4.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден.",
+      "sourceSha256": "cf81fd8f97455828c828ae66c237b2e92d7b15fdcff3c693417cfb2d8bc75e29"
+    },
+    {
+      "file": "biot-protocol-all-utf8fixed.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 1,
+      "bodyCharacters": 1721,
+      "sourceSha256": "236fbe20f4d142b9cee87e0ce371d1c945a6bc475149fe2607a6b0bf327d4cf8",
+      "pdf": "biot-protocol-all-utf8fixed.word.pdf",
+      "pdfBytes": 135974
+    },
+    {
+      "file": "biot-protocol-mc-utf8fixed.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден.",
+      "sourceSha256": "48a6c736ae4fe0371ca788d137f948840c5db156c3af934f7ad4962ab56f221b"
+    },
+    {
+      "file": "biot-protocol-override-utf8fixed.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден.",
+      "sourceSha256": "b0f8cf2154a55788fb50822387dfd840986d11d8b136297ba094387e3ace9ad5"
+    },
+    {
+      "file": "biot-protocol-props-utf8fixed.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден.",
+      "sourceSha256": "55c5c2453d4d54408ee40740b59aaafe9f18f562727c4d8171c6ba1faa774806"
+    },
+    {
+      "file": "biot-protocol-short-utf8fixed.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден.",
+      "sourceSha256": "f1275bd7f702dd767c0304fe83afd0ed8ca72ea5b32e8c4a2d67070e070f90da"
+    }
+  ]
+}

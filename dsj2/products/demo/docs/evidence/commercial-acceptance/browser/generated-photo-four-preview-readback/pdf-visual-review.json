@@ -1,0 +1,184 @@
+{
+  "status": "PARTIAL_PASS_BIOT_LAYOUT_DEFECT",
+  "requestId": "fff50a43-a6f1-444b-bde2-39821d04ae79",
+  "artifactCount": 18,
+  "matches": [
+    {
+      "file": "3a306340-8226-4cdc-bd59-a764506a7e3a-biot-worker-card-fff50a43-a6f1-444b-bde2-39821d04ae79.docx",
+      "provenance": "PREVIEW",
+      "exactPhotoMatches": []
+    },
+    {
+      "file": "48b8929b-0bbf-4961-8072-9d1536ed9779-ptm-card-fff50a43-a6f1-444b-bde2-39821d04ae79.docx",
+      "provenance": "PREVIEW",
+      "exactPhotoMatches": [
+        "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png"
+      ]
+    },
+    {
+      "file": "37907fe6-a5ea-4756-b78a-a9c34be3765a-pb-card-fff50a43-a6f1-444b-bde2-39821d04ae79.docx",
+      "provenance": "PREVIEW",
+      "exactPhotoMatches": [
+        "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png"
+      ]
+    },
+    {
+      "file": "ae728146-ea8e-4e7c-880b-e00d77b0dd5e-ps-card-fff50a43-a6f1-444b-bde2-39821d04ae79.docx",
+      "provenance": "PREVIEW",
+      "exactPhotoMatches": [
+        "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png"
+      ]
+    },
+    {
+      "file": "f69dc84c-af8c-4933-8d28-89d0cffbe2b6-biot-worker-card-a4221d3d-94f9-420f-81be-66adb7c4a881.docx",
+      "provenance": "ORIGINAL",
+      "exactPhotoMatches": []
+    },
+    {
+      "file": "350e5190-a7a2-4a2b-9fd9-1e455ec4ffba-ptm-card-4792e6f5-1e38-4634-8fae-07d422c16f66.docx",
+      "provenance": "ORIGINAL",
+      "exactPhotoMatches": [
+        "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png"
+      ]
+    },
+    {
+      "file": "415092ef-00f0-413b-b2c7-de154fd6cc04-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.docx",
+      "provenance": "ORIGINAL",
+      "exactPhotoMatches": [
+        "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png"
+      ]
+    },
+    {
+      "file": "a1832f4a-d694-4bae-b990-4841bda513ef-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.docx",
+      "provenance": "ORIGINAL",
+      "exactPhotoMatches": [
+        "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "pdf": "46ad6ff3-40cd-4121-8c05-f22a3a9eaddd-biot-worker-card-a4221d3d-94f9-420f-81be-66adb7c4a881.pdf",
+      "page": 1,
+      "png": "46ad6ff3-40cd-4121-8c05-f22a3a9eaddd-biot-worker-card-a4221d3d-94f9-420f-81be-66adb7c4a881.page-1.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 1392,
+      "images": [],
+      "outsideSheetCharacters": [],
+      "visualStatus": "FAIL",
+      "reviewNotes": "Lower duplicate right panel clips long chairman text at right frame; upper panel wraps correctly. Sent to print agent."
+    },
+    {
+      "pdf": "46ad6ff3-40cd-4121-8c05-f22a3a9eaddd-biot-worker-card-a4221d3d-94f9-420f-81be-66adb7c4a881.pdf",
+      "page": 2,
+      "png": "46ad6ff3-40cd-4121-8c05-f22a3a9eaddd-biot-worker-card-a4221d3d-94f9-420f-81be-66adb7c4a881.page-2.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 1129,
+      "images": [],
+      "outsideSheetCharacters": [],
+      "visualStatus": "PASS",
+      "reviewNotes": "Explicitly viewed full page: portrait (when provided by form), title, issuer strip, text, table, seals and frame fit; no clipping/overlap observed."
+    },
+    {
+      "pdf": "fe52e57a-6e1b-49a8-8c86-365cd226b3e1-ptm-card-4792e6f5-1e38-4634-8fae-07d422c16f66.pdf",
+      "page": 1,
+      "png": "fe52e57a-6e1b-49a8-8c86-365cd226b3e1-ptm-card-4792e6f5-1e38-4634-8fae-07d422c16f66.page-1.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 879,
+      "images": [
+        {
+          "x0": 243.75,
+          "top": 123.70076377952807,
+          "x1": 294.75,
+          "bottom": 191.20076377952807,
+          "srcsize": [
+            211,
+            281
+          ]
+        }
+      ],
+      "outsideSheetCharacters": [],
+      "visualStatus": "PASS",
+      "reviewNotes": "Explicitly viewed full page: portrait (when provided by form), title, issuer strip, text, table, seals and frame fit; no clipping/overlap observed."
+    },
+    {
+      "pdf": "44fa3777-0d5c-4d7c-8299-9b1557df7b91-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.pdf",
+      "page": 1,
+      "png": "44fa3777-0d5c-4d7c-8299-9b1557df7b91-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.page-1.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 1686,
+      "images": [
+        {
+          "x0": 26.25,
+          "top": 121.45076377952807,
+          "x1": 86.05,
+          "bottom": 201.10076377952805,
+          "srcsize": [
+            248,
+            331
+          ]
+        }
+      ],
+      "outsideSheetCharacters": [],
+      "visualStatus": "PASS",
+      "reviewNotes": "Explicitly viewed full page: portrait (when provided by form), title, issuer strip, text, table, seals and frame fit; no clipping/overlap observed."
+    },
+    {
+      "pdf": "44fa3777-0d5c-4d7c-8299-9b1557df7b91-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.pdf",
+      "page": 2,
+      "png": "44fa3777-0d5c-4d7c-8299-9b1557df7b91-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.page-2.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 1944,
+      "images": [],
+      "outsideSheetCharacters": [],
+      "visualStatus": "PASS",
+      "reviewNotes": "Explicitly viewed full page: portrait (when provided by form), title, issuer strip, text, table, seals and frame fit; no clipping/overlap observed."
+    },
+    {
+      "pdf": "411f238c-cb06-4223-be59-ed9de2d61e24-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.pdf",
+      "page": 1,
+      "png": "411f238c-cb06-4223-be59-ed9de2d61e24-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.page-1.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 2091,
+      "images": [
+        {
+          "x0": 36.35,
+          "top": 107.95076377952807,
+          "x1": 92.35,
+          "bottom": 181.95076377952807,
+          "srcsize": [
+            232,
+            309
+          ]
+        }
+      ],
+      "outsideSheetCharacters": [],
+      "visualStatus": "PASS",
+      "reviewNotes": "Explicitly viewed full page: portrait (when provided by form), title, issuer strip, text, table, seals and frame fit; no clipping/overlap observed."
+    },
+    {
+      "pdf": "411f238c-cb06-4223-be59-ed9de2d61e24-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.pdf",
+      "page": 2,
+      "png": "411f238c-cb06-4223-be59-ed9de2d61e24-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.page-2.png",
+      "width": 595.303937007874,
+      "height": 841.889763779528,
+      "characters": 2376,
+      "images": [],
+      "outsideSheetCharacters": [],
+      "visualStatus": "PASS",
+      "reviewNotes": "Explicitly viewed full page: portrait (when provided by form), title, issuer strip, text, table, seals and frame fit; no clipping/overlap observed."
+    }
+  ],
+  "manuallyReviewedAt": "2026-09-22T15:28:21.318Z",
+  "manualScreens": [
+    "../generated-photo-four-preview/portrait-crop.png",
+    "../generated-photo-four-preview/pdf-preview.png",
+    "issued-portrait.png"
+  ]
+}

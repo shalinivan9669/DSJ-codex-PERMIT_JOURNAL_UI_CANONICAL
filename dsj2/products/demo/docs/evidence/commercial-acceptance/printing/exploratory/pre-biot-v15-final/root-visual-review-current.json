@@ -1,0 +1,235 @@
+{
+  "status": "PASS",
+  "reviewer": "root",
+  "engine": "LibreOffice 26.2.6.3 Linux",
+  "inspectedBasePages": 36,
+  "pixelIdenticalPreviouslyInspectedPages": 30,
+  "reinspectedChangedPages": 6,
+  "limitations": [
+    "Visual review does not establish physical printer measurements or legal issuer approval."
+  ],
+  "pages": [
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-001.png",
+      "sha256": "883fe5f635a83594ac40d84e608d01507de772b6b2e831f6af2d7150489f98f8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-002.png",
+      "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-001.png",
+      "sha256": "78d48b9bb95163d4be5b9506c640125b878a3e0515274584efa4a312258e8324",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-002.png",
+      "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-001.png",
+      "sha256": "b1469a71f1cbffa977e25dea7721d56fb70a88131ded2af977c8cd38ead68371",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-002.png",
+      "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-001.png",
+      "sha256": "883fe5f635a83594ac40d84e608d01507de772b6b2e831f6af2d7150489f98f8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-002.png",
+      "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-003.png",
+      "sha256": "f75ec374368b05ccabd389ea185e7a34565c9cb1c15235615e2389a6fbe208f3",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-004.png",
+      "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-001.png",
+      "sha256": "21d58680b2be985b669b2bffafd788c8c723f9bf27a6e0161150e0d2acb83e6d",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-002.png",
+      "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-short-page-001.png",
+      "sha256": "40d8e37b7819fd2823ebb9e2cf45bc9d34ac8921a668dcaa4dbbfb9a8dafed86",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-long-page-001.png",
+      "sha256": "949c3aed12e93e0986f6d03f017ff8fa5cf0384d46a369b7f107667e4f3687f8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-blank-page-001.png",
+      "sha256": "fa5c2fb49f36f91a6d36ab1c0c489e07415ccde7a1fda945a818a267238c9dbb",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-batch-page-001.png",
+      "sha256": "40d8e37b7819fd2823ebb9e2cf45bc9d34ac8921a668dcaa4dbbfb9a8dafed86",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-batch-page-002.png",
+      "sha256": "76ae439fdfb62e0dd73a9332401f6b2fb495b3420f0f4d13bd5aba25270220e5",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-punctuation-page-001.png",
+      "sha256": "0fc5b55a2b135368bc6adf6f101ccef5a5f4a16fd4f0dc0940456617ff32676c",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-short-page-001.png",
+      "sha256": "53cbbfc1eccfb9f28152895deebfe5eb5ff76a3293a6eac5bbab5eb1164f4ec5",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-short-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-long-page-001.png",
+      "sha256": "2a30748598a1fe70120754c2de98bca12ac71680ae8b1faf6dde35404fb6964b",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-long-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-blank-page-001.png",
+      "sha256": "cca7a7ea94b865683a0c7c46a47a1974c52f000d51ff5373b08be5f3495ba05c",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-blank-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-001.png",
+      "sha256": "53cbbfc1eccfb9f28152895deebfe5eb5ff76a3293a6eac5bbab5eb1164f4ec5",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-003.png",
+      "sha256": "fa106b27f6e87d0b15a55e371e9e3e0f974ad02137e34e1fa33dc913781b0212",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-004.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-punctuation-page-001.png",
+      "sha256": "360d0c6dfbda4ada0767ec8ec1d5ade4d94914ae94f79406b8a56831f2f98db3",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-punctuation-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "review": "Previously inspected full-page image remains byte-identical after template metadata/static character corrections."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-short-page-001.png",
+      "sha256": "dcd745f07fc326e0f56d4570ef9cc723914ebb68b0b3c289ca61ea063813207a",
+      "status": "PASS",
+      "supersededSha256": "e76b8e3fa1e69369b4ce07dae4e753e637b3acc5ff06240255d7f6abd129f8d6",
+      "review": "Root individually displayed all six updated full-page PTM14 PNGs. Left text now clears frame by 6pt; short/long/optional-blank/punctuation and two distinct recipients remain within panels, photo and text do not overlap."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-long-page-001.png",
+      "sha256": "d676448a071edfc1fd4084da71404ee1a58fd31459dd6d7a171c601141d28831",
+      "status": "PASS",
+      "supersededSha256": "c963a7e115a548fe19d8f20fc342835d5dff3fb20c707d75dd36d45abb2e64bf",
+      "review": "Root individually displayed all six updated full-page PTM14 PNGs. Left text now clears frame by 6pt; short/long/optional-blank/punctuation and two distinct recipients remain within panels, photo and text do not overlap."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-blank-page-001.png",
+      "sha256": "dd63480d74f2bbb6507b72e11d9d16efb7096a8b6b5dab32c469487480543b89",
+      "status": "PASS",
+      "supersededSha256": "cd32c1a9d58e1c3be1dac8bc5125c592798f65167154ab9b0385d6660976759d",
+      "review": "Root individually displayed all six updated full-page PTM14 PNGs. Left text now clears frame by 6pt; short/long/optional-blank/punctuation and two distinct recipients remain within panels, photo and text do not overlap."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-batch-page-001.png",
+      "sha256": "dcd745f07fc326e0f56d4570ef9cc723914ebb68b0b3c289ca61ea063813207a",
+      "status": "PASS",
+      "supersededSha256": "e76b8e3fa1e69369b4ce07dae4e753e637b3acc5ff06240255d7f6abd129f8d6",
+      "review": "Root individually displayed all six updated full-page PTM14 PNGs. Left text now clears frame by 6pt; short/long/optional-blank/punctuation and two distinct recipients remain within panels, photo and text do not overlap."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-batch-page-002.png",
+      "sha256": "f7c5776b2c66c7cdd449379619bb0918082ac7406503e07f313099175333c79a",
+      "status": "PASS",
+      "supersededSha256": "07066b8b0119f805d84c3b80ee6b274e7f873db82a5887c3d246218076a7e54b",
+      "review": "Root individually displayed all six updated full-page PTM14 PNGs. Left text now clears frame by 6pt; short/long/optional-blank/punctuation and two distinct recipients remain within panels, photo and text do not overlap."
+    },
+    {
+      "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-punctuation-page-001.png",
+      "sha256": "234d865a08c5d9dcfb5c1c9c01147f5757399a3de79a330500add5e4515a9cff",
+      "status": "PASS",
+      "supersededSha256": "c7982402a18fa73e6c0be8a70d3a409950abbe52e30640e7ee309e0029a4b5f0",
+      "review": "Root individually displayed all six updated full-page PTM14 PNGs. Left text now clears frame by 6pt; short/long/optional-blank/punctuation and two distinct recipients remain within panels, photo and text do not overlap."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "mutation": "test-only reconstruction of prior guard and row-count naming decisions",
+  "viewerPassword": {
+    "before": 403,
+    "after": 201
+  },
+  "missingOriginalZip": {
+    "databaseArtifacts": 3,
+    "expected": 3,
+    "beforeFileName": "DEMO-complete.zip",
+    "beforeManifestComplete": false,
+    "afterWithoutConsent": 409,
+    "afterWithConsentFileName": "DEMO-PARTIAL.zip"
+  },
+  "status": "PASS"
+}

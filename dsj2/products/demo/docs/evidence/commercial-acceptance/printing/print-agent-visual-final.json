@@ -1,0 +1,293 @@
+{
+  "reviewer": "print_acceptance",
+  "pages": [
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-short-page-001.png",
+      "sha256": "6f1eed9b53bf9b2512c115b7cf819a077ead82bc6ea0dcbb89405d51b5c98976",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-long-page-001.png",
+      "sha256": "5170d01fe9d5ff4f219546f2d114ea5a949e41e7eefc0db95ee8b9ee77fe7ed4",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-blank-page-001.png",
+      "sha256": "e63a97d4de50c59d5289b0a4666f08438dfcc5bc4b159a1eeacbededb8005137",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-batch-page-001.png",
+      "sha256": "6f1eed9b53bf9b2512c115b7cf819a077ead82bc6ea0dcbb89405d51b5c98976",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-batch-page-002.png",
+      "sha256": "a1a9b18a6ba33e9b27cc011f01b90436d0d9970321d3578c16adc6c7eba1f096",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-punctuation-page-001.png",
+      "sha256": "fd99cbf05afc8a462c910bd877d6ac842fc58622aec3cd7324738d0a33be76a8",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-short-page-001.png",
+      "sha256": "345992b1eb0c8f3aea69da3a1c97aa4cd8ee1271079392ace6cc295a5acb52bf",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-long-page-001.png",
+      "sha256": "078612feeb40b241fb6dbccb26e2b61ec7fcb0a05aef90c6e359feb611a6fa79",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-blank-page-001.png",
+      "sha256": "45801f25a4f663395d5c6bfbf6e697e0c81da38120fb5284277a6a1d2cd034a2",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-batch-page-001.png",
+      "sha256": "345992b1eb0c8f3aea69da3a1c97aa4cd8ee1271079392ace6cc295a5acb52bf",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-batch-page-002.png",
+      "sha256": "15b56ae9f99312f1bf2651bce06b4d016f490700ae76689b951ec7d96f526dbc",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-punctuation-page-001.png",
+      "sha256": "6dd2a1ee30d7240e8b216b06bd394908c0d65290a5fb4ae461447f34ea009c9a",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-short-page-001.png",
+      "sha256": "3cde00254336bc36442d54eb07ae86370aa68f88aadddb7eb9bda3fe3058f7ea",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-long-page-001.png",
+      "sha256": "f938b6f4afb74a2ac686198a23aa34b227ac011e25254b396289311b1a4dd7ce",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-blank-page-001.png",
+      "sha256": "67eb0b816fe954d0a0567fb788ca8ad3855b0930bf2c19d1468a6f1c8d661068",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-batch-page-001.png",
+      "sha256": "3cde00254336bc36442d54eb07ae86370aa68f88aadddb7eb9bda3fe3058f7ea",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-batch-page-002.png",
+      "sha256": "73e69d0f8417e69a96546431178a8993bb2bc7fcdd2c37109fc097d6ac122ecf",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-punctuation-page-001.png",
+      "sha256": "e777ecda74b13655fd6fabc0f6c5b4d5e552433277527787ba40744eca4dd5f7",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-short-page-001.png",
+      "sha256": "e2048b9482bbdfa10cbbf0b08a9078caccf4052bd527393d6e2b198926bfd866",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-long-page-001.png",
+      "sha256": "bcb8a4ecfccd6a60dd1c92adfd3420e5c17d22b61a67a27edf4d9e176ce7a434",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-blank-page-001.png",
+      "sha256": "d4a358280d74adb614dd75ab943123fd4b222c8fcde939fd21353ae7c3f408be",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-batch-page-001.png",
+      "sha256": "e2048b9482bbdfa10cbbf0b08a9078caccf4052bd527393d6e2b198926bfd866",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-batch-page-002.png",
+      "sha256": "d97f97a9ea7cdedadc624bedda258107b13dd2cfa7269396d6cae98a954beff3",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-punctuation-page-001.png",
+      "sha256": "ca6a33730a807d6f7d81586f718716b0ae74e3775350abb617856ab29d7aa453",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-short-page-001.png",
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-short-page-002.png",
+      "sha256": "8097ebc1bfb00e6a2d390ea4ef439469b5cf3aaf51149277c3375e436b1d416d",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-long-page-001.png",
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-long-page-002.png",
+      "sha256": "9f078c2dac543e3b0a7739e5a74b76bbe9a3fb34b17118de913c7ae7b98808a2",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-blank-page-001.png",
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-blank-page-002.png",
+      "sha256": "afbe816af9118c3d757040d3384971105817601150e7d41d26ff233eee610aa4",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-001.png",
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-002.png",
+      "sha256": "8097ebc1bfb00e6a2d390ea4ef439469b5cf3aaf51149277c3375e436b1d416d",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-003.png",
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-004.png",
+      "sha256": "c8ba330d0a51068e0633d5ede00da21f3be2e628aaf54d3dad789f8cfdad3a68",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-punctuation-page-001.png",
+      "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-punctuation-page-002.png",
+      "sha256": "48aea7e62ac4c601f50219bed9cecbf906bb6a4a8e38b25b3c4de27c83e5626f",
+      "status": "PASS",
+      "review": "individual full-page visual inspection; readable fields, complete borders, no clipping or overlap; synthetic watermark retained"
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-short-page-001.png",
+      "sha256": "c17b099cf90e8abaf78435a31e32c69bbaa069c395276e8f4411de3263289518",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-short-page-002.png",
+      "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-long-page-001.png",
+      "sha256": "97e88bde12219b78f46ea4bef12176b270ff93808ea11cd81f65db88c27a0c98",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-long-page-002.png",
+      "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-blank-page-001.png",
+      "sha256": "93770d5b0a7fe5f637b88512b4efcd014869f6b8bb93386dad24fcd2d7c8646a",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-blank-page-002.png",
+      "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-001.png",
+      "sha256": "c17b099cf90e8abaf78435a31e32c69bbaa069c395276e8f4411de3263289518",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-002.png",
+      "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-003.png",
+      "sha256": "226094a2aaa07916f97b76400b027696767b25e17ab892ad24c4468731383478",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-004.png",
+      "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-punctuation-page-001.png",
+      "sha256": "6fe8c4b0b08548078f778c7b8b508e9e4d688e6532040ab11e360df19a10da75",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/printing/pages/ps-card-punctuation-page-002.png",
+      "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887",
+      "status": "PASS",
+      "review": "Individual full-page inspection: title below issuer strip, right text inside its panel, full signature and seal labels, complete frames and distinct photos."
+    }
+  ]
+}

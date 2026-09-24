@@ -3,6 +3,7 @@ node_modules/
 
 # build output and compiler state
 .next/
+.next-*/
 .next.broken.*/
 dist/
 build/
@@ -17,23 +18,68 @@ coverage/
 *.err
 tmp/
 .runlogs/
+.runtime/
 .codex-runtime/
 .playwright/
 .playwright-report/
 .playwright-cli/
+playwright-report/
+test-results/
 .cache/
 storage/
 
 # Python runtime artifacts
+.venv/
+.venv-*/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 __pycache__/
 *.py[cod]
 
+# DEMO local document store and generated delivery bundles
+/products/demo/data/artifacts/
+/products/demo/docs/deliverables/
+
+# DEMO generated printouts and screenshots; keep reports, fixtures, and scripts
+/products/demo/docs/evidence/**/*.png
+/products/demo/docs/evidence/**/*.jpg
+/products/demo/docs/evidence/**/*.jpeg
+/products/demo/docs/evidence/**/*.docx
+/products/demo/docs/evidence/**/*.pdf
+/products/demo/docs/evidence/**/*.zip
+/products/demo/docs/evidence/**/*.xlsx
+# Machine-generated per-document checks; keep input fixtures and field maps
+/products/demo/docs/evidence/**/*.result.json
+/products/demo/docs/evidence/**/*.audit.json
+/products/demo/docs/evidence/**/*.conversion.json
+/products/demo/docs/evidence/**/*.word.txt
+/products/demo/docs/evidence/**/*.word-body.txt
+# Downloaded legal references are source material, not generated output
+!/products/demo/docs/evidence/commercial-acceptance/legal-sources/**
+
+# Local process snapshots, Git snapshots, and development TLS certificates
+/products/demo/docs/evidence/runtime-health.json
+/products/demo/docs/evidence/worker-kill-before.json
+/products/demo/docs/evidence/worker-kill-after.json
+/products/demo/docs/evidence/commercial-acceptance/initial-git-status.txt
+/products/demo/docs/evidence/commercial-acceptance/initial-tracked.patch
+/products/demo/docs/evidence/commercial-acceptance/local-tls-*.crt
+/products/demo/docs/evidence/commercial-acceptance/local-tls-certificate.txt
+/products/demo/docs/evidence/commercial-acceptance/browser/user-preview-biot15-pids.json
+/products/demo/docs/evidence/commercial-acceptance/browser/user-preview-processes.json
+/products/demo/docs/evidence/commercial-acceptance/browser/user-preview-restarted-pids.json
+/products/demo/docs/evidence/commercial-acceptance/load-final/resources.jsonl
+
 # local environment
 .env
-.env.local
-.env.*.local
+.env.*
 !.env.example
-!.env.abtest.example
+!.env.*.example
+!.env.sample
+!.env.*.sample
+!.env.template
+!.env.*.template
 
 # database local-only files
 packages/database/generated/

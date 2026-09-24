@@ -1,0 +1,95 @@
+[
+    {
+        "Id": "sha256:399a6212afad69ba745036189495d49658d560492dbb2001cea09c9e615533f8",
+        "RepoTags": [
+            "demo-api:2.0.0",
+            "demo-api:commercial-final"
+        ],
+        "RepoDigests": [
+            "demo-api@sha256:399a6212afad69ba745036189495d49658d560492dbb2001cea09c9e615533f8"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-09-22T20:41:29.18779623+05:00",
+        "Config": {
+            "User": "node",
+            "ExposedPorts": {
+                "4100/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=24.16.0",
+                "YARN_VERSION=1.22.22",
+                "NEXT_TELEMETRY_DISABLED=1",
+                "COREPACK_HOME=/opt/corepack",
+                "NODE_ENV=production",
+                "HOST=0.0.0.0",
+                "COREPACK_ENABLE_NETWORK=0",
+                "DEMO_PYTHON=python3",
+                "DEMO_SOFFICE=/opt/libreoffice26.2/program/soffice",
+                "DEMO_ARTIFACT_ROOT=/data/artifacts",
+                "DEMO_PG_DUMP=/usr/lib/postgresql/18/bin/pg_dump",
+                "DEMO_PG_RESTORE=/usr/lib/postgresql/18/bin/pg_restore",
+                "DEMO_PSQL=/usr/lib/postgresql/18/bin/psql"
+            ],
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "Cmd": [
+                "pnpm",
+                "--filter",
+                "@demo/api",
+                "start"
+            ],
+            "WorkingDir": "/app",
+            "ArgsEscaped": true
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 847126535,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:8db1b4d0e54f2fbc2baf1563e57d88a8e72d3c79a72a38b9e4dee36e84f1d8ce",
+                "sha256:d1d27d0268fcde3790456094514fb712e4ef38e88a7a0fd4ca91737020bf1e31",
+                "sha256:b121058a41e4cc5fa2d3ec25b1cf49d67b3abaee170e502085ec0d7669a68b91",
+                "sha256:b0845494c87c018cf8f57f2095548bcda1494630b6ee977a86e594cde21b7e26",
+                "sha256:79060e5291a1d0c0ea4a575ff97aece5ab5ff9eff96846842d2a953a5d114a19",
+                "sha256:45ea6370113a1c1de2e58b883dee653d7998326e70c0fe633e0d084341db38ee",
+                "sha256:6e593621dd5ba08992ee6d31beb5baf46756c0d0d761cd02b6695af18e46dab0",
+                "sha256:f214c1c33e11d859091646781e7bde071a0962dec56006166d87fdd0def0e2f4",
+                "sha256:9edce6ae044412565e70bc3e6f40c9d2fbc55baa1345413731703aa96cc29fa0",
+                "sha256:83aa1582e4e59b364fdbc77731a1321f7505f909a31c8f24a177522a802a3c1d",
+                "sha256:473d34cc665806eac877753bd39f541bf55f34f5e92a3386c8f2cdc98739b653",
+                "sha256:29cff0a80b0351977a8ab01ed418afd9aba481e6c785952dde8a28460ca73af4",
+                "sha256:43d11e45650ab721a9303923b42bd61d07af988be71d523e2e16d08bcac9d95e",
+                "sha256:ddcb11e3bbb49e6ef4307cfb4daf137ad2880c3f946aecafab2188410f46df30",
+                "sha256:254e09841a328895c930851c8835b73b5401f87ce250f3d028b44a98c6263089",
+                "sha256:ca5f2701123acb21f344fde0f1692a770b223a8a6247d64c41fd02bd5160c7dd",
+                "sha256:12d9338abdb51c28286ed8666c06f67de93d1986c248e724e8f97e41b6ea9693",
+                "sha256:6a18b07c22955b4d1675af0f0b9e7c91e3ccfe8dc1b55907b8d2d2ef7a9168db",
+                "sha256:2508c0dfa85bd67640196f408be66ee5ee2ea749fba2bd33ca75d8a50c12a669",
+                "sha256:f42f5eebc9cb9ed5545fef98267d3712e6623f1f4d67a7d74212022d4d366aef",
+                "sha256:a0803e8e1a83fd39796532f68b5cd2c8904f08a4365a74173bd873c0f5f927fa",
+                "sha256:e6edabbe31197401c5280ec20402b0fef721cd0589c25cc5178402b5d60c982a",
+                "sha256:4a8c06105ac0edbc50daedb71502225915a27a9ee09fe8031eec9c62956c3295",
+                "sha256:0747f31133c35c6f47b05fe2f68221b554e7f4eec93740ca38325142145ef492"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-09-22T15:47:09.60584917Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:399a6212afad69ba745036189495d49658d560492dbb2001cea09c9e615533f8",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "cuexbb1yewf8vk898ov1uz8oz",
+                    "CreatedAt": "2026-09-22T20:41:46.859840692+05:00"
+                }
+            ]
+        }
+    }
+]

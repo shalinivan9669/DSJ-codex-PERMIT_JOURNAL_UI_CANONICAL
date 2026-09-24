@@ -1,0 +1,20 @@
+[
+  {
+    "id": "C06",
+    "status": "PASS",
+    "scenario": "New actual BIOT15 browser issuance with same chairman/program that failed v14",
+    "artifact": "browser/biot-v15-retest/BIOT_V15_RETEST_RU.md",
+    "result": "One new issuance,6 verified artifacts,2 LibreOffice and2 Word pages explicitly reviewed PASS; same user profile unchanged",
+    "defect": "BIOT14 lower duplicate chairman line clipped at right frame",
+    "fix": "BIOT15 lower right x/width aligned with upper block",
+    "retest": "PASS; original failure retained separately"
+  },
+  {
+    "id": "C08",
+    "status": "PASS",
+    "scenario": "Exact active BIOT15 canonical Word rerun plus actual browser-issued Word regression",
+    "artifact": "word/final-active.json; word/biot-v15-browser/word-results.json",
+    "result": "20/20 canonical Word PASS; actual regression DOCX/PDF2pages PASS",
+    "limitation": "Bundled Liberation fonts required; physical printing and legal approval separate"
+  }
+]

@@ -1,0 +1,113 @@
+[
+  {
+    "at": "2026-09-22T12:15:50.073Z",
+    "event": "worker.spawn",
+    "label": "before-crash",
+    "pid": 55804
+  },
+  {
+    "at": "2026-09-22T12:15:54.746Z",
+    "event": "worker.stdout",
+    "label": "before-crash",
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
+  },
+  {
+    "at": "2026-09-22T12:15:54.782Z",
+    "event": "claimed-before-kill",
+    "jobId": "7fb5c87b-8dbc-46c0-be40-391525700890",
+    "status": "RUNNING",
+    "attempts": 1,
+    "fencingToken": 1,
+    "leaseUntil": "2026-09-22T12:16:24.752Z"
+  },
+  {
+    "at": "2026-09-22T12:15:55.313Z",
+    "event": "worker.killed",
+    "pid": 55804
+  },
+  {
+    "at": "2026-09-22T12:15:55.321Z",
+    "event": "crash-confirmed-before-publication",
+    "jobId": "7fb5c87b-8dbc-46c0-be40-391525700890",
+    "status": "RUNNING",
+    "artifactCount": 0
+  },
+  {
+    "at": "2026-09-22T12:16:25.069Z",
+    "event": "worker.spawn",
+    "label": "recovery-a",
+    "pid": 36200
+  },
+  {
+    "at": "2026-09-22T12:16:25.075Z",
+    "event": "worker.spawn",
+    "label": "recovery-b",
+    "pid": 68500
+  },
+  {
+    "at": "2026-09-22T12:16:29.025Z",
+    "event": "worker.stdout",
+    "label": "recovery-a",
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
+  },
+  {
+    "at": "2026-09-22T12:16:29.092Z",
+    "event": "worker.stdout",
+    "label": "recovery-b",
+    "message": "{\"event\":\"worker.started\",\"version\":\"demo-ooxml-2/libreoffice-26.2.6.3\",\"concurrency\":1}"
+  },
+  {
+    "at": "2026-09-22T12:16:37.803Z",
+    "event": "recovered-once-with-two-workers",
+    "jobId": "7fb5c87b-8dbc-46c0-be40-391525700890",
+    "attempts": 2,
+    "fencingToken": 2,
+    "artifactId": "4aa64d5a-7699-4476-99c7-900d741c7096",
+    "sha256": "6f5f3c78b1d95f6d23f22bd7653f7a5b24057b380febe42f6aeb1da188ca4ced",
+    "bytes": 556994
+  },
+  {
+    "at": "2026-09-22T12:16:39.748Z",
+    "event": "actual-converter-killed",
+    "converterPid": 68180,
+    "jobId": "35302dc6-8c61-4d45-8edb-1256b2ac15b4"
+  },
+  {
+    "at": "2026-09-22T12:16:39.805Z",
+    "event": "worker.stderr",
+    "label": "recovery-b",
+    "message": "{\"event\":\"render.failed\",\"jobId\":\"35302dc6-8c61-4d45-8edb-1256b2ac15b4\",\"correlationId\":\"18d88604-0acc-4d9d-b476-3d66d6fcd66f\"}"
+  },
+  {
+    "at": "2026-09-22T12:16:39.806Z",
+    "event": "converter-failure-recorded",
+    "jobId": "35302dc6-8c61-4d45-8edb-1256b2ac15b4",
+    "status": "RETRY",
+    "errorCode": "CONVERTER_VERSION_MISMATCH",
+    "attempts": 1
+  },
+  {
+    "at": "2026-09-22T12:17:07.362Z",
+    "event": "pdf-recovery-complete",
+    "jobId": "35302dc6-8c61-4d45-8edb-1256b2ac15b4",
+    "attempts": 2,
+    "converterPid": 68180,
+    "sha256": "4dda21d15b7fe8600afd2446b54fd5aba4b9642614d2079df7b9b273520fca25",
+    "originalDocxSha256": "6f5f3c78b1d95f6d23f22bd7653f7a5b24057b380febe42f6aeb1da188ca4ced",
+    "noNumbersReserved": true
+  },
+  {
+    "at": "2026-09-22T12:17:07.362Z",
+    "event": "PASS"
+  },
+  {
+    "at": "2026-09-22T12:17:07.744Z",
+    "event": "worker.killed",
+    "pid": 36200
+  },
+  {
+    "at": "2026-09-22T12:17:08.090Z",
+    "event": "worker.killed",
+    "pid": 68500
+  }
+]

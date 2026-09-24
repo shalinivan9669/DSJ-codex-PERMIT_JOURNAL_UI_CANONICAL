@@ -1,0 +1,188 @@
+{
+  "observedAt": "2026-09-22T15:05:13.976Z",
+  "origin": "http://localhost:3200",
+  "contextStatus": 200,
+  "readinessStatus": 200,
+  "readiness": {
+    "status": "ready",
+    "workerSeenAt": "2026-09-22T15:05:10.541Z",
+    "templates": 10,
+    "rendererVersion": "demo-ooxml-3/libreoffice-26.2.6.3",
+    "storage": "ok"
+  },
+  "healthStatus": 200,
+  "health": {
+    "status": "ok",
+    "product": "DEMO",
+    "version": "2.0.0"
+  },
+  "templates": [
+    {
+      "id": "biot-itr-certificate",
+      "version": "4",
+      "checksum": "9f45958fc2548314ce5bae030efae2f93d0a89e1878e074214d18d748853b00d"
+    },
+    {
+      "id": "biot-protocol",
+      "version": "5",
+      "checksum": "c5f3a5b875b2740efc165ffd4b05548439d56cefe1a6918f0eba6d724250f363"
+    },
+    {
+      "id": "biot-protocol",
+      "version": "4",
+      "checksum": "9cb183e598a4ba4d7110db134b256ee18b28e79cd2b0fcbef37e939289535610"
+    },
+    {
+      "id": "biot-worker-card",
+      "version": "4",
+      "checksum": "cf81fd8f97455828c828ae66c237b2e92d7b15fdcff3c693417cfb2d8bc75e29"
+    },
+    {
+      "id": "biot-worker-card",
+      "version": "5",
+      "checksum": "4c4018864da2ad09072fd2a6e5425655cbeed07e20673f418efc80de7772db22"
+    },
+    {
+      "id": "biot-worker-card",
+      "version": "7",
+      "checksum": "6e393c6d3c66fa8125a79eddcd34690ecb64062322d921bd8bbf1d2fefcf693c"
+    },
+    {
+      "id": "pb-card",
+      "version": "5",
+      "checksum": "bfdca5596af8efc09dc3c21d138c315c71b5c9115bcfde9a2be29d640bf8547d"
+    },
+    {
+      "id": "pb-card",
+      "version": "4",
+      "checksum": "dafea319b26ff9d8dd26312aa72a929e36daead1f14ea08399e0188399bbdce9"
+    },
+    {
+      "id": "pb-card",
+      "version": "7",
+      "checksum": "5e839d2b13f38def4c3a35beb1a7b3a7e1bbd3321f44ba8691908c26bcb291c9"
+    },
+    {
+      "id": "pb-protocol",
+      "version": "5",
+      "checksum": "daa358acef4fbaf98b3f56547cc9165fd8859158c5da51180fb8745c7378f6a3"
+    },
+    {
+      "id": "pb-protocol",
+      "version": "4",
+      "checksum": "40fb97d1bf42983908d45b826b6122550169b8f76b91ae958f49b43f2692b0e3"
+    },
+    {
+      "id": "ps-card",
+      "version": "7",
+      "checksum": "f432af0dd743efb7ee56f888318099ed15d345d7a6e7f8d725a7e4e6e7fb1b94"
+    },
+    {
+      "id": "ps-card",
+      "version": "4",
+      "checksum": "04cffe8bede692f10fdb210abaa6b318471586ce9da3b91f36bab857395e4f1c"
+    },
+    {
+      "id": "ps-card",
+      "version": "5",
+      "checksum": "e14b5db9a0607056a7ac3f2380d3b1b3ccb62661b5c7c95ba2cc07f8d899992c"
+    },
+    {
+      "id": "ps-protocol",
+      "version": "5",
+      "checksum": "2153be9e90cb33a75a26292e3761535b2060c84e50275da6b14816d8255f24c8"
+    },
+    {
+      "id": "ps-protocol",
+      "version": "4",
+      "checksum": "41400f11549ef676ad013d7d95419c686bf8674f841e568bd4b992b8a2b64111"
+    },
+    {
+      "id": "ps-witness",
+      "version": "5",
+      "checksum": "b132b14cb7ac36a6cd9d8af745767b87d34742a19a8d7b1f50593888704041a6"
+    },
+    {
+      "id": "ps-witness",
+      "version": "4",
+      "checksum": "1b50157593d79d63fb7e1ff0f507c3b46526351f6e6aedfccf415845473baf0e"
+    },
+    {
+      "id": "ps-witness",
+      "version": "6",
+      "checksum": "fde2c54f6f263a5a3be0c8c7923d4cf8f0da975bb3d1440c126330b478424e6e"
+    },
+    {
+      "id": "ptm-card",
+      "version": "7",
+      "checksum": "9a0c700e928d8d0831f5560c432b3f07bb4780df50df61bbefb901878a121ee1"
+    },
+    {
+      "id": "ptm-card",
+      "version": "4",
+      "checksum": "eecb030d026f586251e4b8b9d39830e3f323cff13720e9d8da50ff9ebaef3a18"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": "4",
+      "checksum": "52b1b9f1b9aeac89d868dd25bba8efca2c8681520868cd009a18aeda63028e93"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": "5",
+      "checksum": "f2f276b3fc9f0f61bcae09f36488efbc8392da1a85b4d8102256f22d921cfebd"
+    }
+  ],
+  "sourceTemplates": [
+    {
+      "id": "biot-worker-card",
+      "version": 14,
+      "sha256": "2fee01f02acc4a3dd4538e8330cc537031c44dba68f2ffda267d97e58784bf58"
+    },
+    {
+      "id": "biot-itr-certificate",
+      "version": 13,
+      "sha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6"
+    },
+    {
+      "id": "biot-protocol",
+      "version": 9,
+      "sha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2"
+    },
+    {
+      "id": "ptm-card",
+      "version": 14,
+      "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": 9,
+      "sha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c"
+    },
+    {
+      "id": "pb-card",
+      "version": 14,
+      "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380"
+    },
+    {
+      "id": "pb-protocol",
+      "version": 9,
+      "sha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b"
+    },
+    {
+      "id": "ps-card",
+      "version": 15,
+      "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13"
+    },
+    {
+      "id": "ps-protocol",
+      "version": 9,
+      "sha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b"
+    },
+    {
+      "id": "ps-witness",
+      "version": 11,
+      "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+    }
+  ]
+}

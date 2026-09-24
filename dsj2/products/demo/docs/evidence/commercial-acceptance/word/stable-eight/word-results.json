@@ -1,0 +1,102 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only, macros disabled, no links update",
+  "documents": [
+    {
+      "file": "biot-itr-certificate-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "biot-itr-certificate-short.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "biot-protocol-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "biot-protocol-short.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "biot-worker-card-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "biot-worker-card-readable-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "pb-card-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "pb-card-readable-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "pb-card-short.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "pb-protocol-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "pb-protocol-short.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "ps-protocol-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "ps-protocol-short.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "ptm-card-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "ptm-card-readable-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "ptm-card-short.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "ptm-protocol-long.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    },
+    {
+      "file": "ptm-protocol-short.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден."
+    }
+  ]
+}

@@ -1,0 +1,1205 @@
+{
+  "status": "PASS",
+  "startedAt": "2026-09-22T14:47:21.504Z",
+  "project": "demo-commercial-release",
+  "origin": "http://localhost:8080",
+  "containers": [
+    "demo-commercial-release-db-1",
+    "demo-commercial-release-api-1",
+    "demo-commercial-release-worker-1",
+    "demo-commercial-release-web-1",
+    "demo-commercial-release-ingress-1"
+  ],
+  "syntheticOnly": true,
+  "limitations": [
+    "A five-container restart is not a host reboot or power-loss test.",
+    "No production tenant, Docker Desktop engine, localhost3200/3100/4100 or Windows PostgreSQL55432 was changed."
+  ],
+  "beforeContainers": [
+    {
+      "name": "demo-commercial-release-db-1",
+      "id": "b3e64b3c53cf24bac31ddfe021096dde862fb062021fd27483a81c53c55216ec",
+      "image": "sha256:b097d139976b72e6245b60ff4d5c81401d446a72d2b92f91bacdfdd80ae6ad51",
+      "running": true,
+      "startedAt": "2026-09-22T14:28:38.646026673Z",
+      "restartCount": 0
+    },
+    {
+      "name": "demo-commercial-release-api-1",
+      "id": "d7dc920dc2e4fd7eefc5d159cf1ceff2be428c084529ce5fabb887d7bcb1e233",
+      "image": "sha256:644bc39ebe3849af40aafedef2c9f4834badce97d7365aba7a4d5c2bb8ce5798",
+      "running": true,
+      "startedAt": "2026-09-22T14:28:58.67451575Z",
+      "restartCount": 0
+    },
+    {
+      "name": "demo-commercial-release-worker-1",
+      "id": "a1f3e5b82c28ba9a4846bb9478095de3fa466d5ced9afbd5dea66bf9c55be2e0",
+      "image": "sha256:644bc39ebe3849af40aafedef2c9f4834badce97d7365aba7a4d5c2bb8ce5798",
+      "running": true,
+      "startedAt": "2026-09-22T14:28:58.280231564Z",
+      "restartCount": 0
+    },
+    {
+      "name": "demo-commercial-release-web-1",
+      "id": "6c69afb1d276d389daa5cee51d11c9c03cd9cb8f0a192fb334cc54432daf7288",
+      "image": "sha256:953b969d04eede146ccd62941b46a4c036593712be85eaf9baa3e6faee715373",
+      "running": true,
+      "startedAt": "2026-09-22T14:28:57.754997994Z",
+      "restartCount": 0
+    },
+    {
+      "name": "demo-commercial-release-ingress-1",
+      "id": "7c3138827c1527fa5de4f719e5d55c6b5cb4b4f9994a3c6a79d9acf8fe66bca9",
+      "image": "sha256:964ad4d6cd0ce6fd6b56d7595d3fd13e1fcbdf3964c31614f4bfd073e00e23e5",
+      "running": true,
+      "startedAt": "2026-09-22T14:29:14.606926578Z",
+      "restartCount": 0
+    }
+  ],
+  "tenantId": "e417ddcc-bf8d-4f78-b094-125ebad9b2bc",
+  "priorCanonicalBefore": [
+    {
+      "id": "756f9248-1207-4315-8064-92c576c6021b",
+      "sha256": "e421c57d977fcb4ced66d0a5ac73c5bbeb296856aaee2bece5be3c520c23f09f",
+      "bytes": 2546420,
+      "format": "ZIP"
+    },
+    {
+      "id": "876c8641-8c50-461d-823a-313ab38f4e10",
+      "sha256": "8ff6cafc2050e31ac207e5f0a00ff46c88cbc9e4aca27ca611916f796c043ebb",
+      "bytes": 98436,
+      "format": "PDF"
+    },
+    {
+      "id": "d27608e2-c53f-450a-a02f-be083492a636",
+      "sha256": "3bd4da400155825db1efc650d275d3b9462c0b2416defcf450c9ae2c0f36f029",
+      "bytes": 5948,
+      "format": "XLSX"
+    },
+    {
+      "id": "f24d3086-b4ac-40fc-a449-c6e5f0e5e87e",
+      "sha256": "b79917ce490c1fd533299402ff53e7267de26bb29ad406c1001ee50219873514",
+      "bytes": 2490757,
+      "format": "DOCX"
+    }
+  ],
+  "requestId": "f6873fef-385f-46c7-acd3-dc868d5cfde2",
+  "documentNumbers": [
+    {
+      "id": "31426d74-c07b-4cff-878a-d4617613d5f7",
+      "number": "BIOT-PROTOCOL-00004"
+    },
+    {
+      "id": "35b7228c-1e20-4ee8-95bc-e515ff33b01e",
+      "number": "BIOT-PROTOCOL-00002"
+    },
+    {
+      "id": "9dff59b4-35a4-4a8a-91fc-4ade3cfb75ba",
+      "number": "BIOT-PROTOCOL-00001"
+    },
+    {
+      "id": "d3ebb5a9-89f6-4a5c-bc80-26327bf299d6",
+      "number": "BIOT-PROTOCOL-00003"
+    }
+  ],
+  "jobsBeforeStop": [
+    {
+      "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+      "kind": "ZIP",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+      "kind": "XLSX",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+      "kind": "PDF",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+      "kind": "DOCX",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+      "kind": "PDF",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+      "kind": "DOCX",
+      "status": "RUNNING",
+      "attempts": 1
+    },
+    {
+      "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+      "kind": "PDF",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+      "kind": "DOCX",
+      "status": "RUNNING",
+      "attempts": 1
+    },
+    {
+      "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+      "kind": "PDF",
+      "status": "PENDING",
+      "attempts": 0
+    },
+    {
+      "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "artifactId": "b5e4ea9f-2d5c-4237-ac52-49627844f3e1",
+      "artifactSha256": "7b73d5ee0c18e4a2308e60591010cf6ad5e7bfe12c7ac86e5efd4ae2c7823bcd"
+    }
+  ],
+  "completedBeforeStop": [
+    {
+      "id": "b5e4ea9f-2d5c-4237-ac52-49627844f3e1",
+      "sha256": "7b73d5ee0c18e4a2308e60591010cf6ad5e7bfe12c7ac86e5efd4ae2c7823bcd",
+      "bytes": 24444,
+      "format": "DOCX"
+    }
+  ],
+  "dbStoppedAt": "2026-09-22T14:47:28.350Z",
+  "unavailableResponses": [
+    {
+      "route": "/ready",
+      "method": "GET",
+      "status": 500,
+      "body": "{\"code\":\"SERVICE_ERROR\",\"message\":\"Сервис временно недоступен\",\"correlationId\":\"6957993a-a389-4202-ba1b-3cabaf5877c3\"}"
+    },
+    {
+      "route": "/jobs?requestId=f6873fef-385f-46c7-acd3-dc868d5cfde2",
+      "method": "GET",
+      "status": 500,
+      "body": "{\"code\":\"SERVICE_ERROR\",\"message\":\"Сервис временно недоступен\",\"correlationId\":\"2c464616-dbcb-4694-81c2-167dd3346717\"}"
+    },
+    {
+      "route": "/print-requests/f6873fef-385f-46c7-acd3-dc868d5cfde2/finalize",
+      "method": "POST",
+      "status": 500,
+      "body": "{\"code\":\"SERVICE_ERROR\",\"message\":\"Сервис временно недоступен\",\"correlationId\":\"129757ef-096e-448e-a720-e873f3154625\"}"
+    }
+  ],
+  "dbStartedAt": "2026-09-22T14:47:42.403Z",
+  "recoveryStates": [
+    {
+      "at": "2026-09-22T14:47:48.726Z",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        }
+      ]
+    },
+    {
+      "at": "2026-09-22T14:47:49.771Z",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        }
+      ]
+    },
+    {
+      "at": "2026-09-22T14:47:52.876Z",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        }
+      ]
+    },
+    {
+      "at": "2026-09-22T14:47:55.955Z",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        }
+      ]
+    },
+    {
+      "at": "2026-09-22T14:47:58.000Z",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "RUNNING",
+          "attempts": 2,
+          "errorCode": null
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "RUNNING",
+          "attempts": 2,
+          "errorCode": null
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        }
+      ]
+    },
+    {
+      "at": "2026-09-22T14:47:59.027Z",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "SUCCEEDED",
+          "attempts": 2,
+          "errorCode": null
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "RUNNING",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 2,
+          "errorCode": null
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        }
+      ]
+    },
+    {
+      "at": "2026-09-22T14:48:01.080Z",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "attempts": 0,
+          "errorCode": null
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "SUCCEEDED",
+          "attempts": 2,
+          "errorCode": null
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 2,
+          "errorCode": null
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        }
+      ]
+    },
+    {
+      "at": "2026-09-22T14:48:02.096Z",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "SUCCEEDED",
+          "attempts": 2,
+          "errorCode": null
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 2,
+          "errorCode": null
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "errorCode": null
+        }
+      ]
+    }
+  ],
+  "jobsAfterRecovery": [
+    {
+      "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+      "kind": "ZIP",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null
+    },
+    {
+      "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+      "kind": "XLSX",
+      "status": "SUCCEEDED",
+      "attempts": 2,
+      "errorCode": null
+    },
+    {
+      "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null
+    },
+    {
+      "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "attempts": 2,
+      "errorCode": null
+    },
+    {
+      "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null
+    },
+    {
+      "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null
+    },
+    {
+      "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null
+    },
+    {
+      "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null
+    },
+    {
+      "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null
+    },
+    {
+      "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null
+    }
+  ],
+  "recoveredArtifacts": [
+    {
+      "id": "1dcdf32f-39ed-46b2-9881-771dd55ec493",
+      "sha256": "124768b80df207fd6c9e1bb56b841b19089938b48a4d3f7e663f19f4534fdd14",
+      "bytes": 24445,
+      "format": "DOCX"
+    },
+    {
+      "id": "2ed60219-aceb-46a8-9088-a7b84ae074d7",
+      "sha256": "ee50dde87d57b34728f3cd6eec446dd1754024e36ee7f8bd211d9758884e2807",
+      "bytes": 69358,
+      "format": "PDF"
+    },
+    {
+      "id": "52ea0e4c-2166-460e-8dc1-6d2f18f1b22d",
+      "sha256": "9ef12215762d25f0fe47e65389d081992ed79a0eb16726443b83fb949f9c079e",
+      "bytes": 267585,
+      "format": "ZIP"
+    },
+    {
+      "id": "63712b2a-2bc8-45a2-af0c-a1be99691239",
+      "sha256": "31ca8fd023e7500174dc1da3865342a12f9dcd63cd80e31ec23a4d0c23977f20",
+      "bytes": 24445,
+      "format": "DOCX"
+    },
+    {
+      "id": "86fda5bf-eb46-4133-8133-16cce5692665",
+      "sha256": "4e93084dfafef71905fd05300a2ba380ce1daf4b0e02c11a0b5af3b1e447b22e",
+      "bytes": 69258,
+      "format": "PDF"
+    },
+    {
+      "id": "a4194fcd-8414-427e-9e6c-754e0c6e166b",
+      "sha256": "f7a066b44f439ccbc3d7247a53f4413e136f872a7171995ac3c1144b3ecad86d",
+      "bytes": 24445,
+      "format": "DOCX"
+    },
+    {
+      "id": "b5e4ea9f-2d5c-4237-ac52-49627844f3e1",
+      "sha256": "7b73d5ee0c18e4a2308e60591010cf6ad5e7bfe12c7ac86e5efd4ae2c7823bcd",
+      "bytes": 24444,
+      "format": "DOCX"
+    },
+    {
+      "id": "b98bfce8-884b-4f8f-aaa5-6c4b2f89f7cd",
+      "sha256": "304ff2008042c32e48ebceda70595d3b5b0df02764ff5d4ba96897b79771d09f",
+      "bytes": 69508,
+      "format": "PDF"
+    },
+    {
+      "id": "ce73d5eb-3ebf-4922-9af3-fb2ed6891f31",
+      "sha256": "e7fd98a0858f3b33dfdebeb0fb3e87348640eab3a79ebfbbb82efb92100b7834",
+      "bytes": 6364,
+      "format": "XLSX"
+    },
+    {
+      "id": "f8531ebd-ea58-4c46-b78e-d30e377dc25c",
+      "sha256": "e8690e44e806f6d5b885637d8a2436a7a075ad393fe027116f57507baeeeff57",
+      "bytes": 69306,
+      "format": "PDF"
+    }
+  ],
+  "priorCanonicalAfterDbRecovery": [
+    {
+      "id": "756f9248-1207-4315-8064-92c576c6021b",
+      "sha256": "e421c57d977fcb4ced66d0a5ac73c5bbeb296856aaee2bece5be3c520c23f09f",
+      "bytes": 2546420,
+      "format": "ZIP"
+    },
+    {
+      "id": "876c8641-8c50-461d-823a-313ab38f4e10",
+      "sha256": "8ff6cafc2050e31ac207e5f0a00ff46c88cbc9e4aca27ca611916f796c043ebb",
+      "bytes": 98436,
+      "format": "PDF"
+    },
+    {
+      "id": "d27608e2-c53f-450a-a02f-be083492a636",
+      "sha256": "3bd4da400155825db1efc650d275d3b9462c0b2416defcf450c9ae2c0f36f029",
+      "bytes": 5948,
+      "format": "XLSX"
+    },
+    {
+      "id": "f24d3086-b4ac-40fc-a449-c6e5f0e5e87e",
+      "sha256": "b79917ce490c1fd533299402ff53e7267de26bb29ad406c1001ee50219873514",
+      "bytes": 2490757,
+      "format": "DOCX"
+    }
+  ],
+  "priorCanonicalAfterRestart": [
+    {
+      "id": "756f9248-1207-4315-8064-92c576c6021b",
+      "sha256": "e421c57d977fcb4ced66d0a5ac73c5bbeb296856aaee2bece5be3c520c23f09f",
+      "bytes": 2546420,
+      "format": "ZIP"
+    },
+    {
+      "id": "876c8641-8c50-461d-823a-313ab38f4e10",
+      "sha256": "8ff6cafc2050e31ac207e5f0a00ff46c88cbc9e4aca27ca611916f796c043ebb",
+      "bytes": 98436,
+      "format": "PDF"
+    },
+    {
+      "id": "d27608e2-c53f-450a-a02f-be083492a636",
+      "sha256": "3bd4da400155825db1efc650d275d3b9462c0b2416defcf450c9ae2c0f36f029",
+      "bytes": 5948,
+      "format": "XLSX"
+    },
+    {
+      "id": "f24d3086-b4ac-40fc-a449-c6e5f0e5e87e",
+      "sha256": "b79917ce490c1fd533299402ff53e7267de26bb29ad406c1001ee50219873514",
+      "bytes": 2490757,
+      "format": "DOCX"
+    }
+  ],
+  "recoveredArtifactsAfterRestart": [
+    {
+      "id": "1dcdf32f-39ed-46b2-9881-771dd55ec493",
+      "sha256": "124768b80df207fd6c9e1bb56b841b19089938b48a4d3f7e663f19f4534fdd14",
+      "bytes": 24445,
+      "format": "DOCX"
+    },
+    {
+      "id": "2ed60219-aceb-46a8-9088-a7b84ae074d7",
+      "sha256": "ee50dde87d57b34728f3cd6eec446dd1754024e36ee7f8bd211d9758884e2807",
+      "bytes": 69358,
+      "format": "PDF"
+    },
+    {
+      "id": "52ea0e4c-2166-460e-8dc1-6d2f18f1b22d",
+      "sha256": "9ef12215762d25f0fe47e65389d081992ed79a0eb16726443b83fb949f9c079e",
+      "bytes": 267585,
+      "format": "ZIP"
+    },
+    {
+      "id": "63712b2a-2bc8-45a2-af0c-a1be99691239",
+      "sha256": "31ca8fd023e7500174dc1da3865342a12f9dcd63cd80e31ec23a4d0c23977f20",
+      "bytes": 24445,
+      "format": "DOCX"
+    },
+    {
+      "id": "86fda5bf-eb46-4133-8133-16cce5692665",
+      "sha256": "4e93084dfafef71905fd05300a2ba380ce1daf4b0e02c11a0b5af3b1e447b22e",
+      "bytes": 69258,
+      "format": "PDF"
+    },
+    {
+      "id": "a4194fcd-8414-427e-9e6c-754e0c6e166b",
+      "sha256": "f7a066b44f439ccbc3d7247a53f4413e136f872a7171995ac3c1144b3ecad86d",
+      "bytes": 24445,
+      "format": "DOCX"
+    },
+    {
+      "id": "b5e4ea9f-2d5c-4237-ac52-49627844f3e1",
+      "sha256": "7b73d5ee0c18e4a2308e60591010cf6ad5e7bfe12c7ac86e5efd4ae2c7823bcd",
+      "bytes": 24444,
+      "format": "DOCX"
+    },
+    {
+      "id": "b98bfce8-884b-4f8f-aaa5-6c4b2f89f7cd",
+      "sha256": "304ff2008042c32e48ebceda70595d3b5b0df02764ff5d4ba96897b79771d09f",
+      "bytes": 69508,
+      "format": "PDF"
+    },
+    {
+      "id": "ce73d5eb-3ebf-4922-9af3-fb2ed6891f31",
+      "sha256": "e7fd98a0858f3b33dfdebeb0fb3e87348640eab3a79ebfbbb82efb92100b7834",
+      "bytes": 6364,
+      "format": "XLSX"
+    },
+    {
+      "id": "f8531ebd-ea58-4c46-b78e-d30e377dc25c",
+      "sha256": "e8690e44e806f6d5b885637d8a2436a7a075ad393fe027116f57507baeeeff57",
+      "bytes": 69306,
+      "format": "PDF"
+    }
+  ],
+  "afterContainers": [
+    {
+      "name": "demo-commercial-release-db-1",
+      "id": "b3e64b3c53cf24bac31ddfe021096dde862fb062021fd27483a81c53c55216ec",
+      "image": "sha256:b097d139976b72e6245b60ff4d5c81401d446a72d2b92f91bacdfdd80ae6ad51",
+      "running": true,
+      "startedAt": "2026-09-22T14:48:03.307704852Z",
+      "restartCount": 0
+    },
+    {
+      "name": "demo-commercial-release-api-1",
+      "id": "d7dc920dc2e4fd7eefc5d159cf1ceff2be428c084529ce5fabb887d7bcb1e233",
+      "image": "sha256:644bc39ebe3849af40aafedef2c9f4834badce97d7365aba7a4d5c2bb8ce5798",
+      "running": true,
+      "startedAt": "2026-09-22T14:48:03.888021465Z",
+      "restartCount": 0
+    },
+    {
+      "name": "demo-commercial-release-worker-1",
+      "id": "a1f3e5b82c28ba9a4846bb9478095de3fa466d5ced9afbd5dea66bf9c55be2e0",
+      "image": "sha256:644bc39ebe3849af40aafedef2c9f4834badce97d7365aba7a4d5c2bb8ce5798",
+      "running": true,
+      "startedAt": "2026-09-22T14:48:04.578720671Z",
+      "restartCount": 0
+    },
+    {
+      "name": "demo-commercial-release-web-1",
+      "id": "6c69afb1d276d389daa5cee51d11c9c03cd9cb8f0a192fb334cc54432daf7288",
+      "image": "sha256:953b969d04eede146ccd62941b46a4c036593712be85eaf9baa3e6faee715373",
+      "running": true,
+      "startedAt": "2026-09-22T14:48:05.517744613Z",
+      "restartCount": 0
+    },
+    {
+      "name": "demo-commercial-release-ingress-1",
+      "id": "7c3138827c1527fa5de4f719e5d55c6b5cb4b4f9994a3c6a79d9acf8fe66bca9",
+      "image": "sha256:964ad4d6cd0ce6fd6b56d7595d3fd13e1fcbdf3964c31614f4bfd073e00e23e5",
+      "running": true,
+      "startedAt": "2026-09-22T14:48:06.225450522Z",
+      "restartCount": 0
+    }
+  ],
+  "completedAt": "2026-09-22T14:48:08.720Z",
+  "events": [
+    {
+      "at": "2026-09-22T14:47:22.964Z",
+      "type": "preflight_ready",
+      "status": "ready"
+    },
+    {
+      "at": "2026-09-22T14:47:26.445Z",
+      "type": "observed_jobs_before_actual_db_stop",
+      "jobs": [
+        {
+          "id": "6df611d7-1117-4601-947c-58624f5d3de9",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "attempts": 0
+        },
+        {
+          "id": "cb677a55-7160-4c76-9194-178906fa3c39",
+          "kind": "XLSX",
+          "status": "PENDING",
+          "attempts": 0
+        },
+        {
+          "id": "c6cdef31-700d-4e99-90f5-f22e4752aada",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0
+        },
+        {
+          "id": "6abe070a-3ec3-4edb-87e4-29eb6d32e748",
+          "kind": "DOCX",
+          "status": "PENDING",
+          "attempts": 0
+        },
+        {
+          "id": "cc3493fa-562e-41cc-8db7-324cdacb5d92",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0
+        },
+        {
+          "id": "3ad73006-b1c5-40c3-b819-6a14e4f52c16",
+          "kind": "DOCX",
+          "status": "RUNNING",
+          "attempts": 1
+        },
+        {
+          "id": "a12e5e65-8008-40c4-9689-c546f237d23e",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0
+        },
+        {
+          "id": "aa0f99af-9526-4136-b165-a656f2c18496",
+          "kind": "DOCX",
+          "status": "RUNNING",
+          "attempts": 1
+        },
+        {
+          "id": "88f6227d-4d83-45ad-a1b1-dbf0037fa795",
+          "kind": "PDF",
+          "status": "PENDING",
+          "attempts": 0
+        },
+        {
+          "id": "9c4e1290-7bcc-44b7-b201-7e8c01846f75",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "attempts": 1,
+          "artifactId": "b5e4ea9f-2d5c-4237-ac52-49627844f3e1",
+          "artifactSha256": "7b73d5ee0c18e4a2308e60591010cf6ad5e7bfe12c7ac86e5efd4ae2c7823bcd"
+        }
+      ]
+    },
+    {
+      "at": "2026-09-22T14:47:29.384Z",
+      "type": "database_stopped",
+      "container": "demo-commercial-release-db-1",
+      "stopTimeoutSeconds": 0
+    },
+    {
+      "at": "2026-09-22T14:47:42.403Z",
+      "type": "database_started",
+      "container": "demo-commercial-release-db-1"
+    },
+    {
+      "at": "2026-09-22T14:48:02.336Z",
+      "type": "jobs_recovered_automatically",
+      "count": 10,
+      "issuanceCount": 1,
+      "unchangedNumbers": true,
+      "manualRetryUsed": false
+    },
+    {
+      "at": "2026-09-22T14:48:06.574Z",
+      "type": "five_project_containers_restarted",
+      "containers": [
+        "demo-commercial-release-db-1",
+        "demo-commercial-release-api-1",
+        "demo-commercial-release-worker-1",
+        "demo-commercial-release-web-1",
+        "demo-commercial-release-ingress-1"
+      ]
+    },
+    {
+      "at": "2026-09-22T14:48:08.720Z",
+      "type": "drill_pass",
+      "verifiedArtifactsAfterFreshAuthentication": 14,
+      "unchangedNumbers": true,
+      "issuanceCount": 1
+    }
+  ]
+}

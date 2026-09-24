@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "basePhysicalPages": 84,
+  "stressSamplePhysicalPages": 186,
+  "stressNotFullManualReview": true,
+  "errors": [],
+  "sources": [
+    "root-visual-review-current.json",
+    "print-agent-visual-final.json",
+    "root-stress-visual-review.json",
+    "print-agent-stress-review.json"
+  ]
+}

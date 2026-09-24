@@ -1,0 +1,238 @@
+{
+  "status": "PASS",
+  "scenario": "Readback of the same finalized acceptance request; no second issuance",
+  "origin": "http://localhost:3200",
+  "requestId": "fff50a43-a6f1-444b-bde2-39821d04ae79",
+  "requestUrl": "http://localhost:3200/requests/fff50a43-a6f1-444b-bde2-39821d04ae79/edit",
+  "browserVersion": "152.0.7977.83",
+  "syntheticDataOnly": true,
+  "transport": {
+    "https": false,
+    "securityDetails": {},
+    "strictTlsProof": null,
+    "browserLeafSpkiPin": null,
+    "nodeExtraCaFile": null,
+    "cookies": [
+      {
+        "name": "demo_session",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "Strict"
+      },
+      {
+        "name": "demo_csrf",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "Strict"
+      }
+    ]
+  },
+  "portraitSource": "fictional-recipient-portrait.png",
+  "portraitSourceSha256": "82f3d34ad38f13a9cf9511d63dc5ab9b9acb19f12a5816c3a1e1b5669e907484",
+  "normalizedPhotoSha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+  "exactEmbeddedPhotoMatches": 6,
+  "templates": [
+    {
+      "id": "biot-worker-card",
+      "version": "14",
+      "sha256": "2fee01f02acc4a3dd4538e8330cc537031c44dba68f2ffda267d97e58784bf58"
+    },
+    {
+      "id": "ptm-card",
+      "version": "14",
+      "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6"
+    },
+    {
+      "id": "pb-card",
+      "version": "14",
+      "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380"
+    },
+    {
+      "id": "ps-card",
+      "version": "15",
+      "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "3a306340-8226-4cdc-bd59-a764506a7e3a-biot-worker-card-fff50a43-a6f1-444b-bde2-39821d04ae79.docx",
+      "format": "DOCX",
+      "provenance": "PREVIEW",
+      "sha256": "df74c492ebf9e383e2c2ae500a0d7a23ba19a685ec84ccc82596c967ac980b8a",
+      "bytes": 26444,
+      "media": []
+    },
+    {
+      "file": "8497b98e-fc1e-4dcd-9b08-a1ed91c1a165-biot-worker-card-fff50a43-a6f1-444b-bde2-39821d04ae79.pdf",
+      "format": "PDF",
+      "provenance": "PREVIEW",
+      "sha256": "0763f83684aa297a7ddb0660fd76bc37f059bda5d82f519031964332873284c6",
+      "bytes": 104802,
+      "media": []
+    },
+    {
+      "file": "48b8929b-0bbf-4961-8072-9d1536ed9779-ptm-card-fff50a43-a6f1-444b-bde2-39821d04ae79.docx",
+      "format": "DOCX",
+      "provenance": "PREVIEW",
+      "sha256": "ecadc01587505a6d57ede46f50fc6cf563a9a817606374fdce512ed38fedd36c",
+      "bytes": 2484045,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "88237277-3700-4e72-9bca-d885df050314-ptm-card-fff50a43-a6f1-444b-bde2-39821d04ae79.pdf",
+      "format": "PDF",
+      "provenance": "PREVIEW",
+      "sha256": "4bb19dfa7d8508240b36311302c9683f861e0f55dba8c6ddaa81205048482bbf",
+      "bytes": 92194,
+      "media": []
+    },
+    {
+      "file": "37907fe6-a5ea-4756-b78a-a9c34be3765a-pb-card-fff50a43-a6f1-444b-bde2-39821d04ae79.docx",
+      "format": "DOCX",
+      "provenance": "PREVIEW",
+      "sha256": "813a1eb4ed8a0ead6d2d6690cd8110ec4bf6e75a6c664979c6646e0df1eb9f59",
+      "bytes": 2490780,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "3f1dd84f-6068-4661-a98b-90c4d9d81dee-pb-card-fff50a43-a6f1-444b-bde2-39821d04ae79.pdf",
+      "format": "PDF",
+      "provenance": "PREVIEW",
+      "sha256": "b1a546d02c5222d3a476ef71199e33c1933e4752214c000d8948b271a53ae869",
+      "bytes": 128197,
+      "media": []
+    },
+    {
+      "file": "ae728146-ea8e-4e7c-880b-e00d77b0dd5e-ps-card-fff50a43-a6f1-444b-bde2-39821d04ae79.docx",
+      "format": "DOCX",
+      "provenance": "PREVIEW",
+      "sha256": "7660181a39988d8422a0103c27c3d708db475408b3bd55936520223e92ebfc4a",
+      "bytes": 2495501,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "2d0704f6-11fd-4628-b8df-9e81140a0bd4-ps-card-fff50a43-a6f1-444b-bde2-39821d04ae79.pdf",
+      "format": "PDF",
+      "provenance": "PREVIEW",
+      "sha256": "8d87177fc98916906247b95d7fedfeebbd9e5726ea146400d8279405d4f60efc",
+      "bytes": 160213,
+      "media": []
+    },
+    {
+      "file": "f69dc84c-af8c-4933-8d28-89d0cffbe2b6-biot-worker-card-a4221d3d-94f9-420f-81be-66adb7c4a881.docx",
+      "format": "DOCX",
+      "provenance": "ORIGINAL",
+      "sha256": "85197968bd1a4d3bbdd4a1841953509c14408dd404220c548381aa090fa797b3",
+      "bytes": 26436,
+      "media": []
+    },
+    {
+      "file": "46ad6ff3-40cd-4121-8c05-f22a3a9eaddd-biot-worker-card-a4221d3d-94f9-420f-81be-66adb7c4a881.pdf",
+      "format": "PDF",
+      "provenance": "ORIGINAL",
+      "sha256": "fd6e3884c8a66ae4ce9934dbbab29897b9e3e68f460c74de8a1a7bc2ec33ff31",
+      "bytes": 106835,
+      "media": []
+    },
+    {
+      "file": "350e5190-a7a2-4a2b-9fd9-1e455ec4ffba-ptm-card-4792e6f5-1e38-4634-8fae-07d422c16f66.docx",
+      "format": "DOCX",
+      "provenance": "ORIGINAL",
+      "sha256": "321fca47c8f1ba557d4d1b7326148b3a1e1315532b0f1310759a57e03d09bd16",
+      "bytes": 2484044,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "fe52e57a-6e1b-49a8-8c86-365cd226b3e1-ptm-card-4792e6f5-1e38-4634-8fae-07d422c16f66.pdf",
+      "format": "PDF",
+      "provenance": "ORIGINAL",
+      "sha256": "131c8214d59413ae1829053d1a9067a9fc869728c06590f5ed31913fc06a839f",
+      "bytes": 92460,
+      "media": []
+    },
+    {
+      "file": "415092ef-00f0-413b-b2c7-de154fd6cc04-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.docx",
+      "format": "DOCX",
+      "provenance": "ORIGINAL",
+      "sha256": "96eb4e53e8ad38da0b6d2d2f51761a2709128b4f8bf2d7a7af2db3897bb6cd0d",
+      "bytes": 2490775,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "44fa3777-0d5c-4d7c-8299-9b1557df7b91-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.pdf",
+      "format": "PDF",
+      "provenance": "ORIGINAL",
+      "sha256": "765ef05a1388d694dd49e73315a3b68b869a505da52a048c851ca0ee482122ff",
+      "bytes": 129333,
+      "media": []
+    },
+    {
+      "file": "a1832f4a-d694-4bae-b990-4841bda513ef-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.docx",
+      "format": "DOCX",
+      "provenance": "ORIGINAL",
+      "sha256": "ecb5901ded967fecab3754865831d81956fa03688c6e32fe6974a9a350f7d374",
+      "bytes": 2495496,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "411f238c-cb06-4223-be59-ed9de2d61e24-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.pdf",
+      "format": "PDF",
+      "provenance": "ORIGINAL",
+      "sha256": "c2f3977cae6195bf605fb6b56a37e4e927dc0d45c38a56f39fac777c9ec827a9",
+      "bytes": 161888,
+      "media": []
+    },
+    {
+      "file": "8d086492-3413-4b2c-af84-277238c49005-registry-fff50a43-a6f1-444b-bde2-39821d04ae79.xlsx",
+      "format": "XLSX",
+      "provenance": "ORIGINAL",
+      "sha256": "2aa1d440ec942ae6f29d37ea4616537cd87c33a2e96e0ff611b6c5ffdf8b9eca",
+      "bytes": 6436,
+      "media": []
+    },
+    {
+      "file": "f8ceae2f-054d-4fd9-9459-3d0a34f7fc35-registry-fff50a43-a6f1-444b-bde2-39821d04ae79.zip",
+      "format": "ZIP",
+      "provenance": "ORIGINAL",
+      "sha256": "237036e6d96528643585ed86750b01631170bb291a78c4949e5d5052fd28e8b4",
+      "bytes": 7826072,
+      "media": []
+    }
+  ]
+}

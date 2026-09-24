@@ -1,0 +1,90 @@
+[
+  {
+    "templateId": "biot-worker-card",
+    "variant": "short",
+    "name": "biot-worker-card-short",
+    "docx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-worker-card-short.docx",
+    "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-worker-card-short.pdf",
+    "docxSha256": "e979b5f6c16a13e1ccb4f607c135949bfdd457641a2619f8bae69c24adeb0ccf",
+    "pdfSha256": "f8897e4544dea0f9706ce0fd4831fb91ade5d48f80228fd75f188c4a5361c7d5",
+    "templateSha256": "33e00e6897a2d10b138c41a8613d40a19b7c1ca2828526f3c512af724b7aa580",
+    "pages": 1
+  },
+  {
+    "templateId": "biot-worker-card",
+    "variant": "long",
+    "name": "biot-worker-card-long",
+    "docx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-worker-card-long.docx",
+    "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-worker-card-long.pdf",
+    "docxSha256": "376ef1854264e66c06cb0c4623d1ed27a1dd0aa902015703b3c22c46ca86e7c7",
+    "pdfSha256": "5e7e0575a714fd00a3b969bfc0668fed84eea9db30125ac3df3ecfd3afe884a9",
+    "templateSha256": "33e00e6897a2d10b138c41a8613d40a19b7c1ca2828526f3c512af724b7aa580",
+    "pages": 1
+  },
+  {
+    "templateId": "biot-itr-certificate",
+    "variant": "short",
+    "name": "biot-itr-certificate-short",
+    "docx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-certificate-short.docx",
+    "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-certificate-short.pdf",
+    "docxSha256": "8c9dccb84b8cddf3a082ac5cb8617d4999fc5a71c5fbb321bff3fbd48133f06b",
+    "pdfSha256": "ae951378f71e347604cc62453044bd3e18c8600c4e587d282331528a53126ef4",
+    "templateSha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+    "pages": 1
+  },
+  {
+    "templateId": "biot-itr-certificate",
+    "variant": "long",
+    "name": "biot-itr-certificate-long",
+    "docx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-certificate-long.docx",
+    "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-certificate-long.pdf",
+    "docxSha256": "6828c8a3a2241687b2d1cb55a26c41cc14d9a8e69d9847ba2491220996b92bce",
+    "pdfSha256": "932371681dc5d438fa5e98fceb276a45c3a47c4ce4d88ed4e5a18baa0ceea891",
+    "templateSha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+    "pages": 1
+  },
+  {
+    "templateId": "biot-protocol",
+    "variant": "short",
+    "name": "biot-protocol-short",
+    "docx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-protocol-short.docx",
+    "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-protocol-short.pdf",
+    "docxSha256": "1bc0ed469f6e40c63ff2d045e1eaa0284c2db002ab807aed4b3a198831a426f6",
+    "pdfSha256": "c7ec76b213ab1d595087e71b2df35b44a6ba5d9833539e65be4b05e5b0d8d794",
+    "templateSha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f",
+    "pages": 1
+  },
+  {
+    "templateId": "biot-protocol",
+    "variant": "long",
+    "name": "biot-protocol-long",
+    "docx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-protocol-long.docx",
+    "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-protocol-long.pdf",
+    "docxSha256": "cbf9b0581e376a20087e299da944a205b32bd3cf7791bea70eaca84855b47d1d",
+    "pdfSha256": "4f6353ca4b05dd30ad0685f5a46f65dec616e5eaa39b372992146f272f774064",
+    "templateSha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f",
+    "pages": 1
+  },
+  {
+    "templateId": "biot-itr-protocol",
+    "variant": "short",
+    "name": "biot-itr-protocol-short",
+    "docx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-protocol-short.docx",
+    "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-protocol-short.pdf",
+    "docxSha256": "5046c24ed7b7d19b3f13e0544eed93f7c66cbf305b3b7897b66017797315059b",
+    "pdfSha256": "0ad9261b575985e47e0525491044ede1bcd2e7d29468fa7d6041bdadd70b4e51",
+    "templateSha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+    "pages": 1
+  },
+  {
+    "templateId": "biot-itr-protocol",
+    "variant": "long",
+    "name": "biot-itr-protocol-long",
+    "docx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-protocol-long.docx",
+    "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-protocol-long.pdf",
+    "docxSha256": "34894ad9ca2395251e58c4ec2bf6c9fa1b46737c5a9cd6e8d2acf876030fb598",
+    "pdfSha256": "8f53d50a6052bb8d1adb36bf810476b92e6bfd3288c3551f8f78214d11da01c1",
+    "templateSha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+    "pages": 1
+  }
+]

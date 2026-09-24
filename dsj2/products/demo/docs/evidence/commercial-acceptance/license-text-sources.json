@@ -1,0 +1,2645 @@
+[
+  {
+    "name": "@borewit/text-codec",
+    "versions": [
+      "0.2.2"
+    ],
+    "platform": "linux-x64",
+    "source": "@borewit/text-codec/LICENSE.txt",
+    "sha256": "5b3af80f317313a8b8c227b0c8bffae67728cfec1786137b0553e625f2affec9",
+    "isFullLicense": true
+  },
+  {
+    "name": "@cacheable/memory",
+    "versions": [
+      "2.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@cacheable/memory/LICENSE",
+    "sha256": "465e8da349d50d8512e4a0e9b26d2bee50392c394f17edaa3be6e0df7c2b27ad",
+    "isFullLicense": true
+  },
+  {
+    "name": "@cacheable/utils",
+    "versions": [
+      "2.5.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@cacheable/utils/LICENSE",
+    "sha256": "465e8da349d50d8512e4a0e9b26d2bee50392c394f17edaa3be6e0df7c2b27ad",
+    "isFullLicense": true
+  },
+  {
+    "name": "@esbuild/linux-x64",
+    "versions": [
+      "0.28.2"
+    ],
+    "platform": "linux-x64",
+    "source": "esbuild/LICENSE.md",
+    "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+    "isFullLicense": true
+  },
+  {
+    "name": "@eslint-community/eslint-utils",
+    "versions": [
+      "4.10.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@eslint-community/eslint-utils/LICENSE",
+    "sha256": "fcf6eabf68ca96988a6b506b4fdc6cc32535d80eb2e11c79724af5ac6f50262b",
+    "isFullLicense": true
+  },
+  {
+    "name": "@eslint-community/regexpp",
+    "versions": [
+      "4.12.2"
+    ],
+    "platform": "linux-x64",
+    "source": "@eslint-community/regexpp/LICENSE",
+    "sha256": "fcf6eabf68ca96988a6b506b4fdc6cc32535d80eb2e11c79724af5ac6f50262b",
+    "isFullLicense": true
+  },
+  {
+    "name": "@eslint/js",
+    "versions": [
+      "10.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@eslint/js/LICENSE",
+    "sha256": "3b6be04f862a077a4b97929dbf247299360824d9365f8603c263769303ace18c",
+    "isFullLicense": true
+  },
+  {
+    "name": "@img/colour",
+    "versions": [
+      "1.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@img/colour/LICENSE.md",
+    "sha256": "e2eaa4603c14cb26f301e88648c12a853fa3f0f5da6d4b0972958c666e7f2ab8",
+    "isFullLicense": true
+  },
+  {
+    "name": "@keyv/bigmap",
+    "versions": [
+      "1.3.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@keyv/bigmap/LICENSE",
+    "sha256": "f18cad8d98d4454ad42c33f1950d642cd3b939f2ccd3c36710fa8f50842cacc0",
+    "isFullLicense": true
+  },
+  {
+    "name": "@keyv/serialize",
+    "versions": [
+      "1.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@keyv/serialize/LICENSE",
+    "sha256": "1f7dca26d2d328c3dbb9b6fe3b15ec3cda08ffe2288e47b73d617454b256f959",
+    "isFullLicense": true
+  },
+  {
+    "name": "@lukeed/csprng",
+    "versions": [
+      "1.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@lukeed/csprng/license",
+    "sha256": "9a9edad7baae52622bddf3c15b2ef8a33d2c89f2d25408ad13e8a7481c6b0c97",
+    "isFullLicense": true
+  },
+  {
+    "name": "@nestjs/common",
+    "versions": [
+      "11.2.5"
+    ],
+    "platform": "linux-x64",
+    "source": "@nestjs/common/LICENSE",
+    "sha256": "56967de93525b12a30717e4446ccef3bbe32fafdbe2350f143c1cc6971b19ed3",
+    "isFullLicense": true
+  },
+  {
+    "name": "@nestjs/core",
+    "versions": [
+      "11.2.5"
+    ],
+    "platform": "linux-x64",
+    "source": "@nestjs/core/LICENSE",
+    "sha256": "56967de93525b12a30717e4446ccef3bbe32fafdbe2350f143c1cc6971b19ed3",
+    "isFullLicense": true
+  },
+  {
+    "name": "@nestjs/platform-express",
+    "versions": [
+      "11.2.5"
+    ],
+    "platform": "linux-x64",
+    "source": "@nestjs/platform-express/LICENSE",
+    "sha256": "56967de93525b12a30717e4446ccef3bbe32fafdbe2350f143c1cc6971b19ed3",
+    "isFullLicense": true
+  },
+  {
+    "name": "@next/env",
+    "versions": [
+      "15.5.25"
+    ],
+    "platform": "linux-x64",
+    "source": "next/license.md",
+    "sha256": "ee765244e2d59f5234d474f62e0766fa0c8b99af967fdd4c0cb8dcb0c76ea224",
+    "isFullLicense": true
+  },
+  {
+    "name": "@next/swc-linux-x64-gnu",
+    "versions": [
+      "15.5.25"
+    ],
+    "platform": "linux-x64",
+    "source": "next/license.md",
+    "sha256": "ee765244e2d59f5234d474f62e0766fa0c8b99af967fdd4c0cb8dcb0c76ea224",
+    "isFullLicense": true
+  },
+  {
+    "name": "@standard-schema/spec",
+    "versions": [
+      "1.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@standard-schema/spec/LICENSE",
+    "sha256": "653b779005a3a4d64a7288c940f7b9a0e8f0b1e0375f6aa6af9473caf131e564",
+    "isFullLicense": true
+  },
+  {
+    "name": "@tokenizer/inflate",
+    "versions": [
+      "0.4.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@tokenizer/inflate/LICENSE",
+    "sha256": "5bb0e8b566dee0e946cafd9bbed359eb0494580df86457876b4f41bba5c77b25",
+    "isFullLicense": true
+  },
+  {
+    "name": "@tokenizer/token",
+    "versions": [
+      "0.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@tokenizer/token/README.md license section",
+    "sha256": "ddec2a71b82486e49c7c8d9895c470316075f304c8ae73dea8a2a20acab033cd",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/body-parser",
+    "versions": [
+      "1.19.6"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/body-parser/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/connect",
+    "versions": [
+      "3.4.38"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/connect/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/esrecurse",
+    "versions": [
+      "4.3.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/esrecurse/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/estree",
+    "versions": [
+      "1.0.9"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/estree/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/express",
+    "versions": [
+      "5.0.6"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/express/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/express-serve-static-core",
+    "versions": [
+      "5.1.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/express-serve-static-core/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/http-errors",
+    "versions": [
+      "2.0.5"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/http-errors/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/json-schema",
+    "versions": [
+      "7.0.15"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/json-schema/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/multer",
+    "versions": [
+      "2.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/multer/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/node",
+    "versions": [
+      "22.18.6",
+      "22.19.15"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/node/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/qs",
+    "versions": [
+      "6.15.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/qs/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/range-parser",
+    "versions": [
+      "1.2.7"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/range-parser/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/react",
+    "versions": [
+      "19.1.16"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/react/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/react-dom",
+    "versions": [
+      "19.1.9"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/react-dom/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/send",
+    "versions": [
+      "1.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/send/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@types/serve-static",
+    "versions": [
+      "2.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@types/serve-static/LICENSE",
+    "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/eslint-plugin",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/eslint-plugin/LICENSE",
+    "sha256": "2eb5c7a0bba9deb77a98c81bf6b9d3fb1c67118eebf968b6b1a787b3f8928ee0",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/parser",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/parser/LICENSE",
+    "sha256": "2eb5c7a0bba9deb77a98c81bf6b9d3fb1c67118eebf968b6b1a787b3f8928ee0",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/project-service",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/project-service/LICENSE",
+    "sha256": "053a75a14b7508a897466b65e12797201a06b0e9b5066d1223da72cac99601b5",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/scope-manager",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/scope-manager/LICENSE",
+    "sha256": "2eb5c7a0bba9deb77a98c81bf6b9d3fb1c67118eebf968b6b1a787b3f8928ee0",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/tsconfig-utils",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/tsconfig-utils/LICENSE",
+    "sha256": "053a75a14b7508a897466b65e12797201a06b0e9b5066d1223da72cac99601b5",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/type-utils",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/type-utils/LICENSE",
+    "sha256": "f3c51ace7f159b21566d72535e84ff354505ae7ffdca835dac81fcdafbf9e879",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/types",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/types/LICENSE",
+    "sha256": "2eb5c7a0bba9deb77a98c81bf6b9d3fb1c67118eebf968b6b1a787b3f8928ee0",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/typescript-estree",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/typescript-estree/LICENSE",
+    "sha256": "2eb5c7a0bba9deb77a98c81bf6b9d3fb1c67118eebf968b6b1a787b3f8928ee0",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/utils",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/utils/LICENSE",
+    "sha256": "2eb5c7a0bba9deb77a98c81bf6b9d3fb1c67118eebf968b6b1a787b3f8928ee0",
+    "isFullLicense": true
+  },
+  {
+    "name": "@typescript-eslint/visitor-keys",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@typescript-eslint/visitor-keys/LICENSE",
+    "sha256": "2eb5c7a0bba9deb77a98c81bf6b9d3fb1c67118eebf968b6b1a787b3f8928ee0",
+    "isFullLicense": true
+  },
+  {
+    "name": "accepts",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "accepts/LICENSE",
+    "sha256": "71f83c4c0621102a56d9853812777b85751bce7e9726f686f5b056c1f8a4b0e6",
+    "isFullLicense": true
+  },
+  {
+    "name": "acorn",
+    "versions": [
+      "8.18.0"
+    ],
+    "platform": "linux-x64",
+    "source": "acorn/LICENSE",
+    "sha256": "76a876cf886ff9be2a8b5e2e86514fed06223c8c9f0c1e9ee9606e93841e00b7",
+    "isFullLicense": true
+  },
+  {
+    "name": "acorn-jsx",
+    "versions": [
+      "5.3.2"
+    ],
+    "platform": "linux-x64",
+    "source": "acorn-jsx/LICENSE",
+    "sha256": "cfa72b62b9ae173078823a3796b25c027a9071046a263beddf966df67018ce06",
+    "isFullLicense": true
+  },
+  {
+    "name": "ajv",
+    "versions": [
+      "6.15.0"
+    ],
+    "platform": "linux-x64",
+    "source": "ajv/LICENSE",
+    "sha256": "e85e131fa4ed25538ff1f4962ced1fb6f68b079bd9164a790597a0f30b8fd030",
+    "isFullLicense": true
+  },
+  {
+    "name": "append-field",
+    "versions": [
+      "1.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "append-field/LICENSE",
+    "sha256": "fe9a7f8b8afc8cea446e8d65a3bbf9bbe278d96c35320b43e57c47f26e447619",
+    "isFullLicense": true
+  },
+  {
+    "name": "balanced-match",
+    "versions": [
+      "4.0.4"
+    ],
+    "platform": "linux-x64",
+    "source": "balanced-match/LICENSE.md",
+    "sha256": "d408f38ffa3355c5faec517153295338892eb0f1ea43f57874bb23c6075979b5",
+    "isFullLicense": true
+  },
+  {
+    "name": "body-parser",
+    "versions": [
+      "2.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "body-parser/LICENSE",
+    "sha256": "23d466b1b134b415b66fa50c6526b4cf3e7b9258554da88d3abb371721e7ce68",
+    "isFullLicense": true
+  },
+  {
+    "name": "brace-expansion",
+    "versions": [
+      "5.0.12"
+    ],
+    "platform": "linux-x64",
+    "source": "brace-expansion/LICENSE",
+    "sha256": "9c63a23124d68cd30cd316a94a1a0bca34f032786df6df69fc4b5f136bac8d2e",
+    "isFullLicense": true
+  },
+  {
+    "name": "busboy",
+    "versions": [
+      "1.6.0"
+    ],
+    "platform": "linux-x64",
+    "source": "busboy/LICENSE",
+    "sha256": "d06b5d27bbbbe22c36b1fd88406b1208876e2d37d795f5b8eaed951a459a3111",
+    "isFullLicense": true
+  },
+  {
+    "name": "bytes",
+    "versions": [
+      "3.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "bytes/LICENSE",
+    "sha256": "e3b44af066615de2ea48d18d852d0762f18c0b2efcea714fa48a6f729d405b85",
+    "isFullLicense": true
+  },
+  {
+    "name": "c12",
+    "versions": [
+      "3.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "c12/LICENSE",
+    "sha256": "46231df5a7733c3f52f11b71f3df61813007745b62b09031acfb45fb42d75082",
+    "isFullLicense": true
+  },
+  {
+    "name": "cacheable",
+    "versions": [
+      "2.5.0"
+    ],
+    "platform": "linux-x64",
+    "source": "cacheable/LICENSE",
+    "sha256": "465e8da349d50d8512e4a0e9b26d2bee50392c394f17edaa3be6e0df7c2b27ad",
+    "isFullLicense": true
+  },
+  {
+    "name": "call-bind-apply-helpers",
+    "versions": [
+      "1.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "call-bind-apply-helpers/LICENSE",
+    "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+    "isFullLicense": true
+  },
+  {
+    "name": "call-bound",
+    "versions": [
+      "1.0.4"
+    ],
+    "platform": "linux-x64",
+    "source": "call-bound/LICENSE",
+    "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+    "isFullLicense": true
+  },
+  {
+    "name": "chokidar",
+    "versions": [
+      "4.0.3"
+    ],
+    "platform": "linux-x64",
+    "source": "chokidar/LICENSE",
+    "sha256": "bdfd5e0edb6089e6586c8f15e6a86fab83ffbeeda3b3b7b33734ccb8c5906965",
+    "isFullLicense": true
+  },
+  {
+    "name": "citty",
+    "versions": [
+      "0.1.6",
+      "0.2.2"
+    ],
+    "platform": "linux-x64",
+    "source": "citty/LICENSE",
+    "sha256": "8c342219f33308944e59ab5dc853d3b4da818b3c646dbf5f3c24f10777767616",
+    "isFullLicense": true
+  },
+  {
+    "name": "citty",
+    "versions": [
+      "0.1.6",
+      "0.2.2"
+    ],
+    "platform": "linux-x64",
+    "source": "citty/LICENSE",
+    "sha256": "46231df5a7733c3f52f11b71f3df61813007745b62b09031acfb45fb42d75082",
+    "isFullLicense": true
+  },
+  {
+    "name": "confbox",
+    "versions": [
+      "0.2.4",
+      "0.3.1"
+    ],
+    "platform": "linux-x64",
+    "source": "confbox/LICENSE",
+    "sha256": "c6e83b9be7af3b907525722dadbd781848162e4fbfcbe20324f7a237d91ee0f3",
+    "isFullLicense": true
+  },
+  {
+    "name": "consola",
+    "versions": [
+      "3.4.2"
+    ],
+    "platform": "linux-x64",
+    "source": "consola/LICENSE",
+    "sha256": "df0e3cef4a42bae7db60ee33c3409a63df5f4dc40291d3627fbf52dfbd44e8a7",
+    "isFullLicense": true
+  },
+  {
+    "name": "content-disposition",
+    "versions": [
+      "1.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "content-disposition/LICENSE",
+    "sha256": "bd47ce7b88c7759630d1e2b9fcfa170a0f1fde522be09e13fb1581a79d090400",
+    "isFullLicense": true
+  },
+  {
+    "name": "content-type",
+    "versions": [
+      "1.0.5",
+      "2.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "content-type/LICENSE",
+    "sha256": "257aed98914108e91a337912727b6a802eef218248507f74b76faffaff517a38",
+    "isFullLicense": true
+  },
+  {
+    "name": "cookie",
+    "versions": [
+      "0.7.2"
+    ],
+    "platform": "linux-x64",
+    "source": "cookie/LICENSE",
+    "sha256": "c02110eedc16c7114f1a9bdc026c65626ce1d9c7e27fd51a8e0feee8a48a6858",
+    "isFullLicense": true
+  },
+  {
+    "name": "cookie-signature",
+    "versions": [
+      "1.2.2"
+    ],
+    "platform": "linux-x64",
+    "source": "cookie-signature/LICENSE",
+    "sha256": "0dd4e47333485760cf8c265db5a5e24ae8d7401064c6f2e19793ee81a5bef42f",
+    "isFullLicense": true
+  },
+  {
+    "name": "cors",
+    "versions": [
+      "2.8.6"
+    ],
+    "platform": "linux-x64",
+    "source": "cors/LICENSE",
+    "sha256": "1aa9a12863eefb583779b2ca0e5d73c610b6e6d07529ae0472721769a6ea0a32",
+    "isFullLicense": true
+  },
+  {
+    "name": "cross-spawn",
+    "versions": [
+      "7.0.6"
+    ],
+    "platform": "linux-x64",
+    "source": "cross-spawn/LICENSE",
+    "sha256": "aaa78451b6fecd1b9c4594c796c133c0e90cad100372ff8bc6de615e9ef9adf1",
+    "isFullLicense": true
+  },
+  {
+    "name": "csstype",
+    "versions": [
+      "3.2.3"
+    ],
+    "platform": "linux-x64",
+    "source": "csstype/LICENSE",
+    "sha256": "11d55bd4541c75ee7879547ac49089c489163dae49551389713c3d026cab383e",
+    "isFullLicense": true
+  },
+  {
+    "name": "debug",
+    "versions": [
+      "4.4.3"
+    ],
+    "platform": "linux-x64",
+    "source": "debug/LICENSE",
+    "sha256": "3a61c6c96caf5c1d9b623fb9b04c822b783dfcb78aa7e49c76a3f643e6ed7f95",
+    "isFullLicense": true
+  },
+  {
+    "name": "deep-is",
+    "versions": [
+      "0.1.4"
+    ],
+    "platform": "linux-x64",
+    "source": "deep-is/LICENSE",
+    "sha256": "f2042f3634c4136d06b5139c9c6aefb81a3a462b514548bc1845953233dfba98",
+    "isFullLicense": true
+  },
+  {
+    "name": "defu",
+    "versions": [
+      "6.1.7"
+    ],
+    "platform": "linux-x64",
+    "source": "defu/LICENSE",
+    "sha256": "46231df5a7733c3f52f11b71f3df61813007745b62b09031acfb45fb42d75082",
+    "isFullLicense": true
+  },
+  {
+    "name": "depd",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "depd/LICENSE",
+    "sha256": "bd134b41da59e452fb5a1d366b660886f741c87c2bf9428e93764c419fbc40f5",
+    "isFullLicense": true
+  },
+  {
+    "name": "destr",
+    "versions": [
+      "2.0.5"
+    ],
+    "platform": "linux-x64",
+    "source": "destr/LICENSE",
+    "sha256": "46231df5a7733c3f52f11b71f3df61813007745b62b09031acfb45fb42d75082",
+    "isFullLicense": true
+  },
+  {
+    "name": "dunder-proto",
+    "versions": [
+      "1.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "dunder-proto/LICENSE",
+    "sha256": "2b770a704c15de238c3f622b01b0044ddd60b49ee30608ea6991ebf19db7a7a1",
+    "isFullLicense": true
+  },
+  {
+    "name": "ee-first",
+    "versions": [
+      "1.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "ee-first/LICENSE",
+    "sha256": "965ef284f7f4c176842ec2e87fa13e79feed777d56d7a21a5a3b38f1bb6dc288",
+    "isFullLicense": true
+  },
+  {
+    "name": "effect",
+    "versions": [
+      "3.21.0"
+    ],
+    "platform": "linux-x64",
+    "source": "effect/LICENSE",
+    "sha256": "774c3bc5924ad8ae6c5a75f1c53db13feb238ade15989625c513d07b60dedf30",
+    "isFullLicense": true
+  },
+  {
+    "name": "empathic",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "empathic/license",
+    "sha256": "9a9edad7baae52622bddf3c15b2ef8a33d2c89f2d25408ad13e8a7481c6b0c97",
+    "isFullLicense": true
+  },
+  {
+    "name": "encodeurl",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "encodeurl/LICENSE",
+    "sha256": "7585ea7bba616ccbbe43cb54ecb67956688c3c5641bb84f3099a652a73193afe",
+    "isFullLicense": true
+  },
+  {
+    "name": "es-define-property",
+    "versions": [
+      "1.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "es-define-property/LICENSE",
+    "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+    "isFullLicense": true
+  },
+  {
+    "name": "es-errors",
+    "versions": [
+      "1.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "es-errors/LICENSE",
+    "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+    "isFullLicense": true
+  },
+  {
+    "name": "es-object-atoms",
+    "versions": [
+      "1.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "es-object-atoms/LICENSE",
+    "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+    "isFullLicense": true
+  },
+  {
+    "name": "esbuild",
+    "versions": [
+      "0.28.2"
+    ],
+    "platform": "linux-x64",
+    "source": "esbuild/LICENSE.md",
+    "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+    "isFullLicense": true
+  },
+  {
+    "name": "escape-html",
+    "versions": [
+      "1.0.3"
+    ],
+    "platform": "linux-x64",
+    "source": "escape-html/LICENSE",
+    "sha256": "255aa557a1f55224ce522f311629c0bf20854740a67955cefd798fbd1d3d1ded",
+    "isFullLicense": true
+  },
+  {
+    "name": "escape-string-regexp",
+    "versions": [
+      "4.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "escape-string-regexp/license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "isFullLicense": true
+  },
+  {
+    "name": "eslint",
+    "versions": [
+      "10.11.0"
+    ],
+    "platform": "linux-x64",
+    "source": "eslint/LICENSE",
+    "sha256": "3b6be04f862a077a4b97929dbf247299360824d9365f8603c263769303ace18c",
+    "isFullLicense": true
+  },
+  {
+    "name": "etag",
+    "versions": [
+      "1.8.1"
+    ],
+    "platform": "linux-x64",
+    "source": "etag/LICENSE",
+    "sha256": "a7996721249a136fbcfc1c201bcb5f414f38a701d4a24f28abe65e16cfcce813",
+    "isFullLicense": true
+  },
+  {
+    "name": "express",
+    "versions": [
+      "5.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "express/LICENSE",
+    "sha256": "95a5762890e5c1c9808921cef095661fc482c5e1f0bba31446ac85595df6237c",
+    "isFullLicense": true
+  },
+  {
+    "name": "exsolve",
+    "versions": [
+      "1.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "exsolve/LICENSE",
+    "sha256": "d37af134e0d0b998393188394202052e2ff6cd5d18efb2fcc81ba7b00ad77b75",
+    "isFullLicense": true
+  },
+  {
+    "name": "fast-check",
+    "versions": [
+      "3.23.2"
+    ],
+    "platform": "linux-x64",
+    "source": "fast-check/LICENSE",
+    "sha256": "b2bd24f5c975f659433271170b17e0a769b12ef8065bbca6dcd5511d57e94ce0",
+    "isFullLicense": true
+  },
+  {
+    "name": "fast-deep-equal",
+    "versions": [
+      "3.1.3"
+    ],
+    "platform": "linux-x64",
+    "source": "fast-deep-equal/LICENSE",
+    "sha256": "7bf9b2de73a6b356761c948d0e9eeb4be6c1270bd04c79cd489c1e400ffdfc1a",
+    "isFullLicense": true
+  },
+  {
+    "name": "fast-json-stable-stringify",
+    "versions": [
+      "2.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "fast-json-stable-stringify/LICENSE",
+    "sha256": "a833d366242c298cf1b10263516572fb8dcbe68eb5072cdcac2b4546e2b4eb36",
+    "isFullLicense": true
+  },
+  {
+    "name": "fast-levenshtein",
+    "versions": [
+      "2.0.6"
+    ],
+    "platform": "linux-x64",
+    "source": "fast-levenshtein/LICENSE.md",
+    "sha256": "942a98cb8846a6354266193f173c1354615827fbb7d67f68399599dff12c4d6a",
+    "isFullLicense": true
+  },
+  {
+    "name": "fast-safe-stringify",
+    "versions": [
+      "2.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "fast-safe-stringify/LICENSE",
+    "sha256": "f0ffe1359ba08038bb99f194c80fbb4f2aae216e749e97b2cd6b006d1861e27b",
+    "isFullLicense": true
+  },
+  {
+    "name": "fdir",
+    "versions": [
+      "6.5.0"
+    ],
+    "platform": "linux-x64",
+    "source": "fdir/LICENSE",
+    "sha256": "9a39f2aadab11a3697edd668ff2d8ad885b649737b7ab4d3bf12b34e5ada0c86",
+    "isFullLicense": true
+  },
+  {
+    "name": "file-entry-cache",
+    "versions": [
+      "11.1.5"
+    ],
+    "platform": "linux-x64",
+    "source": "file-entry-cache/LICENSE",
+    "sha256": "465e8da349d50d8512e4a0e9b26d2bee50392c394f17edaa3be6e0df7c2b27ad",
+    "isFullLicense": true
+  },
+  {
+    "name": "file-type",
+    "versions": [
+      "21.3.4"
+    ],
+    "platform": "linux-x64",
+    "source": "file-type/license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "isFullLicense": true
+  },
+  {
+    "name": "finalhandler",
+    "versions": [
+      "2.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "finalhandler/LICENSE",
+    "sha256": "47dcccf62bf40469d23849b0b1dc8df9fc91bce219b880c638d4dc4596e6b5cf",
+    "isFullLicense": true
+  },
+  {
+    "name": "find-up",
+    "versions": [
+      "5.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "find-up/license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "isFullLicense": true
+  },
+  {
+    "name": "flat-cache",
+    "versions": [
+      "6.1.23"
+    ],
+    "platform": "linux-x64",
+    "source": "flat-cache/LICENSE",
+    "sha256": "465e8da349d50d8512e4a0e9b26d2bee50392c394f17edaa3be6e0df7c2b27ad",
+    "isFullLicense": true
+  },
+  {
+    "name": "forwarded",
+    "versions": [
+      "0.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "forwarded/LICENSE",
+    "sha256": "bd47ce7b88c7759630d1e2b9fcfa170a0f1fde522be09e13fb1581a79d090400",
+    "isFullLicense": true
+  },
+  {
+    "name": "fresh",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "fresh/LICENSE",
+    "sha256": "a0ec0dab16b3666f24950f86d257930ac2ad475557b4bfe245620e0817d8a45d",
+    "isFullLicense": true
+  },
+  {
+    "name": "function-bind",
+    "versions": [
+      "1.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "function-bind/LICENSE",
+    "sha256": "773e131a7684726005a7e4688a80b4620033bc08499bc1404dd1a1eb3bca725e",
+    "isFullLicense": true
+  },
+  {
+    "name": "get-intrinsic",
+    "versions": [
+      "1.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "get-intrinsic/LICENSE",
+    "sha256": "39c5ec504cf6bd5cd782a7c695828e09189df79f5d94840e4f08feb97b9fd416",
+    "isFullLicense": true
+  },
+  {
+    "name": "get-proto",
+    "versions": [
+      "1.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "get-proto/LICENSE",
+    "sha256": "be46ce1e3b0479af9ce82d22b465a6d7d2ff084fca0aaf3d54172da2b5eb5781",
+    "isFullLicense": true
+  },
+  {
+    "name": "giget",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "giget/LICENSE",
+    "sha256": "858a63872e40ca764098e48cfcec054efaa1330dfa6c7d5c0b3fdcb3a44a9d95",
+    "isFullLicense": true
+  },
+  {
+    "name": "gopd",
+    "versions": [
+      "1.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "gopd/LICENSE",
+    "sha256": "d90bf0a089da4cf43d644ed240a0b3825dcdb705e64e38371d56995a4cc9e4c5",
+    "isFullLicense": true
+  },
+  {
+    "name": "has-symbols",
+    "versions": [
+      "1.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "has-symbols/LICENSE",
+    "sha256": "206c1adcf206dc0031b11232f5b054ec5f1662407ab1ca415247921cab2068ab",
+    "isFullLicense": true
+  },
+  {
+    "name": "hashery",
+    "versions": [
+      "1.5.1"
+    ],
+    "platform": "linux-x64",
+    "source": "hashery/LICENSE",
+    "sha256": "2eef776efe4bae7fcd2d8162ecadf2b0873aae20afac343a936ddb0de3d79253",
+    "isFullLicense": true
+  },
+  {
+    "name": "hasown",
+    "versions": [
+      "2.0.4"
+    ],
+    "platform": "linux-x64",
+    "source": "hasown/LICENSE",
+    "sha256": "bf9b0d665be2a689851eea667ca9f42066ea1d903b38349c51e6a44b2577680a",
+    "isFullLicense": true
+  },
+  {
+    "name": "hookified",
+    "versions": [
+      "1.15.1",
+      "2.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "hookified/LICENSE",
+    "sha256": "3902e57e73412bd91ba81a47fa2cef45e1729c152c835114c1692cc5e685ddbe",
+    "isFullLicense": true
+  },
+  {
+    "name": "http-errors",
+    "versions": [
+      "2.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "http-errors/LICENSE",
+    "sha256": "dcb94ff9b1e037a847bc20589dc81a1066d041fd4c16deb18b0fa968c66cf395",
+    "isFullLicense": true
+  },
+  {
+    "name": "iconv-lite",
+    "versions": [
+      "0.7.3"
+    ],
+    "platform": "linux-x64",
+    "source": "iconv-lite/LICENSE",
+    "sha256": "ac779f7314c74f232ef847ea86e714abe25cf6eeb5cc97b69451b74e2af6492d",
+    "isFullLicense": true
+  },
+  {
+    "name": "ignore",
+    "versions": [
+      "5.3.2",
+      "7.0.9"
+    ],
+    "platform": "linux-x64",
+    "source": "ignore/LICENSE-MIT",
+    "sha256": "9c94db23dc4b1e9aaee5d195668b916afc71efed54af226b66cf0ccc4389c1c0",
+    "isFullLicense": true
+  },
+  {
+    "name": "imurmurhash",
+    "versions": [
+      "0.1.4"
+    ],
+    "platform": "linux-x64",
+    "source": "imurmurhash/README.md license section",
+    "sha256": "0fd3e41620ecd5d777d222b9c53336392b20bf336890f74c582d049359fac8fb",
+    "isFullLicense": true
+  },
+  {
+    "name": "ipaddr.js",
+    "versions": [
+      "1.9.1"
+    ],
+    "platform": "linux-x64",
+    "source": "ipaddr.js/LICENSE",
+    "sha256": "62568a2d1337b77171ecca9db10579163446de1ba6151678e81f06cdc199971b",
+    "isFullLicense": true
+  },
+  {
+    "name": "is-extglob",
+    "versions": [
+      "2.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "is-extglob/LICENSE",
+    "sha256": "73b5283588baa142c5baaef5f56d3e8fdea7a30b214e8c5737e87640f882453a",
+    "isFullLicense": true
+  },
+  {
+    "name": "is-glob",
+    "versions": [
+      "4.0.3"
+    ],
+    "platform": "linux-x64",
+    "source": "is-glob/LICENSE",
+    "sha256": "4cd903859549d4b20b571041f96dfae1136ed079c476126268f9d7cc1b611150",
+    "isFullLicense": true
+  },
+  {
+    "name": "is-promise",
+    "versions": [
+      "4.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "is-promise/LICENSE",
+    "sha256": "44191656d296391e0ec97e32f5385f0d02b6f2992694082d22ea04ba0f66f9e4",
+    "isFullLicense": true
+  },
+  {
+    "name": "jiti",
+    "versions": [
+      "2.7.0"
+    ],
+    "platform": "linux-x64",
+    "source": "jiti/LICENSE",
+    "sha256": "46231df5a7733c3f52f11b71f3df61813007745b62b09031acfb45fb42d75082",
+    "isFullLicense": true
+  },
+  {
+    "name": "json-schema-traverse",
+    "versions": [
+      "0.4.1"
+    ],
+    "platform": "linux-x64",
+    "source": "json-schema-traverse/LICENSE",
+    "sha256": "7bf9b2de73a6b356761c948d0e9eeb4be6c1270bd04c79cd489c1e400ffdfc1a",
+    "isFullLicense": true
+  },
+  {
+    "name": "json-stable-stringify-without-jsonify",
+    "versions": [
+      "1.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "json-stable-stringify-without-jsonify/LICENSE",
+    "sha256": "435a6722c786b0a56fbe7387028f1d9d3f3a2d0fb615bb8fee118727c3f59b7b",
+    "isFullLicense": true
+  },
+  {
+    "name": "keyv",
+    "versions": [
+      "5.6.0"
+    ],
+    "platform": "linux-x64",
+    "source": "keyv/LICENSE",
+    "sha256": "1f7dca26d2d328c3dbb9b6fe3b15ec3cda08ffe2288e47b73d617454b256f959",
+    "isFullLicense": true
+  },
+  {
+    "name": "levn",
+    "versions": [
+      "0.4.1"
+    ],
+    "platform": "linux-x64",
+    "source": "levn/LICENSE",
+    "sha256": "b9eb082c39fe245e38793699074c394c43a722c51fce031c3c165cb92a31035c",
+    "isFullLicense": true
+  },
+  {
+    "name": "load-esm",
+    "versions": [
+      "1.0.3"
+    ],
+    "platform": "linux-x64",
+    "source": "load-esm/LICENSE.txt",
+    "sha256": "0ac9ad48738b9e891d410809e56af32d0112632b5e1ede9777042124ece1f2e4",
+    "isFullLicense": true
+  },
+  {
+    "name": "locate-path",
+    "versions": [
+      "6.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "locate-path/license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "isFullLicense": true
+  },
+  {
+    "name": "math-intrinsics",
+    "versions": [
+      "1.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "math-intrinsics/LICENSE",
+    "sha256": "2b770a704c15de238c3f622b01b0044ddd60b49ee30608ea6991ebf19db7a7a1",
+    "isFullLicense": true
+  },
+  {
+    "name": "media-typer",
+    "versions": [
+      "0.3.0",
+      "1.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "media-typer/LICENSE",
+    "sha256": "74d8054d56d522bdaa340d3d71130cb204997d523a5292c85ac1264dd77c8d06",
+    "isFullLicense": true
+  },
+  {
+    "name": "media-typer",
+    "versions": [
+      "0.3.0",
+      "1.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "media-typer/LICENSE",
+    "sha256": "bd47ce7b88c7759630d1e2b9fcfa170a0f1fde522be09e13fb1581a79d090400",
+    "isFullLicense": true
+  },
+  {
+    "name": "merge-descriptors",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "merge-descriptors/license",
+    "sha256": "70b126abc64d7ea06e1243349073935caa16fa47a41a571773ccf0b350b1d574",
+    "isFullLicense": true
+  },
+  {
+    "name": "mime-db",
+    "versions": [
+      "1.52.0",
+      "1.54.0"
+    ],
+    "platform": "linux-x64",
+    "source": "mime-db/LICENSE",
+    "sha256": "cc1dfd4dafa27271e8212cd3b274eeb3f262e40a6fdab36ddc3f9696f706f58b",
+    "isFullLicense": true
+  },
+  {
+    "name": "mime-types",
+    "versions": [
+      "2.1.35",
+      "3.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "mime-types/LICENSE",
+    "sha256": "71f83c4c0621102a56d9853812777b85751bce7e9726f686f5b056c1f8a4b0e6",
+    "isFullLicense": true
+  },
+  {
+    "name": "ms",
+    "versions": [
+      "2.1.3"
+    ],
+    "platform": "linux-x64",
+    "source": "ms/license.md",
+    "sha256": "1662fae9b5314d11cf51284e2dcd1f006a354f7343f08712a730fcff9a359801",
+    "isFullLicense": true
+  },
+  {
+    "name": "multer",
+    "versions": [
+      "2.4.0"
+    ],
+    "platform": "linux-x64",
+    "source": "multer/LICENSE",
+    "sha256": "cc8f87aafbf72a74bafed2a8f6925d8895e1c716b36bd3df7ee0c46be54e87bb",
+    "isFullLicense": true
+  },
+  {
+    "name": "nanoid",
+    "versions": [
+      "3.3.19"
+    ],
+    "platform": "linux-x64",
+    "source": "nanoid/LICENSE",
+    "sha256": "da4db1480d9beea3483a2eda5c53b22238d0827d57da162b48f122e04d2d9987",
+    "isFullLicense": true
+  },
+  {
+    "name": "natural-compare",
+    "versions": [
+      "1.4.0"
+    ],
+    "platform": "linux-x64",
+    "source": "https://raw.githubusercontent.com/litejs/natural-compare-lite/a8e1e32c85713ba7d079445207a808ce6f4852f9/LICENSE",
+    "sha256": "f89cd296971639bb6691aa083a73057dcadb0c7bb2dcb81df509db3d442d1765",
+    "isFullLicense": true
+  },
+  {
+    "name": "negotiator",
+    "versions": [
+      "1.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "negotiator/LICENSE",
+    "sha256": "553d4d20029a24e315b428a1a54a9e109eaa340f2e958a4f50a92362c2c4070b",
+    "isFullLicense": true
+  },
+  {
+    "name": "next",
+    "versions": [
+      "15.5.25"
+    ],
+    "platform": "linux-x64",
+    "source": "next/license.md",
+    "sha256": "ee765244e2d59f5234d474f62e0766fa0c8b99af967fdd4c0cb8dcb0c76ea224",
+    "isFullLicense": true
+  },
+  {
+    "name": "node-fetch-native",
+    "versions": [
+      "1.6.7"
+    ],
+    "platform": "linux-x64",
+    "source": "node-fetch-native/LICENSE",
+    "sha256": "22a1b925621a4fb60cb9df9914612f12482e275c9f545035599fc528b4979da9",
+    "isFullLicense": true
+  },
+  {
+    "name": "nypm",
+    "versions": [
+      "0.6.10"
+    ],
+    "platform": "linux-x64",
+    "source": "nypm/LICENSE",
+    "sha256": "46231df5a7733c3f52f11b71f3df61813007745b62b09031acfb45fb42d75082",
+    "isFullLicense": true
+  },
+  {
+    "name": "object-assign",
+    "versions": [
+      "4.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "object-assign/license",
+    "sha256": "6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c",
+    "isFullLicense": true
+  },
+  {
+    "name": "object-inspect",
+    "versions": [
+      "1.13.4"
+    ],
+    "platform": "linux-x64",
+    "source": "object-inspect/LICENSE",
+    "sha256": "bd40cc437e28a3ad7bef2ad34e6b72e757b182e67bda1acadbab4ef0476f8232",
+    "isFullLicense": true
+  },
+  {
+    "name": "ohash",
+    "versions": [
+      "2.0.12"
+    ],
+    "platform": "linux-x64",
+    "source": "ohash/LICENSE",
+    "sha256": "46231df5a7733c3f52f11b71f3df61813007745b62b09031acfb45fb42d75082",
+    "isFullLicense": true
+  },
+  {
+    "name": "on-finished",
+    "versions": [
+      "2.4.1"
+    ],
+    "platform": "linux-x64",
+    "source": "on-finished/LICENSE",
+    "sha256": "8089bcc08845ec143e5761f4a101a65b8c792a0dedbfeeb90a15560c0b77f768",
+    "isFullLicense": true
+  },
+  {
+    "name": "optionator",
+    "versions": [
+      "0.9.4"
+    ],
+    "platform": "linux-x64",
+    "source": "optionator/LICENSE",
+    "sha256": "b9eb082c39fe245e38793699074c394c43a722c51fce031c3c165cb92a31035c",
+    "isFullLicense": true
+  },
+  {
+    "name": "p-limit",
+    "versions": [
+      "3.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "p-limit/license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "isFullLicense": true
+  },
+  {
+    "name": "p-locate",
+    "versions": [
+      "5.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "p-locate/license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "isFullLicense": true
+  },
+  {
+    "name": "parseurl",
+    "versions": [
+      "1.3.3"
+    ],
+    "platform": "linux-x64",
+    "source": "parseurl/LICENSE",
+    "sha256": "11d017c3b9f1ee3f44caf7203035f0461d5b57e0db8ce1bc03a9af34fa7d3f6b",
+    "isFullLicense": true
+  },
+  {
+    "name": "path-exists",
+    "versions": [
+      "4.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "path-exists/license",
+    "sha256": "48da2f39e100d4085767e94966b43f4fa95ff6a0698fba57ed460914e35f94a0",
+    "isFullLicense": true
+  },
+  {
+    "name": "path-key",
+    "versions": [
+      "3.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "path-key/license",
+    "sha256": "48da2f39e100d4085767e94966b43f4fa95ff6a0698fba57ed460914e35f94a0",
+    "isFullLicense": true
+  },
+  {
+    "name": "path-to-regexp",
+    "versions": [
+      "8.4.2"
+    ],
+    "platform": "linux-x64",
+    "source": "path-to-regexp/LICENSE",
+    "sha256": "4eeb3271453a891df609e5a9f4ee79a68307f730c13417a3bfeffa604ac8cf25",
+    "isFullLicense": true
+  },
+  {
+    "name": "pathe",
+    "versions": [
+      "2.0.3"
+    ],
+    "platform": "linux-x64",
+    "source": "pathe/LICENSE",
+    "sha256": "52e92576851154bad7737e90cc72818936f43665cb0e3f7428ed8edc8cc5709b",
+    "isFullLicense": true
+  },
+  {
+    "name": "perfect-debounce",
+    "versions": [
+      "1.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "perfect-debounce/LICENSE",
+    "sha256": "46231df5a7733c3f52f11b71f3df61813007745b62b09031acfb45fb42d75082",
+    "isFullLicense": true
+  },
+  {
+    "name": "picomatch",
+    "versions": [
+      "4.0.7"
+    ],
+    "platform": "linux-x64",
+    "source": "picomatch/LICENSE",
+    "sha256": "d0cd141b0c322fded5dfad1d4645bb2fedfc05b7321fe1009469638190d59ef9",
+    "isFullLicense": true
+  },
+  {
+    "name": "pkg-types",
+    "versions": [
+      "2.3.3"
+    ],
+    "platform": "linux-x64",
+    "source": "pkg-types/LICENSE",
+    "sha256": "cb00dc7c358014d300dba2462e57d3f477299c169c7ab14d8fe5e347eca44f48",
+    "isFullLicense": true
+  },
+  {
+    "name": "postcss",
+    "versions": [
+      "8.5.28"
+    ],
+    "platform": "linux-x64",
+    "source": "postcss/LICENSE",
+    "sha256": "5be1f3465bba68a626777f984878814aaf35e7ef8e9fd314d469bcf887050fb8",
+    "isFullLicense": true
+  },
+  {
+    "name": "prelude-ls",
+    "versions": [
+      "1.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "prelude-ls/LICENSE",
+    "sha256": "b9eb082c39fe245e38793699074c394c43a722c51fce031c3c165cb92a31035c",
+    "isFullLicense": true
+  },
+  {
+    "name": "prettier",
+    "versions": [
+      "3.8.2"
+    ],
+    "platform": "linux-x64",
+    "source": "prettier/LICENSE",
+    "sha256": "b0f2417199889f1c0d28ec4e0244eacf1a15de5819d61f641dd7d8f45153ac9c",
+    "isFullLicense": true
+  },
+  {
+    "name": "prettier",
+    "versions": [
+      "3.8.2"
+    ],
+    "platform": "linux-x64",
+    "source": "prettier/THIRD-PARTY-NOTICES.md",
+    "sha256": "3208128d6a93d4a921d3c9d3f49b4f34e1e5f24aa81480db62127c1f5ad5ec4c",
+    "isFullLicense": true
+  },
+  {
+    "name": "proxy-addr",
+    "versions": [
+      "2.0.8"
+    ],
+    "platform": "linux-x64",
+    "source": "proxy-addr/LICENSE",
+    "sha256": "a7996721249a136fbcfc1c201bcb5f414f38a701d4a24f28abe65e16cfcce813",
+    "isFullLicense": true
+  },
+  {
+    "name": "punycode",
+    "versions": [
+      "2.3.1"
+    ],
+    "platform": "linux-x64",
+    "source": "punycode/LICENSE-MIT.txt",
+    "sha256": "483acb265f182907d1caf6cff9c16c96f31325ed23792832cc5d8b12d5f88c8a",
+    "isFullLicense": true
+  },
+  {
+    "name": "pure-rand",
+    "versions": [
+      "6.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "pure-rand/LICENSE",
+    "sha256": "e9d6a94ab01c6c9ab68c099d3ba8dd9f8aca60f2e2250c2302275405fca9e806",
+    "isFullLicense": true
+  },
+  {
+    "name": "qified",
+    "versions": [
+      "0.10.1"
+    ],
+    "platform": "linux-x64",
+    "source": "qified/LICENSE",
+    "sha256": "3902e57e73412bd91ba81a47fa2cef45e1729c152c835114c1692cc5e685ddbe",
+    "isFullLicense": true
+  },
+  {
+    "name": "range-parser",
+    "versions": [
+      "1.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "range-parser/LICENSE",
+    "sha256": "f655e6291356ec0de7a8f0e69f294961a2cea86678ec94588be1e6a492e278ab",
+    "isFullLicense": true
+  },
+  {
+    "name": "raw-body",
+    "versions": [
+      "3.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "raw-body/LICENSE",
+    "sha256": "37876d7de8bdf5e5b9b58a697ebc34044624e493e6f49eff5c938e5226dcac6b",
+    "isFullLicense": true
+  },
+  {
+    "name": "rc9",
+    "versions": [
+      "2.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "rc9/LICENSE",
+    "sha256": "688222000d499a064a7feb8fa0bb2a3dded5a182f90ef9de986bf7307d777a26",
+    "isFullLicense": true
+  },
+  {
+    "name": "react",
+    "versions": [
+      "19.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "react/LICENSE",
+    "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+    "isFullLicense": true
+  },
+  {
+    "name": "react-dom",
+    "versions": [
+      "19.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "react-dom/LICENSE",
+    "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+    "isFullLicense": true
+  },
+  {
+    "name": "readdirp",
+    "versions": [
+      "4.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "readdirp/LICENSE",
+    "sha256": "dffec71d93f273d2af7b54c6c7e7e70b3289c632ec0d7253210ec21ac336d5ac",
+    "isFullLicense": true
+  },
+  {
+    "name": "router",
+    "versions": [
+      "2.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "router/LICENSE",
+    "sha256": "d0bca4e517157b7a6120c085f5fe43a35b90c095e3bbeb9e67f220c608506a16",
+    "isFullLicense": true
+  },
+  {
+    "name": "safer-buffer",
+    "versions": [
+      "2.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "safer-buffer/LICENSE",
+    "sha256": "4bc935e71be198c67ddf3c2b5fddb195f6edc182bfc155a96a6db61b44b494b9",
+    "isFullLicense": true
+  },
+  {
+    "name": "scheduler",
+    "versions": [
+      "0.28.0"
+    ],
+    "platform": "linux-x64",
+    "source": "scheduler/LICENSE",
+    "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+    "isFullLicense": true
+  },
+  {
+    "name": "send",
+    "versions": [
+      "1.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "send/LICENSE",
+    "sha256": "25a328069fe771f8ed5b6f983ed4b0e6c84b3312ac0f69b28c3d52dc277962c9",
+    "isFullLicense": true
+  },
+  {
+    "name": "serve-static",
+    "versions": [
+      "2.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "serve-static/LICENSE",
+    "sha256": "63b9a188d7d43e64b0558b7115255045b9fe20a5fc3ff483421cb899e7f52bcb",
+    "isFullLicense": true
+  },
+  {
+    "name": "shebang-command",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "shebang-command/license",
+    "sha256": "69dee148a2cc470554dfa7142e830662062394d0fe67cddd379aba90dc60d6b3",
+    "isFullLicense": true
+  },
+  {
+    "name": "shebang-regex",
+    "versions": [
+      "3.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "shebang-regex/license",
+    "sha256": "48da2f39e100d4085767e94966b43f4fa95ff6a0698fba57ed460914e35f94a0",
+    "isFullLicense": true
+  },
+  {
+    "name": "side-channel",
+    "versions": [
+      "1.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "side-channel/LICENSE",
+    "sha256": "cfc3f455254c0af0655cc3ff46a41ed644b67599f6043346169d285bf2b3cf3b",
+    "isFullLicense": true
+  },
+  {
+    "name": "side-channel-list",
+    "versions": [
+      "1.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "side-channel-list/LICENSE",
+    "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+    "isFullLicense": true
+  },
+  {
+    "name": "side-channel-map",
+    "versions": [
+      "1.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "side-channel-map/LICENSE",
+    "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+    "isFullLicense": true
+  },
+  {
+    "name": "side-channel-weakmap",
+    "versions": [
+      "1.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "side-channel-weakmap/LICENSE",
+    "sha256": "cfc3f455254c0af0655cc3ff46a41ed644b67599f6043346169d285bf2b3cf3b",
+    "isFullLicense": true
+  },
+  {
+    "name": "statuses",
+    "versions": [
+      "2.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "statuses/LICENSE",
+    "sha256": "512cfa4d5e7a7569c7ae4dd95241cb6ae2aaf648ef9ebd080c01bd24868d26e9",
+    "isFullLicense": true
+  },
+  {
+    "name": "streamsearch",
+    "versions": [
+      "1.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "streamsearch/LICENSE",
+    "sha256": "7c28463b739e2e73a49bf127d0bda427f8c55f0b37365a044c3c3f254716118b",
+    "isFullLicense": true
+  },
+  {
+    "name": "strtok3",
+    "versions": [
+      "10.3.5"
+    ],
+    "platform": "linux-x64",
+    "source": "strtok3/LICENSE.txt",
+    "sha256": "c77d564d48f13e7ece47d5dcc57102810744828d5f5af5826808a0320de3bb76",
+    "isFullLicense": true
+  },
+  {
+    "name": "styled-jsx",
+    "versions": [
+      "5.1.6"
+    ],
+    "platform": "linux-x64",
+    "source": "styled-jsx/license.md",
+    "sha256": "24d4a4580df855c345705b3016404f0c9da7e7674dc3b21a3ce7d0e5d0c37e2d",
+    "isFullLicense": true
+  },
+  {
+    "name": "tinyexec",
+    "versions": [
+      "1.3.1"
+    ],
+    "platform": "linux-x64",
+    "source": "tinyexec/LICENSE",
+    "sha256": "f95f668fe64081ddb4153b322e34fdd719b991285ed08177d5ad7133b7988d92",
+    "isFullLicense": true
+  },
+  {
+    "name": "tinyglobby",
+    "versions": [
+      "0.2.17"
+    ],
+    "platform": "linux-x64",
+    "source": "tinyglobby/LICENSE",
+    "sha256": "22c68811e174cbbfb3813d4135918df4f540959c14d872e601d9abe83d3cde8f",
+    "isFullLicense": true
+  },
+  {
+    "name": "toidentifier",
+    "versions": [
+      "1.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "toidentifier/LICENSE",
+    "sha256": "a832d679750e49ab433626ab196350b89964b60eb0d3edd3341887c7d5f4c128",
+    "isFullLicense": true
+  },
+  {
+    "name": "token-types",
+    "versions": [
+      "6.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "token-types/LICENSE.txt",
+    "sha256": "eb0bff8faaba4581e0f09c962e0f795f1f8810191c9d616f3f66f36be4b3a5dc",
+    "isFullLicense": true
+  },
+  {
+    "name": "ts-api-utils",
+    "versions": [
+      "2.5.0"
+    ],
+    "platform": "linux-x64",
+    "source": "ts-api-utils/LICENSE.md",
+    "sha256": "76c9d5f5ea942054715c026f33f8717c9e24603196a3737b8899afa216bcbdab",
+    "isFullLicense": true
+  },
+  {
+    "name": "tsx",
+    "versions": [
+      "4.23.15"
+    ],
+    "platform": "linux-x64",
+    "source": "tsx/LICENSE",
+    "sha256": "8dded67841a9261a622c739fb61c81785e93765de852828ceeb9403d20a74581",
+    "isFullLicense": true
+  },
+  {
+    "name": "type-check",
+    "versions": [
+      "0.4.0"
+    ],
+    "platform": "linux-x64",
+    "source": "type-check/LICENSE",
+    "sha256": "b9eb082c39fe245e38793699074c394c43a722c51fce031c3c165cb92a31035c",
+    "isFullLicense": true
+  },
+  {
+    "name": "type-is",
+    "versions": [
+      "1.6.18",
+      "2.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "type-is/LICENSE",
+    "sha256": "23d466b1b134b415b66fa50c6526b4cf3e7b9258554da88d3abb371721e7ce68",
+    "isFullLicense": true
+  },
+  {
+    "name": "typescript-eslint",
+    "versions": [
+      "8.70.1"
+    ],
+    "platform": "linux-x64",
+    "source": "typescript-eslint/LICENSE",
+    "sha256": "2eb5c7a0bba9deb77a98c81bf6b9d3fb1c67118eebf968b6b1a787b3f8928ee0",
+    "isFullLicense": true
+  },
+  {
+    "name": "uid",
+    "versions": [
+      "2.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "uid/license",
+    "sha256": "9a9edad7baae52622bddf3c15b2ef8a33d2c89f2d25408ad13e8a7481c6b0c97",
+    "isFullLicense": true
+  },
+  {
+    "name": "uint8array-extras",
+    "versions": [
+      "1.5.0"
+    ],
+    "platform": "linux-x64",
+    "source": "uint8array-extras/license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "isFullLicense": true
+  },
+  {
+    "name": "undici-types",
+    "versions": [
+      "6.21.0"
+    ],
+    "platform": "linux-x64",
+    "source": "undici-types/LICENSE",
+    "sha256": "a6db8096b2707bc0102d256917d4d33f298ba36d8c3f25de067a2b5bb379db27",
+    "isFullLicense": true
+  },
+  {
+    "name": "unpipe",
+    "versions": [
+      "1.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "unpipe/LICENSE",
+    "sha256": "1a526fbe8d8577f5a4b1c2821842b55b7c0e18862531c62ae4ce69c9b19b74b6",
+    "isFullLicense": true
+  },
+  {
+    "name": "vary",
+    "versions": [
+      "1.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "vary/LICENSE",
+    "sha256": "bd47ce7b88c7759630d1e2b9fcfa170a0f1fde522be09e13fb1581a79d090400",
+    "isFullLicense": true
+  },
+  {
+    "name": "word-wrap",
+    "versions": [
+      "1.2.5"
+    ],
+    "platform": "linux-x64",
+    "source": "word-wrap/LICENSE",
+    "sha256": "73b5283588baa142c5baaef5f56d3e8fdea7a30b214e8c5737e87640f882453a",
+    "isFullLicense": true
+  },
+  {
+    "name": "yocto-queue",
+    "versions": [
+      "0.1.0"
+    ],
+    "platform": "linux-x64",
+    "source": "yocto-queue/license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "isFullLicense": true
+  },
+  {
+    "name": "zod",
+    "versions": [
+      "4.6.5"
+    ],
+    "platform": "linux-x64",
+    "source": "zod/LICENSE",
+    "sha256": "3f1189b28e3866e0d979968d466b78f813f76827cfdca1fbb124cc0a5c8841f8",
+    "isFullLicense": true
+  },
+  {
+    "name": "@eslint/config-array",
+    "versions": [
+      "0.23.5"
+    ],
+    "platform": "linux-x64",
+    "source": "@eslint/config-array/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@eslint/config-helpers",
+    "versions": [
+      "0.7.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@eslint/config-helpers/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@eslint/core",
+    "versions": [
+      "1.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@eslint/core/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@eslint/object-schema",
+    "versions": [
+      "3.0.5"
+    ],
+    "platform": "linux-x64",
+    "source": "@eslint/object-schema/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@eslint/plugin-kit",
+    "versions": [
+      "0.7.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@eslint/plugin-kit/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@humanfs/core",
+    "versions": [
+      "0.19.2"
+    ],
+    "platform": "linux-x64",
+    "source": "@humanfs/core/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@humanfs/node",
+    "versions": [
+      "0.16.8"
+    ],
+    "platform": "linux-x64",
+    "source": "@humanfs/node/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@humanfs/types",
+    "versions": [
+      "0.15.0"
+    ],
+    "platform": "linux-x64",
+    "source": "@humanfs/core/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@humanwhocodes/module-importer",
+    "versions": [
+      "1.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "@humanwhocodes/module-importer/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@humanwhocodes/retry",
+    "versions": [
+      "0.4.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@humanwhocodes/retry/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@img/sharp-linux-x64",
+    "versions": [
+      "0.35.4"
+    ],
+    "platform": "linux-x64",
+    "source": "@img/sharp-linux-x64/LICENSE",
+    "sha256": "73ba74dfaa520b49a401b5d21459a8523a146f3b7518a833eea5efa85130bf68",
+    "isFullLicense": true
+  },
+  {
+    "name": "@playwright/test",
+    "versions": [
+      "1.58.2"
+    ],
+    "platform": "linux-x64",
+    "source": "@playwright/test/LICENSE",
+    "sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb",
+    "isFullLicense": true
+  },
+  {
+    "name": "@playwright/test",
+    "versions": [
+      "1.58.2"
+    ],
+    "platform": "linux-x64",
+    "source": "@playwright/test/NOTICE",
+    "sha256": "6d602191187b35b9b01d2cffa01c8469c2c8d9de8a96f1bf868e0f264f51c81d",
+    "isFullLicense": true
+  },
+  {
+    "name": "@prisma/client",
+    "versions": [
+      "6.19.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@prisma/client/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@prisma/config",
+    "versions": [
+      "6.19.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@prisma/config/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@prisma/debug",
+    "versions": [
+      "6.19.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@prisma/debug/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@prisma/engines",
+    "versions": [
+      "6.19.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@prisma/engines/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@prisma/engines-version",
+    "versions": [
+      "7.1.1-3.c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
+    ],
+    "platform": "linux-x64",
+    "source": "@prisma/engines-version/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@prisma/fetch-engine",
+    "versions": [
+      "6.19.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@prisma/fetch-engine/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@prisma/get-platform",
+    "versions": [
+      "6.19.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@prisma/get-platform/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "@swc/helpers",
+    "versions": [
+      "0.5.15"
+    ],
+    "platform": "linux-x64",
+    "source": "@swc/helpers/LICENSE",
+    "sha256": "d96eba1f1881334d50ffc144276dfa98e147a415e7c591ecdfcb81680361dc91",
+    "isFullLicense": true
+  },
+  {
+    "name": "detect-libc",
+    "versions": [
+      "2.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "detect-libc/LICENSE",
+    "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+    "isFullLicense": true
+  },
+  {
+    "name": "eslint-visitor-keys",
+    "versions": [
+      "3.4.3",
+      "5.0.1"
+    ],
+    "platform": "linux-x64",
+    "source": "eslint-visitor-keys/LICENSE",
+    "sha256": "d8bf34ff6d190640a01e7704ad78253fc181bc128949d71273fbbaa12f33c0b4",
+    "isFullLicense": true
+  },
+  {
+    "name": "playwright",
+    "versions": [
+      "1.58.2"
+    ],
+    "platform": "linux-x64",
+    "source": "playwright/LICENSE",
+    "sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb",
+    "isFullLicense": true
+  },
+  {
+    "name": "playwright",
+    "versions": [
+      "1.58.2"
+    ],
+    "platform": "linux-x64",
+    "source": "playwright/NOTICE",
+    "sha256": "6d602191187b35b9b01d2cffa01c8469c2c8d9de8a96f1bf868e0f264f51c81d",
+    "isFullLicense": true
+  },
+  {
+    "name": "playwright-core",
+    "versions": [
+      "1.58.2"
+    ],
+    "platform": "linux-x64",
+    "source": "playwright-core/LICENSE",
+    "sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb",
+    "isFullLicense": true
+  },
+  {
+    "name": "playwright-core",
+    "versions": [
+      "1.58.2"
+    ],
+    "platform": "linux-x64",
+    "source": "playwright-core/NOTICE",
+    "sha256": "6d602191187b35b9b01d2cffa01c8469c2c8d9de8a96f1bf868e0f264f51c81d",
+    "isFullLicense": true
+  },
+  {
+    "name": "prisma",
+    "versions": [
+      "6.19.3"
+    ],
+    "platform": "linux-x64",
+    "source": "prisma/LICENSE",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "isFullLicense": true
+  },
+  {
+    "name": "reflect-metadata",
+    "versions": [
+      "0.2.2"
+    ],
+    "platform": "linux-x64",
+    "source": "reflect-metadata/LICENSE",
+    "sha256": "c5217b0544ea9c91d010863582d6f6b35ec50e4146c34dee085ddcec5dd92def",
+    "isFullLicense": true
+  },
+  {
+    "name": "rxjs",
+    "versions": [
+      "7.8.2"
+    ],
+    "platform": "linux-x64",
+    "source": "rxjs/LICENSE.txt",
+    "sha256": "81c407ac717813b0e3795402960e04003c7bba8ba59b621624707028531c9ade",
+    "isFullLicense": true
+  },
+  {
+    "name": "sharp",
+    "versions": [
+      "0.35.4"
+    ],
+    "platform": "linux-x64",
+    "source": "sharp/LICENSE",
+    "sha256": "73ba74dfaa520b49a401b5d21459a8523a146f3b7518a833eea5efa85130bf68",
+    "isFullLicense": true
+  },
+  {
+    "name": "typescript",
+    "versions": [
+      "5.9.3"
+    ],
+    "platform": "linux-x64",
+    "source": "typescript/LICENSE.txt",
+    "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47",
+    "isFullLicense": true
+  },
+  {
+    "name": "@img/sharp-libvips-linux-x64",
+    "versions": [
+      "1.3.3"
+    ],
+    "platform": "linux-x64",
+    "source": "@img/sharp-libvips-linux-x64/README.md upstream license inventory (not full license texts)",
+    "sha256": "4f87b4934d26d52ed65a42e96bfe88e75ac98dbd3bc302b50fe6c07d22e42630",
+    "isFullLicense": false
+  },
+  {
+    "name": "@img/sharp-libvips-linux-x64",
+    "versions": [
+      "1.3.3"
+    ],
+    "platform": "linux-x64",
+    "source": "https://github.com/lovell/sharp-libvips/tree/6e5971d333377743163edc3ad9e5d0b897abcbc9",
+    "sha256": "ff24949673712f97319c86696f7fe2fa03f1fa428c5ad6624e00fe00d273c86a",
+    "isFullLicense": true
+  },
+  {
+    "name": "caniuse-lite",
+    "versions": [
+      "1.0.30001810"
+    ],
+    "platform": "linux-x64",
+    "source": "caniuse-lite/LICENSE",
+    "sha256": "fd3a263fe19ed8faa9068b43abaebafc02c77897b0c6fc09abc04bb592e5f16e",
+    "isFullLicense": true
+  },
+  {
+    "name": "deepmerge-ts",
+    "versions": [
+      "8.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "deepmerge-ts/LICENSE",
+    "sha256": "734d8fd2baff4a5b7450a5b8242d4a960bc4ade3b0ade5e6cad642965d1d496d",
+    "isFullLicense": true
+  },
+  {
+    "name": "esquery",
+    "versions": [
+      "1.7.0"
+    ],
+    "platform": "linux-x64",
+    "source": "esquery/license.txt",
+    "sha256": "ac68116ae73740de4190892f334992e449a124600924ec761e64319d3aac9e6e",
+    "isFullLicense": true
+  },
+  {
+    "name": "ieee754",
+    "versions": [
+      "1.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "ieee754/LICENSE",
+    "sha256": "18d45466ba3253deae04667e267a91ea8de8548f18c1125264d1c9db28194cc1",
+    "isFullLicense": true
+  },
+  {
+    "name": "qs",
+    "versions": [
+      "6.16.0"
+    ],
+    "platform": "linux-x64",
+    "source": "qs/LICENSE.md",
+    "sha256": "e7dc37bf662d7f786efcb46c545615e70c1daf458a38385521c63cf6607cdfe1",
+    "isFullLicense": true
+  },
+  {
+    "name": "source-map-js",
+    "versions": [
+      "1.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "source-map-js/LICENSE",
+    "sha256": "6cb0631f71c7749763fd3dd1d5bee52dd1070ec17f2edc1710079ad070bd2fbd",
+    "isFullLicense": true
+  },
+  {
+    "name": "dotenv",
+    "versions": [
+      "16.6.1"
+    ],
+    "platform": "linux-x64",
+    "source": "dotenv/LICENSE",
+    "sha256": "74b629b24865e1e83c5277ee84590b7937644d6fd959d0c7bdce758676cd2ced",
+    "isFullLicense": true
+  },
+  {
+    "name": "eslint-scope",
+    "versions": [
+      "9.1.2"
+    ],
+    "platform": "linux-x64",
+    "source": "eslint-scope/LICENSE",
+    "sha256": "d3a724e2ed749f172ff70b62a1d0631b7d4b0ea273782365a3464d4e2d6b6dbd",
+    "isFullLicense": true
+  },
+  {
+    "name": "espree",
+    "versions": [
+      "11.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "espree/LICENSE",
+    "sha256": "26c95937762a3dc17a3934a0a2773c70259ba4bf28dab713c225e4af8eb9d349",
+    "isFullLicense": true
+  },
+  {
+    "name": "esrecurse",
+    "versions": [
+      "4.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "esrecurse/README.md license section",
+    "sha256": "e5b327d625e6997c356b91ef68218d57d10feeec17bfd51f8cabcebc25c57289",
+    "isFullLicense": true
+  },
+  {
+    "name": "estraverse",
+    "versions": [
+      "5.3.0"
+    ],
+    "platform": "linux-x64",
+    "source": "estraverse/LICENSE.BSD",
+    "sha256": "0e74697a68cebdcd61502c30fe80ab7f9e341d995dcd452023654d57133534b1",
+    "isFullLicense": true
+  },
+  {
+    "name": "esutils",
+    "versions": [
+      "2.0.3"
+    ],
+    "platform": "linux-x64",
+    "source": "esutils/LICENSE.BSD",
+    "sha256": "0e74697a68cebdcd61502c30fe80ab7f9e341d995dcd452023654d57133534b1",
+    "isFullLicense": true
+  },
+  {
+    "name": "uri-js",
+    "versions": [
+      "4.4.1"
+    ],
+    "platform": "linux-x64",
+    "source": "uri-js/LICENSE",
+    "sha256": "0af366eff4c01ec147c9c61ea9e8ffad64a4294754c9d79355f3fd1b97cb2fb9",
+    "isFullLicense": true
+  },
+  {
+    "name": "flatted",
+    "versions": [
+      "3.4.4"
+    ],
+    "platform": "linux-x64",
+    "source": "flatted/LICENSE",
+    "sha256": "148718606d34f467fd08a2176bb4c1ab275f999576f779368503d8d3e3642861",
+    "isFullLicense": true
+  },
+  {
+    "name": "glob-parent",
+    "versions": [
+      "6.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "glob-parent/LICENSE",
+    "sha256": "fc68eb8f1c8e1d6b8be50f3c177927e24791cae7dc251e6253a012f37926a30c",
+    "isFullLicense": true
+  },
+  {
+    "name": "inherits",
+    "versions": [
+      "2.0.4"
+    ],
+    "platform": "linux-x64",
+    "source": "inherits/LICENSE",
+    "sha256": "5ffe28e7ade7d8f10d85d5337a73fd793dac5c462fb9a28fbf8c5046c7fbca3b",
+    "isFullLicense": true
+  },
+  {
+    "name": "isexe",
+    "versions": [
+      "2.0.0"
+    ],
+    "platform": "linux-x64",
+    "source": "isexe/LICENSE",
+    "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+    "isFullLicense": true
+  },
+  {
+    "name": "iterare",
+    "versions": [
+      "1.2.1"
+    ],
+    "platform": "linux-x64",
+    "source": "iterare/LICENSE.txt",
+    "sha256": "2537bb3d445dd08c12be3ec5c686f0394a3ccd6bfa94dac5d269940a9cb7ff98",
+    "isFullLicense": true
+  },
+  {
+    "name": "once",
+    "versions": [
+      "1.4.0"
+    ],
+    "platform": "linux-x64",
+    "source": "once/LICENSE",
+    "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+    "isFullLicense": true
+  },
+  {
+    "name": "picocolors",
+    "versions": [
+      "1.1.1"
+    ],
+    "platform": "linux-x64",
+    "source": "picocolors/LICENSE",
+    "sha256": "6582629e2979466878f6014313dcc2f3756c9616148682227ce3063dde310750",
+    "isFullLicense": true
+  },
+  {
+    "name": "semver",
+    "versions": [
+      "7.8.5"
+    ],
+    "platform": "linux-x64",
+    "source": "semver/LICENSE",
+    "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+    "isFullLicense": true
+  },
+  {
+    "name": "setprototypeof",
+    "versions": [
+      "1.2.0"
+    ],
+    "platform": "linux-x64",
+    "source": "setprototypeof/LICENSE",
+    "sha256": "76d6d1ea0c268da37dd3c961b4fcfb23dee8417fff9e8786d4d44c585b781b69",
+    "isFullLicense": true
+  },
+  {
+    "name": "which",
+    "versions": [
+      "2.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "which/LICENSE",
+    "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+    "isFullLicense": true
+  },
+  {
+    "name": "wrappy",
+    "versions": [
+      "1.0.2"
+    ],
+    "platform": "linux-x64",
+    "source": "wrappy/LICENSE",
+    "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+    "isFullLicense": true
+  },
+  {
+    "name": "minimatch",
+    "versions": [
+      "10.2.6"
+    ],
+    "platform": "linux-x64",
+    "source": "minimatch/LICENSE.md",
+    "sha256": "2c7c5d22ed5a8ee968c64757710979afcd77438c48b4a265b94e615babd8a901",
+    "isFullLicense": true
+  },
+  {
+    "name": "tslib",
+    "versions": [
+      "2.8.1"
+    ],
+    "platform": "linux-x64",
+    "source": "tslib/LICENSE.txt",
+    "sha256": "210b19e543130388c68654b7497e967119ce17145f66ab7d85688fbd70f08751",
+    "isFullLicense": true
+  }
+]

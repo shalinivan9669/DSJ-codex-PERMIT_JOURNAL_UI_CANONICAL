@@ -1,0 +1,121 @@
+{
+  "reviewer": "root",
+  "observedAt": "2026-09-22T12:52:07.3864881Z",
+  "method": "12 new BIOT worker v7 images opened individually; 6 identical ITR images reviewed earlier by verified SHA",
+  "pages": [
+    {
+      "document": "biot-worker-card-short",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-001.png",
+      "sha256": "147190f82ac1bc3dbf25be8d3799e1481c4fc72dd26e6fc67fd23560d429b75e"
+    },
+    {
+      "document": "biot-worker-card-short",
+      "page": 2,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-002.png",
+      "sha256": "2c2add29150ba80d8fe863d3bde29f88f7972a58ac482aa10a19f6224e4ffd68"
+    },
+    {
+      "document": "biot-worker-card-long",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-001.png",
+      "sha256": "e0ff5691c4da9327270d86694e2384fa80a5f65a766229a91f81c61b3797e102"
+    },
+    {
+      "document": "biot-worker-card-long",
+      "page": 2,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-002.png",
+      "sha256": "2c2add29150ba80d8fe863d3bde29f88f7972a58ac482aa10a19f6224e4ffd68"
+    },
+    {
+      "document": "biot-worker-card-blank",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-001.png",
+      "sha256": "18ba7365c874643f51b14519b6cf8b626b697c623007aefd33f28578cd4a5f35"
+    },
+    {
+      "document": "biot-worker-card-blank",
+      "page": 2,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-002.png",
+      "sha256": "2c2add29150ba80d8fe863d3bde29f88f7972a58ac482aa10a19f6224e4ffd68"
+    },
+    {
+      "document": "biot-worker-card-batch",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-001.png",
+      "sha256": "147190f82ac1bc3dbf25be8d3799e1481c4fc72dd26e6fc67fd23560d429b75e"
+    },
+    {
+      "document": "biot-worker-card-batch",
+      "page": 2,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-002.png",
+      "sha256": "2c2add29150ba80d8fe863d3bde29f88f7972a58ac482aa10a19f6224e4ffd68"
+    },
+    {
+      "document": "biot-worker-card-batch",
+      "page": 3,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-003.png",
+      "sha256": "85e16d0ed6287641e6b9304644a796b2c6398d6bad7c144f309ab3ef1f9dff2b"
+    },
+    {
+      "document": "biot-worker-card-batch",
+      "page": 4,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-004.png",
+      "sha256": "2c2add29150ba80d8fe863d3bde29f88f7972a58ac482aa10a19f6224e4ffd68"
+    },
+    {
+      "document": "biot-worker-card-punctuation",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-001.png",
+      "sha256": "ec34a55fc54de3a41e0cadbc29db9df53700d0eb933f8db436050cc28c3e406f"
+    },
+    {
+      "document": "biot-worker-card-punctuation",
+      "page": 2,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-002.png",
+      "sha256": "2c2add29150ba80d8fe863d3bde29f88f7972a58ac482aa10a19f6224e4ffd68"
+    },
+    {
+      "document": "biot-itr-certificate-short",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-short-page-001.png",
+      "sha256": "372d66819f74cb7179124d2026ab749374381ffc19fd79acca84f9c9d44ddbfd"
+    },
+    {
+      "document": "biot-itr-certificate-long",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-long-page-001.png",
+      "sha256": "4b80f684c89d6bc78ae29dfe104734daba0c2879a999c05a320cc48c7718d596"
+    },
+    {
+      "document": "biot-itr-certificate-blank",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-blank-page-001.png",
+      "sha256": "56a34970a942c34a12dfca24947a198fe1ef029ed7dd1d7a6f60e1c818766c62"
+    },
+    {
+      "document": "biot-itr-certificate-batch",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-batch-page-001.png",
+      "sha256": "372d66819f74cb7179124d2026ab749374381ffc19fd79acca84f9c9d44ddbfd"
+    },
+    {
+      "document": "biot-itr-certificate-batch",
+      "page": 2,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-batch-page-002.png",
+      "sha256": "153fb30b08bb7e0c3b8edf353ba561375407dbea005946c75ff11cb4522bef03"
+    },
+    {
+      "document": "biot-itr-certificate-punctuation",
+      "page": 1,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-punctuation-page-001.png",
+      "sha256": "d47a31d7a28087fea295817702ed0a6e826886e24f25b41235a947a0b51ce9da"
+    }
+  ],
+  "status": "PASS",
+  "findings": [
+    "Gray decorative bands removed; black panel frames intact.",
+    "All shown name/organization fields readable; no text clipping or overlap observed.",
+    "This is visual layout acceptance of the supplied forms; legal and physical print approval remain separate."
+  ]
+}

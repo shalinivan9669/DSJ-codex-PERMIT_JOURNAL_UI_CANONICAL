@@ -1,0 +1,26 @@
+[
+  {
+    "image": "docs\\evidence\\commercial-acceptance\\word\\final-biot-v15\\biot-worker-card-long.word.page-1.png",
+    "prior": "docs\\evidence\\commercial-acceptance\\word\\biot-v15-standard\\biot-worker-card-long.word.page-1.png",
+    "pixelSha256": "738bcbed01684d9627bc076cb6c037d6e7779501bfc88504de46b00789094d8a",
+    "identicalRenderedPng": true
+  },
+  {
+    "image": "docs\\evidence\\commercial-acceptance\\word\\final-biot-v15\\biot-worker-card-long.word.page-2.png",
+    "prior": "docs\\evidence\\commercial-acceptance\\word\\biot-v15-standard\\biot-worker-card-long.word.page-2.png",
+    "pixelSha256": "e6fb063181432ff22c01fd3d836c3dbfe1d9c1bef9fbae6b7ecfb6ae38d81280",
+    "identicalRenderedPng": true
+  },
+  {
+    "image": "docs\\evidence\\commercial-acceptance\\word\\final-biot-v15\\biot-worker-card-short.word.page-1.png",
+    "prior": "docs\\evidence\\commercial-acceptance\\word\\biot-v15-standard\\biot-worker-card-short.word.page-1.png",
+    "pixelSha256": "60c0646f2074baa8d2e702952509839a4081a697a8599f91db6708a03663b80d",
+    "identicalRenderedPng": true
+  },
+  {
+    "image": "docs\\evidence\\commercial-acceptance\\word\\final-biot-v15\\biot-worker-card-short.word.page-2.png",
+    "prior": "docs\\evidence\\commercial-acceptance\\word\\biot-v15-standard\\biot-worker-card-short.word.page-2.png",
+    "pixelSha256": "c5e517542aa08c3b922caaee3e0d2979786f02fa7dc7e14fd9864256b05b2a55",
+    "identicalRenderedPng": true
+  }
+]

@@ -1,0 +1,222 @@
+{
+  "version": "2026-09-22.2",
+  "scope": "HANDOFF_FILES_AND_FIXTURES_ONLY_NOT_APPLICATION_TESTS",
+  "source": "Review of supplied archive and user clarification; not a new live-code or market audit",
+  "applicationCodeModified": false,
+  "applicationRun": false,
+  "applicationTestsRun": false,
+  "originalBinaryFixtures": "PRESERVED_BYTE_FOR_BYTE_NOT_RERENDERED",
+  "checks": [
+    {
+      "check": "Original 32 feature identifiers retained",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "184 unique sequential acceptance cases",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "All application tests remain NOT_RUN without fabricated evidence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "All features mandatory in same delivery",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Feature-test references resolve",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Test-feature references resolve",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Primary feature criteria match AT001-AT128 expectations",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Eight business outcomes cover every feature",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Twelve business journeys with two specific acceptance cases each",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Business test/fixture/value references resolve",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Business baseline and commercial evidence not invented",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Daily fixture synthetic, not production seed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Small revised roster exact diff",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Confirmed needs not confused with unknown/left/external",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Conditional commercial fixture arithmetic",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: 100_people_revised.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: results_G1.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: 100_people.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: issuer_and_customer.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: 100_people.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: customer_export_profile.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: results_G2.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: results_G2.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: results_G1.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: negative_variants.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: 100_people_revised.csv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: training_events.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: EXPECTED_FIXTURES.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: 100_people_revised.tsv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: 100_people.xlsx",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original fixture preserved: 100_people.tsv",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original reference preserved: OT_CENTER_FULL_CONTEXT_RU.md",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original reference preserved: OT_CENTER_START_PROMPT_RU.md",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Original reference preserved: RESEARCH_DECISIONS_RU.md",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "G1/G2 quantitative expectations unchanged",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "No new live repository verification claimed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "All package JSON parses",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "No stale controlling instruction: Главный результат: оформить 100 человек",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "No stale controlling instruction: Главная проверка — 100 человек",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "No stale controlling instruction: 02_FAST_100_PERSON_WORKFLOW_RU.md",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "No shipped fonts, secrets, application binaries",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Required new controlling files present",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "issues": []
+}

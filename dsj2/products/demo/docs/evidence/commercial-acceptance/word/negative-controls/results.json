@@ -1,0 +1,21 @@
+[
+  {
+    "control": "wrong-page-count",
+    "status": "PASS",
+    "expectedError": "WORD_PDF_PAGE_COUNT_MISMATCH",
+    "actualErrors": [
+      "WORD_PDF_PAGE_COUNT_MISMATCH"
+    ],
+    "exitCode": 1
+  },
+  {
+    "control": "wrong-document-text",
+    "status": "PASS",
+    "expectedError": "SOURCE_WORDS_MISSING_IN_PDF",
+    "actualErrors": [
+      "SOURCE_WORDS_MISSING_IN_PDF",
+      "SOURCE_WORDS_MISSING_IN_WORD_BODY"
+    ],
+    "exitCode": 1
+  }
+]

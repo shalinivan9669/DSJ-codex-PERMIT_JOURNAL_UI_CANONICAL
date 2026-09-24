@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "createdAt": "2026-09-22T16:47:52.4679686+00:00",
+  "scope": "Four updated BIOT forms x short/long; exact final manifest DOCX bytes; not a complete 11-form release rerun",
+  "inputManifestSha256": "d365f3ebf6f3e2ffaa8f9ac052991efbf04e1b56cf0b4e1e67c9a8b8023860c7",
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "documents": 8,
+  "pdfPages": 8,
+  "wordComReport": "word-results.json",
+  "fontRegistration": "Bundled Liberation 2.1.5; all eight fonts registered for session and removed after Word exit",
+  "pages": [
+    {
+      "file": "biot-itr-certificate-long.docx",
+      "docxSha256": "6828c8a3a2241687b2d1cb55a26c41cc14d9a8e69d9847ba2491220996b92bce",
+      "pdf": "biot-itr-certificate-long.word.pdf",
+      "pdfSha256": "84e75c568e126583c60dff4cb46838a81892f4bd7834e28ac399fe4bf5d5fed8",
+      "png": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\word\\biot-itr-certificate-long.word-page-1.png",
+      "pngSha256": "da9e18914c930da947b2c957f65f1b13200647b63ff7a95ece07c4b3cec11927",
+      "page": 1,
+      "status": "PASS",
+      "review": "Full page visually inspected: bilingual text, long names/programs, issuer band, table/column boundaries, signatures/seal areas; no clipping, overlap or missing visible text."
+    },
+    {
+      "file": "biot-itr-certificate-short.docx",
+      "docxSha256": "8c9dccb84b8cddf3a082ac5cb8617d4999fc5a71c5fbb321bff3fbd48133f06b",
+      "pdf": "biot-itr-certificate-short.word.pdf",
+      "pdfSha256": "27be96f1c00af03837101a0c0bbd368740d8596536e962b310e3cb9adc377e10",
+      "png": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\word\\biot-itr-certificate-short.word-page-1.png",
+      "pngSha256": "fe61f33e7507c329de33f80451dcad4da36a860678eb04d12a06d8b41259b9ac",
+      "page": 1,
+      "status": "PASS",
+      "review": "Full page visually inspected: bilingual text, long names/programs, issuer band, table/column boundaries, signatures/seal areas; no clipping, overlap or missing visible text."
+    },
+    {
+      "file": "biot-itr-protocol-long.docx",
+      "docxSha256": "34894ad9ca2395251e58c4ec2bf6c9fa1b46737c5a9cd6e8d2acf876030fb598",
+      "pdf": "biot-itr-protocol-long.word.pdf",
+      "pdfSha256": "6bdc485a87e98e8393fd8cddf85260ecb07b4a2721a11cfb1431690e1b874859",
+      "png": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\word\\biot-itr-protocol-long.word-page-1.png",
+      "pngSha256": "dabab354bf82103da82a74425fbf197be26145f9b75166e3304f92bbd099d292",
+      "page": 1,
+      "status": "PASS",
+      "review": "Full page visually inspected: bilingual text, long names/programs, issuer band, table/column boundaries, signatures/seal areas; no clipping, overlap or missing visible text."
+    },
+    {
+      "file": "biot-itr-protocol-short.docx",
+      "docxSha256": "5046c24ed7b7d19b3f13e0544eed93f7c66cbf305b3b7897b66017797315059b",
+      "pdf": "biot-itr-protocol-short.word.pdf",
+      "pdfSha256": "c831da22a598088a982465eefc27e6585802959fcfb6f5ffc9de4f42bdc36da5",
+      "png": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\word\\biot-itr-protocol-short.word-page-1.png",
+      "pngSha256": "1858ecbf6e05996208baa3b444920653506aa5265e7c0e72944e3fdb46e82816",
+      "page": 1,
+      "status": "PASS",
+      "review": "Full page visually inspected: bilingual text, long names/programs, issuer band, table/column boundaries, signatures/seal areas; no clipping, overlap or missing visible text."
+    },
+    {
+      "file": "biot-protocol-long.docx",
+      "docxSha256": "cbf9b0581e376a20087e299da944a205b32bd3cf7791bea70eaca84855b47d1d",
+      "pdf": "biot-protocol-long.word.pdf",
+      "pdfSha256": "bb139487b92dffb4fcffc96fcb6cea88f0b23be9902a247312e85aa56c0f6d38",
+      "png": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\word\\biot-protocol-long.word-page-1.png",
+      "pngSha256": "ea67a52ba8f4cea38d9fa60c07ca351f574c2b820143ee47c405b94b12dfdbc1",
+      "page": 1,
+      "status": "PASS",
+      "review": "Full page visually inspected: bilingual text, long names/programs, issuer band, table/column boundaries, signatures/seal areas; no clipping, overlap or missing visible text."
+    },
+    {
+      "file": "biot-protocol-short.docx",
+      "docxSha256": "1bc0ed469f6e40c63ff2d045e1eaa0284c2db002ab807aed4b3a198831a426f6",
+      "pdf": "biot-protocol-short.word.pdf",
+      "pdfSha256": "4099bc4cfcbab0ce3ae3bd0d6c26c0b9dd143bbb85be613e0ac774317b1cbd3e",
+      "png": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\word\\biot-protocol-short.word-page-1.png",
+      "pngSha256": "dc6c5e093bfead411df105481269ece373bc1b253c05eca511310f31e8748b83",
+      "page": 1,
+      "status": "PASS",
+      "review": "Full page visually inspected: bilingual text, long names/programs, issuer band, table/column boundaries, signatures/seal areas; no clipping, overlap or missing visible text."
+    },
+    {
+      "file": "biot-worker-card-long.docx",
+      "docxSha256": "376ef1854264e66c06cb0c4623d1ed27a1dd0aa902015703b3c22c46ca86e7c7",
+      "pdf": "biot-worker-card-long.word.pdf",
+      "pdfSha256": "7561c25d7f90b1bc14663fceb83d63eca5510447e3f95482269b22497cea8c5c",
+      "png": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\word\\biot-worker-card-long.word-page-1.png",
+      "pngSha256": "0716e9c3e0b79424ef9f66074278ac07d2717c18ddd89333db398f9176e4c059",
+      "page": 1,
+      "status": "PASS",
+      "review": "Full page visually inspected: bilingual text, long names/programs, issuer band, table/column boundaries, signatures/seal areas; no clipping, overlap or missing visible text."
+    },
+    {
+      "file": "biot-worker-card-short.docx",
+      "docxSha256": "e979b5f6c16a13e1ccb4f607c135949bfdd457641a2619f8bae69c24adeb0ccf",
+      "pdf": "biot-worker-card-short.word.pdf",
+      "pdfSha256": "19135e9af1fac032f4aba5f96f9b6165282d1bd2905a64fd9488230123486ec8",
+      "png": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\word\\biot-worker-card-short.word-page-1.png",
+      "pngSha256": "2da3f75614bd6e2026434b90599d0b2657151573d96ee1d66b31e374b47db6d5",
+      "page": 1,
+      "status": "PASS",
+      "review": "Full page visually inspected: bilingual text, long names/programs, issuer band, table/column boundaries, signatures/seal areas; no clipping, overlap or missing visible text."
+    }
+  ],
+  "limitations": [
+    "Synthetic values; no physical printer run",
+    "Visual review is layout evidence, not regulatory approval"
+  ]
+}

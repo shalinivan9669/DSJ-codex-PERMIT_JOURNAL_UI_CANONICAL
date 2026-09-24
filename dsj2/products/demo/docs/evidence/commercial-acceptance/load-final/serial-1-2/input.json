@@ -1,0 +1,31 @@
+{
+  "kind": "PERSON",
+  "customerId": null,
+  "title": "НАГРУЗОЧНЫЙ ТЕСТ 1 73561b43-d822-43d2-9f6c-e6ec73c48da0",
+  "demoMode": true,
+  "items": [
+    {
+      "id": "d93ed989-5c00-4612-960b-02e70a2cb91b",
+      "fullNameRu": "Тестов Получатель 001 73561b43",
+      "fullNameKz": "Сынақ Әғқңөұүһі 001 73561b43",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "082c216f-89d2-4dbd-8922-4507a48c78f6",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    }
+  ]
+}

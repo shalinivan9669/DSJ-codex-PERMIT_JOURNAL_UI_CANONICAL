@@ -1,0 +1,114 @@
+[
+  {
+    "document": "biot-itr-certificate-long.docx",
+    "page": 1,
+    "image": "biot-itr-certificate-long.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "biot-itr-certificate-short.docx",
+    "page": 1,
+    "image": "biot-itr-certificate-short.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "biot-worker-card-long.docx",
+    "page": 1,
+    "image": "biot-worker-card-long.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "biot-worker-card-long.docx",
+    "page": 2,
+    "image": "biot-worker-card-long.word.page-2.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "biot-worker-card-short.docx",
+    "page": 1,
+    "image": "biot-worker-card-short.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "biot-worker-card-short.docx",
+    "page": 2,
+    "image": "biot-worker-card-short.word.page-2.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "pb-card-long.docx",
+    "page": 1,
+    "image": "pb-card-long.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "pb-card-long.docx",
+    "page": 2,
+    "image": "pb-card-long.word.page-2.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "pb-card-short.docx",
+    "page": 1,
+    "image": "pb-card-short.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "pb-card-short.docx",
+    "page": 2,
+    "image": "pb-card-short.word.page-2.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "ps-card-long.docx",
+    "page": 1,
+    "image": "ps-card-long.word.page-1.png",
+    "review": "SUPERSEDED",
+    "findings": "PS v13 replaced by v15 after separate LibreOffice layout defect"
+  },
+  {
+    "document": "ps-card-long.docx",
+    "page": 2,
+    "image": "ps-card-long.word.page-2.png",
+    "review": "SUPERSEDED",
+    "findings": "PS v13 replaced by v15 after separate LibreOffice layout defect"
+  },
+  {
+    "document": "ps-card-short.docx",
+    "page": 1,
+    "image": "ps-card-short.word.page-1.png",
+    "review": "SUPERSEDED",
+    "findings": "PS v13 replaced by v15 after separate LibreOffice layout defect"
+  },
+  {
+    "document": "ps-card-short.docx",
+    "page": 2,
+    "image": "ps-card-short.word.page-2.png",
+    "review": "SUPERSEDED",
+    "findings": "PS v13 replaced by v15 after separate LibreOffice layout defect"
+  },
+  {
+    "document": "ptm-card-long.docx",
+    "page": 1,
+    "image": "ptm-card-long.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  },
+  {
+    "document": "ptm-card-short.docx",
+    "page": 1,
+    "image": "ptm-card-short.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: рамки, фото, issuer strip, KZ текст и подписи корректны."
+  }
+]

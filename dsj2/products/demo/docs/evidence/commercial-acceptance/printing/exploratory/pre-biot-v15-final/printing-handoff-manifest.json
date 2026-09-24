@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "rendererVersion": "demo-ooxml-5/libreoffice-26.2.6.3",
+  "files": {
+    "final-source-docx-revalidation.json": "f3e89e215084514ac7a3420995b0918e56d5a4937188d8ee4eb94fe860ae46fc",
+    "final-artifact-audit.json": "16021b7484d9761b54e1856861c6218b9b3f7d8d1f9718643fac5ef64c2ccbb6",
+    "final-visual-reconciliation.json": "849e564bda77069c0355a17cb89967ae4d393071aaf63d155f16cc4c71099a20",
+    "final-docx-content-scan.json": "db3876cd1b39fb08b0317a5cb85cd68f01f976656fbc2714012eb70c95352fe7",
+    "control-print-set-verification.json": "bfcc681e6fb7c147fef197e927fb4547d5cfffdcb6e3d6625592179a0b8396f1",
+    "all-summary.json": "5d2ea87dffbd8b98429d7681c293b0bd44989f0a04c72a55862fc1e584ca302b",
+    "environment.json": "bacccc4f65d7104583649a9c24639082ce79441e062b7c61559d125ffa394c72",
+    "final-render-tests.log": "2091e8f2568986d83bd88c788818ba6ed3c10542e09390c4b58784986f07a3ea",
+    "matrix-updates.json": "c7ca09199aed252e34827fb0ba173a5efd4555d57d723900e14043e539d07393",
+    "PRINTING_REPORT_RU.md": "461d1f6d7a68f6ff5f481a315b34f1b6cc8721ffd1e09596af788a4404908622"
+  },
+  "wordReport": {
+    "path": "../word/final-active.json",
+    "sha256": "9a23e8f08bd916cd2a31ba212e6cadef33bac3d47d72962587d60536e3a5adca"
+  },
+  "controlZip": {
+    "path": "control-print-set.zip",
+    "sha256": "ef71d66265e30c6997143b7d7b6506d254dec73dc14ada20e91d60410c0e1f4f"
+  },
+  "dateRoundtrip": {
+    "proofSha256": "1cea6cbf5087442ce6e3dfd0389b13959b1424280cc372c23dbb2a8812ed7291",
+    "visualSha256": "3e374c177c4c84f2682753a7a963ddeda3e0dd9677b1c7ef8d8ec0008263cb63",
+    "cases": 4,
+    "pages": 8,
+    "status": "PASS"
+  }
+}

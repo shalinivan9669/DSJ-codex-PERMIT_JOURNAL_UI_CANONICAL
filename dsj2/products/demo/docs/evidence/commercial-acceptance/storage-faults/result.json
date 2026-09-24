@@ -1,0 +1,604 @@
+{
+  "status": "PASS",
+  "observations": [
+    {
+      "environment": {
+        "mount": "685 676 0:155 / /fault-storage rw,nosuid,nodev,noexec,relatime - tmpfs tmpfs rw,size=32768k,uid=1000,gid=1000",
+        "capacity": 33554432,
+        "uid": 1000,
+        "database": "/demo_test_storage_20260922_b",
+        "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+        "apiPid": 35,
+        "workerPid": 73
+      },
+      "initialReady": {
+        "status": 200,
+        "body": {
+          "status": "ready",
+          "workerSeenAt": "2026-09-22T14:33:24.727Z",
+          "templates": 10,
+          "rendererVersion": "demo-ooxml-4/libreoffice-26.2.6.3",
+          "storage": "ok"
+        }
+      }
+    },
+    {
+      "fault": "ENOSPC",
+      "observedOsCode": "ENOSPC",
+      "fillerBytes": 18968576,
+      "duringReady": {
+        "status": 503,
+        "body": {
+          "code": "STORAGE_NOT_READY",
+          "message": "Проверьте доступность хранилища и контрольные суммы шаблонов",
+          "correlationId": "5960582a-c682-4327-872a-132558c1a282"
+        }
+      },
+      "failedJobs": [
+        {
+          "id": "3bccf832-f015-4788-9ebd-d1259571fc7b",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "d35a06f4-b33f-4473-bc04-84102f15a7ae",
+          "issuanceId": "4cf26078-c373-43fe-b921-a2210b619121",
+          "documentId": "7b6a7e50-67f0-435f-a50b-10cb947d18bc",
+          "snapshotId": "823f6c5e-25d0-47c2-b6d0-86bddb12946c",
+          "kind": "DOCX",
+          "status": "RETRY",
+          "logicalKey": "7b6a7e50-67f0-435f-a50b-10cb947d18bc:DOCX",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:29.783Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 1,
+          "heartbeatAt": "2026-09-22T14:33:26.696Z",
+          "errorCode": "RENDER_FAILED",
+          "errorMessage": "Не удалось создать файл. Повтор безопасен для номеров.",
+          "correlationId": "04b5a16d-fbbe-4e55-b030-07683ca673e4",
+          "progress": 0,
+          "artifactId": null,
+          "createdAt": "2026-09-22T14:33:26.385Z",
+          "updatedAt": "2026-09-22T14:33:27.785Z"
+        },
+        {
+          "id": "6a017115-cedb-43b2-9680-268b0ee3090c",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "d35a06f4-b33f-4473-bc04-84102f15a7ae",
+          "issuanceId": "4cf26078-c373-43fe-b921-a2210b619121",
+          "documentId": null,
+          "snapshotId": "70608939-382c-495d-a828-efbb54425b37",
+          "kind": "XLSX",
+          "status": "RUNNING",
+          "logicalKey": "4cf26078-c373-43fe-b921-a2210b619121:XLSX",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:26.420Z",
+          "leaseUntil": "2026-09-22T14:33:57.820Z",
+          "leaseOwner": "4bd60592-4254-48a0-a050-4d9d1f824dfc",
+          "fencingToken": 1,
+          "heartbeatAt": "2026-09-22T14:33:27.820Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "ada8321b-c0f3-414c-a421-a9014fd78f88",
+          "progress": 0,
+          "artifactId": null,
+          "createdAt": "2026-09-22T14:33:26.420Z",
+          "updatedAt": "2026-09-22T14:33:27.820Z"
+        },
+        {
+          "id": "ce078cf8-e96b-456e-b35c-5b1dc9c23313",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "d35a06f4-b33f-4473-bc04-84102f15a7ae",
+          "issuanceId": "4cf26078-c373-43fe-b921-a2210b619121",
+          "documentId": null,
+          "snapshotId": "70608939-382c-495d-a828-efbb54425b37",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "logicalKey": "4cf26078-c373-43fe-b921-a2210b619121:ZIP",
+          "attempts": 0,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:26.425Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 0,
+          "heartbeatAt": null,
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "f856ac9c-3159-4335-bd9d-6ab5bf22b5ab",
+          "progress": 0,
+          "artifactId": null,
+          "createdAt": "2026-09-22T14:33:26.425Z",
+          "updatedAt": "2026-09-22T14:33:26.425Z"
+        },
+        {
+          "id": "f868e8ad-eddc-44fa-93b9-dd3ef0602525",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "d35a06f4-b33f-4473-bc04-84102f15a7ae",
+          "issuanceId": "4cf26078-c373-43fe-b921-a2210b619121",
+          "documentId": "7b6a7e50-67f0-435f-a50b-10cb947d18bc",
+          "snapshotId": "823f6c5e-25d0-47c2-b6d0-86bddb12946c",
+          "kind": "PDF",
+          "status": "PENDING",
+          "logicalKey": "7b6a7e50-67f0-435f-a50b-10cb947d18bc:PDF",
+          "attempts": 0,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:29.310Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 1,
+          "heartbeatAt": "2026-09-22T14:33:27.798Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "47f32135-d701-4d94-99c9-37bdf0ffb6ee",
+          "progress": 0,
+          "artifactId": null,
+          "createdAt": "2026-09-22T14:33:26.397Z",
+          "updatedAt": "2026-09-22T14:33:27.811Z"
+        }
+      ],
+      "afterReady": {
+        "status": 200,
+        "body": {
+          "status": "ready",
+          "workerSeenAt": "2026-09-22T14:33:34.748Z",
+          "templates": 10,
+          "rendererVersion": "demo-ooxml-4/libreoffice-26.2.6.3",
+          "storage": "ok"
+        }
+      },
+      "recoveredJobs": [
+        {
+          "id": "3bccf832-f015-4788-9ebd-d1259571fc7b",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "d35a06f4-b33f-4473-bc04-84102f15a7ae",
+          "issuanceId": "4cf26078-c373-43fe-b921-a2210b619121",
+          "documentId": "7b6a7e50-67f0-435f-a50b-10cb947d18bc",
+          "snapshotId": "823f6c5e-25d0-47c2-b6d0-86bddb12946c",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "logicalKey": "7b6a7e50-67f0-435f-a50b-10cb947d18bc:DOCX",
+          "attempts": 2,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:29.783Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 2,
+          "heartbeatAt": "2026-09-22T14:33:30.035Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "04b5a16d-fbbe-4e55-b030-07683ca673e4",
+          "progress": 100,
+          "artifactId": "6b24287f-ae10-485c-af29-141f15d4f283",
+          "createdAt": "2026-09-22T14:33:26.385Z",
+          "updatedAt": "2026-09-22T14:33:31.156Z"
+        },
+        {
+          "id": "6a017115-cedb-43b2-9680-268b0ee3090c",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "d35a06f4-b33f-4473-bc04-84102f15a7ae",
+          "issuanceId": "4cf26078-c373-43fe-b921-a2210b619121",
+          "documentId": null,
+          "snapshotId": "70608939-382c-495d-a828-efbb54425b37",
+          "kind": "XLSX",
+          "status": "SUCCEEDED",
+          "logicalKey": "4cf26078-c373-43fe-b921-a2210b619121:XLSX",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:26.420Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 1,
+          "heartbeatAt": "2026-09-22T14:33:27.820Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "ada8321b-c0f3-414c-a421-a9014fd78f88",
+          "progress": 100,
+          "artifactId": "f14b08a2-304c-4d8b-839d-22ed43cba31d",
+          "createdAt": "2026-09-22T14:33:26.420Z",
+          "updatedAt": "2026-09-22T14:33:28.429Z"
+        },
+        {
+          "id": "ce078cf8-e96b-456e-b35c-5b1dc9c23313",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "d35a06f4-b33f-4473-bc04-84102f15a7ae",
+          "issuanceId": "4cf26078-c373-43fe-b921-a2210b619121",
+          "documentId": null,
+          "snapshotId": "70608939-382c-495d-a828-efbb54425b37",
+          "kind": "ZIP",
+          "status": "SUCCEEDED",
+          "logicalKey": "4cf26078-c373-43fe-b921-a2210b619121:ZIP",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:32.701Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 3,
+          "heartbeatAt": "2026-09-22T14:33:37.096Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "f856ac9c-3159-4335-bd9d-6ab5bf22b5ab",
+          "progress": 100,
+          "artifactId": "56cc9928-4631-4cc2-bdd7-f913fd590310",
+          "createdAt": "2026-09-22T14:33:26.425Z",
+          "updatedAt": "2026-09-22T14:33:37.890Z"
+        },
+        {
+          "id": "f868e8ad-eddc-44fa-93b9-dd3ef0602525",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "d35a06f4-b33f-4473-bc04-84102f15a7ae",
+          "issuanceId": "4cf26078-c373-43fe-b921-a2210b619121",
+          "documentId": "7b6a7e50-67f0-435f-a50b-10cb947d18bc",
+          "snapshotId": "823f6c5e-25d0-47c2-b6d0-86bddb12946c",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "logicalKey": "7b6a7e50-67f0-435f-a50b-10cb947d18bc:PDF",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:31.525Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 3,
+          "heartbeatAt": "2026-09-22T14:33:37.016Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "47f32135-d701-4d94-99c9-37bdf0ffb6ee",
+          "progress": 100,
+          "artifactId": "ed13c194-2262-4db9-b0bc-7b1a7db7b0bc",
+          "createdAt": "2026-09-22T14:33:26.397Z",
+          "updatedAt": "2026-09-22T14:33:37.084Z"
+        }
+      ],
+      "downloads": [
+        {
+          "id": "6b24287f-ae10-485c-af29-141f15d4f283",
+          "format": "DOCX",
+          "reads": [
+            {
+              "sha256": "a083854eb756dea44f83ecd7fa87af23bf029306ea3f78d4b1996335f77a22f5",
+              "bytes": 24462
+            },
+            {
+              "sha256": "a083854eb756dea44f83ecd7fa87af23bf029306ea3f78d4b1996335f77a22f5",
+              "bytes": 24462
+            }
+          ]
+        },
+        {
+          "id": "ed13c194-2262-4db9-b0bc-7b1a7db7b0bc",
+          "format": "PDF",
+          "reads": [
+            {
+              "sha256": "05163a33695c759734a6580d6299c081402cda2ba0d9ec648cf65288623dcff3",
+              "bytes": 69960
+            },
+            {
+              "sha256": "05163a33695c759734a6580d6299c081402cda2ba0d9ec648cf65288623dcff3",
+              "bytes": 69960
+            }
+          ]
+        },
+        {
+          "id": "f14b08a2-304c-4d8b-839d-22ed43cba31d",
+          "format": "XLSX",
+          "reads": [
+            {
+              "sha256": "10a79dcc87c79a0f1d23b6c93477bb2ad742c4d0ce2e4ee9c82d481f9619bc05",
+              "bytes": 5929
+            },
+            {
+              "sha256": "10a79dcc87c79a0f1d23b6c93477bb2ad742c4d0ce2e4ee9c82d481f9619bc05",
+              "bytes": 5929
+            }
+          ]
+        },
+        {
+          "id": "56cc9928-4631-4cc2-bdd7-f913fd590310",
+          "format": "ZIP",
+          "reads": [
+            {
+              "sha256": "ca090b859b1608590848e7f2c179f1646ac140da5f18dbce0e4daf963b24a503",
+              "bytes": 72098
+            },
+            {
+              "sha256": "ca090b859b1608590848e7f2c179f1646ac140da5f18dbce0e4daf963b24a503",
+              "bytes": 72098
+            }
+          ]
+        }
+      ],
+      "documentNumbers": [
+        "BIOT-PROTOCOL-00001"
+      ],
+      "status": "PASS"
+    },
+    {
+      "fault": "EACCES",
+      "observedOsCode": "EACCES",
+      "fillerBytes": 0,
+      "duringReady": {
+        "status": 503,
+        "body": {
+          "code": "STORAGE_NOT_READY",
+          "message": "Проверьте доступность хранилища и контрольные суммы шаблонов",
+          "correlationId": "a832a71a-c7c8-44f0-b152-09c15b4a91ad"
+        }
+      },
+      "failedJobs": [
+        {
+          "id": "1f8aa6bb-1538-4616-9381-2b796812bc21",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "ac623272-c984-4661-82e9-a3e27ddd5954",
+          "issuanceId": "2a91527a-91c6-4fee-823b-2f341a48c375",
+          "documentId": "d8ef4253-5ebc-4164-8d13-644183672d2b",
+          "snapshotId": "eb541dbb-4b6d-4827-a280-4b6b0ca8995d",
+          "kind": "PDF",
+          "status": "PENDING",
+          "logicalKey": "d8ef4253-5ebc-4164-8d13-644183672d2b:PDF",
+          "attempts": 0,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:41.430Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 1,
+          "heartbeatAt": "2026-09-22T14:33:39.918Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "5b7c896d-9ebe-48bd-895e-50a396bad899",
+          "progress": 0,
+          "artifactId": null,
+          "createdAt": "2026-09-22T14:33:39.278Z",
+          "updatedAt": "2026-09-22T14:33:39.932Z"
+        },
+        {
+          "id": "6fabaf86-d37a-4ed4-9c53-1523597ec909",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "ac623272-c984-4661-82e9-a3e27ddd5954",
+          "issuanceId": "2a91527a-91c6-4fee-823b-2f341a48c375",
+          "documentId": "d8ef4253-5ebc-4164-8d13-644183672d2b",
+          "snapshotId": "eb541dbb-4b6d-4827-a280-4b6b0ca8995d",
+          "kind": "DOCX",
+          "status": "RETRY",
+          "logicalKey": "d8ef4253-5ebc-4164-8d13-644183672d2b:DOCX",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:41.901Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 1,
+          "heartbeatAt": "2026-09-22T14:33:39.349Z",
+          "errorCode": "RENDER_FAILED",
+          "errorMessage": "Не удалось создать файл. Повтор безопасен для номеров.",
+          "correlationId": "d7056841-4c2e-4e52-9c73-4d426defcf8d",
+          "progress": 0,
+          "artifactId": null,
+          "createdAt": "2026-09-22T14:33:39.273Z",
+          "updatedAt": "2026-09-22T14:33:39.902Z"
+        },
+        {
+          "id": "db1991fe-f00b-4ec7-b8c2-9e42412c91a4",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "ac623272-c984-4661-82e9-a3e27ddd5954",
+          "issuanceId": "2a91527a-91c6-4fee-823b-2f341a48c375",
+          "documentId": null,
+          "snapshotId": "1506d5a2-6902-496e-97ed-ead4c0f324ac",
+          "kind": "XLSX",
+          "status": "RUNNING",
+          "logicalKey": "2a91527a-91c6-4fee-823b-2f341a48c375:XLSX",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:39.288Z",
+          "leaseUntil": "2026-09-22T14:34:09.943Z",
+          "leaseOwner": "4bd60592-4254-48a0-a050-4d9d1f824dfc",
+          "fencingToken": 1,
+          "heartbeatAt": "2026-09-22T14:33:39.943Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "e90b3222-6c70-4489-803f-07e640fcc1df",
+          "progress": 0,
+          "artifactId": null,
+          "createdAt": "2026-09-22T14:33:39.288Z",
+          "updatedAt": "2026-09-22T14:33:39.943Z"
+        },
+        {
+          "id": "f845111a-42ed-47b5-99d3-8b41e0e1d43b",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "ac623272-c984-4661-82e9-a3e27ddd5954",
+          "issuanceId": "2a91527a-91c6-4fee-823b-2f341a48c375",
+          "documentId": null,
+          "snapshotId": "1506d5a2-6902-496e-97ed-ead4c0f324ac",
+          "kind": "ZIP",
+          "status": "PENDING",
+          "logicalKey": "2a91527a-91c6-4fee-823b-2f341a48c375:ZIP",
+          "attempts": 0,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:39.291Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 0,
+          "heartbeatAt": null,
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "6d9e7dc7-686e-4b6c-a093-6875fa8c05c4",
+          "progress": 0,
+          "artifactId": null,
+          "createdAt": "2026-09-22T14:33:39.291Z",
+          "updatedAt": "2026-09-22T14:33:39.291Z"
+        }
+      ],
+      "afterReady": {
+        "status": 200,
+        "body": {
+          "status": "ready",
+          "workerSeenAt": "2026-09-22T14:33:44.741Z",
+          "templates": 10,
+          "rendererVersion": "demo-ooxml-4/libreoffice-26.2.6.3",
+          "storage": "ok"
+        }
+      },
+      "recoveredJobs": [
+        {
+          "id": "1f8aa6bb-1538-4616-9381-2b796812bc21",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "ac623272-c984-4661-82e9-a3e27ddd5954",
+          "issuanceId": "2a91527a-91c6-4fee-823b-2f341a48c375",
+          "documentId": "d8ef4253-5ebc-4164-8d13-644183672d2b",
+          "snapshotId": "eb541dbb-4b6d-4827-a280-4b6b0ca8995d",
+          "kind": "PDF",
+          "status": "SUCCEEDED",
+          "logicalKey": "d8ef4253-5ebc-4164-8d13-644183672d2b:PDF",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:43.572Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 3,
+          "heartbeatAt": "2026-09-22T14:33:43.845Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "5b7c896d-9ebe-48bd-895e-50a396bad899",
+          "progress": 100,
+          "artifactId": "1018b9a4-f664-477b-99ed-1717650fc365",
+          "createdAt": "2026-09-22T14:33:39.278Z",
+          "updatedAt": "2026-09-22T14:33:47.008Z"
+        },
+        {
+          "id": "6fabaf86-d37a-4ed4-9c53-1523597ec909",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "ac623272-c984-4661-82e9-a3e27ddd5954",
+          "issuanceId": "2a91527a-91c6-4fee-823b-2f341a48c375",
+          "documentId": "d8ef4253-5ebc-4164-8d13-644183672d2b",
+          "snapshotId": "eb541dbb-4b6d-4827-a280-4b6b0ca8995d",
+          "kind": "DOCX",
+          "status": "SUCCEEDED",
+          "logicalKey": "d8ef4253-5ebc-4164-8d13-644183672d2b:DOCX",
+          "attempts": 2,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:41.901Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 2,
+          "heartbeatAt": "2026-09-22T14:33:42.086Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "d7056841-4c2e-4e52-9c73-4d426defcf8d",
+          "progress": 100,
+          "artifactId": "d6eb5149-85af-493b-8269-16b0915076cc",
+          "createdAt": "2026-09-22T14:33:39.273Z",
+          "updatedAt": "2026-09-22T14:33:43.060Z"
+        },
+        {
+          "id": "db1991fe-f00b-4ec7-b8c2-9e42412c91a4",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "ac623272-c984-4661-82e9-a3e27ddd5954",
+          "issuanceId": "2a91527a-91c6-4fee-823b-2f341a48c375",
+          "documentId": null,
+          "snapshotId": "1506d5a2-6902-496e-97ed-ead4c0f324ac",
+          "kind": "XLSX",
+          "status": "SUCCEEDED",
+          "logicalKey": "2a91527a-91c6-4fee-823b-2f341a48c375:XLSX",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:39.288Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 1,
+          "heartbeatAt": "2026-09-22T14:33:39.943Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "e90b3222-6c70-4489-803f-07e640fcc1df",
+          "progress": 100,
+          "artifactId": "03b1b960-ff93-4467-899a-1390089f70dc",
+          "createdAt": "2026-09-22T14:33:39.288Z",
+          "updatedAt": "2026-09-22T14:33:40.526Z"
+        },
+        {
+          "id": "f845111a-42ed-47b5-99d3-8b41e0e1d43b",
+          "tenantId": "11ff88ee-deed-46e9-a86f-3799a0560826",
+          "requestId": "ac623272-c984-4661-82e9-a3e27ddd5954",
+          "issuanceId": "2a91527a-91c6-4fee-823b-2f341a48c375",
+          "documentId": null,
+          "snapshotId": "1506d5a2-6902-496e-97ed-ead4c0f324ac",
+          "kind": "ZIP",
+          "status": "SUCCEEDED",
+          "logicalKey": "2a91527a-91c6-4fee-823b-2f341a48c375:ZIP",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "runAfter": "2026-09-22T14:33:44.581Z",
+          "leaseUntil": null,
+          "leaseOwner": null,
+          "fencingToken": 3,
+          "heartbeatAt": "2026-09-22T14:33:47.019Z",
+          "errorCode": null,
+          "errorMessage": null,
+          "correlationId": "6d9e7dc7-686e-4b6c-a093-6875fa8c05c4",
+          "progress": 100,
+          "artifactId": "cc0c0758-1da5-4e60-8a30-23e48dfdca6f",
+          "createdAt": "2026-09-22T14:33:39.291Z",
+          "updatedAt": "2026-09-22T14:33:47.506Z"
+        }
+      ],
+      "downloads": [
+        {
+          "id": "d6eb5149-85af-493b-8269-16b0915076cc",
+          "format": "DOCX",
+          "reads": [
+            {
+              "sha256": "4381e9b6a7ab39295e81dc0bfc2a134c0e4b914b5064d06740fc06b024a48ac8",
+              "bytes": 24461
+            },
+            {
+              "sha256": "4381e9b6a7ab39295e81dc0bfc2a134c0e4b914b5064d06740fc06b024a48ac8",
+              "bytes": 24461
+            }
+          ]
+        },
+        {
+          "id": "1018b9a4-f664-477b-99ed-1717650fc365",
+          "format": "PDF",
+          "reads": [
+            {
+              "sha256": "eb73290f7fcf6bcea382ba6f55136ab4caec50a03119d3625bddce52d2bea333",
+              "bytes": 69746
+            },
+            {
+              "sha256": "eb73290f7fcf6bcea382ba6f55136ab4caec50a03119d3625bddce52d2bea333",
+              "bytes": 69746
+            }
+          ]
+        },
+        {
+          "id": "03b1b960-ff93-4467-899a-1390089f70dc",
+          "format": "XLSX",
+          "reads": [
+            {
+              "sha256": "501c2c60b85a5fc4a14a2c50104ff95d43a2df1e9b556a27d1f121125ef66fa0",
+              "bytes": 5929
+            },
+            {
+              "sha256": "501c2c60b85a5fc4a14a2c50104ff95d43a2df1e9b556a27d1f121125ef66fa0",
+              "bytes": 5929
+            }
+          ]
+        },
+        {
+          "id": "cc0c0758-1da5-4e60-8a30-23e48dfdca6f",
+          "format": "ZIP",
+          "reads": [
+            {
+              "sha256": "8edd79e3433d9fb5d056de97c6a75f710d78dd97356c318b8f8bf30b3b0596eb",
+              "bytes": 71900
+            },
+            {
+              "sha256": "8edd79e3433d9fb5d056de97c6a75f710d78dd97356c318b8f8bf30b3b0596eb",
+              "bytes": 71900
+            }
+          ]
+        }
+      ],
+      "documentNumbers": [
+        "BIOT-PROTOCOL-00002"
+      ],
+      "status": "PASS"
+    }
+  ]
+}

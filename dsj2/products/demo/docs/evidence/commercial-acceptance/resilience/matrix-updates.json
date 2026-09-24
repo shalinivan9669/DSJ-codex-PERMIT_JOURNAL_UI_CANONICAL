@@ -1,0 +1,18 @@
+{
+  "owner": "operator_ui",
+  "scope": "Actual database failure and exact five-container restart subchecks; combine TLS/build/host evidence separately.",
+  "requirements": [
+    {
+      "id": "C15",
+      "status": "PASS",
+      "scenario": "DB stop --time0 while own jobs RUNNING/PENDING; HTTP unavailable; automatic recovery; restart exact5 project containers; fresh authentication and canonical artifact SHA readback.",
+      "environment": "WSL Ubuntu-24.04 isolated daemon; demo-commercial-release project; http://localhost:8080; demoOnly synthetic tenant.",
+      "result": "3 actual HTTP500 SERVICE_ERROR responses;10jobs automatically SUCCEEDED;1issuance/4numbers unchanged;14artifactSHA unchanged after all5containers restart.",
+      "artifact": "resilience/result.json; resilience/RESILIENCE_RU.md; resilience/db.log; resilience/worker.log; resilience/api.log; scripts/verification/resilience-http.mjs",
+      "defect": "",
+      "fix": "",
+      "retest": "PASS 2026-09-22T14:47:21Z–14:48:08Z; actual PostgreSQL WAL recovery logged.",
+      "limitation": "Only DB failure/container restart subchecks. No host reboot/power cut/TLS claim."
+    }
+  ]
+}

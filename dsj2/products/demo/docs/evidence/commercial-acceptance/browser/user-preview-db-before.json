@@ -1,0 +1,115 @@
+{
+  "observedAt": "2026-09-22T15:11:20.348Z",
+  "db": "/demo_test_browser_commercial_20260922",
+  "jobs": [
+    {
+      "_count": {
+        "_all": 113
+      },
+      "status": "SUCCEEDED"
+    }
+  ],
+  "activeJobs": [],
+  "tables": {
+    "printRequest": {
+      "count": 140,
+      "sha256": "ef81b00da22e71007c16e853231de546af6f9e7cdbaa3d589b95f79d6267fb86"
+    },
+    "requestItem": {
+      "count": 261,
+      "sha256": "811fb25fc2fb105d0b4ba11a29c1e333891eb2c3d42c01f320c8245d2bd9ad90"
+    },
+    "issuerProfileVersion": {
+      "count": 4,
+      "sha256": "c2cc614b73316cb1b19b18cdf54b97186b0d6c55a7db3b577c5d99856085073a"
+    },
+    "issuedDocument": {
+      "count": 44,
+      "sha256": "14c43e4f9774f903bb57760e434b620721aff9cad2ba346a0472cf113b035dea"
+    },
+    "issuance": {
+      "count": 10,
+      "sha256": "5baafdc0daeea17a251143065822c901602033e32a6592d80c49fd79402d748f"
+    },
+    "numberSequence": {
+      "count": 11,
+      "sha256": "a67a181ce09504d1b0e78be3025f4fff54daf9e6cb19b74b41433a167cf96206"
+    },
+    "artifact": {
+      "count": 113,
+      "sha256": "c4201ce47c4174e407e1a70727affa5fc006eecbf90202f333fb53553e287b63"
+    }
+  },
+  "activeTemplates": [
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "biot-worker-card",
+      "version": "7",
+      "checksum": "6e393c6d3c66fa8125a79eddcd34690ecb64062322d921bd8bbf1d2fefcf693c",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "biot-itr-certificate",
+      "version": "4",
+      "checksum": "9f45958fc2548314ce5bae030efae2f93d0a89e1878e074214d18d748853b00d",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "biot-protocol",
+      "version": "5",
+      "checksum": "c5f3a5b875b2740efc165ffd4b05548439d56cefe1a6918f0eba6d724250f363",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "ptm-card",
+      "version": "7",
+      "checksum": "9a0c700e928d8d0831f5560c432b3f07bb4780df50df61bbefb901878a121ee1",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "ptm-protocol",
+      "version": "5",
+      "checksum": "f2f276b3fc9f0f61bcae09f36488efbc8392da1a85b4d8102256f22d921cfebd",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "pb-card",
+      "version": "7",
+      "checksum": "5e839d2b13f38def4c3a35beb1a7b3a7e1bbd3321f44ba8691908c26bcb291c9",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "pb-protocol",
+      "version": "5",
+      "checksum": "daa358acef4fbaf98b3f56547cc9165fd8859158c5da51180fb8745c7378f6a3",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "ps-card",
+      "version": "7",
+      "checksum": "f432af0dd743efb7ee56f888318099ed15d345d7a6e7f8d725a7e4e6e7fb1b94",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "ps-protocol",
+      "version": "5",
+      "checksum": "2153be9e90cb33a75a26292e3761535b2060c84e50275da6b14816d8255f24c8",
+      "approved": true
+    },
+    {
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "templateId": "ps-witness",
+      "version": "6",
+      "checksum": "fde2c54f6f263a5a3be0c8c7923d4cf8f0da975bb3d1440c126330b478424e6e",
+      "approved": true
+    }
+  ]
+}

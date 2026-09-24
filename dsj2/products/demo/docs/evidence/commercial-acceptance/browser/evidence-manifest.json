@@ -1,0 +1,522 @@
+{
+  "generatedAt": "2026-09-22T13:00:50.758875+00:00",
+  "scope": "Final browser evidence, including clearly recorded focused-selector failure and successful retest. Excludes active server logs and diagnostic earlier runs.",
+  "count": 103,
+  "files": [
+    {
+      "path": "audit_browser_artifacts.py",
+      "bytes": 2730,
+      "sha256": "f7f743bffb38601d29151b4fb0bad672679bd8ab037cdc7fae969bfb3c4a4a7f"
+    },
+    {
+      "path": "final-forms/editor-1366.png",
+      "bytes": 173518,
+      "sha256": "616b2b6f823e97b05e2950ced8a61a1ca4da443ebedd6143e136e767e795a428"
+    },
+    {
+      "path": "final-forms/editor-1920.png",
+      "bytes": 178824,
+      "sha256": "6fbbfa79679463e1cf477bc2b92078b25bd66b3f47392e49b4de9131b4043c8b"
+    },
+    {
+      "path": "final-forms/editor-390.png",
+      "bytes": 142687,
+      "sha256": "7745c0976602b702ac9be6ee8593d7b9500714d8edfede5a528ed2bd85be40d1"
+    },
+    {
+      "path": "final-forms/environment.json",
+      "bytes": 198,
+      "sha256": "8a00f41198271faace6374f3d472bb486764c73cad97f7bac2503d3d0402b140"
+    },
+    {
+      "path": "final-forms/files-history.png",
+      "bytes": 205744,
+      "sha256": "62868c475a7b9d298edbb77e45edebd1f196706ed0698dadd965e50c512ab6ad"
+    },
+    {
+      "path": "final-forms/pdf-preview.png",
+      "bytes": 142917,
+      "sha256": "a5d9882e4c83af1a56346d1d09b91b8d1f6245041484a879e1a6897be8d9cee2"
+    },
+    {
+      "path": "final-forms/person-61f43e07-9d5a-4900-8654-ba95f60aff40/224fd2ab-361a-42fe-a071-73509b50d766-biot-worker-card-61f43e07-9d5a-4900-8654-ba95f60aff40.pdf",
+      "bytes": 100607,
+      "sha256": "5d2cf287a1b13cd1b98fb7434ec83873ac8f576cb8c64595b5e8ca61e6cd443d"
+    },
+    {
+      "path": "final-forms/person-61f43e07-9d5a-4900-8654-ba95f60aff40/6600e339-c51f-423a-b58c-b2727ab67389-registry-61f43e07-9d5a-4900-8654-ba95f60aff40.zip",
+      "bytes": 101178,
+      "sha256": "afa16d5a035f202f00ff991fdb3d49355dcb344c97e8c08031f099275df0f08e"
+    },
+    {
+      "path": "final-forms/person-61f43e07-9d5a-4900-8654-ba95f60aff40/6a079f71-ab0e-425a-82d8-e1e7c45262a3-biot-worker-card-61f43e07-9d5a-4900-8654-ba95f60aff40.docx",
+      "bytes": 26212,
+      "sha256": "c541ce52c89d3f4b36c6ceaad461d596d2f70a2672b14fed9b6b9955311376b9"
+    },
+    {
+      "path": "final-forms/person-61f43e07-9d5a-4900-8654-ba95f60aff40/b60c6c7c-a474-4b32-937b-49bcb1e9db78-biot-worker-card-fdc47026-6ea1-4443-b35d-c3dc12903bee.docx",
+      "bytes": 26255,
+      "sha256": "da2d42c2068b6804c35b559775936ea7aaff400ac92c45565cb8831ab685ad59"
+    },
+    {
+      "path": "final-forms/person-61f43e07-9d5a-4900-8654-ba95f60aff40/d8030a2c-1232-4b00-a8b8-011626ec63e6-registry-61f43e07-9d5a-4900-8654-ba95f60aff40.xlsx",
+      "bytes": 5937,
+      "sha256": "c10a8e33aaaf85b99f7fc90227253ec9f8eeaf4def31ee9c3af6989070681c53"
+    },
+    {
+      "path": "final-forms/person-61f43e07-9d5a-4900-8654-ba95f60aff40/d872905e-7b1c-4716-918f-5c1466d8ca55-biot-worker-card-fdc47026-6ea1-4443-b35d-c3dc12903bee.pdf",
+      "bytes": 103234,
+      "sha256": "7de23eae82687633c94faa956c9fa2f38b40c6a0493da731efecbbf4bdb0250c"
+    },
+    {
+      "path": "final-forms/person-result.json",
+      "bytes": 2367,
+      "sha256": "faaf061719193ce865aa7685ede851a28eda0e5a1e86b2e799820b4a3546ad3f"
+    },
+    {
+      "path": "final-forms/person-retest.json",
+      "bytes": 791,
+      "sha256": "37a4bd6768381f63b47c6c3fab032df076ede0ca70d2591821edfb61ed05fe40"
+    },
+    {
+      "path": "final-forms/photo-crop.png",
+      "bytes": 211368,
+      "sha256": "e77f26a72951692d6251e02753dd40f36bcdcfc1206e47d1e8f38e5cb34a8651"
+    },
+    {
+      "path": "final-forms/results.json",
+      "bytes": 8129,
+      "sha256": "7a23bbb77471796664eb15de67e433e7ceddba3ca7421cb3cc3ced91c2448eed"
+    },
+    {
+      "path": "final-forms/test-results/.last-run.json",
+      "bytes": 96,
+      "sha256": "223f1d0234a624bee70226953e9b0b83d002f3d3a8bb4170c58f54693995c1c1"
+    },
+    {
+      "path": "final-forms/test-results/commercial-administrator-s-5d2df-nflict-preserve-both-drafts/error-context.md",
+      "bytes": 4900,
+      "sha256": "eb2adec9556fe52c632b353ae423f63b8a433cdf6212db92996b7dfb41503ac1"
+    },
+    {
+      "path": "final-forms/test-results/commercial-administrator-s-5d2df-nflict-preserve-both-drafts/test-failed-1.png",
+      "bytes": 57421,
+      "sha256": "cc1c61e1e5e72455c6919b9463f7efb05567b869cf43bf6014870ccd7d7f51c6"
+    },
+    {
+      "path": "final-forms-suite.log",
+      "bytes": 3393,
+      "sha256": "1108a06c51a679f1fe573e5ab082f0b0fa083687e4e941ae4b970f2aa436a5a9"
+    },
+    {
+      "path": "final-settings/results.json",
+      "bytes": 3180,
+      "sha256": "2c74dba912e61cd39aa34128ee2734d65f41b3006096d13417e8b5b4d03b914f"
+    },
+    {
+      "path": "final-settings/settings-10-templates.png",
+      "bytes": 274558,
+      "sha256": "c42518f0101d1301b1d809d60155962a381c4d6c758b8aa8585855810752c1f8"
+    },
+    {
+      "path": "final-settings/settings-issuer-commission.png",
+      "bytes": 78701,
+      "sha256": "cbc1ee699d179ea9d5ad736d09e5631298a877e838cbedd8bf31375363b5a0cc"
+    },
+    {
+      "path": "final-settings/test-results/.last-run.json",
+      "bytes": 45,
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "final-settings/two-operators-conflict.png",
+      "bytes": 239373,
+      "sha256": "aaf501d8f7541f75aeb52f3a79c1ac3ffcda9fdc720d56a6f3de9c32df4609cc"
+    },
+    {
+      "path": "final-settings-suite.log",
+      "bytes": 732,
+      "sha256": "1e25be2157e7239005bfc57792db567be5d832839eeea0c402ea8dfeaf6fe7fb"
+    },
+    {
+      "path": "final-v2/company-12-18-result.json",
+      "bytes": 14236,
+      "sha256": "9d747481b2db847608b02f2bc85267397572e53a1094667b1b788515cb95e125"
+    },
+    {
+      "path": "final-v2/company-12.png",
+      "bytes": 164553,
+      "sha256": "48ca8f3f86bd240a38aba0ee6a13041a72b6a46b6f7a83597f8da56ca0d9f3f0"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-2e17fcdb-8af8-4b60-8f28-383bbd689dad.docx",
+      "bytes": 25477,
+      "sha256": "549c94c3ccc7fcbc3c04c3b5ad0989a341d6ad310a154b63cfbc8c562bf9a1f7"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-2e17fcdb-8af8-4b60-8f28-383bbd689dad.pdf",
+      "bytes": 111808,
+      "sha256": "13656a926818e1949dfb549ff619a67bd72161e784baac42c1333bb1eb92c707"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-2f423109-9670-49e6-aaf1-73fd7834efa1.docx",
+      "bytes": 25476,
+      "sha256": "95e29270fcf43190989d89405429acea121784bb7b3281dc52686797171be4f8"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-2f423109-9670-49e6-aaf1-73fd7834efa1.pdf",
+      "bytes": 111584,
+      "sha256": "b7a8152532eab36627d261fcff9f803be982d6c26639254eaf4eae611be03c3f"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-837ebd22-7295-4e31-9ed5-d3d1f386b18b.docx",
+      "bytes": 25477,
+      "sha256": "40a3eeab9d8aa376931b8645bbbf99f7e427eaa4d4e1c151b880e6868897b994"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-837ebd22-7295-4e31-9ed5-d3d1f386b18b.pdf",
+      "bytes": 111693,
+      "sha256": "165778ed8d131d54530c3739ac12ceaebc6a99b078e6a2f2f89cb14e0911dc92"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-b5728377-67ce-414a-95ef-9d362a995978.docx",
+      "bytes": 25477,
+      "sha256": "e226e8ef90e37eb7b63ea954d2f6e5acbc16578a725e8f2235e2e3af3a2cf160"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-b5728377-67ce-414a-95ef-9d362a995978.pdf",
+      "bytes": 111917,
+      "sha256": "d61c7a3010c90fc13fa8ec55e5ec0292df096893ffc1ea7400f94f37a860308b"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-d5640796-a40c-4e0e-8c0b-f7d2a15b70a0.docx",
+      "bytes": 25477,
+      "sha256": "6b7d219f5ea09c57ac92654fe8a2c6260c984fc9988dd870e0670f05528be045"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-protocol-d5640796-a40c-4e0e-8c0b-f7d2a15b70a0.pdf",
+      "bytes": 111481,
+      "sha256": "ce9c596cd1aad7a52d015c1507db0f6a78a1f39469927d40c0ff1613b660220e"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-11f3fbbb-9b97-4b20-8c3b-fbb16f1fd7e1.docx",
+      "bytes": 29781,
+      "sha256": "aebdd0e3415df633c8d44bbf0e9a15f3960ee610b24036ab7c076c7730f6d395"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-11f3fbbb-9b97-4b20-8c3b-fbb16f1fd7e1.pdf",
+      "bytes": 113560,
+      "sha256": "8a4ff97dbdf53455016c03ca12a2711cd2580b234dd82ef828055bacb9609ffc"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-49e02d16-8026-44a5-8354-d165546a184b.docx",
+      "bytes": 29782,
+      "sha256": "484f6b182bcb142ce9fd76a61906454f954d3fe3c4f1af9c35295226969e1ef2"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-49e02d16-8026-44a5-8354-d165546a184b.pdf",
+      "bytes": 113974,
+      "sha256": "06f361aa983c89923b69156230641cbd04d85ccbde393c29c667daa514912c43"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-599144a5-73b5-4ea4-9406-aea4d39c3f9c.docx",
+      "bytes": 29782,
+      "sha256": "013c8de685e9428254712b9b3165e65186562a0599e35d2eea0f17bc40bbdd6c"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-599144a5-73b5-4ea4-9406-aea4d39c3f9c.pdf",
+      "bytes": 113679,
+      "sha256": "cdd3777c161208ab21f59a7d7424d7ba30089039684748f46daa529ee3aabe9e"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-5df05250-fbcb-4580-acd9-66447c0a82cd.docx",
+      "bytes": 29782,
+      "sha256": "7cb33a7063623b5d2b6e2226ccdb2435f86c05629a0920848213e07bb45a5bba"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-5df05250-fbcb-4580-acd9-66447c0a82cd.pdf",
+      "bytes": 113896,
+      "sha256": "2674ae8d34266789428807894d269c345bd82450ed89590a1a8097a2d10f223e"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-69b3035e-066e-450b-bfc3-61f74d226a2e.docx",
+      "bytes": 29782,
+      "sha256": "65eefb80f0843f6132d9bc9674140fd2499febc78e011adb581f117aee418633"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-69b3035e-066e-450b-bfc3-61f74d226a2e.pdf",
+      "bytes": 113476,
+      "sha256": "6fe116dbeab1eb20f655a0ddc9f0d808745e7c67400124cbd4ee4af297f14371"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-787de3e2-4a9a-4e18-a393-e3859542d2c3.docx",
+      "bytes": 29814,
+      "sha256": "5266ea5ba529cdf3888e1faa059232bc5c3fd2d6c9d5e7240d7918bb87f6f929"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-787de3e2-4a9a-4e18-a393-e3859542d2c3.pdf",
+      "bytes": 114514,
+      "sha256": "3064512f2361012c8ed30bb757b73cdae3e3999a4fedff2256cbd9118a5a0f8b"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-8af3102c-a2a7-4746-b043-c8f813811b72.docx",
+      "bytes": 29784,
+      "sha256": "c3f9d4a3856e696466d446f630429ff8a6a107c3773c62be7d8b2ba69d92f3dc"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-8af3102c-a2a7-4746-b043-c8f813811b72.pdf",
+      "bytes": 113451,
+      "sha256": "40c13b6d8d91caa81b71c7ba2f97dd704b41759630b5a187973d75ddfad5bb45"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-9a5b734d-8d79-4416-8893-986f13457b7a.docx",
+      "bytes": 29815,
+      "sha256": "f15f394f9cc573b054ed99d66004fc35575af0567b94b413192d8544dcf01f17"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-9a5b734d-8d79-4416-8893-986f13457b7a.pdf",
+      "bytes": 113990,
+      "sha256": "24d9e9744e16c04bd49755511e7760050593efef46cb1b4676f0f678d88f070d"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-9b104cb5-17f8-45c8-b838-967d4b5c3235.docx",
+      "bytes": 29815,
+      "sha256": "c4869428e43c64fd903f7ef01473a0dd6511b402554ee326540d00bb6539ae8c"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-9b104cb5-17f8-45c8-b838-967d4b5c3235.pdf",
+      "bytes": 114631,
+      "sha256": "bc1b0763a928b35487fb1e796432d3f4bf54d12dc05719266431893be0923793"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-b72973c8-000f-4e0e-955e-c1bb05c4c465.docx",
+      "bytes": 29814,
+      "sha256": "a2fbfd8305d4f2b2235e56bf17ddaf9f9a063a5f2b2c082df5a9ffef10ef5bcb"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-b72973c8-000f-4e0e-955e-c1bb05c4c465.pdf",
+      "bytes": 114154,
+      "sha256": "5b0c1659b947319a7187e359cc4d3ef0eb61a5ab7cdd9749acbeff22bd05d64b"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-dfbe7181-8aa1-41a0-a458-369e4848fa1b.docx",
+      "bytes": 29816,
+      "sha256": "a6dffaae6e51f3b8d4a24f2e105d462669a6bee6b05cc8175c316a89eefb03f4"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-dfbe7181-8aa1-41a0-a458-369e4848fa1b.pdf",
+      "bytes": 114369,
+      "sha256": "e8772904966f0b5fc4a51b688a0225c7e8cfa581fea1ce7d8ddd93dc4d6d7a49"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-f30e12e7-287e-442d-8418-1b74a17eac04.docx",
+      "bytes": 29781,
+      "sha256": "6d125989ea8b90bb043c4ad0291a8cf24c6f71a70d3f606dbcec7dd15af725ad"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/biot-worker-card-f30e12e7-287e-442d-8418-1b74a17eac04.pdf",
+      "bytes": 113584,
+      "sha256": "51e88502d5890692e980c392ccb892ffe7620fd6cb8fc658daf29b1842729bae"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/ps-witness-f436b099-70bd-44b9-bec0-7916be79a6ea.docx",
+      "bytes": 23042,
+      "sha256": "5b090f8f960e008d37fce92c354dc736324cf97059b5105b03b2647c78fb2f7c"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/ps-witness-f436b099-70bd-44b9-bec0-7916be79a6ea.pdf",
+      "bytes": 170516,
+      "sha256": "3365f35002a086cefe6b645cf2a4605dc8a6cc7bac3839456a4ad07a7c97786a"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/registry-bfcefe19-1ab7-4879-89e7-9d209428bbff.xlsx",
+      "bytes": 8422,
+      "sha256": "c96f4d328f09647d8c90ea88c8f94eef25d7c630d6fe7006b1a409faba63bc0d"
+    },
+    {
+      "path": "final-v2/company-bfcefe19-1ab7-4879-89e7-9d209428bbff/registry-bfcefe19-1ab7-4879-89e7-9d209428bbff.zip",
+      "bytes": 1872621,
+      "sha256": "b58ff066883654df314e110310b67ec1270c6a93dd90e25f5bbe50793ebc910e"
+    },
+    {
+      "path": "final-v2/company-export-audit.json",
+      "bytes": 652,
+      "sha256": "eafc4ccd784634715b755e574805ea7fe36ee9c77efac2c15485cb80a2d1bb1e"
+    },
+    {
+      "path": "final-v2/editor-1366.png",
+      "bytes": 169838,
+      "sha256": "a608bc902bb111f65368a34d849f5aee6459d5bf26b00d0fbf34f79110b430b7"
+    },
+    {
+      "path": "final-v2/editor-1920.png",
+      "bytes": 161924,
+      "sha256": "3fbcef3056b8c0a924b07600e726e73e33fda5e0360b9173a41c87e078b35ef4"
+    },
+    {
+      "path": "final-v2/editor-390.png",
+      "bytes": 143464,
+      "sha256": "78303670a10409e30d31c6f7c9645a5ab4be525f73116fc868deef7c1fb0989d"
+    },
+    {
+      "path": "final-v2/environment.json",
+      "bytes": 198,
+      "sha256": "8a00f41198271faace6374f3d472bb486764c73cad97f7bac2503d3d0402b140"
+    },
+    {
+      "path": "final-v2/expired-session.png",
+      "bytes": 233540,
+      "sha256": "435627f677507d3e694dbf0b94ca4478c835a07f810651ec4465f98916adca10"
+    },
+    {
+      "path": "final-v2/field-errors-and-focus.png",
+      "bytes": 155856,
+      "sha256": "ecc0baaef663aa392f686e8b3f06f024bd7c3c78868eace1152f6fb5eacca437"
+    },
+    {
+      "path": "final-v2/files-history.png",
+      "bytes": 205715,
+      "sha256": "5b5b5b06c87713bd0c758d63684ca1bb72bfce916924e1358e03799acb7d903a"
+    },
+    {
+      "path": "final-v2/finalize-response-lost.png",
+      "bytes": 218451,
+      "sha256": "007cc3fd07404b668d4f60eb91d66f64328fe9bbcb63beb7d2237eb3b821ee8b"
+    },
+    {
+      "path": "final-v2/history-after-55.json",
+      "bytes": 322,
+      "sha256": "e8ee0369260d6e52f478e7251d5132f4f24618352832bd2fae9e769cc262ae87"
+    },
+    {
+      "path": "final-v2/history-after-55.png",
+      "bytes": 45410,
+      "sha256": "adccb8da6856e6179b792393bb18616253b0cf335df2c34881ec713eb84d0e74"
+    },
+    {
+      "path": "final-v2/history-after-55.xlsx",
+      "bytes": 5944,
+      "sha256": "c3888fb813fde2c85206a83c710803922981cd7111a491fed09cec1650fd3cfb"
+    },
+    {
+      "path": "final-v2/history-xlsx-audit.json",
+      "bytes": 1347,
+      "sha256": "d3ac4eab03f90ccff92deede5ff601d5b3f7266f3e6256b5d2386046dda615dc"
+    },
+    {
+      "path": "final-v2/import-100-timing.json",
+      "bytes": 154,
+      "sha256": "c89c9110d3795123a1c378470b6292803c1df144f3d6321bd45aeca7d33c7285"
+    },
+    {
+      "path": "final-v2/import-report.csv",
+      "bytes": 352,
+      "sha256": "87224a5487b74e10fc72f23f73e9d2955ac3e47ce5ea9c0e6d530377ff3bc56f"
+    },
+    {
+      "path": "final-v2/pdf-preview.png",
+      "bytes": 146913,
+      "sha256": "9d5cc09965bc4138f13614bb1d036b8b35fa8b204052980d955423899e285d57"
+    },
+    {
+      "path": "final-v2/person-result.json",
+      "bytes": 211,
+      "sha256": "9fac851309e07bb355e33edd2feeb3bd8fb73f97755b6d837bb08818b8335f37"
+    },
+    {
+      "path": "final-v2/photo-crop.png",
+      "bytes": 211102,
+      "sha256": "7f5f312ca7dd1562d755bdc942412d43eb2c8ee218ed85d21885a3aed9a8b54f"
+    },
+    {
+      "path": "final-v2/reconstruction-ui.json",
+      "bytes": 315,
+      "sha256": "c1184a3883868c10e8df3c8070fb67fccd6dc5ace08ce2a3f60c325b27656936"
+    },
+    {
+      "path": "final-v2/results.json",
+      "bytes": 17277,
+      "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+    },
+    {
+      "path": "final-v2/settings-10-templates.png",
+      "bytes": 230829,
+      "sha256": "54a3db2886082c0caf12f7d9381ebd45303d03098c88b1c0a01d9e76cffd147f"
+    },
+    {
+      "path": "final-v2/settings-issuer-commission.png",
+      "bytes": 82098,
+      "sha256": "1e7d4decc3104867b733c63bb7fdabd7656ad2b1aaf22cb576501bbdc3ecf1e4"
+    },
+    {
+      "path": "final-v2/test-results/.last-run.json",
+      "bytes": 45,
+      "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+    },
+    {
+      "path": "final-v2/timeout-idempotency.json",
+      "bytes": 207,
+      "sha256": "4f63f9c13b8d3f192c1bf28a2b6c9ab44b395a764083ed8b8627d8980b5e7ca1"
+    },
+    {
+      "path": "final-v2/two-operators-conflict.png",
+      "bytes": 239572,
+      "sha256": "b50d35ccc53cdfd248c2b78c02de863ddf5e599d3be7840a96334898673d6cc3"
+    },
+    {
+      "path": "final-v2/xlsx-formula-rejected.png",
+      "bytes": 134499,
+      "sha256": "f26729c73c62c820d0220c55cae672df968e8bf864b0b8331c08bb3b8197f6bf"
+    },
+    {
+      "path": "final-v2-suite.log",
+      "bytes": 2608,
+      "sha256": "26f6db8ba2e6c980617ba47c6afa4e09001064cb8e4f4e84bef914c85d123dc6"
+    },
+    {
+      "path": "matrix-updates.json",
+      "bytes": 25001,
+      "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+    },
+    {
+      "path": "OPERATOR_ACCEPTANCE_RU.md",
+      "bytes": 17427,
+      "sha256": "f3eb4cd55d078d405742010364b46cd2d25e5eec188f6bce652fd54d849d719d"
+    },
+    {
+      "path": "pnpm10-frozen-lockfile.log",
+      "bytes": 68,
+      "sha256": "e7f2547bc6498ca8e9a42d5823baf158ef9c443bfc09682916eaa905eddf7cd3"
+    },
+    {
+      "path": "pnpm10-lockfile.log",
+      "bytes": 584,
+      "sha256": "dc5374556fa75a6975d0079ebeb568dc4c3c26121c6957ddbe0bb62dd9d0ddb6"
+    },
+    {
+      "path": "pnpm10-migration.json",
+      "bytes": 2552,
+      "sha256": "5dcc5da3bfd0443e25ac5570e1f329ffd93163159ecc98dbae0746c7a462220c"
+    },
+    {
+      "path": "PNPM10_MIGRATION_RU.md",
+      "bytes": 2829,
+      "sha256": "e3ede96288ff464419b83a083ceae10364931da611c9ae830567510b75b9e659"
+    },
+    {
+      "path": "ui-unit-final.log",
+      "bytes": 911,
+      "sha256": "ad0a359be3c17b706a335d8ec8cc748461f411d8a34e26244c1b8ba58204888d"
+    },
+    {
+      "path": "validation-summary.json",
+      "bytes": 1155,
+      "sha256": "ad3f2b5974b13e4856c2601083f1c0bbd5bcf440cf19c3391eff81e5e39d6da1"
+    },
+    {
+      "path": "visual-review.json",
+      "bytes": 1453,
+      "sha256": "5c0b218258671c92feda70a528aeef4568f4ce3e8a1afbf59a1fb3a8ee1c4b0d"
+    }
+  ]
+}

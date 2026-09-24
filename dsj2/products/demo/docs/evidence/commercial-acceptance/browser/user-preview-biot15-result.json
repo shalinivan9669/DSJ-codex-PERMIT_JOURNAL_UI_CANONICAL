@@ -1,0 +1,132 @@
+{
+  "status": "PASS",
+  "before": {
+    "observedAt": "2026-09-22T15:39:06.087Z",
+    "tables": {
+      "printRequest": {
+        "count": 145,
+        "sha256": "74a0235a9366a076ce35c83a2327f1f14c8297ab3a9b866e73c38dae2cb1dffa"
+      },
+      "requestItem": {
+        "count": 266,
+        "sha256": "de9c9c95e6b53dfab3c1831861d7bf398ee5c42ee797c1dfd4401ffd99b431ab"
+      },
+      "issuerProfileVersion": {
+        "count": 4,
+        "sha256": "c2cc614b73316cb1b19b18cdf54b97186b0d6c55a7db3b577c5d99856085073a"
+      },
+      "issuedDocument": {
+        "count": 52,
+        "sha256": "8025dda26493e4f1332bf495e19a81b24b725d9e579bd642c51599e3d9fa0322"
+      },
+      "issuance": {
+        "count": 15,
+        "sha256": "61a1b5f41c5f3611460adc977832cf7d0265293ab21e22aceedd85ad04907e47"
+      },
+      "numberSequence": {
+        "count": 11,
+        "sha256": "dad55da79e99dc8c438bde527f92ba878ff5d49e48b48387157a3ae3c7487938"
+      },
+      "artifact": {
+        "count": 147,
+        "sha256": "06377f23db1c026b9ac062da60436a927153b38cf27809628c3b7d56d83d8612"
+      }
+    },
+    "artifactBytesVerified": 147
+  },
+  "after": {
+    "observedAt": "2026-09-22T15:39:06.573Z",
+    "tables": {
+      "printRequest": {
+        "count": 145,
+        "sha256": "74a0235a9366a076ce35c83a2327f1f14c8297ab3a9b866e73c38dae2cb1dffa"
+      },
+      "requestItem": {
+        "count": 266,
+        "sha256": "de9c9c95e6b53dfab3c1831861d7bf398ee5c42ee797c1dfd4401ffd99b431ab"
+      },
+      "issuerProfileVersion": {
+        "count": 4,
+        "sha256": "c2cc614b73316cb1b19b18cdf54b97186b0d6c55a7db3b577c5d99856085073a"
+      },
+      "issuedDocument": {
+        "count": 52,
+        "sha256": "8025dda26493e4f1332bf495e19a81b24b725d9e579bd642c51599e3d9fa0322"
+      },
+      "issuance": {
+        "count": 15,
+        "sha256": "61a1b5f41c5f3611460adc977832cf7d0265293ab21e22aceedd85ad04907e47"
+      },
+      "numberSequence": {
+        "count": 11,
+        "sha256": "dad55da79e99dc8c438bde527f92ba878ff5d49e48b48387157a3ae3c7487938"
+      },
+      "artifact": {
+        "count": 147,
+        "sha256": "06377f23db1c026b9ac062da60436a927153b38cf27809628c3b7d56d83d8612"
+      }
+    },
+    "artifactBytesVerified": 147
+  },
+  "unchanged": true,
+  "unchangedSincePreStop": true,
+  "created": [
+    {
+      "id": "biot-worker-card",
+      "version": "15",
+      "sha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556"
+    }
+  ],
+  "finalTemplates": [
+    {
+      "id": "biot-worker-card",
+      "version": 15,
+      "sha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556"
+    },
+    {
+      "id": "biot-itr-certificate",
+      "version": 13,
+      "sha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6"
+    },
+    {
+      "id": "biot-protocol",
+      "version": 9,
+      "sha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2"
+    },
+    {
+      "id": "ptm-card",
+      "version": 14,
+      "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": 9,
+      "sha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c"
+    },
+    {
+      "id": "pb-card",
+      "version": 14,
+      "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380"
+    },
+    {
+      "id": "pb-protocol",
+      "version": 9,
+      "sha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b"
+    },
+    {
+      "id": "ps-card",
+      "version": 15,
+      "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13"
+    },
+    {
+      "id": "ps-protocol",
+      "version": 9,
+      "sha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b"
+    },
+    {
+      "id": "ps-witness",
+      "version": 11,
+      "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+    }
+  ]
+}

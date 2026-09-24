@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "pages": 12,
+  "review": [
+    {
+      "file": "docs/evidence/biot-finish/final/biot-worker-card-short.page-1.png",
+      "sha256": "45d9fbb9fe7dff3ad29143f75f37fb6cb05ddb251275ca75f3e3daa920d2eb8d",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/final/biot-worker-card-long.page-1.png",
+      "sha256": "258a6cc3ce750f81736ae6fcd9a670877de9a525aa092cd4eade247c6a162067",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/final/biot-itr-certificate-short.page-1.png",
+      "sha256": "eba9661cb5cf08f092ec7af0cdb94e60e1ee202be36f3914998f1de552e06f79",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/final/biot-itr-certificate-long.page-1.png",
+      "sha256": "3edfb2e5e198a575dfe557652b8472e6746c4908a6273cdf7e1a563ca991e98f",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/final/biot-protocol-short.page-1.png",
+      "sha256": "d77e93a515f79adfae09a6e29957672447c6831416af7f5d6c55ecfb3583cef4",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/final/biot-protocol-long.page-1.png",
+      "sha256": "f36c02ac942c385a22c95286f563c1ffa4f66b9028816105952405ef13b9eee1",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/final/biot-itr-protocol-short.page-1.png",
+      "sha256": "a67d1ca360757a71f3488272ae1e91045c5ac4980f3f4402404789fdcfcda213",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/final/biot-itr-protocol-long.page-1.png",
+      "sha256": "1c3e294530d31c542e130f09ce1b2ae279ba335b367c343349d927ff670afa0f",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/initial/biot-protocol-two.page-1.png",
+      "sha256": "01104328363f96a56bf0bc1725da9cb04a27d57a9339bf1ca83a5133e4ac6438",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/initial/biot-protocol-two.page-2.png",
+      "sha256": "d6f32d555b04b4b06ea37158eba354607713711e0f899669ae514bfbc0a929b0",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/initial/biot-itr-protocol-two.page-1.png",
+      "sha256": "5d5e5e313c95c70010b5ec092cca7880b743f496fde3ad31a37498bf3fa47de5",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    },
+    {
+      "file": "docs/evidence/biot-finish/initial/biot-itr-protocol-two.page-2.png",
+      "sha256": "feaf65f117cc3392eab8017eddc2fea90d036d7eca58f6dbe9e4199d71fedd28",
+      "decision": "PASS",
+      "basis": "Every complete page explicitly opened and visually reviewed; issuer text, recipient data, committee, borders and signatures legible without clipping."
+    }
+  ]
+}

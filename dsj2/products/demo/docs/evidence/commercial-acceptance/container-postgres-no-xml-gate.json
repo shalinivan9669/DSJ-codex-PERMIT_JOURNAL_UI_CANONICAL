@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "imageId": "sha256:b097d139976b72e6245b60ff4d5c81401d446a72d2b92f91bacdfdd80ae6ad51",
+  "rawHighCritical": 0,
+  "reviewedNotAffected": 0,
+  "accepted": [],
+  "failures": [],
+  "limitation": "Raw findings remain retained. Review applies only to this image and declared non-root/private/read-only runtime; a new image, package version, CVE, severity or expired review fails closed."
+}

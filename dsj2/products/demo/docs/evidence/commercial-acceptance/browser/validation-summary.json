@@ -1,0 +1,41 @@
+{
+  "browserFull": {
+    "result": "PASS",
+    "expected": 14,
+    "unexpected": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "results": "final-v2/results.json"
+  },
+  "personFinalTemplate": {
+    "result": "PASS",
+    "template": "biot-worker-card v7",
+    "resultFile": "final-forms/person-retest.json"
+  },
+  "expandedSettings": {
+    "result": "PASS",
+    "resultFile": "final-settings/results.json"
+  },
+  "unit": {
+    "result": "PASS",
+    "tests": 7,
+    "log": "ui-unit-final.log"
+  },
+  "typecheck": {
+    "result": "PASS",
+    "exitCode": 0,
+    "command": "corepack pnpm --filter @demo/web exec tsc --noEmit",
+    "log": "ui-typecheck-final.log"
+  },
+  "eslint": {
+    "result": "PASS",
+    "exitCode": 0,
+    "command": "corepack pnpm exec eslint apps/web --ignore-pattern '**/.next-commercial/**'",
+    "log": "ui-lint-final.log"
+  },
+  "toolchain": "pnpm10-migration.json",
+  "limits": [
+    "Windows node_modules were not relinked after lockfile-only migration. Clean Linux install/build/test is owned by root.",
+    "No physical print, Word compatibility or legal gate claimed by browser PASS."
+  ]
+}

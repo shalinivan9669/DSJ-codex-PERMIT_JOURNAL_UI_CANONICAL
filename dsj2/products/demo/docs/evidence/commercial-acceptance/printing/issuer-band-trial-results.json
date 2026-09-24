@@ -1,0 +1,126 @@
+[
+  {
+    "name": "biot-worker-card-long",
+    "status": "PASS",
+    "template": "biot-worker-card",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "059380833cebf3ef8902724722af5b2ea0e49db525847d2d7d0fbb7007fa1be7",
+    "pdfSha256": "787cfaf25592e225b0848062fefadbd7cf4ce9bba1311a2e3648be1aa4e42c20",
+    "docxSeconds": 1.143661200068891,
+    "renderSeconds": 45.6917232000269,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-001.png",
+        "sha256": "a3f39faad7d0375a0cb1da4b2f3033810c7d5b9f90a29058224bc5bff729ed5a"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-002.png",
+        "sha256": "5ed581dce0936012d2acaf9647dcd2651223d27c76888cc5d44c6c20b7f32c46"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-card-long",
+    "status": "PASS",
+    "template": "ptm-card",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "65fe0dafeb6aebbb9919cfed6b72c06c5f78057f8437ef5bb95cd75de72497f5",
+    "pdfSha256": "3e92d4aec34b8f9df9bf4aa611228bd1889f979a02e5eacffc7efbe0f9e099f5",
+    "docxSeconds": 0.5869106999598444,
+    "renderSeconds": 46.18139059992973,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-long-page-001.png",
+        "sha256": "ec8c98b6f950d05820f9b952d510db7dd259e4bebf76d82e2c89ef2aec7b5c42"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-card-long",
+    "status": "PASS",
+    "template": "pb-card",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "e4b72b3435aa8409549d455f91dc533e03c075cb313cc96805b51bc030797ea9",
+    "pdfSha256": "bc429030426fdee77cf562eae797d1f41693eec2b99679ecc9c0adedcef02128",
+    "docxSeconds": 1.0163195999339223,
+    "renderSeconds": 40.022781000006944,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-long-page-001.png",
+        "sha256": "a48c50ae045384f5611dc29ee750dfcc4debfb33c7ab8ddcb290d61fbe624298"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-long-page-002.png",
+        "sha256": "d9d61e8fef4e744d06833d05db05988fd7dbea4a13c344a42d71a2a7c80abbd2"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-card-long",
+    "status": "PASS",
+    "template": "ps-card",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "56f01cf067554ef1287d931fb2d5045c514df7e94f81e165ba16a55244e48183",
+    "pdfSha256": "a1434f0f0fe80d8ee4c118fff93e836f7f3eb36971120c1331c41272955d4e83",
+    "docxSeconds": 0.9723207000643015,
+    "renderSeconds": 41.61302190006245,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-long-page-001.png",
+        "sha256": "d3738bc91370b0a59338a732b65538a8c29a41df576af64a7858a12c24d3cd4a"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-long-page-002.png",
+        "sha256": "40f0615ed2eaa8a334d0bd7e1d258a1580d1f0549f3baf119e5df997683401fe"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  }
+]

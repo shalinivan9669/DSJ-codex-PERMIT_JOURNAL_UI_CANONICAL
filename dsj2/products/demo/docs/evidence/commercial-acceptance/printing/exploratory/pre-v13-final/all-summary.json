@@ -1,0 +1,8 @@
+{
+  "documents": 96,
+  "recipients": 1394,
+  "pages": 1630,
+  "failures": [
+    "ps-card-stress-100"
+  ]
+}

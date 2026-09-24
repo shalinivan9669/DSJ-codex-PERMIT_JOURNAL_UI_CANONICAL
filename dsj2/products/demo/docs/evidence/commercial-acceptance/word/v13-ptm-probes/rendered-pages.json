@@ -1,0 +1,16 @@
+[
+  {
+    "document": "ptm-card-long.docx",
+    "page": 1,
+    "image": "ptm-card-long.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена; текст в рамке, ITR подпись не обрезана, фото и issuer strip не перекрываются."
+  },
+  {
+    "document": "ptm-card-short.docx",
+    "page": 1,
+    "image": "ptm-card-short.word.page-1.png",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена; текст в рамке, ITR подпись не обрезана, фото и issuer strip не перекрываются."
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-22",
+  "method": "Manual visual inspection of screenshots produced by actual Chrome browser tests; not a claim of manually clicking every step.",
+  "reviewedScreenshots": [
+    "final-v2/xlsx-formula-rejected.png",
+    "final-v2/field-errors-and-focus.png",
+    "final-v2/history-after-55.png",
+    "final-v2/expired-session.png",
+    "final-v2/finalize-response-lost.png",
+    "final-v2/two-operators-conflict.png",
+    "final-v2/settings-issuer-commission.png",
+    "final-v2/settings-10-templates.png",
+    "final-v2/photo-crop.png",
+    "final-v2/pdf-preview.png",
+    "final-v2/editor-1366.png",
+    "final-v2/editor-1920.png",
+    "final-v2/editor-390.png",
+    "final-v2/files-history.png",
+    "final-v2/company-12.png",
+    "final-forms/pdf-preview.png",
+    "final-forms/editor-390.png",
+    "final-settings/settings-issuer-commission.png"
+  ],
+  "count": 18,
+  "pdfLimit": "Only the visible native-PDF-viewer viewport reviewed here. Every printed PDF page, dimensions and font minima are separate printing gates.",
+  "findings": [
+    "No hidden required mobile actions or whole-page horizontal overflow at390px.",
+    "Errors and modal focus visible; same-user session recovery keeps editor data.",
+    "v5 BIOT card microtext reported to print agent; v7 visible PDF no microissuer or gray strips beyond frame.",
+    "Updated commission and approval basis displayed after refresh."
+  ]
+}

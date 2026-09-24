@@ -1,0 +1,20 @@
+{
+  "status": "TEST_TIMEOUT_THEN_SUCCESSFUL_READBACK",
+  "requestId": "fff50a43-a6f1-444b-bde2-39821d04ae79",
+  "traceFile": "9592b11ce9013eb810cb-637d95ee9aa8123ab107.trace",
+  "traceSha256": "2a3e59a080503e94f1995f4ca88ece37809280e2ed3c0406762e71feb4e67536",
+  "failedCall": {
+    "method": "expect",
+    "timeout": 180000,
+    "expression": "to.have.text",
+    "error": {
+      "name": "Expect",
+      "message": "Expect failed"
+    }
+  },
+  "lastObservedReadyCount": [
+    15,
+    18
+  ],
+  "resolution": "All18jobs subsequently SUCCEEDED with1attempt; same finalized request browser readback passed10.7s; no new issuance. See ../generated-photo-four-preview-readback/results.json. Test wait now scales with number of templates."
+}

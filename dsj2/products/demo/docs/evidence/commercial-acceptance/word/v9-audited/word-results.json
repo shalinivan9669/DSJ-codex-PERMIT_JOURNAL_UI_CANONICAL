@@ -1,0 +1,152 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 20,
+  "documents": [
+    {
+      "file": "biot-itr-certificate-long.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\...\\biot-itr-certificate-long.docx)",
+      "docxSha256": "c46383c48415aea9e6c18b303e1dcd8b05e0b3bf5c891b983411a090645b0408"
+    },
+    {
+      "file": "biot-itr-certificate-short.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\...\\biot-itr-certificate-short.docx)",
+      "docxSha256": "0aed4ee14369a97022b2afe5cbc656b53f06b1c5a20ba01b87189d82ef0818fa"
+    },
+    {
+      "file": "biot-protocol-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "507efa8321ea10e21f432ac40d088ba108686d62705c4e89f39448cdfcdff06f"
+    },
+    {
+      "file": "biot-protocol-short.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 97,
+      "pdf": "biot-protocol-short.word.pdf",
+      "audit": "biot-protocol-short.audit.json",
+      "docxSha256": "5a798dd6a37a23d035de051eab277c9afbecbdc8c6d603446728c89ce60f25cd",
+      "pdfSha256": "058d047aadaedf19fffc248997bbaea4a3be074a98e84e427cc90cda54a176ae",
+      "visualReview": "REQUIRED_SEPARATELY"
+    },
+    {
+      "file": "biot-worker-card-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "a05bce558718f02ffb17155a75a83d37bcc79b6bf66f46c43c32bc81bb36f0a4"
+    },
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "415a8ffd97d58d916ea903d8a53cb95753eaa0fa7724b9cfdda939d719781cdd"
+    },
+    {
+      "file": "pb-card-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "446b845b2f34e47d1b2b7993fb62605cea8acc8ba7b4adb4c9a7dea8e3cc0b52"
+    },
+    {
+      "file": "pb-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "b346ca0bf86d68bc411559831144287b38b2bf38b8ff62cc1c25bbf98730b323"
+    },
+    {
+      "file": "pb-protocol-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "66de640af6cb4e1487e80b1fbc60f92aa6f6e750d7f572165f3a271971dbb0a0"
+    },
+    {
+      "file": "pb-protocol-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "eaf13aaee7f5856a91808169d88b349be3dd5a31418e0bdaff641bd3a21fbeaa"
+    },
+    {
+      "file": "ps-card-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "6fb2ceb542b547223b7a6faa6c28ab66cc8c8a72a216a52a5ee126b164f39be7"
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "f6baed941448977b8844c1bae9a8ba4502365b2dc47ab4606f7c40234f393a08"
+    },
+    {
+      "file": "ps-protocol-long.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 55,
+      "pdf": "ps-protocol-long.word.pdf",
+      "audit": "ps-protocol-long.audit.json",
+      "docxSha256": "78a233ba5b173da07c88536aecebdc4090b34941b2280f8997e4a865271626cf",
+      "pdfSha256": "1f575f4b35970a53723de141b94473fc6a1e5db5b4e33f6b3f0288b8bac7cda3",
+      "visualReview": "REQUIRED_SEPARATELY"
+    },
+    {
+      "file": "ps-protocol-short.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 49,
+      "pdf": "ps-protocol-short.word.pdf",
+      "audit": "ps-protocol-short.audit.json",
+      "docxSha256": "08138adbb70107848c2cc95218e1250240e2600647298c569f55d070c3bbfc28",
+      "pdfSha256": "f2bb228d912d2d5d9887f4e2d33d8ccad761a9fd747640e667adcb3f871c2b4a",
+      "visualReview": "REQUIRED_SEPARATELY"
+    },
+    {
+      "file": "ps-witness-long.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\Users\\Admin\\...\\ps-witness-long.docx)",
+      "docxSha256": "abbc438c45011aa6c308d21d11022f9aa03275108db3ed44c9965402eb85c832"
+    },
+    {
+      "file": "ps-witness-short.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\Users\\Admin\\...\\ps-witness-short.docx)",
+      "docxSha256": "45c686bb0b865b3580f347ad6daa370655ae42063f13e4ff587e16026d422678"
+    },
+    {
+      "file": "ptm-card-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "c3de7b88801a468bc22533fa7d510d3560908ef8383c07e6812be96721439a10"
+    },
+    {
+      "file": "ptm-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "fce5f244ef4dbef7396539372d3c285e38735a27f7d6cca24150cf826a580933"
+    },
+    {
+      "file": "ptm-protocol-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "61faaeb6dadfcaaa4a8ee9bd1cdba7f08c19d4b8786f1da0143829ac653fdf83"
+    },
+    {
+      "file": "ptm-protocol-short.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 114,
+      "pdf": "ptm-protocol-short.word.pdf",
+      "audit": "ptm-protocol-short.audit.json",
+      "docxSha256": "cab3afcdafc5359fd96539fc473e10934ecdd607d3a93097b16fd26249d2741a",
+      "pdfSha256": "6735179624410f30394a9e2ae386d1d900ef34774e0754e3a40c57227e8e952e",
+      "visualReview": "REQUIRED_SEPARATELY"
+    }
+  ]
+}

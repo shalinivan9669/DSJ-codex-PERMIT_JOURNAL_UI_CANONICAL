@@ -1,0 +1,128 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 20,
+  "documents": [
+    {
+      "file": "biot-itr-certificate-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "db7cc85294db86e02b0946cfb65f5984fe13a7a526eeb58682f498a8d00538c2"
+    },
+    {
+      "file": "biot-itr-certificate-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "060192bf29ad62da3247155706a5921a3f0239dc781443116017f1e7bfd0bde8"
+    },
+    {
+      "file": "biot-protocol-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "5d700f6e220920599428a4b5ade14e764860cf01fe9347ba6cf9f0695e46c6dd"
+    },
+    {
+      "file": "biot-protocol-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "9c4aa1af4d95f8f403eb732236b746b4e38a6c067f7318534fb5b90ade479fe6"
+    },
+    {
+      "file": "biot-worker-card-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "9e6f956fd057b5eff5eb2d77f1fea98cefe0f77c3b96528de33b7d06d2f3bf59"
+    },
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "c79f89bf0c7dc24d92ecf3057212e5660bfeb22fb80cb56e02ff3ed940147436"
+    },
+    {
+      "file": "pb-card-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "e159deb9ca9f9f38180bfc5612eee77a7568272427e7e3ab2f14d3556564aff5"
+    },
+    {
+      "file": "pb-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "1d74d8aeac7affbecb459d42ea0d07fe9dcef38f992c79604375e7eff76cd14c"
+    },
+    {
+      "file": "pb-protocol-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "90c1e95acc82c226c8e79f71463978d1e0a491e367988f48e8863984ddbfe553"
+    },
+    {
+      "file": "pb-protocol-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "00fd283f13a99e03dddfdc5db6298d1c7f5f5c795d688cdd76cda4b139bf3de9"
+    },
+    {
+      "file": "ps-card-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "dbcb885a0bc5ffe079d9b6d548f810211e805083ca234d8731556c378f977eea"
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "9957417061aa5de10e9f4f174864629aa2b0bc28515e8e97cf27cc75b09fc93b"
+    },
+    {
+      "file": "ps-protocol-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "1c991b49dca537931c5ac4dc6fcc90aef3833054a39a54c28f1a31a03a8c4bcf"
+    },
+    {
+      "file": "ps-protocol-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "da8d014dc8649657373dc89c2ba1753e06363775b88e2d7cb1f9f0683d99deed"
+    },
+    {
+      "file": "ps-witness-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "79dce390d903e50609bf82eb8917bcac38fdd3aea25b0c20761aedf54d4d8363"
+    },
+    {
+      "file": "ps-witness-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "b45d0b91103f538a9062a887e5462232b0a3bb200dd0d0e1b774e3bbb8908ccb"
+    },
+    {
+      "file": "ptm-card-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "cddb50179cbb0f1bdf0caf1c7ea0525c879e3e38fe5e0855ae3573b7115c55e4"
+    },
+    {
+      "file": "ptm-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "b086d7b19a70aeee2d19af58b7839572166bbe577a1dc3943edcf27bf4e7a094"
+    },
+    {
+      "file": "ptm-protocol-long.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "c68be733b7b252f912857d70d0492c5e89c3d3bbacd8774cd9df70a3542d8788"
+    },
+    {
+      "file": "ptm-protocol-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: BELOW_8PT_TEXT",
+      "docxSha256": "ec64b006490539894582584b5084232d449b5325eb9378d190fca0440f252d61"
+    }
+  ]
+}

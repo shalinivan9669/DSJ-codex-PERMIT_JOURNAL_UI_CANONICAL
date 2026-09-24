@@ -1,0 +1,157 @@
+{
+  "reviewer": "root independent review",
+  "observedAt": "2026-09-22T12:39:03.9200819Z",
+  "method": "Each of the 18 supplied page PNGs opened individually in image viewer; not inferred from extracted text",
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-001.png",
+      "sha256": "ab62d2d8f16fc442cdcb22999607ebcbed3ca0400ede34be6042a6dfc7940d25"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-002.png",
+      "sha256": "4ea73d70a1a669b919504381854dc5c734ec29c69f7d3b3a20c3a33a320d06a8"
+    },
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-001.png",
+      "sha256": "d2b8e7ccce053dcd602060832b6539f610dd98b35b50b95c5cfa12da90b36fc9"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-002.png",
+      "sha256": "4ea73d70a1a669b919504381854dc5c734ec29c69f7d3b3a20c3a33a320d06a8"
+    },
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-001.png",
+      "sha256": "81a9629b979f10a117fddb514741fdfb90f1ce6ea56e68aa8d210c1824cc7c77"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-002.png",
+      "sha256": "4ea73d70a1a669b919504381854dc5c734ec29c69f7d3b3a20c3a33a320d06a8"
+    },
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-001.png",
+      "sha256": "ab62d2d8f16fc442cdcb22999607ebcbed3ca0400ede34be6042a6dfc7940d25"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-002.png",
+      "sha256": "4ea73d70a1a669b919504381854dc5c734ec29c69f7d3b3a20c3a33a320d06a8"
+    },
+    {
+      "page": 3,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-003.png",
+      "sha256": "46a0d4c2c75571e8e3df25eae0db40ba3975177058d721c31ddd4feabc25d9de"
+    },
+    {
+      "page": 4,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-004.png",
+      "sha256": "4ea73d70a1a669b919504381854dc5c734ec29c69f7d3b3a20c3a33a320d06a8"
+    },
+    {
+      "page": 1,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-001.png",
+      "sha256": "3a70f51ad697018d72986167cdaf3ad4272c6ec32bc82314e35675b57e049496"
+    },
+    {
+      "page": 2,
+      "widthPt": 595.303955078125,
+      "heightPt": 841.8897705078125,
+      "minimumBodyFontPt": 8.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-002.png",
+      "sha256": "4ea73d70a1a669b919504381854dc5c734ec29c69f7d3b3a20c3a33a320d06a8"
+    },
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "minimumBodyFontPt": 14.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-short-page-001.png",
+      "sha256": "372d66819f74cb7179124d2026ab749374381ffc19fd79acca84f9c9d44ddbfd"
+    },
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "minimumBodyFontPt": 14.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-long-page-001.png",
+      "sha256": "4b80f684c89d6bc78ae29dfe104734daba0c2879a999c05a320cc48c7718d596"
+    },
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "minimumBodyFontPt": 14.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-blank-page-001.png",
+      "sha256": "56a34970a942c34a12dfca24947a198fe1ef029ed7dd1d7a6f60e1c818766c62"
+    },
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "minimumBodyFontPt": 14.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-batch-page-001.png",
+      "sha256": "372d66819f74cb7179124d2026ab749374381ffc19fd79acca84f9c9d44ddbfd"
+    },
+    {
+      "page": 2,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "minimumBodyFontPt": 14.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-batch-page-002.png",
+      "sha256": "153fb30b08bb7e0c3b8edf353ba561375407dbea005946c75ff11cb4522bef03"
+    },
+    {
+      "page": 1,
+      "widthPt": 841.8897705078125,
+      "heightPt": 595.303955078125,
+      "minimumBodyFontPt": 14.0,
+      "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-punctuation-page-001.png",
+      "sha256": "d47a31d7a28087fea295817702ed0a6e826886e24f25b41235a947a0b51ce9da"
+    }
+  ],
+  "findings": [
+    "All 18 pages: RU/KZ text, numbers and frames visibly present; no observed text overlaps or truncation.",
+    "BIOT worker pages: gray horizontal band extends outside panel frames toward page edge; reported to print owner for investigation, not accepted as clean geometry.",
+    "ITR six pages: typography and text readable, long names fit in two lines; no visible overlap. Normative form approval remains separate."
+  ],
+  "status": "REVIEWED_WITH_FINDING"
+}

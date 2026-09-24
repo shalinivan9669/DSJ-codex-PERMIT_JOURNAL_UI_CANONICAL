@@ -1,0 +1,29 @@
+[
+  {
+    "templateId": "biot-protocol",
+    "expectedColumns": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "mutatedSecondHeader": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "docxRejection": "DOCX_COLUMN_VALUES:['8', '9', '10', '11', '12', '13', '14']",
+    "pdfRejection": "PDF_COLUMN_VALUES:page=2:['8', '9', '10', '11', '12', '13', '14']",
+    "status": "PASS",
+    "sourceSha256": "d793f2f1468b80d27555e8935c9a3fcb25ac1851d81b45392ae600e41dc661e7",
+    "mutantDocxSha256": "de72d5fcd181ca34998dd4fc31b45b24b8aae1080343fd980e4b0aeef1b50074",
+    "mutantPdfSha256": "7dce9857b94ec4ad21f81998cbcde0cc5ee0f22c75e6429a8a47dd4f53303acb"
+  }
+]

@@ -1,0 +1,83 @@
+[
+    {
+        "Id": "sha256:a0bdb10c4422c2ffff1ef5e729114c66218693a182e8f3261f44d8ac337c08f5",
+        "RepoTags": [
+            "demo-web:commercial-final"
+        ],
+        "RepoDigests": [
+            "demo-web@sha256:a0bdb10c4422c2ffff1ef5e729114c66218693a182e8f3261f44d8ac337c08f5"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-09-22T20:10:14.135080727+05:00",
+        "Config": {
+            "User": "node",
+            "ExposedPorts": {
+                "3100/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=24.16.0",
+                "YARN_VERSION=1.22.22",
+                "NEXT_TELEMETRY_DISABLED=1",
+                "COREPACK_HOME=/opt/corepack",
+                "NODE_ENV=production",
+                "HOSTNAME=0.0.0.0",
+                "COREPACK_ENABLE_NETWORK=0"
+            ],
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "Cmd": [
+                "pnpm",
+                "--filter",
+                "@demo/web",
+                "start"
+            ],
+            "WorkingDir": "/app",
+            "ArgsEscaped": true
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 485200831,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:8db1b4d0e54f2fbc2baf1563e57d88a8e72d3c79a72a38b9e4dee36e84f1d8ce",
+                "sha256:d1d27d0268fcde3790456094514fb712e4ef38e88a7a0fd4ca91737020bf1e31",
+                "sha256:b121058a41e4cc5fa2d3ec25b1cf49d67b3abaee170e502085ec0d7669a68b91",
+                "sha256:b0845494c87c018cf8f57f2095548bcda1494630b6ee977a86e594cde21b7e26",
+                "sha256:79060e5291a1d0c0ea4a575ff97aece5ab5ff9eff96846842d2a953a5d114a19",
+                "sha256:45ea6370113a1c1de2e58b883dee653d7998326e70c0fe633e0d084341db38ee",
+                "sha256:6e593621dd5ba08992ee6d31beb5baf46756c0d0d761cd02b6695af18e46dab0",
+                "sha256:f214c1c33e11d859091646781e7bde071a0962dec56006166d87fdd0def0e2f4",
+                "sha256:9edce6ae044412565e70bc3e6f40c9d2fbc55baa1345413731703aa96cc29fa0",
+                "sha256:83aa1582e4e59b364fdbc77731a1321f7505f909a31c8f24a177522a802a3c1d",
+                "sha256:473d34cc665806eac877753bd39f541bf55f34f5e92a3386c8f2cdc98739b653",
+                "sha256:29cff0a80b0351977a8ab01ed418afd9aba481e6c785952dde8a28460ca73af4",
+                "sha256:43d11e45650ab721a9303923b42bd61d07af988be71d523e2e16d08bcac9d95e",
+                "sha256:ddcb11e3bbb49e6ef4307cfb4daf137ad2880c3f946aecafab2188410f46df30",
+                "sha256:254e09841a328895c930851c8835b73b5401f87ce250f3d028b44a98c6263089",
+                "sha256:ca5f2701123acb21f344fde0f1692a770b223a8a6247d64c41fd02bd5160c7dd",
+                "sha256:a56ef1583e83b68d1e06ad630d0f590f97241f7798fa8b052bf735036da79971",
+                "sha256:c080ec4746b4ea074db8b5c0a256dd28c6d886e5af60069fe4727cd83e331c98",
+                "sha256:9b98d554c3e23184336ed424fd257457d4ad017ccda1506f3551a85a1ee7223b"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-09-22T15:11:32.242913446Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:a0bdb10c4422c2ffff1ef5e729114c66218693a182e8f3261f44d8ac337c08f5",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "9dsd1cfztuje1tda9lqnldag1",
+                    "CreatedAt": "2026-09-22T20:12:15.858132582+05:00"
+                }
+            ]
+        }
+    }
+]

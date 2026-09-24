@@ -1,0 +1,63 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 4,
+  "documents": [
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 66,
+      "pdf": "biot-worker-card-short.word.pdf",
+      "audit": "biot-worker-card-short.audit.json",
+      "docxSha256": "85197968bd1a4d3bbdd4a1841953509c14408dd404220c548381aa090fa797b3",
+      "pdfSha256": "8610fe79a1b0da090183759e465fe2cd9ed199d130c890f9e2f519522c2f28da",
+      "visualReview": "FAIL",
+      "visualNotes": "Lower duplicate right panel long chairman line crosses right frame; also reproduced in LibreOffice actual issuance."
+    },
+    {
+      "file": "pb-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 78,
+      "pdf": "pb-card-short.word.pdf",
+      "audit": "pb-card-short.audit.json",
+      "docxSha256": "96eb4e53e8ad38da0b6d2d2f51761a2709128b4f8bf2d7a7af2db3897bb6cd0d",
+      "pdfSha256": "5e86091e3fa5a5cf1acca714dffcf613ad8082cf904a80fe3b7085a6412629af",
+      "visualReview": "PASS",
+      "visualNotes": "Every exported page explicitly viewed; generated portrait, labels, issuer strip, frame and table fit."
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 91,
+      "pdf": "ps-card-short.word.pdf",
+      "audit": "ps-card-short.audit.json",
+      "docxSha256": "ecb5901ded967fecab3754865831d81956fa03688c6e32fe6974a9a350f7d374",
+      "pdfSha256": "87d71e01c20cb0c37ba7f83b4f9f455d52f0b9db47932076e526569e146d4d8e",
+      "visualReview": "PASS",
+      "visualNotes": "Every exported page explicitly viewed; generated portrait, labels, issuer strip, frame and table fit."
+    },
+    {
+      "file": "ptm-card-short.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 69,
+      "pdf": "ptm-card-short.word.pdf",
+      "audit": "ptm-card-short.audit.json",
+      "docxSha256": "321fca47c8f1ba557d4d1b7326148b3a1e1315532b0f1310759a57e03d09bd16",
+      "pdfSha256": "2f0decd94d551706e61a3e41461abdb20c5d84d762b6d3d92672e0b18162736f",
+      "visualReview": "PASS",
+      "visualNotes": "Every exported page explicitly viewed; generated portrait, labels, issuer strip, frame and table fit."
+    }
+  ],
+  "visualStatus": "PARTIAL_PASS_BIOT_LAYOUT_DEFECT",
+  "manualPagesReviewed": 7,
+  "fontCleanupVerified": true
+}

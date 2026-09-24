@@ -1,0 +1,73 @@
+{
+  "G1": {
+    "uniquePeople": 100,
+    "individualAssignments": 100,
+    "groupEvents": 1,
+    "groupProtocols": 1,
+    "individualCredentials": 100,
+    "registeredDocuments": 101,
+    "namespaceIncrements": {
+      "PB:CARD": 100,
+      "PB:PROTOCOL": 1
+    },
+    "canonicalDOCX": 101,
+    "canonicalPDF": 101,
+    "canonicalXLSX": 1,
+    "canonicalZIP": 1,
+    "canonicalJobsAndArtifacts": 204,
+    "manualServerNumbers": 0,
+    "repeatedCommonFieldEntriesPerPerson": 0,
+    "requiredIndividualEditorOpenings": 0
+  },
+  "G2": {
+    "uniquePeople": 100,
+    "individualAssignments": 200,
+    "byTrack": {
+      "PB": 100,
+      "PTM": 60,
+      "BIOT_WORKER": 40
+    },
+    "groupEvents": 3,
+    "groupProtocols": 3,
+    "individualCredentials": 200,
+    "registeredDocuments": 203,
+    "namespaceIncrements": {
+      "PB:CARD": 100,
+      "PB:PROTOCOL": 1,
+      "PTM:CARD": 60,
+      "PTM:PROTOCOL": 1,
+      "BIOT:CARD": 40,
+      "BIOT:PROTOCOL": 1
+    },
+    "canonicalDOCX": 203,
+    "canonicalPDF": 203,
+    "canonicalXLSX": 1,
+    "canonicalZIP": 1,
+    "canonicalJobsAndArtifacts": 408
+  },
+  "reimport": {
+    "sourceRows": 100,
+    "added": [
+      "DEMO-P101",
+      "DEMO-P102"
+    ],
+    "changed": [
+      "DEMO-P003",
+      "DEMO-P010",
+      "DEMO-P020"
+    ],
+    "missing": [
+      "DEMO-P099",
+      "DEMO-P100"
+    ],
+    "unchanged": 95,
+    "missingDoesNotDeletePersonOrHistory": true,
+    "resultCountRetainMissing": 102,
+    "requiresExplicitRemovalFromCurrentDraftOrOrderSplitAtLimit100": true,
+    "resultCountAfterExplicitRemoveMissingFromDraft": 100
+  },
+  "executionStatus": "NOT_RUN",
+  "sourceFixtures": "../fixtures/EXPECTED_FIXTURES.json",
+  "scopeNote": "G1/G2 verify volume and invariants. Full product acceptance also requires BUSINESS_SCENARIOS.json V01–V12; 100 people is not the product objective.",
+  "businessScenariosFile": "BUSINESS_SCENARIOS.json"
+}

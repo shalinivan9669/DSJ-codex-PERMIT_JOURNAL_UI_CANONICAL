@@ -1,0 +1,37 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 2,
+  "documents": [
+    {
+      "file": "ps-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 99,
+      "pdf": "ps-card-long.word.pdf",
+      "audit": "ps-card-long.audit.json",
+      "docxSha256": "1eea36f2f374fb9eeacbfd647fd793a929ee5d893fad7053151aa0d48bdde61e",
+      "pdfSha256": "ba446794579aa1c8cc19f147c9f87308521130cc731d1bc079dc7b7a70c6336e",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 93,
+      "pdf": "ps-card-short.word.pdf",
+      "audit": "ps-card-short.audit.json",
+      "docxSha256": "da90a8cd8aef172460ba5e1dcd82a8e2119a5043b5420defb83741133655d7ab",
+      "pdfSha256": "8f62497a42842aff87fcc3ac01e6beaa0bc3c00b142e852220cf8436fc01c351",
+      "visualReview": "PASS"
+    }
+  ],
+  "visualSummary": {
+    "status": "PASS",
+    "pagesReviewed": 4,
+    "findings": "Actual corrected paragraph inset is visible. Exam text remains in right half; table/frames/photo do not overlap; both short and long fit."
+  }
+}

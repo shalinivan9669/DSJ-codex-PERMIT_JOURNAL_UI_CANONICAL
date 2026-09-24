@@ -1,0 +1,22 @@
+{
+  "status": "PASS_29_ROOT_LICENSE_TEXTS_COLLECTED",
+  "distributionComplianceStatus": "NOT_CLEARED_BY_TEXT_COLLECTION",
+  "totals": {
+    "inventoryComponents": 29,
+    "matchedInstalledVersionEntries": 28,
+    "upstreamComponentFiles": 40,
+    "supplementalFullLicenseVersions": 3,
+    "bytes": 503927
+  },
+  "sha256": {
+    "licenses\\sharp-libvips\\collection.json": "06c9e8674c1bdbe6ef63d1005ac95ab34912974f7154c473a06b1c76fa787175",
+    "licenses\\sharp-libvips\\README.md": "339a6a3bb042e53c5eec042ef6d3d956a5de1dcee06dc510cc9f3d89f2b8bb15",
+    "licenses\\sharp-libvips\\THIRD_PARTY_NOTICES.txt": "34482ef5f2c9aefcada0cd8b97d1f7bce9e21b8ae088df11a05837de60716067"
+  },
+  "remaining": [
+    "Deliver full corresponding source including exact sharp build patches and scripts, and satisfy applicable LGPL replacement/relink requirements for the chosen distribution method; source is not collected by this bounded license-text task.",
+    "The generic package README names29 libraries; exact static-link contribution/per-file copyright coverage and transitive Rust crate notices are not proved solely by28 version entries.",
+    "Cairo upstream1.18.4 root COPYING says LGPL2.1/MPL1.1 while package README selects MPL2.0; both full versions preserved, legal applicability not silently inferred.",
+    "Bundled libnsgif is mapped to the exact libvips8.18.6 embedded source, without inventing a standalone version."
+  ]
+}

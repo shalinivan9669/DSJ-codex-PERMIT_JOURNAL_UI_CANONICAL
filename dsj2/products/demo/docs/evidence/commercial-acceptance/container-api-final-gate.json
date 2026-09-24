@@ -1,0 +1,730 @@
+{
+  "status": "PASS",
+  "imageId": "sha256:bfb58a6a5f3c38aa2b8431be5d1f666d383dd370c6a5be7e774fb4e4213ad232",
+  "rawHighCritical": 90,
+  "reviewedNotAffected": 90,
+  "accepted": [
+    {
+      "type": "debian",
+      "cve": "CVE-2026-53613",
+      "package": "bsdutils",
+      "version": "1:2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The exact images have no fstab entries. Declared execution is UID1000, read-only root, CapEff=0 and NoNewPrivs=1; no privileged mount caller or product mount endpoint exists. This excludes the required privileged fstab mount, not the presence of the installed util-linux package."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-76642",
+      "package": "bsdutils",
+      "version": "1:2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab X-mount configuration exists; product processes do not invoke mount helpers. UID1000 with all capabilities dropped and no-new-privileges cannot gain the privileged post-hook authority. Re-evaluate if privileged mounts or fstab entries are added."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78408",
+      "package": "bsdutils",
+      "version": "1:2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No product or startup command invokes nsenter. The deployment uses a private PID namespace, no host cgroup mount and UID1000 with no capabilities; a privileged host operator running nsenter is outside this container workflow. The required root-created descriptor is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78409",
+      "package": "bsdutils",
+      "version": "1:2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The inspected fstab is empty and read-only; no X-mount.subdir operation is supplied by the product. UID1000/CapEff0/NoNewPrivs1 prohibit the privileged mount operation. Kernel version alone is not used to dismiss this CVE."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78410",
+      "package": "bsdutils",
+      "version": "1:2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab bind-mount authorization or X-mount hooks exist in the inspected runtime. Product subprocesses are fixed Python/LibreOffice/PostgreSQL tools, never mount; all capabilities are dropped and privilege gains disabled."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-12064",
+      "package": "curl",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose curl CLI schemeless SFTP/SCP with --proto-default and SSH trust options. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-6276",
+      "package": "curl",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose a reused libcurl easy handle with changing custom Host headers and cookies. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-8286",
+      "package": "curl",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose reused IMAP/POP3/SMTP/FTP/LDAP STARTTLS connections with changed TLS settings. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-8458",
+      "package": "curl",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose reused Negotiate-authenticated connections with changed service names. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-8927",
+      "package": "curl",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose one libcurl handle reuses Digest authentication across environment-selected proxies. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-41992",
+      "package": "gzip",
+      "version": "1.12-1",
+      "severity": "HIGH",
+      "justification": "No product command invokes the gzip CLI; supported uploads are PNG/JPEG/CSV/XLSX, not LZW/LZH. HTTP compression and OOXML ZIP processing use distinct libraries, not the vulnerable sequential CLI decoder."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-54369",
+      "package": "libacl1",
+      "version": "2.3.1-3",
+      "severity": "HIGH",
+      "justification": "No privileged process runs in the declared API/web runtime. Node and product code do not call libacl pathname APIs; private artifact paths are generated by the server. UID1000, read-only root and CapEff0 exclude the required privileged ACL caller."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-53613",
+      "package": "libblkid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The exact images have no fstab entries. Declared execution is UID1000, read-only root, CapEff=0 and NoNewPrivs=1; no privileged mount caller or product mount endpoint exists. This excludes the required privileged fstab mount, not the presence of the installed util-linux package."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-76642",
+      "package": "libblkid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab X-mount configuration exists; product processes do not invoke mount helpers. UID1000 with all capabilities dropped and no-new-privileges cannot gain the privileged post-hook authority. Re-evaluate if privileged mounts or fstab entries are added."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78408",
+      "package": "libblkid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No product or startup command invokes nsenter. The deployment uses a private PID namespace, no host cgroup mount and UID1000 with no capabilities; a privileged host operator running nsenter is outside this container workflow. The required root-created descriptor is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78409",
+      "package": "libblkid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The inspected fstab is empty and read-only; no X-mount.subdir operation is supplied by the product. UID1000/CapEff0/NoNewPrivs1 prohibit the privileged mount operation. Kernel version alone is not used to dismiss this CVE."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78410",
+      "package": "libblkid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab bind-mount authorization or X-mount hooks exist in the inspected runtime. Product subprocesses are fixed Python/LibreOffice/PostgreSQL tools, never mount; all capabilities are dropped and privilege gains disabled."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-34980",
+      "package": "libcups2",
+      "version": "2.4.2-3+deb12u9",
+      "severity": "HIGH",
+      "justification": "The exact API image contains the client libcups used by LibreOffice, but no cupsd/cups-browsed service or print queue. DEMO exports PDF and does not offer CUPS server administration or remote PostScript queues."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-12064",
+      "package": "libcurl4",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose curl CLI schemeless SFTP/SCP with --proto-default and SSH trust options. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-6276",
+      "package": "libcurl4",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose a reused libcurl easy handle with changing custom Host headers and cookies. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-8286",
+      "package": "libcurl4",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose reused IMAP/POP3/SMTP/FTP/LDAP STARTTLS connections with changed TLS settings. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-8458",
+      "package": "libcurl4",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose reused Negotiate-authenticated connections with changed service names. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-8927",
+      "package": "libcurl4",
+      "version": "7.88.1-10+deb12u15",
+      "severity": "HIGH",
+      "justification": "The product does not expose one libcurl handle reuses Digest authentication across environment-selected proxies. System curl7.88.1 is used during the image build, not by runtime input handlers. Actual LibreOffice linkage selects its bundled libcurl8.22.0, after upstream fixes8.20/8.21; the Next proxy uses Node fetch with an operator-configured destination."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2025-59375",
+      "package": "libexpat1",
+      "version": "2.5.0-1+deb12u3",
+      "severity": "HIGH",
+      "justification": "The upload reader uses CPython bundled Expat2.8.3, newer than fixes2.7.2/2.7.4/2.8.1 for these three CVEs. System Expat2.5 is linked by LibreOffice/fontconfig, whose XML input is pinned templates and bundled fonts; untrusted XLSX is never passed to LibreOffice. User text is escaped into fixed template nodes."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-25210",
+      "package": "libexpat1",
+      "version": "2.5.0-1+deb12u3",
+      "severity": "HIGH",
+      "justification": "The upload reader uses CPython bundled Expat2.8.3, newer than fixes2.7.2/2.7.4/2.8.1 for these three CVEs. System Expat2.5 is linked by LibreOffice/fontconfig, whose XML input is pinned templates and bundled fonts; untrusted XLSX is never passed to LibreOffice. User text is escaped into fixed template nodes."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-45186",
+      "package": "libexpat1",
+      "version": "2.5.0-1+deb12u3",
+      "severity": "HIGH",
+      "justification": "The upload reader uses CPython bundled Expat2.8.3, newer than fixes2.7.2/2.7.4/2.8.1 for these three CVEs. System Expat2.5 is linked by LibreOffice/fontconfig, whose XML input is pinned templates and bundled fonts; untrusted XLSX is never passed to LibreOffice. User text is escaped into fixed template nodes."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-66046",
+      "package": "libexpat1",
+      "version": "2.5.0-1+deb12u3",
+      "severity": "HIGH",
+      "justification": "The actual upload path now parses all OOXML XML/rels with a DOCTYPE-start rejection before the internal subset or attribute normalization. Six exact-image regressions cover the upstream shape,100000 attributes, UTF16/chunk boundaries, metadata/rels and valid workbooks. This removes the input precondition; native Expat remains unpatched. Pinned DOCX templates are not uploaded by users."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-58016",
+      "package": "libglib2.0-0",
+      "version": "2.74.6-2+deb12u9",
+      "severity": "CRITICAL",
+      "justification": "ELF inspection locates direct calls only in the optional GTK3 GUI plugins, not the headless libmergedlo entrypoint. No D-Bus socket/address/DISPLAY is configured and uploaded XML goes to openpyxl, not D-Bus introspection. The missing input channel, rather than GLib package absence, is the basis."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-58010",
+      "package": "libglib2.0-0",
+      "version": "2.74.6-2+deb12u9",
+      "severity": "HIGH",
+      "justification": "libmergedlo creates/reads GVariants for D-Bus proxy calls; there is no D-Bus peer in the declared container. GSettings/system metadata are immutable image files; the product has no raw GVariant or settings upload API. ELF imports of GVariant in libgio are retained in evidence, not denied. Reassess if a host bus or user settings directory is mounted."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-58011",
+      "package": "libglib2.0-0",
+      "version": "2.74.6-2+deb12u9",
+      "severity": "HIGH",
+      "justification": "Neither the LibreOffice plugins nor the inspected transitive dependencies import g_date_time_add_full. Product dates are strict calendar strings inserted as XML text, not GDateTime arithmetic programs; no user-controlled GLib date arithmetic operation is exposed."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-58012",
+      "package": "libglib2.0-0",
+      "version": "2.74.6-2+deb12u9",
+      "severity": "HIGH",
+      "justification": "No LibreOffice module imports g_regex_replace; libgio imports the literal variant, which does not interpret case-change replacement escapes. Product values are Unicode JSON/XML text; arbitrary raw-byte GLib regex programs are not accepted."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-58013",
+      "package": "libglib2.0-0",
+      "version": "2.74.6-2+deb12u9",
+      "severity": "HIGH",
+      "justification": "No inspected LibreOffice or transitive dependency imports g_io_channel_set_line_term. libgio line-reader presence is acknowledged, but the custom-terminator setter/input required by this CVE is not exposed by the product. File-content import is Python/openpyxl, not configurable GIO channels."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-58014",
+      "package": "libglib2.0-0",
+      "version": "2.74.6-2+deb12u9",
+      "severity": "HIGH",
+      "justification": "libgio imports the function, but applicable desktop/GSettings key files remain read-only image metadata. User uploads are private image/CSV/XLSX files and no XDG configuration, desktop file or arbitrary filesystem destination is accepted. This conditional exclusion becomes invalid if mutable user settings directories or desktop imports are introduced."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-58015",
+      "package": "libglib2.0-0",
+      "version": "2.74.6-2+deb12u9",
+      "severity": "HIGH",
+      "justification": "No D-Bus system socket, session address, DISPLAY or host D-Bus mount exists in the inspected headless runtime. User input cannot configure a D-Bus peer. LibreOffice g_bus/proxy imports are acknowledged, but the required attacker-controlled server channel is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2023-2953",
+      "package": "libldap-2.5-0",
+      "version": "2.5.13+dfsg-5",
+      "severity": "HIGH",
+      "justification": "No LDAP authentication/server/client endpoint exists in DEMO. Database authentication is a fixed PostgreSQL connection; URLs and connection options are operator configuration, not submitted form fields. No user BER input is passed to OpenLDAP."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-53613",
+      "package": "libmount1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The exact images have no fstab entries. Declared execution is UID1000, read-only root, CapEff=0 and NoNewPrivs=1; no privileged mount caller or product mount endpoint exists. This excludes the required privileged fstab mount, not the presence of the installed util-linux package."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-76642",
+      "package": "libmount1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab X-mount configuration exists; product processes do not invoke mount helpers. UID1000 with all capabilities dropped and no-new-privileges cannot gain the privileged post-hook authority. Re-evaluate if privileged mounts or fstab entries are added."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78408",
+      "package": "libmount1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No product or startup command invokes nsenter. The deployment uses a private PID namespace, no host cgroup mount and UID1000 with no capabilities; a privileged host operator running nsenter is outside this container workflow. The required root-created descriptor is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78409",
+      "package": "libmount1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The inspected fstab is empty and read-only; no X-mount.subdir operation is supplied by the product. UID1000/CapEff0/NoNewPrivs1 prohibit the privileged mount operation. Kernel version alone is not used to dismiss this CVE."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78410",
+      "package": "libmount1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab bind-mount authorization or X-mount hooks exist in the inspected runtime. Product subprocesses are fixed Python/LibreOffice/PostgreSQL tools, never mount; all capabilities are dropped and privilege gains disabled."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-53613",
+      "package": "libsmartcols1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The exact images have no fstab entries. Declared execution is UID1000, read-only root, CapEff=0 and NoNewPrivs=1; no privileged mount caller or product mount endpoint exists. This excludes the required privileged fstab mount, not the presence of the installed util-linux package."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-76642",
+      "package": "libsmartcols1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab X-mount configuration exists; product processes do not invoke mount helpers. UID1000 with all capabilities dropped and no-new-privileges cannot gain the privileged post-hook authority. Re-evaluate if privileged mounts or fstab entries are added."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78408",
+      "package": "libsmartcols1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No product or startup command invokes nsenter. The deployment uses a private PID namespace, no host cgroup mount and UID1000 with no capabilities; a privileged host operator running nsenter is outside this container workflow. The required root-created descriptor is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78409",
+      "package": "libsmartcols1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The inspected fstab is empty and read-only; no X-mount.subdir operation is supplied by the product. UID1000/CapEff0/NoNewPrivs1 prohibit the privileged mount operation. Kernel version alone is not used to dismiss this CVE."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78410",
+      "package": "libsmartcols1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab bind-mount authorization or X-mount hooks exist in the inspected runtime. Product subprocesses are fixed Python/LibreOffice/PostgreSQL tools, never mount; all capabilities are dropped and privilege gains disabled."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2025-7458",
+      "package": "libsqlite3-0",
+      "version": "3.40.1-2+deb12u2",
+      "severity": "CRITICAL",
+      "justification": "Product SQL runs through Prisma against PostgreSQL; no SQLite statement endpoint or SQLite input file exists. Python sqlite3 is installed but not imported by rendering/import code, and LibreOffice receives pinned DOCX rather than database files."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-11822",
+      "package": "libsqlite3-0",
+      "version": "3.40.1-2+deb12u2",
+      "severity": "HIGH",
+      "justification": "There is no SQLite upload/database-open/FTS query workflow. HTTP file signatures and import formats admit only decoded images or CSV/XLSX; a database file is not passed to SQLite. Installed SQLite FTS support alone is not an exposed dataflow."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-11824",
+      "package": "libsqlite3-0",
+      "version": "3.40.1-2+deb12u2",
+      "severity": "HIGH",
+      "justification": "There is no SQLite upload/database-open/FTS query workflow. HTTP file signatures and import formats admit only decoded images or CSV/XLSX; a database file is not passed to SQLite. Installed SQLite FTS support alone is not an exposed dataflow."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-16742",
+      "package": "libsystemd0",
+      "version": "252.39-1~deb12u2",
+      "severity": "HIGH",
+      "justification": "No systemd-homed binary, service, managed home or login workflow is present. libsystemd/libudev package presence alone does not install the vulnerable homed service."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2025-69720",
+      "package": "libtinfo6",
+      "version": "6.4-4",
+      "severity": "HIGH",
+      "justification": "The flaw is in progs/infocmp.c, not a generic ncurses text-rendering call. No product/subprocess command invokes infocmp or accepts terminal databases; no terminal UI is exposed."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-16742",
+      "package": "libudev1",
+      "version": "252.39-1~deb12u2",
+      "severity": "HIGH",
+      "justification": "No systemd-homed binary, service, managed home or login workflow is present. libsystemd/libudev package presence alone does not install the vulnerable homed service."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-53613",
+      "package": "libuuid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The exact images have no fstab entries. Declared execution is UID1000, read-only root, CapEff=0 and NoNewPrivs=1; no privileged mount caller or product mount endpoint exists. This excludes the required privileged fstab mount, not the presence of the installed util-linux package."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-76642",
+      "package": "libuuid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab X-mount configuration exists; product processes do not invoke mount helpers. UID1000 with all capabilities dropped and no-new-privileges cannot gain the privileged post-hook authority. Re-evaluate if privileged mounts or fstab entries are added."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78408",
+      "package": "libuuid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No product or startup command invokes nsenter. The deployment uses a private PID namespace, no host cgroup mount and UID1000 with no capabilities; a privileged host operator running nsenter is outside this container workflow. The required root-created descriptor is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78409",
+      "package": "libuuid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The inspected fstab is empty and read-only; no X-mount.subdir operation is supplied by the product. UID1000/CapEff0/NoNewPrivs1 prohibit the privileged mount operation. Kernel version alone is not used to dismiss this CVE."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78410",
+      "package": "libuuid1",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab bind-mount authorization or X-mount hooks exist in the inspected runtime. Product subprocesses are fixed Python/LibreOffice/PostgreSQL tools, never mount; all capabilities are dropped and privilege gains disabled."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-6653",
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3~deb12u6",
+      "severity": "CRITICAL",
+      "justification": "The actual XML bindings used by LibreOffice and lxml are2.14.6, outside the affected range. The separately installed system2.9.14 is not the renderer binding, and untrusted XLSX DTDs are rejected before lxml parsing."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-74860",
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3~deb12u6",
+      "severity": "HIGH",
+      "justification": "The upstream libxml2 Python binding is absent (import probe and filesystem search); lxml is a different binding. In addition the upload path rejects DTDs before downstream XML parsing."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-86138",
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3~deb12u6",
+      "severity": "HIGH",
+      "justification": "The primary patch identifies overflow in4*(namelen+plen+1). Untrusted XLSX is capped at30MiB expanded XML with DTD expansion rejected; that cannot supply the approximately1GiB length required for the multiplication overflow. Generated DOCX QName names come only from hash-pinned templates; form values become text nodes, not names."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-86139",
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3~deb12u6",
+      "severity": "HIGH",
+      "justification": "The primary patch checks xmlStrlen returning0 for lengths above INT_MAX. The entire accepted XLSX expansion is30MiB and API JSON2MiB; generated relation URIs are fixed/local template resources. There is no arbitrary multi-gigabyte URI construction or external resource URL input."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-86140",
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3~deb12u6",
+      "severity": "HIGH",
+      "justification": "All untrusted XLSX DTDs are rejected by xml_input.py. openpyxl/renderer do not request DTD validation; DOCX input is a pinned template and generated content has no attacker-controlled DTD. Merely parsing XML does not invoke this validation diagnostic."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-86142",
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3~deb12u6",
+      "severity": "HIGH",
+      "justification": "No XPointer or XInclude evaluation is called by renderer/openpyxl. The XPath expressions in rendering are fixed literals, distinct from XPointer processing. XLSX values never become XPath/XPointer programs; DOCX relationships are pinned/local."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-86143",
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3~deb12u6",
+      "severity": "HIGH",
+      "justification": "The primary patch checks >=INT_MAX output buffers. DOCX jobs render one bounded recipient against a pinned template; direct batch renderer caps100 and images remain separate ZIP binary parts. XLSX export serializes bounded scalar cells incrementally with openpyxl/xmlfile, not a multi-gigabyte scalar passed to a custom callback. No custom output callback API is exposed."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-86144",
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3~deb12u6",
+      "severity": "HIGH",
+      "justification": "Neither openpyxl nor renderer calls XInclude processing or supplies a custom external resource loader. XML_PARSE_NONET is not the sole defense: the affected operation is absent from the supported input path, and DOCX resources are pinned/local."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-53613",
+      "package": "mount",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The exact images have no fstab entries. Declared execution is UID1000, read-only root, CapEff=0 and NoNewPrivs=1; no privileged mount caller or product mount endpoint exists. This excludes the required privileged fstab mount, not the presence of the installed util-linux package."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-76642",
+      "package": "mount",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab X-mount configuration exists; product processes do not invoke mount helpers. UID1000 with all capabilities dropped and no-new-privileges cannot gain the privileged post-hook authority. Re-evaluate if privileged mounts or fstab entries are added."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78408",
+      "package": "mount",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No product or startup command invokes nsenter. The deployment uses a private PID namespace, no host cgroup mount and UID1000 with no capabilities; a privileged host operator running nsenter is outside this container workflow. The required root-created descriptor is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78409",
+      "package": "mount",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The inspected fstab is empty and read-only; no X-mount.subdir operation is supplied by the product. UID1000/CapEff0/NoNewPrivs1 prohibit the privileged mount operation. Kernel version alone is not used to dismiss this CVE."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78410",
+      "package": "mount",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab bind-mount authorization or X-mount hooks exist in the inspected runtime. Product subprocesses are fixed Python/LibreOffice/PostgreSQL tools, never mount; all capabilities are dropped and privilege gains disabled."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2025-69720",
+      "package": "ncurses-base",
+      "version": "6.4-4",
+      "severity": "HIGH",
+      "justification": "The flaw is in progs/infocmp.c, not a generic ncurses text-rendering call. No product/subprocess command invokes infocmp or accepts terminal databases; no terminal UI is exposed."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2025-69720",
+      "package": "ncurses-bin",
+      "version": "6.4-4",
+      "severity": "HIGH",
+      "justification": "The flaw is in progs/infocmp.c, not a generic ncurses text-rendering call. No product/subprocess command invokes infocmp or accepts terminal databases; no terminal UI is exposed."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-13221",
+      "package": "perl-base",
+      "version": "5.36.0-7+deb12u3",
+      "severity": "CRITICAL",
+      "justification": "No product process invokes Perl or accepts a Perl regular-expression program. Web/API matching is JavaScript/Zod; renderer matching is Python. Actual web process tree/maps contain Node/Next only. The installed Perl CLI is not an input path."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-42496",
+      "package": "perl-base",
+      "version": "5.36.0-7+deb12u3",
+      "severity": "CRITICAL",
+      "justification": "An actual require Archive::Tar fails in both final images: the optional module is absent. Neither the web/API input contract nor the renderer calls Perl tar extraction."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-8376",
+      "package": "perl-base",
+      "version": "5.36.0-7+deb12u3",
+      "severity": "CRITICAL",
+      "justification": "The exact images are amd64 and Perl reports ivsize=8 and ptrsize=8; the upstream flaw is specific to a 32-bit Perl build."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-42497",
+      "package": "perl-base",
+      "version": "5.36.0-7+deb12u3",
+      "severity": "HIGH",
+      "justification": "An actual require Archive::Tar fails in both final images: the optional module is absent. Neither the web/API input contract nor the renderer calls Perl tar extraction."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-48962",
+      "package": "perl-base",
+      "version": "5.36.0-7+deb12u3",
+      "severity": "HIGH",
+      "justification": "Actual require probes show IO::Compress and File::GlobMapper absent. Product code has no Perl/glob evaluation endpoint; filenames are generated rather than executed."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-57432",
+      "package": "perl-base",
+      "version": "5.36.0-7+deb12u3",
+      "severity": "HIGH",
+      "justification": "No API, web, renderer or startup command invokes Perl pack/unpack. Uploaded data is decoded by the bounded Python readers and is not converted into Perl programs or templates."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-57433",
+      "package": "perl-base",
+      "version": "5.36.0-7+deb12u3",
+      "severity": "HIGH",
+      "justification": "Actual require Storable fails in both final images. Product persistence is PostgreSQL/JSON and no Storable input or Perl deserialization path is exposed."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-9538",
+      "package": "perl-base",
+      "version": "5.36.0-7+deb12u3",
+      "severity": "HIGH",
+      "justification": "An actual require Archive::Tar fails in both final images: the optional module is absent. Neither the web/API input contract nor the renderer calls Perl tar extraction."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-53613",
+      "package": "util-linux",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The exact images have no fstab entries. Declared execution is UID1000, read-only root, CapEff=0 and NoNewPrivs=1; no privileged mount caller or product mount endpoint exists. This excludes the required privileged fstab mount, not the presence of the installed util-linux package."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-76642",
+      "package": "util-linux",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab X-mount configuration exists; product processes do not invoke mount helpers. UID1000 with all capabilities dropped and no-new-privileges cannot gain the privileged post-hook authority. Re-evaluate if privileged mounts or fstab entries are added."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78408",
+      "package": "util-linux",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No product or startup command invokes nsenter. The deployment uses a private PID namespace, no host cgroup mount and UID1000 with no capabilities; a privileged host operator running nsenter is outside this container workflow. The required root-created descriptor is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78409",
+      "package": "util-linux",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The inspected fstab is empty and read-only; no X-mount.subdir operation is supplied by the product. UID1000/CapEff0/NoNewPrivs1 prohibit the privileged mount operation. Kernel version alone is not used to dismiss this CVE."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78410",
+      "package": "util-linux",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab bind-mount authorization or X-mount hooks exist in the inspected runtime. Product subprocesses are fixed Python/LibreOffice/PostgreSQL tools, never mount; all capabilities are dropped and privilege gains disabled."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-53613",
+      "package": "util-linux-extra",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The exact images have no fstab entries. Declared execution is UID1000, read-only root, CapEff=0 and NoNewPrivs=1; no privileged mount caller or product mount endpoint exists. This excludes the required privileged fstab mount, not the presence of the installed util-linux package."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-76642",
+      "package": "util-linux-extra",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab X-mount configuration exists; product processes do not invoke mount helpers. UID1000 with all capabilities dropped and no-new-privileges cannot gain the privileged post-hook authority. Re-evaluate if privileged mounts or fstab entries are added."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78408",
+      "package": "util-linux-extra",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No product or startup command invokes nsenter. The deployment uses a private PID namespace, no host cgroup mount and UID1000 with no capabilities; a privileged host operator running nsenter is outside this container workflow. The required root-created descriptor is absent."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78409",
+      "package": "util-linux-extra",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "The inspected fstab is empty and read-only; no X-mount.subdir operation is supplied by the product. UID1000/CapEff0/NoNewPrivs1 prohibit the privileged mount operation. Kernel version alone is not used to dismiss this CVE."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2026-78410",
+      "package": "util-linux-extra",
+      "version": "2.38.1-5+deb12u3",
+      "severity": "HIGH",
+      "justification": "No fstab bind-mount authorization or X-mount hooks exist in the inspected runtime. Product subprocesses are fixed Python/LibreOffice/PostgreSQL tools, never mount; all capabilities are dropped and privilege gains disabled."
+    },
+    {
+      "type": "debian",
+      "cve": "CVE-2023-45853",
+      "package": "zlib1g",
+      "version": "1:1.2.13.dfsg-1",
+      "severity": "CRITICAL",
+      "justification": "Debian zlib in these exact images does not supply the vulnerable contrib/minizip component; image filesystem inspection found no MiniZip implementation. Node/Python ZIP processing is not this removed optional component."
+    }
+  ],
+  "failures": [],
+  "limitation": "Raw findings remain retained. Review applies only to this image and declared non-root/private/read-only runtime; a new image, package version, CVE, severity or expired review fails closed."
+}

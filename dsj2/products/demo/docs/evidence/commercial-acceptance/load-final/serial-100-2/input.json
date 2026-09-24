@@ -1,0 +1,2308 @@
+{
+  "kind": "COMPANY",
+  "customerId": "f4723572-d5f0-4d5f-a069-5a68d3458738",
+  "title": "НАГРУЗОЧНЫЙ ТЕСТ 100 9b1a7ddb-386f-47a9-9e89-a154292ff931",
+  "demoMode": true,
+  "items": [
+    {
+      "id": "7efd9735-70e2-4696-874e-abc46fab3775",
+      "fullNameRu": "Тестов Получатель 001 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 001 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "e282aa68-0f18-4220-8fe3-061ad26af280",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "619984ce-97a7-4293-aa95-76f94d6e9ac1",
+      "fullNameRu": "Тестов Получатель 002 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 002 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "4194d38f-dab3-4fb7-85fb-26aa3f3f339c",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "04512d5b-6fbd-4266-9974-558b379acfd0",
+      "fullNameRu": "Тестов Получатель 003 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 003 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "726adae7-b698-46b2-8c4f-606977237376",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "6f60f797-6e1c-45e2-a87e-8e08c9260499",
+      "fullNameRu": "Тестов Получатель 004 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 004 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "fde623d3-3258-4047-a906-b168e8d498bc",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "278b1728-7e50-4524-8674-b0385cfa71ee",
+      "fullNameRu": "Тестов Получатель 005 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 005 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "c00308fe-8064-4dc7-8534-43fd40ebf592",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "e4acc195-dd5d-477f-b124-c8789d027968",
+      "fullNameRu": "Тестов Получатель 006 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 006 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "417a5b58-472e-4864-a099-34ac641ac49e",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "e78d325b-4ec3-42bc-823a-e49a8a00299c",
+      "fullNameRu": "Тестов Получатель 007 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 007 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "15d63170-fe5e-4cb7-9d76-13f75acabad2",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "6f7d085b-c0ce-47b4-b2d2-8402dc3005fa",
+      "fullNameRu": "Тестов Получатель 008 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 008 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "f6d4e421-63f5-4aac-9665-6396af876489",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "df819b63-bf2c-4833-a32a-a53028da5289",
+      "fullNameRu": "Тестов Получатель 009 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 009 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "8ef39527-547f-4bd7-aa97-25c9282872d2",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b876570d-a300-4550-8b87-04bebbcf6e95",
+      "fullNameRu": "Тестов Получатель 010 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 010 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "f9e500a4-0b94-41ef-a92a-44d762fc582d",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "94655953-f8d3-4009-b797-6fc4ca99caec",
+      "fullNameRu": "Тестов Получатель 011 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 011 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "c5c6b1cd-83fb-47a2-9b46-244a4439cfee",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b27ee438-01af-449f-ab33-b854b013b58f",
+      "fullNameRu": "Тестов Получатель 012 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 012 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "fb163252-d67c-4527-a339-4817bb345c03",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "18f96471-ecee-418d-a840-9baf5358585a",
+      "fullNameRu": "Тестов Получатель 013 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 013 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "2624f4e7-a2f0-4003-a88b-1ef66404ead0",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "4064e4bc-619b-49e0-b4b5-f5dc217cb612",
+      "fullNameRu": "Тестов Получатель 014 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 014 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "2c87634a-433e-480a-9c52-e6cec3c19a52",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "1773c631-f698-4bea-9065-8898be94daae",
+      "fullNameRu": "Тестов Получатель 015 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 015 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "90056367-20bf-42b7-8db3-fcde005ed0ad",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "601c7e4a-59bc-4721-921d-ecbe9a66c68b",
+      "fullNameRu": "Тестов Получатель 016 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 016 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "7ebfa6fc-e9c8-4ef6-b220-eda28f18393b",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "2d8ad3f6-2037-4107-a984-9801cbdb4599",
+      "fullNameRu": "Тестов Получатель 017 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 017 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "7b2795bd-2974-404e-b50f-7b85e24cef01",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "4ed7450b-f0ae-441b-8c60-3038c3c007c1",
+      "fullNameRu": "Тестов Получатель 018 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 018 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "91ecc857-8a31-4ef1-9b67-2cae6312702f",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "2b4108fa-bc74-4713-a511-6684c716456b",
+      "fullNameRu": "Тестов Получатель 019 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 019 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "d32f2bc7-97fc-44ff-806c-66eea4fe2738",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "6833ad78-786e-4584-958e-60921ca67409",
+      "fullNameRu": "Тестов Получатель 020 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 020 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "4b219243-cdc9-433c-8f44-53a87d8c953d",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "8c95972c-ee55-44ab-917e-7149fb9eacc8",
+      "fullNameRu": "Тестов Получатель 021 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 021 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "9086665e-afee-45d5-8e0e-fba6dfeaba34",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "341f1721-48d2-4b20-a4f7-2bfc1667f156",
+      "fullNameRu": "Тестов Получатель 022 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 022 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "b8f18b5b-8bde-491d-aa28-f25ccbcb08be",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "9d1fb682-4547-4305-bbbf-5d916bc1f47e",
+      "fullNameRu": "Тестов Получатель 023 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 023 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "7a6bcfcd-4d5a-486a-81a9-82777de888a2",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "116717ae-0154-4d8b-8089-f160ae2e763d",
+      "fullNameRu": "Тестов Получатель 024 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 024 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "cf1887e2-b12b-49fc-b8ae-145da86a3a67",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "19362239-a66a-4b76-b3b5-00863232ece7",
+      "fullNameRu": "Тестов Получатель 025 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 025 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "be46566f-95c1-4ef7-b24f-779bb05fdad0",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b8e9f70f-bf6a-43b4-a0c5-f53d349c711c",
+      "fullNameRu": "Тестов Получатель 026 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 026 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "2e42d503-6abb-4e91-b015-c06e234ec6be",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "65b35167-5123-410e-a65d-a252384b6b00",
+      "fullNameRu": "Тестов Получатель 027 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 027 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "cdeba4fb-98c8-402d-b6f8-36b83470d58f",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "fe19daad-ecbf-41e2-aa1b-db9870eb35d9",
+      "fullNameRu": "Тестов Получатель 028 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 028 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "8b032526-23e7-4ec6-ac89-0919780bcc0f",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "242c6fe1-128a-45d3-bff8-b623479bc3f1",
+      "fullNameRu": "Тестов Получатель 029 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 029 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "1370074f-0c7a-4391-8c4e-1beebb2ff64b",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "e349cc06-0d2d-4699-86af-99ede1ad5ac4",
+      "fullNameRu": "Тестов Получатель 030 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 030 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "d9c4c9ed-a135-4eb0-9a4e-e3ec53604d7a",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "07a0ce8d-4515-44df-8b43-cee9004121be",
+      "fullNameRu": "Тестов Получатель 031 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 031 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "b10b02c7-2e9e-4d52-ada5-0c9e6e124806",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "ea32b9c2-777b-4918-b2e7-5064c211fa56",
+      "fullNameRu": "Тестов Получатель 032 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 032 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "527c7679-e292-4839-a1b6-6f898db98dea",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "87b3ba95-b2e7-4d97-a985-fe4a8ce0ef64",
+      "fullNameRu": "Тестов Получатель 033 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 033 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "159ea106-1886-491b-94ec-b93510d659dc",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "f5066cdb-3c33-4c30-a0d0-c64ee2aeca17",
+      "fullNameRu": "Тестов Получатель 034 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 034 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "14dba089-b61f-47ac-b246-c50ff1c108c5",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "d5dca248-6753-4638-a5b4-9131a163fa05",
+      "fullNameRu": "Тестов Получатель 035 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 035 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "ae09b156-2dd3-4bc7-93e2-909f3471ff33",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "03132adf-5083-4c53-9f5e-a8ac0fbc21f5",
+      "fullNameRu": "Тестов Получатель 036 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 036 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "2961fe97-e5f9-45cb-8822-439fbf5db8b0",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "07320eea-da8a-4422-b6aa-c39f92bb9f02",
+      "fullNameRu": "Тестов Получатель 037 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 037 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "35738c8e-12c0-48ef-a2e7-471eef0f6ed2",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "e38ae0e7-d99a-4a63-a2d9-066c94efcfc9",
+      "fullNameRu": "Тестов Получатель 038 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 038 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "5b8a032e-a1a4-4241-93f7-cd999e219ff7",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "beef998f-b184-434e-8f90-f2d789690f1a",
+      "fullNameRu": "Тестов Получатель 039 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 039 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "228d8de1-cf23-46a3-9bf7-ce049c8ce831",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "449bb133-eeec-45ee-98ca-58f6cdc9ea11",
+      "fullNameRu": "Тестов Получатель 040 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 040 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "de137c5c-4773-4556-a1eb-41fdedfd36db",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "34c7195c-11cc-4649-a0ac-4cb501eea9f3",
+      "fullNameRu": "Тестов Получатель 041 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 041 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "5ab5afc4-e0e6-4292-b5b3-6fc5e1694f59",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "01eeeeb1-66dc-4e6f-87bc-9415ce62e79b",
+      "fullNameRu": "Тестов Получатель 042 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 042 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "530ebcf0-0d89-43c2-ba89-90f12c00fb3c",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b2086b53-3a0c-450e-a6c0-d1b2837273d8",
+      "fullNameRu": "Тестов Получатель 043 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 043 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "0e6aabd8-5ec9-4adf-94ef-0e57d394083c",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "3f1f73d8-5d30-4e3f-bb2d-b2e0bbd9ea29",
+      "fullNameRu": "Тестов Получатель 044 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 044 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "b0350da5-010e-4a2a-8556-f3776932f039",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "e4e749ec-9593-4897-962b-1c6dca72635f",
+      "fullNameRu": "Тестов Получатель 045 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 045 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "a641fb34-06dd-4a17-a4b5-53dfc61d91d6",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "f2544bc2-9f75-474b-9210-e5055c20f1ac",
+      "fullNameRu": "Тестов Получатель 046 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 046 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "13665155-f9ff-4a28-b33c-776a1d46b4ae",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "456214cc-3dd5-4077-8234-3607947b59b0",
+      "fullNameRu": "Тестов Получатель 047 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 047 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "3b770b9d-baa6-4e6e-b17b-93efeb9496f9",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b47904f5-42e6-461a-b323-a1d0f55a04fd",
+      "fullNameRu": "Тестов Получатель 048 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 048 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "d7d46673-af1f-4022-8513-20e8d77aaacc",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "6fbb8189-37d5-464d-a39d-e230a4657355",
+      "fullNameRu": "Тестов Получатель 049 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 049 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "8f317817-2cb6-41e4-a252-b43516f50f65",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "c8258da2-dbf4-43c2-879d-05e21f160740",
+      "fullNameRu": "Тестов Получатель 050 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 050 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "3cafd2a2-1676-4ad5-87f7-f32a3e7f1b11",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "317e9789-3b92-4d68-81df-cfe159aa33f9",
+      "fullNameRu": "Тестов Получатель 051 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 051 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "8a2b71c6-8235-4686-b677-219124195586",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b3083ea3-1f5a-450c-b2f8-c537057997ed",
+      "fullNameRu": "Тестов Получатель 052 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 052 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "76439e3c-7e50-4e43-a223-0b215d359a5d",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "8b507eb3-e763-4dd5-9002-4dbc88a62981",
+      "fullNameRu": "Тестов Получатель 053 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 053 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "9b23f8fd-14da-4ebf-9ad6-ab7ed70379d7",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "4fc011b0-6607-4b06-affc-13af42ae54ce",
+      "fullNameRu": "Тестов Получатель 054 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 054 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "f6e04c53-4f49-4c12-b54e-1488e3f7ad95",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "461f71fd-572f-4176-b67f-e52f3ffe9835",
+      "fullNameRu": "Тестов Получатель 055 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 055 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "73c99408-ea82-4477-be28-1bbff2b4716c",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "89199310-6fe0-4e57-8743-c60658a6249d",
+      "fullNameRu": "Тестов Получатель 056 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 056 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "49b11c1b-77ca-4bc2-a72a-02be5a0d0292",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "3651327d-2c9a-4129-9d20-8ae828da815d",
+      "fullNameRu": "Тестов Получатель 057 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 057 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "469ec33e-62e2-4411-ac80-aa33ad375aae",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "120d2e31-d311-4d0c-9f40-74bb1166170d",
+      "fullNameRu": "Тестов Получатель 058 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 058 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "77c6f978-a1e9-4391-b5dd-8910128301a9",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "6a721f80-562b-429d-b9bb-897cfb1e4d7e",
+      "fullNameRu": "Тестов Получатель 059 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 059 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "653c0680-8b87-4fe9-9de6-f2f7b8249c20",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "dd921789-9a0a-446f-9ddc-74beaf12e92b",
+      "fullNameRu": "Тестов Получатель 060 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 060 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "4cd9aca7-5006-4f3c-aa78-f0a089383270",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "3d6c0228-646e-4c97-96a7-c53ba0f504dd",
+      "fullNameRu": "Тестов Получатель 061 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 061 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "affeabdf-2d6d-42fa-afbd-5230f42cece8",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "910a8626-9500-4e61-b54a-fc5f704674f9",
+      "fullNameRu": "Тестов Получатель 062 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 062 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "b771e6f3-eea9-4555-a50f-e02413a87a51",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "86df7004-b124-4935-bba9-5876031038ef",
+      "fullNameRu": "Тестов Получатель 063 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 063 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "9160994f-8368-40e3-bdb9-96b4ba332a40",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "2f726d8f-596c-4463-8bd6-e06b692c8217",
+      "fullNameRu": "Тестов Получатель 064 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 064 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "d1da1e5d-7a56-4f6c-9c79-0d04964b94e4",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "dc606478-0d7b-4ca3-ae04-2032c36a2f2d",
+      "fullNameRu": "Тестов Получатель 065 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 065 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "1353505c-a2a8-4038-aabd-8870bfae12fd",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "f19b269f-2aa3-416a-88a9-91c5528d0167",
+      "fullNameRu": "Тестов Получатель 066 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 066 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "94b71108-f30e-49a5-9270-de1b604f5854",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "da659c27-c5a5-4210-92b3-86e8b68139bc",
+      "fullNameRu": "Тестов Получатель 067 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 067 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "19595c2b-293a-4a2b-b3b0-4d615b0c40ca",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "e0ea35d8-29a2-4ca0-8fb4-de5a991205db",
+      "fullNameRu": "Тестов Получатель 068 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 068 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "1f339e62-ca48-40cb-b862-8dba620ab276",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "97a85679-785b-4e3e-8121-a1a23e8a0b28",
+      "fullNameRu": "Тестов Получатель 069 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 069 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "8c4f4fda-0fd3-42a0-be50-da0f091d8edc",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "387b415b-f854-4e83-a487-499ac2200fa2",
+      "fullNameRu": "Тестов Получатель 070 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 070 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "855ec727-6717-4020-88eb-1bfbbe8b9af1",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "109e1c14-088f-431d-ba19-7bc9207b8d8f",
+      "fullNameRu": "Тестов Получатель 071 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 071 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "b4ca4b44-0553-4b98-94ec-97b3435f717c",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "382fac89-c1dc-4dae-9cf6-96b4cfcb4aeb",
+      "fullNameRu": "Тестов Получатель 072 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 072 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "2db36eac-250a-4dc4-a7b2-2f2c4447aa19",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "f7f08276-c223-48c9-8963-674a99a90814",
+      "fullNameRu": "Тестов Получатель 073 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 073 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "40b11645-6b24-4324-8fdc-d6a3dd329972",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "5d958245-ae88-494f-9dc4-170dcb75ff44",
+      "fullNameRu": "Тестов Получатель 074 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 074 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "bbed75a9-d958-4298-973b-be2b84090c75",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "5b70b158-8894-4138-a7a4-aa6e12869853",
+      "fullNameRu": "Тестов Получатель 075 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 075 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "abc888db-081a-4b62-95f3-cc3cf20a4656",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "629a5eac-bae2-434f-a45f-fb9c0c779ca7",
+      "fullNameRu": "Тестов Получатель 076 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 076 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "2be23852-1285-4590-8528-812c650878e7",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "2eea3304-aeca-4f66-a55d-65556a88cf73",
+      "fullNameRu": "Тестов Получатель 077 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 077 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "594ca52c-ea42-4a11-996b-912b05df4073",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "29fac95a-adc5-418e-b895-f0e111401fd9",
+      "fullNameRu": "Тестов Получатель 078 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 078 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "8461e60e-0272-4999-94d6-b4d58991f116",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "397c6961-67e1-499e-9ea8-4dd8e9a5464e",
+      "fullNameRu": "Тестов Получатель 079 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 079 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "b6339b64-d000-41a2-b66b-7dcbf2ef7876",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "0e75772b-de6b-4c8b-8684-321d7e8826e6",
+      "fullNameRu": "Тестов Получатель 080 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 080 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "75240852-e902-4285-9c75-713d142a5105",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "157ecda4-0a2d-4706-a64c-beb43bd9617f",
+      "fullNameRu": "Тестов Получатель 081 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 081 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "aa00bd5c-f9ed-48bf-9cbc-4258cfe94951",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "8e30545a-b25d-4b65-8641-9d13a5eebdd9",
+      "fullNameRu": "Тестов Получатель 082 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 082 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "3dd7ae94-3ae1-484a-b0f1-691f7c1dcffa",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "078f1528-ec63-4679-9727-7ba0bec9fe05",
+      "fullNameRu": "Тестов Получатель 083 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 083 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "db8be54b-c492-442d-8610-1d8dad4212b9",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "0f6ba5e5-1aac-4cab-a3d0-ed9f49e349cb",
+      "fullNameRu": "Тестов Получатель 084 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 084 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "0f5388f9-18db-4c81-ad62-ec30f86c8c0f",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b446523a-06d9-4b6f-8dfe-a29202bb5c94",
+      "fullNameRu": "Тестов Получатель 085 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 085 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "6e4b9330-28ae-4142-bbf9-a8408ab108b6",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b8ba83b0-5cd0-45b3-a6b4-8445a0bb392f",
+      "fullNameRu": "Тестов Получатель 086 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 086 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "830d020e-2834-4842-acb2-55fa01b727c8",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "1f4de8b9-5cea-4fad-ac20-30e77009bc28",
+      "fullNameRu": "Тестов Получатель 087 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 087 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "f21442ba-338f-419d-9164-3a913b1a477d",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "f0b56945-ba30-49ab-950c-01609e8fddd3",
+      "fullNameRu": "Тестов Получатель 088 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 088 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "729f2717-c7f9-4c86-aa48-da9f5c93072b",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "7dff34e8-4f04-4c75-bf60-12574afcdc82",
+      "fullNameRu": "Тестов Получатель 089 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 089 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "39e8d71b-8fe3-4a7f-9d32-0b64fccfc806",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "bb04b46f-e612-45c0-8358-dc3d758c1e51",
+      "fullNameRu": "Тестов Получатель 090 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 090 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "64e2bbf1-0fc2-4ab9-94fc-1c65f10a9f66",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "28f44c5c-70df-4fec-80ff-fa0d4835e133",
+      "fullNameRu": "Тестов Получатель 091 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 091 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "ce04425b-3b14-4e62-9e4a-bf5f1c1f161d",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "eb45c16a-7dcc-4f9a-8ac8-2fd01d35a065",
+      "fullNameRu": "Тестов Получатель 092 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 092 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "e0e9658a-371c-4ad7-a828-abe817f1c17c",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "320614d1-1eaa-46de-b1b9-9394f27e626b",
+      "fullNameRu": "Тестов Получатель 093 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 093 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "7e6c776a-10da-48fa-85e6-d578113749f6",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "6872471c-7625-4c9f-a11a-5b1079d5b010",
+      "fullNameRu": "Тестов Получатель 094 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 094 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "d37d59dc-8e8a-4ff8-801d-4c0448790b3f",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "5c9486d6-67ef-4360-b415-54a356c3a824",
+      "fullNameRu": "Тестов Получатель 095 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 095 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "c12d408a-4812-4568-80dd-3d3d08f7d4fd",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b14722f3-763e-4a35-8446-5d25da682650",
+      "fullNameRu": "Тестов Получатель 096 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 096 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "66ed8a72-99cc-4a7c-af63-d475a5f588bd",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "b867ea57-3af8-4839-9f4e-495cbb1151fa",
+      "fullNameRu": "Тестов Получатель 097 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 097 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "e24754fd-5aea-4bc8-9e25-d1584e1390bd",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "fd3f86ab-a1bd-48ae-9d98-908c96446643",
+      "fullNameRu": "Тестов Получатель 098 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 098 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "04471395-35d9-414f-9fea-0726facb75b1",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "22417e36-3cf3-459f-9bc5-a498bc8b47c4",
+      "fullNameRu": "Тестов Получатель 099 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 099 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "4cc221d9-de64-4c02-9093-39ec0a5a70a9",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    },
+    {
+      "id": "5fc8f7c8-6a21-4b0c-8d41-fcbb5259b9c1",
+      "fullNameRu": "Тестов Получатель 100 9b1a7ddb",
+      "fullNameKz": "Сынақ Әғқңөұүһі 100 9b1a7ddb",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "Синтетическая организация",
+      "workplaceKz": "Синтетикалық ұйым",
+      "assignments": [
+        {
+          "id": "f013fc91-12cd-40d0-8bc0-03a035f8b452",
+          "templateId": "biot-protocol",
+          "documentDate": "2026-09-22",
+          "protocolDate": "2026-09-21",
+          "trainingStart": "2026-09-19",
+          "trainingEnd": "2026-09-20",
+          "trainingSubject": "Синтетическая программа",
+          "hours": "16",
+          "result": "Сдал",
+          "reason": "Периодическая проверка"
+        }
+      ]
+    }
+  ]
+}

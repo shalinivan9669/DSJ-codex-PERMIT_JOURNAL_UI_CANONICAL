@@ -1,0 +1,37 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 2,
+  "documents": [
+    {
+      "file": "ptm-card-long.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 78,
+      "pdf": "ptm-card-long.word.pdf",
+      "audit": "ptm-card-long.audit.json",
+      "docxSha256": "70ab90e1f701cc05917c191c60d604d1aec90bd1065325ce5e840fc7d53f923e",
+      "pdfSha256": "6355cf5a22c56d993142fee993e60d42f92e3679dfb14012c5c200d02146faa0",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ptm-card-short.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 73,
+      "pdf": "ptm-card-short.word.pdf",
+      "audit": "ptm-card-short.audit.json",
+      "docxSha256": "63ac04a96d92ff8e3bea544775b50b9a0eb40ec3cf9dbe6d2049cd2436f5632d",
+      "pdfSha256": "921da615c82a70d53bf8806305ac47f9a32c1acdba51396da81182e1db10f3eb",
+      "visualReview": "PASS"
+    }
+  ],
+  "visualSummary": {
+    "status": "PASS",
+    "pagesReviewed": 2,
+    "limitation": "Диагностические v13 probes; окончательный активный manifest проверяется отдельно."
+  }
+}

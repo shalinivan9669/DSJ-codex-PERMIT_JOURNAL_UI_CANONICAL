@@ -1,0 +1,54 @@
+{
+  "status": "PARTIAL_TIMING_PASS_RESOURCE_MEASUREMENT_FAILED",
+  "runtimeRelease": "r5",
+  "runs": 14,
+  "recipients": 503.0,
+  "artifacts": 1034.0,
+  "failures": 0,
+  "retriedJobs": 0.0,
+  "serial": [
+    {
+      "recipients": 1,
+      "repeats": 3,
+      "minMs": 3683,
+      "medianMs": 4702,
+      "maxMs": 5824
+    },
+    {
+      "recipients": 10,
+      "repeats": 3,
+      "minMs": 13814,
+      "medianMs": 13902,
+      "maxMs": 14779
+    },
+    {
+      "recipients": 50,
+      "repeats": 3,
+      "minMs": 55609,
+      "medianMs": 67153,
+      "maxMs": 69096
+    },
+    {
+      "recipients": 100,
+      "repeats": 3,
+      "minMs": 109643,
+      "medianMs": 113055,
+      "maxMs": 122927
+    }
+  ],
+  "concurrent": [
+    {
+      "label": "concurrent-a",
+      "count": 10,
+      "totalMs": 22451,
+      "finalizeMs": 1710
+    },
+    {
+      "label": "concurrent-b",
+      "count": 10,
+      "totalMs": 23521,
+      "finalizeMs": 1857
+    }
+  ],
+  "limitation": "Actual14 HTTP issuance/download runs pass. Telemetry helper rejected lowercase kB, samples0; cannot claim CPU/RAM/disk measured. Parser fixed+2 meaningful regression tests PASS. Full new resource run pending after upcoming category/photo fixes. No p95 inferred."
+}

@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-09-22T16:49:55.186Z",
+  "tables": {
+    "printRequest": {
+      "count": 146,
+      "sha256": "6d3a3492958f5da686cbaee97079be90595132f67ffb737a0c38664f48c98f89"
+    },
+    "requestItem": {
+      "count": 267,
+      "sha256": "fbcfd73df0ba287e5b15a6a8c757620b3a21f71aca5151ba385744386f974342"
+    },
+    "issuerProfileVersion": {
+      "count": 4,
+      "sha256": "c2cc614b73316cb1b19b18cdf54b97186b0d6c55a7db3b577c5d99856085073a"
+    },
+    "issuedDocument": {
+      "count": 53,
+      "sha256": "dde51d2cf79c847714d2ec94e405712458181df3072a74039399e81b46b72b88"
+    },
+    "issuance": {
+      "count": 16,
+      "sha256": "a8e6490191b9accecbc993eba007895eb01edb1cad9f801d47818fa02251a48b"
+    },
+    "numberSequence": {
+      "count": 11,
+      "sha256": "d625c0af75939922b74c32fb3a17c7e82f9685ed6eca17954543ff5b43c1f01a"
+    },
+    "artifact": {
+      "count": 153,
+      "sha256": "cf2c9a5fc25bfde03072534374970b5c53c50d7898005f6aa33e8b569abf93e3"
+    }
+  },
+  "artifactBytesVerified": 153
+}

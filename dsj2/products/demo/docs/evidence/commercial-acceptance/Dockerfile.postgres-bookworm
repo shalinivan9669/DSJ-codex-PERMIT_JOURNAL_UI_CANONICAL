@@ -1,0 +1,16 @@
+# Database runtime: PostgreSQL 18.6 security release, with Debian security updates.
+# Rebuild and scan before release; OS package versions are captured in the image SBOM.
+FROM postgres:18.6-bookworm@sha256:3725f4e2499eef5134592b3b4ab79a543ed7f8e533b05b5b637af926630f6650
+USER root
+ARG PG_PACKAGE_VERSION=18.6-1.pgdg12+2
+RUN apt-get update -o APT::Update::Error-Mode=any \
+    && apt-get install -y --no-install-recommends \
+        postgresql-18=${PG_PACKAGE_VERSION} postgresql-client-18=${PG_PACKAGE_VERSION} \
+    && apt-mark hold postgresql-18 postgresql-client-18 \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm /usr/local/bin/gosu \
+    && test "$(postgres --version)" = "postgres (PostgreSQL) 18.6 (Debian ${PG_PACKAGE_VERSION})"
+# The upstream entrypoint's gosu branch applies only to UID 0. Fresh initialization,
+# recovery, and normal execution are tested as this unprivileged user.
+USER postgres

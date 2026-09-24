@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "basePhysicalPages": 84,
+  "stressSamplePhysicalPages": 186,
+  "stressNotFullManualReview": true,
+  "errors": [],
+  "sources": [
+    "root-visual-review-current.json",
+    "print-agent-visual-final.json",
+    "root-stress-visual-review.json",
+    "print-agent-stress-review.json"
+  ],
+  "sourceHashes": {
+    "root-visual-review-current.json": "f9aa178a7b1e07d00eb713a4e1d8233eb19aec16e2f465dbdc8a81a97758aa5e",
+    "print-agent-visual-final.json": "e71d69168496e2768073c0a49051e3ea07616c05637211e558b24e4da767c602",
+    "root-stress-visual-review.json": "f1d5cc0511081d2ba60ad55f6b357280c1e816a0741bbf8846f7e45b74ed9d38",
+    "print-agent-stress-review.json": "6ff8c224326bdb72420ee85b3d3f6ccd72de4e045654fe48993ab8a95acbb42a"
+  }
+}

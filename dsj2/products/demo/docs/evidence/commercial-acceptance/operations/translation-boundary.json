@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "translationArchitecture": "No asynchronous translator or translation callback in autonomous DEMO. RU/KZ edit independent state; explicit synchronous copy buttons only.",
+  "source": "apps/web/components/recipient-details.tsx",
+  "sha256": "253085f24d7911e75f948791f222499b4144c4cb02f61600ae52ebc4ffe87ce8",
+  "legacyTranslationRouteProbe": {
+    "method": "POST",
+    "url": "https://localhost:8443/api/translations/job-title",
+    "caVerified": true,
+    "status": 404
+  },
+  "runtimeImage": "sha256:bfb58a6a5f3c38aa2b8431be5d1f666d383dd370c6a5be7e774fb4e4213ad232",
+  "existingBrowserEvidence": [
+    "browser/final-v2/results.json",
+    "browser/matrix-updates.json"
+  ],
+  "limitation": "No out-of-order translation response was simulated because no such service is part of this product. Current supported behavior is independent manual fields and explicit copy; no automatic translation claim."
+}

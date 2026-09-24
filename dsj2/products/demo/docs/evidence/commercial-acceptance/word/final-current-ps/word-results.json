@@ -1,0 +1,37 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 2,
+  "documents": [
+    {
+      "file": "ps-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 99,
+      "pdf": "ps-card-long.word.pdf",
+      "audit": "ps-card-long.audit.json",
+      "docxSha256": "c390efd7cf9ca58dc14f8fef489cf7ba0057c38620c07b315aabe095f3aa2b7d",
+      "pdfSha256": "6e30d23089f899d994e1c207d42cd5263bf352eb867b21c924942e5e525f34ec",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 93,
+      "pdf": "ps-card-short.word.pdf",
+      "audit": "ps-card-short.audit.json",
+      "docxSha256": "853a627b458fbb8fcde6722b94bdc0be8f400ad250760bf807b3cd5562fcc166",
+      "pdfSha256": "7d77a9cd5ace19463caff61f89a89aaf58f7d1c760b16031946f9dde920bd6e2",
+      "visualReview": "PASS"
+    }
+  ],
+  "visualSummary": {
+    "status": "PASS",
+    "pagesReviewed": 4,
+    "findings": "Final canonical PS v15: headings below issuer strip, exam text within right panel, bottom stamp within frame; both pages of both variants reviewed."
+  }
+}

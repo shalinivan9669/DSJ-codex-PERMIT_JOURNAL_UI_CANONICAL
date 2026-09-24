@@ -1,0 +1,292 @@
+{
+  "recordedAt": "2026-09-22T15:02:15.9912419Z",
+  "scope": "Only three .gitignore files plus removal of explicitly reviewed generated DEMO files from Git index. No worktree files deleted; no frozen business source changed.",
+  "changedRules": [
+    ".gitignore",
+    "dsj2/.gitignore",
+    "dsj2/products/demo/.gitignore"
+  ],
+  "indexCleanup": {
+    "dryRun": "PASS",
+    "removedFromIndex": 657,
+    "categories": {
+      "generatedBinaryEvidence": 535,
+      "nextCommercialBuildCache": 122
+    },
+    "all657FilesStillOnDisk": true,
+    "trackedIgnoredRemaining": 0,
+    "reviewedPathListSha256": "5f1393d0cf5bbc8a09ed73523c70153d2b7dec2a022ee0eec09d1ca8e7148847",
+    "retainedOnDiskBytes": 318298810.0,
+    "localFullPlan": ".runtime/gitignore-untrack.paths",
+    "localDryRun": ".runtime/gitignore-untrack-dry-run.log"
+  },
+  "checks": [
+    {
+      "path": "node_modules/package/index.js",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/apps/web/.next-bench/server/index.js",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/apps/web/.next-commercial/cache/webpack/cache.pack.gz",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/node_modules/package/index.js",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/dist/server.js",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/.runtime/postgresql/data/PG_VERSION",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/.env.production",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/.env.local",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/secrets/server.key",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/backups/database.dump",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/uploads/photo.jpg",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/scripts/render/__pycache__/renderer.pyc",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/.pytest_cache/state",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/.venv/bin/python",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/playwright-report/index.html",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/test-results/trace.zip",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/docs/evidence/commercial-acceptance/printing/ps-card-short.pdf",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/docs/evidence/commercial-acceptance/browser/screen.png",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/docs/evidence/commercial-acceptance/export.xlsx",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/docs/evidence/commercial-acceptance/original.docx",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/docs/evidence/commercial-acceptance/package.zip",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": ".env.example",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/.env.abtest.example",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/.env.example",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/ps-card.v15.docx",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/fonts/NotoSans-Regular.ttf",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/fonts/manifest.json",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/tests/fixtures/source.xlsx",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/tests/fixtures/source.docx",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/tests/fixtures/expected.tmp",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/packages/database/prisma/migrations/202609220001_demo/migration.sql",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/docs/evidence/commercial-acceptance/matrix.json",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/docs/evidence/commercial-acceptance/POSTGRES_SECURITY_RU.md",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/docs/evidence/commercial-acceptance/security/integration-final.log",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/products/demo/licenses/natural-compare-MIT.txt",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/docs/experimental/biot/biot-itr-certificate-template.docx",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "dsj2/apps/api/src/briefing-records/example.ts",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "docs/evidence/commercial-acceptance/local-tls-ca.crt",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "docs/deliverables/release.zip",
+      "expectedIgnored": true,
+      "actualIgnored": true,
+      "passed": true
+    },
+    {
+      "path": "docs/deliverables/README.md",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    },
+    {
+      "path": "docs/deliverables/manifest.json",
+      "expectedIgnored": false,
+      "actualIgnored": false,
+      "passed": true
+    }
+  ],
+  "preserved": [
+    "assets/templates source DOCX",
+    "assets/fonts and licenses",
+    "tests/fixtures",
+    "all database migrations",
+    "env.example and env.*.example",
+    "acceptance JSON/Markdown/text/log reports",
+    "frozen DSJ source"
+  ],
+  "additionalRules": [
+    "Generated local acceptance TLS public certificates",
+    "Generated docs/deliverables release bundles"
+  ],
+  "finalTotals": {
+    "removedFromIndex": 665,
+    "onDiskBytesPreserved": 320664555,
+    "allFilesRemainOnDisk": true,
+    "trackedIgnoredRemaining": 0,
+    "ruleChecksPassed": 41,
+    "additionalIndexCleanup": "gitignore-deliverables-audit.json"
+  }
+}

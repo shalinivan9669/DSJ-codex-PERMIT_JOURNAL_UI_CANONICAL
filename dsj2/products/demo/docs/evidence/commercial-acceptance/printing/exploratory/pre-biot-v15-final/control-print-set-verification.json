@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "path": "docs/evidence/commercial-acceptance/printing/control-print-set.zip",
+  "sha256": "ef71d66265e30c6997143b7d7b6506d254dec73dc14ada20e91d60410c0e1f4f",
+  "bytes": 30702450,
+  "entries": 81,
+  "documents": 20,
+  "pdfPages": 28,
+  "registryRows": 20,
+  "verification": "Every ZIP entry compared byte-for-byte to standalone source; XLSX read back with 20 rows and field headers."
+}

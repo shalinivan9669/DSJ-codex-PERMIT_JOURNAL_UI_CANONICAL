@@ -1,0 +1,62 @@
+{
+  "version": "2.1.5",
+  "mode": "session scope, registry-less AddFontResourceExW flags=0; removed after Word exits",
+  "fonts": [
+    {
+      "file": "LiberationSans-Bold.ttf",
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\fonts\\LiberationSans-Bold.ttf",
+      "sha256": "788abee4c806d660e8aee46689dd8540cd4bb98da03dcc9d171ce3efd99a9173",
+      "added": 1,
+      "removed": true
+    },
+    {
+      "file": "LiberationSans-BoldItalic.ttf",
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\fonts\\LiberationSans-BoldItalic.ttf",
+      "sha256": "698da70fc191cc5f33ad4d6d3fe830fe4624b898ea2e3169955928b7c491f1ee",
+      "added": 1,
+      "removed": true
+    },
+    {
+      "file": "LiberationSans-Italic.ttf",
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\fonts\\LiberationSans-Italic.ttf",
+      "sha256": "e5bae5c4cde31f22142753855f4f8fb86da6ff39955ed3c0a11248b0d16948b0",
+      "added": 1,
+      "removed": true
+    },
+    {
+      "file": "LiberationSans-Regular.ttf",
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\fonts\\LiberationSans-Regular.ttf",
+      "sha256": "76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8",
+      "added": 1,
+      "removed": true
+    },
+    {
+      "file": "LiberationSerif-Bold.ttf",
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\fonts\\LiberationSerif-Bold.ttf",
+      "sha256": "d754ba427cfe0bca54ae052384baa8f842da5bd6550ad4da024ac441e7a7d5ce",
+      "added": 1,
+      "removed": true
+    },
+    {
+      "file": "LiberationSerif-BoldItalic.ttf",
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\fonts\\LiberationSerif-BoldItalic.ttf",
+      "sha256": "f17db8af71e24d2066b587546021d4f0b296be389512b658dec3c09affeb11a7",
+      "added": 1,
+      "removed": true
+    },
+    {
+      "file": "LiberationSerif-Italic.ttf",
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\fonts\\LiberationSerif-Italic.ttf",
+      "sha256": "0e3dea9f8d613e006ccfa62201f33e265d19167bd0907725c3e145368b04fc2e",
+      "added": 1,
+      "removed": true
+    },
+    {
+      "file": "LiberationSerif-Regular.ttf",
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\fonts\\LiberationSerif-Regular.ttf",
+      "sha256": "058ea80864aef09a23f45cbec2bb5400bc3dfbdea01c3f10538a21fcb497fb74",
+      "added": 1,
+      "removed": true
+    }
+  ]
+}

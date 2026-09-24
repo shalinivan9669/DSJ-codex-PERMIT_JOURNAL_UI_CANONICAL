@@ -1,0 +1,95 @@
+{
+  "owner": "root",
+  "requirements": [
+    {
+      "id": "A46",
+      "status": "PASS",
+      "scenario": "Offline backup and restore to new isolated PostgreSQL18.6 database/volumes; counts and table row hashes, private files and shipped resources; fresh HTTP login and repeated downloads.",
+      "environment": "Pinned r2 Linux API image and PostgreSQL18.6-no-XML; demo_test_backup_release_20260922b / demo_test_restore_release_20260922b.",
+      "result": "25 table counts+content hashes,16 private files,38 resources,1photo,10templateversions matched. All4 canonical artifacts downloaded twice after restore; identical SHA256/size. Backup4980ms;restore+reconcile3489ms.",
+      "artifact": "backup-restore/timing.json;backup-restore/backup-manifest.json;backup-restore/http-readback.json;backup-restore-run.log",
+      "limitation": "Small quiesced synthetic fixture. Zero logical data loss observed by full hash reconciliation; measured durations are not production RPO/RTO commitments. Original immutable r2 files intentionally preserved; no claim that they use later template layouts."
+    },
+    {
+      "id": "C13",
+      "status": "PASS",
+      "scenario": "Complete DB/storage/resources restore with HTTP readback of original immutable artifacts and photo.",
+      "result": "Counts alone were not used; hashes of all database rows and files reconciled, authenticated repeated downloads and photo matched source.",
+      "artifact": "backup-restore/backup-manifest.json;backup-restore/http-readback.json;backup-restore/timing.json",
+      "limitation": "Exact synthetic source/target DBs, volumes and image recorded in evidence. Production backup medium not supplied."
+    },
+    {
+      "id": "C09",
+      "status": "BLOCKED",
+      "scenario": "Physical100%print, ruler measurements and duplex alignment.",
+      "result": "Four-page calibration and control kit prepared and visually checked. No physical printer available beyond Microsoft Print to PDF; no paper print or ruler result claimed.",
+      "artifact": "../../PHYSICAL_PRINT_RU.md",
+      "limitation": "Requires an actual printer, stock and operator measurement."
+    },
+    {
+      "id": "A48",
+      "status": "BLOCKED",
+      "scenario": "Production inventory, close old public origins and stop out-of-scope workers during cutover.",
+      "result": "No production inventory or environment-specific cutover authorization supplied. Local isolated engines and user preview remain separate from production.",
+      "artifact": "../../CUTOVER_ROLLBACK_RU.md",
+      "limitation": "No production cutover performed."
+    },
+    {
+      "id": "C17",
+      "status": "FAIL",
+      "scenario": "Current primary regulations and separate issuer approval.",
+      "result": "Confirmed historical six-column BIOT protocol differs from current seven-column Appendix3. Applicable categories, issuer authorization and final form approval not supplied; legal approval remains BLOCKED separately.",
+      "artifact": "../../FORM_LEGAL_REVIEW_RU.md;legal/sources.json",
+      "limitation": "Engineering geometry/numbering PASS does not close legal mismatch. No fictitious issuer approval or ECS signature introduced."
+    },
+    {
+      "id": "A23",
+      "status": "PASS",
+      "scenario": "Inspect actual RU/KZ update paths and deployed legacy translation route; combine independent manual-copy/roundtrip/offline browser cases.",
+      "result": "Autonomous DEMO has no asynchronous translator. Manual KZ values change only via explicit edit/copy; legacy POST translation route is404 over CA-verified HTTPS.",
+      "artifact": "operations/translation-boundary.json;browser/final-v2/results.json",
+      "limitation": "No invented translation service or simulated stale-response test claimed. Requirement risk removed by current supported synchronous architecture."
+    },
+    {
+      "id": "A49",
+      "status": "PASS",
+      "scenario": "Current autonomy and freeze verifier plus issuer/header and synthetic watermark print review.",
+      "result": "397 preserved legacy files:381 unchanged,16 authorized adapters,8 authorized new boundary files,0 frozen business changes,0 missing preserved files. Product brandDEMO separate from issuer strip; synthetic watermarks retained.",
+      "artifact": "freeze-release3.log;autonomy-final.log;printing/PRINTING_REPORT_RU.md;printing/final-visual-reconciliation.json;gitignore-audit.json",
+      "limitation": "Index-only removal of665 generated DEMO artifacts/caches preserves all320664555 bytes on disk;41 ignore rule checks PASS; no frozen source removed."
+    },
+    {
+      "status": "PASS",
+      "limitation": "Independent local standalone environment, not production cutover.",
+      "result": "Both final images built and started.17unit+42integration PASS; HTTPS TLS1.2/1.3 live health PASS. Prior exact PS15 HTTPS issue files remain immutable; source/runtime delta reconciled separately.",
+      "scenario": "Clean product-only copy outside DSJ, frozen install/build/checks, own Linux PostgreSQL and safe setup, actual production web/API/worker/readiness and browser issue.",
+      "id": "A01",
+      "environment": "External release5; exact sourceSHA93a82ecaa4d14e647dd03e3c6820c298844c2a457f0abbecd9d209ac00e6a131; Node24.16.0,pnpm11.27.1,PostgreSQL18.6,LibreOffice26.2.6.3.",
+      "artifact": "final-build-checks.json;standalone-stage-release5.json;container-final-r5-tls-update.log;security/integration-linux-final-r5.log;browser/generated-photo-ps-https/photo-result.json"
+    },
+    {
+      "status": "PASS",
+      "limitation": "Current runtime bound to r5 source manifest; later report/helper-only changes must be explicitly reconciled.",
+      "result": "Actual API+web Docker builds and6-service non-root read-only deployment; no parent DSJ source/runtime imports. Final17unit and42integration pass.",
+      "scenario": "Frozen install/build/run from external product-only copy.",
+      "id": "C14",
+      "artifact": "standalone-stage-release5.json;final-build-checks.json;container-final-r5-tls-update.log"
+    },
+    {
+      "status": "PASS",
+      "limitation": "Fault runs deliberately retain original immutable artifacts and recorded runtime versions. Later template/readiness-only changes do not retroactively rerender originals; applicable source differences are reconciled.",
+      "result": "Recovered without repeated issuance/renumbering; readiness503 on unavailable storage, eventual4/4documents per storage fault;16download SHA. DB interruption:10jobs auto-recovered,14artifacts unchanged after all-service restart.",
+      "scenario": "Actual worker SIGKILL, converter interruption, two recovery workers; actual DB stop/recovery and API/worker restarts; real ENOSPC and EACCES.",
+      "id": "C12",
+      "artifact": "security/process-drill.json;security/process-drill.log;storage-faults/result.json;storage-fault-run.log;resilience/result.json;resilience/RESILIENCE_RU.md;security/integration-linux-final-r5.log"
+    },
+    {
+      "status": "PASS",
+      "limitation": "Local WSL2 Linux target, temporary local CA, container restart tested; physical host reboot and public production certificate/domain not supplied. No production availability promise.",
+      "result": "r5 runningAPIworker399a6212.../web3eb90b05...; public listeners limited127.0.0.1:8080/8443; DB/API/storage not published. TLS1.2/1.3 verified with local CA; browser PS15 photo issuance and independent untrusted-CA rejection; real restart14SHA unchanged.",
+      "scenario": "Pinned Linux images; actual build/run, non-root read-only/cap-drop/private volumes, service restart, reverse-proxy TLS.",
+      "id": "C15",
+      "artifact": "container-final-r5-tls-update.log;browser/generated-photo-ps-https/PHOTO_HTTPS_ACCEPTANCE_RU.md;resilience/result.json;final-build-checks.json"
+    }
+  ]
+}

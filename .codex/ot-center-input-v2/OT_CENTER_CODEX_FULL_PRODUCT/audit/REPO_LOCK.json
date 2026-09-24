@@ -1,0 +1,21 @@
+{
+  "repository": "shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL",
+  "branch": "codex/demo-print-2-0",
+  "observedHead": "d1d377b641b0ee3e171c794e654b382d4d3af7c4",
+  "commitAuthorDateUtc": "2026-09-22T16:54:44Z",
+  "commitTitle": "Finalize BIOT finish and validation updates",
+  "parent": "bff94f9949a1f0166893024d3981bf8dee6ef70c",
+  "productRoot": "dsj2/products/demo",
+  "auditDate": "2026-09-22",
+  "auditMethod": "GitHub connector: branch, commit, tree and selected source-file reads",
+  "applicationCodeChanged": false,
+  "runtimeTestsExecuted": false,
+  "productionStateVerified": false,
+  "checkoutPolicy": "Revalidate branch HEAD and user changes; never reset to audit SHA automatically",
+  "artifactContainsApplicationSources": false,
+  "originalAuditBranchRecheckedBeforePackaging": true,
+  "originalAuditRecheckedHead": "d1d377b641b0ee3e171c794e654b382d4d3af7c4",
+  "handoffRevision": "2026-09-22.2",
+  "repositoryRecheckedForThisRevision": false,
+  "revisionMethod": "Read and revise supplied handoff only; original static code audit retained; current branch must be revalidated by implementer"
+}

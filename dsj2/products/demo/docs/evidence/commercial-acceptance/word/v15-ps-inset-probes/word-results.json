@@ -1,0 +1,37 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 2,
+  "documents": [
+    {
+      "file": "ps-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 99,
+      "pdf": "ps-card-long.word.pdf",
+      "audit": "ps-card-long.audit.json",
+      "docxSha256": "afec8feb7de09d127cf7ae27cb435798b8ba2d58cba1d775a6153d134dd4e65c",
+      "pdfSha256": "13d80c60c090ee7d5c1e8a0aa4f19a2520814d5085f2ba691f54b7e651a4f110",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 93,
+      "pdf": "ps-card-short.word.pdf",
+      "audit": "ps-card-short.audit.json",
+      "docxSha256": "f9bd80fd192fa96b42262e2d85ab4daa94ecf06bb8e395fff879c03d99758acf",
+      "pdfSha256": "16c43447efa196e9b85b9495598b6c10d0d44bb81a165e161622fa44b3fd2688",
+      "visualReview": "PASS"
+    }
+  ],
+  "visualSummary": {
+    "status": "PASS",
+    "pagesReviewed": 4,
+    "findings": "Right exam paragraphs remain inside the right panel; first title below issuer strip; bottom stamp text inside frame; both repeated-check pages fit."
+  }
+}

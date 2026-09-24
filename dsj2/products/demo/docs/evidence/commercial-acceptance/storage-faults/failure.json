@@ -1,0 +1,5 @@
+{
+  "status": "FAIL",
+  "error": "Error: ENOSPC: no space left on device, write",
+  "observations": []
+}

@@ -1,0 +1,91 @@
+{
+  "status": "FAIL",
+  "source": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-itr-certificate-short.docx",
+  "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\word\\final-v11\\biot-protocol-short.word.pdf",
+  "sourceSha256": "060192bf29ad62da3247155706a5921a3f0239dc781443116017f1e7bfd0bde8",
+  "pdfSha256": "51bb6c6b4465b9cd617f149e42d64ffd63fa9c90b55ade9bf01f303b98ad132e",
+  "wordPages": 1,
+  "pdfPages": 1,
+  "sourceParagraphs": 14,
+  "expectedUniqueWords": 42,
+  "missingSourceWordsInPdf": [
+    "Астана",
+    "Безопасность",
+    "Еңбек",
+    "Курс",
+    "Настоящим",
+    "Нәтиже",
+    "Результат",
+    "Сертификат",
+    "ТЕСТ-00001",
+    "Тіркеу",
+    "город",
+    "курсы",
+    "обучения",
+    "охрана",
+    "удостоверяет",
+    "Қала"
+  ],
+  "missingSourceWordsInWordBody": [
+    "Астана",
+    "Безопасность",
+    "Еңбек",
+    "Курс",
+    "Настоящим",
+    "Нәтиже",
+    "Результат",
+    "Сертификат",
+    "ТЕСТ-00001",
+    "Тіркеу",
+    "город",
+    "курсы",
+    "обучения",
+    "охрана",
+    "удостоверяет",
+    "Қала"
+  ],
+  "paragraphsReflowedOrMissing": [
+    "22.09.2026",
+    "«Безопасность и охрана труда»",
+    "«Еңбек қауіпсіздігі және еңбекті қорғау»",
+    "Комиссия төрағасы, қолы/Председатель комиссии, подпись",
+    "Настоящим удостоверяет в том, что",
+    "Результат обучения: ТЕСТ: хорошо / жақсы. Курс",
+    "Сертификат",
+    "ТЕСТ-00001",
+    "Тіркеу №/ Рег. №",
+    "курсы. Нәтиже: ТЕСТ: хорошо / жақсы",
+    "Қала/город: Астана"
+  ],
+  "pdfFonts": [
+    "/BCDEEE+LiberationSans",
+    "/BCDFEE+LiberationSans",
+    "/BCDGEE+LiberationSerif-Bold",
+    "/BCDHEE+LiberationSerif-Bold",
+    "/BCDIEE+LiberationSerif",
+    "/BCDJEE+LiberationSerif"
+  ],
+  "activeSourceParts": [
+    "word/demo-header.xml",
+    "word/document.xml",
+    "word/footer1.xml"
+  ],
+  "errors": [
+    "SOURCE_WORDS_MISSING_IN_PDF",
+    "SOURCE_WORDS_MISSING_IN_WORD_BODY"
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.32,
+      "heightPt": 841.92,
+      "textCharacters": 1470,
+      "minimumFontPt": 6.96,
+      "minimumBodyFontPt": 9.96,
+      "excludedDemoNoticeLines": 1,
+      "outOfPageCharacters": 0
+    }
+  ],
+  "reference": null,
+  "visualReview": "REQUIRED_SEPARATELY"
+}

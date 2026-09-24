@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "completedAt": "2026-09-22T15:56:29.443Z",
+  "origin": "http://localhost:3200",
+  "browser": "152.0.7977.83",
+  "scope": "Actual login UI in a fresh unauthenticated Chromium context. Only POST /api/auth/login fulfilled by Playwright; zero server login requests, no credentials used, no DB/service mutations. This is UI fault-response simulation, not a real database outage.",
+  "mockedPosts": 3,
+  "observations": [
+    {
+      "scenario": "500-service-json",
+      "mockedStatus": 500,
+      "visibleMessage": "Не удалось выполнить операцию. Сообщите код ошибки администратору Код обращения: synthetic-login-500",
+      "focusAfterError": "BODY",
+      "keyboardStepsToSubmit": 5,
+      "keyboardFocus": "Submit reachable with Tab after error; disabled submit releases focus during request",
+      "valuesRetained": true,
+      "incorrectPasswordClaim": false,
+      "status": "PASS"
+    },
+    {
+      "scenario": "503-service-json",
+      "mockedStatus": 503,
+      "visibleMessage": "Сервис временно недоступен Код обращения: synthetic-login-503",
+      "focusAfterError": "BODY",
+      "keyboardStepsToSubmit": 5,
+      "keyboardFocus": "Submit reachable with Tab after error; disabled submit releases focus during request",
+      "valuesRetained": true,
+      "incorrectPasswordClaim": false,
+      "status": "PASS"
+    },
+    {
+      "scenario": "503-non-json",
+      "mockedStatus": 503,
+      "visibleMessage": "Сервер не выполнил запрос. Повторите попытку.",
+      "focusAfterError": "BODY",
+      "keyboardStepsToSubmit": 5,
+      "keyboardFocus": "Submit reachable with Tab after error; disabled submit releases focus during request",
+      "valuesRetained": true,
+      "incorrectPasswordClaim": false,
+      "status": "PASS"
+    }
+  ]
+}

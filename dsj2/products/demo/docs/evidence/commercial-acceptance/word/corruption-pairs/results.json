@@ -1,0 +1,46 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "Read-only; macro execution and external link updates disabled",
+  "documents": [
+    {
+      "file": "biot-protocol-mc-props.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 1,
+      "bodyCharacters": 1721,
+      "sourceSha256": "621e1eae7b4a88024891e49e36acb2c52443dac7b114a61b3a4356055964861c",
+      "pdf": "biot-protocol-mc-props.word.pdf",
+      "pdfBytes": 135974
+    },
+    {
+      "file": "biot-protocol-mc-override.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден.",
+      "sourceSha256": "4a14356e442da9421da7813386484f32385c06d79f0faaaefb52902f293a8bb2"
+    },
+    {
+      "file": "biot-protocol-props-override.docx",
+      "status": "FAIL",
+      "error": "Файл поврежден.",
+      "sourceSha256": "3e36070f1cd477c909637a59307f275d8c8fc4d417fc48bfb3bdf3c7ca2b1f64"
+    },
+    {
+      "file": "biot-protocol-canonical.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 1,
+      "bodyCharacters": 1721,
+      "sourceSha256": "5a798dd6a37a23d035de051eab277c9afbecbdc8c6d603446728c89ce60f25cd",
+      "pdf": "biot-protocol-canonical.word.pdf",
+      "pdfBytes": 135974
+    },
+    {
+      "file": "word-created.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 1,
+      "bodyCharacters": 37,
+      "sourceSha256": "f82d4eefcd803c6ec364e7c0269f42a9abb94a32759a74713d9b2de14d3e9efd",
+      "pdf": "word-created.word.pdf",
+      "pdfBytes": 16376
+    }
+  ]
+}

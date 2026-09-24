@@ -1,0 +1,25 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "Read-only; macro execution and external link updates disabled",
+  "documents": [
+    {
+      "file": "biot-itr-certificate-template.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 1,
+      "bodyCharacters": 1,
+      "sourceSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+      "pdf": "biot-itr-certificate-template.word.pdf",
+      "pdfBytes": 144885
+    },
+    {
+      "file": "ps-witness-certificate-template.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 2,
+      "bodyCharacters": 2515,
+      "sourceSha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+      "pdf": "ps-witness-certificate-template.word.pdf",
+      "pdfBytes": 272437
+    }
+  ]
+}

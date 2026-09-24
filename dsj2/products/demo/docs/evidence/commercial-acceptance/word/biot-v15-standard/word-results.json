@@ -1,0 +1,38 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 2,
+  "documents": [
+    {
+      "file": "biot-worker-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 75,
+      "pdf": "biot-worker-card-long.word.pdf",
+      "audit": "biot-worker-card-long.audit.json",
+      "docxSha256": "00ee58d5cdf46125b24a61f1c3d022017211fe0c9894a399608dc889f91e69a0",
+      "pdfSha256": "4bf91d2f03ad7540bfbfbff20647ee83bdd52d2c63a3e7d58027bca6f84b1ee7",
+      "visualReview": "PASS",
+      "visualNotes": "Both pages explicitly reviewed: upper/lower right boxes wrap full chairman and program within frame; issuer band uninterrupted; reverse fields fit."
+    },
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 70,
+      "pdf": "biot-worker-card-short.word.pdf",
+      "audit": "biot-worker-card-short.audit.json",
+      "docxSha256": "e96c1260785d1b7433686c83fca84c0f75562013752aacfa23fe61590a80701f",
+      "pdfSha256": "f21e7b907504fb76c99f93fa366b165593181a2e54333ee6b773b4e661796223",
+      "visualReview": "PASS",
+      "visualNotes": "Both pages explicitly reviewed: upper/lower right boxes wrap full chairman and program within frame; issuer band uninterrupted; reverse fields fit."
+    }
+  ],
+  "manualPagesReviewed": 4,
+  "visualStatus": "PASS",
+  "manuallyReviewedAt": "2026-09-22T15:35:38.672Z",
+  "fontCleanupVerified": true
+}

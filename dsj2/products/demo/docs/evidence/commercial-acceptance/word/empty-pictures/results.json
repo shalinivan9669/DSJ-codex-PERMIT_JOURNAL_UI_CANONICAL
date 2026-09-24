@@ -1,0 +1,25 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "Read-only; macro execution and external link updates disabled",
+  "documents": [
+    {
+      "file": "biot-itr-certificate-no-empty-pictures.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 1,
+      "bodyCharacters": 1,
+      "sourceSha256": "32e34afc2eb9fcb7e3299830952cf1bdb61027c15f30847a42d83e9a6ae4b19d",
+      "pdf": "biot-itr-certificate-no-empty-pictures.word.pdf",
+      "pdfBytes": 107722
+    },
+    {
+      "file": "ps-witness-no-empty-pictures.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 2,
+      "bodyCharacters": 2085,
+      "sourceSha256": "aa64f792b39af91c136a32208f3b2fcb8a0e463349a1c39186f8cb0ff4cdc04d",
+      "pdf": "ps-witness-no-empty-pictures.word.pdf",
+      "pdfBytes": 171109
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "status": "PASS",
+  "image": "sha256:3eb90b057da92d0a6f260a07a5cc18b02a6c61fcfd8647124a3238d6f0dcb956",
+  "checkedAt": "2026-09-22T16:06:10.473Z",
+  "origin": "https://localhost:8443",
+  "tls": "Trusted local CA; verification enabled",
+  "scope": "Actual anonymous HTTPS ingress and Next boundary; genuine API-role checks recorded separately in integration-linux-final-r5.log",
+  "rows": [
+    {
+      "path": "/journals",
+      "method": "GET",
+      "status": 404,
+      "body": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/journals",
+      "method": "POST",
+      "status": 404,
+      "body": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/journals",
+      "method": "PUT",
+      "status": 404,
+      "body": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/journals",
+      "method": "OPTIONS",
+      "status": 404,
+      "body": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/api/journals",
+      "method": "GET",
+      "status": 404,
+      "body": "{\"code\":\"NOT_FOUND\",\"message\":\"Не найдено\",\"correlationId\":\"ef56efe1-830e-4188-a45e-762f3007f677\"}",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/api/journals",
+      "method": "POST",
+      "status": 404,
+      "body": "{\"code\":\"NOT_FOUND\",\"message\":\"Не найдено\",\"correlationId\":\"2c742faa-aea6-4ca8-9546-dbf8c6c35e5d\"}",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/api/journals",
+      "method": "PUT",
+      "status": 404,
+      "body": "{\"code\":\"NOT_FOUND\",\"message\":\"Не найдено\",\"correlationId\":\"20cad2ce-eb5b-4072-bd02-a9677a8ba2e5\"}",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/api/journals",
+      "method": "OPTIONS",
+      "status": 404,
+      "body": "{\"code\":\"NOT_FOUND\",\"message\":\"Не найдено\",\"correlationId\":\"8e6a357e-7879-4b67-9586-cda65516b49f\"}",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/login",
+      "method": "POST",
+      "status": 404,
+      "body": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/login",
+      "method": "GET",
+      "headers": {
+        "next-action": "legacy-action"
+      },
+      "status": 404,
+      "body": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/api/print-requests",
+      "method": "POST",
+      "headers": {
+        "next-action": "legacy-action"
+      },
+      "status": 404,
+      "body": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n",
+      "tlsAuthorized": true
+    },
+    {
+      "path": "/api/old-public",
+      "method": "GET",
+      "status": 404,
+      "body": "{\"code\":\"NOT_FOUND\",\"message\":\"Не найдено\",\"correlationId\":\"5ce3871a-609c-46da-a775-03a3e19603d6\"}",
+      "tlsAuthorized": true
+    }
+  ]
+}

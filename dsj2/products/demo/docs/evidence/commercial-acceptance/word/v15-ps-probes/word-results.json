@@ -1,0 +1,36 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 2,
+  "documents": [
+    {
+      "file": "ps-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 99,
+      "pdf": "ps-card-long.word.pdf",
+      "audit": "ps-card-long.audit.json",
+      "docxSha256": "afec8feb7de09d127cf7ae27cb435798b8ba2d58cba1d775a6153d134dd4e65c",
+      "pdfSha256": "336e0085796b6f1a53b9a4c7e132691bab7921048a45736dfb46ac21e7900ece",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 93,
+      "pdf": "ps-card-short.word.pdf",
+      "audit": "ps-card-short.audit.json",
+      "docxSha256": "f9bd80fd192fa96b42262e2d85ab4daa94ecf06bb8e395fff879c03d99758acf",
+      "pdfSha256": "4a9bc83863c87f2027062ce9e4b97c8992caf120d0b92a63af3bcc39cf0fa2c6",
+      "visualReview": "PASS"
+    }
+  ],
+  "visualSummary": {
+    "pagesReviewed": 4,
+    "status": "PASS"
+  }
+}

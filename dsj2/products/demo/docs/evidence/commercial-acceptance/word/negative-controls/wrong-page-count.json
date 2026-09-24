@@ -1,0 +1,45 @@
+{
+  "status": "FAIL",
+  "source": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-protocol-short.docx",
+  "pdf": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\word\\final-v11\\biot-protocol-short.word.pdf",
+  "sourceSha256": "9c4aa1af4d95f8f403eb732236b746b4e38a6c067f7318534fb5b90ade479fe6",
+  "pdfSha256": "51bb6c6b4465b9cd617f149e42d64ffd63fa9c90b55ade9bf01f303b98ad132e",
+  "wordPages": 999,
+  "pdfPages": 1,
+  "sourceParagraphs": 38,
+  "expectedUniqueWords": 97,
+  "missingSourceWordsInPdf": [],
+  "missingSourceWordsInWordBody": [],
+  "paragraphsReflowedOrMissing": [],
+  "pdfFonts": [
+    "/BCDEEE+LiberationSans",
+    "/BCDFEE+LiberationSans",
+    "/BCDGEE+LiberationSerif-Bold",
+    "/BCDHEE+LiberationSerif-Bold",
+    "/BCDIEE+LiberationSerif",
+    "/BCDJEE+LiberationSerif"
+  ],
+  "activeSourceParts": [
+    "word/demo-header.xml",
+    "word/document.xml",
+    "word/footer1.xml",
+    "word/footer2.xml"
+  ],
+  "errors": [
+    "WORD_PDF_PAGE_COUNT_MISMATCH"
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "widthPt": 595.32,
+      "heightPt": 841.92,
+      "textCharacters": 1470,
+      "minimumFontPt": 6.96,
+      "minimumBodyFontPt": 9.96,
+      "excludedDemoNoticeLines": 1,
+      "outOfPageCharacters": 0
+    }
+  ],
+  "reference": null,
+  "visualReview": "REQUIRED_SEPARATELY"
+}

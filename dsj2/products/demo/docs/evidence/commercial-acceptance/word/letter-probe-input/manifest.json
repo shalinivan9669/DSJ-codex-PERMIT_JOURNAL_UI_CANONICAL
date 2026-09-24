@@ -1,0 +1,10 @@
+{
+  "source": "docs\\evidence\\commercial-acceptance\\printing\\word-final-v9\\biot-worker-card-short.docx",
+  "sourceSha256": "415a8ffd97d58d916ea903d8a53cb95753eaa0fa7724b9cfdda939d719781cdd",
+  "output": "docs\\evidence\\commercial-acceptance\\word\\letter-probe-input\\biot-worker-card-short.docx",
+  "outputSha256": "c6e3a60c862262be5b28880434f521fb9deef245af46d14def57189654fef162",
+  "literalChanges": 4,
+  "old": "КУƏЛІГІ U+018F",
+  "new": "КУӘЛІГІ U+04D8",
+  "scope": "Diagnostic copy only; static label, no user data changed"
+}

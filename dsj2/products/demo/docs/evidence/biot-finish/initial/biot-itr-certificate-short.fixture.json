@@ -1,0 +1,74 @@
+{
+  "mode": "issued-document",
+  "demoMode": true,
+  "templateId": "biot-itr-certificate",
+  "templateVersion": 14,
+  "issuer": {
+    "nameRu": "Учебный центр «Образец»",
+    "nameKz": "«Үлгі» оқу орталығы",
+    "cityRu": "Астана",
+    "cityKz": "Астана",
+    "approvalBasis": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+    "commission": [
+      {
+        "name": "Тестова А. Б.",
+        "position": "Председатель"
+      },
+      {
+        "name": "Үлгі Ә. Ө.",
+        "position": "Член комиссии"
+      },
+      {
+        "name": "Примеров В. Г.",
+        "position": "Член комиссии"
+      }
+    ],
+    "bin": "990140000000",
+    "headName": "Тестова А. Б."
+  },
+  "items": [
+    {
+      "id": "recipient-01",
+      "fullNameRu": "Тестов Иван Петрович",
+      "fullNameKz": "Әділбек Өмірсерік Қанатұлы",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "ТОО «Тестовый заказчик»",
+      "workplaceKz": "«Сынақ тапсырыс беруші» ЖШС",
+      "number": "ТЕСТ-00001",
+      "protocolNumber": "ПР-00001",
+      "registrationNumber": "00123",
+      "assignment": {
+        "id": "a1",
+        "templateId": "biot-itr-certificate",
+        "documentDate": "2026-09-22",
+        "protocolDate": "2026-09-20",
+        "trainingStart": "2026-09-14",
+        "trainingEnd": "2026-09-19",
+        "trainingSubject": "Безопасность труда / Еңбек қауіпсіздігі",
+        "result": "сдал / тапсырды",
+        "reason": "ТЕСТ: первичное обучение",
+        "hours": 40,
+        "validUntil": "2027-09-22",
+        "externalBasisNumber": "ВНЕШНИЙ-01",
+        "protocolMode": "individual",
+        "biotCategory": "OHS_SPECIALIST_SPECIAL",
+        "productionHours": "16",
+        "biotIndustryRu": "промышленной",
+        "biotIndustryKz": "өнеркәсіп",
+        "biotCheckType": "PERIODIC",
+        "biotKnowledgeResult": "90 / 100",
+        "biotProctoringResult": "прошел / өткен",
+        "biotUniqueNumber": "",
+        "biotNotes": ""
+      },
+      "departmentRu": "Испытательный участок",
+      "departmentKz": "Сынақ учаскесі",
+      "employerBin": "990240000000",
+      "employerAddressRu": "Астана, Тестовая 1",
+      "employerAddressKz": "Астана, Сынақ 1",
+      "credentialNumber": "СЕРТ-00001"
+    }
+  ],
+  "photos": {}
+}

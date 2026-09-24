@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "ERR_PNPM_MISSING_PACKAGE_INDEX_FILE",
+    "message": "Failed to find package index file for @eslint/js@10.0.1(eslint@10.11.0(jiti@2.7.0)) (at C:\\Users\\Admin\\AppData\\Local\\pnpm\\store\\v10\\index\\cd\\e47d939a5de20c6367469b46821ac5d73b2379c392da17664daa3aff6008d5-@eslint+js@10.0.1.json), please consider running 'pnpm install'"
+  }
+}

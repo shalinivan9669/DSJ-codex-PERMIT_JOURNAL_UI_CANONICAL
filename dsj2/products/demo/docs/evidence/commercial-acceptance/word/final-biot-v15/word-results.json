@@ -1,0 +1,36 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 2,
+  "documents": [
+    {
+      "file": "biot-worker-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 75,
+      "pdf": "biot-worker-card-long.word.pdf",
+      "audit": "biot-worker-card-long.audit.json",
+      "docxSha256": "e80eb630ba30828501014fd5b0db85133da354de9f495bb6963f10902188c2c9",
+      "pdfSha256": "81714d1aeb2ad080c338e1575f80d5f56b8daa9e4289b1e55a859189a8acaa81",
+      "visualReview": "PASS",
+      "visualNotes": "All4 newly exported/rendered pages are pixel-identical to explicitly reviewed biot-v15-standard pages; see pixel-comparison.json."
+    },
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 70,
+      "pdf": "biot-worker-card-short.word.pdf",
+      "audit": "biot-worker-card-short.audit.json",
+      "docxSha256": "469f7cde62129cef41b8e2812ed960b16ea21ea059e120247f18fff8a737f675",
+      "pdfSha256": "046e41a6a198b4da94a4798cc85aef9d079455832208326ece30f85afda4295a",
+      "visualReview": "PASS",
+      "visualNotes": "All4 newly exported/rendered pages are pixel-identical to explicitly reviewed biot-v15-standard pages; see pixel-comparison.json."
+    }
+  ],
+  "visualStatus": "PASS",
+  "manuallyReviewedEquivalentPages": 4
+}

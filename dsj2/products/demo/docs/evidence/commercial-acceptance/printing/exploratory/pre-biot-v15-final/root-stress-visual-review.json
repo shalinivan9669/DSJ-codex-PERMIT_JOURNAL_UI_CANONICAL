@@ -1,0 +1,230 @@
+{
+  "status": "PASS",
+  "reviewer": "root",
+  "method": "Viewed six contact sheets covering 36 selected physical pages; checked geometry, recipient sequence at boundaries and distinct photo colors. Fine text is covered by base-page visual review and all-page automatic field checks.",
+  "notFullManualReview": true,
+  "cases": [
+    {
+      "case": "biot-worker-card-stress-100",
+      "people": [
+        1,
+        9,
+        10,
+        12,
+        13,
+        49,
+        50,
+        99,
+        100
+      ],
+      "pages": [
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-001.png",
+          "sha256": "883fe5f635a83594ac40d84e608d01507de772b6b2e831f6af2d7150489f98f8",
+          "physicalPage": 1
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-002.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 2
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-017.png",
+          "sha256": "9000c657b238ae80f9f4ce703a0a0148dd986df445b6ab978fd503e84e52f0bd",
+          "physicalPage": 17
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-018.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 18
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-019.png",
+          "sha256": "e07c16684a4d0ff4dee1ee2cfc4e3f423acea1dcbe389839ae9da5630abe3d7e",
+          "physicalPage": 19
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-020.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 20
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-023.png",
+          "sha256": "61538045ca7ba1e6186710a9796b6418aec7d50850eed9c6cc25ff9fa0b49d7b",
+          "physicalPage": 23
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-024.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 24
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-025.png",
+          "sha256": "e4b647f4a58a56b2e96f72a2543a96a6d1cbda83ba07120463697620976ca495",
+          "physicalPage": 25
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-026.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 26
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-097.png",
+          "sha256": "9cb4ed382ed8d242bf15996d0c3e1b00aeda83b754ef7500683fecc6b4e57138",
+          "physicalPage": 97
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-098.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 98
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-099.png",
+          "sha256": "d58b94b0fed1b5c276d14a255b08289810977deb8586c27e963eb3f3aa31ec85",
+          "physicalPage": 99
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-100.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 100
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-197.png",
+          "sha256": "f9ca92c0454a9d3883c70fc6cc11518e81e95e397278275be210ed65898ebdc4",
+          "physicalPage": 197
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-198.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 198
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-199.png",
+          "sha256": "83d6ccff6e17b45c010be21cd8aef2e4b98ca5f44a455fefce927400aa5c0221",
+          "physicalPage": 199
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-stress-100-page-200.png",
+          "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3",
+          "physicalPage": 200
+        }
+      ],
+      "sheets": [
+        "docs/evidence/commercial-acceptance/printing/stress-visual/biot-worker-card-stress-100-sheet-01.jpg",
+        "docs/evidence/commercial-acceptance/printing/stress-visual/biot-worker-card-stress-100-sheet-02.jpg",
+        "docs/evidence/commercial-acceptance/printing/stress-visual/biot-worker-card-stress-100-sheet-03.jpg"
+      ]
+    },
+    {
+      "case": "pb-card-stress-100",
+      "people": [
+        1,
+        9,
+        10,
+        12,
+        13,
+        49,
+        50,
+        99,
+        100
+      ],
+      "pages": [
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-001.png",
+          "sha256": "53cbbfc1eccfb9f28152895deebfe5eb5ff76a3293a6eac5bbab5eb1164f4ec5",
+          "physicalPage": 1
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-002.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 2
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-017.png",
+          "sha256": "116dcc3cd50d20a228d2d85982c73459659a9f21336adb68c6624892642b22c0",
+          "physicalPage": 17
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-018.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 18
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-019.png",
+          "sha256": "f64fe3504c503bfc05405d14a3f1470e89c6e76dbeb34ae10f81cd6a88b5182b",
+          "physicalPage": 19
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-020.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 20
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-023.png",
+          "sha256": "04fdefe0d26e5c1f883d481804b0c036ee302de70a06780aed57019698d02c7a",
+          "physicalPage": 23
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-024.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 24
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-025.png",
+          "sha256": "6f1105fffd05437b5dcc9c5e1599b220bc4e9ad049f460c4a46efbcbe9038b04",
+          "physicalPage": 25
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-026.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 26
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-097.png",
+          "sha256": "9140f5052919efaa7d1149984612cd6377fd69c3e650e7f324e170ea7962471c",
+          "physicalPage": 97
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-098.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 98
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-099.png",
+          "sha256": "32d7ed664a88ae3c53e69718b44d288efbec3327b8b1d87922936d43e65a1dc4",
+          "physicalPage": 99
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-100.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 100
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-197.png",
+          "sha256": "65f7e69a2a0634af33a28077e05ff211d3b0d3dfdec3f6a846c12a1ab72e7193",
+          "physicalPage": 197
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-198.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 198
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-199.png",
+          "sha256": "93475d78f43c6ef772884dfbb83f9902b003f768295db2237d34e02b71df80dd",
+          "physicalPage": 199
+        },
+        {
+          "path": "docs/evidence/commercial-acceptance/printing/pages/pb-card-stress-100-page-200.png",
+          "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+          "physicalPage": 200
+        }
+      ],
+      "sheets": [
+        "docs/evidence/commercial-acceptance/printing/stress-visual/pb-card-stress-100-sheet-01.jpg",
+        "docs/evidence/commercial-acceptance/printing/stress-visual/pb-card-stress-100-sheet-02.jpg",
+        "docs/evidence/commercial-acceptance/printing/stress-visual/pb-card-stress-100-sheet-03.jpg"
+      ]
+    }
+  ]
+}

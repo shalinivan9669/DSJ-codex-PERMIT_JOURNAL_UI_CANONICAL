@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "sourceManifestSha256": "93a82ecaa4d14e647dd03e3c6820c298844c2a457f0abbecd9d209ac00e6a131",
+  "standaloneDirectory": "/home/admin/demo-commercial-release5",
+  "apiImage": "sha256:399a6212afad69ba745036189495d49658d560492dbb2001cea09c9e615533f8",
+  "webImage": "sha256:3eb90b057da92d0a6f260a07a5cc18b02a6c61fcfd8647124a3238d6f0dcb956",
+  "commands": [
+    "pnpm install --frozen-lockfile (Docker dependencies stage)",
+    "node scripts/verification/autonomy.mjs",
+    "DATABASE_URL=synthetic-build-url pnpm db:generate && pnpm -r build",
+    "pnpm lint && pnpm typecheck && pnpm test"
+  ],
+  "unitTests": {
+    "core": 10,
+    "web": 7,
+    "failed": 0,
+    "skipped": 0
+  },
+  "environment": "Node24.16.0,pnpm11.27.1,Linux; actual Docker builds outside parent DSJ. Source tests bind-mounted readonly for final checks because production context excludes root tests. Checks container writes only its disposable layer; production services run non-root separately.",
+  "evidence": [
+    "container-api-final-r5-build.log",
+    "container-web-final-r5-build.log",
+    "container-final-r5-checks.log",
+    "standalone-stage-release5.json",
+    "container-final-r5-tls-update.log",
+    "autonomy-final.log",
+    "freeze-release3.log"
+  ],
+  "scopeLimitations": [
+    "This file reports build/lint/typecheck/unit only. Integration, browser, print, operational, licensing and production gates have separate evidence.",
+    "Later report and verification-helper changes are reconciled separately; runtime release5 is bound to the exact source manifest above."
+  ]
+}

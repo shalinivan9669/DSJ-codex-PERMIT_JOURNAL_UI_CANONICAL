@@ -1,0 +1,17 @@
+﻿[
+    {
+        "description":  "The attribute \u0027side\u0027 has invalid value \u0027bothSides\u0027. The Enumeration constraint failed.",
+        "path":  "/w:document[1]/w:body[1]/w:p[1]/w:r[8]/mc:AlternateContent[1]/mc:Fallback[1]/w:pict[1]/v:shape[1]/w10:wrap[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "Attribute \u0027id\u0027 should have unique value. Its current value \u0027officeArt object\u0027 duplicates with others.",
+        "path":  "/w:document[1]/w:body[1]/w:p[1]/w:r[6]/mc:AlternateContent[1]/mc:Fallback[1]/w:pict[1]/v:shape[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The attribute \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:name\u0027 has invalid value \u0027useWord2013TrackBottomHyphenation\u0027. The Enumeration constraint failed.",
+        "path":  "/w:settings[1]/w:compat[1]/w:compatSetting[6]",
+        "part":  "/word/settings.xml"
+    }
+]

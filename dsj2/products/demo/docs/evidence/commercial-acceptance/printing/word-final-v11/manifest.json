@@ -1,0 +1,205 @@
+{
+  "rendererVersion": "demo-ooxml-4/libreoffice-26.2.6.3",
+  "files": [
+    {
+      "template": "biot-worker-card",
+      "version": 11,
+      "variant": "short",
+      "templateSha256": "48aa92d8a0686ec5b3231847e387b93c27b146b7b7d6031ba4f53d066b33bd78",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-worker-card-short.docx",
+      "docxSha256": "c79f89bf0c7dc24d92ecf3057212e5660bfeb22fb80cb56e02ff3ed940147436",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-worker-card-short.pdf",
+      "pdfSha256": "579caa4809ac3527f0a2476296ad10416d824b539db349df77d856507d432faf"
+    },
+    {
+      "template": "biot-worker-card",
+      "version": 11,
+      "variant": "long",
+      "templateSha256": "48aa92d8a0686ec5b3231847e387b93c27b146b7b7d6031ba4f53d066b33bd78",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-worker-card-long.docx",
+      "docxSha256": "9e6f956fd057b5eff5eb2d77f1fea98cefe0f77c3b96528de33b7d06d2f3bf59",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-worker-card-long.pdf",
+      "pdfSha256": "934f28e9d55e5d997ec391b64b5700acc6ecc6a0c29bfc89f349f04bee2af534"
+    },
+    {
+      "template": "biot-itr-certificate",
+      "version": 11,
+      "variant": "short",
+      "templateSha256": "0eba4028526f6d7d5035a068c670363924505ced2f2771acf6404cea6f12bece",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-itr-certificate-short.docx",
+      "docxSha256": "060192bf29ad62da3247155706a5921a3f0239dc781443116017f1e7bfd0bde8",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-itr-certificate-short.pdf",
+      "pdfSha256": "559d62256ab4d1b93a22fc4c48b8285c2351cb21fdec782a9cca395d96e3fba5"
+    },
+    {
+      "template": "biot-itr-certificate",
+      "version": 11,
+      "variant": "long",
+      "templateSha256": "0eba4028526f6d7d5035a068c670363924505ced2f2771acf6404cea6f12bece",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-itr-certificate-long.docx",
+      "docxSha256": "db7cc85294db86e02b0946cfb65f5984fe13a7a526eeb58682f498a8d00538c2",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-itr-certificate-long.pdf",
+      "pdfSha256": "aa715ae4d0b752634fd7a15f9c7b4cad6713aaa8d2cf915a9886b873846443bb"
+    },
+    {
+      "template": "biot-protocol",
+      "version": 9,
+      "variant": "short",
+      "templateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-protocol-short.docx",
+      "docxSha256": "9c4aa1af4d95f8f403eb732236b746b4e38a6c067f7318534fb5b90ade479fe6",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-protocol-short.pdf",
+      "pdfSha256": "678c7d09964f3a641702f8ed6db45e3a2f91c673f824b381f1498ec4e17b4c8d"
+    },
+    {
+      "template": "biot-protocol",
+      "version": 9,
+      "variant": "long",
+      "templateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-protocol-long.docx",
+      "docxSha256": "5d700f6e220920599428a4b5ade14e764860cf01fe9347ba6cf9f0695e46c6dd",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\biot-protocol-long.pdf",
+      "pdfSha256": "b8e5adbbcde75ccd1f097f2f84106c43e6e58362c5fc5a15ba5c03de035c9923"
+    },
+    {
+      "template": "ptm-card",
+      "version": 11,
+      "variant": "short",
+      "templateSha256": "b6fa06b6e821fa73bbf51168efe88273fb6b214194f809e042d6b243879f62cc",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ptm-card-short.docx",
+      "docxSha256": "b086d7b19a70aeee2d19af58b7839572166bbe577a1dc3943edcf27bf4e7a094",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ptm-card-short.pdf",
+      "pdfSha256": "55eeea5370545be4ce1d6343f64c0485336e0a376fc2c633908162091184e986"
+    },
+    {
+      "template": "ptm-card",
+      "version": 11,
+      "variant": "long",
+      "templateSha256": "b6fa06b6e821fa73bbf51168efe88273fb6b214194f809e042d6b243879f62cc",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ptm-card-long.docx",
+      "docxSha256": "cddb50179cbb0f1bdf0caf1c7ea0525c879e3e38fe5e0855ae3573b7115c55e4",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ptm-card-long.pdf",
+      "pdfSha256": "5fe1dfa4a10767e08b4fe80b4de3f221e5b7150a55c5b9c25fbfdcd97d0bc0e2"
+    },
+    {
+      "template": "ptm-protocol",
+      "version": 9,
+      "variant": "short",
+      "templateSha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ptm-protocol-short.docx",
+      "docxSha256": "ec64b006490539894582584b5084232d449b5325eb9378d190fca0440f252d61",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ptm-protocol-short.pdf",
+      "pdfSha256": "1aa18bad0859a2442382c493c34d61c915be2145a564bbf87f7be594256525e5"
+    },
+    {
+      "template": "ptm-protocol",
+      "version": 9,
+      "variant": "long",
+      "templateSha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ptm-protocol-long.docx",
+      "docxSha256": "c68be733b7b252f912857d70d0492c5e89c3d3bbacd8774cd9df70a3542d8788",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ptm-protocol-long.pdf",
+      "pdfSha256": "3aec0f64f9345fd6c414f562d4d7abcbd59b56945a170a452d4dfdac62585cdc"
+    },
+    {
+      "template": "pb-card",
+      "version": 11,
+      "variant": "short",
+      "templateSha256": "a12d971728f5e7568e295386d2a0061be32d30b7279222f8059fbb4b9d965379",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\pb-card-short.docx",
+      "docxSha256": "1d74d8aeac7affbecb459d42ea0d07fe9dcef38f992c79604375e7eff76cd14c",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\pb-card-short.pdf",
+      "pdfSha256": "bf681c45d8a04f299d7babbe8def0b355ffe0547b4b3379e0dd5d1d9ab50d11f"
+    },
+    {
+      "template": "pb-card",
+      "version": 11,
+      "variant": "long",
+      "templateSha256": "a12d971728f5e7568e295386d2a0061be32d30b7279222f8059fbb4b9d965379",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\pb-card-long.docx",
+      "docxSha256": "e159deb9ca9f9f38180bfc5612eee77a7568272427e7e3ab2f14d3556564aff5",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\pb-card-long.pdf",
+      "pdfSha256": "1763f0eaa2f8ef36748124ab8eaa4f2dcdeade77743ffd588c511dab4aae71ec"
+    },
+    {
+      "template": "pb-protocol",
+      "version": 9,
+      "variant": "short",
+      "templateSha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\pb-protocol-short.docx",
+      "docxSha256": "00fd283f13a99e03dddfdc5db6298d1c7f5f5c795d688cdd76cda4b139bf3de9",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\pb-protocol-short.pdf",
+      "pdfSha256": "d869e959af239502192721bb95f223c95bcedc689cc1b3980beec5fc55208818"
+    },
+    {
+      "template": "pb-protocol",
+      "version": 9,
+      "variant": "long",
+      "templateSha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\pb-protocol-long.docx",
+      "docxSha256": "90c1e95acc82c226c8e79f71463978d1e0a491e367988f48e8863984ddbfe553",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\pb-protocol-long.pdf",
+      "pdfSha256": "7b92d7d08e0d2de0dd60616b16d00a7fad259e2a558988a8f4b867fd2cf9f4ce"
+    },
+    {
+      "template": "ps-card",
+      "version": 12,
+      "variant": "short",
+      "templateSha256": "247599aef992668be86a85f1c33c1f929fdf13065388aba498b6d54f47691322",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-card-short.docx",
+      "docxSha256": "9957417061aa5de10e9f4f174864629aa2b0bc28515e8e97cf27cc75b09fc93b",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-card-short.pdf",
+      "pdfSha256": "79e0da714e1ec9bf2b21fd17ed1aece245085edf5d118a7a19b564ecd4bddb6a"
+    },
+    {
+      "template": "ps-card",
+      "version": 12,
+      "variant": "long",
+      "templateSha256": "247599aef992668be86a85f1c33c1f929fdf13065388aba498b6d54f47691322",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-card-long.docx",
+      "docxSha256": "dbcb885a0bc5ffe079d9b6d548f810211e805083ca234d8731556c378f977eea",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-card-long.pdf",
+      "pdfSha256": "4b172e1343a8f842ccfd2326a8ea8f6d86522a7fd3d563ffd478b0b80d218b6d"
+    },
+    {
+      "template": "ps-protocol",
+      "version": 9,
+      "variant": "short",
+      "templateSha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-protocol-short.docx",
+      "docxSha256": "da8d014dc8649657373dc89c2ba1753e06363775b88e2d7cb1f9f0683d99deed",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-protocol-short.pdf",
+      "pdfSha256": "c4fdc6fcc6c67cd4e122d8c9f7dcf8c0edf53fae1598e724d1521fadb67df19a"
+    },
+    {
+      "template": "ps-protocol",
+      "version": 9,
+      "variant": "long",
+      "templateSha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-protocol-long.docx",
+      "docxSha256": "1c991b49dca537931c5ac4dc6fcc90aef3833054a39a54c28f1a31a03a8c4bcf",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-protocol-long.pdf",
+      "pdfSha256": "aaf5db20de1d59d256ab3221cd09f615665162c98e1bb133a321a4ddbfe3dee8"
+    },
+    {
+      "template": "ps-witness",
+      "version": 11,
+      "variant": "short",
+      "templateSha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-witness-short.docx",
+      "docxSha256": "b45d0b91103f538a9062a887e5462232b0a3bb200dd0d0e1b774e3bbb8908ccb",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-witness-short.pdf",
+      "pdfSha256": "87b0fee6bdf609b06db4b2f62a50d993cab24a26f921719cf8232da4e6c35703"
+    },
+    {
+      "template": "ps-witness",
+      "version": 11,
+      "variant": "long",
+      "templateSha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94",
+      "docxPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-witness-long.docx",
+      "docxSha256": "79dce390d903e50609bf82eb8917bcac38fdd3aea25b0c20761aedf54d4d8363",
+      "pdfPath": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-final-v11\\ps-witness-long.pdf",
+      "pdfSha256": "2cf41ceacedfb7be91ffa87b8753584b713cbf028fb6c70ba959cc95d041abb4"
+    }
+  ]
+}

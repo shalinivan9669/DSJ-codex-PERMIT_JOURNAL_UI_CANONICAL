@@ -1,0 +1,1 @@
+Automatic v14 summary predates the PS opaque-band/divider coordinate gate. PS v13 manual review FAIL; superseded by v15. Other 9 forms remain exact-byte validated.

@@ -1,0 +1,1 @@
+{"components":274,"missingLicenseText":["client-only","@img/sharp-libvips-linux-x64"],"inventories":[{"platform":"linux-x64","source":"npm-licenses-linux-final-collected.json"}],"scope":"resolved npm including build tools, pinned Python requirements, bundled fonts; not OS images"}

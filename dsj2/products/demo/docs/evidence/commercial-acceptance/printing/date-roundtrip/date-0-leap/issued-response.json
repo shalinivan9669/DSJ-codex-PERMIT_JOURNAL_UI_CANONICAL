@@ -1,0 +1,414 @@
+{
+  "id": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+  "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+  "kind": "PERSON",
+  "title": "ТЕСТ A21 Asia/Almaty leap 1790090463324",
+  "customerId": null,
+  "demoMode": true,
+  "status": "FINALIZED",
+  "revision": 1,
+  "draft": {
+    "kind": "PERSON",
+    "items": [
+      {
+        "id": "59a5c3c2-32d7-4729-a876-26dbd30d14f3",
+        "fullNameKz": "Сынақ Әли Қасымұлы 1",
+        "fullNameRu": "Тестовый Календарный Получатель 1",
+        "positionKz": "",
+        "positionRu": "",
+        "assignments": [
+          {
+            "id": "f71e0d86-3776-4250-8e91-deee0f1897cf",
+            "hours": "",
+            "reason": "",
+            "result": "ТЕСТ: сдал / тапсырды",
+            "education": "",
+            "templateId": "ps-witness",
+            "validUntil": "",
+            "trainingEnd": "",
+            "documentDate": "2028-02-29",
+            "protocolDate": "2028-02-28",
+            "protocolMode": "INDIVIDUAL",
+            "trainingStart": "",
+            "trainingSubject": "ТЕСТ: календарная проверка",
+            "externalBasisNumber": ""
+          }
+        ],
+        "workplaceKz": "",
+        "workplaceRu": "",
+        "photoAssetId": null
+      }
+    ],
+    "title": "ТЕСТ A21 Asia/Almaty leap 1790090463324",
+    "demoMode": true,
+    "customerId": null
+  },
+  "itemCount": 1,
+  "searchText": "ТЕСТ A21 Asia/Almaty leap 1790090463324 Тестовый Календарный Получатель 1 Сынақ Әли Қасымұлы 1   PS-WITNESS-00003 PS-REGISTRATION-00003  ",
+  "createdBy": "fc4807f5-c15a-4bb8-af8a-e00d36c817b5",
+  "createdAt": "2026-09-22T15:21:06.176Z",
+  "updatedAt": "2026-09-22T15:21:11.236Z",
+  "correctsIssuanceId": null,
+  "correctionReason": null,
+  "legacySourceId": null,
+  "items": [
+    {
+      "id": "59a5c3c2-32d7-4729-a876-26dbd30d14f3",
+      "fullNameKz": "Сынақ Әли Қасымұлы 1",
+      "fullNameRu": "Тестовый Календарный Получатель 1",
+      "positionKz": "",
+      "positionRu": "",
+      "assignments": [
+        {
+          "id": "f71e0d86-3776-4250-8e91-deee0f1897cf",
+          "hours": "",
+          "reason": "",
+          "result": "ТЕСТ: сдал / тапсырды",
+          "education": "",
+          "templateId": "ps-witness",
+          "validUntil": "",
+          "trainingEnd": "",
+          "documentDate": "2028-02-29",
+          "protocolDate": "2028-02-28",
+          "protocolMode": "INDIVIDUAL",
+          "trainingStart": "",
+          "trainingSubject": "ТЕСТ: календарная проверка",
+          "externalBasisNumber": ""
+        }
+      ],
+      "workplaceKz": "",
+      "workplaceRu": "",
+      "photoAssetId": null
+    }
+  ],
+  "issuances": [
+    {
+      "id": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "requestId": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+      "sourceRevision": 1,
+      "snapshot": {
+        "draft": {
+          "kind": "PERSON",
+          "items": [
+            {
+              "id": "59a5c3c2-32d7-4729-a876-26dbd30d14f3",
+              "fullNameKz": "Сынақ Әли Қасымұлы 1",
+              "fullNameRu": "Тестовый Календарный Получатель 1",
+              "positionKz": "",
+              "positionRu": "",
+              "assignments": [
+                {
+                  "id": "f71e0d86-3776-4250-8e91-deee0f1897cf",
+                  "hours": "",
+                  "reason": "",
+                  "result": "ТЕСТ: сдал / тапсырды",
+                  "education": "",
+                  "templateId": "ps-witness",
+                  "validUntil": "",
+                  "trainingEnd": "",
+                  "documentDate": "2028-02-29",
+                  "protocolDate": "2028-02-28",
+                  "protocolMode": "INDIVIDUAL",
+                  "trainingStart": "",
+                  "trainingSubject": "ТЕСТ: календарная проверка",
+                  "externalBasisNumber": ""
+                }
+              ],
+              "workplaceKz": "",
+              "workplaceRu": "",
+              "photoAssetId": null
+            }
+          ],
+          "title": "ТЕСТ A21 Asia/Almaty leap 1790090463324",
+          "demoMode": true,
+          "customerId": null
+        },
+        "issuer": {
+          "cityKz": "Қызылорда",
+          "cityRu": "Кызылорда",
+          "nameKz": "Операторлық тексеру оқу орталығы",
+          "nameRu": "Синтетический центр операторской приёмки",
+          "approved": true,
+          "addressKz": "Көрнекі мекенжай",
+          "addressRu": "Демонстрационный адрес",
+          "commission": [
+            {
+              "name": "Синтетический Председатель Әли",
+              "position": "Председатель контрольной комиссии"
+            }
+          ],
+          "approvalBasis": "Синтетическая операторская приёмка — не юридическое утверждение формы"
+        },
+        "photos": {},
+        "customer": null,
+        "templates": [
+          {
+            "id": "e8b5cafc-d9f2-4458-af32-833e8f45a9fb",
+            "version": "11",
+            "approved": true,
+            "checksum": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94",
+            "contract": {
+              "id": "ps-witness",
+              "file": "ps-witness.v11.docx",
+              "photo": false,
+              "fields": [
+                "CHAIR",
+                "CITY_RU",
+                "EDU_ORG_KZ",
+                "EDU_ORG_RU",
+                "FULL_NAME_KZ",
+                "FULL_NAME_RU",
+                "ISSUE_DAY",
+                "ISSUE_MONTH_KZ",
+                "ISSUE_MONTH_RU",
+                "ISSUE_YEAR_SHORT",
+                "KB_NUMBER",
+                "PROFESSION_KZ",
+                "PROFESSION_RU",
+                "PROTOCOL_DAY",
+                "PROTOCOL_MONTH_KZ",
+                "PROTOCOL_MONTH_RU",
+                "PROTOCOL_NUMBER_DISPLAY",
+                "PROTOCOL_YEAR",
+                "REGISTRATION_NUMBER",
+                "RESULT",
+                "TRAINING_END_DAY",
+                "TRAINING_END_MONTH_KZ",
+                "TRAINING_END_MONTH_RU",
+                "TRAINING_END_YEAR_FULL",
+                "TRAINING_END_YEAR_SHORT",
+                "TRAINING_START_DAY",
+                "TRAINING_START_MONTH_KZ",
+                "TRAINING_START_MONTH_RU",
+                "TRAINING_START_YEAR_FULL",
+                "TRAINING_START_YEAR_SHORT"
+              ],
+              "sample": "docs/evidence/render/ps-witness.pdf",
+              "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94",
+              "exports": [
+                "DOCX",
+                "PDF"
+              ],
+              "version": 11,
+              "sections": [
+                {
+                  "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840",
+                  "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910"
+                },
+                {
+                  "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840",
+                  "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910"
+                }
+              ],
+              "languages": [
+                "ru",
+                "kk"
+              ],
+              "sourceSha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+              "legalApproval": "REQUIRED_BY_ISSUER",
+              "protocolSemantics": null,
+              "sourceImagesRemoved": true,
+              "previousTemplateSha256": "8ee66b628736f46eb650d8c8c72a812f4e448bd6d142c4d4d052bb776994de24"
+            },
+            "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+            "createdAt": "2026-09-22T15:14:02.762Z",
+            "storageKey": "objects/cf/cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94-4e56f64d-b32d-49e2-a5a9-3bca8e4df88a.docx",
+            "templateId": "ps-witness"
+          }
+        ],
+        "profileVersionId": "d289d78c-da53-4153-93c6-9067a712165d"
+      },
+      "inputHash": "a42272af5b69e8578940a892cb03e7f794b1c692ace0aaa1f4e07f56d09a12ac",
+      "profileVersionId": "d289d78c-da53-4153-93c6-9067a712165d",
+      "createdBy": "fc4807f5-c15a-4bb8-af8a-e00d36c817b5",
+      "createdAt": "2026-09-22T15:21:11.191Z",
+      "correctsIssuanceId": null,
+      "correctionReason": null,
+      "legacySourceId": null
+    }
+  ],
+  "documents": [
+    {
+      "id": "6a011d14-b199-4744-a72a-e7f40786fe5b",
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "requestId": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+      "rowId": "59a5c3c2-32d7-4729-a876-26dbd30d14f3",
+      "assignmentId": "f71e0d86-3776-4250-8e91-deee0f1897cf",
+      "templateVersionId": "e8b5cafc-d9f2-4458-af32-833e8f45a9fb",
+      "templateId": "ps-witness",
+      "namespace": "PS:WITNESS",
+      "number": "PS-WITNESS-00003",
+      "registrationNumber": "PS-REGISTRATION-00003",
+      "documentDate": "2028-02-29",
+      "replacesDocumentId": null,
+      "createdAt": "2026-09-22T15:21:11.211Z"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "b72a6296-50e8-402c-9026-598e37eb8db2",
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "requestId": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "documentId": "6a011d14-b199-4744-a72a-e7f40786fe5b",
+      "snapshotId": "83ad82b9-9533-4cc5-8763-765c46ce165e",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "logicalKey": "6a011d14-b199-4744-a72a-e7f40786fe5b:DOCX",
+      "attempts": 1,
+      "maxAttempts": 3,
+      "runAfter": "2026-09-22T15:21:11.219Z",
+      "leaseUntil": null,
+      "leaseOwner": null,
+      "fencingToken": 1,
+      "heartbeatAt": "2026-09-22T15:21:11.430Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "correlationId": "bfae76f8-8bd2-44ff-87dc-f7accb137ba6",
+      "progress": 100,
+      "artifactId": "9414d7aa-9440-481b-8d0d-d605c489117a",
+      "createdAt": "2026-09-22T15:21:11.219Z",
+      "updatedAt": "2026-09-22T15:21:12.672Z",
+      "sourceRevision": 1
+    },
+    {
+      "id": "ec5037f2-3c6c-4df0-add5-e945dfe11d58",
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "requestId": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "documentId": "6a011d14-b199-4744-a72a-e7f40786fe5b",
+      "snapshotId": "83ad82b9-9533-4cc5-8763-765c46ce165e",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "logicalKey": "6a011d14-b199-4744-a72a-e7f40786fe5b:PDF",
+      "attempts": 1,
+      "maxAttempts": 3,
+      "runAfter": "2026-09-22T15:21:11.223Z",
+      "leaseUntil": null,
+      "leaseOwner": null,
+      "fencingToken": 1,
+      "heartbeatAt": "2026-09-22T15:21:47.746Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "correlationId": "c4604a68-0ae9-474d-9005-9fb31d569b3e",
+      "progress": 100,
+      "artifactId": "3d15473b-0a8c-4aaf-b696-f8d2e8ec341b",
+      "createdAt": "2026-09-22T15:21:11.223Z",
+      "updatedAt": "2026-09-22T15:21:48.920Z",
+      "sourceRevision": 1
+    },
+    {
+      "id": "9ae1b028-1d34-42d0-8f59-7ea3f2e7acc3",
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "requestId": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "documentId": null,
+      "snapshotId": "cd0caaf4-bd15-4c3e-b131-4b6a17881f73",
+      "kind": "XLSX",
+      "status": "SUCCEEDED",
+      "logicalKey": "db406412-f847-46a7-a2fc-06a05baa19aa:XLSX",
+      "attempts": 1,
+      "maxAttempts": 3,
+      "runAfter": "2026-09-22T15:21:11.231Z",
+      "leaseUntil": null,
+      "leaseOwner": null,
+      "fencingToken": 1,
+      "heartbeatAt": "2026-09-22T15:21:48.933Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "correlationId": "08841526-646a-422b-a058-5529b2a43b46",
+      "progress": 100,
+      "artifactId": "2f403c62-327a-4d46-895d-976fe9f25f8c",
+      "createdAt": "2026-09-22T15:21:11.231Z",
+      "updatedAt": "2026-09-22T15:21:50.268Z",
+      "sourceRevision": 1
+    },
+    {
+      "id": "733e26ea-6430-4291-872e-017c2f258e53",
+      "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+      "requestId": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "documentId": null,
+      "snapshotId": "cd0caaf4-bd15-4c3e-b131-4b6a17881f73",
+      "kind": "ZIP",
+      "status": "SUCCEEDED",
+      "logicalKey": "db406412-f847-46a7-a2fc-06a05baa19aa:ZIP",
+      "attempts": 1,
+      "maxAttempts": 3,
+      "runAfter": "2026-09-22T15:21:11.233Z",
+      "leaseUntil": null,
+      "leaseOwner": null,
+      "fencingToken": 1,
+      "heartbeatAt": "2026-09-22T15:21:50.273Z",
+      "errorCode": null,
+      "errorMessage": null,
+      "correlationId": "651ee86d-d790-4c56-902d-d694349b9294",
+      "progress": 100,
+      "artifactId": "a397ea0a-91ab-46b1-a65c-47222477e570",
+      "createdAt": "2026-09-22T15:21:11.233Z",
+      "updatedAt": "2026-09-22T15:21:51.241Z",
+      "sourceRevision": 1
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "9414d7aa-9440-481b-8d0d-d605c489117a",
+      "jobId": "b72a6296-50e8-402c-9026-598e37eb8db2",
+      "documentId": "6a011d14-b199-4744-a72a-e7f40786fe5b",
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "format": "DOCX",
+      "sha256": "4a3d2009b6c06925d82aafa8e1bbb7c4bab07e2a534dfe3b407b7f4278d5a04c",
+      "size": 21258,
+      "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "fileName": "ps-witness-6a011d14-b199-4744-a72a-e7f40786fe5b.docx",
+      "createdAt": "2026-09-22T15:21:12.669Z",
+      "provenance": "ORIGINAL",
+      "availability": "AVAILABLE"
+    },
+    {
+      "id": "3d15473b-0a8c-4aaf-b696-f8d2e8ec341b",
+      "jobId": "ec5037f2-3c6c-4df0-add5-e945dfe11d58",
+      "documentId": "6a011d14-b199-4744-a72a-e7f40786fe5b",
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "format": "PDF",
+      "sha256": "caf1b4384a3a9efe6172839a14158965ab49caff0d77b1060a495e6916ba546e",
+      "size": 167392,
+      "mimeType": "application/pdf",
+      "fileName": "ps-witness-6a011d14-b199-4744-a72a-e7f40786fe5b.pdf",
+      "createdAt": "2026-09-22T15:21:48.918Z",
+      "provenance": "ORIGINAL",
+      "availability": "AVAILABLE"
+    },
+    {
+      "id": "2f403c62-327a-4d46-895d-976fe9f25f8c",
+      "jobId": "9ae1b028-1d34-42d0-8f59-7ea3f2e7acc3",
+      "documentId": null,
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "format": "XLSX",
+      "sha256": "71b479a9ac75ca6a705768afae7db19f9f141a8767ecb1797c85d5cb1483651e",
+      "size": 5897,
+      "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "fileName": "registry-82685b2a-1acb-44f4-8448-3765ceba2e0d.xlsx",
+      "createdAt": "2026-09-22T15:21:50.266Z",
+      "provenance": "ORIGINAL",
+      "availability": "AVAILABLE"
+    },
+    {
+      "id": "a397ea0a-91ab-46b1-a65c-47222477e570",
+      "jobId": "733e26ea-6430-4291-872e-017c2f258e53",
+      "documentId": null,
+      "issuanceId": "db406412-f847-46a7-a2fc-06a05baa19aa",
+      "format": "ZIP",
+      "sha256": "352c66f4b35db22e0ac52c711ef4d62a73e2f9985265f4fbfeac2125a8789b17",
+      "size": 133107,
+      "mimeType": "application/zip",
+      "fileName": "registry-82685b2a-1acb-44f4-8448-3765ceba2e0d.zip",
+      "createdAt": "2026-09-22T15:21:51.237Z",
+      "provenance": "ORIGINAL",
+      "availability": "AVAILABLE"
+    }
+  ],
+  "events": []
+}

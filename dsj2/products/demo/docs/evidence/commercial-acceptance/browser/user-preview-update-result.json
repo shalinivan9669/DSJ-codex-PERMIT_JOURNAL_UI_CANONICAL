@@ -1,0 +1,177 @@
+{
+  "status": "PASS",
+  "before": {
+    "observedAt": "2026-09-22T15:14:01.881Z",
+    "tables": {
+      "printRequest": {
+        "count": 140,
+        "sha256": "ef81b00da22e71007c16e853231de546af6f9e7cdbaa3d589b95f79d6267fb86"
+      },
+      "requestItem": {
+        "count": 261,
+        "sha256": "811fb25fc2fb105d0b4ba11a29c1e333891eb2c3d42c01f320c8245d2bd9ad90"
+      },
+      "issuerProfileVersion": {
+        "count": 4,
+        "sha256": "c2cc614b73316cb1b19b18cdf54b97186b0d6c55a7db3b577c5d99856085073a"
+      },
+      "issuedDocument": {
+        "count": 44,
+        "sha256": "14c43e4f9774f903bb57760e434b620721aff9cad2ba346a0472cf113b035dea"
+      },
+      "issuance": {
+        "count": 10,
+        "sha256": "5baafdc0daeea17a251143065822c901602033e32a6592d80c49fd79402d748f"
+      },
+      "numberSequence": {
+        "count": 11,
+        "sha256": "a67a181ce09504d1b0e78be3025f4fff54daf9e6cb19b74b41433a167cf96206"
+      },
+      "artifact": {
+        "count": 113,
+        "sha256": "c4201ce47c4174e407e1a70727affa5fc006eecbf90202f333fb53553e287b63"
+      }
+    },
+    "artifactBytesVerified": 113
+  },
+  "after": {
+    "observedAt": "2026-09-22T15:14:02.989Z",
+    "tables": {
+      "printRequest": {
+        "count": 140,
+        "sha256": "ef81b00da22e71007c16e853231de546af6f9e7cdbaa3d589b95f79d6267fb86"
+      },
+      "requestItem": {
+        "count": 261,
+        "sha256": "811fb25fc2fb105d0b4ba11a29c1e333891eb2c3d42c01f320c8245d2bd9ad90"
+      },
+      "issuerProfileVersion": {
+        "count": 4,
+        "sha256": "c2cc614b73316cb1b19b18cdf54b97186b0d6c55a7db3b577c5d99856085073a"
+      },
+      "issuedDocument": {
+        "count": 44,
+        "sha256": "14c43e4f9774f903bb57760e434b620721aff9cad2ba346a0472cf113b035dea"
+      },
+      "issuance": {
+        "count": 10,
+        "sha256": "5baafdc0daeea17a251143065822c901602033e32a6592d80c49fd79402d748f"
+      },
+      "numberSequence": {
+        "count": 11,
+        "sha256": "a67a181ce09504d1b0e78be3025f4fff54daf9e6cb19b74b41433a167cf96206"
+      },
+      "artifact": {
+        "count": 113,
+        "sha256": "c4201ce47c4174e407e1a70727affa5fc006eecbf90202f333fb53553e287b63"
+      }
+    },
+    "artifactBytesVerified": 113
+  },
+  "unchanged": true,
+  "unchangedSincePreStop": true,
+  "created": [
+    {
+      "id": "biot-worker-card",
+      "version": "14",
+      "sha256": "2fee01f02acc4a3dd4538e8330cc537031c44dba68f2ffda267d97e58784bf58"
+    },
+    {
+      "id": "biot-itr-certificate",
+      "version": "13",
+      "sha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6"
+    },
+    {
+      "id": "biot-protocol",
+      "version": "9",
+      "sha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2"
+    },
+    {
+      "id": "ptm-card",
+      "version": "14",
+      "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": "9",
+      "sha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c"
+    },
+    {
+      "id": "pb-card",
+      "version": "14",
+      "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380"
+    },
+    {
+      "id": "pb-protocol",
+      "version": "9",
+      "sha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b"
+    },
+    {
+      "id": "ps-card",
+      "version": "15",
+      "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13"
+    },
+    {
+      "id": "ps-protocol",
+      "version": "9",
+      "sha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b"
+    },
+    {
+      "id": "ps-witness",
+      "version": "11",
+      "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+    }
+  ],
+  "finalTemplates": [
+    {
+      "id": "biot-worker-card",
+      "version": 14,
+      "sha256": "2fee01f02acc4a3dd4538e8330cc537031c44dba68f2ffda267d97e58784bf58"
+    },
+    {
+      "id": "biot-itr-certificate",
+      "version": 13,
+      "sha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6"
+    },
+    {
+      "id": "biot-protocol",
+      "version": 9,
+      "sha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2"
+    },
+    {
+      "id": "ptm-card",
+      "version": 14,
+      "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": 9,
+      "sha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c"
+    },
+    {
+      "id": "pb-card",
+      "version": 14,
+      "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380"
+    },
+    {
+      "id": "pb-protocol",
+      "version": 9,
+      "sha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b"
+    },
+    {
+      "id": "ps-card",
+      "version": 15,
+      "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13"
+    },
+    {
+      "id": "ps-protocol",
+      "version": 9,
+      "sha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b"
+    },
+    {
+      "id": "ps-witness",
+      "version": 11,
+      "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+    }
+  ]
+}

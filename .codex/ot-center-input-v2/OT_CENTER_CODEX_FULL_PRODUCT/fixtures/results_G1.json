@@ -1,0 +1,908 @@
+{
+  "synthetic": true,
+  "productionUseAllowed": false,
+  "notProductDefaults": true,
+  "mustImportWithExplicitConfirmation": true,
+  "rows": [
+    {
+      "externalPersonKey": "DEMO-P001",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P002",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P003",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P004",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P005",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P006",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P007",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P008",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P009",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P010",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P011",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P012",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P013",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P014",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P015",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P016",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P017",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P018",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P019",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P020",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P021",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P022",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P023",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P024",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P025",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P026",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P027",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P028",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P029",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P030",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P031",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P032",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P033",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P034",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P035",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P036",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P037",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P038",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P039",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P040",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P041",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P042",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P043",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P044",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P045",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P046",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P047",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P048",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P049",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P050",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P051",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P052",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P053",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P054",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P055",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P056",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P057",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P058",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P059",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P060",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P061",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P062",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P063",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P064",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P065",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P066",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P067",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P068",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P069",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P070",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P071",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P072",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P073",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P074",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P075",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P076",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P077",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P078",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P079",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P080",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P081",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P082",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P083",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P084",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P085",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P086",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P087",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P088",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P089",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P090",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P091",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P092",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P093",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P094",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P095",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P096",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P097",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P098",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P099",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    },
+    {
+      "externalPersonKey": "DEMO-P100",
+      "eventKey": "PB-G1",
+      "outcome": "PASSED",
+      "resultText": "ДЕМО — положительный результат из синтетической ведомости",
+      "evidenceKey": "DEMO-RESULTS-G1",
+      "confirmedBy": "DEMO-RESPONSIBLE",
+      "confirmedAt": "2026-09-22T10:00:00Z"
+    }
+  ]
+}

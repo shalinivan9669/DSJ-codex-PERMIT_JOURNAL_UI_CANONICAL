@@ -1,0 +1,14 @@
+{
+  "generator": "Built-in image_gen tool",
+  "synthetic": true,
+  "subject": "Entirely fictional adult",
+  "dimensions": [
+    1086,
+    1448
+  ],
+  "file": "fictional-recipient-portrait.png",
+  "sha256": "82f3d34ad38f13a9cf9511d63dc5ab9b9acb19f12a5816c3a1e1b5669e907484",
+  "prompt": "Use case: photorealistic-natural. Asset type: synthetic portrait for testing a training-center ID-card photo upload and document layout. Generate a photorealistic passport-style head-and-shoulders studio photograph of one entirely fictional adult Central Asian man, approximately 35 years old, neat short black hair, clean-shaven, neutral expression, looking straight into the camera, wearing a plain dark navy collared shirt. White to very light gray seamless background, even soft frontal light, natural skin texture. Portrait 3:4 composition; head centered with adequate space above hair and visible shoulders, no cropping of head or chin. No text, no logos, no document, no frame, no badges, no stamps, no signatures. This is an invented person for a clearly marked synthetic software test, not an impersonation of a real individual.",
+  "purpose": "Authorized synthetic certificate upload and layout test",
+  "evidence": "../browser/generated-photo-pb/photo-result.json"
+}

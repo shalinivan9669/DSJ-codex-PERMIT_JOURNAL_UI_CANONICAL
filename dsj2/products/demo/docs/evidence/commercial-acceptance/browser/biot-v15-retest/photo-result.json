@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "scenario": "Complete upload, crop, preview and issue browser cycle",
+  "origin": "http://localhost:3200",
+  "requestId": "6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070",
+  "requestUrl": "http://localhost:3200/requests/6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070/edit",
+  "browserVersion": "152.0.7977.83",
+  "syntheticDataOnly": true,
+  "transport": {
+    "https": false,
+    "securityDetails": {},
+    "strictTlsProof": null,
+    "browserLeafSpkiPin": null,
+    "nodeExtraCaFile": null,
+    "cookies": [
+      {
+        "name": "demo_session",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "Strict"
+      },
+      {
+        "name": "demo_csrf",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "Strict"
+      }
+    ]
+  },
+  "portraitSource": "fictional-recipient-portrait.png",
+  "portraitSourceSha256": "82f3d34ad38f13a9cf9511d63dc5ab9b9acb19f12a5816c3a1e1b5669e907484",
+  "normalizedPhotoSha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+  "exactEmbeddedPhotoMatches": 0,
+  "templates": [
+    {
+      "id": "biot-worker-card",
+      "version": "15",
+      "sha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "bed75497-e78d-41e5-8ef3-f76dcd72fec8-biot-worker-card-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.docx",
+      "format": "DOCX",
+      "provenance": "PREVIEW",
+      "sha256": "261f5ee59bf5894dcd424ff0e36abf572b1a6a571f4924cf183ebd38b4fa2336",
+      "bytes": 26461,
+      "media": []
+    },
+    {
+      "file": "d4967d5e-00c5-4bee-b7a2-7059c6130af7-biot-worker-card-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.pdf",
+      "format": "PDF",
+      "provenance": "PREVIEW",
+      "sha256": "4efd6174eb0133e4fcbfcd7d9a1be84a4d44d4bbdfe9ba8784b1dae8e61efa6f",
+      "bytes": 104793,
+      "media": []
+    },
+    {
+      "file": "aac046d2-965d-4e15-965c-e6d83f9c9589-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.docx",
+      "format": "DOCX",
+      "provenance": "ORIGINAL",
+      "sha256": "22de07f244411e96e7813f2794b788d15aa4c186e7c37c20598551b4f3ef1faf",
+      "bytes": 26454,
+      "media": []
+    },
+    {
+      "file": "4a933c8b-4dc4-464e-8c30-91033d6fb156-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.pdf",
+      "format": "PDF",
+      "provenance": "ORIGINAL",
+      "sha256": "464e7514500e5655ff898e414902d2d978fd0ff94488736771371bcba9a6ed31",
+      "bytes": 107262,
+      "media": []
+    },
+    {
+      "file": "af718c32-0e01-4d11-91e1-06ab34a4b124-registry-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.xlsx",
+      "format": "XLSX",
+      "provenance": "ORIGINAL",
+      "sha256": "5defb98b55e956c98294c546601b70a64283004c20142d9e5e683417ba372a9c",
+      "bytes": 5957,
+      "media": []
+    },
+    {
+      "file": "4b0fdc44-ce79-4702-8ec9-15c548032c78-registry-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.zip",
+      "format": "ZIP",
+      "provenance": "ORIGINAL",
+      "sha256": "1df9b117e1dc8e07848c0db547b080fe5048a87a848d4724b4bff1cc2e7552ea",
+      "bytes": 102628,
+      "media": []
+    }
+  ]
+}

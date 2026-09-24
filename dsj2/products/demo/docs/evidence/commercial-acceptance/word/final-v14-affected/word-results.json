@@ -1,0 +1,133 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 10,
+  "documents": [
+    {
+      "file": "biot-itr-certificate-long.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 42,
+      "pdf": "biot-itr-certificate-long.word.pdf",
+      "audit": "biot-itr-certificate-long.audit.json",
+      "docxSha256": "a3ceab951c334fe6d7d680ce64f29d4f2ba65fd0e775356ee6283f3637f4c9fe",
+      "pdfSha256": "0bff18f61759f7cc242e41cae8401a1e71a4230eedc06eb9ed47ad7db2b54ec6",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "biot-itr-certificate-short.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 42,
+      "pdf": "biot-itr-certificate-short.word.pdf",
+      "audit": "biot-itr-certificate-short.audit.json",
+      "docxSha256": "5bd57bed9e9c530e3db399db1fa13cfeeb1e694e655260b0d49fcb6f0f521050",
+      "pdfSha256": "07c81c3ffaef25335c6e0fc5519b89b49a3ea9ad46723d0f11a162d3477d3b08",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "biot-worker-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 75,
+      "pdf": "biot-worker-card-long.word.pdf",
+      "audit": "biot-worker-card-long.audit.json",
+      "docxSha256": "caf7823865cb37aaa22ba241828a8b04cd85cb35b948c3f89835568fb3d56c9c",
+      "pdfSha256": "98ed87c7b435bb1de0bbba26b1b5b84c1360d31ceca5ad0a63bb3aa8a02f84e9",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 70,
+      "pdf": "biot-worker-card-short.word.pdf",
+      "audit": "biot-worker-card-short.audit.json",
+      "docxSha256": "7e5ad58bff1897226c3286df799527a6478750bec18e8a1fc365eeb3aeff0a36",
+      "pdfSha256": "96f5a2caef8005de85ace77feb08a94243b95d3f277b76666d277332080bc9c6",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "pb-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 89,
+      "pdf": "pb-card-long.word.pdf",
+      "audit": "pb-card-long.audit.json",
+      "docxSha256": "350727c183bbf5df5f45052a11400efe4e1dab2551fe15c4d8442b2b80a056bd",
+      "pdfSha256": "2e450eabdf1630e3d28d2427c8ee8f019f53956833cf0361fd1d736e59fb53f5",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "pb-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 84,
+      "pdf": "pb-card-short.word.pdf",
+      "audit": "pb-card-short.audit.json",
+      "docxSha256": "c94c636e7b8ed2d8c405086dd1db61ba7808fb642f9330c7f2ad9cb08c40640d",
+      "pdfSha256": "7811cd1d06f0dfb63135d56127c3ceb917ce9f5c8cb35ee2a3fa005e750749a7",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ps-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 99,
+      "pdf": "ps-card-long.word.pdf",
+      "audit": "ps-card-long.audit.json",
+      "docxSha256": "4b09c57bb2bd26c859b935b27558d4d939d50285dd5de176267ce1847e401eb5",
+      "pdfSha256": "9a7058aa6dc78549975f6a36f66e286b23a99ca63c84d703b5faddc9be2cea82",
+      "visualReview": "SUPERSEDED"
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 93,
+      "pdf": "ps-card-short.word.pdf",
+      "audit": "ps-card-short.audit.json",
+      "docxSha256": "55ed928960bf41f53b527959e2a6194193c0ec6601fbe842137c6f11339ce94b",
+      "pdfSha256": "6b8455742cdaa34ef43b4196b8e454df7ccfc088422ef60d9cc0c2ce4b3576c1",
+      "visualReview": "SUPERSEDED"
+    },
+    {
+      "file": "ptm-card-long.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 78,
+      "pdf": "ptm-card-long.word.pdf",
+      "audit": "ptm-card-long.audit.json",
+      "docxSha256": "71702bd14c526a0b6c973efcf064f7df272e30b136c831e33cf664ebbd28af21",
+      "pdfSha256": "9c87da30f96dfa647ad2432135d08824923d4fc36e3fcacb59637f0abb89a5ab",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ptm-card-short.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 73,
+      "pdf": "ptm-card-short.word.pdf",
+      "audit": "ptm-card-short.audit.json",
+      "docxSha256": "241a9c3808784786d9a290c134bb25f45e50790cb4142e334bad80d831a6abba",
+      "pdfSha256": "73394bab3f06913cd6298e3ac30315e4a91d9e0b68bec46953bb84820b79ce27",
+      "visualReview": "PASS"
+    }
+  ],
+  "visualSummary": {
+    "pagesReviewed": 12,
+    "documentsPassed": 8,
+    "documentsSuperseded": 2
+  }
+}

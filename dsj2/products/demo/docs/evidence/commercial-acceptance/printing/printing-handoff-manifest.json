@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "rendererVersion": "demo-ooxml-5/libreoffice-26.2.6.3",
+  "files": {
+    "final-source-docx-revalidation.json": "1dbb1abd60cff81156979724c0d93bd1e949b4eb84883e7fb5ae862d4e734bb8",
+    "final-artifact-audit.json": "1b5cbb940a07a1754ed984a762cf6e4f4c198bdac24d4128e9dfe3d48dc7bab3",
+    "final-visual-reconciliation.json": "c921696fce0686b85bc3e0c70b0b87ac790282e54824423a3c61cc2f496b68c3",
+    "final-docx-content-scan.json": "e47abb74409255a8271883470f9be6a47516ebd4940f337b60e54b7236803213",
+    "control-print-set-verification.json": "9869f7fe2ac03d3c032e8b5a447e2f3f0ca4e1be6668889fd7bbb120d01f9990",
+    "all-summary.json": "76d87e9410393d0e2cecca5b23df1d3a430fe4e29ba3df727ad84b708293376a",
+    "environment.json": "6efba2419d9efd8c5934b0fe5da2f27d2c9c865523a0891c2ae72ca603d722b7",
+    "final-render-tests-biot-v15.log": "17b485e1e63aec4aff13a2cc9881b1454f1449ba2b438f2e677b59bf0413099e",
+    "matrix-updates.json": "8b91d55cc3e4f1d8ffd803f99f3477fba931fc6e72d4600d8909267d1ab85bd0",
+    "PRINTING_REPORT_RU.md": "14ee601a792c159f7aa31a5bc59c98d9edff387a143698d308321012d48eb226",
+    "biot-panel-regression-result.json": "a3b735c3c1f253009134913da216bf13c356a5efc531edf2b3935bcf1610db95",
+    "template-structure-field-map.json": "e6b8c918f7e039b86fd03ed89f010bc287e19affb3eac4d426c7390e3f27802e",
+    "word-final-biot-v15/manifest.json": "d6f67f6eeae81ae4920f0fe656fdb38ec99f35a1d7a80d5e269066a109c72364"
+  },
+  "wordReport": {
+    "path": "../word/final-active.json",
+    "sha256": "db4d9985b08dba166de3591ba7e667b40b19dedf3aa68bb9cf909d9a642a4936"
+  },
+  "controlZip": {
+    "path": "control-print-set.zip",
+    "sha256": "b241767d87b731b81194162d4a20c9e6ffad745071544127a9b5fd0d00b89303"
+  },
+  "dateRoundtrip": {
+    "proofSha256": "1cea6cbf5087442ce6e3dfd0389b13959b1424280cc372c23dbb2a8812ed7291",
+    "visualSha256": "3e374c177c4c84f2682753a7a963ddeda3e0dd9677b1c7ef8d8ec0008263cb63",
+    "cases": 4,
+    "pages": 8,
+    "status": "PASS"
+  },
+  "limitations": [
+    "Engineering PASS for exact historical forms does not establish legal validity. Known BIOT N6-versus-current-N7 mismatch remains FAIL.",
+    "No physical printer proof; physical acceptance remains BLOCKED.",
+    "Eight BIOT conversions produced all PASS records but the original external shell reported exit1; cause unresolved. Independent later artifact audit, fresh DOCX and regression processes exited0."
+  ]
+}

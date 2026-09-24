@@ -1,0 +1,9 @@
+{
+  "rows": 100,
+  "sourceRows": 101,
+  "excluded": 1,
+  "durationMs": 2236,
+  "defaultsRequests": 0,
+  "browser": "Chromium",
+  "viewport": "1366x768"
+}

@@ -1,0 +1,25 @@
+{
+  "requestId": "bfcefe19-1ab7-4879-89e7-9d209428bbff",
+  "status": "PASS",
+  "downloadedArtifacts": {
+    "DOCX": 18,
+    "PDF": 18,
+    "XLSX": 1,
+    "ZIP": 1
+  },
+  "standaloneSha256Checked": 38,
+  "zip": {
+    "members": 39,
+    "manifestFiles": 37,
+    "complete": true,
+    "hashesAndSizesMatch": true
+  },
+  "xlsx": {
+    "dataRows": 18,
+    "columns": 28,
+    "allIssuedNumbersPresent": true,
+    "psWitnessAndRegistrationPresent": true,
+    "formulaCells": 0
+  },
+  "limitation": "Files belong to the v5 browser cycle. Visual print conformance is a separate gate; final v6 person workflow is retested separately."
+}

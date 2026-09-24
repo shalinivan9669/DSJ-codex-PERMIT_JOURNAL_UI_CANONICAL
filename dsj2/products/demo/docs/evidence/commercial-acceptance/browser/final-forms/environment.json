@@ -1,0 +1,9 @@
+{
+  "browser": "chromium",
+  "browserVersion": "152.0.7977.83",
+  "channel": "chrome",
+  "node": "v24.16.0",
+  "platform": "win32",
+  "origin": "http://localhost:3200",
+  "syntheticDataOnly": true
+}

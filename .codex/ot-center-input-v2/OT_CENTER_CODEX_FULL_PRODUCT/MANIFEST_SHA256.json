@@ -1,0 +1,314 @@
+{
+  "package": "OT_CENTER_CODEX_FULL_PRODUCT",
+  "version": "2026-09-22.2",
+  "createdOn": "2026-09-22",
+  "repositoryAuditCommit": "d1d377b641b0ee3e171c794e654b382d4d3af7c4",
+  "repositoryRecheckedForThisRevision": false,
+  "files": [
+    {
+      "path": "00_START_HERE_RU.md",
+      "bytes": 9337,
+      "sha256": "eff18601db2f05804f7d0485b7d2faba9ecba15c73e7ba5316ce403abd632fb3"
+    },
+    {
+      "path": "01_CODEX_START_PROMPT_RU.md",
+      "bytes": 15746,
+      "sha256": "529e0ee0bb5bacc5df5fb65488761fbfac1f71b7f01dc65fde210acad0a6f49e"
+    },
+    {
+      "path": "FILE_INDEX.md",
+      "bytes": 2710,
+      "sha256": "a35f7b3f5db1f03c3cdc262c88db1981ae3d4c25d59eb00e22e768fa5cbc3d30"
+    },
+    {
+      "path": "acceptance/ACCEPTANCE_MATRIX.json",
+      "bytes": 252848,
+      "sha256": "c9f1186e02c356691b68c3172a2df9807302d248c1206f91b29233fbde64fd6b"
+    },
+    {
+      "path": "acceptance/ACCEPTANCE_RU.md",
+      "bytes": 52404,
+      "sha256": "e4a9154cdef4e0d8c58537e136f413b575840e3d8681fa9f016ca2086e27fd93"
+    },
+    {
+      "path": "acceptance/BUSINESS_SCENARIOS.json",
+      "bytes": 15409,
+      "sha256": "dd43f1403992cd2521d9e6dc3fd0e885bc9054b05f66104c0826f87b042945b2"
+    },
+    {
+      "path": "acceptance/BUSINESS_SCENARIOS_RU.md",
+      "bytes": 27371,
+      "sha256": "431dd075d978fa81c753c53cfc254f5089a0aba3e9e386ea5840b7a950a72fc1"
+    },
+    {
+      "path": "acceptance/GOLDEN_SCENARIOS.json",
+      "bytes": 1902,
+      "sha256": "e2ab87e6ed243a2f6c53997f9d4777b4bab5fd52373778b3fbc2fe12556214b9"
+    },
+    {
+      "path": "acceptance/TRACEABILITY.csv",
+      "bytes": 4745,
+      "sha256": "c6607914e4fa832c55d1b6aedc21d698e460e696c9bae30449a52a48e40d73d1"
+    },
+    {
+      "path": "audit/ORIGINAL_PACKAGE_QA_V1.json",
+      "bytes": 3979,
+      "sha256": "07e98c5333e773a522c312ad487b256f3992e20572f069eb1fb3a6ca2b31a1c0"
+    },
+    {
+      "path": "audit/PACKAGE_QA.json",
+      "bytes": 5427,
+      "sha256": "365578935e99e1359010258f69b7bb9fd38a45ee3327b9cc0496c943e2ad5e33"
+    },
+    {
+      "path": "audit/REPO_AUDIT_RU.md",
+      "bytes": 12931,
+      "sha256": "88f375021fab45ac434c1741e1ff9946b2fd060368c950aa4c144ec23b8a0628"
+    },
+    {
+      "path": "audit/REPO_LOCK.json",
+      "bytes": 1118,
+      "sha256": "fca56b97269d9564df2b1d904bddfe6483d7d14d1b80d5b487629bdfcbae0fa1"
+    },
+    {
+      "path": "audit/SOURCE_LEDGER_RU.md",
+      "bytes": 4308,
+      "sha256": "2b3b3d46d86ac7bf41d6bee8a2f8d8491032f103063ed9b88032a045f4046162"
+    },
+    {
+      "path": "audit/SOURCE_MAP.json",
+      "bytes": 9002,
+      "sha256": "f7ff7574ce7d0dbb7cd2cc6ce152964a14402f240d4e00d6bea367b78e648c55"
+    },
+    {
+      "path": "audit/V2_CHANGES_AND_COVERAGE_RU.md",
+      "bytes": 5122,
+      "sha256": "d8abbc108daac0dd5e54ce287aabd96cd562e43505b86c5e2fd6376d65e8d10d"
+    },
+    {
+      "path": "delivery/AGENTS_SCOPE_NOTE_RU.md",
+      "bytes": 2275,
+      "sha256": "da5a501f104734859eaaefd340c3abc6fac83c8c20c2db21cfb52ffa5be5b241"
+    },
+    {
+      "path": "delivery/BusinessValueEvidence.template.md",
+      "bytes": 3050,
+      "sha256": "f4d7257860b147c50745d56a5aeb523d4b1de59623ac5b055e5d95d9839dca01"
+    },
+    {
+      "path": "delivery/Decisions.template.md",
+      "bytes": 1293,
+      "sha256": "5623b6a51ed1643bc7e31968646b1e7bf146aefef2615086ddf9f7c957d31e4e"
+    },
+    {
+      "path": "delivery/FINAL_REPORT.template.md",
+      "bytes": 3773,
+      "sha256": "5a244c58d70b8f97a639bc50bb2285d542d5ac9bc5d5fe86462a293eb526af7d"
+    },
+    {
+      "path": "delivery/Plan.template.md",
+      "bytes": 3297,
+      "sha256": "0628cf7f4826e8fdad5a1a1b62f452fa850c4b9492cf6e19d6690149eb56bd12"
+    },
+    {
+      "path": "delivery/Progress.template.md",
+      "bytes": 2510,
+      "sha256": "70ea6c64555bc8be5a7f2c6bbe46f727d254bf522ae8c11eae96d8d86450c93b"
+    },
+    {
+      "path": "delivery/Verification.template.md",
+      "bytes": 2969,
+      "sha256": "e520602382f69e451f2359ed4579b5f802bafaf888c1d0fed28e46fd532cd958"
+    },
+    {
+      "path": "fixtures/100_people.csv",
+      "bytes": 43254,
+      "sha256": "0888c7c066579e57469deff87aa8b1ced36fa8e075fe4412d127660ef809baee"
+    },
+    {
+      "path": "fixtures/100_people.json",
+      "bytes": 69455,
+      "sha256": "02c5de1e643871b972657975e003a29f149fb7a8ea7d86a32cfdadab75e839e2"
+    },
+    {
+      "path": "fixtures/100_people.tsv",
+      "bytes": 43254,
+      "sha256": "144ba5ea76c4fec7f15db46498ccf5be1396a1578b6df104fcef5491b34b5bed"
+    },
+    {
+      "path": "fixtures/100_people.xlsx",
+      "bytes": 12274,
+      "sha256": "62338d66fbcdad60bf486d9b50067e12296e5814386936873f2e12c179102787"
+    },
+    {
+      "path": "fixtures/100_people_revised.csv",
+      "bytes": 43390,
+      "sha256": "e8f4bbea3489f9c843a3641d789b8038c596ecfed9d4fa30dac635f98ba29c9d"
+    },
+    {
+      "path": "fixtures/100_people_revised.json",
+      "bytes": 69591,
+      "sha256": "8a65d51931628405669492d6c6a10fee39c0e873f8873be237bf9f927c39b11c"
+    },
+    {
+      "path": "fixtures/100_people_revised.tsv",
+      "bytes": 43390,
+      "sha256": "2eb3a76f7403b1222b6c80dd795934e1b64aee32878ea1dac7ba6c025b459c5f"
+    },
+    {
+      "path": "fixtures/DAILY_WORKFLOWS.json",
+      "bytes": 24236,
+      "sha256": "f85722602fdffcfff6bacd2d916c9531bc4e065fb62311fa17c3deb59134c337"
+    },
+    {
+      "path": "fixtures/EXPECTED_FIXTURES.json",
+      "bytes": 2014,
+      "sha256": "7dfa6459b581c3b6f66ad1981684bd67155fac771d77425b2760906d864681f7"
+    },
+    {
+      "path": "fixtures/README_RU.md",
+      "bytes": 4825,
+      "sha256": "6c323ca0ddd648ed245853f9eb1c779a6b265306790db705db5be236a30e8106"
+    },
+    {
+      "path": "fixtures/customer_export_profile.json",
+      "bytes": 1242,
+      "sha256": "c4d36c92536a9aefa95918312da54725d0af9d82891e776cbda8dbdb9747ebee"
+    },
+    {
+      "path": "fixtures/issuer_and_customer.json",
+      "bytes": 2293,
+      "sha256": "2d2d6260180c1ab8045847ac3c750d92c9b37b1415963111824f9b5e1079478e"
+    },
+    {
+      "path": "fixtures/negative_variants.json",
+      "bytes": 4388,
+      "sha256": "03c2f429207e784398db4cd715ae4f9417a8303179ae2ea2e106dc93be0e476a"
+    },
+    {
+      "path": "fixtures/results_G1.csv",
+      "bytes": 18785,
+      "sha256": "4cf41650c851d98269a4a964b3e97db3908440b57c26c932271516288102bddf"
+    },
+    {
+      "path": "fixtures/results_G1.json",
+      "bytes": 36649,
+      "sha256": "0028517da3223b3e0172c6797496977afc80349d47f2d70f87d81facc2a1dded"
+    },
+    {
+      "path": "fixtures/results_G2.csv",
+      "bytes": 37625,
+      "sha256": "f08ba3de0033433b3d51c4faeb69d4585a6bd646f63141c9fea45749ee9c0481"
+    },
+    {
+      "path": "fixtures/results_G2.json",
+      "bytes": 73289,
+      "sha256": "04f84f830befa741f8a46be8ce9d8ecb23da4fe9c61ce89bb435852c0e6b3c2b"
+    },
+    {
+      "path": "fixtures/training_events.json",
+      "bytes": 9686,
+      "sha256": "0dffbd08465e71557837ea88ffbfcc93d198229038c9a456d2fd97723185c37f"
+    },
+    {
+      "path": "prompts/APPLY_VALUE_CORRECTION_RU.md",
+      "bytes": 10660,
+      "sha256": "4e0d2d37823056d1e79a6182a8c16680dcd5085bc7c39e0614c78824c930b7e9"
+    },
+    {
+      "path": "prompts/CONTINUE_PROMPT_RU.md",
+      "bytes": 2268,
+      "sha256": "307b00ee0be12cf0e60f19473bf076dabb670e55ab3147a392c66da8899ab7da"
+    },
+    {
+      "path": "prompts/INDEPENDENT_REVIEW_PROMPT_RU.md",
+      "bytes": 4044,
+      "sha256": "3d8129bdce9c609add3d0f41eb6639f744ed5bde8b638a459d1b711837febf66"
+    },
+    {
+      "path": "prompts/PLAN_MODE_PROMPT_RU.md",
+      "bytes": 4690,
+      "sha256": "8020512d9d47b826da82fad4bf5c478e00d6eb1d4dcbf6adb24abe3276730bcd"
+    },
+    {
+      "path": "prompts/RUN_GUIDE_RU.md",
+      "bytes": 3192,
+      "sha256": "a215873058aad496853b75b6463716668d6b7e59ad5f4282566156a422eee1cb"
+    },
+    {
+      "path": "reference/OT_CENTER_FULL_CONTEXT_RU.md",
+      "bytes": 146326,
+      "sha256": "005a40df202f0d67eeb7f1a9fe4a12924aea2b439d57189744d84c2e605b2179"
+    },
+    {
+      "path": "reference/OT_CENTER_START_PROMPT_RU.md",
+      "bytes": 7571,
+      "sha256": "5b58e5cf16c94b4eef75f111b5ec98398d26fa68ca60697d66fa8e8f3a60991b"
+    },
+    {
+      "path": "reference/RESEARCH_DECISIONS_RU.md",
+      "bytes": 4369,
+      "sha256": "0069e170abd9269290a85f663b7254f5a46cf4fa00d10552193932a1bae60700"
+    },
+    {
+      "path": "spec/00_BUSINESS_VALUE_AND_ACCEPTANCE_RU.md",
+      "bytes": 19868,
+      "sha256": "6613827e43c84c43c747ea75ac3b3113d64f6ad209711f03e257cbad93a986d1"
+    },
+    {
+      "path": "spec/01_PRODUCT_AND_SCOPE_RU.md",
+      "bytes": 9209,
+      "sha256": "cfe502636ff3b1eb35e75d7e1a50be165b6e057178ee67b34c4fa33e4bc28895"
+    },
+    {
+      "path": "spec/02_FAST_EVERYDAY_WORKFLOW_RU.md",
+      "bytes": 18170,
+      "sha256": "1197c3e9a8b858786c3c2e7abe213dcd1ac6dbc130ba0e2827876161ae097293"
+    },
+    {
+      "path": "spec/03_DATA_AND_ISSUANCE_RU.md",
+      "bytes": 11829,
+      "sha256": "2c85135c45a6dc94d8b280dce69ad73c0868e7000c21f9cb8a910dbbcffef242"
+    },
+    {
+      "path": "spec/04_IMPORT_AND_CUSTOMER_OUTPUT_RU.md",
+      "bytes": 11330,
+      "sha256": "6085f2963b4e55f12e5e270954669d9cde41422772773e16ad0d7c30c8d36ef2"
+    },
+    {
+      "path": "spec/05_ORDERS_RENEWALS_AND_PORTAL_RU.md",
+      "bytes": 14753,
+      "sha256": "04267fc4cf2094e1ceee5db1ffc1b5b8ef0f32f413bd11cf0636a097c2a5675f"
+    },
+    {
+      "path": "spec/06_EVIDENCE_RULES_AND_COMMERCIAL_RU.md",
+      "bytes": 15002,
+      "sha256": "814dbe5ea46cf48054a295f44865f0a16c49de8c64ed821eb128f08e32c96c08"
+    },
+    {
+      "path": "spec/07_SECURITY_MIGRATIONS_OPERATIONS_RU.md",
+      "bytes": 11974,
+      "sha256": "32f5058777e61deafb04c080dd587615392819b261591831aec2d83d2e3bd751"
+    },
+    {
+      "path": "spec/08_UX_AND_PRINT_QUALITY_RU.md",
+      "bytes": 11308,
+      "sha256": "733b258793e4afdb83e8f6e8994fee1c836d8792c19b563d4e9ffd67b8562248"
+    },
+    {
+      "path": "spec/09_IMPLEMENTATION_MAP_RU.md",
+      "bytes": 9018,
+      "sha256": "148d36ff2693e877e74405823b772c952171a07ee54b31381642d0da31fd1bd6"
+    },
+    {
+      "path": "spec/BUSINESS_VALUE_MAP.json",
+      "bytes": 7454,
+      "sha256": "09a9e09d65875003f1d658d3b41c0bf31064440a0755a47c78518ea72c9c3088"
+    },
+    {
+      "path": "spec/FEATURE_CATALOG.json",
+      "bytes": 55902,
+      "sha256": "0144e2d5b2737ba7e5e8d4f857db8d13d7cc44ba0be8c8304ebbb0457956497c"
+    }
+  ]
+}

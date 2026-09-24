@@ -1,0 +1,1 @@
+Superseded BIOT v14: real long issuer commission showed lower-right text clip and divider crossing issuer band. Other nine template outputs unchanged. Previous PASS is bounded to its fixtures. Fixed v15 rerun follows.

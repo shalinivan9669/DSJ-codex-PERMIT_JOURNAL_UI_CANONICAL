@@ -1,0 +1,86 @@
+{
+  "reviewDate": "2026-09-22",
+  "scope": "Exact no-XML database image only. Does not pass API/web/ingress image gates. Source-built PostgreSQL version/security provenance is separate from distro package findings. Scanner absence is not a universal vulnerability absence guarantee.",
+  "releaseGate": "PASS_SCOPED_DATABASE_IMAGE",
+  "image": "demo-postgres:18.6-no-xml",
+  "imageID": "sha256:b097d139976b72e6245b60ff4d5c81401d446a72d2b92f91bacdfdd80ae6ad51",
+  "scanner": {
+    "Version": "0.74.0"
+  },
+  "scannerCreatedAt": "2026-09-22T19:24:32.072815795+05:00",
+  "counts": {
+    "initialBookworm": {
+      "CRITICAL": 18,
+      "HIGH": 116,
+      "MEDIUM": 233,
+      "LOW": 186,
+      "UNKNOWN": 9
+    },
+    "patchedBookworm": {
+      "CRITICAL": 15,
+      "HIGH": 78,
+      "MEDIUM": 173,
+      "LOW": 154,
+      "UNKNOWN": 4
+    },
+    "officialAlpine": {
+      "CRITICAL": 1,
+      "HIGH": 21,
+      "MEDIUM": 21,
+      "LOW": 2,
+      "UNKNOWN": 1
+    },
+    "final": {
+      "CRITICAL": 0,
+      "HIGH": 0,
+      "MEDIUM": 0,
+      "LOW": 0,
+      "UNKNOWN": 0
+    }
+  },
+  "finalPackageCount": 31,
+  "unresolvedScannerHighCritical": 0,
+  "findings": [],
+  "manualCoverage": {
+    "postgresql": "18.6 upstream security release, official source SHA verified; binary SHA recorded",
+    "libxml2": "Absent from final packages and postgres shared-library dependencies; SQL/XML deliberately omitted via supported configure flags; runtime XMLPARSE feature_not_supported verified",
+    "libxslt": "Absent",
+    "gosu": "Absent; official entrypoint executes as UID70",
+    "feedGap": "Official Alpine libxml2 zero-finding result was not trusted; no XML component is shipped",
+    "historicalBookworm": "93 HIGH/CRITICAL remain in the retired patched-bookworm image; full disposition report retained at container-postgres-bookworm-triage.json, not suppressed"
+  },
+  "tests": {
+    "upstreamRegression": {
+      "passed": 231,
+      "failed": 0
+    },
+    "productMigrations": 5,
+    "httpRegression": {
+      "passed": 7,
+      "failed": 0,
+      "applicationImage": "sha256:68bf7a4abf08badb6be9ffe07e570f3d2aa4df19f80a03d5530b3952dabdbc40"
+    },
+    "unicodeJsonb": "PASS",
+    "icuLocale": "ru-KZ",
+    "encoding": "UTF8",
+    "actualSigkillRecovery": "PASS",
+    "pgDumpRestore": {
+      "status": "PASS",
+      "restoredTables": 26
+    }
+  },
+  "evidenceHashes": {
+    "container-postgres-no-xml-build.log": "63c4ca9796809c7cea80aa5e056de09233d9138531bb8ff9d8172f75e71e9be4",
+    "container-postgres-no-xml-smoke.log": "6e63f7068e3f32114ecd726be775157a4aab96c4a32045b1d83c11fd262da7a8",
+    "container-postgres-no-xml-cves.json": "631cbcb04dbe94ddb4f6bc911b10ec9d630efec000131e1e8591f307f44fe0c7",
+    "container-postgres-no-xml-sbom.cdx.json": "d79bcb03ff8df2cf4d582c2b1ad30b9166500dd293b7b02e61b5654944c4d0f9",
+    "container-postgres-binaries.txt": "53e2d789a20318ca0c423642c2461ce5f60b5fc6f0b1c5a90027edc99b0bc034",
+    "container-postgres-scanner.txt": "e86671cf8073332f34d0ac0c6a33218afd2c19cb3da0104b52a4e793606d6fbc"
+  },
+  "primarySources": [
+    "https://www.postgresql.org/docs/18/release-18-6.html",
+    "https://www.postgresql.org/docs/18/install-make.html",
+    "https://alpinelinux.org/releases/",
+    "https://raw.githubusercontent.com/alpinelinux/aports/3.24-stable/main/libxml2/APKBUILD"
+  ]
+}

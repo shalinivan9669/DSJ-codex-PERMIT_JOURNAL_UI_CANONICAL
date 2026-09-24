@@ -1,0 +1,113 @@
+{
+  "status": "PASS",
+  "origin": "http://localhost:8080",
+  "requestId": "46f15190-eb04-4dc9-a7dd-81fc619390a8",
+  "requestUrl": "http://localhost:8080/requests/46f15190-eb04-4dc9-a7dd-81fc619390a8/edit",
+  "browserVersion": "152.0.7977.83",
+  "syntheticDataOnly": true,
+  "portraitSource": "fictional-recipient-portrait.png",
+  "portraitSourceSha256": "82f3d34ad38f13a9cf9511d63dc5ab9b9acb19f12a5816c3a1e1b5669e907484",
+  "normalizedPhotoSha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+  "exactEmbeddedPhotoMatches": 2,
+  "templates": [
+    {
+      "id": "pb-card",
+      "version": "11",
+      "sha256": "a12d971728f5e7568e295386d2a0061be32d30b7279222f8059fbb4b9d965379"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "3c765b6d-4089-4f55-8f3c-6141c8087cb7-pb-card-46f15190-eb04-4dc9-a7dd-81fc619390a8.pdf",
+      "format": "PDF",
+      "provenance": "PREVIEW",
+      "sha256": "a894947891a75e9b83bfaa2dc27e0aadde77368c765f9d4a6660c1dad59916c2",
+      "bytes": 98022,
+      "media": []
+    },
+    {
+      "file": "756f9248-1207-4315-8064-92c576c6021b-registry-46f15190-eb04-4dc9-a7dd-81fc619390a8.zip",
+      "format": "ZIP",
+      "provenance": "ORIGINAL",
+      "sha256": "e421c57d977fcb4ced66d0a5ac73c5bbeb296856aaee2bece5be3c520c23f09f",
+      "bytes": 2546420,
+      "media": []
+    },
+    {
+      "file": "876c8641-8c50-461d-823a-313ab38f4e10-pb-card-c45a5209-e349-4f8b-9817-b941bdefbff8.pdf",
+      "format": "PDF",
+      "provenance": "ORIGINAL",
+      "sha256": "8ff6cafc2050e31ac207e5f0a00ff46c88cbc9e4aca27ca611916f796c043ebb",
+      "bytes": 98436,
+      "media": []
+    },
+    {
+      "file": "d27608e2-c53f-450a-a02f-be083492a636-registry-46f15190-eb04-4dc9-a7dd-81fc619390a8.xlsx",
+      "format": "XLSX",
+      "provenance": "ORIGINAL",
+      "sha256": "3bd4da400155825db1efc650d275d3b9462c0b2416defcf450c9ae2c0f36f029",
+      "bytes": 5948,
+      "media": []
+    },
+    {
+      "file": "e712b61e-0a8e-4e5b-aa31-dab47e7a50f9-pb-card-46f15190-eb04-4dc9-a7dd-81fc619390a8.docx",
+      "format": "DOCX",
+      "provenance": "PREVIEW",
+      "sha256": "2c1bf75fa6add979a5b62e3dd7fc50c8f1a416dc06e5c671a621f386cc5b76c8",
+      "bytes": 2490762,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "f24d3086-b4ac-40fc-a449-c6e5f0e5e87e-pb-card-c45a5209-e349-4f8b-9817-b941bdefbff8.docx",
+      "format": "DOCX",
+      "provenance": "ORIGINAL",
+      "sha256": "b79917ce490c1fd533299402ff53e7267de26bb29ad406c1001ee50219873514",
+      "bytes": 2490757,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    }
+  ],
+  "pdfPages": 2,
+  "normalizedPhotoPixels": [
+    1086,
+    1448
+  ],
+  "pdfImages": [
+    {
+      "page": 1,
+      "x0": 26.25,
+      "top": 121.45,
+      "widthPt": 59.8,
+      "heightPt": 79.65,
+      "sourcePixels": [
+        248,
+        331
+      ]
+    }
+  ],
+  "visualReview": {
+    "status": "PASS",
+    "browserScreens": [
+      "portrait-crop.png",
+      "pdf-preview.png",
+      "issued-portrait.png"
+    ],
+    "finalPdfPagesReviewed": [
+      1,
+      2
+    ],
+    "findings": "Портрет резкий, кадр 3:4, фото не перекрывает текст, issuer strip внутри рамки; обе страницы без обрезанного текста."
+  },
+  "wordVerification": "../../word/generated-photo-pb/word-results.json"
+}

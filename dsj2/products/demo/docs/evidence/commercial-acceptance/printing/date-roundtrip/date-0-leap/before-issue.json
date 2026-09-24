@@ -1,0 +1,89 @@
+{
+  "id": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+  "tenantId": "866ec214-9b4e-4c31-bea5-ba25a90056f1",
+  "kind": "PERSON",
+  "title": "ТЕСТ A21 Asia/Almaty leap 1790090463324",
+  "customerId": null,
+  "demoMode": true,
+  "status": "DRAFT",
+  "revision": 1,
+  "draft": {
+    "kind": "PERSON",
+    "items": [
+      {
+        "id": "59a5c3c2-32d7-4729-a876-26dbd30d14f3",
+        "fullNameKz": "Сынақ Әли Қасымұлы 1",
+        "fullNameRu": "Тестовый Календарный Получатель 1",
+        "positionKz": "",
+        "positionRu": "",
+        "assignments": [
+          {
+            "id": "f71e0d86-3776-4250-8e91-deee0f1897cf",
+            "hours": "",
+            "reason": "",
+            "result": "ТЕСТ: сдал / тапсырды",
+            "education": "",
+            "templateId": "ps-witness",
+            "validUntil": "",
+            "trainingEnd": "",
+            "documentDate": "2028-02-29",
+            "protocolDate": "2028-02-28",
+            "protocolMode": "INDIVIDUAL",
+            "trainingStart": "",
+            "trainingSubject": "ТЕСТ: календарная проверка",
+            "externalBasisNumber": ""
+          }
+        ],
+        "workplaceKz": "",
+        "workplaceRu": "",
+        "photoAssetId": null
+      }
+    ],
+    "title": "ТЕСТ A21 Asia/Almaty leap 1790090463324",
+    "demoMode": true,
+    "customerId": null
+  },
+  "itemCount": 1,
+  "searchText": "ТЕСТ A21 Asia/Almaty leap 1790090463324 Тестовый Календарный Получатель 1 Сынақ Әли Қасымұлы 1  ",
+  "createdBy": "fc4807f5-c15a-4bb8-af8a-e00d36c817b5",
+  "createdAt": "2026-09-22T15:21:06.176Z",
+  "updatedAt": "2026-09-22T15:21:07.356Z",
+  "correctsIssuanceId": null,
+  "correctionReason": null,
+  "legacySourceId": null,
+  "items": [
+    {
+      "id": "59a5c3c2-32d7-4729-a876-26dbd30d14f3",
+      "fullNameKz": "Сынақ Әли Қасымұлы 1",
+      "fullNameRu": "Тестовый Календарный Получатель 1",
+      "positionKz": "",
+      "positionRu": "",
+      "assignments": [
+        {
+          "id": "f71e0d86-3776-4250-8e91-deee0f1897cf",
+          "hours": "",
+          "reason": "",
+          "result": "ТЕСТ: сдал / тапсырды",
+          "education": "",
+          "templateId": "ps-witness",
+          "validUntil": "",
+          "trainingEnd": "",
+          "documentDate": "2028-02-29",
+          "protocolDate": "2028-02-28",
+          "protocolMode": "INDIVIDUAL",
+          "trainingStart": "",
+          "trainingSubject": "ТЕСТ: календарная проверка",
+          "externalBasisNumber": ""
+        }
+      ],
+      "workplaceKz": "",
+      "workplaceRu": "",
+      "photoAssetId": null
+    }
+  ],
+  "issuances": [],
+  "documents": [],
+  "jobs": [],
+  "artifacts": [],
+  "events": []
+}

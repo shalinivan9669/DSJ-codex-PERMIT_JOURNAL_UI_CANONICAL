@@ -1,0 +1,365 @@
+{
+  "requestId": "bfcefe19-1ab7-4879-89e7-9d209428bbff",
+  "recipientCount": 12,
+  "documentCount": 18,
+  "documents": [
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00029",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-protocol",
+      "number": "BIOT-PROTOCOL-00010",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-protocol",
+      "number": "BIOT-PROTOCOL-00006",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00025",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00028",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00026",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00024",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00019",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-protocol",
+      "number": "BIOT-PROTOCOL-00008",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00027",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00020",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00023",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-protocol",
+      "number": "BIOT-PROTOCOL-00009",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00021",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-protocol",
+      "number": "BIOT-PROTOCOL-00007",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00022",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "biot-worker-card",
+      "number": "BIOT-CARD-00018",
+      "registrationNumber": null
+    },
+    {
+      "templateId": "ps-witness",
+      "number": "PS-WITNESS-00002",
+      "registrationNumber": "PS-REGISTRATION-00002"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-f30e12e7-287e-442d-8418-1b74a17eac04.docx",
+      "id": "d89c1a2f-779d-4646-8d32-241e336ce582",
+      "format": "DOCX",
+      "size": 29781,
+      "sha256": "6d125989ea8b90bb043c4ad0291a8cf24c6f71a70d3f606dbcec7dd15af725ad"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\ps-witness-f436b099-70bd-44b9-bec0-7916be79a6ea.docx",
+      "id": "78d3c89e-3840-4d46-816a-406f0aee270f",
+      "format": "DOCX",
+      "size": 23042,
+      "sha256": "5b090f8f960e008d37fce92c354dc736324cf97059b5105b03b2647c78fb2f7c"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-787de3e2-4a9a-4e18-a393-e3859542d2c3.docx",
+      "id": "7ec5eb55-b208-4689-a425-e53ced782995",
+      "format": "DOCX",
+      "size": 29814,
+      "sha256": "5266ea5ba529cdf3888e1faa059232bc5c3fd2d6c9d5e7240d7918bb87f6f929"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-2f423109-9670-49e6-aaf1-73fd7834efa1.docx",
+      "id": "8c8db25f-3be6-4aa5-bbf9-0c0ee1e7af2a",
+      "format": "DOCX",
+      "size": 25476,
+      "sha256": "95e29270fcf43190989d89405429acea121784bb7b3281dc52686797171be4f8"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-d5640796-a40c-4e0e-8c0b-f7d2a15b70a0.docx",
+      "id": "a9817e73-620d-4e2c-9782-d94f1cff4598",
+      "format": "DOCX",
+      "size": 25477,
+      "sha256": "6b7d219f5ea09c57ac92654fe8a2c6260c984fc9988dd870e0670f05528be045"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-9a5b734d-8d79-4416-8893-986f13457b7a.docx",
+      "id": "f24bef3a-7d0d-438e-9f13-ae15119ff129",
+      "format": "DOCX",
+      "size": 29815,
+      "sha256": "f15f394f9cc573b054ed99d66004fc35575af0567b94b413192d8544dcf01f17"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-b72973c8-000f-4e0e-955e-c1bb05c4c465.docx",
+      "id": "d21271a9-30d2-49dc-85f0-e40e42363ebc",
+      "format": "DOCX",
+      "size": 29814,
+      "sha256": "a2fbfd8305d4f2b2235e56bf17ddaf9f9a063a5f2b2c082df5a9ffef10ef5bcb"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-d5640796-a40c-4e0e-8c0b-f7d2a15b70a0.pdf",
+      "id": "12e363d9-7417-4c5f-89e4-954cea46c60c",
+      "format": "PDF",
+      "size": 111481,
+      "sha256": "ce9c596cd1aad7a52d015c1507db0f6a78a1f39469927d40c0ff1613b660220e"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-b72973c8-000f-4e0e-955e-c1bb05c4c465.pdf",
+      "id": "c3eca342-d39c-48a8-a5e5-ba47c055a5c8",
+      "format": "PDF",
+      "size": 114154,
+      "sha256": "5b0c1659b947319a7187e359cc4d3ef0eb61a5ab7cdd9749acbeff22bd05d64b"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-837ebd22-7295-4e31-9ed5-d3d1f386b18b.docx",
+      "id": "b8e769f3-3d56-4efb-97ef-6b8d70e5b89e",
+      "format": "DOCX",
+      "size": 25477,
+      "sha256": "40a3eeab9d8aa376931b8645bbbf99f7e427eaa4d4e1c151b880e6868897b994"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-dfbe7181-8aa1-41a0-a458-369e4848fa1b.docx",
+      "id": "1dac979e-6dc7-4b86-9bf7-62f9fd5a0b28",
+      "format": "DOCX",
+      "size": 29816,
+      "sha256": "a6dffaae6e51f3b8d4a24f2e105d462669a6bee6b05cc8175c316a89eefb03f4"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-b5728377-67ce-414a-95ef-9d362a995978.docx",
+      "id": "b4304af6-d2c4-460b-a927-3cd0159a5fb1",
+      "format": "DOCX",
+      "size": 25477,
+      "sha256": "e226e8ef90e37eb7b63ea954d2f6e5acbc16578a725e8f2235e2e3af3a2cf160"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-9b104cb5-17f8-45c8-b838-967d4b5c3235.docx",
+      "id": "b721292d-42b0-4047-8ef9-a0f0f6f18394",
+      "format": "DOCX",
+      "size": 29815,
+      "sha256": "c4869428e43c64fd903f7ef01473a0dd6511b402554ee326540d00bb6539ae8c"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-2e17fcdb-8af8-4b60-8f28-383bbd689dad.docx",
+      "id": "516a1564-afbe-4f44-bffe-89f2eb39adbc",
+      "format": "DOCX",
+      "size": 25477,
+      "sha256": "549c94c3ccc7fcbc3c04c3b5ad0989a341d6ad310a154b63cfbc8c562bf9a1f7"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-69b3035e-066e-450b-bfc3-61f74d226a2e.docx",
+      "id": "976c2068-e44c-4898-954f-51f70601db1d",
+      "format": "DOCX",
+      "size": 29782,
+      "sha256": "65eefb80f0843f6132d9bc9674140fd2499febc78e011adb581f117aee418633"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-49e02d16-8026-44a5-8354-d165546a184b.docx",
+      "id": "5231e0bf-38a1-4e0c-a6ea-7f01410d8abf",
+      "format": "DOCX",
+      "size": 29782,
+      "sha256": "484f6b182bcb142ce9fd76a61906454f954d3fe3c4f1af9c35295226969e1ef2"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-5df05250-fbcb-4580-acd9-66447c0a82cd.docx",
+      "id": "c996dec9-c385-479d-9c61-ba639f0fb5e5",
+      "format": "DOCX",
+      "size": 29782,
+      "sha256": "7cb33a7063623b5d2b6e2226ccdb2435f86c05629a0920848213e07bb45a5bba"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-8af3102c-a2a7-4746-b043-c8f813811b72.docx",
+      "id": "e6412fd7-4ae1-443a-b23c-b4a01093d72c",
+      "format": "DOCX",
+      "size": 29784,
+      "sha256": "c3f9d4a3856e696466d446f630429ff8a6a107c3773c62be7d8b2ba69d92f3dc"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-599144a5-73b5-4ea4-9406-aea4d39c3f9c.docx",
+      "id": "fc7ee164-da5e-4e26-9bd8-3b17f4f85e2b",
+      "format": "DOCX",
+      "size": 29782,
+      "sha256": "013c8de685e9428254712b9b3165e65186562a0599e35d2eea0f17bc40bbdd6c"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-11f3fbbb-9b97-4b20-8c3b-fbb16f1fd7e1.docx",
+      "id": "17c987c3-a4bb-4988-a748-fb40a2c31f35",
+      "format": "DOCX",
+      "size": 29781,
+      "sha256": "aebdd0e3415df633c8d44bbf0e9a15f3960ee610b24036ab7c076c7730f6d395"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\registry-bfcefe19-1ab7-4879-89e7-9d209428bbff.xlsx",
+      "id": "9bf6055d-b255-4949-8e5f-ae09eb2a1902",
+      "format": "XLSX",
+      "size": 8422,
+      "sha256": "c96f4d328f09647d8c90ea88c8f94eef25d7c630d6fe7006b1a409faba63bc0d"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-f30e12e7-287e-442d-8418-1b74a17eac04.pdf",
+      "id": "010ca40f-db3f-4cb6-bb3f-f228236d8be8",
+      "format": "PDF",
+      "size": 113584,
+      "sha256": "51e88502d5890692e980c392ccb892ffe7620fd6cb8fc658daf29b1842729bae"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\ps-witness-f436b099-70bd-44b9-bec0-7916be79a6ea.pdf",
+      "id": "ed1c7add-5a3e-473b-a25a-15f007e9c075",
+      "format": "PDF",
+      "size": 170516,
+      "sha256": "3365f35002a086cefe6b645cf2a4605dc8a6cc7bac3839456a4ad07a7c97786a"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-787de3e2-4a9a-4e18-a393-e3859542d2c3.pdf",
+      "id": "68137bb6-1e30-4ae2-af2b-369313efe94a",
+      "format": "PDF",
+      "size": 114514,
+      "sha256": "3064512f2361012c8ed30bb757b73cdae3e3999a4fedff2256cbd9118a5a0f8b"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-2f423109-9670-49e6-aaf1-73fd7834efa1.pdf",
+      "id": "6672498f-5b22-4ad1-8453-73ff19e06e17",
+      "format": "PDF",
+      "size": 111584,
+      "sha256": "b7a8152532eab36627d261fcff9f803be982d6c26639254eaf4eae611be03c3f"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-837ebd22-7295-4e31-9ed5-d3d1f386b18b.pdf",
+      "id": "2339f478-87bd-4b7d-b697-cdecb11f3128",
+      "format": "PDF",
+      "size": 111693,
+      "sha256": "165778ed8d131d54530c3739ac12ceaebc6a99b078e6a2f2f89cb14e0911dc92"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-9a5b734d-8d79-4416-8893-986f13457b7a.pdf",
+      "id": "9ae5b129-12b8-4385-b624-1300b62f13bc",
+      "format": "PDF",
+      "size": 113990,
+      "sha256": "24d9e9744e16c04bd49755511e7760050593efef46cb1b4676f0f678d88f070d"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-b5728377-67ce-414a-95ef-9d362a995978.pdf",
+      "id": "48762e3a-e9ff-4b68-8485-4fd0ace4c65e",
+      "format": "PDF",
+      "size": 111917,
+      "sha256": "d61c7a3010c90fc13fa8ec55e5ec0292df096893ffc1ea7400f94f37a860308b"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-dfbe7181-8aa1-41a0-a458-369e4848fa1b.pdf",
+      "id": "f59b600b-2f46-438c-ba6c-609a760c1036",
+      "format": "PDF",
+      "size": 114369,
+      "sha256": "e8772904966f0b5fc4a51b688a0225c7e8cfa581fea1ce7d8ddd93dc4d6d7a49"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-9b104cb5-17f8-45c8-b838-967d4b5c3235.pdf",
+      "id": "5bf3f4d8-666e-4f34-9fb1-3cf36f2a38b4",
+      "format": "PDF",
+      "size": 114631,
+      "sha256": "bc1b0763a928b35487fb1e796432d3f4bf54d12dc05719266431893be0923793"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-protocol-2e17fcdb-8af8-4b60-8f28-383bbd689dad.pdf",
+      "id": "268add0f-a172-4751-8363-079b4149f2ea",
+      "format": "PDF",
+      "size": 111808,
+      "sha256": "13656a926818e1949dfb549ff619a67bd72161e784baac42c1333bb1eb92c707"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-49e02d16-8026-44a5-8354-d165546a184b.pdf",
+      "id": "db49639b-4c23-4a99-bfa5-73eb687ca39b",
+      "format": "PDF",
+      "size": 113974,
+      "sha256": "06f361aa983c89923b69156230641cbd04d85ccbde393c29c667daa514912c43"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-69b3035e-066e-450b-bfc3-61f74d226a2e.pdf",
+      "id": "f1296e74-e215-4611-8bd7-e72b0010c889",
+      "format": "PDF",
+      "size": 113476,
+      "sha256": "6fe116dbeab1eb20f655a0ddc9f0d808745e7c67400124cbd4ee4af297f14371"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-8af3102c-a2a7-4746-b043-c8f813811b72.pdf",
+      "id": "cc95919a-39a2-42e3-a79e-33b074b72b92",
+      "format": "PDF",
+      "size": 113451,
+      "sha256": "40c13b6d8d91caa81b71c7ba2f97dd704b41759630b5a187973d75ddfad5bb45"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-5df05250-fbcb-4580-acd9-66447c0a82cd.pdf",
+      "id": "31075f68-b24d-4eb0-b469-1865a5815a19",
+      "format": "PDF",
+      "size": 113896,
+      "sha256": "2674ae8d34266789428807894d269c345bd82450ed89590a1a8097a2d10f223e"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-599144a5-73b5-4ea4-9406-aea4d39c3f9c.pdf",
+      "id": "33e981e0-4940-4da5-8469-c0eb6720f950",
+      "format": "PDF",
+      "size": 113679,
+      "sha256": "cdd3777c161208ab21f59a7d7424d7ba30089039684748f46daa529ee3aabe9e"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\biot-worker-card-11f3fbbb-9b97-4b20-8c3b-fbb16f1fd7e1.pdf",
+      "id": "400d7ef7-2418-4769-9f45-7514e42174b9",
+      "format": "PDF",
+      "size": 113560,
+      "sha256": "8a4ff97dbdf53455016c03ca12a2711cd2580b234dd82ef828055bacb9609ffc"
+    },
+    {
+      "file": "company-bfcefe19-1ab7-4879-89e7-9d209428bbff\\registry-bfcefe19-1ab7-4879-89e7-9d209428bbff.zip",
+      "id": "de38ddcf-a1e2-4dcc-aefa-3545f3d859d6",
+      "format": "ZIP",
+      "size": 1872621,
+      "sha256": "b58ff066883654df314e110310b67ec1270c6a93dd90e25f5bbe50793ebc910e"
+    }
+  ]
+}

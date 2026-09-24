@@ -1,0 +1,61 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "Read-only; macro execution and external link updates disabled",
+  "documents": [
+    {
+      "file": "biot-itr-certificate-raw-document.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 1,
+      "bodyCharacters": 1,
+      "sourceSha256": "d52256c1f2a2844f110f6bc8e59a3c6e7887c19270445ce441ef76294edc433a",
+      "pdf": "biot-itr-certificate-raw-document.word.pdf",
+      "pdfBytes": 59186
+    },
+    {
+      "file": "biot-itr-certificate-raw-settings.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\...\\biot-itr-certificate-raw-setti...)",
+      "sourceSha256": "757d854ac6f5240c4c1294763cd077102e75470cac23aca74d861aac1a197a49"
+    },
+    {
+      "file": "biot-itr-certificate-raw-styles.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\...\\biot-itr-certificate-raw-style...)",
+      "sourceSha256": "d0e317cf709bb4a69162ef39fdb0d70299b98c8e7acf0f8b17ee1a24ba37d600"
+    },
+    {
+      "file": "biot-itr-certificate-raw-theme1.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\...\\biot-itr-certificate-raw-theme...)",
+      "sourceSha256": "c048d195096b4738de312988fcf813ffd33c9e59490380af2e4c9050ae6603a9"
+    },
+    {
+      "file": "ps-witness-raw-document.docx",
+      "status": "OPENED_EXPORTED_PENDING_PDF_CHECK",
+      "pages": 2,
+      "bodyCharacters": 2515,
+      "sourceSha256": "a119cad7318af97175d3dc86c67b57b45c0a5736e1cf8b92e64fd3dd178a06a1",
+      "pdf": "ps-witness-raw-document.word.pdf",
+      "pdfBytes": 145563
+    },
+    {
+      "file": "ps-witness-raw-settings.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\...\\ps-witness-raw-settings.docx)",
+      "sourceSha256": "e25cbcc98f29516f94b02fcf7bdccd55ac6db151a6b5f2cf181fc47ef5591d97"
+    },
+    {
+      "file": "ps-witness-raw-styles.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\Users\\...\\ps-witness-raw-styles.docx)",
+      "sourceSha256": "201b23b39abba19240518f773c09dd76d9c504d67f6805cf3240651dd39e036b"
+    },
+    {
+      "file": "ps-witness-raw-theme1.docx",
+      "status": "FAIL",
+      "error": "Ошибка Word при попытке открытия файла.\nПопробуйте выполнить следующие действия.\n* Проверьте разрешения на доступ к документу и диску.\n* Проверьте, достаточно ли памяти и места на диске.\n* Откройте файл с помощью конвертера резервных копий.\r (C:\\Users\\...\\ps-witness-raw-theme1.docx)",
+      "sourceSha256": "6f752b05533a5d62e5a670907b647e448c2715ca2a86d68f741dc1a29059e620"
+    }
+  ]
+}

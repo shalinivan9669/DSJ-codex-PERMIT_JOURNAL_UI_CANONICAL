@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "good": [
+    {
+      "page": 1,
+      "titleTopPt": 70.77876377952794,
+      "issuerBandBottomPt": 70.150763779528,
+      "examHeadingLeftPt": 302.85,
+      "panelMiddlePt": 297.275
+    }
+  ],
+  "mutantRejected": true
+}

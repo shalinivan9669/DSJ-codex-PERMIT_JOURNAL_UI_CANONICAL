@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-09-22T15:39:03.938Z",
+  "tables": {
+    "printRequest": {
+      "count": 145,
+      "sha256": "74a0235a9366a076ce35c83a2327f1f14c8297ab3a9b866e73c38dae2cb1dffa"
+    },
+    "requestItem": {
+      "count": 266,
+      "sha256": "de9c9c95e6b53dfab3c1831861d7bf398ee5c42ee797c1dfd4401ffd99b431ab"
+    },
+    "issuerProfileVersion": {
+      "count": 4,
+      "sha256": "c2cc614b73316cb1b19b18cdf54b97186b0d6c55a7db3b577c5d99856085073a"
+    },
+    "issuedDocument": {
+      "count": 52,
+      "sha256": "8025dda26493e4f1332bf495e19a81b24b725d9e579bd642c51599e3d9fa0322"
+    },
+    "issuance": {
+      "count": 15,
+      "sha256": "61a1b5f41c5f3611460adc977832cf7d0265293ab21e22aceedd85ad04907e47"
+    },
+    "numberSequence": {
+      "count": 11,
+      "sha256": "dad55da79e99dc8c438bde527f92ba878ff5d49e48b48387157a3ae3c7487938"
+    },
+    "artifact": {
+      "count": 147,
+      "sha256": "06377f23db1c026b9ac062da60436a927153b38cf27809628c3b7d56d83d8612"
+    }
+  },
+  "artifactBytesVerified": 147
+}

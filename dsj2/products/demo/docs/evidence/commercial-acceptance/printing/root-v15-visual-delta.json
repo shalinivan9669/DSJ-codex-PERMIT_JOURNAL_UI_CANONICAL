@@ -1,0 +1,35 @@
+{
+  "unchanged": 30,
+  "changed": [
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-001.png",
+      "sha256": "1dab2ea6387930c71491180b80640ca59b432552de3117d0d367a2a030695b45",
+      "prior": "883fe5f635a83594ac40d84e608d01507de772b6b2e831f6af2d7150489f98f8"
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-001.png",
+      "sha256": "733034ea6006b870deca73725762294e8e404754c4776deb9c5affba677a03e8",
+      "prior": "78d48b9bb95163d4be5b9506c640125b878a3e0515274584efa4a312258e8324"
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-001.png",
+      "sha256": "365d1f2d1e63db38d0ab707f6bc9d56ebf9abd4fd6cc14d1b197fb4f8d295aaf",
+      "prior": "b1469a71f1cbffa977e25dea7721d56fb70a88131ded2af977c8cd38ead68371"
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-001.png",
+      "sha256": "1dab2ea6387930c71491180b80640ca59b432552de3117d0d367a2a030695b45",
+      "prior": "883fe5f635a83594ac40d84e608d01507de772b6b2e831f6af2d7150489f98f8"
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-003.png",
+      "sha256": "c70f793f271828dc842f0480d876416611892b78972cfaa023af4add41ec8ca6",
+      "prior": "f75ec374368b05ccabd389ea185e7a34565c9cb1c15235615e2389a6fbe208f3"
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-001.png",
+      "sha256": "c615aa02bb57a9906636d26fc63e760fda6dd25b6c14c63dbd9ef97b56075f34",
+      "prior": "21d58680b2be985b669b2bffafd788c8c723f9bf27a6e0161150e0d2acb83e6d"
+    }
+  ]
+}

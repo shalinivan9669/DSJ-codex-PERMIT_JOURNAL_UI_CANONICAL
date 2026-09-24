@@ -1,0 +1,109 @@
+{
+  "status": "PASS_CONDITIONAL_REVIEW",
+  "owner": "operator_ui",
+  "reviewedAt": "2026-09-22T16:00:56.660Z",
+  "scope": "Independent bounded review of six libxml2 findings only; primary GNOME patches read live and local source/evidence inspected. No runtime changes, exploit attempt, library replacement, or heavy tests.",
+  "image": "sha256:399a6212afad69ba745036189495d49658d560492dbb2001cea09c9e615533f8",
+  "bindings": "System libxml2 2.9.14+dfsg-1.3~deb12u6 remains installed; active LO/lxml libxml2 2.14.6 is not assumed patched for these six.",
+  "rows": [
+    {
+      "cve": "CVE-2026-86138",
+      "disposition": "not_affected_in_declared_runtime",
+      "upstream": "dict.c guards QName allocation arithmetic and exponential pool growth.",
+      "inference": "Accepted XLSX expanded total is30MiB, no DTD expansion, and XML names in generated DOCX come from checksum-pinned templates. These bounds exclude attacker-supplied QName lengths near the unsigned32-bit multiplication overflow; small input cannot grow via DTD entities because preparse rejects their declaration.",
+      "primarySource": "https://github.com/GNOME/libxml2/commit/a4cba4b5b5a8c42e155ed42d2d2a44955465a2e4",
+      "primarySourceRead": true,
+      "claimType": "Engineering reachability inference; native vulnerability remains in package"
+    },
+    {
+      "cve": "CVE-2026-86139",
+      "disposition": "not_affected_in_declared_runtime",
+      "upstream": "uri.c rejects xmlStrlen overflow before allocation in URI escaping; relevant input exceeds INT_MAX.",
+      "inference": "30MiB expanded XLSX and bounded scalar document inputs cannot supply a multi-gigabyte URI. Form strings become text, while generated relationship resources remain fixed/local. Nonroot isolation alone would not justify exclusion; explicit length/dataflow does.",
+      "primarySource": "https://github.com/GNOME/libxml2/commit/8edbbdb09f24d26a2f900141fddc2b9d014f53b0",
+      "primarySourceRead": true,
+      "claimType": "Engineering reachability inference; native vulnerability remains in package"
+    },
+    {
+      "cve": "CVE-2026-86140",
+      "disposition": "not_affected_in_declared_runtime",
+      "upstream": "valid.c adds missing buffer-space checks around validation diagnostic string construction.",
+      "inference": "Untrusted workbook DTDs are rejected before openpyxl parsing. Renderer does not request DTD validation of user input; only checksum-pinned templates supply DOCX XML. Absence of affected DTD diagnostic dataflow supports non-reachability for current inputs.",
+      "primarySource": "https://github.com/GNOME/libxml2/commit/d1686f91dbda141a752200419d35639fd6b38340",
+      "primarySourceRead": true,
+      "claimType": "Engineering reachability inference; native vulnerability remains in package"
+    },
+    {
+      "cve": "CVE-2026-86142",
+      "disposition": "not_affected_in_declared_runtime",
+      "upstream": "xpointer.c detects xmlStrlen overflow in XPointer evaluation before allocation.",
+      "inference": "No product XPointer evaluation path found; renderer XPath queries are fixed internal selectors. Generated template XML is pinned and form data is scalar text. No arbitrary XML/DOCX upload is supported. XPointer inclusion would invalidate this conclusion.",
+      "primarySource": "https://github.com/GNOME/libxml2/commit/6b3a736c0edc74ceec3d82f5252499d7911b3a58",
+      "primarySourceRead": true,
+      "claimType": "Engineering reachability inference; native vulnerability remains in package"
+    },
+    {
+      "cve": "CVE-2026-86143",
+      "disposition": "not_affected_in_declared_runtime",
+      "upstream": "xmlIO.c checks pending write/flush buffer sizes against INT_MAX before passing the length to a callback.",
+      "inference": "Worksheet writer streams individual bounded cells/rows via xmlfile; existing exact-binding probe measured76066361 totalXMLbytes over18478callbacks, maximum4316bytes. This supports code review of bounded writes; total file size alone would not prove it. DOCX jobs use bounded recipients/template parts and separate binary image ZIP parts.",
+      "primarySource": "https://github.com/GNOME/libxml2/commit/90f293ba74d28b1d570920382e707586f68ebf35",
+      "primarySourceRead": true,
+      "claimType": "Engineering reachability inference; native vulnerability remains in package"
+    },
+    {
+      "cve": "CVE-2026-86144",
+      "disposition": "not_affected_in_declared_runtime",
+      "upstream": "xinclude.c propagates parser flags into XInclude processing and includes a network-denial regression.",
+      "inference": "No XInclude processing is called by product source. Template resources are checksum-pinned; user values are text, not inclusion programs. DTD guard and keep_links=false help upstream inputs but are not claimed sufficient to repair XInclude itself. An XInclude/arbitrary DOCX feature would require new review.",
+      "primarySource": "https://github.com/GNOME/libxml2/commit/b63cd517afecb76582dd9488c55e54ceaf50de61",
+      "primarySourceRead": true,
+      "claimType": "Engineering reachability inference; native vulnerability remains in package"
+    }
+  ],
+  "sourceChecks": [
+    {
+      "file": "scripts/render/renderer.py",
+      "sha256": "a82569f76e489b611c8c784302464d1f358a0c2d2975f4705f2ad4f4e1aa8487",
+      "lines": "343–348 checksum-pinned template;490–497 import size/archive bounds then validate_xlsx_xml before load_workbook; registry cells emitted as text"
+    },
+    {
+      "file": "scripts/render/xml_input.py",
+      "sha256": "73158be2ab6d0c057869603a74c18fd630a44d63bb7face4bce9621795d0c232",
+      "lines": "All XML/rels members streamed through Expat; StartDoctype/Entity/ExternalEntity failclosed, nesting128/attributes128"
+    }
+  ],
+  "evidence": [
+    {
+      "file": "container-final-r5-applicability-triage.json",
+      "sha256": "445fb11fbbc888fde7cb9bae06682eb8e9592e00b52ab39b191d43f903b1da56"
+    },
+    {
+      "file": "container-api-final-r5-native-imports.json",
+      "sha256": "41177adf20a46e1b5c0f0e4850e3ca6a7118d2211b6c9155b8d33a9f8dff74d8"
+    },
+    {
+      "file": "container-api-final-r5-xml-input.log",
+      "sha256": "c307830f754fc9df47137995489a860aae36a2c0c112e8a56950d98f8c878a8a"
+    },
+    {
+      "file": "printing/security-xml-callback-probe.json",
+      "sha256": "c2be7881077bf5c292bc9c452c72273965895b97f29a74cc87dd124244efec66"
+    },
+    {
+      "file": "security/integration-linux-final-r5.log",
+      "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+    },
+    {
+      "file": "standalone-stage-release5.json",
+      "sha256": "cbe8310abddeaa76a61633edd0264a63c387287b2ce6010753d84395ac6a5cc1"
+    }
+  ],
+  "limitations": [
+    "No claim of patched native library, zero raw CVEs, or exploit-proof safety for arbitrary XML applications.",
+    "No dynamic call graph of every LibreOffice internals path performed. Pinned template/data-only input restriction is part of the conclusion, not ELF import absence alone.",
+    "Export callback probe is an existing bounded measurement on exact lxml/libxml binding; reviewer did not rerun it.",
+    "Re-review on image/library change, arbitrary DOCX/XML/XInclude/XPointer/DTD feature, input-limit change, or callback/writer change.",
+    "This six-CVE review does not independently close all A47 runtime/security findings."
+  ]
+}

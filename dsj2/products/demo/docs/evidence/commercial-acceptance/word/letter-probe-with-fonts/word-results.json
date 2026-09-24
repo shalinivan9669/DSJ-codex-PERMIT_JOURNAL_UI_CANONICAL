@@ -1,0 +1,20 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 1,
+  "documents": [
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 69,
+      "pdf": "biot-worker-card-short.word.pdf",
+      "audit": "biot-worker-card-short.audit.json",
+      "docxSha256": "c6e3a60c862262be5b28880434f521fb9deef245af46d14def57189654fef162",
+      "pdfSha256": "22b98110de13e2c3e9aae8b30f08d9ffd969558bd942864d219c0533ab3f655d",
+      "visualReview": "REQUIRED_SEPARATELY"
+    }
+  ]
+}

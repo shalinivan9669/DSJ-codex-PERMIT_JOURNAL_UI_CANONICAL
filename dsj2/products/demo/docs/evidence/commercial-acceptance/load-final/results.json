@@ -1,0 +1,296 @@
+[
+  {
+    "label": "serial",
+    "count": 1,
+    "repetition": 1,
+    "requestId": "9ad2d3b0-4db3-4d8d-acbd-33a1eda3cb4e",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 4702,
+    "finalizeMs": 511,
+    "readyMs": 4614,
+    "formatReadyMs": {
+      "DOCX": 1572,
+      "PDF": 4614,
+      "XLSX": 1572,
+      "ZIP": 4614
+    },
+    "artifactBytes": 173362,
+    "artifacts": 4,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 10,
+    "repetition": 1,
+    "requestId": "14be6ad5-3543-4464-99a1-f37d8648b235",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 13902,
+    "finalizeMs": 1363,
+    "readyMs": 13601,
+    "formatReadyMs": {
+      "DOCX": 10564,
+      "PDF": 11576,
+      "XLSX": 11576,
+      "ZIP": 13601
+    },
+    "artifactBytes": 1627802,
+    "artifacts": 22,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 50,
+    "repetition": 1,
+    "requestId": "abb77d98-4b70-42f5-9adb-d5879922c206",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 67153,
+    "finalizeMs": 4622,
+    "readyMs": 65107,
+    "formatReadyMs": {
+      "DOCX": 61026,
+      "PDF": 63065,
+      "XLSX": 63065,
+      "ZIP": 65107
+    },
+    "artifactBytes": 8071402,
+    "artifacts": 102,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 100,
+    "repetition": 1,
+    "requestId": "c8d6c1af-901e-4fab-8e9f-b38c48c6eb3b",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 122927,
+    "finalizeMs": 9266,
+    "readyMs": 119834,
+    "formatReadyMs": {
+      "DOCX": 64028,
+      "PDF": 118807,
+      "XLSX": 65061,
+      "ZIP": 119834
+    },
+    "artifactBytes": 16136867,
+    "artifacts": 202,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 1,
+    "repetition": 2,
+    "requestId": "d6ac22fc-73f8-43d4-8220-d1c0fbb82629",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 3683,
+    "finalizeMs": 528,
+    "readyMs": 3606,
+    "formatReadyMs": {
+      "DOCX": 1580,
+      "PDF": 2591,
+      "XLSX": 1580,
+      "ZIP": 3606
+    },
+    "artifactBytes": 173779,
+    "artifacts": 4,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 10,
+    "repetition": 2,
+    "requestId": "d9e41080-a208-4054-894b-d66203cb1b44",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 14779,
+    "finalizeMs": 2242,
+    "readyMs": 14468,
+    "formatReadyMs": {
+      "DOCX": 6357,
+      "PDF": 13458,
+      "XLSX": 6357,
+      "ZIP": 14468
+    },
+    "artifactBytes": 1625915,
+    "artifacts": 22,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 50,
+    "repetition": 2,
+    "requestId": "b965561a-ed2b-4699-9f55-cc189c508baf",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 69096,
+    "finalizeMs": 4799,
+    "readyMs": 67400,
+    "formatReadyMs": {
+      "DOCX": 43848,
+      "PDF": 66382,
+      "XLSX": 44869,
+      "ZIP": 67400
+    },
+    "artifactBytes": 8121214,
+    "artifacts": 102,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 100,
+    "repetition": 2,
+    "requestId": "b015c454-c7e4-4243-b091-2260f881ee61",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 113055,
+    "finalizeMs": 9602,
+    "readyMs": 109740,
+    "formatReadyMs": {
+      "DOCX": 64238,
+      "PDF": 107678,
+      "XLSX": 65266,
+      "ZIP": 109739
+    },
+    "artifactBytes": 16183420,
+    "artifacts": 202,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 1,
+    "repetition": 3,
+    "requestId": "7abd69eb-f438-4370-9507-3a1edd8e1d89",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 5824,
+    "finalizeMs": 644,
+    "readyMs": 5753,
+    "formatReadyMs": {
+      "DOCX": 1701,
+      "PDF": 4744,
+      "XLSX": 2719,
+      "ZIP": 5753
+    },
+    "artifactBytes": 174764,
+    "artifacts": 4,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 10,
+    "repetition": 3,
+    "requestId": "2b4747df-aa24-4670-9c49-fe15ea711eb6",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 13814,
+    "finalizeMs": 1295,
+    "readyMs": 13512,
+    "formatReadyMs": {
+      "DOCX": 5403,
+      "PDF": 12501,
+      "XLSX": 5403,
+      "ZIP": 13512
+    },
+    "artifactBytes": 1627713,
+    "artifacts": 22,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 50,
+    "repetition": 3,
+    "requestId": "79e96a11-d9ef-4f0a-a3aa-eafbf4bc080f",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 55609,
+    "finalizeMs": 5015,
+    "readyMs": 54084,
+    "formatReadyMs": {
+      "DOCX": 17313,
+      "PDF": 53068,
+      "XLSX": 18341,
+      "ZIP": 54084
+    },
+    "artifactBytes": 8092928,
+    "artifacts": 102,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "serial",
+    "count": 100,
+    "repetition": 3,
+    "requestId": "b625b39e-16c9-4fbf-941e-a8c80c32fb85",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 109643,
+    "finalizeMs": 8725,
+    "readyMs": 106637,
+    "formatReadyMs": {
+      "DOCX": 72598,
+      "PDF": 104580,
+      "XLSX": 73634,
+      "ZIP": 106637
+    },
+    "artifactBytes": 16251257,
+    "artifacts": 202,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "concurrent-a",
+    "count": 10,
+    "repetition": 1,
+    "requestId": "a894c428-d15b-4f2c-99c1-7ec3ae1aec9c",
+    "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+    "totalMs": 22451,
+    "finalizeMs": 1710,
+    "readyMs": 22053,
+    "formatReadyMs": {
+      "DOCX": 4813,
+      "PDF": 14953,
+      "XLSX": 4813,
+      "ZIP": 22053
+    },
+    "artifactBytes": 1629548,
+    "artifacts": 22,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  },
+  {
+    "label": "concurrent-b",
+    "count": 10,
+    "repetition": 1,
+    "requestId": "782ce66d-5392-4d88-b417-fb285bf527db",
+    "operatorUserId": "27c1320f-fcf2-4398-8fdb-e915fe4a712a",
+    "totalMs": 23521,
+    "finalizeMs": 1857,
+    "readyMs": 23199,
+    "formatReadyMs": {
+      "DOCX": 6977,
+      "PDF": 22184,
+      "XLSX": 7991,
+      "ZIP": 23199
+    },
+    "artifactBytes": 1627558,
+    "artifacts": 22,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  }
+]

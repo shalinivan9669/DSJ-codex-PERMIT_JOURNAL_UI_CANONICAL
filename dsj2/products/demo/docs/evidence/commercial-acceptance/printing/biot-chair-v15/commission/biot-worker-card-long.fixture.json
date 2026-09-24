@@ -1,0 +1,55 @@
+{
+  "mode": "issued-document",
+  "demoMode": true,
+  "templateId": "biot-worker-card",
+  "templateVersion": 15,
+  "issuer": {
+    "cityKz": "Қызылорда",
+    "cityRu": "Кызылорда",
+    "nameKz": "Операторлық тексеру оқу орталығы",
+    "nameRu": "Синтетический центр операторской приёмки",
+    "approved": true,
+    "addressKz": "Көрнекі мекенжай",
+    "addressRu": "Демонстрационный адрес",
+    "commission": [
+      {
+        "name": "Синтетический Председатель Әли",
+        "position": "Председатель контрольной комиссии"
+      }
+    ],
+    "approvalBasis": "Синтетическая операторская приёмка — не юридическое утверждение формы"
+  },
+  "items": [
+    {
+      "id": "recipient-001",
+      "fullNameRu": "Тестов-Примеров-001 Александр Константинович",
+      "fullNameKz": "Әғқңөұүһі-001 Өмірсерік Қанатұлы",
+      "positionRu": "Инженер по промышленной безопасности",
+      "positionKz": "Өнеркәсіптік қауіпсіздік жөніндегі инженер",
+      "workplaceRu": "ТОО «Научно-производственная компания Образец»",
+      "workplaceKz": "«Үлгі ғылыми-өндірістік компаниясы» ЖШС",
+      "number": "ТЕСТ-00001",
+      "protocolNumber": "ПР-00001",
+      "registrationNumber": "00001",
+      "assignment": {
+        "id": "a1",
+        "templateId": "biot-worker-card",
+        "documentDate": "2026-09-22",
+        "protocolDate": "2026-09-20",
+        "trainingStart": "2026-09-14",
+        "trainingEnd": "2026-09-19",
+        "trainingSubject": "Тестовая программа безопасности и охраны труда для инженерного персонала",
+        "result": "ТЕСТ: хорошо / жақсы",
+        "reason": "ТЕСТ: первичное обучение",
+        "hours": 40,
+        "validUntil": "2027-09-22",
+        "externalBasisNumber": "ВНЕШНИЙ-01",
+        "protocolMode": "individual"
+      },
+      "credentialNumber": "КР-00001"
+    }
+  ],
+  "photos": {},
+  "templateStorageKey": "biot-chair-v15/biot-worker-card.v15.docx",
+  "templateChecksum": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556"
+}

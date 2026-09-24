@@ -1,0 +1,25 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 1,
+  "documents": [
+    {
+      "file": "pb-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 79,
+      "pdf": "pb-card-short.word.pdf",
+      "audit": "pb-card-short.audit.json",
+      "docxSha256": "b79917ce490c1fd533299402ff53e7267de26bb29ad406c1001ee50219873514",
+      "pdfSha256": "fad1528308804ff39bd2086153075db1019d16bf30c73702f3b5c407d2ca5250",
+      "visualReview": "PASS"
+    }
+  ],
+  "visualSummary": {
+    "pagesReviewed": 2,
+    "status": "PASS",
+    "sourcePhotoExactMatch": true
+  }
+}

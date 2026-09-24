@@ -1,0 +1,180 @@
+{
+  "scope": "HANDOFF_PACKAGE_ONLY_NOT_APPLICATION_TESTS",
+  "checkedOn": "2026-09-22",
+  "applicationCodeModified": false,
+  "applicationRun": false,
+  "applicationTestsRun": false,
+  "checks": [
+    {
+      "check": "32 unique features",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "160 unique acceptance cases",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "all application tests explicitly NOT_RUN",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "every feature is mandatory",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "all feature test references resolve",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "per-feature criteria equal machine tests",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "all test feature references resolve",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "100 input people and revised rows",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "stable keys unique",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "leading-zero personnel IDs",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "100_people.csv equals JSON",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "100_people.tsv equals JSON",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "100_people_revised.csv equals JSON",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "100_people_revised.tsv equals JSON",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "reimport differences correct",
+      "pass": true,
+      "detail": "added=['DEMO-P101', 'DEMO-P102'];changed=['DEMO-P003', 'DEMO-P010', 'DEMO-P020'];missing=['DEMO-P099', 'DEMO-P100'];unchanged=95"
+    },
+    {
+      "check": "same names intentionally distinct",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "G1 separate confirmed synthetic result rows",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "G1 counts arithmetic",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "G2 separate confirmed synthetic result rows",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "G2 counts arithmetic",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "G2 all people have two assignments",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "XLSX CRC valid",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "XLSX exactly 100 people rows",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "XLSX original IDs are real strings",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "XLSX all data values equal JSON",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "XLSX no formulas/macros/external links",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "fixture visual preview generated and inspected",
+      "pass": true,
+      "detail": "Visual inspection performed on A1:F8; zeros visible after explicit display mask, stored values remain strings."
+    },
+    {
+      "check": "original context retained OT_CENTER_FULL_CONTEXT_RU.md",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "original context retained OT_CENTER_START_PROMPT_RU.md",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "required package files present",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "all package JSON decodes",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "no font or secret key files",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "no active priority-tier headings outside historical context",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "branch rechecked at same commit",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "issues": []
+}

@@ -1,0 +1,226 @@
+[
+  {
+    "document": "biot-itr-certificate-long.docx",
+    "page": 1,
+    "image": "biot-itr-certificate-long.page-1.png",
+    "imageSha256": "943c2c829cdddadf3d186fd8402c860a1c2085b4ef2f7219ad9bc21207b306e5",
+    "review": "FAIL",
+    "findings": "WORD-LAYOUT-01: строка председателя обрезана снизу на обеих длинах."
+  },
+  {
+    "document": "biot-itr-certificate-short.docx",
+    "page": 1,
+    "image": "biot-itr-certificate-short.page-1.png",
+    "imageSha256": "cc29993acf298cbf068f8017edc914c0b305d60bcfb213bed2978dcc94de4653",
+    "review": "FAIL",
+    "findings": "WORD-LAYOUT-01: строка председателя обрезана снизу на обеих длинах."
+  },
+  {
+    "document": "biot-protocol-long.docx",
+    "page": 1,
+    "image": "biot-protocol-long.page-1.png",
+    "imageSha256": "ac1b338bf4a1691400ef7ef1b68fae4d75867dccbe44e457ae84b259f5c025e1",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "biot-protocol-short.docx",
+    "page": 1,
+    "image": "biot-protocol-short.page-1.png",
+    "imageSha256": "9f4b5bb16d2c6dbb1dbf872d93d31529fd60958fc321b9ba8137f631803d79a0",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "biot-worker-card-long.docx",
+    "page": 1,
+    "image": "biot-worker-card-long.page-1.png",
+    "imageSha256": "7eb26c2fa8782dbc4def33967ba8e60a46bcf4b281c2e94ace911b74101f237d",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "biot-worker-card-long.docx",
+    "page": 2,
+    "image": "biot-worker-card-long.page-2.png",
+    "imageSha256": "4726117ba4480fd2cf4b3cae622c01dadc5cdda79e7e7f08b2d3bce3cafb52a7",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "biot-worker-card-short.docx",
+    "page": 1,
+    "image": "biot-worker-card-short.page-1.png",
+    "imageSha256": "e0fbeb5b7d48f631fd50f1510b98efd4703335b50c7eb4d22dc66815a13b29e6",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "biot-worker-card-short.docx",
+    "page": 2,
+    "image": "biot-worker-card-short.page-2.png",
+    "imageSha256": "ba69de0e5cda6ac92d9fb9eba3fb608b4c42c32944fd73cbc6b86524cfc93c39",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "pb-card-long.docx",
+    "page": 1,
+    "image": "pb-card-long.page-1.png",
+    "imageSha256": "ddafa09f5414e0e6e9c9052ad75a88f0a768bf473fc470527113a5e18ed044a4",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "pb-card-long.docx",
+    "page": 2,
+    "image": "pb-card-long.page-2.png",
+    "imageSha256": "a272508bddc996111a06b3c3e1c9ddc6b96d9ec4ed5119148cdf6a8a61106147",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "pb-card-short.docx",
+    "page": 1,
+    "image": "pb-card-short.page-1.png",
+    "imageSha256": "9648d35806999def6aba0b621832f729ad4ce6913307cfa84126a942b6fe6ce8",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "pb-card-short.docx",
+    "page": 2,
+    "image": "pb-card-short.page-2.png",
+    "imageSha256": "8e07e03f02dd38073ca25e599191c1fc072d3b7120e813172a9a362f50218e6e",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "pb-protocol-long.docx",
+    "page": 1,
+    "image": "pb-protocol-long.page-1.png",
+    "imageSha256": "6fd18fbb622ad6adadeef470de8877592cc9601475a062713cb26e128e8f2711",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "pb-protocol-short.docx",
+    "page": 1,
+    "image": "pb-protocol-short.page-1.png",
+    "imageSha256": "332921da43e625b3d82d2d6446c7bb87e94dea4e03161ee1df33e0497c989b79",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-card-long.docx",
+    "page": 1,
+    "image": "ps-card-long.page-1.png",
+    "imageSha256": "2f9d76f54169682e68bd50357098055ce551a87c5d9b3695607289a97d75858b",
+    "review": "FAIL",
+    "findings": "WORD-LAYOUT-02: строка М.О./М.П. пересекает нижнюю рамку первой панели."
+  },
+  {
+    "document": "ps-card-long.docx",
+    "page": 2,
+    "image": "ps-card-long.page-2.png",
+    "imageSha256": "ae76d714ed57e6fce4dcb36742edeff13d49f5142dd2f6d66e92bfab46ca7cd4",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-card-short.docx",
+    "page": 1,
+    "image": "ps-card-short.page-1.png",
+    "imageSha256": "c23b2af4cd0010e1aeadd758aded5f155698a652b9fad8560152c0b7fd2eaa12",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-card-short.docx",
+    "page": 2,
+    "image": "ps-card-short.page-2.png",
+    "imageSha256": "7ac935ef31becdb6b9c04812c2f5260b6b9d384eeb923066b484c00e187760c7",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-protocol-long.docx",
+    "page": 1,
+    "image": "ps-protocol-long.page-1.png",
+    "imageSha256": "50eed412c2c3ae8a35fef37c398357fe8494b158abfe91de5c727a28cafa84ef",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-protocol-short.docx",
+    "page": 1,
+    "image": "ps-protocol-short.page-1.png",
+    "imageSha256": "7681fdfc266403f894ac22e59d3bfb9fdcfe9a031430da7e3543d9a5d0a395f3",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-witness-long.docx",
+    "page": 1,
+    "image": "ps-witness-long.page-1.png",
+    "imageSha256": "f95d04b87f2f5e455e869faf36f0e73d4bcbb23920d4af241f3e07f500c1edea",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-witness-long.docx",
+    "page": 2,
+    "image": "ps-witness-long.page-2.png",
+    "imageSha256": "89f8f7e67c1451559bf9e59fd53e828b992128fa501d4b0293d908e4d2d6a420",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-witness-short.docx",
+    "page": 1,
+    "image": "ps-witness-short.page-1.png",
+    "imageSha256": "f95d04b87f2f5e455e869faf36f0e73d4bcbb23920d4af241f3e07f500c1edea",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ps-witness-short.docx",
+    "page": 2,
+    "image": "ps-witness-short.page-2.png",
+    "imageSha256": "ae0f17c3e863ebca5df1ebc84fcce1ce15071d1150e35810890e08a5d5b27ae6",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ptm-card-long.docx",
+    "page": 1,
+    "image": "ptm-card-long.page-1.png",
+    "imageSha256": "c19b23ee889e4f33f1bfcb447e5418a6d467c8df1ecfacd7993da1affebef586",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ptm-card-short.docx",
+    "page": 1,
+    "image": "ptm-card-short.page-1.png",
+    "imageSha256": "eb625fbb74e471ed01a5d3dde1511305909ae0d6de9e788e75d5604b3918764e",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ptm-protocol-long.docx",
+    "page": 1,
+    "image": "ptm-protocol-long.page-1.png",
+    "imageSha256": "d71d1596903cfc541503763f6496e26a2183ddfacc569871e9198577b1701e1f",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  },
+  {
+    "document": "ptm-protocol-short.docx",
+    "page": 1,
+    "image": "ptm-protocol-short.page-1.png",
+    "imageSha256": "e6b3668397801d8b51093efb85d02bcb67295d6c77d050b126fff522e35a98d3",
+    "review": "PASS",
+    "findings": "Полная страница просмотрена: текст, рамки, фото, issuer strip, переносы и поля."
+  }
+]

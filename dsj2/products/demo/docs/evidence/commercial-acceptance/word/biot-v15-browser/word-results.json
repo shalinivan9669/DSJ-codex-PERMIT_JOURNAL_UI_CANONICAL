@@ -1,0 +1,24 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 1,
+  "documents": [
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 66,
+      "pdf": "biot-worker-card-short.word.pdf",
+      "audit": "biot-worker-card-short.audit.json",
+      "docxSha256": "22de07f244411e96e7813f2794b788d15aa4c186e7c37c20598551b4f3ef1faf",
+      "pdfSha256": "3fba96213eb7b37eab24b53056bea10f0b707502eb665e1c1e910f4652383d40",
+      "visualReview": "PASS",
+      "visualNotes": "Both actual-issued Word PDF pages explicitly viewed; former clipped chairman line now wraps completely within lower panel."
+    }
+  ],
+  "visualStatus": "PASS",
+  "manualPagesReviewed": 2,
+  "fontCleanupVerified": true
+}

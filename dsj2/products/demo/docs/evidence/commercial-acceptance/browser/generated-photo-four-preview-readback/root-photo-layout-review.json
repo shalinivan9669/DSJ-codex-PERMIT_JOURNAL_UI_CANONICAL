@@ -1,0 +1,48 @@
+{
+  "reviewer": "root",
+  "status": "FAIL",
+  "photoFormsPassed": [
+    "ptm-card14",
+    "pb-card14",
+    "ps-card15"
+  ],
+  "biotCard14": "FAIL - no photo slot; independent commissioner-layout defect",
+  "pages": [
+    {
+      "file": "411f238c-cb06-4223-be59-ed9de2d61e24-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.page-1.png",
+      "sha256": "25cef373f904af74931a04b2622931b59156b1de38ac04efcd238b52b66a4589",
+      "status": "PASS",
+      "checks": "Root individually displayed full-page PNG. Portrait contained in intended slot; readable issuer band; no observed text/photo/frame overlap; repeat panels retained."
+    },
+    {
+      "file": "411f238c-cb06-4223-be59-ed9de2d61e24-ps-card-cfd6aeb8-865c-4d39-9f33-0c80fc9c5bf2.page-2.png",
+      "sha256": "7f09f5a01aec0cc8530c15c3fb7675e368947e8c6293a9a486f016b00a5f406a",
+      "status": "PASS",
+      "checks": "Root individually displayed full-page PNG. Portrait contained in intended slot; readable issuer band; no observed text/photo/frame overlap; repeat panels retained."
+    },
+    {
+      "file": "44fa3777-0d5c-4d7c-8299-9b1557df7b91-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.page-1.png",
+      "sha256": "7096b8a3f2fdfa43f822736387cdb51cdb6ae8e41c3bfbec65786c44ceb8eff0",
+      "status": "PASS",
+      "checks": "Root individually displayed full-page PNG. Portrait contained in intended slot; readable issuer band; no observed text/photo/frame overlap; repeat panels retained."
+    },
+    {
+      "file": "44fa3777-0d5c-4d7c-8299-9b1557df7b91-pb-card-c49f28e1-81cc-41e3-be0e-39546cc2f2e0.page-2.png",
+      "sha256": "667c9a70d6b966caa07f58127b6e1a42e2b80e8f21b8eb09108f0ec5c4fe962d",
+      "status": "PASS",
+      "checks": "Root individually displayed full-page PNG. Portrait contained in intended slot; readable issuer band; no observed text/photo/frame overlap; repeat panels retained."
+    },
+    {
+      "file": "fe52e57a-6e1b-49a8-8c86-365cd226b3e1-ptm-card-4792e6f5-1e38-4634-8fae-07d422c16f66.page-1.png",
+      "sha256": "5bd5622831942aafc039b4cb13d6a397e56385503c153445ec1b6c2c23feb479",
+      "status": "PASS",
+      "checks": "Root individually displayed full-page PNG. Portrait contained in intended slot; readable issuer band; no observed text/photo/frame overlap; repeat panels retained."
+    },
+    {
+      "file": "46ad6ff3-40cd-4121-8c05-f22a3a9eaddd-biot-worker-card-a4221d3d-94f9-420f-81be-66adb7c4a881.page-1.png",
+      "sha256": "d5d396b58c81ead1ba057ffaa28b862775b2b3048ccfb84ad620747ddd19af7d",
+      "status": "FAIL",
+      "finding": "Lower duplicate right panel has no inner margin and clips the long chairman line at the right frame. Upper panel wraps and retains inset. Requires new immutable template version and retest."
+    }
+  ]
+}

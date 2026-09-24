@@ -1,0 +1,22 @@
+[
+  {
+    "image": "ps-card-long.word.page-1.png",
+    "sha256": "96e8f879cfca618166ced0fc9180a7ebd359a35c5619ecff9dc91bf66682302e",
+    "review": "PASS"
+  },
+  {
+    "image": "ps-card-long.word.page-2.png",
+    "sha256": "ae76d714ed57e6fce4dcb36742edeff13d49f5142dd2f6d66e92bfab46ca7cd4",
+    "review": "PASS"
+  },
+  {
+    "image": "ps-card-short.word.page-1.png",
+    "sha256": "70b39363ab7f20a9ac8db31708095063466abc4dc09caad237566f71517b49c9",
+    "review": "PASS"
+  },
+  {
+    "image": "ps-card-short.word.page-2.png",
+    "sha256": "7ac935ef31becdb6b9c04812c2f5260b6b9d384eeb923066b484c00e187760c7",
+    "review": "PASS"
+  }
+]

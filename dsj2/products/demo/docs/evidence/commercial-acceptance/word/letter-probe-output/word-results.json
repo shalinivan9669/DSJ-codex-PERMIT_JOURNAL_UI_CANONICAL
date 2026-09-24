@@ -1,0 +1,14 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 1,
+  "documents": [
+    {
+      "file": "biot-worker-card-short.docx",
+      "status": "FAIL",
+      "error": "PDF structural/text audit failed: SOURCE_WORDS_MISSING_IN_PDF",
+      "docxSha256": "c6e3a60c862262be5b28880434f521fb9deef245af46d14def57189654fef162"
+    }
+  ]
+}

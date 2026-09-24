@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "scenario": "Complete upload, crop, preview and issue browser cycle",
+  "origin": "https://localhost:8443",
+  "requestId": "1f58fc84-325f-4ac1-a8cf-928290b15bc9",
+  "requestUrl": "https://localhost:8443/requests/1f58fc84-325f-4ac1-a8cf-928290b15bc9/edit",
+  "browserVersion": "152.0.7977.83",
+  "syntheticDataOnly": true,
+  "transport": {
+    "https": true,
+    "securityDetails": {
+      "issuer": "DEMO isolated acceptance CA",
+      "protocol": "TLS 1.3",
+      "subjectName": "localhost",
+      "validFrom": 1790088450,
+      "validTo": 1790174850
+    },
+    "strictTlsProof": {
+      "status": 200,
+      "authorized": true,
+      "protocol": "TLSv1.3",
+      "peerFingerprint": "3F:87:AC:F2:F8:4A:EE:FC:4A:8E:42:29:E0:40:85:9E:17:7D:72:50:7A:1A:10:34:8D:5B:DC:8D:DA:97:AD:F8",
+      "emptyTrustRejectedWith": "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
+      "mode": "Node extra CA, rejectUnauthorized=true; browser pin isolated to its temporary profile"
+    },
+    "browserLeafSpkiPin": "cq3aJfFpyfjrwZqhnCnJps8/OftyzHYal2kkYMhLfEM=",
+    "nodeExtraCaFile": "local-tls-ca.crt",
+    "cookies": [
+      {
+        "name": "demo_session",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Strict"
+      },
+      {
+        "name": "demo_csrf",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Strict"
+      }
+    ]
+  },
+  "portraitSource": "fictional-recipient-portrait.png",
+  "portraitSourceSha256": "82f3d34ad38f13a9cf9511d63dc5ab9b9acb19f12a5816c3a1e1b5669e907484",
+  "normalizedPhotoSha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+  "exactEmbeddedPhotoMatches": 2,
+  "templates": [
+    {
+      "id": "ps-card",
+      "version": "15",
+      "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "76b34705-a8f2-4175-8c42-fc33ed96a1df-ps-card-1f58fc84-325f-4ac1-a8cf-928290b15bc9.pdf",
+      "format": "PDF",
+      "provenance": "PREVIEW",
+      "sha256": "86050c14307668cce0f74978cf9da537d313fbafb908ebd4dca3f76816246f4a",
+      "bytes": 122154,
+      "media": []
+    },
+    {
+      "file": "97884889-0df4-481f-8bfc-3b7dccb18974-ps-card-1f58fc84-325f-4ac1-a8cf-928290b15bc9.docx",
+      "format": "DOCX",
+      "provenance": "PREVIEW",
+      "sha256": "97c15fe4a5a4732fce2a11441f8bb25707fd4907af71faa7bae3514f741001fd",
+      "bytes": 2495462,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "abec2791-11b1-4b49-8d98-8af020a2f64e-registry-1f58fc84-325f-4ac1-a8cf-928290b15bc9.zip",
+      "format": "ZIP",
+      "provenance": "ORIGINAL",
+      "sha256": "996a6f1b0d5d176390af6bda55612cc647195d4a5bb6e5f9de39037fd0903d57",
+      "bytes": 2559132,
+      "media": []
+    },
+    {
+      "file": "d25556e5-fea7-4a68-a0bf-3f55d41cd05b-ps-card-8ffa1282-18a4-4c12-a8ff-8e6abde99efa.pdf",
+      "format": "PDF",
+      "provenance": "ORIGINAL",
+      "sha256": "0782b64fe568a74702b3f987fd5ab433bcbd524194c6f2cee89908e76e7862f2",
+      "bytes": 122843,
+      "media": []
+    },
+    {
+      "file": "e40ea1d6-2e76-4c44-b72c-30f60866dbf3-ps-card-8ffa1282-18a4-4c12-a8ff-8e6abde99efa.docx",
+      "format": "DOCX",
+      "provenance": "ORIGINAL",
+      "sha256": "6b87b9ea9e95ba50a3bb9b4b83978de557a95ae40a5ee95e24c8b708d8f93980",
+      "bytes": 2495458,
+      "media": [
+        {
+          "name": "word/media/photo-c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76.png",
+          "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76",
+          "matchesUploadedPhoto": true
+        }
+      ]
+    },
+    {
+      "file": "f371603c-457b-4b44-acf9-964843c34b23-registry-1f58fc84-325f-4ac1-a8cf-928290b15bc9.xlsx",
+      "format": "XLSX",
+      "provenance": "ORIGINAL",
+      "sha256": "a946ec800a043b0bf06b800c319f5e4bae10983a0ba4b3883b84cfb8eeb9fc96",
+      "bytes": 5943,
+      "media": []
+    }
+  ]
+}

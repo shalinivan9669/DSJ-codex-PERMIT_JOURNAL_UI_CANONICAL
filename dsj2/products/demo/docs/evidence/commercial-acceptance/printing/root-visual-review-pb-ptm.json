@@ -1,0 +1,115 @@
+{
+  "reviewer": "root",
+  "inspectedPages": 18,
+  "engine": "LibreOffice 26.2.6.3 Linux",
+  "pages": [
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-short-page-001.png",
+      "sha256": "53cbbfc1eccfb9f28152895deebfe5eb5ff76a3293a6eac5bbab5eb1164f4ec5",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-short-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-long-page-001.png",
+      "sha256": "2a30748598a1fe70120754c2de98bca12ac71680ae8b1faf6dde35404fb6964b",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-long-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-blank-page-001.png",
+      "sha256": "cca7a7ea94b865683a0c7c46a47a1974c52f000d51ff5373b08be5f3495ba05c",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-blank-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-batch-page-001.png",
+      "sha256": "53cbbfc1eccfb9f28152895deebfe5eb5ff76a3293a6eac5bbab5eb1164f4ec5",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-batch-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-batch-page-003.png",
+      "sha256": "fa106b27f6e87d0b15a55e371e9e3e0f974ad02137e34e1fa33dc913781b0212",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-batch-page-004.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-punctuation-page-001.png",
+      "sha256": "360d0c6dfbda4ada0767ec8ec1d5ade4d94914ae94f79406b8a56831f2f98db3",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\pb-card-punctuation-page-002.png",
+      "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8",
+      "status": "PASS",
+      "finding": "Photo/frame/text separation, RU/KZ and repeat panels visually intact."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\ptm-card-short-page-001.png",
+      "sha256": "e76b8e3fa1e69369b4ce07dae4e753e637b3acc5ff06240255d7f6abd129f8d6",
+      "status": "FAIL",
+      "finding": "Left text starts at the vertical frame stroke with no visible inset; add 2-3mm clearance and rerun short/long/blank/batch/punctuation."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\ptm-card-long-page-001.png",
+      "sha256": "c963a7e115a548fe19d8f20fc342835d5dff3fb20c707d75dd36d45abb2e64bf",
+      "status": "FAIL",
+      "finding": "Left text starts at the vertical frame stroke with no visible inset; add 2-3mm clearance and rerun short/long/blank/batch/punctuation."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\ptm-card-blank-page-001.png",
+      "sha256": "cd32c1a9d58e1c3be1dac8bc5125c592798f65167154ab9b0385d6660976759d",
+      "status": "FAIL",
+      "finding": "Left text starts at the vertical frame stroke with no visible inset; add 2-3mm clearance and rerun short/long/blank/batch/punctuation."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\ptm-card-batch-page-001.png",
+      "sha256": "e76b8e3fa1e69369b4ce07dae4e753e637b3acc5ff06240255d7f6abd129f8d6",
+      "status": "FAIL",
+      "finding": "Left text starts at the vertical frame stroke with no visible inset; add 2-3mm clearance and rerun short/long/blank/batch/punctuation."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\ptm-card-batch-page-002.png",
+      "sha256": "07066b8b0119f805d84c3b80ee6b274e7f873db82a5887c3d246218076a7e54b",
+      "status": "FAIL",
+      "finding": "Left text starts at the vertical frame stroke with no visible inset; add 2-3mm clearance and rerun short/long/blank/batch/punctuation."
+    },
+    {
+      "image": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\pages\\ptm-card-punctuation-page-001.png",
+      "sha256": "c7982402a18fa73e6c0be8a70d3a409950abbe52e30640e7ee309e0029a4b5f0",
+      "status": "FAIL",
+      "finding": "Left text starts at the vertical frame stroke with no visible inset; add 2-3mm clearance and rerun short/long/blank/batch/punctuation."
+    }
+  ]
+}

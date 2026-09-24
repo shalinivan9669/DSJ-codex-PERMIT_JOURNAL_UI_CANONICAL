@@ -1,0 +1,28 @@
+{
+  "status": "READ_ONLY_MAPPING_COMPLETE",
+  "sources": [
+    {
+      "language": "RU",
+      "url": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
+      "path": "docs\\evidence\\commercial-acceptance\\legal-sources\\biot-order-223-2026.ru.pdf",
+      "sha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d"
+    },
+    {
+      "language": "KZ",
+      "url": "https://zan.gov.kz/api/documents/225864/kaz/download/pdf",
+      "path": "docs\\evidence\\commercial-acceptance\\legal-sources\\biot-order-223-2026.kz.pdf",
+      "sha256": "fc05894dc908f90c1c4cc98d9677b321c4f308dda0e7b3a2dc7248e9ff345e64"
+    }
+  ],
+  "mappingSha256": "3e29ecc67f63115269376f311af64a9e7b2f123237b297276e450ec2b78081fc",
+  "currentTemplates": [
+    "biot-worker-card.v15",
+    "biot-itr-certificate.v13",
+    "biot-protocol.v9"
+  ],
+  "observedColumns": {
+    "appendix3": 7,
+    "appendix12": 10
+  },
+  "assetsChanged": false
+}

@@ -1,0 +1,65 @@
+{
+  "at": "2026-09-22T15:52:20.229094+00:00",
+  "intervalSeconds": 5.0,
+  "host": {
+    "kernel": "6.18.33.1-microsoft-standard-WSL2",
+    "logicalCpus": 12
+  },
+  "servers": [
+    {
+      "id": "de383e34caa2de66e2cd6b80881c04dc5b4bf48a81b605266ad09b209ff37c93",
+      "name": "/demo-commercial-release-tls-1",
+      "image": "sha256:964ad4d6cd0ce6fd6b56d7595d3fd13e1fcbdf3964c31614f4bfd073e00e23e5",
+      "cpuLimit": 0.0,
+      "memoryLimitBytes": 134217728,
+      "readOnly": true,
+      "user": "101:101"
+    },
+    {
+      "id": "9b6914490621bc74767a20b398cc258402c8af27195bfc02364a9f34956f24f3",
+      "name": "/demo-commercial-release-ingress-1",
+      "image": "sha256:964ad4d6cd0ce6fd6b56d7595d3fd13e1fcbdf3964c31614f4bfd073e00e23e5",
+      "cpuLimit": 0.0,
+      "memoryLimitBytes": 134217728,
+      "readOnly": true,
+      "user": "101:101"
+    },
+    {
+      "id": "ccc4645583933c098dddbbbc6fe8b8a08bf397ed7b6252fea2ef5f1df27f5232",
+      "name": "/demo-commercial-release-worker-1",
+      "image": "sha256:399a6212afad69ba745036189495d49658d560492dbb2001cea09c9e615533f8",
+      "cpuLimit": 2.0,
+      "memoryLimitBytes": 3221225472,
+      "readOnly": true,
+      "user": "1000:1000"
+    },
+    {
+      "id": "10646b79ed584f9b4ed9d81152dfd95812b6f50b5edee7c513a90b01783321dc",
+      "name": "/demo-commercial-release-api-1",
+      "image": "sha256:399a6212afad69ba745036189495d49658d560492dbb2001cea09c9e615533f8",
+      "cpuLimit": 2.0,
+      "memoryLimitBytes": 2147483648,
+      "readOnly": true,
+      "user": "1000:1000"
+    },
+    {
+      "id": "5cee06159bb7ecd5941bd88b71a5ce9d717f5b7ebc8decac8e5271a3bc1b2c8e",
+      "name": "/demo-commercial-release-web-1",
+      "image": "sha256:3eb90b057da92d0a6f260a07a5cc18b02a6c61fcfd8647124a3238d6f0dcb956",
+      "cpuLimit": 1.0,
+      "memoryLimitBytes": 1073741824,
+      "readOnly": true,
+      "user": "1000:1000"
+    },
+    {
+      "id": "b3e64b3c53cf24bac31ddfe021096dde862fb062021fd27483a81c53c55216ec",
+      "name": "/demo-commercial-release-db-1",
+      "image": "sha256:b097d139976b72e6245b60ff4d5c81401d446a72d2b92f91bacdfdd80ae6ad51",
+      "cpuLimit": 2.0,
+      "memoryLimitBytes": 2147483648,
+      "readOnly": true,
+      "user": "postgres"
+    }
+  ],
+  "limitations": "Docker CPU% uses host CPU accounting, memory excludes reclaimable cache per Docker stats. Block/network IO counters are cumulative per container, not per job. Shared Windows/WSL host; no p95 claim from three repetitions."
+}

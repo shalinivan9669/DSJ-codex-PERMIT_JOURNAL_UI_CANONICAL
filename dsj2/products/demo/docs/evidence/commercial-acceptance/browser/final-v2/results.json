@@ -1,0 +1,564 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\playwright.config.ts",
+    "rootDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/commercial-acceptance/browser/final-v2/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\browser\\final-v2\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "commercial.spec.ts",
+      "file": "commercial.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "XLSX formulas are excluded with an actionable row error and no silent loss",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12223,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:26:05.118Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0cace22ba481f327a60b-e50d719c4ca6129c0c79",
+          "file": "commercial.spec.ts",
+          "line": 48,
+          "column": 5
+        },
+        {
+          "title": "oldest file survives 55 newer drafts, page three, history search and complete XLSX export",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 360000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 116140,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:26:18.059Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0cace22ba481f327a60b-ee1de6dfcfdd23d29b94",
+          "file": "commercial.spec.ts",
+          "line": 88,
+          "column": 5
+        },
+        {
+          "title": "validation errors identify the field, focus the missing date and offline retains unsaved input",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5569,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:28:14.305Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0cace22ba481f327a60b-2aee8078cfe2e7aca7f1",
+          "file": "commercial.spec.ts",
+          "line": 190,
+          "column": 5
+        },
+        {
+          "title": "expired session: real cookie revocation, in-page reauthentication and unsaved bilingual data survive",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9139,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:28:19.896Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0cace22ba481f327a60b-5bbe6171e25373aee9fd",
+          "file": "commercial.spec.ts",
+          "line": 237,
+          "column": 5
+        },
+        {
+          "title": "finalize response lost after commit: retry and double click reuse the issuance and final typed text",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6308,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:28:29.057Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0cace22ba481f327a60b-d20f2d49cd1f67761796",
+          "file": "commercial.spec.ts",
+          "line": 284,
+          "column": 5
+        },
+        {
+          "title": "administrator settings and independent operator conflict preserve both drafts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13219,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:28:35.386Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0cace22ba481f327a60b-d8b117862d459ee86961",
+          "file": "commercial.spec.ts",
+          "line": 372,
+          "column": 5
+        },
+        {
+          "title": "CSV formula text and optional PTM/PB semantic fields survive import and refresh",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7196,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:28:48.623Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0cace22ba481f327a60b-8f1552dd973db96521f0",
+          "file": "commercial.spec.ts",
+          "line": 476,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "demo.spec.ts",
+      "file": "demo.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "person: bilingual refresh, final characters, PDF/DOCX originals, immutable history and correction",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 58725,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:28:55.873Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05384557491ebd602dd7-d5de87b64f68d9eb1f9a",
+          "file": "demo.spec.ts",
+          "line": 83,
+          "column": 5
+        },
+        {
+          "title": "network failure retains data, retry saves; concurrent editor conflict has a focus-managed choice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6371,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:29:54.642Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05384557491ebd602dd7-cb14f4e5d2a3af52c090",
+          "file": "demo.spec.ts",
+          "line": 264,
+          "column": 5
+        },
+        {
+          "title": "company: 12 independent bilingual recipients, 18 assignments, complete generated files",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 720000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 244813,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:30:01.030Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05384557491ebd602dd7-aae399a0f42c1d963feb",
+          "file": "demo.spec.ts",
+          "line": 309,
+          "column": 5
+        },
+        {
+          "title": "101 imported rows are explained before apply; all pages remain accessible by keyboard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 14254,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:34:05.885Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05384557491ebd602dd7-c01867074cbd38b98cb4",
+          "file": "demo.spec.ts",
+          "line": 527,
+          "column": 5
+        },
+        {
+          "title": "keyboard creates, validates and finalizes a person with focus visible in dialogs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7812,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:34:20.201Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05384557491ebd602dd7-d841cc969b4f1691d1c7",
+          "file": "demo.spec.ts",
+          "line": 621,
+          "column": 5
+        },
+        {
+          "title": "XLSX sheet selection, saved mapping, leading zeros, partial rows and row report",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 15442,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:34:28.062Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05384557491ebd602dd7-04ed2b6d15e257d55ee4",
+          "file": "demo.spec.ts",
+          "line": 670,
+          "column": 5
+        },
+        {
+          "title": "failed-download UI supports reasoned reconstruction without renumbering or replacing originals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 46131,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-22T12:34:43.560Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "05384557491ebd602dd7-8d9daee15ccef86e48c3",
+          "file": "demo.spec.ts",
+          "line": 757,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-22T12:26:02.553Z",
+    "duration": 567571.341,
+    "expected": 14,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

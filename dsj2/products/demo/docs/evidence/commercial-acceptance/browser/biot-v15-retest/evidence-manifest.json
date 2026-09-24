@@ -1,0 +1,95 @@
+{
+  "files": 18,
+  "records": [
+    {
+      "file": "4a933c8b-4dc4-464e-8c30-91033d6fb156-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.page-1.png",
+      "bytes": 141068,
+      "sha256": "bd1d8f5ef76205fc751cf9b0e3607aeaa71b1e2a6a45d05dc5be0ff4a949e5d8"
+    },
+    {
+      "file": "4a933c8b-4dc4-464e-8c30-91033d6fb156-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.page-2.png",
+      "bytes": 69819,
+      "sha256": "0cb122ac50ba63abf7a59d44a698257c38bff5ceba0fdf78a5e7b79eeab4de7d"
+    },
+    {
+      "file": "4a933c8b-4dc4-464e-8c30-91033d6fb156-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.pdf",
+      "bytes": 107262,
+      "sha256": "464e7514500e5655ff898e414902d2d978fd0ff94488736771371bcba9a6ed31"
+    },
+    {
+      "file": "4b0fdc44-ce79-4702-8ec9-15c548032c78-registry-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.zip",
+      "bytes": 102628,
+      "sha256": "1df9b117e1dc8e07848c0db547b080fe5048a87a848d4724b4bff1cc2e7552ea"
+    },
+    {
+      "file": "aac046d2-965d-4e15-965c-e6d83f9c9589-biot-worker-card-c81e830a-9a8e-4673-94f5-41b645074982.docx",
+      "bytes": 26454,
+      "sha256": "22de07f244411e96e7813f2794b788d15aa4c186e7c37c20598551b4f3ef1faf"
+    },
+    {
+      "file": "af718c32-0e01-4d11-91e1-06ab34a4b124-registry-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.xlsx",
+      "bytes": 5957,
+      "sha256": "5defb98b55e956c98294c546601b70a64283004c20142d9e5e683417ba372a9c"
+    },
+    {
+      "file": "bed75497-e78d-41e5-8ef3-f76dcd72fec8-biot-worker-card-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.docx",
+      "bytes": 26461,
+      "sha256": "261f5ee59bf5894dcd424ff0e36abf572b1a6a571f4924cf183ebd38b4fa2336"
+    },
+    {
+      "file": "BIOT_V15_RETEST_RU.md",
+      "bytes": 4702,
+      "sha256": "d974ac5308845d6647347fd7363c14e6b954f8a00dab6001d353b3562a05f83a"
+    },
+    {
+      "file": "browser-preview.pdf",
+      "bytes": 104793,
+      "sha256": "4efd6174eb0133e4fcbfcd7d9a1be84a4d44d4bbdfe9ba8784b1dae8e61efa6f"
+    },
+    {
+      "file": "d4967d5e-00c5-4bee-b7a2-7059c6130af7-biot-worker-card-6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070.pdf",
+      "bytes": 104793,
+      "sha256": "4efd6174eb0133e4fcbfcd7d9a1be84a4d44d4bbdfe9ba8784b1dae8e61efa6f"
+    },
+    {
+      "file": "issued-portrait.png",
+      "bytes": 214572,
+      "sha256": "fe272399ed582b63929238fcbd570a82caa19b1f4b6c7d10d69f23b0c341f74d"
+    },
+    {
+      "file": "matrix-updates.json",
+      "bytes": 970,
+      "sha256": "0d3e6c9da449413eb323924d1ae57fa4cd0b34a14a87529c3ec92891cfb123dd"
+    },
+    {
+      "file": "normalized-portrait.png",
+      "bytes": 2457751,
+      "sha256": "c171d3030dce69d0bd10191c7fad7888096d24def53ff47bc0827d719ff1da76"
+    },
+    {
+      "file": "pdf-preview.png",
+      "bytes": 156891,
+      "sha256": "acdb1d18e8a86f45466362a8f24248facf7e2029e03ba4a9a0bbb5e861213147"
+    },
+    {
+      "file": "pdf-visual-review.json",
+      "bytes": 1871,
+      "sha256": "2000a64c9203ee279439f988264dd0add81f8af264be5ab6c3af28b339140ef1"
+    },
+    {
+      "file": "photo-result.json",
+      "bytes": 3066,
+      "sha256": "09026fc82aa6530be3818f15f137f9bb99a209f3bd911c14dc1112e498a3e641"
+    },
+    {
+      "file": "portrait-crop.png",
+      "bytes": 245837,
+      "sha256": "2aaf4a2eb11b0c5e9ec00e7522f57e3d0ed5927afa40f319f971e2cdf9c05a96"
+    },
+    {
+      "file": "results.json",
+      "bytes": 3210,
+      "sha256": "5d4efc1b9a707393a16e601590c79076162400318ed67116d23836966496e9c7"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "version": "11.27.1",
+    "integrityVerified": true,
+    "dependencies": [
+      {
+        "path": "package/dist/node_modules/tar/package.json",
+        "name": "tar",
+        "version": "7.5.22"
+      }
+    ],
+    "source": "https://registry.npmjs.org/pnpm/-/pnpm-11.27.1.tgz"
+  },
+  {
+    "version": "12.5.1",
+    "integrityVerified": true,
+    "dependencies": [
+      {
+        "path": "package/dist/node_modules/tar/package.json",
+        "name": "tar",
+        "version": "7.5.22"
+      }
+    ],
+    "source": "https://registry.npmjs.org/pnpm/-/pnpm-12.5.1.tgz"
+  }
+]

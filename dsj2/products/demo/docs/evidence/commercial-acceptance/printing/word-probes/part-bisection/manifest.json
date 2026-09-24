@@ -1,0 +1,66 @@
+[
+  {
+    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-probes\\part-bisection\\biot-itr-certificate-raw-styles.docx",
+    "sha256": "d0e317cf709bb4a69162ef39fdb0d70299b98c8e7acf0f8b17ee1a24ba37d600",
+    "base": "word-final-v9/biot-itr-certificate-short.docx",
+    "rawSource": "../../docs/experimental/biot/biot-itr-certificate-template.docx",
+    "onlySubstitutedPart": "word/styles.xml",
+    "note": "Diagnostic source-part substitution only; may contain original sample text; never a release artifact."
+  },
+  {
+    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-probes\\part-bisection\\biot-itr-certificate-raw-settings.docx",
+    "sha256": "757d854ac6f5240c4c1294763cd077102e75470cac23aca74d861aac1a197a49",
+    "base": "word-final-v9/biot-itr-certificate-short.docx",
+    "rawSource": "../../docs/experimental/biot/biot-itr-certificate-template.docx",
+    "onlySubstitutedPart": "word/settings.xml",
+    "note": "Diagnostic source-part substitution only; may contain original sample text; never a release artifact."
+  },
+  {
+    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-probes\\part-bisection\\biot-itr-certificate-raw-theme1.docx",
+    "sha256": "c048d195096b4738de312988fcf813ffd33c9e59490380af2e4c9050ae6603a9",
+    "base": "word-final-v9/biot-itr-certificate-short.docx",
+    "rawSource": "../../docs/experimental/biot/biot-itr-certificate-template.docx",
+    "onlySubstitutedPart": "word/theme/theme1.xml",
+    "note": "Diagnostic source-part substitution only; may contain original sample text; never a release artifact."
+  },
+  {
+    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-probes\\part-bisection\\biot-itr-certificate-raw-document.docx",
+    "sha256": "d52256c1f2a2844f110f6bc8e59a3c6e7887c19270445ce441ef76294edc433a",
+    "base": "word-final-v9/biot-itr-certificate-short.docx",
+    "rawSource": "../../docs/experimental/biot/biot-itr-certificate-template.docx",
+    "onlySubstitutedPart": "word/document.xml",
+    "note": "Diagnostic source-part substitution only; may contain original sample text; never a release artifact."
+  },
+  {
+    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-probes\\part-bisection\\ps-witness-raw-styles.docx",
+    "sha256": "201b23b39abba19240518f773c09dd76d9c504d67f6805cf3240651dd39e036b",
+    "base": "word-final-v9/ps-witness-short.docx",
+    "rawSource": "../../docs/experimental/ps/ps-witness-certificate-template.docx",
+    "onlySubstitutedPart": "word/styles.xml",
+    "note": "Diagnostic source-part substitution only; may contain original sample text; never a release artifact."
+  },
+  {
+    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-probes\\part-bisection\\ps-witness-raw-settings.docx",
+    "sha256": "e25cbcc98f29516f94b02fcf7bdccd55ac6db151a6b5f2cf181fc47ef5591d97",
+    "base": "word-final-v9/ps-witness-short.docx",
+    "rawSource": "../../docs/experimental/ps/ps-witness-certificate-template.docx",
+    "onlySubstitutedPart": "word/settings.xml",
+    "note": "Diagnostic source-part substitution only; may contain original sample text; never a release artifact."
+  },
+  {
+    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-probes\\part-bisection\\ps-witness-raw-theme1.docx",
+    "sha256": "6f752b05533a5d62e5a670907b647e448c2715ca2a86d68f741dc1a29059e620",
+    "base": "word-final-v9/ps-witness-short.docx",
+    "rawSource": "../../docs/experimental/ps/ps-witness-certificate-template.docx",
+    "onlySubstitutedPart": "word/theme/theme1.xml",
+    "note": "Diagnostic source-part substitution only; may contain original sample text; never a release artifact."
+  },
+  {
+    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\commercial-acceptance\\printing\\word-probes\\part-bisection\\ps-witness-raw-document.docx",
+    "sha256": "a119cad7318af97175d3dc86c67b57b45c0a5736e1cf8b92e64fd3dd178a06a1",
+    "base": "word-final-v9/ps-witness-short.docx",
+    "rawSource": "../../docs/experimental/ps/ps-witness-certificate-template.docx",
+    "onlySubstitutedPart": "word/document.xml",
+    "note": "Diagnostic source-part substitution only; may contain original sample text; never a release artifact."
+  }
+]

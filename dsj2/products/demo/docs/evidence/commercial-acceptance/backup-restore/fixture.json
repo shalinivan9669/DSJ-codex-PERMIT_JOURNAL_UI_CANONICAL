@@ -1,0 +1,38 @@
+{
+  "tenantId": "b936ce29-06e6-41fb-ac97-fa3d44d5e232",
+  "requestId": "cb6c222c-9506-4927-a5c9-00ff593ea754",
+  "artifacts": [
+    {
+      "id": "0e44725c-e182-496b-a9ab-9c3c39ae0b9d",
+      "kind": "ZIP",
+      "sha256": "cb6a9e7851e80df4704fa4317a8ffbf94220deb982e7df917c76c87adb2a5880",
+      "size": 73872
+    },
+    {
+      "id": "267c072a-e1b0-4733-b2c8-7bd202da265c",
+      "kind": "PDF",
+      "sha256": "49168a8f7d925a3025a88ee6b24d9d536ff351bcacf2451732c98775dfae2e2a",
+      "size": 85992
+    },
+    {
+      "id": "8bf2e7cd-94fb-489b-9e31-c37c2b0c6a35",
+      "kind": "DOCX",
+      "sha256": "4d803e6840c7cbf41da7dbd9be929132378e90d9d473c3cb98207e3e01477191",
+      "size": 32563
+    },
+    {
+      "id": "b66b3d0b-7907-4d30-a5e1-431b98a52f25",
+      "kind": "XLSX",
+      "sha256": "3aae8ead8c390ab32b7ce2fbd8ada0a57157719d41a9a14aa72200f1b8768ec1",
+      "size": 5864
+    }
+  ],
+  "photoIds": [
+    {
+      "id": "cace8521-6336-4dc6-a33e-8c726475111b",
+      "sha256": "520b1c5fd44b5d3550555ce245776d2966927650178ab5a4cc6c077a01813200"
+    }
+  ],
+  "photos": 1,
+  "templates": 10
+}

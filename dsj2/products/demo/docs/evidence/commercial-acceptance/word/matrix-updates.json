@@ -1,0 +1,18 @@
+{
+  "owner": "operator_ui",
+  "generatedAt": "2026-09-22T15:43:50.609Z",
+  "requirements": [
+    {
+      "id": "C08",
+      "status": "PASS",
+      "scenario": "Real Microsoft Word read-only open and PDF export for 10 active forms × short/long; all28 pages visually reviewed; exact-byte comparison to final Linux canonical set.",
+      "environment": "Windows; Microsoft Word16.0 build16.0.17932; bundled LiberationSerif/Sans2.1.5 registered session-only with AddFontResourceExW flags0 and all8 removed after Word exit.",
+      "result": "20/20 PASS;28pages; no missing source words, empty pages, page-size/count drift or text outside sheet. Body text min8.04pt. Final DOCX/template/WordPDF/LOPDF SHA recorded for every case. Two negative audit controls correctly fail wrong text/page count.",
+      "artifact": "word/final-active.json; word/WORD_COMPATIBILITY_RU.md; word/final-v11; word/final-v14-affected; word/final-current-ps; word/negative-controls/results.json; printing/word-final-biot-v15/manifest.json; word/final-biot-v15; word/biot-v15-browser",
+      "defect": "Word rejected transformed OOXML with undefined MC prefixes, empty typed properties and empty pictures. Without bundled fonts Word substituted TimesNewRoman and Ә/Ə text differed. Visual QA found clipped ITR signature and PS stamp over frame; separate LO comparison found PS title/right paragraph offsets. Actual v14 BIOT lower duplicate panel clipped long chairman text in both Word and LibreOffice.",
+      "fix": "OOXML hygiene and removal of empty picture containers by print agent; supported-font requirement documented; ITR signature box enlarged, PS first panel repositioned and right paragraphs inset; static Kazakh typos corrected in active cards. BIOT15 lower right box aligned to correctly wrapping upper box; issuer separators start below strip.",
+      "retest": "Current exact hashes: BIOTworker15, PB/PTM14, ITR13, PS15, witness11, protocols9. All20 canonical structural+visual PASS. Actual long-commission browser-issued BIOT15 Word/LibreOffice2pages each PASS;3 generated-photo forms Word/LibreOffice PASS. Original failures retained.",
+      "limitation": "Requires specified bundled fonts for supported Word environment. No-font mismatch is retained, not relabeled PASS. Physical printer/duplex and legal form approval remain separate gates."
+    }
+  ]
+}

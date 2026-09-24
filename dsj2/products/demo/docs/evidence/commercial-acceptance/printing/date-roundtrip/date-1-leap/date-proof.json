@@ -1,0 +1,245 @@
+{
+  "name": "date-1-leap",
+  "status": "PASS",
+  "requestId": "e382d5f0-0fbc-4216-9f76-90c6a03f57e8",
+  "requestUrl": "http://localhost:3200/requests/e382d5f0-0fbc-4216-9f76-90c6a03f57e8/edit",
+  "timezoneId": "America/Los_Angeles",
+  "expected": {
+    "kind": "leap",
+    "documentDate": "2028-02-29",
+    "protocolDate": "2028-02-28"
+  },
+  "ui": {
+    "documentDate": "2028-02-29",
+    "protocolDate": "2028-02-28",
+    "browser": {
+      "zone": "America/Los_Angeles",
+      "midnightProbe": "Thu Dec 31 2026 16:30:00 GMT-0800 (Тихоокеанское стандартное время)"
+    }
+  },
+  "snapshotAssignment": {
+    "id": "d9af8a12-6380-4eeb-97fa-29ec11711361",
+    "hours": "",
+    "reason": "",
+    "result": "ТЕСТ: сдал / тапсырды",
+    "education": "",
+    "templateId": "ps-witness",
+    "validUntil": "",
+    "trainingEnd": "",
+    "documentDate": "2028-02-29",
+    "protocolDate": "2028-02-28",
+    "protocolMode": "INDIVIDUAL",
+    "trainingStart": "",
+    "trainingSubject": "ТЕСТ: календарная проверка",
+    "externalBasisNumber": ""
+  },
+  "browserVersion": "152.0.7977.83",
+  "templates": [
+    {
+      "id": "ps-witness",
+      "version": "11",
+      "checksum": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "afee1f58-88e7-4890-ac4f-c054f7caee85",
+      "format": "DOCX",
+      "file": "docx-afee1f58-88e7-4890-ac4f-c054f7caee85.docx",
+      "sha256": "64be16246d3c7c7b1875361b1735b1db39c4accf9e367be5a1415d0d1eaa65dc",
+      "provenance": "ORIGINAL",
+      "bytes": 21258
+    },
+    {
+      "id": "aa8e6d06-dba5-4f4e-ae72-9a45c05ab5e8",
+      "format": "PDF",
+      "file": "pdf-aa8e6d06-dba5-4f4e-ae72-9a45c05ab5e8.pdf",
+      "sha256": "779b4822a9caae8ab886b5841200ea73a2a5e08f3344e1e38310967fe9dd8834",
+      "provenance": "ORIGINAL",
+      "bytes": 167247
+    },
+    {
+      "id": "6590b635-449b-4b2d-9b6d-68716555e9e3",
+      "format": "XLSX",
+      "file": "xlsx-6590b635-449b-4b2d-9b6d-68716555e9e3.xlsx",
+      "sha256": "714a33057d8a591ad96567544567e183f58e575706eaae5da9e62bf8bd0bb55a",
+      "provenance": "ORIGINAL",
+      "bytes": 5898
+    },
+    {
+      "id": "55e0e6ef-ac5b-46b6-9b22-c8140c51e130",
+      "format": "ZIP",
+      "file": "zip-55e0e6ef-ac5b-46b6-9b22-c8140c51e130.zip",
+      "sha256": "e414cf6bc7213358849b4b6d4b11792c3ff6a6a09a6aec79531af850ec02649e",
+      "provenance": "ORIGINAL",
+      "bytes": 132911
+    }
+  ],
+  "docxSha256": "64be16246d3c7c7b1875361b1735b1db39c4accf9e367be5a1415d0d1eaa65dc",
+  "pdfSha256": "779b4822a9caae8ab886b5841200ea73a2a5e08f3344e1e38310967fe9dd8834",
+  "beforeDraftSha256": "9d47f55df2dd1b37115ce234f300bd8f9ae154481822060c9b53d0e0b792dc48",
+  "issuedSnapshotSha256": "1f8f0cc5a822429b298fce18b3e42debf1a422b11fde6fc016082310467c8d58",
+  "docxDateChecks": [
+    {
+      "field": "PROTOCOL_YEAR",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[4]/w:tr[1]/w:tc[2]/w:p",
+      "expected": "2028",
+      "actual": "2028"
+    },
+    {
+      "field": "PROTOCOL_DAY",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[4]/w:tr[1]/w:tc[5]/w:p",
+      "expected": "28",
+      "actual": "28"
+    },
+    {
+      "field": "PROTOCOL_MONTH_KZ",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[4]/w:tr[1]/w:tc[7]/w:p",
+      "expected": "ақпан",
+      "actual": "ақпан"
+    },
+    {
+      "field": "ISSUE_DAY",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[5]/w:tr/w:tc[2]/w:p",
+      "expected": "29",
+      "actual": "29"
+    },
+    {
+      "field": "ISSUE_MONTH_KZ",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[5]/w:tr/w:tc[4]/w:p",
+      "expected": "ақпан",
+      "actual": "ақпан"
+    },
+    {
+      "field": "ISSUE_YEAR_SHORT",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[1]/w:tbl[5]/w:tr/w:tc[6]/w:p",
+      "expected": "28",
+      "actual": "28"
+    },
+    {
+      "field": "PROTOCOL_DAY",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[2]/w:tbl[5]/w:tr[1]/w:tc/w:p[1]",
+      "expected": "28",
+      "actual": "Решением квалификационной комиссии от «28» февраля 2028 г. № протокола  ему (ей) присвоена квалификация "
+    },
+    {
+      "field": "PROTOCOL_MONTH_RU",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[2]/w:tbl[5]/w:tr[1]/w:tc/w:p[1]",
+      "expected": "февраля",
+      "actual": "Решением квалификационной комиссии от «28» февраля 2028 г. № протокола  ему (ей) присвоена квалификация "
+    },
+    {
+      "field": "PROTOCOL_YEAR",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[2]/w:tbl[5]/w:tr[1]/w:tc/w:p[1]",
+      "expected": "2028",
+      "actual": "Решением квалификационной комиссии от «28» февраля 2028 г. № протокола  ему (ей) присвоена квалификация "
+    },
+    {
+      "field": "ISSUE_DAY",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[2]/w:tbl[6]/w:tr/w:tc[2]/w:p",
+      "expected": "29",
+      "actual": "29"
+    },
+    {
+      "field": "ISSUE_MONTH_RU",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[2]/w:tbl[6]/w:tr/w:tc[4]/w:p",
+      "expected": "февраля",
+      "actual": "февраля"
+    },
+    {
+      "field": "ISSUE_YEAR_SHORT",
+      "xpath": "/w:document/w:body/w:tbl[2]/w:tr/w:tc[2]/w:tbl[6]/w:tr/w:tc[6]/w:p",
+      "expected": "28",
+      "actual": "28"
+    }
+  ],
+  "pdfDateChecks": [
+    {
+      "field": "PROTOCOL_KZ",
+      "page": 2,
+      "searchRegion": [
+        125,
+        330,
+        292,
+        415
+      ],
+      "expectedNormalized": "2028жылғы«28»ақпан",
+      "matchedBox": [
+        131.8,
+        365.24276377952805,
+        259.104,
+        377.27876377952805
+      ],
+      "regionText": "ТЕСТ:сдал/тапсырды2028жылғы«28»ақпаншешіміменоғанбіліктілігіберілді",
+      "swappedProtocolDateRejected": false
+    },
+    {
+      "field": "PROTOCOL_RU",
+      "page": 2,
+      "searchRegion": [
+        300,
+        330,
+        580,
+        410
+      ],
+      "expectedNormalized": "«28»февраля2028",
+      "matchedBox": [
+        457.78600000000006,
+        364.57876377952806,
+        521.5060000000001,
+        372.57876377952806
+      ],
+      "regionText": "ЭкзаменТЕСТ:сдал/тапсырдыРешениемквалификационнойкомиссииот«28»февраля2028г.№протоколаему(ей)присвоенаквалификация",
+      "swappedProtocolDateRejected": false
+    },
+    {
+      "field": "ISSUE_KZ",
+      "page": 2,
+      "searchRegion": [
+        150,
+        450,
+        292,
+        550
+      ],
+      "expectedNormalized": "«29»ақпан2028",
+      "matchedBox": [
+        158.35,
+        520.5787637795281,
+        273.65,
+        528.5787637795281
+      ],
+      "regionText": "ON-00005«29»ақпан2028",
+      "swappedProtocolDateRejected": true
+    },
+    {
+      "field": "ISSUE_RU",
+      "page": 2,
+      "searchRegion": [
+        415,
+        425,
+        550,
+        510
+      ],
+      "expectedNormalized": "«29»февраля2028",
+      "matchedBox": [
+        419.0,
+        453.72876377952804,
+        534.75,
+        461.72876377952804
+      ],
+      "regionText": "ссии-REGISTRATION-00005«29»февраля2028",
+      "swappedProtocolDateRejected": true
+    }
+  ],
+  "pages": [
+    {
+      "file": "page-1.png",
+      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809"
+    },
+    {
+      "file": "page-2.png",
+      "sha256": "f89efe9aa72df1f7b0fc536dbdfddc6bea146ef510b1ab45dcdb431880c3c43e"
+    }
+  ],
+  "scope": "Actual UI input/reload -> saved draft -> immutable issuance snapshot -> actual server DOCX/PDF; documentDate is the printed date, issuance event timestamp is intentionally independent."
+}

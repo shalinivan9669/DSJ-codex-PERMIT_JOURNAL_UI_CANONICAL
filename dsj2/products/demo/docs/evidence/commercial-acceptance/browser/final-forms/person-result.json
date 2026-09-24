@@ -1,0 +1,58 @@
+{
+  "requestId": "61f43e07-9d5a-4900-8654-ba95f60aff40",
+  "documentCount": 1,
+  "issuanceCount": 1,
+  "artifactCount": 6,
+  "originalSha256": "afa16d5a035f202f00ff991fdb3d49355dcb344c97e8c08031f099275df0f08e",
+  "templates": [
+    {
+      "id": "biot-worker-card",
+      "version": "7",
+      "sha256": "6e393c6d3c66fa8125a79eddcd34690ecb64062322d921bd8bbf1d2fefcf693c"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "person-61f43e07-9d5a-4900-8654-ba95f60aff40\\6a079f71-ab0e-425a-82d8-e1e7c45262a3-biot-worker-card-61f43e07-9d5a-4900-8654-ba95f60aff40.docx",
+      "format": "DOCX",
+      "provenance": "PREVIEW",
+      "sha256": "c541ce52c89d3f4b36c6ceaad461d596d2f70a2672b14fed9b6b9955311376b9",
+      "size": 26212
+    },
+    {
+      "file": "person-61f43e07-9d5a-4900-8654-ba95f60aff40\\224fd2ab-361a-42fe-a071-73509b50d766-biot-worker-card-61f43e07-9d5a-4900-8654-ba95f60aff40.pdf",
+      "format": "PDF",
+      "provenance": "PREVIEW",
+      "sha256": "5d2cf287a1b13cd1b98fb7434ec83873ac8f576cb8c64595b5e8ca61e6cd443d",
+      "size": 100607
+    },
+    {
+      "file": "person-61f43e07-9d5a-4900-8654-ba95f60aff40\\b60c6c7c-a474-4b32-937b-49bcb1e9db78-biot-worker-card-fdc47026-6ea1-4443-b35d-c3dc12903bee.docx",
+      "format": "DOCX",
+      "provenance": "ORIGINAL",
+      "sha256": "da2d42c2068b6804c35b559775936ea7aaff400ac92c45565cb8831ab685ad59",
+      "size": 26255
+    },
+    {
+      "file": "person-61f43e07-9d5a-4900-8654-ba95f60aff40\\d872905e-7b1c-4716-918f-5c1466d8ca55-biot-worker-card-fdc47026-6ea1-4443-b35d-c3dc12903bee.pdf",
+      "format": "PDF",
+      "provenance": "ORIGINAL",
+      "sha256": "7de23eae82687633c94faa956c9fa2f38b40c6a0493da731efecbbf4bdb0250c",
+      "size": 103234
+    },
+    {
+      "file": "person-61f43e07-9d5a-4900-8654-ba95f60aff40\\d8030a2c-1232-4b00-a8b8-011626ec63e6-registry-61f43e07-9d5a-4900-8654-ba95f60aff40.xlsx",
+      "format": "XLSX",
+      "provenance": "ORIGINAL",
+      "sha256": "c10a8e33aaaf85b99f7fc90227253ec9f8eeaf4def31ee9c3af6989070681c53",
+      "size": 5937
+    },
+    {
+      "file": "person-61f43e07-9d5a-4900-8654-ba95f60aff40\\6600e339-c51f-423a-b58c-b2727ab67389-registry-61f43e07-9d5a-4900-8654-ba95f60aff40.zip",
+      "format": "ZIP",
+      "provenance": "ORIGINAL",
+      "sha256": "afa16d5a035f202f00ff991fdb3d49355dcb344c97e8c08031f099275df0f08e",
+      "size": 101178
+    }
+  ]
+}

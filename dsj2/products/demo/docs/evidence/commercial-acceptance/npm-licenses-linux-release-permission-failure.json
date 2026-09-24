@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "EACCES",
+    "message": "EACCES: permission denied, open '/app/_tmp_8_0516e1c66b4922e38374918e9b300592'"
+  }
+}

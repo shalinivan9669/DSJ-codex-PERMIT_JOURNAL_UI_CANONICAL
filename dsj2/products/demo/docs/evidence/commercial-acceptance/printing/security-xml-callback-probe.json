@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "python": "3.12.14 (main, Sep 19 2026, 01:05:48) [GCC 12.2.0]",
+  "lxml": [
+    6,
+    1,
+    1,
+    0
+  ],
+  "libxml": [
+    2,
+    14,
+    6
+  ],
+  "openpyxl": "3.1.5",
+  "rows": 1000,
+  "columns": 28,
+  "cellCharacters": 500,
+  "totalXmlBytes": 76066361,
+  "maximumCallbackBytes": 4316,
+  "callbackCount": 18478,
+  "limitations": "Bounded measurement complements actual writer source review; not an exploit test, native patch claim, or proof for arbitrary application callbacks. Total worksheet size is distinct from a single buffered output callback.",
+  "sourceHashes": {
+    "/usr/local/lib/python3.12/site-packages/openpyxl/worksheet/_writer.py": "6c3b70e81579b5dced0114049103e9ac4c51afc859545923d03ca896ac55bb69",
+    "/usr/local/lib/python3.12/site-packages/openpyxl/cell/_writer.py": "dc8e962ca1091ae15ef2b3a3c5d015b834f8b19623718a39efeeaf7a519ea5d4"
+  },
+  "sourceReviewed": {
+    "get_stream": "    def get_stream(self):\n        with xmlfile(self.out) as xf:\n            with xf.element(\"worksheet\", xmlns=SHEET_MAIN_NS):\n                try:\n                    while True:\n                        el = (yield)\n                        if el is True:\n                            yield xf\n                        elif el is None: # et_xmlfile chokes\n                            continue\n                        else:\n                            xf.write(el)\n                except GeneratorExit:\n                    pass\n",
+    "write_rows": "    def write_rows(self):\n        xf = self.xf.send(True)\n\n        with xf.element(\"sheetData\"):\n            for row_idx, row in self.rows():\n                self.write_row(xf, row, row_idx)\n\n        self.xf.send(None) # return control to generator\n",
+    "write_row": "    def write_row(self, xf, row, row_idx):\n        attrs = {'r': f\"{row_idx}\"}\n        dims = self.ws.row_dimensions\n        attrs.update(dims.get(row_idx, {}))\n\n        with xf.element(\"row\", attrs):\n\n            for cell in row:\n                if cell._comment is not None:\n                    comment = CommentRecord.from_cell(cell)\n                    self.ws._comments.append(comment)\n                if (\n                    cell._value is None\n                    and not cell.has_style\n                    and not cell._comment\n                    ):\n                    continue\n                write_cell(xf, self.ws, cell, cell.has_style)\n",
+    "lxml_write_cell": "def lxml_write_cell(xf, worksheet, cell, styled=False):\n    value, attributes = _set_attributes(cell, styled)\n\n    if value == '' or value is None:\n        with xf.element(\"c\", attributes):\n            return\n\n    with xf.element('c', attributes):\n        if cell.data_type == 'f':\n            attrib = {}\n\n            if isinstance(value, ArrayFormula):\n                attrib = dict(value)\n                value = value.text\n\n            elif isinstance(value, DataTableFormula):\n                attrib = dict(value)\n                value = None\n\n            with xf.element('f', attrib):\n                if value is not None and not attrib.get('t') == \"dataTable\":\n                    xf.write(value[1:])\n                    value = None\n\n        if cell.data_type == 's':\n            if isinstance(value, CellRichText):\n                el = value.to_tree()\n                xf.write(el)\n            else:\n                with xf.element(\"is\"):\n                    if isinstance(value, str):\n                        attrs = {}\n                        if value != value.strip():\n                            attrs[\"{%s}space\" % XML_NS] = \"preserve\"\n                        el = Element(\"t\", attrs) # lxml can't handle xml-ns\n                        el.text = value\n                        xf.write(el)\n\n        else:\n            with xf.element(\"v\"):\n                if value is not None:\n                    xf.write(safe_string(value))\n"
+  }
+}

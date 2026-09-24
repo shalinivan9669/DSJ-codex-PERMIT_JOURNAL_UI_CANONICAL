@@ -1,0 +1,19 @@
+[
+  {
+    "id": "A27",
+    "status": "PASS",
+    "scenario": "One generated portrait uploaded/cropped/persisted and issued in PTM14/PB14/PS15; BIOT14 included with photo=false",
+    "artifact": "browser/generated-photo-four-preview-readback/PHOTO_FOUR_ACCEPTANCE_RU.md",
+    "result": "18 artifacts SHA verified,6 exact photo embeddings,3 photo forms visualPASS in Word and LibreOffice",
+    "limitation": "Four-card original test reached fixed180s timeout; same finalized request browser readbackPASS, no new issuance"
+  },
+  {
+    "id": "C06",
+    "status": "FAIL",
+    "scenario": "Actual final14 BIOT worker with existing synthetic long chairman profile",
+    "artifact": "browser/generated-photo-four-preview-readback/pdf-visual-review.json",
+    "defect": "Lower duplicate right panel clips long chairman line at right frame; upper panel wraps. Reproduced Word and LibreOffice.",
+    "fix": "Pending printing agent",
+    "retest": "Pending"
+  }
+]

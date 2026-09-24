@@ -1,0 +1,37 @@
+{
+  "reviews": [
+    {
+      "page": 1,
+      "result": "PASS",
+      "review": "Independent root visual review of full page: issuer/name/number/table/commission/signature areas visible, no clipping or overlapping text; protocol columns in correct order.",
+      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-worker-card-long.page-1.png",
+      "sha256": "258a6cc3ce750f81736ae6fcd9a670877de9a525aa092cd4eade247c6a162067",
+      "template": "biot-worker-card"
+    },
+    {
+      "page": 1,
+      "result": "PASS",
+      "review": "Independent root visual review of full page: issuer/name/number/table/commission/signature areas visible, no clipping or overlapping text; protocol columns in correct order.",
+      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-certificate-long.page-1.png",
+      "sha256": "3edfb2e5e198a575dfe557652b8472e6746c4908a6273cdf7e1a563ca991e98f",
+      "template": "biot-itr-certificate"
+    },
+    {
+      "page": 1,
+      "result": "PASS",
+      "review": "Independent root visual review of full page: issuer/name/number/table/commission/signature areas visible, no clipping or overlapping text; protocol columns in correct order.",
+      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-protocol-long.page-1.png",
+      "sha256": "f36c02ac942c385a22c95286f563c1ffa4f66b9028816105952405ef13b9eee1",
+      "template": "biot-protocol"
+    },
+    {
+      "page": 1,
+      "result": "PASS",
+      "review": "Independent root visual review of full page: issuer/name/number/table/commission/signature areas visible, no clipping or overlapping text; protocol columns in correct order.",
+      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\biot-finish\\final\\biot-itr-protocol-long.page-1.png",
+      "sha256": "1c3e294530d31c542e130f09ce1b2ae279ba335b367c343349d927ff670afa0f",
+      "template": "biot-itr-protocol"
+    }
+  ],
+  "scope": "Four long-data pages, one for each changed BIOT form. This is not all-pages root review."
+}

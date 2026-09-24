@@ -1,0 +1,2023 @@
+(node:1) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+{
+  "MIT": [
+    {
+      "name": "@borewit/text-codec",
+      "versions": [
+        "0.2.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@borewit+text-codec@0.2.2/node_modules/@borewit/text-codec"
+      ],
+      "license": "MIT",
+      "author": "Borewit",
+      "homepage": "https://github.com/Borewit/text-codec#readme",
+      "description": "Text Decoder"
+    },
+    {
+      "name": "@esbuild/linux-x64",
+      "versions": [
+        "0.28.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@esbuild+linux-x64@0.28.2/node_modules/@esbuild/linux-x64"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/evanw/esbuild#readme",
+      "description": "The Linux 64-bit binary for esbuild, a JavaScript bundler."
+    },
+    {
+      "name": "@img/colour",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@img+colour@1.1.0/node_modules/@img/colour"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/lovell/colour#readme",
+      "description": "The ESM-only 'color' package made compatible for use with CommonJS runtimes"
+    },
+    {
+      "name": "@lukeed/csprng",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@lukeed+csprng@1.1.0/node_modules/@lukeed/csprng"
+      ],
+      "license": "MIT",
+      "author": "Luke Edwards",
+      "homepage": "https://github.com/lukeed/csprng#readme",
+      "description": "An alias package for `crypto.randomBytes` in Node.js and/or browsers"
+    },
+    {
+      "name": "@nestjs/common",
+      "versions": [
+        "11.2.5"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@nestjs+common@11.2.5_reflect-metadata@0.2.2_rxjs@7.8.2/node_modules/@nestjs/common"
+      ],
+      "license": "MIT",
+      "author": "Kamil Mysliwiec",
+      "homepage": "https://nestjs.com",
+      "description": "Nest - modern, fast, powerful node.js web framework (@common)"
+    },
+    {
+      "name": "@nestjs/core",
+      "versions": [
+        "11.2.5"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@nestjs+core@11.2.5_@nestjs+common@11.2.5_reflect-metadata@0.2.2_rxjs@7.8.2__@nestjs+platform_muybbregartzxzcgmx6gxsos4y/node_modules/@nestjs/core"
+      ],
+      "license": "MIT",
+      "author": "Kamil Mysliwiec",
+      "homepage": "https://nestjs.com",
+      "description": "Nest - modern, fast, powerful node.js web framework (@core)"
+    },
+    {
+      "name": "@nestjs/platform-express",
+      "versions": [
+        "11.2.5"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@nestjs+platform-express@11.2.5_@nestjs+common@11.2.5_reflect-metadata@0.2.2_rxjs@7.8.2__@nestjs+core@11.2.5/node_modules/@nestjs/platform-express"
+      ],
+      "license": "MIT",
+      "author": "Kamil Mysliwiec",
+      "homepage": "https://nestjs.com",
+      "description": "Nest - modern, fast, powerful node.js web framework (@platform-express)"
+    },
+    {
+      "name": "@next/env",
+      "versions": [
+        "15.5.25"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@next+env@15.5.25/node_modules/@next/env"
+      ],
+      "license": "MIT",
+      "author": "Next.js Team",
+      "homepage": "https://github.com/vercel/next.js#readme",
+      "description": "Next.js dotenv file loading"
+    },
+    {
+      "name": "@next/swc-linux-x64-gnu",
+      "versions": [
+        "15.5.25"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@next+swc-linux-x64-gnu@15.5.25/node_modules/@next/swc-linux-x64-gnu"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/next.js#readme"
+    },
+    {
+      "name": "@next/swc-linux-x64-musl",
+      "versions": [
+        "15.5.25"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@next+swc-linux-x64-musl@15.5.25/node_modules/@next/swc-linux-x64-musl"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/next.js#readme"
+    },
+    {
+      "name": "@standard-schema/spec",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@standard-schema+spec@1.1.0/node_modules/@standard-schema/spec"
+      ],
+      "license": "MIT",
+      "author": "Colin McDonnell",
+      "homepage": "https://standardschema.dev",
+      "description": "A family of specs for interoperable TypeScript"
+    },
+    {
+      "name": "@tokenizer/inflate",
+      "versions": [
+        "0.4.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@tokenizer+inflate@0.4.1/node_modules/@tokenizer/inflate"
+      ],
+      "license": "MIT",
+      "author": "Borewit",
+      "homepage": "https://github.com/Borewit/tokenizer-inflate#readme",
+      "description": "Tokenized zip support"
+    },
+    {
+      "name": "@tokenizer/token",
+      "versions": [
+        "0.3.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@tokenizer+token@0.3.0/node_modules/@tokenizer/token"
+      ],
+      "license": "MIT",
+      "author": "Borewit",
+      "homepage": "https://github.com/Borewit/tokenizer-token#readme",
+      "description": "TypeScript definition for strtok3 token"
+    },
+    {
+      "name": "@types/node",
+      "versions": [
+        "22.18.6",
+        "22.19.15"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@types+node@22.18.6/node_modules/@types/node",
+        "/app/node_modules/.pnpm/@types+node@22.19.15/node_modules/@types/node"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node",
+      "description": "TypeScript definitions for node"
+    },
+    {
+      "name": "accepts",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/accepts@2.0.0/node_modules/accepts"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/accepts#readme",
+      "description": "Higher-level content negotiation"
+    },
+    {
+      "name": "append-field",
+      "versions": [
+        "1.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/append-field@1.0.0/node_modules/append-field"
+      ],
+      "license": "MIT",
+      "author": "Linus Unnebäck",
+      "homepage": "https://github.com/LinusU/node-append-field#readme"
+    },
+    {
+      "name": "body-parser",
+      "versions": [
+        "2.3.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/body-parser@2.3.0/node_modules/body-parser"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/expressjs/body-parser#readme",
+      "description": "Node.js body parsing middleware"
+    },
+    {
+      "name": "busboy",
+      "versions": [
+        "1.6.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/busboy@1.6.0/node_modules/busboy"
+      ],
+      "license": "MIT",
+      "author": "Brian White",
+      "homepage": "https://github.com/mscdex/busboy#readme",
+      "description": "A streaming parser for HTML form data for node.js"
+    },
+    {
+      "name": "bytes",
+      "versions": [
+        "3.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/bytes@3.1.2/node_modules/bytes"
+      ],
+      "license": "MIT",
+      "author": "TJ Holowaychuk",
+      "homepage": "https://github.com/visionmedia/bytes.js#readme",
+      "description": "Utility to parse a string bytes to bytes and vice-versa"
+    },
+    {
+      "name": "c12",
+      "versions": [
+        "3.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/c12@3.1.0/node_modules/c12"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/c12#readme",
+      "description": "Smart Config Loader"
+    },
+    {
+      "name": "call-bind-apply-helpers",
+      "versions": [
+        "1.0.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/call-bind-apply-helpers@1.0.2/node_modules/call-bind-apply-helpers"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/call-bind-apply-helpers#readme",
+      "description": "Helper functions around Function call/apply/bind, for use in `call-bind`"
+    },
+    {
+      "name": "call-bound",
+      "versions": [
+        "1.0.4"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/call-bound@1.0.4/node_modules/call-bound"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/call-bound#readme",
+      "description": "Robust call-bound JavaScript intrinsics, using `call-bind` and `get-intrinsic`."
+    },
+    {
+      "name": "chokidar",
+      "versions": [
+        "4.0.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/chokidar@4.0.3/node_modules/chokidar"
+      ],
+      "license": "MIT",
+      "author": "Paul Miller",
+      "homepage": "https://github.com/paulmillr/chokidar",
+      "description": "Minimal and efficient cross-platform file watching library"
+    },
+    {
+      "name": "citty",
+      "versions": [
+        "0.1.6",
+        "0.2.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/citty@0.1.6/node_modules/citty",
+        "/app/node_modules/.pnpm/citty@0.2.2/node_modules/citty"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/citty#readme",
+      "description": "Elegant CLI Builder"
+    },
+    {
+      "name": "client-only",
+      "versions": [
+        "0.0.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/client-only@0.0.1/node_modules/client-only"
+      ],
+      "license": "MIT",
+      "homepage": "https://reactjs.org/",
+      "description": "This is a marker package to indicate that a module can only be used in Client Components."
+    },
+    {
+      "name": "confbox",
+      "versions": [
+        "0.2.4",
+        "0.3.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/confbox@0.2.4/node_modules/confbox",
+        "/app/node_modules/.pnpm/confbox@0.3.1/node_modules/confbox"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/confbox#readme",
+      "description": "Compact YAML, TOML, JSONC, JSON5 and INI parser and serializer"
+    },
+    {
+      "name": "consola",
+      "versions": [
+        "3.4.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/consola@3.4.2/node_modules/consola"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/consola#readme",
+      "description": "Elegant Console Wrapper"
+    },
+    {
+      "name": "content-disposition",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/content-disposition@1.1.0/node_modules/content-disposition"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/jshttp/content-disposition#readme",
+      "description": "Create and parse Content-Disposition header"
+    },
+    {
+      "name": "content-type",
+      "versions": [
+        "1.0.5",
+        "2.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/content-type@1.0.5/node_modules/content-type",
+        "/app/node_modules/.pnpm/content-type@2.1.0/node_modules/content-type"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/jshttp/content-type#readme",
+      "description": "Create and parse HTTP Content-Type header"
+    },
+    {
+      "name": "cookie",
+      "versions": [
+        "0.7.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/cookie@0.7.2/node_modules/cookie"
+      ],
+      "license": "MIT",
+      "author": "Roman Shtylman",
+      "homepage": "https://github.com/jshttp/cookie#readme",
+      "description": "HTTP server cookie parsing and serialization"
+    },
+    {
+      "name": "cookie-signature",
+      "versions": [
+        "1.2.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/cookie-signature@1.2.2/node_modules/cookie-signature"
+      ],
+      "license": "MIT",
+      "author": "TJ Holowaychuk",
+      "homepage": "https://github.com/visionmedia/node-cookie-signature#readme",
+      "description": "Sign and unsign cookies"
+    },
+    {
+      "name": "cors",
+      "versions": [
+        "2.8.6"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/cors@2.8.6/node_modules/cors"
+      ],
+      "license": "MIT",
+      "author": "Troy Goode",
+      "homepage": "https://github.com/expressjs/cors#readme",
+      "description": "Node.js CORS middleware"
+    },
+    {
+      "name": "debug",
+      "versions": [
+        "4.4.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/debug@4.4.3/node_modules/debug"
+      ],
+      "license": "MIT",
+      "author": "Josh Junon",
+      "homepage": "https://github.com/debug-js/debug#readme",
+      "description": "Lightweight debugging utility for Node.js and the browser"
+    },
+    {
+      "name": "defu",
+      "versions": [
+        "6.1.7"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/defu@6.1.7/node_modules/defu"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/defu#readme",
+      "description": "Recursively assign default properties. Lightweight and Fast!"
+    },
+    {
+      "name": "depd",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/depd@2.0.0/node_modules/depd"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/dougwilson/nodejs-depd#readme",
+      "description": "Deprecate all the things"
+    },
+    {
+      "name": "destr",
+      "versions": [
+        "2.0.5"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/destr@2.0.5/node_modules/destr"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/destr#readme",
+      "description": "A faster, secure and convenient alternative for JSON.parse"
+    },
+    {
+      "name": "dunder-proto",
+      "versions": [
+        "1.0.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/dunder-proto@1.0.1/node_modules/dunder-proto"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/es-shims/dunder-proto#readme",
+      "description": "If available, the `Object.prototype.__proto__` accessor and mutator, call-bound"
+    },
+    {
+      "name": "ee-first",
+      "versions": [
+        "1.1.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/ee-first@1.1.1/node_modules/ee-first"
+      ],
+      "license": "MIT",
+      "author": "Jonathan Ong",
+      "homepage": "https://github.com/jonathanong/ee-first#readme",
+      "description": "return the first event in a set of ee/event pairs"
+    },
+    {
+      "name": "effect",
+      "versions": [
+        "3.21.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/effect@3.21.0/node_modules/effect"
+      ],
+      "license": "MIT",
+      "homepage": "https://effect.website",
+      "description": "The missing standard library for TypeScript, for writing production-grade software."
+    },
+    {
+      "name": "empathic",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/empathic@2.0.0/node_modules/empathic"
+      ],
+      "license": "MIT",
+      "author": "Luke Edwards",
+      "homepage": "https://github.com/lukeed/empathic#readme",
+      "description": "A set of small and fast Node.js utilities to understand your pathing needs."
+    },
+    {
+      "name": "encodeurl",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/encodeurl@2.0.0/node_modules/encodeurl"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/pillarjs/encodeurl#readme",
+      "description": "Encode a URL to a percent-encoded form, excluding already-encoded sequences"
+    },
+    {
+      "name": "es-define-property",
+      "versions": [
+        "1.0.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/es-define-property@1.0.1/node_modules/es-define-property"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/es-define-property#readme",
+      "description": "`Object.defineProperty`, but not IE 8's broken one."
+    },
+    {
+      "name": "es-errors",
+      "versions": [
+        "1.3.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/es-errors@1.3.0/node_modules/es-errors"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/es-errors#readme",
+      "description": "A simple cache for a few of the JS Error constructors."
+    },
+    {
+      "name": "es-object-atoms",
+      "versions": [
+        "1.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/es-object-atoms@1.1.2/node_modules/es-object-atoms"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/es-object-atoms#readme",
+      "description": "ES Object-related atoms: Object, ToObject, RequireObjectCoercible"
+    },
+    {
+      "name": "esbuild",
+      "versions": [
+        "0.28.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/esbuild@0.28.2/node_modules/esbuild"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/evanw/esbuild#readme",
+      "description": "An extremely fast JavaScript and CSS bundler and minifier."
+    },
+    {
+      "name": "escape-html",
+      "versions": [
+        "1.0.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/escape-html@1.0.3/node_modules/escape-html"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/component/escape-html#readme",
+      "description": "Escape string for use in HTML"
+    },
+    {
+      "name": "etag",
+      "versions": [
+        "1.8.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/etag@1.8.1/node_modules/etag"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/etag#readme",
+      "description": "Create simple HTTP ETags"
+    },
+    {
+      "name": "express",
+      "versions": [
+        "5.2.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/express@5.2.1/node_modules/express"
+      ],
+      "license": "MIT",
+      "author": "TJ Holowaychuk",
+      "homepage": "https://expressjs.com/",
+      "description": "Fast, unopinionated, minimalist web framework"
+    },
+    {
+      "name": "exsolve",
+      "versions": [
+        "1.1.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/exsolve@1.1.1/node_modules/exsolve"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/exsolve#readme",
+      "description": "Module resolution utilities based on Node.js upstream implementation."
+    },
+    {
+      "name": "fast-check",
+      "versions": [
+        "3.23.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/fast-check@3.23.2/node_modules/fast-check"
+      ],
+      "license": "MIT",
+      "author": "Nicolas DUBIEN",
+      "homepage": "https://fast-check.dev/",
+      "description": "Property based testing framework for JavaScript (like QuickCheck)"
+    },
+    {
+      "name": "fast-safe-stringify",
+      "versions": [
+        "2.1.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/fast-safe-stringify@2.1.1/node_modules/fast-safe-stringify"
+      ],
+      "license": "MIT",
+      "author": "David Mark Clements",
+      "homepage": "https://github.com/davidmarkclements/fast-safe-stringify#readme",
+      "description": "Safely and quickly serialize JavaScript objects"
+    },
+    {
+      "name": "file-type",
+      "versions": [
+        "21.3.4"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/file-type@21.3.4/node_modules/file-type"
+      ],
+      "license": "MIT",
+      "author": "Sindre Sorhus",
+      "homepage": "https://github.com/sindresorhus/file-type#readme",
+      "description": "Detect the file type of a file, stream, or data"
+    },
+    {
+      "name": "finalhandler",
+      "versions": [
+        "2.1.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/finalhandler@2.1.1/node_modules/finalhandler"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/pillarjs/finalhandler#readme",
+      "description": "Node.js final http responder"
+    },
+    {
+      "name": "forwarded",
+      "versions": [
+        "0.2.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/forwarded@0.2.0/node_modules/forwarded"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/forwarded#readme",
+      "description": "Parse HTTP X-Forwarded-For header"
+    },
+    {
+      "name": "fresh",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/fresh@2.0.0/node_modules/fresh"
+      ],
+      "license": "MIT",
+      "author": "TJ Holowaychuk",
+      "homepage": "https://github.com/jshttp/fresh#readme",
+      "description": "HTTP response freshness testing"
+    },
+    {
+      "name": "function-bind",
+      "versions": [
+        "1.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/function-bind@1.1.2/node_modules/function-bind"
+      ],
+      "license": "MIT",
+      "author": "Raynos",
+      "homepage": "https://github.com/Raynos/function-bind",
+      "description": "Implementation of Function.prototype.bind"
+    },
+    {
+      "name": "get-intrinsic",
+      "versions": [
+        "1.3.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/get-intrinsic@1.3.0/node_modules/get-intrinsic"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/get-intrinsic#readme",
+      "description": "Get and robustly cache all JS language-level intrinsics at first require time"
+    },
+    {
+      "name": "get-proto",
+      "versions": [
+        "1.0.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/get-proto@1.0.1/node_modules/get-proto"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/get-proto#readme",
+      "description": "Robustly get the [[Prototype]] of an object"
+    },
+    {
+      "name": "giget",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/giget@2.0.0/node_modules/giget"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/giget#readme",
+      "description": "Download templates and git repositories with pleasure!"
+    },
+    {
+      "name": "gopd",
+      "versions": [
+        "1.2.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/gopd@1.2.0/node_modules/gopd"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/gopd#readme",
+      "description": "`Object.getOwnPropertyDescriptor`, but accounts for IE's broken implementation."
+    },
+    {
+      "name": "has-symbols",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/has-symbols@1.1.0/node_modules/has-symbols"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/has-symbols#readme",
+      "description": "Determine if the JS environment has Symbol support. Supports spec, or shams."
+    },
+    {
+      "name": "hasown",
+      "versions": [
+        "2.0.4"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/hasown@2.0.4/node_modules/hasown"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/inspect-js/hasOwn#readme",
+      "description": "A robust, ES3 compatible, \"has own property\" predicate."
+    },
+    {
+      "name": "http-errors",
+      "versions": [
+        "2.0.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/http-errors@2.0.1/node_modules/http-errors"
+      ],
+      "license": "MIT",
+      "author": "Jonathan Ong",
+      "homepage": "https://github.com/jshttp/http-errors#readme",
+      "description": "Create HTTP error objects"
+    },
+    {
+      "name": "iconv-lite",
+      "versions": [
+        "0.7.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/iconv-lite@0.7.3/node_modules/iconv-lite"
+      ],
+      "license": "MIT",
+      "author": "Alexander Shtuchkin",
+      "homepage": "https://github.com/pillarjs/iconv-lite",
+      "description": "Convert character encodings in pure javascript."
+    },
+    {
+      "name": "ipaddr.js",
+      "versions": [
+        "1.9.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/ipaddr.js@1.9.1/node_modules/ipaddr.js"
+      ],
+      "license": "MIT",
+      "author": "whitequark",
+      "homepage": "https://github.com/whitequark/ipaddr.js#readme",
+      "description": "A library for manipulating IPv4 and IPv6 addresses in JavaScript."
+    },
+    {
+      "name": "is-promise",
+      "versions": [
+        "4.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/is-promise@4.0.0/node_modules/is-promise"
+      ],
+      "license": "MIT",
+      "author": "ForbesLindesay",
+      "homepage": "https://github.com/then/is-promise#readme",
+      "description": "Test whether an object looks like a promises-a+ promise"
+    },
+    {
+      "name": "jiti",
+      "versions": [
+        "2.7.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/jiti@2.7.0/node_modules/jiti"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/jiti#readme",
+      "description": "Runtime typescript and ESM support for Node.js"
+    },
+    {
+      "name": "load-esm",
+      "versions": [
+        "1.0.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/load-esm@1.0.3/node_modules/load-esm"
+      ],
+      "license": "MIT",
+      "author": "Borewit",
+      "homepage": "https://github.com/Borewit/load-esm#readme",
+      "description": "Utility to dynamically load ESM modules in TypeScript CommonJS projects"
+    },
+    {
+      "name": "math-intrinsics",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/math-intrinsics@1.1.0/node_modules/math-intrinsics"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/es-shims/math-intrinsics#readme",
+      "description": "ES Math-related intrinsics and helpers, robustly cached."
+    },
+    {
+      "name": "media-typer",
+      "versions": [
+        "0.3.0",
+        "1.1.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/media-typer@0.3.0/node_modules/media-typer",
+        "/app/node_modules/.pnpm/media-typer@1.1.1/node_modules/media-typer"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/jshttp/media-typer#readme",
+      "description": "Simple RFC 6838 media type parser and formatter"
+    },
+    {
+      "name": "merge-descriptors",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/merge-descriptors@2.0.0/node_modules/merge-descriptors"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/sindresorhus/merge-descriptors#readme",
+      "description": "Merge objects using their property descriptors"
+    },
+    {
+      "name": "mime-db",
+      "versions": [
+        "1.52.0",
+        "1.54.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/mime-db@1.52.0/node_modules/mime-db",
+        "/app/node_modules/.pnpm/mime-db@1.54.0/node_modules/mime-db"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/mime-db#readme",
+      "description": "Media Type Database"
+    },
+    {
+      "name": "mime-types",
+      "versions": [
+        "2.1.35",
+        "3.0.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/mime-types@2.1.35/node_modules/mime-types",
+        "/app/node_modules/.pnpm/mime-types@3.0.2/node_modules/mime-types"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/mime-types#readme",
+      "description": "The ultimate javascript content-type utility."
+    },
+    {
+      "name": "ms",
+      "versions": [
+        "2.1.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/ms@2.1.3/node_modules/ms"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/ms#readme",
+      "description": "Tiny millisecond conversion utility"
+    },
+    {
+      "name": "multer",
+      "versions": [
+        "2.4.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/multer@2.4.0/node_modules/multer"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/expressjs/multer#readme",
+      "description": "Middleware for handling `multipart/form-data`."
+    },
+    {
+      "name": "nanoid",
+      "versions": [
+        "3.3.19"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/nanoid@3.3.19/node_modules/nanoid"
+      ],
+      "license": "MIT",
+      "author": "Andrey Sitnik",
+      "homepage": "https://github.com/ai/nanoid#readme",
+      "description": "A tiny (116 bytes), secure URL-friendly unique string ID generator"
+    },
+    {
+      "name": "negotiator",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/negotiator@1.1.0/node_modules/negotiator"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/negotiator#readme",
+      "description": "HTTP content negotiation"
+    },
+    {
+      "name": "next",
+      "versions": [
+        "15.5.25"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/next@15.5.25_@playwright+test@1.58.2_@types+node@22.18.6_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/next"
+      ],
+      "license": "MIT",
+      "homepage": "https://nextjs.org",
+      "description": "The React Framework"
+    },
+    {
+      "name": "node-fetch-native",
+      "versions": [
+        "1.6.7"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/node-fetch-native@1.6.7/node_modules/node-fetch-native"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/node-fetch-native#readme",
+      "description": "better fetch for Node.js. Works on any JavaScript runtime!"
+    },
+    {
+      "name": "nypm",
+      "versions": [
+        "0.6.10"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/nypm@0.6.10/node_modules/nypm"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/nypm#readme",
+      "description": "Unified Package Manager for Node.js"
+    },
+    {
+      "name": "object-assign",
+      "versions": [
+        "4.1.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/object-assign@4.1.1/node_modules/object-assign"
+      ],
+      "license": "MIT",
+      "author": "Sindre Sorhus",
+      "homepage": "https://github.com/sindresorhus/object-assign#readme",
+      "description": "ES2015 `Object.assign()` ponyfill"
+    },
+    {
+      "name": "object-inspect",
+      "versions": [
+        "1.13.4"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/object-inspect@1.13.4/node_modules/object-inspect"
+      ],
+      "license": "MIT",
+      "author": "James Halliday",
+      "homepage": "https://github.com/inspect-js/object-inspect",
+      "description": "string representations of objects in node and the browser"
+    },
+    {
+      "name": "ohash",
+      "versions": [
+        "2.0.12"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/ohash@2.0.12/node_modules/ohash"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/ohash#readme",
+      "description": "Simple object hashing, serialization and comparison utils."
+    },
+    {
+      "name": "on-finished",
+      "versions": [
+        "2.4.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/on-finished@2.4.1/node_modules/on-finished"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/on-finished#readme",
+      "description": "Execute a callback when a request closes, finishes, or errors"
+    },
+    {
+      "name": "parseurl",
+      "versions": [
+        "1.3.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/parseurl@1.3.3/node_modules/parseurl"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/pillarjs/parseurl#readme",
+      "description": "parse a url with memoization"
+    },
+    {
+      "name": "path-to-regexp",
+      "versions": [
+        "8.4.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/path-to-regexp@8.4.2/node_modules/path-to-regexp"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/pillarjs/path-to-regexp#readme",
+      "description": "Express style path to RegExp utility"
+    },
+    {
+      "name": "pathe",
+      "versions": [
+        "2.0.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/pathe@2.0.3/node_modules/pathe"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/pathe#readme",
+      "description": "Universal filesystem path utils"
+    },
+    {
+      "name": "perfect-debounce",
+      "versions": [
+        "1.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/perfect-debounce@1.0.0/node_modules/perfect-debounce"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/perfect-debounce#readme",
+      "description": ""
+    },
+    {
+      "name": "pkg-types",
+      "versions": [
+        "2.3.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/pkg-types@2.3.3/node_modules/pkg-types"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/pkg-types#readme",
+      "description": "Node.js utilities and TypeScript definitions for `package.json` and `tsconfig.json`"
+    },
+    {
+      "name": "postcss",
+      "versions": [
+        "8.5.28"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/postcss@8.5.28/node_modules/postcss"
+      ],
+      "license": "MIT",
+      "author": "Andrey Sitnik",
+      "homepage": "https://postcss.org/",
+      "description": "Tool for transforming styles with JS plugins"
+    },
+    {
+      "name": "proxy-addr",
+      "versions": [
+        "2.0.8"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/proxy-addr@2.0.8/node_modules/proxy-addr"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/jshttp/proxy-addr#readme",
+      "description": "Determine address of proxied request"
+    },
+    {
+      "name": "pure-rand",
+      "versions": [
+        "6.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/pure-rand@6.1.0/node_modules/pure-rand"
+      ],
+      "license": "MIT",
+      "author": "Nicolas DUBIEN",
+      "homepage": "https://github.com/dubzzz/pure-rand#readme",
+      "description": " Pure random number generator written in TypeScript"
+    },
+    {
+      "name": "range-parser",
+      "versions": [
+        "1.3.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/range-parser@1.3.0/node_modules/range-parser"
+      ],
+      "license": "MIT",
+      "author": "TJ Holowaychuk",
+      "homepage": "https://github.com/jshttp/range-parser#readme",
+      "description": "Range header field string parser"
+    },
+    {
+      "name": "raw-body",
+      "versions": [
+        "3.0.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/raw-body@3.0.2/node_modules/raw-body"
+      ],
+      "license": "MIT",
+      "author": "Jonathan Ong",
+      "homepage": "https://github.com/stream-utils/raw-body#readme",
+      "description": "Get and validate the raw body of a readable stream."
+    },
+    {
+      "name": "rc9",
+      "versions": [
+        "2.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/rc9@2.1.2/node_modules/rc9"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/rc9#readme",
+      "description": "Read/Write config couldn't be easier!"
+    },
+    {
+      "name": "react",
+      "versions": [
+        "19.3.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/react@19.3.0/node_modules/react"
+      ],
+      "license": "MIT",
+      "homepage": "https://react.dev/",
+      "description": "React is a JavaScript library for building user interfaces."
+    },
+    {
+      "name": "react-dom",
+      "versions": [
+        "19.3.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/react-dom@19.3.0_react@19.3.0/node_modules/react-dom"
+      ],
+      "license": "MIT",
+      "homepage": "https://react.dev/",
+      "description": "React package for working with the DOM."
+    },
+    {
+      "name": "readdirp",
+      "versions": [
+        "4.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/readdirp@4.1.2/node_modules/readdirp"
+      ],
+      "license": "MIT",
+      "author": "Thorsten Lorenz",
+      "homepage": "https://github.com/paulmillr/readdirp",
+      "description": "Recursive version of fs.readdir with small RAM & CPU footprint."
+    },
+    {
+      "name": "router",
+      "versions": [
+        "2.2.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/router@2.2.0/node_modules/router"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/pillarjs/router#readme",
+      "description": "Simple middleware-style router"
+    },
+    {
+      "name": "safer-buffer",
+      "versions": [
+        "2.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/safer-buffer@2.1.2/node_modules/safer-buffer"
+      ],
+      "license": "MIT",
+      "author": "Nikita Skovoroda",
+      "homepage": "https://github.com/ChALkeR/safer-buffer#readme",
+      "description": "Modern Buffer API polyfill without footguns"
+    },
+    {
+      "name": "scheduler",
+      "versions": [
+        "0.28.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/scheduler@0.28.0/node_modules/scheduler"
+      ],
+      "license": "MIT",
+      "homepage": "https://react.dev/",
+      "description": "Cooperative scheduler for the browser environment."
+    },
+    {
+      "name": "send",
+      "versions": [
+        "1.2.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/send@1.2.1/node_modules/send"
+      ],
+      "license": "MIT",
+      "author": "TJ Holowaychuk",
+      "homepage": "https://github.com/pillarjs/send#readme",
+      "description": "Better streaming static file server with Range and conditional-GET support"
+    },
+    {
+      "name": "serve-static",
+      "versions": [
+        "2.2.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/serve-static@2.2.1/node_modules/serve-static"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/expressjs/serve-static#readme",
+      "description": "Serve static files"
+    },
+    {
+      "name": "side-channel",
+      "versions": [
+        "1.1.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/side-channel@1.1.1/node_modules/side-channel"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/side-channel#readme",
+      "description": "Store information about any JS value in a side channel. Uses WeakMap if available."
+    },
+    {
+      "name": "side-channel-list",
+      "versions": [
+        "1.0.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/side-channel-list@1.0.1/node_modules/side-channel-list"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/side-channel-list#readme",
+      "description": "Store information about any JS value in a side channel, using a linked list"
+    },
+    {
+      "name": "side-channel-map",
+      "versions": [
+        "1.0.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/side-channel-map@1.0.1/node_modules/side-channel-map"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/side-channel-map#readme",
+      "description": "Store information about any JS value in a side channel, using a Map"
+    },
+    {
+      "name": "side-channel-weakmap",
+      "versions": [
+        "1.0.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/side-channel-weakmap@1.0.2/node_modules/side-channel-weakmap"
+      ],
+      "license": "MIT",
+      "author": "Jordan Harband",
+      "homepage": "https://github.com/ljharb/side-channel-weakmap#readme",
+      "description": "Store information about any JS value in a side channel. Uses WeakMap if available."
+    },
+    {
+      "name": "statuses",
+      "versions": [
+        "2.0.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/statuses@2.0.2/node_modules/statuses"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/statuses#readme",
+      "description": "HTTP status utility"
+    },
+    {
+      "name": "streamsearch",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/streamsearch@1.1.0/node_modules/streamsearch"
+      ],
+      "license": "MIT",
+      "author": "Brian White",
+      "homepage": "https://github.com/mscdex/streamsearch#readme",
+      "description": "Streaming Boyer-Moore-Horspool searching for node.js"
+    },
+    {
+      "name": "strtok3",
+      "versions": [
+        "10.3.5"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/strtok3@10.3.5/node_modules/strtok3"
+      ],
+      "license": "MIT",
+      "author": "Borewit",
+      "homepage": "https://github.com/Borewit/strtok3#readme",
+      "description": "A promise based streaming tokenizer"
+    },
+    {
+      "name": "styled-jsx",
+      "versions": [
+        "5.1.6"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/styled-jsx@5.1.6_react@19.3.0/node_modules/styled-jsx"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/styled-jsx#readme",
+      "description": "Full CSS support for JSX without compromises"
+    },
+    {
+      "name": "tinyexec",
+      "versions": [
+        "1.3.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/tinyexec@1.3.1/node_modules/tinyexec"
+      ],
+      "license": "MIT",
+      "author": "James Garbutt",
+      "homepage": "https://github.com/tinylibs/tinyexec#readme",
+      "description": "A minimal library for executing processes in Node"
+    },
+    {
+      "name": "toidentifier",
+      "versions": [
+        "1.0.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/toidentifier@1.0.1/node_modules/toidentifier"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/component/toidentifier#readme",
+      "description": "Convert a string of words to a JavaScript identifier"
+    },
+    {
+      "name": "token-types",
+      "versions": [
+        "6.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/token-types@6.1.2/node_modules/token-types"
+      ],
+      "license": "MIT",
+      "author": "Borewit",
+      "homepage": "https://github.com/Borewit/token-types#readme",
+      "description": "Common token types for decoding and encoding numeric and string values"
+    },
+    {
+      "name": "tsx",
+      "versions": [
+        "4.23.15"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/tsx@4.23.15/node_modules/tsx"
+      ],
+      "license": "MIT",
+      "author": "Hiroki Osame",
+      "homepage": "https://tsx.hirok.io",
+      "description": "TypeScript Execute (tsx): Node.js enhanced with esbuild to run TypeScript & ESM files"
+    },
+    {
+      "name": "type-is",
+      "versions": [
+        "1.6.18",
+        "2.1.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/type-is@1.6.18/node_modules/type-is",
+        "/app/node_modules/.pnpm/type-is@2.1.0/node_modules/type-is"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jshttp/type-is#readme",
+      "description": "Infer the content-type of a request."
+    },
+    {
+      "name": "uid",
+      "versions": [
+        "2.0.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/uid@2.0.2/node_modules/uid"
+      ],
+      "license": "MIT",
+      "author": "Luke Edwards",
+      "homepage": "https://github.com/lukeed/uid#readme",
+      "description": "A tiny (130B to 205B) and fast utility to randomize unique IDs of fixed length"
+    },
+    {
+      "name": "uint8array-extras",
+      "versions": [
+        "1.5.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/uint8array-extras@1.5.0/node_modules/uint8array-extras"
+      ],
+      "license": "MIT",
+      "author": "Sindre Sorhus",
+      "homepage": "https://github.com/sindresorhus/uint8array-extras#readme",
+      "description": "Useful utilities for working with Uint8Array (and Buffer)"
+    },
+    {
+      "name": "undici-types",
+      "versions": [
+        "6.21.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/undici-types@6.21.0/node_modules/undici-types"
+      ],
+      "license": "MIT",
+      "homepage": "https://undici.nodejs.org",
+      "description": "A stand-alone types package for Undici"
+    },
+    {
+      "name": "unpipe",
+      "versions": [
+        "1.0.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/unpipe@1.0.0/node_modules/unpipe"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/stream-utils/unpipe#readme",
+      "description": "Unpipe a stream from all destinations"
+    },
+    {
+      "name": "vary",
+      "versions": [
+        "1.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/vary@1.1.2/node_modules/vary"
+      ],
+      "license": "MIT",
+      "author": "Douglas Christopher Wilson",
+      "homepage": "https://github.com/jshttp/vary#readme",
+      "description": "Manipulate the HTTP Vary header"
+    },
+    {
+      "name": "zod",
+      "versions": [
+        "4.6.5"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/zod@4.6.5/node_modules/zod"
+      ],
+      "license": "MIT",
+      "author": "Colin McDonnell",
+      "homepage": "https://zod.dev",
+      "description": "TypeScript-first schema declaration and validation library with static type inference"
+    }
+  ],
+  "LGPL-3.0-or-later": [
+    {
+      "name": "@img/sharp-libvips-linux-x64",
+      "versions": [
+        "1.3.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@img+sharp-libvips-linux-x64@1.3.3/node_modules/@img/sharp-libvips-linux-x64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "author": "Lovell Fuller",
+      "homepage": "https://sharp.pixelplumbing.com",
+      "description": "Prebuilt libvips and dependencies for use with sharp on Linux (glibc) x64"
+    },
+    {
+      "name": "@img/sharp-libvips-linuxmusl-x64",
+      "versions": [
+        "1.3.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@img+sharp-libvips-linuxmusl-x64@1.3.3/node_modules/@img/sharp-libvips-linuxmusl-x64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "author": "Lovell Fuller",
+      "homepage": "https://sharp.pixelplumbing.com",
+      "description": "Prebuilt libvips and dependencies for use with sharp on Linux (musl) x64"
+    }
+  ],
+  "Apache-2.0": [
+    {
+      "name": "@img/sharp-linux-x64",
+      "versions": [
+        "0.35.4"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@img+sharp-linux-x64@0.35.4/node_modules/@img/sharp-linux-x64"
+      ],
+      "license": "Apache-2.0",
+      "author": "Lovell Fuller",
+      "homepage": "https://sharp.pixelplumbing.com",
+      "description": "Prebuilt sharp for use with Linux (glibc) x64"
+    },
+    {
+      "name": "@img/sharp-linuxmusl-x64",
+      "versions": [
+        "0.35.4"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@img+sharp-linuxmusl-x64@0.35.4/node_modules/@img/sharp-linuxmusl-x64"
+      ],
+      "license": "Apache-2.0",
+      "author": "Lovell Fuller",
+      "homepage": "https://sharp.pixelplumbing.com",
+      "description": "Prebuilt sharp for use with Linux (musl) x64"
+    },
+    {
+      "name": "@playwright/test",
+      "versions": [
+        "1.58.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@playwright+test@1.58.2/node_modules/@playwright/test"
+      ],
+      "license": "Apache-2.0",
+      "author": "Microsoft Corporation",
+      "homepage": "https://playwright.dev",
+      "description": "A high-level API to automate web browsers"
+    },
+    {
+      "name": "@prisma/client",
+      "versions": [
+        "6.19.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@prisma+client@6.19.3_prisma@6.19.3_typescript@5.9.3__typescript@5.9.3/node_modules/@prisma/client"
+      ],
+      "license": "Apache-2.0",
+      "author": "Tim Suchanek",
+      "homepage": "https://www.prisma.io",
+      "description": "Prisma Client is an auto-generated, type-safe and modern JavaScript/TypeScript ORM for Node.js that's tailored to your data. Supports PostgreSQL, CockroachDB, MySQL, MariaDB, SQL Server, SQLite & MongoDB databases."
+    },
+    {
+      "name": "@prisma/config",
+      "versions": [
+        "6.19.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@prisma+config@6.19.3/node_modules/@prisma/config"
+      ],
+      "license": "Apache-2.0",
+      "author": "Alberto Schiabel",
+      "homepage": "https://github.com/prisma/prisma#readme",
+      "description": "Internal package used to define and read Prisma configuration files"
+    },
+    {
+      "name": "@prisma/debug",
+      "versions": [
+        "6.19.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@prisma+debug@6.19.3/node_modules/@prisma/debug"
+      ],
+      "license": "Apache-2.0",
+      "author": "Tim Suchanek",
+      "homepage": "https://www.prisma.io",
+      "description": "This package is intended for Prisma's internal use"
+    },
+    {
+      "name": "@prisma/engines",
+      "versions": [
+        "6.19.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@prisma+engines@6.19.3/node_modules/@prisma/engines"
+      ],
+      "license": "Apache-2.0",
+      "author": "Tim Suchanek",
+      "homepage": "https://github.com/prisma/prisma#readme",
+      "description": "This package is intended for Prisma's internal use"
+    },
+    {
+      "name": "@prisma/engines-version",
+      "versions": [
+        "7.1.1-3.c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@prisma+engines-version@7.1.1-3.c2990dca591cba766e3b7ef5d9e8a84796e47ab7/node_modules/@prisma/engines-version"
+      ],
+      "license": "Apache-2.0",
+      "author": "Tim Suchanek",
+      "homepage": "https://github.com/prisma/engines-wrapper#readme"
+    },
+    {
+      "name": "@prisma/fetch-engine",
+      "versions": [
+        "6.19.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@prisma+fetch-engine@6.19.3/node_modules/@prisma/fetch-engine"
+      ],
+      "license": "Apache-2.0",
+      "author": "Tim Suchanek",
+      "homepage": "https://www.prisma.io",
+      "description": "This package is intended for Prisma's internal use"
+    },
+    {
+      "name": "@prisma/get-platform",
+      "versions": [
+        "6.19.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@prisma+get-platform@6.19.3/node_modules/@prisma/get-platform"
+      ],
+      "license": "Apache-2.0",
+      "author": "Tim Suchanek",
+      "homepage": "https://www.prisma.io",
+      "description": "This package is intended for Prisma's internal use"
+    },
+    {
+      "name": "@swc/helpers",
+      "versions": [
+        "0.5.15"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/@swc+helpers@0.5.15/node_modules/@swc/helpers"
+      ],
+      "license": "Apache-2.0",
+      "author": "강동윤",
+      "homepage": "https://swc.rs",
+      "description": "External helpers for the swc project."
+    },
+    {
+      "name": "detect-libc",
+      "versions": [
+        "2.1.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/detect-libc@2.1.2/node_modules/detect-libc"
+      ],
+      "license": "Apache-2.0",
+      "author": "Lovell Fuller",
+      "homepage": "https://github.com/lovell/detect-libc#readme",
+      "description": "Node.js module to detect the C standard library (libc) implementation family and version"
+    },
+    {
+      "name": "playwright",
+      "versions": [
+        "1.58.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/playwright@1.58.2/node_modules/playwright"
+      ],
+      "license": "Apache-2.0",
+      "author": "Microsoft Corporation",
+      "homepage": "https://playwright.dev",
+      "description": "A high-level API to automate web browsers"
+    },
+    {
+      "name": "playwright-core",
+      "versions": [
+        "1.58.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/playwright-core@1.58.2/node_modules/playwright-core"
+      ],
+      "license": "Apache-2.0",
+      "author": "Microsoft Corporation",
+      "homepage": "https://playwright.dev",
+      "description": "A high-level API to automate web browsers"
+    },
+    {
+      "name": "prisma",
+      "versions": [
+        "6.19.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/prisma@6.19.3_typescript@5.9.3/node_modules/prisma"
+      ],
+      "license": "Apache-2.0",
+      "author": "Tim Suchanek",
+      "homepage": "https://www.prisma.io",
+      "description": "Prisma is an open-source database toolkit. It includes a JavaScript/TypeScript ORM for Node.js, migrations and a modern GUI to view and edit the data in your database. You can use Prisma in new projects or add it to an existing one."
+    },
+    {
+      "name": "reflect-metadata",
+      "versions": [
+        "0.2.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/reflect-metadata@0.2.2/node_modules/reflect-metadata"
+      ],
+      "license": "Apache-2.0",
+      "author": "Ron Buckton",
+      "homepage": "http://rbuckton.github.io/reflect-metadata",
+      "description": "Polyfill for Metadata Reflection API"
+    },
+    {
+      "name": "rxjs",
+      "versions": [
+        "7.8.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/rxjs@7.8.2/node_modules/rxjs"
+      ],
+      "license": "Apache-2.0",
+      "author": "Ben Lesh",
+      "homepage": "https://rxjs.dev",
+      "description": "Reactive Extensions for modern JavaScript"
+    },
+    {
+      "name": "sharp",
+      "versions": [
+        "0.35.4"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/sharp@0.35.4_@types+node@22.19.15/node_modules/sharp"
+      ],
+      "license": "Apache-2.0",
+      "author": "Lovell Fuller",
+      "homepage": "https://sharp.pixelplumbing.com",
+      "description": "High performance Node.js image processing, the fastest module to resize JPEG, PNG, WebP, GIF, AVIF and TIFF images"
+    },
+    {
+      "name": "typescript",
+      "versions": [
+        "5.9.3"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript"
+      ],
+      "license": "Apache-2.0",
+      "author": "Microsoft Corp.",
+      "homepage": "https://www.typescriptlang.org/",
+      "description": "TypeScript is a language for application scale JavaScript development"
+    }
+  ],
+  "CC-BY-4.0": [
+    {
+      "name": "caniuse-lite",
+      "versions": [
+        "1.0.30001810"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/caniuse-lite@1.0.30001810/node_modules/caniuse-lite"
+      ],
+      "license": "CC-BY-4.0",
+      "author": "Ben Briggs",
+      "homepage": "https://github.com/browserslist/caniuse-lite#readme",
+      "description": "A smaller version of caniuse-db, with only the essentials!"
+    }
+  ],
+  "BSD-3-Clause": [
+    {
+      "name": "deepmerge-ts",
+      "versions": [
+        "8.0.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/deepmerge-ts@8.0.2/node_modules/deepmerge-ts"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Rebecca Stevens",
+      "homepage": "https://github.com/RebeccaStevens/deepmerge-ts#readme",
+      "description": "Deeply merge 2 or more objects respecting type information."
+    },
+    {
+      "name": "ieee754",
+      "versions": [
+        "1.2.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/ieee754@1.2.1/node_modules/ieee754"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Feross Aboukhadijeh",
+      "homepage": "https://github.com/feross/ieee754#readme",
+      "description": "Read/write IEEE754 floating point numbers from/to a Buffer or array-like object"
+    },
+    {
+      "name": "qs",
+      "versions": [
+        "6.16.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/qs@6.16.0/node_modules/qs"
+      ],
+      "license": "BSD-3-Clause",
+      "homepage": "https://github.com/ljharb/qs",
+      "description": "A querystring parser that supports nesting and arrays, with a depth limit"
+    },
+    {
+      "name": "source-map-js",
+      "versions": [
+        "1.2.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/source-map-js@1.2.1/node_modules/source-map-js"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Valentin 7rulnik Semirulnik",
+      "homepage": "https://github.com/7rulnik/source-map-js",
+      "description": "Generates and consumes source maps"
+    }
+  ],
+  "BSD-2-Clause": [
+    {
+      "name": "dotenv",
+      "versions": [
+        "16.6.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/dotenv@16.6.1/node_modules/dotenv"
+      ],
+      "license": "BSD-2-Clause",
+      "homepage": "https://github.com/motdotla/dotenv#readme",
+      "description": "Loads environment variables from .env file"
+    }
+  ],
+  "ISC": [
+    {
+      "name": "inherits",
+      "versions": [
+        "2.0.4"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/inherits@2.0.4/node_modules/inherits"
+      ],
+      "license": "ISC",
+      "homepage": "https://github.com/isaacs/inherits#readme",
+      "description": "Browser-friendly inheritance fully compatible with standard node.js inherits()"
+    },
+    {
+      "name": "iterare",
+      "versions": [
+        "1.2.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/iterare@1.2.1/node_modules/iterare"
+      ],
+      "license": "ISC",
+      "author": "Felix Becker",
+      "homepage": "https://github.com/felixfbecker/iterare#readme",
+      "description": "Array methods for ES6 Iterators"
+    },
+    {
+      "name": "once",
+      "versions": [
+        "1.4.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/once@1.4.0/node_modules/once"
+      ],
+      "license": "ISC",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/isaacs/once#readme",
+      "description": "Run a function exactly one time"
+    },
+    {
+      "name": "picocolors",
+      "versions": [
+        "1.1.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/picocolors@1.1.1/node_modules/picocolors"
+      ],
+      "license": "ISC",
+      "author": "Alexey Raspopov",
+      "homepage": "https://github.com/alexeyraspopov/picocolors#readme",
+      "description": "The tiniest and the fastest library for terminal output formatting with ANSI colors"
+    },
+    {
+      "name": "semver",
+      "versions": [
+        "7.8.5"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/semver@7.8.5/node_modules/semver"
+      ],
+      "license": "ISC",
+      "author": "GitHub Inc.",
+      "homepage": "https://github.com/npm/node-semver#readme",
+      "description": "The semantic version parser used by npm."
+    },
+    {
+      "name": "setprototypeof",
+      "versions": [
+        "1.2.0"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/setprototypeof@1.2.0/node_modules/setprototypeof"
+      ],
+      "license": "ISC",
+      "author": "Wes Todd",
+      "homepage": "https://github.com/wesleytodd/setprototypeof",
+      "description": "A small polyfill for Object.setprototypeof"
+    },
+    {
+      "name": "wrappy",
+      "versions": [
+        "1.0.2"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/wrappy@1.0.2/node_modules/wrappy"
+      ],
+      "license": "ISC",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/npm/wrappy",
+      "description": "Callback wrapping utility"
+    }
+  ],
+  "0BSD": [
+    {
+      "name": "tslib",
+      "versions": [
+        "2.8.1"
+      ],
+      "paths": [
+        "/app/node_modules/.pnpm/tslib@2.8.1/node_modules/tslib"
+      ],
+      "license": "0BSD",
+      "author": "Microsoft Corp.",
+      "homepage": "https://www.typescriptlang.org/",
+      "description": "Runtime library for TypeScript helper functions"
+    }
+  ]
+}

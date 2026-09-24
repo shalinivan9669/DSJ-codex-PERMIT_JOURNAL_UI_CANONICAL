@@ -1,0 +1,2415 @@
+[
+  {
+    "name": "biot-worker-card-short",
+    "status": "PASS",
+    "template": "biot-worker-card",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "469f7cde62129cef41b8e2812ed960b16ea21ea059e120247f18fff8a737f675",
+    "pdfSha256": "285afda7241e18c7a5989438b00151e39ae46d082b72a6a9ea9cb2c6eebd73dc",
+    "docxSeconds": 0.8598722440001438,
+    "renderSeconds": 2.1313755749997654,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-001.png",
+        "sha256": "1dab2ea6387930c71491180b80640ca59b432552de3117d0d367a2a030695b45"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-short-page-002.png",
+        "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            248.75076377952803
+          ],
+          [
+            304.05,
+            248.75076377952803
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 90.60076377952805,
+        "issuerBandBottomPt": 90.05076377952798
+      },
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            443.700763779528
+          ],
+          [
+            41.7,
+            443.700763779528
+          ],
+          [
+            41.7,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            443.700763779528
+          ],
+          [
+            304.05,
+            443.700763779528
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 286.00076377952803,
+        "issuerBandBottomPt": 285.00076377952803
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-worker-card-long",
+    "status": "PASS",
+    "template": "biot-worker-card",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "e80eb630ba30828501014fd5b0db85133da354de9f495bb6963f10902188c2c9",
+    "pdfSha256": "3117c62f581675024cd2d85375a7e73915db08bfe9f09ab7cf0d8d8217062257",
+    "docxSeconds": 0.8276852150011109,
+    "renderSeconds": 2.130686180000339,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-001.png",
+        "sha256": "733034ea6006b870deca73725762294e8e404754c4776deb9c5affba677a03e8"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-long-page-002.png",
+        "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            248.75076377952803
+          ],
+          [
+            304.05,
+            248.75076377952803
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 90.60076377952805,
+        "issuerBandBottomPt": 90.05076377952798
+      },
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            443.700763779528
+          ],
+          [
+            41.7,
+            443.700763779528
+          ],
+          [
+            41.7,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            443.700763779528
+          ],
+          [
+            304.05,
+            443.700763779528
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 286.00076377952803,
+        "issuerBandBottomPt": 285.00076377952803
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-worker-card-blank",
+    "status": "PASS",
+    "template": "biot-worker-card",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "fcbe29d2ccdafa5d549a2f92f194f748947a4e7c293cffb18d64d8782a954c63",
+    "pdfSha256": "5d5c36b46477a33b4a05c29f0965e0d76a759473f0763437c817a2dbc60612f7",
+    "docxSeconds": 1.2276814540000487,
+    "renderSeconds": 2.4570565199992416,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-001.png",
+        "sha256": "365d1f2d1e63db38d0ab707f6bc9d56ebf9abd4fd6cc14d1b197fb4f8d295aaf"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-blank-page-002.png",
+        "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            248.75076377952803
+          ],
+          [
+            304.05,
+            248.75076377952803
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 90.60076377952805,
+        "issuerBandBottomPt": 90.05076377952798
+      },
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            443.700763779528
+          ],
+          [
+            41.7,
+            443.700763779528
+          ],
+          [
+            41.7,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            443.700763779528
+          ],
+          [
+            304.05,
+            443.700763779528
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 286.00076377952803,
+        "issuerBandBottomPt": 285.00076377952803
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-worker-card-batch",
+    "status": "PASS",
+    "template": "biot-worker-card",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "452916b0bf619cfeb13cf787ee80ad3ad9c2a159d2dbb9792def189c90a2a9bb",
+    "pdfSha256": "49b620972635d5a2381bb583b55eb1cdb95733b459aca00a814e40eecc009cd9",
+    "docxSeconds": 1.483635898999637,
+    "renderSeconds": 2.7308896989998175,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-001.png",
+        "sha256": "1dab2ea6387930c71491180b80640ca59b432552de3117d0d367a2a030695b45"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-002.png",
+        "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3"
+      },
+      {
+        "page": 3,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-003.png",
+        "sha256": "c70f793f271828dc842f0480d876416611892b78972cfaa023af4add41ec8ca6"
+      },
+      {
+        "page": 4,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-batch-page-004.png",
+        "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            248.75076377952803
+          ],
+          [
+            304.05,
+            248.75076377952803
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 90.60076377952805,
+        "issuerBandBottomPt": 90.05076377952798
+      },
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            443.700763779528
+          ],
+          [
+            41.7,
+            443.700763779528
+          ],
+          [
+            41.7,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            443.700763779528
+          ],
+          [
+            304.05,
+            443.700763779528
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 286.00076377952803,
+        "issuerBandBottomPt": 285.00076377952803
+      },
+      {
+        "page": 3,
+        "frameBox": [
+          [
+            304.05,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            248.75076377952803
+          ],
+          [
+            304.05,
+            248.75076377952803
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 90.60076377952805,
+        "issuerBandBottomPt": 90.05076377952798
+      },
+      {
+        "page": 3,
+        "frameBox": [
+          [
+            304.05,
+            443.700763779528
+          ],
+          [
+            41.7,
+            443.700763779528
+          ],
+          [
+            41.7,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            443.700763779528
+          ],
+          [
+            304.05,
+            443.700763779528
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 286.00076377952803,
+        "issuerBandBottomPt": 285.00076377952803
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-worker-card-punctuation",
+    "status": "PASS",
+    "template": "biot-worker-card",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "ef7e4ad11c489a2bcb0fe24c58e34c571713e32ff3705a95dcbd4a5b896656fa",
+    "pdfSha256": "48ab5527987fc8457ada77dfcec3711aacdd98b4595db2fcd5fad689971af319",
+    "docxSeconds": 0.5134087919996091,
+    "renderSeconds": 1.4916054740006075,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-001.png",
+        "sha256": "c615aa02bb57a9906636d26fc63e760fda6dd25b6c14c63dbd9ef97b56075f34"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-worker-card-punctuation-page-002.png",
+        "sha256": "9a9d8b036282c73a3854d32292f84b58928f9dff8bd7c18e8fd26d9b1d48f1c3"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            248.75076377952803
+          ],
+          [
+            41.7,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            76.50076377952803
+          ],
+          [
+            566.4,
+            248.75076377952803
+          ],
+          [
+            304.05,
+            248.75076377952803
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 90.60076377952805,
+        "issuerBandBottomPt": 90.05076377952798
+      },
+      {
+        "page": 1,
+        "frameBox": [
+          [
+            304.05,
+            443.700763779528
+          ],
+          [
+            41.7,
+            443.700763779528
+          ],
+          [
+            41.7,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            271.4507637795281
+          ],
+          [
+            566.4,
+            443.700763779528
+          ],
+          [
+            304.05,
+            443.700763779528
+          ]
+        ],
+        "textLeftPt": 316.6,
+        "textRightPt": 544.128,
+        "frameRightPt": 566.4,
+        "dividerTopPt": 286.00076377952803,
+        "issuerBandBottomPt": 285.00076377952803
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-itr-certificate-short",
+    "status": "PASS",
+    "template": "biot-itr-certificate",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "5bd57bed9e9c530e3db399db1fa13cfeeb1e694e655260b0d49fcb6f0f521050",
+    "pdfSha256": "bdc1e353d028594cbe93d63f87d0f55a877b47cb05ebd4f4fd410dd6350f55f6",
+    "docxSeconds": 0.3548226579996481,
+    "renderSeconds": 2.044769481000003,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 14.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-short-page-001.png",
+        "sha256": "40d8e37b7819fd2823ebb9e2cf45bc9d34ac8921a668dcaa4dbbfb9a8dafed86"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "biot-itr-certificate-long",
+    "status": "PASS",
+    "template": "biot-itr-certificate",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "a3ceab951c334fe6d7d680ce64f29d4f2ba65fd0e775356ee6283f3637f4c9fe",
+    "pdfSha256": "2717b1c24fd2bb6c01826a8d0d17e0a180755786202b53f9b7d2f63d37ef7491",
+    "docxSeconds": 0.3998325279999335,
+    "renderSeconds": 2.142054394999832,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 14.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-long-page-001.png",
+        "sha256": "949c3aed12e93e0986f6d03f017ff8fa5cf0384d46a369b7f107667e4f3687f8"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "biot-itr-certificate-blank",
+    "status": "PASS",
+    "template": "biot-itr-certificate",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "1ffcf32d84a4dcfafb40ab937976952e5405fc46dc751c76cb31bfd0ee893a47",
+    "pdfSha256": "107d30fda180b0c3a7675accc16fc340f9df4b9f0c848ec804dc908cf1d64a3a",
+    "docxSeconds": 0.2967043120006565,
+    "renderSeconds": 1.9550312190003751,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 14.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-blank-page-001.png",
+        "sha256": "fa5c2fb49f36f91a6d36ab1c0c489e07415ccde7a1fda945a818a267238c9dbb"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "biot-itr-certificate-batch",
+    "status": "PASS",
+    "template": "biot-itr-certificate",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "37153f64dd1c06dce3ace26fdb46ae12e65ebec2a74dfb0e518a02f144d9c3d1",
+    "pdfSha256": "2488ed159feb131d9e2a8b56a4529469e0f51e3c3e624c9cb06b27d24719f3f7",
+    "docxSeconds": 0.3805225950000022,
+    "renderSeconds": 2.13103043800038,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 14.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-batch-page-001.png",
+        "sha256": "40d8e37b7819fd2823ebb9e2cf45bc9d34ac8921a668dcaa4dbbfb9a8dafed86"
+      },
+      {
+        "page": 2,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 14.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-batch-page-002.png",
+        "sha256": "76ae439fdfb62e0dd73a9332401f6b2fb495b3420f0f4d13bd5aba25270220e5"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "biot-itr-certificate-punctuation",
+    "status": "PASS",
+    "template": "biot-itr-certificate",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "8cb8f8bb200604729513035eddf2fd2443ac2f78e896983e74cb43eac286a044",
+    "pdfSha256": "6e376be005b9700867e1f3083c98b6d3e3e4dd14cd6c84ab394539d1853c657e",
+    "docxSeconds": 0.33343338499980746,
+    "renderSeconds": 1.9204836589997285,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 14.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-itr-certificate-punctuation-page-001.png",
+        "sha256": "0fc5b55a2b135368bc6adf6f101ccef5a5f4a16fd4f0dc0940456617ff32676c"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "biot-protocol-short",
+    "status": "PASS",
+    "template": "biot-protocol",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "9c4aa1af4d95f8f403eb732236b746b4e38a6c067f7318534fb5b90ade479fe6",
+    "pdfSha256": "678c7d09964f3a641702f8ed6db45e3a2f91c673f824b381f1498ec4e17b4c8d",
+    "docxSeconds": 0.28187969400005386,
+    "renderSeconds": 0.4819443059996047,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 2.117095202999735,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-short-page-001.png",
+        "sha256": "6f1eed9b53bf9b2512c115b7cf819a077ead82bc6ea0dcbb89405d51b5c98976"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "tableBox": [
+          50.4,
+          376.85076377952805,
+          587.4,
+          607.650763779528
+        ],
+        "cells": [
+          {
+            "column": 1,
+            "box": [
+              50.4,
+              527.450763779528,
+              84.9,
+              540.750763779528
+            ],
+            "value": "1"
+          },
+          {
+            "column": 2,
+            "box": [
+              84.9,
+              527.450763779528,
+              176.9,
+              540.750763779528
+            ],
+            "value": "2"
+          },
+          {
+            "column": 3,
+            "box": [
+              176.9,
+              527.450763779528,
+              303.9,
+              540.750763779528
+            ],
+            "value": "3"
+          },
+          {
+            "column": 4,
+            "box": [
+              303.9,
+              527.450763779528,
+              410.2,
+              540.750763779528
+            ],
+            "value": "4"
+          },
+          {
+            "column": 5,
+            "box": [
+              410.2,
+              527.450763779528,
+              515.925,
+              540.750763779528
+            ],
+            "value": "5"
+          },
+          {
+            "column": 6,
+            "box": [
+              515.925,
+              527.450763779528,
+              587.4,
+              540.750763779528
+            ],
+            "value": "6"
+          }
+        ]
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-protocol-long",
+    "status": "PASS",
+    "template": "biot-protocol",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "5d700f6e220920599428a4b5ade14e764860cf01fe9347ba6cf9f0695e46c6dd",
+    "pdfSha256": "b8e5adbbcde75ccd1f097f2f84106c43e6e58362c5fc5a15ba5c03de035c9923",
+    "docxSeconds": 0.38258815100016363,
+    "renderSeconds": 0.7369992410003761,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 2.3048587499997666,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-long-page-001.png",
+        "sha256": "5170d01fe9d5ff4f219546f2d114ea5a949e41e7eefc0db95ee8b9ee77fe7ed4"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "tableBox": [
+          50.4,
+          376.85076377952805,
+          587.4,
+          634.150763779528
+        ],
+        "cells": [
+          {
+            "column": 1,
+            "box": [
+              50.4,
+              527.450763779528,
+              84.9,
+              540.750763779528
+            ],
+            "value": "1"
+          },
+          {
+            "column": 2,
+            "box": [
+              84.9,
+              527.450763779528,
+              176.9,
+              540.750763779528
+            ],
+            "value": "2"
+          },
+          {
+            "column": 3,
+            "box": [
+              176.9,
+              527.450763779528,
+              303.9,
+              540.750763779528
+            ],
+            "value": "3"
+          },
+          {
+            "column": 4,
+            "box": [
+              303.9,
+              527.450763779528,
+              410.2,
+              540.750763779528
+            ],
+            "value": "4"
+          },
+          {
+            "column": 5,
+            "box": [
+              410.2,
+              527.450763779528,
+              515.925,
+              540.750763779528
+            ],
+            "value": "5"
+          },
+          {
+            "column": 6,
+            "box": [
+              515.925,
+              527.450763779528,
+              587.4,
+              540.750763779528
+            ],
+            "value": "6"
+          }
+        ]
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-protocol-blank",
+    "status": "PASS",
+    "template": "biot-protocol",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "38fd1b515658fc7a31e8f25a7c8bc9a832778f16f647dd07e7de7ffde213a438",
+    "pdfSha256": "2c69ebcd2b0bf75e3d1d61f6415608efd86efb3c85893d60a04ebfed8f1d1461",
+    "docxSeconds": 0.6746782139998686,
+    "renderSeconds": 0.9240513109998574,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 5.890388587000416,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-blank-page-001.png",
+        "sha256": "e63a97d4de50c59d5289b0a4666f08438dfcc5bc4b159a1eeacbededb8005137"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "tableBox": [
+          50.4,
+          376.85076377952805,
+          587.4,
+          567.950763779528
+        ],
+        "cells": [
+          {
+            "column": 1,
+            "box": [
+              50.4,
+              527.450763779528,
+              84.9,
+              540.875763779528
+            ],
+            "value": "1"
+          },
+          {
+            "column": 2,
+            "box": [
+              84.9,
+              527.450763779528,
+              176.9,
+              540.875763779528
+            ],
+            "value": "2"
+          },
+          {
+            "column": 3,
+            "box": [
+              176.9,
+              527.450763779528,
+              303.9,
+              540.875763779528
+            ],
+            "value": "3"
+          },
+          {
+            "column": 4,
+            "box": [
+              303.9,
+              527.450763779528,
+              410.2,
+              540.875763779528
+            ],
+            "value": "4"
+          },
+          {
+            "column": 5,
+            "box": [
+              410.2,
+              527.450763779528,
+              515.925,
+              540.875763779528
+            ],
+            "value": "5"
+          },
+          {
+            "column": 6,
+            "box": [
+              515.925,
+              527.450763779528,
+              587.4,
+              540.875763779528
+            ],
+            "value": "6"
+          }
+        ]
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-protocol-batch",
+    "status": "PASS",
+    "template": "biot-protocol",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "2b61a2d883b197679a805bd3a1402a206a7b6cf6f575aa16aaeb520564024f5f",
+    "pdfSha256": "23558f09f512a47732d64a0e9e20502f4a89f383fb35c7125312bc9af5be3d19",
+    "docxSeconds": 1.1795226569993247,
+    "renderSeconds": 1.385661130999324,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 5.260680002000299,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-batch-page-001.png",
+        "sha256": "6f1eed9b53bf9b2512c115b7cf819a077ead82bc6ea0dcbb89405d51b5c98976"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-batch-page-002.png",
+        "sha256": "a1a9b18a6ba33e9b27cc011f01b90436d0d9970321d3578c16adc6c7eba1f096"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "tableBox": [
+          50.4,
+          376.85076377952805,
+          587.4,
+          607.650763779528
+        ],
+        "cells": [
+          {
+            "column": 1,
+            "box": [
+              50.4,
+              527.450763779528,
+              84.9,
+              540.750763779528
+            ],
+            "value": "1"
+          },
+          {
+            "column": 2,
+            "box": [
+              84.9,
+              527.450763779528,
+              176.9,
+              540.750763779528
+            ],
+            "value": "2"
+          },
+          {
+            "column": 3,
+            "box": [
+              176.9,
+              527.450763779528,
+              303.9,
+              540.750763779528
+            ],
+            "value": "3"
+          },
+          {
+            "column": 4,
+            "box": [
+              303.9,
+              527.450763779528,
+              410.2,
+              540.750763779528
+            ],
+            "value": "4"
+          },
+          {
+            "column": 5,
+            "box": [
+              410.2,
+              527.450763779528,
+              515.925,
+              540.750763779528
+            ],
+            "value": "5"
+          },
+          {
+            "column": 6,
+            "box": [
+              515.925,
+              527.450763779528,
+              587.4,
+              540.750763779528
+            ],
+            "value": "6"
+          }
+        ]
+      },
+      {
+        "page": 2,
+        "tableBox": [
+          50.4,
+          376.85076377952805,
+          587.4,
+          607.650763779528
+        ],
+        "cells": [
+          {
+            "column": 1,
+            "box": [
+              50.4,
+              527.450763779528,
+              84.9,
+              540.750763779528
+            ],
+            "value": "1"
+          },
+          {
+            "column": 2,
+            "box": [
+              84.9,
+              527.450763779528,
+              176.9,
+              540.750763779528
+            ],
+            "value": "2"
+          },
+          {
+            "column": 3,
+            "box": [
+              176.9,
+              527.450763779528,
+              303.9,
+              540.750763779528
+            ],
+            "value": "3"
+          },
+          {
+            "column": 4,
+            "box": [
+              303.9,
+              527.450763779528,
+              410.2,
+              540.750763779528
+            ],
+            "value": "4"
+          },
+          {
+            "column": 5,
+            "box": [
+              410.2,
+              527.450763779528,
+              515.925,
+              540.750763779528
+            ],
+            "value": "5"
+          },
+          {
+            "column": 6,
+            "box": [
+              515.925,
+              527.450763779528,
+              587.4,
+              540.750763779528
+            ],
+            "value": "6"
+          }
+        ]
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "biot-protocol-punctuation",
+    "status": "PASS",
+    "template": "biot-protocol",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "b96a2e79b3f397ff7ec0805895e5e2404e40f4c038d59e53538b0d78b079df3c",
+    "pdfSha256": "f60d0c6704209e7dfe9bcbee61f4e90b672cdad6027181e4ec2810116c2699b9",
+    "docxSeconds": 0.3932527229999323,
+    "renderSeconds": 0.513744945000326,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 2.5122569730001487,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/biot-protocol-punctuation-page-001.png",
+        "sha256": "fd99cbf05afc8a462c910bd877d6ac842fc58622aec3cd7324738d0a33be76a8"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "tableBox": [
+          50.4,
+          376.85076377952805,
+          587.4,
+          581.150763779528
+        ],
+        "cells": [
+          {
+            "column": 1,
+            "box": [
+              50.4,
+              527.450763779528,
+              84.9,
+              540.750763779528
+            ],
+            "value": "1"
+          },
+          {
+            "column": 2,
+            "box": [
+              84.9,
+              527.450763779528,
+              176.9,
+              540.750763779528
+            ],
+            "value": "2"
+          },
+          {
+            "column": 3,
+            "box": [
+              176.9,
+              527.450763779528,
+              303.9,
+              540.750763779528
+            ],
+            "value": "3"
+          },
+          {
+            "column": 4,
+            "box": [
+              303.9,
+              527.450763779528,
+              410.2,
+              540.750763779528
+            ],
+            "value": "4"
+          },
+          {
+            "column": 5,
+            "box": [
+              410.2,
+              527.450763779528,
+              515.925,
+              540.750763779528
+            ],
+            "value": "5"
+          },
+          {
+            "column": 6,
+            "box": [
+              515.925,
+              527.450763779528,
+              587.4,
+              540.750763779528
+            ],
+            "value": "6"
+          }
+        ]
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "ptm-card-short",
+    "status": "PASS",
+    "template": "ptm-card",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "241a9c3808784786d9a290c134bb25f45e50790cb4142e334bad80d831a6abba",
+    "pdfSha256": "562069cf8d4dc9e4e31782c217288f943e2ad949d7910f055caeb856d166c381",
+    "docxSeconds": 0.6639185229996656,
+    "renderSeconds": 2.9845418839995546,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-short-page-001.png",
+        "sha256": "dcd745f07fc326e0f56d4570ef9cc723914ebb68b0b3c289ca61ea063813207a"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-card-long",
+    "status": "PASS",
+    "template": "ptm-card",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "71702bd14c526a0b6c973efcf064f7df272e30b136c831e33cf664ebbd28af21",
+    "pdfSha256": "19793850314b762bb17726f3c1c08060e3915d11fb94c0b5a0040703755f750a",
+    "docxSeconds": 0.6812531159994251,
+    "renderSeconds": 2.874917366999398,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-long-page-001.png",
+        "sha256": "d676448a071edfc1fd4084da71404ee1a58fd31459dd6d7a171c601141d28831"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-card-blank",
+    "status": "PASS",
+    "template": "ptm-card",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "acd14b5278fdbcc376bcac2183f75658f6e0e9a5a8961e468a9144ef1c3aa2b8",
+    "pdfSha256": "54e6f9780f70e0ddfde942a120adb050e4ceaebd38027926b01802321a5e7972",
+    "docxSeconds": 0.5773799580001651,
+    "renderSeconds": 2.075487011000405,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-blank-page-001.png",
+        "sha256": "dd63480d74f2bbb6507b72e11d9d16efb7096a8b6b5dab32c469487480543b89"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-card-batch",
+    "status": "PASS",
+    "template": "ptm-card",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "1068bff721940092104767b4f22c0d3d7bc885fd138c6c72a9da7a67e0b41355",
+    "pdfSha256": "0343cf763c40a93235bcc645c9afeb1cbb8251bba7c374d4c11f18021807119a",
+    "docxSeconds": 0.8863562739998088,
+    "renderSeconds": 2.688325830999929,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-batch-page-001.png",
+        "sha256": "dcd745f07fc326e0f56d4570ef9cc723914ebb68b0b3c289ca61ea063813207a"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-batch-page-002.png",
+        "sha256": "f7c5776b2c66c7cdd449379619bb0918082ac7406503e07f313099175333c79a"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-card-punctuation",
+    "status": "PASS",
+    "template": "ptm-card",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "a729b718193def6b8943309311ed792aab322bbcf1e868354d7e1fd29537bc8e",
+    "pdfSha256": "267c9829b36c127fde72094594b34c0787ed9bc36b594b7d687103ed3ec3ed07",
+    "docxSeconds": 0.40062230300009105,
+    "renderSeconds": 1.8324191499996232,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-card-punctuation-page-001.png",
+        "sha256": "234d865a08c5d9dcfb5c1c9c01147f5757399a3de79a330500add5e4515a9cff"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-protocol-short",
+    "status": "PASS",
+    "template": "ptm-protocol",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "ec64b006490539894582584b5084232d449b5325eb9378d190fca0440f252d61",
+    "pdfSha256": "1aa18bad0859a2442382c493c34d61c915be2145a564bbf87f7be594256525e5",
+    "docxSeconds": 1.5815342039995812,
+    "renderSeconds": 1.8996838179991755,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 2.9918907520004723,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 9.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-short-page-001.png",
+        "sha256": "345992b1eb0c8f3aea69da3a1c97aa4cd8ee1271079392ace6cc295a5acb52bf"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-protocol-long",
+    "status": "PASS",
+    "template": "ptm-protocol",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "c68be733b7b252f912857d70d0492c5e89c3d3bbacd8774cd9df70a3542d8788",
+    "pdfSha256": "3aec0f64f9345fd6c414f562d4d7abcbd59b56945a170a452d4dfdac62585cdc",
+    "docxSeconds": 2.0413878150002347,
+    "renderSeconds": 2.2454594730006647,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.078996671999448,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 9.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-long-page-001.png",
+        "sha256": "078612feeb40b241fb6dbccb26e2b61ec7fcb0a05aef90c6e359feb611a6fa79"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-protocol-blank",
+    "status": "PASS",
+    "template": "ptm-protocol",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "88afb43a0ea84ba5d1265926264e5189e747a3b610127bb0038990c9cc45afb6",
+    "pdfSha256": "e2a8d37b9b6bb0eb700065506f7a95f2a756aa3e9873eed6b5efa54353fbf0b5",
+    "docxSeconds": 1.5613805179991687,
+    "renderSeconds": 1.7619629499995426,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.2319891009992716,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 9.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-blank-page-001.png",
+        "sha256": "45801f25a4f663395d5c6bfbf6e697e0c81da38120fb5284277a6a1d2cd034a2"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-protocol-batch",
+    "status": "PASS",
+    "template": "ptm-protocol",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "141f751aa9c7d880a11023af5c3fa75c47ab44c5c3c9630f2f45607f75f6de88",
+    "pdfSha256": "11413131d9aab7a79640d381dc9defa2b5ec3398af05f363fb676ba462d2a6f9",
+    "docxSeconds": 2.448401992000072,
+    "renderSeconds": 2.7225012520002565,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.5773482790000344,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 9.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-batch-page-001.png",
+        "sha256": "345992b1eb0c8f3aea69da3a1c97aa4cd8ee1271079392ace6cc295a5acb52bf"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 9.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-batch-page-002.png",
+        "sha256": "15b56ae9f99312f1bf2651bce06b4d016f490700ae76689b951ec7d96f526dbc"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ptm-protocol-punctuation",
+    "status": "PASS",
+    "template": "ptm-protocol",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "6c8f3d1eb0281d326def9443c549eb6fe6361fd5868d8575019eab47892b2000",
+    "pdfSha256": "333b8d942140e715e149b50613eb0e81c78337689d739deebab9118b01bc6b19",
+    "docxSeconds": 1.826777846999903,
+    "renderSeconds": 1.9995544559997143,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.5574098130000493,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 9.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ptm-protocol-punctuation-page-001.png",
+        "sha256": "6dd2a1ee30d7240e8b216b06bd394908c0d65290a5fb4ae461447f34ea009c9a"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-card-short",
+    "status": "PASS",
+    "template": "pb-card",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "c94c636e7b8ed2d8c405086dd1db61ba7808fb642f9330c7f2ad9cb08c40640d",
+    "pdfSha256": "6dce52a0f024bc58f952167aa1d6b6a5532cd93eb3530b957e9f2fd0d1203f68",
+    "docxSeconds": 1.700311032999707,
+    "renderSeconds": 3.9377143720003005,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-short-page-001.png",
+        "sha256": "53cbbfc1eccfb9f28152895deebfe5eb5ff76a3293a6eac5bbab5eb1164f4ec5"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-short-page-002.png",
+        "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-card-long",
+    "status": "PASS",
+    "template": "pb-card",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "350727c183bbf5df5f45052a11400efe4e1dab2551fe15c4d8442b2b80a056bd",
+    "pdfSha256": "b39bd6bd00e03d0d3b09f4da388e1db30f3cba655793a19c3448da865d030e5e",
+    "docxSeconds": 1.6077369159993395,
+    "renderSeconds": 3.7051000989995373,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-long-page-001.png",
+        "sha256": "2a30748598a1fe70120754c2de98bca12ac71680ae8b1faf6dde35404fb6964b"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-long-page-002.png",
+        "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-card-blank",
+    "status": "PASS",
+    "template": "pb-card",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "1a7f63407dbdc9189ef14eb97075b9f712017517d1cbf51cb756fe84ba88756d",
+    "pdfSha256": "283b5964774a7caaf0ff58065025ac7ec3966b63efd4d4af2c38757fca651c42",
+    "docxSeconds": 1.4611012860004848,
+    "renderSeconds": 3.999609545000567,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-blank-page-001.png",
+        "sha256": "cca7a7ea94b865683a0c7c46a47a1974c52f000d51ff5373b08be5f3495ba05c"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-blank-page-002.png",
+        "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-card-batch",
+    "status": "PASS",
+    "template": "pb-card",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "5cdd9bbb6c371df99ffb98a5b65fd6abe294f2ce1fde5a09f96136658892281e",
+    "pdfSha256": "965cb1a915d7ad0c6a969b752c439f9e8adbb08a30b88ebe5e90f328492be5fb",
+    "docxSeconds": 2.5672366600001624,
+    "renderSeconds": 4.6032897280001634,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-001.png",
+        "sha256": "53cbbfc1eccfb9f28152895deebfe5eb5ff76a3293a6eac5bbab5eb1164f4ec5"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-002.png",
+        "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
+      },
+      {
+        "page": 3,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-003.png",
+        "sha256": "fa106b27f6e87d0b15a55e371e9e3e0f974ad02137e34e1fa33dc913781b0212"
+      },
+      {
+        "page": 4,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-batch-page-004.png",
+        "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-card-punctuation",
+    "status": "PASS",
+    "template": "pb-card",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "0c921f124eea64b70caed0f7032a445591a45c3474c9bf425bc4c07a3a386b7b",
+    "pdfSha256": "1d2d210d24623947c451f2c1cd2bb5a308c515c0479016c1dc9eb4809782fdf0",
+    "docxSeconds": 1.1555417899999156,
+    "renderSeconds": 3.219631180999386,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-punctuation-page-001.png",
+        "sha256": "360d0c6dfbda4ada0767ec8ec1d5ade4d94914ae94f79406b8a56831f2f98db3"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-card-punctuation-page-002.png",
+        "sha256": "391ee21c3947b65302252d69efdc885a0081b57bd68c37314bfa5255fe9bc7c8"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-protocol-short",
+    "status": "PASS",
+    "template": "pb-protocol",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "00fd283f13a99e03dddfdc5db6298d1c7f5f5c795d688cdd76cda4b139bf3de9",
+    "pdfSha256": "d869e959af239502192721bb95f223c95bcedc689cc1b3980beec5fc55208818",
+    "docxSeconds": 2.949130929000603,
+    "renderSeconds": 4.224356567000541,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 4.102835705999496,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-short-page-001.png",
+        "sha256": "3cde00254336bc36442d54eb07ae86370aa68f88aadddb7eb9bda3fe3058f7ea"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-protocol-long",
+    "status": "PASS",
+    "template": "pb-protocol",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "90c1e95acc82c226c8e79f71463978d1e0a491e367988f48e8863984ddbfe553",
+    "pdfSha256": "7b92d7d08e0d2de0dd60616b16d00a7fad259e2a558988a8f4b867fd2cf9f4ce",
+    "docxSeconds": 3.351673268999548,
+    "renderSeconds": 3.6477267789996404,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 4.040344144000301,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-long-page-001.png",
+        "sha256": "f938b6f4afb74a2ac686198a23aa34b227ac011e25254b396289311b1a4dd7ce"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-protocol-blank",
+    "status": "PASS",
+    "template": "pb-protocol",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "20f685ba0955890da07b7d3d0f6b2bfdfea777de5a4edd997aaac81e8881c3da",
+    "pdfSha256": "bfb41c06175c3dbd34b59d9bb8be456d7af9b20653928493c76ae75deb289e20",
+    "docxSeconds": 2.504358897000202,
+    "renderSeconds": 2.8675527989998955,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 6.145334070999525,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-blank-page-001.png",
+        "sha256": "67eb0b816fe954d0a0567fb788ca8ad3855b0930bf2c19d1468a6f1c8d661068"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-protocol-batch",
+    "status": "PASS",
+    "template": "pb-protocol",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "9186308e99457a1b5b46d95711c8e1b81d6d3f71a9ba125c7e28d3cbdf69cc25",
+    "pdfSha256": "1ca0a4b6eeed17aab258ef332978f6395343e28b5ef3ab4071860f875a035916",
+    "docxSeconds": 2.8583221810004034,
+    "renderSeconds": 3.1022062700003517,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 7.305740775999766,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-batch-page-001.png",
+        "sha256": "3cde00254336bc36442d54eb07ae86370aa68f88aadddb7eb9bda3fe3058f7ea"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-batch-page-002.png",
+        "sha256": "73e69d0f8417e69a96546431178a8993bb2bc7fcdd2c37109fc097d6ac122ecf"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "pb-protocol-punctuation",
+    "status": "PASS",
+    "template": "pb-protocol",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "b2a7084eb16222f07d882360dab2e3c15c202970495ce911567fe66f28281c63",
+    "pdfSha256": "cef792bd8a16a1efa0ddeed1a7f3c5c10fe465b241889d767ef18e8843737214",
+    "docxSeconds": 1.8961497520003832,
+    "renderSeconds": 2.5043854800005647,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 5.122567649999837,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/pb-protocol-punctuation-page-001.png",
+        "sha256": "e777ecda74b13655fd6fabc0f6c5b4d5e552433277527787ba40744eca4dd5f7"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-card-short",
+    "status": "PASS",
+    "template": "ps-card",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "853a627b458fbb8fcde6722b94bdc0be8f400ad250760bf807b3cd5562fcc166",
+    "pdfSha256": "552865b7b8565af3aa9a3f693b8b4c3bc300278412f7b085804f0d09ac6f9f1a",
+    "docxSeconds": 1.3202968100004,
+    "renderSeconds": 3.128154617999826,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-short-page-001.png",
+        "sha256": "c17b099cf90e8abaf78435a31e32c69bbaa069c395276e8f4411de3263289518"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-short-page-002.png",
+        "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "titleTopPt": 70.77876377952794,
+        "issuerBandBottomPt": 70.150763779528,
+        "examHeadingLeftPt": 302.85,
+        "panelMiddlePt": 297.275
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "ps-card-long",
+    "status": "PASS",
+    "template": "ps-card",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "c390efd7cf9ca58dc14f8fef489cf7ba0057c38620c07b315aabe095f3aa2b7d",
+    "pdfSha256": "4d1ebfcbd3f5adaefb91459fe08b257f1f64929d2d571cb99930aee6e47b7f36",
+    "docxSeconds": 1.3208063330002915,
+    "renderSeconds": 3.140881950000221,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-long-page-001.png",
+        "sha256": "97e88bde12219b78f46ea4bef12176b270ff93808ea11cd81f65db88c27a0c98"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-long-page-002.png",
+        "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "titleTopPt": 70.77876377952794,
+        "issuerBandBottomPt": 70.150763779528,
+        "examHeadingLeftPt": 302.85,
+        "panelMiddlePt": 297.275
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "ps-card-blank",
+    "status": "PASS",
+    "template": "ps-card",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "d4e26f07a0d4a6898458c28b2c8a689ce9989070bfc65da6d1b21af360cff818",
+    "pdfSha256": "b0f6e9504cf6a9246cdbae296eb528d230ec3a50883192a41f07506fa95f71fe",
+    "docxSeconds": 1.132091985000443,
+    "renderSeconds": 3.0779225060005047,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-blank-page-001.png",
+        "sha256": "93770d5b0a7fe5f637b88512b4efcd014869f6b8bb93386dad24fcd2d7c8646a"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-blank-page-002.png",
+        "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "titleTopPt": 70.77876377952794,
+        "issuerBandBottomPt": 70.150763779528,
+        "examHeadingLeftPt": 302.85,
+        "panelMiddlePt": 297.275
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "ps-card-batch",
+    "status": "PASS",
+    "template": "ps-card",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "5ae42516d0c4a5c835c952fd84c56d47fbc08bee445a123d561305adb238aeab",
+    "pdfSha256": "a2cb27af6b1fd65637760f962c486dfc79d54a6b6801177a8268d67744ae27bb",
+    "docxSeconds": 2.1559057120002763,
+    "renderSeconds": 4.438237737000236,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-001.png",
+        "sha256": "c17b099cf90e8abaf78435a31e32c69bbaa069c395276e8f4411de3263289518"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-002.png",
+        "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887"
+      },
+      {
+        "page": 3,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-003.png",
+        "sha256": "226094a2aaa07916f97b76400b027696767b25e17ab892ad24c4468731383478"
+      },
+      {
+        "page": 4,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-batch-page-004.png",
+        "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "titleTopPt": 70.77876377952794,
+        "issuerBandBottomPt": 70.150763779528,
+        "examHeadingLeftPt": 302.85,
+        "panelMiddlePt": 297.275
+      },
+      {
+        "page": 3,
+        "titleTopPt": 70.77876377952794,
+        "issuerBandBottomPt": 70.150763779528,
+        "examHeadingLeftPt": 302.85,
+        "panelMiddlePt": 297.275
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "ps-card-punctuation",
+    "status": "PASS",
+    "template": "ps-card",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "1cd364ab8c9da3f772eb401b4582b4c7ce476af73ac7a1879c4eff6db6a9ae95",
+    "pdfSha256": "935bdbf407e21054deaaaa6e5aef56a2d20c692eecb3a6671461860002ba6b55",
+    "docxSeconds": 0.8040846690000762,
+    "renderSeconds": 3.393051920000289,
+    "conversionReusedAfterExactByteMatch": false,
+    "priorConversionSeconds": null,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-punctuation-page-001.png",
+        "sha256": "6fe8c4b0b08548078f778c7b8b508e9e4d688e6532040ab11e360df19a10da75"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-card-punctuation-page-002.png",
+        "sha256": "90fdc766e903a2aa2a2a81228fcf7cbf007f0ac3620904738e80050f8d918887"
+      }
+    ],
+    "columnChecks": [
+      {
+        "page": 1,
+        "titleTopPt": 70.77876377952794,
+        "issuerBandBottomPt": 70.150763779528,
+        "examHeadingLeftPt": 302.85,
+        "panelMiddlePt": 297.275
+      }
+    ],
+    "problems": []
+  },
+  {
+    "name": "ps-protocol-short",
+    "status": "PASS",
+    "template": "ps-protocol",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "da8d014dc8649657373dc89c2ba1753e06363775b88e2d7cb1f9f0683d99deed",
+    "pdfSha256": "c4fdc6fcc6c67cd4e122d8c9f7dcf8c0edf53fae1598e724d1521fadb67df19a",
+    "docxSeconds": 0.30175627500011615,
+    "renderSeconds": 0.4127770579998469,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 2.2393845470005544,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-short-page-001.png",
+        "sha256": "e2048b9482bbdfa10cbbf0b08a9078caccf4052bd527393d6e2b198926bfd866"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-protocol-long",
+    "status": "PASS",
+    "template": "ps-protocol",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "1c991b49dca537931c5ac4dc6fcc90aef3833054a39a54c28f1a31a03a8c4bcf",
+    "pdfSha256": "aaf5db20de1d59d256ab3221cd09f615665162c98e1bb133a321a4ddbfe3dee8",
+    "docxSeconds": 0.407233286000519,
+    "renderSeconds": 0.512494064000748,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 2.2876856970005974,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-long-page-001.png",
+        "sha256": "bcb8a4ecfccd6a60dd1c92adfd3420e5c17d22b61a67a27edf4d9e176ce7a434"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-protocol-blank",
+    "status": "PASS",
+    "template": "ps-protocol",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "03b6fcc7ba1b15740cf69850eb7c6c9bf803f916b1f9c42333d24f9e33843f77",
+    "pdfSha256": "6dca3855b949645a05f04b55240d57dec64f20656a96e6a6f3de6531e9b1cbde",
+    "docxSeconds": 0.4378289619999123,
+    "renderSeconds": 0.534344818000136,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.2121274809996976,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-blank-page-001.png",
+        "sha256": "d4a358280d74adb614dd75ab943123fd4b222c8fcde939fd21353ae7c3f408be"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-protocol-batch",
+    "status": "PASS",
+    "template": "ps-protocol",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "03f67f35707044027ac321ac42a51448895a702a2f68ad5436b85e27e7d4cb92",
+    "pdfSha256": "0620af58ec7c11fd2ecd95ba0afe1a4aeca5d1fc98bdfdf10efbab1b867de15f",
+    "docxSeconds": 1.2488422919996083,
+    "renderSeconds": 1.461333537000428,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.9619010770002205,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-batch-page-001.png",
+        "sha256": "e2048b9482bbdfa10cbbf0b08a9078caccf4052bd527393d6e2b198926bfd866"
+      },
+      {
+        "page": 2,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-batch-page-002.png",
+        "sha256": "d97f97a9ea7cdedadc624bedda258107b13dd2cfa7269396d6cae98a954beff3"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-protocol-punctuation",
+    "status": "PASS",
+    "template": "ps-protocol",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "880e350890cec0289d4c2867392e19ea1e5ce94f4679c3f5c312caea5c569331",
+    "pdfSha256": "2c457b5a92994deedb39c3e773df4de0bd01f37a436bdde58e64ca119f23a0ff",
+    "docxSeconds": 0.8096538970003166,
+    "renderSeconds": 1.0061389020002025,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.567733696999312,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 841.8897705078125,
+        "heightPt": 595.303955078125,
+        "minimumBodyFontPt": 10.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-protocol-punctuation-page-001.png",
+        "sha256": "ca6a33730a807d6f7d81586f718716b0ae74e3775350abb617856ab29d7aa453"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-witness-short",
+    "status": "PASS",
+    "template": "ps-witness",
+    "variant": "short",
+    "recipients": 1,
+    "docxSha256": "b45d0b91103f538a9062a887e5462232b0a3bb200dd0d0e1b774e3bbb8908ccb",
+    "pdfSha256": "87b0fee6bdf609b06db4b2f62a50d993cab24a26f921719cf8232da4e6c35703",
+    "docxSeconds": 1.034174460000031,
+    "renderSeconds": 1.1680427549999877,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.4602034830004413,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 20.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-short-page-001.png",
+        "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-short-page-002.png",
+        "sha256": "8097ebc1bfb00e6a2d390ea4ef439469b5cf3aaf51149277c3375e436b1d416d"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-witness-long",
+    "status": "PASS",
+    "template": "ps-witness",
+    "variant": "long",
+    "recipients": 1,
+    "docxSha256": "79dce390d903e50609bf82eb8917bcac38fdd3aea25b0c20761aedf54d4d8363",
+    "pdfSha256": "2cf41ceacedfb7be91ffa87b8753584b713cbf028fb6c70ba959cc95d041abb4",
+    "docxSeconds": 0.4953567069997007,
+    "renderSeconds": 0.6001498050000009,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.2159659819999433,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 20.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-long-page-001.png",
+        "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-long-page-002.png",
+        "sha256": "9f078c2dac543e3b0a7739e5a74b76bbe9a3fb34b17118de913c7ae7b98808a2"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-witness-blank",
+    "status": "PASS",
+    "template": "ps-witness",
+    "variant": "blank",
+    "recipients": 1,
+    "docxSha256": "15e1dae21bcfa64367bce6de50a25a7e836c57a2b87f042974fdc750c61f770a",
+    "pdfSha256": "8052de248161f9fb25ddcb4aa3e17005d24c30be759d35dad55e3d2722ce6d75",
+    "docxSeconds": 1.1940482259997225,
+    "renderSeconds": 1.6151216179996482,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.069215894000081,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 20.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-blank-page-001.png",
+        "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-blank-page-002.png",
+        "sha256": "afbe816af9118c3d757040d3384971105817601150e7d41d26ff233eee610aa4"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-witness-batch",
+    "status": "PASS",
+    "template": "ps-witness",
+    "variant": "batch",
+    "recipients": 2,
+    "docxSha256": "213b88caf7a9adc3adf1286f62c92178eb624e5c540aa27d21991f08e24f7d59",
+    "pdfSha256": "1ca571278000ac227f849c04c20326b62a8e60ec0a711049968849221552b228",
+    "docxSeconds": 1.5369691370005967,
+    "renderSeconds": 1.7185991430005743,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 3.7008993389999887,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 20.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-001.png",
+        "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-002.png",
+        "sha256": "8097ebc1bfb00e6a2d390ea4ef439469b5cf3aaf51149277c3375e436b1d416d"
+      },
+      {
+        "page": 3,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 20.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-003.png",
+        "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
+      },
+      {
+        "page": 4,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-batch-page-004.png",
+        "sha256": "c8ba330d0a51068e0633d5ede00da21f3be2e628aaf54d3dad789f8cfdad3a68"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  },
+  {
+    "name": "ps-witness-punctuation",
+    "status": "PASS",
+    "template": "ps-witness",
+    "variant": "punctuation",
+    "recipients": 1,
+    "docxSha256": "7e550003fdcdffa80b7a9d3af917dd275dfb7ca4b679b4fa4b4b6f3ee7a29329",
+    "pdfSha256": "2a3c169311bec48057a11022723773d2a7d3ce40fd877efaf2ad5055396aa55a",
+    "docxSeconds": 0.617254812000283,
+    "renderSeconds": 0.8652196060002098,
+    "conversionReusedAfterExactByteMatch": true,
+    "priorConversionSeconds": 2.789335683999525,
+    "pages": [
+      {
+        "page": 1,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 20.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-punctuation-page-001.png",
+        "sha256": "1c994d2ddfeb4bfd45a54b52f393446bfbe9da4c69a7a52877c2d6a6b9e90033"
+      },
+      {
+        "page": 2,
+        "widthPt": 595.303955078125,
+        "heightPt": 841.8897705078125,
+        "minimumBodyFontPt": 8.0,
+        "image": "docs/evidence/commercial-acceptance/printing/pages/ps-witness-punctuation-page-002.png",
+        "sha256": "48aea7e62ac4c601f50219bed9cecbf906bb6a4a8e38b25b3c4de27c83e5626f"
+      }
+    ],
+    "columnChecks": [],
+    "problems": []
+  }
+]

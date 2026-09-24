@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "reviewer": "print_acceptance",
+  "pages": [
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/date-roundtrip/date-0-leap/page-1.png",
+      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809",
+      "status": "PASS",
+      "review": "Full-page visual inspection: separate issue/protocol dates readable on page2 in RU/KZ; page1 expected witness cover, synthetic watermark preserved."
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/date-roundtrip/date-0-leap/page-2.png",
+      "sha256": "4ff808f5f2b9e8d4b3d11803963bbb980a7c88a6f08c46a133ce6426055ba2d0",
+      "status": "PASS",
+      "review": "Full-page visual inspection: separate issue/protocol dates readable on page2 in RU/KZ; page1 expected witness cover, synthetic watermark preserved."
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/date-roundtrip/date-0-year/page-1.png",
+      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809",
+      "status": "PASS",
+      "review": "Full-page visual inspection: separate issue/protocol dates readable on page2 in RU/KZ; page1 expected witness cover, synthetic watermark preserved."
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/date-roundtrip/date-0-year/page-2.png",
+      "sha256": "091b5d5b97d8cd973bc38ee6e9749f47d8030785ce6ce8968d6660fb8372edf7",
+      "status": "PASS",
+      "review": "Full-page visual inspection: separate issue/protocol dates readable on page2 in RU/KZ; page1 expected witness cover, synthetic watermark preserved."
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/date-roundtrip/date-1-leap/page-1.png",
+      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809",
+      "status": "PASS",
+      "review": "Full-page visual inspection: separate issue/protocol dates readable on page2 in RU/KZ; page1 expected witness cover, synthetic watermark preserved."
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/date-roundtrip/date-1-leap/page-2.png",
+      "sha256": "f89efe9aa72df1f7b0fc536dbdfddc6bea146ef510b1ab45dcdb431880c3c43e",
+      "status": "PASS",
+      "review": "Full-page visual inspection: separate issue/protocol dates readable on page2 in RU/KZ; page1 expected witness cover, synthetic watermark preserved."
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/date-roundtrip/date-1-year/page-1.png",
+      "sha256": "70bdf1e2023d7b2bc748ee5a7d09c7f0666e6f903bcf82a794c807c4dfad2809",
+      "status": "PASS",
+      "review": "Full-page visual inspection: separate issue/protocol dates readable on page2 in RU/KZ; page1 expected witness cover, synthetic watermark preserved."
+    },
+    {
+      "file": "docs/evidence/commercial-acceptance/printing/date-roundtrip/date-1-year/page-2.png",
+      "sha256": "e5ceea810edd5b3bc51e6bcc4b87603ede299dd6d72cf4bfe800049a33b863e6",
+      "status": "PASS",
+      "review": "Full-page visual inspection: separate issue/protocol dates readable on page2 in RU/KZ; page1 expected witness cover, synthetic watermark preserved."
+    }
+  ]
+}

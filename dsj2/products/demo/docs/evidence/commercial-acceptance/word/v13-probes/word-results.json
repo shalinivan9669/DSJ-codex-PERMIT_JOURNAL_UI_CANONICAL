@@ -1,0 +1,61 @@
+{
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "mode": "read-only; macros disabled; no links update; canonical filenames only; PDF page/text comparison required",
+  "expectedDocuments": 4,
+  "documents": [
+    {
+      "file": "biot-itr-certificate-long.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 42,
+      "pdf": "biot-itr-certificate-long.word.pdf",
+      "audit": "biot-itr-certificate-long.audit.json",
+      "docxSha256": "ea1b133da76b4dfa44ddbcee1745fee9865bc70cb8337fe4559ebceb7dbe2b9d",
+      "pdfSha256": "963b467e0fa63a6155ab57afe176a17e9aca44ce56d7919c782a9d23ea2120a5",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "biot-itr-certificate-short.docx",
+      "status": "PASS",
+      "pages": 1,
+      "pdfPages": 1,
+      "expectedWords": 42,
+      "pdf": "biot-itr-certificate-short.word.pdf",
+      "audit": "biot-itr-certificate-short.audit.json",
+      "docxSha256": "c91132f3bb7b0abaa900dfc70f12a1708c259587cf9868e9172f5b7d0d1af970",
+      "pdfSha256": "3bcda575dfa37f945decbc4b2a674bc0c7e4499705a328bdcabacb1920113a7c",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ps-card-long.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 99,
+      "pdf": "ps-card-long.word.pdf",
+      "audit": "ps-card-long.audit.json",
+      "docxSha256": "ce7811046ebfc8da0f66cbfb5a9527dfa569270444be8752b058387dc5924693",
+      "pdfSha256": "1718e1e2089a4672ccc11535737f4c7545468e69218440545a51bd6f5009fbc8",
+      "visualReview": "PASS"
+    },
+    {
+      "file": "ps-card-short.docx",
+      "status": "PASS",
+      "pages": 2,
+      "pdfPages": 2,
+      "expectedWords": 93,
+      "pdf": "ps-card-short.word.pdf",
+      "audit": "ps-card-short.audit.json",
+      "docxSha256": "76da87cdfa3c6d7dede768d7fcb98ebf8f887b780d57ec12fa5c4eaeb13ab0f8",
+      "pdfSha256": "5d0da51413395c445c01227d10be73ce38bb56293e068a342145af5d1daf9740",
+      "visualReview": "PASS"
+    }
+  ],
+  "visualSummary": {
+    "status": "PASS",
+    "pagesReviewed": 6,
+    "limitation": "Диагностические v13 probes; окончательный активный manifest проверяется отдельно."
+  }
+}

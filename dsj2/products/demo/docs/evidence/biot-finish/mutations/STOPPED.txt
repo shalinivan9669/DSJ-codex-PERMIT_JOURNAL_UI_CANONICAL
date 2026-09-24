@@ -1,0 +1,1 @@
+Additional optional negative conversion stopped at parent request before completion. It is not included in PASS evidence. Only existing positive two-copy checks and scoped test24 support this finish.

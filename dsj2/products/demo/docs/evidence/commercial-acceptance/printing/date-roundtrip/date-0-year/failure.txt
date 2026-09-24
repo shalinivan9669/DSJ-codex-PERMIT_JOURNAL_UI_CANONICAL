@@ -1,0 +1,5 @@
+locator.click: Timeout 20000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('link', { name: 'Новая заявка', exact: true })[22m
+
+    at C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\.runtime\date-roundtrip.mjs:18:67

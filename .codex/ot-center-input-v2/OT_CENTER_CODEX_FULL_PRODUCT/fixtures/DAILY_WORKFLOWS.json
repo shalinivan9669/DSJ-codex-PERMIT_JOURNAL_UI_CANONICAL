@@ -1,0 +1,520 @@
+{
+  "schema": "handoff-daily-workflows-v2",
+  "synthetic": true,
+  "productionUseAllowed": false,
+  "mustCreateDisposableDemoOnlyTenant": true,
+  "watermark": "ДЕМО — НЕ ЯВЛЯЕТСЯ ВЫДАННЫМ ДОКУМЕНТОМ",
+  "note": "Это исходные данные и состояния сценариев, не готовые API payload или seed. Адаптер к фактической модели должен сохранить семантику. Обязательные реквизиты выбранной формы добавляются из согласованного синтетического профиля, не угадываются.",
+  "issuerFixture": "issuer_and_customer.json",
+  "people": [
+    {
+      "externalPersonKey": "DEMO-P001",
+      "personnelNumber": "000001",
+      "fullNameRu": "Демонстрационный Слушатель 001",
+      "fullNameKz": "Демонстрациялық Тыңдаушы 001",
+      "positionRu": "Тестовый оператор",
+      "positionKz": "Сынақ операторы",
+      "departmentRu": "Демонстрационный участок 1",
+      "departmentKz": "Демонстрациялық учаске 1",
+      "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+      "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    },
+    {
+      "externalPersonKey": "DEMO-P002",
+      "personnelNumber": "000002",
+      "fullNameRu": "Демонстрационный Слушатель 002",
+      "fullNameKz": "Демонстрациялық Тыңдаушы 002",
+      "positionRu": "Тестовый мастер",
+      "positionKz": "Сынақ шебері",
+      "departmentRu": "Демонстрационный участок 1",
+      "departmentKz": "Демонстрациялық учаске 1",
+      "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+      "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    },
+    {
+      "externalPersonKey": "DEMO-P003",
+      "personnelNumber": "000003",
+      "fullNameRu": "Демонстрационный Слушатель 003",
+      "fullNameKz": "Әғқңөұүһі Демонстрациялық Тыңдаушы 003",
+      "positionRu": "Тестовый специалист",
+      "positionKz": "Сынақ маманы",
+      "departmentRu": "Демонстрационный участок 1",
+      "departmentKz": "Демонстрациялық учаске 1",
+      "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+      "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    },
+    {
+      "externalPersonKey": "DEMO-P004",
+      "personnelNumber": "000004",
+      "fullNameRu": "Демонстрационный Слушатель 004",
+      "fullNameKz": "Демонстрациялық Тыңдаушы 004",
+      "positionRu": "Тестовый механик",
+      "positionKz": "Сынақ механигі",
+      "departmentRu": "Демонстрационный участок 1",
+      "departmentKz": "Демонстрациялық учаске 1",
+      "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+      "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    },
+    {
+      "externalPersonKey": "DEMO-P005",
+      "personnelNumber": "000005",
+      "fullNameRu": "Демонстрационный Слушатель 005",
+      "fullNameKz": "Демонстрациялық Тыңдаушы 005",
+      "positionRu": "Тестовый оператор",
+      "positionKz": "Сынақ операторы",
+      "departmentRu": "Демонстрационный участок 1",
+      "departmentKz": "Демонстрациялық учаске 1",
+      "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+      "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    },
+    {
+      "externalPersonKey": "DEMO-P006",
+      "personnelNumber": "000006",
+      "fullNameRu": "Демонстрационный Слушатель 006",
+      "fullNameKz": "Демонстрациялық Тыңдаушы 006",
+      "positionRu": "Тестовый мастер",
+      "positionKz": "Сынақ шебері",
+      "departmentRu": "Демонстрационный участок 1",
+      "departmentKz": "Демонстрациялық учаске 1",
+      "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+      "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    },
+    {
+      "externalPersonKey": "DEMO-P007",
+      "personnelNumber": "000007",
+      "fullNameRu": "Демонстрационный Слушатель 007",
+      "fullNameKz": "Демонстрациялық Тыңдаушы 007",
+      "positionRu": "Тестовый специалист",
+      "positionKz": "Сынақ маманы",
+      "departmentRu": "Демонстрационный участок 1",
+      "departmentKz": "Демонстрациялық учаске 1",
+      "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+      "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    },
+    {
+      "externalPersonKey": "DEMO-P008",
+      "personnelNumber": "000008",
+      "fullNameRu": "Демонстрационный Слушатель 008",
+      "fullNameKz": "Демонстрациялық Тыңдаушы 008",
+      "positionRu": "Тестовый механик",
+      "positionKz": "Сынақ механигі",
+      "departmentRu": "Демонстрационный участок 1",
+      "departmentKz": "Демонстрациялық учаске 1",
+      "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+      "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    }
+  ],
+  "cases": {
+    "V01": {
+      "personKeys": [
+        "DEMO-P001"
+      ],
+      "requestKind": "PERSON",
+      "customerOrganizationRequiredByCase": false,
+      "note": "Выбрать поддерживаемый одиночный процесс. Требуемые самой формой реквизиты работодателя остаются обязательными; лишняя компания-заказчик не навязывается."
+    },
+    "V02": {
+      "personKeys": [
+        "DEMO-P001"
+      ],
+      "oldEmployerKey": "DEMO-CUSTOMER-A",
+      "newEmployerKey": "DEMO-CUSTOMER-B",
+      "newTrainingResult": "UNKNOWN",
+      "priorDocumentMustRemainUnchanged": true
+    },
+    "V03": {
+      "personKeys": [
+        "DEMO-P001",
+        "DEMO-P002",
+        "DEMO-P003"
+      ],
+      "sharedProgramCount": 2,
+      "individualOverride": {
+        "personKey": "DEMO-P003",
+        "field": "positionRu",
+        "value": "Индивидуальная тестовая должность"
+      }
+    },
+    "V04": {
+      "sourcePeople": [
+        {
+          "externalPersonKey": "DEMO-P001",
+          "personnelNumber": "000001",
+          "fullNameRu": "Демонстрационный Слушатель 001",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 001",
+          "positionRu": "Тестовый оператор",
+          "positionKz": "Сынақ операторы",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P002",
+          "personnelNumber": "000002",
+          "fullNameRu": "Демонстрационный Слушатель 002",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 002",
+          "positionRu": "Тестовый мастер",
+          "positionKz": "Сынақ шебері",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P003",
+          "personnelNumber": "000003",
+          "fullNameRu": "Демонстрационный Слушатель 003",
+          "fullNameKz": "Әғқңөұүһі Демонстрациялық Тыңдаушы 003",
+          "positionRu": "Тестовый специалист",
+          "positionKz": "Сынақ маманы",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P004",
+          "personnelNumber": "000004",
+          "fullNameRu": "Демонстрационный Слушатель 004",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 004",
+          "positionRu": "Тестовый механик",
+          "positionKz": "Сынақ механигі",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P005",
+          "personnelNumber": "000005",
+          "fullNameRu": "Демонстрационный Слушатель 005",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 005",
+          "positionRu": "Тестовый оператор",
+          "positionKz": "Сынақ операторы",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P006",
+          "personnelNumber": "000006",
+          "fullNameRu": "Демонстрационный Слушатель 006",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 006",
+          "positionRu": "Тестовый мастер",
+          "positionKz": "Сынақ шебері",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        }
+      ],
+      "revisedPeople": [
+        {
+          "externalPersonKey": "DEMO-P001",
+          "personnelNumber": "000001",
+          "fullNameRu": "Демонстрационный Слушатель 001",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 001",
+          "positionRu": "Тестовый оператор",
+          "positionKz": "Сынақ операторы",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P002",
+          "personnelNumber": "000002",
+          "fullNameRu": "Демонстрационный Слушатель 002",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 002",
+          "positionRu": "Тестовая уточнённая должность",
+          "positionKz": "Сынақ шебері",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P003",
+          "personnelNumber": "000003",
+          "fullNameRu": "Демонстрационный Слушатель 003",
+          "fullNameKz": "Әғқңөұүһі Демонстрациялық Тыңдаушы 003",
+          "positionRu": "Тестовый специалист",
+          "positionKz": "Сынақ маманы",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P004",
+          "personnelNumber": "000004",
+          "fullNameRu": "Демонстрационный Слушатель 004",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 004",
+          "positionRu": "Тестовый механик",
+          "positionKz": "Сынақ механигі",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P005",
+          "personnelNumber": "000005",
+          "fullNameRu": "Демонстрационный Слушатель 005",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 005",
+          "positionRu": "Тестовый оператор",
+          "positionKz": "Сынақ операторы",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        },
+        {
+          "externalPersonKey": "DEMO-P007",
+          "personnelNumber": "000007",
+          "fullNameRu": "Демонстрационный Слушатель 007",
+          "fullNameKz": "Демонстрациялық Тыңдаушы 007",
+          "positionRu": "Тестовый специалист",
+          "positionKz": "Сынақ маманы",
+          "departmentRu": "Демонстрационный участок 1",
+          "departmentKz": "Демонстрациялық учаске 1",
+          "workplaceRu": "ДЕМО — Тестовая организация «Учебный заказ»",
+          "workplaceKz": "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+        }
+      ],
+      "expected": {
+        "added": [
+          "DEMO-P007"
+        ],
+        "changed": [
+          "DEMO-P002"
+        ],
+        "missing": [
+          "DEMO-P006"
+        ],
+        "unchanged": [
+          "DEMO-P001",
+          "DEMO-P003",
+          "DEMO-P004",
+          "DEMO-P005"
+        ],
+        "missingDoesNotDeletePersonOrHistory": true
+      }
+    },
+    "V05": {
+      "personKeys": [
+        "DEMO-P001",
+        "DEMO-P002",
+        "DEMO-P003",
+        "DEMO-P004",
+        "DEMO-P005",
+        "DEMO-P006",
+        "DEMO-P007",
+        "DEMO-P008"
+      ],
+      "eventPeople": {
+        "TEST-EVENT-A": [
+          "DEMO-P001",
+          "DEMO-P002",
+          "DEMO-P003",
+          "DEMO-P004"
+        ],
+        "TEST-EVENT-B": [
+          "DEMO-P005",
+          "DEMO-P006",
+          "DEMO-P007",
+          "DEMO-P008"
+        ]
+      },
+      "pendingActions": [
+        "result_for_DEMO-P008",
+        "agreed_material_to_customer"
+      ],
+      "operatorOne": "SYNTHETIC_OPERATOR_A",
+      "operatorTwo": "SYNTHETIC_OPERATOR_B"
+    },
+    "V06": {
+      "asOfDate": "2026-09-22",
+      "states": [
+        {
+          "personKey": "DEMO-P001",
+          "employment": "ACTIVE",
+          "need": "CONFIRMED",
+          "basis": "EXPLICIT_CUSTOMER_REQUEST"
+        },
+        {
+          "personKey": "DEMO-P002",
+          "employment": "ACTIVE",
+          "need": "CONFIRMED",
+          "basis": "EXPLICIT_CUSTOMER_REQUEST"
+        },
+        {
+          "personKey": "DEMO-P003",
+          "employment": "ACTIVE",
+          "need": "UNKNOWN",
+          "basis": null
+        },
+        {
+          "personKey": "DEMO-P004",
+          "employment": "ACTIVE",
+          "need": "SATISFIED_EXTERNALLY",
+          "basis": "SYNTHETIC_EXTERNAL_RECORD"
+        },
+        {
+          "personKey": "DEMO-P005",
+          "employment": "ENDED",
+          "need": "NOT_CURRENT",
+          "basis": "CONFIRMED_EMPLOYMENT_END"
+        }
+      ],
+      "expectedNewRequestPersonKeys": [
+        "DEMO-P001",
+        "DEMO-P002"
+      ],
+      "note": "Не основано на выдуманном правовом сроке; две потребности подтверждены синтетическим явным запросом заказчика."
+    },
+    "V07": {
+      "customerKey": "DEMO-CUSTOMER-A",
+      "visiblePersonKeys": [
+        "DEMO-P001",
+        "DEMO-P002",
+        "DEMO-P003"
+      ],
+      "otherCustomerKey": "DEMO-CUSTOMER-B",
+      "forbiddenPersonKeys": [
+        "DEMO-P004",
+        "DEMO-P005"
+      ],
+      "portalRequiredForCenterWork": false
+    },
+    "V08": {
+      "personKeys": [
+        "DEMO-P003",
+        "DEMO-P001",
+        "DEMO-P002"
+      ],
+      "outputOrder": "EXPLICIT_SOURCE_ORDER",
+      "requiredColumns": [
+        "personnelNumber",
+        "fullNameRu",
+        "documentNumber",
+        "documentDate"
+      ],
+      "forbiddenManualPostprocessing": [
+        "retype_numbers",
+        "rename_each_file",
+        "rebuild_inventory"
+      ]
+    },
+    "V09": {
+      "personKeys": [
+        "DEMO-P001"
+      ],
+      "originalSetup": "Create through real synthetic issuance, then retain artifact hash and number.",
+      "actions": [
+        "search",
+        "redownload",
+        "request_correction"
+      ],
+      "noNewNumberOnRedownload": true
+    },
+    "V10": {
+      "personKeys": [
+        "DEMO-P001"
+      ],
+      "newCenterSetup": "ONE_SUPPORTED_SYNTHETIC_SERVICE",
+      "optionalWorkflowsDisabledForCase": [
+        "commercial_accounting",
+        "customer_portal"
+      ],
+      "note": "Функции реализованы в продукте, но не обязательны в процессе этого клиента. Требования выбранной формы сохраняются."
+    },
+    "V11": {
+      "personKeys": [
+        "DEMO-P001",
+        "DEMO-P002",
+        "DEMO-P003"
+      ],
+      "commercialUnits": "AGREED_SERVICE_UNITS",
+      "initialAgreedQuantity": 3,
+      "revisedAgreedQuantity": 2,
+      "unitPriceKzt": "10000.00",
+      "expectedInitialNetKzt": "30000.00",
+      "expectedRevisedNetKzt": "20000.00",
+      "amountMeaning": "SYNTHETIC_PRICE_SUBTOTAL_NOT_A_TAX_INVOICE",
+      "taxConfiguration": null,
+      "partialPaymentKzt": "5000.00",
+      "note": "Расчёт условный, не рыночный тариф. Налоги не выводить из null; регламентированный финансовый документ без нужных данных не создавать."
+    },
+    "V12": {
+      "personKeys": [
+        "DEMO-P001",
+        "DEMO-P002",
+        "DEMO-P003"
+      ],
+      "missingEvidence": "AGREED_SIGNED_COPY",
+      "exportScope": "AUTHORIZED_CUSTOMER_ONLY",
+      "notes": "Недостающий подписанный экземпляр не создаётся. Проверить разрешённое получение доступных оснований и восстановление по действующему тестовому порядку."
+    }
+  },
+  "separateSyntheticResults": [
+    {
+      "sourceId": "SYNTHETIC-RESULT-1",
+      "personKey": "DEMO-P001",
+      "status": "PASSED",
+      "requiresExplicitImportOrEntryAndConfirmation": true,
+      "note": "Исключительно синтетическая ведомость, не default приложения и не факт реального обучения."
+    },
+    {
+      "sourceId": "SYNTHETIC-RESULT-2",
+      "personKey": "DEMO-P002",
+      "status": "PASSED",
+      "requiresExplicitImportOrEntryAndConfirmation": true,
+      "note": "Исключительно синтетическая ведомость, не default приложения и не факт реального обучения."
+    },
+    {
+      "sourceId": "SYNTHETIC-RESULT-3",
+      "personKey": "DEMO-P003",
+      "status": "PASSED",
+      "requiresExplicitImportOrEntryAndConfirmation": true,
+      "note": "Исключительно синтетическая ведомость, не default приложения и не факт реального обучения."
+    },
+    {
+      "sourceId": "SYNTHETIC-RESULT-4",
+      "personKey": "DEMO-P004",
+      "status": "PASSED",
+      "requiresExplicitImportOrEntryAndConfirmation": true,
+      "note": "Исключительно синтетическая ведомость, не default приложения и не факт реального обучения."
+    },
+    {
+      "sourceId": "SYNTHETIC-RESULT-5",
+      "personKey": "DEMO-P005",
+      "status": "PASSED",
+      "requiresExplicitImportOrEntryAndConfirmation": true,
+      "note": "Исключительно синтетическая ведомость, не default приложения и не факт реального обучения."
+    },
+    {
+      "sourceId": "SYNTHETIC-RESULT-6",
+      "personKey": "DEMO-P006",
+      "status": "PASSED",
+      "requiresExplicitImportOrEntryAndConfirmation": true,
+      "note": "Исключительно синтетическая ведомость, не default приложения и не факт реального обучения."
+    },
+    {
+      "sourceId": "SYNTHETIC-RESULT-7",
+      "personKey": "DEMO-P007",
+      "status": "PASSED",
+      "requiresExplicitImportOrEntryAndConfirmation": true,
+      "note": "Исключительно синтетическая ведомость, не default приложения и не факт реального обучения."
+    },
+    {
+      "sourceId": "SYNTHETIC-RESULT-8",
+      "personKey": "DEMO-P008",
+      "status": "PASSED",
+      "requiresExplicitImportOrEntryAndConfirmation": true,
+      "note": "Исключительно синтетическая ведомость, не default приложения и не факт реального обучения."
+    }
+  ]
+}

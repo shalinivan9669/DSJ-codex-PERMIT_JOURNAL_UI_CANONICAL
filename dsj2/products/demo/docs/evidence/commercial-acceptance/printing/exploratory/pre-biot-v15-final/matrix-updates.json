@@ -1,0 +1,162 @@
+{
+  "owner": "print_acceptance",
+  "scope": "Proposed print contribution; A27 intentionally partial NOT RUN; A21 closed by actual two-timezone roundtrip. Legal and physical blockers remain separate. Current source is pinned by hash, not the old base Git revision.",
+  "requirements": [
+    {
+      "id": "A20",
+      "status": "PASS",
+      "scenario": "10 forms: short, long RU/KZ, blank optional, punctuation/newlines and all Kazakh glyphs; >80-character unbroken values before issuance.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "All 84 base pages manually reviewed; every matrix page automatically checked. Names preserved without abbreviation; no RU/KZ substitution; valid layout tested and impossible values rejected by preflight.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-render-tests.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; printing/template-structure-field-map.json; word/final-active.json",
+      "defect": "Microfonts/photo overlap and deferred layout errors.",
+      "fix": "Minimum 8pt body, bounded field reflow and preflight with row issue. Word requires bundled Liberation fonts.",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+    },
+    {
+      "id": "A21",
+      "status": "PASS",
+      "scenario": "Four actual UI save/reload/issue/reload cases in Asia/Almaty and America/Los_Angeles: leap date2028-02-29/protocol2028-02-28; year boundary document2027-01-01/protocol2026-12-31.",
+      "environment": "Chrome152 via installed Playwright; localhost3200/4200, actual worker LibreOffice26.2.6.3; ps-witness v11, renderer5, exact template checksum; only four newly created synthetic requests.",
+      "result": "UI, saved draft and immutable issuance snapshot dates equal; 48 exact DOCX XPath checks and16 PDF regional checks PASS, no date shift or silent today. All8pages visually reviewed. Printed issue date and protocol date remain independent in RU/KZ.",
+      "artifact": "printing/date-roundtrip/date-roundtrip-proof.json; printing/date-roundtrip/visual-review.json; printing/date-roundtrip/*/issued-response.json; printing/date-roundtrip/*/ui-issued-reloaded.png",
+      "defect": "No product date defect in this run; helper navigation failure preserved separately.",
+      "fix": "No runtime/template modification needed; helper navigates through request list before creating next independent case.",
+      "retest": "Four actual browser roundtrips,4DOCX+4PDF/8pages,48DOCX assertions,16PDF regions and negative swapped-date checks PASS.",
+      "limitation": "Bounded calendar sweep of one form with separate issue/protocol date blocks; complements all10form date mapping and date parser regressions. Technical issuance timestamp is not the printed documentDate."
+    },
+    {
+      "id": "A27",
+      "status": "NOT RUN",
+      "scenario": "Printed photo subset: distinct synthetic PNGs per recipient, no-photo samples, EXIF/crop/rotation and invalid bytes/size checks.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Print subset PASS. Every embedded photo SHA tied to its recipient fixture; all base pages and selected 100-person boundaries reviewed; generated portrait additionally verified in Word.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-render-tests.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; word/generated-photo-pb/word-results.json",
+      "defect": "Photo/text overlap with long fields.",
+      "fix": "Reserved photo rectangle and text width reflow.",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "This entry covers renderer and layout, not whole HTTP asset isolation; combine with API evidence. Physical photo quality remains unmeasured."
+    },
+    {
+      "id": "A36",
+      "status": "PASS",
+      "scenario": "10 forms x5 base; protocols 1/2/3/10/13/50/100; other forms 1/2/100.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "96 DOCX/PDF pairs, 1394 recipient instances, 1830 pages PASS; 84 base pages and 186 selected stress pages manually reviewed.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-render-tests.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json",
+      "defect": "",
+      "fix": "",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+    },
+    {
+      "id": "A42",
+      "status": "PASS",
+      "scenario": "Real DOCX to PDF, section/page geometry, fonts>=8pt, fields/photos/order/frames and base/stress visual review.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "All 1830 pages automatically checked; 84 base and 186 selected stress manually reviewed; Word20/20,28 pages viewed.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-render-tests.log; printing/final-visual-reconciliation.json; printing/final-source-docx-revalidation.json; word/final-active.json",
+      "defect": "Word package failures, clipped ITR signature, PS title behind issuer strip and right text beyond divider, PTM frame contact.",
+      "fix": "OOXML package normalization; ITR textbox+14pt; PS y+9pt/right inset24pt; PTM left inset6pt; dynamic issuer strips restored.",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+    },
+    {
+      "id": "A43",
+      "status": "PASS",
+      "scenario": "Scan all XML/rels parts of all96 final DOCX, image ownership and original fixture sanitation.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "No unresolved fields, known legacy identity text, hidden gfxdata cache or external relationships in96 documents. All ten templates retain no old signatures/seals; visual review agrees.",
+      "artifact": "printing/final-docx-content-scan.json; printing/final-artifact-audit.json; printing/final-render-tests.log; printing/final-visual-reconciliation.json",
+      "defect": "",
+      "fix": "",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+    },
+    {
+      "id": "C01",
+      "status": "PASS",
+      "scenario": "BIOT historical six-column table exact cells, all final PDF physical pages, and artificial table continuation. Other nine forms do not receive invented number rows.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Every relevant DOCX numbering row contains literal1..6, per-cell PDF coordinates confirm restart1..6. Row number1 in individual protocols; registration/protocol numbers remain independent.",
+      "artifact": "printing/template-structure-field-map.json; printing/numbering-mutation-result.json; printing/physical-continuation-result.json; printing/biot-protocol-stress-100.result.json",
+      "defect": "No dedicated per-cell/per-page regression existed.",
+      "fix": "Literal values, numId0, tblHeader, cantSplit; structural and PDF coordinate assertions.",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "PASS proves engineering behavior of historical N6. Current law has N7; normative suitability is BLOCKED, not claimed."
+    },
+    {
+      "id": "C02",
+      "status": "PASS",
+      "scenario": "Controlled mutation of second form numbering cells from1..6 to7..12; real converter.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Both DOCX cell test and PDF coordinate test reject mutant; good version passes.",
+      "artifact": "printing/numbering-good.docx; printing/numbering-good.pdf; printing/numbering-mutation-7-12.docx; printing/numbering-mutation-7-12.pdf; printing/numbering-mutation-result.json",
+      "defect": "",
+      "fix": "",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Historical spontaneous bug not reproduced; this is explicitly controlled mutation sensitivity evidence."
+    },
+    {
+      "id": "C03",
+      "status": "PASS",
+      "scenario": "New rendering of preserved PTM v4, comparison to fixed semantic template and final v9 regression.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Before: document number in signature cell and3 basis occurrences. After: blank signature and1 basis. Final test16 confirms active v9 unchanged semantics.",
+      "artifact": "printing/ptm-before-after-proof.json; printing/ptm-before-v4.docx; printing/ptm-before-v4.pdf; printing/ptm-protocol-short.docx; printing/ptm-protocol-short.pdf; printing/final-render-tests.log",
+      "defect": "Confirmed NUMBER in signature and duplicated APPROVAL_BASIS.",
+      "fix": "Empty signature cell and one basis; old original bytes preserved.",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+    },
+    {
+      "id": "C04",
+      "status": "PASS",
+      "scenario": "All10 templates field-to-XML XPath/cell map and base PDF field coordinates; independent language, number and date values.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Corrected BIOT KZ position and blank notes, PTM signature/basis, PS credentialNumber once, witness protocol decision date/day/month, PB education and dates. Individual protocol recipient index1 remains separate from issuance numbers.",
+      "artifact": "printing/FIELD_MAP_RU.md; printing/template-structure-field-map.json; printing/*field-coordinates.json; printing/final-render-tests.log",
+      "defect": "",
+      "fix": "New immutable template versions; field mapping regressions; source originals retained.",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Engineering evidence for historical forms; normative BIOT approval and physical print remain BLOCKED."
+    },
+    {
+      "id": "C05",
+      "status": "PASS",
+      "scenario": "4 protocols x1/2/3/10/13/50/100,6 other forms x1/2/100; all actual PDF pages.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "46 stress documents,1334 recipients,1746 pages PASS. Final PS100=200pages,109.004s DOCX+converter (one measurement, concurrency2).",
+      "artifact": "printing/stress-summary.json; printing/stress-results.json; printing/final-v14-linux-run.log; printing/final-v15-ps-stress.log; printing/final-artifact-audit.json",
+      "defect": "PS100 initially exceeded90s converter timeout.",
+      "fix": "Bounded converter180s/API PDF210s; original failure log retained and actual retest passed.",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Renderer aggregate capacity measurement, not SLA or p95 of production queue; API normally issues per-recipient documents."
+    },
+    {
+      "id": "C06",
+      "status": "PASS",
+      "scenario": "Distinct names, document/protocol numbers and photo bytes for every recipient;101 rows rejected on all10 forms.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "Photo/recipient ownership and order checked on all1394 instances;101 gives ROW_LIMIT before creation with no partial file on all10 forms.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-source-docx-revalidation.json; printing/final-visual-reconciliation.json",
+      "defect": "",
+      "fix": "",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Print-side rejection proof; API numbering/transaction evidence is independently recorded by security agent."
+    },
+    {
+      "id": "C07",
+      "status": "PASS",
+      "scenario": "Paper size/orientation and minimum8pt on all1830 pages, full84 base review and186 stress sample; Word28 pages.",
+      "environment": "Linux container / Python 3.12.14 / LibreOffice 26.2.6.3 / Liberation 2.1.5; renderer demo-ooxml-5; final template SHA in environment.json. Word 16.0.17932 on Windows with bundled fonts.",
+      "result": "A4 portrait except ITR andPSprotocol landscape; title/frames/photos/signatures fit. Final manual reviews reconciled by SHA.",
+      "artifact": "printing/final-visual-reconciliation.json; printing/all-results.json; word/final-active.json; PHYSICAL_PRINT_RU.md",
+      "defect": "Unreadable3–6pt labels, ITR clipping, PS overlap, PTM inset.",
+      "fix": "Preserved frame geometry while expanding/offsetting internal blocks and restoring issuer strip.",
+      "retest": "Fresh final artifacts and current-source hashes; 22 render tests PASS; original failed evidence retained.",
+      "limitation": "Digital layout PASS only. 7pt synthetic notice excluded from body threshold. Physical100% ruler/duplex measurement BLOCKED."
+    }
+  ]
+}

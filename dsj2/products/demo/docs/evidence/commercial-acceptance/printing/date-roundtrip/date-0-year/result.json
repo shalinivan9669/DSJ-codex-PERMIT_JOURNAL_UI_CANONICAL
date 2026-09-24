@@ -1,0 +1,78 @@
+{
+  "name": "date-0-year",
+  "status": "BROWSER_AND_SNAPSHOT_PASS_PDF_PENDING",
+  "requestId": "c33cdc32-832d-4e11-8c6e-c217b47be5fd",
+  "requestUrl": "http://localhost:3200/requests/c33cdc32-832d-4e11-8c6e-c217b47be5fd/edit",
+  "timezoneId": "Asia/Almaty",
+  "expected": {
+    "kind": "year",
+    "documentDate": "2027-01-01",
+    "protocolDate": "2026-12-31"
+  },
+  "ui": {
+    "documentDate": "2027-01-01",
+    "protocolDate": "2026-12-31",
+    "browser": {
+      "zone": "Asia/Almaty",
+      "midnightProbe": "Fri Jan 01 2027 05:30:00 GMT+0500 (Казахстан)"
+    }
+  },
+  "snapshotAssignment": {
+    "id": "7c196e3e-08ff-4364-ba47-30e55cb793ce",
+    "hours": "",
+    "reason": "",
+    "result": "ТЕСТ: сдал / тапсырды",
+    "education": "",
+    "templateId": "ps-witness",
+    "validUntil": "",
+    "trainingEnd": "",
+    "documentDate": "2027-01-01",
+    "protocolDate": "2026-12-31",
+    "protocolMode": "INDIVIDUAL",
+    "trainingStart": "",
+    "trainingSubject": "ТЕСТ: календарная проверка",
+    "externalBasisNumber": ""
+  },
+  "browserVersion": "152.0.7977.83",
+  "templates": [
+    {
+      "id": "ps-witness",
+      "version": "11",
+      "checksum": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "c44718bd-3c2c-4853-a432-59cc9dbd95b6",
+      "format": "DOCX",
+      "file": "docx-c44718bd-3c2c-4853-a432-59cc9dbd95b6.docx",
+      "sha256": "3190794e6482a659d605361dbfd37744203670ef0bb1ae322dcd1babe34c124a",
+      "provenance": "ORIGINAL",
+      "bytes": 21283
+    },
+    {
+      "id": "930aca36-4111-4ebf-a3aa-fbe18fb45e81",
+      "format": "PDF",
+      "file": "pdf-930aca36-4111-4ebf-a3aa-fbe18fb45e81.pdf",
+      "sha256": "4ff63780ebeeffa3e94b3eb260c4252cf23e3c8351338e3862804568695bec7b",
+      "provenance": "ORIGINAL",
+      "bytes": 167441
+    },
+    {
+      "id": "bd47c8cf-15c1-4f7b-b1e6-e74fb7419bf1",
+      "format": "XLSX",
+      "file": "xlsx-bd47c8cf-15c1-4f7b-b1e6-e74fb7419bf1.xlsx",
+      "sha256": "e12a86b5a0dd6502d0871e756a3ba7b2f0b4b36e71c8b649980025572380deab",
+      "provenance": "ORIGINAL",
+      "bytes": 5904
+    },
+    {
+      "id": "754dbf1e-1949-48c8-bdcf-c72558ac7dd8",
+      "format": "ZIP",
+      "file": "zip-754dbf1e-1949-48c8-bdcf-c72558ac7dd8.zip",
+      "sha256": "2e7977ea1fbb1df267921fe0ec7dcf3da4cf5c64a255838f0d124385fcefce8c",
+      "provenance": "ORIGINAL",
+      "bytes": 133168
+    }
+  ]
+}

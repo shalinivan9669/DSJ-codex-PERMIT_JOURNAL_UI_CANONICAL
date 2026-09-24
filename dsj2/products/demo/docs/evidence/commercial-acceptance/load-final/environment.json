@@ -1,0 +1,42 @@
+{
+  "observedAt": "2026-09-22T15:52:21.183Z",
+  "clientHost": {
+    "node": "v24.16.0",
+    "platform": "linux",
+    "cpu": "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+    "logicalCpus": 12,
+    "memoryBytes": 16624783360
+  },
+  "target": {
+    "origin": "https://localhost:8443/api",
+    "runtimeDescription": "See separate server/container resource telemetry; clientHost is not a server capacity measurement"
+  },
+  "operators": [
+    {
+      "userId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+      "role": "OPERATOR",
+      "tenantId": "e417ddcc-bf8d-4f78-b094-125ebad9b2bc"
+    },
+    {
+      "userId": "27c1320f-fcf2-4398-8fdb-e915fe4a712a",
+      "role": "OPERATOR",
+      "tenantId": "e417ddcc-bf8d-4f78-b094-125ebad9b2bc"
+    }
+  ],
+  "repeats": 3,
+  "sizes": [
+    1,
+    10,
+    50,
+    100
+  ],
+  "pollMs": 1000,
+  "workload": "HTTP create/finalize, real independent worker, all persisted artifacts downloaded and hashed; one BIOT protocol per distinct recipient",
+  "thresholds": {
+    "kind": "engineering assumptions, not contractual SLA",
+    "finalizeMs": 60000,
+    "issuanceTimeoutMs": 1800000,
+    "unexpectedFailures": 0
+  },
+  "queuePrecision": "Observed states relative to request start with 1000ms polling uncertainty; not exact worker service instrumentation. No p95 asserted from fewer than 20 complete samples."
+}

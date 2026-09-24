@@ -1,0 +1,22 @@
+[
+  {
+    "file": "biot-protocol-all.docx",
+    "status": "FAIL",
+    "error": "Файл поврежден."
+  },
+  {
+    "file": "biot-protocol-mc.docx",
+    "status": "FAIL",
+    "error": "Файл поврежден."
+  },
+  {
+    "file": "biot-protocol-override.docx",
+    "status": "FAIL",
+    "error": "Файл поврежден."
+  },
+  {
+    "file": "biot-protocol-props.docx",
+    "status": "FAIL",
+    "error": "Файл поврежден."
+  }
+]

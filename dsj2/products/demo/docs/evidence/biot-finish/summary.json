@@ -1,0 +1,89 @@
+{
+  "status": "PASS",
+  "scope": "Bounded finish of four current BIOT forms; not full release/commercial acceptance",
+  "rendererVersion": "demo-ooxml-6/libreoffice-26.2.6.3",
+  "activeManifestSha256": "a43cc4481bc68fc91b42762bb536b30f44cb6c627f00ee6619112b8636d6c159",
+  "finalDocxPdfCases": 8,
+  "finalLibreOfficePages": 8,
+  "wordCases": 8,
+  "wordPages": 8,
+  "twoRecipientProtocolCases": 2,
+  "twoRecipientProtocolPages": 4,
+  "minimumBodyFontPt": 9,
+  "fieldChecks": 146,
+  "sourceTemplates": [
+    {
+      "id": "biot-worker-card",
+      "version": 16,
+      "sha256": "33e00e6897a2d10b138c41a8613d40a19b7c1ca2828526f3c512af724b7aa580"
+    },
+    {
+      "id": "biot-itr-certificate",
+      "version": 14,
+      "sha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c"
+    },
+    {
+      "id": "biot-protocol",
+      "version": 10,
+      "sha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f"
+    },
+    {
+      "id": "biot-itr-protocol",
+      "version": 1,
+      "sha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29"
+    }
+  ],
+  "unchangedOtherTemplates": [
+    "ptm-card",
+    "ptm-protocol",
+    "pb-card",
+    "pb-protocol",
+    "ps-card",
+    "ps-protocol",
+    "ps-witness"
+  ],
+  "proof": [
+    {
+      "path": "final/manifest.json",
+      "sha256": "d365f3ebf6f3e2ffaa8f9ac052991efbf04e1b56cf0b4e1e67c9a8b8023860c7"
+    },
+    {
+      "path": "final/results.json",
+      "sha256": "f994f27aa7b20231195e0daff12fe9da93b9ced5b63959b249c766d9e032370a"
+    },
+    {
+      "path": "initial/results.json",
+      "sha256": "b59e599ae537d49297f3ae6d22ffdc3692258f3c3f47fbf601c986bba917b6cf"
+    },
+    {
+      "path": "field-coordinates.json",
+      "sha256": "6cd8aa33aed70ed125308a2c2be1d36676a2f41cd774aefd961f7d4539f6acf2"
+    },
+    {
+      "path": "visual-review.json",
+      "sha256": "833d3355e8a8ca173cde91521fbed8febeacc4cf4b7843f99e60d22ea38efae1"
+    },
+    {
+      "path": "preflight.json",
+      "sha256": "3127765d8ad1b4163bcb9c7727b0d8ab9463a78c133d9dac12d1e7f910fb93d8"
+    },
+    {
+      "path": "scoped-test-result.json",
+      "sha256": "6e44d8320569a789c398597521cee4a5e32b482f9aa551d71946ee11a8e3003a"
+    },
+    {
+      "path": "word/word-results.json",
+      "sha256": "80b0e7240eda87f3b0256371ddae9c202be6bb8329dfc31a8fb9968fa9c6e901"
+    },
+    {
+      "path": "word/visual-review.json",
+      "sha256": "af501706bdd05c587e3f6e703e80132f3597933998cd66cf71b118ea8274499b"
+    }
+  ],
+  "limits": [
+    "No renewed 96-case/100-recipient/load/commercial acceptance run",
+    "No physical printer approval",
+    "Issuer authorization and external ECS procedures are separate",
+    "Optional extra mutation conversion stopped and excluded from evidence"
+  ]
+}

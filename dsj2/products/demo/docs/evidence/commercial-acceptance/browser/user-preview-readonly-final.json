@@ -1,0 +1,65 @@
+{
+  "observedAt": "2026-09-22T15:14:51.672Z",
+  "origin": "http://localhost:3200",
+  "readyStatus": 200,
+  "ready": {
+    "status": "ready",
+    "workerSeenAt": "2026-09-22T15:14:42.908Z",
+    "templates": 10,
+    "rendererVersion": "demo-ooxml-5/libreoffice-26.2.6.3",
+    "storage": "ok"
+  },
+  "templates": [
+    {
+      "id": "biot-worker-card",
+      "version": "14",
+      "sha256": "2fee01f02acc4a3dd4538e8330cc537031c44dba68f2ffda267d97e58784bf58"
+    },
+    {
+      "id": "biot-itr-certificate",
+      "version": "13",
+      "sha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6"
+    },
+    {
+      "id": "biot-protocol",
+      "version": "9",
+      "sha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2"
+    },
+    {
+      "id": "ptm-card",
+      "version": "14",
+      "sha256": "dd0b8fb0b25bae70a96de35a13bf1114fcc024c123b11ca047b4196ebd8e5ef6"
+    },
+    {
+      "id": "ptm-protocol",
+      "version": "9",
+      "sha256": "7618dbabb64e1ae04d319e095e6721b05220a860c7f16b49ec2c4959e627d68c"
+    },
+    {
+      "id": "pb-card",
+      "version": "14",
+      "sha256": "00c17e8c416131075dd8391e701ce158e328ed754445bb16d2c77d33708ae380"
+    },
+    {
+      "id": "pb-protocol",
+      "version": "9",
+      "sha256": "c3045b99800e58aedab50c6e72b121ea59a5bdcf5e2da1cd8daf3ea7a05e2e2b"
+    },
+    {
+      "id": "ps-card",
+      "version": "15",
+      "sha256": "35bc64bd8059771e5d4a378d861bfb0632ebe8367fc4471ccb7a08d27a88dc13"
+    },
+    {
+      "id": "ps-protocol",
+      "version": "9",
+      "sha256": "96e11567e132d7b0e2b90b71b9ba3e0e19e2df5081e060a4157a1aa95f67890b"
+    },
+    {
+      "id": "ps-witness",
+      "version": "11",
+      "sha256": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+    }
+  ],
+  "sourceAllMatch": true
+}

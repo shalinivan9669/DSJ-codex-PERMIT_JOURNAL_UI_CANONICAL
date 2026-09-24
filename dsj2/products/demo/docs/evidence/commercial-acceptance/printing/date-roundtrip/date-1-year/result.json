@@ -1,0 +1,78 @@
+{
+  "name": "date-1-year",
+  "status": "BROWSER_AND_SNAPSHOT_PASS_PDF_PENDING",
+  "requestId": "2ae5c0d2-f5dd-4c7a-9ffa-af6101360579",
+  "requestUrl": "http://localhost:3200/requests/2ae5c0d2-f5dd-4c7a-9ffa-af6101360579/edit",
+  "timezoneId": "America/Los_Angeles",
+  "expected": {
+    "kind": "year",
+    "documentDate": "2027-01-01",
+    "protocolDate": "2026-12-31"
+  },
+  "ui": {
+    "documentDate": "2027-01-01",
+    "protocolDate": "2026-12-31",
+    "browser": {
+      "zone": "America/Los_Angeles",
+      "midnightProbe": "Thu Dec 31 2026 16:30:00 GMT-0800 (Тихоокеанское стандартное время)"
+    }
+  },
+  "snapshotAssignment": {
+    "id": "ca0f567c-3f67-4f30-91c4-78262e6148ce",
+    "hours": "",
+    "reason": "",
+    "result": "ТЕСТ: сдал / тапсырды",
+    "education": "",
+    "templateId": "ps-witness",
+    "validUntil": "",
+    "trainingEnd": "",
+    "documentDate": "2027-01-01",
+    "protocolDate": "2026-12-31",
+    "protocolMode": "INDIVIDUAL",
+    "trainingStart": "",
+    "trainingSubject": "ТЕСТ: календарная проверка",
+    "externalBasisNumber": ""
+  },
+  "browserVersion": "152.0.7977.83",
+  "templates": [
+    {
+      "id": "ps-witness",
+      "version": "11",
+      "checksum": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "75331732-b716-436b-8a6e-867400bc3423",
+      "format": "DOCX",
+      "file": "docx-75331732-b716-436b-8a6e-867400bc3423.docx",
+      "sha256": "a409d6d71356f7554e82c613001e9b58aafe9c8b58da59ce918ab2fc52b0902e",
+      "provenance": "ORIGINAL",
+      "bytes": 21283
+    },
+    {
+      "id": "cc41b7d0-8774-49ff-852f-a05e2281b371",
+      "format": "PDF",
+      "file": "pdf-cc41b7d0-8774-49ff-852f-a05e2281b371.pdf",
+      "sha256": "d2e9786af2f9388f4d0851ef2bf478b40c7508faf5f31f41ed76c0237717e0db",
+      "provenance": "ORIGINAL",
+      "bytes": 167557
+    },
+    {
+      "id": "ced76b1a-a939-4003-883e-0e8034a414f5",
+      "format": "XLSX",
+      "file": "xlsx-ced76b1a-a939-4003-883e-0e8034a414f5.xlsx",
+      "sha256": "9f06ca8dfe3d30dec15f33418ec9d9cc8cedfac8b42677ad5ea2e0a33759362e",
+      "provenance": "ORIGINAL",
+      "bytes": 5903
+    },
+    {
+      "id": "7a8479ef-a430-4b22-8091-353946a6ff99",
+      "format": "ZIP",
+      "file": "zip-7a8479ef-a430-4b22-8091-353946a6ff99.zip",
+      "sha256": "ff15fc975bb3bdbdf55999a1afb68a929face928eed772bca09d2745d18e5057",
+      "provenance": "ORIGINAL",
+      "bytes": 133256
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "mode": "issued-document",
+  "demoMode": true,
+  "templateId": "biot-protocol",
+  "templateVersion": 9,
+  "issuer": {
+    "nameRu": "Учебный центр «Образец»",
+    "nameKz": "«Үлгі» оқу орталығы",
+    "cityRu": "Астана",
+    "cityKz": "Астана",
+    "approvalBasis": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+    "commission": [
+      {
+        "name": "Тестова А. Б.",
+        "position": "Председатель"
+      },
+      {
+        "name": "Үлгі Ә. Ө.",
+        "position": "Член комиссии"
+      },
+      {
+        "name": "Примеров В. Г.",
+        "position": "Член комиссии"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "recipient-001",
+      "fullNameRu": "Тестов-001 Иван Петрович",
+      "fullNameKz": "Әділбек-001 Өмірсерік Қанатұлы",
+      "positionRu": "Инженер",
+      "positionKz": "Инженер",
+      "workplaceRu": "ТОО «Тестовый заказчик»",
+      "workplaceKz": "«Сынақ тапсырыс беруші» ЖШС",
+      "number": "ТЕСТ-00001",
+      "protocolNumber": "ПР-00001",
+      "registrationNumber": "00001",
+      "assignment": {
+        "id": "a1",
+        "templateId": "biot-protocol",
+        "documentDate": "2026-09-22",
+        "protocolDate": "2026-09-20",
+        "trainingStart": "2026-09-14",
+        "trainingEnd": "2026-09-19",
+        "trainingSubject": "Безопасность труда / Еңбек қауіпсіздігі",
+        "result": "ТЕСТ: хорошо / жақсы",
+        "reason": "ТЕСТ: первичное обучение",
+        "hours": 40,
+        "validUntil": "2027-09-22",
+        "externalBasisNumber": "ВНЕШНИЙ-01",
+        "protocolMode": "individual"
+      },
+      "credentialNumber": "КР-00001"
+    }
+  ],
+  "photos": {}
+}

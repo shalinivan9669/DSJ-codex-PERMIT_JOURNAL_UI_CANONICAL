@@ -1,0 +1,202 @@
+﻿[
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstRow\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastRow\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstColumn\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastColumn\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noHBand\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noVBand\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:numPr\u0027.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tr[2]/w:tc[1]/w:p[1]/w:pPr[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:numPr\u0027.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tr[2]/w:tc[2]/w:p[1]/w:pPr[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:numPr\u0027.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tr[2]/w:tc[3]/w:p[1]/w:pPr[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:numPr\u0027.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tr[2]/w:tc[4]/w:p[1]/w:pPr[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:numPr\u0027.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tr[2]/w:tc[5]/w:p[1]/w:pPr[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:numPr\u0027.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tr[2]/w:tc[6]/w:p[1]/w:pPr[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:numPr\u0027.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tr[3]/w:tc[1]/w:p[1]/w:pPr[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:numPr\u0027.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[1]/w:tr[3]/w:tc[6]/w:p[1]/w:pPr[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstRow\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[2]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastRow\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[2]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstColumn\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[2]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastColumn\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[2]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noHBand\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[2]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noVBand\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[2]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstRow\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[3]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastRow\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[3]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstColumn\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[3]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastColumn\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[3]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noHBand\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[3]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noVBand\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[3]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstRow\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[4]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastRow\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[4]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstColumn\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[4]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastColumn\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[4]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noHBand\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[4]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noVBand\u0027 attribute is not declared.",
+        "path":  "/w:document[1]/w:body[1]/w:tbl[4]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/document.xml"
+    },
+    {
+        "description":  "The attribute \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:name\u0027 has invalid value \u0027useWord2013TrackBottomHyphenation\u0027. The Enumeration constraint failed.",
+        "path":  "/w:settings[1]/w:compat[1]/w:compatSetting[2]",
+        "part":  "/word/settings.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstRow\u0027 attribute is not declared.",
+        "path":  "/w:hdr[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/header2.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastRow\u0027 attribute is not declared.",
+        "path":  "/w:hdr[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/header2.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:firstColumn\u0027 attribute is not declared.",
+        "path":  "/w:hdr[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/header2.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:lastColumn\u0027 attribute is not declared.",
+        "path":  "/w:hdr[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/header2.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noHBand\u0027 attribute is not declared.",
+        "path":  "/w:hdr[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/header2.xml"
+    },
+    {
+        "description":  "The \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:noVBand\u0027 attribute is not declared.",
+        "path":  "/w:hdr[1]/w:tbl[1]/w:tblPr[1]/w:tblLook[1]",
+        "part":  "/word/header2.xml"
+    },
+    {
+        "description":  "The element has unexpected child element \u0027http://schemas.openxmlformats.org/wordprocessingml/2006/main:color\u0027.",
+        "path":  "/w:hdr[1]/w:p[1]/w:r[1]/w:rPr[1]",
+        "part":  "/word/demo-header.xml"
+    }
+]

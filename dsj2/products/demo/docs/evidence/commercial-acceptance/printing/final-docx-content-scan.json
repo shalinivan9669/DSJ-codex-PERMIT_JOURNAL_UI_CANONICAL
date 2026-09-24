@@ -1,0 +1,584 @@
+{
+  "status": "PASS",
+  "documents": 96,
+  "checks": [
+    {
+      "case": "biot-worker-card-short",
+      "sha256": "469f7cde62129cef41b8e2812ed960b16ea21ea059e120247f18fff8a737f675",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "biot-worker-card-long",
+      "sha256": "e80eb630ba30828501014fd5b0db85133da354de9f495bb6963f10902188c2c9",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "biot-worker-card-blank",
+      "sha256": "fcbe29d2ccdafa5d549a2f92f194f748947a4e7c293cffb18d64d8782a954c63",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "biot-worker-card-batch",
+      "sha256": "452916b0bf619cfeb13cf787ee80ad3ad9c2a159d2dbb9792def189c90a2a9bb",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "biot-worker-card-punctuation",
+      "sha256": "ef7e4ad11c489a2bcb0fe24c58e34c571713e32ff3705a95dcbd4a5b896656fa",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "biot-worker-card-stress-001",
+      "sha256": "469f7cde62129cef41b8e2812ed960b16ea21ea059e120247f18fff8a737f675",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "biot-worker-card-stress-002",
+      "sha256": "452916b0bf619cfeb13cf787ee80ad3ad9c2a159d2dbb9792def189c90a2a9bb",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "biot-worker-card-stress-100",
+      "sha256": "c63230621ac9fe03420edbb0e5dc4e84ef5b1f8bf187a2bfcd88ec17d1357e7e",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "biot-itr-certificate-short",
+      "sha256": "5bd57bed9e9c530e3db399db1fa13cfeeb1e694e655260b0d49fcb6f0f521050",
+      "xmlParts": 16,
+      "issues": []
+    },
+    {
+      "case": "biot-itr-certificate-long",
+      "sha256": "a3ceab951c334fe6d7d680ce64f29d4f2ba65fd0e775356ee6283f3637f4c9fe",
+      "xmlParts": 16,
+      "issues": []
+    },
+    {
+      "case": "biot-itr-certificate-blank",
+      "sha256": "1ffcf32d84a4dcfafb40ab937976952e5405fc46dc751c76cb31bfd0ee893a47",
+      "xmlParts": 16,
+      "issues": []
+    },
+    {
+      "case": "biot-itr-certificate-batch",
+      "sha256": "37153f64dd1c06dce3ace26fdb46ae12e65ebec2a74dfb0e518a02f144d9c3d1",
+      "xmlParts": 16,
+      "issues": []
+    },
+    {
+      "case": "biot-itr-certificate-punctuation",
+      "sha256": "8cb8f8bb200604729513035eddf2fd2443ac2f78e896983e74cb43eac286a044",
+      "xmlParts": 16,
+      "issues": []
+    },
+    {
+      "case": "biot-itr-certificate-stress-001",
+      "sha256": "5bd57bed9e9c530e3db399db1fa13cfeeb1e694e655260b0d49fcb6f0f521050",
+      "xmlParts": 16,
+      "issues": []
+    },
+    {
+      "case": "biot-itr-certificate-stress-002",
+      "sha256": "37153f64dd1c06dce3ace26fdb46ae12e65ebec2a74dfb0e518a02f144d9c3d1",
+      "xmlParts": 16,
+      "issues": []
+    },
+    {
+      "case": "biot-itr-certificate-stress-100",
+      "sha256": "3dae7fe8ccadbbfc644aeb5a98150bf7be2ca26d557c9d103590c79d894e1ba4",
+      "xmlParts": 16,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-short",
+      "sha256": "9c4aa1af4d95f8f403eb732236b746b4e38a6c067f7318534fb5b90ade479fe6",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-long",
+      "sha256": "5d700f6e220920599428a4b5ade14e764860cf01fe9347ba6cf9f0695e46c6dd",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-blank",
+      "sha256": "38fd1b515658fc7a31e8f25a7c8bc9a832778f16f647dd07e7de7ffde213a438",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-batch",
+      "sha256": "2b61a2d883b197679a805bd3a1402a206a7b6cf6f575aa16aaeb520564024f5f",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-punctuation",
+      "sha256": "b96a2e79b3f397ff7ec0805895e5e2404e40f4c038d59e53538b0d78b079df3c",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-stress-001",
+      "sha256": "9c4aa1af4d95f8f403eb732236b746b4e38a6c067f7318534fb5b90ade479fe6",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-stress-002",
+      "sha256": "2b61a2d883b197679a805bd3a1402a206a7b6cf6f575aa16aaeb520564024f5f",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-stress-003",
+      "sha256": "77a86c126949097aacd142a97b2dcd5f66458cab44c57953a6aa9b2ada0c1414",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-stress-010",
+      "sha256": "541c55152ece1b61a001446089fd7573df1ee3860ea792b8f9acaebd1a9b4b2a",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-stress-013",
+      "sha256": "74a28f049f7529e68b2805dc3cfa080c3ad06cb9ad8f306f92ae0968274bf540",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-stress-050",
+      "sha256": "22efb994cc26dd7443e383ef6f9518e25a1bbf1e0cc8c3e0b32ba2366902a292",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "biot-protocol-stress-100",
+      "sha256": "0063a53121d8c5d59c838a121e8f821fe104429c6c90371f916e6d025b51d802",
+      "xmlParts": 22,
+      "issues": []
+    },
+    {
+      "case": "ptm-card-short",
+      "sha256": "241a9c3808784786d9a290c134bb25f45e50790cb4142e334bad80d831a6abba",
+      "xmlParts": 13,
+      "issues": []
+    },
+    {
+      "case": "ptm-card-long",
+      "sha256": "71702bd14c526a0b6c973efcf064f7df272e30b136c831e33cf664ebbd28af21",
+      "xmlParts": 13,
+      "issues": []
+    },
+    {
+      "case": "ptm-card-blank",
+      "sha256": "acd14b5278fdbcc376bcac2183f75658f6e0e9a5a8961e468a9144ef1c3aa2b8",
+      "xmlParts": 13,
+      "issues": []
+    },
+    {
+      "case": "ptm-card-batch",
+      "sha256": "1068bff721940092104767b4f22c0d3d7bc885fd138c6c72a9da7a67e0b41355",
+      "xmlParts": 13,
+      "issues": []
+    },
+    {
+      "case": "ptm-card-punctuation",
+      "sha256": "a729b718193def6b8943309311ed792aab322bbcf1e868354d7e1fd29537bc8e",
+      "xmlParts": 13,
+      "issues": []
+    },
+    {
+      "case": "ptm-card-stress-001",
+      "sha256": "241a9c3808784786d9a290c134bb25f45e50790cb4142e334bad80d831a6abba",
+      "xmlParts": 13,
+      "issues": []
+    },
+    {
+      "case": "ptm-card-stress-002",
+      "sha256": "1068bff721940092104767b4f22c0d3d7bc885fd138c6c72a9da7a67e0b41355",
+      "xmlParts": 13,
+      "issues": []
+    },
+    {
+      "case": "ptm-card-stress-100",
+      "sha256": "14048ea33fcb811db44e1bad0e4b0aa8508861de48dd8d14f519b32f5c438842",
+      "xmlParts": 13,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-short",
+      "sha256": "ec64b006490539894582584b5084232d449b5325eb9378d190fca0440f252d61",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-long",
+      "sha256": "c68be733b7b252f912857d70d0492c5e89c3d3bbacd8774cd9df70a3542d8788",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-blank",
+      "sha256": "88afb43a0ea84ba5d1265926264e5189e747a3b610127bb0038990c9cc45afb6",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-batch",
+      "sha256": "141f751aa9c7d880a11023af5c3fa75c47ab44c5c3c9630f2f45607f75f6de88",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-punctuation",
+      "sha256": "6c8f3d1eb0281d326def9443c549eb6fe6361fd5868d8575019eab47892b2000",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-stress-001",
+      "sha256": "ec64b006490539894582584b5084232d449b5325eb9378d190fca0440f252d61",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-stress-002",
+      "sha256": "141f751aa9c7d880a11023af5c3fa75c47ab44c5c3c9630f2f45607f75f6de88",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-stress-003",
+      "sha256": "a4c773ad2c49731076175afce286ce3e76016dfb984bce417f0c55ca6a8d5184",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-stress-010",
+      "sha256": "337bc78221c865ac2ef2e9d5e1e94191713e525de4ef2df0325e5b95c5349071",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-stress-013",
+      "sha256": "94efe487d2ce51ab14d0af19f90e225f9d1c6998a682a320837aa4c5fca5afaf",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-stress-050",
+      "sha256": "a7f02d0600a9adea27c6920583410c58abff238c9d1729acd69e212bd318256d",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ptm-protocol-stress-100",
+      "sha256": "c1af27966b1e9ede580cf8b4e86616d26e2b5fc32c5a617af9d2dc1788a084f4",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-card-short",
+      "sha256": "c94c636e7b8ed2d8c405086dd1db61ba7808fb642f9330c7f2ad9cb08c40640d",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "pb-card-long",
+      "sha256": "350727c183bbf5df5f45052a11400efe4e1dab2551fe15c4d8442b2b80a056bd",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "pb-card-blank",
+      "sha256": "1a7f63407dbdc9189ef14eb97075b9f712017517d1cbf51cb756fe84ba88756d",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "pb-card-batch",
+      "sha256": "5cdd9bbb6c371df99ffb98a5b65fd6abe294f2ce1fde5a09f96136658892281e",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "pb-card-punctuation",
+      "sha256": "0c921f124eea64b70caed0f7032a445591a45c3474c9bf425bc4c07a3a386b7b",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "pb-card-stress-001",
+      "sha256": "c94c636e7b8ed2d8c405086dd1db61ba7808fb642f9330c7f2ad9cb08c40640d",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "pb-card-stress-002",
+      "sha256": "5cdd9bbb6c371df99ffb98a5b65fd6abe294f2ce1fde5a09f96136658892281e",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "pb-card-stress-100",
+      "sha256": "42b683ab9061e9c3b58dbeda6f62cdae7da226a939feae27822b42057673e615",
+      "xmlParts": 14,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-short",
+      "sha256": "00fd283f13a99e03dddfdc5db6298d1c7f5f5c795d688cdd76cda4b139bf3de9",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-long",
+      "sha256": "90c1e95acc82c226c8e79f71463978d1e0a491e367988f48e8863984ddbfe553",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-blank",
+      "sha256": "20f685ba0955890da07b7d3d0f6b2bfdfea777de5a4edd997aaac81e8881c3da",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-batch",
+      "sha256": "9186308e99457a1b5b46d95711c8e1b81d6d3f71a9ba125c7e28d3cbdf69cc25",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-punctuation",
+      "sha256": "b2a7084eb16222f07d882360dab2e3c15c202970495ce911567fe66f28281c63",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-stress-001",
+      "sha256": "00fd283f13a99e03dddfdc5db6298d1c7f5f5c795d688cdd76cda4b139bf3de9",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-stress-002",
+      "sha256": "9186308e99457a1b5b46d95711c8e1b81d6d3f71a9ba125c7e28d3cbdf69cc25",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-stress-003",
+      "sha256": "5a92d92d4c66eaa91f3c5e31f7d3cd2e759d46ff81c778a64994abb1c85ece60",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-stress-010",
+      "sha256": "750eb0504ba68ce5c0763251fda18c1cabf36c8ed49bdc3936b8462678d8554b",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-stress-013",
+      "sha256": "6c47b011d967137470ed0e53c2d8b9fc59e4a5cf8abbbd792bee73cdad8d1659",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-stress-050",
+      "sha256": "53db3bad6117667928f7e494e9cbae6011db43f90c857c1ed60e0abf17322d85",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "pb-protocol-stress-100",
+      "sha256": "abe84456963a2103716e86c1b37250389be8ede1f5ebe0efc5009b058ed8ee21",
+      "xmlParts": 21,
+      "issues": []
+    },
+    {
+      "case": "ps-card-short",
+      "sha256": "853a627b458fbb8fcde6722b94bdc0be8f400ad250760bf807b3cd5562fcc166",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-card-long",
+      "sha256": "c390efd7cf9ca58dc14f8fef489cf7ba0057c38620c07b315aabe095f3aa2b7d",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-card-blank",
+      "sha256": "d4e26f07a0d4a6898458c28b2c8a689ce9989070bfc65da6d1b21af360cff818",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-card-batch",
+      "sha256": "5ae42516d0c4a5c835c952fd84c56d47fbc08bee445a123d561305adb238aeab",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-card-punctuation",
+      "sha256": "1cd364ab8c9da3f772eb401b4582b4c7ce476af73ac7a1879c4eff6db6a9ae95",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-card-stress-001",
+      "sha256": "853a627b458fbb8fcde6722b94bdc0be8f400ad250760bf807b3cd5562fcc166",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-card-stress-002",
+      "sha256": "5ae42516d0c4a5c835c952fd84c56d47fbc08bee445a123d561305adb238aeab",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-card-stress-100",
+      "sha256": "def9840adde8879acf42ac0fd4c344af1a95416c772d105ee66a0f3636f72612",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-short",
+      "sha256": "da8d014dc8649657373dc89c2ba1753e06363775b88e2d7cb1f9f0683d99deed",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-long",
+      "sha256": "1c991b49dca537931c5ac4dc6fcc90aef3833054a39a54c28f1a31a03a8c4bcf",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-blank",
+      "sha256": "03b6fcc7ba1b15740cf69850eb7c6c9bf803f916b1f9c42333d24f9e33843f77",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-batch",
+      "sha256": "03f67f35707044027ac321ac42a51448895a702a2f68ad5436b85e27e7d4cb92",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-punctuation",
+      "sha256": "880e350890cec0289d4c2867392e19ea1e5ce94f4679c3f5c312caea5c569331",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-stress-001",
+      "sha256": "da8d014dc8649657373dc89c2ba1753e06363775b88e2d7cb1f9f0683d99deed",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-stress-002",
+      "sha256": "03f67f35707044027ac321ac42a51448895a702a2f68ad5436b85e27e7d4cb92",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-stress-003",
+      "sha256": "3802de1f712b398fe6e6e30e5605bdb50f68ac2805b8f4c0eae7575d95533ea8",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-stress-010",
+      "sha256": "6d43e8df0e51b3d878a7a44bc699ad4bce679bb1f183767f33ad7acdebf832a9",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-stress-013",
+      "sha256": "0869c92d98b9dd7a9b7d848ef9d072181a4b2fa76dc1c00d29fceb6328386d36",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-stress-050",
+      "sha256": "0dc75a768e9e1800b1de068419392601010bf290f5753fbe222848cb827244c3",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-protocol-stress-100",
+      "sha256": "b6089806d695417caafd105cebd31e161285423788e47029830c1c806c9df4ba",
+      "xmlParts": 17,
+      "issues": []
+    },
+    {
+      "case": "ps-witness-short",
+      "sha256": "b45d0b91103f538a9062a887e5462232b0a3bb200dd0d0e1b774e3bbb8908ccb",
+      "xmlParts": 12,
+      "issues": []
+    },
+    {
+      "case": "ps-witness-long",
+      "sha256": "79dce390d903e50609bf82eb8917bcac38fdd3aea25b0c20761aedf54d4d8363",
+      "xmlParts": 12,
+      "issues": []
+    },
+    {
+      "case": "ps-witness-blank",
+      "sha256": "15e1dae21bcfa64367bce6de50a25a7e836c57a2b87f042974fdc750c61f770a",
+      "xmlParts": 12,
+      "issues": []
+    },
+    {
+      "case": "ps-witness-batch",
+      "sha256": "213b88caf7a9adc3adf1286f62c92178eb624e5c540aa27d21991f08e24f7d59",
+      "xmlParts": 12,
+      "issues": []
+    },
+    {
+      "case": "ps-witness-punctuation",
+      "sha256": "7e550003fdcdffa80b7a9d3af917dd275dfb7ca4b679b4fa4b4b6f3ee7a29329",
+      "xmlParts": 12,
+      "issues": []
+    },
+    {
+      "case": "ps-witness-stress-001",
+      "sha256": "b45d0b91103f538a9062a887e5462232b0a3bb200dd0d0e1b774e3bbb8908ccb",
+      "xmlParts": 12,
+      "issues": []
+    },
+    {
+      "case": "ps-witness-stress-002",
+      "sha256": "213b88caf7a9adc3adf1286f62c92178eb624e5c540aa27d21991f08e24f7d59",
+      "xmlParts": 12,
+      "issues": []
+    },
+    {
+      "case": "ps-witness-stress-100",
+      "sha256": "ed129d867690fdac3682703af776b136ced9686cc056521d53f851a712729e89",
+      "xmlParts": 12,
+      "issues": []
+    }
+  ],
+  "errors": [],
+  "scope": "All XML/rels parts scanned for unresolved fields, known legacy identity names, hidden gfxdata cache and external references. Image bytes/photo ownership and visual review are separately recorded."
+}

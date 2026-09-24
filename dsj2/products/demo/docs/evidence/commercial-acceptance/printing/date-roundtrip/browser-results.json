@@ -1,0 +1,314 @@
+[
+  {
+    "name": "date-0-leap",
+    "status": "BROWSER_AND_SNAPSHOT_PASS_PDF_PENDING",
+    "requestId": "82685b2a-1acb-44f4-8448-3765ceba2e0d",
+    "requestUrl": "http://localhost:3200/requests/82685b2a-1acb-44f4-8448-3765ceba2e0d/edit",
+    "timezoneId": "Asia/Almaty",
+    "expected": {
+      "kind": "leap",
+      "documentDate": "2028-02-29",
+      "protocolDate": "2028-02-28"
+    },
+    "ui": {
+      "documentDate": "2028-02-29",
+      "protocolDate": "2028-02-28",
+      "browser": {
+        "zone": "Asia/Almaty",
+        "midnightProbe": "Fri Jan 01 2027 05:30:00 GMT+0500 (Казахстан)"
+      }
+    },
+    "snapshotAssignment": {
+      "id": "f71e0d86-3776-4250-8e91-deee0f1897cf",
+      "hours": "",
+      "reason": "",
+      "result": "ТЕСТ: сдал / тапсырды",
+      "education": "",
+      "templateId": "ps-witness",
+      "validUntil": "",
+      "trainingEnd": "",
+      "documentDate": "2028-02-29",
+      "protocolDate": "2028-02-28",
+      "protocolMode": "INDIVIDUAL",
+      "trainingStart": "",
+      "trainingSubject": "ТЕСТ: календарная проверка",
+      "externalBasisNumber": ""
+    },
+    "browserVersion": "152.0.7977.83",
+    "templates": [
+      {
+        "id": "ps-witness",
+        "version": "11",
+        "checksum": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "9414d7aa-9440-481b-8d0d-d605c489117a",
+        "format": "DOCX",
+        "file": "docx-9414d7aa-9440-481b-8d0d-d605c489117a.docx",
+        "sha256": "4a3d2009b6c06925d82aafa8e1bbb7c4bab07e2a534dfe3b407b7f4278d5a04c",
+        "provenance": "ORIGINAL",
+        "bytes": 21258
+      },
+      {
+        "id": "3d15473b-0a8c-4aaf-b696-f8d2e8ec341b",
+        "format": "PDF",
+        "file": "pdf-3d15473b-0a8c-4aaf-b696-f8d2e8ec341b.pdf",
+        "sha256": "caf1b4384a3a9efe6172839a14158965ab49caff0d77b1060a495e6916ba546e",
+        "provenance": "ORIGINAL",
+        "bytes": 167392
+      },
+      {
+        "id": "2f403c62-327a-4d46-895d-976fe9f25f8c",
+        "format": "XLSX",
+        "file": "xlsx-2f403c62-327a-4d46-895d-976fe9f25f8c.xlsx",
+        "sha256": "71b479a9ac75ca6a705768afae7db19f9f141a8767ecb1797c85d5cb1483651e",
+        "provenance": "ORIGINAL",
+        "bytes": 5897
+      },
+      {
+        "id": "a397ea0a-91ab-46b1-a65c-47222477e570",
+        "format": "ZIP",
+        "file": "zip-a397ea0a-91ab-46b1-a65c-47222477e570.zip",
+        "sha256": "352c66f4b35db22e0ac52c711ef4d62a73e2f9985265f4fbfeac2125a8789b17",
+        "provenance": "ORIGINAL",
+        "bytes": 133107
+      }
+    ]
+  },
+  {
+    "name": "date-0-year",
+    "status": "BROWSER_AND_SNAPSHOT_PASS_PDF_PENDING",
+    "requestId": "c33cdc32-832d-4e11-8c6e-c217b47be5fd",
+    "requestUrl": "http://localhost:3200/requests/c33cdc32-832d-4e11-8c6e-c217b47be5fd/edit",
+    "timezoneId": "Asia/Almaty",
+    "expected": {
+      "kind": "year",
+      "documentDate": "2027-01-01",
+      "protocolDate": "2026-12-31"
+    },
+    "ui": {
+      "documentDate": "2027-01-01",
+      "protocolDate": "2026-12-31",
+      "browser": {
+        "zone": "Asia/Almaty",
+        "midnightProbe": "Fri Jan 01 2027 05:30:00 GMT+0500 (Казахстан)"
+      }
+    },
+    "snapshotAssignment": {
+      "id": "7c196e3e-08ff-4364-ba47-30e55cb793ce",
+      "hours": "",
+      "reason": "",
+      "result": "ТЕСТ: сдал / тапсырды",
+      "education": "",
+      "templateId": "ps-witness",
+      "validUntil": "",
+      "trainingEnd": "",
+      "documentDate": "2027-01-01",
+      "protocolDate": "2026-12-31",
+      "protocolMode": "INDIVIDUAL",
+      "trainingStart": "",
+      "trainingSubject": "ТЕСТ: календарная проверка",
+      "externalBasisNumber": ""
+    },
+    "browserVersion": "152.0.7977.83",
+    "templates": [
+      {
+        "id": "ps-witness",
+        "version": "11",
+        "checksum": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "c44718bd-3c2c-4853-a432-59cc9dbd95b6",
+        "format": "DOCX",
+        "file": "docx-c44718bd-3c2c-4853-a432-59cc9dbd95b6.docx",
+        "sha256": "3190794e6482a659d605361dbfd37744203670ef0bb1ae322dcd1babe34c124a",
+        "provenance": "ORIGINAL",
+        "bytes": 21283
+      },
+      {
+        "id": "930aca36-4111-4ebf-a3aa-fbe18fb45e81",
+        "format": "PDF",
+        "file": "pdf-930aca36-4111-4ebf-a3aa-fbe18fb45e81.pdf",
+        "sha256": "4ff63780ebeeffa3e94b3eb260c4252cf23e3c8351338e3862804568695bec7b",
+        "provenance": "ORIGINAL",
+        "bytes": 167441
+      },
+      {
+        "id": "bd47c8cf-15c1-4f7b-b1e6-e74fb7419bf1",
+        "format": "XLSX",
+        "file": "xlsx-bd47c8cf-15c1-4f7b-b1e6-e74fb7419bf1.xlsx",
+        "sha256": "e12a86b5a0dd6502d0871e756a3ba7b2f0b4b36e71c8b649980025572380deab",
+        "provenance": "ORIGINAL",
+        "bytes": 5904
+      },
+      {
+        "id": "754dbf1e-1949-48c8-bdcf-c72558ac7dd8",
+        "format": "ZIP",
+        "file": "zip-754dbf1e-1949-48c8-bdcf-c72558ac7dd8.zip",
+        "sha256": "2e7977ea1fbb1df267921fe0ec7dcf3da4cf5c64a255838f0d124385fcefce8c",
+        "provenance": "ORIGINAL",
+        "bytes": 133168
+      }
+    ]
+  },
+  {
+    "name": "date-1-leap",
+    "status": "BROWSER_AND_SNAPSHOT_PASS_PDF_PENDING",
+    "requestId": "e382d5f0-0fbc-4216-9f76-90c6a03f57e8",
+    "requestUrl": "http://localhost:3200/requests/e382d5f0-0fbc-4216-9f76-90c6a03f57e8/edit",
+    "timezoneId": "America/Los_Angeles",
+    "expected": {
+      "kind": "leap",
+      "documentDate": "2028-02-29",
+      "protocolDate": "2028-02-28"
+    },
+    "ui": {
+      "documentDate": "2028-02-29",
+      "protocolDate": "2028-02-28",
+      "browser": {
+        "zone": "America/Los_Angeles",
+        "midnightProbe": "Thu Dec 31 2026 16:30:00 GMT-0800 (Тихоокеанское стандартное время)"
+      }
+    },
+    "snapshotAssignment": {
+      "id": "d9af8a12-6380-4eeb-97fa-29ec11711361",
+      "hours": "",
+      "reason": "",
+      "result": "ТЕСТ: сдал / тапсырды",
+      "education": "",
+      "templateId": "ps-witness",
+      "validUntil": "",
+      "trainingEnd": "",
+      "documentDate": "2028-02-29",
+      "protocolDate": "2028-02-28",
+      "protocolMode": "INDIVIDUAL",
+      "trainingStart": "",
+      "trainingSubject": "ТЕСТ: календарная проверка",
+      "externalBasisNumber": ""
+    },
+    "browserVersion": "152.0.7977.83",
+    "templates": [
+      {
+        "id": "ps-witness",
+        "version": "11",
+        "checksum": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "afee1f58-88e7-4890-ac4f-c054f7caee85",
+        "format": "DOCX",
+        "file": "docx-afee1f58-88e7-4890-ac4f-c054f7caee85.docx",
+        "sha256": "64be16246d3c7c7b1875361b1735b1db39c4accf9e367be5a1415d0d1eaa65dc",
+        "provenance": "ORIGINAL",
+        "bytes": 21258
+      },
+      {
+        "id": "aa8e6d06-dba5-4f4e-ae72-9a45c05ab5e8",
+        "format": "PDF",
+        "file": "pdf-aa8e6d06-dba5-4f4e-ae72-9a45c05ab5e8.pdf",
+        "sha256": "779b4822a9caae8ab886b5841200ea73a2a5e08f3344e1e38310967fe9dd8834",
+        "provenance": "ORIGINAL",
+        "bytes": 167247
+      },
+      {
+        "id": "6590b635-449b-4b2d-9b6d-68716555e9e3",
+        "format": "XLSX",
+        "file": "xlsx-6590b635-449b-4b2d-9b6d-68716555e9e3.xlsx",
+        "sha256": "714a33057d8a591ad96567544567e183f58e575706eaae5da9e62bf8bd0bb55a",
+        "provenance": "ORIGINAL",
+        "bytes": 5898
+      },
+      {
+        "id": "55e0e6ef-ac5b-46b6-9b22-c8140c51e130",
+        "format": "ZIP",
+        "file": "zip-55e0e6ef-ac5b-46b6-9b22-c8140c51e130.zip",
+        "sha256": "e414cf6bc7213358849b4b6d4b11792c3ff6a6a09a6aec79531af850ec02649e",
+        "provenance": "ORIGINAL",
+        "bytes": 132911
+      }
+    ]
+  },
+  {
+    "name": "date-1-year",
+    "status": "BROWSER_AND_SNAPSHOT_PASS_PDF_PENDING",
+    "requestId": "2ae5c0d2-f5dd-4c7a-9ffa-af6101360579",
+    "requestUrl": "http://localhost:3200/requests/2ae5c0d2-f5dd-4c7a-9ffa-af6101360579/edit",
+    "timezoneId": "America/Los_Angeles",
+    "expected": {
+      "kind": "year",
+      "documentDate": "2027-01-01",
+      "protocolDate": "2026-12-31"
+    },
+    "ui": {
+      "documentDate": "2027-01-01",
+      "protocolDate": "2026-12-31",
+      "browser": {
+        "zone": "America/Los_Angeles",
+        "midnightProbe": "Thu Dec 31 2026 16:30:00 GMT-0800 (Тихоокеанское стандартное время)"
+      }
+    },
+    "snapshotAssignment": {
+      "id": "ca0f567c-3f67-4f30-91c4-78262e6148ce",
+      "hours": "",
+      "reason": "",
+      "result": "ТЕСТ: сдал / тапсырды",
+      "education": "",
+      "templateId": "ps-witness",
+      "validUntil": "",
+      "trainingEnd": "",
+      "documentDate": "2027-01-01",
+      "protocolDate": "2026-12-31",
+      "protocolMode": "INDIVIDUAL",
+      "trainingStart": "",
+      "trainingSubject": "ТЕСТ: календарная проверка",
+      "externalBasisNumber": ""
+    },
+    "browserVersion": "152.0.7977.83",
+    "templates": [
+      {
+        "id": "ps-witness",
+        "version": "11",
+        "checksum": "cf804c4d350dc1d73a3dc8dd9f1d16fda558f1c4de65844e9fee13a9c03ffb94"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "75331732-b716-436b-8a6e-867400bc3423",
+        "format": "DOCX",
+        "file": "docx-75331732-b716-436b-8a6e-867400bc3423.docx",
+        "sha256": "a409d6d71356f7554e82c613001e9b58aafe9c8b58da59ce918ab2fc52b0902e",
+        "provenance": "ORIGINAL",
+        "bytes": 21283
+      },
+      {
+        "id": "cc41b7d0-8774-49ff-852f-a05e2281b371",
+        "format": "PDF",
+        "file": "pdf-cc41b7d0-8774-49ff-852f-a05e2281b371.pdf",
+        "sha256": "d2e9786af2f9388f4d0851ef2bf478b40c7508faf5f31f41ed76c0237717e0db",
+        "provenance": "ORIGINAL",
+        "bytes": 167557
+      },
+      {
+        "id": "ced76b1a-a939-4003-883e-0e8034a414f5",
+        "format": "XLSX",
+        "file": "xlsx-ced76b1a-a939-4003-883e-0e8034a414f5.xlsx",
+        "sha256": "9f06ca8dfe3d30dec15f33418ec9d9cc8cedfac8b42677ad5ea2e0a33759362e",
+        "provenance": "ORIGINAL",
+        "bytes": 5903
+      },
+      {
+        "id": "7a8479ef-a430-4b22-8091-353946a6ff99",
+        "format": "ZIP",
+        "file": "zip-7a8479ef-a430-4b22-8091-353946a6ff99.zip",
+        "sha256": "ff15fc975bb3bdbdf55999a1afb68a929face928eed772bca09d2745d18e5057",
+        "provenance": "ORIGINAL",
+        "bytes": 133256
+      }
+    ]
+  }
+]

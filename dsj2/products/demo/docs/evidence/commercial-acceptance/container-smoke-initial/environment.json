@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-09-22T13:58:32.935Z",
+  "clientHost": {
+    "node": "v24.16.0",
+    "platform": "win32",
+    "cpu": "11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+    "logicalCpus": 12,
+    "memoryBytes": 34069159936
+  },
+  "target": {
+    "origin": "http://localhost:8080/api",
+    "runtimeDescription": "Exploratory container startup, PostgreSQL18.3, renderer3, historicalv7; not final release performance"
+  },
+  "operators": [
+    {
+      "userId": "8951a419-047c-4867-95c4-beed56b62380",
+      "role": "OPERATOR",
+      "tenantId": "8cc05715-93a0-4f2a-9796-d6e3bfbc73b7"
+    }
+  ],
+  "repeats": 1,
+  "sizes": [
+    1
+  ],
+  "pollMs": 1000,
+  "workload": "HTTP create/finalize, real independent worker, all persisted artifacts downloaded and hashed; one BIOT protocol per distinct recipient",
+  "thresholds": {
+    "kind": "engineering assumptions, not contractual SLA",
+    "finalizeMs": 60000,
+    "issuanceTimeoutMs": 1800000,
+    "unexpectedFailures": 0
+  },
+  "queuePrecision": "Observed states relative to request start with 1000ms polling uncertainty; not exact worker service instrumentation. No p95 asserted from fewer than 20 complete samples."
+}

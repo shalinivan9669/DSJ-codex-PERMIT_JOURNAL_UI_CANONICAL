@@ -1,0 +1,74 @@
+{
+  "mode": "issued-document",
+  "demoMode": true,
+  "templateId": "biot-itr-certificate",
+  "templateVersion": 14,
+  "issuer": {
+    "nameRu": "Учебный центр «Образец»",
+    "nameKz": "«Үлгі» оқу орталығы",
+    "cityRu": "Астана",
+    "cityKz": "Астана",
+    "approvalBasis": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+    "commission": [
+      {
+        "name": "Синтетический Председатель Әли",
+        "position": "Руководитель обучающей организации"
+      },
+      {
+        "name": "Тестовый-Примеров Александр Константинович",
+        "position": "Член экзаменационной комиссии"
+      },
+      {
+        "name": "Әділбек Өмірсерік Қанатұлы",
+        "position": "Член экзаменационной комиссии"
+      }
+    ],
+    "bin": "990140000000",
+    "headName": "Синтетический Председатель Әли"
+  },
+  "items": [
+    {
+      "id": "recipient-01",
+      "fullNameRu": "Тестов-Примеров Александр Константинович",
+      "fullNameKz": "Әділбек-Өмірсерік Қанатұлы",
+      "positionRu": "Инженер по промышленной безопасности",
+      "positionKz": "Өнеркәсіптік қауіпсіздік жөніндегі инженер",
+      "workplaceRu": "ТОО «Научно-производственная компания Образец»",
+      "workplaceKz": "«Үлгі ғылыми-өндірістік компаниясы» ЖШС",
+      "number": "BIOT-CERTIFICATE-00001",
+      "protocolNumber": "BIOT-PROTOCOL-00001",
+      "registrationNumber": "00123",
+      "assignment": {
+        "id": "a1",
+        "templateId": "biot-itr-certificate",
+        "documentDate": "2026-09-22",
+        "protocolDate": "2026-09-20",
+        "trainingStart": "2026-09-14",
+        "trainingEnd": "2026-09-19",
+        "trainingSubject": "Программа обучения по безопасности и охране труда для инженерного персонала / Инженерлік персоналға арналған еңбек қауіпсіздігі және еңбекті қорғау бағдарламасы",
+        "result": "сдал / тапсырды",
+        "reason": "ТЕСТ: первичное обучение",
+        "hours": 40,
+        "validUntil": "2029-09-22",
+        "externalBasisNumber": "ВНЕШНИЙ-01",
+        "protocolMode": "individual",
+        "biotCategory": "OHS_SPECIALIST_SPECIAL",
+        "productionHours": "16",
+        "biotIndustryRu": "промышленного строительства",
+        "biotIndustryKz": "өнеркәсіптік құрылыс",
+        "biotCheckType": "PERIODIC",
+        "biotKnowledgeResult": "92 из 100",
+        "biotProctoringResult": "прошел / өткен",
+        "biotUniqueNumber": "",
+        "biotNotes": "Проверка по утверждённой программе"
+      },
+      "departmentRu": "Участок промышленной безопасности",
+      "departmentKz": "Өнеркәсіптік қауіпсіздік учаскесі",
+      "employerBin": "990240000000",
+      "employerAddressRu": "Астана, улица Синтетическая, дом 125",
+      "employerAddressKz": "Астана, Синтетикалық көшесі, 125 үй",
+      "credentialNumber": "BIOT-CERTIFICATE-00001"
+    }
+  ],
+  "photos": {}
+}

@@ -1,0 +1,136 @@
+{
+  "label": "serial",
+  "count": 1,
+  "repetition": 2,
+  "requestId": "d6ac22fc-73f8-43d4-8220-d1c0fbb82629",
+  "issuance": {
+    "issuanceId": "6128905f-644d-4ffe-b164-5cb4815b5f17",
+    "requestId": "d6ac22fc-73f8-43d4-8220-d1c0fbb82629",
+    "revision": 0,
+    "documentIds": [
+      "3b582de0-ac01-4fa3-a1f6-80bf881b4435"
+    ],
+    "jobIds": [
+      "3098ce63-2209-4b89-875d-a0263a63a103",
+      "baf43df3-d9cd-43e9-b5d4-051ff8cfa5e8",
+      "cc08a74b-4992-476b-82e4-91e4d8b60a59",
+      "eea51d07-7b8e-4600-86ad-4f8575dbddc9"
+    ]
+  },
+  "tenantId": "e417ddcc-bf8d-4f78-b094-125ebad9b2bc",
+  "operatorUserId": "1f56ac2d-2b52-48e4-894a-0b8078d9a4b6",
+  "createMs": 26,
+  "finalizeMs": 528,
+  "readyMs": 3606,
+  "formatReadyMs": {
+    "DOCX": 1580,
+    "PDF": 2591,
+    "XLSX": 1580,
+    "ZIP": 3606
+  },
+  "allDownloadsMs": 77,
+  "totalMs": 3683,
+  "success": true,
+  "retriedJobs": 0,
+  "withinEngineeringAssumptions": true,
+  "artifactBytes": 173779,
+  "jobs": [
+    {
+      "id": "3098ce63-2209-4b89-875d-a0263a63a103",
+      "kind": "ZIP",
+      "createdAt": "2026-09-22T15:55:50.491Z",
+      "firstSeenMs": 568,
+      "lastWaitingMs": 2591,
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null,
+      "maximumAttemptsObserved": 1,
+      "firstSucceededMs": 3606
+    },
+    {
+      "id": "eea51d07-7b8e-4600-86ad-4f8575dbddc9",
+      "kind": "XLSX",
+      "createdAt": "2026-09-22T15:55:50.489Z",
+      "firstSeenMs": 568,
+      "lastWaitingMs": 568,
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null,
+      "maximumAttemptsObserved": 1,
+      "firstSucceededMs": 1580
+    },
+    {
+      "id": "cc08a74b-4992-476b-82e4-91e4d8b60a59",
+      "kind": "PDF",
+      "createdAt": "2026-09-22T15:55:50.484Z",
+      "firstSeenMs": 568,
+      "lastWaitingMs": 568,
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null,
+      "maximumAttemptsObserved": 1,
+      "firstRunningMs": 1580,
+      "firstSucceededMs": 2591
+    },
+    {
+      "id": "baf43df3-d9cd-43e9-b5d4-051ff8cfa5e8",
+      "kind": "DOCX",
+      "createdAt": "2026-09-22T15:55:50.482Z",
+      "firstSeenMs": 568,
+      "lastWaitingMs": 568,
+      "status": "SUCCEEDED",
+      "attempts": 1,
+      "errorCode": null,
+      "maximumAttemptsObserved": 1,
+      "firstSucceededMs": 1580
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "2656d2e2-eab3-4aea-89c9-3e3e00e4250d",
+      "format": "ZIP",
+      "file": "3098ce63-2209-4b89-875d-a0263a63a103.zip",
+      "bytes": 72777,
+      "sha256": "e16be92bc287c1966b4c4a4608b58c7fd2b38fda1e94b8a2bab4324d40bfdf58"
+    },
+    {
+      "id": "9dcc2d0a-d4e6-49cf-b90d-052d24deef5b",
+      "format": "XLSX",
+      "file": "eea51d07-7b8e-4600-86ad-4f8575dbddc9.xlsx",
+      "bytes": 5954,
+      "sha256": "d487134606e4d3c84749eb43f87c51df4a5fee3e77da137cfa5f36becda66042"
+    },
+    {
+      "id": "fb503aaa-010b-46c9-aa7d-7d256e64faf2",
+      "format": "PDF",
+      "file": "cc08a74b-4992-476b-82e4-91e4d8b60a59.pdf",
+      "bytes": 70575,
+      "sha256": "3d57eeda8ba4dbab75f039f80388bd8c081fb0fd40298db82590eb5ccfadd69e"
+    },
+    {
+      "id": "f78d40e0-139a-4511-afca-f6e263b019a6",
+      "format": "DOCX",
+      "file": "baf43df3-d9cd-43e9-b5d4-051ff8cfa5e8.docx",
+      "bytes": 24473,
+      "sha256": "e0b8f399beda09a6d96a29ae3312ced3809133d47071a5d8615c2fb7fde0fe93"
+    }
+  ],
+  "documents": [
+    {
+      "id": "3b582de0-ac01-4fa3-a1f6-80bf881b4435",
+      "tenantId": "e417ddcc-bf8d-4f78-b094-125ebad9b2bc",
+      "issuanceId": "6128905f-644d-4ffe-b164-5cb4815b5f17",
+      "requestId": "d6ac22fc-73f8-43d4-8220-d1c0fbb82629",
+      "rowId": "d93ed989-5c00-4612-960b-02e70a2cb91b",
+      "assignmentId": "082c216f-89d2-4dbd-8922-4507a48c78f6",
+      "templateVersionId": "29536c11-cc92-4136-a11b-2628178f6037",
+      "templateId": "biot-protocol",
+      "namespace": "BIOT:PROTOCOL",
+      "number": "BIOT-PROTOCOL-00166",
+      "registrationNumber": null,
+      "documentDate": "2026-09-22",
+      "replacesDocumentId": null,
+      "createdAt": "2026-09-22T15:55:50.478Z"
+    }
+  ]
+}

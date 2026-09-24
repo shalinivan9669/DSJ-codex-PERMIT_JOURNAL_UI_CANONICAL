@@ -1,0 +1,21 @@
+[
+  {
+    "id": "A27",
+    "status": "PASS",
+    "scenario": "Final PS15 fictional portrait upload/crop/persist/preview/issue/download on actual HTTPS stack",
+    "artifact": "browser/generated-photo-ps-https/photo-result.json",
+    "result": "1 issuance,6 SHA-verified files,2 exact embedded photos,2 final PDF pages visuallyPASS",
+    "limitation": "Synthetic tenant, localhost CA, no production claim"
+  },
+  {
+    "id": "C15",
+    "status": "PASS",
+    "scenario": "Actual HTTPS browser issuance + isolated CA positive/negative TLS handshake and cookie checks",
+    "artifact": "browser/generated-photo-ps-https/PHOTO_HTTPS_ACCEPTANCE_RU.md",
+    "result": "TLS1.3 authenticated issuance; strictCAauthorized, emptyTrustrejected, secure session/CSRF cookies",
+    "defect": "Test negative control initially reused keep-alive connection",
+    "fix": "agent:false forces independent TLS handshakes",
+    "retest": "PASS22.0s",
+    "limitation": "C15HTTPSsubcheck; host power-loss/physical restart not claimed"
+  }
+]

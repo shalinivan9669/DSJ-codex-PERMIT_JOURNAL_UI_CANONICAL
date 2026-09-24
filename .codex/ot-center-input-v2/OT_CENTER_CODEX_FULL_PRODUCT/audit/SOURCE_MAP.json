@@ -1,0 +1,190 @@
+{
+  "commit": "d1d377b641b0ee3e171c794e654b382d4d3af7c4",
+  "coverageIsSelective": true,
+  "files": [
+    {
+      "id": "S01",
+      "path": "AGENTS.md",
+      "coverage": "all",
+      "purpose": "root router; active monorepo",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/AGENTS.md",
+      "evidenceLevel": "REPOSITORY_DOCUMENT"
+    },
+    {
+      "id": "S02",
+      "path": "dsj2/AGENTS.md",
+      "coverage": "all",
+      "purpose": "DEMO autonomous boundary, legacy frozen",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/AGENTS.md",
+      "evidenceLevel": "REPOSITORY_DOCUMENT"
+    },
+    {
+      "id": "S03",
+      "path": "dsj2/products/demo/AGENTS.md",
+      "coverage": "all",
+      "purpose": "product instructions and security boundaries",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/AGENTS.md",
+      "evidenceLevel": "REPOSITORY_DOCUMENT"
+    },
+    {
+      "id": "S04",
+      "path": "dsj2/products/demo/README.md",
+      "coverage": "all",
+      "purpose": "commands and documented workflow; claims not rerun",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/README.md",
+      "evidenceLevel": "REPOSITORY_DOCUMENT"
+    },
+    {
+      "id": "S05",
+      "path": "dsj2/products/demo/package.json",
+      "coverage": "all",
+      "purpose": "authoritative scripts and pnpm",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/package.json",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S06",
+      "path": "dsj2/products/demo/packages/database/prisma/schema.prisma",
+      "coverage": "all",
+      "purpose": "current models, ids and uniqueness",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/packages/database/prisma/schema.prisma",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S07",
+      "path": "dsj2/products/demo/packages/contracts/src/index.ts",
+      "coverage": "1-540",
+      "purpose": "limits, templates, draft and validation contracts",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/packages/contracts/src/index.ts",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S08",
+      "path": "dsj2/products/demo/packages/contracts/src/product-policy.json",
+      "coverage": "1-220",
+      "purpose": "explicit API allowlist; remaining entries require local review",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/packages/contracts/src/product-policy.json",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S09",
+      "path": "dsj2/products/demo/apps/web/components/editor.tsx",
+      "coverage": "1-505;680-end",
+      "purpose": "autosave, selected rows, bulk fields, finalize",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/web/components/editor.tsx",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S10",
+      "path": "dsj2/products/demo/apps/web/components/recipient-details.tsx",
+      "coverage": "1-235",
+      "purpose": "individual fields, form-level input, RU/KZ independence",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/web/components/recipient-details.tsx",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S11",
+      "path": "dsj2/products/demo/apps/web/lib/types.ts",
+      "coverage": "all",
+      "purpose": "draft payload, default assignments, no persistent recipient reference",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/web/lib/types.ts",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S12",
+      "path": "dsj2/products/demo/apps/web/lib/imports.ts",
+      "coverage": "all",
+      "purpose": "column mapping, single template per import row, import-generated ids",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/web/lib/imports.ts",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S13",
+      "path": "dsj2/products/demo/apps/web/lib/assignment-presets.ts",
+      "coverage": "all",
+      "purpose": "BIOT defaults and manual-field tracking",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/web/lib/assignment-presets.ts",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S14",
+      "path": "dsj2/products/demo/apps/api/src/controller.ts",
+      "coverage": "1-310",
+      "purpose": "customer/recipient CRUD and printing endpoints",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/api/src/controller.ts",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S15",
+      "path": "dsj2/products/demo/apps/api/src/requests.ts",
+      "coverage": "1-260;400-960",
+      "purpose": "draft persistence, layout checks, numbering and finalize ownership",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/api/src/requests.ts",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S16",
+      "path": "dsj2/products/demo/apps/api/src/files.ts",
+      "coverage": "1-end",
+      "purpose": "import preview/apply, registry, ZIP, artifact handling",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/api/src/files.ts",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S17",
+      "path": "dsj2/products/demo/apps/render-worker/src/queue.ts",
+      "coverage": "1-end",
+      "purpose": "durable queue, leases, snapshots, DOCX/PDF and artifact naming",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/render-worker/src/queue.ts",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S18",
+      "path": "dsj2/products/demo/assets/templates/manifest.json",
+      "coverage": "1-160",
+      "purpose": "renderer version and current BIOT template metadata; legal metadata not independently verified",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/assets/templates/manifest.json",
+      "evidenceLevel": "SOURCE_READ"
+    },
+    {
+      "id": "S19",
+      "path": "dsj2/products/demo/docs/OPERATOR_RU.md",
+      "coverage": "all",
+      "purpose": "documented user behavior; not independent execution evidence",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/docs/OPERATOR_RU.md",
+      "evidenceLevel": "REPOSITORY_DOCUMENT"
+    },
+    {
+      "id": "S20",
+      "path": "dsj2/products/demo/docs/ACCEPTANCE_RU.md",
+      "coverage": "opening and visible A01-A45 excerpt",
+      "purpose": "explicit current incomplete acceptance; historical PASS not reused",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/docs/ACCEPTANCE_RU.md",
+      "evidenceLevel": "REPOSITORY_DOCUMENT"
+    },
+    {
+      "id": "S21",
+      "path": "dsj2/products/demo/apps/web/e2e/biot-issue.spec.ts",
+      "coverage": "commit diff visible excerpt",
+      "purpose": "new BIOT UI test present; not executed here",
+      "url": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/blob/d1d377b641b0ee3e171c794e654b382d4d3af7c4/dsj2/products/demo/apps/web/e2e/biot-issue.spec.ts",
+      "evidenceLevel": "SOURCE_READ"
+    }
+  ],
+  "additionalTreeInspections": [
+    "apps",
+    "packages",
+    "scripts",
+    "tests",
+    "assets"
+  ],
+  "notInspectedAtRuntime": [
+    "UI",
+    "database",
+    "rendered documents",
+    "worker",
+    "Word",
+    "physical printer",
+    "production deployment"
+  ]
+}

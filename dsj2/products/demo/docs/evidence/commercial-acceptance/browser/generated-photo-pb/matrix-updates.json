@@ -1,0 +1,18 @@
+{
+  "owner": "operator_ui",
+  "scope": "Дополнение к A27/C06/C10: реальный вымышленный портрет в отдельной браузерной заявке на актуальном контейнере.",
+  "requirements": [
+    {
+      "id": "A27",
+      "status": "PASS",
+      "scenario": "Imagegen portrait -> UI crop -> refresh -> PDF preview -> finalized PB v11 -> downloads -> DOCX embedded bytes -> Word PDF.",
+      "environment": "Chrome 152.0.7977.83; http://localhost:8080; synthetic container tenant; Word16.0.17932 with temporary Liberation2.1.5.",
+      "result": "1 browser test PASS38.5s; 1 issuance,1document,6artifacts verified SHA; uploaded photo exact match in2DOCX;2serverPDF and2WordPDFpages visually reviewed.",
+      "artifact": "browser/generated-photo-pb/photo-result.json; browser/generated-photo-pb/results.json; browser/generated-photo-pb/PHOTO_ACCEPTANCE_RU.md; word/generated-photo-pb/word-results.json",
+      "defect": "",
+      "fix": "",
+      "retest": "PASS; new portrait-specific browser regression; TypeScript/ESLint PASS.",
+      "limitation": "Дополняет существующие MIME/EXIF/security проверки. Эта заявка PB; физическаяпечатьнепроверялась."
+    }
+  ]
+}

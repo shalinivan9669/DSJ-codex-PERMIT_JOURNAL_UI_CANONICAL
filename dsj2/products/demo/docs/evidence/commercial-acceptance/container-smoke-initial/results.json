@@ -1,0 +1,23 @@
+[
+  {
+    "label": "serial",
+    "count": 1,
+    "repetition": 1,
+    "requestId": "0d9e17b6-279a-4599-9577-9061720042c1",
+    "operatorUserId": "8951a419-047c-4867-95c4-beed56b62380",
+    "totalMs": 7052,
+    "finalizeMs": 755,
+    "readyMs": 6960,
+    "formatReadyMs": {
+      "DOCX": 2874,
+      "PDF": 6960,
+      "XLSX": 1842,
+      "ZIP": 6960
+    },
+    "artifactBytes": 175024,
+    "artifacts": 4,
+    "success": true,
+    "retriedJobs": 0,
+    "withinEngineeringAssumptions": true
+  }
+]

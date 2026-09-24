@@ -1,0 +1,1142 @@
+{
+  "owner": "operator_ui",
+  "auditedAt": "2026-09-22T15:58:25.289Z",
+  "scope": "Read-only70-row evidence reconciliation; separate proposed updates only. No main matrix/runtime mutation. One explicitly authorized lightweight login fault-view browser probe uses only intercepted POSTs.",
+  "matrixObservedSha256": "dbdf7e200e4dcbd9fca2d891764ee5f192e3237e6edfbb5fea41df9c96e67126",
+  "matrixObservedUpdatedAt": "2026-09-22T15:54:44.907Z",
+  "rowCount": 70,
+  "inventory": [
+    {
+      "id": "A01",
+      "status": "PASS",
+      "requirement": "Копия DEMO вне DSJ"
+    },
+    {
+      "id": "A02",
+      "status": "NOT RUN",
+      "requirement": "Frozen menu/routes"
+    },
+    {
+      "id": "A03",
+      "status": "NOT RUN",
+      "requirement": "Обход frontend"
+    },
+    {
+      "id": "A04",
+      "status": "PASS",
+      "requirement": "Новый случайный controller"
+    },
+    {
+      "id": "A05",
+      "status": "NOT RUN",
+      "requirement": "Jobs и package boundary"
+    },
+    {
+      "id": "A06",
+      "status": "PASS",
+      "requirement": "Два tenant и два customer"
+    },
+    {
+      "id": "A07",
+      "status": "NOT RUN",
+      "requirement": "Auth lifecycle"
+    },
+    {
+      "id": "A08",
+      "status": "PASS",
+      "requirement": "Заявка человека"
+    },
+    {
+      "id": "A09",
+      "status": "PASS",
+      "requirement": "Заявка компании"
+    },
+    {
+      "id": "A10",
+      "status": "PASS",
+      "requirement": "Серверный draft"
+    },
+    {
+      "id": "A11",
+      "status": "PASS",
+      "requirement": "Конфликт редактирования"
+    },
+    {
+      "id": "A12",
+      "status": "PASS",
+      "requirement": "Несохранённая работа и связь"
+    },
+    {
+      "id": "A13",
+      "status": "PASS",
+      "requirement": "Concurrent finalize"
+    },
+    {
+      "id": "A14",
+      "status": "PASS",
+      "requirement": "Повтор одного finalize"
+    },
+    {
+      "id": "A15",
+      "status": "PASS",
+      "requirement": "Key/payload mismatch"
+    },
+    {
+      "id": "A16",
+      "status": "PASS",
+      "requirement": "Уже оформленная revision"
+    },
+    {
+      "id": "A17",
+      "status": "PASS",
+      "requirement": "История >1000 выпусков"
+    },
+    {
+      "id": "A18",
+      "status": "PASS",
+      "requirement": "Нет лишнего расхода номеров"
+    },
+    {
+      "id": "A19",
+      "status": "PASS",
+      "requirement": "RU/KZ roundtrip"
+    },
+    {
+      "id": "A20",
+      "status": "PASS",
+      "requirement": "Unicode/длинные поля"
+    },
+    {
+      "id": "A21",
+      "status": "PASS",
+      "requirement": "Календарные даты"
+    },
+    {
+      "id": "A22",
+      "status": "PASS",
+      "requirement": "Массовые defaults"
+    },
+    {
+      "id": "A23",
+      "status": "PASS",
+      "requirement": "Translation race"
+    },
+    {
+      "id": "A24",
+      "status": "PASS",
+      "requirement": "Import accounting"
+    },
+    {
+      "id": "A25",
+      "status": "PASS",
+      "requirement": "100/101 строка"
+    },
+    {
+      "id": "A26",
+      "status": "PASS",
+      "requirement": "Import повтор/formulas"
+    },
+    {
+      "id": "A27",
+      "status": "NOT RUN",
+      "requirement": "Фото"
+    },
+    {
+      "id": "A28",
+      "status": "PASS",
+      "requirement": "Нагрузка transport"
+    },
+    {
+      "id": "A29",
+      "status": "PASS",
+      "requirement": "Renderer crash/timeout"
+    },
+    {
+      "id": "A30",
+      "status": "PASS",
+      "requirement": "Worker crash/lease/GC race"
+    },
+    {
+      "id": "A31",
+      "status": "PASS",
+      "requirement": "Частичный комплект"
+    },
+    {
+      "id": "A32",
+      "status": "PASS",
+      "requirement": "Исходный файл"
+    },
+    {
+      "id": "A33",
+      "status": "PASS",
+      "requirement": "Изменение master/template"
+    },
+    {
+      "id": "A34",
+      "status": "PASS",
+      "requirement": "Потеря storage"
+    },
+    {
+      "id": "A35",
+      "status": "PASS",
+      "requirement": "Исправление/отмена"
+    },
+    {
+      "id": "A36",
+      "status": "PASS",
+      "requirement": "Все формы"
+    },
+    {
+      "id": "A37",
+      "status": "PASS",
+      "requirement": "Семантика протокола"
+    },
+    {
+      "id": "A38",
+      "status": "PASS",
+      "requirement": "Полный XLSX/ZIP"
+    },
+    {
+      "id": "A39",
+      "status": "PASS",
+      "requirement": "История 55+"
+    },
+    {
+      "id": "A40",
+      "status": "PASS",
+      "requirement": "Производительность ввода"
+    },
+    {
+      "id": "A41",
+      "status": "PASS",
+      "requirement": "Browser/keyboard"
+    },
+    {
+      "id": "A42",
+      "status": "FAIL",
+      "requirement": "Print pages"
+    },
+    {
+      "id": "A43",
+      "status": "PASS",
+      "requirement": "Scan документов"
+    },
+    {
+      "id": "A44",
+      "status": "NOT RUN",
+      "requirement": "Миграции"
+    },
+    {
+      "id": "A45",
+      "status": "PASS",
+      "requirement": "Legacy import"
+    },
+    {
+      "id": "A46",
+      "status": "PASS",
+      "requirement": "Backup restore"
+    },
+    {
+      "id": "A47",
+      "status": "NOT RUN",
+      "requirement": "Security/deps/runtime"
+    },
+    {
+      "id": "A48",
+      "status": "BLOCKED",
+      "requirement": "Production boundary"
+    },
+    {
+      "id": "A49",
+      "status": "PASS",
+      "requirement": "Branding и freeze"
+    },
+    {
+      "id": "A50",
+      "status": "NOT RUN",
+      "requirement": "Release gate"
+    },
+    {
+      "id": "C01",
+      "status": "PASS",
+      "requirement": "Номера колонок DOCX ячейки/PDF координаты на каждой странице"
+    },
+    {
+      "id": "C02",
+      "status": "PASS",
+      "requirement": "Управляемая мутация нумерации: тест обязан упасть"
+    },
+    {
+      "id": "C03",
+      "status": "PASS",
+      "requirement": "PTM подпись и повторы основания: до/после"
+    },
+    {
+      "id": "C04",
+      "status": "PASS",
+      "requirement": "Карта всех полей 10 форм, языки и семантика номеров"
+    },
+    {
+      "id": "C05",
+      "status": "PASS",
+      "requirement": "Большие реальные PDF пакеты 1/2/3/10/13/50/100"
+    },
+    {
+      "id": "C06",
+      "status": "PASS",
+      "requirement": "Фото/различающиеся получатели/101 отказ без выпуска"
+    },
+    {
+      "id": "C07",
+      "status": "FAIL",
+      "requirement": "Размеры, читаемый минимум, визуальный просмотр"
+    },
+    {
+      "id": "C08",
+      "status": "PASS",
+      "requirement": "Microsoft Word совместимость"
+    },
+    {
+      "id": "C09",
+      "status": "BLOCKED",
+      "requirement": "Физическая печать 100%/duplex и измерение"
+    },
+    {
+      "id": "C10",
+      "status": "PASS",
+      "requirement": "Полный новый операторский браузерный цикл"
+    },
+    {
+      "id": "C11",
+      "status": "PASS",
+      "requirement": "Реальные сессии 2 организаций × все роли"
+    },
+    {
+      "id": "C12",
+      "status": "PASS",
+      "requirement": "Реальный отказ worker/converter/DB/disk/volume"
+    },
+    {
+      "id": "C13",
+      "status": "PASS",
+      "requirement": "Backup/restore полный hash плюс скачивание"
+    },
+    {
+      "id": "C14",
+      "status": "PASS",
+      "requirement": "Чистая внешняя копия frozen install/build/run"
+    },
+    {
+      "id": "C15",
+      "status": "PASS",
+      "requirement": "Целевой Linux/container build/run/restart/TLS"
+    },
+    {
+      "id": "C16",
+      "status": "NOT RUN",
+      "requirement": "CI runner и реальные image CVE"
+    },
+    {
+      "id": "C17",
+      "status": "FAIL",
+      "requirement": "Нормативные источники и отдельное утверждение эмитентом"
+    },
+    {
+      "id": "C18",
+      "status": "NOT RUN",
+      "requirement": "Лицензии/SBOM/notices/права на формы"
+    },
+    {
+      "id": "C19",
+      "status": "NOT RUN",
+      "requirement": "Выпуск 1/10/50/100 и несколько операторов, ресурсы"
+    },
+    {
+      "id": "C20",
+      "status": "NOT RUN",
+      "requirement": "Единый финальный gate и хешированный источник"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "A08",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Новый человек без заказчика: отдельные RU/KZ, дата, фото, refresh, validate, PDF preview, немедленный finalize, оригиналы и исправление.",
+      "result": "Один документ, один выпуск, шесть файлов с двумя предпросмотрами. Повторное скачивание сохраняет SHA; исправление открывается отдельным черновиком.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "Полная серия использует сохранённые v5 формы; отдельный person retest подтверждает текущую biot-worker-card v7. Другие финальные формы проверяет print matrix. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A09",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Компания: 12 синтетических получателей, 18 назначений, массовое заполнение явно выбранных строк, отдельная дата последнего получателя; скачивание всех 38 файлов.",
+      "result": "18 DOCX, 18 PDF, XLSX и ZIP. Хеш каждого файла совпал; каждый DOCX содержит только своего получателя на RU/KZ. XLSX и ZIP дополнительно проверены независимым скриптом.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "Browser/data/package correctness; all-page print layout separate. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A10",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Сохранить серверный черновик, перезагрузить RU/KZ, дату и фото, затем отдельно оформить.",
+      "result": "Данные черновика восстановлены до оформления. Финальный повтор дополнительно проверяет пустые documents/issuances до команды finalize.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "Focused person retest explicitly confirms DRAFT, documents=[], issuances=[] before finalize. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A11",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Два пользователя ADMIN/OPERATOR в независимых браузерных сессиях: второй сохраняет устаревшую ревизию после первого.",
+      "result": "Ответ 409 открывает диалог с управлением фокусом. Копия содержит ввод второго; первоначальная заявка сохраняет ввод первого.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "Один tenant, две реальные сессии; межtenant authorization проверяется API агентом. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A12",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Реальный offline, ошибка PATCH, session 401, немедленный logout, немедленный finalize, устаревший preview и потеря ответа после настоящего commit.",
+      "result": "RU/KZ ввод сохранён; повторный вход не размонтирует редактор; logout ожидает сохранение последних символов. Два finalize используют один ключ и создают один выпуск.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "401 induced by cookie revocation, not8hour wait;504 injected after real upstream commit, not WAN benchmark. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A19",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Различающиеся RU/KZ, перезагрузка, сохранение, копия/исправление и CSV/XLSX; казахские буквы и ведущие нули 00123.",
+      "result": "Языковые поля остаются независимыми в snapshot, импорте и экспорте. Ведущие нули сохранены.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "All-form printed field mapping is printing-agent gate. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A22",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Массовые значения компании применяются только к выбранным получателям; последняя строка получает индивидуальную дату.",
+      "result": "В snapshot последнего получателя остаётся дата 2026-10-02; комплект содержит 12 получателей и 18 назначений.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": " Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A24",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "CSV с точкой с запятой, вставка TSV из 101 строки, XLSX с двумя листами, сохранённое сопоставление, исходные номера строк и частичные строки.",
+      "result": "Каждая строка явно выбрана, исключена или отклонена. 100 строк добавлены после исключения одной; частичная XLSX-строка и коды 00123/00456 сохранены.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": " Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A25",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "До применения 101 строки видны объяснение и заблокированная кнопка. Исключить исходную строку 102, сохранить 100 и повторить тот же импорт.",
+      "result": "100 строк сохраняются после refresh. Нет молчаливого отсечения или повторных строк; для неполного импорта оформление не запускалось.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "Server oversized finalize allocation guard independentlytested by API. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A38",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Скачать 38 файлов компании; сверить XLSX, оба номера ПС, ZIP-манифест и историю после 55 новых черновиков.",
+      "result": "Совпали 38 внешних и 37 внутренних хешей/размеров. ZIP содержит 39 записей с manifest/status. XLSX содержит 18 документов и оба номера ПС; история экспортирует один выпуск.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "No claim thatv5layoutisfinal; exporteddata/packageaudit remains valid. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A39",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "После старого выпуска создать 55 новых черновиков, найти выпуск на третьей странице, отфильтровать историю и повторно скачать оригинал.",
+      "result": "Всего 56 заявок, старый выпуск на странице 3, история содержит 1 выпуск; SHA оригинала и повторного скачивания совпал.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "55recordscreatedthroughAPI for deterministic setup; metadata-photo listshape requires API evidence. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A40",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Импорт 101 строки с явным исключением одной, сохранение и refresh в Chrome 1366×768 на отдельном Windows-стенде.",
+      "result": "Полный сценарий занял 10246 мс; запросов defaults 0; все 100 строк доступны.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "Not generation100PDF benchmark; elapsedincludesUI/network/save/reload under sharedhost load. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A41",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Создание, проверка и оформление клавиатурой; Tab/Shift+Tab/Escape в диалогах, переход от ошибки к полю; три размера окна.",
+      "result": "Фокус видим, ошибки объяснимы; при ширине 390px обязательные действия видимы, горизонтального переполнения всей страницы нет.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "Chromeonly; mobile viewport emulation, notphysicaldevice. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "C10",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Свежий браузерный цикл из 14 сценариев: настройки, человек, компания, импорт, история, сбои, повторный вход, два оператора, клавиатура и восстановление файла.",
+      "result": "14 PASS, 0 FAIL, 0 SKIP, 0 flaky за 567571 мс; 38 файлов компании проверены. Дополнительно 7 unit tests, TypeScript и ESLint PASS.",
+      "artifact": "browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "14/14 полный набор плюс отдельные PASS person v7 и expanded settings. Первый expanded settings attempt использовал неверный exact label textarea; selector исправлен, отдельный повтор PASS. Исходный синтетический tenant/admin создан штатным setup CLI; обычная работа оператора SQL/CLI не требует. Full 14-case browser suite is the recorded functional run, not a repeated final r5 run. Latest focused BIOT15 and PS15/photo cases are separately linked below."
+    },
+    {
+      "id": "A03",
+      "observedStatus": "NOT RUN",
+      "status": "PASS",
+      "scenario": "Direct Nest frozen routes/old JWT/alternate methods with genuine role sessions, plus12 actual final-web HTTPS method and Next-Action probes",
+      "result": "r5 complete42-test integration PASS; direct frozen API entry denied. Twelve CA-verified web probes all404 cover GET/POST/PUT/OPTIONS /journals and /api/journals, POST/login, next-action login/print-request and old-public.",
+      "artifact": "security/integration-linux-final-r5.log; security/web-boundary-https-final.json; security/security-http-final.log",
+      "evidence": [
+        {
+          "file": "security/integration-linux-final-r5.log",
+          "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+        },
+        {
+          "file": "security/web-boundary-https-final.json",
+          "sha256": "bdafd1697038686c1999f6fd3da4d5647d1091b802325842ceb60447f9c5b42f"
+        },
+        {
+          "file": "security/security-http-final.log",
+          "sha256": "cf9bb6de8167d9718aae0a184a10b0c31cfc5225ee4639d5a7587427f222675c"
+        }
+      ],
+      "limitation": "Local autonomous product only. The12 web probes were on exact r4 web image; r5 build/check evidence is independent. Deployed legacy public origins remain A48 BLOCKED."
+    },
+    {
+      "id": "A07",
+      "observedStatus": "NOT RUN",
+      "status": "PASS",
+      "scenario": "Real lifecycle and real unavailable-database login on exact r5 API, plus isolated actual UI with intercepted500/503 responses",
+      "result": "r5 lifecycle checks PASS. Network-none API with unreachable database returned500 SERVICE_ERROR with safe Russian message, correlationId and no sessionCookie. Separate browser3 cases verify same500 message,503 JSON and503 HTML fallback; input retained, no incorrect-password claim, keyboard retry available.",
+      "artifact": "security/integration-linux-final-r5.log; security/login-db-unavailable-r5.log; browser/login-503-ui/result.json; browser/login-503-ui/probe.mjs",
+      "evidence": [
+        {
+          "file": "security/integration-linux-final-r5.log",
+          "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+        },
+        {
+          "file": "security/login-db-unavailable-r5.log",
+          "sha256": "63119e2205ea17e6856b6288e10ff4bab7346fbf70dc0edf5228a94955f88828"
+        },
+        {
+          "file": "browser/login-503-ui/result.json",
+          "sha256": "1e592ee7a82132158c02ac5a8d4e762ae7c3f6372c753d058c8cda91d8a870a2"
+        },
+        {
+          "file": "browser/login-503-ui/probe.mjs",
+          "sha256": "b40e4690a72515997d94989dc30b9ba371d01e167534d13f43db92d20cb2c111"
+        }
+      ],
+      "limitation": "The browser fault responses are Playwright mocks; actual database outage was a separate backend check. Disabled submit releases focus to BODY; keyboard return verified in5Tab presses, not automatic focus restoration."
+    },
+    {
+      "id": "A21",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Four real browser date roundtrips across Asia/Almaty and America/Los_Angeles, leap day and year boundary",
+      "result": "Four new synthetic requests issued; UI save/reload and issued snapshot preserved explicit dates.48 DOCX XPath and16 PDF region assertions,4 DOCX/4 PDF/8 pages and swapped-date negative checks PASS.",
+      "artifact": "printing/date-roundtrip/date-roundtrip-proof.json; printing/date-roundtrip/visual-review.json",
+      "evidence": [
+        {
+          "file": "printing/date-roundtrip/date-roundtrip-proof.json",
+          "sha256": "1cea6cbf5087442ce6e3dfd0389b13959b1424280cc372c23dbb2a8812ed7291"
+        },
+        {
+          "file": "printing/date-roundtrip/visual-review.json",
+          "sha256": "3e374c177c4c84f2682753a7a963ddeda3e0dd9677b1c7ef8d8ec0008263cb63"
+        }
+      ],
+      "limitation": "Literal saved dates verified; no silent current-date substitution claim inferred from screenshot alone."
+    },
+    {
+      "id": "A23",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Current translator applicability review combined with independent RU/KZ browser edits, explicit copy and offline behavior",
+      "result": "Current product has no asynchronous translation service/callback; legacy translation POST404 over verifiedHTTPS. Supported behavior is independent manual RU/KZ and synchronous explicit copy, so no stale external response can overwrite KZ.",
+      "artifact": "operations/translation-boundary.json; browser/final-v2/results.json; browser/matrix-updates.json",
+      "evidence": [
+        {
+          "file": "operations/translation-boundary.json",
+          "sha256": "de0ebbbf9a04ccb31623d4ea877d7b58c79f4b54c081329e4c877e602d42b11b"
+        },
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/matrix-updates.json",
+          "sha256": "8470944da33d819802d0a958a6380faee9d48682dde04faadc907a7fedb6e8ad"
+        }
+      ],
+      "limitation": "No out-of-order translation response was simulated. PASS applies to supported synchronous architecture; automatic translation is absent, not certified."
+    },
+    {
+      "id": "A27",
+      "observedStatus": "NOT RUN",
+      "status": "PASS",
+      "scenario": "Positive PNG/JPEG decoding, EXIF/crop/rotation, negative payload/security scope and real portrait issuance in all3 photo forms",
+      "result": "r5 integration42 PASS includes realPNG rotated100x100crop, JPEG EXIF6 becoming20x40, corrupted bytes, SVG external image, HTML disguisedPNG,5MiB+1 upload and20.25MP PNG rejection; cross-tenant photo references denied. PTM14/PB14/PS15 actual issued set has18 SHA-verified artifacts and6 exact normalized-photo embeddings with Word and LibreOffice visualPASS; separateHTTPS PS15 cycle6files/2embeddings PASS.1394 recipient ownership checks cover distinct source photos; BIOT photo=false matches form contract.",
+      "artifact": "security/integration-linux-final-r5.log; browser/generated-photo-four-preview-readback/photo-result.json; browser/generated-photo-four-preview-readback/pdf-visual-review.json; word/generated-photo-four/word-results.json; browser/generated-photo-ps-https/photo-result.json; printing/final-artifact-audit.json",
+      "evidence": [
+        {
+          "file": "security/integration-linux-final-r5.log",
+          "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+        },
+        {
+          "file": "browser/generated-photo-four-preview-readback/photo-result.json",
+          "sha256": "0858b827815caef02ff2538f3c0991c46149b5134fd536ddf92a6a38c170e8e2"
+        },
+        {
+          "file": "browser/generated-photo-four-preview-readback/pdf-visual-review.json",
+          "sha256": "5477bc9604179de7036721e6f17c75eaf340174f2ce07c5385e3f00e3d60a533"
+        },
+        {
+          "file": "word/generated-photo-four/word-results.json",
+          "sha256": "7f93415b623f0a06d2d6eba7f5f12e1fcdc6ff6b2a24fbfd790ef437978d97d1"
+        },
+        {
+          "file": "browser/generated-photo-ps-https/photo-result.json",
+          "sha256": "ab6f0316a256e5c147656b80e4630fb83653d2a16600f6a91846301dc12de2f9"
+        },
+        {
+          "file": "printing/final-artifact-audit.json",
+          "sha256": "1b5cbb940a07a1754ed984a762cf6e4f4c198bdac24d4128e9dfe3d48dc7bab3"
+        }
+      ],
+      "limitation": "Digital image placement/readability verified. Physical print quality is C09 BLOCKED. Historical BIOT14 non-photo chairman clipping was separate and is resolved by BIOT15 retest, not hidden. Original4-form wait timed out; same immutable request later downloaded18 files without new issuance.",
+      "sourceAssertions": [
+        "tests/integration/security-acceptance.test.ts:545-629",
+        "tests/integration/files-import.test.ts:59-100"
+      ]
+    },
+    {
+      "id": "C06",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Distinct recipients and photos across96 outputs;101 rejected before file/number creation; real portrait set and final BIOT regression",
+      "result": "All1394 recipient instances matched intended names/numbers/photos/order. All10 form101 negative cases ROW_LIMIT with no partial file; browser/import/API100/101 no-allocation checks PASS. Three photo forms retain6 exact photo embeddings. BIOT15 new issuance with unchanged failing chairman/program now6SHA verified and2 LibreOffice+2Word pages manuallyPASS.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-source-docx-revalidation.json; security/integration-linux-final-r5.log; browser/final-v2/results.json; browser/generated-photo-four-preview-readback/photo-result.json; browser/biot-v15-retest/photo-result.json; browser/biot-v15-retest/pdf-visual-review.json; word/biot-v15-browser/word-results.json",
+      "evidence": [
+        {
+          "file": "printing/final-artifact-audit.json",
+          "sha256": "1b5cbb940a07a1754ed984a762cf6e4f4c198bdac24d4128e9dfe3d48dc7bab3"
+        },
+        {
+          "file": "printing/final-source-docx-revalidation.json",
+          "sha256": "1dbb1abd60cff81156979724c0d93bd1e949b4eb84883e7fb5ae862d4e734bb8"
+        },
+        {
+          "file": "security/integration-linux-final-r5.log",
+          "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+        },
+        {
+          "file": "browser/final-v2/results.json",
+          "sha256": "55885260d43635e2d105e7b1dd93eb50159cfdd9888e6e4b7a62ef124440bb6e"
+        },
+        {
+          "file": "browser/generated-photo-four-preview-readback/photo-result.json",
+          "sha256": "0858b827815caef02ff2538f3c0991c46149b5134fd536ddf92a6a38c170e8e2"
+        },
+        {
+          "file": "browser/biot-v15-retest/photo-result.json",
+          "sha256": "09026fc82aa6530be3818f15f137f9bb99a209f3bd911c14dc1112e498a3e641"
+        },
+        {
+          "file": "browser/biot-v15-retest/pdf-visual-review.json",
+          "sha256": "2000a64c9203ee279439f988264dd0add81f8af264be5ab6c3af28b339140ef1"
+        },
+        {
+          "file": "word/biot-v15-browser/word-results.json",
+          "sha256": "7f9305a1e7ab6969120513701cf503d47f1d7668cba7096b6ff4ccf4af709450"
+        }
+      ],
+      "limitation": "BIOT has no photo field in its current immutable template contract; no artificial portrait added. Paper/duplex remains C09."
+    },
+    {
+      "id": "A42",
+      "observedStatus": "FAIL",
+      "status": "PASS",
+      "scenario": "Final actual BIOT15 source/output reconciliation plus complete automated96-file audit and bounded full/sample visual review",
+      "result": "96 DOCX/PDF cases,1394recipients,1830pages automatic geometry/glyph/field/photo checks PASS.84 base and186 stress pages manually reviewed. Final Word20/20 across28pages PASS. Additional real chairman/program BIOT14 clipping is fixed by immutableBIOT15, whose actual browser-issued2LO+2Word pages and6downloadSHA PASS.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-source-docx-revalidation.json; printing/final-visual-reconciliation.json; browser/biot-v15-retest/BIOT_V15_RETEST_RU.md; browser/biot-v15-retest/pdf-visual-review.json; word/biot-v15-browser/word-results.json; word/final-active.json",
+      "evidence": [
+        {
+          "file": "printing/final-artifact-audit.json",
+          "sha256": "1b5cbb940a07a1754ed984a762cf6e4f4c198bdac24d4128e9dfe3d48dc7bab3"
+        },
+        {
+          "file": "printing/final-source-docx-revalidation.json",
+          "sha256": "1dbb1abd60cff81156979724c0d93bd1e949b4eb84883e7fb5ae862d4e734bb8"
+        },
+        {
+          "file": "printing/final-visual-reconciliation.json",
+          "sha256": "c921696fce0686b85bc3e0c70b0b87ac790282e54824423a3c61cc2f496b68c3"
+        },
+        {
+          "file": "browser/biot-v15-retest/BIOT_V15_RETEST_RU.md",
+          "sha256": "d974ac5308845d6647347fd7363c14e6b954f8a00dab6001d353b3562a05f83a"
+        },
+        {
+          "file": "browser/biot-v15-retest/pdf-visual-review.json",
+          "sha256": "2000a64c9203ee279439f988264dd0add81f8af264be5ab6c3af28b339140ef1"
+        },
+        {
+          "file": "word/biot-v15-browser/word-results.json",
+          "sha256": "7f9305a1e7ab6969120513701cf503d47f1d7668cba7096b6ff4ccf4af709450"
+        },
+        {
+          "file": "word/final-active.json",
+          "sha256": "db4d9985b08dba166de3591ba7e667b40b19dedf3aa68bb9cf909d9a642a4936"
+        }
+      ],
+      "limitation": "All1830 pages automatically checked; NOT all1830 manually viewed. Digital geometry only; 7pt exact synthetic notice is excluded from8pt body minimum. Historical legal mismatch and physical paper gate remain separate.",
+      "defect": "BIOT14 lower duplicate chairman text clipped at frame under actual user-preview issuer profile.",
+      "fix": "BIOT15 aligns lower-right textbox x/width with upper block and starts divider below issuer band.",
+      "retest": "Fresh current canonical BIOT15 Word2 plus actual browser issuance81.1s and exact6files,2LO+2Word pages visualPASS; historical failure artifacts retained."
+    },
+    {
+      "id": "C07",
+      "observedStatus": "FAIL",
+      "status": "PASS",
+      "scenario": "Final actual BIOT15 source/output reconciliation plus complete automated96-file audit and bounded full/sample visual review",
+      "result": "96 DOCX/PDF cases,1394recipients,1830pages automatic geometry/glyph/field/photo checks PASS.84 base and186 stress pages manually reviewed. Final Word20/20 across28pages PASS. Additional real chairman/program BIOT14 clipping is fixed by immutableBIOT15, whose actual browser-issued2LO+2Word pages and6downloadSHA PASS.",
+      "artifact": "printing/final-artifact-audit.json; printing/final-source-docx-revalidation.json; printing/final-visual-reconciliation.json; browser/biot-v15-retest/BIOT_V15_RETEST_RU.md; browser/biot-v15-retest/pdf-visual-review.json; word/biot-v15-browser/word-results.json; word/final-active.json",
+      "evidence": [
+        {
+          "file": "printing/final-artifact-audit.json",
+          "sha256": "1b5cbb940a07a1754ed984a762cf6e4f4c198bdac24d4128e9dfe3d48dc7bab3"
+        },
+        {
+          "file": "printing/final-source-docx-revalidation.json",
+          "sha256": "1dbb1abd60cff81156979724c0d93bd1e949b4eb84883e7fb5ae862d4e734bb8"
+        },
+        {
+          "file": "printing/final-visual-reconciliation.json",
+          "sha256": "c921696fce0686b85bc3e0c70b0b87ac790282e54824423a3c61cc2f496b68c3"
+        },
+        {
+          "file": "browser/biot-v15-retest/BIOT_V15_RETEST_RU.md",
+          "sha256": "d974ac5308845d6647347fd7363c14e6b954f8a00dab6001d353b3562a05f83a"
+        },
+        {
+          "file": "browser/biot-v15-retest/pdf-visual-review.json",
+          "sha256": "2000a64c9203ee279439f988264dd0add81f8af264be5ab6c3af28b339140ef1"
+        },
+        {
+          "file": "word/biot-v15-browser/word-results.json",
+          "sha256": "7f9305a1e7ab6969120513701cf503d47f1d7668cba7096b6ff4ccf4af709450"
+        },
+        {
+          "file": "word/final-active.json",
+          "sha256": "db4d9985b08dba166de3591ba7e667b40b19dedf3aa68bb9cf909d9a642a4936"
+        }
+      ],
+      "limitation": "All1830 pages automatically checked; NOT all1830 manually viewed. Digital geometry only; 7pt exact synthetic notice is excluded from8pt body minimum. Historical legal mismatch and physical paper gate remain separate.",
+      "defect": "BIOT14 lower duplicate chairman text clipped at frame under actual user-preview issuer profile.",
+      "fix": "BIOT15 aligns lower-right textbox x/width with upper block and starts divider below issuer band.",
+      "retest": "Fresh current canonical BIOT15 Word2 plus actual browser issuance81.1s and exact6files,2LO+2Word pages visualPASS; historical failure artifacts retained."
+    },
+    {
+      "id": "C08",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Real Word16.0.17932 open/read-only PDF export for current10forms × short/long, exact manifest matching",
+      "result": "20/20 PASS,28pages. Current canonical manifest is word-final-biot-v15: BIOTworker15,ITR13,PTM14,PB14,PScard15,witness11,all4protocols9. No missing source words/extra empty pages/page-count or sheet bounds drift; observed body minimum8.04pt. All28page visual decisions SHA-reconciled; wrong-text and wrong-page-count negative controls fail. Additional actual BIOT15 browser DOCX2pages PASS.",
+      "artifact": "word/final-active.json; word/WORD_COMPATIBILITY_RU.md; printing/word-final-biot-v15/manifest.json; word/final-biot-v15/pixel-comparison.json; word/negative-controls/results.json; word/biot-v15-browser/word-results.json",
+      "evidence": [
+        {
+          "file": "word/final-active.json",
+          "sha256": "db4d9985b08dba166de3591ba7e667b40b19dedf3aa68bb9cf909d9a642a4936"
+        },
+        {
+          "file": "word/WORD_COMPATIBILITY_RU.md",
+          "sha256": "fc8c9bdd81586c00c57faffc7a50cdae9c6388682dd3cbe71d741f07b2e912f4"
+        },
+        {
+          "file": "printing/word-final-biot-v15/manifest.json",
+          "sha256": "d6f67f6eeae81ae4920f0fe656fdb38ec99f35a1d7a80d5e269066a109c72364"
+        },
+        {
+          "file": "word/final-biot-v15/pixel-comparison.json",
+          "sha256": "16f76d287f11bfae9c73abf672c6ebf6b5b1eea80332a9b824fe85f1f298734c"
+        },
+        {
+          "file": "word/negative-controls/results.json",
+          "sha256": "7b50b038b86741a41037a66a7c7e30b21cb1f46f849eec892d0e689e7ab9359a"
+        },
+        {
+          "file": "word/biot-v15-browser/word-results.json",
+          "sha256": "7f9305a1e7ab6969120513701cf503d47f1d7668cba7096b6ff4ccf4af709450"
+        }
+      ],
+      "limitation": "Supported environment requires exact bundled LiberationSerif/Sans2.1.5. Eight TTF fonts were registered session-only then removed; unconfigured-font failure is retained. Physical printer/issuer approval not covered."
+    },
+    {
+      "id": "A01",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Clean product-only copy outside DSJ, frozen install/build/checks, own Linux PostgreSQL and safe setup, actual production web/API/worker/readiness and browser issue.",
+      "result": "Both final images built and started.17unit+42integration PASS; HTTPS TLS1.2/1.3 live health PASS. Prior exact PS15 HTTPS issue files remain immutable; source/runtime delta reconciled separately.",
+      "artifact": "final-build-checks.json; standalone-stage-release5.json; container-final-r5-tls-update.log; security/integration-linux-final-r5.log",
+      "evidence": [
+        {
+          "file": "final-build-checks.json",
+          "sha256": "b9f7fd9517a9271dee96f0043df5ef418eb78d648c8716b5fbcbddcdce6f83e4"
+        },
+        {
+          "file": "standalone-stage-release5.json",
+          "sha256": "cbe8310abddeaa76a61633edd0264a63c387287b2ce6010753d84395ac6a5cc1"
+        },
+        {
+          "file": "container-final-r5-tls-update.log",
+          "sha256": "ea1107634551adc84a68fe477e7a46334398688f3ecdc76ae3b6b496cdf48c04"
+        },
+        {
+          "file": "security/integration-linux-final-r5.log",
+          "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+        }
+      ],
+      "limitation": "Independent local standalone environment, not production cutover."
+    },
+    {
+      "id": "A49",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Current autonomy and freeze verifier plus issuer/header and synthetic watermark print review.",
+      "result": "397 preserved legacy files:381 unchanged,16 authorized adapters,8 authorized new boundary files,0 frozen business changes,0 missing preserved files. Product brandDEMO separate from issuer strip; synthetic watermarks retained.",
+      "artifact": "freeze-release3.log; autonomy-final.log; printing/final-visual-reconciliation.json",
+      "evidence": [
+        {
+          "file": "freeze-release3.log",
+          "sha256": "ded780c7a1d7bcb92dfd87ab17b47f20719df0604fa4c21602e4b63fd5f2deee"
+        },
+        {
+          "file": "autonomy-final.log",
+          "sha256": "d5f7466822f9cbd590af85c1d7bf15ea7b4a141b7858688083892dddbe9ecbbf"
+        },
+        {
+          "file": "printing/final-visual-reconciliation.json",
+          "sha256": "c921696fce0686b85bc3e0c70b0b87ac790282e54824423a3c61cc2f496b68c3"
+        }
+      ],
+      "limitation": "Index-only removal of665 generated DEMO artifacts/caches preserves all320664555 bytes on disk;41 ignore rule checks PASS; no frozen source removed."
+    },
+    {
+      "id": "C12",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Actual worker SIGKILL, converter interruption, two recovery workers; actual DB stop/recovery and API/worker restarts; real ENOSPC and EACCES.",
+      "result": "Recovered without repeated issuance/renumbering; readiness503 on unavailable storage, eventual4/4documents per storage fault;16download SHA. DB interruption:10jobs auto-recovered,14artifacts unchanged after all-service restart.",
+      "artifact": "security/process-drill.json; storage-faults/result.json; resilience/result.json; security/integration-linux-final-r5.log",
+      "evidence": [
+        {
+          "file": "security/process-drill.json",
+          "sha256": "c5d8a1861ffb953e68f17f81e4ee70cbaf86ccd0f20b494705619d6f45e18b34"
+        },
+        {
+          "file": "storage-faults/result.json",
+          "sha256": "6c584efb5175a5a0d5ebbf944e35961750858a517848c99c3a3f35542dfe36b2"
+        },
+        {
+          "file": "resilience/result.json",
+          "sha256": "8fa1d5b568db79c6b7b13d839ee40dc33ce731fd0467e678787b5bee1ada1f40"
+        },
+        {
+          "file": "security/integration-linux-final-r5.log",
+          "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+        }
+      ],
+      "limitation": "Fault runs deliberately retain original immutable artifacts and recorded runtime versions. Later template/readiness-only changes do not retroactively rerender originals; applicable source differences are reconciled."
+    },
+    {
+      "id": "C14",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Frozen install/build/run from external product-only copy.",
+      "result": "Actual API+web Docker builds and6-service non-root read-only deployment; no parent DSJ source/runtime imports. Final17unit and42integration pass.",
+      "artifact": "final-build-checks.json; standalone-stage-release5.json; container-final-r5-tls-update.log; security/integration-linux-final-r5.log",
+      "evidence": [
+        {
+          "file": "final-build-checks.json",
+          "sha256": "b9f7fd9517a9271dee96f0043df5ef418eb78d648c8716b5fbcbddcdce6f83e4"
+        },
+        {
+          "file": "standalone-stage-release5.json",
+          "sha256": "cbe8310abddeaa76a61633edd0264a63c387287b2ce6010753d84395ac6a5cc1"
+        },
+        {
+          "file": "container-final-r5-tls-update.log",
+          "sha256": "ea1107634551adc84a68fe477e7a46334398688f3ecdc76ae3b6b496cdf48c04"
+        },
+        {
+          "file": "security/integration-linux-final-r5.log",
+          "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+        }
+      ],
+      "limitation": "Current runtime bound to r5 source manifest; later report/helper-only changes must be explicitly reconciled."
+    },
+    {
+      "id": "C15",
+      "observedStatus": "PASS",
+      "status": "PASS",
+      "scenario": "Pinned Linux images; actual build/run, non-root read-only/cap-drop/private volumes, service restart, reverse-proxy TLS.",
+      "result": "r5 runningAPIworker399a6212.../web3eb90b05...; public listeners limited127.0.0.1:8080/8443; DB/API/storage not published. TLS1.2/1.3 verified with local CA; browser PS15 photo issuance and independent untrusted-CA rejection; real restart14SHA unchanged.",
+      "artifact": "container-final-r5-tls-update.log; browser/generated-photo-ps-https/PHOTO_HTTPS_ACCEPTANCE_RU.md; resilience/result.json; final-build-checks.json",
+      "evidence": [
+        {
+          "file": "container-final-r5-tls-update.log",
+          "sha256": "ea1107634551adc84a68fe477e7a46334398688f3ecdc76ae3b6b496cdf48c04"
+        },
+        {
+          "file": "browser/generated-photo-ps-https/PHOTO_HTTPS_ACCEPTANCE_RU.md",
+          "sha256": "78409e0670d18806610dd1ff584f596c75129a11f356a5ad8f880976b11dd3cd"
+        },
+        {
+          "file": "resilience/result.json",
+          "sha256": "8fa1d5b568db79c6b7b13d839ee40dc33ce731fd0467e678787b5bee1ada1f40"
+        },
+        {
+          "file": "final-build-checks.json",
+          "sha256": "b9f7fd9517a9271dee96f0043df5ef418eb78d648c8716b5fbcbddcdce6f83e4"
+        }
+      ],
+      "limitation": "Local WSL2 Linux target, temporary local CA, container restart tested; physical host reboot and public production certificate/domain not supplied. No production availability promise. HTTPS photo issuance was onr4; current r5 health/TLS/nonroot/run proven separately. Five-container restart was earlier recorded stage, not host power loss."
+    },
+    {
+      "id": "A44",
+      "observedStatus": "NOT RUN",
+      "status": "PASS",
+      "scenario": "Final exact r5 fresh migrations and initial001→002–005 upgrade on separate synthetic PostgreSQL18.6 DB",
+      "result": "All5 migrations applied; upgrade retained3synthetic records including independentRU/KZ and literal leapdate. Same actual isolated final run42integration PASS0skip.",
+      "artifact": "security/integration-linux-final-r5.log",
+      "evidence": [
+        {
+          "file": "security/integration-linux-final-r5.log",
+          "sha256": "2be58374e92d5c4763e3c1c520a172e83a0e098e159f342aea89182f02460d64"
+        }
+      ],
+      "limitation": "No production migration was run; applied DSJ migrations unchanged."
+    }
+  ],
+  "remainingNotRunNotClosedByThisAudit": [
+    {
+      "id": "A02",
+      "status": "NOT RUN",
+      "requirement": "Frozen menu/routes",
+      "reason": "Current product route/menu closure has partial browser/API evidence; root must reconcile all legacy boundary route/menu tests and exact source."
+    },
+    {
+      "id": "A05",
+      "status": "NOT RUN",
+      "requirement": "Jobs и package boundary",
+      "reason": "Root owns worker/package deny-boundary test and final frozen source reconciliation."
+    },
+    {
+      "id": "A47",
+      "status": "NOT RUN",
+      "requirement": "Security/deps/runtime",
+      "reason": "Exact r5 CVE applicability review exists but this browser audit does not certify every nativeCVE; leave independent security/root review."
+    },
+    {
+      "id": "A50",
+      "status": "NOT RUN",
+      "requirement": "Release gate",
+      "reason": "Aggregate release gate includes physical printing, legal approval and production boundary; do not infer fullPASS."
+    },
+    {
+      "id": "C16",
+      "status": "NOT RUN",
+      "requirement": "CI runner и реальные image CVE",
+      "reason": "Actual image scans exist; CI runner execution still must be distinguished from local equivalent checks."
+    },
+    {
+      "id": "C18",
+      "status": "NOT RUN",
+      "requirement": "Лицензии/SBOM/notices/права на формы",
+      "reason": "Licenses/notices evidence plus rights to supplied forms require separate root/legal conclusion."
+    },
+    {
+      "id": "C19",
+      "status": "NOT RUN",
+      "requirement": "Выпуск 1/10/50/100 и несколько операторов, ресурсы",
+      "reason": "Root benchmark running; do not promote from old timings."
+    },
+    {
+      "id": "C20",
+      "status": "NOT RUN",
+      "requirement": "Единый финальный gate и хешированный источник",
+      "reason": "Root final source/evidence manifest and gates not yet finalized."
+    }
+  ],
+  "preserve": [
+    {
+      "id": "A48",
+      "status": "BLOCKED",
+      "reason": "No production cutover authorization/inventory."
+    },
+    {
+      "id": "C09",
+      "status": "BLOCKED",
+      "reason": "No physical100%/duplex paper/ruler evidence."
+    },
+    {
+      "id": "C17",
+      "status": "FAIL",
+      "reason": "HistoricalBIOT6column form differs from current7column requirement; issuer legal approval separate."
+    }
+  ],
+  "latestUserPreview": {
+    "requestUrl": "http://localhost:3200/requests/6b9ab371-e8c0-4b9c-bc9b-012dc5cf0070/edit",
+    "readyEvidence": "browser/user-preview-biot15-ready.json",
+    "readyEvidenceSha256": "318f7d106368d6728e9df2b915bca06f12a68c03c4036dd82afbfc4047db7449",
+    "artifactEvidence": "browser/biot-v15-retest/photo-result.json",
+    "artifactEvidenceSha256": "09026fc82aa6530be3818f15f137f9bb99a209f3bd911c14dc1112e498a3e641",
+    "result": "LatestBIOT15 already verified in completed readiness and6SHA artifact readback; no repeat service call or mutation during this audit."
+  }
+}

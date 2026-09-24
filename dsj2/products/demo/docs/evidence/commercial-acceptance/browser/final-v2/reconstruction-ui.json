@@ -1,0 +1,8 @@
+{
+  "requestId": "9705b2c7-32d4-48aa-b821-57ee46d09bea",
+  "browserReadFailure": "simulated HTTP503",
+  "originalArtifactId": "a4c47598-a2f3-45e0-a343-ef9d416eb23d",
+  "originalSha256": "e04cff781966f40cfe536a70d848c989aa8e3ae334c4736592af6f8ae6f1e08b",
+  "numberingPreserved": true,
+  "reconstructedArtifacts": 1
+}

@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "test": "test_render.RenderTests.test_24_biot_current_columns_numbers_results_and_preflight",
+  "command": "python -m unittest test_render.RenderTests.test_24_biot_current_columns_numbers_results_and_preflight -v",
+  "durationSeconds": 2.691,
+  "exitCode": 0,
+  "sourceSha256": "a33db9ae3689b8e5cc27a0c1f9d49f4c7e00652afd06c86f30816db996f464fc",
+  "checks": [
+    "Exact 7/10 data cell mapping",
+    "Independent scores/proctoring/passmark",
+    "Linked credential number and explicit external override",
+    "No fallback to protocol number",
+    "12-digit actual numbering reserve accepted",
+    "Wide prefix and tall commission rejected before issuance"
+  ],
+  "note": "Tool execution output observed during this bounded finish; no full unittest discovery run."
+}

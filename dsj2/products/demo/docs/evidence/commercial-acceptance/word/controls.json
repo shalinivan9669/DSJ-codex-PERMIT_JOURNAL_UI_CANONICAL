@@ -1,0 +1,17 @@
+[
+  {
+    "file": "word-created.docx",
+    "status": "PASS",
+    "pages": 1
+  },
+  {
+    "file": "template.docx",
+    "status": "FAIL",
+    "error": "Файл поврежден."
+  },
+  {
+    "file": "rendered.docx",
+    "status": "FAIL",
+    "error": "Файл поврежден."
+  }
+]
