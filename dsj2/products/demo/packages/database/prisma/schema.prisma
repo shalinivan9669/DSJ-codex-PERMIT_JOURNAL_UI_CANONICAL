@@ -51,6 +51,9 @@ model CustomerOrganization {
   tenantId String
   nameRu String
   nameKz String @default("")
+  legalForm String?
+  ownNameRu String?
+  ownNameKz String?
   bin String @default("")
   addressRu String @default("")
   addressKz String @default("")

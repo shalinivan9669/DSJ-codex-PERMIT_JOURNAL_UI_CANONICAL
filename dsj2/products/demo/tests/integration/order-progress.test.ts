@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { db, type Context } from "../../apps/api/src/core";
 import { createRequest, patchRequest } from "../../apps/api/src/requests";
-import { draftSchema } from "../../packages/contracts/src";
+import { draftSchema, resolveDraft, today } from "../../packages/contracts/src";
 import * as value from "../../apps/api/src/operator-value";
 import { assertTestDatabase } from "./test-database";
 
@@ -48,6 +48,9 @@ test("order progress uses scoped factual results and counts people/events instea
     kind: "COMPANY",
     title: "Eight people and two events",
     customerId: customer.id,
+    // This scenario intentionally models missing issuance data. Omission on a
+    // new v2 request now means the center's current calendar date.
+    commonFields: { documentDate: "" },
     events: eventIds.map((id, i) => ({
       id,
       title: i === 2 ? "FOREIGN EVENT" : `Event ${i + 1}`,
@@ -165,6 +168,64 @@ test("order progress uses scoped factual results and counts people/events instea
     ).length,
     4,
     "Event inheritance uses the canonical resolver; the first four people need no duplicated date input",
+  );
+
+  await t.test(
+    "the default issuance date does not supply training dates, protocol dates or factual outcomes",
+    async () => {
+      const eventId = randomUUID();
+      const request = await createRequest(c, {
+        schemaVersion: 2,
+        kind: "COMPANY",
+        customerId: customer.id,
+        events: [
+          {
+            id: eventId,
+            title: "Unknown factual event",
+            protocolTemplateId: "pb-protocol",
+            commonFields: { trainingSubject: "Synthetic program" },
+          },
+        ],
+        items: [
+          {
+            id: randomUUID(),
+            recipientId: people[0].id,
+            employerId: customer.id,
+            fullNameRu: "Person with no factual outcome",
+            assignments: [
+              {
+                id: randomUUID(),
+                templateId: "pb-card",
+                protocolMode: "GROUP",
+                eventId,
+                outcome: { status: "UNKNOWN", source: "" },
+              },
+            ],
+          },
+        ],
+      });
+      const saved = draftSchema.parse(request.draft);
+      assert.equal(saved.commonFields!.documentDate, today(tenant.timezone));
+      const resolved = resolveDraft(saved).draft;
+      const assignment = resolved.items[0].assignments[0];
+      assert.equal(assignment.documentDate, today(tenant.timezone));
+      assert.equal(assignment.trainingStart, "");
+      assert.equal(assignment.trainingEnd, "");
+      assert.equal(assignment.protocolDate, "");
+      assert.equal(assignment.outcome?.status, "UNKNOWN");
+      const order = await value.createServiceOrder(c, {
+        title: "Unknown training outcome",
+        customerId: customer.id,
+        requestIds: [request.id],
+      });
+      const detail = await value.serviceOrderDetail(c, order.id);
+      assert.equal(detail.completion.training, false);
+      assert.equal(detail.completion.documents, false);
+      assert.equal(
+        detail.nextActions.filter((a) => a.source === "RESULT_REVIEW").length,
+        1,
+      );
+    },
   );
 
   await t.test(

@@ -1,13 +1,22 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
-import { BIOT_CATEGORIES, LIMITS, type BiotCategory } from "@demo/contracts";
+import {
+  BIOT_CATEGORIES,
+  LIMITS,
+  calculatedDateKeys,
+  type CalculatedDateKey,
+  type BiotCategory,
+} from "@demo/contracts";
 import { api, errorText } from "@/lib/api";
 import { TextQualityHint } from "./text-quality-hint";
 import { RecipientRecord } from "./recipient-record";
+import { DateCalculationStatus } from "./date-calculation-status";
+import { TrainingDateSettings } from "./training-date-settings";
 import {
   biotCategoriesForTemplate,
   updateAssignment,
+  restoreAssignmentDate,
 } from "@/lib/assignment-presets";
 import {
   newAssignment,
@@ -349,6 +358,7 @@ export function RecipientDetails({
                                 MANUAL: "Введено вручную",
                                 IMPORTED: "Импортировано",
                                 CLEARED: "Очищено вручную",
+                                AUTO: "Автоматический расчёт",
                               } as Record<string, string>
                             )[origin] || origin}
                             {["MANUAL", "IMPORTED", "CLEARED"].includes(
@@ -364,13 +374,20 @@ export function RecipientDetails({
                                       (a) =>
                                         a.id !== assignment.id
                                           ? a
-                                          : {
-                                              ...a,
-                                              fieldOrigins: {
-                                                ...a.fieldOrigins,
-                                                [key]: "INHERITED",
+                                          : calculatedDateKeys.includes(
+                                                key as CalculatedDateKey,
+                                              )
+                                            ? restoreAssignmentDate(
+                                                a,
+                                                key as CalculatedDateKey,
+                                              )
+                                            : {
+                                                ...a,
+                                                fieldOrigins: {
+                                                  ...a.fieldOrigins,
+                                                  [key]: "INHERITED",
+                                                },
                                               },
-                                            },
                                     ),
                                   })
                                 }
@@ -449,6 +466,55 @@ export function RecipientDetails({
                         </small>
                       ))}
                   </label>
+                )}
+                <DateCalculationStatus
+                  values={resolvedRecipient?.assignments[index] || assignment}
+                  rule={
+                    (resolvedRecipient?.assignments[index] || assignment)
+                      .trainingDateRule
+                  }
+                  origins={
+                    provenance?.[`${recipient.id}:${assignment.id}`] ||
+                    assignment.fieldOrigins
+                  }
+                  disabled={disabled}
+                  restoreKeys={
+                    assignment.protocolMode === "GROUP"
+                      ? calculatedDateKeys.filter((key) =>
+                          ["MANUAL", "IMPORTED", "CLEARED"].includes(
+                            provenance?.[`${recipient.id}:${assignment.id}`]?.[
+                              key
+                            ] ||
+                              assignment.fieldOrigins?.[key] ||
+                              "",
+                          ),
+                        )
+                      : undefined
+                  }
+                  onRestore={(key) =>
+                    onChange({
+                      ...recipient,
+                      assignments: recipient.assignments.map((a) =>
+                        a.id !== assignment.id
+                          ? a
+                          : restoreAssignmentDate(a, key),
+                      ),
+                    })
+                  }
+                />
+                {assignment.protocolMode !== "GROUP" && (
+                  <TrainingDateSettings
+                    rule={
+                      (resolvedRecipient?.assignments[index] || assignment)
+                        .trainingDateRule
+                    }
+                    disabled={disabled}
+                    onChange={(rule) =>
+                      changeAssignment(assignment.id, {
+                        trainingDateRule: rule,
+                      })
+                    }
+                  />
                 )}
                 <div className="form-grid compact">
                   <label>

@@ -104,6 +104,20 @@ def add_mark(files,text):
     p=E.SubElement(header,W+'p'); pr=E.SubElement(p,W+'pPr'); E.SubElement(pr,W+'jc',{W+'val':'center'})
     run=E.SubElement(p,W+'r'); props=E.SubElement(run,W+'rPr'); E.SubElement(props,W+'sz',{W+'val':'14'}); E.SubElement(props,W+'color',{W+'val':'9C2020'})
     E.SubElement(run,W+'t').text=text
+    # Restored DSJ protocols retain issuer/address in their original header.
+    # Replacing its references with a watermark-only header hides those fields.
+    # This opt-in marker is carried by the new immutable template bytes; older
+    # snapshots keep their prior rendering behavior.
+    if any(n.get(W+'val')=='DSJ_RESTORED_BIOT_PROTOCOL' for n in root.iter(W+'tblCaption')):
+        rels=E.fromstring(files['word/_rels/document.xml.rels'])
+        references={n.get(R+'id') for n in root.iter(W+'headerReference')}
+        for rel in rels:
+            if rel.get('Id') not in references:continue
+            part='word/'+rel.get('Target').lstrip('/')
+            if part not in files:continue
+            original=E.fromstring(files[part]);original.insert(0,deepcopy(p))
+            files[part]=E.tostring(original,xml_declaration=True,encoding='utf-8')
+        if references:return
     files['word/demo-header.xml']=E.tostring(header,xml_declaration=True,encoding='utf-8')
     rels=E.fromstring(files['word/_rels/document.xml.rels'])
     rid='rIdDemoHeader'; E.SubElement(rels,PKG+'Relationship',Id=rid,Type=R[1:-1]+'/header',Target='demo-header.xml')

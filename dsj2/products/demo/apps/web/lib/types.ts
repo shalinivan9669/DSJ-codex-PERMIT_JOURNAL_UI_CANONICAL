@@ -4,6 +4,7 @@ import {
   type Assignment,
   type RequestItemInput,
   type Role,
+  type OrganizationForm,
 } from "@demo/contracts";
 import { biotAssignmentDefaults } from "./assignment-presets";
 export type { Assignment, Role };
@@ -20,6 +21,9 @@ export type Customer = {
   id: string;
   nameRu: string;
   nameKz: string;
+  legalForm?: OrganizationForm | null;
+  ownNameRu?: string | null;
+  ownNameKz?: string | null;
   bin: string;
   addressRu: string;
   addressKz: string;

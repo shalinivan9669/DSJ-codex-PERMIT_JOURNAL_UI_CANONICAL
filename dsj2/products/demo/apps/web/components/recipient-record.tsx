@@ -5,6 +5,7 @@ import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import type { Recipient, Customer } from "@/lib/types";
 import { RecordPicker } from "./record-picker";
+import { CustomerDialog } from "./customers";
 type History = {
   employment: {
     id: string;
@@ -30,6 +31,7 @@ export function RecipientRecord({
     {},
   );
   const [picker, setPicker] = useState(false);
+  const [createEmployer, setCreateEmployer] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -113,6 +115,21 @@ export function RecipientRecord({
       setBusy(false);
     }
   }
+  function chooseEmployer(value: Customer) {
+    setEmployer(value);
+    setPicker(false);
+    setCreateEmployer(false);
+    setConfirmed(false);
+    onChange({
+      ...recipient,
+      employerId: value.id,
+      workplaceRu: value.nameRu,
+      workplaceKz: value.nameKz,
+      employerBin: value.bin,
+      employerAddressRu: value.addressRu,
+      employerAddressKz: value.addressKz,
+    });
+  }
   return (
     <details className="outcome-entry">
       <summary>Постоянная запись, работодатель и история</summary>
@@ -145,6 +162,9 @@ export function RecipientRecord({
       <p>Работодатель: {employer?.nameRu || "не связан со справочником"}</p>
       <button disabled={disabled} onClick={() => setPicker(true)}>
         Выбрать работодателя
+      </button>
+      <button disabled={disabled} onClick={() => setCreateEmployer(true)}>
+        Добавить организацию работодателя
       </button>
       {!disabled && (
         <>
@@ -199,20 +219,14 @@ export function RecipientRecord({
         <RecordPicker
           kind="customers"
           onClose={() => setPicker(false)}
-          onCustomer={(value) => {
-            setEmployer(value);
-            setPicker(false);
-            setConfirmed(false);
-            onChange({
-              ...recipient,
-              employerId: value.id,
-              workplaceRu: value.nameRu,
-              workplaceKz: value.nameKz,
-              employerBin: value.bin,
-              employerAddressRu: value.addressRu,
-              employerAddressKz: value.addressKz,
-            });
-          }}
+          onCustomer={chooseEmployer}
+        />
+      )}
+      {createEmployer && (
+        <CustomerDialog
+          customer={{}}
+          onClose={() => setCreateEmployer(false)}
+          onSaved={chooseEmployer}
         />
       )}
     </details>

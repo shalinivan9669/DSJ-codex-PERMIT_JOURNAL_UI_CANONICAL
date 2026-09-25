@@ -4,6 +4,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon, Notice } from "@demo/ui";
 import { today } from "@demo/contracts";
+import {
+  newRequestBundle,
+  requestBundles,
+  type RequestBundle,
+} from "@/lib/request-bundles";
 import { api, downloadExport, errorText, json } from "@/lib/api";
 import {
   newRecipient,
@@ -280,7 +285,8 @@ export function NewRequest({ context }: { context: AppContext }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  async function create(kind: "PERSON" | "COMPANY") {
+  const [kind, setKind] = useState<"PERSON" | "COMPANY">("PERSON");
+  async function create(kind: "PERSON" | "COMPANY", bundle?: RequestBundle) {
     setBusy(true);
     setError("");
     try {
@@ -290,13 +296,14 @@ export function NewRequest({ context }: { context: AppContext }) {
           kind,
           schemaVersion: 2,
           commonFields: { documentDate: today(context.tenant.timezone) },
-          title:
-            kind === "PERSON"
+          title: bundle
+            ? `БиОТ · ${requestBundles[bundle].label}`
+            : kind === "PERSON"
               ? "Новая заявка на человека"
               : "Новая заявка организации",
           customerId: null,
           demoMode: !!context.tenant.demoOnly,
-          items: [newRecipient()],
+          ...(bundle ? newRequestBundle(bundle) : { items: [newRecipient()] }),
         }),
       });
       router.push(`/requests/${draft.id}/edit`);
@@ -313,7 +320,7 @@ export function NewRequest({ context }: { context: AppContext }) {
       <div className="page-heading">
         <div>
           <h1>Новая заявка</h1>
-          <p>Для кого подготовить документы?</p>
+          <p>Выберите комплект. Соответствующий протокол уже включён.</p>
         </div>
       </div>
       {error && <Notice>{error}</Notice>}
@@ -322,40 +329,84 @@ export function NewRequest({ context }: { context: AppContext }) {
           Создавать заявки могут оператор и администратор центра.
         </Notice>
       ) : (
-        <div className="start-options">
-          <button
-            className="start-option"
-            disabled={busy}
-            onClick={() => void create("PERSON")}
-          >
-            <Icon name="person" size={38} />
-            <h2>Человек</h2>
-            <p>
-              Документы для одного получателя.
-              <br />
-              При необходимости можно добавить ещё.
-            </p>
-            <span>
-              Создать заявку <Icon name="chevron" />
-            </span>
-          </button>
-          <button
-            className="start-option"
-            disabled={busy}
-            onClick={() => void create("COMPANY")}
-          >
-            <Icon name="company" size={38} />
-            <h2>Организация</h2>
-            <p>
-              Заказчик и список сотрудников.
-              <br />
-              Свои документы и даты у каждого.
-            </p>
-            <span>
-              Создать заявку <Icon name="chevron" />
-            </span>
-          </button>
-        </div>
+        <>
+          <section className="panel">
+            <label>
+              Для кого подготовить комплект
+              <select
+                value={kind}
+                disabled={busy}
+                onChange={(event) =>
+                  setKind(event.target.value as "PERSON" | "COMPANY")
+                }
+              >
+                <option value="PERSON">Человек или группа получателей</option>
+                <option value="COMPANY">Организация и её сотрудники</option>
+              </select>
+            </label>
+          </section>
+          <div className="start-options" aria-label="Комплекты БиОТ">
+            {(Object.keys(requestBundles) as RequestBundle[]).map((key) => (
+              <button
+                key={key}
+                className="start-option"
+                disabled={busy}
+                onClick={() => void create(kind, key)}
+              >
+                <Icon
+                  name={key === "WORKER" ? "person" : "company"}
+                  size={38}
+                />
+                <h2>{requestBundles[key].label}</h2>
+                <p>
+                  {requestBundles[key].description}. Для группы — один протокол
+                  на всех участников события.
+                </p>
+                <span>
+                  {busy ? "Создаём…" : "Создать комплект"}{" "}
+                  <Icon name="chevron" />
+                </span>
+              </button>
+            ))}
+          </div>
+          <details className="panel">
+            <summary>Другие направления и отдельные формы: ПБ, ПТМ, ПС</summary>
+            <div className="start-options">
+              <button
+                className="start-option"
+                disabled={busy}
+                onClick={() => void create("PERSON")}
+              >
+                <Icon name="person" size={38} />
+                <h2>Человек</h2>
+                <p>
+                  Документы для одного получателя.
+                  <br />
+                  При необходимости можно добавить ещё.
+                </p>
+                <span>
+                  Создать заявку <Icon name="chevron" />
+                </span>
+              </button>
+              <button
+                className="start-option"
+                disabled={busy}
+                onClick={() => void create("COMPANY")}
+              >
+                <Icon name="company" size={38} />
+                <h2>Организация</h2>
+                <p>
+                  Заказчик и список сотрудников.
+                  <br />
+                  Свои документы и даты у каждого.
+                </p>
+                <span>
+                  Создать заявку <Icon name="chevron" />
+                </span>
+              </button>
+            </div>
+          </details>
+        </>
       )}
       <p className="fine-print">
         Номера документов назначаются только при оформлении. Черновик можно

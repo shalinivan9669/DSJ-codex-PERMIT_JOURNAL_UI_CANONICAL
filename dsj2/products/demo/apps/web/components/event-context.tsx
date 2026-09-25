@@ -3,8 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
-  biotValidUntil,
+  resolveDraft,
+  resolveCommonDates,
+  calculatedDateKeys,
   commonFieldKeys,
+  type CommonFields,
   type BiotCategory,
   type TrainingEventInput,
 } from "@demo/contracts";
@@ -12,6 +15,8 @@ import { api, errorText } from "@/lib/api";
 import { bulkFields } from "@/lib/bulk-edit";
 import { newAssignment, type Assignment, type Draft } from "@/lib/types";
 import { eligibleForEvent, joinEventAssignment } from "@/lib/event-assignment";
+import { TrainingDateSettings } from "./training-date-settings";
+import { DateCalculationStatus } from "./date-calculation-status";
 
 const directions = [
   {
@@ -151,6 +156,12 @@ export function EventContext({
   }, [expanded]);
   const events = draft.events || [];
   const event = events.find((e) => e.id === activeId);
+  const displayedCommon =
+    resolveDraft(draft).draft.events?.find((e) => e.id === activeId)
+      ?.commonFields ||
+    event?.commonFields ||
+    {};
+  const displayedRequestCommon = resolveCommonDates(requestCommon);
   const eventAssignments = draft.items.flatMap((item) =>
     item.assignments
       .filter((a) => a.eventId === activeId)
@@ -183,6 +194,17 @@ export function EventContext({
         ),
       });
   }
+  function changeEventCommon(patch: Partial<CommonFields>) {
+    if (!event) return;
+    const next = { ...event.commonFields, ...patch };
+    for (const key of calculatedDateKeys)
+      if (Object.hasOwn(patch, key))
+        next.dateOrigins = {
+          ...next.dateOrigins,
+          [key]: patch[key] ? "MANUAL" : "CLEARED",
+        };
+    updateEvent({ commonFields: next });
+  }
   function addEvent() {
     const choice = directions.find((d) => d.key === direction)!;
     const next: TrainingEventInput = {
@@ -191,19 +213,12 @@ export function EventContext({
       protocolTemplateId: choice.protocol,
       revision: 0,
       commonFields: {
-        ...(draft.commonFields?.documentDate
-          ? { documentDate: draft.commonFields.documentDate }
-          : {}),
         ...(choice.key === "biot"
           ? {
               biotCategory: "WORKER" as const,
               biotCheckType: "PERIODIC" as const,
               hours: "10",
               productionHours: "16",
-              validUntil: draft.commonFields?.documentDate
-                ? biotValidUntil(draft.commonFields.documentDate, "WORKER") ||
-                  ""
-                : "",
             }
           : {}),
       },
@@ -214,12 +229,6 @@ export function EventContext({
         biotCategory: "OHS_SPECIALIST_SPECIAL",
         biotCheckType: "PERIODIC",
         hours: "40",
-        validUntil: next.commonFields.documentDate
-          ? biotValidUntil(
-              next.commonFields.documentDate,
-              "OHS_SPECIALIST_SPECIAL",
-            ) || ""
-          : "",
       };
     void apply({ schemaVersion: 2, events: [...events, next] });
     setActiveId(next.id);
@@ -333,13 +342,26 @@ export function EventContext({
                         type={type}
                         disabled={disabled}
                         value={String(
-                          requestCommon[field as keyof typeof requestCommon] ||
-                            "",
+                          displayedRequestCommon[
+                            field as keyof typeof requestCommon
+                          ] || "",
                         )}
                         onChange={(e) =>
                           setRequestCommon((old) => ({
                             ...old,
                             [field]: e.target.value,
+                            ...(calculatedDateKeys.includes(
+                              field as (typeof calculatedDateKeys)[number],
+                            )
+                              ? {
+                                  dateOrigins: {
+                                    ...old.dateOrigins,
+                                    [field]: e.target.value
+                                      ? "MANUAL"
+                                      : "CLEARED",
+                                  },
+                                }
+                              : {}),
                           }))
                         }
                       />
@@ -353,6 +375,12 @@ export function EventContext({
                         setRequestCommon((old) => {
                           const next = { ...old };
                           delete next[field as keyof typeof next];
+                          if (next.dateOrigins && field in next.dateOrigins) {
+                            next.dateOrigins = { ...next.dateOrigins };
+                            delete next.dateOrigins[
+                              field as keyof typeof next.dateOrigins
+                            ];
+                          }
                           return next;
                         })
                       }
@@ -362,6 +390,32 @@ export function EventContext({
                   </div>
                 ))}
             </div>
+            <TrainingDateSettings
+              rule={requestCommon.trainingDateRule}
+              disabled={disabled}
+              onChange={(rule) =>
+                setRequestCommon((old) => ({ ...old, trainingDateRule: rule }))
+              }
+            />
+            <DateCalculationStatus
+              values={displayedRequestCommon}
+              rule={requestCommon.trainingDateRule}
+              origins={Object.fromEntries(
+                calculatedDateKeys.map((key) => [
+                  key,
+                  requestCommon.dateOrigins?.[key] ||
+                    (Object.hasOwn(requestCommon, key) ? "REQUEST" : undefined),
+                ]),
+              )}
+              disabled={disabled}
+              onRestore={(key) =>
+                setRequestCommon((old) => ({
+                  ...old,
+                  [key]: "",
+                  dateOrigins: { ...old.dateOrigins, [key]: "AUTO" },
+                }))
+              }
+            />
             <button
               disabled={disabled || JSON.stringify(requestCommon) === commonKey}
               onClick={() =>
@@ -517,34 +571,56 @@ export function EventContext({
                       aria-label={label}
                       type={type}
                       disabled={disabled}
-                      value={String(event.commonFields[field] || "")}
-                      onChange={(e) => {
-                        const common = {
-                          ...event.commonFields,
-                          [field]: e.target.value,
-                        };
-                        if (
-                          field === "documentDate" &&
-                          common.biotCategory &&
-                          (!common.validUntil ||
-                            common.validUntil ===
-                              biotValidUntil(
-                                event.commonFields.documentDate || "",
-                                common.biotCategory,
-                              ))
-                        )
-                          common.validUntil =
-                            biotValidUntil(
-                              e.target.value,
-                              common.biotCategory,
-                            ) || "";
-                        updateEvent({ commonFields: common });
-                      }}
+                      value={String(displayedCommon[field] || "")}
+                      onChange={(e) =>
+                        changeEventCommon({ [field]: e.target.value })
+                      }
                     />
                     <small>Общее значение события</small>
                   </label>
                 ))}
               </div>
+              <TrainingDateSettings
+                rule={displayedCommon.trainingDateRule}
+                disabled={disabled}
+                onChange={(rule) =>
+                  updateEvent({
+                    commonFields: {
+                      ...event.commonFields,
+                      trainingDateRule: rule,
+                    },
+                  })
+                }
+              />
+              <DateCalculationStatus
+                values={displayedCommon}
+                rule={displayedCommon.trainingDateRule}
+                origins={Object.fromEntries(
+                  calculatedDateKeys.map((key) => [
+                    key,
+                    event.commonFields.dateOrigins?.[key] ||
+                      (Object.hasOwn(event.commonFields, key)
+                        ? "EVENT"
+                        : draft.commonFields?.dateOrigins?.[key] ||
+                          (Object.hasOwn(draft.commonFields || {}, key)
+                            ? "REQUEST"
+                            : undefined)),
+                  ]),
+                )}
+                disabled={disabled}
+                onRestore={(key) =>
+                  updateEvent({
+                    commonFields: {
+                      ...event.commonFields,
+                      [key]: "",
+                      dateOrigins: {
+                        ...event.commonFields.dateOrigins,
+                        [key]: "AUTO",
+                      },
+                    },
+                  })
+                }
+              />
               {event.protocolTemplateId.startsWith("biot-") && (
                 <div className="form-grid">
                   <label>
@@ -647,14 +723,9 @@ export function EventContext({
                     <input
                       type="date"
                       disabled={disabled}
-                      value={event.commonFields.validUntil || ""}
+                      value={displayedCommon.validUntil || ""}
                       onChange={(e) =>
-                        updateEvent({
-                          commonFields: {
-                            ...event.commonFields,
-                            validUntil: e.target.value,
-                          },
-                        })
+                        changeEventCommon({ validUntil: e.target.value })
                       }
                     />
                     <small>

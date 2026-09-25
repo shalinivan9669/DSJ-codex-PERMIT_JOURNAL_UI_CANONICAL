@@ -4,26 +4,153 @@
   "templates": [
     {
       "id": "biot-worker-card",
-      "version": 16,
-      "file": "biot-worker-card.v16.docx",
-      "sha256": "33e00e6897a2d10b138c41a8613d40a19b7c1ca2828526f3c512af724b7aa580",
-      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+      "version": 17,
+      "file": "biot-worker-card.v17.docx",
+      "sha256": "0fe8b96475943bb7d9c8219fe421bbce5c57c5edd99e7b80c9265530af5fe4c1",
+      "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
       "fields": [
         "CHAIR_NAME",
-        "CHAIR_POSITION",
-        "CITY_KZ",
-        "CITY_RU",
-        "DOCUMENT_DATE",
         "FULL_NAME_KZ",
         "FULL_NAME_RU",
-        "ISSUER_KZ",
-        "ISSUER_RU",
+        "ISSUER_BOTH",
         "MEMBER_1_NAME",
-        "MEMBER_1_POSITION",
+        "NUMBER",
+        "POSITION_KZ",
+        "POSITION_RU",
+        "PROTOCOL_DAY_MONTH",
+        "PROTOCOL_NUMBER",
+        "PROTOCOL_YEAR",
+        "SUBJECT",
+        "WORKPLACE_KZ",
+        "WORKPLACE_RU"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        },
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        },
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11910",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16840"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "33e00e6897a2d10b138c41a8613d40a19b7c1ca2828526f3c512af724b7aa580",
+      "formRevision": "DSJ_RESTORED_2026_09",
+      "historicalTemplate": "biot-worker-card.v15.docx",
+      "historicalTemplateSha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556",
+      "verificationStatus": "DOCX_PDF_LOCAL_ENGINEERING_VERIFIED",
+      "restoration": {
+        "sourceManifest": "manifest-before-biot-2026.json",
+        "sourceForm": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+        "reason": "Restore retained DSJ design requested by issuer; preserve source mapping and layout repairs."
+      },
+      "verification": {
+        "scope": "14 synthetic scenarios; 44 PDF pages; all pages checked through 23 unique PNG hashes; extra worker server-number stress sample inspected",
+        "evidence": "docs/OT_CENTER_DSJ_TEMPLATE_RESTORATION_RU.md",
+        "machineEvidence": "docs/evidence/dsj-forms-ux/templates/restored/verification.json",
+        "platform": "Windows",
+        "renderEngine": "LibreOffice",
+        "word": "NOT_RUN_FOR_RESTORED_VERSIONS",
+        "physicalPrint": "NOT_RUN",
+        "legalApproval": "NOT_CLAIMED"
+      }
+    },
+    {
+      "id": "biot-itr-certificate",
+      "version": 15,
+      "file": "biot-itr-certificate.v15.docx",
+      "sha256": "a4cbfd02164d28a7449610cab0944b10993f2dcbc187c6e34c1dc65e996f0585",
+      "sourceSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+      "fields": [
+        "CHAIR",
+        "CITY_RU",
+        "DOCUMENT_DATE",
+        "FULL_NAME_RU",
+        "ISSUER_BOTH",
+        "NUMBER",
+        "RESULT"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16840",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11900",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+      "formRevision": "DSJ_RESTORED_2026_09",
+      "historicalTemplate": "biot-itr-certificate.v13.docx",
+      "historicalTemplateSha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6",
+      "verificationStatus": "DOCX_PDF_LOCAL_ENGINEERING_VERIFIED",
+      "restoration": {
+        "sourceManifest": "manifest-before-biot-2026.json",
+        "sourceForm": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+        "reason": "Restore retained DSJ design requested by issuer; preserve source mapping and layout repairs."
+      },
+      "verification": {
+        "scope": "14 synthetic scenarios; 44 PDF pages; all pages checked through 23 unique PNG hashes; extra worker server-number stress sample inspected",
+        "evidence": "docs/OT_CENTER_DSJ_TEMPLATE_RESTORATION_RU.md",
+        "machineEvidence": "docs/evidence/dsj-forms-ux/templates/restored/verification.json",
+        "platform": "Windows",
+        "renderEngine": "LibreOffice",
+        "word": "NOT_RUN_FOR_RESTORED_VERSIONS",
+        "physicalPrint": "NOT_RUN",
+        "legalApproval": "NOT_CLAIMED"
+      }
+    },
+    {
+      "id": "biot-protocol",
+      "version": 11,
+      "file": "biot-protocol.v11.docx",
+      "sha256": "0a84936b8c325700f8ead82256f7e219eee72aca47fa76c51a49ee6262499954",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "fields": [
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "BIOT_CHECK_TYPE_KZ",
+        "BIOT_CHECK_TYPE_RU",
+        "BIOT_NOTES",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_RU",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
         "MEMBER_2_NAME",
-        "MEMBER_2_POSITION",
-        "REGISTRATION_NUMBER_DISPLAY",
-        "SUBJECT"
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH"
       ],
       "sections": [
         {
@@ -40,146 +167,28 @@
         "DOCX",
         "PDF"
       ],
-      "protocolSemantics": null,
-      "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "previousTemplateSha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556",
-      "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
-        "effectiveFrom": "2026-07-12",
-        "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
-      },
-      "formRevision": "BIOT_2026_223",
-      "verificationStatus": "BOUNDED_DOCX_PDF_WORD_PASS",
-      "verification": {
-        "scope": "Four BIOT forms: short/long RU/KZ; two-recipient column reset for both protocols; bounded preflight checks",
-        "platform": "Windows",
-        "libreoffice": "26.2.6.3",
-        "word": "16.0.17932",
-        "evidence": "docs/evidence/biot-finish/summary.json",
-        "fullStressRerun": false
-      }
-    },
-    {
-      "id": "biot-itr-certificate",
-      "version": 14,
-      "file": "biot-itr-certificate.v14.docx",
-      "sha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
-      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
-      "fields": [
-        "BIOT_INDUSTRY_KZ",
-        "BIOT_INDUSTRY_RU",
-        "CITY_KZ",
-        "CITY_RU",
-        "DOCUMENT_DATE",
-        "FULL_NAME_KZ",
-        "FULL_NAME_RU",
-        "HOURS",
-        "ISSUER_HEAD_NAME",
-        "ISSUER_KZ",
-        "ISSUER_RU",
-        "NUMBER",
-        "RESULT",
-        "VALID_DATE"
-      ],
-      "sections": [
-        {
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
-        }
-      ],
-      "languages": [
-        "ru",
-        "kk"
-      ],
-      "photo": false,
-      "exports": [
-        "DOCX",
-        "PDF"
-      ],
-      "protocolSemantics": null,
-      "legalApproval": "REQUIRED_BY_ISSUER",
-      "sourceImagesRemoved": true,
-      "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
-        "effectiveFrom": "2026-07-12",
-        "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
-      },
-      "previousTemplateSha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6",
-      "formRevision": "BIOT_2026_223",
-      "verificationStatus": "BOUNDED_DOCX_PDF_WORD_PASS",
-      "verification": {
-        "scope": "Four BIOT forms: short/long RU/KZ; two-recipient column reset for both protocols; bounded preflight checks",
-        "platform": "Windows",
-        "libreoffice": "26.2.6.3",
-        "word": "16.0.17932",
-        "evidence": "docs/evidence/biot-finish/summary.json",
-        "fullStressRerun": false
-      }
-    },
-    {
-      "id": "biot-protocol",
-      "version": 10,
-      "file": "biot-protocol.v10.docx",
-      "sha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f",
-      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
-      "fields": [
-        "APPROVAL_BASIS",
-        "BIOT_CHECK_TYPE_KZ",
-        "BIOT_CHECK_TYPE_RU",
-        "BIOT_NOTES",
-        "CHAIR_NAME",
-        "CHAIR_POSITION",
-        "DEPARTMENT_BOTH",
-        "FULL_NAME_BOTH",
-        "ISSUER_KZ",
-        "ISSUER_RU",
-        "MEMBER_1_NAME",
-        "MEMBER_1_POSITION",
-        "MEMBER_2_NAME",
-        "MEMBER_2_POSITION",
-        "POSITION_BOTH",
-        "PROTOCOL_DATE",
-        "PROTOCOL_NUMBER",
-        "RESULT",
-        "WORKPLACE_BOTH"
-      ],
-      "sections": [
-        {
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
-        }
-      ],
-      "languages": [
-        "ru",
-        "kk"
-      ],
-      "photo": false,
-      "exports": [
-        "DOCX",
-        "PDF"
-      ],
       "protocolSemantics": "INDIVIDUAL",
       "legalApproval": "REQUIRED_BY_ISSUER",
       "sourceImagesRemoved": true,
-      "previousTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
-      "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
-        "effectiveFrom": "2026-07-12",
-        "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+      "previousTemplateSha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f",
+      "formRevision": "DSJ_RESTORED_2026_09",
+      "historicalTemplate": "biot-protocol.v9.docx",
+      "historicalTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+      "verificationStatus": "DOCX_PDF_LOCAL_ENGINEERING_VERIFIED",
+      "restoration": {
+        "sourceManifest": "manifest-before-biot-2026.json",
+        "sourceForm": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "reason": "Restore retained DSJ design requested by issuer; preserve source mapping and layout repairs."
       },
-      "formRevision": "BIOT_2026_223",
-      "verificationStatus": "BOUNDED_DOCX_PDF_WORD_PASS",
       "verification": {
-        "scope": "Four BIOT forms: short/long RU/KZ; two-recipient column reset for both protocols; bounded preflight checks",
+        "scope": "14 synthetic scenarios; 44 PDF pages; all pages checked through 23 unique PNG hashes; extra worker server-number stress sample inspected",
+        "evidence": "docs/OT_CENTER_DSJ_TEMPLATE_RESTORATION_RU.md",
+        "machineEvidence": "docs/evidence/dsj-forms-ux/templates/restored/verification.json",
         "platform": "Windows",
-        "libreoffice": "26.2.6.3",
-        "word": "16.0.17932",
-        "evidence": "docs/evidence/biot-finish/summary.json",
-        "fullStressRerun": false
+        "renderEngine": "LibreOffice",
+        "word": "NOT_RUN_FOR_RESTORED_VERSIONS",
+        "physicalPrint": "NOT_RUN",
+        "legalApproval": "NOT_CLAIMED"
       }
     },
     {
@@ -519,6 +528,37 @@
       "previousTemplateSha256": "8ee66b628736f46eb650d8c8c72a812f4e448bd6d142c4d4d052bb776994de24"
     },
     {
+      "id": "biot-itr-protocol",
+      "version": 2,
+      "file": "biot-itr-protocol.v2.docx",
+      "sha256": "0a84936b8c325700f8ead82256f7e219eee72aca47fa76c51a49ee6262499954",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "fields": [
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "BIOT_CHECK_TYPE_KZ",
+        "BIOT_CHECK_TYPE_RU",
+        "BIOT_NOTES",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_RU",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
       "languages": [
         "ru",
         "kk"
@@ -528,88 +568,52 @@
         "DOCX",
         "PDF"
       ],
-      "sourceImagesRemoved": true,
-      "id": "biot-itr-protocol",
-      "version": 1,
-      "file": "biot-itr-protocol.v1.docx",
-      "sha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
-      "fields": [
-        "APPROVAL_BASIS",
-        "BIOT_CATEGORY_KZ",
-        "BIOT_CATEGORY_RU",
-        "BIOT_CHECK_TYPE_KZ",
-        "BIOT_CHECK_TYPE_RU",
-        "BIOT_KNOWLEDGE_RESULT",
-        "BIOT_NOTES",
-        "BIOT_PROCTORING_RESULT",
-        "BIOT_UNIQUE_NUMBER",
-        "CHAIR_NAME",
-        "CHAIR_POSITION",
-        "EMPLOYER_BIN",
-        "EMPLOYER_NAME_ADDRESS_BOTH",
-        "FULL_NAME_BOTH",
-        "HOURS",
-        "ISSUER_BIN",
-        "ISSUER_KZ",
-        "ISSUER_RU",
-        "MEMBER_1_NAME",
-        "MEMBER_1_POSITION",
-        "MEMBER_2_NAME",
-        "MEMBER_2_POSITION",
-        "POSITION_BOTH",
-        "PROTOCOL_DATE",
-        "PROTOCOL_NUMBER",
-        "RESULT"
-      ],
-      "sections": [
-        {
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
-        }
-      ],
-      "formRevision": "BIOT_2026_223",
-      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
-      "verificationStatus": "BOUNDED_DOCX_PDF_WORD_PASS",
-      "legalApproval": "REQUIRED_BY_ISSUER",
       "protocolSemantics": "INDIVIDUAL",
-      "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
-        "effectiveFrom": "2026-07-12",
-        "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+      "formRevision": "DSJ_RESTORED_2026_09",
+      "historicalTemplate": "biot-protocol.v9.docx",
+      "historicalTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+      "verificationStatus": "DOCX_PDF_LOCAL_ENGINEERING_VERIFIED",
+      "restoration": {
+        "sourceManifest": "manifest-before-biot-2026.json",
+        "sourceForm": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "reason": "Restore retained DSJ design requested by issuer; preserve source mapping and layout repairs."
       },
       "verification": {
-        "scope": "Four BIOT forms: short/long RU/KZ; two-recipient column reset for both protocols; bounded preflight checks",
+        "scope": "14 synthetic scenarios; 44 PDF pages; all pages checked through 23 unique PNG hashes; extra worker server-number stress sample inspected",
+        "evidence": "docs/OT_CENTER_DSJ_TEMPLATE_RESTORATION_RU.md",
+        "machineEvidence": "docs/evidence/dsj-forms-ux/templates/restored/verification.json",
         "platform": "Windows",
-        "libreoffice": "26.2.6.3",
-        "word": "16.0.17932",
-        "evidence": "docs/evidence/biot-finish/summary.json",
-        "fullStressRerun": false
+        "renderEngine": "LibreOffice",
+        "word": "NOT_RUN_FOR_RESTORED_VERSIONS",
+        "physicalPrint": "NOT_RUN",
+        "legalApproval": "NOT_CLAIMED"
       }
     }
   ],
   "groupTemplates": [
     {
       "id": "biot-protocol",
-      "version": "10-group-2",
-      "file": "biot-protocol.group-v1.docx",
-      "sha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f",
-      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+      "version": "11-group-1",
+      "file": "biot-protocol.group-v2.docx",
+      "sha256": "0a84936b8c325700f8ead82256f7e219eee72aca47fa76c51a49ee6262499954",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
       "fields": [
+        "ADDRESS_RU",
         "APPROVAL_BASIS",
         "BIOT_CHECK_TYPE_KZ",
         "BIOT_CHECK_TYPE_RU",
         "BIOT_NOTES",
+        "CHAIR",
         "CHAIR_NAME",
-        "CHAIR_POSITION",
-        "DEPARTMENT_BOTH",
         "FULL_NAME_BOTH",
-        "ISSUER_KZ",
         "ISSUER_RU",
+        "MEMBER_1",
         "MEMBER_1_NAME",
-        "MEMBER_1_POSITION",
+        "MEMBER_2",
         "MEMBER_2_NAME",
-        "MEMBER_2_POSITION",
         "POSITION_BOTH",
         "PROTOCOL_DATE",
         "PROTOCOL_NUMBER",
@@ -618,8 +622,8 @@
       ],
       "sections": [
         {
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
         }
       ],
       "languages": [
@@ -634,31 +638,28 @@
       "protocolSemantics": "GROUP",
       "legalApproval": "REQUIRED_BY_ISSUER",
       "sourceImagesRemoved": true,
-      "previousTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
-      "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
-        "effectiveFrom": "2026-07-12",
-        "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+      "previousTemplateSha256": "f7d74264690f4617cae8976c7d6a32901b72c30d979258dfbe476eefc47fd62f",
+      "formRevision": "DSJ_RESTORED_2026_09",
+      "historicalTemplate": "biot-protocol.v9.docx",
+      "historicalTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+      "verificationStatus": "DOCX_PDF_LOCAL_ENGINEERING_VERIFIED",
+      "restoration": {
+        "sourceManifest": "manifest-before-biot-2026.json",
+        "sourceForm": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "reason": "Restore retained DSJ design requested by issuer; preserve source mapping and layout repairs."
       },
-      "formRevision": "BIOT_2026_223",
       "ownerKind": "GROUP",
       "groupContractVersion": 1,
-      "approvalScope": "Synthetic engineering review; legal approval required per center",
       "groupRenderer": "group_protocol.py:v1",
-      "verificationStatus": "GROUP_DOCX_PDF_WORD_ENGINEERING_VERIFIED",
       "verification": {
-        "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
+        "scope": "14 synthetic scenarios; 44 PDF pages; all pages checked through 23 unique PNG hashes; extra worker server-number stress sample inspected",
+        "evidence": "docs/OT_CENTER_DSJ_TEMPLATE_RESTORATION_RU.md",
+        "machineEvidence": "docs/evidence/dsj-forms-ux/templates/restored/verification.json",
         "platform": "Windows",
-        "libreoffice": "26.2.6.3",
-        "word": "Microsoft Word 16.0.17932, Windows",
-        "evidence": "docs/evidence/import-delivery/verification.md",
-        "fullStressRerun": false,
-        "templateBytesChanged": false,
-        "previousContractVersion": "10-group-1",
-        "wordEvidence": "docs/evidence/final-completion/word/verification.json",
-        "wordScope": "All five group forms at 1/2/25/100 participants; 20 DOCX files, 83 exported PDF pages, all-page visual review; source hashes unchanged",
-        "physicalPrint": "NOT_RUN"
+        "renderEngine": "LibreOffice",
+        "word": "NOT_RUN_FOR_RESTORED_VERSIONS",
+        "physicalPrint": "NOT_RUN",
+        "legalApproval": "NOT_CLAIMED"
       }
     },
     {
@@ -847,6 +848,37 @@
       }
     },
     {
+      "id": "biot-itr-protocol",
+      "version": "2-group-1",
+      "file": "biot-itr-protocol.group-v2.docx",
+      "sha256": "0a84936b8c325700f8ead82256f7e219eee72aca47fa76c51a49ee6262499954",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "fields": [
+        "ADDRESS_RU",
+        "APPROVAL_BASIS",
+        "BIOT_CHECK_TYPE_KZ",
+        "BIOT_CHECK_TYPE_RU",
+        "BIOT_NOTES",
+        "CHAIR",
+        "CHAIR_NAME",
+        "FULL_NAME_BOTH",
+        "ISSUER_RU",
+        "MEMBER_1",
+        "MEMBER_1_NAME",
+        "MEMBER_2",
+        "MEMBER_2_NAME",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT",
+        "WORKPLACE_BOTH"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
       "languages": [
         "ru",
         "kk"
@@ -856,72 +888,31 @@
         "DOCX",
         "PDF"
       ],
-      "sourceImagesRemoved": true,
-      "id": "biot-itr-protocol",
-      "version": "1-group-2",
-      "file": "biot-itr-protocol.group-v1.docx",
-      "sha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
-      "fields": [
-        "APPROVAL_BASIS",
-        "BIOT_CATEGORY_KZ",
-        "BIOT_CATEGORY_RU",
-        "BIOT_CHECK_TYPE_KZ",
-        "BIOT_CHECK_TYPE_RU",
-        "BIOT_KNOWLEDGE_RESULT",
-        "BIOT_NOTES",
-        "BIOT_PROCTORING_RESULT",
-        "BIOT_UNIQUE_NUMBER",
-        "CHAIR_NAME",
-        "CHAIR_POSITION",
-        "EMPLOYER_BIN",
-        "EMPLOYER_NAME_ADDRESS_BOTH",
-        "FULL_NAME_BOTH",
-        "HOURS",
-        "ISSUER_BIN",
-        "ISSUER_KZ",
-        "ISSUER_RU",
-        "MEMBER_1_NAME",
-        "MEMBER_1_POSITION",
-        "MEMBER_2_NAME",
-        "MEMBER_2_POSITION",
-        "POSITION_BOTH",
-        "PROTOCOL_DATE",
-        "PROTOCOL_NUMBER",
-        "RESULT"
-      ],
-      "sections": [
-        {
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
-          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
-        }
-      ],
-      "formRevision": "BIOT_2026_223",
-      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
-      "legalApproval": "REQUIRED_BY_ISSUER",
       "protocolSemantics": "GROUP",
-      "regulatoryReview": {
-        "status": "CURRENT_PAPER_FORM_ENGINEERING_VERIFIED",
-        "effectiveFrom": "2026-07-12",
-        "source": "https://zan.gov.kz/api/documents/225864/rus/download/pdf",
-        "notice": "Бумажная форма по приказу №223. Выпуск требует правильной категории, фактических результатов и утверждения эмитента; документ не заменяет оригинал ЕЦС."
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "sourceImagesRemoved": true,
+      "previousTemplateSha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+      "formRevision": "DSJ_RESTORED_2026_09",
+      "historicalTemplate": "biot-protocol.v9.docx",
+      "historicalTemplateSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+      "verificationStatus": "DOCX_PDF_LOCAL_ENGINEERING_VERIFIED",
+      "restoration": {
+        "sourceManifest": "manifest-before-biot-2026.json",
+        "sourceForm": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "reason": "Restore retained DSJ design requested by issuer; preserve source mapping and layout repairs."
       },
       "ownerKind": "GROUP",
       "groupContractVersion": 1,
-      "approvalScope": "Synthetic engineering review; legal approval required per center",
       "groupRenderer": "group_protocol.py:v1",
-      "verificationStatus": "GROUP_DOCX_PDF_WORD_ENGINEERING_VERIFIED",
       "verification": {
-        "scope": "All five group forms: 1/2/25/100 real DOCX structures; saved G1/G2 and PTM100 PDF all-page review",
+        "scope": "14 synthetic scenarios; 44 PDF pages; all pages checked through 23 unique PNG hashes; extra worker server-number stress sample inspected",
+        "evidence": "docs/OT_CENTER_DSJ_TEMPLATE_RESTORATION_RU.md",
+        "machineEvidence": "docs/evidence/dsj-forms-ux/templates/restored/verification.json",
         "platform": "Windows",
-        "libreoffice": "26.2.6.3",
-        "word": "Microsoft Word 16.0.17932, Windows",
-        "evidence": "docs/evidence/import-delivery/verification.md",
-        "fullStressRerun": false,
-        "templateBytesChanged": false,
-        "previousContractVersion": "1-group-1",
-        "wordEvidence": "docs/evidence/final-completion/word/verification.json",
-        "wordScope": "All five group forms at 1/2/25/100 participants; 20 DOCX files, 83 exported PDF pages, all-page visual review; source hashes unchanged",
-        "physicalPrint": "NOT_RUN"
+        "renderEngine": "LibreOffice",
+        "word": "NOT_RUN_FOR_RESTORED_VERSIONS",
+        "physicalPrint": "NOT_RUN",
+        "legalApproval": "NOT_CLAIMED"
       }
     }
   ]

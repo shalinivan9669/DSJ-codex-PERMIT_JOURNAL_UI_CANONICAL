@@ -3,9 +3,13 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import type { AppContext, Customer, Page } from "@/lib/types";
+import { OrganizationNameFields } from "./organization-name-fields";
 const emptyCustomer = {
   nameRu: "",
   nameKz: "",
+  legalForm: "NONE" as const,
+  ownNameRu: "",
+  ownNameKz: "",
   bin: "",
   addressRu: "",
   addressKz: "",
@@ -50,8 +54,8 @@ export function Customers({ context }: { context: AppContext }) {
         <div>
           <h1>Заказчики</h1>
           <p>
-            Организации внутри вашего центра. Реквизиты RU и KZ сохраняются
-            отдельно.
+            Организации внутри вашего центра. Форма и собственное наименование
+            формируют названия RU и KZ для новых документов.
           </p>
         </div>
         {context.user.role !== "VIEWER" && (
@@ -160,7 +164,19 @@ export function CustomerDialog({
   onClose: () => void;
   onSaved: (customer: Customer) => void;
 }) {
-  const [value, setValue] = useState({ ...emptyCustomer, ...customer });
+  const [value, setValue] = useState(() => ({
+    ...emptyCustomer,
+    ...customer,
+    legalForm: customer.id
+      ? (customer.legalForm ?? null)
+      : (customer.legalForm ?? "NONE"),
+    ownNameRu: customer.id
+      ? (customer.ownNameRu ?? null)
+      : (customer.ownNameRu ?? ""),
+    ownNameKz: customer.id
+      ? (customer.ownNameKz ?? null)
+      : (customer.ownNameKz ?? ""),
+  }));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   async function save(event: FormEvent) {
@@ -168,12 +184,32 @@ export function CustomerDialog({
     setBusy(true);
     setError("");
     try {
-      const { nameRu, nameKz, bin, addressRu, addressKz, archived } = value;
+      const {
+        nameRu,
+        nameKz,
+        legalForm,
+        ownNameRu,
+        ownNameKz,
+        bin,
+        addressRu,
+        addressKz,
+        archived,
+      } = value;
       const result = await api<Customer>(
         customer.id ? `/customers/${customer.id}` : "/customers",
         {
           method: customer.id ? "PATCH" : "POST",
-          body: json({ nameRu, nameKz, bin, addressRu, addressKz, archived }),
+          body: json({
+            nameRu,
+            nameKz,
+            legalForm,
+            ownNameRu,
+            ownNameKz,
+            bin,
+            addressRu,
+            addressKz,
+            archived,
+          }),
         },
       );
       onSaved(result);
@@ -185,15 +221,17 @@ export function CustomerDialog({
   }
   return (
     <Modal
-      title={customer.id ? "Реквизиты заказчика" : "Новый заказчик"}
+      title={customer.id ? "Реквизиты организации" : "Новая организация"}
       onClose={onClose}
     >
       <form onSubmit={save}>
         {error && <Notice>{error}</Notice>}
+        <OrganizationNameFields
+          value={value}
+          onChange={(names) => setValue({ ...value, ...names })}
+        />
         <div className="form-grid">
           {[
-            ["nameRu", "Название на русском"],
-            ["nameKz", "Название на казахском"],
             ["bin", "БИН"],
             ["addressRu", "Адрес на русском"],
             ["addressKz", "Адрес на казахском"],
@@ -201,8 +239,6 @@ export function CustomerDialog({
             <label key={key}>
               {label}
               <input
-                autoFocus={key === "nameRu"}
-                required={key === "nameRu"}
                 value={String(value[key as keyof typeof value] || "")}
                 onChange={(event) =>
                   setValue({ ...value, [key]: event.target.value })

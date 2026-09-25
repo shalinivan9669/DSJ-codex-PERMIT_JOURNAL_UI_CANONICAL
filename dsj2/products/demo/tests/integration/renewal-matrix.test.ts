@@ -200,13 +200,29 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
           code("WAIVER_DENIED"),
         );
       }
+      const ordersBefore = await db.serviceOrder.count({
+        where: { tenantId: c.tenantId },
+      });
+      await assert.rejects(
+        value.createServiceOrder(c, {
+          title: "Состав без выбранного работодателя",
+          customerId: outsider.id,
+          requestIds: [request.id],
+        }),
+        code("EMPLOYER_SCOPE_REQUIRED"),
+      );
       await assert.rejects(
         value.createServiceOrder(c, {
           title: "Чужой состав",
           customerId: outsider.id,
+          employerId: outsider.id,
           requestIds: [request.id],
         }),
         code("CUSTOMER_MISMATCH"),
+      );
+      assert.equal(
+        await db.serviceOrder.count({ where: { tenantId: c.tenantId } }),
+        ordersBefore,
       );
       const employer = await db.user.create({
         data: {

@@ -7,10 +7,12 @@ import { assertTestDatabase } from "./test-database";
 
 test("older eligible deferred bundle precedes newer bulk while future schedules and fences remain enforced", async () => {
   assertTestDatabase();
+  let testTenantId: string | undefined;
   try {
     const tenant = await db.tenant.create({
       data: { name: "Synthetic queue fairness" },
     });
+    testTenantId = tenant.id;
     const user = await db.user.create({
       data: {
         tenantId: tenant.id,
@@ -85,6 +87,18 @@ test("older eligible deferred bundle precedes newer bulk while future schedules 
       future.id,
     );
   } finally {
+    // These claims test scheduling without running a renderer. Release only
+    // this fixture's leases so later global GC checks see their own workers.
+    if (testTenantId)
+      await db.generationJob.updateMany({
+        where: { tenantId: testTenantId, status: "RUNNING" },
+        data: {
+          status: "FAILED",
+          errorCode: "TEST_COMPLETE",
+          leaseOwner: null,
+          leaseUntil: null,
+        },
+      });
     await db.$disconnect();
   }
 });

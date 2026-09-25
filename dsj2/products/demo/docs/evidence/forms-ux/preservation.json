@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-25T06:28:16.422Z",
+  "changed": [],
+  "counts": {
+    "issuance": 44,
+    "issuedDocument": 390,
+    "renderInputSnapshot": 446,
+    "groupDocumentMember": 222,
+    "artifact": 891,
+    "numberReservation": 391
+  },
+  "files": 891
+}

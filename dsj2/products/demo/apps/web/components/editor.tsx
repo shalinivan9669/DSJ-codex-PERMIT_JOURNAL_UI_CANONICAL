@@ -16,9 +16,9 @@ import { Icon, Modal, Notice } from "@demo/ui";
 import { LIMITS, resolveDraft, documentPlan } from "@demo/contracts";
 import { api, ApiError, errorText, json, BEFORE_LOGOUT_EVENT } from "@/lib/api";
 import { AutosaveLane } from "@/lib/autosave";
+import { recipientForRequest, requestBundles } from "@/lib/request-bundles";
 import {
   draftPayload,
-  newRecipient,
   type AppContext,
   type Customer,
   type Draft,
@@ -596,6 +596,30 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         onContextCommit={rememberContextOperation}
         onBusyChange={setContextBusy}
       />
+      {!!draft.events?.length && (
+        <section className="panel" aria-label="Состав комплекта">
+          <h2>Состав комплекта</h2>
+          {draft.events.map((event) => {
+            const bundle = Object.values(requestBundles).find(
+              (choice) => choice.protocol === event.protocolTemplateId,
+            );
+            if (!bundle) return null;
+            const count = draft.items.filter((person) =>
+              person.assignments.some(
+                (assignment) => assignment.eventId === event.id,
+              ),
+            ).length;
+            return (
+              <p key={event.id}>
+                <strong>{event.title}:</strong> {count} индивидуальных
+                документов и 1 общий протокол. Документы участников выпускаются
+                после подтверждения результата; номера назначаются при
+                оформлении.
+              </p>
+            );
+          })}
+        </section>
+      )}
       {undo && !readonly && (
         <Notice kind="info">
           Последнее массовое изменение сохранено.{" "}
@@ -674,7 +698,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               <button
                 disabled={draft.items.length >= LIMITS.rows || operationBusy}
                 onClick={() => {
-                  const row = newRecipient();
+                  const row = recipientForRequest(draft);
                   edit({ items: [...draft.items, row] });
                   setSelectedId(row.id);
                 }}
@@ -1066,7 +1090,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           {...pastedRange}
           onClose={() => setPastedRange(null)}
           onApply={async (items) => {
-            if (await applyOperation({ items })) setPastedRange(null);
+            const existing = new Set(draft.items.map((person) => person.id));
+            const addedToBundle = items.map((person) =>
+              existing.has(person.id)
+                ? person
+                : recipientForRequest(draft, person),
+            );
+            if (await applyOperation({ items: addedToBundle }))
+              setPastedRange(null);
           }}
         />
       )}
@@ -1112,7 +1143,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               draft.items.length === 1 &&
               !draft.items[0].fullNameRu &&
               !draft.items[0].fullNameKz;
-            edit({ items: empty ? [person] : [...draft.items, person] });
+            const participant = recipientForRequest(draft, person);
+            edit({
+              items: empty ? [participant] : [...draft.items, participant],
+            });
             setSelectedId(person.id);
             setDialog(null);
           }}
@@ -1132,6 +1166,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       {dialog === "import" && (
         <ImportDialog
           requestId={id}
+          bundleEvent={draft.events?.length === 1 ? draft.events[0] : undefined}
           existingCount={draft.items.length}
           existingImportIds={draft.items.flatMap((item) =>
             item.importId ? [item.importId] : [],

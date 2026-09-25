@@ -11,6 +11,7 @@ import {
   resolveDraft,
   documentPlan,
   eventProtocolAssignment,
+  today,
   z,
 } from "@demo/contracts";
 import { Prisma } from "@demo/database";
@@ -43,22 +44,43 @@ export function namespace(templateId: string) {
         : "CARD";
   return `${family}:${kind}`;
 }
-function employerFields(
-  item: Draft["items"][number],
-  customer: {
+type OrganizationPrintFields = {
+    id: string;
     nameRu: string;
     nameKz: string | null;
     bin: string | null;
     addressRu: string | null;
     addressKz: string | null;
-  } | null,
+};
+async function organizationMap(
+  tx: Prisma.TransactionClient,
+  c: Context,
+  draft: Draft,
 ) {
+  const ids = [...new Set([
+    ...(draft.customerId ? [draft.customerId] : []),
+    ...draft.items.flatMap((item) => item.employerId ? [item.employerId] : []),
+  ])];
+  const organizations = ids.length ? await tx.customerOrganization.findMany({
+    where: { tenantId: c.tenantId, id: { in: ids } },
+    orderBy: { id: "asc" },
+  }) : [];
+  return new Map(organizations.map((organization) => [organization.id, organization]));
+}
+function employerFields(
+  item: Draft["items"][number],
+  customer: OrganizationPrintFields | null,
+  organizations: ReadonlyMap<string, OrganizationPrintFields>,
+) {
+  // Explicit imported/manual text stays intact. A separately linked employer
+  // supplies missing fields; the ordering customer is not that employer.
+  const employer = item.employerId ? organizations.get(item.employerId) : customer;
   return {
-    workplaceRu: item.workplaceRu || customer?.nameRu || "",
-    workplaceKz: item.workplaceKz || customer?.nameKz || "",
-    employerBin: item.employerBin || customer?.bin || "",
-    employerAddressRu: item.employerAddressRu || customer?.addressRu || "",
-    employerAddressKz: item.employerAddressKz || customer?.addressKz || "",
+    workplaceRu: item.workplaceRu || employer?.nameRu || "",
+    workplaceKz: item.workplaceKz || employer?.nameKz || "",
+    employerBin: item.employerBin || employer?.bin || "",
+    employerAddressRu: item.employerAddressRu || employer?.addressRu || "",
+    employerAddressKz: item.employerAddressKz || employer?.addressKz || "",
   };
 }
 export function searchable(draft: Draft) {
@@ -273,6 +295,11 @@ export async function persistItems(
 }
 export async function createRequest(c: Context, input: unknown) {
   const draft = parse(draftSchema, input);
+  const tenant = await db.tenant.findUniqueOrThrow({ where: { id: c.tenantId } });
+  // Creation only: reopening/saving a draft never advances its calendar date.
+  // An explicit blank is an intentional exception, not a request for a default.
+  if (draft.schemaVersion === 2 && draft.commonFields?.documentDate === undefined)
+    draft.commonFields = { ...draft.commonFields, documentDate: today(tenant.timezone) };
   for (const item of draft.items)
     for (const assignment of item.assignments)
       if (assignment.outcome)
@@ -281,10 +308,7 @@ export async function createRequest(c: Context, input: unknown) {
           confirmedBy: c.userId,
           confirmedAt: new Date().toISOString(),
         };
-  if (
-    (await db.tenant.findUniqueOrThrow({ where: { id: c.tenantId } })).demoOnly
-  )
-    draft.demoMode = true;
+  if (tenant.demoOnly) draft.demoMode = true;
   if (draft.schemaVersion === 2 && !draft.profileVersionId) {
     const profile = await db.issuerProfileVersion.findFirst({
       where: { tenantId: c.tenantId },
@@ -597,11 +621,8 @@ async function validation(
   const parsedProfile = profile ? profileSchema.parse(profile.profile) : null;
   resolved = resolveDraft(savedDraft, parsedProfile?.commonFields);
   draft = resolved.draft;
-  const customer = draft.customerId
-    ? await tx.customerOrganization.findFirst({
-        where: { id: draft.customerId, tenantId: c.tenantId },
-      })
-    : null;
+  const organizations = await organizationMap(tx, c, draft);
+  const customer = draft.customerId ? organizations.get(draft.customerId) || null : null;
   // Validate exactly the fallback values that will be frozen into render inputs,
   // without rewriting the operator's saved draft or a previous issuance snapshot.
   const issues = validateDraft(
@@ -609,7 +630,7 @@ async function validation(
       ...draft,
       items: draft.items.map((item) => ({
         ...item,
-        ...employerFields(item, customer),
+        ...employerFields(item, customer, organizations),
       })),
     },
     parsedProfile,
@@ -708,7 +729,7 @@ async function validation(
             items: [
               {
                 ...member.item,
-                ...employerFields(member.item, customer),
+                ...employerFields(member.item, customer, organizations),
                 assignments: [member.assignment, protocol],
               },
             ],
@@ -746,6 +767,8 @@ async function validation(
     eventProfiles,
     eventRules,
     provenance: resolved.provenance,
+    organizations,
+    customer,
   };
 }
 
@@ -773,15 +796,12 @@ async function prepareLayout(
   c: Context,
   v: Awaited<ReturnType<typeof validation>>,
 ) {
-  const [customer, photos, sequences] = await Promise.all([
-    v.draft.customerId
-      ? tx.customerOrganization.findFirst({
-          where: { id: v.draft.customerId, tenantId: c.tenantId },
-        })
-      : null,
+  const [organizations, photos, sequences] = await Promise.all([
+    organizationMap(tx, c, v.draft),
     photoMap(tx, c, v.draft),
     tx.numberSequence.findMany({ where: { tenantId: c.tenantId } }),
   ]);
+  const customer = v.draft.customerId ? organizations.get(v.draft.customerId) || null : null;
   // PostgreSQL integer counters have at most ten digits. Twelve is the largest
   // supported padding; this check remains valid while concurrent counters advance.
   const numberFor = (ns: string) => {
@@ -847,7 +867,7 @@ async function prepareLayout(
                     namespace(credentialTemplateFor(assignment.templateId)),
                   )
                 : "",
-              ...employerFields(item, customer),
+              ...employerFields(item, customer, organizations),
             },
           ],
         };
@@ -858,7 +878,7 @@ async function prepareLayout(
     const template = v.groupSelected.get(event.protocolTemplateId)!;
     const rows = members.map(({ item, assignment }) => ({
       ...item,
-      ...employerFields(item, customer),
+      ...employerFields(item, customer, organizations),
       assignment: eventProtocolAssignment(event, assignment),
       number: numberFor(namespace(event.protocolTemplateId)),
       credentialNumber:
@@ -1184,8 +1204,8 @@ export async function finalize(
     ].sort();
     for (const name of ns)
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":" + name},0))`;
-    if (v.draft.customerId)
-      await tx.$executeRaw`SELECT id FROM "CustomerOrganization" WHERE id=${v.draft.customerId} AND "tenantId"=${c.tenantId} FOR SHARE`;
+    for (const organizationId of [...v.organizations.keys()].sort())
+      await tx.$executeRaw`SELECT id FROM "CustomerOrganization" WHERE id=${organizationId} AND "tenantId"=${c.tenantId} FOR SHARE`;
     if (
       !layoutFingerprint ||
       (await prepareLayout(tx, c, v)).fingerprint !== layoutFingerprint
@@ -1195,11 +1215,8 @@ export async function finalize(
         "PRINT_INPUT_CHANGED",
         "Реквизиты, шаблон или настройки изменились во время проверки. Повторите оформление актуальной редакции",
       );
-    const customer = v.draft.customerId
-      ? await tx.customerOrganization.findFirst({
-          where: { id: v.draft.customerId, tenantId: c.tenantId },
-        })
-      : null;
+    const organizations = await organizationMap(tx, c, v.draft);
+    const customer = v.draft.customerId ? organizations.get(v.draft.customerId) || null : null;
     const photos = await photoMap(tx, c, v.draft);
     const issued = await tx.issuance.create({
       data: {
@@ -1212,6 +1229,7 @@ export async function finalize(
           issuer: v.parsedProfile,
           profileVersionId: v.profile.id,
           customer,
+          employers: [...organizations.values()].filter((organization) => v.draft.items.some((item) => item.employerId === organization.id)),
           templates: [
             ...v.selected.values(),
             ...v.groupSelected.values(),
@@ -1376,7 +1394,7 @@ export async function finalize(
         credentialNumber: linkedCredential?.number || "",
         linkedCredentialDocumentId: linkedCredential?.documentId,
         documentId,
-        ...employerFields(item, customer),
+        ...employerFields(item, customer, organizations),
       };
       allItems.push(renderedItem);
       const renderInput = {
@@ -1428,7 +1446,7 @@ export async function finalize(
         );
         return {
           ...item,
-          ...employerFields(item, customer),
+          ...employerFields(item, customer, organizations),
           assignments: undefined,
           assignment: eventProtocolAssignment(event, assignment),
           number,
@@ -1599,17 +1617,15 @@ export async function preview(c: Context, id: string, input: unknown) {
         categoryIssues,
       );
     const photos = await photoMap(tx, c, v.draft);
-    const customer = v.draft.customerId
-      ? await tx.customerOrganization.findFirst({
-          where: { id: v.draft.customerId, tenantId: c.tenantId },
-        })
-      : null;
+    const organizations = await organizationMap(tx, c, v.draft);
+    const customer = v.draft.customerId ? organizations.get(v.draft.customerId) || null : null;
+    const organizationFingerprint = hash([...organizations.values()]);
     const jobs = [];
     for (const item of v.draft.items)
       for (const assignment of item.assignments) {
         const template = v.selected.get(assignment.templateId);
         if (!template) fail(422, "TEMPLATE_REQUIRED", "Шаблон отсутствует");
-        const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:${item.id}:${assignment.id}`;
+        const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:${item.id}:${assignment.id}:${organizationFingerprint}`;
         const previous = await tx.generationJob.findMany({
           where: {
             logicalKey: { startsWith: logicalKey + ":" },
@@ -1641,7 +1657,7 @@ export async function preview(c: Context, id: string, input: unknown) {
               )
                 ? "ПРЕДПРОСМОТР"
                 : "",
-              ...employerFields(item, customer),
+              ...employerFields(item, customer, organizations),
             },
           ],
           photos,
@@ -1674,7 +1690,7 @@ export async function preview(c: Context, id: string, input: unknown) {
       const template = v.groupSelected.get(event.protocolTemplateId);
       if (!template)
         fail(422, "TEMPLATE_REQUIRED", "Групповой шаблон отсутствует");
-      const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:group:${event.id}`;
+      const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:group:${event.id}:${organizationFingerprint}`;
       const existing = await tx.generationJob.findMany({
         where: {
           tenantId: c.tenantId,
@@ -1701,7 +1717,7 @@ export async function preview(c: Context, id: string, input: unknown) {
         photos: {},
         items: members.map(({ item, assignment }) => ({
           ...item,
-          ...employerFields(item, customer),
+          ...employerFields(item, customer, organizations),
           assignment: eventProtocolAssignment(event, assignment),
           number: "ПРЕДПРОСМОТР",
           credentialNumber: "",
@@ -1979,5 +1995,12 @@ export async function deleteDraft(c: Context, id: string) {
 export async function resolvedRequest(c: Context, id: string) {
   const record = await scopedRequest(c, id);
   const v = await validation(db, c, id, record.revision);
-  return { draft: v.draft, provenance: v.provenance, issues: v.issues };
+  return {
+    draft: { ...v.draft, items: v.draft.items.map((item) => ({
+      ...item,
+      ...employerFields(item, v.customer, v.organizations),
+    })) },
+    provenance: v.provenance,
+    issues: v.issues,
+  };
 }

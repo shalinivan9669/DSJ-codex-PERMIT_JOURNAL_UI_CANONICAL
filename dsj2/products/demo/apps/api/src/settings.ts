@@ -97,13 +97,23 @@ export async function saveProfile(c: Context, input: unknown) {
 }
 export async function saveCustomer(c: Context, input: unknown, id?: string) {
   const data = parse(customerSchema, input);
+  const previous = id
+    ? await db.customerOrganization.findFirst({
+        where: { id, tenantId: c.tenantId },
+      })
+    : null;
+  if (id && !previous) fail(404, "NOT_FOUND", "Заказчик не найден");
+  // A legacy/import client may edit the complete name. Do not retain stale
+  // structured metadata or infer a new form from that free text.
   if (
-    id &&
-    !(await db.customerOrganization.findFirst({
-      where: { id, tenantId: c.tenantId },
-    }))
-  )
-    fail(404, "NOT_FOUND", "Заказчик не найден");
+    data.legalForm === undefined &&
+    previous &&
+    (previous.nameRu !== data.nameRu || previous.nameKz !== data.nameKz)
+  ) {
+    data.legalForm = null;
+    data.ownNameRu = null;
+    data.ownNameKz = null;
+  }
   return db.$transaction(async (tx) => {
     const result = id
       ? await tx.customerOrganization.update({ where: { id }, data })

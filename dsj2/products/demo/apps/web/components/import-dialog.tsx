@@ -1,7 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
-import { BIOT_CATEGORIES, LIMITS, type BiotCategory } from "@demo/contracts";
+import {
+  BIOT_CATEGORIES,
+  LIMITS,
+  type BiotCategory,
+  type TrainingEventInput,
+} from "@demo/contracts";
+import { joinEventAssignment } from "@/lib/event-assignment";
+import { requestBundles } from "@/lib/request-bundles";
 import {
   biotCategoriesForTemplate,
   defaultBiotCategory,
@@ -34,6 +41,7 @@ export function ImportDialog({
   requestId,
   existingCount,
   existingImportIds,
+  bundleEvent,
   flush,
   onClose,
   onApplied,
@@ -41,6 +49,7 @@ export function ImportDialog({
   requestId: string;
   existingCount: number;
   existingImportIds: string[];
+  bundleEvent?: TrainingEventInput;
   flush: () => Promise<number>;
   onClose: () => void;
   onApplied: (draft: Draft) => void;
@@ -59,10 +68,14 @@ export function ImportDialog({
   const [preview, setPreview] = useState<ImportPreview | null>(null);
   const [mapping, setMapping] = useState<string[]>([]);
   const [excluded, setExcluded] = useState<number[]>([]);
-  const [templateId, setTemplateId] =
-    useState<Assignment["templateId"]>("biot-worker-card");
+  const bundle = Object.values(requestBundles).find(
+    (choice) => choice.protocol === bundleEvent?.protocolTemplateId,
+  );
+  const [templateId, setTemplateId] = useState<Assignment["templateId"]>(
+    bundle?.card || "biot-worker-card",
+  );
   const [biotCategory, setBiotCategory] = useState<BiotCategory | undefined>(
-    "WORKER",
+    bundleEvent?.commonFields.biotCategory || "WORKER",
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -160,9 +173,26 @@ export function ImportDialog({
       const expectedRevision = await flush();
       const rows = preview.rows
         .filter((row) => !excluded.includes(row.sourceRow))
-        .map((row) =>
-          mapImportRow(preview, row, mapping, templateId, biotCategory),
-        );
+        .map((row) => {
+          const mapped = mapImportRow(
+            preview,
+            row,
+            mapping,
+            templateId,
+            biotCategory,
+          );
+          if (
+            bundleEvent &&
+            bundle?.card === templateId &&
+            bundleEvent.commonFields.biotCategory === biotCategory
+          )
+            mapped.assignments = mapped.assignments.map((assignment) =>
+              assignment.biotCategory === bundleEvent.commonFields.biotCategory
+                ? joinEventAssignment(assignment, bundleEvent.id)
+                : assignment,
+            );
+          return mapped;
+        });
       if (revisionMode) {
         const input = {
           expectedRevision,

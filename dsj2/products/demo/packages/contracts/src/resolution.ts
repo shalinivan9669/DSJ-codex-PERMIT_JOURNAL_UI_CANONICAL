@@ -1,5 +1,10 @@
 import type { Assignment, CommonFields, Draft, ValidationIssue } from "./index";
-import { protocolTemplateFor, validDate, biotValidUntil } from "./index";
+import { protocolTemplateFor } from "./index";
+import {
+  calculateDates,
+  calculatedDateKeys,
+  type TrainingDateRule,
+} from "./date-calculation";
 
 export const commonFieldKeys = [
   "documentDate",
@@ -25,13 +30,82 @@ export type FieldSource =
   | "EVENT"
   | "MANUAL"
   | "IMPORTED"
+  | "AUTO"
   | "CLEARED";
+
+function commonContext(
+  layers: readonly (readonly [CommonFields | undefined, FieldSource])[],
+) {
+  const fields: CommonFields = {};
+  const origins: Record<string, FieldSource> = {};
+  for (const [layer, source] of layers) {
+    if (!layer) continue;
+    if (layer.trainingDateRule !== undefined)
+      fields.trainingDateRule = layer.trainingDateRule;
+    for (const key of commonFieldKeys) {
+      if (
+        layer[key] === undefined &&
+        layer.dateOrigins?.[
+          key as keyof NonNullable<CommonFields["dateOrigins"]>
+        ] !== "AUTO"
+      )
+        continue;
+      (fields as Record<string, unknown>)[key] = layer[key];
+      origins[key] =
+        layer.dateOrigins?.[
+          key as keyof NonNullable<CommonFields["dateOrigins"]>
+        ] || source;
+    }
+  }
+  return { fields, origins };
+}
+
+export function resolveCommonDates(fields: CommonFields): CommonFields {
+  const result = commonContext([[fields, "REQUEST"]]);
+  applyDateCalculation(result.fields, result.origins, fields.trainingDateRule);
+  return result.fields;
+}
+
+function applyDateCalculation(
+  values: CommonFields,
+  origins: Record<string, FieldSource>,
+  rule?: TrainingDateRule | null,
+) {
+  const calculation = calculateDates(values, rule);
+  for (const key of calculatedDateKeys) {
+    if (origins[key] === "AUTO" || (!origins[key] && !values[key])) {
+      if (calculation.proposed[key] !== undefined || origins[key] === "AUTO") {
+        values[key] = calculation.proposed[key] || "";
+        origins[key] = key === "validUntil" ? "PRESET" : "AUTO";
+        values.dateOrigins = { ...values.dateOrigins, [key]: "AUTO" };
+      }
+    }
+  }
+  return calculation;
+}
 
 /** Resolves once on the server. Result/identity/number can never be inherited. */
 export function resolveDraft(input: Draft, center: CommonFields = {}) {
   const draft: Draft = structuredClone(input);
   const provenance: Record<string, Record<string, FieldSource>> = {};
   const issues: ValidationIssue[] = [];
+  const eventContexts = new Map(
+    (draft.events || []).map((event) => {
+      const context = commonContext([
+        [center, "CENTER"],
+        [draft.presetFields, "PRESET"],
+        [draft.commonFields, "REQUEST"],
+        [event.commonFields, "EVENT"],
+      ]);
+      if (draft.schemaVersion === 2)
+        applyDateCalculation(
+          context.fields,
+          context.origins,
+          context.fields.trainingDateRule,
+        );
+      return [event.id, context] as const;
+    }),
+  );
   for (const item of draft.items) {
     const seen = new Set<string>();
     for (const a of item.assignments.filter(
@@ -51,7 +125,14 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
   for (const [row, item] of draft.items.entries())
     for (const [column, assignment] of item.assignments.entries()) {
       const path = `items.${row}.assignments.${column}`;
-      const origins: Record<string, FieldSource> = {};
+      const context =
+        eventContexts.get(assignment.eventId || "") ||
+        commonContext([
+          [center, "CENTER"],
+          [draft.presetFields, "PRESET"],
+          [draft.commonFields, "REQUEST"],
+        ]);
+      const origins: Record<string, FieldSource> = { ...context.origins };
       provenance[`${item.id}:${assignment.id}`] = origins;
       const event = draft.events?.find((e) => e.id === assignment.eventId);
       if (
@@ -87,19 +168,8 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           message: "Укажите источник подтверждённого результата",
         });
       for (const key of commonFieldKeys) {
-        let value: string | undefined;
-        let source: FieldSource | undefined;
-        for (const [layer, name] of [
-          [center, "CENTER"],
-          [draft.presetFields, "PRESET"],
-          [draft.commonFields, "REQUEST"],
-          [event?.commonFields, "EVENT"],
-        ] as const) {
-          if (layer?.[key] !== undefined) {
-            value = layer[key];
-            source = name;
-          }
-        }
+        let value = context.fields[key];
+        let source = origins[key];
         const explicit = assignment.fieldOrigins?.[key];
         const own = assignment[key];
         const manual =
@@ -110,9 +180,9 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
         if (
           event &&
           assignment.protocolMode === "GROUP" &&
-          event.commonFields[key] !== undefined &&
+          context.fields[key] !== undefined &&
           manual &&
-          (explicit === "CLEARED" ? "" : own) !== event.commonFields[key]
+          (explicit === "CLEARED" ? "" : own) !== context.fields[key]
         )
           issues.push({
             code: "GROUP_COMMON_OVERRIDE",
@@ -128,31 +198,52 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
               : explicit === "CLEARED"
                 ? "CLEARED"
                 : "MANUAL";
+        } else if (
+          explicit === "AUTO" &&
+          assignment.protocolMode !== "GROUP" &&
+          calculatedDateKeys.includes(
+            key as (typeof calculatedDateKeys)[number],
+          )
+        ) {
+          source = "AUTO";
+        } else if (value === undefined && own) {
+          value = own;
+          source = explicit === "AUTO" ? "PRESET" : source;
         }
         if (value !== undefined)
           (assignment as unknown as Record<string, unknown>)[key] = value;
         if (source) origins[key] = source;
       }
-      // Reuse the existing explicit BIOT category policy after date inheritance.
-      // A saved/imported/cleared expiry always wins; legacy drafts retain their
-      // former validation. This proposes no training date or successful result.
-      if (
-        draft.schemaVersion === 2 &&
-        assignment.templateId.startsWith("biot-") &&
-        !assignment.templateId.endsWith("-protocol") &&
-        assignment.biotCategory &&
-        validDate(assignment.documentDate) &&
-        !assignment.validUntil &&
-        !origins.validUntil
-      ) {
-        const until = biotValidUntil(
-          assignment.documentDate,
-          assignment.biotCategory,
-        );
-        if (until) {
-          assignment.validUntil = until;
-          origins.validUntil = "PRESET";
-        }
+      if (draft.schemaVersion === 2) {
+        const rule =
+          assignment.trainingDateRule !== undefined
+            ? assignment.trainingDateRule
+            : context.fields.trainingDateRule;
+        if (
+          assignment.protocolMode === "GROUP" &&
+          assignment.trainingDateRule !== undefined &&
+          JSON.stringify(assignment.trainingDateRule) !==
+            JSON.stringify(context.fields.trainingDateRule)
+        )
+          issues.push({
+            code: "GROUP_DATE_RULE_OVERRIDE",
+            path: `${path}.trainingDateRule`,
+            rowId: item.id,
+            message:
+              "График участника отличается от общего события. Измените график события или выделите другое событие.",
+          });
+        const calculation = applyDateCalculation(assignment, origins, rule);
+        // Metadata is exposed through provenance; keep assignment schema clean.
+        delete (assignment as Assignment & { dateOrigins?: unknown })
+          .dateOrigins;
+        if (rule !== undefined) assignment.trainingDateRule = rule;
+        for (const message of calculation.problems)
+          issues.push({
+            code: "TRAINING_DATE_RULE",
+            path: `${path}.documentDate`,
+            rowId: item.id,
+            message,
+          });
       }
       if (
         event &&
@@ -167,6 +258,8 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           PASSED: "",
         }[assignment.outcome?.status || "UNKNOWN"];
     }
+  for (const event of draft.events || [])
+    event.commonFields = eventContexts.get(event.id)!.fields;
   return { draft, provenance, issues };
 }
 
@@ -202,9 +295,19 @@ export function eventProtocolAssignment(
   event: NonNullable<Draft["events"]>[number],
   member: Assignment,
 ): Assignment {
+  // Common context contains calculation metadata that is not an Assignment
+  // field. Keep generated protocol payloads compatible with the strict schema.
+  const fields = Object.fromEntries(
+    commonFieldKeys
+      .filter((key) => event.commonFields[key] !== undefined)
+      .map((key) => [key, event.commonFields[key]]),
+  );
   return {
     ...member,
-    ...event.commonFields,
+    ...fields,
+    ...(event.commonFields.trainingDateRule !== undefined
+      ? { trainingDateRule: event.commonFields.trainingDateRule }
+      : {}),
     id: event.id,
     templateId: event.protocolTemplateId,
     protocolMode: "INDIVIDUAL",

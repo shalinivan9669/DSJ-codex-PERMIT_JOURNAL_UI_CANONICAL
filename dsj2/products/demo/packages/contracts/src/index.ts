@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { BIOT_CATEGORIES, biotCategoryIds, biotValidUntil } from "./biot";
+import { dateOriginsSchema, trainingDateRuleSchema } from "./date-calculation";
 export { z } from "zod";
 export * from "./biot";
+export * from "./date-calculation";
 export const LIMITS = {
   rows: 100,
   documents: 1000,
@@ -39,13 +41,13 @@ export function validDate(value: string): boolean {
   const d = new Date(value + "T12:00:00Z");
   return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === value;
 }
-export function today(timezone: string): string {
+export function today(timezone: string, at: Date = new Date()): string {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: timezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).formatToParts(new Date());
+  }).formatToParts(at);
   return ["year", "month", "day"]
     .map((k) => parts.find((p) => p.type === k)!.value)
     .join("-");
@@ -53,6 +55,8 @@ export function today(timezone: string): string {
 const date = z.string().max(10).default("");
 export const commonFieldsSchema = z
   .object({
+    trainingDateRule: trainingDateRuleSchema.nullable().optional(),
+    dateOrigins: dateOriginsSchema.optional(),
     documentDate: z.string().max(10).optional(),
     trainingStart: z.string().max(10).optional(),
     trainingEnd: z.string().max(10).optional(),
@@ -91,6 +95,7 @@ export type CommonFields = z.infer<typeof commonFieldsSchema>;
 export type TrainingEventInput = z.infer<typeof trainingEventSchema>;
 export const assignmentSchema = z
   .object({
+    trainingDateRule: trainingDateRuleSchema.nullable().optional(),
     id: z.string().min(1).max(80),
     templateId: z.enum(templateIds),
     documentDate: date,
@@ -130,7 +135,7 @@ export const assignmentSchema = z
     fieldOrigins: z
       .record(
         z.string().max(60),
-        z.enum(["MANUAL", "IMPORTED", "INHERITED", "CLEARED"]),
+        z.enum(["MANUAL", "IMPORTED", "INHERITED", "CLEARED", "AUTO"]),
       )
       .optional(),
     outcome: z
@@ -230,19 +235,7 @@ export const patchSchema = z
 export const finalizeSchema = z
   .object({ expectedRevision: z.number().int().nonnegative() })
   .strict();
-export const customerSchema = z
-  .object({
-    nameRu: z
-      .string()
-      .min(1, "Введите название на русском")
-      .max(500, "Максимум 500 символов в названии"),
-    nameKz: text,
-    bin: z.string().max(50).default(""),
-    addressRu: text,
-    addressKz: text,
-    archived: z.boolean().default(false),
-  })
-  .strict();
+export * from "./organization";
 export const profileSchema = z
   .object({
     commonFields: commonFieldsSchema.optional(),

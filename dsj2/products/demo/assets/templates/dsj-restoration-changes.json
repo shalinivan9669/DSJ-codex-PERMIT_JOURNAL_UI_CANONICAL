@@ -1,0 +1,60 @@
+[
+  {
+    "id": "biot-worker-card",
+    "previous": "biot-worker-card.v16.docx",
+    "restored": "biot-worker-card.v17.docx",
+    "historical": "biot-worker-card.v15.docx",
+    "originalSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+    "historicalSha256": "b7a1d552d67470b1900041bbca24d0e58225df73d023f7d76722644e830b5556",
+    "sha256": "0fe8b96475943bb7d9c8219fe421bbce5c57c5edd99e7b80c9265530af5fe4c1",
+    "geometry": "retained DSJ source; protocol signatures flow in original three columns",
+    "corrections": [
+      "retained repaired panel insets and Cyrillic Kazakh labels"
+    ]
+  },
+  {
+    "id": "biot-itr-certificate",
+    "previous": "biot-itr-certificate.v14.docx",
+    "restored": "biot-itr-certificate.v15.docx",
+    "historical": "biot-itr-certificate.v13.docx",
+    "originalSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+    "historicalSha256": "877525dd9138962dac4a56283d1151b224cc4430dedc0eb740ac181396f761b6",
+    "sha256": "a4cbfd02164d28a7449610cab0944b10993f2dcbc187c6e34c1dc65e996f0585",
+    "geometry": "retained DSJ source; protocol signatures flow in original three columns",
+    "corrections": [
+      "actual issuer in original logo slot"
+    ]
+  },
+  {
+    "id": "biot-protocol",
+    "previous": "biot-protocol.v10.docx",
+    "restored": "biot-protocol.v11.docx",
+    "historical": "biot-protocol.v9.docx",
+    "originalSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+    "historicalSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+    "sha256": "0a84936b8c325700f8ead82256f7e219eee72aca47fa76c51a49ee6262499954",
+    "geometry": "retained DSJ source; protocol signatures flow in original three columns",
+    "corrections": [
+      "independent RU/KZ employer cell",
+      "explicit check type",
+      "signature names without duplicated positions",
+      "blank signature lines"
+    ]
+  },
+  {
+    "id": "biot-itr-protocol",
+    "previous": "biot-itr-protocol.v1.docx",
+    "restored": "biot-itr-protocol.v2.docx",
+    "historical": "biot-protocol.v9.docx",
+    "originalSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+    "historicalSha256": "1acdaa391427e313fb86600bf353776481e4272b1f3191b6bfa5707631c686d2",
+    "sha256": "0a84936b8c325700f8ead82256f7e219eee72aca47fa76c51a49ee6262499954",
+    "geometry": "retained DSJ source; protocol signatures flow in original three columns",
+    "corrections": [
+      "independent RU/KZ employer cell",
+      "explicit check type",
+      "signature names without duplicated positions",
+      "blank signature lines"
+    ]
+  }
+]

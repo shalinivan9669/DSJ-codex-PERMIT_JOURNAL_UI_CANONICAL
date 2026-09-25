@@ -116,6 +116,9 @@ test("distinct contractual customer, payer and persisted participant employer pr
     customerId: a.id,
     title: "A orders, B pays, C employs",
     demoMode: true,
+    // An explicitly cleared date remains missing; omitted dates now correctly
+    // receive the center's calendar day when a new draft is created.
+    commonFields: { documentDate: "" },
     events: [personC.event],
     items: [personC.row],
   });

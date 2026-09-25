@@ -1,0 +1,129 @@
+{
+  "baseCommit": "97ffd06c82b556324f342abd578f7343fed5f885",
+  "branch": "codex/ot-center-dsj-forms-ux",
+  "status": "PASS",
+  "trackedChangesOutsideAutonomousProduct": [],
+  "oldTemplateDocxCount": 16,
+  "oldTemplateDocx": [
+    {
+      "path": "dsj2/products/demo/assets/templates/biot-itr-certificate.v14.docx",
+      "baseBlob": "7b701a2d608eaabfed29771d67a16c6a9f536ba9",
+      "currentBlob": "7b701a2d608eaabfed29771d67a16c6a9f536ba9",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/biot-itr-protocol.group-v1.docx",
+      "baseBlob": "2fababf44b861d1c4fd29c8ca9688ef496eb36e7",
+      "currentBlob": "2fababf44b861d1c4fd29c8ca9688ef496eb36e7",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/biot-itr-protocol.v1.docx",
+      "baseBlob": "2fababf44b861d1c4fd29c8ca9688ef496eb36e7",
+      "currentBlob": "2fababf44b861d1c4fd29c8ca9688ef496eb36e7",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/biot-protocol.group-v1.docx",
+      "baseBlob": "425ab83328b297e6d299df471e14bf6417a52b17",
+      "currentBlob": "425ab83328b297e6d299df471e14bf6417a52b17",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/biot-protocol.v10.docx",
+      "baseBlob": "425ab83328b297e6d299df471e14bf6417a52b17",
+      "currentBlob": "425ab83328b297e6d299df471e14bf6417a52b17",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/biot-worker-card.v16.docx",
+      "baseBlob": "f0eab9403524afb910fe085562944e60b1d8a953",
+      "currentBlob": "f0eab9403524afb910fe085562944e60b1d8a953",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/pb-card.v14.docx",
+      "baseBlob": "a1d9257d5f01a0f05fd6f2216f9d8a7c600b1f27",
+      "currentBlob": "a1d9257d5f01a0f05fd6f2216f9d8a7c600b1f27",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/pb-protocol.group-v1.docx",
+      "baseBlob": "c2a354cc651110b75c28e3142183ac5bfb044839",
+      "currentBlob": "c2a354cc651110b75c28e3142183ac5bfb044839",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/pb-protocol.v9.docx",
+      "baseBlob": "c2a354cc651110b75c28e3142183ac5bfb044839",
+      "currentBlob": "c2a354cc651110b75c28e3142183ac5bfb044839",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/ps-card.v15.docx",
+      "baseBlob": "3a59f2b4317b8872639d5fcf70d23f4abb407680",
+      "currentBlob": "3a59f2b4317b8872639d5fcf70d23f4abb407680",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/ps-protocol.group-v1.docx",
+      "baseBlob": "bc69544d520c5a0cdfab1e4c8358154d81b0cf78",
+      "currentBlob": "bc69544d520c5a0cdfab1e4c8358154d81b0cf78",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/ps-protocol.v9.docx",
+      "baseBlob": "bc69544d520c5a0cdfab1e4c8358154d81b0cf78",
+      "currentBlob": "bc69544d520c5a0cdfab1e4c8358154d81b0cf78",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/ps-witness.v11.docx",
+      "baseBlob": "ae43cacc63dc98b82b72d01392c4c50add57d724",
+      "currentBlob": "ae43cacc63dc98b82b72d01392c4c50add57d724",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/ptm-card.v14.docx",
+      "baseBlob": "452fb6970beba291bdefdf0e2be212df5623c84a",
+      "currentBlob": "452fb6970beba291bdefdf0e2be212df5623c84a",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/ptm-protocol.group-v1.docx",
+      "baseBlob": "8751b220a2210d06d27c3d2500af752a4ca82e20",
+      "currentBlob": "8751b220a2210d06d27c3d2500af752a4ca82e20",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/products/demo/assets/templates/ptm-protocol.v9.docx",
+      "baseBlob": "8751b220a2210d06d27c3d2500af752a4ca82e20",
+      "currentBlob": "8751b220a2210d06d27c3d2500af752a4ca82e20",
+      "unchanged": true
+    }
+  ],
+  "frozenHistoricalOriginals": [
+    {
+      "path": "dsj2/docs/experimental/biot/biot-card-template.docx",
+      "baseBlob": "6c52d2215a0a2a6fa40a0e2f6e18a77f2205c999",
+      "currentBlob": "6c52d2215a0a2a6fa40a0e2f6e18a77f2205c999",
+      "sha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/docs/experimental/biot/biot-itr-certificate-template.docx",
+      "baseBlob": "4cce0dfbf0cd61fbdf2e749b4c56389d99cda3f1",
+      "currentBlob": "4cce0dfbf0cd61fbdf2e749b4c56389d99cda3f1",
+      "sha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+      "unchanged": true
+    },
+    {
+      "path": "dsj2/docs/experimental/biot/biot-protocol-template.docx",
+      "baseBlob": "65d1af74c42b1390b4ee0879a4897abc76fdc9a8",
+      "currentBlob": "65d1af74c42b1390b4ee0879a4897abc76fdc9a8",
+      "sha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "unchanged": true
+    }
+  ],
+  "scope": "Tracked active-worktree bytes versus baseline HEAD; issued-artifact immutability audited separately; no original working-tree mutation performed"
+}

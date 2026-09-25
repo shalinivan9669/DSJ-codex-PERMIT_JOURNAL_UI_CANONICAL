@@ -31,6 +31,15 @@ def fixture(template_id):
         item['assignment'].update(biotCategory='OHS_SPECIALIST_SPECIAL' if template_id.startswith('biot-itr-') else 'WORKER',productionHours='16',biotIndustryRu='промышленной',biotIndustryKz='өнеркәсіп',biotCheckType='PERIODIC',biotKnowledgeResult='90 / 100',biotProctoringResult='прошел / өткен',biotUniqueNumber='',biotNotes='')
     return snap
 
+def pinned_2026_fixture(template_id):
+    """Keep the prior 2026 form's semantic regression independent of active design."""
+    versions={'biot-worker-card':16,'biot-itr-certificate':14,'biot-protocol':10,'biot-itr-protocol':1}
+    snap=fixture(template_id);version=versions[template_id]
+    source=ROOT/'assets/templates'/f'{template_id}.v{version}.docx'
+    key=f'pinned-{template_id}-v{version}.docx';(STORE/key).write_bytes(source.read_bytes())
+    snap.update(templateVersion=version,templateStorageKey=key,templateChecksum=hashlib.sha256(source.read_bytes()).hexdigest())
+    return snap
+
 class RenderTests(unittest.TestCase):
     def test_01_all_active_forms_real_docx_pdf(self):
         results=[]
@@ -148,7 +157,7 @@ class RenderTests(unittest.TestCase):
         good=evidence/'numbering-good.docx';render_docx(snap,good);convert_pdf(good,good.with_suffix('.pdf'))
         assert_docx_columns(good,'biot-protocol',2);checks=assert_pdf_columns(good.with_suffix('.pdf'),2,2)
         with ZipFile(good) as archive:files={n:archive.read(n) for n in archive.namelist()}
-        tree=E.fromstring(files['word/document.xml']);tables=[t for t in tree.iter(W+'tbl') if len(t.findall(W+'tblGrid/'+W+'gridCol'))==7]
+        tree=E.fromstring(files['word/document.xml']);tables=[t for t in tree.iter(W+'tbl') if len(t.findall(W+'tblGrid/'+W+'gridCol')) in [6,7]]
         for index,cell in enumerate(tables[1].findall(W+'tr')[1].findall(W+'tc'),8):next(cell.iter(W+'t')).text=str(index)
         files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8');bad=evidence/'numbering-mutation-8-14.docx';deterministic_zip(bad,files);convert_pdf(bad,bad.with_suffix('.pdf'))
         with self.assertRaisesRegex(AssertionError,'DOCX_COLUMN_VALUES'):assert_docx_columns(bad,'biot-protocol',2)
@@ -212,7 +221,7 @@ class RenderTests(unittest.TestCase):
         from print_contracts import W,text,assert_docx_columns
         from copy import deepcopy
         for tid,columns in [('biot-protocol',7),('biot-itr-protocol',10)]:
-            snap=fixture(tid);item=snap['items'][0]
+            snap=pinned_2026_fixture(tid);item=snap['items'][0]
             item.update(number='BIOT-PROTOCOL-888888888888',protocolNumber='BIOT-PROTOCOL-888888888888',credentialNumber='BIOT-CERTIFICATE-888888888888')
             item['assignment'].update(biotKnowledgeResult='92 из 100',biotProctoringResult='прошел',result='сдал')
             output=OUT/(tid+'-current-contract.docx');render_docx(snap,output);assert_docx_columns(output,tid)
@@ -224,9 +233,9 @@ class RenderTests(unittest.TestCase):
             item['assignment']['biotUniqueNumber']='EXTERNAL-CERT-003';self.assertEqual(fields_for(snap,item)['BIOT_UNIQUE_NUMBER'],'EXTERNAL-CERT-003')
             item['assignment']['biotUniqueNumber']='';item['credentialNumber']='';self.assertEqual(fields_for(snap,item)['BIOT_UNIQUE_NUMBER'],'')
             item['assignment']['biotProctoringResult']='';self.assertEqual(fields_for(snap,item)['BIOT_PROCTORING_RESULT'],'')
-        valid=fixture('biot-itr-protocol');valid['items'][0]['credentialNumber']='BIOT-CERTIFICATE-888888888888'
+        valid=pinned_2026_fixture('biot-itr-protocol');valid['items'][0]['credentialNumber']='BIOT-CERTIFICATE-888888888888'
         too_wide=deepcopy(valid);too_wide['items'][0]['credentialNumber']='W'*70
-        too_tall=fixture('biot-worker-card')
+        too_tall=pinned_2026_fixture('biot-worker-card')
         for member in too_tall['issuer']['commission']:member.update(name='Представитель комиссии '*20,position='Должность члена комиссии '*20)
         result=preflight({'snapshots':[valid,too_wide,too_tall]},OUT/'biot-current-preflight.json')
         self.assertEqual(result['issues'],[{'index':1,'code':'PRINT_LAYOUT_OVERFLOW'},{'index':2,'code':'PRINT_LAYOUT_OVERFLOW'}])

@@ -132,7 +132,7 @@ def assert_docx_columns(path, template_id, recipients=1):
     return matches
 
 
-def assert_pdf_columns(path, recipients=1, expected_pages=None, expected_columns=7):
+def assert_pdf_columns(path, recipients=1, expected_pages=None, expected_columns=None):
     """Read bordered cells from PDF vector lines, never a document-wide digit search.
 
     Coordinates and each cell's extracted value are returned as saved evidence.
@@ -147,7 +147,9 @@ def assert_pdf_columns(path, recipients=1, expected_pages=None, expected_columns
             assert len(tables) == 1, f'PDF_NUMBERED_TABLE_PAGE:{index+1}:{len(tables)}'
             for table in tables:
                 rows = table.extract(); values = rows[1]
-                assert values == [str(i) for i in range(1,expected_columns+1)], f'PDF_COLUMN_VALUES:page={index+1}:{values}'
+                columns=expected_columns if expected_columns is not None else len(rows[0])
+                assert columns in [6,7,10], f'PDF_COLUMN_CONTRACT:{columns}'
+                assert values == [str(i) for i in range(1,columns+1)], f'PDF_COLUMN_VALUES:page={index+1}:{values}'
                 checks.append({'page':index+1,'tableBox':list(table.bbox),'cells':[{'column':i+1,'box':list(cell),'value':values[i]} for i,cell in enumerate(table.rows[1].cells)]})
     assert len(checks) >= recipients, 'PDF_MISSING_RECIPIENT_TABLE'
     return checks

@@ -1,0 +1,156 @@
+{
+  "date": "2026-09-25",
+  "branch": "codex/ot-center-dsj-forms-ux",
+  "baseline": "97ffd06c82b556324f342abd578f7343fed5f885",
+  "localUrl": "http://localhost:3109/login",
+  "database": "demo_test_operator_browser",
+  "checks": [
+    {
+      "id": 1,
+      "status": "PASS",
+      "criterion": "Today once, tenant timezone; saved draft/reload stable",
+      "evidence": [
+        "date-order-progress-regression.log",
+        "../ot-center-dsj-forms-ux/date-rule-evidence.md",
+        "../../OT_CENTER_DSJ_FORMS_UX_RU.md"
+      ]
+    },
+    {
+      "id": 2,
+      "status": "PASS_WITH_EXPLICIT_SCHEDULE",
+      "criterion": "One resolver for inclusive hours-to-days, boundaries/leap/manual exceptions/reset",
+      "limitation": "No authoritative BIOT hours-per-day/calendar/anchor found; user answered 'не подскажу'. No schedule is invented or enabled by default. QA uses explicitly synthetic rules.",
+      "evidence": [
+        "unit-final.log",
+        "date-order-progress-regression.log",
+        "live/cases.json"
+      ]
+    },
+    {
+      "id": 3,
+      "status": "PASS",
+      "criterion": "Worker/ITR bundle contains correct credential and one event protocol, no duplication on join/save/reload",
+      "evidence": [
+        "integration-final.log",
+        "unit-final.log",
+        "../../OT_CENTER_DSJ_FORMS_UX_RU.md"
+      ]
+    },
+    {
+      "id": 4,
+      "status": "PASS",
+      "criterion": "Both categories 1/3/100 issue count+1, unique numbers, one group and ordered membership",
+      "evidence": [
+        "integration-final.log",
+        "../dsj-forms-ux/templates/restored/final-audit.json",
+        "live/verified.json"
+      ]
+    },
+    {
+      "id": 5,
+      "status": "PASS",
+      "criterion": "Historical source mapping;14 DOCX/PDF cases44pages + server-number stress, visual/semantic verification",
+      "evidence": [
+        "../../OT_CENTER_DSJ_TEMPLATE_RESTORATION_RU.md",
+        "../dsj-forms-ux/templates/restored/final-audit.json"
+      ],
+      "notRun": [
+        "Microsoft Word",
+        "Physical printing"
+      ]
+    },
+    {
+      "id": 6,
+      "status": "PASS",
+      "criterion": "TOO/IP/AO/NONE, distinct RU/KZ, explicit conversion of legacy/import values without duplicates or inferred legal form",
+      "evidence": [
+        "unit-final.log",
+        "integration-final.log",
+        "organization-verification.md",
+        "live/registry-checks.json"
+      ]
+    },
+    {
+      "id": 7,
+      "status": "PASS",
+      "criterion": "Two UI-issued synthetic groups; current server snapshots, downloads and SHA, DOCX/PDF/XLSX data agree",
+      "evidence": [
+        "live/verified.json",
+        "live/pdf-checks.json",
+        "live/registry-checks.json",
+        "live/header-audit.json",
+        "live-readback-final.log"
+      ]
+    },
+    {
+      "id": 8,
+      "status": "PASS",
+      "criterion": "Old issuances/891 files unchanged, tenancy/party separation/outcomes/numbering preserved",
+      "evidence": [
+        "preservation.json",
+        "source-isolation-final.json",
+        "integration-final.log"
+      ]
+    },
+    {
+      "id": 9,
+      "status": "PASS",
+      "criterion": "Fresh lint/typecheck/build/unit/integration/render and browser scenarios",
+      "evidence": [
+        "lint-final.log",
+        "typecheck-final.log",
+        "build-final.log",
+        "unit-final.log",
+        "integration-final.log",
+        "render-final.log",
+        "../../OT_CENTER_DSJ_FORMS_UX_RU.md"
+      ]
+    }
+  ],
+  "commands": {
+    "lint": {
+      "status": "PASS"
+    },
+    "typecheck": {
+      "status": "PASS"
+    },
+    "build": {
+      "status": "PASS",
+      "productionDirectory": ".next-forms-ux"
+    },
+    "unit": {
+      "pass": 133,
+      "fail": 0,
+      "skipped": 0,
+      "root": 90,
+      "web": 43
+    },
+    "integration": {
+      "pass": 126,
+      "fail": 0,
+      "skipped": 0
+    },
+    "render": {
+      "pass": 37,
+      "fail": 0
+    }
+  },
+  "preservation": {
+    "issuances": 44,
+    "issuedDocuments": 390,
+    "renderSnapshots": 446,
+    "groupMembers": 222,
+    "numberReservations": 391,
+    "artifactsAndFiles": 891,
+    "changed": 0
+  },
+  "remainingFacts": [
+    "Approved center training schedule not supplied; configurable conversion implemented, no fabricated default."
+  ],
+  "notClaimed": [
+    "Production deployment",
+    "Legal form approval",
+    "Physical printing",
+    "Microsoft Word validation of these restored versions"
+  ]
+}

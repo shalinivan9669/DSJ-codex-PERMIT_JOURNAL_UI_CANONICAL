@@ -4,7 +4,25 @@ import {
   commonFieldKeys,
   type Assignment,
   type BiotCategory,
+  type CalculatedDateKey,
 } from "@demo/contracts";
+
+export function restoreAssignmentDate(
+  assignment: Assignment,
+  key: CalculatedDateKey,
+): Assignment {
+  return {
+    ...assignment,
+    [key]: "",
+    fieldOrigins: {
+      ...assignment.fieldOrigins,
+      [key]: assignment.protocolMode === "GROUP" ? "INHERITED" : "AUTO",
+    },
+    biotManualFields: assignment.biotManualFields?.filter(
+      (field) => field !== key,
+    ),
+  };
+}
 
 export function biotCategoriesForTemplate(
   templateId: Assignment["templateId"],
@@ -44,6 +62,13 @@ export function biotAssignmentDefaults(
           ? { biotCheckType: "PERIODIC" as const }
           : {}),
         hours: String(preset.defaultHours),
+        fieldOrigins: {
+          biotCategory: "AUTO",
+          hours: "AUTO",
+          ...(preset.defaultProductionHours
+            ? { productionHours: "AUTO" as const }
+            : {}),
+        },
         ...(preset.defaultProductionHours
           ? { productionHours: String(preset.defaultProductionHours) }
           : {}),
@@ -127,6 +152,7 @@ export function updateAssignment(
       next.validUntil = next.biotCategory
         ? biotValidUntil(next.documentDate, next.biotCategory) || ""
         : "";
+      next.fieldOrigins = { ...next.fieldOrigins, validUntil: "AUTO" };
     }
   }
   if (!next.biotCategory) delete next.biotCategory;

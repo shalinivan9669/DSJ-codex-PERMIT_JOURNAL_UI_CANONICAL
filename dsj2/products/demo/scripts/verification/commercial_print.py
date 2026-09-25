@@ -55,7 +55,7 @@ def snapshot(template, variant, count):
 def audit_template_maps():
     maps = []
     for template in MANIFEST['templates']:
-        columns=10 if template['id']=='biot-itr-protocol' else 7 if template.get('formRevision')=='BIOT_2026_223' else 6
+        columns=(10 if template['id']=='biot-itr-protocol' else 7) if template.get('formRevision')=='BIOT_2026_223' else 6
         result = {'id':template['id'],'file':template['file'],'sha256':template['sha256'],'columnNumbers':{'table':0,'row':1,'values':list(range(1,columns+1))} if template['id'] in ['biot-protocol','biot-itr-protocol'] else None,'protocolSemantics':template['protocolSemantics'],'tables':[],'fieldLocations':[]}
         with ZipFile(ROOT/'assets/templates'/template['file']) as archive:
             tree = E.fromstring(archive.read('word/document.xml'))
@@ -105,9 +105,14 @@ def verify_pdf(name, snap, pdf, baseline_pages=None):
                 if other['id'] != item['id'] and normalize(other['fullNameRu']) in own: problems.append({'code':'RECIPIENT_DATA_MIXED','recipient':i+1,'foreign':other['id']})
             number=item['protocolNumber'] if tid.endswith('protocol') else (item.get('registrationNumber') or item['number']) if tid=='biot-worker-card' and next(t for t in MANIFEST['templates'] if t['id']==tid).get('formRevision')=='BIOT_2026_223' else item['number']
             if normalize(number) not in own: problems.append({'code':'DOCUMENT_NUMBER_MISSING','recipient':i+1,'number':number})
-    if tid in ['biot-protocol','biot-itr-protocol']: coordinates=assert_pdf_columns(pdf,count,baseline_pages*count if baseline_pages else None,10 if tid=='biot-itr-protocol' else 7)
+    if tid in ['biot-protocol','biot-itr-protocol']:
+        active=next(t for t in MANIFEST['templates'] if t['id']==tid)
+        columns=(10 if tid=='biot-itr-protocol' else 7) if active.get('formRevision')=='BIOT_2026_223' else 6
+        coordinates=assert_pdf_columns(pdf,count,baseline_pages*count if baseline_pages else None,columns)
     if tid=='ps-card': coordinates=assert_card_title_visible(pdf,tid,count)
-    if tid=='biot-worker-card' and next(t for t in MANIFEST['templates'] if t['id']==tid).get('formRevision')!='BIOT_2026_223': coordinates=assert_biot_card_panels(pdf,count,[{key:fields_for(snap,item)[key] for key in ['CHAIR','SUBJECT']} for item in snap['items']])
+    if tid=='biot-worker-card' and next(t for t in MANIFEST['templates'] if t['id']==tid).get('formRevision')!='BIOT_2026_223':
+        chair='CHAIR_NAME' if 'CHAIR_NAME' in next(t for t in MANIFEST['templates'] if t['id']==tid)['fields'] else 'CHAIR'
+        coordinates=assert_biot_card_panels(pdf,count,[{key:fields_for(snap,item)[key] for key in [chair,'SUBJECT']} for item in snap['items']])
     # Physical-page coordinates of every unique supplied field value in the base samples.
     if count<=2:
         with pdfplumber.open(pdf) as document:
