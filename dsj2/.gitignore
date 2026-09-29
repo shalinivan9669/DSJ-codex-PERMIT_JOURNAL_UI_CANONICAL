@@ -67,6 +67,10 @@ packages/database/prisma/dev.db-*
 # deployment/tooling local state
 .vercel/
 
+# Standalone presentation/video working bundle; keep locally, not in app history.
+# Scope only this deliverable, preserving other docs and application sources.
+/docs/presentations/demo-overview-2026-09-25/
+
 # OS/editor
 .DS_Store
 Thumbs.db
