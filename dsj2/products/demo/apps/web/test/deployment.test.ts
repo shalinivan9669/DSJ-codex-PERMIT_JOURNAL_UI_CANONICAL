@@ -5,6 +5,8 @@ import { config } from "../middleware";
 import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
 import { NextRequest } from "next/server";
 import { GET, POST } from "../app/api/[...path]/route";
+import { execFileSync } from "node:child_process";
+import path from "node:path";
 
 test("Vercel API transport requires an explicit fixed HTTPS backend origin", () => {
   assert.deepEqual(externalApiRewrites({}), []);
@@ -108,4 +110,39 @@ test("local transport retains route, server-action and origin guards without mid
     ).status,
     403,
   );
+});
+
+test("Vercel's actual Next config loader retains the repository tracing root for a nested app", () => {
+  const appRoot = path.resolve(__dirname, "..");
+  const repositoryRoot = path.resolve(appRoot, "../../../../..");
+  const productRoot = path.resolve(appRoot, "../..");
+  const script = `const load = require('next/dist/server/config').default;
+    const { PHASE_PRODUCTION_BUILD } = require('next/constants');
+    load(PHASE_PRODUCTION_BUILD, process.cwd()).then(config => {
+      process.stdout.write(JSON.stringify({root: config.outputFileTracingRoot, output: config.output || null}));
+    }).catch(error => { console.error(error); process.exitCode = 1; });`;
+  function read(vercel: string) {
+    return JSON.parse(
+      execFileSync(process.execPath, ["-e", script], {
+        cwd: appRoot,
+        env: {
+          ...process.env,
+          VERCEL: vercel,
+          NEXT_PRIVATE_OUTPUT_TRACE_ROOT: repositoryRoot,
+        },
+        encoding: "utf8",
+        windowsHide: true,
+      }),
+    );
+  }
+  const cloud = read("1");
+  assert.equal(cloud.root, repositoryRoot);
+  assert.equal(cloud.output, null);
+  const relativeAppDir = path.relative(cloud.root, appRoot);
+  assert.equal(path.join(repositoryRoot, relativeAppDir), appRoot);
+  assert.equal(
+    relativeAppDir.split(path.sep).join("/"),
+    "dsj2/products/demo/apps/web",
+  );
+  assert.deepEqual(read(""), { root: productRoot, output: "standalone" });
 });
