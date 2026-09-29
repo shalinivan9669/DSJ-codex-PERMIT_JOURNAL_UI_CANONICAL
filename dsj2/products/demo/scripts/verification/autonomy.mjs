@@ -1,7 +1,16 @@
 import { promises as fs } from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../../", import.meta.url));
+// Match exact exclusions in both a source checkout and the Docker context.
+// Glob patterns still use the explicit directory exclusions below.
+const dockerExcludes = new Set(
+  (await fs.readFile(path.join(root, ".dockerignore"), "utf8"))
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#") && !/[*!?]/.test(line)),
+);
 const excluded = new Set([
   "node_modules",
   ".next",
@@ -21,6 +30,8 @@ async function walk(directory) {
   for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
     if (excluded.has(entry.name) || entry.name.startsWith(".next-")) continue;
     const file = path.join(directory, entry.name);
+    if (dockerExcludes.has(path.relative(root, file).replaceAll("\\", "/")))
+      continue;
     if (entry.isSymbolicLink()) {
       errors.push(
         `Symbolic link outside build ownership: ${path.relative(root, file)}`,
@@ -74,9 +85,34 @@ const templateRoot = path.join(root, "assets", "templates");
 const manifest = JSON.parse(
   await fs.readFile(path.join(templateRoot, "manifest.json"), "utf8"),
 );
-const selected = new Set(manifest.templates.map((template) => template.file));
+const templates = [...manifest.templates, ...(manifest.groupTemplates || [])];
+const selected = new Set(templates.map((template) => template.file));
+for (const template of templates) {
+  const file = String(template.file);
+  if (path.basename(file) !== file || !file.endsWith(".docx")) {
+    errors.push(`Invalid shipping template path: ${file}`);
+    continue;
+  }
+  if (dockerExcludes.has(`assets/templates/${file}`)) {
+    errors.push(`Selected template excluded from Docker context: ${file}`);
+    continue;
+  }
+  try {
+    const checksum = createHash("sha256")
+      .update(await fs.readFile(path.join(templateRoot, file)))
+      .digest("hex");
+    if (checksum !== template.sha256)
+      errors.push(`Shipping template checksum mismatch: ${file}`);
+  } catch {
+    errors.push(`Missing shipping template: ${file}`);
+  }
+}
 for (const entry of await fs.readdir(templateRoot))
-  if (entry.endsWith(".docx") && !selected.has(entry))
+  if (
+    entry.endsWith(".docx") &&
+    !selected.has(entry) &&
+    !dockerExcludes.has(`assets/templates/${entry}`)
+  )
     errors.push(
       `Unselected historical template would enter shipping image: ${entry}`,
     );
@@ -86,6 +122,7 @@ console.log(
     autonomous: true,
     manifests,
     sourceFiles,
+    selectedTemplates: selected.size,
     externalDsjDependencies: 0,
   }),
 );

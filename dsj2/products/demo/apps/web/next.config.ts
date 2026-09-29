@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import path from "node:path";
+import { externalApiRewrites } from "./lib/deployment";
 const config: NextConfig = {
   // Allow an acceptance server beside a running local preview without sharing build files.
   distDir: process.env.DEMO_NEXT_DIST_DIR || ".next",
@@ -9,6 +10,9 @@ const config: NextConfig = {
   transpilePackages: ["@demo/contracts", "@demo/ui"],
   experimental: { cpus: 2 },
   images: { unoptimized: true },
+  async rewrites() {
+    return { beforeFiles: externalApiRewrites(process.env) };
+  },
   async headers() {
     return [
       {

@@ -36,4 +36,6 @@ export function middleware(request: NextRequest) {
   }
   return response;
 }
-export const config = { matcher: "/:path*" };
+// API policy/auth is enforced by the API before parsing and by the local route
+// handler. Keeping API bodies out of Vercel Middleware preserves 5 MiB uploads.
+export const config = { matcher: "/((?!api(?:/|$)).*)" };

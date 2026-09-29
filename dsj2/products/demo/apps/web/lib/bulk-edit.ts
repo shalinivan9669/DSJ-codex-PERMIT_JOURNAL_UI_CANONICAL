@@ -11,7 +11,15 @@ export const bulkFields = [
   ["externalBasisNumber", "Внешнее основание", "text"],
   ["reason", "Причина проверки", "text"],
 ] as const;
-export type BulkField = (typeof bulkFields)[number][0];
+export const bulkRecipientFields = [
+  ["positionRu", "Должность RU", "text"],
+  ["positionKz", "Должность KZ", "text"],
+  ["workplaceRu", "Место работы RU", "text"],
+  ["workplaceKz", "Место работы KZ", "text"],
+] as const;
+export type BulkField =
+  | (typeof bulkFields)[number][0]
+  | (typeof bulkRecipientFields)[number][0];
 export type BulkMode = "EMPTY" | "INHERITED" | "REPLACE";
 export type BulkChange = {
   recipientId: string;
@@ -36,8 +44,30 @@ export function previewBulk(
   let skipped = 0;
   const next = items.map((item) => {
     if (!selected.has(item.id)) return item;
+    const recipientPatch: Partial<Recipient> = {};
+    // Person fields have no inheritance metadata. Never reinterpret a stored
+    // individual or imported value as an inherited document default.
+    if (mode !== "INHERITED") {
+      for (const [field] of bulkRecipientFields) {
+        if (!Object.hasOwn(patch, field)) continue;
+        const before = item[field] || "";
+        const after = patch[field] || "";
+        if ((mode === "EMPTY" && before) || before === after) continue;
+        recipientPatch[field] = after;
+        changes.push({
+          recipientId: item.id,
+          name: item.fullNameRu || item.fullNameKz || "Без имени",
+          assignmentId: "",
+          templateId: "",
+          field,
+          before,
+          after,
+        });
+      }
+    }
     return {
       ...item,
+      ...recipientPatch,
       assignments: item.assignments.map((assignment) => {
         if (!direction || !assignment.templateId.startsWith(direction + "-")) {
           skipped += 1;
@@ -59,7 +89,7 @@ export function previewBulk(
           allowed[field] = after;
           changes.push({
             recipientId: item.id,
-            name: item.fullNameRu || "Без имени",
+            name: item.fullNameRu || item.fullNameKz || "Без имени",
             assignmentId: assignment.id,
             templateId: assignment.templateId,
             field,
@@ -78,6 +108,7 @@ export function previewBulk(
     changes,
     skipped,
     people: new Set(changes.map((c) => c.recipientId)).size,
-    assignments: new Set(changes.map((c) => c.assignmentId)).size,
+    assignments: new Set(changes.map((c) => c.assignmentId).filter(Boolean))
+      .size,
   };
 }

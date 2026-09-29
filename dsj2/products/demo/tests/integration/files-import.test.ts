@@ -102,7 +102,7 @@ test("real image/import/export/original/reconstruction integration", async (t) =
       },
     );
     await t.test(
-      "same upload same batch; 100 rows applied, leading zeros/RUKZ/partials survive;101 visible",
+      "same upload same batch; 100 rows applied, leading zeros/RUKZ/partials survive;251 visible",
       async () => {
         const csv = Buffer.from(
           "\uFEFFfullNameRu,fullNameKz,positionRu\r\n" +
@@ -168,15 +168,27 @@ test("real image/import/export/original/reconstruction integration", async (t) =
         assert.equal(repeat.items.length, 100);
         assert.equal(repeat.status, "DRAFT");
         assert.equal(repeat.importResult.repeated, true);
-        const over = Buffer.concat([csv, Buffer.from("\r\n00100,Қосымша,")]);
+        const over = Buffer.concat([
+          csv,
+          Buffer.from(
+            Array.from(
+              { length: 151 },
+              (_, i) => `\r\n${String(i + 100).padStart(5, "0")},Қосымша ${i},`,
+            ).join(""),
+          ),
+        ]);
         const larger = await importPreview(c, {
           buffer: over,
           size: over.length,
-          originalname: "101.csv",
+          originalname: "251.csv",
         } as Express.Multer.File);
-        assert.equal(larger.total, 101);
+        assert.equal(larger.total, 251);
         assert.equal(larger.canApply, false);
-        const tooMany = [...rows, { ...rows[0], id: "101", sourceRow: 102 }];
+        const tooMany = Array.from({ length: 251 }, (_, index) => ({
+          ...rows[0],
+          id: String(index),
+          sourceRow: index + 2,
+        }));
         await assert.rejects(
           applyImport(c, draft.id, {
             expectedRevision: revision,

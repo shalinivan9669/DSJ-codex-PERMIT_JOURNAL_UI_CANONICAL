@@ -61,3 +61,13 @@ CMD ["pnpm", "--filter", "@demo/api", "start"]
 
 FROM runtime AS worker
 CMD ["pnpm", "--filter", "@demo/render-worker", "start"]
+
+# Railway's volume belongs to one service. Keep both processes beside the same
+# private filesystem; existing compose services keep their explicit targets.
+FROM runtime AS railway
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends tini \
+    && rm -rf /var/lib/apt/lists/*
+ENV DEMO_PRODUCT_ID=demo-product DEMO_RENDER_CONCURRENCY=2
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["node", "deployment/railway/start.mjs"]

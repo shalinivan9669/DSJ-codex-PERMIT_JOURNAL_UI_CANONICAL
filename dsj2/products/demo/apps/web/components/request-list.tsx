@@ -87,8 +87,8 @@ export function RequestList({
   }, [history]);
   useEffect(() => {
     let active = true;
+    setLoading(true);
     const timer = setTimeout(() => {
-      setLoading(true);
       setError("");
       const params = new URLSearchParams({
         page: String(page),
@@ -177,7 +177,20 @@ export function RequestList({
             <Icon name="download" />
             Реестр XLSX
           </button>
-          <span className="muted count">Всего: {rows.total}</span>
+          {(search || filter) && (
+            <button
+              onClick={() => {
+                setSearch("");
+                setFilter("");
+                setPage(1);
+              }}
+            >
+              Сбросить фильтры
+            </button>
+          )}
+          <span className="muted count" role="status">
+            {loading ? "Загружаем заявки…" : `Всего: ${rows.total}`}
+          </span>
         </div>
         {error && (
           <Notice>
@@ -246,15 +259,28 @@ export function RequestList({
                 ? "Измените поиск или статус."
                 : "Добавьте человека или список сотрудников организации."}
             </p>
-            {!history && context.user.role !== "VIEWER" && (
-              <Link href="/requests/new" className="button">
-                Создать первую заявку
-              </Link>
+            {search || filter ? (
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setFilter("");
+                  setPage(1);
+                }}
+              >
+                Сбросить фильтры
+              </button>
+            ) : (
+              !history &&
+              context.user.role !== "VIEWER" && (
+                <Link href="/requests/new" className="button">
+                  Создать первую заявку
+                </Link>
+              )
             )}
           </div>
         )}
         {loading && !rows.items.length && (
-          <div className="empty-state" role="status">
+          <div className="empty-state" aria-hidden="true">
             Загружаем заявки…
           </div>
         )}

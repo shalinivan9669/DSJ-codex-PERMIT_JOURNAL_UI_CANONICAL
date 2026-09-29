@@ -375,7 +375,11 @@ export async function applyImport(c: Context, id: string, input: unknown) {
   if (new Set(data.rows.map((r) => r.sourceRow)).size !== data.rows.length)
     fail(400, "IMPORT_DUPLICATE", "Исходная строка выбрана дважды");
   if (draft.items.length + data.rows.length > LIMITS.rows)
-    fail(422, "ROW_LIMIT", "Максимум 100 получателей; строки не обрезаны");
+    fail(
+      422,
+      "ROW_LIMIT",
+      `Максимум ${LIMITS.rows} получателей; строки не обрезаны`,
+    );
   const result = await patchRequest(c, id, {
     expectedRevision: data.expectedRevision,
     draft: { ...draft, items: [...draft.items, ...data.rows] },

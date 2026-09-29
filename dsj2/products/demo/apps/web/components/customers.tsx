@@ -22,11 +22,11 @@ export function Customers({ context }: { context: AppContext }) {
   const [edit, setEdit] = useState<Partial<Customer> | null>(null);
   const [error, setError] = useState("");
   const [refresh, setRefresh] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     let active = true;
+    setLoading(true);
     const timer = setTimeout(() => {
-      setLoading(true);
       api<Page<Customer>>(
         `/customers?${new URLSearchParams({ search, page: String(page), pageSize: "20" })}`,
       )
@@ -65,7 +65,17 @@ export function Customers({ context }: { context: AppContext }) {
           </button>
         )}
       </div>
-      {error && <Notice>{error}</Notice>}
+      {error && (
+        <Notice>
+          {error}{" "}
+          <button
+            disabled={loading}
+            onClick={() => setRefresh((value) => value + 1)}
+          >
+            Повторить загрузку
+          </button>
+        </Notice>
+      )}
       <section className="panel">
         <div className="toolbar">
           <label className="search-field">
@@ -80,7 +90,19 @@ export function Customers({ context }: { context: AppContext }) {
               }}
             />
           </label>
-          <span className="count muted">Всего: {rows.total}</span>
+          {search && (
+            <button
+              onClick={() => {
+                setSearch("");
+                setPage(1);
+              }}
+            >
+              Сбросить поиск
+            </button>
+          )}
+          <span className="count muted" role="status">
+            {loading ? "Загружаем заказчиков…" : `Всего: ${rows.total}`}
+          </span>
         </div>
         <div className="table-scroll" aria-busy={loading}>
           <table>
@@ -115,26 +137,51 @@ export function Customers({ context }: { context: AppContext }) {
             </tbody>
           </table>
         </div>
-        {!rows.items.length && !loading && (
+        {!rows.items.length && !loading && !error && (
           <div className="empty-state">
             <Icon name="company" size={36} />
             <h2>Заказчики не найдены</h2>
             <p>
-              Добавьте реквизиты организации один раз и выбирайте её в заявках.
+              {search
+                ? "Попробуйте другое название или БИН либо сбросьте поиск."
+                : "Добавьте реквизиты организации один раз и выбирайте её в заявках."}
             </p>
+            {search ? (
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setPage(1);
+                }}
+              >
+                Сбросить поиск
+              </button>
+            ) : (
+              context.user.role !== "VIEWER" && (
+                <button onClick={() => setEdit(emptyCustomer)}>
+                  Добавить заказчика
+                </button>
+              )
+            )}
+          </div>
+        )}
+        {loading && !rows.items.length && (
+          <div className="empty-state" aria-hidden="true">
+            Загружаем заказчиков…
           </div>
         )}
         <div className="pagination">
-          <span>Страница {page}</span>
+          <span>
+            Страница {page} из {Math.max(1, Math.ceil(rows.total / 20))}
+          </span>
           <div>
             <button
-              disabled={page === 1}
+              disabled={page === 1 || loading}
               onClick={() => setPage((value) => value - 1)}
             >
               Назад
             </button>
             <button
-              disabled={page * 20 >= rows.total}
+              disabled={page * 20 >= rows.total || loading}
               onClick={() => setPage((value) => value + 1)}
             >
               Далее

@@ -1,4 +1,66 @@
 {
+  "operatorCompletion20260929": {
+    "date": "2026-09-29",
+    "status": "LOCAL_OPERATOR_AND_PRINT_ENGINEERING_PASS",
+    "branch": "codex/ot-center-dsj-forms-ux",
+    "baseHead": "8503079a9168f498c295bde56035d817b746699d",
+    "buildId": "6N-Szfx6WRphvUOueY02J",
+    "report": "../../OPERATOR_COMPLETION_AUDIT_2026-09-29.md",
+    "printReport": "../../OPERATOR_PRINT_VERIFICATION_2026-09-29.md",
+    "evidence": "../operator-complete-20260929/verification-summary.json",
+    "humanTrial": "PREPARED_NOT_RUN",
+    "productionChanged": false,
+    "historicalMatrixEntriesPreserved": true
+  },
+
+  "operatorUx20260929": {
+    "date": "2026-09-29",
+    "status": "LOCAL_UI_AND_CAPACITY_PASS",
+    "scope": "Operator input and review; 250 recipients; existing dirty UI changes preserved. Not production or full issuance acceptance.",
+    "branch": "codex/ot-center-dsj-forms-ux",
+    "baseHead": "8503079",
+    "report": "../../OPERATOR_INTERFACE_AUDIT_2026-09-29.md",
+    "capacityReport": "../../OPERATOR_CAPACITY_250.md",
+    "checks": {
+      "unit": {
+        "passed": 137,
+        "failed": 0,
+        "skipped": 0
+      },
+      "uiNew": 6,
+      "uiLive150And250": 2,
+      "uiImport251To250": 1,
+      "uiRegression": {
+        "firstPass": 5,
+        "fixtureRepairPass": 1
+      },
+      "integrationCapacityAndFileImport": 7,
+      "integrationImportDelivery": 8,
+      "typecheck": "7 packages PASS",
+      "lint": "PASS",
+      "build": "All packages and final web PASS",
+      "protectedTemplates": 38
+    },
+    "evidenceDirectory": ".runtime/operator-ux-20260929",
+    "limits": {
+      "recipients": 250,
+      "documents": 1000,
+      "jsonBytes": 2097152,
+      "photosPerBatch": 100
+    },
+    "notRun": [
+      "Production deployment or migration",
+      "Full issuance of 250 individual documents with all ZIPs",
+      "Physical printing",
+      "Comparative operator timing"
+    ],
+    "localEnvironment": {
+      "web": "http://localhost:3119",
+      "api": "http://127.0.0.1:4119",
+      "database": "demo_test_operator_ux_20260929",
+      "ready": "503 because renderer worker not launched; CRUD checks passed"
+    }
+  },
   "startedAt": "2026-09-22T12:01:10.938144+00:00",
   "baseRevision": "161c5ed022c9e2c643e80802d3f9dc2cd496a041",
   "scope": "independent current working-tree acceptance; prior PASS not inherited",

@@ -15,7 +15,8 @@ from openpyxl import Workbook,load_workbook
 from PIL import Image
 from lxml import etree as E
 
-OUT=ROOT/'docs/evidence/render'
+EVIDENCE_ROOT=Path(os.environ.get('DEMO_RENDER_EVIDENCE_ROOT', str(ROOT/'docs/evidence')))
+OUT=EVIDENCE_ROOT/'render'
 OUT.mkdir(parents=True,exist_ok=True)
 os.environ.setdefault('DEMO_ARTIFACT_ROOT',str(OUT/'store'))
 STORE=Path(os.environ['DEMO_ARTIFACT_ROOT']);STORE.mkdir(parents=True,exist_ok=True)
@@ -70,7 +71,7 @@ class RenderTests(unittest.TestCase):
         from print_contracts import assert_docx_columns,assert_pdf_columns
         assert_docx_columns(OUT/'biot-100.docx','biot-protocol',100)
         assert_pdf_columns(OUT/'biot-100.pdf',100,100)
-        hundred['items'].append(hundred['items'][0])
+        hundred['items'] = [hundred['items'][0]] * 251
         with self.assertRaisesRegex(ValueError,'ROW_LIMIT'):render_docx(hundred,OUT/'invalid.docx')
     def test_03_safe_registry_all_fields_and_import(self):
         item=fixture('ps-witness')['items'][0];item['fullNameRu']='=1+1';item['registrationNumber']='00012'
@@ -82,9 +83,11 @@ class RenderTests(unittest.TestCase):
     def test_04_formulas_rejected_and_limits(self):
         wb=Workbook();ws=wb.active;ws.append(['fullNameRu','number']);ws.append(['=1+1','001']);wb.save(OUT/'formula-input.xlsx')
         result=import_table({'inputPath':str(OUT/'formula-input.xlsx')},OUT/'formula-result.json');self.assertFalse(result['canApply']);self.assertEqual(result['errors'][0]['code'],'FORMULA_NOT_ALLOWED')
-        for count in [100,101]:
+        for count in [100,101,250,251]:
             path=OUT/f'{count}.csv';path.write_text('fullNameRu,fullNameKz\n'+'\n'.join(f'Тестов {i},Әділбек {i}' for i in range(count)),encoding='utf8')
-            result=import_table({'inputPath':str(path)},OUT/f'{count}.json');self.assertEqual(result['canApply'],count==100)
+            result=import_table({'inputPath':str(path)},OUT/f'{count}.json');self.assertEqual(result['canApply'],count<=250)
+            self.assertEqual(len(result['rawRows']), count, 'over-limit source rows must remain available for explicit exclusion')
+            if count > 250: self.assertIn({'code':'ROW_LIMIT','count':251,'limit':250}, result['errors'])
         path=OUT/'duplicate.csv';path.write_text('fullNameRu\nА\nА\n',encoding='utf8');result=import_table({'inputPath':str(path)},OUT/'duplicate.json');self.assertEqual(result['rows'][1]['errors'],['DUPLICATE_ROW'])
     def test_05_photo_decode_crop_rotation(self):
         path=OUT/'source-photo.png';Image.new('RGB',(800,1000),(100,160,180)).save(path)
@@ -152,7 +155,7 @@ class RenderTests(unittest.TestCase):
         from print_contracts import assert_docx_columns,assert_pdf_columns,W
         from sanitize_templates import deterministic_zip
         from copy import deepcopy
-        evidence=ROOT/'docs/evidence/commercial-acceptance/printing';evidence.mkdir(parents=True,exist_ok=True)
+        evidence=EVIDENCE_ROOT/'commercial-acceptance/printing';evidence.mkdir(parents=True,exist_ok=True)
         snap=fixture('biot-protocol');snap['items'].append(deepcopy(snap['items'][0]));snap['items'][1].update(fullNameRu='Другой Получатель',protocolNumber='ПР-00002')
         good=evidence/'numbering-good.docx';render_docx(snap,good);convert_pdf(good,good.with_suffix('.pdf'))
         assert_docx_columns(good,'biot-protocol',2);checks=assert_pdf_columns(good.with_suffix('.pdf'),2,2)
@@ -202,7 +205,7 @@ class RenderTests(unittest.TestCase):
         from print_contracts import assert_pdf_columns,W
         from sanitize_templates import deterministic_zip
         from copy import deepcopy
-        evidence=ROOT/'docs/evidence/commercial-acceptance/printing';evidence.mkdir(parents=True,exist_ok=True)
+        evidence=EVIDENCE_ROOT/'commercial-acceptance/printing';evidence.mkdir(parents=True,exist_ok=True)
         output=evidence/'numbering-physical-continuation.docx';render_docx(fixture('biot-protocol'),output)
         with ZipFile(output) as archive:files={n:archive.read(n) for n in archive.namelist()}
         tree=E.fromstring(files['word/document.xml']);table=next(tree.iter(W+'tbl'));source=table.findall(W+'tr')[2]
@@ -253,7 +256,7 @@ class RenderTests(unittest.TestCase):
         from print_contracts import assert_card_title_visible,W,text
         from sanitize_templates import deterministic_zip
         from upgrade_templates_v10 import move_box
-        evidence=ROOT/'docs/evidence/commercial-acceptance/printing'
+        evidence=EVIDENCE_ROOT/'commercial-acceptance/printing'
         good=evidence/'ps-title-visible.docx';snap=fixture('ps-card');render_docx(snap,good);convert_pdf(good,good.with_suffix('.pdf'))
         checks=assert_card_title_visible(good.with_suffix('.pdf'),'ps-card',1)
         with ZipFile(good) as archive:files={n:archive.read(n) for n in archive.namelist()}
@@ -272,7 +275,7 @@ class RenderTests(unittest.TestCase):
         from renderer import fields_for
         WP='{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}'
         A='{http://schemas.openxmlformats.org/drawingml/2006/main}'
-        evidence=ROOT/'docs/evidence/commercial-acceptance/printing'
+        evidence=EVIDENCE_ROOT/'commercial-acceptance/printing'
         snap=fixture('biot-worker-card')
         # Keep this historic geometry regression pinned after the normative v16
         # replaces the repeating panels with the complete Appendix 4 form.

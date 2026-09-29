@@ -25,6 +25,7 @@ from openpyxl import Workbook, load_workbook
 from sanitize_templates import replace_text_nodes, deterministic_zip
 from package_xml import normalize_package
 from xml_input import validate_xlsx_xml
+from request_limits import MAX_REQUEST_ROWS
 
 ROOT=Path(__file__).resolve().parents[2]
 W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
@@ -395,7 +396,7 @@ def render_docx(snapshot,out):
         deterministic_zip(out,normalize_package(files))
         return {'format':'DOCX','groupContractVersion':1,'participants':len(snapshot['items']),'templateId':snapshot['templateId'],'rendererVersion':RENDERER_VERSION}
     items=snapshot['items']
-    if not 1<=len(items)<=100: raise ValueError('ROW_LIMIT')
+    if not 1<=len(items)<=MAX_REQUEST_ROWS: raise ValueError('ROW_LIMIT')
     files=render_one(snapshot,items[0],path)
     root=E.fromstring(files['word/document.xml']); body=root.find(W+'body'); section=body.find(W+'sectPr')
     if section is not None: body.remove(section)
@@ -569,8 +570,8 @@ def import_table(payload,out):
                 try: date.fromisoformat(record[key])
                 except ValueError: row_errors.append(key+':INVALID_DATE')
         rows.append({'rowNumber':rowno,'sourceId':fingerprint,'values':record,'errors':row_errors})
-    if len(rows)>100: errors.append({'code':'ROW_LIMIT','count':len(rows),'limit':100})
-    result={'headers':headers,'sheets':sheets,'sheet':selected_sheet,'rawRows':raw_rows,'rows':rows,'errors':errors,'count':len(rows),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'canApply':len(rows)<=100 and not errors and not any(r['errors'] for r in rows)}
+    if len(rows)>MAX_REQUEST_ROWS: errors.append({'code':'ROW_LIMIT','count':len(rows),'limit':MAX_REQUEST_ROWS})
+    result={'headers':headers,'sheets':sheets,'sheet':selected_sheet,'rawRows':raw_rows,'rows':rows,'errors':errors,'count':len(rows),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'canApply':len(rows)<=MAX_REQUEST_ROWS and not errors and not any(r['errors'] for r in rows)}
     Path(out).write_text(json.dumps(result,ensure_ascii=False),encoding='utf-8'); return result
 
 def safe_bundle_name(value):

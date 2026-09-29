@@ -30,7 +30,7 @@ test("tenant midnight changes only new defaults, saved leap-day dates remain lit
   assert.equal(today("UTC"), "2026-09-22");
   assert.equal(assignmentSchema.parse(saved).documentDate, "2024-02-29");
 });
-test("partial draft retains independent RU/KZ and rejects 101 rows", () => {
+test("partial draft retains independent RU/KZ, accepts 100/250 and rejects 251 rows", () => {
   const item = itemSchema.parse({
     id: "r",
     fullNameRu: "Иванов",
@@ -43,7 +43,7 @@ test("partial draft retains independent RU/KZ and rejects 101 rows", () => {
   assert.throws(() =>
     draftSchema.parse({
       kind: "PERSON",
-      items: Array.from({ length: 101 }, (_, i) => ({
+      items: Array.from({ length: 251 }, (_, i) => ({
         ...item,
         id: String(i),
       })),
@@ -59,6 +59,12 @@ test("partial draft retains independent RU/KZ and rejects 101 rows", () => {
     }).items.length,
     100,
   );
+  const large = draftSchema.parse({
+    kind: "COMPANY",
+    items: Array.from({ length: 250 }, (_, i) => ({ ...item, id: String(i) })),
+  });
+  assert.equal(large.items.length, 250);
+  assert.deepEqual(large.items[249], { ...item, id: "249" });
   assert.ok(validateDraft(draft, null).length > 0);
 });
 test("protocol reason/education roundtrip and unbroken print limits report the specific field", () => {

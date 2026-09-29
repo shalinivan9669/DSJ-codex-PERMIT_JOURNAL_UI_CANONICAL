@@ -90,3 +90,63 @@ test("conflicting revision keeps unsaved input intact", async () => {
   assert.equal(lane.dirty, true);
   assert.equal(lane.currentRevision, 1);
 });
+
+test("a late validation failure identifies its captured input generation", async () => {
+  const save = deferred<{ revision: number }>();
+  let failedVersion: number | undefined;
+  const lane = new AutosaveLane(
+    { name: "Original" },
+    3,
+    () => save.promise,
+    (state, _revision, _error, version) => {
+      if (state === "error") failedVersion = version;
+    },
+  );
+  lane.edit({ name: "Invalid submitted value" });
+  const flushing = lane.flush();
+  lane.edit({ name: "Corrected while saving" });
+  save.reject(new Error("validation"));
+  await assert.rejects(flushing, /validation/);
+  assert.equal(failedVersion, 1);
+  assert.equal(lane.currentVersion, 2);
+  assert.notEqual(failedVersion, lane.currentVersion);
+  assert.equal(lane.currentRevision, 3);
+  assert.equal(lane.dirty, true);
+});
+
+test("malformed or unchanged acknowledgements never mark local input saved", async () => {
+  for (const revision of [undefined, NaN, 0, 3, 3.5]) {
+    const states: string[] = [];
+    const lane = new AutosaveLane(
+      "original",
+      3,
+      async () => ({ revision: revision as number }),
+      (state) => states.push(state),
+    );
+    lane.edit("must retain");
+    await assert.rejects(lane.flush(), /Сервер не подтвердил новую редакцию/);
+    assert.equal(lane.dirty, true);
+    assert.equal(lane.currentRevision, 3);
+    assert.equal(states.includes("saved"), false);
+    assert.equal(states.at(-1), "error");
+  }
+});
+
+test("synchronous persistence failure releases the lane for retry", async () => {
+  let calls = 0;
+  const lane = new AutosaveLane(
+    "original",
+    3,
+    () => {
+      calls += 1;
+      if (calls === 1) throw new Error("adapter failed synchronously");
+      return Promise.resolve({ revision: 4 });
+    },
+    () => {},
+  );
+  lane.edit("retained");
+  await assert.rejects(lane.flush(), /adapter failed synchronously/);
+  assert.equal(await lane.flush(), 4);
+  assert.equal(calls, 2);
+  assert.equal(lane.dirty, false);
+});

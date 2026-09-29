@@ -16,6 +16,7 @@ export class AutosaveLane<T> {
       state: "dirty" | "saving" | "saved" | "error",
       revision: number,
       error?: unknown,
+      capturedVersion?: number,
     ) => void,
   ) {
     this.value = value;
@@ -32,6 +33,14 @@ export class AutosaveLane<T> {
   get currentRevision() {
     return this.revision;
   }
+  get currentVersion() {
+    return this.localVersion;
+  }
+  private async persistSnapshot(value: T, revision: number) {
+    // Convert a synchronous adapter failure to a rejected promise so the
+    // inFlight assignment happens before its finally clears the lane.
+    return this.persist(value, revision);
+  }
   async flush(): Promise<number> {
     if (this.inFlight) {
       await this.inFlight;
@@ -44,12 +53,24 @@ export class AutosaveLane<T> {
     this.changed("saving", revision);
     this.inFlight = (async () => {
       try {
-        const response = await this.persist(value, revision);
+        const response = await this.persistSnapshot(value, revision);
+        if (
+          !Number.isSafeInteger(response?.revision) ||
+          response.revision <= revision
+        )
+          throw new Error(
+            "Сервер не подтвердил новую редакцию. Ваш ввод остаётся на странице; повторите сохранение.",
+          );
         this.revision = response.revision;
         this.savedVersion = version;
-        this.changed(this.dirty ? "dirty" : "saved", this.revision);
+        this.changed(
+          this.dirty ? "dirty" : "saved",
+          this.revision,
+          undefined,
+          version,
+        );
       } catch (error) {
-        this.changed("error", this.revision, error);
+        this.changed("error", this.revision, error, version);
         throw error;
       } finally {
         this.inFlight = undefined;

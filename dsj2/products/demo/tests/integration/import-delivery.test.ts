@@ -117,7 +117,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
       operationKey: randomUUID(),
     };
     await t.test(
-      "preview counts match supplied revision and 102 cannot apply without choice",
+      "preview keeps the original 100-person fixture counts and 102 fit without exclusion",
       async () => {
         const preview = await previewImportReconciliation(
           c,
@@ -131,16 +131,109 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           missing: 2,
           ambiguous: 0,
         });
-        await assert.rejects(
-          applyImportReconciliation(c, request.id, data),
-          /превышает 100/,
-        );
+        assert.equal(preview.retainedTotal, 102);
+        assert.equal(preview.rowLimit, 250);
+        const retainRequest = await createRequest(c, {
+          kind: "COMPANY",
+          title: "Сверка с сохранением отсутствующих",
+          items: old,
+        });
+        await applyImportReconciliation(c, retainRequest.id, {
+          ...data,
+          operationKey: randomUUID(),
+        });
+        const retained = await requestDetail(c, retainRequest.id);
+        assert.equal(retained.items.length, 102);
+        assert.deepEqual(retained.items[0].assignments, old[0].assignments);
+        assert.ok(retained.items.some((row) => row.id === "DEMO-P099"));
+        assert.ok(retained.items.some((row) => row.id === "DEMO-P100"));
         assert.equal((await requestDetail(c, request.id)).revision, 0);
         assert.equal(
           await db.idempotencyOperation.count({
             where: { tenantId: c.tenantId, idempotencyKey: data.operationKey },
           }),
           0,
+        );
+      },
+    );
+    await t.test(
+      "251 reconciled recipients fail atomically; one explicit exclusion allows exactly 250",
+      async () => {
+        const capacityImportId = randomUUID();
+        const additional = Array.from({ length: 149 }, (_, index) =>
+          itemSchema.parse({
+            id: `capacity-${index + 1}`,
+            externalId: `capacity-${index + 1}`,
+            fullNameRu: `Дополнительный Слушатель ${index + 1}`,
+          }),
+        );
+        const source = [...revised, ...additional].map((row, index) => ({
+          ...row,
+          importId: capacityImportId,
+          sourceRow: index + 2,
+        }));
+        await db.importBatch.create({
+          data: {
+            id: capacityImportId,
+            tenantId: c.tenantId,
+            checksum: hash(capacityImportId),
+            rows: json({
+              rows: source.map((row) => ({
+                sourceRow: row.sourceRow,
+                errors: [],
+              })),
+            }),
+          },
+        });
+        const capacityRequest = await createRequest(c, {
+          kind: "COMPANY",
+          title: "Сверка на границе 250",
+          items: [...old, ...additional],
+        });
+        const operation = {
+          expectedRevision: 0,
+          importId: capacityImportId,
+          rows: source,
+          operationKey: randomUUID(),
+        };
+        const preview = await previewImportReconciliation(
+          c,
+          capacityRequest.id,
+          dataWithoutOperation(operation),
+        );
+        assert.equal(preview.retainedTotal, 251);
+        assert.equal(preview.counts.missing, 2);
+        await assert.rejects(
+          applyImportReconciliation(c, capacityRequest.id, operation),
+          /превышает 250/,
+        );
+        const unchanged = await requestDetail(c, capacityRequest.id);
+        assert.equal(unchanged.revision, 0);
+        assert.equal(unchanged.items.length, 249);
+        assert.deepEqual(unchanged.items[0].assignments, old[0].assignments);
+        assert.equal(
+          await db.idempotencyOperation.count({
+            where: {
+              tenantId: c.tenantId,
+              idempotencyKey: operation.operationKey,
+            },
+          }),
+          0,
+        );
+        await applyImportReconciliation(c, capacityRequest.id, {
+          ...operation,
+          excludeMissingIds: ["DEMO-P099"],
+          exclusionReason: "Подтверждённый состав заявки на 250 человек",
+        });
+        const accepted = await requestDetail(c, capacityRequest.id);
+        assert.equal(accepted.revision, 1);
+        assert.equal(accepted.items.length, 250);
+        assert.ok(!accepted.items.some((row) => row.id === "DEMO-P099"));
+        assert.ok(accepted.items.some((row) => row.id === "DEMO-P100"));
+        assert.deepEqual(accepted.items[0].assignments, old[0].assignments);
+        assert.equal(
+          await db.recipient.count({ where: { id: preserved.id } }),
+          1,
         );
       },
     );

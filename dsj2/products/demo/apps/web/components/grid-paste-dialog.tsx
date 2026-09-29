@@ -12,6 +12,7 @@ export function GridPasteDialog({
   startRow,
   startField,
   text,
+  columns,
   onClose,
   onApply,
 }: {
@@ -19,6 +20,7 @@ export function GridPasteDialog({
   startRow: number;
   startField: GridField;
   text: string;
+  columns?: readonly GridField[];
   onClose: () => void;
   onApply: (items: Recipient[]) => void | Promise<void>;
 }) {
@@ -28,7 +30,14 @@ export function GridPasteDialog({
   let preview: ReturnType<typeof previewGridPaste> | undefined;
   let error = "";
   try {
-    preview = previewGridPaste(items, startRow, startField, text, mode);
+    preview = previewGridPaste(
+      items,
+      startRow,
+      startField,
+      text,
+      mode,
+      columns,
+    );
   } catch (c) {
     error = c instanceof Error ? c.message : "Не удалось прочитать диапазон";
   }
@@ -44,6 +53,13 @@ export function GridPasteDialog({
         Начало: строка {startRow + 1}, колонка{" "}
         {gridColumns.find(([field]) => field === startField)?.[1]}. Строки
         следуют исходному порядку заявки, включая скрытые поиском.
+      </p>
+      <p className="muted">
+        Порядок колонок:{" "}
+        {(columns ?? gridColumns.map(([field]) => field))
+          .map((field) => gridColumns.find(([key]) => key === field)?.[1])
+          .join(" → ")}
+        .
       </p>
       <label>
         Режим вставки

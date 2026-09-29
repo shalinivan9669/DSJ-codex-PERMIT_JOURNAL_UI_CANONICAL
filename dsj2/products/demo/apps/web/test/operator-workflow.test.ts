@@ -270,7 +270,88 @@ test("rectangular clipboard handles quoted tabs, multiline values, Unicode and t
   assert.equal(first.fullNameKz, "");
   assert.throws(() => parseClipboardRange("a\tb\nc"), /количество ячеек/);
   assert.throws(
-    () => previewGridPaste([], 99, "fullNameRu", "a\nb", "EMPTY"),
+    () => previewGridPaste([], 249, "fullNameRu", "a\nb", "EMPTY"),
     /предел/,
   );
+});
+
+test("paste preserves all 250 bilingual rows and textual IDs; row 251 is rejected without mutation", () => {
+  const rows = Array.from({ length: 250 }, (_, index) =>
+    [
+      `Слушатель ${index + 1}`,
+      `Қатысушы ${index + 1}`,
+      "Инженер",
+      "Инженер",
+      "ТОО Образец",
+      "Үлгі ЖШС",
+      String(index + 1).padStart(6, "0"),
+      `external-${index + 1}`,
+    ].join("\t"),
+  );
+  const first = { ...newRecipient(), fullNameRu: "Сохранённое имя" };
+  const result = previewGridPaste(
+    [first],
+    0,
+    "fullNameRu",
+    rows.join("\n"),
+    "EMPTY",
+  );
+  assert.equal(result.items.length, 250);
+  assert.equal(result.added, 249);
+  assert.equal(result.items[0].id, first.id);
+  assert.equal(result.items[0].fullNameRu, "Сохранённое имя");
+  assert.equal(result.items[249].fullNameKz, "Қатысушы 250");
+  assert.equal(result.items[249].personnelNumber, "000250");
+  assert.equal(new Set(result.items.map((item) => item.id)).size, 250);
+  assert.throws(
+    () =>
+      previewGridPaste(
+        [first],
+        0,
+        "fullNameRu",
+        [...rows, rows[0]].join("\n"),
+        "EMPTY",
+      ),
+    /250/,
+  );
+  assert.equal(first.fullNameRu, "Сохранённое имя");
+  assert.equal(first.fullNameKz, "");
+});
+
+test("paste follows visible RU-only columns without overwriting hidden KZ fields", () => {
+  const person = {
+    ...newRecipient(),
+    fullNameKz: "Қатысушы",
+    positionKz: "Маман",
+    workplaceKz: "Үлгі ЖШС",
+  };
+  const result = previewGridPaste(
+    [person],
+    0,
+    "fullNameRu",
+    "Иванов Иван\tИнженер\tТОО Образец",
+    "REPLACE",
+    ["fullNameRu", "positionRu", "workplaceRu"],
+  );
+  assert.equal(result.items[0].fullNameRu, "Иванов Иван");
+  assert.equal(result.items[0].positionRu, "Инженер");
+  assert.equal(result.items[0].workplaceRu, "ТОО Образец");
+  assert.equal(result.items[0].fullNameKz, person.fullNameKz);
+  assert.equal(result.items[0].positionKz, person.positionKz);
+  assert.equal(result.items[0].workplaceKz, person.workplaceKz);
+  assert.deepEqual(
+    result.changes.map((change) => change.field),
+    ["fullNameRu", "positionRu", "workplaceRu"],
+  );
+  const paired = previewGridPaste(
+    [],
+    0,
+    "fullNameRu",
+    "Иванов Иван\tҚатысушы\tИнженер\tМаман",
+    "EMPTY",
+    ["fullNameRu", "fullNameKz", "positionRu", "positionKz"],
+  );
+  assert.equal(paired.items[0].fullNameKz, "Қатысушы");
+  assert.equal(paired.items[0].positionRu, "Инженер");
+  assert.equal(paired.items[0].positionKz, "Маман");
 });

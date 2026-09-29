@@ -3,6 +3,7 @@ import {
   BIOT_CATEGORIES,
   biotValidUntil,
   commonFieldKeys,
+  LIMITS,
   type BiotCategory,
 } from "@demo/contracts";
 import {
@@ -33,7 +34,7 @@ export function importIssueText(
 ): string {
   if (typeof issue === "string") return issue;
   if (issue.code === "ROW_LIMIT")
-    return `В исходном листе ${issue.count ?? "более 100"} строк. Для одной заявки выберите не более ${issue.limit ?? 100} получателей.`;
+    return `В исходном листе ${issue.count ?? `более ${LIMITS.rows}`} строк. Для одной заявки выберите не более ${issue.limit ?? LIMITS.rows} получателей.`;
   return (
     issue.message ||
     "Проверьте исходный файл и отмеченные строки перед импортом."

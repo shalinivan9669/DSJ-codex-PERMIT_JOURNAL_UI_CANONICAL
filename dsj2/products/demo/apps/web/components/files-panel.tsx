@@ -23,6 +23,7 @@ import { dateTime, Status } from "./request-list";
 import { VerificationLink } from "./verification-link";
 import { SavedPrintSet } from "./saved-print-set";
 import { filePollingRetryDelay } from "@/lib/file-polling";
+import { readyPreviewRevision } from "@/lib/preview-readiness";
 
 export function FilesPanel({
   requestId,
@@ -32,6 +33,7 @@ export function FilesPanel({
   readonly,
   canManage,
   onChanged,
+  onPreviewReady,
 }: {
   requestId: string;
   draft: Draft;
@@ -40,6 +42,7 @@ export function FilesPanel({
   readonly: boolean;
   canManage: boolean;
   onChanged: () => void;
+  onPreviewReady?: (revision: number | null) => void;
 }) {
   const [missing, setMissing] = useState<string[]>([]);
   const [restoreArtifact, setRestoreArtifact] = useState<Artifact | null>(null);
@@ -54,6 +57,11 @@ export function FilesPanel({
   const [reason, setReason] = useState("");
   const [viewArtifact, setViewArtifact] = useState<Artifact | null>(null);
   const [reload, setReload] = useState(0);
+  useEffect(() => {
+    onPreviewReady?.(
+      readyPreviewRevision(draft.revision, jobs, artifacts, missing),
+    );
+  }, [draft.revision, jobs, artifacts, missing, onPreviewReady]);
   useEffect(() => {
     let active = true;
     let failures = 0;

@@ -6,7 +6,7 @@ import { joinEventAssignment } from "../lib/event-assignment";
 import { newRecipient } from "../lib/types";
 
 for (const category of ["WORKER", "ITR"] as const) {
-  for (const count of [1, 3, 100]) {
+  for (const count of [1, 3, 100, 250]) {
     test(`${category} bundle: ${count} members share exactly one protocol and preserve IDs after reload`, () => {
       const seed = newRequestBundle(category);
       const draft = draftSchema.parse({

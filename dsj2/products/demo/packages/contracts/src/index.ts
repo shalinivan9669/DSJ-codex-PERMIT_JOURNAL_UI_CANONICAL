@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { BIOT_CATEGORIES, biotCategoryIds, biotValidUntil } from "./biot";
 import { dateOriginsSchema, trainingDateRuleSchema } from "./date-calculation";
+import { documentPlan } from "./resolution";
 export { z } from "zod";
 export * from "./biot";
 export * from "./date-calculation";
 export const LIMITS = {
-  rows: 100,
+  rows: 250,
   documents: 1000,
   jsonBytes: 2 * 1024 * 1024,
   photoBytes: 5 * 1024 * 1024,
@@ -327,7 +328,6 @@ export function validateDraft(
   if (!draft.items.length) add("NO_RECIPIENTS", "items", "Добавьте получателя");
   if (draft.kind === "COMPANY" && !draft.customerId)
     add("CUSTOMER_REQUIRED", "customerId", "Выберите заказчика");
-  let count = 0;
   for (const [n, item] of draft.items.entries()) {
     for (const key of [
       "fullNameRu",
@@ -363,7 +363,6 @@ export function validateDraft(
         item.id,
       );
     for (const [a, assignment] of item.assignments.entries()) {
-      count++;
       const path = `items.${n}.assignments.${a}`;
       for (const key of [
         "trainingSubject",
@@ -636,8 +635,13 @@ export function validateDraft(
         );
     }
   }
+  const count = documentPlan(draft).documentCount;
   if (count > LIMITS.documents)
-    add("DOCUMENT_LIMIT", "items", "Слишком много документов");
+    add(
+      "DOCUMENT_LIMIT",
+      "items",
+      `В одном выпуске допускается до ${LIMITS.documents} документов, включая общие протоколы. Сейчас ${count}. Разделите заявку или уменьшите комплект документов`,
+    );
   return issues;
 }
 export const TEMPLATE_LABELS: Record<(typeof templateIds)[number], string> = {

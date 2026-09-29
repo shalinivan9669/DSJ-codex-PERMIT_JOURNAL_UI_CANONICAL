@@ -29,6 +29,7 @@ import {
 } from "./core";
 import { artifactAvailability } from "./storage";
 import { duplicateIssuanceWarnings } from "./duplicate-issuance";
+import { groupHeaderWorkplace } from "./group-workplace";
 import {
   validatePinnedServiceRule,
   ruleApplicabilityIssues,
@@ -902,6 +903,7 @@ async function prepareLayout(
         issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
         photos: {},
         items: rows,
+        groupHeaderWorkplace: groupHeaderWorkplace(template.templateId, rows),
         ...{
           groupEvent: {
             ...event,
@@ -1472,6 +1474,7 @@ export async function finalize(
         issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
         items,
         photos: {},
+        groupHeaderWorkplace: groupHeaderWorkplace(template.templateId, items),
       };
       const snapshot = await tx.renderInputSnapshot.create({
         data: {
@@ -1690,7 +1693,7 @@ export async function preview(c: Context, id: string, input: unknown) {
       const template = v.groupSelected.get(event.protocolTemplateId);
       if (!template)
         fail(422, "TEMPLATE_REQUIRED", "Групповой шаблон отсутствует");
-      const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:group:${event.id}:${organizationFingerprint}`;
+      const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:group:${event.id}:${organizationFingerprint}:header-v1`;
       const existing = await tx.generationJob.findMany({
         where: {
           tenantId: c.tenantId,
@@ -1701,6 +1704,14 @@ export async function preview(c: Context, id: string, input: unknown) {
         jobs.push(...existing);
         continue;
       }
+      const items = members.map(({ item, assignment }) => ({
+        ...item,
+        ...employerFields(item, customer, organizations),
+        assignment: eventProtocolAssignment(event, assignment),
+        number: "ПРЕДПРОСМОТР",
+        credentialNumber: "",
+        protocolNumber: "",
+      }));
       const renderInput = {
         mode: "draft-preview",
         demoMode: true,
@@ -1715,14 +1726,8 @@ export async function preview(c: Context, id: string, input: unknown) {
         templateChecksum: template.checksum,
         issuer: v.eventProfiles.get(event.id)?.profile || v.parsedProfile,
         photos: {},
-        items: members.map(({ item, assignment }) => ({
-          ...item,
-          ...employerFields(item, customer, organizations),
-          assignment: eventProtocolAssignment(event, assignment),
-          number: "ПРЕДПРОСМОТР",
-          credentialNumber: "",
-          protocolNumber: "",
-        })),
+        items,
+        groupHeaderWorkplace: groupHeaderWorkplace(template.templateId, items),
       };
       const snapshot = await tx.renderInputSnapshot.create({
         data: {

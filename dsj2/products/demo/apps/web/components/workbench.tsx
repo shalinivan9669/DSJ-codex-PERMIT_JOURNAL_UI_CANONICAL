@@ -121,7 +121,7 @@ export function Workbench({ context }: { context: AppContext }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [renewals, setRenewals] = useState<Renewal[]>([]);
   const [selectedId, setSelectedId] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(true);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [refresh, setRefresh] = useState(0);
@@ -248,12 +248,17 @@ export function Workbench({ context }: { context: AppContext }) {
         <ValueLibrary context={context} />
       ) : tab === "orders" ? (
         <div className="workbench-grid">
-          <section className="panel">
+          <section className="panel workbench-list" aria-label="Список заказов">
             <div className="toolbar">
               <h2>Заказы</h2>
-              <span className="muted">Всего: {orders.length}</span>
+              <span className="muted" role="status">
+                {busy ? "Обновляем заказы…" : `Всего: ${orders.length}`}
+              </span>
             </div>
-            <div className="table-scroll" aria-busy={busy}>
+            <div
+              className="table-scroll workbench-list-scroll"
+              aria-busy={busy}
+            >
               <table>
                 <thead>
                   <tr>
@@ -271,6 +276,8 @@ export function Workbench({ context }: { context: AppContext }) {
                       <td>
                         <button
                           className="text-button"
+                          aria-pressed={order.id === selectedId}
+                          aria-controls="selected-order-details"
                           onClick={() => setSelectedId(order.id)}
                         >
                           {order.title}
@@ -291,7 +298,7 @@ export function Workbench({ context }: { context: AppContext }) {
                 </tbody>
               </table>
             </div>
-            {!orders.length && !busy && (
+            {!orders.length && !busy && !error && (
               <div className="empty-state">
                 <h3>Нет коммерческих заказов</h3>
                 <p>
@@ -301,9 +308,18 @@ export function Workbench({ context }: { context: AppContext }) {
                 <Link href="/requests">Открыть заявки</Link>
               </div>
             )}
+            {!orders.length && busy && (
+              <div className="empty-state" aria-hidden="true">
+                Загружаем заказы…
+              </div>
+            )}
           </section>
           {selected && (
-            <section className="panel workbench-detail">
+            <section
+              className="panel workbench-detail"
+              id="selected-order-details"
+              aria-label="Выбранный заказ"
+            >
               <h2>{selected.title}</h2>
               <p>{statuses[selected.status] || selected.status}</p>
               {selected.summary && (
@@ -693,7 +709,7 @@ export function Workbench({ context }: { context: AppContext }) {
               </tbody>
             </table>
           </div>
-          {!renewalGroups.length && !busy && (
+          {!renewalGroups.length && !busy && !error && (
             <p>
               Потребности пока не подтверждены. Добавляйте их из истории
               оформленной заявки с проверенным источником срока.

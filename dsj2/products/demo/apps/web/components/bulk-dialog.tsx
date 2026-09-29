@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import {
   bulkFields,
+  bulkRecipientFields,
   previewBulk,
   type BulkField,
   type BulkMode,
@@ -13,12 +14,14 @@ export function BulkDialog({
   items,
   resolvedItems,
   selectedIds,
+  operationError,
   onClose,
   onApply,
 }: {
   items: Recipient[];
   resolvedItems?: Recipient[];
   selectedIds: string[];
+  operationError?: string;
   onClose: () => void;
   onApply: (items: Recipient[]) => Promise<void>;
 }) {
@@ -38,6 +41,15 @@ export function BulkDialog({
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [attempted, setAttempted] = useState(false);
+  const errorRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLElement>(null);
+  const visibleError = error || (attempted ? operationError : "");
+  useEffect(() => {
+    if (!visibleError) return;
+    errorRef.current?.focus({ preventScroll: true });
+    errorRef.current?.scrollIntoView({ block: "nearest" });
+  }, [visibleError]);
   const preview = previewBulk(
     items,
     selectedIds,
@@ -49,7 +61,12 @@ export function BulkDialog({
   const reset = () => {
     setReview(false);
     setConfirmed(false);
+    setError("");
+    setAttempted(false);
   };
+  const documentFieldsSelected = bulkFields.some(([field]) =>
+    Object.hasOwn(patch, field),
+  );
   return (
     <Modal
       title={`Общие значения для ${selectedIds.length} получателей`}
@@ -60,13 +77,61 @@ export function BulkDialog({
     >
       <p>
         Выбранные строки остаются выбранными при поиске. Изменение затронет
-        только указанное направление и отмеченные поля.
+        только отмеченных получателей и поля. Данные человека не зависят от
+        направления документов. Перед сохранением проверьте список изменений.
       </p>
-      {error && <Notice>{error}</Notice>}
+      {visibleError && (
+        <div ref={errorRef} tabIndex={-1}>
+          <Notice>{visibleError}</Notice>
+        </div>
+      )}
+      <details className="bulk-recipient-fields">
+        <summary>Должность и место работы</summary>
+        <p className="fine-print">
+          Заполните общую организацию или должность для выбранной группы. RU и
+          KZ независимы. В режиме «Только пустые» индивидуальные значения
+          сохраняются; замена требует отдельного подтверждения.
+        </p>
+        <div className="form-grid">
+          {bulkRecipientFields.map(([field, label]) => (
+            <div key={field} className="bulk-field">
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  disabled={mode === "INHERITED"}
+                  checked={Object.hasOwn(patch, field)}
+                  onChange={(event) => {
+                    setPatch((current) => {
+                      const next = { ...current };
+                      if (event.target.checked) next[field] = "";
+                      else delete next[field];
+                      return next;
+                    });
+                    reset();
+                  }}
+                />
+                {label}
+              </label>
+              <input
+                aria-label={`Общее значение: ${label}`}
+                maxLength={500}
+                disabled={mode === "INHERITED" || !Object.hasOwn(patch, field)}
+                value={patch[field] || ""}
+                onChange={(event) => {
+                  setPatch({ ...patch, [field]: event.target.value });
+                  reset();
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </details>
       <div className="form-grid">
         <label>
           Направление
           <select
+            aria-label="Направление"
+            aria-describedby="bulk-direction-help"
             value={direction}
             onChange={(e) => {
               setDirection(e.target.value);
@@ -87,6 +152,9 @@ export function BulkDialog({
               </option>
             ))}
           </select>
+          <small id="bulk-direction-help">
+            Нужно только для отмеченных полей документов.
+          </small>
         </label>
         <label>
           Режим применения
@@ -94,6 +162,13 @@ export function BulkDialog({
             value={mode}
             onChange={(e) => {
               setMode(e.target.value as BulkMode);
+              if (e.target.value === "INHERITED") {
+                setPatch((current) => {
+                  const next = { ...current };
+                  for (const [field] of bulkRecipientFields) delete next[field];
+                  return next;
+                });
+              }
               reset();
             }}
           >
@@ -107,7 +182,8 @@ export function BulkDialog({
         <p className="fine-print">
           Ручные, импортированные и явно очищенные значения сохраняются. Новые
           значения фиксируются как исключения выбранных назначений; общий
-          протокол требует одинаковых сведений события.
+          протокол требует одинаковых сведений события. Должность и место работы
+          в этом режиме не меняются.
         </p>
       )}
       <div className="form-grid">
@@ -147,12 +223,23 @@ export function BulkDialog({
         Эти поля не меняют результат проверки.
       </p>
       {review && (
-        <section aria-label="Предварительные изменения">
+        <section
+          ref={previewRef}
+          tabIndex={-1}
+          aria-label="Предварительные изменения"
+        >
           <h3>
-            {preview.people} человек · {preview.assignments} назначений ·{" "}
-            {preview.changes.length} изменений
+            {preview.people} человек
+            {preview.assignments > 0
+              ? ` · ${preview.assignments} назначений`
+              : ""}{" "}
+            · {preview.changes.length} изменений
           </h3>
-          <p>Назначений других направлений без изменений: {preview.skipped}.</p>
+          {documentFieldsSelected && (
+            <p>
+              Назначений других направлений без изменений: {preview.skipped}.
+            </p>
+          )}
           <div className="table-scroll bulk-preview">
             <table>
               <thead>
@@ -168,9 +255,19 @@ export function BulkDialog({
                   <tr key={`${c.recipientId}-${c.assignmentId}-${c.field}`}>
                     <td>
                       {c.name}
-                      <small>{templateLabels[c.templateId]}</small>
+                      <small>
+                        {c.assignmentId
+                          ? templateLabels[c.templateId]
+                          : "Данные человека"}
+                      </small>
                     </td>
-                    <td>{bulkFields.find(([f]) => f === c.field)?.[1]}</td>
+                    <td>
+                      {
+                        [...bulkRecipientFields, ...bulkFields].find(
+                          ([f]) => f === c.field,
+                        )?.[1]
+                      }
+                    </td>
                     <td>{c.before || "пусто"}</td>
                     <td>{c.after || "будет очищено"}</td>
                   </tr>
@@ -198,8 +295,17 @@ export function BulkDialog({
         {!review ? (
           <button
             className="primary"
-            disabled={!direction || !Object.keys(patch).length}
-            onClick={() => setReview(true)}
+            disabled={
+              (documentFieldsSelected && !direction) ||
+              !Object.keys(patch).length
+            }
+            onClick={() => {
+              setReview(true);
+              requestAnimationFrame(() => {
+                previewRef.current?.focus({ preventScroll: true });
+                previewRef.current?.scrollIntoView({ block: "start" });
+              });
+            }}
           >
             Показать изменения
           </button>
@@ -213,6 +319,8 @@ export function BulkDialog({
             }
             onClick={async () => {
               setBusy(true);
+              setError("");
+              setAttempted(true);
               try {
                 await onApply(preview.items);
               } catch (caught) {

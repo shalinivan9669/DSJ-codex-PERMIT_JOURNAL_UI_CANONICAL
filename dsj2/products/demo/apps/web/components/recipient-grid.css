@@ -1,0 +1,329 @@
+.recipient-grid-workspace {
+  min-width: 0;
+  background: var(--paper);
+}
+
+.recipient-grid-options {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.recipient-grid-language {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.recipient-grid-language > span {
+  margin-right: 5px;
+  color: var(--muted);
+}
+
+.recipient-grid-language button {
+  min-height: 34px;
+  padding: 6px 10px;
+  font-size: 13px;
+  border-color: transparent;
+}
+
+.recipient-grid-language button[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+.recipient-grid-identifiers {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.recipient-grid-keyboard-hint {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.recipient-grid-scroll {
+  max-height: clamp(360px, 64dvh, 780px);
+  overflow: auto;
+  scrollbar-gutter: stable;
+  scroll-padding-top: 54px;
+  scroll-padding-left: 324px;
+  overscroll-behavior: contain;
+}
+
+.recipient-grid-table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.recipient-grid-table.is-bilingual {
+  min-width: 1490px;
+}
+
+.recipient-grid-table.has-identifiers {
+  min-width: 1190px;
+}
+
+.recipient-grid-table.is-bilingual.has-identifiers {
+  min-width: 1810px;
+}
+
+.recipient-grid-table th,
+.recipient-grid-table td {
+  padding: 5px 6px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.recipient-grid-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 44px;
+  padding-inline: 15px;
+  background: var(--soft);
+  color: var(--text);
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.recipient-grid-table .recipient-grid-selection {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 64px;
+  padding-inline: 8px;
+  text-align: center;
+}
+
+.recipient-grid-selection label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.recipient-grid-table .recipient-grid-name {
+  position: sticky;
+  left: 64px;
+  z-index: 1;
+  width: 250px;
+  border-right: 1px solid var(--line);
+}
+
+.recipient-grid-table th.recipient-grid-selection,
+.recipient-grid-table th.recipient-grid-name {
+  z-index: 3;
+}
+
+.recipient-grid-table .recipient-grid-documents {
+  width: 110px;
+  text-align: center;
+}
+
+.recipient-grid-table .recipient-grid-actions {
+  width: 48px;
+  text-align: center;
+}
+
+.recipient-grid-table input:not([type="checkbox"]) {
+  min-height: 40px;
+  padding: 8px;
+  border-color: transparent;
+  background: transparent;
+  font-size: 14px;
+  border-radius: 4px;
+  text-overflow: ellipsis;
+}
+
+.recipient-grid-table input:not([type="checkbox"]):hover:not(:disabled) {
+  border-color: var(--line);
+}
+
+.recipient-grid-table input:not([type="checkbox"]):focus-visible {
+  background: var(--paper);
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  text-overflow: clip;
+}
+
+.recipient-grid-table input[aria-invalid="true"] {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.recipient-grid-table input[readonly] {
+  cursor: text;
+}
+
+.recipient-grid-table tr.is-active > td {
+  background: #f0f8f7;
+}
+
+.recipient-grid-table tr.is-checked > td {
+  background: var(--accent-soft);
+}
+
+.recipient-grid-table tr.is-active > .recipient-grid-selection {
+  box-shadow: inset 3px 0 var(--accent);
+}
+
+.recipient-grid-table .recipient-grid-documents button {
+  min-height: 34px;
+  min-width: 52px;
+  padding: 5px 9px;
+  font-size: 13px;
+}
+
+.recipient-grid-table .recipient-grid-actions button {
+  min-width: 32px;
+  min-height: 34px;
+  padding: 4px;
+  border-color: transparent;
+  color: var(--muted);
+  background: transparent;
+  font-size: 19px;
+}
+
+.recipient-grid-table .recipient-grid-actions button:hover:not(:disabled) {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.recipient-grid-table .field-error,
+.recipient-grid-table .recipient-grid-row-errors {
+  display: block;
+  margin: 3px 8px;
+  color: var(--danger);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.recipient-grid-table .recipient-grid-row-errors {
+  margin-inline: 0;
+}
+
+.recipient-grid-empty {
+  padding: 30px 20px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.recipient-grid-footer {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--line);
+}
+
+.recipient-grid-footer > button {
+  flex-shrink: 0;
+  min-height: 38px;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.recipient-grid-paste-help {
+  flex: 1 1 300px;
+  margin-left: auto;
+  max-width: 670px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.recipient-grid-paste-help > summary {
+  padding: 10px 0;
+  cursor: pointer;
+  color: var(--accent-dark);
+}
+
+.recipient-grid-paste-help p {
+  margin: 0 0 9px;
+  line-height: 1.5;
+}
+
+@media (max-width: 780px) {
+  .recipient-grid-options {
+    padding: 10px 12px;
+    gap: 10px 16px;
+  }
+
+  .recipient-grid-keyboard-hint {
+    width: 100%;
+    margin: 0;
+  }
+
+  .recipient-grid-scroll {
+    max-height: 65dvh;
+    scroll-padding-left: 54px;
+  }
+
+  .recipient-grid-table .recipient-grid-selection {
+    width: 46px;
+    padding-inline: 4px;
+  }
+
+  .recipient-grid-selection label {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .recipient-grid-table .recipient-grid-name {
+    left: auto;
+    width: 140px;
+  }
+
+  /* Leave room for an entire editable field on a narrow or zoomed viewport.
+     The selection/row number and column headers remain fixed for context. */
+  .recipient-grid-table td.recipient-grid-name {
+    position: static;
+  }
+
+  .recipient-grid-table th.recipient-grid-name {
+    z-index: 2;
+  }
+
+  .recipient-grid-table input:not([type="checkbox"]) {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .recipient-grid-language button,
+  .recipient-grid-table .recipient-grid-documents button,
+  .recipient-grid-table .recipient-grid-actions button {
+    min-height: 44px;
+  }
+
+  .recipient-grid-footer {
+    padding-inline: 12px;
+  }
+}

@@ -62,7 +62,7 @@ export function EventContext({
   onContextCommit: (previousEvents: TrainingEventInput[]) => Promise<void>;
   onBusyChange: (busy: boolean) => void;
 }) {
-  const [expanded, setExpanded] = useState(!!draft.events?.length);
+  const [expanded, setExpanded] = useState(false);
   const [contextBusy, setContextBusy] = useState(false);
   const applying = useRef(false);
   const disabled = externalDisabled || contextBusy;
@@ -99,11 +99,10 @@ export function EventContext({
   const [joinExisting, setJoinExisting] = useState(false);
   const [moveTarget, setMoveTarget] = useState("");
   const [moveConfirmed, setMoveConfirmed] = useState(false);
-  const [requestCommon, setRequestCommon] = useState(draft.commonFields || {});
-  const commonKey = JSON.stringify(draft.commonFields || {});
-  useEffect(() => {
-    setRequestCommon(JSON.parse(commonKey));
-  }, [commonKey]);
+  const requestCommon = draft.commonFields || {};
+  function setRequestCommon(update: (previous: CommonFields) => CommonFields) {
+    onChange({ schemaVersion: 2, commonFields: update(requestCommon) });
+  }
   const pristine = (assignment: Assignment) =>
     !assignment.eventId &&
     !assignment.documentDate &&
@@ -157,16 +156,22 @@ export function EventContext({
   const events = draft.events || [];
   const event = events.find((e) => e.id === activeId);
   const displayedCommon =
-    resolveDraft(draft).draft.events?.find((e) => e.id === activeId)
-      ?.commonFields ||
+    (expanded
+      ? resolveDraft(draft).draft.events?.find((e) => e.id === activeId)
+          ?.commonFields
+      : undefined) ||
     event?.commonFields ||
     {};
-  const displayedRequestCommon = resolveCommonDates(requestCommon);
-  const eventAssignments = draft.items.flatMap((item) =>
-    item.assignments
-      .filter((a) => a.eventId === activeId)
-      .map((assignment) => ({ item, assignment })),
-  );
+  const displayedRequestCommon = expanded
+    ? resolveCommonDates(requestCommon)
+    : requestCommon;
+  const eventAssignments = expanded
+    ? draft.items.flatMap((item) =>
+        item.assignments
+          .filter((a) => a.eventId === activeId)
+          .map((assignment) => ({ item, assignment })),
+      )
+    : [];
   const selectedAssignments = eventAssignments.filter(({ item }) =>
     selectedIds.includes(item.id),
   );
@@ -416,14 +421,10 @@ export function EventContext({
                 }))
               }
             />
-            <button
-              disabled={disabled || JSON.stringify(requestCommon) === commonKey}
-              onClick={() =>
-                void apply({ schemaVersion: 2, commonFields: requestCommon })
-              }
-            >
-              Сохранить общие значения заявки
-            </button>
+            <p className="fine-print">
+              Общие значения сохраняются автоматически вместе с заявкой.
+              Индивидуальные исключения сохраняются.
+            </p>
           </details>
           <label className="checkbox-label">
             <input

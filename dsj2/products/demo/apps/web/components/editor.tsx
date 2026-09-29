@@ -6,9 +6,9 @@ import { CustomerOutput } from "./customer-output";
 import { CustomerReview } from "./customer-review";
 import { RequestOperations } from "./request-operations";
 import { GridPasteDialog } from "./grid-paste-dialog";
-import type { GridField } from "@/lib/grid-paste";
+import { gridColumns, type GridField } from "@/lib/grid-paste";
 import { BulkPhotoDialog } from "./bulk-photo-dialog";
-import { TextQualityHint } from "./text-quality-hint";
+import { RecipientGrid } from "./recipient-grid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -16,6 +16,7 @@ import { Icon, Modal, Notice } from "@demo/ui";
 import { LIMITS, resolveDraft, documentPlan } from "@demo/contracts";
 import { api, ApiError, errorText, json, BEFORE_LOGOUT_EVENT } from "@/lib/api";
 import { AutosaveLane } from "@/lib/autosave";
+import { useUnsavedNavigation } from "@/lib/use-unsaved-navigation";
 import { recipientForRequest, requestBundles } from "@/lib/request-bundles";
 import {
   draftPayload,
@@ -65,17 +66,25 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [selectedId, setSelectedId] = useState("");
   const [checked, setChecked] = useState<string[]>([]);
   const [rowSearch, setRowSearch] = useState("");
+  const [editingSearchId, setEditingSearchId] = useState("");
+  const [entryView, setEntryView] = useState<"table" | "card">("table");
+  const [reviewStale, setReviewStale] = useState(false);
+  const [removeId, setRemoveId] = useState<string | null>(null);
   const [pastedRange, setPastedRange] = useState<{
     startRow: number;
     startField: GridField;
     text: string;
+    columns?: GridField[];
   } | null>(null);
-  const [undo, setUndo] = useState<{ before: Draft; revision: number } | null>(
-    null,
-  );
+  const [undo, setUndo] = useState<{
+    before: Draft;
+    revision: number;
+    removedId?: string;
+  } | null>(null);
   const [saveState, setSaveState] = useState("saved");
   const [rowScope, setRowScope] = useState("");
   const [error, setError] = useState("");
+  const saveError = useRef("");
   const [busy, setBusy] = useState("");
   const [contextBusy, setContextBusy] = useState(false);
   const operationBusy = !!busy || contextBusy;
@@ -100,12 +109,101 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   >(null);
   const [refreshFiles, setRefreshFiles] = useState(0);
   const [previewRevision, setPreviewRevision] = useState<number | null>(null);
+  const [readyPreviewRevision, setReadyPreviewRevision] = useState<
+    number | null
+  >(null);
   const lane = useRef<AutosaveLane<ReturnType<typeof draftPayload>> | null>(
     null,
   );
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const idempotency = useRef<{ revision: number; key: string } | null>(null);
   const errorsRef = useRef<HTMLDivElement>(null);
+  const recipientDetailRef = useRef<HTMLElement>(null);
+  const gridReturn = useRef<{
+    element: HTMLElement | null;
+    rowId: string;
+    scrollTop: number;
+    scrollLeft: number;
+    windowY: number;
+  } | null>(null);
+  const lastGridField = useRef<HTMLElement | null>(null);
+  const initialEntry = useRef("");
+  useEffect(() => {
+    if (!draft || draft.id !== id || initialEntry.current === id) return;
+    initialEntry.current = id;
+    if (
+      draft.status === "DRAFT" &&
+      context.user.role !== "VIEWER" &&
+      draft.items.length === 1 &&
+      !draft.items[0].fullNameRu &&
+      !draft.items[0].fullNameKz
+    ) {
+      requestAnimationFrame(() => {
+        const input = document.querySelector<HTMLInputElement>(
+          '.operator-grid [data-field-path="items.0.fullNameRu"]',
+        );
+        input?.focus();
+        input?.scrollIntoView({ block: "center" });
+      });
+    }
+  }, [draft, id, context.user.role]);
+  function openRecipient(id: string) {
+    if (entryView === "table") {
+      const grid = document.querySelector<HTMLElement>(
+        ".recipient-grid-scroll",
+      );
+      const active = document.activeElement as HTMLElement | null;
+      const opener = active?.closest(".operator-grid")
+        ? active
+        : lastGridField.current;
+      gridReturn.current =
+        opener
+          ?.closest("tr[data-recipient-id]")
+          ?.getAttribute("data-recipient-id") === id
+          ? {
+              element: opener,
+              rowId: id,
+              scrollTop: grid?.scrollTop || 0,
+              scrollLeft: grid?.scrollLeft || 0,
+              windowY: window.scrollY,
+            }
+          : null;
+    }
+    setSelectedId(id);
+    setEntryView("card");
+    requestAnimationFrame(() => {
+      const panel = recipientDetailRef.current;
+      panel?.focus({ preventScroll: true });
+      panel?.scrollIntoView({ block: "nearest" });
+    });
+  }
+  function returnToTable() {
+    setEntryView("table");
+    requestAnimationFrame(() => {
+      const previous = gridReturn.current;
+      const grid = document.querySelector<HTMLElement>(
+        ".recipient-grid-scroll",
+      );
+      const index =
+        current.current?.items.findIndex((item) => item.id === selectedId) ??
+        -1;
+      const fallback = document.querySelector<HTMLElement>(
+        `.operator-grid [aria-label="Документы и даты получателя ${index + 1}"]`,
+      );
+      const target =
+        previous?.rowId === selectedId && previous.element?.isConnected
+          ? previous.element
+          : fallback;
+      if (grid && previous && previous.rowId === selectedId) {
+        grid.scrollTop = previous.scrollTop;
+        grid.scrollLeft = previous.scrollLeft;
+        window.scrollTo({ top: previous.windowY });
+      }
+      target?.focus({ preventScroll: true });
+      if (!previous || previous.rowId !== selectedId)
+        target?.scrollIntoView({ block: "center", inline: "nearest" });
+    });
+  }
   useEffect(() => {
     if (validation) {
       errorsRef.current?.focus({ preventScroll: true });
@@ -118,6 +216,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       current.current = value;
       setDraft(value);
       setServerResolution(null);
+      setValidation(null);
+      setReviewStale(false);
+      setChecked((ids) =>
+        ids.filter((itemId) => value.items.some((item) => item.id === itemId)),
+      );
       setSelectedId((previous) =>
         value.items.some((item) => item.id === previous)
           ? previous
@@ -132,7 +235,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             method: "PATCH",
             body: json({ expectedRevision, draft: payload }),
           }),
-        (state, revision, caught) => {
+        (state, revision, caught, capturedVersion) => {
           if (!alive.current) return;
           setSaveState(state);
           if (current.current) {
@@ -140,14 +243,22 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             setDraft(current.current);
           }
           if (caught) {
-            setError(errorText(caught));
+            saveError.current = errorText(caught);
+            setError(saveError.current);
             const errors = validationErrors(caught);
             if (errors.length) {
               setValidation({ valid: false, errors });
               setValidationRevision(revision);
+              setReviewStale(capturedVersion !== lane.current?.currentVersion);
             }
             if (caught instanceof ApiError && caught.status === 409)
               setDialog("conflict");
+          } else if (state === "saved" && saveError.current) {
+            const previousSaveError = saveError.current;
+            setError((message) =>
+              message === previousSaveError ? "" : message,
+            );
+            saveError.current = "";
           }
         },
       );
@@ -237,11 +348,27 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   }, [router]);
   function edit(patch: Partial<Draft>) {
     if (!current.current || !lane.current) return;
+    if (patch.items) {
+      const structure = (items: Recipient[]) =>
+        JSON.stringify(
+          items.map((item) => [
+            item.id,
+            item.assignments.map((assignment) => [
+              assignment.id,
+              assignment.templateId,
+            ]),
+          ]),
+        );
+      // Validation paths use array indices; discard them if their targets move.
+      if (structure(patch.items) !== structure(current.current.items))
+        setValidation(null);
+    }
     const next = { ...current.current, ...patch };
     current.current = next;
     setDraft(next);
     lane.current.edit(draftPayload(next));
-    setValidation(null);
+    // Keep the review queue stable while the operator fixes successive rows.
+    setReviewStale(true);
     setServerResolution(null);
     setError("");
     clearTimeout(timer.current);
@@ -250,6 +377,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     }, 650);
   }
   function editRecipient(value: Recipient) {
+    // A matching row must not disappear halfway through correcting its name.
+    if (rowSearch && visibleItems.some((item) => item.id === value.id))
+      setEditingSearchId(value.id);
     if (current.current)
       edit({
         items: current.current.items.map((item) =>
@@ -262,7 +392,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     if (!lane.current) throw new Error("Заявка ещё загружается.");
     return lane.current.flush();
   }
-  async function applyOperation(patch: Partial<Draft>) {
+  useUnsavedNavigation({
+    requestId: id,
+    dirty: () => !!lane.current?.dirty,
+    flush,
+    onError: (caught) => setError(errorText(caught)),
+    replace: (url) => router.replace(url),
+  });
+  async function applyOperation(patch: Partial<Draft>, removedId?: string) {
     if (!current.current || busy) return;
     setBusy("bulk");
     setError("");
@@ -280,7 +417,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         body: json({ expectedRevision, draft: draftPayload(next) }),
       });
       initialize({ ...next, revision: result.revision });
-      setUndo({ before, revision: result.revision });
+      setUndo({ before, revision: result.revision, removedId });
       setValidation(null);
       return true;
     } catch (caught) {
@@ -328,6 +465,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           errors: result.errors || result.issues || [],
         });
         setValidationRevision(revision);
+        setReviewStale(false);
       } else if (kind === "preview") {
         await api(`/print-requests/${id}/preview`, {
           method: "POST",
@@ -354,6 +492,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       if (errors.length) {
         setValidation({ valid: false, errors });
         setValidationRevision(lane.current?.currentRevision ?? null);
+        setReviewStale(false);
         setDialog(null);
       }
     } finally {
@@ -391,6 +530,25 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       setBusy("");
     }
   }
+  function addRecipient() {
+    if (!current.current || current.current.items.length >= LIMITS.rows) return;
+    const row = recipientForRequest(current.current);
+    const index = current.current.items.length;
+    edit({ items: [...current.current.items, row] });
+    setRowSearch("");
+    setRowScope("");
+    setSelectedId(row.id);
+    setEntryView("table");
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const input = document.querySelector<HTMLInputElement>(
+          `.operator-grid [data-field-path="items.${index}.fullNameRu"], .operator-grid [data-field-path="items.${index}.fullNameKz"]`,
+        );
+        input?.focus();
+        input?.scrollIntoView({ block: "nearest" });
+      }),
+    );
+  }
   if (!draft)
     return (
       <>
@@ -409,34 +567,45 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const readonly = draft.status !== "DRAFT" || context.user.role === "VIEWER";
   const visibleItems = draft.items.filter(
     (item) =>
-      [
-        item.fullNameRu,
-        item.fullNameKz,
-        item.personnelNumber,
-        item.externalId,
-      ].some((value) =>
-        value
-          ?.toLocaleLowerCase("ru")
-          .includes(rowSearch.toLocaleLowerCase("ru")),
-      ) &&
+      (item.id === editingSearchId ||
+        [
+          item.fullNameRu,
+          item.fullNameKz,
+          item.personnelNumber,
+          item.externalId,
+          item.positionRu,
+          item.positionKz,
+          item.workplaceRu,
+          item.workplaceKz,
+        ].some((value) =>
+          value
+            ?.toLocaleLowerCase("ru")
+            .includes(rowSearch.toLocaleLowerCase("ru")),
+        )) &&
       (!rowScope ||
         (rowScope === "selected"
           ? checked.includes(item.id)
-          : rowScope === "errors"
-            ? validation?.errors.some(
-                (issue) =>
-                  typeof issue !== "string" &&
-                  (issue.itemId === item.id ||
-                    (issue as { rowId?: string }).rowId === item.id ||
-                    String(issue.path || "").startsWith(
-                      `items.${draft.items.indexOf(item)}.`,
-                    )),
-              )
-            : rowScope.startsWith("event:")
-              ? item.assignments.some((a) => a.eventId === rowScope.slice(6))
-              : item.assignments.some((a) =>
-                  a.templateId.startsWith(rowScope),
-                ))),
+          : rowScope === "unnamed"
+            ? !item.fullNameRu.trim()
+            : rowScope === "unassigned"
+              ? !item.assignments.length
+              : rowScope === "errors"
+                ? validation?.errors.some(
+                    (issue) =>
+                      typeof issue !== "string" &&
+                      (issue.itemId === item.id ||
+                        (issue as { rowId?: string }).rowId === item.id ||
+                        String(issue.path || "").startsWith(
+                          `items.${draft.items.indexOf(item)}.`,
+                        )),
+                  )
+                : rowScope.startsWith("event:")
+                  ? item.assignments.some(
+                      (a) => a.eventId === rowScope.slice(6),
+                    )
+                  : item.assignments.some((a) =>
+                      a.templateId.startsWith(rowScope),
+                    ))),
   );
   const selected = draft.items.find((item) => item.id === selectedId);
   const resolved =
@@ -451,6 +620,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const documentCount = plan.documentCount;
   const dirty =
     saveState === "dirty" || saveState === "saving" || saveState === "error";
+  const saveLabel = {
+    saved: `Сохранено · редакция ${draft.revision}`,
+    dirty: "Есть изменения",
+    saving: "Сохраняем…",
+    error: "Не сохранено",
+  }[saveState];
+  const reviewCurrent = validation?.valid && !reviewStale;
+  const previewCurrent = readyPreviewRevision === draft.revision && !dirty;
   const fieldErrors = Object.fromEntries(
     (validation?.errors || []).flatMap((issue) =>
       typeof issue !== "string" && issue.path
@@ -491,21 +668,32 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           ) : (
             <span className="save-dot" />
           )}
-          {
-            {
-              saved: `Сохранено · редакция ${draft.revision}`,
-              dirty: "Есть изменения",
-              saving: "Сохраняем…",
-              error: "Не сохранено",
-            }[saveState]
-          }
+          {saveLabel}
         </span>
       </div>
+      <button
+        className="text-button entry-jump"
+        onClick={() => {
+          setEntryView("table");
+          requestAnimationFrame(() => {
+            document
+              .getElementById("recipient-workspace")
+              ?.scrollIntoView({ block: "start" });
+            document
+              .querySelector<HTMLInputElement>(
+                ".operator-grid tbody input[data-grid-field]",
+              )
+              ?.focus({ preventScroll: true });
+          });
+        }}
+      >
+        К списку получателей
+      </button>
       <ol className="workflow" aria-label="Этапы оформления">
         <li className={readonly ? "complete" : "active"}>
           <span>1</span>Получатели и документы
         </li>
-        <li className={validation?.valid ? "complete" : ""}>
+        <li className={validation?.valid && !reviewStale ? "complete" : ""}>
           <span>2</span>Проверка и макет
         </li>
         <li className={readonly ? "active" : ""}>
@@ -597,8 +785,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         onBusyChange={setContextBusy}
       />
       {!!draft.events?.length && (
-        <section className="panel" aria-label="Состав комплекта">
-          <h2>Состав комплекта</h2>
+        <details
+          className="panel bundle-overview"
+          aria-label="Состав комплекта"
+        >
+          <summary>
+            Состав комплекта: {documentCount} документов, общих протоколов —{" "}
+            {plan.groups.length}
+          </summary>
           {draft.events.map((event) => {
             const bundle = Object.values(requestBundles).find(
               (choice) => choice.protocol === event.protocolTemplateId,
@@ -618,11 +812,13 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               </p>
             );
           })}
-        </section>
+        </details>
       )}
       {undo && !readonly && (
         <Notice kind="info">
-          Последнее массовое изменение сохранено.{" "}
+          {undo.removedId
+            ? "Получатель убран из заявки. До следующей правки его можно восстановить."
+            : "Последнее массовое изменение сохранено."}{" "}
           <button
             disabled={
               operationBusy || dirty || draft.revision !== undo.revision
@@ -642,6 +838,22 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   },
                 );
                 initialize({ ...undo.before, revision: result.revision });
+                if (undo.removedId) {
+                  setSelectedId(undo.removedId);
+                  setEntryView("table");
+                  setRowSearch("");
+                  setRowScope("");
+                  const restoredIndex = undo.before.items.findIndex(
+                    (item) => item.id === undo.removedId,
+                  );
+                  requestAnimationFrame(() => {
+                    const field = document.querySelector<HTMLInputElement>(
+                      `.operator-grid [data-field-path="items.${restoredIndex}.fullNameRu"], .operator-grid [data-field-path="items.${restoredIndex}.fullNameKz"]`,
+                    );
+                    field?.focus();
+                    field?.scrollIntoView({ block: "center" });
+                  });
+                }
                 setUndo(null);
               } catch (caught) {
                 setError(errorText(caught));
@@ -650,7 +862,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               }
             }}
           >
-            Отменить массовое изменение
+            {undo.removedId
+              ? "Восстановить получателя"
+              : "Отменить массовое изменение"}
           </button>
           {(dirty || draft.revision !== undo.revision) && (
             <span>
@@ -660,7 +874,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
         </Notice>
       )}
-      <section className="panel recipients-panel">
+      <section className="panel recipients-panel" id="recipient-workspace">
         <div className="toolbar">
           <div>
             <h2>Получатели</h2>
@@ -697,11 +911,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               </button>
               <button
                 disabled={draft.items.length >= LIMITS.rows || operationBusy}
-                onClick={() => {
-                  const row = recipientForRequest(draft);
-                  edit({ items: [...draft.items, row] });
-                  setSelectedId(row.id);
-                }}
+                onClick={addRecipient}
               >
                 <Icon name="plus" />
                 Получатель
@@ -710,12 +920,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
         </div>
         <div className="toolbar selection-toolbar">
-          <label className="search-field">
+          <label className="search-field recipient-search">
             Поиск в заявке
             <input
               value={rowSearch}
-              onChange={(e) => setRowSearch(e.target.value)}
-              placeholder="ФИО или табельный номер"
+              onChange={(e) => {
+                setRowSearch(e.target.value);
+                setEditingSearchId("");
+              }}
+              placeholder="ФИО, должность, организация или номер"
             />
           </label>
           <span aria-live="polite">
@@ -727,6 +940,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               ).length
             }
             .
+            {rowScope === "errors" &&
+              reviewStale &&
+              " Замечания последней проверки; перепроверьте после исправлений."}
           </span>
           <label>
             Показать строки
@@ -736,6 +952,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             >
               <option value="">Все</option>
               <option value="selected">Выбранные</option>
+              <option value="unnamed">Без ФИО на русском</option>
+              <option value="unassigned">Без документов</option>
               <option value="errors">С ошибками последней проверки</option>
               <option value="pb-">Промышленная безопасность</option>
               <option value="ptm-">Пожарно-технический минимум</option>
@@ -751,174 +969,132 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           {checked.length > 0 && (
             <button onClick={() => setChecked([])}>Снять выбор</button>
           )}
+          {(rowSearch || rowScope) && (
+            <button
+              onClick={() => {
+                setRowSearch("");
+                setRowScope("");
+              }}
+            >
+              Сбросить фильтры
+            </button>
+          )}
         </div>
-        <div className="editor-grid">
-          <div className="recipient-table-wrap">
-            <table className="recipient-table">
-              <thead>
-                <tr>
-                  <th>
-                    <input
-                      type="checkbox"
-                      aria-label="Выбрать всех получателей"
-                      checked={
-                        !!draft.items.length &&
-                        checked.length === draft.items.length
-                      }
-                      onChange={(event) =>
-                        setChecked(
-                          event.target.checked
-                            ? draft.items.map((item) => item.id)
-                            : [],
-                        )
-                      }
-                    />
-                  </th>
-                  <th>Получатель · RU / KZ</th>
-                  <th>Документы</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {visibleItems.map((item) => {
-                  const index = draft.items.indexOf(item);
-                  return (
-                    <tr
-                      key={item.id}
-                      className={item.id === selectedId ? "selected" : ""}
-                    >
-                      <td>
-                        <input
-                          type="checkbox"
-                          aria-label={`Выбрать строку ${index + 1}`}
-                          checked={checked.includes(item.id)}
-                          onChange={(event) =>
-                            setChecked(
-                              event.target.checked
-                                ? [...checked, item.id]
-                                : checked.filter((value) => value !== item.id),
-                            )
-                          }
-                        />
-                        <small>{index + 1}</small>
-                      </td>
-                      <td>
-                        <input
-                          aria-label={`ФИО RU, строка ${index + 1}`}
-                          onPaste={(event) => {
-                            const text = event.clipboardData.getData("text");
-                            if (/[\t\r\n]/.test(text)) {
-                              event.preventDefault();
-                              setPastedRange({
-                                startRow: index,
-                                startField: "fullNameRu",
-                                text,
-                              });
-                            }
-                          }}
-                          data-field-path={`items.${index}.fullNameRu`}
-                          aria-invalid={
-                            !!fieldErrors[`items.${index}.fullNameRu`]
-                          }
-                          aria-describedby={
-                            fieldErrors[`items.${index}.fullNameRu`]
-                              ? `name-error-${item.id}`
-                              : undefined
-                          }
-                          disabled={readonly || operationBusy}
-                          value={item.fullNameRu}
-                          placeholder="ФИО на русском"
-                          onFocus={() => setSelectedId(item.id)}
-                          onChange={(event) =>
-                            editRecipient({
-                              ...item,
-                              fullNameRu: event.target.value,
-                            })
-                          }
-                        />
-                        {fieldErrors[`items.${index}.fullNameRu`] && (
-                          <small
-                            className="field-error"
-                            id={`name-error-${item.id}`}
-                          >
-                            {fieldErrors[`items.${index}.fullNameRu`]}
-                          </small>
-                        )}
-                        <TextQualityHint value={item.fullNameRu} />
-                        <input
-                          aria-label={`ФИО KZ, строка ${index + 1}`}
-                          onPaste={(event) => {
-                            const text = event.clipboardData.getData("text");
-                            if (/[\t\r\n]/.test(text)) {
-                              event.preventDefault();
-                              setPastedRange({
-                                startRow: index,
-                                startField: "fullNameKz",
-                                text,
-                              });
-                            }
-                          }}
-                          disabled={readonly || operationBusy}
-                          value={item.fullNameKz}
-                          placeholder="Қазақша аты-жөні"
-                          onFocus={() => setSelectedId(item.id)}
-                          onChange={(event) =>
-                            editRecipient({
-                              ...item,
-                              fullNameKz: event.target.value,
-                            })
-                          }
-                        />
-                        <TextQualityHint value={item.fullNameKz} />
-                      </td>
-                      <td>
-                        <button
-                          className="document-count"
-                          onClick={() => setSelectedId(item.id)}
-                          aria-label={`Документы и даты получателя ${index + 1}`}
-                        >
-                          {item.assignments.length}
-                          <Icon name="chevron" size={14} />
-                        </button>
-                      </td>
-                      <td>
-                        {!readonly && (
-                          <button
-                            className="icon-button"
-                            disabled={operationBusy}
-                            aria-label={`Удалить получателя ${index + 1}`}
-                            onClick={() => {
-                              edit({
-                                items: draft.items.filter(
-                                  (row) => row.id !== item.id,
-                                ),
-                              });
-                              setChecked(
-                                checked.filter((value) => value !== item.id),
-                              );
-                              if (selectedId === item.id)
-                                setSelectedId(
-                                  draft.items.find((row) => row.id !== item.id)
-                                    ?.id || "",
-                                );
-                            }}
-                          >
-                            ×
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            {!draft.items.length && (
-              <div className="empty-state">
-                <p>Добавьте получателя или импортируйте таблицу.</p>
-              </div>
+        <div className="entry-view-toolbar">
+          <div
+            className="entry-view-switch"
+            role="group"
+            aria-label="Режим заполнения"
+          >
+            <button
+              aria-pressed={entryView === "table"}
+              onClick={returnToTable}
+            >
+              Таблица
+            </button>
+            <button
+              aria-pressed={entryView === "card"}
+              disabled={!selected}
+              onClick={() => selected && openRecipient(selected.id)}
+            >
+              Карточка получателя
+            </button>
+          </div>
+          <span className="muted">
+            {entryView === "table"
+              ? "Основные данные — прямо в строках. Документы и даты — в карточке."
+              : "Индивидуальные документы, даты и исключения выбранного человека."}
+          </span>
+        </div>
+        <div
+          hidden={entryView !== "table"}
+          onFocusCapture={(event) => {
+            if ((event.target as HTMLElement).matches("[data-grid-field]"))
+              lastGridField.current = event.target as HTMLElement;
+          }}
+        >
+          <RecipientGrid
+            items={draft.items}
+            visibleItems={visibleItems}
+            resolvedItems={resolved.draft.items}
+            selectedId={selectedId}
+            checked={checked}
+            disabled={operationBusy}
+            readonly={readonly}
+            fieldErrors={fieldErrors}
+            onEdit={editRecipient}
+            onSelect={setSelectedId}
+            onOpen={openRecipient}
+            onChecked={setChecked}
+            onRemove={setRemoveId}
+            onPaste={(range) => {
+              if (rowSearch || rowScope) {
+                setError(
+                  "Перед вставкой диапазона сбросьте поиск и фильтры, чтобы видеть все изменяемые строки.",
+                );
+                return;
+              }
+              setPastedRange(range);
+            }}
+            onAdd={addRecipient}
+            canAdd={
+              draft.items.length < LIMITS.rows && !operationBusy && !readonly
+            }
+          />
+          {!!draft.items.length && !visibleItems.length && (
+            <div className="empty-state" role="status">
+              <h3>Получатели не найдены</h3>
+              <p>Измените запрос или сбросьте фильтры.</p>
+              <button
+                onClick={() => {
+                  setRowSearch("");
+                  setRowScope("");
+                }}
+              >
+                Показать всех получателей
+              </button>
+            </div>
+          )}
+        </div>
+        <div
+          className="editor-grid operator-card-view"
+          hidden={entryView !== "card"}
+        >
+          <div
+            className="recipient-card-list"
+            role="region"
+            aria-label="Список получателей"
+          >
+            <button className="text-button" onClick={returnToTable}>
+              Вернуться к таблице
+            </button>
+            {visibleItems.map((item) => (
+              <button
+                key={item.id}
+                className="recipient-card-link"
+                aria-pressed={selectedId === item.id}
+                onClick={() => openRecipient(item.id)}
+              >
+                <span className="muted">{draft.items.indexOf(item) + 1}</span>
+                <span>
+                  <strong>
+                    {item.fullNameRu || item.fullNameKz || "Без ФИО"}
+                  </strong>
+                  <small>{item.positionRu || "Должность не указана"}</small>
+                </span>
+                <span>{item.assignments.length} док.</span>
+              </button>
+            ))}
+            {!visibleItems.length && (
+              <p className="muted">По фильтру нет получателей.</p>
             )}
           </div>
-          <aside className="recipient-details">
+          <aside
+            ref={recipientDetailRef}
+            className="recipient-details"
+            aria-label="Редактор получателя"
+            tabIndex={-1}
+          >
             {selected ? (
               <RecipientDetails
                 recipient={selected}
@@ -942,14 +1118,20 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       </section>
       {validation && (
         <div ref={errorsRef} tabIndex={-1} className="validation-result">
-          <Notice kind={validation.valid ? "success" : "error"}>
+          <Notice
+            kind={reviewStale ? "info" : validation.valid ? "success" : "error"}
+          >
             <strong>
-              {validation.valid
-                ? "Данные прошли проверку"
-                : "Исправьте данные перед оформлением"}
+              {reviewStale
+                ? "Данные изменены после проверки"
+                : validation.valid
+                  ? "Данные прошли проверку"
+                  : "Исправьте данные перед оформлением"}
             </strong>
             <span>
               Редакция {validationRevision}.{" "}
+              {reviewStale &&
+                "Список замечаний сохранён для последовательного исправления. Выполните проверку повторно."}
               {validation.valid
                 ? `Документов: ${validation.documentCount ?? documentCount}. Проверьте макет перед оформлением.`
                 : ""}
@@ -968,20 +1150,37 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                           const path = Array.isArray(issue.path)
                             ? issue.path.join(".")
                             : issue.path || "";
+                          const personField = /^items\.\d+\.([^.]+)$/.exec(
+                            path,
+                          )?.[1];
+                          const inGrid = gridColumns.some(
+                            ([field]) => field === personField,
+                          );
+                          setEntryView(inGrid ? "table" : "card");
                           const rowIndex = /items\.(\d+)/.exec(path)?.[1];
                           if (rowIndex && draft.items[Number(rowIndex)])
                             setSelectedId(draft.items[Number(rowIndex)].id);
+                          setRowSearch("");
+                          setRowScope("");
                           requestAnimationFrame(() => {
                             window.dispatchEvent(
                               new CustomEvent("demo:focus-field", {
                                 detail: path,
                               }),
                             );
-                            const input = document.querySelector<HTMLElement>(
-                              `[data-field-path="${CSS.escape(path)}"]`,
+                            const input = Array.from(
+                              document.querySelectorAll<HTMLElement>(
+                                `[data-field-path="${CSS.escape(path)}"]`,
+                              ),
+                            ).find(
+                              (element) => element.getClientRects().length > 0,
                             );
-                            const details = input?.closest("details");
-                            if (details) details.open = true;
+                            let ancestor = input?.parentElement;
+                            while (ancestor) {
+                              if (ancestor instanceof HTMLDetailsElement)
+                                ancestor.open = true;
+                              ancestor = ancestor.parentElement;
+                            }
                             input?.focus();
                             input?.scrollIntoView({ block: "center" });
                           });
@@ -1045,6 +1244,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         readonly={readonly}
         canManage={context.user.role !== "VIEWER"}
         onChanged={() => void reload()}
+        onPreviewReady={setReadyPreviewRevision}
       />
       {!readonly && (
         <div className="action-bar">
@@ -1052,7 +1252,13 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             <strong>
               {draft.items.length} получателей · {documentCount} документов
             </strong>
-            <small>Номера будут назначены при оформлении</small>
+            <small
+              className={
+                saveState === "error" ? "action-save-error" : undefined
+              }
+            >
+              {saveLabel}. Номера — при оформлении.
+            </small>
           </div>
           <div className="action-buttons">
             <button
@@ -1062,19 +1268,25 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               {busy === "save" ? "Сохраняем…" : "Сохранить"}
             </button>
             <button
+              className={!reviewCurrent ? "primary" : undefined}
               disabled={operationBusy}
               onClick={() => void command("validate")}
             >
               {busy === "validate" ? "Проверяем…" : "Проверить"}
             </button>
             <button
+              className={
+                reviewCurrent && !previewCurrent ? "primary" : undefined
+              }
               disabled={operationBusy}
               onClick={() => void command("preview")}
             >
               {busy === "preview" ? "Готовим…" : "Предпросмотр"}
             </button>
             <button
-              className="primary"
+              className={
+                reviewCurrent && previewCurrent ? "primary" : undefined
+              }
               disabled={operationBusy || !draft.items.length}
               onClick={() => setDialog("finalize")}
             >
@@ -1083,6 +1295,35 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             </button>
           </div>
         </div>
+      )}
+      {removeId && (
+        <Modal
+          title="Убрать получателя из заявки?"
+          onClose={() => setRemoveId(null)}
+        >
+          <p>
+            {draft.items.find((item) => item.id === removeId)?.fullNameRu ||
+              "Получатель без ФИО"}
+            : из этой заявки будут убраны данные и назначения документов.
+          </p>
+          <div className="modal-actions">
+            <button disabled={operationBusy} onClick={() => setRemoveId(null)}>
+              Оставить
+            </button>
+            <button
+              disabled={operationBusy}
+              onClick={async () => {
+                const next = draft.items.filter((item) => item.id !== removeId);
+                if (await applyOperation({ items: next }, removeId)) {
+                  setChecked((ids) => ids.filter((item) => item !== removeId));
+                  setRemoveId(null);
+                }
+              }}
+            >
+              Убрать из заявки
+            </button>
+          </div>
+        </Modal>
       )}
       {pastedRange && (
         <GridPasteDialog
@@ -1147,7 +1388,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             edit({
               items: empty ? [participant] : [...draft.items, participant],
             });
-            setSelectedId(person.id);
+            setRowSearch("");
+            setRowScope("");
+            openRecipient(participant.id);
             setDialog(null);
           }}
         />
@@ -1184,6 +1427,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           items={draft.items}
           resolvedItems={resolved.draft.items}
           selectedIds={checked}
+          operationError={error}
           onClose={() => setDialog(null)}
           onApply={async (items) => {
             if (await applyOperation({ items })) setDialog(null);

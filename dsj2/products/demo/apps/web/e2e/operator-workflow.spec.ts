@@ -92,6 +92,8 @@ async function mockWorkspace(page: Page) {
       path === "/service-rules"
     )
       result = { items: [], total: 0 };
+    else if (/^\/recipients\/saved-\d+$/.test(path))
+      result = { employment: [], requests: [] };
     else if (path === "/recipients") {
       const pageNumber = Number(url.searchParams.get("page"));
       result = {
@@ -124,6 +126,7 @@ async function mockWorkspace(page: Page) {
   });
   await page.goto("/requests/ui-contract/edit");
   await expect(page.getByLabel("ФИО RU, строка 1")).toBeVisible();
+  await page.getByRole("button", { name: "RU + KZ", exact: true }).click();
   return {
     getDraft: () => draft,
     saves,
@@ -172,7 +175,7 @@ test("event set and confirmed outcomes are separate single undo operations", asy
   page,
 }) => {
   const state = await mockWorkspace(page);
-  await page.getByLabel("Выбрать всех получателей").check();
+  await page.getByLabel("Выбрать видимых получателей").check();
   await page.getByRole("button", { name: "Настроить общий контекст" }).click();
   await page
     .getByRole("button", { name: "Добавить событие", exact: true })
@@ -312,7 +315,7 @@ test("operator bulk preview applies only selected PB empty dates and supports re
   page,
 }) => {
   const state = await mockWorkspace(page);
-  await page.getByLabel("Выбрать всех получателей").check();
+  await page.getByLabel("Выбрать видимых получателей").check();
   await page.getByLabel("Поиск в заявке").fill("Первый");
   await expect(page.getByText(/из них скрыто поиском: 1/)).toBeVisible();
   await page.getByRole("button", { name: "Применить к выбранным (2)" }).click();

@@ -20,3 +20,12 @@ tests
 .git
 *.log
 backups
+# Retained historical sources remain in Git, outside the shipping image.
+assets/templates/biot-itr-certificate.v14.docx
+assets/templates/biot-itr-protocol.group-v1.docx
+assets/templates/biot-itr-protocol.v1.docx
+assets/templates/biot-protocol.group-v1.docx
+assets/templates/biot-protocol.v10.docx
+assets/templates/biot-worker-card.v16.docx
+# Read-only comparison helper requires retained sources outside this product.
+scripts/verification/compare-dsj-sources.py

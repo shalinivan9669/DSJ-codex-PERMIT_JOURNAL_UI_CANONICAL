@@ -78,6 +78,11 @@ async function login(page: Page) {
 }
 async function newPerson(page: Page) {
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
+  await page
+    .getByText("Другие направления и отдельные формы: ПБ, ПТМ, ПС", {
+      exact: true,
+    })
+    .click();
   await page.getByRole("button", { name: /Человек Документы/ }).click();
   await expect(page.getByLabel("ФИО RU, строка 1")).toBeVisible();
 }
@@ -664,7 +669,7 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
     ),
   );
 });
-test("101 imported rows are explained before apply; all pages remain accessible by keyboard", async ({
+test("251 imported rows are explained before apply; 250 save and all pages remain accessible by keyboard", async ({
   page,
 }) => {
   const started = Date.now();
@@ -674,9 +679,16 @@ test("101 imported rows are explained before apply; all pages remain accessible 
   });
   await login(page);
   await newPerson(page);
+  const requestId = /requests\/([^/]+)/.exec(page.url())![1];
+  const requestUrl = page.url();
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Убрать из заявки", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
     .click();
@@ -684,38 +696,53 @@ test("101 imported rows are explained before apply; all pages remain accessible 
     .getByLabel("Или вставьте таблицу с заголовками")
     .fill(
       "ФИО RU\n" +
-        Array.from({ length: 101 }, (_, i) => `Строка ${i + 1}`).join("\n"),
+        Array.from({ length: 251 }, (_, i) => `Строка ${i + 1}`).join("\n"),
     );
   await page
     .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
     .click();
   await expect(
-    page.getByText(/После импорта получится 101 получателей/),
+    page.getByText(/После импорта получится 251 получателей/),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Добавить 101 строк в черновик" }),
+    page.getByRole("button", { name: "Добавить 251 строк в черновик" }),
   ).toBeDisabled();
+  await page.screenshot({
+    path: path.join(evidence, "import-251-limit.png"),
+  });
   await page
-    .getByLabel("Импортировать исходную строку 102", { exact: true })
+    .getByLabel("Импортировать исходную строку 252", { exact: true })
     .uncheck();
   await page
-    .getByRole("button", { name: "Добавить 100 строк в черновик", exact: true })
+    .getByRole("button", { name: "Добавить 250 строк в черновик", exact: true })
     .click();
-  await expect(page.getByLabel("ФИО RU, строка 100")).toHaveValue("Строка 100");
+  await expect(page.getByLabel("ФИО RU, строка 250")).toHaveValue("Строка 250");
   await save(page);
   await page.reload();
-  await expect(page.getByLabel("ФИО RU, строка 100")).toHaveValue("Строка 100");
+  await expect(page.getByLabel("ФИО RU, строка 250")).toHaveValue("Строка 250");
+  const savedResponse = await page.request.get(
+    `/api/print-requests/${requestId}`,
+  );
+  expect(savedResponse.ok()).toBe(true);
+  const saved = await savedResponse.json();
+  expect(
+    saved.items.map((item: { fullNameRu: string }) => item.fullNameRu),
+  ).toEqual(Array.from({ length: 250 }, (_, index) => `Строка ${index + 1}`));
+  expect(saved.status).toBe("DRAFT");
+  expect(saved.documents).toHaveLength(0);
   await fs.writeFile(
-    path.join(evidence, "import-100-timing.json"),
+    path.join(evidence, "import-250-timing.json"),
     JSON.stringify(
       {
-        rows: 100,
-        sourceRows: 101,
+        rows: 250,
+        sourceRows: 251,
         excluded: 1,
         durationMs: Date.now() - started,
         defaultsRequests,
         browser: "Chromium",
         viewport: "1366x768",
+        requestId,
+        requestUrl,
       },
       null,
       2,
@@ -728,7 +755,7 @@ test("101 imported rows are explained before apply; all pages remain accessible 
     .getByLabel("Или вставьте таблицу с заголовками")
     .fill(
       "ФИО RU\n" +
-        Array.from({ length: 101 }, (_, i) => `Строка ${i + 1}`).join("\n"),
+        Array.from({ length: 251 }, (_, i) => `Строка ${i + 1}`).join("\n"),
     );
   await page
     .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
@@ -741,7 +768,17 @@ test("101 imported rows are explained before apply; all pages remain accessible 
   await page
     .getByRole("button", { name: "Закрыть повторный импорт", exact: true })
     .click();
-  await expect(page.locator(".recipient-table tbody tr")).toHaveCount(100);
+  await expect(page.locator(".recipient-grid-table tbody tr")).toHaveCount(250);
+  const repeatedResponse = await page.request.get(
+    `/api/print-requests/${requestId}`,
+  );
+  expect(repeatedResponse.ok()).toBe(true);
+  const repeated = await repeatedResponse.json();
+  expect(repeated.items).toEqual(saved.items);
+  expect(repeated.documents).toHaveLength(0);
+  await page.screenshot({
+    path: path.join(evidence, "import-250-saved.png"),
+  });
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
     .click();
@@ -756,6 +793,27 @@ test("101 imported rows are explained before apply; all pages remain accessible 
     await expect(page.locator("h1")).toBeVisible();
   }
   expect(await page.evaluate(() => Object.keys(localStorage).length)).toBe(0);
+  await fs.writeFile(
+    path.join(evidence, "import-250-result.json"),
+    JSON.stringify(
+      {
+        status: "PASS",
+        requestId,
+        requestUrl,
+        sourceRows: 251,
+        capacityPreventedBeforeApply: true,
+        excluded: 1,
+        savedRows: saved.items.length,
+        reimportRows: repeated.items.length,
+        reimportUnchanged: true,
+        draftOnly: true,
+        navigationByKeyboard: ["Заказчики", "История", "Настройки", "Заявки"],
+        durationMs: Date.now() - started,
+      },
+      null,
+      2,
+    ),
+  );
 });
 
 test("keyboard creates, validates and finalizes a person with focus visible in dialogs", async ({

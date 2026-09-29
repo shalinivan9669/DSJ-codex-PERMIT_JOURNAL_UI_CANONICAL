@@ -12,8 +12,11 @@ export const gridColumns = [
 ] as const;
 export type GridField = (typeof gridColumns)[number][0];
 export function parseClipboardRange(text: string): string[][] {
-  if (text.length > 200_000)
-    throw new Error("Диапазон слишком большой. Выберите не более 100 строк.");
+  // Eight columns of 500 characters per recipient plus TSV quoting overhead.
+  if (text.length > LIMITS.rows * gridColumns.length * 1_002)
+    throw new Error(
+      `Диапазон слишком большой. Выберите не более ${LIMITS.rows} строк.`,
+    );
   const rows: string[][] = [];
   let row: string[] = [];
   let cell = "";
@@ -63,12 +66,15 @@ export function previewGridPaste(
   startField: GridField,
   text: string,
   mode: "EMPTY" | "REPLACE",
+  columns: readonly GridField[] = gridColumns.map(([field]) => field),
 ) {
   const data = parseClipboardRange(text);
-  const startColumn = gridColumns.findIndex(([field]) => field === startField);
+  const startColumn = columns.indexOf(startField);
+  if (startColumn < 0 || new Set(columns).size !== columns.length)
+    throw new Error("Выберите доступную колонку для начала вставки.");
   if (startRow + data.length > LIMITS.rows)
     throw new Error(`Диапазон выходит за предел ${LIMITS.rows} получателей.`);
-  if (startColumn + data[0].length > gridColumns.length)
+  if (startColumn + data[0].length > columns.length)
     throw new Error(
       "Диапазон выходит за доступные колонки. Начните с ФИО RU или скопируйте меньше колонок.",
     );
@@ -83,7 +89,7 @@ export function previewGridPaste(
     const index = startRow + rowIndex;
     if (!next[index]) next[index] = newRecipient();
     values.forEach((value, columnIndex) => {
-      const field = gridColumns[startColumn + columnIndex][0];
+      const field = columns[startColumn + columnIndex];
       const before = next[index][field] || "";
       if ((mode === "EMPTY" && before) || before === value) return;
       if (value.length > 500)

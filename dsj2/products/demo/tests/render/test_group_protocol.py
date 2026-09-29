@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / 'scripts/render'))
 from renderer import render_docx, convert_pdf
 from group_protocol import roster_table, W
 from lxml import etree as E
-from test_render import fixture
+from test_render import EVIDENCE_ROOT, fixture
 
 MANIFEST = json.loads((ROOT / 'assets/templates/manifest.json').read_text(encoding='utf8'))
 FORMS = ['pb-protocol', 'ptm-protocol', 'biot-protocol', 'biot-itr-protocol', 'ps-protocol']
@@ -30,10 +30,10 @@ def group_fixture(template_id, count):
     return snapshot
 
 class GroupProtocolTests(unittest.TestCase):
-    def test_real_1_2_25_100_rows_in_one_table_all_five_protocols(self):
+    def test_real_1_2_25_100_250_rows_in_one_table_all_five_protocols(self):
         with tempfile.TemporaryDirectory(prefix='demo-group-regression-') as temp:
             for template_id in FORMS:
-                for count in [1, 2, 25, 100]:
+                for count in [1, 2, 25, 100, 250]:
                     with self.subTest(template=template_id, count=count):
                         path = Path(temp) / (template_id + '.docx')
                         render_docx(group_fixture(template_id, count), path)
@@ -55,13 +55,22 @@ class GroupProtocolTests(unittest.TestCase):
                             self.assertEqual(sum(widths), 9464)
                             self.assertFalse(list(rows[headings].findall(W + 'tc')[0].iter(W + 'numPr')))
 
-    def test_ptm_100_actual_pdf_keeps_all_ordinals_and_repeats_headings(self):
+    def test_251_group_members_are_rejected_before_output(self):
+        with tempfile.TemporaryDirectory(prefix='demo-group-capacity-') as temp:
+            for template_id in FORMS:
+                with self.subTest(template=template_id):
+                    path = Path(temp) / (template_id + '.docx')
+                    with self.assertRaisesRegex(ValueError, 'ROW_LIMIT'):
+                        render_docx(group_fixture(template_id, 251), path)
+                    self.assertFalse(path.exists())
+
+    def test_ptm_250_actual_pdf_keeps_all_ordinals_and_repeats_headings(self):
         import pymupdf
-        output = ROOT / 'docs/evidence/operator-value/group-layout'
+        output = EVIDENCE_ROOT / 'operator-value/group-layout'
         output.mkdir(parents=True, exist_ok=True)
-        docx = output / 'ptm-protocol-100.docx'
+        docx = output / 'ptm-protocol-250.docx'
         pdf = docx.with_suffix('.pdf')
-        render_docx(group_fixture('ptm-protocol', 100), docx)
+        render_docx(group_fixture('ptm-protocol', 250), docx)
         convert_pdf(docx, pdf)
         document = pymupdf.open(pdf)
         ordinals = []
@@ -72,18 +81,18 @@ class GroupProtocolTests(unittest.TestCase):
             participants = re.findall(r'Слушатель\s+(\d{3})', text)
             if participants:
                 self.assertIn('Фамилия', text, 'roster continuation must show column headings')
-                ordinals.extend(int(word[4]) for word in words if 70 < word[0] < 115 and word[4].isdigit() and 1 <= int(word[4]) <= 100)
+                ordinals.extend(int(word[4]) for word in words if 70 < word[0] < 115 and word[4].isdigit() and 1 <= int(word[4]) <= 250)
             self.assertTrue(all(word[0] >= 0 and word[1] >= 0 and word[2] <= page.rect.width + 1 and word[3] <= page.rect.height + 1 for word in words))
             per_page.append({'page': index + 1, 'participants': participants, 'columnHeadings': 'Фамилия' in text})
-            page.get_pixmap(matrix=pymupdf.Matrix(1, 1)).save(output / ('ptm-protocol-100-page-%d.png' % (index + 1)))
-        self.assertEqual(ordinals, list(range(1, 101)), 'actual PDF must show 10..100 completely, not only their first digit')
+            page.get_pixmap(matrix=pymupdf.Matrix(1, 1)).save(output / ('ptm-protocol-250-page-%d.png' % (index + 1)))
+        self.assertEqual(ordinals, list(range(1, 251)), 'actual PDF must show all three digits through 250')
         text = ' '.join(' '.join(page.get_text().split()) for page in document)
-        for n in range(1, 101): self.assertIn('Синтетический Слушатель %03d' % n, text)
+        for n in range(1, 251): self.assertIn('Синтетический Слушатель %03d' % n, text)
         self.assertIn('Председатель комиссии', text)
         signature_pages = [page for page in document if 'Председатель комиссии:' in page.get_text()]
         self.assertEqual(len(signature_pages), 1)
         self.assertIn('Үлгі', signature_pages[0].get_text(), 'the last commission member and the chair must remain in one signature block')
-        (output / 'ptm-protocol-100-verification.json').write_text(json.dumps({'pages': per_page, 'ordinals': ordinals, 'all100Names': True}, indent=2), encoding='utf8')
+        (output / 'ptm-protocol-250-verification.json').write_text(json.dumps({'pages': per_page, 'ordinals': ordinals, 'all250Names': True}, indent=2), encoding='utf8')
 
 if __name__ == '__main__':
     unittest.main()

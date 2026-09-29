@@ -6,6 +6,7 @@ bytes already checked by resolve_template; all participant cells use render_one.
 """
 from copy import deepcopy
 from lxml import etree as E
+from request_limits import MAX_REQUEST_ROWS
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 
@@ -23,11 +24,23 @@ def render_group(snapshot, path, render_one):
     if event.get('contractVersion') != 1 or not snapshot['templateId'].endswith('-protocol'):
         raise ValueError('GROUP_VERSION_UNKNOWN')
     items = snapshot['items']
-    if not 1 <= len(items) <= 100:
+    if not 1 <= len(items) <= MAX_REQUEST_ROWS:
         raise ValueError('GROUP_ROW_LIMIT')
     if len({(i['id'], i['assignment']['eventId']) for i in items}) != len(items):
         raise ValueError('GROUP_DUPLICATE_MEMBER')
-    files = render_one(snapshot, items[0], path)
+    # Only new snapshots opt into factual common workplace names. Keep the old
+    # first-person header for old immutable snapshots and their reconstruction.
+    header_item = items[0]
+    header = snapshot.get('groupHeaderWorkplace')
+    if header is not None:
+        if (snapshot['templateId'] not in ['biot-protocol', 'biot-itr-protocol', 'pb-protocol']
+                or header.get('version') != 1
+                or not isinstance(header.get('workplaceRu'), str)
+                or not isinstance(header.get('workplaceKz'), str)):
+            raise ValueError('GROUP_HEADER_WORKPLACE_CONTRACT')
+        header_item = {**items[0], 'workplaceRu': header['workplaceRu'],
+                       'workplaceKz': header['workplaceKz']}
+    files = render_one(snapshot, header_item, path)
     root = E.fromstring(files['word/document.xml'])
     table = roster_table(root)
     rows = table.findall(W+'tr')
