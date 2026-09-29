@@ -197,3 +197,84 @@ export async function saveKeyboardMetrics(directory: string, status: string) {
     ),
   );
 }
+
+/** Preserve legacy test setup explicitly now that a new request has no default document. */
+export async function createRequestWithWorkerDocument(
+  page: Page,
+  kind: "PERSON" | "COMPANY" = "PERSON",
+) {
+  await page
+    .getByRole("radio", {
+      name: kind === "COMPANY" ? /^Организация/ : /^Физическое лицо/,
+    })
+    .check();
+  await page
+    .getByRole("button", { name: "Перейти к людям и документам", exact: true })
+    .click();
+  await page
+    .getByRole("button", {
+      name: "Выбрать документы получателя 1",
+      exact: true,
+    })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await dialog
+    .getByRole("checkbox", { name: /^БиОТ — удостоверение рабочего/ })
+    .check();
+  await dialog
+    .getByRole("button", { name: "Добавить выбранные документы", exact: true })
+    .click();
+  await expect(dialog).toHaveCount(0);
+}
+
+/** The same explicit fixture setup through the keyboard-only access path. */
+export async function keyboardCreateRequestWithWorkerDocument(
+  page: Page,
+  kind: "PERSON" | "COMPANY" = "PERSON",
+) {
+  await keyboardCheck(
+    page,
+    page.getByRole("radio", {
+      name: kind === "COMPANY" ? /^Организация/ : /^Физическое лицо/,
+    }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Перейти к людям и документам",
+      exact: true,
+    }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Выбрать документы получателя 1",
+      exact: true,
+    }),
+  );
+  const dialog = page.getByRole("dialog");
+  await keyboardCheck(
+    page,
+    dialog.getByRole("checkbox", { name: /^БиОТ — удостоверение рабочего/ }),
+  );
+  await keyboardActivate(
+    page,
+    dialog.getByRole("button", {
+      name: "Добавить выбранные документы",
+      exact: true,
+    }),
+  );
+  await expect(dialog).toHaveCount(0);
+}
+
+export async function openRecipientExtraTools(page: Page) {
+  const menu = page.locator(".recipient-extra-tools");
+  if ((await menu.getAttribute("open")) === null)
+    await menu.locator("summary").click();
+}
+
+export async function keyboardOpenRecipientExtraTools(page: Page) {
+  const menu = page.locator(".recipient-extra-tools");
+  if ((await menu.getAttribute("open")) === null)
+    await keyboardActivate(page, menu.locator("summary"));
+}

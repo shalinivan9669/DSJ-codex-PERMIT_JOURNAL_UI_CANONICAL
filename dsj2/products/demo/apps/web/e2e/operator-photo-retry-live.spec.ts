@@ -1,3 +1,7 @@
+import {
+  createRequestWithWorkerDocument,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -39,7 +43,7 @@ test("real photo throttle can be cancelled and resumed without reuploading accep
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
@@ -69,6 +73,7 @@ test("real photo throttle can be cancelled and resumed without reuploading accep
   await page.getByRole("button", { name: "Сохранить", exact: true }).click();
   await expect(page.locator(".save-indicator")).toContainText("Сохранено");
   const requestId = /requests\/([^/]+)/.exec(page.url())![1];
+  await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Сопоставить фото", exact: true })
     .click();

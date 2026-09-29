@@ -1,3 +1,7 @@
+import {
+  createRequestWithWorkerDocument,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -131,7 +135,7 @@ test("G1 complete: 100 original people and photos, one common PB event, no indiv
   await expect(page.getByText(/Создана новая версия реквизитов/)).toBeVisible();
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Организация Заказчик/ }).click();
+  await createRequestWithWorkerDocument(page, "COMPANY");
   await page
     .getByLabel("Название заявки", { exact: true })
     .fill(`G1 · полный UI путь 100 человек ${Date.now()}`);
@@ -201,6 +205,7 @@ test("G1 complete: 100 original people and photos, one common PB event, no indiv
       true,
     );
   });
+  await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Сопоставить фото", exact: true })
     .click();
@@ -228,7 +233,7 @@ test("G1 complete: 100 original people and photos, one common PB event, no indiv
   await expect(page.getByRole("dialog")).toHaveCount(0, { timeout: 240000 });
   await page.getByLabel("Выбрать всех получателей", { exact: true }).check();
   await page
-    .getByRole("button", { name: "Настроить общий контекст", exact: true })
+    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
     .click();
   await page
     .getByLabel(

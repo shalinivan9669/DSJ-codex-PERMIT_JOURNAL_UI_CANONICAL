@@ -1,3 +1,4 @@
+import { openRecipientExtraTools } from "./operator-keyboard-helpers";
 import { expect, test } from "@playwright/test";
 import fs from "node:fs/promises";
 import { newAssignment, newRecipient, type Draft } from "../lib/types";
@@ -68,9 +69,10 @@ test("real API preserves selected-only workplace changes, individual exceptions,
     "скрыто поиском: 2",
   );
   const open = page.getByRole("button", {
-    name: "Применить к выбранным (3)",
+    name: "Изменить данные выбранных (3)",
     exact: true,
   });
+  await openRecipientExtraTools(page);
   await open.click();
   const modal = page.getByRole("dialog");
   await modal.getByText("Должность и место работы", { exact: true }).click();
@@ -100,6 +102,7 @@ test("real API preserves selected-only workplace changes, individual exceptions,
     .click();
   await expect(modal).toHaveCount(0);
   expect((await read()).items).toEqual(expected);
+  await openRecipientExtraTools(page);
   await open.click();
   await modal.getByText("Должность и место работы", { exact: true }).click();
   await modal

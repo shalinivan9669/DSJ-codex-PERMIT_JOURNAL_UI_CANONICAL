@@ -9,6 +9,7 @@ import { resolveDraft } from "@demo/contracts";
 import { parseClipboardRange, previewGridPaste } from "../lib/grid-paste";
 import { textQualityHints } from "../lib/text-quality";
 import { eligibleForEvent, joinEventAssignment } from "../lib/event-assignment";
+import { newRequestBundle, recipientForRequest } from "../lib/request-bundles";
 
 test("joining an explicitly selected existing form preserves imported/manual/cleared exceptions and rejects existing events or outcomes", () => {
   const imported = {
@@ -267,6 +268,8 @@ test("rectangular clipboard handles quoted tabs, multiline values, Unicode and t
   assert.equal(p.items[0].fullNameKz, "Қазақша");
   assert.equal(p.added, 1);
   assert.equal(p.items[1].fullNameRu, "Вторая строка");
+  assert.deepEqual(p.items[1].assignments, []);
+  assert.equal(p.items[0].assignments, first.assignments);
   assert.equal(first.fullNameKz, "");
   assert.throws(() => parseClipboardRange("a\tb\nc"), /количество ячеек/);
   assert.throws(
@@ -303,6 +306,10 @@ test("paste preserves all 250 bilingual rows and textual IDs; row 251 is rejecte
   assert.equal(result.items[249].fullNameKz, "Қатысушы 250");
   assert.equal(result.items[249].personnelNumber, "000250");
   assert.equal(new Set(result.items.map((item) => item.id)).size, 250);
+  assert.ok(
+    result.items.slice(1).every((item) => item.assignments.length === 0),
+  );
+  assert.equal(result.items[0].assignments, first.assignments);
   assert.throws(
     () =>
       previewGridPaste(
@@ -354,4 +361,41 @@ test("paste follows visible RU-only columns without overwriting hidden KZ fields
   assert.equal(paired.items[0].fullNameKz, "Қатысушы");
   assert.equal(paired.items[0].positionRu, "Инженер");
   assert.equal(paired.items[0].positionKz, "Маман");
+});
+
+test("pasted rows choose no document implicitly, while an explicit bundle can join only the new rows", () => {
+  const bundle = newRequestBundle("ITR");
+  const original = {
+    ...newRecipient(),
+    assignments: [
+      {
+        ...newAssignment("pb-card"),
+        documentDate: "2026-08-14",
+        hours: "32",
+        fieldOrigins: {
+          documentDate: "MANUAL" as const,
+          hours: "IMPORTED" as const,
+        },
+      },
+    ],
+  };
+  const result = previewGridPaste(
+    [original],
+    0,
+    "fullNameRu",
+    "Существующий\nНовый",
+    "REPLACE",
+    ["fullNameRu"],
+  );
+  assert.equal(result.items[0].assignments, original.assignments);
+  assert.equal(result.items[0].assignments[0].documentDate, "2026-08-14");
+  assert.equal(result.items[0].assignments[0].hours, "32");
+  assert.deepEqual(result.items[1].assignments, []);
+  const joined = recipientForRequest(bundle, result.items[1]);
+  assert.equal(joined.fullNameRu, "Новый");
+  assert.equal(joined.assignments.length, 1);
+  assert.equal(joined.assignments[0].templateId, "biot-itr-certificate");
+  assert.equal(joined.assignments[0].eventId, bundle.events[0].id);
+  assert.equal(joined.assignments[0].outcome?.status, "UNKNOWN");
+  assert.deepEqual(result.items[1].assignments, []);
 });

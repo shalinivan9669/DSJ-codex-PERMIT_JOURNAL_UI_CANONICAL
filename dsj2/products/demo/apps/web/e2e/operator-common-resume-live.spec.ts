@@ -1,3 +1,7 @@
+import {
+  createRequestWithWorkerDocument,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -136,7 +140,8 @@ test("resume issued 100 common assignments and employer history after transient 
   );
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
+  await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
     .click();

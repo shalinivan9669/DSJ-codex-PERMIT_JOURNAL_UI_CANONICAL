@@ -1,3 +1,7 @@
+import {
+  createRequestWithWorkerDocument,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -84,7 +88,7 @@ test("100 common assignments and two overrides render consistently, then employe
   const commonSubject = "Общая подтверждённая программа В";
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByLabel("Название заявки", { exact: true })
     .fill(`100 общих значений и история ${stamp}`);
@@ -168,9 +172,11 @@ test("100 common assignments and two overrides render consistently, then employe
     ),
   ).toBe(true);
   await page
-    .getByRole("button", { name: "Настроить общий контекст", exact: true })
+    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
     .click();
-  await page.getByText("Общие значения заявки", { exact: true }).click();
+  await expect(
+    page.getByText("Даты и программа для всей заявки", { exact: true }),
+  ).toBeVisible();
   await page
     .getByLabel("Программа / тема для заявки", { exact: true })
     .fill("Исходная общая программа");
@@ -370,7 +376,8 @@ test("100 common assignments and two overrides render consistently, then employe
   );
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
+  await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
     .click();

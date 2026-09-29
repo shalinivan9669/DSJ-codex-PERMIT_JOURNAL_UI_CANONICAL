@@ -1,3 +1,4 @@
+import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -37,7 +38,7 @@ test("V03 exact three source people and two services preserve the individual pos
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByLabel("ФИО RU, строка 1", { exact: true })
     .fill("Один Синтетический Человек");
@@ -61,9 +62,11 @@ test("V03 exact three source people and two services preserve the individual pos
     .last()
     .selectOption("pb-card");
   await page
-    .getByRole("button", { name: "Настроить общий контекст", exact: true })
+    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
     .click();
-  await page.getByText("Общие значения заявки", { exact: true }).click();
+  await expect(
+    page.getByText("Даты и программа для всей заявки", { exact: true }),
+  ).toBeVisible();
   await page
     .getByLabel("Программа / тема для заявки", { exact: true })
     .fill("Общий источник для двух форм");
@@ -110,7 +113,7 @@ test("V03 exact three source people and two services preserve the individual pos
   expect(scenario.sharedProgramCount).toBe(2);
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByLabel("Название заявки", { exact: true })
     .fill(`V03 · три человека и две услуги ${Date.now()}`);
@@ -152,7 +155,7 @@ test("V03 exact three source people and two services preserve the individual pos
     .click();
   await page.getByLabel("Выбрать всех получателей", { exact: true }).check();
   await page
-    .getByRole("button", { name: "Настроить общий контекст", exact: true })
+    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
     .click();
   await page
     .getByLabel(

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./feedback-workflow.css";
 export const metadata: Metadata = {
   title: "DEMO — подготовка и печать документов",
   description:

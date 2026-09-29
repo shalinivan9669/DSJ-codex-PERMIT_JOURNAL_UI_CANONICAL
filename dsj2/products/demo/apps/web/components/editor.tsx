@@ -9,6 +9,9 @@ import { GridPasteDialog } from "./grid-paste-dialog";
 import { gridColumns, type GridField } from "@/lib/grid-paste";
 import { BulkPhotoDialog } from "./bulk-photo-dialog";
 import { RecipientGrid } from "./recipient-grid";
+import { DocumentSelectionDialog } from "./document-selection-dialog";
+import { SharedEmployerDialog } from "./shared-employer-dialog";
+import { groupValidationIssues } from "@/lib/validation-groups";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -20,6 +23,7 @@ import { useUnsavedNavigation } from "@/lib/use-unsaved-navigation";
 import { recipientForRequest, requestBundles } from "@/lib/request-bundles";
 import {
   draftPayload,
+  newRecipient,
   type AppContext,
   type Customer,
   type Draft,
@@ -65,6 +69,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedId, setSelectedId] = useState("");
   const [checked, setChecked] = useState<string[]>([]);
+  const [documentTargets, setDocumentTargets] = useState<string[] | null>(null);
+  const [employerTargets, setEmployerTargets] = useState<string[] | null>(null);
   const [rowSearch, setRowSearch] = useState("");
   const [editingSearchId, setEditingSearchId] = useState("");
   const [entryView, setEntryView] = useState<"table" | "card">("table");
@@ -532,7 +538,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   }
   function addRecipient() {
     if (!current.current || current.current.items.length >= LIMITS.rows) return;
-    const row = recipientForRequest(current.current);
+    const row = recipientForRequest(current.current, {
+      ...newRecipient(),
+      assignments: [],
+    });
     const index = current.current.items.length;
     edit({ items: [...current.current.items, row] });
     setRowSearch("");
@@ -618,6 +627,16 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     0,
   );
   const documentCount = plan.documentCount;
+  const reviewGroups = groupValidationIssues(
+    validation?.errors || [],
+    draft.items,
+  );
+  const missingNames = draft.items.filter(
+    (item) => !item.fullNameRu.trim(),
+  ).length;
+  const missingDocuments = draft.items.filter(
+    (item) => !item.assignments.length,
+  ).length;
   const dirty =
     saveState === "dirty" || saveState === "saving" || saveState === "error";
   const saveLabel = {
@@ -728,7 +747,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           />
         </label>
         {draft.kind === "COMPANY" && (
-          <div>
+          <div className="request-customer">
             <label>
               Заказчик
               <select
@@ -765,6 +784,32 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             )}
           </div>
         )}
+        <label>
+          Общая дата документов
+          <input
+            type="date"
+            data-field-path="commonFields.documentDate"
+            aria-describedby="common-document-date-hint"
+            disabled={readonly || operationBusy}
+            value={
+              draft.commonFields?.documentDate ??
+              draft.presetFields?.documentDate ??
+              ""
+            }
+            onChange={(event) =>
+              edit({
+                schemaVersion: 2,
+                commonFields: {
+                  ...draft.commonFields,
+                  documentDate: event.target.value,
+                },
+              })
+            }
+          />
+          <small id="common-document-date-hint">
+            Для документов без индивидуальной даты
+          </small>
+        </label>
         <label className="checkbox">
           <input
             type="checkbox"
@@ -775,15 +820,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           Тестовый комплект
         </label>
       </section>
-      <EventContext
-        draft={draft}
-        selectedIds={checked}
-        disabled={readonly || operationBusy}
-        onChange={edit}
-        onApply={applyOperation}
-        onContextCommit={rememberContextOperation}
-        onBusyChange={setContextBusy}
-      />
       {!!draft.events?.length && (
         <details
           className="panel bundle-overview"
@@ -885,16 +921,32 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           {!readonly && (
             <div className="toolbar-actions">
               <button
+                className="primary"
                 disabled={operationBusy || !draft.items.length}
-                onClick={() => setDialog("photos")}
+                onClick={() =>
+                  setDocumentTargets(
+                    checked.length
+                      ? [...checked]
+                      : draft.items.map((item) => item.id),
+                  )
+                }
               >
-                Сопоставить фото
+                <Icon name="plus" />
+                {checked.length
+                  ? `Документы выбранным (${checked.length})`
+                  : "Документы для всех"}
               </button>
               <button
-                disabled={operationBusy || draft.items.length >= LIMITS.rows}
-                onClick={() => setDialog("recipientPicker")}
+                disabled={operationBusy || !draft.items.length}
+                onClick={() =>
+                  setEmployerTargets(
+                    checked.length
+                      ? [...checked]
+                      : draft.items.map((item) => item.id),
+                  )
+                }
               >
-                Найти человека
+                Общая организация
               </button>
               <button
                 disabled={operationBusy}
@@ -904,21 +956,71 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 Импорт / вставка
               </button>
               <button
-                disabled={!checked.length || operationBusy}
-                onClick={() => setDialog("bulk")}
-              >
-                Применить к выбранным ({checked.length})
-              </button>
-              <button
                 disabled={draft.items.length >= LIMITS.rows || operationBusy}
                 onClick={addRecipient}
               >
                 <Icon name="plus" />
                 Получатель
               </button>
+              <details className="recipient-extra-tools">
+                <summary>Ещё</summary>
+                <div>
+                  <button
+                    disabled={
+                      operationBusy || draft.items.length >= LIMITS.rows
+                    }
+                    onClick={() => setDialog("recipientPicker")}
+                  >
+                    Найти человека
+                  </button>
+                  <button
+                    disabled={operationBusy || !draft.items.length}
+                    onClick={() => setDialog("photos")}
+                  >
+                    Сопоставить фото
+                  </button>
+                  <button
+                    disabled={!checked.length || operationBusy}
+                    onClick={() => setDialog("bulk")}
+                  >
+                    Изменить данные выбранных ({checked.length})
+                  </button>
+                </div>
+              </details>
             </div>
           )}
         </div>
+        {!readonly && (missingNames > 0 || missingDocuments > 0) && (
+          <div className="entry-progress" role="status">
+            <span>Продолжите заполнение:</span>
+            {missingNames > 0 && (
+              <button
+                className="text-button"
+                onClick={() => {
+                  setRowSearch("");
+                  setRowScope("unnamed");
+                  setEntryView("table");
+                }}
+              >
+                без ФИО — {missingNames}
+              </button>
+            )}
+            {missingDocuments > 0 && (
+              <button
+                className="text-button"
+                onClick={() =>
+                  setDocumentTargets(
+                    draft.items
+                      .filter((item) => !item.assignments.length)
+                      .map((item) => item.id),
+                  )
+                }
+              >
+                выбрать документы — {missingDocuments}
+              </button>
+            )}
+          </div>
+        )}
         <div className="toolbar selection-toolbar">
           <label className="search-field recipient-search">
             Поиск в заявке
@@ -1002,7 +1104,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </div>
           <span className="muted">
             {entryView === "table"
-              ? "Основные данные — прямо в строках. Документы и даты — в карточке."
+              ? "Введите людей и выберите документы рядом с ними. В карточке — даты и индивидуальные изменения."
               : "Индивидуальные документы, даты и исключения выбранного человека."}
           </span>
         </div>
@@ -1025,6 +1127,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             onEdit={editRecipient}
             onSelect={setSelectedId}
             onOpen={openRecipient}
+            onDocuments={(recipientId) => setDocumentTargets([recipientId])}
             onChecked={setChecked}
             onRemove={setRemoveId}
             onPaste={(range) => {
@@ -1116,6 +1219,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </aside>
         </div>
       </section>
+      <EventContext
+        draft={draft}
+        selectedIds={checked}
+        disabled={readonly || operationBusy}
+        onChange={edit}
+        onApply={applyOperation}
+        onContextCommit={rememberContextOperation}
+        onBusyChange={setContextBusy}
+      />
       {validation && (
         <div ref={errorsRef} tabIndex={-1} className="validation-result">
           <Notice
@@ -1137,61 +1249,84 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 : ""}
             </span>
             {validation.errors.length > 0 && (
-              <ul>
-                {validation.errors.map((issue, index) => (
-                  <li key={index}>
-                    <button
-                      className="text-button"
-                      onClick={() => {
-                        if (typeof issue !== "string") {
-                          const rowId =
-                            (issue as { rowId?: string }).rowId || issue.itemId;
-                          if (rowId) setSelectedId(rowId);
-                          const path = Array.isArray(issue.path)
-                            ? issue.path.join(".")
-                            : issue.path || "";
-                          const personField = /^items\.\d+\.([^.]+)$/.exec(
-                            path,
-                          )?.[1];
-                          const inGrid = gridColumns.some(
-                            ([field]) => field === personField,
-                          );
-                          setEntryView(inGrid ? "table" : "card");
-                          const rowIndex = /items\.(\d+)/.exec(path)?.[1];
-                          if (rowIndex && draft.items[Number(rowIndex)])
-                            setSelectedId(draft.items[Number(rowIndex)].id);
-                          setRowSearch("");
-                          setRowScope("");
-                          requestAnimationFrame(() => {
-                            window.dispatchEvent(
-                              new CustomEvent("demo:focus-field", {
-                                detail: path,
-                              }),
-                            );
-                            const input = Array.from(
-                              document.querySelectorAll<HTMLElement>(
-                                `[data-field-path="${CSS.escape(path)}"]`,
-                              ),
-                            ).find(
-                              (element) => element.getClientRects().length > 0,
-                            );
-                            let ancestor = input?.parentElement;
-                            while (ancestor) {
-                              if (ancestor instanceof HTMLDetailsElement)
-                                ancestor.open = true;
-                              ancestor = ancestor.parentElement;
-                            }
-                            input?.focus();
-                            input?.scrollIntoView({ block: "center" });
-                          });
-                        }
-                      }}
-                    >
-                      {typeof issue === "string" ? issue : issue.message}
-                    </button>
-                  </li>
+              <div className="review-issue-groups">
+                {reviewGroups.map((group) => (
+                  <section key={group.key} className="review-issue-group">
+                    <h3>{group.title}</h3>
+                    <ul>
+                      {group.issues.map(
+                        ({ issue, document: documentLabel }, index) => (
+                          <li key={index}>
+                            <button
+                              className="text-button"
+                              onClick={() => {
+                                if (typeof issue !== "string") {
+                                  const rowId =
+                                    (issue as { rowId?: string }).rowId ||
+                                    issue.itemId;
+                                  if (rowId) setSelectedId(rowId);
+                                  const path = Array.isArray(issue.path)
+                                    ? issue.path.join(".")
+                                    : issue.path || "";
+                                  const personField =
+                                    /^items\.\d+\.([^.]+)$/.exec(path)?.[1];
+                                  const inGrid = gridColumns.some(
+                                    ([field]) => field === personField,
+                                  );
+                                  setEntryView(inGrid ? "table" : "card");
+                                  const rowIndex = /items\.(\d+)/.exec(
+                                    path,
+                                  )?.[1];
+                                  if (rowIndex && draft.items[Number(rowIndex)])
+                                    setSelectedId(
+                                      draft.items[Number(rowIndex)].id,
+                                    );
+                                  setRowSearch("");
+                                  setRowScope("");
+                                  requestAnimationFrame(() => {
+                                    window.dispatchEvent(
+                                      new CustomEvent("demo:focus-field", {
+                                        detail: path,
+                                      }),
+                                    );
+                                    const input = Array.from(
+                                      document.querySelectorAll<HTMLElement>(
+                                        `[data-field-path="${CSS.escape(path)}"]`,
+                                      ),
+                                    ).find(
+                                      (element) =>
+                                        element.getClientRects().length > 0,
+                                    );
+                                    let ancestor = input?.parentElement;
+                                    while (ancestor) {
+                                      if (
+                                        ancestor instanceof HTMLDetailsElement
+                                      )
+                                        ancestor.open = true;
+                                      ancestor = ancestor.parentElement;
+                                    }
+                                    input?.focus();
+                                    input?.scrollIntoView({ block: "center" });
+                                  });
+                                }
+                              }}
+                            >
+                              {documentLabel && (
+                                <span className="review-document">
+                                  {documentLabel}:{" "}
+                                </span>
+                              )}
+                              {typeof issue === "string"
+                                ? issue
+                                : issue.message}
+                            </button>
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                  </section>
                 ))}
-              </ul>
+              </div>
             )}
             {validation.warnings?.map((warning, i) => (
               <p key={i}>
@@ -1434,6 +1569,42 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           }}
         />
       )}{" "}
+      {documentTargets && !readonly && (
+        <DocumentSelectionDialog
+          items={draft.items}
+          selectedIds={documentTargets}
+          disabled={operationBusy}
+          onClose={() => setDocumentTargets(null)}
+          onApply={async (items) => {
+            if (!(await applyOperation({ items })))
+              throw new Error(
+                "Не удалось сохранить документы. Повторите попытку.",
+              );
+            setDocumentTargets(null);
+          }}
+        />
+      )}
+      {employerTargets && !readonly && (
+        <SharedEmployerDialog
+          items={draft.items}
+          selectedIds={employerTargets}
+          customer={customers.find(
+            (customer) => customer.id === draft.customerId,
+          )}
+          onEmployerChosen={(customer) =>
+            setCustomers((old) => [
+              ...old.filter((entry) => entry.id !== customer.id),
+              customer,
+            ])
+          }
+          onClose={() => setEmployerTargets(null)}
+          onApply={async (items) => {
+            if (!(await applyOperation({ items })))
+              throw new Error("Не удалось сохранить организацию.");
+            setEmployerTargets(null);
+          }}
+        />
+      )}
       {dialog === "finalize" && (
         <Modal
           title="Оформить комплект документов?"

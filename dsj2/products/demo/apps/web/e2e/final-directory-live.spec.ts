@@ -1,3 +1,7 @@
+import {
+  createRequestWithWorkerDocument,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -48,7 +52,7 @@ test("server directory finds the 101st company and person outside the first page
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
   await page.goto("/requests/new");
-  await page.getByRole("button", { name: /Организация Заказчик/ }).click();
+  await createRequestWithWorkerDocument(page, "COMPANY");
   await page
     .getByRole("button", { name: "Найти в справочнике", exact: true })
     .click();
@@ -76,6 +80,7 @@ test("server directory finds the 101st company and person outside the first page
   await expect(
     page.getByRole("combobox", { name: "Заказчик", exact: true }),
   ).toHaveValue(auth.customer.id);
+  await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
     .click();

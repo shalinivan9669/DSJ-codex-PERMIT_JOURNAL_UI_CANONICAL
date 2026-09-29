@@ -26,6 +26,7 @@ export type RecipientGridProps = {
   onEdit: (recipient: Recipient) => void;
   onSelect: (id: string) => void;
   onOpen: (id: string) => void;
+  onDocuments?: (id: string) => void;
   onChecked: (ids: string[]) => void;
   onRemove: (id: string) => void;
   onPaste: (range: {
@@ -57,6 +58,7 @@ export function RecipientGrid({
   onEdit,
   onSelect,
   onOpen,
+  onDocuments,
   onChecked,
   onRemove,
   onPaste,
@@ -169,6 +171,7 @@ export function RecipientGrid({
     onEdit,
     onSelect,
     onOpen,
+    onDocuments,
     onRemove,
     onPaste,
     moveInColumn,
@@ -220,11 +223,11 @@ export function RecipientGrid({
         tabIndex={0}
       >
         <table
-          className={`recipient-grid-table${language === "BOTH" ? " is-bilingual" : ""}${showIdentifiers ? " has-identifiers" : ""}`}
+          className={`recipient-grid-table has-document-labels${onDocuments ? " has-document-selection" : ""}${language === "BOTH" ? " is-bilingual" : ""}${showIdentifiers ? " has-identifiers" : ""}`}
         >
           <caption className="sr-only">
-            Получатели заявки. Редактируйте данные в строках; документы и даты
-            открываются отдельно для каждого человека.
+            Получатели заявки. Редактируйте данные и выбирайте документы в
+            строках; индивидуальные даты открываются отдельно.
           </caption>
           <thead>
             <tr>
@@ -263,7 +266,10 @@ export function RecipientGrid({
                   {label}
                 </th>
               ))}
-              <th scope="col" className="recipient-grid-documents">
+              <th
+                scope="col"
+                className="recipient-grid-documents has-document-choices"
+              >
                 Документы
               </th>
               {!readonly && (
@@ -287,6 +293,7 @@ export function RecipientGrid({
                   checked={checkedIds.has(item.id)}
                   disabled={disabled}
                   readonly={readonly}
+                  canSelectDocuments={!!onDocuments}
                   documentCount={
                     (resolvedById.get(item.id) || item).assignments.length
                   }

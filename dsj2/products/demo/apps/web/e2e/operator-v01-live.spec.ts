@@ -1,3 +1,4 @@
+import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -26,7 +27,7 @@ test("V01 one person obtains an actual supported file without company, order or 
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByLabel("Название заявки", { exact: true })
     .fill(`V01 · синтетический одиночный выпуск ${Date.now()}`);

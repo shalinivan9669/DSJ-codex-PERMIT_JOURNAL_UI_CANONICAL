@@ -1,3 +1,7 @@
+import {
+  createRequestWithWorkerDocument,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -58,7 +62,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   }
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByLabel("Название заявки", { exact: true })
     .fill(`Уточнения и история ${stamp}`);
@@ -268,7 +272,8 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   expect(history.employment).toHaveLength(2);
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
+  await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
     .click();
@@ -287,14 +292,12 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   expect(next.items).toHaveLength(1);
   expect(next.items[0].recipientId).toBe(first.recipientId);
   expect(next.items[0].employerId).toBe(companies[1].id);
-  expect(next.items[0].assignments).toHaveLength(1);
-  expect(next.items[0].assignments[0].result).toBe("");
-  expect(next.items[0].assignments[0].trainingStart).toBe("");
-  expect(next.items[0].assignments[0].eventId).toBeUndefined();
+  // Reuse copies identity only; no past document, date, result or group is assigned.
+  expect(next.items[0].assignments).toEqual([]);
   expect(next.documents).toHaveLength(0);
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Организация Заказчик/ }).click();
+  await createRequestWithWorkerDocument(page, "COMPANY");
   await page
     .getByRole("combobox", { name: "Заказчик", exact: true })
     .selectOption(companies[0].id);
@@ -354,7 +357,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   const sameName = `Совпадающее ФИО ${stamp}`;
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();

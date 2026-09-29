@@ -6,10 +6,12 @@ import type { GridField } from "@/lib/grid-paste";
 import type { Recipient } from "@/lib/types";
 import type { RecipientGridProps } from "./recipient-grid";
 import { TextQualityHint } from "./text-quality-hint";
+import { documentChoices } from "@/lib/document-selection";
+import "./document-selection.css";
 
 export type GridRowActions = Pick<
   RecipientGridProps,
-  "onEdit" | "onSelect" | "onOpen" | "onRemove" | "onPaste"
+  "onEdit" | "onSelect" | "onOpen" | "onDocuments" | "onRemove" | "onPaste"
 > & {
   toggleChecked: (id: string, checked: boolean) => void;
   moveInColumn: (
@@ -27,6 +29,7 @@ type Props = {
   checked: boolean;
   disabled: boolean;
   readonly: boolean;
+  canSelectDocuments: boolean;
   documentCount: number;
   rowErrors: number;
   fieldErrors: Record<string, string>;
@@ -46,6 +49,7 @@ export const RecipientGridRow = memo(
     checked,
     disabled,
     readonly,
+    canSelectDocuments,
     documentCount,
     rowErrors,
     fieldErrors,
@@ -145,17 +149,61 @@ export const RecipientGridRow = memo(
             </td>
           );
         })}
-        <td className="recipient-grid-documents">
-          <button
-            type="button"
-            disabled={disabled}
-            onClick={() => actions.current.onOpen(item.id)}
-            aria-label={`Документы и даты получателя ${index + 1}`}
-            title="Открыть документы и даты"
+        <td className="recipient-grid-documents has-document-choices">
+          <div
+            className="recipient-document-labels"
+            aria-label="Выбранные документы"
           >
-            {documentCount}
-            <Icon name="chevron" size={14} />
-          </button>
+            {[
+              ...new Set(
+                item.assignments.map((assignment) => assignment.templateId),
+              ),
+            ].map((templateId) => {
+              const choice = documentChoices.find(
+                (candidate) => candidate.templateId === templateId,
+              );
+              const count = item.assignments.filter(
+                (assignment) => assignment.templateId === templateId,
+              ).length;
+              return (
+                <span key={templateId} title={choice?.label}>
+                  {choice?.shortLabel || templateId}
+                  {count > 1 ? ` ×${count}` : ""}
+                </span>
+              );
+            })}
+            {item.assignments.some(
+              (assignment) => assignment.protocolMode === "GROUP",
+            ) && <span>Общий протокол</span>}
+            {!documentCount && (
+              <span className="recipient-document-empty">
+                Документы не выбраны
+              </span>
+            )}
+          </div>
+          <div className="recipient-document-actions">
+            {!readonly && canSelectDocuments && (
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => actions.current.onDocuments?.(item.id)}
+                aria-label={`Выбрать документы получателя ${index + 1}`}
+              >
+                Выбрать документы
+              </button>
+            )}
+            <button
+              type="button"
+              className="text-button"
+              disabled={disabled}
+              onClick={() => actions.current.onOpen(item.id)}
+              aria-label={`Документы и даты получателя ${index + 1}`}
+              title={`Документов: ${documentCount}. Открыть даты и детали`}
+            >
+              Даты и детали
+              <Icon name="chevron" size={14} />
+            </button>
+          </div>
           {rowErrors > 0 && (
             <small className="recipient-grid-row-errors">
               Ошибок: {rowErrors}
@@ -186,6 +234,7 @@ export const RecipientGridRow = memo(
     before.checked === after.checked &&
     before.disabled === after.disabled &&
     before.readonly === after.readonly &&
+    before.canSelectDocuments === after.canSelectDocuments &&
     before.documentCount === after.documentCount &&
     before.rowErrors === after.rowErrors &&
     before.columns === after.columns &&

@@ -1,3 +1,4 @@
+import { openRecipientExtraTools } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import { newAssignment, newRecipient, type Draft } from "../lib/types";
 
@@ -176,7 +177,7 @@ test("event set and confirmed outcomes are separate single undo operations", asy
 }) => {
   const state = await mockWorkspace(page);
   await page.getByLabel("Выбрать видимых получателей").check();
-  await page.getByRole("button", { name: "Настроить общий контекст" }).click();
+  await page.getByRole("button", { name: "Настроить даты и протоколы" }).click();
   await page
     .getByRole("button", { name: "Добавить событие", exact: true })
     .click();
@@ -292,7 +293,7 @@ test("keyboard edits preserve focus order and event common fields undo as one sa
   await page.keyboard.press("Enter");
   expect(state.getDraft().status).toBe("DRAFT");
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await page.getByRole("button", { name: "Настроить общий контекст" }).click();
+  await page.getByRole("button", { name: "Настроить даты и протоколы" }).click();
   await page
     .getByRole("button", { name: "Добавить событие", exact: true })
     .click();
@@ -318,7 +319,8 @@ test("operator bulk preview applies only selected PB empty dates and supports re
   await page.getByLabel("Выбрать видимых получателей").check();
   await page.getByLabel("Поиск в заявке").fill("Первый");
   await expect(page.getByText(/из них скрыто поиском: 1/)).toBeVisible();
-  await page.getByRole("button", { name: "Применить к выбранным (2)" }).click();
+  await openRecipientExtraTools(page);
+  await page.getByRole("button", { name: "Изменить данные выбранных (2)" }).click();
   const dialog = page.getByRole("dialog");
   await dialog
     .getByRole("combobox", { name: "Направление", exact: true })
@@ -354,6 +356,7 @@ test("recipient lookup pages beyond first hundred and never reuses historical re
   page,
 }) => {
   const state = await mockWorkspace(page);
+  await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
     .click();
@@ -373,8 +376,8 @@ test("recipient lookup pages beyond first hundred and never reuses historical re
   const reused = state.getDraft().items[2];
   expect(reused.recipientId).toBe("saved-6");
   expect(reused.personnelNumber).toBe("00101");
-  expect(reused.assignments[0].result).toBe("");
-  expect(reused.assignments[0].documentDate).toBe("");
+  // The operator explicitly chooses new documents after reusing personal data.
+  expect(reused.assignments).toEqual([]);
 });
 
 test("mixed customer output selects employer B, binds its profile and requires explicit partial ZIP with server filename", async ({

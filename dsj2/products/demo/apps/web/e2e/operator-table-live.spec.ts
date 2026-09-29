@@ -163,9 +163,11 @@ for (const count of [100, 150, 250]) {
     expect(afterSave.revision).toBeGreaterThan(before.revision);
 
     await page
-      .getByRole("button", { name: "Настроить общий контекст", exact: true })
+      .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
       .click();
-    await page.getByText("Общие значения заявки", { exact: true }).click();
+    await expect(
+      page.getByText("Даты и программа для всей заявки", { exact: true }),
+    ).toBeVisible();
     const sharedValue = `Общая программа для ${count} получателей`;
     const savedCommon = page.waitForResponse((response) => {
       if (
@@ -202,9 +204,11 @@ for (const count of [100, 150, 250]) {
       page.getByLabel(`Должность KZ, строка ${count}`, { exact: true }),
     ).toHaveValue(expectedItems[count - 1].positionKz!);
     await page
-      .getByRole("button", { name: "Настроить общий контекст", exact: true })
+      .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
       .click();
-    await page.getByText("Общие значения заявки", { exact: true }).click();
+    await expect(
+      page.getByText("Даты и программа для всей заявки", { exact: true }),
+    ).toBeVisible();
     await expect(
       page.getByLabel("Программа / тема для заявки", { exact: true }),
     ).toHaveValue(sharedValue);

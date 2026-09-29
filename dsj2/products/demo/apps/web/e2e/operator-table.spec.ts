@@ -220,9 +220,11 @@ test("error queue survives editing and shared fields use the same autosave", asy
     page.locator('.operator-grid [data-field-path="items.1.positionRu"]'),
   ).toBeFocused();
   await page
-    .getByRole("button", { name: "Настроить общий контекст", exact: true })
+    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
     .click();
-  await page.getByText("Общие значения заявки", { exact: true }).click();
+  await expect(
+    page.getByText("Даты и программа для всей заявки", { exact: true }),
+  ).toBeVisible();
   await page
     .getByLabel("Программа / тема для заявки", { exact: true })
     .fill("Общая программа");

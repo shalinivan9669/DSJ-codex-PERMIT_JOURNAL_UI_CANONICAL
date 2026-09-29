@@ -2,10 +2,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Notice } from "@demo/ui";
+import { customerSchema, type OrganizationNames } from "@demo/contracts";
 import { api, errorText, json } from "@/lib/api";
 import type { Recipient, Customer } from "@/lib/types";
+import {
+  applyRecipientOrganization,
+  patchRecipientEmployer,
+  recipientOrganizationDraft,
+} from "@/lib/recipient-employer";
 import { RecordPicker } from "./record-picker";
 import { CustomerDialog } from "./customers";
+import { OrganizationNameFields } from "./organization-name-fields";
 type History = {
   employment: {
     id: string;
@@ -32,6 +39,8 @@ export function RecipientRecord({
   );
   const [picker, setPicker] = useState(false);
   const [createEmployer, setCreateEmployer] = useState(false);
+  const [nameDraft, setNameDraft] = useState<OrganizationNames | null>(null);
+  const [nameError, setNameError] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -39,6 +48,8 @@ export function RecipientRecord({
   useEffect(() => {
     setSuccess("");
     setError("");
+    setNameDraft(null);
+    setNameError("");
   }, [recipient.id, recipient.employerId]);
   useEffect(() => {
     let active = true;
@@ -119,102 +130,166 @@ export function RecipientRecord({
     setEmployer(value);
     setPicker(false);
     setCreateEmployer(false);
+    setNameDraft(null);
     setConfirmed(false);
-    onChange({
-      ...recipient,
-      employerId: value.id,
-      workplaceRu: value.nameRu,
-      workplaceKz: value.nameKz,
-      employerBin: value.bin,
-      employerAddressRu: value.addressRu,
-      employerAddressKz: value.addressKz,
-    });
+    onChange(patchRecipientEmployer(recipient, value));
   }
   return (
-    <details className="outcome-entry">
-      <summary>Постоянная запись, работодатель и история</summary>
-      {error && <Notice>{error}</Notice>}
-      {success && <Notice kind="success">{success}</Notice>}
-      <p>
-        {recipient.recipientId
-          ? "Человек связан с постоянной записью. Сведения текущего обращения могут отличаться от сохранённой истории."
-          : "При необходимости сохраните человека для следующих обращений. Одинаковое ФИО само по себе не связывает разные записи."}
-      </p>
-      <div className="form-grid">
-        {[
-          ["personnelNumber", "Табельный номер"],
-          ["externalId", "Внешний устойчивый ID"],
-          ["employmentPeriod", "Период работы / основание актуальности"],
-        ].map(([key, label]) => (
-          <label key={key}>
-            {label}
-            <input
-              disabled={disabled}
-              value={String(recipient[key as keyof Recipient] || "")}
-              onChange={(e) => {
-                onChange({ ...recipient, [key]: e.target.value });
-                setConfirmed(false);
-              }}
-            />
-          </label>
-        ))}
-      </div>
-      <p>Работодатель: {employer?.nameRu || "не связан со справочником"}</p>
-      <button disabled={disabled} onClick={() => setPicker(true)}>
-        Выбрать работодателя
-      </button>
-      <button disabled={disabled} onClick={() => setCreateEmployer(true)}>
-        Добавить организацию работодателя
-      </button>
-      {!disabled && (
-        <>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={confirmed}
-              onChange={(e) => setConfirmed(e.target.checked)}
-            />
-            Подтверждаю актуальность сведений для постоянной записи человека
-          </label>
-          <button
-            disabled={busy || !confirmed || !recipient.fullNameRu.trim()}
-            onClick={() => void save()}
-          >
-            {recipient.recipientId
-              ? "Обновить текущие сведения человека"
-              : "Сохранить человека в справочник"}
-          </button>
-        </>
-      )}
-      {!!history?.employment.length && (
-        <>
-          <h4>Сохранённые периоды работы</h4>
-          {history.employment.map((period) => (
-            <p key={period.id}>
-              {employerNames[period.employerId] || "Сохранённый работодатель"} ·{" "}
-              {period.positionRu || "Должность не указана"}
-              {period.personnelNumber
-                ? ` · табельный ${period.personnelNumber}`
-                : ""}{" "}
-              · {period.period || "Период не указан"}
-            </p>
-          ))}
-        </>
-      )}
-      {!!history?.requests.length && (
-        <>
-          <h4>Обращения и оформленные файлы</h4>
-          <div className="toolbar-actions">
-            {[...new Set(history.requests.map((r) => r.requestId))].map(
-              (id, index) => (
-                <Link className="button" key={id} href={`/requests/${id}`}>
-                  Открыть обращение {index + 1}
-                </Link>
-              ),
-            )}
+    <>
+      <section
+        className="recipient-employer"
+        aria-label="Работодатель получателя"
+      >
+        <div className="section-heading">
+          <div>
+            <h4>Организация / работодатель</h4>
+            <p>{recipient.workplaceRu || employer?.nameRu || "Не указан"}</p>
+            {recipient.workplaceKz && <small>{recipient.workplaceKz}</small>}
           </div>
-        </>
-      )}
+        </div>
+        <div className="toolbar-actions">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => setPicker(true)}
+          >
+            Выбрать работодателя
+          </button>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => setCreateEmployer(true)}
+          >
+            Добавить организацию работодателя
+          </button>
+          <button
+            type="button"
+            className="text-button"
+            disabled={disabled}
+            onClick={() => {
+              setNameDraft(recipientOrganizationDraft(recipient));
+              setNameError("");
+            }}
+          >
+            Ввести название для документов
+          </button>
+        </div>
+        {nameDraft && (
+          <div className="recipient-employer-name-editor">
+            <OrganizationNameFields value={nameDraft} onChange={setNameDraft} />
+            {nameError && <Notice>{nameError}</Notice>}
+            {recipient.employerId && (
+              <p className="fine-print">
+                Название изменится только в этом обращении. Организация в
+                справочнике сохранится.
+              </p>
+            )}
+            <div className="toolbar-actions">
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => {
+                  const parsed = customerSchema.safeParse(nameDraft);
+                  if (!parsed.success) {
+                    setNameError(
+                      parsed.error.issues[0]?.message ||
+                        "Проверьте название организации",
+                    );
+                    return;
+                  }
+                  onChange(applyRecipientOrganization(recipient, nameDraft));
+                  setNameDraft(null);
+                  setNameError("");
+                  setConfirmed(false);
+                }}
+              >
+                Применить название
+              </button>
+              <button type="button" onClick={() => setNameDraft(null)}>
+                Отмена
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
+      <details className="outcome-entry">
+        <summary>Постоянная запись, работодатель и история</summary>
+        {error && <Notice>{error}</Notice>}
+        {success && <Notice kind="success">{success}</Notice>}
+        <p>
+          {recipient.recipientId
+            ? "Человек связан с постоянной записью. Сведения текущего обращения могут отличаться от сохранённой истории."
+            : "При необходимости сохраните человека для следующих обращений. Одинаковое ФИО само по себе не связывает разные записи."}
+        </p>
+        <div className="form-grid">
+          {[
+            ["personnelNumber", "Табельный номер"],
+            ["externalId", "Внешний устойчивый ID"],
+            ["employmentPeriod", "Период работы / основание актуальности"],
+          ].map(([key, label]) => (
+            <label key={key}>
+              {label}
+              <input
+                disabled={disabled}
+                value={String(recipient[key as keyof Recipient] || "")}
+                onChange={(e) => {
+                  onChange({ ...recipient, [key]: e.target.value });
+                  setConfirmed(false);
+                }}
+              />
+            </label>
+          ))}
+        </div>
+        {!disabled && (
+          <>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={confirmed}
+                onChange={(e) => setConfirmed(e.target.checked)}
+              />
+              Подтверждаю актуальность сведений для постоянной записи человека
+            </label>
+            <button
+              disabled={busy || !confirmed || !recipient.fullNameRu.trim()}
+              onClick={() => void save()}
+            >
+              {recipient.recipientId
+                ? "Обновить текущие сведения человека"
+                : "Сохранить человека в справочник"}
+            </button>
+          </>
+        )}
+        {!!history?.employment.length && (
+          <>
+            <h4>Сохранённые периоды работы</h4>
+            {history.employment.map((period) => (
+              <p key={period.id}>
+                {employerNames[period.employerId] || "Сохранённый работодатель"}{" "}
+                · {period.positionRu || "Должность не указана"}
+                {period.personnelNumber
+                  ? ` · табельный ${period.personnelNumber}`
+                  : ""}{" "}
+                · {period.period || "Период не указан"}
+              </p>
+            ))}
+          </>
+        )}
+        {!!history?.requests.length && (
+          <>
+            <h4>Обращения и оформленные файлы</h4>
+            <div className="toolbar-actions">
+              {[...new Set(history.requests.map((r) => r.requestId))].map(
+                (id, index) => (
+                  <Link className="button" key={id} href={`/requests/${id}`}>
+                    Открыть обращение {index + 1}
+                  </Link>
+                ),
+              )}
+            </div>
+          </>
+        )}
+      </details>
       {picker && (
         <RecordPicker
           kind="customers"
@@ -229,6 +304,6 @@ export function RecipientRecord({
           onSaved={chooseEmployer}
         />
       )}
-    </details>
+    </>
   );
 }

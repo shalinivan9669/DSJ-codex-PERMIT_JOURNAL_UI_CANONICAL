@@ -1,3 +1,4 @@
+import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -26,7 +27,7 @@ for (const form of ["biot-worker-card", "biot-itr-certificate"] as const) {
       page.getByRole("heading", { name: "Заявки на печать" }),
     ).toBeVisible();
     await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-    await page.getByRole("button", { name: /Человек Документы/ }).click();
+    await createRequestWithWorkerDocument(page, "PERSON");
     await page
       .getByLabel("ФИО RU, строка 1")
       .fill("Тестовый Получатель Категории БиОТ");

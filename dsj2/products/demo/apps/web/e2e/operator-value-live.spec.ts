@@ -1,3 +1,4 @@
+import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import path from "node:path";
 import fs from "node:fs/promises";
@@ -23,7 +24,7 @@ test("live operator creates a simple request, grouped event, linked order, oblig
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await expect(page.getByLabel("ФИО RU, строка 1")).toBeVisible();
   const title = `Проверка рабочего цикла ${Date.now()}`;
   await page.getByLabel("Название заявки").fill(title);
@@ -34,7 +35,7 @@ test("live operator creates a simple request, grouped event, linked order, oblig
     .getByLabel("ФИО KZ, строка 1")
     .fill("Синтетикалық Ә Ғ Қ Ң Ө Ұ Ү Һ І");
   await page.getByLabel("Выбрать всех получателей").check();
-  await page.getByRole("button", { name: "Настроить общий контекст" }).click();
+  await page.getByRole("button", { name: "Настроить даты и протоколы" }).click();
   await page
     .getByRole("button", { name: "Добавить событие", exact: true })
     .click();

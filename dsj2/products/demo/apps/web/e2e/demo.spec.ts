@@ -1,3 +1,8 @@
+import {
+  createRequestWithWorkerDocument,
+  keyboardCreateRequestWithWorkerDocument,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import path from "node:path";
 import fs from "node:fs/promises";
@@ -78,12 +83,7 @@ async function login(page: Page) {
 }
 async function newPerson(page: Page) {
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page
-    .getByText("Другие направления и отдельные формы: ПБ, ПТМ, ПС", {
-      exact: true,
-    })
-    .click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await expect(page.getByLabel("ФИО RU, строка 1")).toBeVisible();
 }
 async function save(page: Page) {
@@ -397,7 +397,7 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
   }
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Организация Заказчик/ }).click();
+  await createRequestWithWorkerDocument(page, "COMPANY");
   await page
     .getByRole("button", { name: "Добавить заказчика", exact: true })
     .click();
@@ -446,8 +446,9 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
     .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
     .click();
   await page.getByLabel("Выбрать строку 1", { exact: true }).check();
+  await openRecipientExtraTools(page);
   await page
-    .getByRole("button", { name: "Применить к выбранным (1)", exact: true })
+    .getByRole("button", { name: "Изменить данные выбранных (1)", exact: true })
     .click();
   await page
     .getByRole("dialog")
@@ -513,8 +514,9 @@ test("company: 12 independent bilingual recipients, 18 assignments, complete gen
   // V2 scopes generic common values by direction and previews the exact mask.
   // Actual results remain individual facts, outside these common-field edits.
   for (const direction of ["biot", "ps"]) {
+    await openRecipientExtraTools(page);
     await page
-      .getByRole("button", { name: "Применить к выбранным (12)", exact: true })
+      .getByRole("button", { name: "Изменить данные выбранных (12)", exact: true })
       .click();
     const bulk = page.getByRole("dialog");
     await bulk
@@ -822,8 +824,7 @@ test("keyboard creates, validates and finalizes a person with focus visible in d
   await login(page);
   await page.getByRole("link", { name: "Новая заявка", exact: true }).focus();
   await page.keyboard.press("Enter");
-  await page.getByRole("button", { name: /Человек Документы/ }).focus();
-  await page.keyboard.press("Enter");
+  await keyboardCreateRequestWithWorkerDocument(page, "PERSON");
   await expect(page.getByLabel("ФИО RU, строка 1")).toBeVisible();
   for (const [label, value] of [
     ["ФИО RU, строка 1", "Клавиатурный Сценарий"],

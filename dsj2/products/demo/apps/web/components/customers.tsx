@@ -277,23 +277,29 @@ export function CustomerDialog({
           value={value}
           onChange={(names) => setValue({ ...value, ...names })}
         />
-        <div className="form-grid">
-          {[
-            ["bin", "БИН"],
-            ["addressRu", "Адрес на русском"],
-            ["addressKz", "Адрес на казахском"],
-          ].map(([key, label]) => (
-            <label key={key}>
-              {label}
-              <input
-                value={String(value[key as keyof typeof value] || "")}
-                onChange={(event) =>
-                  setValue({ ...value, [key]: event.target.value })
-                }
-              />
-            </label>
-          ))}
-        </div>
+        <details className="customer-extra-fields">
+          <summary>Дополнительные реквизиты</summary>
+          <p className="fine-print">
+            БИН и адрес можно добавить сейчас или позже.
+          </p>
+          <div className="form-grid">
+            {[
+              ["bin", "БИН"],
+              ["addressRu", "Адрес на русском"],
+              ["addressKz", "Адрес на казахском"],
+            ].map(([key, label]) => (
+              <label key={key}>
+                {label}
+                <input
+                  value={String(value[key as keyof typeof value] || "")}
+                  onChange={(event) =>
+                    setValue({ ...value, [key]: event.target.value })
+                  }
+                />
+              </label>
+            ))}
+          </div>
+        </details>
         {customer.id && (
           <label className="checkbox">
             <input

@@ -1,0 +1,101 @@
+{
+  "scope": "Anik feedback: faster recipient and document entry",
+  "date": "2026-09-29",
+  "branch": "codex/ot-center-dsj-forms-ux",
+  "baseRevision": "c4e2f6396498cc09b96cf06cc6cada2c8e6f0f34",
+  "report": "../../ANIK_FEEDBACK_UX_2026-09-29.md",
+  "checks": [
+    {
+      "id": "customer-radio-and-empty-start",
+      "status": "PASS",
+      "evidence": "apps/web/e2e/anik-feedback.spec.ts; .runtime/anik-feedback-e2e-final/results.json"
+    },
+    {
+      "id": "additive-person-and-selected-document-sets",
+      "status": "PASS",
+      "evidence": "apps/web/test/document-selection.test.ts; apps/web/e2e/anik-feedback.spec.ts"
+    },
+    {
+      "id": "explicit-bundle-shared-protocol-preserved",
+      "status": "PASS",
+      "evidence": "apps/web/test/request-bundles.test.ts; apps/web/e2e/anik-feedback.spec.ts"
+    },
+    {
+      "id": "manual-date-and-assignment-identity-preserved",
+      "status": "PASS",
+      "evidence": "apps/web/test/document-selection.test.ts; apps/web/e2e/anik-feedback.spec.ts; apps/web/e2e/shared-employer-feedback.spec.ts"
+    },
+    {
+      "id": "organization-one-name-ru-kz-optional-details",
+      "status": "PASS",
+      "evidence": "apps/web/test/recipient-employer.test.ts; apps/web/e2e/anik-feedback.spec.ts; real local API synthetic draft 9a1f11e7-3899-4610-985b-0b973f3c5567"
+    },
+    {
+      "id": "shared-employer-empty-selected-failure-mobile-and-create",
+      "status": "PASS",
+      "result": "5/5",
+      "evidence": ".runtime/shared-employer-feedback/results.json"
+    },
+    {
+      "id": "grouped-validation-and-hidden-date-focus",
+      "status": "PASS",
+      "evidence": "apps/web/test/validation-groups.test.ts; apps/web/e2e/anik-feedback.spec.ts"
+    },
+    {
+      "id": "unit",
+      "status": "PASS",
+      "result": "169/169 (93 common + 76 web)",
+      "evidence": ".runtime/feedback-unit-tests-final.log"
+    },
+    {
+      "id": "lint-and-seven-workspace-typechecks",
+      "status": "PASS",
+      "evidence": "pnpm lint; pnpm -r typecheck"
+    },
+    {
+      "id": "web-production-build",
+      "status": "PASS",
+      "evidence": ".runtime/feedback-build.log",
+      "limitation": "Existing globals.css Autoprefixer and Next ESLint-plugin warnings; final cloud source SHA checked separately"
+    },
+    {
+      "id": "table-150-250-keyboard-paste-reload-mobile",
+      "status": "PASS",
+      "result": "8/8",
+      "evidence": ".runtime/feedback-table-regression/results.json",
+      "limitation": "Next dev and mocked API; not human speed or production INP"
+    },
+    {
+      "id": "real-local-save-and-reload",
+      "status": "PASS",
+      "evidence": "Isolated demo_test_operator_ux_20260929, synthetic draft 9a1f11e7-3899-4610-985b-0b973f3c5567 revisions2/3, reviewed in browser"
+    },
+    {
+      "id": "independent-data-preservation-review",
+      "status": "PASS",
+      "evidence": "Additive document sets, GROUP protocols, employer-only fields, manual/imported/cleared dates and immutable issued/read-only guards reviewed; rowId finding fixed and covered"
+    },
+    {
+      "id": "human-speed-and-operator-preference",
+      "status": "NOT RUN",
+      "limitation": "Requires real operator task timing and feedback"
+    },
+    {
+      "id": "full-print-and-legal-acceptance",
+      "status": "NOT RUN",
+      "limitation": "Frontend-only UX release, no template/schema/renderer changes; old acceptance is not asserted as fresh"
+    },
+    {
+      "id": "adapted-focus-bulk-directory-autosave-regressions",
+      "status": "PASS",
+      "result": "5/5",
+      "evidence": ".runtime/feedback-affected-regression/results.json",
+      "limitation": "Heavy historical printing scenarios have locator maintenance only, not a fresh PASS"
+    }
+  ],
+  "releaseVerification": {
+    "target": "https://dsj-demo-operator-ux-20260929.vercel.app",
+    "evidenceDirectory": ".runtime/anik-feedback-release",
+    "method": "Exact Git SHA Vercel READY + production alias, Railway SUCCESS + active deployment, authenticated read-only session/context/list/ready smoke, no business writes"
+  }
+}

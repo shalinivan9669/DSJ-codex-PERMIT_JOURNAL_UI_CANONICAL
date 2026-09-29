@@ -1,3 +1,4 @@
+import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import path from "node:path";
 import fs from "node:fs/promises";
@@ -68,7 +69,7 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   await fs.mkdir(evidence, { recursive: true });
   await login(page);
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByLabel("Название заявки", { exact: true })
     .fill(`100 строк · наследование и две сессии ${Date.now()}`);
@@ -123,7 +124,7 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   await expect(page.locator(".recipient-table tbody tr")).toHaveCount(100);
   await page.getByLabel("Выбрать всех получателей", { exact: true }).check();
   await page
-    .getByRole("button", { name: "Настроить общий контекст", exact: true })
+    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
     .click();
   await page
     .getByLabel(

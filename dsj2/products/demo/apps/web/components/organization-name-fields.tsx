@@ -39,7 +39,7 @@ export function OrganizationNameFields({
     });
   }
   return (
-    <div className="stack">
+    <div className="stack organization-name-fields">
       <label>
         Форма организации
         <select
@@ -77,7 +77,9 @@ export function OrganizationNameFields({
             });
           }}
         >
-          <option value="">Сохранённая строка — без преобразования</option>
+          {!value.legalForm && (
+            <option value="">Сохранённое название — как введено</option>
+          )}
           {ORGANIZATION_FORMS.map((form) => (
             <option value={form.value} key={form.value}>
               {form.label}
@@ -86,9 +88,8 @@ export function OrganizationNameFields({
         </select>
       </label>
       <p className="fine-print" id={`${id}-hint`}>
-        Форма выбирается отдельно. Собственное название не переводится и не
-        транслитерируется. Для другой формы можно сохранить полные названия как
-        введено.
+        Название вводится один раз. Меняется только обозначение формы: ТОО /
+        ЖШС, ИП / ЖК, АО / АҚ.
       </p>
       {value.legalForm ? (
         <>
@@ -111,32 +112,38 @@ export function OrganizationNameFields({
                 : "Без ТОО, ИП, АО. Кавычки сохраняются так, как вы их ввели."}
             </small>
           </label>
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={differentKz}
-              onChange={(event) => {
-                setDifferentKz(event.target.checked);
-                if (!event.target.checked) update(value.ownNameRu || "", "");
-              }}
-            />
-            Собственное наименование на казахском отличается
-          </label>
-          {differentKz && (
-            <label>
-              Собственное наименование · KZ
+          <details
+            open={differentKz || undefined}
+            className="organization-extra-name"
+          >
+            <summary>Другое наименование на казахском</summary>
+            <label className="checkbox-label">
               <input
-                required
-                maxLength={500}
-                value={value.ownNameKz || ""}
-                aria-invalid={!!names?.issue}
-                aria-describedby={names?.issue ? `${id}-error` : undefined}
-                onChange={(event) =>
-                  update(value.ownNameRu || "", event.target.value)
-                }
+                type="checkbox"
+                checked={differentKz}
+                onChange={(event) => {
+                  setDifferentKz(event.target.checked);
+                  if (!event.target.checked) update(value.ownNameRu || "", "");
+                }}
               />
+              Собственное наименование на казахском отличается
             </label>
-          )}
+            {differentKz && (
+              <label>
+                Собственное наименование · KZ
+                <input
+                  required
+                  maxLength={500}
+                  value={value.ownNameKz || ""}
+                  aria-invalid={!!names?.issue}
+                  aria-describedby={names?.issue ? `${id}-error` : undefined}
+                  onChange={(event) =>
+                    update(value.ownNameRu || "", event.target.value)
+                  }
+                />
+              </label>
+            )}
+          </details>
           {names?.issue && (
             <p className="field-error" id={`${id}-error`} role="alert">
               {names.issue}
@@ -182,7 +189,7 @@ export function OrganizationNameFields({
         </>
       )}
       <div
-        className="form-grid"
+        className="form-grid organization-name-preview"
         aria-live="polite"
         aria-label="Полные названия для документов"
       >

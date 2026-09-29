@@ -1,3 +1,4 @@
+import { openRecipientExtraTools } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -28,14 +29,12 @@ async function login(page: Page) {
 async function create(page: Page, company = false) {
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
   await page
-    .getByText("Другие направления и отдельные формы: ПБ, ПТМ, ПС", {
-      exact: true,
+    .getByRole("radio", {
+      name: company ? /^Организация/ : /^Физическое лицо/,
     })
-    .click();
+    .check();
   await page
-    .getByRole("button", {
-      name: company ? /Организация Заказчик/ : /Человек Документы/,
-    })
+    .getByRole("button", { name: "Перейти к людям и документам", exact: true })
     .click();
   await expect(
     page.getByLabel("ФИО RU, строка 1", { exact: true }),
@@ -89,7 +88,7 @@ test("real UI creates one, then keyboard enters ten without opening cards and pe
     await page.keyboard.insertText(values[2]);
     expected.push(values);
     if (i < 10)
-      for (let tab = 0; tab < 4; tab++) await page.keyboard.press("Tab");
+      for (let tab = 0; tab < 5; tab++) await page.keyboard.press("Tab");
   }
   await save(page);
   const keyboardSavedMs = performance.now() - entryStart;
@@ -169,6 +168,7 @@ test("real existing organization and recipient reuse keeps personal data and res
     .filter({ hasText: company.nameRu })
     .getByRole("button", { name: "Выбрать", exact: true })
     .click();
+  await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
     .click();
@@ -189,8 +189,8 @@ test("real existing organization and recipient reuse keeps personal data and res
   expect(result.items[0].recipientId).toBe(record.id);
   expect(result.items[0].personnelNumber).toBe("000125");
   expect(result.items[0].fullNameKz).toBe(person.fullNameKz);
-  expect(result.items[0].assignments[0].result).toBe("");
-  expect(result.items[0].assignments[0].documentDate).not.toBe("2025-01-10");
+  // No implicit worker document or previous result/date survives reuse.
+  expect(result.items[0].assignments).toEqual([]);
   await page.reload();
   await expect(
     page.getByLabel("ФИО RU, строка 1", { exact: true }),

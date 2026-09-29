@@ -53,6 +53,21 @@ function sectionForField(key: string): DocumentSection {
     return "training";
   return "main";
 }
+function documentDateSummary(assignment: Assignment) {
+  const date = (value: string) =>
+    value ? value.split("-").reverse().join(".") : "не задана";
+  return [
+    assignment.trainingStart || assignment.trainingEnd
+      ? `Обучение ${date(assignment.trainingStart)} — ${date(assignment.trainingEnd)}`
+      : "Период обучения не задан",
+    assignment.protocolDate
+      ? `протокол ${date(assignment.protocolDate)}`
+      : "дата протокола не задана",
+    assignment.validUntil ? `действует до ${date(assignment.validUntil)}` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
 function navigateTabs(event: KeyboardEvent<HTMLButtonElement>) {
   const tabs = Array.from(
     event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
@@ -331,8 +346,6 @@ export function RecipientDetails({
         {[
           ["positionRu", "Должность · RU"],
           ["positionKz", "Должность · KZ"],
-          ["workplaceRu", "Место работы · RU"],
-          ["workplaceKz", "Место работы · KZ"],
         ].map(([key, label]) => (
           <label key={key}>
             {label}
@@ -351,6 +364,33 @@ export function RecipientDetails({
             />
           </label>
         ))}
+        <details className="person-fields-wide employer-document-wording">
+          <summary>Полные названия работодателя в документах</summary>
+          <p className="fine-print">
+            Сохранённые строки RU и KZ. Для автоматического ТОО / ЖШС выберите
+            форму в «Ввести название для документов».
+          </p>
+          <div className="form-grid">
+            {[
+              ["workplaceRu", "Место работы · RU"],
+              ["workplaceKz", "Место работы · KZ"],
+            ].map(([key, label]) => (
+              <label key={key}>
+                {label}
+                <input
+                  aria-label={label}
+                  {...personField(key)}
+                  disabled={disabled}
+                  value={String(recipient[key as keyof Recipient] || "")}
+                  onChange={(event) =>
+                    onChange({ ...recipient, [key]: event.target.value })
+                  }
+                />
+                {personError(key)}
+              </label>
+            ))}
+          </div>
+        </details>
         {recipient.assignments.some((assignment) =>
           assignment.templateId.startsWith("biot-"),
         ) && (
@@ -402,11 +442,10 @@ export function RecipientDetails({
             onChange({
               ...recipient,
               positionKz: recipient.positionRu,
-              workplaceKz: recipient.workplaceRu,
             })
           }
         >
-          Скопировать должность и место работы RU → KZ
+          Скопировать должность RU → KZ
         </button>
         {recipient.photoAssetId && (
           <button
@@ -580,91 +619,168 @@ export function RecipientDetails({
                       />
                       {fieldError(index, "documentDate")}
                     </label>
-                    <label>
-                      Действителен до
-                      <input
-                        {...field(index, "validUntil")}
-                        type="date"
-                        disabled={disabled}
-                        value={
-                          (resolvedRecipient?.assignments[index] || assignment)
-                            .validUntil
-                        }
-                        onChange={(event) =>
-                          changeAssignment(assignment.id, {
-                            validUntil: event.target.value,
-                          })
-                        }
-                      />
-                      {fieldError(index, "validUntil")}
-                      {assignment.biotCategory &&
-                        BIOT_CATEGORIES[assignment.biotCategory]
-                          .validityYears && (
-                          <small>
-                            Срок по категории:{" "}
-                            {BIOT_CATEGORIES[assignment.biotCategory]
-                              .validityYears === 1
-                              ? "1 год"
-                              : "3 года"}{" "}
-                            от даты документа. Введённая вручную дата
-                            сохраняется.
-                          </small>
+                  </div>
+                  <details className="document-date-details">
+                    <summary>
+                      <span>Период обучения, протокол и срок действия</span>
+                      <small>
+                        {documentDateSummary(
+                          resolvedRecipient?.assignments[index] || assignment,
                         )}
-                    </label>
-                    <label>
-                      Начало обучения
-                      <input
-                        {...field(index, "trainingStart")}
-                        type="date"
-                        disabled={disabled}
-                        value={
-                          (resolvedRecipient?.assignments[index] || assignment)
-                            .trainingStart
+                      </small>
+                      {[
+                        "trainingStart",
+                        "trainingEnd",
+                        "protocolDate",
+                        "validUntil",
+                      ].some(
+                        (key) =>
+                          fieldErrors[
+                            `items.${rowIndex}.assignments.${index}.${key}`
+                          ],
+                      ) && (
+                        <span className="field-error">
+                          Есть незаполненные или неверные даты
+                        </span>
+                      )}
+                    </summary>
+                    <div className="form-grid compact">
+                      <label>
+                        Действителен до
+                        <input
+                          {...field(index, "validUntil")}
+                          type="date"
+                          disabled={disabled}
+                          value={
+                            (
+                              resolvedRecipient?.assignments[index] ||
+                              assignment
+                            ).validUntil
+                          }
+                          onChange={(event) =>
+                            changeAssignment(assignment.id, {
+                              validUntil: event.target.value,
+                            })
+                          }
+                        />
+                        {fieldError(index, "validUntil")}
+                        {assignment.biotCategory &&
+                          BIOT_CATEGORIES[assignment.biotCategory]
+                            .validityYears && (
+                            <small>
+                              Срок по категории:{" "}
+                              {BIOT_CATEGORIES[assignment.biotCategory]
+                                .validityYears === 1
+                                ? "1 год"
+                                : "3 года"}{" "}
+                              от даты документа. Введённая вручную дата
+                              сохраняется.
+                            </small>
+                          )}
+                      </label>
+                      <label>
+                        Начало обучения
+                        <input
+                          {...field(index, "trainingStart")}
+                          type="date"
+                          disabled={disabled}
+                          value={
+                            (
+                              resolvedRecipient?.assignments[index] ||
+                              assignment
+                            ).trainingStart
+                          }
+                          onChange={(event) =>
+                            changeAssignment(assignment.id, {
+                              trainingStart: event.target.value,
+                            })
+                          }
+                        />
+                        {fieldError(index, "trainingStart")}
+                      </label>
+                      <label>
+                        Окончание обучения
+                        <input
+                          {...field(index, "trainingEnd")}
+                          type="date"
+                          disabled={disabled}
+                          value={
+                            (
+                              resolvedRecipient?.assignments[index] ||
+                              assignment
+                            ).trainingEnd
+                          }
+                          onChange={(event) =>
+                            changeAssignment(assignment.id, {
+                              trainingEnd: event.target.value,
+                            })
+                          }
+                        />
+                        {fieldError(index, "trainingEnd")}
+                      </label>
+                      <label>
+                        Дата протокола
+                        <input
+                          {...field(index, "protocolDate")}
+                          type="date"
+                          disabled={disabled}
+                          value={
+                            (
+                              resolvedRecipient?.assignments[index] ||
+                              assignment
+                            ).protocolDate
+                          }
+                          onChange={(event) =>
+                            changeAssignment(assignment.id, {
+                              protocolDate: event.target.value,
+                            })
+                          }
+                        />
+                        {fieldError(index, "protocolDate")}
+                      </label>
+                    </div>
+                    <details className="assignment-help">
+                      <summary>Расчёт дат и пояснения</summary>
+                      <DateCalculationStatus
+                        values={
+                          resolvedRecipient?.assignments[index] || assignment
                         }
-                        onChange={(event) =>
-                          changeAssignment(assignment.id, {
-                            trainingStart: event.target.value,
+                        rule={
+                          (resolvedRecipient?.assignments[index] || assignment)
+                            .trainingDateRule
+                        }
+                        origins={
+                          provenance?.[`${recipient.id}:${assignment.id}`] ||
+                          assignment.fieldOrigins
+                        }
+                        disabled={disabled}
+                        restoreKeys={
+                          assignment.protocolMode === "GROUP"
+                            ? calculatedDateKeys.filter((key) =>
+                                ["MANUAL", "IMPORTED", "CLEARED"].includes(
+                                  provenance?.[
+                                    `${recipient.id}:${assignment.id}`
+                                  ]?.[key] ||
+                                    assignment.fieldOrigins?.[key] ||
+                                    "",
+                                ),
+                              )
+                            : undefined
+                        }
+                        onRestore={(key) =>
+                          onChange({
+                            ...recipient,
+                            assignments: recipient.assignments.map((a) =>
+                              a.id !== assignment.id
+                                ? a
+                                : restoreAssignmentDate(a, key),
+                            ),
                           })
                         }
                       />
-                      {fieldError(index, "trainingStart")}
-                    </label>
-                    <label>
-                      Окончание обучения
-                      <input
-                        {...field(index, "trainingEnd")}
-                        type="date"
-                        disabled={disabled}
-                        value={
-                          (resolvedRecipient?.assignments[index] || assignment)
-                            .trainingEnd
-                        }
-                        onChange={(event) =>
-                          changeAssignment(assignment.id, {
-                            trainingEnd: event.target.value,
-                          })
-                        }
-                      />
-                      {fieldError(index, "trainingEnd")}
-                    </label>
-                    <label>
-                      Дата протокола
-                      <input
-                        {...field(index, "protocolDate")}
-                        type="date"
-                        disabled={disabled}
-                        value={
-                          (resolvedRecipient?.assignments[index] || assignment)
-                            .protocolDate
-                        }
-                        onChange={(event) =>
-                          changeAssignment(assignment.id, {
-                            protocolDate: event.target.value,
-                          })
-                        }
-                      />
-                      {fieldError(index, "protocolDate")}
-                    </label>
+                    </details>
+                  </details>
+                  <div className="form-grid compact">
                     <label>
                       {assignment.biotCategory
                         ? BIOT_CATEGORIES[assignment.biotCategory].hoursLabel
@@ -731,46 +847,6 @@ export function RecipientDetails({
                       </label>
                     )}
                   </div>
-                  <details className="assignment-help">
-                    <summary>Расчёт дат и пояснения</summary>
-                    <DateCalculationStatus
-                      values={
-                        resolvedRecipient?.assignments[index] || assignment
-                      }
-                      rule={
-                        (resolvedRecipient?.assignments[index] || assignment)
-                          .trainingDateRule
-                      }
-                      origins={
-                        provenance?.[`${recipient.id}:${assignment.id}`] ||
-                        assignment.fieldOrigins
-                      }
-                      disabled={disabled}
-                      restoreKeys={
-                        assignment.protocolMode === "GROUP"
-                          ? calculatedDateKeys.filter((key) =>
-                              ["MANUAL", "IMPORTED", "CLEARED"].includes(
-                                provenance?.[
-                                  `${recipient.id}:${assignment.id}`
-                                ]?.[key] ||
-                                  assignment.fieldOrigins?.[key] ||
-                                  "",
-                              ),
-                            )
-                          : undefined
-                      }
-                      onRestore={(key) =>
-                        onChange({
-                          ...recipient,
-                          assignments: recipient.assignments.map((a) =>
-                            a.id !== assignment.id
-                              ? a
-                              : restoreAssignmentDate(a, key),
-                          ),
-                        })
-                      }
-                    />
-                  </details>
                 </div>
                 <div
                   className="assignment-section assignment-section-grid"

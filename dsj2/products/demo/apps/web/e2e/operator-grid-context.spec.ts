@@ -114,6 +114,12 @@ async function workspace(page: Page, count = 150) {
   return () => draft;
 }
 
+async function openExtraTools(page: Page) {
+  const tools = page.locator(".recipient-extra-tools");
+  if ((await tools.getAttribute("open")) === null)
+    await tools.locator("summary").click();
+}
+
 test("ten rows preserve ordinary Tab, Shift+Tab, Enter and IME confirmation", async ({
   page,
 }) => {
@@ -229,8 +235,7 @@ test("error links reveal exact hidden grid columns and nested document fields", 
   await page.screenshot({ path: testInfo.outputPath("exact-grid-error.png") });
   await page
     .getByRole("button", {
-      name: "Укажите тему обучения четвёртого получателя",
-      exact: true,
+      name: /Укажите тему обучения четвёртого получателя$/,
     })
     .click();
   await expect(
@@ -319,8 +324,9 @@ test("shared organization previews selected people, preserves exceptions, confir
   await page.reload();
   await page.getByLabel("Выбрать строку 1", { exact: true }).check();
   await page.getByLabel("Выбрать строку 2", { exact: true }).check();
+  await openExtraTools(page);
   await page
-    .getByRole("button", { name: "Применить к выбранным (2)", exact: true })
+    .getByRole("button", { name: "Изменить данные выбранных (2)", exact: true })
     .click();
   const modal = page.getByRole("dialog");
   await modal.getByText("Должность и место работы", { exact: true }).click();
@@ -348,8 +354,9 @@ test("shared organization previews selected people, preserves exceptions, confir
     .toBe("Общая организация");
   expect(current().items[1].workplaceRu).toBe("Индивидуальная организация");
   expect(current().items[2]).toEqual(third);
+  await openExtraTools(page);
   await page
-    .getByRole("button", { name: "Применить к выбранным (2)", exact: true })
+    .getByRole("button", { name: "Изменить данные выбранных (2)", exact: true })
     .click();
   await modal.getByText("Должность и место работы", { exact: true }).click();
   await modal
@@ -407,6 +414,7 @@ test("return after appending a stored person targets that new person instead of 
     }),
   );
   await page.getByLabel("Должность RU, строка 2", { exact: true }).focus();
+  await openExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
     .click();
@@ -455,8 +463,9 @@ test("failed bulk save explains the error inside the dialog and retains the exac
   });
   const before = structuredClone(current().items);
   await page.getByLabel("Выбрать строку 2", { exact: true }).check();
+  await openExtraTools(page);
   await page
-    .getByRole("button", { name: "Применить к выбранным (1)", exact: true })
+    .getByRole("button", { name: "Изменить данные выбранных (1)", exact: true })
     .click();
   const modal = page.getByRole("dialog");
   await modal.getByText("Должность и место работы", { exact: true }).click();

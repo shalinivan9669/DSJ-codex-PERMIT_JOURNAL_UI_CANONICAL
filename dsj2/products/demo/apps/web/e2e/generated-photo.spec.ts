@@ -1,3 +1,4 @@
+import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -154,7 +155,7 @@ test("generated portrait: upload, crop, refresh, preview, issue and exact embedd
     );
   } else {
     await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-    await page.getByRole("button", { name: /Человек Документы/ }).click();
+    await createRequestWithWorkerDocument(page, "PERSON");
     await page
       .getByLabel("Название заявки", { exact: true })
       .fill(`ТЕСТ · созданный портрет · ${template} · ${Date.now()}`);

@@ -1,3 +1,4 @@
+import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -25,7 +26,7 @@ async function login(page: Page, user = email, secret = password) {
 }
 async function person(page: Page) {
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await expect(page.getByLabel("ФИО RU, строка 1")).toBeVisible();
 }
 async function save(page: Page) {

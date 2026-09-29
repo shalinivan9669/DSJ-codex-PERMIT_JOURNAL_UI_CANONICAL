@@ -1,3 +1,7 @@
+import {
+  keyboardCreateRequestWithWorkerDocument,
+  keyboardOpenRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -179,10 +183,7 @@ test("G1 keyboard only: 100 people, visible focus, errors and explicit issuance 
     page,
     page.getByRole("link", { name: "Новая заявка", exact: true }),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", { name: /Организация Заказчик/ }),
-  );
+  await keyboardCreateRequestWithWorkerDocument(page, "COMPANY");
   await keyboardEnter(
     page,
     page.getByLabel("Название заявки", { exact: true }),
@@ -276,6 +277,7 @@ test("G1 keyboard only: 100 people, visible focus, errors and explicit issuance 
       true,
     );
   });
+  await keyboardOpenRecipientExtraTools(page);
   await keyboardActivate(
     page,
     page.getByRole("button", { name: "Сопоставить фото", exact: true }),
@@ -339,7 +341,7 @@ test("G1 keyboard only: 100 people, visible focus, errors and explicit issuance 
   );
   await keyboardActivate(
     page,
-    page.getByRole("button", { name: "Настроить общий контекст", exact: true }),
+    page.getByRole("button", { name: "Настроить даты и протоколы", exact: true }),
   );
   await keyboardCheck(
     page,

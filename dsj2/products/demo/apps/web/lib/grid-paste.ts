@@ -87,7 +87,7 @@ export function previewGridPaste(
   }[] = [];
   data.forEach((values, rowIndex) => {
     const index = startRow + rowIndex;
-    if (!next[index]) next[index] = newRecipient();
+    if (!next[index]) next[index] = { ...newRecipient(), assignments: [] };
     values.forEach((value, columnIndex) => {
       const field = columns[startColumn + columnIndex];
       const before = next[index][field] || "";

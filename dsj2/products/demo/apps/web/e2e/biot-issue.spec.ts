@@ -1,3 +1,4 @@
+import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -41,7 +42,7 @@ test("new isolated synthetic issuer: four current BIOT forms preview and issue t
   await expect(page.getByText(/Создана новая версия реквизитов/)).toBeVisible();
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("button", { name: /Человек Документы/ }).click();
+  await createRequestWithWorkerDocument(page, "PERSON");
   await page.getByLabel("Название заявки", { exact: true }).fill(`ТЕСТ · новые четыре формы БиОТ · ${Date.now()}`);
   await page.getByLabel("ФИО RU, строка 1").fill("Тестовый Получатель БиОТ");
   await page.getByLabel("ФИО KZ, строка 1").fill("Сынақ Әли Қасымұлы");

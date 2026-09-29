@@ -2,12 +2,7 @@
 import { useEffect, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import { api, errorText } from "@/lib/api";
-import {
-  newAssignment,
-  type Customer,
-  type Page,
-  type Recipient,
-} from "@/lib/types";
+import { type Customer, type Page, type Recipient } from "@/lib/types";
 
 type StoredRecipient = { id: string; data: Recipient; archived?: boolean };
 export function reuseRecipient(record: StoredRecipient): Recipient {
@@ -21,7 +16,7 @@ export function reuseRecipient(record: StoredRecipient): Recipient {
     ...person,
     id: crypto.randomUUID(),
     recipientId: record.id,
-    assignments: [newAssignment()],
+    assignments: [],
   };
 }
 export function RecordPicker({

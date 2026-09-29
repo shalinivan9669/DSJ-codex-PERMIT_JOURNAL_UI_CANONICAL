@@ -312,6 +312,7 @@ export function NewRequest({ context }: { context: AppContext }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [kind, setKind] = useState<"PERSON" | "COMPANY">("PERSON");
+  const [bundle, setBundle] = useState<RequestBundle | "">("");
   async function create(kind: "PERSON" | "COMPANY", bundle?: RequestBundle) {
     setBusy(true);
     setError("");
@@ -329,7 +330,9 @@ export function NewRequest({ context }: { context: AppContext }) {
               : "Новая заявка организации",
           customerId: null,
           demoMode: !!context.tenant.demoOnly,
-          ...(bundle ? newRequestBundle(bundle) : { items: [newRecipient()] }),
+          ...(bundle
+            ? newRequestBundle(bundle)
+            : { items: [{ ...newRecipient(), assignments: [] }] }),
         }),
       });
       router.push(`/requests/${draft.id}/edit`);
@@ -346,7 +349,9 @@ export function NewRequest({ context }: { context: AppContext }) {
       <div className="page-heading">
         <div>
           <h1>Новая заявка</h1>
-          <p>Выберите комплект. Соответствующий протокол уже включён.</p>
+          <p>
+            Укажите заказчика. Затем добавьте людей и отметьте нужные документы.
+          </p>
         </div>
       </div>
       {error && <Notice>{error}</Notice>}
@@ -355,84 +360,88 @@ export function NewRequest({ context }: { context: AppContext }) {
           Создавать заявки могут оператор и администратор центра.
         </Notice>
       ) : (
-        <>
-          <section className="panel">
-            <label>
-              Для кого подготовить комплект
-              <select
-                value={kind}
-                disabled={busy}
-                onChange={(event) =>
-                  setKind(event.target.value as "PERSON" | "COMPANY")
-                }
-              >
-                <option value="PERSON">Человек или группа получателей</option>
-                <option value="COMPANY">Организация и её сотрудники</option>
-              </select>
-            </label>
-          </section>
-          <div className="start-options" aria-label="Комплекты БиОТ">
-            {(Object.keys(requestBundles) as RequestBundle[]).map((key) => (
-              <button
-                key={key}
-                className="start-option"
-                disabled={busy}
-                onClick={() => void create(kind, key)}
-              >
-                <Icon
-                  name={key === "WORKER" ? "person" : "company"}
-                  size={38}
+        <form
+          className="panel request-start"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!busy) void create(kind, bundle || undefined);
+          }}
+        >
+          <fieldset className="choice-fieldset" disabled={busy}>
+            <legend>Кто заказчик?</legend>
+            <div className="customer-kind-choices">
+              <label className="choice-option">
+                <input
+                  type="radio"
+                  name="customer-kind"
+                  value="PERSON"
+                  checked={kind === "PERSON"}
+                  onChange={() => setKind("PERSON")}
                 />
-                <h2>{requestBundles[key].label}</h2>
-                <p>
-                  {requestBundles[key].description}. Для группы — один протокол
-                  на всех участников события.
-                </p>
                 <span>
-                  {busy ? "Создаём…" : "Создать комплект"}{" "}
-                  <Icon name="chevron" />
+                  <strong>Физическое лицо</strong>
+                  <small>Личные данные и документы человека</small>
                 </span>
-              </button>
-            ))}
-          </div>
-          <details className="panel">
-            <summary>Другие направления и отдельные формы: ПБ, ПТМ, ПС</summary>
-            <div className="start-options">
-              <button
-                className="start-option"
-                disabled={busy}
-                onClick={() => void create("PERSON")}
-              >
-                <Icon name="person" size={38} />
-                <h2>Человек</h2>
-                <p>
-                  Документы для одного получателя.
-                  <br />
-                  При необходимости можно добавить ещё.
-                </p>
+              </label>
+              <label className="choice-option">
+                <input
+                  type="radio"
+                  name="customer-kind"
+                  value="COMPANY"
+                  checked={kind === "COMPANY"}
+                  onChange={() => setKind("COMPANY")}
+                />
                 <span>
-                  Создать заявку <Icon name="chevron" />
+                  <strong>Организация</strong>
+                  <small>Название компании и список людей</small>
                 </span>
-              </button>
-              <button
-                className="start-option"
-                disabled={busy}
-                onClick={() => void create("COMPANY")}
-              >
-                <Icon name="company" size={38} />
-                <h2>Организация</h2>
-                <p>
-                  Заказчик и список сотрудников.
-                  <br />
-                  Свои документы и даты у каждого.
-                </p>
-                <span>
-                  Создать заявку <Icon name="chevron" />
-                </span>
-              </button>
+              </label>
             </div>
+          </fieldset>
+          <p className="request-start-context" role="status">
+            {kind === "COMPANY"
+              ? "В заявке выберите компанию или добавьте новую по форме и названию. Дополнительные реквизиты можно заполнить позже."
+              : "Начните с ФИО и должности. При необходимости добавьте ещё людей; документы выбираются для каждого отдельно или сразу для всех."}
+          </p>
+          <details className="request-start-bundles">
+            <summary>Начать с готового комплекта БиОТ</summary>
+            <fieldset className="choice-fieldset" disabled={busy}>
+              <legend className="sr-only">Начальный комплект документов</legend>
+              <label className="checkbox-label">
+                <input
+                  type="radio"
+                  name="initial-bundle"
+                  checked={!bundle}
+                  onChange={() => setBundle("")}
+                />
+                Выберу документы рядом с людьми
+              </label>
+              {(Object.keys(requestBundles) as RequestBundle[]).map((key) => (
+                <label className="checkbox-label" key={key}>
+                  <input
+                    type="radio"
+                    name="initial-bundle"
+                    checked={bundle === key}
+                    onChange={() => setBundle(key)}
+                  />
+                  {requestBundles[key].label} —{" "}
+                  {requestBundles[key].description.toLowerCase()}
+                </label>
+              ))}
+            </fieldset>
           </details>
-        </>
+          <div className="request-start-footer">
+            <span className="muted">
+              {bundle
+                ? `Начальный комплект: ${requestBundles[bundle].label}`
+                : "БиОТ, ПТМ, ПБ и ПС — на следующем экране"}
+            </span>
+            <button type="submit" className="primary" disabled={busy}>
+              {busy ? "Создаём заявку…" : "Перейти к людям и документам"}
+              <Icon name="chevron" />
+            </button>
+          </div>
+        </form>
       )}
       <p className="fine-print">
         Номера документов назначаются только при оформлении. Черновик можно
