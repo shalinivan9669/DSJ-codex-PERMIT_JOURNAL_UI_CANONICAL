@@ -92,6 +92,9 @@ packages/database/prisma/dev.db
 # Scope only this deliverable, preserving other docs and application sources.
 /docs/presentations/demo-overview-2026-09-25/
 
+# Reproducible archive; retain the unpacked audit sources and evidence.
+/docs/audit/DEMO_2_0_HANDOFF.zip
+
 # OS/editor
 .DS_Store
 Thumbs.db

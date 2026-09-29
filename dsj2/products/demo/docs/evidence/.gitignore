@@ -1,0 +1,13 @@
+# Superseded raw scan runs stay local; retain final scans, SBOMs and reports.
+# Exact paths only: source fixtures, legal records and helpers remain visible.
+/commercial-acceptance/container-api-cves-initial.json
+/commercial-acceptance/container-api-release-cves.json
+/commercial-acceptance/container-api-final-cves.json
+/commercial-acceptance/container-web-cves-initial.json
+/commercial-acceptance/container-web-final-cves.json
+/commercial-acceptance/container-postgres-alpine-cves-initial.json
+/commercial-acceptance/container-postgres-bookworm-cves-final.json
+/commercial-acceptance/container-postgres-cves-final.json
+/commercial-acceptance/container-postgres-cves.json
+/commercial-acceptance/container-nginx-cves-initial.json
+/commercial-acceptance/container-nginx-cves-final.json
