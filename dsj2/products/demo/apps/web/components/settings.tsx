@@ -2,6 +2,10 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
+import { profileSchema } from "@demo/contracts";
+import { OrganizationNameFields } from "./organization-name-fields";
+import { CenterTrainingSchedule } from "./center-training-schedule";
+import "./center-onboarding.css";
 import {
   templateLabels,
   type AppContext,
@@ -56,7 +60,13 @@ export function Settings({
           {tab === "profile" ? (
             <ProfileForm
               profile={context.profile}
-              onSaved={(profile) => onContextChange({ ...context, profile })}
+              onSaved={(profile) =>
+                onContextChange({
+                  ...context,
+                  profile,
+                  profileVersionId: profile.id || context.profileVersionId,
+                })
+              }
             />
           ) : tab === "templates" ? (
             <Templates initial={context.templates} />
@@ -88,17 +98,20 @@ export function Settings({
     </>
   );
 }
-function ProfileForm({
+export function ProfileForm({
   profile,
   onSaved,
 }: {
-  profile: Profile;
+  profile: Profile | null;
   onSaved: (profile: Profile) => void;
 }) {
   const [value, setValue] = useState<Profile>(
     profile || {
       nameRu: "",
       nameKz: "",
+      legalForm: "NONE",
+      ownNameRu: "",
+      ownNameKz: "",
       cityRu: "",
       cityKz: "",
       addressRu: "",
@@ -120,42 +133,17 @@ function ProfileForm({
     setBusy(true);
     setError("");
     try {
-      const {
-        nameRu,
-        bin,
-        headName,
-        nameKz,
-        addressRu,
-        addressKz,
-        cityRu,
-        cityKz,
-        commission,
-        approvalBasis,
-        commissionTitle,
-        approved,
-      } = value;
+      const { id: _id, version: _version, ...fields } = value;
+      const payload = profileSchema.parse(fields);
       const result = await api<Profile & { profile?: Profile }>(
         "/settings/profile",
         {
           method: "POST",
-          body: json({
-            nameRu,
-            bin,
-            headName,
-            nameKz,
-            addressRu,
-            addressKz,
-            cityRu,
-            cityKz,
-            commission,
-            approvalBasis,
-            commissionTitle,
-            approved,
-          }),
+          body: json(payload),
         },
       );
       const savedProfile = result.profile
-        ? { ...result.profile, version: result.version }
+        ? { ...result.profile, version: result.version, id: result.id }
         : result;
       setValue(savedProfile);
       onSaved(savedProfile);
@@ -185,10 +173,16 @@ function ProfileForm({
           свою версию.
         </Notice>
       )}
+      <OrganizationNameFields
+        value={value}
+        onChange={(names) => change(names)}
+        legacyLabels={[
+          "Юридическое название · RU",
+          "Юридическое название · KZ",
+        ]}
+      />
       <div className="form-grid">
         {[
-          ["nameRu", "Юридическое название · RU"],
-          ["nameKz", "Юридическое название · KZ"],
           ["bin", "БИН учебного центра"],
           ["headName", "ФИО руководителя учебного центра"],
           ["cityRu", "Город · RU"],
@@ -234,7 +228,9 @@ function ProfileForm({
           }
         >
           <Icon name="plus" />
-          Добавить
+          {value.commission.length
+            ? "Добавить члена комиссии"
+            : "Добавить председателя"}
         </button>
       </div>
       {value.commission.length === 0 && (
@@ -243,49 +239,150 @@ function ProfileForm({
         </p>
       )}
       {value.commission.map((person, index) => (
-        <div className="commission-row" key={index}>
-          <label>
-            ФИО
-            <input
-              required
-              value={person.name}
-              onChange={(event) =>
+        <div key={index}>
+          <p className="center-person-role">
+            {index === 0 ? "Председатель комиссии" : `Член комиссии ${index}`}
+          </p>
+          <div className="commission-row">
+            <label>
+              ФИО
+              <input
+                required
+                value={person.name}
+                onChange={(event) =>
+                  change({
+                    commission: value.commission.map((row, i) =>
+                      i === index ? { ...row, name: event.target.value } : row,
+                    ),
+                  })
+                }
+              />
+            </label>
+            <label>
+              Роль в комиссии / должность
+              <input
+                value={person.position}
+                onChange={(event) =>
+                  change({
+                    commission: value.commission.map((row, i) =>
+                      i === index
+                        ? { ...row, position: event.target.value }
+                        : row,
+                    ),
+                  })
+                }
+              />
+            </label>
+            <button
+              type="button"
+              aria-label={`Удалить члена комиссии ${index + 1}`}
+              onClick={() =>
                 change({
-                  commission: value.commission.map((row, i) =>
-                    i === index ? { ...row, name: event.target.value } : row,
-                  ),
+                  commission:
+                    index === 0 && value.commission.length > 1
+                      ? [
+                          { name: "", position: "" },
+                          ...value.commission.slice(1),
+                        ]
+                      : value.commission.filter((_, i) => i !== index),
                 })
               }
-            />
-          </label>
-          <label>
-            Роль в комиссии / должность
-            <input
-              value={person.position}
-              onChange={(event) =>
-                change({
-                  commission: value.commission.map((row, i) =>
-                    i === index
-                      ? { ...row, position: event.target.value }
-                      : row,
-                  ),
-                })
-              }
-            />
-          </label>
-          <button
-            type="button"
-            aria-label={`Удалить члена комиссии ${index + 1}`}
-            onClick={() =>
-              change({
-                commission: value.commission.filter((_, i) => i !== index),
-              })
-            }
-          >
-            Удалить
-          </button>
+            >
+              Удалить
+            </button>
+          </div>
         </div>
       ))}
+      <details className="center-extra-people">
+        <summary>Другие преподаватели и подписанты</summary>
+        <p className="fine-print">
+          Список имён для работы центра. Состав комиссии выше определяет подписи
+          в текущих формах. Эти записи не предоставляют доступ к приложению.
+        </p>
+        {(value.people || []).map((person, index) => (
+          <div className="form-grid" key={index}>
+            <label>
+              ФИО сотрудника
+              <input
+                required
+                maxLength={255}
+                value={person.name}
+                onChange={(event) =>
+                  change({
+                    people: value.people!.map((row, i) =>
+                      i === index ? { ...row, name: event.target.value } : row,
+                    ),
+                  })
+                }
+              />
+            </label>
+            <label>
+              Роль
+              <select
+                value={person.role}
+                onChange={(event) =>
+                  change({
+                    people: value.people!.map((row, i) =>
+                      i === index
+                        ? {
+                            ...row,
+                            role: event.target.value as "TEACHER" | "SIGNER",
+                          }
+                        : row,
+                    ),
+                  })
+                }
+              >
+                <option value="TEACHER">Преподаватель</option>
+                <option value="SIGNER">Подписант</option>
+              </select>
+            </label>
+            <label>
+              Должность сотрудника
+              <input
+                maxLength={255}
+                value={person.position}
+                onChange={(event) =>
+                  change({
+                    people: value.people!.map((row, i) =>
+                      i === index
+                        ? { ...row, position: event.target.value }
+                        : row,
+                    ),
+                  })
+                }
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() =>
+                change({ people: value.people!.filter((_, i) => i !== index) })
+              }
+            >
+              Убрать сотрудника {index + 1}
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          disabled={(value.people?.length || 0) >= 24}
+          onClick={() =>
+            change({
+              people: [
+                ...(value.people || []),
+                { name: "", position: "", role: "TEACHER" },
+              ],
+            })
+          }
+        >
+          Добавить преподавателя или подписанта
+        </button>
+      </details>
+      <CenterTrainingSchedule
+        commonFields={value.commonFields}
+        disabled={busy}
+        onChange={(commonFields) => change({ commonFields })}
+      />
       <label className="checkbox approval">
         <input
           type="checkbox"
@@ -300,7 +397,7 @@ function ProfileForm({
     </form>
   );
 }
-function Templates({ initial }: { initial: Template[] }) {
+export function Templates({ initial }: { initial: Template[] }) {
   const [templates, setTemplates] = useState<
     (Template & {
       approved?: boolean;

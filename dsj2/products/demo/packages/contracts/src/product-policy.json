@@ -3,6 +3,11 @@
   "productId": "DEMO",
   "version": 2,
   "demoRoutes": [
+    { "method": "POST", "surface": "api", "path": "/auth/register" },
+    { "method": "GET", "surface": "web", "path": "/register" },
+    { "method": "HEAD", "surface": "web", "path": "/register" },
+    { "method": "GET", "surface": "web", "path": "/onboarding" },
+    { "method": "HEAD", "surface": "web", "path": "/onboarding" },
     {
       "method": "POST",
       "surface": "api",

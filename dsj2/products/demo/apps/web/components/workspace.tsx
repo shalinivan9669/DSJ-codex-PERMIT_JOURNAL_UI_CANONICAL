@@ -21,6 +21,8 @@ import { Workbench } from "./workbench";
 import { EmployerPortal } from "./employer-portal";
 import { PublicVerification } from "./public-verification";
 import { SessionDialog } from "./session-dialog";
+import { Register } from "./register";
+import { CenterOnboarding } from "./center-onboarding";
 
 export function Workspace() {
   const pathname = usePathname();
@@ -62,9 +64,13 @@ export function Workspace() {
     if (!pathname.startsWith("/verify/")) void load();
   }, [load]);
   useEffect(() => {
-    if (context && pathname === "/login")
+    if (context && (pathname === "/login" || pathname === "/register"))
       router.replace(
-        context.user.role === "EMPLOYER" ? "/portal" : "/requests",
+        context.user.role === "EMPLOYER"
+          ? "/portal"
+          : pathname === "/register"
+            ? "/onboarding"
+            : "/requests",
       );
   }, [context, pathname, router]);
   async function logout() {
@@ -94,7 +100,12 @@ export function Workspace() {
         <p>Открываем рабочее пространство…</p>
       </main>
     );
-  if (unauthorized) return <Login onLogin={load} />;
+  if (unauthorized)
+    return pathname === "/register" ? (
+      <Register onRegistered={load} />
+    ) : (
+      <Login onLogin={load} />
+    );
   if (!context)
     return (
       <main className="initial-state">
@@ -169,6 +180,8 @@ export function Workspace() {
           <EmployerPortal />
         ) : pathname === "/portal" ? (
           <EmployerPortal />
+        ) : pathname === "/onboarding" ? (
+          <CenterOnboarding context={context} onContextChange={setContext} />
         ) : pathname === "/requests/new" ? (
           <NewRequest context={context} />
         ) : requestMatch ? (
@@ -287,6 +300,9 @@ function Login({ onLogin }: { onLogin: () => Promise<void> }) {
           </button>
           <p className="fine-print">
             Нет доступа? Обратитесь к администратору вашего центра.
+          </p>
+          <p>
+            <Link href="/register">Зарегистрировать учебный центр</Link>
           </p>
         </form>
       </section>

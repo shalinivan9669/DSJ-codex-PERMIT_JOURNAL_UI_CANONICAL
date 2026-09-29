@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import {
   trainingDateRuleSchema,
   trainingRuleDescription,
+  KZ_TRAINING_CALENDAR_LABEL,
+  KZ_TRAINING_CALENDAR_VERSION,
   type TrainingDateRule,
 } from "@demo/contracts";
 
@@ -15,10 +17,18 @@ export function TrainingDateSettings({
   disabled: boolean;
   onChange: (rule: TrainingDateRule | null) => void;
 }) {
+  const suggested: Partial<TrainingDateRule> = {
+    hoursSource: "THEORY",
+    calendar: "KZ_FIVE_DAY",
+    calendarVersion: KZ_TRAINING_CALENDAR_VERSION,
+    anchor: "DOCUMENT_AFTER_TRAINING",
+    protocolDate: "MANUAL",
+    source: "График учебного центра",
+  };
   const [candidate, setCandidate] = useState<Partial<TrainingDateRule>>(
-    rule || {},
+    rule || suggested,
   );
-  const ruleKey = JSON.stringify(rule || {});
+  const ruleKey = JSON.stringify(rule || suggested);
   useEffect(() => setCandidate(JSON.parse(ruleKey)), [ruleKey]);
   const parsed = trainingDateRuleSchema.safeParse(candidate);
   return (
@@ -30,6 +40,50 @@ export function TrainingDateSettings({
         не подтверждают обучение или экзамен. Срок действия считается отдельно
         по категории БиОТ.
       </p>
+      <p className="fine-print">
+        Продолжительность учебного дня задаёт центр по программе. Например, 16
+        часов при 8 часах в день — 2 учебных дня; 8 часов здесь не норматив и не
+        заполнено автоматически. Производственные часы учитываются только в
+        выбранном режиме.
+      </p>
+      <details className="fine-print">
+        <summary>Как выбрать часы программы</summary>
+        <p>
+          Объём программы и часы в учебном дне — разные настройки. По{" "}
+          <a
+            href="https://old.adilet.zan.kz/rus/docs/V1500012665"
+            target="_blank"
+            rel="noreferrer"
+          >
+            правилам БиОТ
+          </a>{" "}
+          рабочим предусмотрено не менее 10 академических часов теории и 16
+          часов производства; объём для ИТР зависит от категории. Академические
+          и производственные часы задаются отдельно.
+        </p>
+        <p>
+          По{" "}
+          <a
+            href="https://old.adilet.zan.kz/rus/docs/V2100023461"
+            target="_blank"
+            rel="noreferrer"
+          >
+            правилам ПБ, пункт 7
+          </a>{" "}
+          программа рабочих опасных объектов — не менее 10 часов, руководителей,
+          специалистов и ИТР — не менее 40. В{" "}
+          <a
+            href="https://old.adilet.zan.kz/rus/docs/V1400009510"
+            target="_blank"
+            rel="noreferrer"
+          >
+            программах ПТМ
+          </a>{" "}
+          объём различается: например, руководители — 8 часов, педагогические
+          работники — 6. Выберите фактическую программу центра; единого объёма
+          для всех документов нет.
+        </p>
+      </details>
       <div className="form-grid compact">
         <label>
           Часов в учебном дне
@@ -39,6 +93,7 @@ export function TrainingDateSettings({
             min="0.01"
             max="24"
             step="any"
+            placeholder="Например, 8 — по вашей программе"
             disabled={disabled}
             value={candidate.hoursPerDay || ""}
             onChange={(e) =>
@@ -65,10 +120,44 @@ export function TrainingDateSettings({
             <option value="">Выберите по графику</option>
             <option value="THEORY">Часы обучения без производственных</option>
             <option value="THEORY_AND_PRODUCTION">
-              Сумма учебных и производственных часов
+              Сумма — только при подтверждённых одинаковых единицах
+            </option>
+            <option value="SEPARATE_BLOCKS">
+              Теория и производство — последовательные отдельные блоки
             </option>
           </select>
         </label>
+        {candidate.hoursSource === "THEORY_AND_PRODUCTION" && (
+          <p className="fine-print">
+            Академические часы теории и часы производства нельзя складывать без
+            подтверждения единиц в графике. Для разных единиц выберите отдельные
+            блоки.
+          </p>
+        )}
+        {candidate.hoursSource === "SEPARATE_BLOCKS" && (
+          <label>
+            Производственных часов в дне
+            <input
+              aria-label="Производственных часов в дне"
+              type="number"
+              min="0.01"
+              max="24"
+              step="any"
+              disabled={disabled}
+              value={candidate.productionHoursPerDay || ""}
+              onChange={(e) =>
+                setCandidate({
+                  ...candidate,
+                  productionHoursPerDay: Number(e.target.value) || undefined,
+                })
+              }
+            />
+            <small>
+              Первое поле задаёт академические часы теории в день; каждый блок
+              округляется до целого учебного дня отдельно.
+            </small>
+          </label>
+        )}
         <label>
           Учебные дни
           <select
@@ -79,10 +168,15 @@ export function TrainingDateSettings({
               setCandidate({
                 ...candidate,
                 calendar: e.target.value as TrainingDateRule["calendar"],
+                calendarVersion:
+                  e.target.value === "KZ_FIVE_DAY"
+                    ? KZ_TRAINING_CALENDAR_VERSION
+                    : undefined,
               })
             }
           >
             <option value="">Выберите по графику</option>
+            <option value="KZ_FIVE_DAY">{KZ_TRAINING_CALENDAR_LABEL}</option>
             <option value="CALENDAR">Календарные, включая выходные</option>
             <option value="WEEKDAYS">
               Понедельник–пятница (без календаря праздников)
@@ -103,6 +197,10 @@ export function TrainingDateSettings({
             }
           >
             <option value="">Выберите по графику</option>
+            <option value="DOCUMENT_AFTER_TRAINING">
+              Обучение до даты документа — выходные и праздники пропускаются по
+              графику
+            </option>
             <option value="DOCUMENT_IS_END">
               Дата документа — последний день обучения
             </option>
@@ -145,6 +243,7 @@ export function TrainingDateSettings({
         </label>
       </div>
       <button
+        type="button"
         disabled={
           disabled ||
           !parsed.success ||
@@ -158,6 +257,7 @@ export function TrainingDateSettings({
       </button>
       {rule && (
         <button
+          type="button"
           className="text-button"
           disabled={disabled}
           onClick={() => onChange(null)}

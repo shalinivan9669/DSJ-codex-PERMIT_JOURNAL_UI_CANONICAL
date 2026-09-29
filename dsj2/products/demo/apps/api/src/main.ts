@@ -49,6 +49,7 @@ export async function bootstrap() {
     }
     next();
   });
+  app.use("/auth/register", bodyJson({ limit: 8192, strict: true }));
   app.use(
     ["/auth/employer-invite/inspect", "/auth/employer-invite/exchange"],
     bodyJson({ limit: 4096, strict: true }),

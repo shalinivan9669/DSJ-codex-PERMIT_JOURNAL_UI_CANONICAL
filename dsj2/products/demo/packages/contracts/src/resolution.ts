@@ -3,6 +3,7 @@ import { protocolTemplateFor } from "./index";
 import {
   calculateDates,
   calculatedDateKeys,
+  trainingBeforeIssueProblems,
   type TrainingDateRule,
 } from "./date-calculation";
 
@@ -60,9 +61,21 @@ function commonContext(
   return { fields, origins };
 }
 
-export function resolveCommonDates(fields: CommonFields): CommonFields {
-  const result = commonContext([[fields, "REQUEST"]]);
-  applyDateCalculation(result.fields, result.origins, fields.trainingDateRule);
+export function resolveCommonDates(
+  fields: CommonFields,
+  center: CommonFields = {},
+  preset: CommonFields = {},
+): CommonFields {
+  const result = commonContext([
+    [center, "CENTER"],
+    [preset, "PRESET"],
+    [fields, "REQUEST"],
+  ]);
+  applyDateCalculation(
+    result.fields,
+    result.origins,
+    result.fields.trainingDateRule,
+  );
   return result.fields;
 }
 
@@ -243,6 +256,13 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
             path: `${path}.documentDate`,
             rowId: item.id,
             message,
+          });
+        for (const problem of trainingBeforeIssueProblems(assignment, rule))
+          issues.push({
+            code: "TRAINING_BEFORE_DOCUMENT",
+            path: `${path}.${problem.field}`,
+            rowId: item.id,
+            message: problem.message,
           });
       }
       if (

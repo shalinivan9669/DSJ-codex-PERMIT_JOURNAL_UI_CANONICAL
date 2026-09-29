@@ -4,6 +4,7 @@ import {
   calculateDates,
   calculatedDateKeys,
   trainingRuleDescription,
+  trainingBeforeIssueProblems,
   type CalculatedDateKey,
   type DateValues,
   type TrainingDateRule,
@@ -42,8 +43,9 @@ export function DateCalculationStatus({
       <p>{trainingRuleDescription(rule)}</p>
       {calculation.trainingDays && (
         <p>
-          Расчётная продолжительность: {calculation.trainingDays} учебных дней.
-          Автоматический период: {calculation.proposed.trainingStart || "—"} —{" "}
+          Продолжительность по выбранным часам: {calculation.trainingDays}{" "}
+          учебных дней. Расчётный период:{" "}
+          {calculation.proposed.trainingStart || "—"} —{" "}
           {calculation.proposed.trainingEnd || "—"}.
         </p>
       )}
@@ -61,6 +63,11 @@ export function DateCalculationStatus({
           {message}
         </p>
       ))}
+      {trainingBeforeIssueProblems(values, rule).map(({ field, message }) => (
+        <p className="field-error" key={field}>
+          {message}
+        </p>
+      ))}
       {overrides.map((key) => (
         <p key={key}>
           {labels[key]}:{" "}
@@ -72,6 +79,7 @@ export function DateCalculationStatus({
             : "Сохранится даже при изменении расчёта."}{" "}
           {!restoreKeys || restoreKeys.includes(key) ? (
             <button
+              type="button"
               className="text-button"
               disabled={disabled}
               aria-label={`Вернуть автоматический расчёт: ${labels[key]}`}

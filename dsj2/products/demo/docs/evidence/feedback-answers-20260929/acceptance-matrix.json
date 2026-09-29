@@ -1,0 +1,29 @@
+{
+  "scope": "Anik answers: self-registration, training calendar and mixed recipients",
+  "date": "2026-09-29",
+  "branch": "codex/ot-center-dsj-forms-ux",
+  "baseRevision": "e038b6687c6b7dd608424fe1a852b8bb410150f1",
+  "report": "../../ANIK_FEEDBACK_ANSWERS_2026-09-29.md",
+  "checks": [
+    {"id":"full-unit-suite","status":"PASS","result":"179/179 (103 common + 76 web)","evidence":".runtime/feedback-answers/units-final.log"},
+    {"id":"full-lint","status":"PASS","evidence":".runtime/feedback-answers/lint-final.log"},
+    {"id":"registration-unit","status":"PASS","result":"3/3","evidence":"tests/registration.test.ts"},
+    {"id":"registration-api-atomic-isolated-and-unapproved","status":"PASS","result":"9/9","evidence":"tests/integration/registration.test.ts"},
+    {"id":"http-security-regression","status":"PASS","result":"13/13","evidence":".runtime/feedback-answers/security/http-security.log"},
+    {"id":"pinned-profile-older-than-100-versions","status":"PASS","result":"1/1","evidence":".runtime/feedback-answers/security/profile-lookup.log"},
+    {"id":"calendar-legacy-manual-and-separate-hours","status":"PASS","result":"18/18 focused unit + 1 API integration","evidence":"tests/kz-training-dates.test.ts; tests/date-calculation.test.ts; tests/integration/date-calculation.test.ts"},
+    {"id":"mixed-worker-and-itr-request","status":"PASS","result":"2/2","evidence":".runtime/mixed-feedback-e2e/results.json","limitation":"Synthetic mocked API"},
+    {"id":"registration-onboarding-mobile-and-field-preservation","status":"PASS","result":"4/4","evidence":".runtime/center-registration/results.json","limitation":"Synthetic mocked API"},
+    {"id":"calendar-browser-retroactive-override-and-pinned-profile","status":"PASS","result":"3/3","evidence":".runtime/feedback-training-calendar-final/results.json","limitation":"Synthetic mocked API"},
+    {"id":"real-browser-registration-proxy-cookie-profile-and-draft","status":"PASS","result":"1/1","evidence":".runtime/center-registration-real/results.json","limitation":"Local disposable database; no production registration or finalization"},
+    {"id":"existing-immutable-records-preserved","status":"PASS","result":"2975/2975 unchanged by ID and SHA-256","evidence":".runtime/feedback-answers/preservation-result.json"},
+    {"id":"seven-workspace-builds","status":"PASS","evidence":".runtime/feedback-answers/build.log","limitation":"No schema change, pnpm -r build; existing globals.css and Next ESLint warnings"},
+    {"id":"seven-workspace-typechecks","status":"PASS","evidence":".runtime/feedback-answers/typecheck-final.log"},
+    {"id":"full-print-legal-and-human-speed-acceptance","status":"NOT RUN","limitation":"No template or renderer changes; no physical printing or real operator timing"}
+  ],
+  "releaseVerification": {
+    "target":"https://dsj-demo-operator-ux-20260929.vercel.app",
+    "evidenceDirectory":".runtime/anik-feedback-release",
+    "method":"Exact SHA Vercel READY and production alias, Railway active SUCCESS, authenticated read-only smoke after publication"
+  }
+}

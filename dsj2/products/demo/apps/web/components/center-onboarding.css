@@ -1,0 +1,74 @@
+.center-registration {
+  width: min(720px, calc(100% - 32px));
+  margin: 28px auto 60px;
+}
+.center-registration .panel,
+.center-setup-panel {
+  padding: clamp(18px, 4vw, 32px);
+}
+.registration-fields {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+.registration-fields legend {
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.registration-fields h2 {
+  margin-top: 28px;
+  font-size: 20px;
+}
+.center-setup-steps,
+.center-setup-next {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+  align-items: center;
+}
+.center-setup-steps button,
+.center-setup-steps .button {
+  min-height: 46px;
+}
+.center-setup-steps [aria-current="step"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.center-setup-steps span {
+  font-weight: 700;
+  color: var(--accent-dark);
+  margin-right: 8px;
+}
+.center-extra-people {
+  margin: 22px 0;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.center-extra-people summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 0;
+}
+.center-person-role {
+  color: var(--accent-dark);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 14px 0 6px;
+}
+.center-registration input,
+.center-registration select {
+  max-width: 100%;
+}
+@media (max-width: 600px) {
+  .center-setup-steps {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .center-setup-next {
+    align-items: stretch;
+  }
+  .center-setup-next .button {
+    width: 100%;
+  }
+}

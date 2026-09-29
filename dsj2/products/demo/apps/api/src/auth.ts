@@ -85,6 +85,7 @@ export async function authenticate(
         /^\/verification\/[a-f0-9]{64}\/corrections$/.test(req.path));
     if (
       req.path === "/auth/login" ||
+      (req.method === "POST" && req.path === "/auth/register") ||
       (req.method === "POST" &&
         [
           "/auth/employer-invite/inspect",

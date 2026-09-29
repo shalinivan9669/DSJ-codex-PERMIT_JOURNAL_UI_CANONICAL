@@ -17,6 +17,7 @@ import type { Response } from "express";
 import { z, LIMITS, templateIds } from "@demo/contracts";
 import { db, ctx, fail, parse, audit, type DemoRequest } from "./core";
 import { login, logout, changePassword, cookies } from "./auth";
+import { registerCenter } from "./tenant-provisioning";
 import {
   context,
   getProfile,
@@ -118,6 +119,13 @@ export class DemoController {
       storage: "ok",
     };
   }
+  @Post("auth/register") register(
+    @Req() req: DemoRequest,
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: unknown,
+  ) {
+    return registerCenter(req, res, body);
+  }
   @Post("auth/login") login(
     @Req() req: DemoRequest,
     @Res({ passthrough: true }) res: Response,
@@ -193,10 +201,25 @@ export class DemoController {
   ) {
     return saveCustomer(ctx(req, true), body, id);
   }
-  @Get("settings/profiles") async profiles(@Req() req: DemoRequest) {
+  @Get("settings/profiles") async profiles(
+    @Req() req: DemoRequest,
+    @Query() query: Record<string, unknown>,
+  ) {
+    const c = ctx(req);
+    const { versionId } = parse(
+      z.object({ versionId: z.uuid().optional() }).strict(),
+      query,
+    );
+    if (versionId) {
+      const profile = await db.issuerProfileVersion.findFirst({
+        where: { id: versionId, tenantId: c.tenantId },
+      });
+      if (!profile) fail(404, "PROFILE_NOT_FOUND", "Версия центра не найдена");
+      return { items: [profile] };
+    }
     return {
       items: await db.issuerProfileVersion.findMany({
-        where: { tenantId: ctx(req).tenantId },
+        where: { tenantId: c.tenantId },
         orderBy: { version: "desc" },
         take: 100,
       }),

@@ -8,6 +8,12 @@ import {
   resolvedRequest,
 } from "../../apps/api/src/requests";
 import { draftSchema, today } from "../../packages/contracts/src";
+import {
+  KZ_TRAINING_CALENDAR_VERSION,
+  resolveDraft,
+  type TrainingDateRule,
+} from "../../packages/contracts/src";
+import { saveProfile } from "../../apps/api/src/settings";
 import { assertTestDatabase } from "./test-database";
 
 test("API creation defaults to tenant calendar date once; saved/blank/imported dates and automatic provenance survive reload", async () => {
@@ -131,7 +137,108 @@ test("API creation defaults to tenant calendar date once; saved/blank/imported d
     assert.equal(draftSchema.parse(blank.draft).commonFields!.documentDate, "");
     const legacy = await createRequest(c, { kind: "PERSON" });
     assert.equal(draftSchema.parse(legacy.draft).commonFields, undefined);
+
+    const schedule: TrainingDateRule = {
+      hoursPerDay: 8,
+      hoursSource: "THEORY",
+      calendar: "KZ_FIVE_DAY",
+      calendarVersion: KZ_TRAINING_CALENDAR_VERSION,
+      anchor: "DOCUMENT_AFTER_TRAINING",
+      protocolDate: "DOCUMENT_DATE",
+      source: "Синтетический подтверждённый график интеграционного теста",
+    };
+    const center = {
+      nameRu: "Изолированный тест графика",
+      nameKz: "",
+      addressRu: "",
+      addressKz: "",
+      cityRu: "",
+      cityKz: "",
+      approvalBasis: "",
+      commission: [],
+      approved: false,
+      commonFields: { trainingDateRule: schedule },
+    };
+    const profile = await saveProfile(c, center);
+    const scheduled = await createRequest(c, {
+      kind: "PERSON",
+      schemaVersion: 2,
+      commonFields: { documentDate: "2026-03-26" },
+      items: [
+        {
+          id: "scheduled-person",
+          assignments: [
+            { id: "scheduled-card", templateId: "ptm-card", hours: "16" },
+          ],
+        },
+      ],
+    });
+    const persisted = draftSchema.parse(scheduled.draft);
+    assert.equal(persisted.profileVersionId, profile.id);
+    let server = await resolvedRequest(c, scheduled.id);
+    const browser = resolveDraft(persisted, center.commonFields);
+    assert.equal(
+      server.draft.items[0].assignments[0].trainingStart,
+      "2026-03-19",
+    );
+    assert.equal(
+      server.draft.items[0].assignments[0].trainingEnd,
+      "2026-03-20",
+    );
+    assert.deepEqual(
+      server.draft.items[0].assignments[0],
+      browser.draft.items[0].assignments[0],
+    );
+    await saveProfile(c, {
+      ...center,
+      commonFields: { trainingDateRule: { ...schedule, hoursPerDay: 4 } },
+    });
+    server = await resolvedRequest(c, scheduled.id);
+    assert.equal(
+      server.draft.items[0].assignments[0].trainingStart,
+      "2026-03-19",
+      "Saved profile version remains pinned after center settings change",
+    );
+    persisted.items[0].assignments[0].documentDate = "2025-01-08";
+    persisted.items[0].assignments[0].fieldOrigins = { documentDate: "MANUAL" };
+    const retroactive = await patchRequest(c, scheduled.id, {
+      expectedRevision: scheduled.revision,
+      draft: persisted,
+    });
+    server = await resolvedRequest(c, scheduled.id);
+    assert.equal(
+      server.draft.items[0].assignments[0].documentDate,
+      "2025-01-08",
+    );
+    assert.equal(
+      server.draft.items[0].assignments[0].trainingStart,
+      "2025-01-05",
+    );
+    assert.equal(
+      server.draft.items[0].assignments[0].trainingEnd,
+      "2025-01-06",
+    );
+    persisted.items[0].assignments[0].trainingEnd = "2025-01-08";
+    persisted.items[0].assignments[0].fieldOrigins!.trainingEnd = "IMPORTED";
+    await patchRequest(c, scheduled.id, {
+      expectedRevision: retroactive.revision,
+      draft: persisted,
+    });
+    server = await resolvedRequest(c, scheduled.id);
+    assert.equal(
+      server.draft.items[0].assignments[0].trainingEnd,
+      "2025-01-08",
+    );
+    assert.ok(
+      server.issues.some(
+        (issue) =>
+          issue.code === "TRAINING_BEFORE_DOCUMENT" &&
+          issue.path === "items.0.assignments.0.trainingEnd",
+      ),
+    );
   } finally {
+    // Profiles/audit are immutable, including isolated fixtures. Leave the
+    // UUID-scoped test tenant for disposal with the dedicated test database.
     await db.$disconnect();
   }
 });

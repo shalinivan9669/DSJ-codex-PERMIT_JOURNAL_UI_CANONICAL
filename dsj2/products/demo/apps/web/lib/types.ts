@@ -5,6 +5,7 @@ import {
   type RequestItemInput,
   type Role,
   type OrganizationForm,
+  type IssuerProfile,
 } from "@demo/contracts";
 import { biotAssignmentDefaults } from "./assignment-presets";
 export type { Assignment, Role };
@@ -42,26 +43,16 @@ export type Template = {
   description?: string;
   contract?: Record<string, unknown>;
 };
-export type Profile = {
-  commissionTitle?: string;
-  bin?: string;
-  headName?: string;
-  nameRu: string;
-  nameKz: string;
-  addressRu: string;
-  addressKz: string;
-  cityRu: string;
-  cityKz: string;
-  approvalBasis: string;
-  commission: { name: string; position: string }[];
+export type Profile = IssuerProfile & {
   version?: number;
-  approved: boolean;
+  id?: string;
 };
 export type AppContext = {
   user: { id: string; displayName: string; email: string; role: Role };
   tenant: { id: string; name: string; timezone: string; demoOnly?: boolean };
   csrfToken?: string;
-  profile: Profile;
+  profile: Profile | null;
+  profileVersionId?: string | null;
   templates: Template[];
   numbering: unknown;
 };

@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { BIOT_CATEGORIES, biotCategoryIds, biotValidUntil } from "./biot";
 import { dateOriginsSchema, trainingDateRuleSchema } from "./date-calculation";
+import { customerSchema, organizationFormSchema } from "./organization";
 import { documentPlan } from "./resolution";
 export { z } from "zod";
 export * from "./biot";
 export * from "./date-calculation";
+export * from "./registration";
 export const LIMITS = {
   rows: 250,
   documents: 1000,
@@ -241,6 +243,21 @@ export const profileSchema = z
   .object({
     commonFields: commonFieldsSchema.optional(),
     commissionTitle: z.string().max(255).optional(),
+    legalForm: organizationFormSchema.nullable().optional(),
+    ownNameRu: z.string().max(500).nullable().optional(),
+    ownNameKz: z.string().max(500).nullable().optional(),
+    people: z
+      .array(
+        z
+          .object({
+            name: z.string().trim().min(1).max(255),
+            position: z.string().max(255).default(""),
+            role: z.enum(["TEACHER", "SIGNER"]),
+          })
+          .strict(),
+      )
+      .max(24)
+      .optional(),
     nameRu: z
       .string()
       .min(1, "Введите название на русском")
@@ -265,7 +282,41 @@ export const profileSchema = z
       .max(12),
     approved: z.boolean().default(false),
   })
-  .strict();
+  .strict()
+  .superRefine((value, context) => {
+    const parsed = customerSchema.safeParse({
+      nameRu: value.nameRu,
+      nameKz: value.nameKz,
+      legalForm: value.legalForm,
+      ownNameRu: value.ownNameRu,
+      ownNameKz: value.ownNameKz,
+    });
+    if (!parsed.success)
+      for (const issue of parsed.error.issues)
+        context.addIssue({
+          code: "custom",
+          path: issue.path,
+          message: issue.message,
+        });
+  })
+  .transform((value) => {
+    if (!value.legalForm) return value;
+    const names = customerSchema.parse({
+      nameRu: value.nameRu,
+      nameKz: value.nameKz,
+      legalForm: value.legalForm,
+      ownNameRu: value.ownNameRu,
+      ownNameKz: value.ownNameKz,
+    });
+    return {
+      ...value,
+      legalForm: names.legalForm,
+      ownNameRu: names.ownNameRu,
+      ownNameKz: names.ownNameKz,
+      nameRu: names.nameRu,
+      nameKz: names.nameKz,
+    };
+  });
 export type Draft = z.infer<typeof draftSchema>;
 export type RequestItemInput = z.infer<typeof itemSchema>;
 export type Assignment = z.infer<typeof assignmentSchema>;

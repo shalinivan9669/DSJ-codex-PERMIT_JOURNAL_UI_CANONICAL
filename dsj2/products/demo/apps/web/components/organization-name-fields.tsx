@@ -10,9 +10,11 @@ import {
 export function OrganizationNameFields({
   value,
   onChange,
+  legacyLabels = ["Полное название · RU", "Полное название · KZ"],
 }: {
   value: OrganizationNames;
   onChange: (value: OrganizationNames) => void;
+  legacyLabels?: readonly [string, string];
 }) {
   const id = useId();
   const [differentKz, setDifferentKz] = useState(!!value.ownNameKz);
@@ -164,7 +166,7 @@ export function OrganizationNameFields({
           </p>
           <div className="form-grid">
             <label>
-              Полное название · RU
+              {legacyLabels[0]}
               <input
                 autoFocus
                 required
@@ -176,7 +178,7 @@ export function OrganizationNameFields({
               />
             </label>
             <label>
-              Полное название · KZ
+              {legacyLabels[1]}
               <input
                 maxLength={500}
                 value={value.nameKz}

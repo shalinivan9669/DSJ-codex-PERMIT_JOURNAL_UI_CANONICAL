@@ -16,7 +16,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
-import { LIMITS, resolveDraft, documentPlan } from "@demo/contracts";
+import {
+  LIMITS,
+  resolveDraft,
+  documentPlan,
+  type CommonFields,
+} from "@demo/contracts";
 import { api, ApiError, errorText, json, BEFORE_LOGOUT_EVENT } from "@/lib/api";
 import { AutosaveLane } from "@/lib/autosave";
 import { useUnsavedNavigation } from "@/lib/use-unsaved-navigation";
@@ -90,6 +95,36 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [saveState, setSaveState] = useState("saved");
   const [rowScope, setRowScope] = useState("");
   const [error, setError] = useState("");
+  const [pinnedCenter, setPinnedCenter] = useState<{
+    id: string;
+    commonFields: CommonFields;
+  } | null>(null);
+  useEffect(() => {
+    const profileId = draft?.profileVersionId;
+    if (!profileId || profileId === context.profileVersionId) return;
+    let active = true;
+    void api<{
+      items: { id: string; profile: { commonFields?: CommonFields } }[];
+    }>(`/settings/profiles?versionId=${encodeURIComponent(profileId)}`)
+      .then(({ items }) => {
+        if (!active) return;
+        const profile = items.find((item) => item.id === profileId);
+        if (!profile)
+          throw new Error(
+            "Не найдена сохранённая версия графика центра. Обновите заявку.",
+          );
+        setPinnedCenter({
+          id: profileId,
+          commonFields: profile.profile.commonFields || {},
+        });
+      })
+      .catch((caught) => {
+        if (active) setError(errorText(caught));
+      });
+    return () => {
+      active = false;
+    };
+  }, [draft?.profileVersionId, context.profileVersionId]);
   const saveError = useRef("");
   const [busy, setBusy] = useState("");
   const [contextBusy, setContextBusy] = useState(false);
@@ -617,10 +652,17 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                     ))),
   );
   const selected = draft.items.find((item) => item.id === selectedId);
+  const centerCommon =
+    draft.profileVersionId &&
+    draft.profileVersionId !== context.profileVersionId
+      ? pinnedCenter?.id === draft.profileVersionId
+        ? pinnedCenter.commonFields
+        : {}
+      : context.profile?.commonFields || {};
   const resolved =
     serverResolution?.revision === draft.revision
       ? serverResolution.value
-      : resolveDraft(draft);
+      : resolveDraft(draft, centerCommon);
   const plan = documentPlan(resolved.draft);
   const assignmentCount = draft.items.reduce(
     (sum, item) => sum + item.assignments.length,
@@ -1221,6 +1263,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       </section>
       <EventContext
         draft={draft}
+        centerCommon={centerCommon}
         selectedIds={checked}
         disabled={readonly || operationBusy}
         onChange={edit}

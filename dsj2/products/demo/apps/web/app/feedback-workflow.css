@@ -199,6 +199,11 @@
 .document-date-details > summary {
   font-size: 14px;
 }
+.document-date-details > summary small {
+  display: block;
+  margin-top: 4px;
+  font-weight: 400;
+}
 .review-issue-groups {
   display: grid;
   gap: 12px;

@@ -47,6 +47,7 @@ const directions = [
 ] as const;
 export function EventContext({
   draft,
+  centerCommon = {},
   selectedIds,
   disabled: externalDisabled,
   onChange,
@@ -55,6 +56,7 @@ export function EventContext({
   onBusyChange,
 }: {
   draft: Draft;
+  centerCommon?: CommonFields;
   selectedIds: string[];
   disabled: boolean;
   onChange: (patch: Partial<Draft>) => void;
@@ -157,13 +159,14 @@ export function EventContext({
   const event = events.find((e) => e.id === activeId);
   const displayedCommon =
     (expanded
-      ? resolveDraft(draft).draft.events?.find((e) => e.id === activeId)
-          ?.commonFields
+      ? resolveDraft(draft, centerCommon).draft.events?.find(
+          (e) => e.id === activeId,
+        )?.commonFields
       : undefined) ||
     event?.commonFields ||
     {};
   const displayedRequestCommon = expanded
-    ? resolveCommonDates(requestCommon)
+    ? resolveCommonDates(requestCommon, centerCommon, draft.presetFields)
     : requestCommon;
   const eventAssignments = expanded
     ? draft.items.flatMap((item) =>
@@ -397,7 +400,7 @@ export function EventContext({
                 ))}
             </div>
             <TrainingDateSettings
-              rule={requestCommon.trainingDateRule}
+              rule={displayedRequestCommon.trainingDateRule}
               disabled={disabled}
               onChange={(rule) =>
                 setRequestCommon((old) => ({ ...old, trainingDateRule: rule }))
@@ -405,7 +408,7 @@ export function EventContext({
             />
             <DateCalculationStatus
               values={displayedRequestCommon}
-              rule={requestCommon.trainingDateRule}
+              rule={displayedRequestCommon.trainingDateRule}
               origins={Object.fromEntries(
                 calculatedDateKeys.map((key) => [
                   key,
@@ -563,6 +566,8 @@ export function EventContext({
                 </select>
                 <small>
                   В выпуске сохраняется выбранная версия профиля и комиссии.
+                  График обучения наследуется от настроек заявки; при
+                  необходимости измените его ниже для этой группы.
                 </small>
               </label>
               <div className="form-grid">
