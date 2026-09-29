@@ -33,6 +33,11 @@ const config: NextConfig = {
           },
         ],
       },
+      {
+        // Vercel's configured headers override the upstream API response.
+        source: "/api/auth/employer-invite/:path*",
+        headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
+      },
     ];
   },
 };

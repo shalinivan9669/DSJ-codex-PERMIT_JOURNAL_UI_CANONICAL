@@ -2,12 +2,34 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { externalApiRewrites } from "../lib/deployment";
 import { config } from "../middleware";
-import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
+import {
+  unstable_doesMiddlewareMatch,
+  unstable_getResponseFromNextConfig,
+} from "next/experimental/testing/server";
+import nextConfig from "../next.config";
 import { NextRequest } from "next/server";
 import { GET, POST } from "../app/api/[...path]/route";
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import path from "node:path";
+
+test("invite API responses preserve their stricter referrer policy through Next headers", async () => {
+  for (const [pathname, expected] of [
+    ["/api/auth/employer-invite/inspect", "no-referrer"],
+    ["/api/auth/employer-invite/exchange", "no-referrer"],
+    ["/api/auth/employer-invite/unknown", "no-referrer"],
+    ["/api/health", "same-origin"],
+    ["/api/auth/employer-invite-other", "same-origin"],
+  ]) {
+    const response = await unstable_getResponseFromNextConfig({
+      url: `https://demo.example.test${pathname}`,
+      nextConfig: { headers: nextConfig.headers },
+    });
+    assert.equal(response.headers.get("referrer-policy"), expected, pathname);
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+    assert.equal(response.headers.get("x-frame-options"), "SAMEORIGIN");
+  }
+});
 
 test("Vercel API transport requires an explicit fixed HTTPS backend origin", () => {
   assert.deepEqual(externalApiRewrites({}), []);
