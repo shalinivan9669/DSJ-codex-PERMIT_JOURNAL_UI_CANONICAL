@@ -81,6 +81,23 @@ venv/
 !/docs/evidence/operator-value/business-value-map.json
 !/docs/evidence/operator-value/release-checks.json
 
+# Maintained UX acceptance and preservation records are source-controlled.
+# Keep raw runs in the same directories local.
+!/docs/evidence/forms-ux/
+/docs/evidence/forms-ux/*
+!/docs/evidence/forms-ux/acceptance-matrix.json
+!/docs/evidence/forms-ux/preservation.json
+!/docs/evidence/forms-ux/source-isolation-final.json
+!/docs/evidence/ot-center-dsj-forms-ux/
+/docs/evidence/ot-center-dsj-forms-ux/*
+!/docs/evidence/ot-center-dsj-forms-ux/date-rule-evidence.md
+!/docs/evidence/feedback-ux-20260929/
+/docs/evidence/feedback-ux-20260929/*
+!/docs/evidence/feedback-ux-20260929/acceptance-matrix.json
+!/docs/evidence/feedback-answers-20260929/
+/docs/evidence/feedback-answers-20260929/*
+!/docs/evidence/feedback-answers-20260929/acceptance-matrix.json
+
 # Delivery archives and their generated manifests are local output.
 /docs/deliverables/*
 !/docs/deliverables/README.md
