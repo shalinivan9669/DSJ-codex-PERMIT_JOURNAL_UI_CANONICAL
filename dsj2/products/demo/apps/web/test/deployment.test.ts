@@ -6,6 +6,7 @@ import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
 import { NextRequest } from "next/server";
 import { GET, POST } from "../app/api/[...path]/route";
 import { execFileSync } from "node:child_process";
+import { createRequire } from "node:module";
 import path from "node:path";
 
 test("Vercel API transport requires an explicit fixed HTTPS backend origin", () => {
@@ -140,9 +141,16 @@ test("Vercel's actual Next config loader retains the repository tracing root for
   assert.equal(cloud.output, null);
   const relativeAppDir = path.relative(cloud.root, appRoot);
   assert.equal(path.join(repositoryRoot, relativeAppDir), appRoot);
+  const adapterRequire = createRequire(
+    path.join(repositoryRoot, relativeAppDir, "noop.js"),
+  );
   assert.equal(
-    relativeAppDir.split(path.sep).join("/"),
-    "dsj2/products/demo/apps/web",
+    adapterRequire.resolve(
+      "next/dist/compiled/next-server/server.runtime.prod.js",
+    ),
+    createRequire(path.join(appRoot, "noop.js")).resolve(
+      "next/dist/compiled/next-server/server.runtime.prod.js",
+    ),
   );
   assert.deepEqual(read(""), { root: productRoot, output: "standalone" });
 });
