@@ -1,0 +1,126 @@
+{
+  "policy": "LEGACY_REFERENCE_90D5",
+  "sourceCommit": "90d5b5e72dba0ac38c89f42fa37925a0b3468561",
+  "sourcePackageUnmodified": true,
+  "helperNormalization": "LF_LINE_ENDINGS_ONLY",
+  "helpers": [
+    {
+      "path": "generate_biot_card.py",
+      "sourcePath": "dsj2/scripts/generate_biot_card.py",
+      "sha256": "ea6c8c06ee41d5954fdab5734ca75d61d84fe9ec9f8a74bdfbc419eb1bbb8b17",
+      "sourceBlobSha256": "ea6c8c06ee41d5954fdab5734ca75d61d84fe9ec9f8a74bdfbc419eb1bbb8b17",
+      "normalization": "LF_LINE_ENDINGS_ONLY"
+    },
+    {
+      "path": "generate_biot_mail_merge_bundle.py",
+      "sourcePath": "dsj2/scripts/generate_biot_mail_merge_bundle.py",
+      "sha256": "1e1c32706d288aec3999588c76d0407ed24b988c479e39edc2fd0d9a0c9b3e15",
+      "sourceBlobSha256": "1e1c32706d288aec3999588c76d0407ed24b988c479e39edc2fd0d9a0c9b3e15",
+      "normalization": "LF_LINE_ENDINGS_ONLY"
+    },
+    {
+      "path": "generate_ps_witness_certificate.py",
+      "sourcePath": "dsj2/scripts/generate_ps_witness_certificate.py",
+      "sha256": "af72244318a96f2e73c2e7bd2e84c082c76f5755c202d7c9ed405a6e267a8dc0",
+      "sourceBlobSha256": "af72244318a96f2e73c2e7bd2e84c082c76f5755c202d7c9ed405a6e267a8dc0",
+      "normalization": "LF_LINE_ENDINGS_ONLY"
+    }
+  ],
+  "templates": [
+    {
+      "id": "biot-worker-card",
+      "previousFile": "biot-worker-card.v19.docx",
+      "sourcePath": "dsj2/docs/experimental/biot/biot-card-template.docx",
+      "sha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+      "file": "biot-worker-card.v20.docx",
+      "version": 20
+    },
+    {
+      "id": "biot-itr-certificate",
+      "previousFile": "biot-itr-certificate.v17.docx",
+      "sourcePath": "dsj2/docs/experimental/biot/biot-itr-certificate-template.docx",
+      "sha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+      "file": "biot-itr-certificate.v18.docx",
+      "version": 18
+    },
+    {
+      "id": "biot-protocol",
+      "previousFile": "biot-protocol.v13.docx",
+      "sourcePath": "dsj2/docs/experimental/biot/biot-protocol-template.docx",
+      "sha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "file": "biot-protocol.v14.docx",
+      "version": 14
+    },
+    {
+      "id": "ptm-card",
+      "previousFile": "ptm-card.v16.docx",
+      "sourcePath": "dsj2/docs/experimental/ptm/ptm-card-template.docx",
+      "sha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+      "file": "ptm-card.v17.docx",
+      "version": 17
+    },
+    {
+      "id": "ptm-protocol",
+      "previousFile": "ptm-protocol.v11.docx",
+      "sourcePath": "dsj2/docs/experimental/ptm/ptm-protocol-template.docx",
+      "sha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "file": "ptm-protocol.v12.docx",
+      "version": 12
+    },
+    {
+      "id": "pb-card",
+      "previousFile": "pb-card.v16.docx",
+      "sourcePath": "dsj2/docs/experimental/pb/pb-card-template.docx",
+      "sha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+      "file": "pb-card.v17.docx",
+      "version": 17
+    },
+    {
+      "id": "pb-protocol",
+      "previousFile": "pb-protocol.v11.docx",
+      "sourcePath": "dsj2/docs/experimental/pb/pb-protocol-template.docx",
+      "sha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "file": "pb-protocol.v12.docx",
+      "version": 12
+    },
+    {
+      "id": "ps-card",
+      "previousFile": "ps-card.v17.docx",
+      "sourcePath": "dsj2/docs/experimental/ps/ps-card-template.docx",
+      "sha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+      "file": "ps-card.v18.docx",
+      "version": 18
+    },
+    {
+      "id": "ps-protocol",
+      "previousFile": "ps-protocol.v11.docx",
+      "sourcePath": "dsj2/docs/experimental/ps/ps-protocol-template.docx",
+      "sha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "file": "ps-protocol.v12.docx",
+      "version": 12
+    },
+    {
+      "id": "ps-witness",
+      "previousFile": "ps-witness.v13.docx",
+      "sourcePath": "dsj2/docs/experimental/ps/ps-witness-certificate-template.docx",
+      "sha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+      "file": "ps-witness.v14.docx",
+      "version": 14
+    },
+    {
+      "id": "biot-itr-protocol",
+      "previousFile": "biot-itr-protocol.v4.docx",
+      "sourcePath": "dsj2/docs/experimental/biot/biot-protocol-template.docx",
+      "sha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "file": "biot-itr-protocol.v5.docx",
+      "version": 5
+    }
+  ],
+  "permittedDataChanges": [
+    "existing cached field/text values from the frozen snapshot",
+    "DATE cached value frozen without active DATE instructions",
+    "source PS witness empty month cell populated",
+    "original participant roster row cloned for group data"
+  ],
+  "layoutChanges": []
+}

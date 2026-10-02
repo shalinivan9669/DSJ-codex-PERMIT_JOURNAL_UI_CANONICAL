@@ -29,3 +29,57 @@ assets/templates/biot-protocol.v10.docx
 assets/templates/biot-worker-card.v16.docx
 # Read-only comparison helper requires retained sources outside this product.
 scripts/verification/compare-dsj-sources.py
+# Development-only manifest selection utility; runtime uses pinned assets.
+scripts/render/select_legacy_reference.py
+
+# Historical versions retained for immutable local reconstruction.
+assets/templates/biot-itr-certificate.v15.docx
+assets/templates/biot-itr-certificate.v16.docx
+assets/templates/biot-itr-protocol.group-v2.docx
+assets/templates/biot-itr-protocol.group-v3.docx
+assets/templates/biot-itr-protocol.v2.docx
+assets/templates/biot-itr-protocol.v3.docx
+assets/templates/biot-protocol.group-v2.docx
+assets/templates/biot-protocol.group-v3.docx
+assets/templates/biot-protocol.v11.docx
+assets/templates/biot-protocol.v12.docx
+assets/templates/biot-worker-card.v17.docx
+assets/templates/biot-worker-card.v18.docx
+assets/templates/pb-card.v14.docx
+assets/templates/pb-card.v15.docx
+assets/templates/pb-protocol.group-v1.docx
+assets/templates/pb-protocol.group-v2.docx
+assets/templates/pb-protocol.v10.docx
+assets/templates/pb-protocol.v9.docx
+assets/templates/ps-card.v15.docx
+assets/templates/ps-card.v16.docx
+assets/templates/ps-protocol.group-v1.docx
+assets/templates/ps-protocol.group-v2.docx
+assets/templates/ps-protocol.v10.docx
+assets/templates/ps-protocol.v9.docx
+assets/templates/ps-witness.v11.docx
+assets/templates/ps-witness.v12.docx
+assets/templates/ptm-card.v14.docx
+assets/templates/ptm-card.v15.docx
+assets/templates/ptm-protocol.group-v1.docx
+assets/templates/ptm-protocol.group-v2.docx
+assets/templates/ptm-protocol.v10.docx
+assets/templates/ptm-protocol.v9.docx
+
+# Superseded local comparison packages; original versions remain in Git.
+assets/templates/biot-itr-certificate.v17.docx
+assets/templates/biot-itr-protocol.group-v4.docx
+assets/templates/biot-itr-protocol.v4.docx
+assets/templates/biot-protocol.group-v4.docx
+assets/templates/biot-protocol.v13.docx
+assets/templates/biot-worker-card.v19.docx
+assets/templates/pb-card.v16.docx
+assets/templates/pb-protocol.group-v3.docx
+assets/templates/pb-protocol.v11.docx
+assets/templates/ps-card.v17.docx
+assets/templates/ps-protocol.group-v3.docx
+assets/templates/ps-protocol.v11.docx
+assets/templates/ps-witness.v13.docx
+assets/templates/ptm-card.v16.docx
+assets/templates/ptm-protocol.group-v3.docx
+assets/templates/ptm-protocol.v11.docx

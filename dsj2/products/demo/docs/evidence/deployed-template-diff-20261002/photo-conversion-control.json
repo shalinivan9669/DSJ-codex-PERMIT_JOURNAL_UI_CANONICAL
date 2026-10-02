@@ -1,0 +1,31 @@
+[
+  {
+    "case": "unchanged-control",
+    "inputFilename": "input.docx",
+    "inputPathLength": 64,
+    "inputSha256": "aacb0c77a7a08e89573cdc8fd278adf518e30d8a5cec1b9dd554fc88211b12f5",
+    "sameAsOriginal": true,
+    "changedZipParts": [],
+    "returncode": 1,
+    "pdfExists": false,
+    "stderr": "Could not find platform independent libraries <prefix>\r\nError: source file could not be loaded\n",
+    "stdout": "",
+    "seconds": 17.54
+  },
+  {
+    "case": "opc-default-candidate",
+    "inputFilename": "input.docx",
+    "inputPathLength": 64,
+    "inputSha256": "6b2cd3132cf4c3e6188842ac80b6491f030c2aba6db4abaa9b7e761005ce8679",
+    "sameAsOriginal": false,
+    "changedZipParts": [
+      "[Content_Types].xml",
+      "word/_rels/document.xml.rels"
+    ],
+    "returncode": 0,
+    "pdfExists": true,
+    "stderr": "Could not find platform independent libraries <prefix>\r\n",
+    "stdout": "convert C:\\Users\\Admin\\AppData\\Local\\Temp\\photo-pair-scqxgq9r\\input.docx as a Writer document -> C:\\Users\\Admin\\AppData\\Local\\Temp\\photo-pair-scqxgq9r\\1\\input.pdf using filter : writer_pdf_Export\n",
+    "seconds": 18.43
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "status": "CLEAR",
+  "reviewMode": "Read-only source, local template-selection and historical-byte checks",
+  "sourceCommit": "90d5b5e72dba0ac38c89f42fa37925a0b3468561",
+  "productScope": "dsj2/products/demo only",
+  "selectedTemplates": {
+    "manifestCount": 16,
+    "exactRawSourceCount": 16,
+    "latestRuntimeSelectionCount": 16,
+    "latestRuntimeRawApprovedCount": 16,
+    "v2SelectedCount": 0,
+    "nonRawSelectedCount": 0,
+    "policy": "LEGACY_REFERENCE_90D5",
+    "method": "Manifest hashes compared with actual Git source blobs; latest runtime selections checked with the API's template and owner grouping"
+  },
+  "historicalIntegrity": {
+    "existingHeadDocxCompared": 38,
+    "existingHeadDocxUnchanged": 38,
+    "oldStoredArtifactFilesRehashed": 52,
+    "oldStoredArtifactFilesUnchanged": 52,
+    "sourceHelpersCompared": 3,
+    "sourceHelpersGitBlobByteExact": 3
+  },
+  "autonomy": {
+    "status": "PASS",
+    "command": "node scripts/verification/autonomy.mjs",
+    "manifests": 8,
+    "sourceFiles": 316,
+    "selectedTemplates": 16,
+    "externalDsjDependencies": 0,
+    "note": "The legacy source path occurs in a provenance docstring, not a runtime import"
+  },
+  "testCoverageReview": {
+    "status": "CLEAR_WITH_EXPLICIT_COVERAGE_BOUNDARY",
+    "currentRawCoverage": [
+      "All individual forms and supported photographs",
+      "Two-recipient batch and 100-recipient batch",
+      "Pinned-template checksums and input overflow guards",
+      "Actual source-column semantics, factual outcomes and dates",
+      "Current group workplace data and mixed member outcomes",
+      "Legacy core equality and declared production-data/package transformations",
+      "Final package contracts and malformed-package rejection"
+    ],
+    "historicalPins": "V1 transformed-layout, synthetic brace/cache, combined-language and explicit numbered-column contracts remain explicitly pinned",
+    "currentLargeGroupPhysicalEvidence": "BIOT raw group with 250 members has separate actual PDF evidence",
+    "historicalLargeGroupMatrix": "The five-protocol 1/2/25/100/250 typography and table matrix is V1 evidence, not current raw-form physical acceptance",
+    "physicalPrintAcceptance": "NOT_ACCEPTED_SOURCE_LIBREOFFICE_LIMITS"
+  },
+  "mutationsDuringReview": "None; this aggregate was saved only after the read-only review completed",
+  "sensitiveDataIncluded": false
+}

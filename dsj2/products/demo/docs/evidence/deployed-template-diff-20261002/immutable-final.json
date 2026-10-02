@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "scope": "FINAL_SOURCE_IMMUTABLE_HISTORY",
+  "originalFiles": 52,
+  "preservedTemplateVersions": 32,
+  "oldSavedSnapshotsReproducedByteForByte": 20,
+  "comparisonCommit": "8825dfa65f6c2a9b38bd39ee44463d3a0f6b102e",
+  "currentAdapterSha256": "b6fe2e6d1376fb033109b8c4b33235249f17a10fad19090b718f2c5432924cac",
+  "sourceLogs": [
+    "immutable-final.log",
+    "old-snapshots-final.log"
+  ]
+}

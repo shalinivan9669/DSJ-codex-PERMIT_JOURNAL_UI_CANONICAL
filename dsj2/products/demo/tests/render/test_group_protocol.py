@@ -1,5 +1,6 @@
 """Real group DOCX structure and one PDF regression for multi-digit ordinals."""
 from copy import deepcopy
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -13,7 +14,7 @@ sys.path.insert(0, str(ROOT / 'scripts/render'))
 from renderer import render_docx, convert_pdf
 from group_protocol import roster_table, W
 from lxml import etree as E
-from test_render import EVIDENCE_ROOT, fixture
+from test_render import EVIDENCE_ROOT, STORE, fixture
 
 MANIFEST = json.loads((ROOT / 'assets/templates/manifest.json').read_text(encoding='utf8'))
 FORMS = ['pb-protocol', 'ptm-protocol', 'biot-protocol', 'biot-itr-protocol', 'ps-protocol']
@@ -29,6 +30,22 @@ def group_fixture(template_id, count):
                         for n in range(1, count + 1)]
     return snapshot
 
+def historical_v1_group_fixture(template_id, count):
+    """Pin the transformed V1 roster's explicit layout contract.
+
+    The raw 90d5 templates retain their own automatic numbering and source
+    headings. Their current data/limits are tested separately; old immutable
+    roster widths, repeat flags and physical layout must remain reproducible.
+    """
+    snapshot = group_fixture(template_id, count)
+    version = 3 if template_id.startswith('biot-') else 2
+    source = ROOT / 'assets/templates' / f'{template_id}.group-v{version}.docx'
+    key = f'historical-v1-{template_id}-group-{version}.docx'
+    (STORE / key).write_bytes(source.read_bytes())
+    snapshot.update(templateVersion=version, templateStorageKey=key,
+                    templateChecksum=hashlib.sha256(source.read_bytes()).hexdigest())
+    return snapshot
+
 class GroupProtocolTests(unittest.TestCase):
     def test_real_1_2_25_100_250_rows_in_one_table_all_five_protocols(self):
         with tempfile.TemporaryDirectory(prefix='demo-group-regression-') as temp:
@@ -36,7 +53,7 @@ class GroupProtocolTests(unittest.TestCase):
                 for count in [1, 2, 25, 100, 250]:
                     with self.subTest(template=template_id, count=count):
                         path = Path(temp) / (template_id + '.docx')
-                        render_docx(group_fixture(template_id, count), path)
+                        render_docx(historical_v1_group_fixture(template_id, count), path)
                         with ZipFile(path) as archive:
                             root = E.fromstring(archive.read('word/document.xml'))
                         table = roster_table(root)
@@ -70,7 +87,7 @@ class GroupProtocolTests(unittest.TestCase):
         output.mkdir(parents=True, exist_ok=True)
         docx = output / 'ptm-protocol-250.docx'
         pdf = docx.with_suffix('.pdf')
-        render_docx(group_fixture('ptm-protocol', 250), docx)
+        render_docx(historical_v1_group_fixture('ptm-protocol', 250), docx)
         convert_pdf(docx, pdf)
         document = pymupdf.open(pdf)
         ordinals = []

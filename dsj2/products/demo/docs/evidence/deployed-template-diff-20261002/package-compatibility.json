@@ -1,0 +1,749 @@
+{
+  "status": "PASS",
+  "scope": "Final raw package compatibility, 11 normal forms + 3 photographed forms. Namespace declarations, UTF-8 encoding spelling and OPC default namespace serialization only. No source form/helper/image or layout edits.",
+  "sourceHashes": {
+    "legacy_reference.py": "b6fe2e6d1376fb033109b8c4b33235249f17a10fad19090b718f2c5432924cac",
+    "legacy_snapshot_fields.py": "c1b6a307495a4dc32bc485e29d817f47fa947f65f78aa4d8854310d85b00fcaa",
+    "generate_biot_card.py": "ea6c8c06ee41d5954fdab5734ca75d61d84fe9ec9f8a74bdfbc419eb1bbb8b17",
+    "generate_biot_mail_merge_bundle.py": "1e1c32706d288aec3999588c76d0407ed24b988c479e39edc2fd0d9a0c9b3e15",
+    "generate_ps_witness_certificate.py": "af72244318a96f2e73c2e7bd2e84c082c76f5755c202d7c9ed405a6e267a8dc0"
+  },
+  "records": [
+    {
+      "case": "biot-itr-certificate",
+      "templateId": "biot-itr-certificate",
+      "photo": false,
+      "sourceSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 1,
+      "changedParts": [
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex"
+          }
+        },
+        {
+          "part": "word/footer1.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "biot-itr-protocol",
+      "templateId": "biot-itr-protocol",
+      "photo": false,
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 1,
+      "changedParts": [
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex",
+            "wp14": "http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+          }
+        },
+        {
+          "part": "word/footer1.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/footer2.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/footer3.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "biot-protocol",
+      "templateId": "biot-protocol",
+      "photo": false,
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 1,
+      "changedParts": [
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex",
+            "wp14": "http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+          }
+        },
+        {
+          "part": "word/footer1.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/footer2.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/footer3.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "biot-worker-card",
+      "templateId": "biot-worker-card",
+      "photo": false,
+      "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 0,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "pb-card",
+      "templateId": "pb-card",
+      "photo": false,
+      "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 0,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "pb-protocol",
+      "templateId": "pb-protocol",
+      "photo": false,
+      "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 2,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex",
+            "wp14": "http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "ps-card",
+      "templateId": "ps-card",
+      "photo": false,
+      "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 0,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "ps-protocol",
+      "templateId": "ps-protocol",
+      "photo": false,
+      "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 1,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex",
+            "wp14": "http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "ps-witness",
+      "templateId": "ps-witness",
+      "photo": false,
+      "sourceSha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 2,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "ptm-card",
+      "templateId": "ptm-card",
+      "photo": false,
+      "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 0,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "ptm-protocol",
+      "templateId": "ptm-protocol",
+      "photo": false,
+      "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 2,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex",
+            "wp14": "http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "pb-card-photo",
+      "templateId": "pb-card",
+      "photo": true,
+      "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 1,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": true,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": true,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "ps-card-photo",
+      "templateId": "ps-card",
+      "photo": true,
+      "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 1,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": true,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": true,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    },
+    {
+      "case": "ptm-card-photo",
+      "templateId": "ptm-card",
+      "photo": true,
+      "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+      "packageContract": "PASS",
+      "elementQNameAttributesTextAndOrderEqual": true,
+      "styleAndGeometryXmlEqual": true,
+      "allNonXmlPartsByteEqual": true,
+      "mediaPartsByteEqual": true,
+      "mediaPartCount": 1,
+      "changedParts": [
+        {
+          "part": "[Content_Types].xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": true,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/_rels/document.xml.rels",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": true,
+          "restoredMcAliases": {}
+        },
+        {
+          "part": "word/document.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {
+            "w15": "http://schemas.microsoft.com/office/word/2012/wordml",
+            "w16": "http://schemas.microsoft.com/office/word/2018/wordml",
+            "w16cex": "http://schemas.microsoft.com/office/word/2018/wordml/cex",
+            "w16cid": "http://schemas.microsoft.com/office/word/2016/wordml/cid",
+            "w16du": "http://schemas.microsoft.com/office/word/2023/wordml/word16du",
+            "w16sdtdh": "http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash",
+            "w16sdtfl": "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock",
+            "w16se": "http://schemas.microsoft.com/office/word/2015/wordml/symex"
+          }
+        },
+        {
+          "part": "word/demo-footer.xml",
+          "standardEncodingNameRepaired": true,
+          "opcDefaultNamespaceRestored": false,
+          "restoredMcAliases": {}
+        }
+      ]
+    }
+  ],
+  "batchActualProof": {
+    "semanticXmlEqual": true,
+    "allMediaUnchanged": true,
+    "changedPackageParts": [
+      "[Content_Types].xml",
+      "word/_rels/document.xml.rels",
+      "word/demo-footer.xml",
+      "word/document.xml"
+    ],
+    "adapterSha256": "b6fe2e6d1376fb033109b8c4b33235249f17a10fad19090b718f2c5432924cac",
+    "cases": [
+      {
+        "case": "unchanged-control",
+        "inputPathLength": 64,
+        "sameAsOriginal": true,
+        "returncode": 1,
+        "pdfExists": false,
+        "stderr": "Could not find platform independent libraries <prefix>\r\nError: source file could not be loaded\n",
+        "stdout": "",
+        "seconds": 12.76
+      },
+      {
+        "case": "package-repaired",
+        "inputPathLength": 64,
+        "sameAsOriginal": false,
+        "returncode": 0,
+        "pdfExists": true,
+        "stderr": "Could not find platform independent libraries <prefix>\r\n",
+        "stdout": "convert C:\\Users\\Admin\\AppData\\Local\\Temp\\batch-pair-aqrzbmhx\\input.docx as a Writer document -> C:\\Users\\Admin\\AppData\\Local\\Temp\\batch-pair-aqrzbmhx\\1\\input.pdf using filter : writer_pdf_Export\n",
+        "seconds": 16.2
+      }
+    ]
+  },
+  "photoActualRootCauseProof": [
+    {
+      "case": "unchanged-control",
+      "inputFilename": "input.docx",
+      "inputPathLength": 64,
+      "inputSha256": "aacb0c77a7a08e89573cdc8fd278adf518e30d8a5cec1b9dd554fc88211b12f5",
+      "sameAsOriginal": true,
+      "changedZipParts": [],
+      "returncode": 1,
+      "pdfExists": false,
+      "stderr": "Could not find platform independent libraries <prefix>\r\nError: source file could not be loaded\n",
+      "stdout": "",
+      "seconds": 17.54
+    },
+    {
+      "case": "opc-default-candidate",
+      "inputFilename": "input.docx",
+      "inputPathLength": 64,
+      "inputSha256": "6b2cd3132cf4c3e6188842ac80b6491f030c2aba6db4abaa9b7e761005ce8679",
+      "sameAsOriginal": false,
+      "changedZipParts": [
+        "[Content_Types].xml",
+        "word/_rels/document.xml.rels"
+      ],
+      "returncode": 0,
+      "pdfExists": true,
+      "stderr": "Could not find platform independent libraries <prefix>\r\n",
+      "stdout": "convert C:\\Users\\Admin\\AppData\\Local\\Temp\\photo-pair-scqxgq9r\\input.docx as a Writer document -> C:\\Users\\Admin\\AppData\\Local\\Temp\\photo-pair-scqxgq9r\\1\\input.pdf using filter : writer_pdf_Export\n",
+      "seconds": 18.43
+    }
+  ],
+  "targetedTests": {
+    "passed": 5,
+    "log": ".runtime/exact-reference-20261002/package-compatibility-final.log",
+    "covers": [
+      "all11 sample-mode final DOCX package contract",
+      "batch semantic XML and media equality",
+      "all3 photo forms OPC-only changes plus declarations",
+      "unmodified raw OPC roots retained",
+      "test21 malformed MC prefix rejection"
+    ]
+  },
+  "boundary": "Engineering package compatibility only. Physical print acceptance remains NOT_ACCEPTED_SOURCE_LIBREOFFICE_LIMITS; final full suite pending."
+}

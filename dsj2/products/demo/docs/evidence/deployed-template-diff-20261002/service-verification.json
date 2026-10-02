@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "scope": "LOCAL_SYNTHETIC_MANAGER_DIRECTOR_NUMBERED_DOCUMENT_FLOW",
+  "requestId": "5dcf2386-a357-472d-928b-041b4466c1f6",
+  "issuanceId": "35493328-0c7c-45e6-b2f2-e3d9ed05f481",
+  "lifecycle": "AWAITING_SIGNATURE",
+  "documents": [
+    {
+      "templateId": "biot-worker-card",
+      "templateVersion": "20",
+      "number": "BIOT-CARD-00003"
+    },
+    {
+      "templateId": "biot-protocol",
+      "templateVersion": "14",
+      "number": "BIOT-PROTOCOL-00005"
+    },
+    {
+      "templateId": "biot-itr-certificate",
+      "templateVersion": "18",
+      "number": "BIOT-CERTIFICATE-00003"
+    },
+    {
+      "templateId": "biot-itr-protocol",
+      "templateVersion": "5",
+      "number": "BIOT-PROTOCOL-00006"
+    }
+  ],
+  "artifactCount": 10,
+  "artifactFormats": {
+    "DOCX": 4,
+    "PDF": 4,
+    "ZIP": 1,
+    "XLSX": 1
+  },
+  "allStoredArtifactHashesVerified": true,
+  "old52FilesAnd32PriorTemplateRowsUnchanged": true,
+  "failedOwnPendingDraftArchived": true,
+  "printAcceptance": "NOT_ACCEPTED_SOURCE_LIBREOFFICE_LIMITS",
+  "physicalPrint": "NOT_VERIFIED",
+  "sourceLanguageSlots": {
+    "biotProtocols": {
+      "header": "saved employerKz",
+      "recipientRow": "saved employerRu",
+      "mixedHeader": "all participants in the existing header language"
+    },
+    "pbProtocol": "Original combineCompanyRuKzLabel selects one company base and legal-form wrapper; both complete language strings are not promised in the single source slot. Historical V1 joined-language behavior remains pinned and tested."
+  }
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "templateId": "biot-worker-card",
+    "status": "PASS",
+    "equalZipParts": 15
+  },
+  {
+    "templateId": "biot-itr-certificate",
+    "status": "PASS",
+    "equalZipParts": 16
+  }
+]

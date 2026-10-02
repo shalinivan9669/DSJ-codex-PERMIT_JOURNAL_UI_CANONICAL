@@ -1,0 +1,689 @@
+{
+  "status": "SOURCE_AND_SYNTHETIC_DATA_PASS_WITH_PRINT_LIMITATIONS",
+  "pdfPrintStatus": "NOT_PRINT_ACCEPTED",
+  "databaseAccess": false,
+  "syntheticInputOnly": true,
+  "productionPersonalDocumentsRead": false,
+  "rawSourceCommit": "90d5b5e72dba0ac38c89f42fa37925a0b3468561",
+  "converter": "LibreOffice 26.2.6.3",
+  "evidenceBoundary": "The 14-case/20-page and current group250/12-page PDF runs used adapter473048de before final lexical-only package repairs. Final b6fe2e6d is covered separately by all14 package semantics, all11 production oracle, one photo physical equality, and one batch actual conversion. No claim that all14 PDFs were re-rendered at b6fe2e6d.",
+  "matrix": {
+    "forms": 14,
+    "pages": 20,
+    "rawSourceHashesAndMedia": "PASS",
+    "syntheticSavedData": "PASS",
+    "allPageSampleTextAndVisibleRedPixels": "PASS_20_OF_20",
+    "sourceHashes": {
+      "renderer.py": "ac8038398bbb1144fe4664c51cc37aa5811276fe6f0697ab7d2a016ea9e4e55e",
+      "legacy_reference.py": "473048de3101487406d9668898f0cd04fd4516ab83730b89aeeab1e6859754df",
+      "legacy_reference_sources.json": "c96b4fb861407ef51494f64fa7d45879251fd6383bb41f3330ac42f5b9e30a6d",
+      "legacy_snapshot_fields.py": "c1b6a307495a4dc32bc485e29d817f47fa947f65f78aa4d8854310d85b00fcaa",
+      "generate_biot_card.py": "ea6c8c06ee41d5954fdab5734ca75d61d84fe9ec9f8a74bdfbc419eb1bbb8b17",
+      "generate_biot_mail_merge_bundle.py": "1e1c32706d288aec3999588c76d0407ed24b988c479e39edc2fd0d9a0c9b3e15",
+      "generate_ps_witness_certificate.py": "af72244318a96f2e73c2e7bd2e84c082c76f5755c202d7c9ed405a6e267a8dc0",
+      "source_fidelity.py": "d03984dc91d83bbff0a06e780820c821998634810d797ce3d818567adda2ae67",
+      "english_appendix.py": "32ead30f14c5b231d6a6dc643609bba152d3d828b4f50c2a8e4232191c27c425",
+      "group_protocol.py": "06dfc98e689552ab518109b437b4bfa08c984e51133b1e2e5ec105255cb0a4b9",
+      "sanitize_templates.py": "e5440d67816f343ff9753e088385629db8c0b835c5b44e55e072c5121d988348"
+    },
+    "cases": [
+      {
+        "case": "biot-itr-certificate",
+        "pageCount": 1,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              333.3,
+              577.1639,
+              353.5999,
+              584.913
+            ],
+            "redPixelsInMarkerStrip": 530
+          }
+        ],
+        "pdfSha256": "b740f7780bf3cc320ba8c6b1019e876696a162afe3f53dc77f4d16d47d5a5ddd",
+        "docxSha256": "8dface552aac8cea4219b74062cae4a8d0c5b4e0e51adffb4a9f55a4fb1e5c17",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      },
+      {
+        "case": "biot-itr-protocol",
+        "pageCount": 1,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              221.25,
+              823.6368,
+              239.779,
+              832.1768
+            ],
+            "redPixelsInMarkerStrip": 642
+          }
+        ],
+        "pdfSha256": "14b24fdfa7717b2c74aabe649b3b52299e47d22dd51f0fd03a957e74dc2b1faa",
+        "docxSha256": "a2fb40652d1cba345523f562e982d196ee65bab327967ff1b9d6b9a2a4a82c9c",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      },
+      {
+        "case": "biot-protocol",
+        "pageCount": 1,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              221.25,
+              823.6368,
+              239.779,
+              832.1768
+            ],
+            "redPixelsInMarkerStrip": 642
+          }
+        ],
+        "pdfSha256": "7f2b5917779a8792e03ede2f07195fffc9fbba9d3ff2eadb86dc1baaee718de7",
+        "docxSha256": "a2fb40652d1cba345523f562e982d196ee65bab327967ff1b9d6b9a2a4a82c9c",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      },
+      {
+        "case": "biot-worker-card",
+        "pageCount": 2,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              210.05,
+              824.1638,
+              230.35,
+              831.9128
+            ],
+            "redPixelsInMarkerStrip": 526
+          },
+          {
+            "page": 2,
+            "markerBboxPt": [
+              210.05,
+              824.1638,
+              230.35,
+              831.9128
+            ],
+            "redPixelsInMarkerStrip": 526
+          }
+        ],
+        "pdfSha256": "0a3f8816fe273c5885c11f5d13a9b70b409531e1a0363d703e5cdb2b88e5e739",
+        "docxSha256": "40ce6e8f2681dd3649d4bc6662dba2ef29c561f1d768add5c7d6fe81263f3b5c",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      },
+      {
+        "case": "pb-card",
+        "pageCount": 2,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              209.95,
+              824.0638,
+              230.25,
+              831.8128
+            ],
+            "redPixelsInMarkerStrip": 526
+          },
+          {
+            "page": 2,
+            "markerBboxPt": [
+              209.95,
+              824.0638,
+              230.25,
+              831.8128
+            ],
+            "redPixelsInMarkerStrip": 526
+          }
+        ],
+        "pdfSha256": "c4d711bb54b3250f2dcaf5cfaad2d020dea612237627db9e8523a016c56013af",
+        "docxSha256": "f4ac30744fddc31b97f4ff26878c5b83d195e4d3bb688bb84811c6eaa5008af6",
+        "outOfPageWordCount": 5,
+        "pdfPrintStatus": "NOT_PRINT_ACCEPTED"
+      },
+      {
+        "case": "pb-protocol",
+        "pageCount": 1,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              221.25,
+              823.6368,
+              239.779,
+              832.1768
+            ],
+            "redPixelsInMarkerStrip": 642
+          }
+        ],
+        "pdfSha256": "7e76d1cbc8a1c2584f36a1f62267aa0358a24a4dd12ffe617a134a6044ee727e",
+        "docxSha256": "97076b5ba33cadc4d6f7577b05ec4d68b8205a9bf7480a82c0d2d9227620e4d2",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      },
+      {
+        "case": "ps-card",
+        "pageCount": 2,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              210.05,
+              824.1638,
+              230.35,
+              831.9128
+            ],
+            "redPixelsInMarkerStrip": 526
+          },
+          {
+            "page": 2,
+            "markerBboxPt": [
+              210.05,
+              824.1638,
+              230.35,
+              831.9128
+            ],
+            "redPixelsInMarkerStrip": 526
+          }
+        ],
+        "pdfSha256": "9325fe9ca30dacb818c9dd06c19d60fa4c060554b8f83a7bf27b3aea5c87623b",
+        "docxSha256": "f08aac479baca1c6380db1b2fb654f59bc9ff710bf18a016b93a46d472f21f1c",
+        "outOfPageWordCount": 1,
+        "pdfPrintStatus": "NOT_PRINT_ACCEPTED"
+      },
+      {
+        "case": "ps-protocol",
+        "pageCount": 1,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              344.55,
+              577.0369,
+              363.079,
+              585.5769
+            ],
+            "redPixelsInMarkerStrip": 646
+          }
+        ],
+        "pdfSha256": "c54ec9bb28f986b919ebc4a551246b0a78ddb075a16541e4a6b60626fd026c97",
+        "docxSha256": "fd959ec27026071d88c405f34d3f2e3753d24daf31926fad6e693cb72539c32d",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      },
+      {
+        "case": "ps-witness",
+        "pageCount": 2,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              221.35,
+              823.7368,
+              239.879,
+              832.2767
+            ],
+            "redPixelsInMarkerStrip": 672
+          },
+          {
+            "page": 2,
+            "markerBboxPt": [
+              221.35,
+              823.7368,
+              239.879,
+              832.2767
+            ],
+            "redPixelsInMarkerStrip": 672
+          }
+        ],
+        "pdfSha256": "3e76ddea51fabdbdfc1b1a84b44eebaff64816deea8b251358d4da8dc696e399",
+        "docxSha256": "311db7013c9ad99f5890bc29ed6d2a75a5d8303f05b35393818e9d0da8de3489",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NOT_PRINT_ACCEPTED"
+      },
+      {
+        "case": "ptm-card",
+        "pageCount": 1,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              209.95,
+              824.0638,
+              230.25,
+              831.8128
+            ],
+            "redPixelsInMarkerStrip": 526
+          }
+        ],
+        "pdfSha256": "1ab40241b1dbd7901ba58f5b8fec961fe89d439b30640e4cec97586434955691",
+        "docxSha256": "def36ca80ba61452e3094bf142951a1e43e1bc5087abb370b77e14de13fd6471",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      },
+      {
+        "case": "ptm-protocol",
+        "pageCount": 1,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              221.25,
+              823.6368,
+              239.779,
+              832.1768
+            ],
+            "redPixelsInMarkerStrip": 642
+          }
+        ],
+        "pdfSha256": "defe9990b538a4d0953cbd1199608a8df5e71ebe0fabbacdf3a453d9368dd5fa",
+        "docxSha256": "85fe9e26b0b66bd5f0423bb813f04954e4328926b9a5c28bc55a0597743509a5",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      },
+      {
+        "case": "pb-card-photo",
+        "pageCount": 2,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              209.95,
+              824.0638,
+              230.25,
+              831.8128
+            ],
+            "redPixelsInMarkerStrip": 526
+          },
+          {
+            "page": 2,
+            "markerBboxPt": [
+              209.95,
+              824.0638,
+              230.25,
+              831.8128
+            ],
+            "redPixelsInMarkerStrip": 526
+          }
+        ],
+        "pdfSha256": "f445c063f6889e8be671c9661db240a0d229d93528a0f2d8949b1af15e8af0fc",
+        "docxSha256": "a4d45ce9e35d7deedc71c0c5ce48f555f509e04b34aa73c1447c16b6bbc44001",
+        "outOfPageWordCount": 5,
+        "pdfPrintStatus": "NOT_PRINT_ACCEPTED"
+      },
+      {
+        "case": "ps-card-photo",
+        "pageCount": 2,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              210.05,
+              824.1638,
+              230.35,
+              831.9128
+            ],
+            "redPixelsInMarkerStrip": 526
+          },
+          {
+            "page": 2,
+            "markerBboxPt": [
+              210.05,
+              824.1638,
+              230.35,
+              831.9128
+            ],
+            "redPixelsInMarkerStrip": 526
+          }
+        ],
+        "pdfSha256": "62234c1662c3392a2ace3b8fec995273437b7613368e8fadb087b596a19f8b1e",
+        "docxSha256": "cdbdae7078afd5604df865af90c8d75890855a820cb58c835d9ed674e4551637",
+        "outOfPageWordCount": 1,
+        "pdfPrintStatus": "NOT_PRINT_ACCEPTED"
+      },
+      {
+        "case": "ptm-card-photo",
+        "pageCount": 1,
+        "sourceFidelityStatus": "PASS",
+        "dataStatus": "PASS",
+        "manualDateReview": "PASS_FOR_EXISTING_SOURCE_FIELDS",
+        "visualReview": "REVIEWED_IN_ALL_PAGE_CONTACT_SHEETS_AND_KEY_FULL_PAGE_PREVIEWS",
+        "sampleMarker": [
+          {
+            "page": 1,
+            "markerBboxPt": [
+              209.95,
+              824.0638,
+              230.25,
+              831.8128
+            ],
+            "redPixelsInMarkerStrip": 526
+          }
+        ],
+        "pdfSha256": "55023bb2f07b897258a6a386fbaaf9d0ba2eeb9e63ebbda18418515f275c5b9a",
+        "docxSha256": "900d3c2dc05a86ff1d9f16ce51a8e6efea6eb45dbff7799e52f69d06827dfc48",
+        "outOfPageWordCount": 0,
+        "pdfPrintStatus": "NO_ADDITIONAL_LIMIT_OBSERVED_IN_THIS_SYNTHETIC_FIXTURE"
+      }
+    ]
+  },
+  "finalPackage": {
+    "sourceHashes": {
+      "legacy_reference.py": "b6fe2e6d1376fb033109b8c4b33235249f17a10fad19090b718f2c5432924cac",
+      "legacy_snapshot_fields.py": "c1b6a307495a4dc32bc485e29d817f47fa947f65f78aa4d8854310d85b00fcaa",
+      "generate_biot_card.py": "ea6c8c06ee41d5954fdab5734ca75d61d84fe9ec9f8a74bdfbc419eb1bbb8b17",
+      "generate_biot_mail_merge_bundle.py": "1e1c32706d288aec3999588c76d0407ed24b988c479e39edc2fd0d9a0c9b3e15",
+      "generate_ps_witness_certificate.py": "af72244318a96f2e73c2e7bd2e84c082c76f5755c202d7c9ed405a6e267a8dc0"
+    },
+    "all14XmlContractAndSemanticEquality": "PASS",
+    "packageProof": ".runtime/exact-reference-20261002/package-compatibility/compatibility-summary.json",
+    "all11IndependentProductionOracle": "PASS",
+    "productionOracleProof": ".runtime/legacy-reference-verification/legacy-reference-equivalence/production-data-equivalence.json",
+    "photoPhysical": {
+      "status": "PASS",
+      "case": "pb-card-photo",
+      "adapterSha256": "b6fe2e6d1376fb033109b8c4b33235249f17a10fad19090b718f2c5432924cac",
+      "databaseAccess": false,
+      "syntheticInputOnly": true,
+      "pageCount": 2,
+      "finalPackageSemanticEquality": true,
+      "physicalGeometryEqualToPriorAcceptedDataOutput": true,
+      "physicalPointPrecision": 0.0001,
+      "sampleMarkerEveryPage": true,
+      "pdfPrintStatus": "NOT_PRINT_ACCEPTED_SOURCE_LEFT_EDGE_CLIPPING",
+      "docxSha256": "b26445cb26acb31b38f170baf846a32f94d09a352197830f9d3039ecde2208bc",
+      "pdfSha256": "fa3f1548a1e629899c3de7d4947cc945b787490fbf7c41016035429382f7200c"
+    },
+    "batchPhysical": {
+      "adapterSha256": "b6fe2e6d1376fb033109b8c4b33235249f17a10fad19090b718f2c5432924cac",
+      "semanticXmlEqual": true,
+      "allMediaUnchanged": true,
+      "samePathRawControlReturnCode": 1,
+      "samePathRepairedReturnCode": 0,
+      "proof": ".runtime/exact-reference-20261002/batch-compatibility/same-path-evidence.json"
+    }
+  },
+  "currentBiotGroup250": {
+    "status": "PASS",
+    "sourceHashes": {
+      "renderer.py": "ac8038398bbb1144fe4664c51cc37aa5811276fe6f0697ab7d2a016ea9e4e55e",
+      "legacy_reference.py": "473048de3101487406d9668898f0cd04fd4516ab83730b89aeeab1e6859754df",
+      "legacy_snapshot_fields.py": "c1b6a307495a4dc32bc485e29d817f47fa947f65f78aa4d8854310d85b00fcaa",
+      "generate_biot_card.py": "ea6c8c06ee41d5954fdab5734ca75d61d84fe9ec9f8a74bdfbc419eb1bbb8b17",
+      "source_fidelity.py": "d03984dc91d83bbff0a06e780820c821998634810d797ce3d818567adda2ae67"
+    },
+    "participants": 250,
+    "pageCount": 12,
+    "eachNameExactlyOnce": true,
+    "ordinalSequence1To250": true,
+    "sourceColumnsInDocx": true,
+    "pdfSavedNotesAndNegativeOutcomes": {
+      "Первичная": true,
+      "Повторная": true,
+      "Отсутствовал": true,
+      "Не сдал": true,
+      "Тапсырмады": true,
+      "Не явился": true,
+      "Келмеді": true
+    },
+    "genericNumberNotInNotesOrPdf": true,
+    "commissionAfterRosterGapPt": 41.71,
+    "sampleMarker": [
+      {
+        "page": 1,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 2,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 3,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 4,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 5,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 6,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 7,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 8,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 9,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 10,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 11,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      },
+      {
+        "page": 12,
+        "markerBboxPt": [
+          221.25,
+          823.6368,
+          239.779,
+          832.1768
+        ],
+        "redPixelsInMarkerStrip": 642
+      }
+    ],
+    "manualPreviewPages": [
+      1,
+      11,
+      12
+    ],
+    "pdfSha256": "d754e8875a8d07efd1824731b7b7d9f1e91e721fda9c14839efb9a4384cde497",
+    "proof": ".runtime/legacy-reference-current-group250/evidence.json"
+  },
+  "printLimitations": [
+    {
+      "id": "PB_SOURCE_LEFT_EDGE",
+      "cases": [
+        "pb-card",
+        "pb-card-photo"
+      ],
+      "status": "NOT_PRINT_ACCEPTED",
+      "finding": "Five first-page words begin at x=-2.1pt and are clipped. Independently reproduced with raw source and direct 90d5 helper without adapter data hooks or sample footer.",
+      "proof": "source-control/pb-source-out-of-page.json",
+      "preview": "source-control/pb-card-unmodified-legacy-core-page-1.png"
+    },
+    {
+      "id": "PS_SOURCE_RIGHT_EDGE",
+      "cases": [
+        "ps-card",
+        "ps-card-photo"
+      ],
+      "status": "NOT_PRINT_ACCEPTED",
+      "finding": "Issuer-band trailing letters extend to x=597.39pt on a 595.28pt page; first title also touches the gray band in the preserved source arrangement.",
+      "preview": "pages/ps-card-page-1.png"
+    },
+    {
+      "id": "PS_SOURCE_PHOTO_OVERLAP",
+      "cases": [
+        "ps-card-photo"
+      ],
+      "status": "NOT_PRINT_ACCEPTED",
+      "finding": "The original photo slot ends at x=92.35pt while text starts at x=85pt, causing 7.35pt horizontal overlap. Photo covers initial letters in the source front text.",
+      "photoBboxPt": [
+        36.35,
+        107.95,
+        92.35,
+        181.95
+      ],
+      "preview": "pages/ps-card-photo-page-1.png"
+    },
+    {
+      "id": "PS_WITNESS_SOURCE_SLOTS",
+      "cases": [
+        "ps-witness"
+      ],
+      "status": "NOT_PRINT_ACCEPTED",
+      "finding": "The Kazakh start month wraps into two lines in the fixed original slot; preserved stamp artwork overlaps lower source lines. All supplied values remain in DOCX and PDF text.",
+      "preview": "pages/ps-witness-page-2.png"
+    }
+  ],
+  "manualEvidence": {
+    "all20PageContactSheets": [
+      "contact-1.png",
+      "contact-2.png",
+      "contact-3.png",
+      "contact-4.png"
+    ],
+    "keyFullPageReviews": [
+      "pages/pb-card-photo-page-1.png",
+      "pages/ps-card-photo-page-1.png",
+      "pages/ptm-card-photo-page-1.png",
+      "pages/ps-witness-page-2.png",
+      "final-package-photo/page-1.png"
+    ]
+  },
+  "notEstablished": [
+    "Microsoft Word rendering",
+    "physical printer output",
+    "legal approval",
+    "new center readiness",
+    "live electronic signature validity",
+    "all arbitrary long field values"
+  ]
+}

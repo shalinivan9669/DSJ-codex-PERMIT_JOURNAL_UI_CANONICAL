@@ -6,6 +6,7 @@ Only supplied English fields and factual structured outcomes are accepted.
 """
 from copy import deepcopy
 from datetime import date
+import json
 from lxml import etree as E
 
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
@@ -219,6 +220,23 @@ def append_english_pages(files,snapshot):
     E.SubElement(appendix,W+'type',{W+'val':'nextPage'})
     rid=english_header(files,snapshot)
     for kind in ['default','first','even']:E.SubElement(appendix,W+'headerReference',{W+'type':kind,R+'id':rid})
+    metadata=json.loads(files.get('demo/original-form.json',b'{}'))
+    if (metadata.get('version')==2 and metadata.get('layoutPolicy')=='SOURCE_FIDELITY_V2') or 'word/demo-footer.xml' in files:
+        # The appendix has its own English mark and can use another page size.
+        # Stop it inheriting the source form's page-relative footer overlay.
+        part='word/demo-english-footer.xml';footer_rid='rIdDemoEnglishFooter'
+        footer=E.Element(W+'ftr',nsmap={'w':W[1:-1]});E.SubElement(footer,W+'p')
+        files[part]=E.tostring(footer,xml_declaration=True,encoding='utf-8')
+        rels=E.fromstring(files['word/_rels/document.xml.rels'])
+        if not any(r.get('Id')==footer_rid for r in rels):
+            E.SubElement(rels,PKG+'Relationship',Id=footer_rid,Type=R[1:-1]+'/footer',Target='demo-english-footer.xml')
+        files['word/_rels/document.xml.rels']=E.tostring(rels,xml_declaration=True,encoding='utf-8')
+        content=E.fromstring(files['[Content_Types].xml'])
+        if not any(n.get('PartName')=='/'+part for n in content):
+            E.SubElement(content,CT+'Override',PartName='/'+part,ContentType='application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml')
+        files['[Content_Types].xml']=E.tostring(content,xml_declaration=True,encoding='utf-8')
+        for kind in ['default','first','even']:
+            E.SubElement(appendix,W+'footerReference',{W+'type':kind,R+'id':footer_rid})
     E.SubElement(appendix,W+'pgSz',({W+'w':'16838',W+'h':'11906',W+'orient':'landscape'} if protocol else {W+'w':'11906',W+'h':'16838'}))
     E.SubElement(appendix,W+'pgMar',{W+'top':'1080',W+'right':'1080',W+'bottom':'1080',W+'left':'1080',W+'header':'360',W+'footer':'360',W+'gutter':'0'})
     body.append(text_paragraph('English appendix',size=28,bold=True,keep=True))

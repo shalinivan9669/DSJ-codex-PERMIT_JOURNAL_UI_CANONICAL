@@ -1,0 +1,99 @@
+{
+  "status": "PASS_WITH_DOCUMENTED_PDF_LIMITS",
+  "scope": "EXACT_SOURCE_DATA_ENGINEERING",
+  "printAcceptance": "NOT_ACCEPTED_SOURCE_LIBREOFFICE_LIMITS",
+  "physicalPrint": "NOT_VERIFIED",
+  "sourceCommit": "90d5b5e72dba0ac38c89f42fa37925a0b3468561",
+  "sourceHashes": {
+    "legacy_reference.py": "b6fe2e6d1376fb033109b8c4b33235249f17a10fad19090b718f2c5432924cac",
+    "legacy_snapshot_fields.py": "c1b6a307495a4dc32bc485e29d817f47fa947f65f78aa4d8854310d85b00fcaa",
+    "generate_biot_card.py": "ea6c8c06ee41d5954fdab5734ca75d61d84fe9ec9f8a74bdfbc419eb1bbb8b17",
+    "generate_biot_mail_merge_bundle.py": "1e1c32706d288aec3999588c76d0407ed24b988c479e39edc2fd0d9a0c9b3e15",
+    "generate_ps_witness_certificate.py": "af72244318a96f2e73c2e7bd2e84c082c76f5755c202d7c9ed405a6e267a8dc0"
+  },
+  "fullRenderSuite": {
+    "status": "PASS",
+    "command": "pnpm test:render",
+    "tests": 90,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 988.675,
+    "log": ".runtime/legacy-reference-acceptance-20261002/full-render-suite-accepted.log"
+  },
+  "directLegacyCorePackageEquality": {
+    "status": "PASS",
+    "forms": 11
+  },
+  "productionDataOnlyStructureAndMedia": {
+    "status": "PASS",
+    "forms": 11
+  },
+  "packageCompatibility": {
+    "status": "PASS",
+    "forms": 14
+  },
+  "immutability": {
+    "status": "PASS",
+    "originalStoredFiles": 52,
+    "priorTemplateVersions": 32,
+    "actualPinnedSnapshotInputsReconstructedByteIdentically": 20,
+    "historicalV1TemplateGoldenOutputsByteIdentical": 16,
+    "referenceCommit": "8825dfa"
+  },
+  "localSyntheticServiceFlow": {
+    "status": "PASS",
+    "scope": "LOCAL_SYNTHETIC_MANAGER_DIRECTOR_NUMBERED_DOCUMENT_FLOW",
+    "requestId": "5dcf2386-a357-472d-928b-041b4466c1f6",
+    "issuanceId": "35493328-0c7c-45e6-b2f2-e3d9ed05f481",
+    "lifecycle": "AWAITING_SIGNATURE",
+    "documents": [
+      {
+        "templateId": "biot-worker-card",
+        "templateVersion": "20",
+        "number": "BIOT-CARD-00003"
+      },
+      {
+        "templateId": "biot-protocol",
+        "templateVersion": "14",
+        "number": "BIOT-PROTOCOL-00005"
+      },
+      {
+        "templateId": "biot-itr-certificate",
+        "templateVersion": "18",
+        "number": "BIOT-CERTIFICATE-00003"
+      },
+      {
+        "templateId": "biot-itr-protocol",
+        "templateVersion": "5",
+        "number": "BIOT-PROTOCOL-00006"
+      }
+    ],
+    "artifactCount": 10,
+    "artifactFormats": {
+      "DOCX": 4,
+      "PDF": 4,
+      "ZIP": 1,
+      "XLSX": 1
+    },
+    "allStoredArtifactHashesVerified": true,
+    "old52FilesAnd32PriorTemplateRowsUnchanged": true,
+    "failedOwnPendingDraftArchived": true,
+    "printAcceptance": "NOT_ACCEPTED_SOURCE_LIBREOFFICE_LIMITS",
+    "physicalPrint": "NOT_VERIFIED",
+    "sourceLanguageSlots": {
+      "biotProtocols": {
+        "header": "saved employerKz",
+        "recipientRow": "saved employerRu",
+        "mixedHeader": "all participants in the existing header language"
+      },
+      "pbProtocol": "Original combineCompanyRuKzLabel selects one company base and legal-form wrapper; both complete language strings are not promised in the single source slot. Historical V1 joined-language behavior remains pinned and tested."
+    }
+  },
+  "limits": [
+    "Exact original forms retain their original LibreOffice geometry and source limitations.",
+    "Engineering PASS does not establish complete PDF print acceptance or physical printing.",
+    "The issuance remains AWAITING_SIGNATURE; no cryptographic completion is claimed.",
+    "The full renderer test total includes historical layout checks pinned to historical templates."
+  ]
+}

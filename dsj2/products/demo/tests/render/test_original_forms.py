@@ -112,9 +112,9 @@ class OriginalFormTests(unittest.TestCase):
                     if tid in ['ptm-card','pb-card']:self.assertIn('2029',text);self.assertIn('15',text)
 
     def test_ptm_expiry_prints_exactly_once_with_adjacent_and_split_merge_runs(self):
-        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
-        template=next(t for t in manifest['templates'] if t['id']=='ptm-card')
-        source=ROOT/'assets/templates'/template['file']
+        # This mutation exercises V1's synthetic brace keys. Exact reference
+        # versions keep real Word fields and have separate frozen-date tests.
+        source=ROOT/'assets/templates/ptm-card.v15.docx'
         with ZipFile(source) as archive:package={n:archive.read(n) for n in archive.namelist()}
         tree=E.fromstring(package['word/document.xml'])
         # Keep the retained form, including both DrawingML/VML alternatives,
@@ -162,7 +162,7 @@ class OriginalFormTests(unittest.TestCase):
         self.assertEqual(2,sum(E.QName(box.getparent()).localname=='txbx' for box in fronts))
         self.assertEqual(2,sum(E.QName(box.getparent()).localname=='textbox' for box in fronts))
         for box in fronts:
-            lines=[' '.join(''.join(p.itertext()).split()) for p in box.findall(W+'p')]
+            lines=[' '.join(''.join(n.text or '' for n in p.iter(W+'t')).split()) for p in box.findall(W+'p')]
             self.assertIn('Лауазымы Синтетикалық құрастырушы',lines)
             self.assertIn('Должность Синтетический монтажник',lines)
         self.assertEqual(checksum,hashlib.sha256(source.read_bytes()).hexdigest())
@@ -195,9 +195,9 @@ class OriginalFormTests(unittest.TestCase):
         self.assertEqual(checksum,hashlib.sha256(source.read_bytes()).hexdigest())
 
     def test_ps_shared_subject_and_result_print_once_without_losing_distinct_languages(self):
-        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
-        template=next(t for t in manifest['templates'] if t['id']=='ps-card')
-        source=ROOT/'assets/templates'/template['file']
+        # Brace splitting is a historical V1 contract, not a raw Word-field
+        # mutation of the current reference form.
+        source=ROOT/'assets/templates/ps-card.v16.docx'
         checksum=hashlib.sha256(source.read_bytes()).hexdigest()
         with ZipFile(source) as archive:package={n:archive.read(n) for n in archive.namelist()}
         tree=E.fromstring(package['word/document.xml'])

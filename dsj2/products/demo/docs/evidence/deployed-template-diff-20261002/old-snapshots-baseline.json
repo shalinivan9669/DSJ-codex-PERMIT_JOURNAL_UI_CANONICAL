@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "snapshots": 20,
+  "referenceCommit": "8825dfa",
+  "comparison": "deterministic DOCX bytes SHA256"
+}

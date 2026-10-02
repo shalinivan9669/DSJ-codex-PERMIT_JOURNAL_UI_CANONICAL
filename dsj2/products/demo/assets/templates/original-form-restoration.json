@@ -3,165 +3,289 @@
     "id": "biot-worker-card",
     "source": "biot/biot-card-template.docx",
     "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
-    "previous": "biot-worker-card.v17.docx",
-    "file": "biot-worker-card.v18.docx",
-    "sha256": "366a5604a12015a56cde602943b8dab54bf4bdc6231272fc66dd0828d366a91c",
+    "previous": "biot-worker-card.v18.docx",
+    "file": "biot-worker-card.v19.docx",
+    "sha256": "41b671fcd888baad7e93972d301b4b5016e495c2273eaa2e6d040ef9466a4aeb",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
-    ]
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [],
+    "excludedSourceMedia": []
   },
   {
     "id": "biot-itr-certificate",
     "source": "biot/biot-itr-certificate-template.docx",
     "sourceSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
-    "previous": "biot-itr-certificate.v15.docx",
-    "file": "biot-itr-certificate.v16.docx",
-    "sha256": "20b2f85c0ad615a720c6b304db7dff9185838b3b50457eeefca6d3605294ab1f",
+    "previous": "biot-itr-certificate.v16.docx",
+    "file": "biot-itr-certificate.v17.docx",
+    "sha256": "d9f9195400855db2a3dd31ac4c3d388555064662c3a7f85c296fb35b09f00e92",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
-    ]
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [
+      {
+        "issuerNameRu": "Аттестационный центр Стандарт",
+        "kind": "REFERENCE_BRAND",
+        "originalSha256": "4c1e7489d3350c451e9d3ea355356a15133097bc443e64549b8b342c181a8c03",
+        "part": "word/media/image1.png"
+      }
+    ],
+    "excludedSourceMedia": []
   },
   {
     "id": "biot-protocol",
     "source": "biot/biot-protocol-template.docx",
     "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-    "previous": "biot-protocol.v11.docx",
-    "file": "biot-protocol.v12.docx",
-    "sha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+    "previous": "biot-protocol.v12.docx",
+    "file": "biot-protocol.v13.docx",
+    "sha256": "ff979ecca018e441fa9cddcb712207606b9a9417eb2c07f678f2cfd385bb0214",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
-    ]
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [
+      {
+        "issuerNameRu": "Аттестационный центр Стандарт",
+        "kind": "REFERENCE_BRAND",
+        "originalSha256": "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+        "part": "word/media/image1.png"
+      }
+    ],
+    "excludedSourceMedia": []
   },
   {
     "id": "ptm-card",
     "source": "ptm/ptm-card-template.docx",
     "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
-    "previous": "ptm-card.v14.docx",
-    "file": "ptm-card.v15.docx",
-    "sha256": "db147f3e14f08b3190cd525e97caf74767ebecce9639716a2f95fdfea99f989d",
+    "previous": "ptm-card.v15.docx",
+    "file": "ptm-card.v16.docx",
+    "sha256": "bb4fc6856c13218af1895e165fab37df23bc54ef409224f22ff2197ee697789a",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
-    ]
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [],
+    "excludedSourceMedia": []
   },
   {
     "id": "ptm-protocol",
     "source": "ptm/ptm-protocol-template.docx",
     "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
-    "previous": "ptm-protocol.v9.docx",
-    "file": "ptm-protocol.v10.docx",
-    "sha256": "519d4dd4eeb6789eb2425839d0357879b076241a98c549116524a96a3be5622a",
+    "previous": "ptm-protocol.v10.docx",
+    "file": "ptm-protocol.v11.docx",
+    "sha256": "a834bbdbfe6dcc9aa0944d759aec616ca3e1745c17398cce7388a8ef4e914b3f",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [
+      {
+        "issuerNameRu": "Аттестационный центр Стандарт",
+        "kind": "REFERENCE_BRAND",
+        "originalSha256": "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+        "part": "word/media/image2.png"
+      }
+    ],
+    "excludedSourceMedia": [
+      {
+        "originalSha256": "4a68945b73ad53915df8560bca147848f186476a12f0f165e98a9f17b7e37780",
+        "part": "word/media/image1.png",
+        "reason": "FOREIGN_CONTACT_DETAILS",
+        "replacement": "FROZEN_ISSUER_ADDRESS"
+      }
     ]
   },
   {
     "id": "pb-card",
     "source": "pb/pb-card-template.docx",
     "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
-    "previous": "pb-card.v14.docx",
-    "file": "pb-card.v15.docx",
-    "sha256": "b6b4ff4cc3457eca168c3ea78938f4f90f37c752c6c4954ea29acbdafed9bb20",
+    "previous": "pb-card.v15.docx",
+    "file": "pb-card.v16.docx",
+    "sha256": "77051f6777bc91c889f6e5f95cf16cedbd3490019093550a19f5caf0daf50e9d",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
-    ]
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [],
+    "excludedSourceMedia": []
   },
   {
     "id": "pb-protocol",
     "source": "pb/pb-protocol-template.docx",
     "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
-    "previous": "pb-protocol.v9.docx",
-    "file": "pb-protocol.v10.docx",
-    "sha256": "e7bc3573923bfe039c8196e7df2effeb0eb940fef43db9531d32ea50e8ff9f91",
+    "previous": "pb-protocol.v10.docx",
+    "file": "pb-protocol.v11.docx",
+    "sha256": "cac918f1c73682f7015537999c7ce25efef8a14554e604006fc57021ca7bbc08",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [
+      {
+        "issuerNameRu": "Аттестационный центр Стандарт",
+        "kind": "REFERENCE_BRAND",
+        "originalSha256": "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+        "part": "word/media/image2.png"
+      }
+    ],
+    "excludedSourceMedia": [
+      {
+        "originalSha256": "4a68945b73ad53915df8560bca147848f186476a12f0f165e98a9f17b7e37780",
+        "part": "word/media/image1.png",
+        "reason": "FOREIGN_CONTACT_DETAILS",
+        "replacement": "FROZEN_ISSUER_ADDRESS"
+      }
     ]
   },
   {
     "id": "ps-card",
     "source": "ps/ps-card-template.docx",
     "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
-    "previous": "ps-card.v15.docx",
-    "file": "ps-card.v16.docx",
-    "sha256": "61b772c29425b7c6ae6f66e21d576736cc06244c524e15ff3a9559371e582198",
+    "previous": "ps-card.v16.docx",
+    "file": "ps-card.v17.docx",
+    "sha256": "ee74ecf5281d839f225fc2f1524725542af3392813318954dd94b8b7c3be62e8",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
-    ]
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [],
+    "excludedSourceMedia": []
   },
   {
     "id": "ps-protocol",
     "source": "ps/ps-protocol-template.docx",
     "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
-    "previous": "ps-protocol.v9.docx",
-    "file": "ps-protocol.v10.docx",
-    "sha256": "7e47a469436057e2f099114c75c51ae350da555a747e39a0bd3fde3b7f3a0175",
+    "previous": "ps-protocol.v10.docx",
+    "file": "ps-protocol.v11.docx",
+    "sha256": "9fcb6184e7b3d1bcd0454675943a8ef129b0a5b269a27cb91cbbaeb550407518",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
-    ]
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [
+      {
+        "issuerNameRu": "Аттестационный центр Стандарт",
+        "kind": "REFERENCE_BRAND",
+        "originalSha256": "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+        "part": "word/media/image1.png"
+      }
+    ],
+    "excludedSourceMedia": []
   },
   {
     "id": "ps-witness",
     "source": "ps/ps-witness-certificate-template.docx",
     "sourceSha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
-    "previous": "ps-witness.v11.docx",
-    "file": "ps-witness.v12.docx",
-    "sha256": "26a0ff059d5488e08af8cb2de0d780dad01146d771e7b04e0abe12353c5c9bfa",
+    "previous": "ps-witness.v12.docx",
+    "file": "ps-witness.v13.docx",
+    "sha256": "c097ee8f21d4b0cf1a4d5f1e05ac99aa08044aabaa2107bff7df7c8e7a2644f8",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [],
+    "excludedSourceMedia": [
+      {
+        "originalSha256": "2325b248f0883dfce64b7068a6e763edaf0e5d2f4e517b4fac40e87e897cf91d",
+        "part": "word/media/image2.png",
+        "reason": "SPECIMEN_SIGNATURE_OR_STAMP",
+        "replacement": "BLANK"
+      },
+      {
+        "originalSha256": "06eb8b79a4d5029ed34e4c71a546b664406de228c57dfcc98a63969338682a1c",
+        "part": "word/media/image1.png",
+        "reason": "SPECIMEN_SIGNATURE_OR_STAMP",
+        "replacement": "BLANK"
+      }
     ]
   },
   {
     "id": "biot-itr-protocol",
     "source": "biot/biot-protocol-template.docx",
     "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
-    "previous": "biot-itr-protocol.v2.docx",
-    "file": "biot-itr-protocol.v3.docx",
-    "sha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+    "previous": "biot-itr-protocol.v3.docx",
+    "file": "biot-itr-protocol.v4.docx",
+    "sha256": "ff979ecca018e441fa9cddcb712207606b9a9417eb2c07f678f2cfd385bb0214",
     "intentionalChanges": [
       "cached sample values replaced in original field slots",
-      "former issuer logo and contact slots filled at render time",
+      "original reference logo retained only for matching frozen issuer; other issuer uses the original slot",
       "former handwritten signature and stamp left blank",
       "equivalent bundled Liberation fonts",
-      "protocol sample row filled and headings repeat for group pagination"
-    ]
+      "protocol sample row filled and headings repeat for group pagination",
+      "source run formatting retained; only populated fields receive bounded fitting",
+      "sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets"
+    ],
+    "layoutPolicy": "SOURCE_FIDELITY_V2",
+    "preservedReferenceMedia": [
+      {
+        "issuerNameRu": "Аттестационный центр Стандарт",
+        "kind": "REFERENCE_BRAND",
+        "originalSha256": "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+        "part": "word/media/image1.png"
+      }
+    ],
+    "excludedSourceMedia": []
   }
 ]

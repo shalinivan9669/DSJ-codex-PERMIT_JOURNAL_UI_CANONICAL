@@ -1,0 +1,709 @@
+{
+  "scope": "OOXML structure and graphical-byte hashes only; no recipient text, generated XML or image bytes included",
+  "referenceDeploymentCommit": "90d5b5e",
+  "forms": [
+    {
+      "form": "biot-worker",
+      "originalSource": "biot/biot-card-template.docx",
+      "original": {
+        "sha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+        "pagesAndShapesGeometrySha256": "56e23a73f522ab858b2ba9cedc7f02769c3c0c1dbc9c32db8a59114455fbdd90",
+        "sectionPageSizes": [
+          {
+            "w": "11910",
+            "h": "16840"
+          },
+          {
+            "w": "11910",
+            "h": "16840"
+          },
+          {
+            "w": "11910",
+            "h": "16840"
+          }
+        ],
+        "tables": 3,
+        "textBoxes": 12,
+        "directFontSizesHalfPoints": {
+          "10": 114,
+          "11": 51,
+          "12": 52,
+          "13": 696,
+          "14": 108,
+          "15": 16,
+          "16": 430,
+          "18": 316,
+          "20": 136,
+          "24": 48,
+          "4": 390,
+          "8": 151,
+          "9": 6
+        },
+        "fontFamilies": {},
+        "formattingNodeCounts": {
+          "b": 88,
+          "tab": 205,
+          "u": 672
+        },
+        "mediaCount": 0,
+        "mediaSha256": []
+      },
+      "deployedGenerated": {
+        "sha256": "b822368a2558cfd4d5b927f4c3f733afb92612ef0bbb445d66d31cee31d9433f",
+        "pagesAndShapesGeometrySha256": "56e23a73f522ab858b2ba9cedc7f02769c3c0c1dbc9c32db8a59114455fbdd90",
+        "sectionPageSizes": [
+          {
+            "w": "11910",
+            "h": "16840"
+          },
+          {
+            "w": "11910",
+            "h": "16840"
+          },
+          {
+            "w": "11910",
+            "h": "16840"
+          }
+        ],
+        "tables": 3,
+        "textBoxes": 12,
+        "directFontSizesHalfPoints": {
+          "10": 114,
+          "11": 51,
+          "12": 52,
+          "13": 696,
+          "14": 108,
+          "15": 16,
+          "16": 430,
+          "18": 316,
+          "20": 200,
+          "24": 48,
+          "4": 390,
+          "8": 151,
+          "9": 6
+        },
+        "fontFamilies": {
+          "Times New Roman": 240
+        },
+        "formattingNodeCounts": {
+          "b": 88,
+          "tab": 205,
+          "u": 672
+        },
+        "mediaCount": 0,
+        "mediaSha256": []
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": true,
+      "sameMediaHashes": true
+    },
+    {
+      "form": "biot-itr",
+      "originalSource": "biot/biot-itr-certificate-template.docx",
+      "original": {
+        "sha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+        "pagesAndShapesGeometrySha256": "b862503e6eab4af448f11ec2bb477853909d80c3bba148b0f8969c876767222c",
+        "sectionPageSizes": [
+          {
+            "w": "16840",
+            "h": "11900",
+            "orient": "landscape"
+          }
+        ],
+        "tables": 0,
+        "textBoxes": 14,
+        "directFontSizesHalfPoints": {
+          "56": 88,
+          "66": 20,
+          "76": 4
+        },
+        "fontFamilies": {
+          "Arial Unicode MS": 220
+        },
+        "formattingNodeCounts": {
+          "b": 9,
+          "i": 9
+        },
+        "mediaCount": 1,
+        "mediaSha256": [
+          "4c1e7489d3350c451e9d3ea355356a15133097bc443e64549b8b342c181a8c03"
+        ]
+      },
+      "deployedGenerated": {
+        "sha256": "31883154247ee11d0f5677476879c2bea4e5ab1d3ca84c531054e1bbb6c24e8f",
+        "pagesAndShapesGeometrySha256": "fe23ba76e4c1b6c77b74af746073afad9b549af35b1d74efdd0e5d12399255a5",
+        "sectionPageSizes": [
+          {
+            "w": "16840",
+            "h": "11900",
+            "orient": "landscape"
+          }
+        ],
+        "tables": 0,
+        "textBoxes": 28,
+        "directFontSizesHalfPoints": {
+          "20": 16,
+          "56": 176,
+          "66": 40,
+          "76": 8
+        },
+        "fontFamilies": {
+          "Arial Unicode MS": 424,
+          "Times New Roman": 48
+        },
+        "formattingNodeCounts": {
+          "b": 18,
+          "i": 18
+        },
+        "mediaCount": 2,
+        "mediaSha256": [
+          "4c1e7489d3350c451e9d3ea355356a15133097bc443e64549b8b342c181a8c03",
+          "4c1e7489d3350c451e9d3ea355356a15133097bc443e64549b8b342c181a8c03"
+        ]
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": false,
+      "sameMediaHashes": false
+    },
+    {
+      "form": "biot-protocol",
+      "originalSource": "biot/biot-protocol-template.docx",
+      "original": {
+        "sha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "pagesAndShapesGeometrySha256": "d516af038ee9741ab3517290bbad39f51ddb6a037d4be478fd8bb2b35adcc1e9",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838"
+          }
+        ],
+        "tables": 4,
+        "textBoxes": 0,
+        "directFontSizesHalfPoints": {
+          "20": 586
+        },
+        "fontFamilies": {
+          "Calibri": 56,
+          "Times New Roman": 879
+        },
+        "formattingNodeCounts": {
+          "b": 108,
+          "tab": 4,
+          "u": 19
+        },
+        "mediaCount": 1,
+        "mediaSha256": [
+          "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a"
+        ]
+      },
+      "deployedGenerated": {
+        "sha256": "cb13bb5c0c06eb608ce011445ac222761d354c3d973037d62d9dcae2c9624b6b",
+        "pagesAndShapesGeometrySha256": "d516af038ee9741ab3517290bbad39f51ddb6a037d4be478fd8bb2b35adcc1e9",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838"
+          }
+        ],
+        "tables": 4,
+        "textBoxes": 0,
+        "directFontSizesHalfPoints": {
+          "20": 590
+        },
+        "fontFamilies": {
+          "Calibri": 55,
+          "Times New Roman": 898
+        },
+        "formattingNodeCounts": {
+          "b": 108,
+          "tab": 4,
+          "u": 19
+        },
+        "mediaCount": 1,
+        "mediaSha256": [
+          "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a"
+        ]
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": true,
+      "sameMediaHashes": true
+    },
+    {
+      "form": "pb-card",
+      "originalSource": "pb/pb-card-template.docx",
+      "original": {
+        "sha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+        "pagesAndShapesGeometrySha256": "3d52604d3ed9f2794d841806904759036466d8485fac3a9d42bc83785d3fc5bf",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838",
+            "code": "9"
+          }
+        ],
+        "tables": 4,
+        "textBoxes": 16,
+        "directFontSizesHalfPoints": {
+          "10": 138,
+          "12": 288,
+          "14": 42,
+          "16": 992,
+          "18": 26,
+          "19": 3,
+          "2": 42,
+          "20": 188,
+          "24": 46,
+          "28": 153,
+          "32": 8,
+          "40": 4,
+          "44": 8,
+          "48": 4,
+          "6": 6,
+          "8": 248
+        },
+        "fontFamilies": {
+          "Arial": 12,
+          "Calibri": 4
+        },
+        "formattingNodeCounts": {
+          "b": 263,
+          "tab": 498,
+          "u": 512
+        },
+        "mediaCount": 0,
+        "mediaSha256": []
+      },
+      "deployedGenerated": {
+        "sha256": "dbe01840ecad6ab18aa5cbda8dbcb7d9c3720a33dd1b8242f60e3ede3ce3ac6b",
+        "pagesAndShapesGeometrySha256": "4036a7989371a78c570e07a5c2281dfa1a4bb5af4f773a1dd4ca30975663f7b5",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838",
+            "code": "9"
+          }
+        ],
+        "tables": 4,
+        "textBoxes": 16,
+        "directFontSizesHalfPoints": {
+          "10": 138,
+          "12": 288,
+          "14": 42,
+          "16": 992,
+          "18": 26,
+          "19": 3,
+          "2": 42,
+          "20": 198,
+          "24": 46,
+          "28": 153,
+          "32": 8,
+          "40": 4,
+          "44": 8,
+          "48": 4,
+          "6": 6,
+          "8": 248
+        },
+        "fontFamilies": {
+          "Arial": 12,
+          "Calibri": 4,
+          "Times New Roman": 120
+        },
+        "formattingNodeCounts": {
+          "b": 263,
+          "tab": 498,
+          "u": 512
+        },
+        "mediaCount": 1,
+        "mediaSha256": [
+          "a03da22b201547187d3aaf27dcea4af6d05181978408aab57fbc2fe9d582319e"
+        ]
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": false,
+      "sameMediaHashes": false
+    },
+    {
+      "form": "pb-protocol",
+      "originalSource": "pb/pb-protocol-template.docx",
+      "original": {
+        "sha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+        "pagesAndShapesGeometrySha256": "651a94d91820752e669a9bca18182bd779f0fc373796a1e1ada71e8779d7a69c",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838"
+          }
+        ],
+        "tables": 2,
+        "textBoxes": 0,
+        "directFontSizesHalfPoints": {
+          "20": 556
+        },
+        "fontFamilies": {
+          "Calibri": 136,
+          "Times New Roman": 854
+        },
+        "formattingNodeCounts": {
+          "b": 153,
+          "tab": 14,
+          "u": 1
+        },
+        "mediaCount": 2,
+        "mediaSha256": [
+          "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+          "4a68945b73ad53915df8560bca147848f186476a12f0f165e98a9f17b7e37780"
+        ]
+      },
+      "deployedGenerated": {
+        "sha256": "8472b3adc7092c9c72056cb9c7623ed5d2773457df2392488f4833121e467c25",
+        "pagesAndShapesGeometrySha256": "651a94d91820752e669a9bca18182bd779f0fc373796a1e1ada71e8779d7a69c",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838"
+          }
+        ],
+        "tables": 2,
+        "textBoxes": 0,
+        "directFontSizesHalfPoints": {
+          "20": 530
+        },
+        "fontFamilies": {
+          "Calibri": 131,
+          "Times New Roman": 832
+        },
+        "formattingNodeCounts": {
+          "b": 149,
+          "tab": 8,
+          "u": 1
+        },
+        "mediaCount": 2,
+        "mediaSha256": [
+          "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+          "4a68945b73ad53915df8560bca147848f186476a12f0f165e98a9f17b7e37780"
+        ]
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": true,
+      "sameMediaHashes": true
+    },
+    {
+      "form": "ps-card",
+      "originalSource": "ps/ps-card-template.docx",
+      "original": {
+        "sha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+        "pagesAndShapesGeometrySha256": "bf965112e1169e1af60292c1a8b123d39ca61b3d8e9cf3504a25ed4db1fffc55",
+        "sectionPageSizes": [
+          {
+            "w": "11910",
+            "h": "16840"
+          },
+          {
+            "w": "11910",
+            "h": "16840"
+          },
+          {
+            "w": "11910",
+            "h": "16840"
+          }
+        ],
+        "tables": 6,
+        "textBoxes": 32,
+        "directFontSizesHalfPoints": {
+          "10": 120,
+          "11": 8,
+          "12": 122,
+          "13": 1482,
+          "14": 23,
+          "15": 88,
+          "16": 178,
+          "18": 112,
+          "19": 32,
+          "20": 78,
+          "24": 40,
+          "28": 2,
+          "32": 4,
+          "5": 2,
+          "8": 760
+        },
+        "fontFamilies": {
+          "Arial": 2
+        },
+        "formattingNodeCounts": {
+          "b": 163,
+          "tab": 378,
+          "u": 344
+        },
+        "mediaCount": 0,
+        "mediaSha256": []
+      },
+      "deployedGenerated": {
+        "sha256": "099d4e6911d7431da567d9f29abd53b7c69b7529bd0ab786620cfd4337408a3b",
+        "pagesAndShapesGeometrySha256": "0db97ee58acee847b5f9c43cf212714ce7970c67f1732994bc60bcdd6fd419cf",
+        "sectionPageSizes": [
+          {
+            "w": "11910",
+            "h": "16840"
+          },
+          {
+            "w": "11910",
+            "h": "16840"
+          },
+          {
+            "w": "11910",
+            "h": "16840"
+          }
+        ],
+        "tables": 6,
+        "textBoxes": 32,
+        "directFontSizesHalfPoints": {
+          "10": 120,
+          "11": 8,
+          "12": 122,
+          "13": 1502,
+          "14": 23,
+          "15": 88,
+          "16": 190,
+          "18": 100,
+          "19": 30,
+          "20": 72,
+          "22": 12,
+          "24": 40,
+          "28": 2,
+          "32": 4,
+          "5": 2,
+          "8": 760
+        },
+        "fontFamilies": {
+          "Arial": 2,
+          "Times New Roman": 144
+        },
+        "formattingNodeCounts": {
+          "b": 163,
+          "tab": 378,
+          "u": 344
+        },
+        "mediaCount": 1,
+        "mediaSha256": [
+          "a03da22b201547187d3aaf27dcea4af6d05181978408aab57fbc2fe9d582319e"
+        ]
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": false,
+      "sameMediaHashes": false
+    },
+    {
+      "form": "ps-protocol",
+      "originalSource": "ps/ps-protocol-template.docx",
+      "original": {
+        "sha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+        "pagesAndShapesGeometrySha256": "aa366b2a6fcc6602e0aecdb10e4fd0e400af198c0120dfe0d450b49bc41ef7c7",
+        "sectionPageSizes": [
+          {
+            "w": "16838",
+            "h": "11906",
+            "orient": "landscape"
+          }
+        ],
+        "tables": 2,
+        "textBoxes": 0,
+        "directFontSizesHalfPoints": {
+          "20": 352
+        },
+        "fontFamilies": {
+          "Calibri": 8,
+          "Times New Roman": 660
+        },
+        "formattingNodeCounts": {
+          "b": 89,
+          "tab": 2,
+          "u": 7
+        },
+        "mediaCount": 1,
+        "mediaSha256": [
+          "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a"
+        ]
+      },
+      "deployedGenerated": {
+        "sha256": "19c64b877dfe01a3bf051ad06a8334028376422dfe6c755eef05c647f954901a",
+        "pagesAndShapesGeometrySha256": "aa366b2a6fcc6602e0aecdb10e4fd0e400af198c0120dfe0d450b49bc41ef7c7",
+        "sectionPageSizes": [
+          {
+            "w": "16838",
+            "h": "11906",
+            "orient": "landscape"
+          }
+        ],
+        "tables": 2,
+        "textBoxes": 0,
+        "directFontSizesHalfPoints": {
+          "20": 356
+        },
+        "fontFamilies": {
+          "Calibri": 7,
+          "Times New Roman": 673
+        },
+        "formattingNodeCounts": {
+          "b": 89,
+          "tab": 1,
+          "u": 7
+        },
+        "mediaCount": 1,
+        "mediaSha256": [
+          "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a"
+        ]
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": true,
+      "sameMediaHashes": true
+    },
+    {
+      "form": "ptm-card",
+      "originalSource": "ptm/ptm-card-template.docx",
+      "original": {
+        "sha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+        "pagesAndShapesGeometrySha256": "7628617fff991a574427bf66ca2238ab02c17c332969dcf57d6bc88f80005d5d",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838",
+            "code": "9"
+          }
+        ],
+        "tables": 1,
+        "textBoxes": 6,
+        "directFontSizesHalfPoints": {
+          "10": 74,
+          "13": 304,
+          "14": 34,
+          "15": 60,
+          "16": 178,
+          "18": 88,
+          "19": 10,
+          "2": 4,
+          "20": 23,
+          "32": 4,
+          "4": 4,
+          "6": 6,
+          "8": 26
+        },
+        "fontFamilies": {},
+        "formattingNodeCounts": {
+          "b": 66,
+          "tab": 77,
+          "u": 280
+        },
+        "mediaCount": 0,
+        "mediaSha256": []
+      },
+      "deployedGenerated": {
+        "sha256": "39cffbafee6904051b2d99cf3ac21d89d8a229715494a0dfacd2812336159631",
+        "pagesAndShapesGeometrySha256": "ecec23bc623379582493b76ae34a013b89ede3a1eb24c819df8768d34bc0a331",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838",
+            "code": "9"
+          }
+        ],
+        "tables": 1,
+        "textBoxes": 6,
+        "directFontSizesHalfPoints": {
+          "10": 74,
+          "13": 304,
+          "14": 34,
+          "15": 60,
+          "16": 178,
+          "18": 88,
+          "19": 10,
+          "2": 4,
+          "20": 49,
+          "32": 4,
+          "4": 4,
+          "6": 6,
+          "8": 26
+        },
+        "fontFamilies": {
+          "Times New Roman": 152
+        },
+        "formattingNodeCounts": {
+          "b": 66,
+          "tab": 77,
+          "u": 280
+        },
+        "mediaCount": 1,
+        "mediaSha256": [
+          "a03da22b201547187d3aaf27dcea4af6d05181978408aab57fbc2fe9d582319e"
+        ]
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": false,
+      "sameMediaHashes": false
+    },
+    {
+      "form": "ptm-protocol",
+      "originalSource": "ptm/ptm-protocol-template.docx",
+      "original": {
+        "sha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+        "pagesAndShapesGeometrySha256": "694afc7307355f0ba35686e49a343ac1ae56bb2aa4630e81d1dfa75dd567d14a",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838"
+          }
+        ],
+        "tables": 2,
+        "textBoxes": 0,
+        "directFontSizesHalfPoints": {
+          "18": 726
+        },
+        "fontFamilies": {
+          "Calibri": 156,
+          "Times New Roman": 1187
+        },
+        "formattingNodeCounts": {
+          "b": 128,
+          "tab": 19,
+          "u": 6
+        },
+        "mediaCount": 2,
+        "mediaSha256": [
+          "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+          "4a68945b73ad53915df8560bca147848f186476a12f0f165e98a9f17b7e37780"
+        ]
+      },
+      "deployedGenerated": {
+        "sha256": "211361b2f2e89922b3bc88d5b65692fbb487beb5f5fdc7bd52af8c153dfbd6f9",
+        "pagesAndShapesGeometrySha256": "694afc7307355f0ba35686e49a343ac1ae56bb2aa4630e81d1dfa75dd567d14a",
+        "sectionPageSizes": [
+          {
+            "w": "11906",
+            "h": "16838"
+          }
+        ],
+        "tables": 2,
+        "textBoxes": 0,
+        "directFontSizesHalfPoints": {
+          "18": 726
+        },
+        "fontFamilies": {
+          "Calibri": 146,
+          "Times New Roman": 1202
+        },
+        "formattingNodeCounts": {
+          "b": 128,
+          "tab": 19,
+          "u": 6
+        },
+        "mediaCount": 2,
+        "mediaSha256": [
+          "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+          "4a68945b73ad53915df8560bca147848f186476a12f0f165e98a9f17b7e37780"
+        ]
+      },
+      "samePageSizes": true,
+      "sameGeometryFingerprint": true,
+      "sameMediaHashes": true
+    }
+  ]
+}

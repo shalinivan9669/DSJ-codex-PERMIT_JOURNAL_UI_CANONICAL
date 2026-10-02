@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "checked": {
+    "issuerProfileVersion": 2,
+    "templateVersion": 16,
+    "issuance": 6,
+    "issuedDocument": 18,
+    "renderInputSnapshot": 26,
+    "artifact": 52
+  },
+  "originalFileHashes": 52
+}

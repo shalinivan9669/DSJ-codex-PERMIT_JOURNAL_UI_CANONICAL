@@ -1,5 +1,35 @@
 {
   "version": "2026-09-22.2",
+  "deployedTemplateDiff20261002": {
+    "status": "ORIGINAL_FORMS_RESTORED_LOCAL_ENGINEERING_PASS",
+    "branch": "codex/diff-deployed-templates",
+    "checkpoint": "8825dfa65f6c2a9b38bd39ee44463d3a0f6b102e",
+    "referenceFrontendCommit": "90d5b5e72dba0ac38c89f42fa37925a0b3468561",
+    "referenceBackendCommit": "NOT_ESTABLISHED",
+    "target": "Original reference DOCX bytes and original filling mechanics; no typography or layout redesign",
+    "intermediateV2": "NOT_ACCEPTED; 16 local template versions registered, zero issuances and snapshots using them",
+    "completed": [
+      "Exact source: 11 form mappings, 10 unique DOCX and 3 helper checksums",
+      "11 direct-legacy versus adapter core package comparisons PASS",
+      "11 current-data output comparisons preserve original typography, geometry and media; final XML package declarations checked separately",
+      "16 original template versions selected and registered in local test database; earlier versions and files preserved",
+      "New synthetic local control request: 4 documents, 10 of 10 jobs and stored artifact checksums verified",
+      "Worker card and ITR certificate opened and downloaded through browser UI; both downloaded PDF hashes match stored artifacts",
+      "248 unit tests, product lint, printing typecheck and product autonomy check PASS",
+      "Final full pnpm test:render: 90 of 90 PASS, zero failures/errors/skips, 988.675 seconds, exit 0",
+      "14 PDF cases on 20 pages and current raw BIOT 250-member protocol on 12 pages verified for source preservation and actual data; original print limitations documented separately",
+      "Read-only comparison of published and current request forms",
+      "Prior 52 artifact files preserved; 20 saved inputs and 16 historical fixtures reproduce old DOCX bytes"
+    ],
+    "controlRequestId": "5dcf2386-a357-472d-928b-041b4466c1f6",
+    "printAcceptance": "NOT_ACCEPTED_SOURCE_LIBREOFFICE_LIMITS",
+    "physicalPrint": "NOT_VERIFIED",
+    "pending": [],
+    "evidence": "docs/evidence/deployed-template-diff-20261002/engineering-verification.json",
+    "pdfEvidenceBoundary": "The visual 14-case and BIOT250 matrices precede the final lexical XML repair; final code separately passes all active DOCX/PDF conversions, package semantic equality, worker/ITR geometry equality and a photographed PB conversion. No blanket print acceptance.",
+    "push": "NOT_RUN",
+    "deploy": "NOT_RUN"
+  },
   "statusMeaning": {
     "NOT_RUN": "Не выполнялось",
     "PASS": "Выполнено на указанном SHA с реальным доказательством",

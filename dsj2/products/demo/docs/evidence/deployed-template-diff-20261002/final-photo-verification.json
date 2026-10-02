@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "case": "pb-card-photo",
+  "adapterSha256": "b6fe2e6d1376fb033109b8c4b33235249f17a10fad19090b718f2c5432924cac",
+  "databaseAccess": false,
+  "syntheticInputOnly": true,
+  "pageCount": 2,
+  "finalPackageSemanticEquality": true,
+  "physicalGeometryEqualToPriorAcceptedDataOutput": true,
+  "physicalPointPrecision": 0.0001,
+  "sampleMarkerEveryPage": true,
+  "pdfPrintStatus": "NOT_PRINT_ACCEPTED_SOURCE_LEFT_EDGE_CLIPPING",
+  "docxSha256": "b26445cb26acb31b38f170baf846a32f94d09a352197830f9d3039ecde2208bc",
+  "pdfSha256": "fa3f1548a1e629899c3de7d4947cc945b787490fbf7c41016035429382f7200c"
+}

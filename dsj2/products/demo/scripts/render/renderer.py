@@ -33,7 +33,7 @@ W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 R='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
 NS={'w':W[1:-1]}
-RENDERER_VERSION='demo-ooxml-8/libreoffice-26.2.6.3'
+RENDERER_VERSION='demo-ooxml-10/libreoffice-26.2.6.3'
 RU=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']
 KZ=['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан']
 Image.MAX_IMAGE_PIXELS=20_000_000
@@ -102,6 +102,11 @@ def photo_normalize(input_path,output_path,options):
         return {'width':image.width,'height':image.height,'mimeType':'image/png','warning':warning}
 
 def add_mark(files,text):
+    metadata=json.loads(files.get('demo/original-form.json',b'{}'))
+    if metadata.get('version')==2 and metadata.get('layoutPolicy')=='SOURCE_FIDELITY_V2':
+        from source_fidelity import add_floating_mark
+        add_floating_mark(files,text)
+        return
     root=E.fromstring(files['word/document.xml'])
     header=E.Element(W+'hdr',nsmap={'w':W[1:-1]})
     p=E.SubElement(header,W+'p'); pr=E.SubElement(p,W+'pPr'); E.SubElement(pr,W+'jc',{W+'val':'center'})
@@ -262,10 +267,15 @@ def fit_certificate_name(tree,value):
 def fill_original_media(files, snapshot):
     """Use the former issuer image slot, without carrying its logo/signatures."""
     metadata=json.loads(files['demo/original-form.json'].decode('utf-8'))
-    if metadata.get('version')!=1:raise ValueError('ORIGINAL_FORM_VERSION_UNKNOWN')
+    if metadata.get('version') not in [1,2]:raise ValueError('ORIGINAL_FORM_VERSION_UNKNOWN')
     issuer=snapshot['issuer']
     for slot in metadata['dynamicMedia']:
         if slot['kind']=='BLANK_SIGNATURE':continue
+        if metadata.get('version')==2 and slot['kind']=='REFERENCE_BRAND':
+            # Artwork belongs to the source issuer, not to every tenant using
+            # this form. Only frozen identity equality permits its exact bytes.
+            normalize=lambda value:re.sub(r'[^\w]','',re.sub(r'\b(?:тоо|жшс)\b','',value.casefold()))
+            if normalize(issuer.get('nameRu',''))==normalize(slot['issuerNameRu']):continue
         with Image.open(io.BytesIO(files[slot['part']])) as original:size=original.size
         content=' / '.join(filter(None,[issuer.get('nameKz'),issuer.get('nameRu')]))
         if slot['kind']=='ISSUER_ADDRESS':
@@ -310,16 +320,26 @@ def immutable_template_package(content):
     return files,frozenset(fields),frozenset(parts)
 
 
+def validated_fields(snapshot,item):
+    fields=fields_for(snapshot,item)
+    # Shared with PRINT_LIMITS.maxUnbroken for every immutable template policy.
+    # Reject invalid input without changing any document typography or geometry.
+    if any(len(token)>80 for value in fields.values() for token in str(value).split()):
+        raise ValueError('PRINT_LAYOUT_OVERFLOW')
+    return fields
+
+
 def render_one(snapshot,item,template):
+    fields=validated_fields(snapshot,item)
+    from legacy_reference import identify_reference,render_reference_files,freeze_reference_dates
+    if identify_reference(template,snapshot['templateId']):
+        return freeze_reference_dates(render_reference_files(snapshot,item,template,source_values=True),snapshot,item)
     package,available,field_parts=immutable_template_package(Path(template).read_bytes())
     files=dict(package)
     original_form='demo/original-form.json' in files
+    original_metadata=json.loads(files['demo/original-form.json']) if original_form else {}
+    source_fidelity=original_metadata.get('version')==2 and original_metadata.get('layoutPolicy')=='SOURCE_FIDELITY_V2'
     if original_form:fill_original_media(files,snapshot)
-    fields=fields_for(snapshot,item)
-    # Shared with contracts PRINT_LIMITS.maxUnbroken. Reject before registration via
-    # preflight; never truncate a legal name or solve overflow with a micro-font.
-    if any(len(token)>80 for value in fields.values() for token in str(value).split()):
-        raise ValueError('PRINT_LAYOUT_OVERFLOW')
     # Some historic forms have one bilingual cell backed by a RU-only merge key.
     # Decide from the immutable template bytes, never from the current manifest.
     for base in ['FULL_NAME','POSITION','WORKPLACE']:
@@ -460,9 +480,13 @@ def render_one(snapshot,item,template):
         # Original anchors stay in place. Populated fixed card boxes still need
         # bounded paragraph insets and wrapping: the PB source starts 2.1pt
         # outside the sheet and its cached short names hide that clipping.
-        fit_textboxes(root,snapshot['templateId'],bool(item.get('photoAssetId')),original_form)
+        fidelity_states=[]
+        if source_fidelity:
+            from source_fidelity import prepare_layout,fit_layout
+            fidelity_states=prepare_layout(root,snapshot['templateId'],bool(item.get('photoAssetId')),files['word/styles.xml'])
+        else:fit_textboxes(root,snapshot['templateId'],bool(item.get('photoAssetId')),original_form)
         current_biot=any((n.get(W+'val') or '').startswith('BIOT2026_') for n in root.iter(W+'tblCaption'))
-        if snapshot['templateId']=='biot-itr-certificate' and not current_biot:fit_certificate_name(root,fields['FULL_NAME_RU'])
+        if snapshot['templateId']=='biot-itr-certificate' and not current_biot and not source_fidelity:fit_certificate_name(root,fields['FULL_NAME_RU'])
         if snapshot['templateId']=='pb-protocol' and not original_form:
             body=root.find(W+'body');previous_blank=False
             for paragraph in list(body) if body is not None else []:
@@ -474,7 +498,8 @@ def render_one(snapshot,item,template):
             for key,value in fields.items(): replace_text_nodes(nodes,re.escape('{{'+key+'}}'),str(value))
         leftovers=re.findall(r'\{\{[A-Z0-9_]+\}\}', ''.join(root.itertext()))
         if leftovers: raise ValueError('TEMPLATE_FIELDS_MISSING:'+','.join(sorted(set(leftovers))))
-        fit_rendered_textboxes(root)
+        if source_fidelity:fit_layout(fidelity_states)
+        else:fit_rendered_textboxes(root)
         if current_biot:
             from biot_2026 import assert_page_fit
             assert_page_fit(root)
@@ -487,7 +512,7 @@ def render_one(snapshot,item,template):
         if not photo.is_relative_to(store): raise ValueError('PHOTO_PATH')
         coords={'ptm-card':(215.4,123.75,51,67.5),'pb-card':(-2.1,121.5,59.8,79.65),'ps-card':(8,108,56,74)}[tid]
         x,y,w,h=coords
-        if original_form and tid=='pb-card':x=20
+        if original_form and tid=='pb-card' and not source_fidelity:x=20
         blob=photo.read_bytes();photo_digest=hashlib.sha256(blob).hexdigest()
         expected=re.search(r'/(\w{64})-[0-9a-f-]{36}\.png$',key)
         if expected and expected[1]!=photo_digest:raise ValueError('PHOTO_HASH_MISMATCH')
@@ -562,8 +587,13 @@ def preflight(payload,out):
         if not snapshot.get('groupEvent') and len(snapshot['items'])!=1: raise ValueError('PREFLIGHT_SINGLE_RECIPIENT')
         try:
             if snapshot.get('groupEvent'):
-                from group_protocol import render_group
-                render_group(snapshot,path,render_one)
+                from legacy_reference import identify_reference,render_reference_group_files
+                if identify_reference(path,snapshot['templateId']):
+                    for item in snapshot['items']:validated_fields(snapshot,item)
+                    render_reference_group_files(snapshot,path)
+                else:
+                    from group_protocol import render_group
+                    render_group(snapshot,path,render_one)
             else: render_one(snapshot,snapshot['items'][0],path)
         except ValueError as error:
             if str(error)!='PRINT_LAYOUT_OVERFLOW': raise
@@ -575,6 +605,12 @@ def render_docx(snapshot,out):
     from english_appendix import append_english_pages, validate_english
     validate_english(snapshot)
     template,path=resolve_template(snapshot)
+    from legacy_reference import identify_reference,render_reference_document
+    if identify_reference(path,snapshot['templateId']):
+        if not 1<=len(snapshot['items'])<=MAX_REQUEST_ROWS:raise ValueError('ROW_LIMIT')
+        for item in snapshot['items']:validated_fields(snapshot,item)
+        render_reference_document(snapshot,out,path)
+        return {'format':'DOCX','templateVersion':snapshot.get('templateVersion',template['version']),'rendererVersion':RENDERER_VERSION,'renderPolicy':'LEGACY_REFERENCE_90D5'}
     if snapshot.get('groupEvent'):
         from group_protocol import render_group
         files=render_group(snapshot,path,render_one)

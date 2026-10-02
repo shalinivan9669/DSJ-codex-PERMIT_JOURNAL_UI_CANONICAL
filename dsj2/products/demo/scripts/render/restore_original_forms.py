@@ -24,6 +24,10 @@ ROOT = Path(__file__).resolve().parents[2]
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 NS = {'w': W[1:-1]}
 METADATA_PART = 'demo/original-form.json'
+REFERENCE_LOGO_HASHES = {
+    '4c1e7489d3350c451e9d3ea355356a15133097bc443e64549b8b342c181a8c03',
+    '02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a',
+}
 EXTRA_FIELDS = {
     'ФИО_1': 'FULL_NAME_BOTH', 'ФИО_РУС_1': 'FULL_NAME_BOTH',
     'Наименование_организации_1': 'WORKPLACE_BOTH', 'Организация_РУС_1': 'WORKPLACE_BOTH',
@@ -135,20 +139,35 @@ def roster_slots(tree, template_id):
         if props.find(W+'tblHeader') is None: E.SubElement(props,W+'tblHeader')
 
 
-def prepare_original(source, template_id):
+def prepare_original(source, template_id, source_fidelity=False):
     with ZipFile(source) as archive: files = {n:archive.read(n) for n in archive.namelist()}
     dynamic_media = []
+    reference_media = []
+    exclusions = []
     # All nine retained source images were visually inspected. They are former
     # issuer logos, foreign contact details, a stamp and a handwritten signature.
     # Keep each image relationship/anchor and dimensions; never reuse old identity.
     for name, data in list(files.items()):
         if not name.startswith('word/media/'): continue
+        original_hash = hashlib.sha256(data).hexdigest()
+        is_logo = template_id != 'ps-witness' and not (template_id in ['pb-protocol','ptm-protocol'] and name.endswith('image1.png'))
+        if source_fidelity and is_logo:
+            if original_hash not in REFERENCE_LOGO_HASHES:raise ValueError('SOURCE_REFERENCE_LOGO_UNKNOWN')
+            slot = {'part':name,'kind':'REFERENCE_BRAND','originalSha256':original_hash,
+                    'issuerNameRu':'Аттестационный центр Стандарт'}
+            dynamic_media.append(slot)
+            reference_media.append(dict(slot))
+            continue
         with Image.open(io.BytesIO(data)) as image:
             placeholder = Image.new('RGBA', image.size, (255,255,255,0))
             output = io.BytesIO(); placeholder.save(output,'PNG'); files[name] = output.getvalue()
         kind = ('BLANK_SIGNATURE' if template_id == 'ps-witness' else
                 'ISSUER_ADDRESS' if template_id in ['pb-protocol','ptm-protocol'] and name.endswith('image1.png') else 'ISSUER')
-        dynamic_media.append({'part':name,'kind':kind,'originalSha256':hashlib.sha256(data).hexdigest()})
+        dynamic_media.append({'part':name,'kind':kind,'originalSha256':original_hash})
+        if source_fidelity:
+            exclusions.append({'part':name,'originalSha256':original_hash,
+                               'reason':'SPECIMEN_SIGNATURE_OR_STAMP' if kind=='BLANK_SIGNATURE' else 'FOREIGN_CONTACT_DETAILS',
+                               'replacement':'BLANK' if kind=='BLANK_SIGNATURE' else 'FROZEN_ISSUER_ADDRESS'})
     replacements = [
         (r'(?:ТОО\s*[«"]?\s*)?Аттестационный\s+центр\s+Стандарт[»"]?(?:\s*ЖШС)?','{{ISSUER_BOTH}}'),
         (r'ТОО\s+Аттестац\b','{{ISSUER_BOTH}}'),
@@ -229,11 +248,16 @@ def prepare_original(source, template_id):
         files[name] = E.tostring(tree,xml_declaration=True,encoding='utf-8')
     metadata = {'version':1,'sourceSha256':sha(source),'sourceFile':source.name,
                 'dynamicMedia':dynamic_media,'layout':'MARCH_2026_ORIGINAL','englishAppendixVersion':1}
+    if source_fidelity:
+        metadata.update(version=2,layoutPolicy='SOURCE_FIDELITY_V2',
+                        preservedReferenceMedia=reference_media,excludedSourceMedia=exclusions,
+                        referenceBrandPolicy='RETAIN_ONLY_FOR_MATCHING_FROZEN_ISSUER',
+                        fieldLayoutPolicy='SOURCE_RUN_STYLES_WITH_BOUNDED_ADAPTIVE_FIT')
     files[METADATA_PART] = json.dumps(metadata,ensure_ascii=False,sort_keys=True).encode('utf-8')
     return normalize_package(files)
 
 
-def build(source_root, replace_unpublished=False):
+def build(source_root, replace_unpublished=False, source_fidelity=False):
     directory = ROOT/'assets/templates'
     manifest_path = directory/'manifest.json'
     manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
@@ -244,7 +268,7 @@ def build(source_root, replace_unpublished=False):
         source = source_root/relative; original_hash = sha(source)
         old = next(t for t in manifest['templates'] if t['id']==tid)
         if old['sourceSha256'] != original_hash: raise ValueError('ORIGINAL_HASH_CHANGED:'+tid)
-        files = prepare_original(source,tid)
+        files = prepare_original(source,tid,source_fidelity=source_fidelity)
         text = ''.join(''.join(E.fromstring(v).itertext()) for n,v in files.items() if n.endswith('.xml'))
         if re.search(r'Стандарт|Солтанова|Флеглер|Баянов|Жакибеков|QNP|Венцель|Токенов',text):
             raise ValueError('SOURCE_SAMPLE_LEFTOVER:'+tid)
@@ -263,6 +287,9 @@ def build(source_root, replace_unpublished=False):
                        verificationStatus='PENDING_CURRENT_RENDER_REVIEW',
                        restoration={'sourceFile':relative,'sourceSha256':original_hash,
                                     'sourceCommit':'f5c2aab','englishAppendixVersion':1})
+        if source_fidelity:
+            updated['restoration'].update(layoutPolicy='SOURCE_FIDELITY_V2',metadataVersion=2,
+                                           referenceBrandPolicy='RETAIN_ONLY_FOR_MATCHING_FROZEN_ISSUER')
         for stale in ['sample','verification','regulatoryReview','historicalTemplate','historicalTemplateSha256']:
             updated.pop(stale,None)
         manifest['templates'][manifest['templates'].index(old)] = updated
@@ -285,7 +312,14 @@ def build(source_root, replace_unpublished=False):
                            'former handwritten signature and stamp left blank',
                            'equivalent bundled Liberation fonts',
                            'protocol sample row filled and headings repeat for group pagination']})
-    manifest['rendererVersion'] = 'demo-ooxml-8/libreoffice-26.2.6.3'
+        if source_fidelity:
+            report[-1].update(layoutPolicy='SOURCE_FIDELITY_V2',
+                             preservedReferenceMedia=json.loads(files[METADATA_PART])['preservedReferenceMedia'],
+                             excludedSourceMedia=json.loads(files[METADATA_PART])['excludedSourceMedia'])
+            report[-1]['intentionalChanges'][1] = 'original reference logo retained only for matching frozen issuer; other issuer uses the original slot'
+            report[-1]['intentionalChanges'].append('source run formatting retained; only populated fields receive bounded fitting')
+            report[-1]['intentionalChanges'].append('sample space/tab padding normalized in populated slots; original photo rectangles reserved with bounded text insets')
+    manifest['rendererVersion'] = 'demo-ooxml-9/libreoffice-26.2.6.3' if source_fidelity else 'demo-ooxml-8/libreoffice-26.2.6.3'
     manifest_path.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     (directory/'original-form-restoration.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     return report
@@ -294,5 +328,6 @@ def build(source_root, replace_unpublished=False):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(); parser.add_argument('--source',type=Path,required=True)
     parser.add_argument('--replace-unpublished',action='store_true',help='Only this build output before provisioning, approval or issuance')
+    parser.add_argument('--source-fidelity',action='store_true',help='New immutable versions with source run formatting and conditional reference artwork')
     args=parser.parse_args()
-    print(json.dumps(build(args.source,args.replace_unpublished),ensure_ascii=False,indent=2))
+    print(json.dumps(build(args.source,args.replace_unpublished,args.source_fidelity),ensure_ascii=False,indent=2))

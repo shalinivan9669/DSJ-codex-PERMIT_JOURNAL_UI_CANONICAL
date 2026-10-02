@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "requestId": "5dcf2386-a357-472d-928b-041b4466c1f6",
+  "previewedPdfPages": {
+    "itr": 1,
+    "worker": 2
+  },
+  "downloads": [
+    {
+      "templateId": "biot-worker-card",
+      "artifactId": "6775e889-9f20-4e2c-9a29-60d96332fc8e",
+      "sha256": "3b066df861f74b4ccb4a33e5e1c10bdbda7d33a4518c2f2c5dab9a7a5684b99a",
+      "downloadMatchesSavedBytes": true
+    },
+    {
+      "templateId": "biot-itr-certificate",
+      "artifactId": "3a869247-ffda-4e7d-8d2e-ca26fbd56a86",
+      "sha256": "7a4b32c10a31d6730bbd7d3920b0323cc89fe75d210fc31dc0a1924ef0a52fb1",
+      "downloadMatchesSavedBytes": true
+    }
+  ],
+  "physicalPrint": "NOT_VERIFIED"
+}

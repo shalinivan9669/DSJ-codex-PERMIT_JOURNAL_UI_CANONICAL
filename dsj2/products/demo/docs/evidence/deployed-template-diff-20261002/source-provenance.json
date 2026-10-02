@@ -1,0 +1,420 @@
+{
+  "head": "8825dfa65f6c2a9b38bd39ee44463d3a0f6b102e",
+  "comparisonType": "LOCAL_SYNTHETIC_RENDER_NOT_DEPLOYMENT_OUTPUT",
+  "templates": [
+    {
+      "id": "biot-worker-card",
+      "version": 18,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\biot\\biot-card-template.docx",
+      "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-worker-card.v18.docx",
+      "templateSha256": "366a5604a12015a56cde602943b8dab54bf4bdc6231272fc66dd0828d366a91c",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+        "8503079": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+        "224c1bd": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+        "8825dfa": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [],
+      "demoMedia": []
+    },
+    {
+      "id": "biot-itr-certificate",
+      "version": 16,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\biot\\biot-itr-certificate-template.docx",
+      "sourceSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-itr-certificate.v16.docx",
+      "templateSha256": "20b2f85c0ad615a720c6b304db7dff9185838b3b50457eeefca6d3605294ab1f",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+        "8503079": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+        "224c1bd": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+        "8825dfa": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [
+        "word/media/image1.png"
+      ],
+      "demoMedia": [
+        "word/media/image1.png"
+      ]
+    },
+    {
+      "id": "biot-protocol",
+      "version": 12,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\biot\\biot-protocol-template.docx",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-protocol.v12.docx",
+      "templateSha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "8503079": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "224c1bd": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "8825dfa": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [
+        "word/media/image1.png"
+      ],
+      "demoMedia": [
+        "word/media/image1.png"
+      ]
+    },
+    {
+      "id": "ptm-card",
+      "version": 15,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\ptm\\ptm-card-template.docx",
+      "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ptm-card.v15.docx",
+      "templateSha256": "db147f3e14f08b3190cd525e97caf74767ebecce9639716a2f95fdfea99f989d",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+        "8503079": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+        "224c1bd": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+        "8825dfa": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [],
+      "demoMedia": []
+    },
+    {
+      "id": "ptm-protocol",
+      "version": 10,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\ptm\\ptm-protocol-template.docx",
+      "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ptm-protocol.v10.docx",
+      "templateSha256": "519d4dd4eeb6789eb2425839d0357879b076241a98c549116524a96a3be5622a",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+        "8503079": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+        "224c1bd": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+        "8825dfa": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [
+        "word/media/image1.png",
+        "word/media/image2.png"
+      ],
+      "demoMedia": [
+        "word/media/image1.png",
+        "word/media/image2.png"
+      ]
+    },
+    {
+      "id": "pb-card",
+      "version": 15,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\pb\\pb-card-template.docx",
+      "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\pb-card.v15.docx",
+      "templateSha256": "b6b4ff4cc3457eca168c3ea78938f4f90f37c752c6c4954ea29acbdafed9bb20",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+        "8503079": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+        "224c1bd": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+        "8825dfa": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [],
+      "demoMedia": []
+    },
+    {
+      "id": "pb-protocol",
+      "version": 10,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\pb\\pb-protocol-template.docx",
+      "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\pb-protocol.v10.docx",
+      "templateSha256": "e7bc3573923bfe039c8196e7df2effeb0eb940fef43db9531d32ea50e8ff9f91",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+        "8503079": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+        "224c1bd": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+        "8825dfa": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [
+        "word/media/image2.png",
+        "word/media/image1.png"
+      ],
+      "demoMedia": [
+        "word/media/image1.png",
+        "word/media/image2.png"
+      ]
+    },
+    {
+      "id": "ps-card",
+      "version": 16,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\ps\\ps-card-template.docx",
+      "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ps-card.v16.docx",
+      "templateSha256": "61b772c29425b7c6ae6f66e21d576736cc06244c524e15ff3a9559371e582198",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+        "8503079": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+        "224c1bd": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+        "8825dfa": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [],
+      "demoMedia": []
+    },
+    {
+      "id": "ps-protocol",
+      "version": 10,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\ps\\ps-protocol-template.docx",
+      "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ps-protocol.v10.docx",
+      "templateSha256": "7e47a469436057e2f099114c75c51ae350da555a747e39a0bd3fde3b7f3a0175",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+        "8503079": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+        "224c1bd": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+        "8825dfa": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [
+        "word/media/image1.png"
+      ],
+      "demoMedia": [
+        "word/media/image1.png"
+      ]
+    },
+    {
+      "id": "ps-witness",
+      "version": 12,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\ps\\ps-witness-certificate-template.docx",
+      "sourceSha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ps-witness.v12.docx",
+      "templateSha256": "26a0ff059d5488e08af8cb2de0d780dad01146d771e7b04e0abe12353c5c9bfa",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+        "8503079": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+        "224c1bd": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+        "8825dfa": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [
+        "word/media/image2.png",
+        "word/media/image1.png"
+      ],
+      "demoMedia": [
+        "word/media/image1.png",
+        "word/media/image2.png"
+      ]
+    },
+    {
+      "id": "biot-itr-protocol",
+      "version": 3,
+      "source": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\docs\\experimental\\biot\\biot-protocol-template.docx",
+      "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+      "template": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-itr-protocol.v3.docx",
+      "templateSha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+      "manifestHashMatches": true,
+      "gitSourceHashes": {
+        "f5c2aab": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "8503079": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "224c1bd": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "8825dfa": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+        "90d5b5e72dba0ac38c89f42fa37925a0b3468561": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b"
+      },
+      "sourceBytesIdenticalAcrossRefs": true,
+      "storedPagePropertiesEqual": true,
+      "storedVmlGeometryEqual": true,
+      "sourceMedia": [
+        "word/media/image1.png"
+      ],
+      "demoMedia": [
+        "word/media/image1.png"
+      ]
+    }
+  ],
+  "media": [
+    {
+      "index": 1,
+      "sha256": "4c1e7489d3350c451e9d3ea355356a15133097bc443e64549b8b342c181a8c03",
+      "refs": [
+        "biot-itr-certificate:word/media/image1.png"
+      ],
+      "dimensions": [
+        2000,
+        2000
+      ],
+      "visualClassification": "SOURCE_LOGO_ITR"
+    },
+    {
+      "index": 2,
+      "sha256": "02eefee335db15397778441c2f249884f01c3a7f3c00f2ec0d336e52ca9e047a",
+      "refs": [
+        "biot-protocol:word/media/image1.png",
+        "ptm-protocol:word/media/image2.png",
+        "pb-protocol:word/media/image2.png",
+        "ps-protocol:word/media/image1.png",
+        "biot-itr-protocol:word/media/image1.png"
+      ],
+      "dimensions": [
+        2000,
+        2000
+      ],
+      "visualClassification": "SOURCE_LOGO_PROTOCOLS"
+    },
+    {
+      "index": 3,
+      "sha256": "4a68945b73ad53915df8560bca147848f186476a12f0f165e98a9f17b7e37780",
+      "refs": [
+        "ptm-protocol:word/media/image1.png",
+        "pb-protocol:word/media/image1.png"
+      ],
+      "dimensions": [
+        962,
+        186
+      ],
+      "visualClassification": "FOREIGN_CONTACT_BLOCK"
+    },
+    {
+      "index": 4,
+      "sha256": "2325b248f0883dfce64b7068a6e763edaf0e5d2f4e517b4fac40e87e897cf91d",
+      "refs": [
+        "ps-witness:word/media/image2.png"
+      ],
+      "dimensions": [
+        219,
+        125
+      ],
+      "visualClassification": "SAMPLE_HANDWRITTEN_SIGNATURE"
+    },
+    {
+      "index": 5,
+      "sha256": "06eb8b79a4d5029ed34e4c71a546b664406de228c57dfcc98a63969338682a1c",
+      "refs": [
+        "ps-witness:word/media/image1.png"
+      ],
+      "dimensions": [
+        353,
+        360
+      ],
+      "visualClassification": "SAMPLE_STAMP"
+    }
+  ],
+  "renders": [
+    {
+      "id": "biot-worker-card",
+      "legacyDocx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\template-provenance-20261002\\biot-worker-card-legacy.docx",
+      "legacyPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\template-provenance-20261002\\biot-worker-card-legacy.pdf",
+      "legacyPdfSha256": "63424864ecc8f3447f979f68ec55a4c035b06d13959cf234da43db3390d8e36c",
+      "currentDemoPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\first-live-iteration\\sprint-browser-evidence\\b1c24d11-c03d-4f28-82e0-bfdfe0795dac-biot-worker-card-d49fc0f4-9db6-40f0-bc2a-314112f55456.pdf",
+      "currentDemoPdfSha256": "adcbeb3fd18df4c5d55e444221f9da418f70648153cbd16aa15badcbff99db43",
+      "fields": {
+        "Берілді": "Синтетический Рабочий Первый",
+        "В_том_что_он": "Синтетическая программа БиОТ — спринт 1",
+        "ГОД": "26",
+        "День_месяц": "02.10",
+        "Должность": "Монтажник",
+        "Жұмыс__орны_": "Синтетикалық жұмыс беруші",
+        "Лауазымы": "Монтажник",
+        "Место_работы__": "Синтетический работодатель",
+        "Номер_серии": "",
+        "Номер_удостоверения": "BIOT-CARD-00002",
+        "Протокол_": "BIOT-PROTOCOL-00003",
+        "ФИО": "Синтетический Рабочий Первый"
+      },
+      "comparison": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\template-provenance-20261002\\biot-worker-card-comparison.png",
+      "limits": "Legacy supports source identity/subject fixed in form; DEMO uses tenant identity and ITR bilingual name. Same available synthetic recipient/date/number inputs, no legacy service/DB execution.",
+      "pageReview": {
+        "legacy": {
+          "pages": 2,
+          "text": [
+            "  Бойынша емтихан тапсырғаны туралы берiлдi. \n  В  том,  что  он  сдал  экзамены  на  знание    Синтетическая\n \n \nпрограмма БиОТ — спринт 1\n \n   \n \n  Негiздеме:      \n \n 26\n      \n  ж.      \n \n 02.10\n \n .     \n  №     \n \n BIOT-PROTOCOL-00003\n \n           \n \n    \nхаттама\n  Основание: Протокол №     \n   BIOT-PROTOCOL-00003\n \n       \n \n от \n02.10\n \n . 26\n           \n \n г. \n  Емтихан комиссиясының төрағасы\n  Председатель экзаменационной\n  комиссии   Солтанова Н.Н.\n \n  \n \n  Комиссия мүшесi                                                           Т.А.Ə./Ф.И.О\n  Член комиссии Флеглер А.С. \n \n             \n  Т.А.Ə./Ф.И.О\n  М.О.\n  Бойынша емтихан тапсырғаны туралы берiлдi. \n  В том, что он сдал экзамены на знание  Синтетическая программа\n \n \nБиОТ — спринт 1\n \n   \n \n  Негiздеме:      \n \n 26\n      \n  ж.      \n \n 02.10\n \n .     \n  №     \n \n BIOT-PROTOCOL-00003\n \n           \n \n    \nхаттама\n  Основание: Протокол №     \n   BIOT-PROTOCOL-00003\n \n       \n \n от      \n \n 02.10\n \n . 26\n     \nг. \n  Емтихан комиссиясының төрағасы\n  Председатель экзаменационной\n  комиссии   Солтанова Н.Н.\n \n  \n  Комиссия мүшесi                                                           Т.А.Ə./Ф.И.О\n  Член комиссии  Флеглер А.С. \n \n      \n     \n \n             \n  Т.А.Ə./Ф.И.О\n  М.О.\n№  BIOT-CARD-00002\n \n     КУƏЛІГІ \nУДОСТОВЕРЕНИЕ №   BIOT-CARD-00002\n \n \n    Синтетический Рабочий Первый\n \n   \n \nберілді\n                                         (ТАƏ)\nВыдано Синтетический Рабочий Первый\n \n   \n \n                                                                                    (ФИО)\nДолжность Монтажник\n \n   \n \nЛауазымы    \n \nЖұмыс орны Синтетикалық жұмыс беруші\n \n   \n \nМесто работы Синтетический работодатель\n \n   \n \n№  BIOT-CARD-00002\n \n     КУƏЛІГІ \nУДОСТОВЕРЕНИЕ №   BIOT-CARD-00002\n \n \n    Синтетический Рабочий Первый\n \n  берілді\n                                         (ТАƏ)\nВыдано Синтетический Рабочий Первый\n                                                                                    (ФИО)\nДолжность Монтажник\n \n   \n \nЛауазымы  Монтажник\n \n   \n \nЖұмыс орны Синтетикалық жұмыс беруші  \n \nМесто работы Синтетический работодатель  \n \n    \n \n \n  \n      \n \n \n                                                   ТОО Аттестационный центр Стандарт             ТОО Аттестационный центр Стандарт               ТОО Аттестационный центр Стандарт                      ТОО Аттестационный центр Стандарт                          ТОО Аттестационный центр Стандарт \n \n                                                       ТОО Аттестационный центр Стандарт             ТОО Аттестационный центр Стандарт               ТОО Аттестационный центр Стандарт                      ТОО Аттестационный центр Стандарт                    ТОО Аттестационный центр Стандарт \n \n",
+            "Емтиханды қайта тапсырғаны туралы мəлiметтер \nСведения о повторной сдаче экзаменов\nЛауазымы                                                                                                                                    \nДолжность                                                                                                                                   \nЖұмыс орны                                                                                                                                \n \n  \nМесто работы                                                                                                                            \n \n  \nБойынша емтихан тапсырғаны туралы берiлдi\nВ том, что он сдал экзамены на знание \nНегiздеме: 20        ж.                                                  \n \n №                                            хаттама \nОснование: Протокол №                                     \n \n от                              20             \n \n г. \nЕмтихан комиссиясының төрағасы\nПредседатель экзаменационной\nКомиссии \n                                                                                                               Т.А.Ə./Ф.И.О\nКомиссия мүшесi\nЧлен комиссии                \n \n    \n \nМ.О                                                                                                                                             Т.А.Ə./Ф.И.О\nМ.П.\nЕмтиханды қайта тапсырғаны туралы мəлiметтер \nСведения о  повторной сдаче экзаменов\nЛауазымы    \n    \n \nДолжность       \n \nЖұмыс орны                           \n \n       \n \nМесто работы                 \n \n   \n \nБойынша емтихан тапсырғаны туралы берiлдi\nВ том, что он сдал экзамены на знание                  \n \n   \n \n  \n \nНегiздеме: 20        \n \n  ж.        \n \n                                 \n \n №        \n \n                       \n \n                     \n \n \nхаттама \nОснование: Протокол №            \n \n             \n \n                                     \n \n от    \n                    \n \n 20   \n \nг.\nЕмтихан комиссиясының төрағасы \nПредседатель экзаменационной\nкомиссии     \n \n                       \n \n                       \n \n   \n \nКомиссия мүшесi\n                                                     Т.А.Ə./Ф.И.О\nЧлен комиссии               \n                          \n \n                  \n \n   \n \n                                                                        Т.А.Ə./Ф.И.О\n                    ТОО Аттестационный центр Стандарт             ТОО Аттестационный центр Стандарт               ТОО Аттестационный центр Стандарт                      ТОО Аттестационный центр Стандарт                              ТОО Аттестационный центр Стандарт \n \n"
+          ]
+        },
+        "demo": {
+          "pages": 2,
+          "text": [
+            "ДЕМО — НЕ ЯВЛЯЕТСЯ ВЫДАННЫМ ДОКУМЕНТОМ\nБойынша емтихан тапсырғаны туралы берiлдi.\nВ том, что он сдал экзамены на знание Синтетическая программа БиОТ \n— спринт 1\nНегiздеме: 2026 ж. 02.10. № BIOT-PROTOCOL-00003 хаттама\nОснование: Протокол № BIOT-PROTOCOL-00003 от 02.10.2026 г.\nЕмтихан комиссиясының төрағасы\nПредседатель экзаменационной\nкомиссии Тестовый Председатель\nКомиссия мүшесi Т.А.Ə./Ф.И.О\nЧлен комиссии Тестовый Член Первый\nТ.А.Ə./Ф.И.О\nМ.О.\nМ.П.\nБойынша емтихан тапсырғаны туралы берiлдi.\nВ том, что он сдал экзамены на знание Синтетическая программа БиОТ — \nспринт 1\nНегiздеме: 2026 ж. 02.10. № BIOT-PROTOCOL-00003 хаттама\nОснование: Протокол № BIOT-PROTOCOL-00003 от 02.10.2026 г.\nЕмтихан комиссиясының төрағасы\nПредседатель экзаменационной\nкомиссии Тестовый Председатель\nКомиссия мүшесi Т.А.Ə./Ф.И.О\nЧлен комиссии Тестовый Член Первый\nТ.А.Ə./Ф.И.О\nМ.О.\nМ.П.\n№ BIOT-CARD-00002 КУƏЛІГІ\nУДОСТОВЕРЕНИЕ № BIOT-CARD-00002\nСинтетический Рабочий Первый берілді\n(ТАƏ)\nВыдано Синтетический Рабочий Первый\n(ФИО)\nДолжность Монтажник\nЛауазымы Монтажник\nЖұмыс орны Синтетикалық жұмыс беруші\nМесто работы Синтетический работодатель\n№ BIOT-CARD-00002 КУƏЛІГІ\nУДОСТОВЕРЕНИЕ № BIOT-CARD-00002\nСинтетический Рабочий Первый берілді\n(ТАƏ)\nВыдано Синтетический Рабочий Первый\n(ФИО)\nДолжность Монтажник\nЛауазымы Монтажник\nЖұмыс орны Синтетикалық жұмыс беруші\nМесто работы Синтетический работодатель\n    \n \n \n  \nСинтетический учебный центр / Синтетикалық оқу орталығы\nСинтетический учебный центр / Синтетикалық оқу орталығы\n",
+            "ДЕМО — НЕ ЯВЛЯЕТСЯ ВЫДАННЫМ ДОКУМЕНТОМ\nЕмтиханды қайта тапсырғаны туралы мəлiметтер \nСведения о повторной сдаче экзаменов\nЛауазымы                                                                                                                                    \nДолжность                                                                                                                                   \nЖұмыс орны                                                                                                                                \n \n  \nМесто работы                                                                                                                            \n \n  \nБойынша емтихан тапсырғаны туралы берiлдi\nВ том, что он сдал экзамены на знание \nНегiздеме: 20        ж.                                                  \n \n №                                            хаттама \nОснование: Протокол №                                     \n \n от                              20             \n \n г. \nЕмтихан комиссиясының төрағасы\nПредседатель экзаменационной\nКомиссии \n                                                                                                               Т.А.Ə./Ф.И.О\nКомиссия мүшесi\nЧлен комиссии                \n \n    \n \nМ.О                                                                                                                                             Т.А.Ə./Ф.И.О\nМ.П.\nЕмтиханды қайта тапсырғаны туралы мəлiметтер \nСведения о  повторной сдаче экзаменов\nЛауазымы    \n    \n \nДолжность       \n \nЖұмыс орны                           \n \n       \n \nМесто работы                 \n \n   \n \nБойынша емтихан тапсырғаны туралы берiлдi\nВ том, что он сдал экзамены на знание                  \n \n   \n \n  \n \nНегiздеме: 20        \n \n  ж.        \n \n                                 \n \n №        \n \n                       \n \n                     \n \n \nхаттама \nОснование: Протокол №            \n \n             \n \n                                     \n \n от    \n                    \n \n 20   \n \nг.\nЕмтихан комиссиясының төрағасы \nПредседатель экзаменационной\nкомиссии     \n \n                       \n \n                       \n \n   \n \nКомиссия мүшесi\n                                                     Т.А.Ə./Ф.И.О\nЧлен комиссии               \n                          \n \n                  \n \n   \n \n                                                                        Т.А.Ə./Ф.И.О\nСинтетический учебный центр / Синтетикалық оқу орталығы\n"
+          ]
+        }
+      },
+      "visualFindings": [
+        "Legacy original typography/underlines retained; long synthetic name/employer exceeds frame at left in source panels",
+        "DEMO uses uniform8/6pt reflow, omits original underlines, moves filled content into panel; watermark/issuer band differ",
+        "First legacy KZ position blank due original wrong series merge slot; current DEMO repaired it"
+      ]
+    },
+    {
+      "id": "biot-itr-certificate",
+      "legacyDocx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\template-provenance-20261002\\biot-itr-certificate-legacy.docx",
+      "legacyPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\template-provenance-20261002\\biot-itr-certificate-legacy.pdf",
+      "legacyPdfSha256": "6392989d6ea94781548ed2400046e20e13ee1239727578d2d08599723a32b803",
+      "currentDemoPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\first-live-iteration\\sprint-browser-evidence\\b1c24d11-c03d-4f28-82e0-bfdfe0795dac-biot-itr-certificate-624e5e36-5e59-477e-abfe-6300fb5e5615.pdf",
+      "currentDemoPdfSha256": "c4e49dd4309069f6e298fd49059694ef4f68e46d454c1232147827ff29e32bf2",
+      "fields": {
+        "Full_Name": "Синтетический Инженер Второй Уточнённый"
+      },
+      "comparison": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\template-provenance-20261002\\biot-itr-certificate-comparison.png",
+      "limits": "Legacy supports source identity/subject fixed in form; DEMO uses tenant identity and ITR bilingual name. Same available synthetic recipient/date/number inputs, no legacy service/DB execution.",
+      "pageReview": {
+        "legacy": {
+          "pages": 1,
+          "text": [
+            "Настоящим удостоверяет в том, что\nСинтетический Инженер Второй\nУточнённый\nУспешно закончил(а) программу обучения по \nкурсу\n«Безопасность и \nохрана труда»\nКала/город: Астана\n2 октября y г.\nСертификат\n«Еңбек қауіпсіздігі \nжәне еңбекті қорғау»\nкурсы бойынша оқу бағдарламасын сәтті \nаяқтады\nТіркеу №/ Рег. №\nBIOT-CERTIFICATE-00002\nКомиссия төрағасы, \nқолы/Председатель комиссии, подпись\nСолтанова Н.Н.\n"
+          ]
+        },
+        "demo": {
+          "pages": 1,
+          "text": [
+            "ДЕМО — НЕ ЯВЛЯЕТСЯ ВЫДАННЫМ ДОКУМЕНТОМ\nНастоящим удостоверяет в том, что\nСинтетический Инженер Второй Уточнённый / \nСинтетикалық Инженер Екінші\nУспешно закончил(а) программу обучения по \nкурсу\n«Безопасность и \nохрана труда»\nҚала/город: Кызылорда\n02.10.2026\nСертификат\n«Еңбек қауіпсіздігі \nжәне еңбекті қорғау»\nкурсы бойынша оқу бағдарламасын сәтті \nаяқтады\nТіркеу №/ Рег. №\nBIOT-CERTIFICATE-00002\nКомиссия төрағасы, \nқолы/Председатель комиссии, подпись\nТестовый Председатель\n"
+          ]
+        }
+      },
+      "visualFindings": [
+        "Source logo replaced by dynamic tenant text in DEMO",
+        "Original blue ornament preserved in both",
+        "DEMO combines RU/KZ names and fits at smaller size; legacy prints RU-only name",
+        "LibreOffice refreshed retained legacy DATE field to malformed text; date freezing is required and must remain in DEMO"
+      ]
+    }
+  ],
+  "boundary": "No cloud, browser, database, source-template, product-code, or existing issuance mutation. Read-only comparison created ignored local artifacts only. Legacy PDF is local LibreOffice interpretation of original DOCX + legacy field substitution, not downloaded production output.",
+  "visualReview": "COMPLETE: all 6 relevant PDF pages visually inspected (legacy worker2+ITR1, current DEMO worker2+ITR1); differences and legacy rendering defects recorded. All5unique source media inspected."
+}
