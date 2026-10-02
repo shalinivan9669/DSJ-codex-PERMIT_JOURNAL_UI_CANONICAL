@@ -2,8 +2,9 @@
 
 import { useEffect, useId, useMemo, useRef, type KeyboardEvent } from "react";
 import { Icon } from "@demo/ui";
-import { gridColumns, type GridField } from "@/lib/grid-paste";
+import type { GridField } from "@/lib/grid-paste";
 import type { Recipient } from "@/lib/types";
+import { recipientRowDate } from "@/lib/recipient-row-date";
 import { RecipientGridRow, type GridRowActions } from "./recipient-grid-row";
 import "./recipient-grid.css";
 
@@ -16,10 +17,14 @@ export type RecipientGridProps = {
   disabled: boolean;
   readonly: boolean;
   fieldErrors: Record<string, string>;
+  fieldHints?: Record<string, string>;
   onEdit: (recipient: Recipient) => void;
   onSelect: (id: string) => void;
   onOpen: (id: string) => void;
   onDocuments?: (id: string) => void;
+  onPhoto?: (id: string) => void;
+  photoTemplateIds?: readonly string[];
+  liveRules?: boolean;
   onChecked: (ids: string[]) => void;
   onRemove: (id: string) => void;
   onPaste: (range: {
@@ -35,8 +40,11 @@ export type RecipientGridProps = {
 
 const columns: readonly (readonly [GridField, string])[] = [
   ["fullNameRu", "ФИО"],
-  ["positionRu", "Должность / профессия"],
+  ["positionRu", "Должность · RU"],
+  ["positionKz", "Должность · KZ"],
 ];
+const defaultPhotoTemplates = ["ptm-card", "pb-card", "ps-card"];
+const noHints: Record<string, string> = {};
 
 export function RecipientGrid({
   items,
@@ -47,10 +55,14 @@ export function RecipientGrid({
   disabled,
   readonly,
   fieldErrors,
+  fieldHints = noHints,
   onEdit,
   onSelect,
   onOpen,
   onDocuments,
+  onPhoto,
+  photoTemplateIds = defaultPhotoTemplates,
+  liveRules = true,
   onChecked,
   onRemove,
   onPaste,
@@ -59,7 +71,9 @@ export function RecipientGrid({
   active = true,
 }: RecipientGridProps) {
   const root = useRef<HTMLDivElement>(null);
-  const inputs = useRef(new Map<string, HTMLInputElement>());
+  const inputs = useRef(
+    new Map<string, HTMLInputElement | HTMLSelectElement>(),
+  );
   const instanceId = useId();
   const helpId = `${instanceId}-help`;
   const indexById = useMemo(
@@ -81,6 +95,13 @@ export function RecipientGrid({
     return counts;
   }, [fieldErrors]);
   const checkedIds = new Set(checked);
+  const showPhotoColumn = (resolvedItems || items).some(
+    (item) =>
+      item.photoAssetId ||
+      item.assignments.some((assignment) =>
+        photoTemplateIds.includes(assignment.templateId),
+      ),
+  );
   const visibleIds = new Set(visibleItems.map((item) => item.id));
   const selectedVisible = visibleItems.filter((item) =>
     checkedIds.has(item.id),
@@ -93,12 +114,35 @@ export function RecipientGrid({
     function focusField(event: Event) {
       if (!root.current?.getClientRects().length) return;
       const path = (event as CustomEvent<string>).detail;
-      const match = /^items\.(\d+)\.([^.]+)$/.exec(path || "");
-      if (!match || !gridColumns.some(([field]) => field === match[2])) return;
+      const match = /^items\.(\d+)\.(.+)$/.exec(path || "");
+      if (!match) return;
       const item = items[Number(match[1])];
       if (!item) return;
-      const field = match[2] as GridField;
-      if (!columns.some(([column]) => column === field)) {
+      const assignmentDate = /^assignments\.(\d+)\.documentDate$/.exec(
+        match[2],
+      );
+      if (
+        assignmentDate &&
+        item.assignments[Number(assignmentDate[1])]?.templateId.endsWith(
+          "-protocol",
+        )
+      ) {
+        onOpen(item.id);
+        return;
+      }
+      const field = assignmentDate ? "documentDate" : match[2];
+      const inline =
+        columns.some(([column]) => column === field) ||
+        [
+          "employeeCategory",
+          "workplaceRu",
+          "employerBin",
+          "employerAddressRu",
+        ].includes(field) ||
+        (field === "documentDate" &&
+          recipientRowDate(item, resolvedById.get(item.id) || item).kind ===
+            "single");
+      if (!inline) {
         onOpen(item.id);
         return;
       }
@@ -107,7 +151,13 @@ export function RecipientGrid({
       revealFrame = requestAnimationFrame(() => {
         focusFrame = requestAnimationFrame(() => {
           const input = inputs.current.get(`${item.id}:${field}`);
-          if (!input || !input.getClientRects().length) return;
+          if (!input) {
+            onOpen(item.id);
+            return;
+          }
+          const details = input.closest("details");
+          if (details) details.open = true;
+          if (!input.getClientRects().length) return;
           input.focus({ preventScroll: true });
           input.scrollIntoView({ block: "center", inline: "nearest" });
         });
@@ -119,7 +169,7 @@ export function RecipientGrid({
       cancelAnimationFrame(focusFrame);
       window.removeEventListener("demo:focus-field", focusField);
     };
-  }, [active, items, onOpen]);
+  }, [active, items, resolvedById, onOpen]);
 
   function moveInColumn(
     event: KeyboardEvent<HTMLInputElement>,
@@ -150,6 +200,7 @@ export function RecipientGrid({
     onSelect,
     onOpen,
     onDocuments,
+    onPhoto,
     onRemove,
     onPaste,
     moveInColumn,
@@ -163,14 +214,6 @@ export function RecipientGrid({
 
   return (
     <div className="operator-grid recipient-grid-workspace" ref={root}>
-      <div className="recipient-grid-options">
-        <span className="recipient-grid-simple-hint">
-          ФИО и должность вводятся один раз. Языковые уточнения — в деталях.
-        </span>
-        <span className="recipient-grid-keyboard-hint" id={helpId}>
-          Tab — следующее поле · Enter — строка ниже · Shift + Enter — выше
-        </span>
-      </div>
       <div
         className="recipient-grid-scroll"
         role="region"
@@ -178,10 +221,12 @@ export function RecipientGrid({
         aria-describedby={helpId}
         tabIndex={0}
       >
-        <table className="recipient-grid-table is-compact has-document-labels">
+        <table
+          className={`recipient-grid-table is-compact legacy-entry${showPhotoColumn ? " has-photo" : ""}`}
+        >
           <caption className="sr-only">
             Получатели заявки. Редактируйте данные и назначайте обучение в
-            строках; индивидуальные даты открываются отдельно.
+            строках; дата и языковые варианты доступны сразу.
           </caption>
           <thead>
             <tr>
@@ -209,6 +254,9 @@ export function RecipientGrid({
                   }
                 />
               </th>
+              <th scope="col" className="recipient-grid-settings">
+                Обучение / дата выдачи
+              </th>
               {columns.map(([field, label], columnIndex) => (
                 <th
                   key={field}
@@ -220,15 +268,11 @@ export function RecipientGrid({
                   {label}
                 </th>
               ))}
-              <th scope="col" className="recipient-grid-category-cell">
-                Категория
-              </th>
-              <th
-                scope="col"
-                className="recipient-grid-documents has-document-choices"
-              >
-                Обучение
-              </th>
+              {showPhotoColumn && (
+                <th scope="col" className="recipient-grid-photo">
+                  Фото
+                </th>
+              )}
               <th scope="col" className="recipient-grid-actions">
                 Действия
               </th>
@@ -242,6 +286,7 @@ export function RecipientGrid({
                 <RecipientGridRow
                   key={item.id}
                   item={item}
+                  resolvedItem={resolvedById.get(item.id) || item}
                   index={index}
                   visibleIndex={visibleIndex}
                   active={selectedId === item.id}
@@ -249,11 +294,19 @@ export function RecipientGrid({
                   disabled={disabled}
                   readonly={readonly}
                   canSelectDocuments={!!onDocuments}
+                  liveRules={liveRules}
+                  showPhotoColumn={showPhotoColumn}
+                  needsPhoto={(
+                    resolvedById.get(item.id) || item
+                  ).assignments.some((assignment) =>
+                    photoTemplateIds.includes(assignment.templateId),
+                  )}
                   documentCount={
                     (resolvedById.get(item.id) || item).assignments.length
                   }
                   rowErrors={errorCountByIndex.get(index) || 0}
                   fieldErrors={fieldErrors}
+                  fieldHints={fieldHints}
                   columns={columns}
                   instanceId={instanceId}
                   inputs={inputs.current}
@@ -283,7 +336,10 @@ export function RecipientGrid({
         )}
       </div>
       <div className="recipient-grid-footer">
-        {!readonly && items.length > 0 && (
+        <span className="recipient-grid-keyboard-hint" id={helpId}>
+          Tab — следующее поле · Enter — строка ниже · Shift + Enter — выше
+        </span>
+        {!readonly && items.length > 10 && (
           <button
             type="button"
             className="text-button"
@@ -302,8 +358,7 @@ export function RecipientGrid({
             </p>
             <p>
               Вставка следует видимым колонкам:{" "}
-              {columns.map(([, label]) => label).join(" → ")}. Языковые
-              уточнения можно добавить в деталях получателя или при импорте.
+              {columns.map(([, label]) => label).join(" → ")}.
             </p>
             <p>
               Для таблицы с другим порядком колонок используйте «Импорт /

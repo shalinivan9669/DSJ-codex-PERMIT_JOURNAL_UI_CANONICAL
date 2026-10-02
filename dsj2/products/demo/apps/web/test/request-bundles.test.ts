@@ -2,9 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   applyBusinessRules,
+  commonFieldKeys,
   draftSchema,
   documentPlan,
   resolveDraft,
+  trainingDirection,
   validateBusinessRules,
 } from "@demo/contracts";
 import {
@@ -14,7 +16,7 @@ import {
   setTrainingProtocolMode,
 } from "../lib/request-bundles";
 import { joinEventAssignment } from "../lib/event-assignment";
-import { newRecipient } from "../lib/types";
+import { newAssignment, newRecipient } from "../lib/types";
 
 for (const category of ["WORKER", "ITR"] as const) {
   for (const count of [1, 3, 100, 250]) {
@@ -97,6 +99,207 @@ test("multiple events require explicit selection and never mix worker/ITR", () =
   );
 });
 
+for (const direction of ["PTM", "PB", "PS"] as const) {
+  test(`new empty recipient inherits the unique ${direction} event and its common dates without an outcome`, () => {
+    const first = { ...newRecipient(), assignments: [] };
+    const draft = assignTrainingBundle(
+      {
+        ...draftSchema.parse({
+          kind: "PERSON",
+          schemaVersion: 2,
+          items: [first],
+        }),
+        id: "request",
+        revision: 0,
+        status: "DRAFT",
+      },
+      [first.id],
+      direction,
+      "INDIVIDUAL",
+    );
+    const event = draft.events![0];
+    event.commonFields = {
+      documentDate: "2026-10-02",
+      protocolDate: "2026-10-01",
+      trainingStart: "2026-09-28",
+      trainingEnd: "2026-09-30",
+      trainingSubject: "Synthetic common program",
+      hours: "24",
+    };
+    const person = { ...newRecipient(), assignments: [] };
+    const before = structuredClone(draft);
+    const added = recipientForRequest(draft, person);
+    assert.equal(added.assignments.length, 1, "only a raw primary is added");
+    assert.equal(added.assignments[0].eventId, event.id);
+    assert.equal(trainingDirection(added.assignments[0].templateId), direction);
+    assert.equal(added.assignments[0].protocolMode, "INDIVIDUAL");
+    assert.deepEqual(added.assignments[0].outcome, {
+      status: "UNKNOWN",
+      source: "",
+    });
+    for (const key of commonFieldKeys)
+      assert.equal(added.assignments[0].fieldOrigins?.[key], "INHERITED");
+    assert.deepEqual(person.assignments, []);
+    assert.deepEqual(draft, before);
+    const normalized = applyBusinessRules({
+      ...draft,
+      items: [...draft.items, added],
+    });
+    const resolved = resolveDraft(normalized).draft.items.at(-1)!;
+    assert.equal(resolved.assignments[0].documentDate, "2026-10-02");
+    assert.equal(resolved.assignments[0].trainingStart, "2026-09-28");
+    assert.equal(resolved.assignments[0].trainingEnd, "2026-09-30");
+    assert.equal(
+      resolved.assignments[0].trainingSubject,
+      "Synthetic common program",
+    );
+    assert.equal(resolved.assignments.length, direction === "PS" ? 3 : 2);
+    assert.equal(
+      normalized.events![0].protocolMode,
+      "INDIVIDUAL",
+      "manual mode survives adding a person",
+    );
+    assert.deepEqual(
+      recipientForRequest(draft, added),
+      added,
+      "a second pass preserves assigned facts",
+    );
+  });
+}
+
+test("a new recipient inherits each unique direction and the unique BiOT category", () => {
+  const seed = newRequestBundle("ITR");
+  let draft = {
+    ...draftSchema.parse({ kind: "PERSON", ...seed }),
+    id: "request",
+    revision: 0,
+    status: "DRAFT",
+  };
+  for (const direction of ["PTM", "PB", "PS"] as const)
+    draft = assignTrainingBundle(draft, [draft.items[0].id], direction);
+  const added = recipientForRequest(draft, {
+    ...newRecipient(),
+    assignments: [],
+  });
+  assert.equal(added.employeeCategory, "ITR");
+  assert.deepEqual(
+    added.assignments.map((assignment) =>
+      trainingDirection(assignment.templateId),
+    ),
+    ["BIOT", "PTM", "PB", "PS"],
+  );
+  assert.equal(added.assignments[0].templateId, "biot-itr-certificate");
+  assert.deepEqual(
+    new Set(added.assignments.map((assignment) => assignment.eventId)),
+    new Set(draft.events!.map((event) => event.id)),
+  );
+});
+
+test("ambiguous courses are skipped per direction while other unique courses still inherit", () => {
+  const worker = newRequestBundle("WORKER");
+  const itr = newRequestBundle("ITR");
+  let draft = {
+    ...draftSchema.parse({ kind: "PERSON", ...worker }),
+    id: "request",
+    revision: 0,
+    status: "DRAFT",
+  };
+  for (const direction of ["PTM", "PB"] as const)
+    draft = assignTrainingBundle(draft, [draft.items[0].id], direction);
+  const ptm = draft.events!.find(
+    (event) => event.protocolTemplateId === "ptm-protocol",
+  )!;
+  draft.events!.push(...itr.events, {
+    ...structuredClone(ptm),
+    id: "another-ptm",
+  });
+  const added = recipientForRequest(draft, {
+    ...newRecipient(),
+    assignments: [],
+  });
+  assert.deepEqual(
+    added.assignments.map((assignment) => assignment.templateId),
+    ["pb-card"],
+  );
+  assert.equal(
+    added.assignments[0].eventId,
+    draft.events!.find((event) => event.protocolTemplateId === "pb-protocol")!
+      .id,
+  );
+});
+
+test("a supplied recipient with existing assignments is never rewritten or enrolled elsewhere", () => {
+  const draft = newRequestBundle("ITR");
+  const person = {
+    ...newRecipient(),
+    assignments: [
+      {
+        ...newAssignment("pb-card"),
+        documentDate: "2026-09-15",
+        protocolDate: "",
+        fieldOrigins: {
+          documentDate: "IMPORTED" as const,
+          protocolDate: "CLEARED" as const,
+        },
+        outcome: { status: "FAILED" as const, source: "Synthetic assessment" },
+      },
+    ],
+  };
+  const before = structuredClone(person);
+  assert.equal(recipientForRequest(draft, person), person);
+  assert.deepEqual(person, before);
+});
+
+for (const category of ["WORKER", "ITR"] as const) {
+  test(`directory ${category} retains its category and skips incompatible BiOT while inheriting other directions`, () => {
+    const seed = newRequestBundle(category === "ITR" ? "WORKER" : "ITR");
+    let draft = {
+      ...draftSchema.parse({ kind: "PERSON", ...seed }),
+      id: "request",
+      revision: 0,
+      status: "DRAFT",
+    };
+    const person = {
+      ...newRecipient(),
+      recipientId: "stored-person",
+      employeeCategory: category,
+      assignments: [],
+    };
+    const before = structuredClone(person);
+    assert.equal(
+      recipientForRequest(draft, person),
+      person,
+      "incompatible-only event does not enroll the person",
+    );
+    for (const direction of ["PTM", "PB", "PS"] as const)
+      draft = assignTrainingBundle(draft, [draft.items[0].id], direction);
+    const added = recipientForRequest(draft, person);
+    assert.equal(added.employeeCategory, category);
+    assert.equal(added.recipientId, "stored-person");
+    assert.deepEqual(
+      added.assignments.map((assignment) =>
+        trainingDirection(assignment.templateId),
+      ),
+      ["PTM", "PB", "PS"],
+    );
+    assert.ok(
+      added.assignments.every(
+        (assignment) => assignment.outcome?.status === "UNKNOWN",
+      ),
+    );
+    assert.deepEqual(person, before);
+    const normalized = applyBusinessRules({
+      ...draft,
+      items: [...draft.items, added],
+    });
+    assert.equal(
+      normalized.events!.length,
+      draft.events!.length,
+      "no incompatible BiOT event is implicitly split",
+    );
+  });
+}
+
 test("training selection is idempotent, separates BiOT categories and defaults two people to a group", () => {
   const worker = { ...newRecipient(), id: "worker", assignments: [] };
   const itr = {
@@ -142,6 +345,68 @@ test("training selection is idempotent, separates BiOT categories and defaults t
   );
   assert.deepEqual(input.items[0].assignments, []);
 });
+
+for (const direction of ["BIOT", "PTM", "PB", "PS"] as const) {
+  test(`inline ${direction} addition targets selected people, preserves previous facts and is idempotent`, () => {
+    const previousDirection = direction === "BIOT" ? "PTM" : "BIOT";
+    let input = assignTrainingBundle(
+      {
+        ...draftSchema.parse({
+          kind: "PERSON",
+          schemaVersion: 2,
+          commonFields: { documentDate: "2026-10-02" },
+          items: ["one", "two", "excluded"].map((id) => ({
+            ...newRecipient(),
+            id,
+            assignments: [],
+          })),
+        }),
+        id: "request",
+        revision: 0,
+        status: "DRAFT",
+      },
+      ["one", "two", "excluded"],
+      previousDirection,
+    );
+    Object.assign(input.items[0].assignments[0], {
+      documentDate: "2026-09-28",
+      protocolDate: "",
+      fieldOrigins: { documentDate: "IMPORTED", protocolDate: "CLEARED" },
+      result: "Не сдал",
+      outcome: { status: "FAILED", source: "Synthetic assessment" },
+    });
+    input = applyBusinessRules(input);
+    const before = structuredClone(input);
+    const next = assignTrainingBundle(input, ["one", "two"], direction);
+    assert.deepEqual(input, before, "input remains unchanged");
+    assert.deepEqual(
+      next.items[2],
+      before.items[2],
+      "excluded person is unchanged",
+    );
+    for (const item of next.items.slice(0, 2)) {
+      const old = before.items.find((row) => row.id === item.id)!;
+      assert.deepEqual(
+        item.assignments.filter((assignment) =>
+          old.assignments.some((entry) => entry.id === assignment.id),
+        ),
+        old.assignments,
+        "existing documents retain dates, origins and factual results",
+      );
+      const added = item.assignments.filter(
+        (assignment) => trainingDirection(assignment.templateId) === direction,
+      );
+      assert.ok(added.length > 0);
+      assert.ok(
+        added.every((assignment) => assignment.outcome?.status === "UNKNOWN"),
+      );
+    }
+    assert.deepEqual(
+      assignTrainingBundle(next, ["one", "two"], direction),
+      next,
+    );
+  });
+}
 
 test("switching protocol mode preserves personal dates and includes one PS witness per person", () => {
   const input = {

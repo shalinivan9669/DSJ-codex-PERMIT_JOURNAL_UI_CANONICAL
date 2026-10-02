@@ -10,7 +10,7 @@ import { GridPasteDialog } from "./grid-paste-dialog";
 import { type GridField } from "@/lib/grid-paste";
 import { BulkPhotoDialog } from "./bulk-photo-dialog";
 import { RecipientGrid } from "./recipient-grid";
-import { RecipientPanels } from "./recipient-panels";
+import { RequestTrainingChoices } from "./request-training-choices";
 import { TrainingBundleDialog } from "./training-bundle-dialog";
 import { TrainingOverview } from "./training-overview";
 import { RequestActivity } from "./request-activity";
@@ -20,6 +20,7 @@ import { SharedEmployerDialog } from "./shared-employer-dialog";
 import { groupValidationIssues } from "@/lib/validation-groups";
 import { validationErrors } from "@/lib/validation-errors";
 import { draftReadiness } from "@/lib/draft-readiness";
+import { recipientRowDate } from "@/lib/recipient-row-date";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -57,7 +58,7 @@ import {
   createRequestCustomer,
   type RequestOrganizationSelection,
 } from "./request-organization-fields";
-import { RecipientDetails } from "./recipient-details";
+import { PhotoDialog, RecipientDetails } from "./recipient-details";
 import { ImportDialog } from "./import-dialog";
 import { FilesPanel } from "./files-panel";
 import { Status } from "./request-list";
@@ -86,10 +87,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [employerTargets, setEmployerTargets] = useState<string[] | null>(null);
   const [rowSearch, setRowSearch] = useState("");
   const [editingSearchId, setEditingSearchId] = useState("");
-  const [entryView, setEntryView] = useState<"panels" | "table" | "card">(
-    "panels",
-  );
-  const previousEntryView = useRef<"panels" | "table">("panels");
+  const [entryView, setEntryView] = useState<"table" | "card">("table");
+  const previousEntryView = useRef<"table">("table");
+  const [photoRecipientId, setPhotoRecipientId] = useState<string | null>(null);
   const [reviewStale, setReviewStale] = useState(false);
   const [focusFieldPath, setFocusFieldPath] = useState<string | null>(null);
   const validationRequested = useRef(false);
@@ -253,7 +253,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     ) {
       requestAnimationFrame(() => {
         const input = document.querySelector<HTMLInputElement>(
-          '.recipient-panels [data-field-path="items.0.fullNameRu"]',
+          '.operator-grid [data-field-path="items.0.fullNameRu"]',
         );
         input?.focus();
         input?.scrollIntoView({ block: "center" });
@@ -262,7 +262,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   }, [draft, id, context.user.role]);
   function openRecipient(id: string) {
     if (entryView !== "card") previousEntryView.current = entryView;
-    if (entryView === "panels") gridReturn.current = null;
     if (entryView === "table") {
       const grid = document.querySelector<HTMLElement>(
         ".recipient-grid-scroll",
@@ -294,21 +293,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   }
   function returnToTable() {
     setEntryView(previousEntryView.current);
-    if (previousEntryView.current === "panels") {
-      const index =
-        current.current?.items.findIndex((item) => item.id === selectedId) ??
-        -1;
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          window.dispatchEvent(
-            new CustomEvent("demo:focus-field", {
-              detail: `items.${index}.fullNameRu`,
-            }),
-          );
-        }),
-      );
-      return;
-    }
     requestAnimationFrame(() => {
       const previous = gridReturn.current;
       const grid = document.querySelector<HTMLElement>(
@@ -318,7 +302,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         current.current?.items.findIndex((item) => item.id === selectedId) ??
         -1;
       const fallback = document.querySelector<HTMLElement>(
-        `.operator-grid [aria-label="Документы и даты получателя ${index + 1}"]`,
+        `.operator-grid [aria-label="Детали получателя ${index + 1}"]`,
       );
       const target =
         previous?.rowId === selectedId && previous.element?.isConnected
@@ -1003,6 +987,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     const training = /^events\.(\d+)\.(?:commonFields\.)?(.+)$/.exec(path);
     if (training) {
       const event = draft!.events?.[Number(training[1])];
+      const settings = document.getElementById("request-training");
+      if (settings instanceof HTMLDetailsElement) settings.open = true;
       document
         .getElementById("request-training")
         ?.scrollIntoView({ block: "start" });
@@ -1017,6 +1003,19 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     if (rowMatch) {
       const row = draft!.items[Number(rowMatch[1])];
       if (row) {
+        const datePath = /^items\.\d+\.assignments\.(\d+)\.documentDate$/.exec(
+          path,
+        );
+        const dateAssignment = datePath
+          ? row.assignments[Number(datePath[1])]
+          : null;
+        const inlineDate =
+          dateAssignment &&
+          !dateAssignment.templateId.endsWith("-protocol") &&
+          recipientRowDate(
+            row,
+            resolved.draft.items.find((item) => item.id === row.id) || row,
+          ).kind === "single";
         setSelectedId(row.id);
         setRowSearch("");
         setRowScope("");
@@ -1034,7 +1033,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             "employerBin",
             "employerAddressRu",
             "workplaceRu",
-          ].includes(rowMatch[2] || "")
+          ].includes(rowMatch[2] || "") ||
+          inlineDate
         )
           setEntryView(previousEntryView.current);
         else openRecipient(row.id);
@@ -1050,7 +1050,12 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           document.querySelectorAll<HTMLElement>(
             `[data-field-path="${CSS.escape(path)}"]`,
           ),
-        ).find((element) => !element.closest("[hidden]"));
+        ).find((element) => {
+          const modal = document.querySelector("dialog[open]");
+          return (
+            !element.closest("[hidden]") && (!modal || modal.contains(element))
+          );
+        });
         let ancestor = input?.parentElement;
         while (ancestor) {
           if (ancestor instanceof HTMLDetailsElement) ancestor.open = true;
@@ -1081,6 +1086,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       ).size,
     0,
   );
+  const missingTrainingFields = nextIssues.filter(
+    (issue) =>
+      typeof issue !== "string" && /^events\./.test(String(issue.path)),
+  ).length;
   const dirty =
     saveState === "dirty" || saveState === "saving" || saveState === "error";
   const saveLabel = pendingOrganization.current
@@ -1165,9 +1174,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           id="request-customer"
           aria-label="Заказчик заявки"
         >
-          <div className="section-heading">
-            <h2>Компания</h2>
-          </div>
           {draft.kind === "COMPANY" &&
             (readonly ? (
               <div className="organization-name-preview form-grid">
@@ -1317,6 +1323,103 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         </Notice>
       )}
       <section className="panel recipients-panel" id="recipient-workspace">
+        <div className="operator-common-bar">
+          <RequestTrainingChoices
+            draft={draft}
+            disabled={operationBusy}
+            readonly={readonly}
+            selectedIds={checked}
+            onChange={(next) =>
+              edit({ items: next.items, events: next.events })
+            }
+          />
+          <label className="operator-row-common-date">
+            Общая дата документов
+            <input
+              type="date"
+              title="Для документов без индивидуальной даты в строке"
+              data-field-path="commonFields.documentDate"
+              disabled={readonly || operationBusy}
+              value={
+                draft.commonFields?.documentDate ??
+                draft.presetFields?.documentDate ??
+                ""
+              }
+              onChange={(event) =>
+                edit({
+                  schemaVersion: 2,
+                  commonFields: {
+                    ...draft.commonFields,
+                    documentDate: event.target.value,
+                  },
+                })
+              }
+            />
+          </label>
+        </div>
+        <details className="operator-common-settings" id="request-training">
+          <summary>
+            <span>Параметры обучения и документов</span>
+            <span className="muted">
+              {missingTrainingFields
+                ? `Осталось заполнить: ${missingTrainingFields}`
+                : draft.events?.length
+                  ? "Общие сведения заполнены"
+                  : "Даты, программа и результаты"}
+            </span>
+          </summary>
+          <div className="operator-training-panel">
+            {!!draft.events?.length && (
+              <>
+                <TrainingOverview
+                  draft={draft}
+                  resolvedEvents={resolved.draft.events}
+                  disabled={readonly || operationBusy}
+                  onChange={edit}
+                />
+                <EventContext
+                  primary
+                  embedded
+                  fieldHints={sharedHints}
+                  draft={draft}
+                  centerCommon={centerCommon}
+                  selectedIds={checked}
+                  disabled={readonly || operationBusy}
+                  onChange={edit}
+                  onApply={applyOperation}
+                  onContextCommit={rememberContextOperation}
+                  onBusyChange={setContextBusy}
+                />
+              </>
+            )}
+            <details
+              className="operator-request-options"
+              open={draft.englishAppendix || undefined}
+            >
+              <summary>
+                Дополнительный язык документов
+                {draft.englishAppendix ? " · английский включён" : ""}
+              </summary>
+              <label className="english-appendix-toggle">
+                <input
+                  type="checkbox"
+                  checked={!!draft.englishAppendix}
+                  disabled={readonly || operationBusy}
+                  onChange={(event) =>
+                    edit({ englishAppendix: event.target.checked })
+                  }
+                />
+                <span>
+                  <strong>Добавить английскую страницу</strong>
+                  <small>
+                    Основные формы — казахско-русские. Английская страница
+                    добавляется с тем же номером.
+                  </small>
+                </span>
+              </label>
+            </details>
+          </div>
+        </details>
         <div className="toolbar">
           <div>
             <h2>Получатели</h2>
@@ -1339,7 +1442,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   onClick={addRecipient}
                 >
                   <Icon name="plus" />
-                  Получатель
+                  Добавить строку
                 </button>
               )}
               <details className="recipient-extra-tools">
@@ -1386,6 +1489,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         </div>
         {!readonly &&
           entryView === "table" &&
+          draft.items.length > 10 &&
           (missingNames > 0 || missingDocuments > 0) && (
             <div className="entry-progress" role="status">
               <span>Продолжите заполнение:</span>
@@ -1489,74 +1593,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               </button>
             )}
           </div>
-          <div className="entry-view-toolbar operator-view-toolbar">
-            <div
-              className="entry-view-switch"
-              role="group"
-              aria-label="Режим заполнения"
-            >
-              <button
-                aria-pressed={entryView === "panels"}
-                onClick={() => {
-                  previousEntryView.current = "panels";
-                  setEntryView("panels");
-                }}
-              >
-                Поля участников
-              </button>
-              <button
-                aria-pressed={entryView === "table"}
-                onClick={() => {
-                  previousEntryView.current = "table";
-                  setEntryView("table");
-                }}
-              >
-                Табличный режим
-              </button>
-            </div>
-            {entryView === "card" && (
-              <button className="text-button" onClick={returnToTable}>
-                Вернуться к людям
-              </button>
-            )}
-          </div>
         </details>
-        <div hidden={entryView !== "panels"}>
-          <RecipientPanels
-            active={entryView === "panels"}
-            showTrainingControls={draft.items.length > 1}
-            items={draft.items}
-            visibleItems={visibleItems}
-            resolvedItems={resolved.draft.items}
-            selectedId={selectedId}
-            checked={checked}
-            disabled={operationBusy}
-            readonly={readonly}
-            fieldErrors={fieldErrors}
-            fieldHints={sharedHints}
-            onEdit={editRecipient}
-            onSelect={setSelectedId}
-            onOpen={openRecipient}
-            onDocuments={(recipientId) => setDocumentTargets([recipientId])}
-            onChecked={setChecked}
-            onRemove={setRemoveId}
-            onAdd={addRecipient}
-            canAdd={
-              draft.items.length < LIMITS.rows && !operationBusy && !readonly
-            }
-            onPaste={(range) => {
-              if (rowSearch || rowScope) {
-                setError(
-                  "Перед вставкой диапазона сбросьте поиск и фильтры, чтобы видеть все изменяемые строки.",
-                );
-                return;
-              }
-              setPastedRange(range);
-            }}
-          />
-        </div>
         <div
-          hidden={entryView !== "table"}
           onFocusCapture={(event) => {
             if ((event.target as HTMLElement).matches("[data-grid-field]"))
               lastGridField.current = event.target as HTMLElement;
@@ -1567,11 +1605,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             items={draft.items}
             visibleItems={visibleItems}
             resolvedItems={resolved.draft.items}
+            liveRules={draft.businessRuleVersion === "LIVE_V1"}
             selectedId={selectedId}
             checked={checked}
             disabled={operationBusy}
             readonly={readonly}
             fieldErrors={fieldErrors}
+            fieldHints={sharedHints}
+            onPhoto={setPhotoRecipientId}
             onEdit={editRecipient}
             onSelect={setSelectedId}
             onOpen={openRecipient}
@@ -1607,194 +1648,57 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             </div>
           )}
         </div>
-        <div
-          className="editor-grid operator-card-view"
-          hidden={entryView !== "card"}
-        >
-          <div
-            className="recipient-card-list"
-            role="region"
-            aria-label="Список получателей"
+        {entryView === "card" && selected && (
+          <Modal
+            title={`Настройки строки ${draft.items.indexOf(selected) + 1}`}
+            onClose={returnToTable}
+            wide
           >
-            <button className="text-button" onClick={returnToTable}>
-              Вернуться к людям
-            </button>
-            {visibleItems.map((item) => (
-              <button
-                key={item.id}
-                className="recipient-card-link"
-                aria-pressed={selectedId === item.id}
-                onClick={() => openRecipient(item.id)}
-              >
-                <span className="muted">{draft.items.indexOf(item) + 1}</span>
-                <span>
-                  <strong>
-                    {item.fullNameRu || item.fullNameKz || "Без ФИО"}
-                  </strong>
-                  <small>{item.positionRu || "Должность не указана"}</small>
-                </span>
-                <span>{item.assignments.length} док.</span>
-              </button>
-            ))}
-            {!visibleItems.length && (
-              <p className="muted">По фильтру нет получателей.</p>
-            )}
-          </div>
-          <aside
-            ref={recipientDetailRef}
-            className="recipient-details"
-            aria-label="Редактор получателя"
-            tabIndex={-1}
-          >
-            {selected ? (
-              <RecipientDetails
-                recipient={selected}
-                resolvedRecipient={resolved.draft.items.find(
-                  (item) => item.id === selected.id,
-                )}
-                provenance={resolved.provenance}
-                disabled={readonly || operationBusy}
-                onChange={editRecipient}
-                context={context}
-                rowIndex={draft.items.indexOf(selected)}
-                focusFieldPath={focusFieldPath}
-                fieldErrors={{ ...readiness.fieldHints, ...fieldErrors }}
-                liveRules={draft.businessRuleVersion === "LIVE_V1"}
-                englishAppendix={draft.englishAppendix}
-                requestEmployer={
-                  requestEmployer
-                    ? {
-                        id: requestEmployer.id,
-                        nameRu: requestEmployer.nameRu,
-                        nameKz:
-                          requestEmployer.nameKz || requestEmployer.nameRu,
-                      }
-                    : null
-                }
-              />
-            ) : (
-              <p className="muted">
-                Выберите получателя, чтобы настроить документы и даты.
-              </p>
-            )}
-          </aside>
-        </div>
-      </section>
-      <section
-        className="panel operator-training-panel"
-        id="request-training"
-        aria-label="Обучение и документы"
-      >
-        <div className="section-heading">
-          <h2>Обучение и документы</h2>
-          <span className="muted">Общие сведения заполняются один раз.</span>
-        </div>
-        {!readonly && (
-          <div className="operator-training-choice">
-            <button
-              disabled={operationBusy || !draft.items.length}
-              onClick={() =>
-                setDocumentTargets(
-                  checked.length
-                    ? [...checked]
-                    : draft.items.map((item) => item.id),
-                )
-              }
+            <aside
+              ref={recipientDetailRef}
+              className="recipient-details"
+              aria-label="Редактор получателя"
+              tabIndex={-1}
             >
-              {checked.length
-                ? `Обучение выбранным (${checked.length})`
-                : draft.events?.length
-                  ? "Добавить или изменить обучение"
-                  : "Выбрать обучение"}
-            </button>
-            {!draft.events?.length && (
-              <span className="muted">Документы добавятся комплектом.</span>
-            )}
-          </div>
+              {selected ? (
+                <RecipientDetails
+                  recipient={selected}
+                  resolvedRecipient={resolved.draft.items.find(
+                    (item) => item.id === selected.id,
+                  )}
+                  provenance={resolved.provenance}
+                  disabled={readonly || operationBusy}
+                  onChange={editRecipient}
+                  context={context}
+                  rowIndex={draft.items.indexOf(selected)}
+                  focusFieldPath={focusFieldPath}
+                  fieldErrors={{ ...readiness.fieldHints, ...fieldErrors }}
+                  liveRules={draft.businessRuleVersion === "LIVE_V1"}
+                  englishAppendix={draft.englishAppendix}
+                  requestEmployer={
+                    requestEmployer
+                      ? {
+                          id: requestEmployer.id,
+                          nameRu: requestEmployer.nameRu,
+                          nameKz:
+                            requestEmployer.nameKz || requestEmployer.nameRu,
+                        }
+                      : null
+                  }
+                />
+              ) : (
+                <p className="muted">
+                  Выберите получателя, чтобы настроить документы и даты.
+                </p>
+              )}
+            </aside>
+            <div className="toolbar">
+              <button className="primary" onClick={returnToTable}>
+                Готово
+              </button>
+            </div>
+          </Modal>
         )}
-        <div className="operator-common-date">
-          <label>
-            Общая дата документов
-            <input
-              type="date"
-              data-field-path="commonFields.documentDate"
-              aria-describedby="common-document-date-hint"
-              disabled={readonly || operationBusy}
-              value={
-                draft.commonFields?.documentDate ??
-                draft.presetFields?.documentDate ??
-                ""
-              }
-              onChange={(event) =>
-                edit({
-                  schemaVersion: 2,
-                  commonFields: {
-                    ...draft.commonFields,
-                    documentDate: event.target.value,
-                  },
-                })
-              }
-            />
-            <small id="common-document-date-hint">
-              Для всех документов без индивидуальной даты.
-            </small>
-          </label>
-          <p className="muted">
-            {draft.items.length} получателей · {documentCount} документов
-            {plan.groups.length
-              ? ` · общих протоколов: ${plan.groups.length}`
-              : ""}
-          </p>
-        </div>
-        {!!draft.events?.length && (
-          <>
-            <TrainingOverview
-              draft={draft}
-              resolvedEvents={resolved.draft.events}
-              disabled={readonly || operationBusy}
-              onChange={edit}
-            />
-            <EventContext
-              primary
-              embedded
-              fieldHints={sharedHints}
-              draft={draft}
-              centerCommon={centerCommon}
-              selectedIds={checked}
-              disabled={readonly || operationBusy}
-              onChange={edit}
-              onApply={applyOperation}
-              onContextCommit={rememberContextOperation}
-              onBusyChange={setContextBusy}
-            />
-          </>
-        )}
-        <details
-          className="operator-request-options"
-          open={draft.englishAppendix || undefined}
-        >
-          <summary>
-            Дополнительный язык документов
-            {draft.englishAppendix ? " · английский включён" : ""}
-          </summary>
-          <label className="english-appendix-toggle">
-            <input
-              type="checkbox"
-              checked={!!draft.englishAppendix}
-              disabled={readonly || operationBusy}
-              onChange={(event) =>
-                edit({ englishAppendix: event.target.checked })
-              }
-            />
-            <span>
-              <strong>Добавить английскую страницу</strong>
-              <small>
-                Основные формы — казахско-русские. Английская страница
-                добавляется с тем же номером.
-              </small>
-            </span>
-          </label>
-        </details>
       </section>
       {!readonly && (
         <section
@@ -1802,42 +1706,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           id="request-readiness"
           aria-label="Проверка заполнения"
         >
-          <div className="section-heading">
-            <h2>
-              {nextIssues.length
-                ? "Осталось заполнить"
-                : "Основные поля заполнены"}
-            </h2>
-          </div>
-          <p className="muted">
-            {nextIssues.length
-              ? "Подсказки обновляются при вводе. Можно продолжать заполнение в любом порядке."
-              : "Можно посмотреть документы. Перед подготовкой система также проверит формы и сохранённые данные."}
-          </p>
-          {nextIssues.length > 0 && (
-            <ul className="operator-next-fields">
-              {nextIssues.slice(0, 6).map((issue, index) => (
-                <li key={index}>
-                  {typeof issue !== "string" &&
-                  /^(profile|issuer)(\.|$)/.test(String(issue.path)) ? (
-                    <Link href="/settings">{issue.message}</Link>
-                  ) : (
-                    <button
-                      className="text-button"
-                      onClick={() => focusIssue(issue)}
-                    >
-                      {typeof issue === "string" ? issue : issue.message}
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-          {nextIssues.length > 6 && (
+          {nextIssues.length ? (
             <details>
-              <summary>Остальные пункты ({nextIssues.length - 6})</summary>
+              <summary>Осталось заполнить · {nextIssues.length}</summary>
               <ul className="operator-next-fields">
-                {nextIssues.slice(6).map((issue, index) => (
+                {nextIssues.map((issue, index) => (
                   <li key={index}>
                     {typeof issue !== "string" &&
                     /^(profile|issuer)(\.|$)/.test(String(issue.path)) ? (
@@ -1854,6 +1727,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 ))}
               </ul>
             </details>
+          ) : (
+            <p className="muted">
+              Основные поля заполнены · {documentCount} документов
+            </p>
           )}
         </section>
       )}
@@ -2355,6 +2232,19 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           }}
         />
       )}{" "}
+      {photoRecipientId && !readonly && (
+        <PhotoDialog
+          onClose={() => setPhotoRecipientId(null)}
+          onSaved={(assetId) => {
+            const recipient = current.current?.items.find(
+              (item) => item.id === photoRecipientId,
+            );
+            if (recipient)
+              editRecipient({ ...recipient, photoAssetId: assetId });
+            setPhotoRecipientId(null);
+          }}
+        />
+      )}
       {documentTargets && !readonly && (
         <TrainingBundleDialog
           draft={draft}

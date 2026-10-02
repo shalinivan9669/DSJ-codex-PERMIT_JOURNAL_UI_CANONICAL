@@ -1557,7 +1557,7 @@ export function RecipientDetails({
     </div>
   );
 }
-function PhotoDialog({
+export function PhotoDialog({
   onClose,
   onSaved,
 }: {

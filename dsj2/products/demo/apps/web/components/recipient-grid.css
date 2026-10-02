@@ -320,6 +320,178 @@
   line-height: 1.5;
 }
 
+/* A compact operator row: training and date, then the three text fields. */
+.recipient-grid-workspace .recipient-grid-table.legacy-entry {
+  min-width: 1080px;
+}
+
+.recipient-grid-workspace .recipient-grid-table.legacy-entry.has-photo {
+  min-width: 1170px;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-selection {
+  width: 48px;
+  padding-inline: 4px;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-settings {
+  width: 250px;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-name {
+  position: static;
+  width: 260px;
+  border-right: 0;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-photo {
+  width: 110px;
+  text-align: center;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-actions {
+  width: 110px;
+}
+
+.recipient-grid-table.legacy-entry td {
+  padding: 5px 8px;
+}
+
+.recipient-grid-table.legacy-entry input:not([type="checkbox"]),
+.recipient-grid-table.legacy-entry select {
+  min-height: 36px;
+  height: 36px;
+  padding: 6px 8px;
+  background: var(--soft);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.recipient-grid-settings-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-settings-line select {
+  flex: 0 0 84px;
+  width: 84px;
+  min-height: 32px;
+  height: 32px;
+  padding: 4px;
+  font-size: 12px;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-training-button {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  min-width: 0;
+  min-height: 32px;
+  padding: 5px 7px;
+  font-size: 12px;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+
+.recipient-grid-training-button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recipient-grid-training-button svg {
+  flex-shrink: 0;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-settings input[type="date"],
+.recipient-grid-table.legacy-entry .recipient-grid-mixed-date {
+  width: 100%;
+  min-height: 32px;
+  height: 32px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-mixed-date {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-color: transparent;
+  background: var(--soft);
+  color: var(--accent-dark);
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-photo-button {
+  min-height: 36px;
+  padding: 5px 6px;
+  font-size: 12px;
+}
+
+.recipient-grid-no-photo {
+  color: var(--muted);
+}
+
+.recipient-grid-table.legacy-entry .field-error,
+.recipient-grid-table.legacy-entry .field-hint {
+  display: block;
+  margin: 3px 2px 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+  font-size: 11px;
+}
+
+.recipient-grid-table.legacy-entry .field-hint {
+  color: var(--muted);
+}
+.recipient-grid-table.legacy-entry .field-error {
+  color: var(--danger);
+}
+
+.recipient-grid-table.legacy-entry input[aria-invalid="true"],
+.recipient-grid-table.legacy-entry select[aria-invalid="true"] {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.recipient-grid-table.legacy-entry .recipient-grid-supplement > td {
+  padding: 0 12px 6px 56px;
+}
+
+.recipient-grid-supplement summary {
+  padding: 4px 0;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.recipient-grid-employer-fields {
+  display: flex;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.recipient-grid-employer-fields label {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.recipient-grid-employer-fields label:has(input[inputmode="numeric"]) {
+  flex: 0 0 180px;
+}
+
 @media (max-width: 780px) {
   .recipient-grid-options {
     padding: 10px 12px;

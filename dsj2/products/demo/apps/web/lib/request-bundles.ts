@@ -4,6 +4,7 @@ import {
   employeeCategoryFor,
   mandatoryTemplates,
   trainingDirection,
+  trainingDirections,
   type TrainingDirection,
   type TrainingEventInput,
 } from "@demo/contracts";
@@ -84,24 +85,61 @@ export function newRequestBundle(category: RequestBundle) {
   };
 }
 
-/** New rows join only an unambiguous single bundle, never a different event. */
+/** Empty new rows inherit one unambiguous event per direction, without replacing facts. */
 export function recipientForRequest(
   draft: Pick<Draft, "events">,
-  person = newRecipient(),
+  person?: Recipient,
 ): Recipient {
-  if (draft.events?.length !== 1) return person;
-  const event = draft.events[0];
-  if (
-    !Object.values(requestBundles).some(
-      (bundle) => bundle.protocol === event.protocolTemplateId,
-    )
-  )
-    return person;
+  const recipient = person ?? newRecipient();
+  // Callers pass empty assignments for freshly added, pasted or directory rows.
+  // A supplied assignment may contain dates/results or represent a separate course.
+  if (person?.assignments.length) return person;
+  const events = trainingDirections.flatMap((direction) => {
+    const candidates = (draft.events || []).filter(
+      (event) => trainingDirection(event.protocolTemplateId) === direction,
+    );
+    return candidates.length === 1 ? candidates : [];
+  });
+  if (!events.length) return recipient;
+  const biot = events.find(
+    (event) => trainingDirection(event.protocolTemplateId) === "BIOT",
+  );
+  const storedCategory = recipient.recipientId
+    ? recipient.employeeCategory
+    : undefined;
+  const category =
+    storedCategory ??
+    (biot
+      ? biot.protocolTemplateId === "biot-itr-protocol"
+        ? "ITR"
+        : "WORKER"
+      : employeeCategoryFor(recipient));
+  const compatibleEvents = events.filter(
+    (event) =>
+      event.protocolTemplateId ===
+      mandatoryTemplates(
+        trainingDirection(event.protocolTemplateId),
+        category,
+      ).at(-1),
+  );
+  if (!compatibleEvents.length) return recipient;
   return {
-    ...person,
-    employeeCategory:
-      event.protocolTemplateId === "biot-itr-protocol" ? "ITR" : "WORKER",
-    assignments: [bundleAssignment(event)],
+    ...recipient,
+    employeeCategory: category,
+    assignments: compatibleEvents.map((event) => ({
+      ...newAssignment(
+        mandatoryTemplates(
+          trainingDirection(event.protocolTemplateId),
+          category,
+        )[0],
+      ),
+      eventId: event.id,
+      protocolMode: event.protocolMode || ("GROUP" as const),
+      fieldOrigins: Object.fromEntries(
+        commonFieldKeys.map((key) => [key, "INHERITED" as const]),
+      ),
+      outcome: { status: "UNKNOWN" as const, source: "" },
+    })),
   };
 }
 

@@ -1,0 +1,37 @@
+.request-training-choices {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.request-training-scope {
+  margin-right: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.request-training-choices .request-training-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.request-training-choices .request-training-chip[data-complete="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  opacity: 1;
+}
+
+.request-training-count,
+.request-training-empty {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}

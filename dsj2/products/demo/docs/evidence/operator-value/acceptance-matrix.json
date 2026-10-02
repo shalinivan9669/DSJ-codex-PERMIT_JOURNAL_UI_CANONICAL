@@ -1,5 +1,69 @@
 {
   "version": "2026-09-22.2",
+  "operatorRowEntry20261002": {
+    "status": "LOCAL_ENGINEERING_AND_SCOPED_UI_PASS",
+    "branch": "codex/operator-continuous-form",
+    "baseCommit": "6a9625ddb9ee312419c3bd2bb47cd2db9cae143e",
+    "supersedes": "operatorContinuousForm20261002 panel layout: rejected by user; historical engineering evidence retained",
+    "scope": "Compact recipient rows, common training above the list, details in a modal, inherited directions, preserved personal issue dates and explicit protocol dates",
+    "newRequestRoute": "PASS: two customer-type choices and Next only; request-list.tsx unchanged against 436bffe",
+    "environment": {
+      "web": "http://localhost:3132",
+      "api": "http://127.0.0.1:4132",
+      "database": "demo_test_first_live_ui",
+      "data": "SYNTHETIC_LOCAL_ONLY",
+      "dist": ".next-operator-rows-reviewed",
+      "buildId": "vpxN60XOqb8QSRgAlxAHP",
+      "webPidAtVerification": 47972,
+      "httpStatus": 200
+    },
+    "company": {
+      "status": "PASS_SCOPED_UI",
+      "requestId": "31e1f7c8-e5af-4ed7-9fd3-84bb71bee449",
+      "revision": 11,
+      "rows": 3,
+      "verified": "RU/KZ company names persisted after reload; Enter/Tab; modal close restores focus; photo dialog opens and is cancelled; new rows inherit BIOT/PTM; personal issue date 2026-10-03 survives common date 2026-10-04 and mixed dates are shown; ITR BIN/address persist without collapsing during last-field typing; readiness link focuses trainingSubject"
+    },
+    "person": {
+      "status": "PASS_SCOPED_UI",
+      "requestId": "3547d78e-65de-43ed-96ce-ca633d544bc9",
+      "verified": "One recipient row without the company block"
+    },
+    "bulk250": {
+      "status": "PASS_SCOPED_UI",
+      "requestId": "b9065773-908f-475b-a61a-b7a9c8810d36",
+      "verified": "Existing 250-row fixture: row 250 position Электрик — проверка строки 250 saved and retained after reload; search 250 returns one row",
+      "boundary": "Existing fixture, not a current import-250 or mass issuance claim"
+    },
+    "verification": {
+      "webTests": "PASS 143/143, zero fail/skip/cancelled",
+      "webLint": "PASS; final polish also passed scoped ESLint",
+      "webTypecheck": "PASS; final production build also checked types",
+      "finalProductionWebBuild": "PASS: exit 0; generated next-env.d.ts and tsconfig.json restored to HEAD bytes",
+      "currentImport250": "NOT_RUN",
+      "newFullDirectorAndPrintCycle": "NOT_RUN",
+      "physicalPrint": "NOT_VERIFIED",
+      "humanUXAcceptance": "NOT_CLAIMED",
+      "operatorSpeedBenchmark": "NOT_RUN",
+      "fullHistoricalVerifyCI": "NOT_RUN",
+      "push": "NOT_RUN",
+      "deployment": "NOT_RUN"
+    },
+    "preserved": "Document templates, backend, database schemas/migrations and frozen modules; prior acceptance entries unchanged",
+    "evidence": [
+      "docs/OPERATOR_ROW_ENTRY_2026-10-02.md",
+      ".runtime/operator-rows/web-tests.log",
+      ".runtime/operator-rows/web-typecheck.log",
+      ".runtime/operator-rows/web-eslint.log",
+      ".runtime/operator-rows/web-final-polish-eslint.log",
+      ".runtime/operator-rows/production-build-summary.json",
+      ".runtime/operator-rows/processes.json",
+      "docs/evidence/operator-rows/company-three-rows.jpg",
+      "docs/evidence/operator-rows/new-request-unchanged.jpg",
+      "docs/evidence/operator-rows/person-row.jpg",
+      "docs/evidence/operator-rows/row-250-search.jpg"
+    ]
+  },
   "operatorContinuousForm20261002": {
     "status": "LOCAL_ENGINEERING_AND_SCOPED_UI_PASS",
     "branch": "codex/operator-continuous-form",
