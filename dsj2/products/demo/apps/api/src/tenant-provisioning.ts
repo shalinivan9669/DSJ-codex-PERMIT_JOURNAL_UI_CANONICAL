@@ -110,13 +110,13 @@ export async function provisionRegisteredCenter(
           email: data.email,
           displayName: data.displayName,
           passwordHash: digest,
-          role: "ADMIN",
+          role: "DIRECTOR",
         },
       });
       const c = {
         tenantId: tenant.id,
         userId: user.id,
-        role: "ADMIN",
+        role: "DIRECTOR",
         sessionId: hash(session.token),
         csrfHash: hash(session.csrf),
         correlationId: session.correlationId,

@@ -171,7 +171,7 @@ export function SigningPanel({
           )}
           {state.missingBindings.length > 0 && (
             <Notice>
-              Администратору нужно настроить подписантов:{" "}
+              Директору нужно настроить подписантов ЭЦП:{" "}
               {[...new Set(state.missingBindings)].join(", ")}.
             </Notice>
           )}

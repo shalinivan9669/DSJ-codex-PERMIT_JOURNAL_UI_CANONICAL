@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Notice } from "@demo/ui";
+import { canManageCenter } from "@demo/contracts";
 import type { AppContext } from "@/lib/types";
 import { ProfileForm, Templates } from "./settings";
 import "./center-onboarding.css";
@@ -14,10 +15,10 @@ export function CenterOnboarding({
   onContextChange: (context: AppContext) => void;
 }) {
   const [step, setStep] = useState<"profile" | "templates">("profile");
-  if (context.user.role !== "ADMIN")
+  if (!canManageCenter(context.user.role))
     return (
       <Notice kind="info">
-        Данные и формы центра настраивает администратор.{" "}
+        Данные и формы центра настраивает директор.{" "}
         <Link href="/requests/new">Создать черновик заявки</Link>
       </Notice>
     );

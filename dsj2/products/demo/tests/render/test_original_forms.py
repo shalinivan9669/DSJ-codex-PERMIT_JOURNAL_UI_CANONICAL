@@ -147,4 +147,88 @@ class OriginalFormTests(unittest.TestCase):
                             self.assertEqual(f'Действительно до {printed} г.',line)
                             self.assertEqual(1,line.count(printed))
 
+    def test_worker_both_front_copies_keep_the_supplied_kazakh_position(self):
+        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
+        template=next(t for t in manifest['templates'] if t['id']=='biot-worker-card')
+        source=ROOT/'assets/templates'/template['file']
+        checksum=hashlib.sha256(source.read_bytes()).hexdigest()
+        snapshot=fixture('biot-worker-card')
+        snapshot['items'][0].update(positionRu='Синтетический монтажник',positionKz='Синтетикалық құрастырушы')
+        files=render_one(snapshot,snapshot['items'][0],source)
+        root=E.fromstring(files['word/document.xml'])
+        fronts=[box for box in root.iter(W+'txbxContent') if snapshot['items'][0]['fullNameRu'] in ''.join(box.itertext())]
+        # Two printed fronts, each retaining its DrawingML and VML alternative.
+        self.assertEqual(4,len(fronts))
+        self.assertEqual(2,sum(E.QName(box.getparent()).localname=='txbx' for box in fronts))
+        self.assertEqual(2,sum(E.QName(box.getparent()).localname=='textbox' for box in fronts))
+        for box in fronts:
+            lines=[' '.join(''.join(p.itertext()).split()) for p in box.findall(W+'p')]
+            self.assertIn('Лауазымы Синтетикалық құрастырушы',lines)
+            self.assertIn('Должность Синтетический монтажник',lines)
+        self.assertEqual(checksum,hashlib.sha256(source.read_bytes()).hexdigest())
+
+    def test_ps_witness_keeps_issue_training_and_bilingual_decision_dates_independent(self):
+        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
+        template=next(t for t in manifest['templates'] if t['id']=='ps-witness')
+        source=ROOT/'assets/templates'/template['file']
+        checksum=hashlib.sha256(source.read_bytes()).hexdigest()
+        with ZipFile(source) as archive:original=E.fromstring(archive.read('word/document.xml'))
+        snapshot=fixture('ps-witness')
+        snapshot['items'][0]['assignment'].update(documentDate='2026-10-02',protocolDate='2026-09-30',trainingStart='2026-09-14',trainingEnd='2026-09-19')
+        files=render_one(snapshot,snapshot['items'][0],source)
+        rendered=E.fromstring(files['word/document.xml'])
+        for old,new in zip(original.iter(W+'tbl'),rendered.iter(W+'tbl')):
+            if len(list(old.iter(W+'tbl')))!=1:continue
+            before=''.join(old.itertext());after=''.join(''.join(new.itertext()).split())
+            if '{{ISSUE_DAY}}' in before and 'Решением квалификационной' not in before:
+                self.assertIn('02',after)
+                self.assertNotIn('30',after)
+                self.assertIn('қазан' if '{{ISSUE_MONTH_KZ}}' in before else 'октября',after)
+            if 'Біліктілік комиссиясының' in before:
+                self.assertIn('2026жылғы«30»қыркүйек',after)
+                self.assertIn('ПР-00001',after)
+            if '{{TRAINING_END_DAY}}' in before:
+                self.assertIn('19',after)
+                self.assertNotIn('30',after)
+        decision=next(p for p in rendered.iter(W+'p') if 'Решением квалификационной' in ''.join(p.itertext()))
+        self.assertIn('от «30» сентября 2026 г.', ''.join(decision.itertext()))
+        self.assertEqual(checksum,hashlib.sha256(source.read_bytes()).hexdigest())
+
+    def test_ps_shared_subject_and_result_print_once_without_losing_distinct_languages(self):
+        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
+        template=next(t for t in manifest['templates'] if t['id']=='ps-card')
+        source=ROOT/'assets/templates'/template['file']
+        checksum=hashlib.sha256(source.read_bytes()).hexdigest()
+        with ZipFile(source) as archive:package={n:archive.read(n) for n in archive.namelist()}
+        tree=E.fromstring(package['word/document.xml'])
+        split_count=0
+        for node in list(tree.iter(W+'t')):
+            token=node.text or ''
+            if token not in ['{{SUBJECT}}','{{RESULT}}']:continue
+            run=node.getparent();extra=deepcopy(run)
+            node.text=token[:5];extra.find(W+'t').text=token[5:]
+            run.addnext(extra);split_count+=1
+        self.assertGreater(split_count,0)
+        package['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8')
+        with tempfile.TemporaryDirectory() as temp:
+            split_template=Path(temp)/'split-ps.docx';deterministic_zip(split_template,package)
+            for path in [source,split_template]:
+                for subject,result in [('Синтетическая программа','Хорошо'),('Русская программа / Қазақша бағдарлама','Хорошо / Жақсы')]:
+                    with self.subTest(template=path.name,subject=subject):
+                        snapshot=fixture('ps-card');item=snapshot['items'][0]
+                        item.update(fullNameRu='Получатель Русский',fullNameKz='Қазақша Алушы',positionRu='Слесарь',positionKz='Слесарь қазақша')
+                        item['assignment'].update(trainingSubject=subject,result=result)
+                        files=render_one(snapshot,item,path)
+                        rendered=E.fromstring(files['word/document.xml'])
+                        lines=[''.join(n.text or '' for n in p.xpath('./w:r/w:t | ./w:hyperlink/w:r/w:t',namespaces={'w':W[1:-1]})) for p in rendered.iter(W+'p')]
+                        for value in [subject,result]:
+                            populated=[line for line in lines if value in line]
+                            self.assertTrue(populated,value)
+                            for line in populated:self.assertEqual(1,line.count(value),line)
+                        text=''.join(rendered.itertext())
+                        for key in ['fullNameRu','fullNameKz','positionRu','positionKz']:
+                            self.assertIn(item[key],text)
+                        self.assertNotIn('{{',text)
+        self.assertEqual(checksum,hashlib.sha256(source.read_bytes()).hexdigest())
+
 if __name__=='__main__':unittest.main(verbosity=2)

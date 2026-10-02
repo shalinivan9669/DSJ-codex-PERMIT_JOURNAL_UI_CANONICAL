@@ -80,7 +80,11 @@ export function Register({
           <fieldset className="registration-fields" disabled={busy}>
             <legend>Название центра</legend>
             <OrganizationNameFields value={names} onChange={setNames} />
-            <h2>Администратор центра</h2>
+            <h2>Директор центра</h2>
+            <p className="muted">
+              Вы будете согласовывать заявки и управлять центром. Менеджера
+              можно добавить позже в настройках пользователей.
+            </p>
             <label>
               Ваше имя
               <input

@@ -1,9 +1,17 @@
+import { isDirectorRole } from "@demo/contracts";
 import type { Draft, Role } from "./types";
 
 export type RequestActionsInput = {
   draft: Pick<
     Draft,
-    "status" | "approval" | "items" | "issuances" | "archived" | "archivedAt"
+    | "status"
+    | "approval"
+    | "items"
+    | "issuances"
+    | "archived"
+    | "archivedAt"
+    | "revision"
+    | "approvedRevision"
   >;
   role: Role;
   dirty: boolean;
@@ -23,19 +31,24 @@ export function requestActions({
     !archived &&
     ["ADMIN", "DIRECTOR", "OPERATOR"].includes(role);
   const approval = draft.approval?.status;
+  const canPrintCurrentPreview =
+    approval === "APPROVED" &&
+    draft.approvedRevision === draft.revision &&
+    !dirty &&
+    !archived;
   return {
     editable,
     showValidate: editable,
     showPreview: editable,
-    showSave:
-      editable &&
-      (dirty || (approval !== "PENDING" && approval !== "APPROVED")),
+    showSave: editable && dirty,
     showDecision:
-      role === "DIRECTOR" && approval === "PENDING" && !dirty && !archived,
+      isDirectorRole(role) && approval === "PENDING" && !dirty && !archived,
     showPrepareSigning: editable && approval === "APPROVED",
-    prepareSigningDisabled: busy || !draft.items.length || dirty,
+    prepareSigningDisabled:
+      busy || !draft.items.length || !canPrintCurrentPreview,
+    canPrintCurrentPreview,
     showDocuments:
-      (approval === "APPROVED" && !archived) ||
+      canPrintCurrentPreview ||
       draft.status === "FINALIZED" ||
       !!draft.issuances?.length,
   };

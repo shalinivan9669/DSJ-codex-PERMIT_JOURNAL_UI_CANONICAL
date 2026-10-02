@@ -127,7 +127,7 @@ export function RequestList({
           <p>
             {history
               ? "Завершённые выпуски, оригиналы, подписи и история исправлений."
-              : "Рабочие версии, согласование директора и подготовка к подписанию."}
+              : "Рабочие версии, согласование директора, документы и печать."}
           </p>
         </div>
         {context.user.role !== "VIEWER" && (
@@ -362,7 +362,7 @@ export function NewRequest({ context }: { context: AppContext }) {
       {error && <Notice>{error}</Notice>}
       {context.user.role === "VIEWER" ? (
         <Notice kind="info">
-          Создавать заявки могут оператор и администратор центра.
+          Создавать заявки могут менеджер и директор центра.
         </Notice>
       ) : (
         <form

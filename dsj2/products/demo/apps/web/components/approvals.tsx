@@ -1,4 +1,5 @@
 "use client";
+import { isDirectorRole } from "@demo/contracts";
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -8,6 +9,7 @@ import type { AppContext, Draft, Page, Role } from "@/lib/types";
 import { dateTime, Status } from "./request-list";
 import { templateLabels } from "@/lib/types";
 import { validationErrors } from "@/lib/validation-errors";
+import { rejectionReason } from "@/lib/rejection-reason";
 
 type Proposal = {
   id: string;
@@ -173,7 +175,46 @@ export function ApprovalBanner({
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [returnedProposal, setReturnedProposal] = useState<Proposal | null>(
+    null,
+  );
+  const [returnError, setReturnError] = useState("");
   const approval = draft.approval;
+  useEffect(() => {
+    let active = true;
+    setReturnedProposal(null);
+    setReturnError("");
+    if (approval?.status === "REJECTED") {
+      void api<Proposal>(
+        `/approvals/${encodeURIComponent(approval.proposalId)}`,
+      )
+        .then((detail) => {
+          if (!active) return;
+          if (!rejectionReason({ id: draft.id, approval }, detail)) {
+            setReturnError(
+              "Замечание директора недоступно. Откройте решение для проверки.",
+            );
+            return;
+          }
+          setReturnedProposal(detail);
+        })
+        .catch(() => {
+          if (active)
+            setReturnError(
+              "Не удалось загрузить замечание директора. Откройте решение для проверки.",
+            );
+        });
+    }
+    return () => {
+      active = false;
+    };
+  }, [
+    draft.id,
+    approval?.proposalId,
+    approval?.proposalHash,
+    approval?.status,
+  ]);
+  const reason = rejectionReason(draft, returnedProposal);
   if (!approval && draft.status !== "DRAFT") return null;
   return (
     <section className="approval-banner" aria-label="Согласование заявки">
@@ -187,10 +228,29 @@ export function ApprovalBanner({
         </strong>
         {approval && <Status value={approval.status} />}
       </div>
+      {approval?.status === "REJECTED" &&
+        (reason ? (
+          <p>
+            <strong>Причина возврата:</strong> {reason}
+          </p>
+        ) : returnError ? (
+          <p>
+            {returnError}{" "}
+            <Link
+              href={`/approvals?proposal=${encodeURIComponent(approval.proposalId)}`}
+            >
+              Посмотреть решение
+            </Link>
+          </p>
+        ) : (
+          <p role="status">Загружаем замечание директора…</p>
+        ))}
       <p>
         {approval?.status === "APPROVED"
-          ? "Можно подготовить окончательные документы к подписанию. Новые изменения потребуют нового решения."
-          : "Введённые сведения сохранены отдельно. Действующая заявка изменится после решения директора."}
+          ? draft.status === "FINALIZED"
+            ? "Документы подготовлены и доступны для печати."
+            : "Можно подготовить документы и распечатать. Изменения потребуют нового решения."
+          : "Изменения сохраняются автоматически и поступают директору. Он согласует текущую редакцию или вернёт её с замечаниями."}
       </p>
       {!compact && (
         <div className="action-buttons">
@@ -199,7 +259,7 @@ export function ApprovalBanner({
               className="button"
               href={`/approvals?proposal=${encodeURIComponent(approval.proposalId)}`}
             >
-              {role === "DIRECTOR"
+              {isDirectorRole(role)
                 ? "Проверить и принять решение"
                 : "Посмотреть решение"}
             </Link>
@@ -241,7 +301,7 @@ export function Approvals({ context }: { context: AppContext }) {
     ReturnType<typeof validationErrors>
   >([]);
   const [refresh, setRefresh] = useState(0);
-  const director = context.user.role === "DIRECTOR";
+  const director = isDirectorRole(context.user.role);
   useEffect(() => {
     setSelected(
       new URLSearchParams(window.location.search).get("proposal") || "",
@@ -344,7 +404,7 @@ export function Approvals({ context }: { context: AppContext }) {
           <h1>{director ? "Кабинет директора" : "Согласование заявок"}</h1>
           <p>
             {director
-              ? "Проверьте предложенную редакцию и примите решение. Подписание готовых документов выполняется в заявке."
+              ? "Проверьте редакцию и согласуйте её или верните менеджеру. После согласования документы доступны для печати."
               : "Решения директора по сохранённым рабочим версиям."}
           </p>
         </div>
@@ -392,7 +452,7 @@ export function Approvals({ context }: { context: AppContext }) {
             <option value="PENDING">Ожидают решения</option>
             <option value="APPROVED">Согласованы</option>
             <option value="REJECTED">Возвращены</option>
-            {context.user.role === "ADMIN" && (
+            {isDirectorRole(context.user.role) && (
               <option value="SUPERSEDED">Заменены новыми редакциями</option>
             )}
           </select>

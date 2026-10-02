@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { assertTestDatabase } from "./test-database";
 import { db, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
+import { saveUser } from "../../apps/api/src/settings";
 import {
   createRequest,
   patchRequest,
@@ -20,12 +21,23 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
     name: "Synthetic capacity test",
     sample: true,
   });
-  const context: Context = {
+  const director: Context = {
     ...who,
-    role: "ADMIN",
+    role: "DIRECTOR",
     sessionId: "capacity-test",
     csrfHash: "capacity-test",
     correlationId: randomUUID(),
+  };
+  const manager = await saveUser(director, {
+    email: `capacity-manager-${randomUUID()}@example.test`,
+    password: "Synthetic-Capacity-Manager-Password!",
+    displayName: "Синтетический менеджер импорта",
+    role: "OPERATOR",
+  });
+  const context: Context = {
+    ...director,
+    role: "OPERATOR",
+    userId: manager.id,
   };
   try {
     const csv = Buffer.from(
@@ -56,22 +68,35 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
         importId: preview.importId,
       }),
     );
-    const created = await createRequest(context, { kind: "COMPANY" });
+    const created = await createRequest(context, {
+      kind: "COMPANY",
+      schemaVersion: 2,
+      businessRuleVersion: "LIVE_V1",
+      items: [
+        itemSchema.parse({ id: "empty-starter", employeeCategory: "WORKER" }),
+      ],
+    });
     const imported = await applyImport(context, created.id, {
       expectedRevision: created.revision,
       importId: preview.importId,
       rows,
     });
     assert.equal(imported.items.length, 250);
+    assert.equal(
+      imported.items.some((row) => row.id === "empty-starter"),
+      false,
+    );
     assert.equal(imported.items[249].personnelNumber, "000250");
     assert.equal(
       await db.requestItem.count({ where: { requestId: created.id } }),
-      250,
+      0,
+      "imported working rows must not replace approved records before director review",
     );
     assert.equal(
       (await db.printRequest.findUniqueOrThrow({ where: { id: created.id } }))
         .itemCount,
-      250,
+      0,
+      "working import must not promote the approved container",
     );
     const draft = draftSchema.parse({ kind: "COMPANY", items: imported.items });
     draft.items[249].positionRu = "Последний инженер";

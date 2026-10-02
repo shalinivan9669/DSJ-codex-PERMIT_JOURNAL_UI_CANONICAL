@@ -4,7 +4,8 @@ import { randomUUID } from "node:crypto";
 import { assertTestDatabase } from "./test-database";
 import { db, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
-import { saveProfile } from "../../apps/api/src/settings";
+import { saveProfile, saveUser } from "../../apps/api/src/settings";
+import { decideProposal } from "../../apps/api/src/approvals";
 import {
   createRequest,
   patchRequest,
@@ -17,8 +18,9 @@ import {
   newRequestBundle,
   recipientForRequest,
 } from "../../apps/web/lib/request-bundles";
+import { editTrainingAssignment } from "../../apps/web/lib/training-assignment-edit";
 
-test("worker and ITR bundles persist and issue 1/3/100 credentials with one shared protocol", async (t) => {
+test("manager and director prepare worker and ITR bundles for 1/3/100/250 people with individual or shared protocols", async (t) => {
   assertTestDatabase();
   assert.notEqual(
     new URL(process.env.DATABASE_URL!).pathname,
@@ -33,7 +35,7 @@ test("worker and ITR bundles persist and issue 1/3/100 credentials with one shar
   });
   const context: Context = {
     ...seeded,
-    role: "ADMIN",
+    role: "DIRECTOR",
     sessionId: "test",
     csrfHash: "test",
     correlationId: randomUUID(),
@@ -52,8 +54,23 @@ test("worker and ITR bundles persist and issue 1/3/100 credentials with one shar
       position: "Член комиссии",
     })),
   });
+  const operator = await saveUser(context, {
+    email: `forms-manager-${randomUUID()}@example.test`,
+    password: "Synthetic-Forms-Manager-Password!",
+    displayName: "Синтетический менеджер комплектов",
+    role: "OPERATOR",
+  });
+  const manager: Context = {
+    ...context,
+    userId: operator.id,
+    role: "OPERATOR",
+  };
+  assert.equal(
+    await db.user.count({ where: { tenantId: context.tenantId } }),
+    2,
+  );
   for (const category of ["WORKER", "ITR"] as const)
-    for (const count of [1, 3, 100])
+    for (const count of [1, 3, 100, 250])
       await t.test(`${category}: ${count}`, async () => {
         const seed = newRequestBundle(category);
         const draft = draftSchema.parse({
@@ -86,26 +103,39 @@ test("worker and ITR bundles persist and issue 1/3/100 credentials with one shar
             employerAddressRu: "Тестовый адрес",
             employerAddressKz: "Сынақ мекенжайы",
           });
-          Object.assign(item.assignments[0], {
-            result: "Сдал",
-            outcome: {
-              status: "PASSED",
-              source: "Синтетическая тестовая ведомость",
-            },
-            biotKnowledgeResult: "80%",
-            biotProctoringResult: "Синтетический подтверждённый результат",
-          });
+          Object.assign(
+            item,
+            editTrainingAssignment(
+              item,
+              item.assignments[0].id,
+              {
+                result: "Сдал",
+                outcome: {
+                  status: "PASSED",
+                  source: "Синтетическая тестовая ведомость",
+                },
+                biotKnowledgeResult: "80%",
+                biotProctoringResult: "Синтетический подтверждённый результат",
+              },
+              true,
+            ),
+          );
         });
         const before = await db.numberReservation.count({
           where: { tenantId: context.tenantId },
         });
-        const created = await createRequest(context, draft);
-        await patchRequest(context, created.id, { expectedRevision: 0, draft });
-        const reloaded = await requestDetail(context, created.id);
+        const created = await createRequest(manager, draft);
+        const saved = await patchRequest(manager, created.id, {
+          expectedRevision: created.revision,
+          draft,
+        });
+        const reloaded = await requestDetail(manager, created.id);
         assert.equal(reloaded.events?.length, 1);
         assert.equal(reloaded.items.length, count);
         assert.ok(
-          reloaded.items.every((item) => item.assignments.length === 1),
+          reloaded.items.every(
+            (item) => item.assignments.length === (count === 1 ? 2 : 1),
+          ),
         );
         assert.equal(
           await db.numberReservation.count({
@@ -113,30 +143,42 @@ test("worker and ITR bundles persist and issue 1/3/100 credentials with one shar
           }),
           before,
         );
-        const checked = await validateRequest(context, created.id, {
-          expectedRevision: 1,
+        const checked = await validateRequest(manager, created.id, {
+          expectedRevision: saved.revision,
         });
         assert.deepEqual(checked.issues, []);
         assert.equal(checked.documentCount, count + 1);
+        await decideProposal(context, saved.approval.proposalId, {
+          decision: "APPROVE",
+          reason: "Синтетическая проверка массового комплекта",
+          expectedProposalHash: saved.approval.proposalHash,
+        });
+        const approved = await requestDetail(manager, created.id);
         const key = randomUUID();
         const issued = await finalize(
-          context,
+          manager,
           created.id,
-          { expectedRevision: 1 },
+          { expectedRevision: approved.revision },
           key,
         );
         assert.deepEqual(
-          await finalize(context, created.id, { expectedRevision: 1 }, key),
+          await finalize(
+            manager,
+            created.id,
+            { expectedRevision: approved.revision },
+            key,
+          ),
           issued,
         );
         const documents = await db.issuedDocument.findMany({
           where: { requestId: created.id },
         });
         assert.equal(documents.length, count + 1);
-        const protocols = documents.filter(
-          (document) => document.ownerKind === "GROUP",
+        const protocols = documents.filter((document) =>
+          document.templateId.endsWith("-protocol"),
         );
         assert.equal(protocols.length, 1);
+        assert.equal(protocols[0].ownerKind === "GROUP", count > 1);
         assert.equal(
           protocols[0].templateId,
           category === "WORKER" ? "biot-protocol" : "biot-itr-protocol",
@@ -144,7 +186,7 @@ test("worker and ITR bundles persist and issue 1/3/100 credentials with one shar
         assert.equal(
           new Set(
             documents
-              .filter((document) => document.ownerKind !== "GROUP")
+              .filter((document) => !document.templateId.endsWith("-protocol"))
               .map((document) => document.number),
           ).size,
           count,
@@ -153,7 +195,7 @@ test("worker and ITR bundles persist and issue 1/3/100 credentials with one shar
           where: { documentId: protocols[0].id },
           orderBy: { position: "asc" },
         });
-        assert.equal(members.length, count);
+        assert.equal(members.length, count > 1 ? count : 0);
         const snapshots = await db.renderInputSnapshot.findMany({
           where: {
             requestId: created.id,
@@ -164,15 +206,22 @@ test("worker and ITR bundles persist and issue 1/3/100 credentials with one shar
         const group = snapshots
           .map((snapshot) => snapshot.input as any)
           .find((input) => input.groupEvent);
-        assert.deepEqual(
-          group.items.map((item: any) => item.fullNameRu),
-          draft.items.map((item) => item.fullNameRu),
-        );
+        if (count > 1)
+          assert.deepEqual(
+            group.items.map((item: any) => item.fullNameRu),
+            draft.items.map((item) => item.fullNameRu),
+          );
+        else assert.equal(group, undefined);
         for (const input of snapshots
           .map((snapshot) => snapshot.input as any)
           .filter((input) => !input.groupEvent)) {
           assert.equal(input.items[0].protocolNumber, protocols[0].number);
-          assert.equal(input.items[0].assignment.documentDate, "2026-09-25");
+          assert.equal(
+            input.items[0].assignment.documentDate,
+            input.templateId.endsWith("-protocol")
+              ? "2026-09-24"
+              : "2026-09-25",
+          );
         }
         assert.equal(
           await db.numberReservation.count({

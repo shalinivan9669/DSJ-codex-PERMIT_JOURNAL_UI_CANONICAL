@@ -1,4 +1,5 @@
 "use client";
+import { canManageCenter } from "@demo/contracts";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText } from "@/lib/api";
@@ -76,7 +77,7 @@ export function RequestActivity({
       <summary>История заявки</summary>
       <div className="section-heading">
         <p>
-          {role === "ADMIN"
+          {canManageCenter(role)
             ? "Последние 200 событий. Фильтры применяются к показанным событиям."
             : "Основные события согласования, подписания и выдачи."}
         </p>
@@ -85,7 +86,7 @@ export function RequestActivity({
         </button>
       </div>
       {error && <Notice>{error}</Notice>}
-      {role === "ADMIN" && (
+      {canManageCenter(role) && (
         <div className="form-grid">
           <label>
             Событие

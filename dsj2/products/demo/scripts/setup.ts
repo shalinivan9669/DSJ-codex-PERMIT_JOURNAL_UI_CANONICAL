@@ -29,8 +29,8 @@ export async function provision(input: {
       data: {
         tenantId: tenant.id,
         email: input.email.toLowerCase(),
-        displayName: "Администратор",
-        role: "ADMIN",
+        displayName: "Директор",
+        role: "DIRECTOR",
         passwordHash: await passwordHash(input.password),
       },
     });

@@ -8,7 +8,11 @@ import { bootstrap } from "../../apps/api/src/main";
 import { db } from "../../apps/api/src/core";
 import { store } from "../../apps/api/src/files";
 import { provision } from "../../scripts/setup";
-import { draftSchema, itemSchema } from "../../packages/contracts/src";
+import {
+  draftSchema,
+  itemSchema,
+  canManageCenter,
+} from "../../packages/contracts/src";
 import { claimJob, executeJob } from "../../apps/render-worker/src/queue";
 import { assertTestDatabase } from "./test-database";
 import { createApprovalFixture } from "./live-approval-fixture";
@@ -100,7 +104,7 @@ test("commercial security: two tenants, all four genuine roles, HTTP object isol
       });
       const admin = await logIn(tenant.email, tenant.tenantId);
       const group = [admin];
-      for (const role of ["OPERATOR", "VIEWER", "DIRECTOR"]) {
+      for (const role of ["OPERATOR", "VIEWER", "ADMIN"]) {
         const user = await readJson(
           await call(admin, "/users", "POST", {
             email: `security-${label}-${role}-${suffix}@example.test`,
@@ -382,13 +386,13 @@ test("commercial security: two tenants, all four genuine roles, HTTP object isol
                 `/settings/templates/${foreign.template.id}/approve`,
                 "POST",
                 { approved: true },
-                session.role === "ADMIN" ? 404 : 403,
+                canManageCenter(session.role) ? 404 : 403,
               ],
               [
                 `/users/${sessions[1 - index][1].userId}`,
                 "PATCH",
                 { disabled: true },
-                session.role === "ADMIN" ? 404 : 403,
+                canManageCenter(session.role) ? 404 : 403,
               ],
             ] as const) {
               const response = await call(session, path, method, body, {
@@ -422,8 +426,11 @@ test("commercial security: two tenants, all four genuine roles, HTTP object isol
               );
             }
             const audit = await call(session, "/audit");
-            assert.equal(audit.status, session.role === "ADMIN" ? 200 : 403);
-            if (session.role === "ADMIN")
+            assert.equal(
+              audit.status,
+              canManageCenter(session.role) ? 200 : 403,
+            );
+            if (canManageCenter(session.role))
               assert.ok(
                 (await audit.json()).items.every(
                   (item: { tenantId: string }) =>
@@ -431,7 +438,10 @@ test("commercial security: two tenants, all four genuine roles, HTTP object isol
                 ),
               );
             const users = await call(session, "/users");
-            assert.equal(users.status, session.role === "ADMIN" ? 200 : 403);
+            assert.equal(
+              users.status,
+              canManageCenter(session.role) ? 200 : 403,
+            );
             for (const path of [
               "/employees",
               "/v1/biot-cards/generate",

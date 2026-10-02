@@ -1,4 +1,5 @@
 "use client";
+import { canManageCenter } from "@demo/contracts";
 import { useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
@@ -314,7 +315,7 @@ export function OrderFinance({
           </button>
         </details>
       )}
-      {context.user.role === "ADMIN" && (
+      {canManageCenter(context.user.role) && (
         <details>
           <summary>Зафиксировать подтверждённый платёж</summary>
           <label>

@@ -1,6 +1,7 @@
 import {
   draftSchema,
   applyBusinessRules,
+  isDirectorRole,
   z,
   type Draft,
 } from "@demo/contracts";
@@ -58,7 +59,7 @@ export function assertStaff(c: Context, write = false) {
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");
 }
 export function assertDirector(c: Context) {
-  if (c.role !== "DIRECTOR")
+  if (!isDirectorRole(c.role))
     fail(
       403,
       "DIRECTOR_REQUIRED",
@@ -112,6 +113,8 @@ export async function submitProposal(
   assertStaff(c, true);
   await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
   const record = await scopedRequest(c, id, tx);
+  if (record.archivedAt && operation !== "CANCEL")
+    fail(409, "REQUEST_ARCHIVED", "Архивная заявка недоступна для изменения");
   const working = await workingRequest(c, id, tx);
   if (working.revision !== expectedRevision)
     fail(
@@ -271,6 +274,12 @@ export async function submitApproval(c: Context, id: string, input: unknown) {
     input,
   );
   const record = await workingRequest(c, id);
+  if (record.archivedAt)
+    fail(
+      409,
+      "REQUEST_ARCHIVED",
+      "Архивная заявка недоступна для согласования",
+    );
   if (record.revision !== expectedRevision)
     fail(409, "REVISION_CONFLICT", "Обновите рабочую версию");
   if (record.approval?.status !== "PENDING")
@@ -368,7 +377,7 @@ export async function approvalDetail(c: Context, id: string) {
       else findReferences(child);
     }
   };
-  if (c.role === "DIRECTOR") {
+  if (isDirectorRole(c.role)) {
     findReferences(before);
     findReferences(proposal.payload);
   }
@@ -411,7 +420,7 @@ export async function approvalDetail(c: Context, id: string) {
       }),
     ]),
     author,
-    ...(c.role === "DIRECTOR"
+    ...(isDirectorRole(c.role)
       ? { diff, before, decision }
       : {
           diff: [],
@@ -618,7 +627,7 @@ export async function requestActivity(c: Context, id: string) {
     where: {
       tenantId: c.tenantId,
       entityId: { in: [id, ...issued.map((entry) => entry.id)] },
-      ...(c.role !== "ADMIN" ? { action: { in: important } } : {}),
+      ...(!isDirectorRole(c.role) ? { action: { in: important } } : {}),
     },
     orderBy: { createdAt: "desc" },
     take: 200,
@@ -639,7 +648,7 @@ export async function requestActivity(c: Context, id: string) {
         users.find((user) => user.id === entry.actorId)?.displayName ||
         "Система",
       summary: entry.action,
-      ...(c.role === "ADMIN" && important.includes(entry.action)
+      ...(isDirectorRole(c.role) && important.includes(entry.action)
         ? { details: entry.metadata }
         : {}),
     })),

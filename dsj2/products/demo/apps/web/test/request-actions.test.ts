@@ -14,6 +14,8 @@ function input(
     dirty: false,
     draft: {
       status: "DRAFT",
+      revision: 4,
+      approvedRevision: approval === "APPROVED" ? 4 : 0,
       items: [{ id: "row" }] as RequestActionsInput["draft"]["items"],
       ...(approval
         ? {
@@ -32,11 +34,15 @@ function input(
   };
 }
 
-test("draft entry offers checks and one submit action, withholding decision/preparation/documents", () => {
+test("saved draft entry offers checks without a no-op save, decision, preparation or documents", () => {
   const actions = requestActions(input());
   assert.equal(actions.showValidate, true);
   assert.equal(actions.showPreview, true);
-  assert.equal(actions.showSave, true);
+  assert.equal(actions.showSave, false);
+  assert.equal(
+    requestActions(input(undefined, { dirty: true })).showSave,
+    true,
+  );
   assert.equal(actions.showDecision, false);
   assert.equal(actions.showPrepareSigning, false);
   assert.equal(actions.showDocuments, false);
@@ -71,7 +77,8 @@ test("approved clean data offers preparation and documents; local changes requir
   assert.equal(dirty.showSave, true);
   assert.equal(dirty.showPrepareSigning, true);
   assert.equal(dirty.prepareSigningDisabled, true);
-  assert.equal(dirty.showDocuments, true);
+  assert.equal(dirty.showDocuments, false);
+  assert.equal(dirty.canPrintCurrentPreview, false);
   assert.equal(
     requestActions(input("APPROVED", { busy: true })).prepareSigningDisabled,
     true,
@@ -81,10 +88,30 @@ test("approved clean data offers preparation and documents; local changes requir
   assert.equal(requestActions(empty).prepareSigningDisabled, true);
 });
 
-test("rejected and superseded drafts offer resubmission without preparation or director decision", () => {
+test("current preview printing requires the exact approved revision; historical originals stay available", () => {
+  const request = input("APPROVED");
+  assert.equal(requestActions(request).canPrintCurrentPreview, true);
+  request.draft.approvedRevision = 3;
+  assert.equal(requestActions(request).prepareSigningDisabled, true);
+  assert.equal(requestActions(request).showDocuments, false);
+  assert.equal(requestActions(request).canPrintCurrentPreview, false);
+  request.draft.issuances = [
+    { id: "old", sourceRevision: 2, createdAt: "2026-10-01T00:00:00Z" },
+  ];
+  request.dirty = true;
+  assert.equal(requestActions(request).showDocuments, true);
+  assert.equal(requestActions(request).canPrintCurrentPreview, false);
+  assert.equal(
+    requestActions(input("PENDING", { role: "ADMIN" })).showDecision,
+    true,
+  );
+});
+
+test("rejected and superseded drafts only offer save after editing, without preparation or director decision", () => {
   for (const status of ["REJECTED", "SUPERSEDED"] as const) {
     const actions = requestActions(input(status, { role: "DIRECTOR" }));
-    assert.equal(actions.showSave, true);
+    assert.equal(actions.showSave, false);
+    assert.equal(requestActions(input(status, { dirty: true })).showSave, true);
     assert.equal(actions.showValidate, true);
     assert.equal(actions.showDecision, false);
     assert.equal(actions.showPrepareSigning, false);
@@ -108,7 +135,12 @@ test("viewers have no mutation actions and retain access to approved/prepared do
     assert.equal(actions.showPreview, false);
     assert.equal(actions.showDecision, false);
     assert.equal(actions.showPrepareSigning, false);
-    assert.equal(actions.showDocuments, status === "APPROVED");
+    assert.equal(actions.showDocuments, false);
+    assert.equal(
+      requestActions(input(status, { role: "VIEWER", dirty: false }))
+        .showDocuments,
+      status === "APPROVED",
+    );
   }
 });
 

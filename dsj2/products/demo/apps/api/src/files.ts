@@ -14,6 +14,7 @@ import {
   itemSchema,
   draftSchema,
   protocolTemplateFor,
+  initialImportScaffoldId,
   z,
 } from "@demo/contracts";
 import {
@@ -393,7 +394,34 @@ export async function applyImport(c: Context, id: string, input: unknown) {
     fail(400, "IMPORT_SOURCE", "Неверная ссылка на исходную строку");
   if (new Set(data.rows.map((r) => r.sourceRow)).size !== data.rows.length)
     fail(400, "IMPORT_DUPLICATE", "Исходная строка выбрана дважды");
-  if (draft.items.length + data.rows.length > LIMITS.rows)
+  let retainedItems = draft.items;
+  const scaffoldId = data.rows.length
+    ? initialImportScaffoldId({
+        ...draft,
+        approvedRevision: record.approvedRevision,
+      })
+    : undefined;
+  if (scaffoldId) {
+    const history = await db.requestProposal.findMany({
+      where: { tenantId: c.tenantId, requestId: id, operation: "SAVE" },
+      select: { payload: true },
+    });
+    // A row cleared after a previous edit is not an untouched starter. Replace
+    // only when every retained proposal confirms the same empty starter row.
+    if (
+      history.length &&
+      history.every(({ payload }) => {
+        const prior = draftSchema.safeParse(payload);
+        return (
+          prior.success &&
+          initialImportScaffoldId({ ...prior.data, approvedRevision: 0 }) ===
+            scaffoldId
+        );
+      })
+    )
+      retainedItems = [];
+  }
+  if (retainedItems.length + data.rows.length > LIMITS.rows)
     fail(
       422,
       "ROW_LIMIT",
@@ -401,7 +429,7 @@ export async function applyImport(c: Context, id: string, input: unknown) {
     );
   const result = await patchRequest(c, id, {
     expectedRevision: data.expectedRevision,
-    draft: { ...draft, items: [...draft.items, ...data.rows] },
+    draft: { ...draft, items: [...retainedItems, ...data.rows] },
   });
   await audit(db, c, "IMPORT_APPLIED", id, {
     importId: batch.id,

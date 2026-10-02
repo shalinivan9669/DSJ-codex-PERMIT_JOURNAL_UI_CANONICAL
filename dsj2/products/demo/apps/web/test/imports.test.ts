@@ -2,11 +2,121 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   inferMapping,
+  importApplyErrorText,
   importedEmployeeCategory,
+  initialImportTemplate,
   importIssueText,
   mapImportRow,
   type ImportPreview,
 } from "../lib/imports";
+import { trainingEventSchema } from "@demo/contracts";
+import { ApiError } from "../lib/api";
+
+test("retained starter row-limit error explains recovery without masking unrelated failures", () => {
+  const error = new ApiError(
+    422,
+    "Максимум 250 получателей; строки не обрезаны",
+    { code: "ROW_LIMIT" },
+    "trace-import",
+  );
+  const message = importApplyErrorText(error, true);
+  assert.match(message, /Ранее заполненная, затем очищенная строка/);
+  assert.match(message, /явно удалите ненужную пустую строку/);
+  assert.match(message, /не более 249 исходных строк/);
+  assert.match(message, /trace-import/);
+  assert.doesNotMatch(importApplyErrorText(error, false), /очищенная строка/);
+  assert.equal(
+    importApplyErrorText(
+      new ApiError(409, "Заявка изменена", { code: "REVISION_CONFLICT" }),
+      true,
+    ),
+    "Заявка изменена",
+  );
+});
+
+test("an import without selected training creates only recipients and keeps their source identity", () => {
+  assert.equal(initialImportTemplate(), "");
+  const preview: ImportPreview = {
+    importId: "people-only",
+    columns: [
+      "ФИО RU",
+      "Должность RU",
+      "Категория сотрудника",
+      "Табельный номер",
+    ],
+    rows: [],
+    total: 1,
+  };
+  const item = mapImportRow(
+    preview,
+    { sourceRow: 2, values: ["Тест Импорта", "Инженер", "ITR", "000042"] },
+    inferMapping(preview.columns),
+    "",
+  );
+  assert.equal(item.fullNameRu, "Тест Импорта");
+  assert.equal(item.positionRu, "Инженер");
+  assert.equal(item.employeeCategory, "ITR");
+  assert.equal(item.personnelNumber, "000042");
+  assert.equal(item.importId, "people-only");
+  assert.equal(item.sourceRow, 2);
+  assert.deepEqual(item.assignments, []);
+});
+
+test("an explicitly selected training or existing BiOT group remains selected during import", () => {
+  for (const [protocol, card] of [
+    ["biot-protocol", "biot-worker-card"],
+    ["biot-itr-protocol", "biot-itr-certificate"],
+  ]) {
+    const event = trainingEventSchema.parse({
+      id: "group",
+      title: "Группа",
+      protocolTemplateId: protocol,
+      commonFields: {},
+    });
+    assert.equal(initialImportTemplate(event), card);
+  }
+  const preview: ImportPreview = {
+    importId: "selected-ptm",
+    columns: ["ФИО RU"],
+    rows: [],
+    total: 1,
+  };
+  assert.equal(
+    mapImportRow(
+      preview,
+      { sourceRow: 2, values: ["Тест"] },
+      ["fullNameRu"],
+      "ptm-card",
+    ).assignments[0].templateId,
+    "ptm-card",
+  );
+});
+
+test("recipient-only import never silently discards mapped factual training data", () => {
+  const preview: ImportPreview = {
+    importId: "factual-result",
+    columns: ["ФИО RU", "Результат / оценка"],
+    rows: [],
+    total: 1,
+  };
+  assert.throws(
+    () =>
+      mapImportRow(
+        preview,
+        { sourceRow: 2, values: ["Тест", "Сдал"] },
+        ["fullNameRu", "result"],
+        "",
+      ),
+    /выберите документ/,
+  );
+  const empty = mapImportRow(
+    preview,
+    { sourceRow: 2, values: ["Тест", ""] },
+    ["fullNameRu", "result"],
+    "",
+  );
+  assert.deepEqual(empty.assignments, []);
+});
 test("structured server row-limit issue becomes operator text rather than a React child object", () => {
   assert.equal(
     importIssueText({ code: "ROW_LIMIT", count: 101, limit: 100 }),

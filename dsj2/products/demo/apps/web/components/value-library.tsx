@@ -1,4 +1,5 @@
 "use client";
+import { canManageCenter } from "@demo/contracts";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { BIOT_CATEGORIES, type BiotCategory } from "@demo/contracts";
@@ -342,7 +343,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                         {entry.definition.limitation ||
                           "Дополнительные ограничения не указаны; применимость подтверждается по источнику."}
                       </p>
-                      {context.user.role === "ADMIN" && (
+                      {canManageCenter(context.user.role) && (
                         <button onClick={() => newVersion(entry)}>
                           Создать следующую версию
                         </button>
@@ -480,7 +481,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
         </p>
       )}
       {!readonly &&
-        (section !== "service-rules" || context.user.role === "ADMIN") && (
+        (section !== "service-rules" || canManageCenter(context.user.role)) && (
           <button onClick={() => setOpen(!open)}>
             {open ? "Закрыть форму" : "Добавить запись с источником"}
           </button>
@@ -582,7 +583,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
                     }
                   >
                     <option value="DRAFT">Проект для проверки</option>
-                    <option value="APPROVED">Утверждено администратором</option>
+                    <option value="APPROVED">Утверждено директором</option>
                   </select>
                 </label>
                 {field("serviceKey", "Постоянный код услуги")}
@@ -807,7 +808,7 @@ export function ValueLibrary({ context }: { context: AppContext }) {
           </button>
         </form>
       )}
-      {context.user.role === "ADMIN" && <PortalAccess />}
+      {canManageCenter(context.user.role) && <PortalAccess />}
       {picker && (
         <RecordPicker
           kind={picker}

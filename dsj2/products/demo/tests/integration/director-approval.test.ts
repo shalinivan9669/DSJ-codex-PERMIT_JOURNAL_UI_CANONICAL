@@ -180,7 +180,7 @@ test("director approval, immutable official versions and real CMS rejection in i
           }),
           rejectedCode("ROLE_DENIED"),
         );
-        for (const caller of [admin, operator])
+        for (const caller of [operator])
           await assert.rejects(
             decideProposal(caller, created.approval.proposalId, {
               decision: "APPROVE",
@@ -197,7 +197,7 @@ test("director approval, immutable official versions and real CMS rejection in i
               proposalHash: created.approval.proposalHash,
               decision: "APPROVE",
               comment: "SQL обход",
-              decidedBy: admin.userId,
+              decidedBy: operator.userId,
             },
           }),
           /DEMO_DIRECTOR_REQUIRED/,
@@ -235,6 +235,7 @@ test("director approval, immutable official versions and real CMS rejection in i
         );
         const nextDraft = editable(approved);
         nextDraft.title = "Новая рабочая редакция";
+        nextDraft.items[0].fullNameRu = nextDraft.title;
         const next = await patchRequest(operator, created.id, {
           expectedRevision: approved.revision,
           draft: nextDraft,
@@ -309,7 +310,7 @@ test("director approval, immutable official versions and real CMS rejection in i
       async () => {
         const created = await createRequest(operator, fixture());
         const changed = editable(await workingRequest(operator, created.id));
-        changed.title = "Параллельное изменение";
+        changed.items[0].positionRu = "Параллельное изменение должности";
         const outcomes = await Promise.allSettled(
           [1, 2].map(() =>
             patchRequest(operator, created.id, {
@@ -421,7 +422,7 @@ test("director approval, immutable official versions and real CMS rejection in i
           (await requestActivity(director, created.id)).items.some(
             (x) => x.action === "INTERNAL_RENDER_DIAGNOSTIC",
           ),
-          false,
+          true,
         );
         const middle = (await requestActivity(admin, created.id)).items.find(
           (x) => x.action === "INTERNAL_RENDER_DIAGNOSTIC",
@@ -517,6 +518,7 @@ test("director approval, immutable official versions and real CMS rejection in i
           },
         });
         const draft = fixture();
+        draft.kind = "COMPANY";
         draft.customerId = customer.id;
         draft.items[0].workplaceRu = "";
         draft.items[0].workplaceKz = "";
@@ -589,7 +591,7 @@ test("director approval, immutable official versions and real CMS rejection in i
             ).items?.some(
               (item) =>
                 item.workplaceRu === customer.nameRu &&
-                item.employerAddressKz === "",
+                item.employerAddressKz === customer.addressRu,
             ),
           ),
         );

@@ -43,11 +43,7 @@ import {
   submitProposal,
   workingRequest,
 } from "./approvals";
-import {
-  assertSigningPolicy,
-  prepareSigningPolicy,
-  signingState,
-} from "./signing";
+import { prepareSigningPolicy, signingState } from "./signing";
 import {
   validatePinnedServiceRule,
   ruleApplicabilityIssues,
@@ -1405,17 +1401,9 @@ export async function finalize(
       })),
       v.draft.items.flatMap((item) => item.assignments),
     );
-    const outputPlan = documentPlan(v.draft);
-    assertSigningPolicy(signingPolicy, [
-      ...outputPlan.individuals.map(({ assignment }) => ({
-        templateId: assignment.templateId,
-        assignmentId: assignment.id,
-      })),
-      ...outputPlan.groups.map(({ event }) => ({
-        templateId: event.protocolTemplateId,
-        groupEventId: event.id,
-      })),
-    ]);
+    // Director approval is sufficient to freeze a numbered print set. Keep
+    // every required signer in the immutable policy, including unbound slots;
+    // signingState still refuses ISSUED until real signatures are verified.
     const ns = [
       ...new Set([
         ...(v.draft.events || []).map((e) => namespace(e.protocolTemplateId)),
@@ -1839,6 +1827,15 @@ export async function finalize(
 export async function preview(c: Context, id: string, input: unknown) {
   const { expectedRevision } = parse(finalizeSchema, input);
   return transaction(async (tx) => {
+    // Serialize enqueueing with edits and archive decisions on this request.
+    await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    const record = await scopedRequest(c, id, tx);
+    if (record.archivedAt)
+      fail(
+        409,
+        "REQUEST_ARCHIVED",
+        "Архивная заявка доступна только для просмотра сохранённых документов",
+      );
     const v = await validation(tx, c, id, expectedRevision);
     if (!v.profile || !v.parsedProfile)
       fail(422, "ISSUER_REQUIRED", "Сохраните профиль центра");

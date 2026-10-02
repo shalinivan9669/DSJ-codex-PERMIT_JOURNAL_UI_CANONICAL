@@ -25,7 +25,7 @@ test("public self-registration isolates a complete unapproved center atomically"
     legalForm: "TOO",
     ownNameRu: `Synthetic ${label} ${suffix}`,
     ownNameKz: "",
-    displayName: "Synthetic administrator",
+    displayName: "Synthetic director",
     email: `register-${label}-${suffix}@example.test`,
     password: "Synthetic-registration-password!",
   });
@@ -94,13 +94,13 @@ test("public self-registration isolates a complete unapproved center atomically"
       },
     );
     await t.test(
-      "creates ADMIN, private tenant, profile, all templates, sequences and session with approvals false",
+      "creates DIRECTOR, private tenant, profile, all templates, sequences and session with approvals false",
       async () => {
         const response = await send("/auth/register", "POST", input("first"));
         assert.equal(response.status, 201, await response.clone().text());
         first = await response.json();
         auth = credentials(response, first.csrfToken);
-        assert.equal(first.user.role, "ADMIN");
+        assert.equal(first.user.role, "DIRECTOR");
         assert.equal("passwordHash" in first.user, false);
         assert.match(auth.cookie, /demo_session=/);
         const tenant = await db.tenant.findUniqueOrThrow({
@@ -228,7 +228,7 @@ test("public self-registration isolates a complete unapproved center atomically"
       },
     );
     await t.test(
-      "unapproved setup allows drafts, blocks finalization and rejects another center profile",
+      "unapproved setup allows drafts, blocks approval and finalization and rejects another center profile",
       async () => {
         const secondResponse = await send(
           "/auth/register",
@@ -317,7 +317,14 @@ test("public self-registration isolates a complete unapproved center atomically"
           },
           directorAuth,
         );
-        assert.equal(decision.status, 201, await decision.clone().text());
+        assert.equal(decision.status, 422, await decision.clone().text());
+        assert.equal((await decision.json()).code, "APPROVAL_DATA_INCOMPLETE");
+        assert.equal(
+          await db.proposalDecision.count({
+            where: { proposalId: proposal.id },
+          }),
+          0,
+        );
         const afterApproval = await send(
           `/print-requests/${draft.id}/finalize`,
           "POST",
@@ -326,13 +333,10 @@ test("public self-registration isolates a complete unapproved center atomically"
         );
         assert.equal(
           afterApproval.status,
-          422,
+          409,
           await afterApproval.clone().text(),
         );
-        assert.match(
-          await afterApproval.text(),
-          /PROFILE_NOT_APPROVED|PROFILE_UNAPPROVED|Реквизиты|реквизиты/,
-        );
+        assert.match(await afterApproval.text(), /APPROVAL_REQUIRED/);
         const foreignProfile = await db.issuerProfileVersion.findFirstOrThrow({
           where: { tenantId: second.tenant.id },
         });

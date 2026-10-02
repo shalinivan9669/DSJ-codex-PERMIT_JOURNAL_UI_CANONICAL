@@ -1,4 +1,5 @@
 "use client";
+import { canManageCenter } from "@demo/contracts";
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
@@ -576,7 +577,7 @@ export function Workbench({ context }: { context: AppContext }) {
       ) : (
         <section className="panel workbench-detail">
           <h2>Потребности из подтверждённой истории</h2>
-          {context.user.role === "ADMIN" && (
+          {canManageCenter(context.user.role) && (
             <EvidenceMatrix
               context={context}
               scanOnly

@@ -2,7 +2,12 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
-import { profileSchema } from "@demo/contracts";
+import { canManageCenter, profileSchema, roleLabel } from "@demo/contracts";
+import {
+  userRoleForEditor,
+  userRoleOptions,
+  userRoleUpdate,
+} from "@/lib/user-roles";
 import { OrganizationNameFields } from "./organization-name-fields";
 import { CenterTrainingSchedule } from "./center-training-schedule";
 import { SignatorySettings } from "./signatory-settings";
@@ -24,10 +29,10 @@ export function Settings({
   onContextChange: (context: AppContext) => void;
 }) {
   const [tab, setTab] = useState(
-    context.user.role === "ADMIN" ? "profile" : "account",
+    canManageCenter(context.user.role) ? "profile" : "account",
   );
   const tabs =
-    context.user.role === "ADMIN"
+    canManageCenter(context.user.role)
       ? [
           ["profile", "Учебный центр"],
           ["templates", "Формы"],
@@ -78,7 +83,7 @@ export function Settings({
             <Users currentUserId={context.user.id} />
           ) : tab === "signatories" ? (
             <SignatorySettings />
-          ) : tab === "export" && context.user.role === "ADMIN" ? (
+          ) : tab === "export" && canManageCenter(context.user.role) ? (
             <>
               <h2>Полная копия данных центра</h2>
               <p>
@@ -522,7 +527,7 @@ export function Templates({ initial }: { initial: Template[] }) {
                 <Notice kind="info">
                   Исторические макеты БиОТ не подтверждены редакцией правил с
                   12.07.2026. Текущая форма протокола рабочих профессий содержит
-                  7 колонок. Отметка администратора не исправляет несовпадение
+                  7 колонок. Отметка директора не исправляет несовпадение
                   формы; требуется актуальный макет, проверенный уполномоченным
                   сотрудником для соответствующей категории получателей.{" "}
                   <a
@@ -728,8 +733,9 @@ function Users({ currentUserId }: { currentUserId: string }) {
         </button>
       </div>
       <p className="muted">
-        Администратор управляет настройками и доступом. Оператор подготавливает
-        документы. Просмотр позволяет читать заявки и скачивать файлы.
+        Менеджер заполняет заявки, отправляет их на согласование и печатает
+        документы. Директор согласует заявки, управляет настройками центра и
+        доступом сотрудников.
       </p>
       {error && <Notice>{error}</Notice>}
       <div className="table-scroll">
@@ -749,17 +755,7 @@ function Users({ currentUserId }: { currentUserId: string }) {
                   <strong>{user.displayName}</strong>
                   <small>{user.email}</small>
                 </td>
-                <td>
-                  {
-                    {
-                      ADMIN: "Администратор",
-                      OPERATOR: "Менеджер",
-                      DIRECTOR: "Директор",
-                      EMPLOYER: "Представитель заказчика",
-                      VIEWER: "Просмотр",
-                    }[user.role]
-                  }
-                </td>
+                <td>{roleLabel(user.role)}</td>
                 <td>{user.disabled ? "Отключён" : "Активен"}</td>
                 <td>
                   <button onClick={() => setEdit(user)}>
@@ -796,9 +792,9 @@ function UserDialog({
   const [value, setValue] = useState({
     email: "",
     displayName: "",
-    role: "OPERATOR" as Role,
     disabled: false,
     ...user,
+    role: userRoleForEditor(user.role),
   });
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -813,7 +809,7 @@ function UserDialog({
         body: json({
           ...(!user.id ? { email: value.email } : {}),
           displayName: value.displayName,
-          role: value.role,
+          ...userRoleUpdate(user.id ? user.role : undefined, value.role),
           ...(user.id ? { disabled: value.disabled } : {}),
           ...(password ? { password } : {}),
         }),
@@ -863,11 +859,14 @@ function UserDialog({
               setValue({ ...value, role: event.target.value as Role })
             }
           >
-            <option value="ADMIN">Администратор</option>
-            <option value="OPERATOR">Менеджер</option>
-            <option value="DIRECTOR">Директор</option>
-            <option value="VIEWER">Просмотр</option>
-            <option value="EMPLOYER">Представитель заказчика</option>
+            {userRoleOptions(user.id ? user.role : undefined).map((role) => (
+              <option key={role} value={role}>
+                {roleLabel(role)}
+                {role === "VIEWER" || role === "EMPLOYER"
+                  ? " (текущий доступ)"
+                  : ""}
+              </option>
+            ))}
           </select>
         </label>
         <label>

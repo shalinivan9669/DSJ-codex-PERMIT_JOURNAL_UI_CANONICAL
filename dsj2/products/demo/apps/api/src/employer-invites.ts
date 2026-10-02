@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import type { Response } from "express";
+import { canManageCenter } from "@demo/contracts";
 import {
   employerInviteSchema,
   employerInviteTokenSchema,
@@ -31,12 +32,8 @@ function invalid(): never {
   );
 }
 function admin(c: Context) {
-  if (c.role !== "ADMIN")
-    fail(
-      403,
-      "ROLE_DENIED",
-      "Только администратор может приглашать представителей",
-    );
+  if (!canManageCenter(c.role))
+    fail(403, "ROLE_DENIED", "Только директор может приглашать представителей");
 }
 const publicFields = {
   id: true,

@@ -9,6 +9,8 @@ import { tenantExportSnapshot } from "../../apps/api/src/tenant-export";
 import { draftSchema } from "../../packages/contracts/src";
 import { provision } from "../../scripts/setup";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
+import { workingRequest } from "../../apps/api/src/approvals";
 
 const code = (expected: string) => (error: unknown) => {
   assert.equal(
@@ -34,6 +36,8 @@ test("distinct contractual customer, payer and persisted participant employer pr
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  const approvals = await createApprovalFixture(c);
+  t.after(() => approvals.close());
   const [a, b, employer, other] = await Promise.all(
     ["Contract customer A", "Payer B", "Employer C", "Employer D"].map(
       (nameRu) =>
@@ -61,7 +65,7 @@ test("distinct contractual customer, payer and persisted participant employer pr
       checkedOn: "2026-09-25",
       definition: {
         programVersion: "1",
-        category: "PB",
+        category: "",
         compatibleTemplateIds: ["pb-card", "pb-protocol"],
         requirements: [
           {
@@ -170,8 +174,8 @@ test("distinct contractual customer, payer and persisted participant employer pr
     events: [...draft.events!, personA.event],
     items: [...draft.items, personA.row],
   });
-  const changed = await patchRequest(c, request.id, {
-    expectedRevision: 0,
+  let changed = await patchRequest(c, request.id, {
+    expectedRevision: request.revision,
     draft,
   });
   await t.test(
@@ -196,6 +200,44 @@ test("distinct contractual customer, payer and persisted participant employer pr
       assert.equal(saved.employerId, employer.id);
     },
   );
+
+  // The employer portal receives only the director-approved revision. Complete
+  // the deliberately incomplete private planning draft through the real flow.
+  const readyDraft = draftSchema.parse(
+    (await workingRequest(c, request.id)).draft,
+  );
+  const dates = {
+    documentDate: "2026-09-25",
+    protocolDate: "2026-09-25",
+    trainingStart: "2026-09-24",
+    trainingEnd: "2026-09-25",
+  };
+  readyDraft.commonFields = { ...readyDraft.commonFields, ...dates };
+  readyDraft.events = readyDraft.events?.map((event) => ({
+    ...event,
+    commonFields: {
+      ...event.commonFields,
+      ...dates,
+      trainingSubject: "Synthetic scoped program",
+    },
+  }));
+  readyDraft.items = readyDraft.items.map((row) => ({
+    ...row,
+    positionRu: "Синтетическая должность",
+    assignments: row.assignments.map((assignment) => ({
+      ...assignment,
+      ...dates,
+      trainingSubject: "Synthetic scoped program",
+      hours: "16",
+      result: "Сдал",
+      outcome: { status: "PASSED" as const, source: "Synthetic scoped result" },
+    })),
+  }));
+  changed = await patchRequest(c, request.id, {
+    expectedRevision: changed.revision,
+    draft: readyDraft,
+  });
+  await approvals.approve(request.id);
 
   const memberContext = async (organization: string) => {
     const user = await db.user.create({
@@ -344,7 +386,7 @@ test("distinct contractual customer, payer and persisted participant employer pr
       assert.equal(mixed.employerId, null);
       const detail = await value.serviceOrderDetail(c, mixed.id);
       assert.equal(detail.summary.people, 1);
-      assert.ok(resultActions(detail)[0].label.includes("Person A"));
+      assert.equal(resultActions(detail).length, 0);
       const c2 = await person(employer.id, "C2");
       const d2 = await person(other.id, "D2");
       const ambiguous = await createRequest(

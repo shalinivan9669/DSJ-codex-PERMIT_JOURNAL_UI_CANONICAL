@@ -7,6 +7,7 @@ import {
   profileSchema,
   TEMPLATE_LABELS,
   today,
+  canManageCenter,
   z,
   type Draft,
 } from "@demo/contracts";
@@ -59,7 +60,7 @@ function center(c: Context, write = false, admin = false) {
   if (
     !["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
     (write && c.role === "VIEWER") ||
-    (admin && c.role !== "ADMIN")
+    (admin && !canManageCenter(c.role))
   )
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");
 }
@@ -131,7 +132,7 @@ async function inferredOrderEmployer(
 ) {
   const employers = new Set<string | null>();
   for (const id of new Set(ids)) {
-    const request = await scopedRequest(c, id, tx);
+    const request = await workingRequest(c, id, tx);
     const draft = draftSchema.parse(request.draft);
     for (const row of draft.items)
       employers.add(row.employerId || draft.customerId || null);
@@ -154,10 +155,10 @@ async function linkRequests(
   tx: Tx,
 ) {
   for (const requestId of new Set(ids)) {
-    const request = await scopedRequest(c, requestId, tx);
+    const request = await workingRequest(c, requestId, tx);
     const draft = draftSchema.parse(request.draft);
     const scopedRows = orderRows(draft, employerId ?? customerId);
-    if (request.customerId !== customerId && !scopedRows.length)
+    if (draft.customerId !== customerId && !scopedRows.length)
       fail(
         409,
         "CUSTOMER_MISMATCH",
@@ -297,13 +298,12 @@ async function orderDetail(c: Context, id: string) {
       select: attachmentSelect,
     }),
   ]);
-  const requests = await db.printRequest.findMany({
-    where: {
-      tenantId: c.tenantId,
-      id: { in: links.map((link) => link.requestId) },
-    },
-  });
-  const events = await db.trainingEvent.findMany({
+  // Internal preparation uses the manager's current proposal. The separate
+  // employer portal continues reading only the approved stored request.
+  const requests = await Promise.all(
+    links.map((link) => workingRequest(c, link.requestId)),
+  );
+  const storedEvents = await db.trainingEvent.findMany({
     where: {
       tenantId: c.tenantId,
       requestId: { in: requests.map((request) => request.id) },
@@ -311,6 +311,16 @@ async function orderDetail(c: Context, id: string) {
     select: { id: true, title: true, requestId: true },
     orderBy: { createdAt: "asc" },
   });
+  const eventMap = new Map(storedEvents.map((event) => [event.id, event]));
+  for (const request of requests)
+    if (request.status === "DRAFT")
+      for (const event of draftSchema.parse(request.draft).events || [])
+        eventMap.set(event.id, {
+          id: event.id,
+          title: event.title,
+          requestId: request.id,
+        });
+  const events = [...eventMap.values()];
   const blocking = milestones.filter(
     (m) => m.source !== "RECOMMENDATION" && m.status === "PENDING",
   );
@@ -494,7 +504,7 @@ async function orderDetail(c: Context, id: string) {
     requests: requests.map((r) => ({
       requestId: r.id,
       id: r.id,
-      title: r.title,
+      title: draftSchema.parse(r.draft).title || r.title,
       status: r.status,
       revision: r.revision,
       itemCount: orderRows(draftSchema.parse(r.draft), orderEmployer(value))
@@ -746,12 +756,12 @@ export async function patchOrderMilestone(
     if (
       data.status === "WAIVED" &&
       (old.source === "NORMATIVE" ||
-        (old.source === "CONTRACT" && c.role !== "ADMIN"))
+        (old.source === "CONTRACT" && !canManageCenter(c.role)))
     )
       fail(
         403,
         "WAIVER_DENIED",
-        "Нормативное обязательство не снимается; договорное изменяет администратор",
+        "Нормативное обязательство не снимается; договорное изменяет директор",
       );
     if (data.status === "WAIVED" && !data.reason.trim())
       fail(400, "REASON_REQUIRED", "Укажите основание изменения обязательства");

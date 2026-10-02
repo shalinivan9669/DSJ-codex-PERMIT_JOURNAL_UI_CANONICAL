@@ -327,6 +327,29 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           PASSED: "",
         }[assignment.outcome?.status || "UNKNOWN"];
       if (draft.businessRuleVersion === "LIVE_V1") {
+        // A simple kit has one issue date until a separate protocol date or
+        // schedule is supplied. Resolve it before freezing the print snapshot;
+        // the renderer must never reinterpret already issued history.
+        if (
+          !assignment.protocolDate &&
+          !["MANUAL", "IMPORTED", "CLEARED"].includes(
+            origins.protocolDate || "",
+          )
+        ) {
+          assignment.protocolDate =
+            event && assignment.protocolMode === "GROUP"
+              ? context.fields.documentDate || assignment.documentDate
+              : assignment.documentDate;
+          if (assignment.protocolDate) origins.protocolDate = "AUTO";
+        }
+        if (!assignment.protocolDate && assignment.documentDate)
+          issues.push({
+            code: "PROTOCOL_DATE_REQUIRED",
+            path: `${path}.protocolDate`,
+            rowId: item.id,
+            message:
+              "Укажите дату протокола или восстановите наследование даты документа",
+          });
         if (
           assignment.templateId.endsWith("-protocol") &&
           assignment.protocolDate
@@ -343,8 +366,19 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
         origins.validUntil = "AUTO";
       }
     }
-  for (const event of draft.events || [])
-    event.commonFields = eventContexts.get(event.id)!.fields;
+  for (const event of draft.events || []) {
+    const context = eventContexts.get(event.id)!;
+    if (
+      draft.businessRuleVersion === "LIVE_V1" &&
+      !context.fields.protocolDate &&
+      context.fields.documentDate &&
+      !["MANUAL", "IMPORTED", "CLEARED"].includes(
+        context.origins.protocolDate || "",
+      )
+    )
+      context.fields.protocolDate = context.fields.documentDate;
+    event.commonFields = context.fields;
+  }
   return { draft, provenance, issues };
 }
 

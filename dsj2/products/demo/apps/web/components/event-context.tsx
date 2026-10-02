@@ -180,6 +180,9 @@ export function EventContext({
   const selectedAssignments = eventAssignments.filter(({ item }) =>
     selectedIds.includes(item.id),
   );
+  const selectedParticipantCount = new Set(
+    selectedAssignments.map(({ item }) => item.id),
+  ).size;
   const moveTargets = event
     ? events.filter(
         (target) =>
@@ -800,11 +803,15 @@ export function EventContext({
                   <Notice kind="info">
                     Не подтверждены результаты:{" "}
                     {
-                      eventAssignments.filter(
-                        ({ assignment }) =>
-                          !assignment.outcome ||
-                          assignment.outcome.status === "UNKNOWN",
-                      ).length
+                      new Set(
+                        eventAssignments
+                          .filter(
+                            ({ assignment }) =>
+                              !assignment.outcome ||
+                              assignment.outcome.status === "UNKNOWN",
+                          )
+                          .map(({ item }) => item.id),
+                      ).size
                     }
                     . Удостоверения этих участников не включаются в комплект.
                     Для их оформления откройте «Подтвердить фактические
@@ -922,8 +929,8 @@ export function EventContext({
               <details className="outcome-entry">
                 <summary>Подтвердить фактические результаты события</summary>
                 <p>
-                  Выбрано участников этого события: {selectedAssignments.length}
-                  . Участники других событий не меняются.
+                  Выбрано участников этого события: {selectedParticipantCount}.
+                  Участники других событий не меняются.
                 </p>
                 <div className="form-grid">
                   <label>
@@ -959,7 +966,7 @@ export function EventContext({
                 </div>
                 {review && (
                   <Notice kind="info">
-                    Будет заменён результат у {selectedAssignments.length}{" "}
+                    Будет заменён результат у {selectedParticipantCount}{" "}
                     участников события «{event.title}». Основание: {source}. Это
                     действие не регистрирует документы.
                   </Notice>

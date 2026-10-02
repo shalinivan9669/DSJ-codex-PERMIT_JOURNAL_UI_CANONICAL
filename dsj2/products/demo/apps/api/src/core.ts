@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { HttpException } from "@nestjs/common";
 import { PrismaClient, Prisma } from "@demo/database";
-import { z } from "@demo/contracts";
+import { z, canManageCenter } from "@demo/contracts";
 import type { Request } from "express";
 export const db = new PrismaClient({ log: [] });
 export type Context = {
@@ -28,7 +28,7 @@ export function ctx(req: DemoRequest, write = false, admin = false): Context {
   const c = req.context;
   if (!c) fail(401, "SESSION_REQUIRED", "Войдите в DEMO");
   if (
-    (admin && c.role !== "ADMIN") ||
+    (admin && !canManageCenter(c.role)) ||
     (write && (c.role === "VIEWER" || c.role === "EMPLOYER"))
   )
     fail(403, "ROLE_DENIED", "Недостаточно прав");

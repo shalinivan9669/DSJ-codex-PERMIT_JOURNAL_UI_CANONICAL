@@ -1,4 +1,4 @@
-import { z } from "@demo/contracts";
+import { z, canManageCenter, isDirectorRole } from "@demo/contracts";
 import type { Prisma } from "@demo/database";
 import {
   audit,
@@ -137,7 +137,7 @@ export async function prepareSigningPolicy(
     (binding) =>
       binding.kind === "DIRECTOR" &&
       staff.some(
-        (user) => user.id === binding.userId && user.role === "DIRECTOR",
+        (user) => user.id === binding.userId && isDirectorRole(user.role),
       ),
   );
   if (directors.length > 1)
@@ -247,8 +247,8 @@ export async function listSignatories(c: Context) {
   return { items: items.map(({ kind, ...item }) => ({ ...item, role: kind })) };
 }
 export async function saveSignatory(c: Context, input: unknown) {
-  if (c.role !== "ADMIN")
-    fail(403, "ROLE_DENIED", "Подписантов назначает администратор");
+  if (!canManageCenter(c.role))
+    fail(403, "ROLE_DENIED", "Подписантов назначает директор");
   const data = parse(
     z
       .object({
@@ -272,7 +272,7 @@ export async function saveSignatory(c: Context, input: unknown) {
     if (
       !user ||
       !["ADMIN", "DIRECTOR", "OPERATOR"].includes(user.role) ||
-      (data.role === "DIRECTOR" && user.role !== "DIRECTOR")
+      (data.role === "DIRECTOR" && !isDirectorRole(user.role))
     )
       fail(
         422,
@@ -750,7 +750,7 @@ export async function startSigning(c: Context, id: string, input: unknown) {
       "SIGNATORY_REQUIRED",
       "У вас нет назначенной непоставленной подписи этого документа",
     );
-  if (signer.kind === "DIRECTOR" && c.role !== "DIRECTOR")
+  if (signer.kind === "DIRECTOR" && !isDirectorRole(c.role))
     fail(
       403,
       "DIRECTOR_REQUIRED",
@@ -912,7 +912,7 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       "SIGNING_TARGET_CHANGED",
       "Назначение или подписываемый документ изменились",
     );
-  if (binding.kind === "DIRECTOR" && c.role !== "DIRECTOR")
+  if (binding.kind === "DIRECTOR" && !isDirectorRole(c.role))
     fail(
       403,
       "DIRECTOR_REQUIRED",

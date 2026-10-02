@@ -2249,5 +2249,380 @@
     "externalSigning": "NOT_CONFIGURED",
     "physicalPrint": "NOT_VERIFIED",
     "commitPushDeployment": "NOT_REQUESTED_NOT_PERFORMED"
+  },
+  "firstProductSprint20261002": {
+    "date": "2026-10-02",
+    "status": "LOCAL_PRODUCT_SPRINT_ACCEPTED_WITH_STATED_LIMITS",
+    "report": "../../FIRST_PRODUCT_SPRINT_2026-10-02.md",
+    "branch": "codex/first-live-iteration",
+    "checkpointCommit": "224c1bd",
+    "previousBaseCommit": "0a44022",
+    "localChangesAfterCheckpoint": true,
+    "localUrl": "http://localhost:3132",
+    "twoWorkingRoles": {
+      "status": "IMPLEMENTED_SCOPED_CHECKS_PASS",
+      "roles": [
+        "DIRECTOR",
+        "OPERATOR"
+      ],
+      "legacyAdmin": "DIRECTOR_COMPATIBILITY_WITHOUT_ACCOUNT_OR_PASSWORD_REWRITE",
+      "restrictedLegacyAccounts": "NOT_PROMOTED",
+      "ordinaryPrintNeedsThirdAccount": false,
+      "directorDecision": "REQUIRED_FOR_CURRENT_REVISION",
+      "realSignatureCompletion": "SEPARATE_CRYPTOGRAPHIC_GATE_PRESERVED"
+    },
+    "quality": {
+      "lint": "PASS",
+      "packageTypecheck": "PASS_WITH_EXISTING_CLIENT_NO_DB_GENERATE",
+      "typecheckedPackages": [
+        "contracts",
+        "database",
+        "printing",
+        "web",
+        "render-worker",
+        "api"
+      ],
+      "rootUnit": {
+        "passed": 137,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "durationMs": 21475.1144
+      },
+      "webUnit": {
+        "passed": 111,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "durationMs": 5117.8172
+      },
+      "unitTotalPassed": 248,
+      "logs": [
+        ".runtime/first-live-iteration/final-product-lint.log",
+        ".runtime/first-live-iteration/final-product-typecheck.log",
+        ".runtime/first-live-iteration/final-product-unit.log"
+      ],
+      "checkedAfter": [
+        "import-scaffold and preserved-data fixes",
+        "protocol date inheritance and cleared-date validation"
+      ],
+      "localWebBuild": {
+        "status": "PASS",
+        "dist": ".next-sprint1-accepted-20261002",
+        "log": ".runtime/first-live-iteration/final-web-build.log",
+        "deployed": false
+      },
+      "protocolDateRegression": {
+        "passed": 37,
+        "overlapsFullUnit": true,
+        "files": [
+          "tests/resolution.test.ts",
+          "tests/date-calculation.test.ts",
+          "tests/kz-training-dates.test.ts",
+          "tests/business-rules.test.ts"
+        ],
+        "evidence": "Targeted runner stdout; same tests also pass in final-product-unit.log",
+        "behavior": [
+          "inherited blank protocolDate resolves effective issueDate",
+          "explicit date preserved",
+          "CLEARED blocks approval with PROTOCOL_DATE_REQUIRED",
+          "group date shared",
+          "old snapshots unchanged"
+        ]
+      }
+    },
+    "backendIntegration": {
+      "status": "CONSOLIDATED_SCOPED_RUN_PASS",
+      "countConvention": "Node.js totals include parent tests; never mix with nested-only counts",
+      "consolidatedLog": ".runtime/first-live-iteration/backend-scoped-final.log",
+      "total": {
+        "passed": 61,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "durationSeconds": 211.9556913
+      },
+      "suitePassed": {
+        "two-working-roles": 7,
+        "registration": 9,
+        "security-acceptance": 6,
+        "director-approval": 7,
+        "operator-value-http": 5,
+        "order-employer-scope": 9,
+        "pending-order-linkage": 1,
+        "renewal-matrix": 6,
+        "employer-invites": 7,
+        "profile-lookup": 1,
+        "staff-directory": 1,
+        "tenant-export": 1,
+        "archive-preview-race": 1
+      },
+      "archiveRace": "PASS: real PostgreSQL lock wait; archived preview returns REQUEST_ARCHIVED with zero jobs and render snapshots"
+    },
+    "printQa": {
+      "status": "PASS_WITH_STATED_LIMITS",
+      "summary": ".runtime/sprint-webqa/qa-summary.json",
+      "currentPdfVerification": ".runtime/sprint-webqa/pdf-verification.json",
+      "activeTemplates": 11,
+      "pdfPages": 15,
+      "allPagesVisuallyReviewed": true,
+      "templateManifestShaMatched": true,
+      "postFixSourceRegressionsPassed": 9,
+      "rendererBaselinePassed": 16,
+      "rendererBaselineTiming": "BEFORE_TWO_PS_FIXES_AFFECTED_FORMS_RERENDERED_AFTER",
+      "postFixExistingPsMappingRegressionsPassed": 2,
+      "sourceTemplateFilesChanged": false,
+      "priorIssuedBytesChanged": false,
+      "psFixes": [
+        "duplicate shared SUBJECT/RESULT token",
+        "independent witness issue/protocol dates and KZ decision day"
+      ],
+      "visualCaveats": [
+        "PS card title near issuer band in retained original geometry",
+        "KZ month wrapping in narrow witness training-date cell"
+      ],
+      "massPtmProtocol": {
+        "members": 250,
+        "pages": 26,
+        "allNamesAndOrdinalsVerified": true,
+        "firstAndLastPagesVisuallyReviewed": true,
+        "report": ".runtime/sprint-webqa/operator-value/group-layout/ptm-protocol-250-verification.json"
+      },
+      "evidenceScope": "11-template synthetic fixture baseline predates browser request protocol-date and BiOT KZ-token corrections",
+      "correctedBrowserRequestPdfStatus": "PASS",
+      "finalOriginalFormsRegression": {
+        "passed": 10,
+        "durationSeconds": 18.528,
+        "evidence": "review_roles exact runner stdout",
+        "addedTest": "test_worker_both_front_copies_keep_the_supplied_kazakh_position",
+        "command": ".runtime/venv/Scripts/python.exe -X utf8 -m unittest discover -s tests/render -p test_original_forms.py"
+      },
+      "nativePrintDialog": {
+        "status": "NOT_VERIFIED",
+        "observation": "IAB PDF viewer opened; print attempt created hidden iframe and preparing state, then Runtime calls timed out while accessibility remained available",
+        "inference": "Compatible with synchronous native window.print blocking; iframe creation alone does not prove print reached",
+        "source": "https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#printing",
+        "physicalPrint": "NOT_VERIFIED"
+      },
+      "correctedBrowserRequestPdfs": {
+        "files": 6,
+        "pages": 7,
+        "visualReview": "PASS_ALL_7_PAGES",
+        "requests": [
+          "4d98230c-7941-48fb-9223-37ce6db51f57",
+          "b1c24d11-c03d-4f28-82e0-bfdfe0795dac"
+        ],
+        "approvedRevision": 1,
+        "checks": [
+          "all six PDFs show 02.10.2026",
+          "artifact, copy and manifest SHA-256 match",
+          "numbers, names RU/KZ and employer match",
+          "PTM expiry 02.10.2027 exactly once",
+          "both worker front copies preserve KZ position",
+          "no template tokens, unrelated names or text outside page"
+        ],
+        "report": ".runtime/first-live-iteration/sprint-browser-evidence/pdf-qa-corrected-evidence.json",
+        "contactSheet": ".runtime/first-live-iteration/sprint-browser-evidence/pdf-qa-corrected-contactsheet.png",
+        "initialFailuresPreservedAt": ".runtime/first-live-iteration/sprint-browser-evidence/pdf-qa-evidence.json"
+      },
+      "savedPdfBrowserViewAndDownload": {
+        "status": "PASS",
+        "artifactId": "d49fc0f4-9db6-40f0-bc2a-314112f55456",
+        "visiblePages": 2,
+        "downloadedViaUi": true,
+        "downloadedSha256MatchesOriginal": true,
+        "evidence": [
+          ".runtime/first-live-iteration/sprint-browser-evidence/21-corrected-pdf-browser.png",
+          ".runtime/first-live-iteration/sprint-browser-evidence/21-corrected-pdf-browser.txt",
+          ".runtime/first-live-iteration/sprint-browser-evidence/download-verification.json",
+          ".runtime/first-live-iteration/sprint-browser-evidence/22-final-pdf-preview.png"
+        ]
+      },
+      "previousIssuanceImmutability": {
+        "status": "PASS",
+        "issuances": 2,
+        "documents": 6,
+        "renderSnapshots": 8,
+        "artifactMetadata": 16,
+        "storedByteHashes": 16,
+        "changed": 0,
+        "evidence": [
+          ".runtime/first-live-iteration/sprint-browser-evidence/immutable-baseline.json",
+          ".runtime/first-live-iteration/sprint-browser-evidence/immutable-verification.json"
+        ]
+      },
+      "rendererFixScope": [
+        "PS duplicate tokens and independent issue/protocol dates",
+        "BiOT worker KZ position on both front copies"
+      ]
+    },
+    "bulk": {
+      "integration": {
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0,
+        "durationSeconds": 169.817
+      },
+      "integrationLog": ".runtime/sprint-webqa/bulk-integration-final.log",
+      "frontendScopedPassed": 41,
+      "frontendOverlapsFullWebUnit": true,
+      "categories": [
+        "WORKER",
+        "ITR"
+      ],
+      "recipientsPerCategory": [
+        1,
+        3,
+        100,
+        250
+      ],
+      "preparedDocumentsPerCategory": [
+        2,
+        4,
+        101,
+        251
+      ],
+      "workingAccounts": 2,
+      "import250AndReject251": "PASS",
+      "renderedAll100Or250IndividualCredentials": false,
+      "importScaffold": {
+        "status": "PASS",
+        "unitPassed": 30,
+        "finalMessageWebPassed": 10,
+        "integrationPassed": 8,
+        "unitOverlapsFullUnit": true,
+        "integrationDatabase": "demo_test_webqa_20261002",
+        "logs": [
+          ".runtime/sprint-webqa/import-scaffold-unit.log",
+          ".runtime/sprint-webqa/import-message-unit.log",
+          ".runtime/sprint-webqa/import-scaffold-integration.log"
+        ],
+        "behavior": [
+          "sole untouched empty LIVE_V1 row replaced for exactly 100 or 250 recipients",
+          "partial rows and edited-then-cleared row preserved",
+          "recipient-only default and explicit form selection",
+          "stale revision, provenance and overflow rejection leaves no partial write"
+        ]
+      }
+    },
+    "browser": {
+      "status": "PASS_WITH_STATED_LIMITS",
+      "owner": "root",
+      "flows": {
+        "person": {
+          "status": "PASS",
+          "marker": "BROWSER_PERSON_FINAL",
+          "requestId": "9164e407-569b-4a2b-af7e-2a174fdd8fd3",
+          "incompleteApprovalRevision": 3,
+          "incompleteApprovalStatus": 422,
+          "programSavedRevision": 4,
+          "firstApprovedRevision": 5,
+          "approvedRevision": 6,
+          "changedApprovedDataRequiredNewApproval": true,
+          "correctionRequestId": "4d98230c-7941-48fb-9223-37ce6db51f57",
+          "correctionApprovedRevision": 1,
+          "correctedPdfs": 2,
+          "correctedArtifacts": 6,
+          "evidence": [
+            ".runtime/first-live-iteration/sprint-browser-evidence/01-error-focus.png",
+            ".runtime/first-live-iteration/sprint-browser-evidence/02-director-incomplete.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/03-corrected.png",
+            ".runtime/first-live-iteration/sprint-browser-evidence/04-reloaded-both-forms.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/05-new-revision-pending.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/06-prepared-by-manager.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/13-person-pdf-open.png",
+            ".runtime/first-live-iteration/sprint-browser-evidence/15-person-corrected-prepared.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/person-corrected-summary.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/pdf-qa-corrected-evidence.json"
+          ]
+        },
+        "company": {
+          "status": "PASS",
+          "marker": "BROWSER_COMPANY_FINAL",
+          "requestId": "8f813515-c85b-4cda-8fef-63a67004dc6e",
+          "returnedRevision": 9,
+          "approvedRevision": 10,
+          "directorRejectionReasonVisible": true,
+          "explicitKzRetainedAfterReload": true,
+          "correctionRequestId": "b1c24d11-c03d-4f28-82e0-bfdfe0795dac",
+          "correctionApprovedRevision": 1,
+          "correctedPdfs": 4,
+          "correctedArtifacts": 10,
+          "evidence": [
+            ".runtime/first-live-iteration/sprint-browser-evidence/07-company-kz-reloaded.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/08-return-reason-visible.png",
+            ".runtime/first-live-iteration/sprint-browser-evidence/08-return-reason-visible.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/16-company-corrected-prepared.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/company-corrected-summary.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/21-corrected-pdf-browser.png",
+            ".runtime/first-live-iteration/sprint-browser-evidence/21-corrected-pdf-browser.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/download-verification.json",
+            ".runtime/first-live-iteration/sprint-browser-evidence/pdf-qa-corrected-evidence.json",
+            ".runtime/first-live-iteration/sprint-browser-evidence/22-final-pdf-preview.png"
+          ]
+        },
+        "mass": {
+          "status": "PASS_WITH_STATED_LIMITS",
+          "marker": "BROWSER_MASS_FINAL",
+          "requestId": "b2a42370-12c8-4dc5-b175-46ac04299de9",
+          "recipients": 250,
+          "importedRevision": 3,
+          "initialAssignments": 0,
+          "validatedWorkingRevision": 6,
+          "approvalStatus": "PENDING",
+          "plannedDocuments": 251,
+          "renderedDocuments": 0,
+          "oneSharedEmployerProgramEvent": true,
+          "allRowsSyntheticPassedWithSource": true,
+          "lastRowFilterAndReloadValidation": "PASS",
+          "independentSavedDataChecksPassed": 17,
+          "smallerFlow": {
+            "requestId": "68c0e203-3723-4ab5-853f-20f84c3cad90",
+            "recipients": 100,
+            "workingRevision": 8,
+            "plannedDocuments": 101,
+            "approvalStatus": "PENDING",
+            "independentSavedDataChecksPassed": 13,
+            "row100IsolatedEdit": "PASS"
+          },
+          "evidence": [
+            ".runtime/first-live-iteration/sprint-browser-evidence/11-mass-100-validated.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/12-mass-filter.png",
+            ".runtime/first-live-iteration/sprint-browser-evidence/17-import250-mapping.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/18-import250-no-training.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/19-import250-validated.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/20-import250-filter.png",
+            ".runtime/first-live-iteration/sprint-browser-evidence/20-import250-filter.txt",
+            ".runtime/first-live-iteration/sprint-browser-evidence/b2a42370-12c8-4dc5-b175-46ac04299de9.json",
+            ".runtime/first-live-iteration/sprint-browser-evidence/mass250-qa-evidence.json",
+            ".runtime/first-live-iteration/sprint-browser-evidence/pdf-qa-corrected-evidence.json"
+          ]
+        }
+      },
+      "scope": "Manager/director UI flows, saved PDFs, browser PDF view/download and mass import/validation. Native print dialog and physical print not verified; mass 251 PDFs not rendered."
+    },
+    "publication": {
+      "checkpointPush": "224c1bd_INITIAL_USER_AUTHORIZATION",
+      "checkpointVercelPreviewCreated": 5,
+      "checkpointVercelPreviewFailed": 1,
+      "pushesAfterCheckpoint": 0,
+      "deploymentsInLocalContinuation": "NOT_PERFORMED",
+      "productionReadOnlyAudit": "FOUR_VERCEL_CURRENT_AND_FOUR_RAILWAY_ACTIVE_RETAIN_0a44022",
+      "productionSourceCommit": "0a44022",
+      "productionAuditEvidence": ".runtime/no-deploy-audit-20261002/*.txt",
+      "productionBusinessDataChanged": false
+    },
+    "limits": {
+      "fullHistoricalVerifyAndCi": "NOT_CLAIMED",
+      "physicalPrinting": "NOT_VERIFIED",
+      "realElectronicSignature": "NOT_VERIFIED_EXTERNAL_DEPENDENCY",
+      "governmentRegistry": "NOT_CONNECTED",
+      "legalApproval": "NOT_ESTABLISHED",
+      "humanComparativeUsabilityStudy": "NOT_RUN",
+      "productionAcceptance": "NOT_PERFORMED",
+      "nativePrintDialog": "NOT_VERIFIED",
+      "renderedAll251MassPdfs": "NOT_PERFORMED"
+    },
+    "historicalMatrixEntriesPreserved": true
   }
 }

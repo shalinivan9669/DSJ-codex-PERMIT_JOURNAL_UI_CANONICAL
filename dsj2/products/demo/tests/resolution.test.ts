@@ -6,6 +6,8 @@ import {
   documentPlan,
   commonFieldsSchema,
   resolveRecipientText,
+  applyBusinessRules,
+  eventProtocolAssignment,
 } from "../packages/contracts/src";
 
 test("one supplied spelling resolves both print languages without changing the raw draft or inventing English", () => {
@@ -183,4 +185,92 @@ test("one group protocol with failed/absent/unknown members and no positive cred
   assert.equal(plan.groups.length, 1);
   assert.equal(plan.groups[0].members.length, 4);
   assert.equal(plan.documentCount, 2);
+});
+
+test("live print kits inherit the effective issue date for an omitted protocol date without changing saved input", () => {
+  for (const templateId of [
+    "ptm-card",
+    "biot-worker-card",
+    "biot-itr-certificate",
+  ] as const) {
+    const input = applyBusinessRules(
+      draftSchema.parse({
+        kind: "PERSON",
+        schemaVersion: 2,
+        commonFields: { documentDate: "2026-10-02" },
+        items: [
+          {
+            id: "person",
+            fullNameRu: "Synthetic date regression",
+            assignments: [{ id: "kit", templateId }],
+          },
+        ],
+      }),
+    );
+    const saved = JSON.stringify(input);
+    const resolved = resolveDraft(input);
+    for (const assignment of resolved.draft.items[0].assignments) {
+      assert.equal(assignment.protocolDate, "2026-10-02", templateId);
+      assert.equal(assignment.documentDate, "2026-10-02", templateId);
+      assert.equal(
+        resolved.provenance[`person:${assignment.id}`].protocolDate,
+        "AUTO",
+      );
+    }
+    assert.equal(JSON.stringify(input), saved);
+  }
+});
+
+test("explicit, calculated and cleared protocol dates retain precedence over the live issue-date fallback", () => {
+  for (const origin of ["MANUAL", "IMPORTED", "CLEARED"] as const) {
+    const input = applyBusinessRules(
+      draftSchema.parse({
+        kind: "PERSON",
+        schemaVersion: 2,
+        commonFields: { documentDate: "2026-10-02" },
+        items: [
+          {
+            id: "person",
+            assignments: [
+              {
+                id: "kit",
+                templateId: "ptm-card",
+                protocolDate: origin === "CLEARED" ? "" : "2026-09-30",
+                fieldOrigins: { protocolDate: origin },
+              },
+            ],
+          },
+        ],
+      }),
+    );
+    const result = resolveDraft(input);
+    const resolved = result.draft;
+    for (const assignment of resolved.items[0].assignments)
+      assert.equal(
+        assignment.protocolDate,
+        origin === "CLEARED" ? "" : "2026-09-30",
+      );
+    assert.equal(resolved.items[0].assignments[0].documentDate, "2026-10-02");
+    if (origin === "CLEARED")
+      assert.ok(
+        result.issues.some((issue) => issue.code === "PROTOCOL_DATE_REQUIRED"),
+      );
+    else assert.deepEqual(result.issues, []);
+  }
+});
+
+test("a group protocol and its credential bases use the shared event date even with a later individual issue date", () => {
+  const input = fixture();
+  input.businessRuleVersion = "LIVE_V1";
+  input.commonFields!.documentDate = "2026-10-02";
+  input.events![0].commonFields.documentDate = "2026-10-03";
+  input.items[0].assignments[0].documentDate = "2026-10-08";
+  input.items[0].assignments[0].fieldOrigins = { documentDate: "MANUAL" };
+  const resolved = resolveDraft(input).draft;
+  const member = resolved.items[0].assignments[0];
+  const protocol = eventProtocolAssignment(resolved.events![0], member);
+  assert.equal(member.documentDate, "2026-10-08");
+  assert.equal(member.protocolDate, "2026-10-03");
+  assert.equal(protocol.documentDate, "2026-10-03");
+  assert.equal(protocol.protocolDate, "2026-10-03");
 });

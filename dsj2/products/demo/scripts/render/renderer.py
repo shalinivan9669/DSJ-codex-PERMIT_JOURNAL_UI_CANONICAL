@@ -330,6 +330,14 @@ def render_one(snapshot,item,template):
         if original_form and name!='word/document.xml' and name not in field_parts and b'gfxdata' not in data:continue
         root=E.fromstring(data)
         if original_form and name=='word/document.xml':
+            if snapshot['templateId']=='biot-worker-card':
+                # The first retained front uses a series merge key in its Kazakh
+                # position line. Repair that labelled slot, including split runs,
+                # without altering series fields elsewhere or the template bytes.
+                for paragraph in root.iter(W+'p'):
+                    nodes=paragraph.xpath('./w:r/w:t | ./w:hyperlink/w:r/w:t',namespaces=NS)
+                    if 'Лауазымы' in ''.join(n.text or '' for n in nodes):
+                        replace_text_nodes(nodes,re.escape('{{SERIES}}'),'{{POSITION_KZ}}')
             if snapshot['templateId'].endswith('-card'):
                 # Original card merge keys reused issue-day aliases in protocol
                 # and expiry bands. Resolve by the printed field context, while
@@ -372,11 +380,32 @@ def render_one(snapshot,item,template):
                     if props.find(W+'cantSplit') is None:E.SubElement(props,W+'cantSplit')
             if snapshot['templateId']=='ps-witness':
                 for table in root.iter(W+'tbl'):
-                    if 'Біліктілік комиссиясының' in ''.join(table.itertext()):
-                        for node in table.iter(W+'t'):node.text=(node.text or '').replace('{{DOCUMENT_','{{PROTOCOL_').replace('{{ISSUE_','{{PROTOCOL_').replace('{{TRAINING_END_YEAR_FULL}}','{{PROTOCOL_YEAR}}')
+                    # Only the decision's leaf table owns the protocol date.
+                    # The outer booklet table also contains this label together
+                    # with the independent issue and training dates.
+                    if len(list(table.iter(W+'tbl')))!=1:continue
+                    rows=table.findall(W+'tr')
+                    cells=rows[0].findall(W+'tc') if rows else []
+                    if len(cells)==7 and 'Біліктілік комиссиясының' in ''.join(cells[0].itertext()):
+                        for paragraph in table.iter(W+'p'):
+                            nodes=paragraph.xpath('./w:r/w:t | ./w:hyperlink/w:r/w:t',namespaces=NS)
+                            replace_text_nodes(nodes,re.escape('{{TRAINING_END_YEAR_FULL}}'),'{{PROTOCOL_YEAR}}')
+                        # The retained source put a month in the quoted day cell
+                        # and left the actual month cell empty. Populate those
+                        # existing cells without changing the source geometry.
+                        day_nodes=list(cells[4].iter(W+'t'))
+                        if '{{TRAINING_END_MONTH_KZ}}' in ''.join(n.text or '' for n in day_nodes) and not ''.join(cells[6].itertext()).strip():
+                            replace_text_nodes(day_nodes,re.escape('{{TRAINING_END_MONTH_KZ}}'),'{{PROTOCOL_DAY}}')
+                            paragraph=cells[6].find(W+'p')
+                            if paragraph is None:paragraph=E.SubElement(cells[6],W+'p')
+                            node=next(paragraph.iter(W+'t'),None)
+                            if node is None:node=E.SubElement(E.SubElement(paragraph,W+'r'),W+'t')
+                            node.text='{{PROTOCOL_MONTH_KZ}}'
                 for paragraph in root.iter(W+'p'):
                     if 'Решением квалификационной' in ''.join(paragraph.itertext()):
-                        for node in paragraph.iter(W+'t'):node.text=(node.text or '').replace('{{DOCUMENT_','{{PROTOCOL_').replace('{{ISSUE_','{{PROTOCOL_').replace('{{TRAINING_END_YEAR_FULL}}','{{PROTOCOL_YEAR}}')
+                        nodes=paragraph.xpath('./w:r/w:t | ./w:hyperlink/w:r/w:t',namespaces=NS)
+                        replace_text_nodes(nodes,r'\{\{(?:DOCUMENT|ISSUE)_','{{PROTOCOL_')
+                        replace_text_nodes(nodes,re.escape('{{TRAINING_END_YEAR_FULL}}'),'{{PROTOCOL_YEAR}}')
             if snapshot['templateId'].endswith('-protocol'):
                 approval_seen=False
                 for node in root.iter(W+'t'):
@@ -393,6 +422,16 @@ def render_one(snapshot,item,template):
                 nodes[0].text='{{ISSUER_RU}}'
                 for n in nodes[1:]:n.text=''
             else:replace_text_nodes(nodes,r'ТОО\s+Аттестац\w*','')
+        if snapshot['templateId']=='ps-card':
+            # The restored bilingual form repeats the same shared subject/result
+            # merge key on both sides of a slash. Keep one occurrence per field,
+            # including split Word runs; never deduplicate user-supplied wording
+            # or independent RU/KZ name and profession fields.
+            for paragraph in root.iter(W+'p'):
+                nodes=paragraph.xpath('./w:r/w:t | ./w:hyperlink/w:r/w:t',namespaces=NS)
+                for token in ['SUBJECT','RESULT']:
+                    key=re.escape('{{'+token+'}}')
+                    replace_text_nodes(nodes,key+r'(?:\s*/\s*'+key+r')+','{{'+token+'}}')
         if snapshot['templateId']=='ps-card' and not original_form:
             for p in root.iter(W+'p'):
                 nodes=p.xpath('./w:r/w:t',namespaces=NS);label=' '.join(''.join(n.text or '' for n in nodes).split())

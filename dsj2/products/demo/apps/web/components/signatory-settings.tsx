@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Notice } from "@demo/ui";
+import { isDirectorRole } from "@demo/contracts";
 import { api, errorText, json } from "@/lib/api";
 
 type Signatory = {
@@ -43,7 +44,7 @@ export function SignatorySettings() {
       user.active !== false &&
       !user.disabled &&
       ["ADMIN", "DIRECTOR", "OPERATOR"].includes(user.role) &&
-      (role !== "DIRECTOR" || user.role === "DIRECTOR"),
+      (role !== "DIRECTOR" || isDirectorRole(user.role)),
   );
   const load = useCallback(async () => {
     const [bindings, directory] = await Promise.all([
@@ -92,7 +93,12 @@ export function SignatorySettings() {
   }
   return (
     <>
-      <h2>Подписанты документов</h2>
+      <h2>Подписанты ЭЦП</h2>
+      <Notice kind="info">
+        Согласования директора достаточно для подготовки и печати документов.
+        Этот раздел нужен для официального подписания ЭЦП. ФИО комиссии
+        заполняются в реквизитах центра и не требуют отдельных учётных записей.
+      </Notice>
       <p>
         Свяжите учётную запись подписанта с ИИН владельца ЭЦП. Председатель и
         члены комиссии должны соответствовать утверждённому профилю учебного
@@ -163,7 +169,9 @@ export function SignatorySettings() {
               setRole(nextRole);
               if (
                 nextRole === "DIRECTOR" &&
-                users.find((user) => user.id === userId)?.role !== "DIRECTOR"
+                !isDirectorRole(
+                  users.find((user) => user.id === userId)?.role || "",
+                )
               ) {
                 setUserId("");
                 setDisplayName("");

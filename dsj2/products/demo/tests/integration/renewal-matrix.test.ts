@@ -13,7 +13,9 @@ import {
   evidenceMatrix,
   scanRenewals,
 } from "../../apps/api/src/renewal-matrix";
-import { createRequest } from "../../apps/api/src/requests";
+import { createRequest, finalize } from "../../apps/api/src/requests";
+import { provision } from "../../scripts/setup";
+import { createApprovalFixture } from "./live-approval-fixture";
 import { assertTestDatabase } from "./test-database";
 
 function code(expected: string) {
@@ -27,8 +29,9 @@ function code(expected: string) {
 
 test("pinned policy requirements, mixed-employer scope, explicit history scan and source-based matrix", async (t) => {
   assertTestDatabase();
+  t.after(() => db.$disconnect());
   const tenant = await db.tenant.create({
-    data: { name: "Синтетический центр матрицы" },
+    data: { name: "Синтетический центр матрицы", demoOnly: true },
   });
   const foreign = await db.tenant.create({
     data: { name: "Другой центр матрицы" },
@@ -50,6 +53,14 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  await provision({
+    email: user.email,
+    password: "Synthetic-renewal-fixture!",
+    name: tenant.name,
+    sample: true,
+  });
+  const approvals = await createApprovalFixture(c);
+  t.after(() => approvals.close());
   const ca = await db.customerOrganization.create({
     data: { tenantId: tenant.id, nameRu: "Работодатель A" },
   });
@@ -111,11 +122,12 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
     },
   });
   const eventId = randomUUID();
-  const draft = draftSchema.parse({
+  let draft = draftSchema.parse({
     kind: "COMPANY",
     customerId: ca.id,
     title: "Общее событие двух работодателей",
     demoMode: true,
+    commonFields: { documentDate: "2026-09-24" },
     events: [
       {
         id: eventId,
@@ -124,6 +136,9 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
         serviceRuleVersionId: rule.id,
         commonFields: {
           protocolDate: "2026-09-24",
+          documentDate: "2026-09-24",
+          trainingStart: "2026-09-23",
+          trainingEnd: "2026-09-24",
           trainingSubject: rule.title,
         },
       },
@@ -134,6 +149,7 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
         recipientId: person.id,
         employerId: index === 0 ? ca.id : cb.id,
         fullNameRu: `Участник ${index}`,
+        positionRu: "Синтетическая должность",
         assignments: [
           assignmentSchema.parse({
             id: randomUUID(),
@@ -144,7 +160,11 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
             trainingSubject: rule.title,
             protocolDate: "2026-09-24",
             documentDate: "2026-09-24",
-            validUntil: "2099-09-24",
+            trainingStart: "2026-09-23",
+            trainingEnd: "2026-09-24",
+            hours: "16",
+            productionHours: "16",
+            result: "Сдал",
             outcome: {
               status: "PASSED",
               source: "Синтетический фактический результат",
@@ -155,6 +175,14 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
     ),
   });
   const request = await createRequest(c, draft);
+  await approvals.approve(request.id);
+  draft = draftSchema.parse(
+    (
+      await db.printRequest.findUniqueOrThrow({
+        where: { id: request.id },
+      })
+    ).draft,
+  );
   const orderA = await value.createServiceOrder(c, {
     title: "Заказ A",
     customerId: ca.id,
@@ -249,7 +277,7 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
       assert.equal(portal.orders[0].requests[0].fullRosterAllowed, false);
       await value.submitEmployerProposal(employerContext, orderB.id, {
         requestId: request.id,
-        requestRevision: 0,
+        requestRevision: request.revision,
         kind: "UPDATE_LIST",
         changes: [
           { rowId: draft.items[1].id, positionRu: "Согласованная должность" },
@@ -258,7 +286,7 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
       await assert.rejects(
         value.submitEmployerProposal(employerContext, orderB.id, {
           requestId: request.id,
-          requestRevision: 0,
+          requestRevision: request.revision,
           kind: "UPDATE_LIST",
           changes: [{ rowId: draft.items[0].id, fullNameRu: "Не разрешено" }],
         }),
@@ -267,7 +295,7 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
       await assert.rejects(
         value.submitEmployerProposal(employerContext, orderB.id, {
           requestId: request.id,
-          requestRevision: 0,
+          requestRevision: request.revision,
           kind: "CONFIRM_LIST",
         }),
         code("FULL_ROSTER_DENIED"),
@@ -350,50 +378,32 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
     },
   );
 
-  // Synthetic immutable history, not a claim that rendering/physical printing ran.
-  const profile = await db.issuerProfileVersion.create({
-    data: { tenantId: tenant.id, version: 1, profile: {}, createdBy: user.id },
+  // Real approval and immutable numbered history. Generation jobs remain queued;
+  // this matrix regression does not claim physical printing or verified signatures.
+  await finalize(
+    c,
+    request.id,
+    { expectedRevision: request.revision },
+    randomUUID(),
+  );
+  const issuance = await db.issuance.findUniqueOrThrow({
+    where: {
+      requestId_sourceRevision: {
+        requestId: request.id,
+        sourceRevision: request.revision,
+      },
+    },
   });
-  const template = await db.templateVersion.create({
-    data: {
+  const template = await db.templateVersion.findFirstOrThrow({
+    where: {
       tenantId: tenant.id,
       templateId: "biot-worker-card",
-      version: "test",
-      checksum: "test",
-      storageKey: randomUUID(),
-      contract: {},
+      approved: true,
     },
   });
-  const issuance = await db.issuance.create({
-    data: {
-      tenantId: tenant.id,
-      requestId: request.id,
-      sourceRevision: 0,
-      snapshot: json({ draft }),
-      inputHash: "test",
-      profileVersionId: profile.id,
-      createdBy: user.id,
-    },
+  const reservedBeforeScan = await db.numberReservation.count({
+    where: { tenantId: tenant.id },
   });
-  await db.printRequest.update({
-    where: { id: request.id },
-    data: { status: "FINALIZED" },
-  });
-  for (const row of draft.items)
-    await db.issuedDocument.create({
-      data: {
-        tenantId: tenant.id,
-        requestId: request.id,
-        issuanceId: issuance.id,
-        rowId: row.id,
-        assignmentId: row.assignments[0].id,
-        templateVersionId: template.id,
-        templateId: template.templateId,
-        namespace: "BIOT:CARD",
-        number: `SAVED-${row.id}`,
-        documentDate: "2026-09-24",
-      },
-    });
 
   await t.test(
     "database refuses a GROUP owner with null event revision before any deferred membership checks",
@@ -443,7 +453,22 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
           },
         ],
       });
-      const missingRequest = await createRequest(c, missingDraft);
+      // A distinct synthetic pre-approval-policy history record models legacy
+      // incomplete archives. Never downgrade a current request's policy.
+      const missingRequest = await db.printRequest.create({
+        data: {
+          tenantId: tenant.id,
+          kind: "COMPANY",
+          title: "Synthetic legacy history without actual dates",
+          customerId: ca.id,
+          status: "FINALIZED",
+          approvalPolicy: false,
+          demoMode: true,
+          draft: json(missingDraft),
+          itemCount: missingDraft.items.length,
+          createdBy: user.id,
+        },
+      });
       const missingIssuance = await db.issuance.create({
         data: {
           tenantId: tenant.id,
@@ -451,13 +476,9 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
           sourceRevision: 0,
           snapshot: json({ draft: missingDraft }),
           inputHash: "test-missing-dates",
-          profileVersionId: profile.id,
+          profileVersionId: issuance.profileVersionId,
           createdBy: user.id,
         },
-      });
-      await db.printRequest.update({
-        where: { id: missingRequest.id },
-        data: { status: "FINALIZED" },
       });
       await db.issuedDocument.create({
         data: {
@@ -499,12 +520,12 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
         ),
       );
       assert.equal(result.nextCursor, null);
-      assert.equal(result.items[0].contactAfter, "2099-08-25");
+      assert.equal(result.items[0].contactAfter, "2027-08-25");
       assert.ok(
         result.items.every(
           (item) =>
             item.basisDate === "2026-09-24" &&
-            item.documentValidUntil === "2099-09-24" &&
+            item.documentValidUntil === "2027-09-24" &&
             item.nextCheckDate === null &&
             item.state === "NEEDS_REVIEW",
         ),
@@ -524,7 +545,7 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
         repeat.items.find((item) => item.id === result.items[0].id)!.state,
         "IRRELEVANT",
       );
-      assert.equal(repeat.items[0].contactAfter, "2099-08-25");
+      assert.equal(repeat.items[0].contactAfter, "2027-08-25");
       await assert.rejects(
         scanRenewals({ ...c, role: "OPERATOR" }, input),
         code("ROLE_DENIED"),
@@ -539,7 +560,7 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
       );
       assert.equal(
         await db.numberReservation.count({ where: { tenantId: tenant.id } }),
-        0,
+        reservedBeforeScan,
       );
     },
   );
@@ -633,5 +654,4 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
       );
     },
   );
-  await db.$disconnect();
 });

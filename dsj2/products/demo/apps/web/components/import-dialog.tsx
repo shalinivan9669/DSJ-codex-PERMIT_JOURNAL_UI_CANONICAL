@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
+  initialImportScaffoldId,
   LIMITS,
   type BiotCategory,
   type TrainingEventInput,
@@ -16,10 +17,12 @@ import {
 import { api, errorText, json } from "@/lib/api";
 import {
   importFields,
+  importApplyErrorText,
   inferMapping,
   importIssueText,
   importRowIssueText,
   mapImportRow,
+  initialImportTemplate,
   type ImportPreview,
 } from "@/lib/imports";
 import { templateLabels, type Assignment, type Draft } from "@/lib/types";
@@ -39,7 +42,7 @@ type Reconciliation = {
 
 export function ImportDialog({
   requestId,
-  existingCount,
+  existingDraft,
   existingImportIds,
   bundleEvent,
   flush,
@@ -47,7 +50,7 @@ export function ImportDialog({
   onApplied,
 }: {
   requestId: string;
-  existingCount: number;
+  existingDraft: Draft;
   existingImportIds: string[];
   bundleEvent?: TrainingEventInput;
   flush: () => Promise<number>;
@@ -71,11 +74,11 @@ export function ImportDialog({
   const bundle = Object.values(requestBundles).find(
     (choice) => choice.protocol === bundleEvent?.protocolTemplateId,
   );
-  const [templateId, setTemplateId] = useState<Assignment["templateId"]>(
-    bundle?.card || "biot-worker-card",
+  const [templateId, setTemplateId] = useState<Assignment["templateId"] | "">(
+    initialImportTemplate(bundleEvent),
   );
   const [biotCategory, setBiotCategory] = useState<BiotCategory | undefined>(
-    bundleEvent?.commonFields.biotCategory || "WORKER",
+    bundleEvent?.commonFields.biotCategory,
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -266,7 +269,7 @@ export function ImportDialog({
       });
       onApplied(result);
     } catch (caught) {
-      setError(errorText(caught));
+      setError(importApplyErrorText(caught, replacesStarter));
     } finally {
       setBusy(false);
     }
@@ -307,11 +310,19 @@ export function ImportDialog({
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   const repeated = !!preview && existingImportIds.includes(preview.importId);
+  const existingCount = existingDraft.items.length;
+  const replacesStarter =
+    !revisionMode &&
+    !repeated &&
+    selected.length > 0 &&
+    !!initialImportScaffoldId(existingDraft);
   const total = revisionMode
     ? reconciliation
       ? reconciliation.retainedTotal - exclusions.length
       : existingCount
-    : existingCount + (repeated ? 0 : selected.length);
+    : existingCount -
+      (replacesStarter ? 1 : 0) +
+      (repeated ? 0 : selected.length);
   const mappedFields = mapping.filter(Boolean);
   const duplicateMapping = new Set(mappedFields).size !== mappedFields.length;
   return (
@@ -616,12 +627,18 @@ export function ImportDialog({
               <select
                 value={templateId}
                 onChange={(event) => {
-                  const nextTemplate = event.target
-                    .value as Assignment["templateId"];
+                  const nextTemplate = event.target.value as
+                    | Assignment["templateId"]
+                    | "";
                   setTemplateId(nextTemplate);
-                  setBiotCategory(defaultBiotCategory(nextTemplate));
+                  setBiotCategory(
+                    nextTemplate
+                      ? defaultBiotCategory(nextTemplate)
+                      : undefined,
+                  );
                 }}
               >
+                <option value="">Без обучения — выбрать после импорта</option>
                 {Object.entries(templateLabels).map(([id, title]) => (
                   <option key={id} value={id}>
                     {title}
@@ -629,7 +646,7 @@ export function ImportDialog({
                 ))}
               </select>
             </label>
-            {biotCategory && (
+            {biotCategory && templateId && (
               <label>
                 Категория БиОТ для импортируемых строк
                 <select
@@ -652,6 +669,13 @@ export function ImportDialog({
               </label>
             )}
           </div>
+          {replacesStarter && (
+            <p className="muted">
+              Нетронутая стартовая строка заменится импортируемым списком. Ранее
+              заполненная и затем очищенная строка сохранится и будет
+              учитываться в лимите.
+            </p>
+          )}
           {repeated && (
             <Notice kind="info">
               Этот файл уже добавлен в заявку. Повторные строки не будут

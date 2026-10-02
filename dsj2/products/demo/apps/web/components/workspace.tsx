@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Icon, Notice } from "@demo/ui";
+import { isDirectorRole } from "@demo/contracts";
+import { workspaceStartPath } from "@/lib/user-roles";
 import {
   api,
   ApiError,
@@ -67,13 +69,7 @@ export function Workspace() {
   useEffect(() => {
     if (context && (pathname === "/login" || pathname === "/register"))
       router.replace(
-        context.user.role === "EMPLOYER"
-          ? "/portal"
-          : context.user.role === "DIRECTOR"
-            ? "/approvals"
-            : pathname === "/register"
-              ? "/onboarding"
-              : "/requests",
+        workspaceStartPath(context.user.role, pathname === "/register"),
       );
   }, [context, pathname, router]);
   async function logout() {
@@ -149,7 +145,7 @@ export function Workspace() {
                 ["requests", "Заявки"],
                 [
                   "approvals",
-                  context.user.role === "DIRECTOR"
+                  isDirectorRole(context.user.role)
                     ? "Кабинет директора"
                     : "Согласование",
                 ],
@@ -312,7 +308,7 @@ function Login({ onLogin }: { onLogin: () => Promise<void> }) {
             {busy ? "Входим…" : "Войти"}
           </button>
           <p className="fine-print">
-            Нет доступа? Обратитесь к администратору вашего центра.
+            Нет доступа? Обратитесь к директору вашего центра.
           </p>
           <p>
             <Link href="/register">Зарегистрировать учебный центр</Link>

@@ -1,4 +1,5 @@
-import { newAssignment, type Recipient } from "./types";
+import { newAssignment, type Assignment, type Recipient } from "./types";
+import { ApiError, errorText } from "./api";
 import {
   BIOT_CATEGORIES,
   biotValidUntil,
@@ -6,6 +7,7 @@ import {
   LIMITS,
   type BiotCategory,
   type EmployeeCategory,
+  type TrainingEventInput,
 } from "@demo/contracts";
 import {
   biotCategoriesForTemplate,
@@ -30,6 +32,21 @@ export type ImportPreview = {
     | { code?: string; message?: string; count?: number; limit?: number }
   )[];
 };
+export function importApplyErrorText(
+  error: unknown,
+  starterCandidate: boolean,
+): string {
+  const details = error instanceof ApiError ? error.details : undefined;
+  const retainedStarterLimit =
+    starterCandidate &&
+    details &&
+    typeof details === "object" &&
+    "code" in details &&
+    details.code === "ROW_LIMIT";
+  return retainedStarterLimit
+    ? `${errorText(error)} Ранее заполненная, затем очищенная строка не удаляется автоматически и учитывается в лимите. Закройте импорт, явно удалите ненужную пустую строку и повторите импорт либо выберите не более ${LIMITS.rows - 1} исходных строк.`
+    : errorText(error);
+}
 export function importIssueText(
   issue: NonNullable<ImportPreview["errors"]>[number],
 ): string {
@@ -158,11 +175,42 @@ export function importedEmployeeCategory(
     `Исходная строка ${sourceRow}: категория сотрудника должна быть «Рабочий» (WORKER) или «ИТР» (ITR). Должность не определяет категорию автоматически.`,
   );
 }
+const recipientImportFields = [
+  "externalId",
+  "personnelNumber",
+  "employerId",
+  "fullNameRu",
+  "fullNameKz",
+  "fullNameEn",
+  "positionRu",
+  "positionKz",
+  "positionEn",
+  "workplaceRu",
+  "workplaceKz",
+  "workplaceEn",
+  "departmentRu",
+  "departmentKz",
+  "departmentEn",
+  "employerBin",
+  "employerAddressRu",
+  "employerAddressKz",
+  "employerAddressEn",
+];
+
+export function initialImportTemplate(
+  event?: TrainingEventInput,
+): Assignment["templateId"] | "" {
+  if (event?.protocolTemplateId === "biot-protocol") return "biot-worker-card";
+  if (event?.protocolTemplateId === "biot-itr-protocol")
+    return "biot-itr-certificate";
+  return "";
+}
+
 export function mapImportRow(
   preview: ImportPreview,
   row: ImportRow,
   mapping: string[],
-  templateId: Parameters<typeof newAssignment>[0],
+  templateId: Assignment["templateId"] | "",
   category?: BiotCategory,
 ): Recipient {
   const id = `${preview.importId.slice(0, 55)}-${row.sourceRow}`;
@@ -171,6 +219,19 @@ export function mapImportRow(
     employeeColumn < 0 ? "" : String(row.values[employeeColumn] ?? ""),
     row.sourceRow,
   );
+  if (!templateId) {
+    const trainingColumn = mapping.findIndex(
+      (field, index) =>
+        field !== "employeeCategory" &&
+        !recipientImportFields.includes(field) &&
+        importFields.some(([key]) => key === field) &&
+        String(row.values[index] ?? "").trim(),
+    );
+    if (trainingColumn >= 0)
+      throw new Error(
+        `Исходная строка ${row.sourceRow}: выберите документ для переноса учебных данных из колонки «${preview.columns[trainingColumn]}».`,
+      );
+  }
   const resolvedTemplate =
     employeeCategory && templateId?.startsWith("biot-")
       ? templateId.endsWith("-protocol")
@@ -181,7 +242,10 @@ export function mapImportRow(
           ? "biot-itr-certificate"
           : "biot-worker-card"
       : templateId;
-  let assignment = { ...newAssignment(resolvedTemplate), id: `${id}-doc` };
+  let assignment = {
+    ...newAssignment(resolvedTemplate || undefined),
+    id: `${id}-doc`,
+  };
   const categoryColumn = mapping.indexOf("biotCategory");
   const importedCategory =
     categoryColumn < 0 ? "" : String(row.values[categoryColumn] ?? "").trim();
@@ -192,7 +256,7 @@ export function mapImportRow(
     BIOT_CATEGORIES[category].form !== employeeCategory
       ? assignment.biotCategory
       : category);
-  if (selectedCategory) {
+  if (templateId && selectedCategory) {
     const known = (Object.keys(BIOT_CATEGORIES) as BiotCategory[]).find(
       (key) =>
         key === selectedCategory ||
@@ -214,7 +278,7 @@ export function mapImportRow(
     sourceRow: row.sourceRow,
     employeeCategory:
       employeeCategory ||
-      (assignment.biotCategory
+      (templateId && assignment.biotCategory
         ? BIOT_CATEGORIES[assignment.biotCategory].form
         : "WORKER"),
     fullNameRu: "",
@@ -224,33 +288,11 @@ export function mapImportRow(
     workplaceRu: "",
     workplaceKz: "",
     photoAssetId: null,
-    assignments: [assignment],
+    assignments: templateId ? [assignment] : [],
   };
   mapping.forEach((field, index) => {
     const value = String(row.values[index] ?? "");
-    if (
-      [
-        "externalId",
-        "personnelNumber",
-        "employerId",
-        "fullNameRu",
-        "fullNameKz",
-        "fullNameEn",
-        "positionRu",
-        "positionKz",
-        "positionEn",
-        "workplaceRu",
-        "workplaceKz",
-        "workplaceEn",
-        "departmentRu",
-        "departmentKz",
-        "departmentEn",
-        "employerBin",
-        "employerAddressRu",
-        "employerAddressKz",
-        "employerAddressEn",
-      ].includes(field)
-    )
+    if (recipientImportFields.includes(field))
       (result as unknown as Record<string, unknown>)[field] = value;
     else if (field === "biotCheckType") {
       const checkType = (

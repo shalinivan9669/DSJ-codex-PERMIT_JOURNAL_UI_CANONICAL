@@ -1,4 +1,5 @@
 "use client";
+import { canManageCenter } from "@demo/contracts";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Notice } from "@demo/ui";
@@ -52,7 +53,7 @@ export function OrderCoordination({
   const [busy, setBusy] = useState(false);
   const readonly = context.user.role === "VIEWER";
   useEffect(() => {
-    if (["ADMIN", "OPERATOR"].includes(context.user.role))
+    if (canManageCenter(context.user.role) || context.user.role === "OPERATOR")
       void api<{ items: { id: string; displayName: string }[] }>(
         "/staff-directory",
       )

@@ -258,8 +258,16 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
           assignment.protocolDate = assignment.documentDate;
           assignment.fieldOrigins = {
             ...assignment.fieldOrigins,
-            documentDate: assignment.documentDate ? "MANUAL" : "INHERITED",
-            protocolDate: assignment.protocolDate ? "MANUAL" : "INHERITED",
+            documentDate: explicitProtocolDate
+              ? dateOrigin || "MANUAL"
+              : assignment.documentDate
+                ? "MANUAL"
+                : "INHERITED",
+            protocolDate: explicitProtocolDate
+              ? dateOrigin || "MANUAL"
+              : assignment.protocolDate
+                ? "MANUAL"
+                : "INHERITED",
           };
         }
         if (direction === "BIOT") {

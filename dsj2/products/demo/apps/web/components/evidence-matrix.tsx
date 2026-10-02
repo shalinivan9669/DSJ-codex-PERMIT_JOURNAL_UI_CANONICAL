@@ -1,4 +1,5 @@
 "use client";
+import { canManageCenter } from "@demo/contracts";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
@@ -165,7 +166,7 @@ export function EvidenceMatrix({
           ))
         ) : (
           <p>
-            Утверждённых правил нет. Администратор проверяет источник и
+            Утверждённых правил нет. Директор проверяет источник и
             применимость в паспорте услуги.
           </p>
         )}
@@ -202,7 +203,7 @@ export function EvidenceMatrix({
           busy ||
           !selected.length ||
           (scanOnly
-            ? context.user.role !== "ADMIN" ||
+            ? !canManageCenter(context.user.role) ||
               !confirmed ||
               !/^\d+$/.test(lead) ||
               Number(lead) > 365

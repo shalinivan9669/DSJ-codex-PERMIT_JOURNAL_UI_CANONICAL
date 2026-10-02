@@ -128,7 +128,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [dialog, setDialog] = useState<
     | "import"
     | "bulk"
-    | "finalize"
     | "customer"
     | "customerPicker"
     | "recipientPicker"
@@ -579,6 +578,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         initialize(result);
         setDialog(null);
         setRefreshFiles((value) => value + 1);
+        requestAnimationFrame(() => {
+          document
+            .getElementById("request-files")
+            ?.scrollIntoView({ block: "start" });
+        });
       }
     } catch (caught) {
       setError(errorText(caught));
@@ -847,10 +851,35 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       >
         К списку получателей
       </button>
-      {actions.showDocuments && (
+      {actions.showPrepareSigning ? (
+        <button
+          className="primary entry-jump"
+          disabled={actions.prepareSigningDisabled}
+          onClick={() => void command("finalize")}
+        >
+          <Icon name="print" />{" "}
+          {busy === "finalize" ? "Готовим документы…" : "Подготовить документы"}
+        </button>
+      ) : actions.showDocuments ? (
         <a className="button primary entry-jump" href="#request-files">
           <Icon name="print" /> Документы и печать
         </a>
+      ) : (
+        actions.showValidate && (
+          <button
+            className="primary entry-jump"
+            disabled={operationBusy}
+            onClick={() => void command("validate")}
+          >
+            Проверить данные
+          </button>
+        )
+      )}
+      {actions.showPrepareSigning && (
+        <p className="muted">
+          Комплект получит номера и будет готов к печати. Исправления
+          подготовленного комплекта оформляются отдельной заявкой.
+        </p>
       )}
       <button
         className="entry-jump"
@@ -867,7 +896,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           <span>2</span>Проверка и согласование
         </li>
         <li className={readonly ? "active" : ""}>
-          <span>3</span>Подписание и выдача
+          <span>3</span>Документы и печать
         </li>
       </ol>
       <ApprovalBanner
@@ -1584,11 +1613,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         </div>
       )}
       {draft.status !== "DRAFT" && (
-        <SigningPanel
-          requestId={id}
-          role={context.user.role}
-          onChanged={() => void reload()}
-        />
+        <details className="panel">
+          <summary>Электронные подписи</summary>
+          <SigningPanel
+            requestId={id}
+            role={context.user.role}
+            onChanged={() => void reload()}
+          />
+        </details>
       )}
       <FilesPanel
         requestId={id}
@@ -1600,6 +1632,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         }
         readonly={readonly}
         allowPrint={actions.showDocuments}
+        previewPrintAllowed={actions.canPrintCurrentPreview}
         canManage={context.user.role !== "VIEWER"}
         onChanged={() => void reload()}
       />
@@ -1634,7 +1667,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                       void command("save");
                     }}
                   >
-                    Сохранить для согласования
+                    Сохранить изменения
                   </button>
                 )}
                 {actions.showValidate && (
@@ -1674,17 +1707,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   >
                     Состояние согласования
                   </Link>
-                )}
-                {actions.showPrepareSigning && (
-                  <button
-                    disabled={actions.prepareSigningDisabled}
-                    onClick={() => {
-                      closeExtraPanel();
-                      setDialog("finalize");
-                    }}
-                  >
-                    Подготовить к подписанию
-                  </button>
                 )}
                 <button
                   disabled={operationBusy}
@@ -1880,7 +1902,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         <ImportDialog
           requestId={id}
           bundleEvent={draft.events?.length === 1 ? draft.events[0] : undefined}
-          existingCount={draft.items.length}
+          existingDraft={draft}
           existingImportIds={draft.items.flatMap((item) =>
             item.importId ? [item.importId] : [],
           )}
@@ -1945,40 +1967,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             setEmployerTargets(null);
           }}
         />
-      )}
-      {dialog === "finalize" && (
-        <Modal
-          title="Подготовить комплект к подписанию?"
-          onClose={() => {
-            if (!busy) setDialog(null);
-          }}
-        >
-          <p>
-            Будет зафиксирована согласованная директором редакция:{" "}
-            {draft.items.length} получателей, {documentCount} документов. Сервер
-            назначит номера и начнёт подготовку файлов.
-          </p>
-          <p>
-            После подготовки файлы подписывают назначенные подписанты. Только
-            после проверки всех ЭЦП комплект считается выданным и попадает в
-            архив. Исправления оформляются отдельной связанной заявкой.
-          </p>
-          {error && <Notice>{error}</Notice>}
-          <div className="modal-actions">
-            <button disabled={operationBusy} onClick={() => setDialog(null)}>
-              Вернуться к данным
-            </button>
-            <button
-              className="primary"
-              disabled={operationBusy}
-              onClick={() => void command("finalize")}
-            >
-              {busy === "finalize"
-                ? "Подготавливаем…"
-                : "Подготовить к подписанию"}
-            </button>
-          </div>
-        </Modal>
       )}
       {dialog === "conflict" && (
         <Modal

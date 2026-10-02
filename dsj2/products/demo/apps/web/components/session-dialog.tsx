@@ -35,7 +35,7 @@ export function SessionDialog({
         result.tenant.id !== context.tenant.id
       )
         throw new Error(
-          "Учётная запись изменилась. Сохраните введённые данные отдельно и обратитесь к администратору.",
+          "Учётная запись изменилась. Сохраните введённые данные отдельно и обратитесь к директору центра.",
         );
       setCsrf(result.csrfToken);
       const restored = await api<AppContext>("/context");

@@ -1,4 +1,9 @@
-import { draftSchema, today, type Draft } from "@demo/contracts";
+import {
+  draftSchema,
+  today,
+  canManageCenter,
+  type Draft,
+} from "@demo/contracts";
 import {
   evidenceMatrixSchema,
   evidenceState,
@@ -11,7 +16,7 @@ import { ruleApplicabilityIssues } from "./service-rule-applicability";
 function staff(c: Context, admin = false) {
   if (
     !(admin
-      ? c.role === "ADMIN"
+      ? canManageCenter(c.role)
       : ["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role))
   )
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");

@@ -6,6 +6,9 @@ import { db, json, type Context } from "../../apps/api/src/core";
 import { passwordHash } from "../../apps/api/src/auth";
 import { draftSchema, itemSchema } from "../../packages/contracts/src";
 import { createRequest } from "../../apps/api/src/requests";
+import { decideProposal } from "../../apps/api/src/approvals";
+import { saveProfile } from "../../apps/api/src/settings";
+import { provision } from "../../scripts/setup";
 import {
   createEmployerMembership,
   createServiceOrder,
@@ -19,19 +22,32 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
   process.env.PORT = "0";
   process.env.DEMO_ORIGIN = "http://localhost:3100";
   const app = await bootstrap();
+  t.after(async () => {
+    await app.close();
+    await db.$disconnect();
+  });
   const base = await app.getUrl();
   const suffix = randomUUID(),
     password = "Http-Operator-Value-Test!";
-  const tenant = await db.tenant.create({
-    data: { name: "Синтетический HTTP центр", demoOnly: true },
+  const center = await provision({
+    email: `hdirector-${suffix}@example.test`,
+    password,
+    name: "Синтетический HTTP центр",
+    sample: true,
   });
-  const admin = await db.user.create({
+  const tenant = await db.tenant.findUniqueOrThrow({
+    where: { id: center.tenantId },
+  });
+  const director = await db.user.findUniqueOrThrow({
+    where: { id: center.userId },
+  });
+  const manager = await db.user.create({
     data: {
       tenantId: tenant.id,
-      email: `hadmin-${suffix}@example.test`,
-      displayName: "Администратор",
+      email: `hmanager-${suffix}@example.test`,
+      displayName: "Менеджер",
       passwordHash: await passwordHash(password),
-      role: "ADMIN",
+      role: "OPERATOR",
     },
   });
   const employer = await db.user.create({
@@ -51,12 +67,48 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
   });
   const c: Context = {
     tenantId: tenant.id,
-    userId: admin.id,
-    role: "ADMIN",
+    userId: director.id,
+    role: "DIRECTOR",
     sessionId: "test",
     csrfHash: "test",
     correlationId: suffix,
   };
+  const managerContext = { ...c, userId: manager.id, role: "OPERATOR" };
+  const sampleProfile = await db.issuerProfileVersion.findFirstOrThrow({
+    where: { tenantId: tenant.id },
+    orderBy: { version: "desc" },
+  });
+  const profile = await saveProfile(c, {
+    ...(sampleProfile.profile as object),
+    nameRu: "HTTP тестовый эмитент",
+    commission: Array.from({ length: 3 }, (_, index) => ({
+      name: `Закрытое ФИО ${index}`,
+      position: index ? "Член комиссии" : "Председатель",
+    })),
+  });
+  const template = await db.templateVersion.findFirstOrThrow({
+    where: {
+      tenantId: tenant.id,
+      templateId: "biot-worker-card",
+      approved: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const assignment = (id: string) => ({
+    id,
+    templateId: "biot-worker-card",
+    biotCategory: "WORKER",
+    biotCheckType: "PERIODIC",
+    documentDate: "2026-09-24",
+    protocolDate: "2026-09-24",
+    trainingStart: "2026-09-20",
+    trainingEnd: "2026-09-23",
+    trainingSubject: "Синтетическая программа БиОТ",
+    hours: "10",
+    productionHours: "16",
+    result: "Сдал",
+    outcome: { status: "PASSED", source: "Синтетическая проверка знаний" },
+  });
   const currentPerson = await db.recipient.create({
     data: {
       tenantId: tenant.id,
@@ -64,7 +116,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
     },
   });
   const request = await createRequest(
-    c,
+    managerContext,
     draftSchema.parse({
       kind: "COMPANY",
       customerId: customer.id,
@@ -74,14 +126,47 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
           recipientId: currentPerson.id,
           employerId: customer.id,
           fullNameRu: "Свой сотрудник",
+          positionRu: "Монтажник",
+          employeeCategory: "WORKER",
+          assignments: [assignment("own-doc")],
         }),
         itemSchema.parse({
           id: "foreign",
           employerId: other.id,
           fullNameRu: "Тайна другого заказчика",
+          positionRu: "Монтажник",
+          employeeCategory: "WORKER",
+          assignments: [assignment("foreign-doc")],
         }),
       ],
     }),
+  );
+  assert.equal(
+    await db.requestItem.count({ where: { requestId: request.id } }),
+    0,
+  );
+  await assert.rejects(
+    decideProposal(managerContext, request.approval.proposalId, {
+      decision: "APPROVE",
+      reason: "Менеджер не принимает решение директора",
+      expectedProposalHash: request.approval.proposalHash,
+    }),
+    (error: unknown) => {
+      assert.equal(
+        (error as { getResponse(): { code: string } }).getResponse().code,
+        "DIRECTOR_REQUIRED",
+      );
+      return true;
+    },
+  );
+  await decideProposal(c, request.approval.proposalId, {
+    decision: "APPROVE",
+    reason: "Синтетическая проверка заявки",
+    expectedProposalHash: request.approval.proposalHash,
+  });
+  assert.equal(
+    await db.requestItem.count({ where: { requestId: request.id } }),
+    2,
   );
   const order = await createServiceOrder(c, {
     title: "Смешанный заказ",
@@ -93,33 +178,11 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
     userId: employer.id,
     permissions: ["READ", "PROPOSE", "DOWNLOAD", "APPROVE_DATA"],
   });
-  const profile = await db.issuerProfileVersion.create({
-    data: {
-      tenantId: tenant.id,
-      version: 1,
-      profile: {
-        nameRu: "HTTP тестовый эмитент",
-        commission: [{ name: "Закрытое ФИО" }],
-      },
-      createdBy: admin.id,
-    },
-  });
-  const template = await db.templateVersion.create({
-    data: {
-      tenantId: tenant.id,
-      templateId: "biot-worker-card",
-      version: "test",
-      checksum: "test",
-      storageKey: `test-${suffix}`,
-      contract: {},
-      approved: true,
-    },
-  });
   const issuance = await db.issuance.create({
     data: {
       tenantId: tenant.id,
       requestId: request.id,
-      sourceRevision: 0,
+      sourceRevision: request.revision,
       snapshot: json({
         private: "Закрытое ФИО",
         draft: {
@@ -135,7 +198,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
       }),
       inputHash: "test",
       profileVersionId: profile.id,
-      createdBy: admin.id,
+      createdBy: director.id,
     },
   });
   const doc = await db.issuedDocument.create({
@@ -156,7 +219,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
     data: {
       tenantId: tenant.id,
       requestId: request.id,
-      revision: 0,
+      revision: request.revision,
       issuanceId: issuance.id,
       profileVersionId: profile.id,
       input: {},
@@ -305,7 +368,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
     };
   }
   try {
-    const adminSession = await login(admin.email),
+    const directorSession = await login(director.email),
       employerSession = await login(employer.email);
     await t.test(
       "employer context has no center configuration; all direct center surfaces denied",
@@ -347,7 +410,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
               "/orders",
               "POST",
               { title: "CSRF bypass" },
-              adminSession,
+              directorSession,
               { "x-csrf-token": "wrong" },
             )
           ).status,
@@ -461,7 +524,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
               "POST",
               {
                 requestId: request.id,
-                requestRevision: 0,
+                requestRevision: request.revision,
                 kind: "CONFIRM_LIST",
               },
               employerSession,
@@ -533,7 +596,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
               `/employer-memberships/${membership.id}/revoke`,
               "POST",
               {},
-              adminSession,
+              directorSession,
             )
           ).status,
           201,
@@ -559,7 +622,7 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
               `/verification-links/${published.id}/revoke`,
               "POST",
               {},
-              adminSession,
+              directorSession,
             )
           ).status,
           201,

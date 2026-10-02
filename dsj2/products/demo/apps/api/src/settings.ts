@@ -4,6 +4,7 @@ import {
   roleSchema,
   z,
   today,
+  canManageCenter,
 } from "@demo/contracts";
 import {
   db,
@@ -125,6 +126,8 @@ export async function saveCustomer(c: Context, input: unknown, id?: string) {
   });
 }
 export async function saveUser(c: Context, input: unknown, id?: string) {
+  if (!canManageCenter(c.role))
+    fail(403, "ROLE_DENIED", "Сотрудниками центра управляет директор");
   const create = z
     .object({
       email: z.email().max(255),
@@ -148,12 +151,12 @@ export async function saveUser(c: Context, input: unknown, id?: string) {
   if (
     id === c.userId &&
     (("disabled" in data && data.disabled) ||
-      (data.role && data.role !== "ADMIN"))
+      (data.role && !canManageCenter(data.role)))
   )
     fail(
       409,
       "SELF_LOCKOUT",
-      "Для отключения своей учётной записи используйте другого администратора",
+      "Для отключения своей учётной записи используйте другого директора",
     );
   const digest = data.password ? await passwordHash(data.password) : undefined;
   return transaction(async (tx) => {
@@ -163,19 +166,24 @@ export async function saveUser(c: Context, input: unknown, id?: string) {
       : null;
     if (id && !currentTarget) fail(404, "NOT_FOUND", "Пользователь не найден");
     if (
-      currentTarget?.role === "ADMIN" &&
+      currentTarget &&
+      canManageCenter(currentTarget.role) &&
       currentTarget.active &&
-      ((data.role && data.role !== "ADMIN") ||
+      ((data.role && !canManageCenter(data.role)) ||
         ("disabled" in data && data.disabled))
     ) {
       const count = await tx.user.count({
-        where: { tenantId: c.tenantId, role: "ADMIN", active: true },
+        where: {
+          tenantId: c.tenantId,
+          role: { in: ["ADMIN", "DIRECTOR"] },
+          active: true,
+        },
       });
       if (count <= 1)
         fail(
           409,
-          "LAST_ADMIN",
-          "В центре должен остаться действующий администратор",
+          "LAST_DIRECTOR",
+          "В центре должен остаться действующий директор",
         );
     }
     const fields = {
