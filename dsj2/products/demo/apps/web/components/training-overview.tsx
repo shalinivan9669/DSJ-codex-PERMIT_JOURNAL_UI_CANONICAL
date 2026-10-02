@@ -26,7 +26,7 @@ export function TrainingOverview({
         Дата общего протокола задаётся здесь. Дату выдачи комплекта каждому
         человеку можно изменить в его карточке.
       </p>
-      {events.map((event) => {
+      {events.map((event, eventIndex) => {
         const displayedEvent =
           resolvedEvents?.find((row) => row.id === event.id) || event;
         const displayTitle = event.title
@@ -97,6 +97,7 @@ export function TrainingOverview({
               Дата протокола
               <input
                 type="date"
+                data-field-path={`events.${eventIndex}.commonFields.protocolDate`}
                 value={displayedEvent.commonFields.protocolDate || ""}
                 disabled={disabled}
                 onChange={(change) =>

@@ -30,6 +30,7 @@ export type RecipientGridProps = {
   }) => void;
   onAdd: () => void;
   canAdd: boolean;
+  active?: boolean;
 };
 
 const columns: readonly (readonly [GridField, string])[] = [
@@ -55,7 +56,9 @@ export function RecipientGrid({
   onPaste,
   onAdd,
   canAdd,
+  active = true,
 }: RecipientGridProps) {
+  const root = useRef<HTMLDivElement>(null);
   const inputs = useRef(new Map<string, HTMLInputElement>());
   const instanceId = useId();
   const helpId = `${instanceId}-help`;
@@ -84,9 +87,11 @@ export function RecipientGrid({
   ).length;
 
   useEffect(() => {
+    if (!active) return;
     let revealFrame = 0;
     let focusFrame = 0;
     function focusField(event: Event) {
+      if (!root.current?.getClientRects().length) return;
       const path = (event as CustomEvent<string>).detail;
       const match = /^items\.(\d+)\.([^.]+)$/.exec(path || "");
       if (!match || !gridColumns.some(([field]) => field === match[2])) return;
@@ -114,7 +119,7 @@ export function RecipientGrid({
       cancelAnimationFrame(focusFrame);
       window.removeEventListener("demo:focus-field", focusField);
     };
-  }, [items, onOpen]);
+  }, [active, items, onOpen]);
 
   function moveInColumn(
     event: KeyboardEvent<HTMLInputElement>,
@@ -157,7 +162,7 @@ export function RecipientGrid({
   };
 
   return (
-    <div className="operator-grid recipient-grid-workspace">
+    <div className="operator-grid recipient-grid-workspace" ref={root}>
       <div className="recipient-grid-options">
         <span className="recipient-grid-simple-hint">
           ФИО и должность вводятся один раз. Языковые уточнения — в деталях.

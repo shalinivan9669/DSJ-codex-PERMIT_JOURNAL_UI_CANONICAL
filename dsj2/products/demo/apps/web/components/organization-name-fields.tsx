@@ -11,10 +11,20 @@ export function OrganizationNameFields({
   value,
   onChange,
   legacyLabels = ["Полное название · RU", "Полное название · KZ"],
+  labels,
+  autoFocus = true,
+  showRequiredErrors = false,
+  compactHints = false,
+  hideEmptyPreview = false,
 }: {
   value: OrganizationNames;
   onChange: (value: OrganizationNames) => void;
   legacyLabels?: readonly [string, string];
+  labels?: { legalForm?: string; ownNameRu?: string };
+  autoFocus?: boolean;
+  showRequiredErrors?: boolean;
+  compactHints?: boolean;
+  hideEmptyPreview?: boolean;
 }) {
   const id = useId();
   const [differentKz, setDifferentKz] = useState(!!value.ownNameKz);
@@ -25,6 +35,12 @@ export function OrganizationNameFields({
         value.ownNameKz || "",
       )
     : null;
+  const nameError =
+    names?.issue ||
+    (showRequiredErrors &&
+    !(value.legalForm ? value.ownNameRu : value.nameRu)?.trim()
+      ? "Введите название компании."
+      : "");
   function update(ownNameRu: string, ownNameKz: string) {
     if (!value.legalForm) return;
     const computed = formatOrganizationNames(
@@ -43,7 +59,7 @@ export function OrganizationNameFields({
   return (
     <div className="stack organization-name-fields">
       <label>
-        Форма организации
+        {labels?.legalForm || "Форма организации"}
         <select
           value={value.legalForm || ""}
           aria-describedby={`${id}-hint`}
@@ -90,29 +106,34 @@ export function OrganizationNameFields({
         </select>
       </label>
       <p className="fine-print" id={`${id}-hint`}>
-        Название вводится один раз. Меняется только обозначение формы: ТОО /
-        ЖШС, ИП / ЖК, АО / АҚ.
+        {compactHints
+          ? value.legalForm === "NONE"
+            ? "Название сохранится как введено."
+            : "Введите название без ТОО, ИП, АО. Кавычки сохраняются."
+          : "Название вводится один раз. Меняется только обозначение формы: ТОО / ЖШС, ИП / ЖК, АО / АҚ."}
       </p>
       {value.legalForm ? (
         <>
           <label>
-            Собственное наименование
+            {labels?.ownNameRu || "Собственное наименование"}
             <input
-              autoFocus
+              autoFocus={autoFocus}
               required
               maxLength={500}
               value={value.ownNameRu || ""}
-              aria-invalid={!!names?.issue}
-              aria-describedby={names?.issue ? `${id}-error` : undefined}
+              aria-invalid={!!nameError}
+              aria-describedby={nameError ? `${id}-error` : undefined}
               onChange={(event) =>
                 update(event.target.value, value.ownNameKz || "")
               }
             />
-            <small>
-              {value.legalForm === "NONE"
-                ? "Название сохраняется как введено. Обозначение формы не добавляется."
-                : "Без ТОО, ИП, АО. Кавычки сохраняются так, как вы их ввели."}
-            </small>
+            {!compactHints && (
+              <small>
+                {value.legalForm === "NONE"
+                  ? "Название сохраняется как введено. Обозначение формы не добавляется."
+                  : "Без ТОО, ИП, АО. Кавычки сохраняются так, как вы их ввели."}
+              </small>
+            )}
           </label>
           <details
             open={differentKz || undefined}
@@ -146,9 +167,9 @@ export function OrganizationNameFields({
               </label>
             )}
           </details>
-          {names?.issue && (
+          {nameError && (
             <p className="field-error" id={`${id}-error`} role="alert">
-              {names.issue}
+              {nameError}
             </p>
           )}
           {names?.normalized && !names.issue && (
@@ -168,14 +189,21 @@ export function OrganizationNameFields({
             <label>
               {legacyLabels[0]}
               <input
-                autoFocus
+                autoFocus={autoFocus}
                 required
                 maxLength={500}
                 value={value.nameRu}
+                aria-invalid={!!nameError}
+                aria-describedby={nameError ? `${id}-error` : undefined}
                 onChange={(event) =>
                   onChange({ ...value, nameRu: event.target.value })
                 }
               />
+              {nameError && (
+                <span className="field-error" id={`${id}-error`} role="alert">
+                  {nameError}
+                </span>
+              )}
             </label>
             <label>
               {legacyLabels[1]}
@@ -190,24 +218,30 @@ export function OrganizationNameFields({
           </div>
         </>
       )}
-      <div
-        className="form-grid organization-name-preview"
-        aria-live="polite"
-        aria-label="Полные названия для документов"
-      >
-        <div>
-          <small>Полное название · RU</small>
-          <p>
-            <output>{names?.nameRu || value.nameRu || "—"}</output>
-          </p>
+      {(!hideEmptyPreview ||
+        names?.nameRu ||
+        names?.nameKz ||
+        value.nameRu ||
+        value.nameKz) && (
+        <div
+          className="form-grid organization-name-preview"
+          aria-live="polite"
+          aria-label="Полные названия для документов"
+        >
+          <div>
+            <small>Полное название · RU</small>
+            <p>
+              <output>{names?.nameRu || value.nameRu || "—"}</output>
+            </p>
+          </div>
+          <div>
+            <small>Полное название · KZ</small>
+            <p>
+              <output>{names?.nameKz || value.nameKz || "—"}</output>
+            </p>
+          </div>
         </div>
-        <div>
-          <small>Полное название · KZ</small>
-          <p>
-            <output>{names?.nameKz || value.nameKz || "—"}</output>
-          </p>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,0 +1,359 @@
+.operator-form {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 12px 0 64px;
+}
+.operator-form .operator-heading {
+  align-items: flex-start;
+  gap: 20px;
+  margin: 8px 0 32px;
+}
+.operator-heading .title-with-status {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.operator-heading h1 {
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.25;
+}
+.operator-heading-actions {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+.operator-heading-actions > button {
+  font-size: 12px;
+  padding: 4px 0;
+  min-height: 32px;
+}
+.operator-form > .panel {
+  box-shadow: none;
+  border: 0;
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+.operator-form .section-heading {
+  margin: 0 0 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.operator-form h2 {
+  font-size: 21px;
+  margin: 0;
+}
+.operator-form label {
+  font-weight: 500;
+}
+.operator-form input:not([type="checkbox"]):not([type="radio"]),
+.operator-form select {
+  min-height: 46px;
+  border-radius: 7px;
+}
+.operator-form .form-grid {
+  gap: 20px 28px;
+}
+.operator-form .operator-request-options {
+  margin: 24px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.operator-request-options > summary,
+.operator-list-tools > summary,
+.training-advanced-settings > summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 13px;
+}
+.operator-request-options[open] > summary,
+.training-advanced-settings[open] > summary {
+  margin-bottom: 16px;
+}
+.operator-form .request-organization-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+.request-organization-fields > .request-organization-mode,
+.request-organization-fields > .request-organization-new,
+.request-organization-fields > .request-organization-selected,
+.request-organization-fields > .field-error {
+  grid-column: 1 / -1;
+}
+.request-organization-fields > label {
+  margin: 0;
+}
+.operator-form .request-organization-selected {
+  display: grid;
+  gap: 8px;
+}
+.operator-form .request-organization-selected .organization-name-preview {
+  margin: 0;
+}
+.operator-form .request-organization-selected .fine-print {
+  margin: 4px 0 0;
+}
+.operator-form .request-organization-mode {
+  display: inline-flex;
+  width: fit-content;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 8px;
+}
+.operator-form .request-organization-mode button {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.request-organization-fields > label {
+  max-width: 620px;
+}
+.request-organization-fields > .text-button {
+  justify-self: start;
+  align-self: end;
+}
+.request-organization-new {
+  border: 0;
+  padding: 8px 0 0;
+  margin: 0;
+  min-width: 0;
+}
+.request-organization-new > legend {
+  font-size: 0;
+  padding: 0;
+}
+.request-organization-new .organization-name-fields {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.65fr) minmax(260px, 1.6fr);
+  gap: 16px 24px;
+}
+.operator-form .request-organization-new .organization-name-fields > * {
+  margin-block: 0;
+}
+.operator-form .request-organization-new > .toolbar {
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+}
+.request-organization-new .organization-name-fields > label {
+  margin: 0;
+}
+.request-organization-new .organization-name-fields > p,
+.request-organization-new .organization-name-fields > details,
+.request-organization-new .organization-name-preview {
+  grid-column: 1 / -1;
+}
+.request-organization-new
+  .organization-name-fields
+  > .fine-print:first-of-type {
+  display: none;
+}
+.request-organization-new .organization-name-fields > label:nth-of-type(2) {
+  grid-column: 2;
+  grid-row: 1;
+}
+.request-organization-fields .organization-name-preview {
+  background: var(--canvas);
+  border: 0;
+  border-radius: 8px;
+  padding: 14px 18px;
+}
+.organization-name-preview p {
+  margin: 3px 0 0;
+}
+.request-organization-selected > p {
+  margin: 0;
+}
+.operator-form .recipients-panel > .toolbar {
+  padding: 0;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.operator-form .recipients-panel > .toolbar > .toolbar {
+  gap: 8px;
+}
+.operator-list-tools {
+  margin-bottom: 8px;
+}
+.operator-list-tools .selection-toolbar {
+  padding: 12px 0;
+}
+.operator-form .operator-view-toolbar {
+  padding: 12px 0 18px;
+  border: 0;
+  justify-content: flex-end;
+}
+.operator-view-toolbar .entry-view-switch {
+  gap: 4px;
+  background: var(--canvas);
+  border-radius: 8px;
+  padding: 3px;
+}
+.operator-view-toolbar .entry-view-switch button {
+  font-size: 12px;
+  min-height: 34px;
+  border: 0;
+  background: transparent;
+}
+.operator-view-toolbar .entry-view-switch button[aria-pressed="true"] {
+  background: white;
+  color: var(--accent-dark);
+  box-shadow: 0 1px 3px #17324718;
+}
+.operator-form .entry-progress {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  gap: 8px;
+}
+.operator-form .entry-progress .text-button {
+  font-size: 12px;
+}
+.operator-common-date {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.operator-training-choice {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.operator-result-reminder {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.operator-common-date label {
+  max-width: 270px;
+}
+.operator-form .operator-training-panel > .panel {
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 24px;
+}
+.operator-form .operator-training-panel > .training-overview > h2,
+.operator-form .operator-training-panel > .training-overview > p {
+  display: none;
+}
+.operator-form .training-event-row {
+  background: var(--canvas);
+  border: 0;
+  border-radius: 8px;
+  padding: 16px;
+}
+.operator-form .training-advanced-settings {
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.operator-form .training-primary-context .context-body {
+  padding: 0;
+}
+.operator-form .operator-readiness {
+  margin: 32px 0;
+  padding: 0 32px;
+}
+.operator-readiness .section-heading {
+  margin-bottom: 8px;
+}
+.operator-readiness p {
+  margin: 8px 0;
+}
+.operator-next-fields {
+  display: grid;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+.operator-next-fields .text-button {
+  text-align: left;
+  justify-content: flex-start;
+  min-height: 32px;
+  padding: 2px 0;
+  font-weight: 500;
+}
+.operator-next-fields li {
+  padding-left: 16px;
+  border-left: 2px solid var(--line);
+}
+.operator-completion {
+  padding: 28px 32px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+.operator-completion .approval-banner {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin-bottom: 24px;
+}
+.operator-completion .approval-summary {
+  font-size: 15px;
+}
+.operator-completion .approval-banner p {
+  color: var(--muted);
+  font-size: 13px;
+}
+.operator-final-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.operator-final-actions .primary {
+  min-height: 48px;
+  padding-inline: 24px;
+}
+.operator-form .field-hint {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+@media (max-width: 680px) {
+  .operator-form .request-organization-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .operator-form > .panel,
+  .operator-completion {
+    padding: 22px 18px;
+  }
+  .operator-form .operator-heading {
+    display: grid;
+  }
+  .operator-heading-actions {
+    justify-items: start;
+  }
+  .operator-form .operator-readiness {
+    padding: 0 18px;
+  }
+  .request-organization-new .organization-name-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .request-organization-new .organization-name-fields > label:nth-of-type(2) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .operator-form .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .operator-form .title-with-status {
+    align-items: flex-start;
+  }
+  .operator-view-toolbar .entry-view-switch {
+    flex-wrap: wrap;
+  }
+  .operator-final-actions > .primary {
+    width: 100%;
+  }
+}

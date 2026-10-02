@@ -1,5 +1,63 @@
 {
   "version": "2026-09-22.2",
+  "operatorContinuousForm20261002": {
+    "status": "LOCAL_ENGINEERING_AND_SCOPED_UI_PASS",
+    "branch": "codex/operator-continuous-form",
+    "baseCommit": "436bffeaa62c65e2505f983f6a7bc9125cb7abf8",
+    "scope": "Existing request editor: continuous operator input, inline company, early field hints, visible training outcomes and optional large-list table",
+    "newRequestRoute": "PASS: /requests/new restored from HEAD; two customer-type choices and Next only, verified in browser; request-list.tsx has no diff",
+    "environment": {
+      "web": "http://localhost:3132",
+      "api": "http://127.0.0.1:4132",
+      "database": "demo_test_first_live_ui",
+      "data": "SYNTHETIC_LOCAL_ONLY"
+    },
+    "company": {
+      "status": "PASS",
+      "requestId": "6190a89e-82ee-471e-a502-dac69caffe1c",
+      "revision": 6,
+      "verified": "Created through Next; inline TOO and separate KZ name, recipient and position, BIOT program, explicit PASSED with source persisted",
+      "preview": "4 of 4 DOCX/PDF jobs SUCCEEDED; preview only, no issuance claim"
+    },
+    "person": {
+      "status": "PASS",
+      "requestId": "3547d78e-65de-43ed-96ce-ca633d544bc9",
+      "verified": "Created in browser; FIO title and reload; ITR enterprise name, BIN and address visible before checking, editable and persisted after reload"
+    },
+    "bulk250": {
+      "status": "PASS_SCOPED_UI",
+      "requestId": "b9065773-908f-475b-a61a-b7a9c8810d36",
+      "verified": "250 synthetic rows; 10 panels per page; issue link reveals and focuses items.249.fullNameRu; name entered; optional table opens all 250 rows; corrected row survives reload and search finds it",
+      "boundary": "Fixture creation is not a browser import claim; mass rendering and operator speed comparison not executed"
+    },
+    "verification": {
+      "webTests": "PASS 125/125, zero fail/skip/cancelled",
+      "webLint": "PASS",
+      "webTypecheck": "PASS",
+      "finalProductionWebBuild": "PASS: exit 0; .next-operator-continuous-final; Build ID Z4vQgxCy24sV51HlZgRy3",
+      "fullHistoricalVerifyCI": "NOT_RUN",
+      "newDirectorAcceptanceLoop": "NOT_RUN",
+      "physicalPrint": "NOT_VERIFIED",
+      "legalAcceptance": "NOT_CLAIMED",
+      "deployment": "NOT_RUN",
+      "productionBrowserSmoke": "PASS: routes render; company readiness focuses company name; saved training results visible after reload; ITR result issue focuses events.0.outcomes.biotKnowledgeResult input"
+    },
+    "preserved": "Existing templates, backend, database schemas/migrations and frozen modules; historical matrix entries retained",
+    "evidence": [
+      "docs/OPERATOR_FORM_UX_2026-10-02.md",
+      ".runtime/operator-continuous-form/bulk-fixture.json",
+      ".runtime/operator-continuous-form/final-web-tests.log",
+      ".runtime/operator-continuous-form/final-web-lint.log",
+      ".runtime/operator-continuous-form/final-typecheck.log",
+      ".runtime/operator-continuous-form/production-build-summary.json",
+      "docs/evidence/operator-continuous-form/entry-unchanged.jpg",
+      "docs/evidence/operator-continuous-form/company-entry.jpg",
+      "docs/evidence/operator-continuous-form/recipient-panel.jpg",
+      "docs/evidence/operator-continuous-form/training-saved.jpg",
+      "docs/evidence/operator-continuous-form/itr-early-fields.jpg"
+    ],
+    "pendingEvidence": []
+  },
   "deployedTemplateDiff20261002": {
     "status": "ORIGINAL_FORMS_RESTORED_LOCAL_ENGINEERING_PASS",
     "branch": "codex/diff-deployed-templates",
