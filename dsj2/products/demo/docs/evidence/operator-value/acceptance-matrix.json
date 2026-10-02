@@ -1,5 +1,24 @@
 {
   "version": "2026-09-22.2",
+  "operatorLayout20261002": {
+    "status": "DEPLOYED_SCOPED_UI_PASS",
+    "codeCommit": "1dc69a704304512a69747ac6396c6ab17e8da3a5",
+    "branch": "codex/operator-continuous-form",
+    "scope": "Two CSS files only: spacing, field alignment, table proportions, focus and internal scrolling; flow unchanged",
+    "verification": {
+      "formatAndDiff": "PASS",
+      "localProductionWebBuild": "PASS uIecRo71N04T58Q-IozHo; final CSS refinements covered by final Vercel build",
+      "browser": "PASS desktop1280/mobile390; final tablet768; no page overflow; Tab scrolls focused field into view",
+      "newRequest": "PASS: physical person, organization and Next only",
+      "cloudData": "Company and two recipients retained, request f350b0ee-a170-485c-9494-f1f392917306 revision5",
+      "push": "PASS origin/codex/operator-continuous-form",
+      "vercel": "READY dpl_EMiygRPsd86Au4D6JdCUMdWh4mFP; canonical dsj-demo-rows-20261002.vercel.app; exact code archive1dc69a7",
+      "railway": "Existing deployment4fd4e282-5899-4133-9f18-35dc678ddef6 SUCCESS; health/ready200; DB, worker heartbeat and storage verified read-only",
+      "newPrintCycle": "NOT_RUN_CSS_ONLY",
+      "operatorSpeedBenchmark": "NOT_RUN"
+    },
+    "evidenceDirectory": "C:/Users/Admin/Documents/DSJ-DEMO-cloud-20261002"
+  },
   "operatorRowEntry20261002": {
     "status": "LOCAL_ENGINEERING_AND_SCOPED_UI_PASS",
     "branch": "codex/operator-continuous-form",
