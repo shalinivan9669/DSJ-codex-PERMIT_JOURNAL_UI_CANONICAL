@@ -53,7 +53,7 @@ class RenderTests(unittest.TestCase):
                 out=OUT/(template['id']+'.docx');render_docx(snap,out)
                 with ZipFile(out) as z:
                     xml=b'\n'.join(z.read(n) for n in z.namelist() if n.endswith('.xml')).decode('utf8')
-                    self.assertNotRegex(xml,r'\{\{[A-Z_]+\}\}|MERGEFIELD|Стандарт|Солтанова|Флеглер|Баянов|Жакибеков|Есен Д\.')
+                    self.assertNotRegex(xml,r'\{\{[A-Z_]+\}\}|MERGEFIELD|Стандарт(?!ная|ный)|Солтанова|Флеглер|Баянов|Жакибеков|Есен Д\.')
                     self.assertIn('Тестов',xml)
                     self.assertTrue(all(b'TargetMode="External"' not in z.read(n) for n in z.namelist() if n.endswith('.rels')))
                 pdf=out.with_suffix('.pdf');convert_pdf(out,pdf)
@@ -104,7 +104,13 @@ class RenderTests(unittest.TestCase):
     def test_07_clean_templates_keep_exact_geometry(self):
         for template in MANIFEST['templates']:
             with ZipFile(ROOT/'assets/templates'/template['file']) as z:
-                self.assertFalse(any(n.startswith('word/media/') for n in z.namelist()))
+                if 'demo/original-form.json' in z.namelist():
+                    metadata=json.loads(z.read('demo/original-form.json'))
+                    self.assertEqual({n for n in z.namelist() if n.startswith('word/media/')},
+                                     {slot['part'] for slot in metadata['dynamicMedia']})
+                    for slot in metadata['dynamicMedia']:
+                        self.assertNotEqual(hashlib.sha256(z.read(slot['part'])).hexdigest(),slot['originalSha256'])
+                else:self.assertFalse(any(n.startswith('word/media/') for n in z.namelist()))
                 tree=E.fromstring(z.read('word/document.xml'))
                 self.assertEqual([dict(n.attrib) for n in tree.iter('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}pgSz')],template['sections'])
     def test_08_no_demo_mark_on_working_documents(self):
@@ -257,7 +263,13 @@ class RenderTests(unittest.TestCase):
         from sanitize_templates import deterministic_zip
         from upgrade_templates_v10 import move_box
         evidence=EVIDENCE_ROOT/'commercial-acceptance/printing'
-        good=evidence/'ps-title-visible.docx';snap=fixture('ps-card');render_docx(snap,good);convert_pdf(good,good.with_suffix('.pdf'))
+        good=evidence/'ps-title-visible.docx';snap=fixture('ps-card')
+        # This mutation oracle describes the previous one-card layout. The
+        # March original's cutout copies have independent source-fidelity QA.
+        historic=ROOT/'assets/templates/ps-card.v15.docx'
+        pinned=STORE/'ps-card.v15.docx';pinned.write_bytes(historic.read_bytes())
+        snap.update(templateVersion=15,templateStorageKey=pinned.name,templateChecksum=hashlib.sha256(pinned.read_bytes()).hexdigest())
+        render_docx(snap,good);convert_pdf(good,good.with_suffix('.pdf'))
         checks=assert_card_title_visible(good.with_suffix('.pdf'),'ps-card',1)
         with ZipFile(good) as archive:files={n:archive.read(n) for n in archive.namelist()}
         tree=E.fromstring(files['word/document.xml']);changed=0

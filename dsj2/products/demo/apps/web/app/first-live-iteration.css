@@ -1,0 +1,243 @@
+.training-choices {
+  border: 0;
+  margin: 18px 0;
+  padding: 0;
+}
+.request-more-actions,
+.request-menu-group {
+  display: grid;
+  gap: 10px;
+}
+.request-menu-group + .request-menu-group {
+  margin-top: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.request-menu-group button,
+.request-menu-group .button {
+  text-align: left;
+  justify-content: flex-start;
+}
+.training-choice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.training-choice input,
+.english-appendix-toggle input {
+  width: 20px;
+  min-height: 20px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.training-choice small,
+.training-event-row small {
+  display: block;
+  color: var(--muted);
+}
+.training-overview {
+  padding: 24px;
+  margin-block: 20px;
+}
+.training-event-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(180px, 1fr) minmax(
+      150px,
+      0.7fr
+    );
+  gap: 18px;
+  align-items: end;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+.training-event-row label,
+.english-fields label {
+  display: grid;
+  gap: 6px;
+}
+.operator-grid .recipient-grid-category {
+  min-width: 118px;
+  width: 130px;
+}
+.operator-grid .recipient-grid-category select {
+  min-height: 40px;
+  padding: 7px;
+}
+.english-appendix-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-block: 14px;
+}
+.english-appendix-toggle small {
+  display: block;
+  color: var(--muted);
+  font-weight: 400;
+}
+.english-fields {
+  display: grid;
+  gap: 14px;
+  padding-block: 16px;
+}
+.approval-banner {
+  margin-block: 16px;
+  padding: 18px 22px;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+}
+.approval-banner p {
+  margin: 6px 0;
+}
+.approval-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.approval-layout {
+  display: grid;
+  grid-template-columns: minmax(270px, 0.85fr) minmax(360px, 1.7fr);
+  gap: 22px;
+}
+.approval-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.approval-list button {
+  width: 100%;
+  text-align: left;
+  display: block;
+  margin-bottom: 8px;
+}
+.approval-list button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.approval-list small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.approval-detail {
+  min-width: 0;
+  padding: 24px;
+}
+.approval-diff {
+  width: 100%;
+  border-collapse: collapse;
+}
+.approval-diff th,
+.approval-diff td {
+  padding: 10px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.approval-diff th {
+  background: var(--soft);
+}
+.approval-diff pre {
+  white-space: pre-wrap;
+  font: inherit;
+  margin: 0;
+  max-height: 240px;
+  overflow: auto;
+}
+.approval-decision {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+.signing-panel {
+  padding: 24px;
+  margin-block: 20px;
+}
+.signing-document {
+  padding-block: 16px;
+  border-top: 1px solid var(--line);
+}
+.signing-document .action-buttons {
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.signing-document .button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.signing-qr {
+  display: block;
+  margin: 16px auto;
+}
+.request-activity {
+  padding: 20px 24px;
+  margin-block: 20px;
+}
+.request-activity summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.activity-list {
+  padding-left: 24px;
+}
+.activity-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.activity-list span {
+  display: block;
+  color: var(--muted);
+}
+.status-approved,
+.status-signed {
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+}
+.status-rejected {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+.status-awaiting_signature,
+.status-rendering {
+  color: var(--ink);
+  background: var(--soft);
+}
+@media (max-width: 850px) {
+  .approval-layout,
+  .training-event-row {
+    grid-template-columns: 1fr;
+  }
+}
+.pdf-pages {
+  max-height: 60vh;
+  overflow: auto;
+  background: #e8edee;
+  padding: 16px;
+  text-align: center;
+}
+.pdf-pages canvas {
+  display: block;
+  margin: 0 auto 20px;
+  max-width: 100%;
+  height: auto !important;
+  box-shadow: 0 2px 12px #0002;
+}
+.pdf-pages p {
+  margin: 8px 0;
+  color: var(--muted);
+}
+.pdf-print-frame {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+}
+#request-files {
+  scroll-margin-top: 24px;
+}

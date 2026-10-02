@@ -2,7 +2,7 @@ import { staffDirectorySchema } from "@demo/contracts/src/staff-directory";
 import { db, fail, type Context } from "./core";
 
 export async function staffDirectory(c: Context) {
-  if (c.role !== "ADMIN" && c.role !== "OPERATOR")
+  if (c.role !== "ADMIN" && c.role !== "DIRECTOR" && c.role !== "OPERATOR")
     fail(
       403,
       "ROLE_DENIED",
@@ -12,7 +12,7 @@ export async function staffDirectory(c: Context) {
     where: {
       tenantId: c.tenantId,
       active: true,
-      role: { in: ["ADMIN", "OPERATOR"] },
+      role: { in: ["ADMIN", "DIRECTOR", "OPERATOR"] },
     },
     select: { id: true, displayName: true },
     orderBy: [{ displayName: "asc" }, { id: "asc" }],

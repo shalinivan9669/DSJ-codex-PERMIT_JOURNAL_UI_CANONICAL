@@ -28,6 +28,8 @@ import {
   type Context,
 } from "./core";
 import { patchRequest, requestFilter, resolvedRequest } from "./requests";
+import { workingRequest } from "./approvals";
+import { companyEmployerId } from "./request-customer";
 import {
   customerExportProfileSchema,
   deliveryFileNames,
@@ -173,6 +175,23 @@ export async function readArtifact(c: Context, id: string) {
     where: { id, tenantId: c.tenantId },
   });
   if (!artifact) fail(404, "NOT_FOUND", "Файл не найден");
+  if (["ZIP", "XLSX"].includes(artifact.format) && artifact.issuanceId) {
+    const workflow = await db.issuanceWorkflow.findFirst({
+      where: { tenantId: c.tenantId, issuanceId: artifact.issuanceId },
+    });
+    if (workflow && workflow.status !== "ISSUED")
+      fail(
+        409,
+        "ISSUANCE_NOT_COMPLETE",
+        "Комплект доступен после формирования и обязательных подписей; отдельные PDF доступны для проверки и печати",
+      );
+    if (workflow && artifact.format === "ZIP")
+      fail(
+        409,
+        "USE_SIGNED_BUNDLE_EXPORT",
+        "Скачайте актуальный комплект через экспорт ZIP: он включает проверенные откреплённые подписи и их контрольные суммы",
+      );
+  }
   try {
     const buffer = await store.read(artifact.storageKey, artifact.sha256);
     if (buffer.length !== artifact.size) throw new Error("SIZE");
@@ -350,7 +369,7 @@ export async function applyImport(c: Context, id: string, input: unknown) {
     where: { id: data.importId, tenantId: c.tenantId },
   });
   if (!batch) fail(404, "IMPORT_NOT_FOUND", "Импорт не найден");
-  const record = await scopedRequest(c, id);
+  const record = await workingRequest(c, id);
   const draft = draftSchema.parse(record.draft);
   const previous = draft.items.filter((i) => i.importId === data.importId);
   if (previous.length)
@@ -439,6 +458,7 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
         kind: z.enum(["PERSON", "COMPANY"]).optional(),
         customerId: z.string().optional(),
         history: z.boolean().default(false),
+        archive: z.boolean().optional(),
         allowPartial: z.boolean().default(false),
         format: z.enum(["XLSX", "ZIP", "TSV"]).default("XLSX"),
         profileId: z.string().max(80).optional(),
@@ -449,6 +469,18 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
     input || {},
   );
   const requested = id ? await scopedRequest(c, id) : null;
+  if (requested) {
+    const workflow = await db.issuanceWorkflow.findFirst({
+      where: { tenantId: c.tenantId, requestId: requested.id },
+      orderBy: { createdAt: "desc" },
+    });
+    if (workflow && workflow.status !== "ISSUED")
+      fail(
+        409,
+        "ISSUANCE_NOT_COMPLETE",
+        "Передавать официальный комплект можно после формирования и обязательных подписей",
+      );
+  }
   let profile = await resolveExportProfile(c, query.profileId, query.profile);
   if (
     profile?.customerId &&
@@ -628,6 +660,54 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
           ]),
         )
       : undefined;
+    const signatures = await db.documentSignature.findMany({
+      where: {
+        tenantId: c.tenantId,
+        artifactId: { in: artifacts.map((artifact) => artifact.id) },
+      },
+      orderBy: [{ artifactId: "asc" }, { bindingId: "asc" }],
+    });
+    const signatureManifest = [];
+    for (const signature of signatures) {
+      const artifact = artifacts.find(
+        (entry) => entry.id === signature.artifactId,
+      )!;
+      if (signature.documentSha256 !== artifact.sha256)
+        fail(
+          409,
+          "SIGNATURE_BINDING_MISMATCH",
+          "Сохранённая подпись относится к другой версии файла",
+        );
+      const buffer = await store.read(
+        signature.signatureStorageKey,
+        signature.signatureSha256,
+      );
+      const fileName = `${fileNames?.get(artifact.id) || artifact.fileName}.${signature.bindingId}.p7s`;
+      attachments.push({ fileName, base64: buffer.toString("base64") });
+      signatureManifest.push({
+        fileName,
+        artifactId: artifact.id,
+        documentFileName: fileNames?.get(artifact.id) || artifact.fileName,
+        documentSha256: artifact.sha256,
+        signatureSha256: signature.signatureSha256,
+        format: "CMS_DETACHED",
+        provider: signature.provider,
+        certificateSerial: signature.certificateSerial,
+        certificateFingerprint: signature.certificateFingerprint,
+        verifiedAt: signature.createdAt,
+      });
+    }
+    if (signatureManifest.length)
+      attachments.push({
+        fileName: "signatures.json",
+        base64: Buffer.from(
+          JSON.stringify(
+            { version: 1, signatures: signatureManifest },
+            null,
+            2,
+          ),
+        ).toString("base64"),
+      });
     let out;
     try {
       out = await buildZip(
@@ -759,13 +839,25 @@ export async function collectRegistryRows(
   query: Parameters<typeof requestFilter>[1],
   id?: string,
 ) {
-  const records = await db.printRequest.findMany({
+  let records = await db.printRequest.findMany({
     where: {
       ...(await requestFilter(c, query)),
       ...(id ? { id } : {}),
     },
     orderBy: { createdAt: "asc" },
   });
+  const pendingWorkflows = await db.issuanceWorkflow.findMany({
+    where: {
+      tenantId: c.tenantId,
+      requestId: { in: records.map((record) => record.id) },
+      status: { not: "ISSUED" },
+    },
+    select: { requestId: true },
+  });
+  records = records.filter(
+    (record) =>
+      !pendingWorkflows.some((workflow) => workflow.requestId === record.id),
+  );
   const ids = records.map((r) => r.id);
   const [documents, issuances] = await Promise.all([
     db.issuedDocument.findMany({
@@ -781,34 +873,59 @@ export async function collectRegistryRows(
     const draft = issuance
       ? draftSchema.parse((issuance.snapshot as { draft: unknown }).draft)
       : (await resolvedRequest(c, record.id)).draft;
-    const customer = issuance
-      ? (
-          issuance.snapshot as {
-            customer?: {
-              nameRu?: string;
-              nameKz?: string;
-              bin?: string;
-              addressRu?: string;
-              addressKz?: string;
-            };
-          }
-        ).customer
-      : draft.customerId
-        ? await db.customerOrganization.findFirst({
-            where: { tenantId: c.tenantId, id: draft.customerId },
-          })
-        : null;
+    const employerId = companyEmployerId(draft);
+    const customer = !employerId
+      ? null
+      : issuance
+        ? (
+            issuance.snapshot as {
+              customer?: {
+                nameRu?: string;
+                nameKz?: string;
+                bin?: string;
+                addressRu?: string;
+                addressKz?: string;
+              };
+            }
+          ).customer
+        : employerId
+          ? await db.customerOrganization.findFirst({
+              where: { tenantId: c.tenantId, id: employerId },
+            })
+          : null;
+    const frozenEmployers =
+      draft.organizationSnapshots ||
+      (
+        issuance?.snapshot as {
+          employers?: {
+            id: string;
+            nameRu?: string;
+            nameKz?: string | null;
+            bin?: string | null;
+            addressRu?: string | null;
+            addressKz?: string | null;
+          }[];
+        }
+      )?.employers ||
+      [];
     for (const sourceItem of draft.items) {
+      const employer = sourceItem.employerId
+        ? frozenEmployers.find((entry) => entry.id === sourceItem.employerId)
+        : customer;
       const item = {
         ...sourceItem,
-        employerId: sourceItem.employerId || draft.customerId || undefined,
-        workplaceRu: sourceItem.workplaceRu || customer?.nameRu || "",
-        workplaceKz: sourceItem.workplaceKz || customer?.nameKz || "",
-        employerBin: sourceItem.employerBin || customer?.bin || "",
+        employerId: sourceItem.employerId || employerId || undefined,
+        workplaceRu: sourceItem.workplaceRu || employer?.nameRu || "",
+        workplaceKz:
+          sourceItem.workplaceKz || employer?.nameKz || employer?.nameRu || "",
+        employerBin: sourceItem.employerBin || employer?.bin || "",
         employerAddressRu:
-          sourceItem.employerAddressRu || customer?.addressRu || "",
+          sourceItem.employerAddressRu || employer?.addressRu || "",
         employerAddressKz:
-          sourceItem.employerAddressKz || customer?.addressKz || "",
+          sourceItem.employerAddressKz ||
+          employer?.addressKz ||
+          employer?.addressRu ||
+          "",
       };
       if (!item.assignments.length)
         rows.push({

@@ -5,7 +5,51 @@ import {
   resolveDraft,
   documentPlan,
   commonFieldsSchema,
+  resolveRecipientText,
 } from "../packages/contracts/src";
+
+test("one supplied spelling resolves both print languages without changing the raw draft or inventing English", () => {
+  const draft = draftSchema.parse({
+    kind: "PERSON",
+    items: [
+      {
+        id: "one",
+        fullNameRu: "Тестов Оператор",
+        positionRu: "Инженер",
+        workplaceRu: "Тестовая компания",
+      },
+    ],
+  });
+  const result = resolveDraft(draft).draft.items[0];
+  assert.equal(result.fullNameKz, "Тестов Оператор");
+  assert.equal(result.positionKz, "Инженер");
+  assert.equal(result.workplaceKz, "Тестовая компания");
+  assert.equal(draft.items[0].fullNameKz, "");
+  assert.equal(draft.items[0].positionKz, "");
+  assert.equal(result.fullNameEn, undefined);
+});
+
+test("explicit language spellings stay intact and a supplied Kazakh name can be reused verbatim", () => {
+  const item = draftSchema.parse({
+    kind: "PERSON",
+    items: [
+      {
+        id: "one",
+        fullNameRu: "Тестов",
+        fullNameKz: "Тестұлы",
+        positionRu: "Рабочий",
+        positionKz: "Жұмысшы",
+        workplaceRu: "ТОО Тест",
+        workplaceKz: "Тест ЖШС",
+      },
+    ],
+  }).items[0];
+  assert.deepEqual(resolveRecipientText(item), item);
+  assert.equal(
+    resolveRecipientText({ ...item, fullNameRu: "" }).fullNameRu,
+    "Тестұлы",
+  );
+});
 
 const fixture = () =>
   draftSchema.parse({

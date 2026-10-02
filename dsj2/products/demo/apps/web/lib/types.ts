@@ -16,6 +16,26 @@ export type Draft = DraftInput & {
   status: string;
   createdAt?: string;
   updatedAt?: string;
+  customerName?: string;
+  approval?: {
+    proposalId: string;
+    status: "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
+    baseRevision: number;
+    proposalHash: string;
+    submittedBy: string;
+    submittedAt: string;
+  };
+  approvedDraft?: Draft;
+  approvedRevision?: number;
+  archived?: boolean;
+  archivedAt?: string | null;
+  lifecycle?:
+    | "RENDERING"
+    | "AWAITING_SIGNATURE"
+    | "ISSUED"
+    | "FAILED"
+    | "LEGACY_ISSUED"
+    | null;
   issuances?: Issuance[];
 };
 export type Customer = {
@@ -109,7 +129,8 @@ export type Issuance = {
     number: string;
     registrationNumber?: string;
     templateId: string;
-    rowId?: string;
+    rowId?: string | null;
+    groupEventId?: string | null;
     artifacts?: Artifact[];
   }[];
   jobs?: Job[];
@@ -138,6 +159,15 @@ export type Page<T> = {
   pageSize?: number;
 };
 export const templateLabels: Record<string, string> = TEMPLATE_LABELS;
+export function documentTitle(templateId: string, group?: boolean): string {
+  const title = templateLabels[templateId] || templateId;
+  if (!templateId.endsWith("-protocol")) return title;
+  const scope = group === undefined ? "" : group ? "общий " : "индивидуальный ";
+  return title.replace(
+    /(?:индивидуальный |общий )?протокол/,
+    `${scope}протокол`,
+  );
+}
 export function newAssignment(
   templateId: Assignment["templateId"] = "biot-worker-card",
 ): Assignment {
@@ -162,6 +192,7 @@ export function newAssignment(
 export function newRecipient(): Recipient {
   return {
     id: crypto.randomUUID(),
+    employeeCategory: "WORKER",
     fullNameRu: "",
     fullNameKz: "",
     positionRu: "",
@@ -177,7 +208,10 @@ export function draftPayload(draft: Draft) {
     kind,
     title,
     customerId,
+    organizationSnapshots,
     demoMode,
+    businessRuleVersion,
+    englishAppendix,
     items,
     schemaVersion,
     profileVersionId,
@@ -187,9 +221,12 @@ export function draftPayload(draft: Draft) {
   } = draft;
   return {
     kind,
-    title,
+    title: personRequestName(draft) || title,
     customerId,
+    organizationSnapshots,
     demoMode,
+    businessRuleVersion,
+    englishAppendix,
     items,
     schemaVersion,
     profileVersionId,
@@ -197,4 +234,11 @@ export function draftPayload(draft: Draft) {
     commonFields,
     events,
   };
+}
+
+export function personRequestName(draft: Pick<Draft, "kind" | "items">) {
+  if (draft.kind !== "PERSON") return "";
+  return (draft.items[0]?.fullNameRu || draft.items[0]?.fullNameKz || "")
+    .trim()
+    .slice(0, 255);
 }

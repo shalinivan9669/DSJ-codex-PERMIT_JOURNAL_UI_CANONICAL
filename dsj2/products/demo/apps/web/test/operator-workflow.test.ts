@@ -208,6 +208,16 @@ test("autosave draft payload retains versioned event and inherited context", () 
     kind: "PERSON" as const,
     title: "Context",
     customerId: null,
+    organizationSnapshots: [
+      {
+        id: "employer",
+        nameRu: "Работодатель",
+        nameKz: null,
+        bin: "000000000001",
+        addressRu: "",
+        addressKz: null,
+      },
+    ],
     demoMode: false,
     items: [],
     schemaVersion: 2 as const,
@@ -225,6 +235,10 @@ test("autosave draft payload retains versioned event and inherited context", () 
   };
   assert.deepEqual(draftPayload(value).events, value.events);
   assert.equal(draftPayload(value).profileVersionId, "profile");
+  assert.deepEqual(
+    draftPayload(value).organizationSnapshots,
+    value.organizationSnapshots,
+  );
 });
 test("revised fixture stable external identity and personnel leading zeros survive column mapping", () => {
   const columns = ["externalPersonKey", "Табельный номер", "ФИО RU"];

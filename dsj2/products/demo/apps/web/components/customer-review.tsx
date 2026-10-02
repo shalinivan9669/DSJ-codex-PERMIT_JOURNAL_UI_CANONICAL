@@ -46,12 +46,14 @@ export function CustomerReview({
   draft,
   canManage,
   flush,
+  embedded = false,
 }: {
   draft: Draft;
   canManage: boolean;
   flush: () => Promise<number>;
+  embedded?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(embedded);
   const [sheet, setSheet] = useState<Sheet | null>(null);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
@@ -139,18 +141,20 @@ export function CustomerReview({
     }
   }
   return (
-    <section className="panel common-context">
-      <div className="toolbar">
-        <div>
-          <h2>Согласование и передача</h2>
-          <span className="muted">
-            Контрольный список, уточнения и факт передачи комплекта
-          </span>
+    <section className={embedded ? undefined : "panel common-context"}>
+      {!embedded && (
+        <div className="toolbar">
+          <div>
+            <h2>Согласование и передача</h2>
+            <span className="muted">
+              Контрольный список, уточнения и факт передачи комплекта
+            </span>
+          </div>
+          <button onClick={() => setOpen(!open)} aria-expanded={open}>
+            {open ? "Свернуть" : "Открыть согласование"}
+          </button>
         </div>
-        <button onClick={() => setOpen(!open)} aria-expanded={open}>
-          {open ? "Свернуть" : "Открыть согласование"}
-        </button>
-      </div>
+      )}
       {open && (
         <div className="context-body">
           {error && <Notice>{error}</Notice>}

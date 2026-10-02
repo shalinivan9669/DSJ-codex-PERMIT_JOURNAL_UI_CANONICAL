@@ -11,6 +11,7 @@ import { provision } from "../../scripts/setup";
 import { draftSchema, itemSchema } from "../../packages/contracts/src";
 import { claimJob, executeJob } from "../../apps/render-worker/src/queue";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
 
 type Session = {
   cookie: string;
@@ -19,7 +20,7 @@ type Session = {
   tenantId: string;
   userId: string;
 };
-test("commercial security: two tenants, all three genuine roles, HTTP object isolation and credential lifecycle", async (t) => {
+test("commercial security: two tenants, all four genuine roles, HTTP object isolation and credential lifecycle", async (t) => {
   assertTestDatabase();
   process.env.PORT = "0";
   process.env.DEMO_ORIGIN = "http://localhost:3100";
@@ -28,6 +29,7 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
   const password = "Synthetic-Security-Password!";
   const suffix = randomUUID();
   const sessions: Session[][] = [];
+  const approvals: Awaited<ReturnType<typeof createApprovalFixture>>[] = [];
   const call = (
     s: Session | null,
     path: string,
@@ -45,15 +47,25 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
       },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
+  const authenticatedLogin = async (email: string, pass: string) => {
+    for (let attempt = 0; ; attempt++) {
+      const response = await call(null, "/auth/login", "POST", {
+        email,
+        password: pass,
+      });
+      if (response.status !== 429 || attempt >= 2) return response;
+      // Four genuine roles plus approval-fixture sessions share the real IP
+      // login limit. Wait for its window; brute-force assertions below do not retry.
+      await response.text();
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+    }
+  };
   const logIn = async (
     email: string,
     tenantId: string,
     pass = password,
   ): Promise<Session> => {
-    const response = await call(null, "/auth/login", "POST", {
-      email,
-      password: pass,
-    });
+    const response = await authenticatedLogin(email, pass);
     assert.equal(response.status, 201, await response.clone().text());
     const cookies = response.headers.getSetCookie();
     assert.ok(
@@ -88,7 +100,7 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
       });
       const admin = await logIn(tenant.email, tenant.tenantId);
       const group = [admin];
-      for (const role of ["OPERATOR", "VIEWER"]) {
+      for (const role of ["OPERATOR", "VIEWER", "DIRECTOR"]) {
         const user = await readJson(
           await call(admin, "/users", "POST", {
             email: `security-${label}-${role}-${suffix}@example.test`,
@@ -100,11 +112,21 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
         group.push(await logIn(user.email, tenant.tenantId));
       }
       sessions.push(group);
+      approvals.push(
+        await createApprovalFixture({
+          tenantId: tenant.tenantId,
+          userId: tenant.userId,
+          role: "ADMIN",
+          sessionId: "fixture",
+          csrfHash: "fixture",
+          correlationId: randomUUID(),
+        }),
+      );
     }
     const fixtures: Array<{
       customer: { id: string };
       recipient: { id: string };
-      request: { id: string };
+      request: { id: string; revision: number };
       draft: ReturnType<typeof draftSchema.parse>;
       photo: { id: string };
       artifact: Awaited<ReturnType<typeof executeJob>>;
@@ -160,12 +182,18 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
             id: randomUUID(),
             fullNameRu: token,
             fullNameKz: `Ә Ғ Қ ${token}`,
+            positionRu: "Синтетический работник",
+            positionKz: "Синтетикалық қызметкер",
+            employeeCategory: "WORKER",
             photoAssetId: photo.id,
             assignments: [
               {
                 id: randomUUID(),
                 templateId: "biot-worker-card",
                 documentDate: "2026-09-22",
+                trainingStart: "2026-09-20",
+                trainingEnd: "2026-09-21",
+                protocolDate: "2026-09-21",
                 biotCategory: "WORKER",
                 hours: "10",
                 productionHours: "16",
@@ -180,14 +208,13 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
       const request = await readJson(
         await call(admin, "/print-requests", "POST", draft),
       );
+      await approvals[index].approve(request.id);
+      // Download isolation uses an actual preview artifact. Final files remain
+      // gated until their required cryptographic signatures are complete.
       await readJson(
-        await call(
-          admin,
-          `/print-requests/${request.id}/finalize`,
-          "POST",
-          { expectedRevision: 0 },
-          { "idempotency-key": randomUUID() },
-        ),
+        await call(admin, `/print-requests/${request.id}/preview`, "POST", {
+          expectedRevision: request.revision,
+        }),
       );
       const owned = await claimJob(db, `security-${index}`, admin.tenantId);
       assert.ok(owned);
@@ -198,6 +225,15 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
         owned,
         `security-${index}`,
         new AbortController().signal,
+      );
+      await readJson(
+        await call(
+          admin,
+          `/print-requests/${request.id}/finalize`,
+          "POST",
+          { expectedRevision: request.revision },
+          { "idempotency-key": randomUUID() },
+        ),
       );
       const template = (
         await readJson(await call(admin, "/settings/templates"), 200)
@@ -335,7 +371,11 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
               [
                 `/print-requests/${own.request.id}/import`,
                 "POST",
-                { expectedRevision: 0, importId: foreign.batch.id, rows: [] },
+                {
+                  expectedRevision: own.request.revision,
+                  importId: foreign.batch.id,
+                  rows: [],
+                },
                 writes,
               ],
               [
@@ -492,10 +532,10 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
         assert.equal((await call(second, "/context")).status, 401);
         const previous = process.env.NODE_ENV;
         process.env.NODE_ENV = "production";
-        const secureLogin = await call(null, "/auth/login", "POST", {
+        const secureLogin = await authenticatedLogin(
           email,
-          password: "Changed-Security-Password!",
-        });
+          "Changed-Security-Password!",
+        );
         process.env.NODE_ENV = previous;
         assert.equal(secureLogin.status, 201);
         assert.ok(
@@ -694,6 +734,7 @@ test("commercial security: two tenants, all three genuine roles, HTTP object iso
       },
     );
   } finally {
+    for (const fixture of approvals) await fixture.close();
     await app.close();
     await db.$disconnect();
   }

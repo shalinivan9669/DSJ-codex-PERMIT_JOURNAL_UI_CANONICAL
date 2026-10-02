@@ -200,6 +200,12 @@ export function ImportDialog({
           rows,
           fieldMask: mapping.filter((field) =>
             [
+              "employeeCategory",
+              "fullNameEn",
+              "positionEn",
+              "workplaceEn",
+              "departmentEn",
+              "employerAddressEn",
               "fullNameRu",
               "fullNameKz",
               "positionRu",
@@ -539,108 +545,113 @@ export function ImportDialog({
               </button>
             </section>
           )}
-          <div className="form-grid">
-            <label>
-              Сохранённое сопоставление
-              <select
-                defaultValue=""
-                disabled={busy}
-                onChange={(event) => {
-                  const selected = savedMappings.find(
-                    (item) => item.id === event.target.value,
-                  );
-                  if (selected) {
-                    setMapping(
-                      preview.columns.map(
-                        (column) => selected.mapping[column] || "",
-                      ),
+          <details className="import-mapping-options">
+            <summary>Сохранённые правила сопоставления</summary>
+            <div className="form-grid">
+              <label>
+                Сохранённое сопоставление
+                <select
+                  defaultValue=""
+                  disabled={busy}
+                  onChange={(event) => {
+                    const selected = savedMappings.find(
+                      (item) => item.id === event.target.value,
                     );
-                    setMappingName(selected.name);
+                    if (selected) {
+                      setMapping(
+                        preview.columns.map(
+                          (column) => selected.mapping[column] || "",
+                        ),
+                      );
+                      setMappingName(selected.name);
+                      setMappingSaved(false);
+                    }
+                  }}
+                >
+                  <option value="">Выберите правило центра</option>
+                  {savedMappings.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Название правила сопоставления
+                <input
+                  value={mappingName}
+                  maxLength={100}
+                  onChange={(event) => {
+                    setMappingName(event.target.value);
                     setMappingSaved(false);
-                  }
-                }}
-              >
-                <option value="">Выберите правило центра</option>
-                {savedMappings.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Название правила сопоставления
-              <input
-                value={mappingName}
-                maxLength={100}
-                onChange={(event) => {
-                  setMappingName(event.target.value);
-                  setMappingSaved(false);
-                }}
-              />
-            </label>
-          </div>
-          <div className="file-actions">
-            <button
-              disabled={
-                busy ||
-                !mappingName.trim() ||
-                duplicateMapping ||
-                !mappedFields.length
-              }
-              onClick={() => void saveMapping()}
-            >
-              {savedMappings.some((item) => item.name === mappingName.trim())
-                ? "Обновить сохранённое правило"
-                : "Сохранить сопоставление"}
-            </button>
-            <button onClick={downloadReport}>Скачать отчёт по строкам</button>
-          </div>
-          {mappingSaved && (
-            <Notice kind="success">
-              Сопоставление сохранено для вашего центра.
-            </Notice>
-          )}
-          <label>
-            Документ для импортируемых строк
-            <select
-              value={templateId}
-              onChange={(event) => {
-                const nextTemplate = event.target
-                  .value as Assignment["templateId"];
-                setTemplateId(nextTemplate);
-                setBiotCategory(defaultBiotCategory(nextTemplate));
-              }}
-            >
-              {Object.entries(templateLabels).map(([id, title]) => (
-                <option key={id} value={id}>
-                  {title}
-                </option>
-              ))}
-            </select>
-          </label>
-          {biotCategory && (
-            <label>
-              Категория БиОТ для импортируемых строк
-              <select
-                value={biotCategory}
-                onChange={(event) =>
-                  setBiotCategory(event.target.value as BiotCategory)
+                  }}
+                />
+              </label>
+            </div>
+            <div className="file-actions">
+              <button
+                disabled={
+                  busy ||
+                  !mappingName.trim() ||
+                  duplicateMapping ||
+                  !mappedFields.length
                 }
+                onClick={() => void saveMapping()}
               >
-                {biotCategoriesForTemplate(templateId).map((category) => (
-                  <option key={category} value={category}>
-                    {BIOT_CATEGORIES[category].label}
+                {savedMappings.some((item) => item.name === mappingName.trim())
+                  ? "Обновить сохранённое правило"
+                  : "Сохранить сопоставление"}
+              </button>
+              <button onClick={downloadReport}>Скачать отчёт по строкам</button>
+            </div>
+            {mappingSaved && (
+              <Notice kind="success">
+                Сопоставление сохранено для вашего центра.
+              </Notice>
+            )}
+          </details>
+          <div className="form-grid import-document-options">
+            <label>
+              Документ для импортируемых строк
+              <select
+                value={templateId}
+                onChange={(event) => {
+                  const nextTemplate = event.target
+                    .value as Assignment["templateId"];
+                  setTemplateId(nextTemplate);
+                  setBiotCategory(defaultBiotCategory(nextTemplate));
+                }}
+              >
+                {Object.entries(templateLabels).map(([id, title]) => (
+                  <option key={id} value={id}>
+                    {title}
                   </option>
                 ))}
               </select>
-              <small>
-                {BIOT_CATEGORIES[biotCategory].hint} Если в таблице есть
-                категория, используются значения строк. Часы и даты из выбранных
-                колонок сохраняются.
-              </small>
             </label>
-          )}
+            {biotCategory && (
+              <label>
+                Категория БиОТ для импортируемых строк
+                <select
+                  value={biotCategory}
+                  onChange={(event) =>
+                    setBiotCategory(event.target.value as BiotCategory)
+                  }
+                >
+                  {biotCategoriesForTemplate(templateId).map((category) => (
+                    <option key={category} value={category}>
+                      {BIOT_CATEGORIES[category].label}
+                    </option>
+                  ))}
+                </select>
+                <small>
+                  {BIOT_CATEGORIES[biotCategory].hint} Если в таблице есть
+                  категория, используются значения строк. Часы и даты из
+                  выбранных колонок сохраняются.
+                </small>
+              </label>
+            )}
+          </div>
           {repeated && (
             <Notice kind="info">
               Этот файл уже добавлен в заявку. Повторные строки не будут
@@ -659,7 +670,12 @@ export function ImportDialog({
               одну колонку.
             </Notice>
           )}
-          <div className="table-scroll import-preview">
+          <div
+            className="table-scroll import-preview"
+            role="region"
+            aria-label="Предпросмотр импортируемых строк"
+            tabIndex={0}
+          >
             <table>
               <thead>
                 <tr>

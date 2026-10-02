@@ -16,11 +16,12 @@ import tempfile
 import importlib.metadata
 import threading
 from copy import deepcopy
+from functools import lru_cache
 from datetime import date, datetime
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED, ZipInfo
 from lxml import etree as E
-from PIL import Image, ImageOps, ImageFont
+from PIL import Image, ImageOps, ImageFont, ImageDraw
 from openpyxl import Workbook, load_workbook
 from sanitize_templates import replace_text_nodes, deterministic_zip
 from package_xml import normalize_package
@@ -32,12 +33,13 @@ W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 R='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
 NS={'w':W[1:-1]}
-RENDERER_VERSION='demo-ooxml-7/libreoffice-26.2.6.3'
+RENDERER_VERSION='demo-ooxml-8/libreoffice-26.2.6.3'
 RU=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']
 KZ=['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан']
 Image.MAX_IMAGE_PIXELS=20_000_000
 _converter_versions={}
 _converter_version_lock=threading.Lock()
+_original_media_cache={}
 
 def date_parts(value):
     if not value: return dict.fromkeys(['DAY','MONTH','YEAR','YEAR_SHORT','DAY_MONTH','DATE','MONTH_RU','MONTH_KZ'],'')
@@ -71,7 +73,7 @@ def fields_for(snapshot,item):
         'CHAIR':member(0),'MEMBER_1':member(1),'MEMBER_2':member(2),'APPROVAL_BASIS':issuer.get('approvalBasis','')}
     for prefix,key in [('DOCUMENT','documentDate'),('PROTOCOL','protocolDate'),('VALID','validUntil'),('TRAINING_START','trainingStart'),('TRAINING_END','trainingEnd'),('ISSUE','documentDate')]:
         for part,value in date_parts(assignment.get(key)).items(): fields[f'{prefix}_{part}']=value
-    fields.update(PROFESSION_RU=fields['POSITION_RU'],PROFESSION_KZ=fields['POSITION_KZ'],PROTOCOL_NUMBER_DISPLAY=fields['PROTOCOL_NUMBER'])
+    fields.update(PROFESSION_RU=fields['POSITION_RU'],PROFESSION_KZ=fields['POSITION_KZ'],PROTOCOL_NUMBER_DISPLAY=fields['PROTOCOL_NUMBER'],CREDENTIAL_NUMBER=item.get('credentialNumber','') or number)
     from biot_2026 import current_fields
     fields.update(current_fields(snapshot,item))
     fields['TRAINING_START_YEAR_FULL']=fields['TRAINING_START_YEAR']; fields['TRAINING_END_YEAR_FULL']=fields['TRAINING_END_YEAR']
@@ -109,7 +111,7 @@ def add_mark(files,text):
     # Replacing its references with a watermark-only header hides those fields.
     # This opt-in marker is carried by the new immutable template bytes; older
     # snapshots keep their prior rendering behavior.
-    if any(n.get(W+'val')=='DSJ_RESTORED_BIOT_PROTOCOL' for n in root.iter(W+'tblCaption')):
+    if 'demo/original-form.json' in files or any(n.get(W+'val')=='DSJ_RESTORED_BIOT_PROTOCOL' for n in root.iter(W+'tblCaption')):
         rels=E.fromstring(files['word/_rels/document.xml.rels'])
         references={n.get(R+'id') for n in root.iter(W+'headerReference')}
         for rel in rels:
@@ -131,7 +133,7 @@ def add_mark(files,text):
     files['[Content_Types].xml']=E.tostring(ct,xml_declaration=True,encoding='utf-8')
     files['word/document.xml']=E.tostring(root,xml_declaration=True,encoding='utf-8')
 
-def fit_textboxes(tree,tid,has_photo):
+def fit_textboxes(tree,tid,has_photo,original_form=False):
     """Keep the historic panel/section geometry and reserve the original photo slot.
     Source boxes used spaces/tabs as positioning, which clipped substituted text.
     Reflow populated boxes only; blank repeat-examination panels stay unchanged.
@@ -140,6 +142,13 @@ def fit_textboxes(tree,tid,has_photo):
     for box in tree.iter(W+'txbxContent'):
         text=''.join(box.itertext())
         if '{{' not in text: continue
+        if original_form:
+            if tid=='ps-card' and 'FULL_NAME' not in text:
+                for node in box.iter(W+'t'):
+                    node.text=re.sub(r'\{\{(?:CHAIR|MEMBER_1|MEMBER_2)_NAME\}\}','',node.text or '')
+                text=''.join(box.itertext())
+            # Issuer text in a future renewal panel is not a live examination.
+            if not any(token in text for token in ['{{FULL_NAME','{{NUMBER}}','{{PROTOCOL_NUMBER}}','{{SUBJECT}}','{{ONE}}']):continue
         shape=next((n for n in box.iterancestors() if E.QName(n).localname in ['shape','rect','anchor']),None)
         issuer_strip='{{ISSUER_BOTH}}' in text
         style=shape.get('style','') if shape is not None else ''
@@ -167,23 +176,25 @@ def fit_textboxes(tree,tid,has_photo):
             if value:paragraphs.append((p,value))
             elif not any(E.QName(n).localname in ['drawing','pict','br'] for n in p.iter()):box.remove(p)
         for p,value in paragraphs:
+            points=8 if not original_form or '{{' in value else 6
             # Right/left insets apply only to the fields below the panel title.
             is_title=('NUMBER' in value and any(title in value.upper() for title in ['УДОСТОВЕРЕНИЕ','КУӘЛІК','КУƏЛІК']))
-            inset=24 if tid=='biot-worker-card' and 'FULL_NAME' in text else 18 if tid=='ptm-card' and 'FULL_NAME' in text else 100 if tid=='pb-card' and 'FULL_NAME' in text and not is_title else 88 if photo_panel and tid=='ps-card' and not is_title else 0
+            inset=24 if tid=='biot-worker-card' and 'FULL_NAME' in text else 18 if tid=='ptm-card' and 'FULL_NAME' in text else (100 if has_photo or not original_form else 8) if tid=='pb-card' and 'FULL_NAME' in text and not is_title else 88 if photo_panel and tid=='ps-card' and not is_title else 0
             if tid=='ps-card' and 'Тапсырылған емтихандар' in text:inset=24
             right=76 if photo_panel and tid=='ptm-card' and not is_title and 'ISSUER' not in value else 0
             for child in list(p):p.remove(child)
-            pr=E.SubElement(p,W+'pPr');E.SubElement(pr,W+'spacing',{W+'before':'0',W+'after':'0',W+'line':'180',W+'lineRule':'exact'})
+            pr=E.SubElement(p,W+'pPr');E.SubElement(pr,W+'spacing',{W+'before':'0',W+'after':'0',W+'line':str((points+1)*20),W+'lineRule':'exact'})
             E.SubElement(pr,W+'ind',{W+'left':str(round(inset*20)),W+'right':str(round(right*20)),W+'firstLine':'0'})
             E.SubElement(pr,W+'jc',{W+'val':'center' if issuer_strip or (is_title and tid!='ptm-card') else 'left'})
             run=E.SubElement(p,W+'r');rp=E.SubElement(run,W+'rPr')
             E.SubElement(rp,W+'rFonts',{W+'ascii':'Liberation Serif',W+'hAnsi':'Liberation Serif',W+'cs':'Liberation Serif'})
-            E.SubElement(rp,W+'sz',{W+'val':'16'});E.SubElement(rp,W+'szCs',{W+'val':'16'})
+            E.SubElement(rp,W+'sz',{W+'val':str(points*2)});E.SubElement(rp,W+'szCs',{W+'val':str(points*2)})
             if is_title:E.SubElement(rp,W+'b')
             E.SubElement(run,W+'t').text=value
         if tid=='ps-card' and 'FULL_NAME' in text:
             spacer=E.Element(W+'p');pr=E.SubElement(spacer,W+'pPr');E.SubElement(pr,W+'spacing',{W+'line':'160',W+'lineRule':'exact'});box.insert(0,spacer)
         box.set('data-demo-width',str(width));box.set('data-demo-height',str(height))
+        if original_form:box.set('data-demo-original','true')
         if issuer_strip:box.set('data-demo-bottom-pad','2')
         if photo_panel:
             box.set('data-demo-photo-band',{'ptm-card':'48,124','pb-card':'25,116','ps-card':'42,138'}.get(tid,'0,0'))
@@ -193,12 +204,15 @@ def fit_rendered_textboxes(tree):
     for box in tree.iter(W+'txbxContent'):
         if 'data-demo-width' not in box.attrib:continue
         width=float(box.attrib.pop('data-demo-width'));height=float(box.attrib.pop('data-demo-height'))
+        original=box.attrib.pop('data-demo-original',False)
         bottom_pad=float(box.attrib.pop('data-demo-bottom-pad','6'))
         band=box.attrib.pop('data-demo-photo-band',None);side=box.attrib.pop('data-demo-photo-side',None)
         for size in [8]:
             font=ImageFont.truetype(str(ROOT/'assets/fonts/LiberationSerif-Regular.ttf'),round(size*10))
             total=0;unbreakable_overflow=False
             for p in box.findall(W+'p'):
+                measured_size=(float(p.find('.//'+W+'sz').get(W+'val'))/2 if original and p.find('.//'+W+'sz') is not None else size)
+                measured_font=ImageFont.truetype(str(ROOT/'assets/fonts/LiberationSerif-Regular.ttf'),round(measured_size*10)) if original else font
                 if band:
                     start,end=map(float,band.split(','));ind=p.find(W+'pPr/'+W+'ind')
                     # The old uniform inset wasted the full width below the photo.
@@ -208,14 +222,14 @@ def fit_rendered_textboxes(tree):
                 ind=p.find(W+'pPr/'+W+'ind');avail=width-9-((int(ind.get(W+'left','0'))+int(ind.get(W+'right','0')))/20 if ind is not None else 0)
                 lines=1;current=''
                 for word in ''.join(n.text or '' for n in p.iter(W+'t')).split():
-                    if font.getlength(word)/10>avail:unbreakable_overflow=True
+                    if measured_font.getlength(word)/10>avail:unbreakable_overflow=True
                     candidate=(current+' '+word).strip()
-                    if current and font.getlength(candidate)/10>avail:lines+=1;current=word
+                    if current and measured_font.getlength(candidate)/10>avail:lines+=1;current=word
                     else:current=candidate
-                total+=lines*(size+1)
+                total+=lines*(measured_size+1)
             if total<=height-bottom_pad and not unbreakable_overflow:break
         if total>height-bottom_pad or unbreakable_overflow:raise ValueError('PRINT_LAYOUT_OVERFLOW')
-        for node in box.iter():
+        for node in box.iter() if not original else []:
             if node.tag in [W+'sz',W+'szCs']:node.set(W+'val',str(round(size*2)))
             if node.tag==W+'spacing':node.set(W+'line',str(round((size+1)*20)))
 
@@ -245,8 +259,62 @@ def fit_certificate_name(tree,value):
                 for old in rp.findall(W+key):rp.remove(old)
                 E.SubElement(rp,W+key,{W+'val':str(size*2)})
 
+def fill_original_media(files, snapshot):
+    """Use the former issuer image slot, without carrying its logo/signatures."""
+    metadata=json.loads(files['demo/original-form.json'].decode('utf-8'))
+    if metadata.get('version')!=1:raise ValueError('ORIGINAL_FORM_VERSION_UNKNOWN')
+    issuer=snapshot['issuer']
+    for slot in metadata['dynamicMedia']:
+        if slot['kind']=='BLANK_SIGNATURE':continue
+        with Image.open(io.BytesIO(files[slot['part']])) as original:size=original.size
+        content=' / '.join(filter(None,[issuer.get('nameKz'),issuer.get('nameRu')]))
+        if slot['kind']=='ISSUER_ADDRESS':
+            content+='\n'+' / '.join(filter(None,[issuer.get('addressKz'),issuer.get('addressRu')]))
+        cache_key=(hashlib.sha256(files[slot['part']]).digest(),content)
+        if cache_key in _original_media_cache:
+            files[slot['part']]=_original_media_cache[cache_key];continue
+        canvas=Image.new('RGBA',size,(255,255,255,0));draw=ImageDraw.Draw(canvas)
+        font_path=ROOT/'assets/fonts/LiberationSans-Regular.ttf'
+        maximum=max(10,min(70,size[1]//3))
+        for pixels in range(maximum,5,-1):
+            font=ImageFont.truetype(str(font_path),pixels)
+            lines=[]
+            for paragraph in content.splitlines():
+                line=''
+                for word in paragraph.split():
+                    candidate=(line+' '+word).strip()
+                    if draw.textlength(candidate,font=font)>size[0]-8 and line:lines.append(line);line=word
+                    else:line=candidate
+                if line:lines.append(line)
+            height=len(lines)*(pixels+3)
+            if height<=size[1]-8 and all(draw.textlength(line,font=font)<=size[0]-8 for line in lines):break
+        else:raise ValueError('PRINT_LAYOUT_OVERFLOW')
+        y=max(4,(size[1]-height)//2)
+        for line in lines:
+            draw.text((max(4,(size[0]-draw.textlength(line,font=font))/2),y),line,font=font,fill=(0,0,0,255));y+=pixels+3
+        output=io.BytesIO();canvas.save(output,'PNG');files[slot['part']]=output.getvalue()
+        if len(_original_media_cache)>=64:_original_media_cache.pop(next(iter(_original_media_cache)))
+        _original_media_cache[cache_key]=files[slot['part']]
+
+
+@lru_cache(maxsize=32)
+def immutable_template_package(content):
+    # Keyed by actual immutable bytes; edits under the same path cannot reuse
+    # stale fields/media. Every render receives a fresh package dictionary.
+    with ZipFile(io.BytesIO(content)) as z:files={n:z.read(n) for n in z.namelist()}
+    fields=set();parts=set()
+    for name,data in files.items():
+        if not name.endswith('.xml'):continue
+        found=re.findall(r'\{\{([A-Z0-9_]+)\}\}',''.join(E.fromstring(data).itertext()))
+        if found:fields.update(found);parts.add(name)
+    return files,frozenset(fields),frozenset(parts)
+
+
 def render_one(snapshot,item,template):
-    with ZipFile(template) as z: files={n:z.read(n) for n in z.namelist()}
+    package,available,field_parts=immutable_template_package(Path(template).read_bytes())
+    files=dict(package)
+    original_form='demo/original-form.json' in files
+    if original_form:fill_original_media(files,snapshot)
     fields=fields_for(snapshot,item)
     # Shared with contracts PRINT_LIMITS.maxUnbroken. Reject before registration via
     # preflight; never truncate a legal name or solve overflow with a micro-font.
@@ -254,13 +322,67 @@ def render_one(snapshot,item,template):
         raise ValueError('PRINT_LAYOUT_OVERFLOW')
     # Some historic forms have one bilingual cell backed by a RU-only merge key.
     # Decide from the immutable template bytes, never from the current manifest.
-    available=set(re.findall(r'\{\{([A-Z0-9_]+)\}\}', ''.join(''.join(E.fromstring(data).itertext()) for name,data in files.items() if name.endswith('.xml'))))
     for base in ['FULL_NAME','POSITION','WORKPLACE']:
         if base+'_RU' in available and not ({base+'_KZ',base+'_BOTH'} & available):
             fields[base+'_RU']=fields[base+'_BOTH']
     for name,data in list(files.items()):
         if not name.endswith('.xml'): continue
+        if original_form and name!='word/document.xml' and name not in field_parts and b'gfxdata' not in data:continue
         root=E.fromstring(data)
+        if original_form and name=='word/document.xml':
+            if snapshot['templateId'].endswith('-card'):
+                # Original card merge keys reused issue-day aliases in protocol
+                # and expiry bands. Resolve by the printed field context, while
+                # keeping the issue fields in the identity panel independent.
+                for paragraph in root.iter(W+'p'):
+                    nodes=paragraph.xpath('./w:r/w:t | ./w:hyperlink/w:r/w:t',namespaces=NS);label=''.join(n.text or '' for n in nodes)
+                    prefix='VALID' if '{{VALID_' in label else 'PROTOCOL' if '{{PROTOCOL_NUMBER' in label else None
+                    if prefix:
+                        replace_text_nodes(nodes,r'\{\{(?:DOCUMENT|ISSUE)_','{{'+prefix+'_')
+                        if prefix=='VALID':
+                            # The PTM source has adjacent day/month merge keys.
+                            # Both aliases resolve to expiry, but print it once;
+                            # Word can split either key between multiple runs.
+                            replace_text_nodes(nodes,r'\{\{VALID_DAY_MONTH\}\}(?:\s*\{\{VALID_DAY_MONTH\}\})+','{{VALID_DAY_MONTH}}')
+                            replace_text_nodes(nodes,r'\{\{VALID_DAY_MONTH\}\}\s*\{\{VALID_DATE\}\}','{{VALID_DATE}}')
+                for box in root.iter(W+'txbxContent'):
+                    protocol_band=False
+                    for paragraph in box.findall(W+'p'):
+                        nodes=paragraph.xpath('./w:r/w:t | ./w:hyperlink/w:r/w:t',namespaces=NS);label=''.join(n.text or '' for n in nodes)
+                        if '{{VALID_' in label:protocol_band=False
+                        if '{{PROTOCOL_NUMBER' in label:protocol_band=True
+                        if protocol_band:
+                            for node in nodes:node.text=(node.text or '').replace('{{DOCUMENT_','{{PROTOCOL_').replace('{{ISSUE_','{{PROTOCOL_')
+            if snapshot['templateId'].startswith('biot-') and snapshot['templateId'].endswith('-protocol'):
+                for paragraph in root.iter(W+'p'):
+                    nodes=paragraph.xpath('./w:r/w:t | ./w:hyperlink/w:r/w:t',namespaces=NS)
+                    if '{{WORKPLACE_KZ}}' in ''.join(n.text or '' for n in nodes):
+                        nodes[0].text='{{WORKPLACE_BOTH}}'
+                        for node in nodes[1:]:node.text=''
+                    all_nodes=list(paragraph.iter(W+'t'));label=''.join(n.text or '' for n in all_nodes)
+                    kz_check=re.search(r'б[іi]л[іi]м[іi]н.*тексеру',label,re.I)
+                    ru_check='вид проверки знаний' in label.lower()
+                    if all_nodes and (kz_check or ru_check):
+                        all_nodes[0].text='Білімін тексеру түрі: {{BIOT_CHECK_TYPE_KZ}}' if kz_check else 'Вид проверки знаний: {{BIOT_CHECK_TYPE_RU}}'
+                        for node in all_nodes[1:]:node.text=''
+            if snapshot['templateId'].endswith('-protocol'):
+                for row in root.iter(W+'tr'):
+                    props=row.find(W+'trPr')
+                    if props is None:props=E.Element(W+'trPr');row.insert(0,props)
+                    if props.find(W+'cantSplit') is None:E.SubElement(props,W+'cantSplit')
+            if snapshot['templateId']=='ps-witness':
+                for table in root.iter(W+'tbl'):
+                    if 'Біліктілік комиссиясының' in ''.join(table.itertext()):
+                        for node in table.iter(W+'t'):node.text=(node.text or '').replace('{{DOCUMENT_','{{PROTOCOL_').replace('{{ISSUE_','{{PROTOCOL_').replace('{{TRAINING_END_YEAR_FULL}}','{{PROTOCOL_YEAR}}')
+                for paragraph in root.iter(W+'p'):
+                    if 'Решением квалификационной' in ''.join(paragraph.itertext()):
+                        for node in paragraph.iter(W+'t'):node.text=(node.text or '').replace('{{DOCUMENT_','{{PROTOCOL_').replace('{{ISSUE_','{{PROTOCOL_').replace('{{TRAINING_END_YEAR_FULL}}','{{PROTOCOL_YEAR}}')
+            if snapshot['templateId'].endswith('-protocol'):
+                approval_seen=False
+                for node in root.iter(W+'t'):
+                    if '{{APPROVAL_BASIS}}' not in (node.text or ''):continue
+                    if approval_seen:node.text=node.text.replace('{{APPROVAL_BASIS}}','')
+                    else:approval_seen=True
         for node in root.iter():
             for attribute in list(node.attrib):
                 if E.QName(attribute).localname=='gfxdata':del node.attrib[attribute]
@@ -271,7 +393,7 @@ def render_one(snapshot,item,template):
                 nodes[0].text='{{ISSUER_RU}}'
                 for n in nodes[1:]:n.text=''
             else:replace_text_nodes(nodes,r'ТОО\s+Аттестац\w*','')
-        if snapshot['templateId']=='ps-card':
+        if snapshot['templateId']=='ps-card' and not original_form:
             for p in root.iter(W+'p'):
                 nodes=p.xpath('./w:r/w:t',namespaces=NS);label=' '.join(''.join(n.text or '' for n in nodes).split())
                 if '{{RESULT}}' in label and ('Выпускной' in label or 'Практическое' in label):
@@ -296,10 +418,13 @@ def render_one(snapshot,item,template):
                         if rp is None:rp=E.Element(W+'rPr');run.insert(0,rp)
                         for old in rp.findall(W+'sz'):rp.remove(old)
                         E.SubElement(rp,W+'sz',{W+'val':'16'})
-        fit_textboxes(root,snapshot['templateId'],bool(item.get('photoAssetId')))
+        # Original anchors stay in place. Populated fixed card boxes still need
+        # bounded paragraph insets and wrapping: the PB source starts 2.1pt
+        # outside the sheet and its cached short names hide that clipping.
+        fit_textboxes(root,snapshot['templateId'],bool(item.get('photoAssetId')),original_form)
         current_biot=any((n.get(W+'val') or '').startswith('BIOT2026_') for n in root.iter(W+'tblCaption'))
         if snapshot['templateId']=='biot-itr-certificate' and not current_biot:fit_certificate_name(root,fields['FULL_NAME_RU'])
-        if snapshot['templateId']=='pb-protocol':
+        if snapshot['templateId']=='pb-protocol' and not original_form:
             body=root.find(W+'body');previous_blank=False
             for paragraph in list(body) if body is not None else []:
                 blank=paragraph.tag==W+'p' and not ''.join(paragraph.itertext()).strip() and not any(E.QName(n).localname in ['drawing','pict','sectPr','br'] for n in paragraph.iter())
@@ -323,6 +448,7 @@ def render_one(snapshot,item,template):
         if not photo.is_relative_to(store): raise ValueError('PHOTO_PATH')
         coords={'ptm-card':(215.4,123.75,51,67.5),'pb-card':(-2.1,121.5,59.8,79.65),'ps-card':(8,108,56,74)}[tid]
         x,y,w,h=coords
+        if original_form and tid=='pb-card':x=20
         blob=photo.read_bytes();photo_digest=hashlib.sha256(blob).hexdigest()
         expected=re.search(r'/(\w{64})-[0-9a-f-]{36}\.png$',key)
         if expected and expected[1]!=photo_digest:raise ValueError('PHOTO_HASH_MISMATCH')
@@ -338,6 +464,14 @@ def render_one(snapshot,item,template):
     if snapshot.get('demoMode'): add_mark(files,'ДЕМО — НЕ ЯВЛЯЕТСЯ ВЫДАННЫМ ДОКУМЕНТОМ')
     elif snapshot.get('mode')=='draft-preview': add_mark(files,'ПРЕДПРОСМОТР — НЕ ЯВЛЯЕТСЯ ВЫДАННЫМ ДОКУМЕНТОМ')
     tree=E.fromstring(files['word/document.xml']);body=tree.find(W+'body')
+    if original_form and snapshot['templateId']=='ps-witness':
+        # The retained booklet ends in an empty section with identical paper
+        # geometry. It becomes an unwanted blank leaf before an EN appendix.
+        # Retain the preceding section break so the cover keeps its own page,
+        # and start only the empty final section continuously on that page.
+        final=body.find(W+'sectPr');kind=final.find(W+'type')
+        if kind is None:kind=E.SubElement(final,W+'type')
+        kind.set(W+'val','continuous')
     while len(body)>1:
         tail=body[-2] if body[-1].tag==W+'sectPr' else body[-1]
         if tail.tag!=W+'p' or ''.join(tail.itertext()).strip() or tail.find('.//'+W+'sectPr') is not None or any(E.QName(n).localname in ['drawing','pict','br'] for n in tail.iter()):break
@@ -351,7 +485,15 @@ def render_one(snapshot,item,template):
         if len(streak)>30:
             insertion=body.index(streak[0])
             for old in streak:body.remove(old)
-            p=E.Element(W+'p');run=E.SubElement(p,W+'r');E.SubElement(run,W+'br',{W+'type':'page'});body.insert(insertion,p)
+            p=E.Element(W+'p')
+            if original_form:
+                # Source sample padding already advances a page in the prior
+                # continuous section; a second explicit break makes a blank leaf.
+                pr=E.SubElement(p,W+'pPr');E.SubElement(pr,W+'pageBreakBefore')
+                E.SubElement(pr,W+'spacing',{W+'before':'0',W+'after':'0',W+'line':'20',W+'lineRule':'exact'})
+            else:
+                run=E.SubElement(p,W+'r');E.SubElement(run,W+'br',{W+'type':'page'})
+            body.insert(insertion,p)
         streak=[]
     files['word/document.xml']=E.tostring(tree,xml_declaration=True,encoding='utf-8')
     return files
@@ -376,6 +518,8 @@ def preflight(payload,out):
     issues=[]
     for index,snapshot in enumerate(snapshots):
         template,path=resolve_template(snapshot)
+        from english_appendix import validate_english
+        validate_english(snapshot)
         if not snapshot.get('groupEvent') and len(snapshot['items'])!=1: raise ValueError('PREFLIGHT_SINGLE_RECIPIENT')
         try:
             if snapshot.get('groupEvent'):
@@ -389,11 +533,13 @@ def preflight(payload,out):
     Path(out).write_text(json.dumps(result),encoding='utf8');return result
 
 def render_docx(snapshot,out):
+    from english_appendix import append_english_pages, validate_english
+    validate_english(snapshot)
     template,path=resolve_template(snapshot)
     if snapshot.get('groupEvent'):
         from group_protocol import render_group
         files=render_group(snapshot,path,render_one)
-        deterministic_zip(out,normalize_package(files))
+        deterministic_zip(out,normalize_package(append_english_pages(files,snapshot)))
         return {'format':'DOCX','groupContractVersion':1,'participants':len(snapshot['items']),'templateId':snapshot['templateId'],'rendererVersion':RENDERER_VERSION}
     items=snapshot['items']
     if not 1<=len(items)<=MAX_REQUEST_ROWS: raise ValueError('ROW_LIMIT')
@@ -455,7 +601,7 @@ def render_docx(snapshot,out):
     files['word/document.xml']=E.tostring(root,xml_declaration=True,encoding='utf-8')
     files['word/_rels/document.xml.rels']=E.tostring(rels,xml_declaration=True,encoding='utf-8')
     if numbering is not None:files['word/numbering.xml']=E.tostring(numbering,xml_declaration=True,encoding='utf-8')
-    deterministic_zip(out,normalize_package(files))
+    deterministic_zip(out,normalize_package(append_english_pages(files,snapshot)))
     return {'format':'DOCX','templateVersion':snapshot.get('templateVersion',template['version']),'rendererVersion':RENDERER_VERSION}
 
 def convert_pdf(docx,out):
@@ -501,6 +647,7 @@ def runtime_health(out):
     Path(out).write_text(json.dumps(result),encoding='utf8');return result
 
 COLUMNS=['requestId','status','revision','createdAt','id','recipientId','externalId','personnelNumber','sourceRow','sourceOrder','employerId','employmentPeriod','fullNameRu','fullNameKz','positionRu','positionKz','workplaceRu','workplaceKz','departmentRu','departmentKz','employerBin','employerAddressRu','employerAddressKz','templateId','direction','documentKind','number','protocolNumber','registrationNumber','documentDate','protocolDate','trainingStart','trainingEnd','trainingSubject','result','reason','education','hours','productionHours','validUntil','externalBasisNumber','biotCategory','biotIndustryRu','biotIndustryKz','biotCheckType','biotKnowledgeResult','biotProctoringResult','biotUniqueNumber','biotNotes']
+COLUMNS += ['employeeCategory','fullNameEn','positionEn','workplaceEn','employerAddressEn','departmentEn','trainingSubjectEn','resultEn','reasonEn','educationEn','biotIndustryEn','biotKnowledgeResultEn','biotProctoringResultEn','biotNotesEn']
 
 def export_registry(payload,out):
     columns=payload.get('columns') or [{'field':key,'title':key} for key in COLUMNS]

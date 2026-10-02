@@ -15,7 +15,7 @@ export const PUBLIC_RECORD_LIMITATION =
   "Проверяется запись в реестре этого центра. Страница не подтверждает неизменность любой копии документа и не заменяет проверку подписи.";
 function center(c: Context, write = false) {
   if (
-    !["ADMIN", "OPERATOR", "VIEWER"].includes(c.role) ||
+    !["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
     (write && c.role === "VIEWER")
   )
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");
@@ -34,9 +34,11 @@ export async function createVerificationLink(c: Context, input: unknown) {
     fail(400, "EXPIRY_PASSED", "Срок публикации должен быть в будущем");
   const target = await db.issuedDocument.findFirst({
     where: { tenantId: c.tenantId, id: data.documentId },
-    select: { id: true },
+    select: { id: true, issuanceId: true },
   });
   if (!target) fail(404, "NOT_FOUND", "Выданный документ не найден");
+  const workflow = await db.issuanceWorkflow.findFirst({ where: { tenantId: c.tenantId, issuanceId: target.issuanceId } });
+  if (workflow && workflow.status !== "ISSUED") fail(409, "ISSUANCE_NOT_COMPLETE", "Публичная проверка доступна после полного выпуска и обязательных подписей");
   const token = randomBytes(32).toString("hex");
   const path = `/verify/${token}`;
   const origin = process.env.DEMO_ORIGIN;

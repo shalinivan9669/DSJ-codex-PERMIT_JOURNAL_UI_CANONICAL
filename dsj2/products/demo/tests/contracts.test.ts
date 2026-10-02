@@ -67,6 +67,47 @@ test("partial draft retains independent RU/KZ, accepts 100/250 and rejects 251 r
   assert.deepEqual(large.items[249], { ...item, id: "249" });
   assert.ok(validateDraft(draft, null).length > 0);
 });
+test("organization reference snapshots retain approved empty and bilingual values in a bounded strict draft contract", () => {
+  const snapshot = {
+    id: "customer",
+    nameRu: "Заказчик",
+    nameKz: "Тапсырыс беруші",
+    bin: "000000000001",
+    addressRu: "",
+    addressKz: null,
+  };
+  const input = {
+    kind: "COMPANY",
+    customerId: snapshot.id,
+    organizationSnapshots: [snapshot],
+    items: [],
+  };
+  const draft = draftSchema.parse(input);
+  assert.deepEqual(draft.organizationSnapshots, [snapshot]);
+  assert.deepEqual(draftSchema.parse(JSON.parse(JSON.stringify(draft))), draft);
+  assert.equal(
+    draftSchema.safeParse({
+      ...input,
+      organizationSnapshots: [{ ...snapshot, tenantId: "foreign" }],
+    }).success,
+    false,
+  );
+  assert.equal(
+    draftSchema.safeParse({
+      ...input,
+      organizationSnapshots: Array.from({ length: 252 }, (_, index) => ({
+        ...snapshot,
+        id: String(index),
+      })),
+    }).success,
+    false,
+  );
+  assert.equal(
+    draftSchema.parse({ kind: "PERSON", items: [] }).organizationSnapshots,
+    undefined,
+  );
+});
+
 test("protocol reason/education roundtrip and unbroken print limits report the specific field", () => {
   const assignment = assignmentSchema.parse({
     id: "a",
@@ -119,6 +160,7 @@ test("product policy exact method and path deny unknown, action replay, normaliz
   for (const role of [
     "anonymous",
     "ADMIN",
+    "DIRECTOR",
     "OPERATOR",
     "VIEWER",
     "SUPER_ADMIN",
@@ -146,6 +188,32 @@ test("product policy exact method and path deny unknown, action replay, normaliz
     );
     assert.equal(allowedRoute("web", "POST", "/requests"), false);
   }
+});
+
+test("director approval and signing routes stay exact and do not open legacy signing or arbitrary callbacks", () => {
+  assert.equal(allowedRoute("web", "GET", "/approvals"), true);
+  assert.equal(allowedRoute("api", "GET", "/approvals/test-id"), true);
+  assert.equal(
+    allowedRoute("api", "POST", "/approvals/test-id/decision"),
+    true,
+  );
+  assert.equal(
+    allowedRoute("api", "PATCH", "/approvals/test-id/decision"),
+    false,
+  );
+  assert.equal(
+    allowedRoute("api", "POST", "/print-requests/test-id/signing/start"),
+    true,
+  );
+  assert.equal(allowedRoute("api", "POST", "/signing/test-id/complete"), true);
+  assert.equal(allowedRoute("api", "GET", "/signing/test-id/complete"), false);
+  assert.equal(allowedRoute("api", "POST", "/signing/test-id/callback"), false);
+  assert.equal(allowedRoute("api", "POST", "/signatures"), false);
+  assert.equal(
+    allowedRoute("api", "POST", "/public/invites/test-id/sign"),
+    false,
+  );
+  assert.equal(allowedRoute("api", "POST", "/translations/suggest"), true);
 });
 test("registered API controller method/path map equals deny-by-default policy", async () => {
   await import("../apps/api/src/main");

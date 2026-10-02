@@ -10,13 +10,15 @@ export function RequestOperations({
   selected,
   flush,
   canManage,
+  embedded = false,
 }: {
   draft: Draft;
   selected?: Recipient;
   flush: () => Promise<number>;
   canManage: boolean;
+  embedded?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(embedded);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -42,18 +44,20 @@ export function RequestOperations({
     }
   }
   return (
-    <section className="panel common-context">
-      <div className="toolbar">
-        <div>
-          <h2>Связанные действия</h2>
-          <span className="muted">
-            Заказ и повторное обращение используют данные этой заявки
-          </span>
+    <section className={embedded ? undefined : "panel common-context"}>
+      {!embedded && (
+        <div className="toolbar">
+          <div>
+            <h2>Связанные действия</h2>
+            <span className="muted">
+              Заказ и повторное обращение используют данные этой заявки
+            </span>
+          </div>
+          <button onClick={() => setOpen(!open)} aria-expanded={open}>
+            {open ? "Свернуть" : "Открыть действия"}
+          </button>
         </div>
-        <button onClick={() => setOpen(!open)} aria-expanded={open}>
-          {open ? "Свернуть" : "Открыть действия"}
-        </button>
-      </div>
+      )}
       {open && (
         <div className="context-body">
           {error && <Notice>{error}</Notice>}

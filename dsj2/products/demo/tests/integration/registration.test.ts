@@ -265,12 +265,72 @@ test("public self-registration isolates a complete unapproved center atomically"
         const finalized = await send(
           `/print-requests/${draft.id}/finalize`,
           "POST",
-          { expectedRevision: 0 },
+          { expectedRevision: draft.revision },
           { ...auth, "idempotency-key": randomUUID() },
         );
-        assert.equal(finalized.status, 422);
+        assert.equal(finalized.status, 409);
+        assert.match(await finalized.text(), /APPROVAL_REQUIRED/);
+        const directorEmail = `registration-director-${suffix}@example.test`;
+        const directorPassword = `Synthetic-director-${randomUUID()}!`;
+        const directorResponse = await send(
+          "/users",
+          "POST",
+          {
+            email: directorEmail,
+            displayName: "Synthetic Director",
+            role: "DIRECTOR",
+            password: directorPassword,
+          },
+          auth,
+        );
+        assert.equal(
+          directorResponse.status,
+          201,
+          await directorResponse.clone().text(),
+        );
+        const login = await send("/auth/login", "POST", {
+          email: directorEmail,
+          password: directorPassword,
+        });
+        assert.equal(
+          login.status,
+          201,
+          "Director login must establish a real session",
+        );
+        const directorAuth = credentials(login, (await login.json()).csrfToken);
+        const proposal = await (
+          await send(
+            `/approvals/${draft.approval.proposalId}`,
+            "GET",
+            undefined,
+            directorAuth,
+          )
+        ).json();
+        const decision = await send(
+          `/approvals/${proposal.id}/decision`,
+          "POST",
+          {
+            decision: "APPROVE",
+            reason:
+              "Verify unapproved setup still blocks issuance after director approval",
+            expectedProposalHash: proposal.proposalHash,
+          },
+          directorAuth,
+        );
+        assert.equal(decision.status, 201, await decision.clone().text());
+        const afterApproval = await send(
+          `/print-requests/${draft.id}/finalize`,
+          "POST",
+          { expectedRevision: draft.revision },
+          { ...auth, "idempotency-key": randomUUID() },
+        );
+        assert.equal(
+          afterApproval.status,
+          422,
+          await afterApproval.clone().text(),
+        );
         assert.match(
-          await finalized.text(),
+          await afterApproval.text(),
           /PROFILE_NOT_APPROVED|PROFILE_UNAPPROVED|Реквизиты|реквизиты/,
         );
         const foreignProfile = await db.issuerProfileVersion.findFirstOrThrow({
@@ -297,6 +357,9 @@ test("public self-registration isolates a complete unapproved center atomically"
     await t.test(
       "profile version preserves schedule and people without creating accounts or mutating prior version",
       async () => {
+        const usersBefore = await db.user.count({
+          where: { tenantId: first.tenant.id },
+        });
         const initial = await db.issuerProfileVersion.findFirstOrThrow({
           where: { tenantId: first.tenant.id },
         });
@@ -351,7 +414,7 @@ test("public self-registration isolates a complete unapproved center atomically"
         );
         assert.equal(
           await db.user.count({ where: { tenantId: first.tenant.id } }),
-          1,
+          usersBefore,
         );
       },
     );

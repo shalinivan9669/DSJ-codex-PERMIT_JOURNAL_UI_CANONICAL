@@ -4,6 +4,7 @@ import {
   patchSchema,
   finalizeSchema,
   validateDraft,
+  validateBusinessRules,
   profileSchema,
   type Draft,
   protocolTemplateFor,
@@ -31,6 +32,23 @@ import { artifactAvailability } from "./storage";
 import { duplicateIssuanceWarnings } from "./duplicate-issuance";
 import { groupHeaderWorkplace } from "./group-workplace";
 import {
+  companyEmployerId,
+  personCustomerName,
+  withCustomerIdentity,
+} from "./request-customer";
+import {
+  assertStaff,
+  createProposedContainer,
+  requireApproved,
+  submitProposal,
+  workingRequest,
+} from "./approvals";
+import {
+  assertSigningPolicy,
+  prepareSigningPolicy,
+  signingState,
+} from "./signing";
+import {
   validatePinnedServiceRule,
   ruleApplicabilityIssues,
 } from "./service-rule-applicability";
@@ -46,42 +64,93 @@ export function namespace(templateId: string) {
   return `${family}:${kind}`;
 }
 type OrganizationPrintFields = {
-    id: string;
-    nameRu: string;
-    nameKz: string | null;
-    bin: string | null;
-    addressRu: string | null;
-    addressKz: string | null;
+  id: string;
+  nameRu: string;
+  nameKz: string | null;
+  bin: string | null;
+  addressRu: string | null;
+  addressKz: string | null;
 };
-async function organizationMap(
+export async function organizationMap(
   tx: Prisma.TransactionClient,
   c: Context,
   draft: Draft,
 ) {
-  const ids = [...new Set([
-    ...(draft.customerId ? [draft.customerId] : []),
-    ...draft.items.flatMap((item) => item.employerId ? [item.employerId] : []),
-  ])];
-  const organizations = ids.length ? await tx.customerOrganization.findMany({
-    where: { tenantId: c.tenantId, id: { in: ids } },
-    orderBy: { id: "asc" },
-  }) : [];
-  return new Map(organizations.map((organization) => [organization.id, organization]));
+  if (draft.organizationSnapshots !== undefined)
+    return new Map(
+      draft.organizationSnapshots.map((organization) => [
+        organization.id,
+        organization,
+      ]),
+    );
+  const ids = [
+    ...new Set([
+      ...(draft.customerId ? [draft.customerId] : []),
+      ...draft.items.flatMap((item) =>
+        item.employerId ? [item.employerId] : [],
+      ),
+    ]),
+  ];
+  const organizations = ids.length
+    ? await tx.customerOrganization.findMany({
+        where: { tenantId: c.tenantId, id: { in: ids } },
+        orderBy: { id: "asc" },
+      })
+    : [];
+  return new Map(
+    organizations.map((organization) => [organization.id, organization]),
+  );
 }
-function employerFields(
+/** Server-owned business reference values. Never refresh an approved or issued payload during rendering. */
+export async function freezeProposalReferences(
+  tx: Prisma.TransactionClient,
+  c: Context,
+  draft: Draft,
+) {
+  const ids = [
+    ...new Set([
+      ...(draft.customerId ? [draft.customerId] : []),
+      ...draft.items.flatMap((item) =>
+        item.employerId ? [item.employerId] : [],
+      ),
+    ]),
+  ].sort();
+  const organizations = ids.length
+    ? await tx.customerOrganization.findMany({
+        where: { tenantId: c.tenantId, id: { in: ids } },
+        select: {
+          id: true,
+          nameRu: true,
+          nameKz: true,
+          bin: true,
+          addressRu: true,
+          addressKz: true,
+        },
+        orderBy: { id: "asc" },
+      })
+    : [];
+  draft.organizationSnapshots = organizations;
+}
+export function employerFields(
   item: Draft["items"][number],
   customer: OrganizationPrintFields | null,
   organizations: ReadonlyMap<string, OrganizationPrintFields>,
 ) {
   // Explicit imported/manual text stays intact. A separately linked employer
-  // supplies missing fields; the ordering customer is not that employer.
-  const employer = item.employerId ? organizations.get(item.employerId) : customer;
+  // supplies missing fields. The request's company is the default employer.
+  const employer = item.employerId
+    ? organizations.get(item.employerId)
+    : customer;
   return {
     workplaceRu: item.workplaceRu || employer?.nameRu || "",
-    workplaceKz: item.workplaceKz || employer?.nameKz || "",
+    workplaceKz: item.workplaceKz || employer?.nameKz || employer?.nameRu || "",
     employerBin: item.employerBin || employer?.bin || "",
     employerAddressRu: item.employerAddressRu || employer?.addressRu || "",
-    employerAddressKz: item.employerAddressKz || employer?.addressKz || "",
+    employerAddressKz:
+      item.employerAddressKz ||
+      employer?.addressKz ||
+      employer?.addressRu ||
+      "",
   };
 }
 export function searchable(draft: Draft) {
@@ -295,12 +364,21 @@ export async function persistItems(
     });
 }
 export async function createRequest(c: Context, input: unknown) {
+  assertStaff(c, true);
   const draft = parse(draftSchema, input);
-  const tenant = await db.tenant.findUniqueOrThrow({ where: { id: c.tenantId } });
+  const tenant = await db.tenant.findUniqueOrThrow({
+    where: { id: c.tenantId },
+  });
   // Creation only: reopening/saving a draft never advances its calendar date.
   // An explicit blank is an intentional exception, not a request for a default.
-  if (draft.schemaVersion === 2 && draft.commonFields?.documentDate === undefined)
-    draft.commonFields = { ...draft.commonFields, documentDate: today(tenant.timezone) };
+  if (
+    draft.schemaVersion === 2 &&
+    draft.commonFields?.documentDate === undefined
+  )
+    draft.commonFields = {
+      ...draft.commonFields,
+      documentDate: today(tenant.timezone),
+    };
   for (const item of draft.items)
     for (const assignment of item.assignments)
       if (assignment.outcome)
@@ -318,26 +396,11 @@ export async function createRequest(c: Context, input: unknown) {
     if (profile) draft.profileVersionId = profile.id;
   }
   return transaction(async (tx) => {
-    await checkReferences(tx, c, draft);
-    const record = await tx.printRequest.create({
-      data: {
-        tenantId: c.tenantId,
-        kind: draft.kind,
-        title: draft.title,
-        customerId: draft.customerId,
-        demoMode: draft.demoMode,
-        draft: json(draft),
-        itemCount: draft.items.length,
-        searchText: searchable(draft),
-        createdBy: c.userId,
-      },
-    });
-    await persistItems(tx, c, record.id, draft);
-    await audit(tx, c, "DRAFT_CREATED", record.id);
-    return { ...record, ...draft };
+    return createProposedContainer(tx, c, draft);
   });
 }
 export async function patchRequest(c: Context, id: string, input: unknown) {
+  assertStaff(c, true);
   const { expectedRevision, draft } = parse(patchSchema, input);
   if (
     (await db.tenant.findUniqueOrThrow({ where: { id: c.tenantId } })).demoOnly
@@ -345,7 +408,7 @@ export async function patchRequest(c: Context, id: string, input: unknown) {
     draft.demoMode = true;
   return transaction(async (tx) => {
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
-    const record = await scopedRequest(c, id, tx);
+    const record = await workingRequest(c, id, tx);
     if (record.status !== "DRAFT")
       fail(
         409,
@@ -375,29 +438,7 @@ export async function patchRequest(c: Context, id: string, input: unknown) {
                 confirmedAt: new Date().toISOString(),
               };
       }
-    await checkReferences(tx, c, draft);
-    const updated = await tx.printRequest.updateMany({
-      where: {
-        id,
-        tenantId: c.tenantId,
-        revision: expectedRevision,
-        status: "DRAFT",
-      },
-      data: {
-        draft: json(draft),
-        kind: draft.kind,
-        title: draft.title,
-        customerId: draft.customerId,
-        demoMode: draft.demoMode,
-        itemCount: draft.items.length,
-        searchText: searchable(draft),
-        revision: { increment: 1 },
-      },
-    });
-    if (updated.count !== 1) fail(409, "REVISION_CONFLICT", "Обновите заявку");
-    await persistItems(tx, c, id, draft);
-    await audit(tx, c, "DRAFT_SAVED", id, { revision: expectedRevision + 1 });
-    return { id, status: "DRAFT", revision: expectedRevision + 1, ...draft };
+    return submitProposal(tx, c, id, draft, expectedRevision);
   });
 }
 export async function requestFilter(
@@ -408,6 +449,7 @@ export async function requestFilter(
     kind?: string;
     customerId?: string;
     history?: boolean;
+    archive?: boolean;
   },
 ): Promise<Prisma.PrintRequestWhereInput> {
   return {
@@ -416,6 +458,9 @@ export async function requestFilter(
       q.status || (q.history ? { in: ["FINALIZED", "CANCELLED"] } : undefined),
     kind: q.kind,
     customerId: q.customerId,
+    ...(q.archive !== undefined
+      ? { archivedAt: q.archive ? { not: null } : null }
+      : {}),
     ...(q.search
       ? {
           OR: [
@@ -423,6 +468,15 @@ export async function requestFilter(
               searchText: { contains: q.search, mode: "insensitive" as const },
             },
             { id: { contains: q.search } },
+            {
+              id: {
+                in: (
+                  await db.$queryRaw<
+                    Array<{ requestId: string }>
+                  >`SELECT p."requestId" FROM "RequestProposal" p WHERE p."tenantId"=${c.tenantId} AND p.operation='SAVE' AND p.status IN ('PENDING','REJECTED') AND p.payload::text ILIKE ${"%" + q.search + "%"} AND NOT EXISTS(SELECT 1 FROM "RequestProposal" newer WHERE newer."tenantId"=p."tenantId" AND newer."requestId"=p."requestId" AND newer.revision>p.revision)`
+                ).map((proposal) => proposal.requestId),
+              },
+            },
             {
               id: {
                 in: (
@@ -475,6 +529,10 @@ export async function listRequests(c: Context, query: Record<string, unknown>) {
       status: z.enum(["DRAFT", "FINALIZED", "CANCELLED"]).optional(),
       kind: z.enum(["PERSON", "COMPANY"]).optional(),
       customerId: z.string().optional(),
+      archive: z
+        .enum(["true", "false"])
+        .transform((value) => value === "true")
+        .optional(),
       history: z
         .enum(["true", "false"])
         .transform((value) => value === "true")
@@ -494,9 +552,11 @@ export async function listRequests(c: Context, query: Record<string, unknown>) {
         revision: true,
         itemCount: true,
         customerId: true,
+        draft: true,
         createdAt: true,
         updatedAt: true,
         demoMode: true,
+        archivedAt: true,
       },
       orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       skip: (q.page - 1) * q.pageSize,
@@ -504,10 +564,98 @@ export async function listRequests(c: Context, query: Record<string, unknown>) {
     }),
     db.printRequest.count({ where }),
   ]);
-  return { items, total, page: q.page, pageSize: q.pageSize };
+  const proposals = await db.requestProposal.findMany({
+    where: {
+      tenantId: c.tenantId,
+      requestId: { in: items.map((item) => item.id) },
+    },
+    orderBy: { revision: "desc" },
+  });
+  const workflows = await db.issuanceWorkflow.findMany({
+    where: {
+      tenantId: c.tenantId,
+      requestId: { in: items.map((item) => item.id) },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const customerIds = [
+    ...new Set(
+      [
+        ...items.map((item) => item.customerId),
+        ...proposals
+          .filter((proposal) => proposal.operation === "SAVE")
+          .map(
+            (proposal) =>
+              (proposal.payload as { customerId?: string }).customerId,
+          ),
+      ].filter((id): id is string => !!id),
+    ),
+  ];
+  const customers = await db.customerOrganization.findMany({
+    where: { tenantId: c.tenantId, id: { in: customerIds } },
+    select: { id: true, nameRu: true, nameKz: true },
+  });
+  return {
+    items: items.map(({ draft: approvedPayload, ...item }) => {
+      const proposal = proposals.find((entry) => entry.requestId === item.id);
+      const working =
+        proposal?.operation === "SAVE" &&
+        ["PENDING", "REJECTED"].includes(proposal.status) &&
+        item.status === "DRAFT"
+          ? draftSchema.parse(proposal.payload)
+          : null;
+      const displayDraft = withCustomerIdentity(
+        working || draftSchema.parse(approvedPayload),
+      );
+      const customer =
+        displayDraft.kind === "COMPANY"
+          ? customers.find((entry) => entry.id === displayDraft.customerId) ||
+            null
+          : null;
+      return {
+        ...item,
+        title: displayDraft.title,
+        ...(working
+          ? {
+              kind: working.kind,
+              itemCount: working.items.length,
+              customerId: working.customerId,
+              revision: proposal!.revision,
+            }
+          : {}),
+        archived: !!item.archivedAt,
+        customer,
+        customerName:
+          displayDraft.kind === "PERSON"
+            ? personCustomerName(displayDraft) || null
+            : displayDraft.organizationSnapshots?.find(
+                (entry) => entry.id === displayDraft.customerId,
+              )?.nameRu ||
+              customer?.nameRu ||
+              null,
+        lifecycle:
+          workflows.find((entry) => entry.requestId === item.id)?.status ||
+          (item.status === "FINALIZED" ? "LEGACY_ISSUED" : null),
+        approval: proposal
+          ? {
+              proposalId: proposal.id,
+              status: proposal.status,
+              proposalHash: proposal.proposalHash,
+              baseRevision: proposal.baseRevision,
+              submittedBy: proposal.submittedBy,
+              submittedAt: proposal.submittedAt,
+            }
+          : null,
+      };
+    }),
+    total,
+    page: q.page,
+    pageSize: q.pageSize,
+  };
 }
 export async function requestDetail(c: Context, id: string) {
-  const record = await scopedRequest(c, id);
+  const record = await workingRequest(c, id);
+  const displayDraft = withCustomerIdentity(draftSchema.parse(record.draft));
   const [issuances, documents, jobs, artifacts] = await Promise.all([
     db.issuance.findMany({
       where: { requestId: id, tenantId: c.tenantId },
@@ -576,7 +724,11 @@ export async function requestDetail(c: Context, id: string) {
   );
   return {
     ...record,
-    ...(record.draft as object),
+    ...displayDraft,
+    ...(displayDraft.kind === "PERSON"
+      ? { customerName: personCustomerName(displayDraft) || null }
+      : {}),
+    lifecycle: (await signingState(c, id)).status,
     issuances: issuances.map((issuance) => ({
       ...issuance,
       correctsRequestId: issuance.correctsIssuanceId
@@ -603,7 +755,7 @@ async function validation(
   id: string,
   expectedRevision: number,
 ) {
-  const record = await scopedRequest(c, id, tx);
+  const record = await workingRequest(c, id, tx);
   if (record.revision !== expectedRevision)
     fail(409, "REVISION_CONFLICT", "Сначала сохраните актуальную версию", {
       revision: record.revision,
@@ -623,7 +775,8 @@ async function validation(
   resolved = resolveDraft(savedDraft, parsedProfile?.commonFields);
   draft = resolved.draft;
   const organizations = await organizationMap(tx, c, draft);
-  const customer = draft.customerId ? organizations.get(draft.customerId) || null : null;
+  const employerId = companyEmployerId(draft);
+  const customer = employerId ? organizations.get(employerId) || null : null;
   // Validate exactly the fallback values that will be frozen into render inputs,
   // without rewriting the operator's saved draft or a previous issuance snapshot.
   const issues = validateDraft(
@@ -692,6 +845,26 @@ async function validation(
         id: row.id,
         profile: profileSchema.parse(row.profile),
       });
+    if (
+      row &&
+      row.id !== profile?.id &&
+      draft.items.some((item) =>
+        item.assignments.some((assignment) => assignment.eventId === event.id),
+      )
+    )
+      issues.push(
+        ...validateBusinessRules(
+          { ...draft, items: [] },
+          profileSchema.parse(row.profile),
+        ).map((issue) => ({
+          ...issue,
+          path: `events.${event.id}.${issue.path}`,
+        })),
+      );
+    const members =
+      documentPlan(draft).groups.find((group) => group.event.id === event.id)
+        ?.members || [];
+    if (!members.length) continue;
     const template = groupSelected.get(event.protocolTemplateId);
     if (!template?.approved)
       issues.push({
@@ -699,11 +872,6 @@ async function validation(
         path: "events",
         message: `Подтвердите форму ${event.protocolTemplateId}`,
       });
-    const members = draft.items.flatMap((item) =>
-      item.assignments
-        .filter((a) => a.protocolMode === "GROUP" && a.eventId === event.id)
-        .map((assignment) => ({ item, assignment })),
-    );
     if (event.serviceRuleVersionId) {
       const binding = await validatePinnedServiceRule(
         c,
@@ -736,6 +904,7 @@ async function validation(
             ],
           },
           row ? profileSchema.parse(row.profile) : null,
+          { skipBusinessRules: true },
         ),
       );
       const pinnedRule = eventRules.get(event.id);
@@ -792,6 +961,23 @@ async function boundedLayoutCheck(snapshots: unknown[]) {
     waitingLayoutChecks.shift()?.();
   }
 }
+/** Approval checks print data without rendering or promoting the proposed payload. */
+export async function assertApprovalDataComplete(
+  tx: Prisma.TransactionClient,
+  c: Context,
+  id: string,
+  expectedRevision: number,
+) {
+  const checked = await validation(tx, c, id, expectedRevision);
+  if (checked.issues.length)
+    fail(
+      422,
+      "APPROVAL_DATA_INCOMPLETE",
+      "Сначала заполните обязательные данные заявки и повторите проверку",
+      checked.issues,
+    );
+}
+
 async function prepareLayout(
   tx: Prisma.TransactionClient,
   c: Context,
@@ -802,7 +988,8 @@ async function prepareLayout(
     photoMap(tx, c, v.draft),
     tx.numberSequence.findMany({ where: { tenantId: c.tenantId } }),
   ]);
-  const customer = v.draft.customerId ? organizations.get(v.draft.customerId) || null : null;
+  const employerId = companyEmployerId(v.draft);
+  const customer = employerId ? organizations.get(employerId) || null : null;
   // PostgreSQL integer counters have at most ten digits. Twelve is the largest
   // supported padding; this check remains valid while concurrent counters advance.
   const numberFor = (ns: string) => {
@@ -816,7 +1003,10 @@ async function prepareLayout(
   const plans = v.draft.items.flatMap((item, row) =>
     item.assignments
       .filter(
-        (a) => a.protocolMode !== "GROUP" || a.outcome?.status === "PASSED",
+        (a) =>
+          a.templateId.endsWith("-protocol") ||
+          (a.protocolMode !== "GROUP" && !a.outcome) ||
+          a.outcome?.status === "PASSED",
       )
       .map((assignment, column) => {
         const template = v.selected.get(assignment.templateId)!;
@@ -831,6 +1021,8 @@ async function prepareLayout(
         const snapshot = {
           mode: "issued-document",
           demoMode: v.draft.demoMode,
+          businessRuleVersion: v.draft.businessRuleVersion,
+          englishAppendix: v.draft.englishAppendix || false,
           templateId: template.templateId,
           templateVersion: template.version,
           templateStorageKey: template.storageKey,
@@ -896,6 +1088,8 @@ async function prepareLayout(
       snapshot: {
         mode: "issued-document",
         demoMode: v.draft.demoMode,
+        businessRuleVersion: v.draft.businessRuleVersion,
+        englishAppendix: v.draft.englishAppendix || false,
         templateId: template.templateId,
         templateVersion: template.version,
         templateStorageKey: template.storageKey,
@@ -1091,11 +1285,14 @@ export async function finalize(
   input: unknown,
   key: unknown,
 ) {
+  assertStaff(c, true);
   const data = parse(finalizeSchema, input);
   if (typeof key !== "string" || !/^[a-zA-Z0-9_-]{16,128}$/.test(key))
     fail(400, "KEY_REQUIRED", "Требуется ключ повторяемости команды");
   const payloadHash = hash({ requestId: id, ...data });
   const before = await scopedRequest(c, id);
+  if (before.status === "DRAFT")
+    await requireApproved(c, id, data.expectedRevision);
   let layoutFingerprint: string | undefined;
   if (before.status === "DRAFT") {
     const checked = await validation(db, c, id, data.expectedRevision);
@@ -1184,6 +1381,12 @@ export async function finalize(
     }
     if (record.status !== "DRAFT")
       fail(409, "REGISTERED_IMMUTABLE", "Заявка уже оформлена");
+    const approvedProposal = await requireApproved(
+      c,
+      id,
+      data.expectedRevision,
+      tx,
+    );
     const v = await validation(tx, c, id, data.expectedRevision);
     if (v.issues.length || !v.profile || !v.parsedProfile)
       fail(
@@ -1192,6 +1395,27 @@ export async function finalize(
         "Исправьте ошибки перед оформлением",
         v.issues,
       );
+    const signingPolicy = await prepareSigningPolicy(
+      tx,
+      c,
+      v.parsedProfile,
+      [...v.eventProfiles].map(([eventId, value]) => ({
+        id: eventId,
+        profile: value.profile,
+      })),
+      v.draft.items.flatMap((item) => item.assignments),
+    );
+    const outputPlan = documentPlan(v.draft);
+    assertSigningPolicy(signingPolicy, [
+      ...outputPlan.individuals.map(({ assignment }) => ({
+        templateId: assignment.templateId,
+        assignmentId: assignment.id,
+      })),
+      ...outputPlan.groups.map(({ event }) => ({
+        templateId: event.protocolTemplateId,
+        groupEventId: event.id,
+      })),
+    ]);
     const ns = [
       ...new Set([
         ...(v.draft.events || []).map((e) => namespace(e.protocolTemplateId)),
@@ -1218,7 +1442,8 @@ export async function finalize(
         "Реквизиты, шаблон или настройки изменились во время проверки. Повторите оформление актуальной редакции",
       );
     const organizations = await organizationMap(tx, c, v.draft);
-    const customer = v.draft.customerId ? organizations.get(v.draft.customerId) || null : null;
+    const employerId = companyEmployerId(v.draft);
+    const customer = employerId ? organizations.get(employerId) || null : null;
     const photos = await photoMap(tx, c, v.draft);
     const issued = await tx.issuance.create({
       data: {
@@ -1231,7 +1456,9 @@ export async function finalize(
           issuer: v.parsedProfile,
           profileVersionId: v.profile.id,
           customer,
-          employers: [...organizations.values()].filter((organization) => v.draft.items.some((item) => item.employerId === organization.id)),
+          employers: [...organizations.values()].filter((organization) =>
+            v.draft.items.some((item) => item.employerId === organization.id),
+          ),
           templates: [
             ...v.selected.values(),
             ...v.groupSelected.values(),
@@ -1348,7 +1575,7 @@ export async function finalize(
           rowId: item.id,
           assignmentId: assignment.id,
           recipientId: item.recipientId,
-          employerId: item.employerId || v.draft.customerId,
+          employerId: item.employerId || companyEmployerId(v.draft),
           position,
           outcome: json(assignment.outcome!),
         })),
@@ -1375,12 +1602,16 @@ export async function finalize(
             : planned.find(
                 (p) =>
                   p.item.id === item.id &&
+                  (v.draft.businessRuleVersion !== "LIVE_V1" ||
+                    p.assignment.eventId === assignment.eventId) &&
                   p.assignment.templateId ===
                     protocolTemplateFor(assignment.templateId),
               );
       const linkedCredential = planned.find(
         (p) =>
           p.item.id === item.id &&
+          (v.draft.businessRuleVersion !== "LIVE_V1" ||
+            p.assignment.eventId === assignment.eventId) &&
           p.assignment.templateId ===
             credentialTemplateFor(assignment.templateId),
       );
@@ -1402,6 +1633,8 @@ export async function finalize(
       const renderInput = {
         mode: "issued-document",
         demoMode: v.draft.demoMode,
+        businessRuleVersion: v.draft.businessRuleVersion,
+        englishAppendix: v.draft.englishAppendix || false,
         templateId: template.templateId,
         templateVersion: template.version,
         templateStorageKey: template.storageKey,
@@ -1461,6 +1694,8 @@ export async function finalize(
       const renderInput = {
         mode: "issued-document",
         schemaVersion: 2,
+        businessRuleVersion: v.draft.businessRuleVersion,
+        englishAppendix: v.draft.englishAppendix || false,
         groupEvent: {
           ...event,
           contractVersion: 1,
@@ -1519,6 +1754,8 @@ export async function finalize(
     const aggregate = {
       mode: "issued-document",
       demoMode: v.draft.demoMode,
+      businessRuleVersion: v.draft.businessRuleVersion,
+      englishAppendix: v.draft.englishAppendix || false,
       issuer: v.parsedProfile,
       items: allItems,
       photos,
@@ -1568,23 +1805,25 @@ export async function finalize(
           (customer?.nameKz || ""),
       },
     });
-    if (record.correctsIssuanceId)
-      await tx.issuanceEvent.create({
-        data: {
-          tenantId: c.tenantId,
-          issuanceId: record.correctsIssuanceId,
-          kind: "REPLACED",
-          reason: record.correctionReason!,
-          actorId: c.userId,
-          relatedIssuanceId: issued.id,
-        },
-      });
+    await tx.issuanceWorkflow.create({
+      data: {
+        tenantId: c.tenantId,
+        requestId: id,
+        issuanceId: issued.id,
+        proposalId: approvedProposal.id,
+        requiredSigners: json(signingPolicy),
+      },
+    });
     await audit(tx, c, "ISSUANCE_REGISTERED", issued.id, {
       requestId: id,
       revision: data.expectedRevision,
       documents: documentIds.length,
     });
-    const result = issuanceResult(issued, documentIds, jobIds);
+    const result = {
+      ...issuanceResult(issued, documentIds, jobIds),
+      lifecycle: "RENDERING",
+      archived: false,
+    };
     await tx.idempotencyOperation.create({
       data: {
         tenantId: c.tenantId,
@@ -1621,7 +1860,8 @@ export async function preview(c: Context, id: string, input: unknown) {
       );
     const photos = await photoMap(tx, c, v.draft);
     const organizations = await organizationMap(tx, c, v.draft);
-    const customer = v.draft.customerId ? organizations.get(v.draft.customerId) || null : null;
+    const employerId = companyEmployerId(v.draft);
+    const customer = employerId ? organizations.get(employerId) || null : null;
     const organizationFingerprint = hash([...organizations.values()]);
     const jobs = [];
     for (const item of v.draft.items)
@@ -1642,6 +1882,8 @@ export async function preview(c: Context, id: string, input: unknown) {
         const renderInput = {
           mode: "draft-preview",
           demoMode: true,
+          businessRuleVersion: v.draft.businessRuleVersion,
+          englishAppendix: v.draft.englishAppendix || false,
           templateId: template.templateId,
           templateVersion: template.version,
           templateStorageKey: template.storageKey,
@@ -1715,6 +1957,8 @@ export async function preview(c: Context, id: string, input: unknown) {
       const renderInput = {
         mode: "draft-preview",
         demoMode: true,
+        businessRuleVersion: v.draft.businessRuleVersion,
+        englishAppendix: v.draft.englishAppendix || false,
         groupEvent: {
           ...event,
           contractVersion: 1,
@@ -1855,31 +2099,19 @@ export async function retake(c: Context, id: string, input: unknown) {
       items: [{ ...row, id: randomUUID(), assignments: [assignment] }],
     });
     await checkReferences(tx, c, draft);
-    const created = await tx.printRequest.create({
-      data: {
-        tenantId: c.tenantId,
-        kind: draft.kind,
-        title: draft.title,
-        customerId: draft.customerId,
-        demoMode: draft.demoMode,
-        draft: json(draft),
-        itemCount: 1,
-        searchText: searchable(draft),
-        createdBy: c.userId,
-      },
-    });
-    await persistItems(tx, c, created.id, draft);
+    const created = await createProposedContainer(tx, c, draft);
     await audit(tx, c, "RETAKE_DRAFT_CREATED", created.id, {
       sourceRequestId: id,
       sourceRowId: row.id,
       sourceAssignmentId: old.id,
       reason: data.reason,
     });
-    return { ...created, ...draft };
+    return created;
   });
 }
 
 export async function correction(c: Context, id: string, input: unknown) {
+  assertStaff(c, true);
   const data = parse(
     z
       .object({
@@ -1913,29 +2145,20 @@ export async function correction(c: Context, id: string, input: unknown) {
         if (assignment.eventId)
           assignment.eventId =
             eventIds.get(assignment.eventId) || assignment.eventId;
-    const next = await tx.printRequest.create({
-      data: {
-        tenantId: c.tenantId,
-        kind: draft.kind,
-        title: `Исправление: ${draft.title}`,
-        customerId: draft.customerId,
-        demoMode: draft.demoMode,
-        draft: json({ ...draft, title: `Исправление: ${draft.title}` }),
-        itemCount: draft.items.length,
-        searchText: searchable(draft),
-        createdBy: c.userId,
-        correctsIssuanceId: issued.id,
-        correctionReason: data.reason,
-      },
-    });
-    await persistItems(tx, c, next.id, draft);
+    const next = await createProposedContainer(
+      tx,
+      c,
+      { ...draft, title: `Исправление: ${draft.title}` },
+      { correctsIssuanceId: issued.id, correctionReason: data.reason },
+    );
     await audit(tx, c, "CORRECTION_DRAFT_CREATED", next.id, {
       correctsIssuanceId: issued.id,
     });
-    return { ...next, ...(next.draft as object) };
+    return next;
   });
 }
 export async function cancelRequest(c: Context, id: string, input: unknown) {
+  assertStaff(c, true);
   const data = parse(
     z
       .object({
@@ -1947,7 +2170,7 @@ export async function cancelRequest(c: Context, id: string, input: unknown) {
   );
   return transaction(async (tx) => {
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
-    const record = await scopedRequest(c, id, tx);
+    const record = await workingRequest(c, id, tx);
     if (record.revision !== data.expectedRevision)
       fail(409, "REVISION_CONFLICT", "Редакция изменилась");
     if (record.status === "CANCELLED") return { ok: true };
@@ -1957,27 +2180,22 @@ export async function cancelRequest(c: Context, id: string, input: unknown) {
     });
     if (!issued)
       fail(409, "NOT_REGISTERED", "Отмена применяется к оформленному выпуску");
-    await tx.issuanceEvent.create({
-      data: {
-        tenantId: c.tenantId,
-        issuanceId: issued.id,
-        kind: "CANCELLED",
-        reason: data.reason,
-        actorId: c.userId,
-      },
-    });
-    await tx.printRequest.update({
-      where: { id },
-      data: { status: "CANCELLED" },
-    });
-    await audit(tx, c, "ISSUANCE_CANCELLED", issued.id);
-    return { ok: true };
+    return submitProposal(
+      tx,
+      c,
+      id,
+      draftSchema.parse(record.draft),
+      data.expectedRevision,
+      "CANCEL",
+      data.reason,
+    );
   });
 }
 export async function deleteDraft(c: Context, id: string) {
+  assertStaff(c, true);
   return transaction(async (tx) => {
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
-    const record = await scopedRequest(c, id, tx);
+    const record = await workingRequest(c, id, tx);
     if (
       record.status !== "DRAFT" ||
       (await tx.issuance.count({
@@ -1989,22 +2207,29 @@ export async function deleteDraft(c: Context, id: string) {
         "REGISTERED_IMMUTABLE",
         "Зарегистрированную заявку удалить нельзя",
       );
-    /* Retain server draft and preview references; deletion is an archive transition. */ await tx.printRequest.update(
-      { where: { id }, data: { status: "CANCELLED" } },
+    return submitProposal(
+      tx,
+      c,
+      id,
+      draftSchema.parse(record.draft),
+      record.revision,
+      "ARCHIVE",
+      "Архивирование черновика",
     );
-    await audit(tx, c, "DRAFT_ARCHIVED", id);
-    return { ok: true };
   });
 }
 
 export async function resolvedRequest(c: Context, id: string) {
-  const record = await scopedRequest(c, id);
+  const record = await workingRequest(c, id);
   const v = await validation(db, c, id, record.revision);
   return {
-    draft: { ...v.draft, items: v.draft.items.map((item) => ({
-      ...item,
-      ...employerFields(item, v.customer, v.organizations),
-    })) },
+    draft: {
+      ...v.draft,
+      items: v.draft.items.map((item) => ({
+        ...item,
+        ...employerFields(item, v.customer, v.organizations),
+      })),
+    },
     provenance: v.provenance,
     issues: v.issues,
   };

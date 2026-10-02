@@ -1,5 +1,16 @@
-import type { Assignment, CommonFields, Draft, ValidationIssue } from "./index";
+import type {
+  Assignment,
+  CommonFields,
+  Draft,
+  RequestItemInput,
+  ValidationIssue,
+} from "./index";
 import { protocolTemplateFor } from "./index";
+import {
+  businessValidUntil,
+  employeeCategoryFor,
+  trainingDirection,
+} from "./business-rules";
 import {
   calculateDates,
   calculatedDateKeys,
@@ -14,8 +25,11 @@ export const commonFieldKeys = [
   "protocolDate",
   "validUntil",
   "trainingSubject",
+  "trainingSubjectEn",
   "reason",
+  "reasonEn",
   "education",
+  "educationEn",
   "externalBasisNumber",
   "hours",
   "productionHours",
@@ -23,6 +37,7 @@ export const commonFieldKeys = [
   "biotCheckType",
   "biotIndustryRu",
   "biotIndustryKz",
+  "biotIndustryEn",
 ] as const;
 export type FieldSource =
   | "CENTER"
@@ -83,8 +98,12 @@ function applyDateCalculation(
   values: CommonFields,
   origins: Record<string, FieldSource>,
   rule?: TrainingDateRule | null,
+  eventDocumentDate?: string,
 ) {
-  const calculation = calculateDates(values, rule);
+  const calculation = calculateDates(
+    eventDocumentDate ? { ...values, documentDate: eventDocumentDate } : values,
+    rule,
+  );
   for (const key of calculatedDateKeys) {
     if (origins[key] === "AUTO" || (!origins[key] && !values[key])) {
       if (calculation.proposed[key] !== undefined || origins[key] === "AUTO") {
@@ -97,9 +116,26 @@ function applyDateCalculation(
   return calculation;
 }
 
-/** Resolves once on the server. Result/identity/number can never be inherited. */
+/** Reuse the entered text when a separate language spelling was not supplied.
+ * This does not translate or transliterate, and never overwrites an explicit spelling.
+ */
+export function resolveRecipientText<T extends RequestItemInput>(item: T): T {
+  const result = { ...item };
+  for (const [ru, kz] of [
+    ["fullNameRu", "fullNameKz"],
+    ["positionRu", "positionKz"],
+    ["workplaceRu", "workplaceKz"],
+  ] as const) {
+    if (!result[ru].trim()) result[ru] = result[kz];
+    if (!result[kz].trim()) result[kz] = result[ru];
+  }
+  return result;
+}
+
+/** Resolves once on the server. Result/number can never be inherited. */
 export function resolveDraft(input: Draft, center: CommonFields = {}) {
   const draft: Draft = structuredClone(input);
+  draft.items = draft.items.map(resolveRecipientText);
   const provenance: Record<string, Record<string, FieldSource>> = {};
   const issues: ValidationIssue[] = [];
   const eventContexts = new Map(
@@ -149,11 +185,13 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
       provenance[`${item.id}:${assignment.id}`] = origins;
       const event = draft.events?.find((e) => e.id === assignment.eventId);
       if (
-        assignment.protocolMode === "GROUP" &&
+        (assignment.protocolMode === "GROUP" ||
+          (draft.businessRuleVersion === "LIVE_V1" && assignment.eventId)) &&
         (!event ||
           event.protocolTemplateId !==
             protocolTemplateFor(assignment.templateId) ||
-          assignment.templateId.endsWith("-protocol"))
+          (assignment.protocolMode === "GROUP" &&
+            assignment.templateId.endsWith("-protocol")))
       )
         issues.push({
           code: "EVENT_INCOMPATIBLE",
@@ -193,6 +231,8 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
         if (
           event &&
           assignment.protocolMode === "GROUP" &&
+          key !== "documentDate" &&
+          key !== "validUntil" &&
           context.fields[key] !== undefined &&
           manual &&
           (explicit === "CLEARED" ? "" : own) !== context.fields[key]
@@ -245,7 +285,16 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
             message:
               "График участника отличается от общего события. Измените график события или выделите другое событие.",
           });
-        const calculation = applyDateCalculation(assignment, origins, rule);
+        const calculation = applyDateCalculation(
+          assignment,
+          origins,
+          rule,
+          draft.businessRuleVersion === "LIVE_V1" &&
+            event &&
+            assignment.protocolMode === "GROUP"
+            ? context.fields.documentDate
+            : undefined,
+        );
         // Metadata is exposed through provenance; keep assignment schema clean.
         delete (assignment as Assignment & { dateOrigins?: unknown })
           .dateOrigins;
@@ -277,6 +326,22 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           UNKNOWN: "Не подтверждено",
           PASSED: "",
         }[assignment.outcome?.status || "UNKNOWN"];
+      if (draft.businessRuleVersion === "LIVE_V1") {
+        if (
+          assignment.templateId.endsWith("-protocol") &&
+          assignment.protocolDate
+        )
+          assignment.documentDate = assignment.protocolDate;
+        const unlimited = trainingDirection(assignment.templateId) === "PS";
+        assignment.validityMode = unlimited ? "UNLIMITED" : "FIXED";
+        assignment.validUntil = unlimited
+          ? ""
+          : businessValidUntil(
+              assignment.documentDate,
+              employeeCategoryFor(item),
+            );
+        origins.validUntil = "AUTO";
+      }
     }
   for (const event of draft.events || [])
     event.commonFields = eventContexts.get(event.id)!.fields;
@@ -300,6 +365,10 @@ export function documentPlan(draft: Draft) {
       members: draft.items.flatMap((item) =>
         item.assignments
           .filter((a) => a.protocolMode === "GROUP" && a.eventId === event.id)
+          .filter(
+            (_, index) =>
+              draft.businessRuleVersion !== "LIVE_V1" || index === 0,
+          )
           .map((assignment) => ({ item, assignment })),
       ),
     }))
@@ -325,6 +394,9 @@ export function eventProtocolAssignment(
   return {
     ...member,
     ...fields,
+    ...(event.commonFields.protocolDate
+      ? { documentDate: event.commonFields.protocolDate }
+      : {}),
     ...(event.commonFields.trainingDateRule !== undefined
       ? { trainingDateRule: event.commonFields.trainingDateRule }
       : {}),

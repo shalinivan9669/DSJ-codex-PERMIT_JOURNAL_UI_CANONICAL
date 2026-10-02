@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { useEffect, useId, useMemo, useRef, type KeyboardEvent } from "react";
 import { Icon } from "@demo/ui";
 import { gridColumns, type GridField } from "@/lib/grid-paste";
 import type { Recipient } from "@/lib/types";
@@ -39,11 +32,9 @@ export type RecipientGridProps = {
   canAdd: boolean;
 };
 
-type Language = "RU" | "KZ" | "BOTH";
-const languageChoices: { value: Language; label: string }[] = [
-  { value: "RU", label: "RU" },
-  { value: "KZ", label: "KZ" },
-  { value: "BOTH", label: "RU + KZ" },
+const columns: readonly (readonly [GridField, string])[] = [
+  ["fullNameRu", "ФИО"],
+  ["positionRu", "Должность / профессия"],
 ];
 
 export function RecipientGrid({
@@ -65,8 +56,6 @@ export function RecipientGrid({
   onAdd,
   canAdd,
 }: RecipientGridProps) {
-  const [language, setLanguage] = useState<Language>("RU");
-  const [showIdentifiers, setShowIdentifiers] = useState(false);
   const inputs = useRef(new Map<string, HTMLInputElement>());
   const instanceId = useId();
   const helpId = `${instanceId}-help`;
@@ -93,18 +82,6 @@ export function RecipientGrid({
   const selectedVisible = visibleItems.filter((item) =>
     checkedIds.has(item.id),
   ).length;
-  const columns = useMemo(
-    () =>
-      gridColumns.filter(([field]) => {
-        if (field === "personnelNumber" || field === "externalId")
-          return showIdentifiers;
-        return (
-          language === "BOTH" ||
-          (language === "RU" ? field.endsWith("Ru") : field.endsWith("Kz"))
-        );
-      }),
-    [language, showIdentifiers],
-  );
 
   useEffect(() => {
     let revealFrame = 0;
@@ -116,14 +93,10 @@ export function RecipientGrid({
       const item = items[Number(match[1])];
       if (!item) return;
       const field = match[2] as GridField;
-      if (field === "personnelNumber" || field === "externalId")
-        setShowIdentifiers(true);
-      else
-        setLanguage((current) =>
-          current === "BOTH" || field.endsWith(current === "RU" ? "Ru" : "Kz")
-            ? current
-            : "BOTH",
-        );
+      if (!columns.some(([column]) => column === field)) {
+        onOpen(item.id);
+        return;
+      }
       cancelAnimationFrame(revealFrame);
       cancelAnimationFrame(focusFrame);
       revealFrame = requestAnimationFrame(() => {
@@ -141,7 +114,7 @@ export function RecipientGrid({
       cancelAnimationFrame(focusFrame);
       window.removeEventListener("demo:focus-field", focusField);
     };
-  }, [items]);
+  }, [items, onOpen]);
 
   function moveInColumn(
     event: KeyboardEvent<HTMLInputElement>,
@@ -186,31 +159,9 @@ export function RecipientGrid({
   return (
     <div className="operator-grid recipient-grid-workspace">
       <div className="recipient-grid-options">
-        <div
-          className="recipient-grid-language"
-          role="group"
-          aria-label="Язык колонок"
-        >
-          <span>Поля:</span>
-          {languageChoices.map((choice) => (
-            <button
-              key={choice.value}
-              type="button"
-              aria-pressed={language === choice.value}
-              onClick={() => setLanguage(choice.value)}
-            >
-              {choice.label}
-            </button>
-          ))}
-        </div>
-        <label className="recipient-grid-identifiers">
-          <input
-            type="checkbox"
-            checked={showIdentifiers}
-            onChange={(event) => setShowIdentifiers(event.target.checked)}
-          />
-          Табельный номер и ID
-        </label>
+        <span className="recipient-grid-simple-hint">
+          ФИО и должность вводятся один раз. Языковые уточнения — в деталях.
+        </span>
         <span className="recipient-grid-keyboard-hint" id={helpId}>
           Tab — следующее поле · Enter — строка ниже · Shift + Enter — выше
         </span>
@@ -222,11 +173,9 @@ export function RecipientGrid({
         aria-describedby={helpId}
         tabIndex={0}
       >
-        <table
-          className={`recipient-grid-table has-document-labels${onDocuments ? " has-document-selection" : ""}${language === "BOTH" ? " is-bilingual" : ""}${showIdentifiers ? " has-identifiers" : ""}`}
-        >
+        <table className="recipient-grid-table is-compact has-document-labels">
           <caption className="sr-only">
-            Получатели заявки. Редактируйте данные и выбирайте документы в
+            Получатели заявки. Редактируйте данные и назначайте обучение в
             строках; индивидуальные даты открываются отдельно.
           </caption>
           <thead>
@@ -266,17 +215,18 @@ export function RecipientGrid({
                   {label}
                 </th>
               ))}
+              <th scope="col" className="recipient-grid-category-cell">
+                Категория
+              </th>
               <th
                 scope="col"
                 className="recipient-grid-documents has-document-choices"
               >
-                Документы
+                Обучение
               </th>
-              {!readonly && (
-                <th scope="col" className="recipient-grid-actions">
-                  <span className="sr-only">Действия</span>
-                </th>
-              )}
+              <th scope="col" className="recipient-grid-actions">
+                Действия
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -347,8 +297,8 @@ export function RecipientGrid({
             </p>
             <p>
               Вставка следует видимым колонкам:{" "}
-              {columns.map(([, label]) => label).join(" → ")}. Для двух языков
-              сначала включите «RU + KZ».
+              {columns.map(([, label]) => label).join(" → ")}. Языковые
+              уточнения можно добавить в деталях получателя или при импорте.
             </p>
             <p>
               Для таблицы с другим порядком колонок используйте «Импорт /

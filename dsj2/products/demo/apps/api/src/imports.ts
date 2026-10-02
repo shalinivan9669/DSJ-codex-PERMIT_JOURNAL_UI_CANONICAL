@@ -13,24 +13,30 @@ import {
   hash,
   json,
   parse,
-  scopedRequest,
   transaction,
   type Context,
 } from "./core";
-import { checkReferences, persistItems, searchable } from "./requests";
+import { checkReferences } from "./requests";
+import { assertStaff, submitProposal, workingRequest } from "./approvals";
 
 export const reconciliationFields = [
+  "employeeCategory",
   "fullNameRu",
   "fullNameKz",
+  "fullNameEn",
   "positionRu",
   "positionKz",
+  "positionEn",
   "workplaceRu",
   "workplaceKz",
+  "workplaceEn",
   "departmentRu",
   "departmentKz",
+  "departmentEn",
   "employerBin",
   "employerAddressRu",
   "employerAddressKz",
+  "employerAddressEn",
   "personnelNumber",
   "externalId",
 ] as const;
@@ -255,7 +261,7 @@ export async function previewImportReconciliation(
   input: unknown,
 ) {
   const data = parse(previewSchema, input);
-  const record = await scopedRequest(c, id);
+  const record = await workingRequest(c, id);
   if (record.status !== "DRAFT")
     fail(
       409,
@@ -304,7 +310,8 @@ export async function applyImportReconciliation(
       return old.result;
     }
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
-    const record = await scopedRequest(c, id, tx);
+    assertStaff(c, true);
+    const record = await workingRequest(c, id, tx);
     if (record.status !== "DRAFT")
       fail(
         409,
@@ -401,16 +408,13 @@ export async function applyImportReconciliation(
       );
     const updated = draftSchema.parse({ ...draft, items });
     await checkReferences(tx, c, updated);
-    await tx.printRequest.update({
-      where: { id },
-      data: {
-        draft: json(updated),
-        itemCount: items.length,
-        searchText: searchable(updated),
-        revision: { increment: 1 },
-      },
-    });
-    await persistItems(tx, c, id, updated);
+    const proposed = await submitProposal(
+      tx,
+      c,
+      id,
+      updated,
+      data.expectedRevision,
+    );
     const importResult = {
       ...diff.counts,
       appliedAdded: added,
@@ -419,10 +423,7 @@ export async function applyImportReconciliation(
       retainedMissing: diff.counts.missing - exclusions.size,
     };
     const result = {
-      id,
-      status: "DRAFT",
-      revision: record.revision + 1,
-      ...updated,
+      ...proposed,
       importResult,
     };
     await tx.idempotencyOperation.create({

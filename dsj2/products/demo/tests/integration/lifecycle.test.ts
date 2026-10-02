@@ -19,9 +19,11 @@ import {
   preview,
   correction,
   cancelRequest,
+  validateRequest,
 } from "../../apps/api/src/requests";
 import { saveProfile, updateNumbering } from "../../apps/api/src/settings";
 import { retryJob } from "../../apps/api/src/files";
+import { createApprovalFixture } from "./live-approval-fixture";
 function context(tenantId: string, userId: string): Context {
   return {
     tenantId,
@@ -102,6 +104,13 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       position: i === 0 ? "Председатель" : "Член комиссии",
     })),
   });
+  const approvals = await createApprovalFixture(ca);
+  t.after(() => approvals.close());
+  async function createApprovedRequest(c: Context, input: unknown) {
+    const request = await createRequest(c, input);
+    await approvals.approve(request.id);
+    return request;
+  }
   let issued: { id: string; revision: number };
   await t.test(
     "A06 two tenants and two customers, partial save, RU/KZ, stale revision",
@@ -133,17 +142,17 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       const row = fixture();
       row.items[0].assignments = [];
       const created = await createRequest(ca, row);
-      assert.equal(created.revision, 0);
+      assert.equal(created.revision, 1);
       assert.equal(
         await db.issuance.count({ where: { requestId: created.id } }),
         0,
       );
       await assert.rejects(requestDetail(cb, created.id), /найдена/);
       const updated = await patchRequest(ca, created.id, {
-        expectedRevision: 0,
+        expectedRevision: created.revision,
         draft: row,
       });
-      assert.equal(updated.revision, 1);
+      assert.equal(updated.revision, 2);
       assert.equal(
         (await requestDetail(ca, created.id)).items[0].fullNameKz,
         row.items[0].fullNameKz,
@@ -164,11 +173,11 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
     "A13 20 parallel finalizations allocate 20 unique numbers",
     async () => {
       const drafts = await Promise.all(
-        Array.from({ length: 20 }, () => createRequest(ca, fixture())),
+        Array.from({ length: 20 }, () => createApprovedRequest(ca, fixture())),
       );
       const results = await Promise.all(
         drafts.map((d) =>
-          finalize(ca, d.id, { expectedRevision: 0 }, randomUUID()),
+          finalize(ca, d.id, { expectedRevision: d.revision }, randomUUID()),
         ),
       );
       assert.equal(results.length, 20);
@@ -178,32 +187,53 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
           requestId: { in: drafts.map((d) => d.id) },
         },
       });
-      assert.equal(new Set(docs.map((d) => d.number)).size, 20);
+      assert.equal(docs.length, 40);
+      assert.equal(
+        new Set(
+          docs
+            .filter((d) => d.templateId === "biot-worker-card")
+            .map((d) => d.number),
+        ).size,
+        20,
+      );
+      assert.equal(
+        new Set(
+          docs
+            .filter((d) => d.templateId === "biot-protocol")
+            .map((d) => d.number),
+        ).size,
+        20,
+      );
       issued = drafts[0];
     },
   );
   await t.test(
     "A14/A15 20 same-key repeats, lost reply and mismatched request",
     async () => {
-      const d = await createRequest(ca, fixture());
+      const d = await createApprovedRequest(ca, fixture());
       const key = randomUUID();
       const results = await Promise.all(
         Array.from({ length: 20 }, () =>
-          finalize(ca, d.id, { expectedRevision: 0 }, key),
+          finalize(ca, d.id, { expectedRevision: d.revision }, key),
         ),
       );
       assert.equal(new Set(results.map((x) => hash(x))).size, 1);
       assert.deepEqual(
-        await finalize(ca, d.id, { expectedRevision: 0 }, key),
+        await finalize(ca, d.id, { expectedRevision: d.revision }, key),
         results[0],
       );
       await assert.rejects(
-        finalize(ca, d.id, { expectedRevision: 1 }, key),
+        finalize(ca, d.id, { expectedRevision: d.revision + 1 }, key),
         /ключ/,
       );
-      const different = await createRequest(ca, fixture());
+      const different = await createApprovedRequest(ca, fixture());
       await assert.rejects(
-        finalize(ca, different.id, { expectedRevision: 0 }, key),
+        finalize(
+          ca,
+          different.id,
+          { expectedRevision: different.revision },
+          key,
+        ),
         /ключ/,
       );
       assert.equal(await db.issuance.count({ where: { requestId: d.id } }), 1);
@@ -212,10 +242,10 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
   await t.test(
     "A16 different keys same revision have one issuance, no registered patch",
     async () => {
-      const d = await createRequest(ca, fixture());
+      const d = await createApprovedRequest(ca, fixture());
       const results = await Promise.all(
         Array.from({ length: 20 }, () =>
-          finalize(ca, d.id, { expectedRevision: 0 }, randomUUID()),
+          finalize(ca, d.id, { expectedRevision: d.revision }, randomUUID()),
         ),
       );
       assert.equal(new Set(results.map((x) => hash(x))).size, 1);
@@ -227,7 +257,7 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
     },
   );
   await t.test(
-    "A09 company 12 recipients and 18 assignments; PS separate registration",
+    "A09 company 12 recipients receive mandatory kits; PS has separate registration",
     async () => {
       const customer = await db.customerOrganization.create({
         data: {
@@ -246,12 +276,27 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
           templateId: i === 0 ? "ps-witness" : "biot-protocol",
           biotCategory: i === 0 ? undefined : "WORKER",
         });
-      const d = await createRequest(ca, draft);
-      await finalize(ca, d.id, { expectedRevision: 0 }, randomUUID());
+      const d = await createApprovedRequest(ca, draft);
+      assert.deepEqual(
+        (await validateRequest(ca, d.id, { expectedRevision: d.revision }))
+          .issues,
+        [],
+      );
+      await finalize(ca, d.id, { expectedRevision: d.revision }, randomUUID());
       const docs = await db.issuedDocument.findMany({
         where: { requestId: d.id },
       });
-      assert.equal(docs.length, 18);
+      assert.equal(docs.length, 27);
+      assert.equal(
+        docs.filter((document) => document.templateId === "biot-worker-card")
+          .length,
+        12,
+      );
+      assert.equal(
+        docs.filter((document) => document.templateId === "biot-protocol")
+          .length,
+        12,
+      );
       assert.ok(
         docs.find((x) => x.templateId === "ps-witness")?.registrationNumber,
       );
@@ -281,8 +326,13 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
         { ...base, id: "ps-protocol", templateId: "ps-protocol" },
         { ...base, id: "ps-card", templateId: "ps-card" },
       ];
-      const request = await createRequest(ca, draft);
-      await finalize(ca, request.id, { expectedRevision: 0 }, randomUUID());
+      const request = await createApprovedRequest(ca, draft);
+      await finalize(
+        ca,
+        request.id,
+        { expectedRevision: request.revision },
+        randomUUID(),
+      );
       const documents = await db.issuedDocument.findMany({
         where: { requestId: request.id },
       });
@@ -314,14 +364,29 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       draft.items[0].assignments = [
         { ...base, id: "ps-only", templateId: "ps-protocol" },
       ];
-      const standalone = await createRequest(ca, draft);
-      await finalize(ca, standalone.id, { expectedRevision: 0 }, randomUUID());
-      const standaloneInput = (
+      const standalone = await createApprovedRequest(ca, draft);
+      await finalize(
+        ca,
+        standalone.id,
+        { expectedRevision: standalone.revision },
+        randomUUID(),
+      );
+      const suppliedCard = await db.issuedDocument.findFirstOrThrow({
+        where: { requestId: standalone.id, templateId: "ps-card" },
+      });
+      const suppliedProtocolInput = (
         await db.renderInputSnapshot.findFirstOrThrow({
-          where: { requestId: standalone.id, templateVersionId: { not: null } },
+          where: {
+            requestId: standalone.id,
+            templateVersionId: { not: null },
+            input: { path: ["templateId"], equals: "ps-protocol" },
+          },
         })
       ).input as any;
-      assert.equal(standaloneInput.items[0].credentialNumber, "");
+      assert.equal(
+        suppliedProtocolInput.items[0].credentialNumber,
+        suppliedCard.number,
+      );
     },
   );
   await t.test(
@@ -333,12 +398,17 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       // value fits it. Exercise real overflow on the fixed-size PB card.
       draft.items[0].assignments[0].templateId = "pb-card";
       delete draft.items[0].assignments[0].biotCategory;
-      const request = await createRequest(ca, draft);
+      const request = await createApprovedRequest(ca, draft);
       const before = await db.numberReservation.count({
         where: { tenantId: ca.tenantId },
       });
       await assert.rejects(
-        finalize(ca, request.id, { expectedRevision: 0 }, randomUUID()),
+        finalize(
+          ca,
+          request.id,
+          { expectedRevision: request.revision },
+          randomUUID(),
+        ),
         (error: any) => {
           assert.equal(error.getStatus(), 422);
           assert.ok(
@@ -363,8 +433,25 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       );
       assert.equal((await requestDetail(ca, request.id)).status, "DRAFT");
       draft.items[0].fullNameRu = "Исправленный Синтетический Получатель";
-      await patchRequest(ca, request.id, { expectedRevision: 0, draft });
-      await finalize(ca, request.id, { expectedRevision: 1 }, randomUUID());
+      const corrected = await patchRequest(ca, request.id, {
+        expectedRevision: request.revision,
+        draft,
+      });
+      await approvals.approve(request.id);
+      assert.deepEqual(
+        (
+          await validateRequest(ca, request.id, {
+            expectedRevision: corrected.revision,
+          })
+        ).issues,
+        [],
+      );
+      await finalize(
+        ca,
+        request.id,
+        { expectedRevision: corrected.revision },
+        randomUUID(),
+      );
       assert.equal(
         await db.issuance.count({ where: { requestId: request.id } }),
         1,
@@ -378,8 +465,8 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
         where: { tenantId: a.tenantId },
       });
       const d = await createRequest(ca, fixture());
-      const result = await preview(ca, d.id, { expectedRevision: 0 });
-      assert.equal(result.jobs.length, 2);
+      const result = await preview(ca, d.id, { expectedRevision: d.revision });
+      assert.equal(result.jobs.length, 4);
       assert.equal(
         await db.numberReservation.count({ where: { tenantId: a.tenantId } }),
         before,
@@ -433,23 +520,41 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       });
       await assert.rejects(db.auditEvent.delete({ where: { id: audit.id } }));
       const corrected = await correction(ca, issued.id, {
-        expectedRevision: 0,
+        expectedRevision: issued.revision,
         reason: "Исправление синтетической опечатки",
       });
-      await finalize(ca, corrected.id, { expectedRevision: 0 }, randomUUID());
+      await approvals.approve(corrected.id);
+      await finalize(
+        ca,
+        corrected.id,
+        { expectedRevision: corrected.revision },
+        randomUUID(),
+      );
       assert.equal(
         await db.issuanceEvent.count({
           where: { issuanceId: old.id, kind: "REPLACED" },
         }),
-        1,
+        0,
+      );
+      assert.notEqual(
+        (await requestDetail(ca, corrected.id)).lifecycle,
+        "ISSUED",
+        "Rendering and director approval do not establish a signed replacement",
       );
       await cancelRequest(ca, corrected.id, {
-        expectedRevision: 0,
+        expectedRevision: corrected.revision,
         reason: "Отмена тестового выпуска",
       });
       assert.equal(
+        (await requestDetail(ca, corrected.id)).status,
+        "FINALIZED",
+        "Cancellation waits for a separate director decision",
+      );
+      await approvals.approve(corrected.id);
+      assert.equal((await requestDetail(ca, corrected.id)).status, "CANCELLED");
+      assert.equal(
         await db.issuedDocument.count({ where: { issuanceId: old.id } }),
-        1,
+        2,
       );
     },
   );
@@ -458,16 +563,18 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
     async () => {
       for (let batch = 0; batch < 50; batch++) {
         const drafts = await Promise.all(
-          Array.from({ length: 20 }, () => createRequest(ca, fixture())),
+          Array.from({ length: 20 }, () =>
+            createApprovedRequest(ca, fixture()),
+          ),
         );
         await Promise.all(
           drafts.map((d) =>
-            finalize(ca, d.id, { expectedRevision: 0 }, randomUUID()),
+            finalize(ca, d.id, { expectedRevision: d.revision }, randomUUID()),
           ),
         );
       }
-      const d = await createRequest(ca, fixture());
-      await finalize(ca, d.id, { expectedRevision: 0 }, randomUUID());
+      const d = await createApprovedRequest(ca, fixture());
+      await finalize(ca, d.id, { expectedRevision: d.revision }, randomUUID());
       const counter = await db.numberSequence.findUniqueOrThrow({
         where: {
           tenantId_namespace: { tenantId: a.tenantId, namespace: "BIOT:CARD" },

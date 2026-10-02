@@ -3,7 +3,7 @@ import { buildZip } from "@demo/printing";
 import { db, fail, parse, audit, type Context } from "./core";
 
 function center(c: Context) {
-  if (!["ADMIN", "OPERATOR", "VIEWER"].includes(c.role))
+  if (!["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role))
     fail(403, "ROLE_DENIED", "Требуется доступ сотрудника центра");
 }
 const date = z.string().refine(validDate, "Укажите календарную дату");

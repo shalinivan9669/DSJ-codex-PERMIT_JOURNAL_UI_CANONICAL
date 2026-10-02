@@ -19,6 +19,37 @@ def roster_table(root):
     return matches[0]
 
 
+def flow_original_signatures(root, roster):
+    """Keep the original three-column signatures after a flowing group roster."""
+    body=root.find(W+'body')
+    tables=[t for t in body.findall(W+'tbl') if t is not roster]
+    if len(tables)!=3:return
+    names,signs,labels=tables
+    signature=E.Element(W+'tbl');pr=E.SubElement(signature,W+'tblPr')
+    widths=[2454,2854,2886]
+    E.SubElement(pr,W+'tblW',{W+'w':str(sum(widths)),W+'type':'dxa'})
+    E.SubElement(pr,W+'tblLayout',{W+'type':'fixed'})
+    borders=E.SubElement(pr,W+'tblBorders')
+    for side in ['top','left','bottom','right','insideH','insideV']:E.SubElement(borders,W+side,{W+'val':'nil'})
+    grid=E.SubElement(signature,W+'tblGrid')
+    for width in widths:E.SubElement(grid,W+'gridCol',{W+'w':str(width)})
+    for index in range(max(len(t.findall(W+'tr')) for t in tables)):
+        row=E.SubElement(signature,W+'tr');E.SubElement(E.SubElement(row,W+'trPr'),W+'cantSplit')
+        for source,width in zip([labels,names,signs],widths):
+            rows=source.findall(W+'tr')
+            cell=deepcopy(rows[index].find(W+'tc')) if index<len(rows) else E.Element(W+'tc')
+            cp=cell.find(W+'tcPr')
+            if cp is None:cp=E.Element(W+'tcPr');cell.insert(0,cp)
+            cw=cp.find(W+'tcW')
+            if cw is None:cw=E.SubElement(cp,W+'tcW')
+            cw.set(W+'w',str(width));cw.set(W+'type','dxa')
+            if not cell.findall(W+'p'):E.SubElement(cell,W+'p')
+            row.append(cell)
+    position=body.index(tables[0])
+    for old in tables:body.remove(old)
+    body.insert(position,signature)
+
+
 def render_group(snapshot, path, render_one):
     event = snapshot.get('groupEvent', {})
     if event.get('contractVersion') != 1 or not snapshot['templateId'].endswith('-protocol'):
@@ -43,6 +74,8 @@ def render_group(snapshot, path, render_one):
     files = render_one(snapshot, header_item, path)
     root = E.fromstring(files['word/document.xml'])
     table = roster_table(root)
+    if 'demo/original-form.json' in files and snapshot['templateId'].startswith('biot-'):
+        flow_original_signatures(root,table)
     rows = table.findall(W+'tr')
     header_count = 2 if snapshot['templateId'] in ['biot-protocol', 'biot-itr-protocol'] else 1
     if len(rows) < header_count+1:
@@ -52,6 +85,12 @@ def render_group(snapshot, path, render_one):
     if pr is not None:
         for floating in pr.findall(W+'tblpPr'):
             pr.remove(floating)
+        if 'demo/original-form.json' in files:
+            # The original floating roster is centred and wider than the text
+            # margins. Preserve that physical centre when making it flow.
+            alignment=pr.find(W+'jc')
+            if alignment is None:alignment=E.SubElement(pr,W+'jc')
+            alignment.set(W+'val','center')
     for old in rows[header_count:]:
         table.remove(old)
     for index, item in enumerate(items, 1):

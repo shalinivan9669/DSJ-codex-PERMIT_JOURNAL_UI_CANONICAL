@@ -13,6 +13,7 @@ import {
 } from "@/lib/api";
 import {
   templateLabels,
+  documentTitle,
   type Artifact,
   type Draft,
   type Issuance,
@@ -24,6 +25,7 @@ import { VerificationLink } from "./verification-link";
 import { SavedPrintSet } from "./saved-print-set";
 import { filePollingRetryDelay } from "@/lib/file-polling";
 import { readyPreviewRevision } from "@/lib/preview-readiness";
+import { PdfPreview, printPdfArtifact } from "./pdf-preview";
 
 export function FilesPanel({
   requestId,
@@ -32,6 +34,7 @@ export function FilesPanel({
   previewStale,
   readonly,
   canManage,
+  allowPrint = true,
   onChanged,
   onPreviewReady,
 }: {
@@ -41,6 +44,7 @@ export function FilesPanel({
   previewStale: boolean;
   readonly: boolean;
   canManage: boolean;
+  allowPrint?: boolean;
   onChanged: () => void;
   onPreviewReady?: (revision: number | null) => void;
 }) {
@@ -56,6 +60,8 @@ export function FilesPanel({
   const [dialog, setDialog] = useState<"correct" | "cancel" | null>(null);
   const [reason, setReason] = useState("");
   const [viewArtifact, setViewArtifact] = useState<Artifact | null>(null);
+  const [printing, setPrinting] = useState(false);
+  const [printError, setPrintError] = useState("");
   const [reload, setReload] = useState(0);
   useEffect(() => {
     onPreviewReady?.(
@@ -109,7 +115,7 @@ export function FilesPanel({
                       event.kind === "REPLACED",
                   )
                 ? "REPLACED"
-                : "REGISTERED",
+                : detail.lifecycle || "LEGACY_ISSUED",
           })),
         );
         setArtifacts(detail.artifacts || []);
@@ -239,7 +245,7 @@ export function FilesPanel({
       .flatMap((issuance) => issuance.documents || [])
       .find((document) => document.id === artifact.documentId);
     if (document)
-      return `${templateLabels[document.templateId] || document.templateId} · № ${document.number}`;
+      return `${documentTitle(document.templateId, !document.rowId)} · № ${document.number}`;
     if (artifact.format === "XLSX") return "Реестр документов";
     if (artifact.format === "ZIP") return "Комплект документов";
     const name = artifact.fileName || artifact.filename || artifact.name || "";
@@ -247,7 +253,7 @@ export function FilesPanel({
       name.startsWith(id + "-"),
     );
     return templateId
-      ? `${templateLabels[templateId]} · ${artifact.provenance === "PREVIEW" ? "предпросмотр" : "печатная форма"}`
+      ? `${documentTitle(templateId)} · ${artifact.provenance === "PREVIEW" ? "предпросмотр" : "печатная форма"}`
       : name || "Печатный документ";
   }
   const allArtifacts = [
@@ -266,28 +272,42 @@ export function FilesPanel({
     (artifact, index, rows) =>
       rows.findIndex((item) => item.id === artifact.id) === index,
   );
+  const awaitingSignatures = issuances.some((issuance) =>
+    ["RENDERING", "AWAITING_SIGNATURE"].includes(issuance.status || ""),
+  );
+  const panelTitle = allowPrint
+    ? "Документы и печать"
+    : "Предпросмотр документов";
   if (!jobs.length && !issuances.length && !error)
     return (
-      <section className="files-empty">
-        <Icon name="print" />
+      <section id="request-files" className="files-empty">
+        <Icon name={allowPrint ? "print" : "search"} />
         <p>
           После предпросмотра или оформления здесь появятся задания и файлы.
         </p>
       </section>
     );
   return (
-    <section className="panel files-panel">
-      {canManage && issuances.some((i) => i.documents?.length) && (
-        <VerificationLink
-          documents={issuances.flatMap((i) => i.documents || [])}
-        />
-      )}
+    <section
+      id="request-files"
+      className="panel files-panel"
+      aria-label={panelTitle}
+    >
+      {canManage &&
+        !awaitingSignatures &&
+        issuances.some((i) => i.documents?.length) && (
+          <VerificationLink
+            documents={issuances.flatMap((i) => i.documents || [])}
+          />
+        )}
       <div className="section-heading">
         <div>
-          <h2>Файлы и задания</h2>
+          <h2>{panelTitle}</h2>
           <p className="muted">
             Готово {complete} из {jobs.length}. Повторяется только генерация;
             номера сохраняются.
+            {!allowPrint &&
+              " Предпросмотр можно открыть и скачать. Печать станет доступна после согласования заявки."}
             {missing.length > 0 && (
               <strong className="danger-text">
                 {" "}
@@ -299,7 +319,12 @@ export function FilesPanel({
         </div>
         <div className="file-actions">
           <button
-            disabled={!!busy}
+            disabled={!!busy || awaitingSignatures}
+            title={
+              awaitingSignatures
+                ? "Реестр выданных документов доступен после всех подписей"
+                : undefined
+            }
             onClick={() => {
               setBusy("registry");
               void downloadExport(
@@ -315,7 +340,12 @@ export function FilesPanel({
           </button>
           {readonly && (
             <button
-              disabled={!!busy}
+              disabled={!!busy || awaitingSignatures}
+              title={
+                awaitingSignatures
+                  ? "Официальный комплект доступен после всех подписей"
+                  : undefined
+              }
               onClick={() => {
                 setBusy("zip");
                 void downloadExport(
@@ -336,11 +366,22 @@ export function FilesPanel({
         </div>
       </div>
       {error && <Notice>{error}</Notice>}
-      <SavedPrintSet
-        draft={draft}
-        issuances={issuances}
-        artifacts={allArtifacts}
-      />
+      {awaitingSignatures && (
+        <Notice kind="info">
+          {allowPrint
+            ? "Готовые PDF можно просмотреть и распечатать кнопкой «Печать»."
+            : "Готовые PDF можно просмотреть и скачать."}{" "}
+          Комплект ожидает электронных подписей; официальный ZIP и реестр выдачи
+          станут доступны после их проверки.
+        </Notice>
+      )}
+      {allowPrint && (
+        <SavedPrintSet
+          draft={draft}
+          issuances={issuances}
+          artifacts={allArtifacts}
+        />
+      )}
       {(previewStale ||
         (lastPreviewRevision >= 0 &&
           lastPreviewRevision !== draft.revision)) && (
@@ -351,71 +392,107 @@ export function FilesPanel({
       )}
       {allArtifacts.length > 0 && (
         <div className="artifact-list">
-          {allArtifacts.map((artifact) => (
-            <article key={artifact.id}>
-              <span className="file-type">
-                {artifact.format ||
-                  artifact.filename?.split(".").pop()?.toUpperCase() ||
-                  artifact.name?.split(".").pop()?.toUpperCase() ||
-                  "Файл"}
-              </span>
-              <div>
-                <strong>{artifactTitle(artifact)}</strong>
-                <small>
-                  {artifact.provenance === "RECONSTRUCTED"
-                    ? "Восстановленная копия · "
-                    : ""}
-                  {missing.includes(artifact.id)
-                    ? "Оригинал недоступен · "
-                    : ""}
-                  {artifact.size != null
-                    ? `${Math.ceil(artifact.size / 1024)} КБ`
-                    : "Сохранённый оригинал"}{" "}
-                  · {dateTime(artifact.createdAt)}
-                </small>
-                {artifact.sha256 && (
-                  <details>
-                    <summary>Контрольная сумма</summary>
-                    <span className="hash">SHA-256: {artifact.sha256}</span>
-                  </details>
-                )}
-              </div>
-              <div className="file-actions">
-                {(artifact.mimeType === "application/pdf" ||
-                  artifact.format?.toLowerCase() === "pdf" ||
-                  artifact.fileName?.endsWith(".pdf") ||
-                  artifact.filename?.endsWith(".pdf")) && (
-                  <button onClick={() => setViewArtifact(artifact)}>
-                    Посмотреть
-                  </button>
-                )}
-                <a
-                  className="button"
-                  href={`/api/artifacts/${artifact.id}`}
-                  download
-                  aria-disabled={!!busy}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    if (!busy) void download(artifact);
-                  }}
-                >
-                  <Icon name="download" />
-                  Скачать
-                </a>
-                {canManage && missing.includes(artifact.id) && (
-                  <button
-                    disabled={!!busy}
-                    onClick={() => {
-                      setRestoreReason("");
-                      setRestoreArtifact(artifact);
+          {allArtifacts
+            .filter(
+              (artifact) =>
+                !(
+                  (draft.approval || draft.businessRuleVersion === "LIVE_V1") &&
+                  artifact.format?.toUpperCase() === "ZIP"
+                ),
+            )
+            .map((artifact) => (
+              <article key={artifact.id}>
+                <span className="file-type">
+                  {artifact.format ||
+                    artifact.filename?.split(".").pop()?.toUpperCase() ||
+                    artifact.name?.split(".").pop()?.toUpperCase() ||
+                    "Файл"}
+                </span>
+                <div>
+                  <strong>{artifactTitle(artifact)}</strong>
+                  <small>
+                    {artifact.provenance === "RECONSTRUCTED"
+                      ? "Восстановленная копия · "
+                      : ""}
+                    {missing.includes(artifact.id)
+                      ? "Оригинал недоступен · "
+                      : ""}
+                    {artifact.size != null
+                      ? `${Math.ceil(artifact.size / 1024)} КБ`
+                      : "Сохранённый оригинал"}{" "}
+                    · {dateTime(artifact.createdAt)}
+                  </small>
+                  {artifact.sha256 && (
+                    <details>
+                      <summary>Контрольная сумма</summary>
+                      <span className="hash">SHA-256: {artifact.sha256}</span>
+                    </details>
+                  )}
+                </div>
+                <div className="file-actions">
+                  {(artifact.mimeType === "application/pdf" ||
+                    artifact.format?.toLowerCase() === "pdf" ||
+                    artifact.fileName?.endsWith(".pdf") ||
+                    artifact.filename?.endsWith(".pdf")) && (
+                    <button
+                      className="primary"
+                      disabled={missing.includes(artifact.id)}
+                      onClick={() => {
+                        setPrintError("");
+                        setViewArtifact(artifact);
+                      }}
+                    >
+                      <Icon name={allowPrint ? "print" : "search"} />{" "}
+                      {allowPrint ? "Печать" : "Просмотр PDF"}
+                    </button>
+                  )}
+                  <a
+                    className="button"
+                    href={`/api/artifacts/${artifact.id}`}
+                    download
+                    aria-disabled={
+                      !!busy ||
+                      (awaitingSignatures &&
+                        ["ZIP", "XLSX"].includes(
+                          (artifact.format || "").toUpperCase(),
+                        ))
+                    }
+                    onClick={(event) => {
+                      event.preventDefault();
+                      if (
+                        !busy &&
+                        !(
+                          awaitingSignatures &&
+                          ["ZIP", "XLSX"].includes(
+                            (artifact.format || "").toUpperCase(),
+                          )
+                        )
+                      )
+                        void download(artifact);
                     }}
                   >
-                    Восстановить файл
-                  </button>
-                )}
-              </div>
-            </article>
-          ))}
+                    <Icon name="download" />
+                    {awaitingSignatures &&
+                    ["ZIP", "XLSX"].includes(
+                      (artifact.format || "").toUpperCase(),
+                    )
+                      ? "После подписания"
+                      : "Скачать"}
+                  </a>
+                  {canManage && missing.includes(artifact.id) && (
+                    <button
+                      disabled={!!busy}
+                      onClick={() => {
+                        setRestoreReason("");
+                        setRestoreArtifact(artifact);
+                      }}
+                    >
+                      Восстановить файл
+                    </button>
+                  )}
+                </div>
+              </article>
+            ))}
         </div>
       )}
       <div className="table-scroll">
@@ -440,7 +517,11 @@ export function FilesPanel({
                   )}
                 </td>
                 <td>
-                  <Status value={job.status} />
+                  {job.status === "PENDING" ? (
+                    <span className="status">В очереди</span>
+                  ) : (
+                    <Status value={job.status} />
+                  )}
                   {job.errorCode && <small>{job.errorCode}</small>}
                 </td>
                 <td>{job.attempts ?? 0}</td>
@@ -507,7 +588,7 @@ export function FilesPanel({
           <ul>
             {issuance.documents?.map((document) => (
               <li key={document.id}>
-                {templateLabels[document.templateId] || document.templateId} —{" "}
+                {documentTitle(document.templateId, !document.rowId)} —{" "}
                 <strong>№ {document.number}</strong>
                 {document.registrationNumber
                   ? ` · регистрационный № ${document.registrationNumber}`
@@ -545,7 +626,7 @@ export function FilesPanel({
           <p>
             {dialog === "correct"
               ? "Будет создан новый черновик. Зарегистрированная редакция, номера и оригинальные файлы останутся в истории."
-              : "Отмена будет зафиксирована в истории. Номера и файлы сохранятся, номера не будут использованы повторно."}
+              : "Запрос на аннулирование будет отправлен директору. После согласования решение появится в истории; номера и файлы сохранятся."}
           </p>
           {error && <Notice>{error}</Notice>}
           <label>
@@ -614,16 +695,54 @@ export function FilesPanel({
       )}
       {viewArtifact && (
         <Modal
-          title="Предпросмотр PDF"
+          title={allowPrint ? "Просмотр и печать PDF" : "Предпросмотр PDF"}
           onClose={() => setViewArtifact(null)}
           wide
         >
-          <iframe
-            className="pdf-preview"
-            title="Печатный макет PDF"
-            src={`/api/artifacts/${viewArtifact.id}?inline=1`}
-          />
+          <p>
+            <strong>{artifactTitle(viewArtifact)}</strong>
+          </p>
+          <p>
+            {allowPrint
+              ? "Печатайте в масштабе 100% («Фактический размер»)."
+              : "Проверьте документ. Печать станет доступна после согласования заявки."}{" "}
+            {awaitingSignatures
+              ? "PDF подготовлен, электронные подписи ещё не получены."
+              : ""}
+          </p>
+          {allowPrint && printError && <Notice>{printError}</Notice>}
+          <PdfPreview artifactId={viewArtifact.id} />
           <div className="modal-actions">
+            {allowPrint && (
+              <button
+                className="primary"
+                disabled={printing}
+                onClick={async () => {
+                  setPrinting(true);
+                  setPrintError("");
+                  try {
+                    await printPdfArtifact(viewArtifact.id);
+                  } catch {
+                    setPrintError(
+                      "Этот браузер не открыл диалог печати. Откройте PDF в отдельной вкладке или скачайте его и нажмите Ctrl+P.",
+                    );
+                  } finally {
+                    setPrinting(false);
+                  }
+                }}
+              >
+                <Icon name="print" />{" "}
+                {printing ? "Подготовка печати…" : "Печать PDF"}
+              </button>
+            )}
+            <a
+              className="button"
+              href={`/api/artifacts/${viewArtifact.id}?inline=1`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Открыть PDF отдельно
+            </a>
             <a
               className="button"
               href={`/api/artifacts/${viewArtifact.id}`}

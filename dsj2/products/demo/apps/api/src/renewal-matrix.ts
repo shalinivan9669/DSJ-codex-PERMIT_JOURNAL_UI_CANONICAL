@@ -12,7 +12,7 @@ function staff(c: Context, admin = false) {
   if (
     !(admin
       ? c.role === "ADMIN"
-      : ["ADMIN", "OPERATOR", "VIEWER"].includes(c.role))
+      : ["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role))
   )
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");
 }

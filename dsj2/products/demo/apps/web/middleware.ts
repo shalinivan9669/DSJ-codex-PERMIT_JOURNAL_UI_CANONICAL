@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
     .replace(/%5d/gi, "]");
   const safeStatic =
     ["GET", "HEAD"].includes(request.method) &&
-    /^\/_next\/static\/[A-Za-z0-9_./()[\]@-]+\.(?:js|css|woff2?|ttf|otf)$/.test(
+    /^\/_next\/static\/[A-Za-z0-9_./()[\]@-]+\.(?:m?js|css|woff2?|ttf|otf)$/.test(
       staticPath,
     ) &&
     !staticPath

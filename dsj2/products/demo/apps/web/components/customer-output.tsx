@@ -96,11 +96,13 @@ const defaults: OutputProfile = {
 export function CustomerOutput({
   draft,
   canManage,
+  embedded = false,
 }: {
   draft: Draft;
   canManage: boolean;
+  embedded?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(embedded);
   const [customerId, setCustomerId] = useState(draft.customerId || "");
   const customerChosen = useRef(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -202,18 +204,20 @@ export function CustomerOutput({
     }
   }
   return (
-    <section className="panel common-context">
-      <div className="toolbar">
-        <div>
-          <h2>Комплект для заказчика</h2>
-          <span className="muted">
-            Колонки, порядок и названия файлов из согласованного профиля
-          </span>
+    <section className={embedded ? undefined : "panel common-context"}>
+      {!embedded && (
+        <div className="toolbar">
+          <div>
+            <h2>Комплект для заказчика</h2>
+            <span className="muted">
+              Колонки, порядок и названия файлов из согласованного профиля
+            </span>
+          </div>
+          <button onClick={() => setOpen(!open)} aria-expanded={open}>
+            {open ? "Свернуть" : "Настроить выдачу"}
+          </button>
         </div>
-        <button onClick={() => setOpen(!open)} aria-expanded={open}>
-          {open ? "Свернуть" : "Настроить выдачу"}
-        </button>
-      </div>
+      )}
       {open && (
         <div className="context-body">
           {error && <Notice>{error}</Notice>}

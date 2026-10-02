@@ -13,9 +13,10 @@ import { TextQualityHint } from "./text-quality-hint";
 import { RecipientRecord } from "./recipient-record";
 import { DateCalculationStatus } from "./date-calculation-status";
 import { TrainingDateSettings } from "./training-date-settings";
+import { TranslationSuggestion } from "./translation-suggestion";
+import { editTrainingAssignment } from "@/lib/training-assignment-edit";
 import {
   biotCategoriesForTemplate,
-  updateAssignment,
   restoreAssignmentDate,
 } from "@/lib/assignment-presets";
 import {
@@ -38,7 +39,16 @@ function sectionForField(key: string): DocumentSection {
   if (
     [
       "trainingSubject",
+      "trainingSubjectEn",
+      "resultEn",
+      "reasonEn",
+      "educationEn",
+      "biotIndustryEn",
+      "biotKnowledgeResultEn",
+      "biotProctoringResultEn",
+      "biotNotesEn",
       "result",
+      "outcome",
       "reason",
       "education",
       "biotCheckType",
@@ -63,7 +73,11 @@ function documentDateSummary(assignment: Assignment) {
     assignment.protocolDate
       ? `протокол ${date(assignment.protocolDate)}`
       : "дата протокола не задана",
-    assignment.validUntil ? `действует до ${date(assignment.validUntil)}` : "",
+    assignment.validityMode === "UNLIMITED"
+      ? "бессрочно"
+      : assignment.validUntil
+        ? `действует до ${date(assignment.validUntil)}`
+        : "",
   ]
     .filter(Boolean)
     .join(" · ");
@@ -96,6 +110,10 @@ export function RecipientDetails({
   fieldErrors,
   resolvedRecipient,
   provenance,
+  liveRules = false,
+  englishAppendix = false,
+  requestEmployer,
+  focusFieldPath,
 }: {
   recipient: Recipient;
   disabled: boolean;
@@ -105,6 +123,10 @@ export function RecipientDetails({
   fieldErrors: Record<string, string>;
   resolvedRecipient?: Recipient;
   provenance?: Record<string, Record<string, string>>;
+  liveRules?: boolean;
+  englishAppendix?: boolean;
+  requestEmployer?: { id: string; nameRu: string; nameKz: string } | null;
+  focusFieldPath?: string | null;
 }) {
   const [photoOpen, setPhotoOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("documents");
@@ -113,10 +135,22 @@ export function RecipientDetails({
   >({});
   const tabId = useId();
   const detailsRoot = useRef<HTMLDivElement>(null);
+  const consumedFocusPath = useRef("");
+  const employerException = !!(
+    requestEmployer &&
+    ((recipient.employerId && recipient.employerId !== requestEmployer.id) ||
+      (recipient.workplaceRu &&
+        recipient.workplaceRu !== requestEmployer.nameRu) ||
+      (recipient.workplaceKz &&
+        recipient.workplaceKz !== requestEmployer.nameKz))
+  );
+  const hasLanguageDetails = !!(recipient.fullNameKz || recipient.positionKz);
   useEffect(() => {
-    function focusField(event: Event) {
-      const path = (event as CustomEvent<string>).detail;
+    let revealFrame = 0;
+    let focusFrame = 0;
+    function revealField(path: string) {
       if (!path?.startsWith(`items.${rowIndex}.`)) return;
+      consumedFocusPath.current = `${recipient.id}:${path}`;
       const assignmentPath = path
         .slice(`items.${rowIndex}.`.length)
         .match(/^assignments\.(\d+)(?:\.(.+))?$/);
@@ -131,8 +165,10 @@ export function RecipientDetails({
             ),
           }));
       }
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
+      cancelAnimationFrame(revealFrame);
+      cancelAnimationFrame(focusFrame);
+      revealFrame = requestAnimationFrame(() => {
+        focusFrame = requestAnimationFrame(() => {
           const input = detailsRoot.current?.querySelector<HTMLElement>(
             `[data-field-path="${CSS.escape(path)}"]`,
           );
@@ -143,12 +179,26 @@ export function RecipientDetails({
           }
           input?.focus();
           input?.scrollIntoView({ block: "center" });
-        }),
-      );
+        });
+      });
+    }
+    function focusField(event: Event) {
+      revealField((event as CustomEvent<string>).detail);
     }
     window.addEventListener("demo:focus-field", focusField);
-    return () => window.removeEventListener("demo:focus-field", focusField);
-  }, [rowIndex, recipient.assignments]);
+    // The selected row may render after the editor's focus event. Consume the
+    // requested path after this recipient mounts, without refocusing on edits.
+    if (
+      focusFieldPath &&
+      consumedFocusPath.current !== `${recipient.id}:${focusFieldPath}`
+    )
+      revealField(focusFieldPath);
+    return () => {
+      cancelAnimationFrame(revealFrame);
+      cancelAnimationFrame(focusFrame);
+      window.removeEventListener("demo:focus-field", focusField);
+    };
+  }, [rowIndex, recipient.id, recipient.assignments, focusFieldPath]);
   function field(index: number, key: string) {
     const path = `items.${rowIndex}.assignments.${index}.${key}`;
     const category = recipient.assignments[index].biotCategory;
@@ -162,6 +212,8 @@ export function RecipientDetails({
       protocolDate: "Дата протокола",
       trainingSubject: "Программа / тема обучения",
       result: "Подтверждённый результат / оценка",
+      outcome: "Исход обучения",
+      "outcome.source": "Источник подтверждения результата",
       externalBasisNumber: "Внешний номер основания",
       reason: "Причина проверки знаний",
       education: "Образование",
@@ -206,12 +258,7 @@ export function RecipientDetails({
     ) : null;
   }
   function changeAssignment(id: string, patch: Partial<Assignment>) {
-    onChange({
-      ...recipient,
-      assignments: recipient.assignments.map((item) =>
-        item.id === id ? updateAssignment(item, patch) : item,
-      ),
-    });
+    onChange(editTrainingAssignment(recipient, id, patch, liveRules));
   }
   function personField(key: string) {
     const path = `items.${rowIndex}.${key}`;
@@ -263,6 +310,78 @@ export function RecipientDetails({
           </button>
         )}
       </div>
+      <label>
+        Категория сотрудника
+        <select
+          disabled={disabled}
+          {...personField("employeeCategory")}
+          value={
+            recipient.employeeCategory ||
+            (recipient.assignments.some(
+              (assignment) => assignment.templateId === "biot-itr-certificate",
+            )
+              ? "ITR"
+              : "WORKER")
+          }
+          onChange={(event) =>
+            onChange({
+              ...recipient,
+              employeeCategory: event.target.value as "WORKER" | "ITR",
+            })
+          }
+        >
+          <option value="WORKER">Рабочий</option>
+          <option value="ITR">ИТР</option>
+        </select>
+        {personError("employeeCategory")}
+      </label>
+      {englishAppendix && (
+        <div className="english-fields">
+          <p className="muted">
+            Английская страница добавится к казахско-русскому документу.
+            Проверьте перевод; ФИО укажите по документам сотрудника.
+          </p>
+          {(
+            [
+              ["fullNameEn", "ФИО латиницей · EN"],
+              ["positionEn", "Должность · EN"],
+              ["workplaceEn", "Место работы · EN"],
+              ["employerAddressEn", "Адрес работодателя · EN"],
+              ["departmentEn", "Подразделение · EN"],
+            ] as const
+          )
+            .filter(
+              ([key]) =>
+                (key !== "employerAddressEn" && key !== "departmentEn") ||
+                (key === "departmentEn"
+                  ? !!(recipient.departmentRu || recipient.departmentKz)
+                  : !!(
+                      recipient.employerAddressRu || recipient.employerAddressKz
+                    )),
+            )
+            .map(([key, label]) => (
+              <label key={key}>
+                {label}
+                <input
+                  disabled={disabled}
+                  value={recipient[key] || ""}
+                  {...personField(key)}
+                  onChange={(event) =>
+                    onChange({ ...recipient, [key]: event.target.value })
+                  }
+                />
+                {personError(key)}
+              </label>
+            ))}
+          <TranslationSuggestion
+            source={recipient.positionRu}
+            field="positionRu"
+            target="en"
+            disabled={disabled}
+            onApply={(text) => onChange({ ...recipient, positionEn: text })}
+          />
+        </div>
+      )}
       <div className="tabs" role="tablist" aria-label="Данные получателя">
         <button
           type="button"
@@ -296,19 +415,12 @@ export function RecipientDetails({
         aria-labelledby={`${tabId}-person-tab`}
         hidden={activeTab !== "person"}
       >
-        <div className="person-fields-wide">
-          <RecipientRecord
-            recipient={recipient}
-            disabled={disabled}
-            onChange={onChange}
-          />
-        </div>
         <label>
-          ФИО · RU
+          ФИО
           <input
             disabled={disabled}
-            value={recipient.fullNameRu}
-            aria-label="ФИО · RU"
+            value={recipient.fullNameRu || recipient.fullNameKz}
+            aria-label="ФИО"
             {...personField("fullNameRu")}
             onChange={(event) =>
               onChange({ ...recipient, fullNameRu: event.target.value })
@@ -318,57 +430,108 @@ export function RecipientDetails({
           <TextQualityHint value={recipient.fullNameRu} />
         </label>
         <label>
-          ФИО · KZ
+          Должность / профессия
           <input
+            aria-label="Должность / профессия"
+            {...personField("positionRu")}
             disabled={disabled}
-            value={recipient.fullNameKz}
-            aria-label="ФИО · KZ"
-            {...personField("fullNameKz")}
+            value={recipient.positionRu || recipient.positionKz}
             onChange={(event) =>
-              onChange({ ...recipient, fullNameKz: event.target.value })
+              onChange({ ...recipient, positionRu: event.target.value })
             }
           />
-          {personError("fullNameKz")}
-          <TextQualityHint value={recipient.fullNameKz} />
+          {personError("positionRu")}
+          <TextQualityHint
+            value={recipient.positionRu || recipient.positionKz}
+          />
         </label>
-        <div className="helper-line person-fields-wide">
-          <small>Поля RU и KZ независимы.</small>
-          <button
-            className="text-button"
-            disabled={disabled}
-            onClick={() =>
-              onChange({ ...recipient, fullNameKz: recipient.fullNameRu })
-            }
-          >
-            Скопировать ФИО RU → KZ
-          </button>
-        </div>
-        {[
-          ["positionRu", "Должность · RU"],
-          ["positionKz", "Должность · KZ"],
-        ].map(([key, label]) => (
-          <label key={key}>
-            {label}
-            <input
-              aria-label={label}
-              {...personField(key)}
-              disabled={disabled}
-              value={String(recipient[key as keyof Recipient] || "")}
-              onChange={(event) =>
-                onChange({ ...recipient, [key]: event.target.value })
-              }
-            />
-            {personError(key)}
-            <TextQualityHint
-              value={String(recipient[key as keyof Recipient] || "")}
-            />
-          </label>
-        ))}
-        <details className="person-fields-wide employer-document-wording">
-          <summary>Полные названия работодателя в документах</summary>
+        <details className="person-fields-wide">
+          <summary>
+            Казахский вариант
+            {hasLanguageDetails
+              ? " · есть сохранённые данные"
+              : " · при необходимости"}
+          </summary>
           <p className="fine-print">
-            Сохранённые строки RU и KZ. Для автоматического ТОО / ЖШС выберите
-            форму в «Ввести название для документов».
+            Основные формы всегда KZ/RU. Если отдельный вариант не указан,
+            используется введённый текст без перевода. Сохранённые уточнения
+            остаются самостоятельными и не меняются при редактировании общего
+            ввода.
+          </p>
+          <div className="form-grid">
+            {(
+              [
+                ["fullNameKz", "ФИО · KZ"],
+                ["positionKz", "Должность / профессия · KZ"],
+              ] as const
+            ).map(([key, label]) => (
+              <label key={key}>
+                {label}
+                <input
+                  aria-label={label}
+                  {...personField(key)}
+                  disabled={disabled}
+                  value={recipient[key]}
+                  placeholder="Если отличается от общего ввода"
+                  onChange={(event) =>
+                    onChange({ ...recipient, [key]: event.target.value })
+                  }
+                />
+                {personError(key)}
+                <TextQualityHint value={recipient[key]} />
+                {key === "positionKz" && (
+                  <TranslationSuggestion
+                    source={recipient.positionRu}
+                    field="positionRu"
+                    target="kk"
+                    disabled={disabled}
+                    onApply={(text) =>
+                      onChange({ ...recipient, positionKz: text })
+                    }
+                  />
+                )}
+              </label>
+            ))}
+          </div>
+        </details>
+        {requestEmployer && (
+          <div className="person-fields-wide">
+            <p className="fine-print">
+              Работодатель заявки: {requestEmployer.nameRu}
+            </p>
+            {employerException && (
+              <Notice>
+                У этого получателя сохранены отдельные сведения работодателя:{" "}
+                {recipient.workplaceRu ||
+                  recipient.workplaceKz ||
+                  "другая организация"}
+                . Они сохранены как исключение. Проверьте их в деталях ниже.
+              </Notice>
+            )}
+          </div>
+        )}
+        <details
+          className="person-fields-wide employer-document-wording"
+          open={employerException || undefined}
+        >
+          <summary>
+            {requestEmployer
+              ? "Исключение по работодателю и история"
+              : "Работодатель, справочник и история"}
+          </summary>
+          {requestEmployer && (
+            <p className="fine-print">
+              Общий работодатель задаётся в заявке. Здесь сохранены только
+              индивидуальные сведения и исключения из старых заявок.
+            </p>
+          )}
+          <RecipientRecord
+            recipient={recipient}
+            disabled={disabled}
+            onChange={onChange}
+          />
+          <p className="fine-print">
+            Отдельные названия работодателя для документов · RU/KZ
           </p>
           <div className="form-grid">
             {[
@@ -435,18 +598,6 @@ export function RecipientDetails({
             ))}
           </details>
         )}
-        <button
-          className="text-button person-fields-wide"
-          disabled={disabled}
-          onClick={() =>
-            onChange({
-              ...recipient,
-              positionKz: recipient.positionRu,
-            })
-          }
-        >
-          Скопировать должность RU → KZ
-        </button>
         {recipient.photoAssetId && (
           <button
             className="text-button danger-text"
@@ -537,7 +688,7 @@ export function RecipientDetails({
                     Форма документа
                     <select
                       {...field(index, "templateId")}
-                      disabled={disabled}
+                      disabled={disabled || liveRules}
                       value={assignment.templateId}
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
@@ -650,7 +801,9 @@ export function RecipientDetails({
                         <input
                           {...field(index, "validUntil")}
                           type="date"
-                          disabled={disabled}
+                          disabled={
+                            disabled || assignment.validityMode === "UNLIMITED"
+                          }
                           value={
                             (
                               resolvedRecipient?.assignments[index] ||
@@ -664,6 +817,11 @@ export function RecipientDetails({
                           }
                         />
                         {fieldError(index, "validUntil")}
+                        {assignment.validityMode === "UNLIMITED" && (
+                          <small>
+                            ПС — бессрочно. Дата окончания не указывается.
+                          </small>
+                        )}
                         {assignment.biotCategory &&
                           BIOT_CATEGORIES[assignment.biotCategory]
                             .validityYears && (
@@ -1013,6 +1171,138 @@ export function RecipientDetails({
                     />
                     {fieldError(index, "result")}
                   </label>
+                  {(liveRules ||
+                    assignment.outcome ||
+                    assignment.protocolMode === "GROUP") && (
+                    <div className="form-grid assignment-field-wide">
+                      <label>
+                        Исход обучения
+                        <select
+                          {...field(index, "outcome")}
+                          disabled={disabled}
+                          value={assignment.outcome?.status || "UNKNOWN"}
+                          onChange={(event) =>
+                            changeAssignment(assignment.id, {
+                              outcome: {
+                                ...assignment.outcome,
+                                status: event.target.value as NonNullable<
+                                  Assignment["outcome"]
+                                >["status"],
+                                source: assignment.outcome?.source || "",
+                              },
+                            })
+                          }
+                        >
+                          <option value="UNKNOWN">Не подтверждён</option>
+                          <option value="PASSED">Сдал</option>
+                          <option value="FAILED">Не сдал</option>
+                          <option value="ABSENT">Не явился</option>
+                        </select>
+                        {fieldError(index, "outcome")}
+                      </label>
+                      <label>
+                        Источник подтверждения результата
+                        <input
+                          {...field(index, "outcome.source")}
+                          disabled={disabled}
+                          maxLength={500}
+                          value={assignment.outcome?.source || ""}
+                          placeholder="Ведомость, дата и ответственный"
+                          onChange={(event) =>
+                            changeAssignment(assignment.id, {
+                              outcome: {
+                                ...assignment.outcome,
+                                status: assignment.outcome?.status || "UNKNOWN",
+                                source: event.target.value,
+                              },
+                            })
+                          }
+                        />
+                        {fieldError(index, "outcome.source")}
+                      </label>
+                      <p className="fine-print assignment-field-wide">
+                        Оценка и подтверждённый исход указываются отдельно.
+                        Удостоверение выдаётся при исходе «Сдал». Эти сведения
+                        применяются ко всем формам этого обучения у выбранного
+                        получателя.
+                      </p>
+                    </div>
+                  )}
+                  {englishAppendix && (
+                    <div className="english-fields assignment-field-wide">
+                      <p className="muted">
+                        Текст для дополнительной английской страницы
+                      </p>
+                      {(
+                        [
+                          ["trainingSubjectEn", "Программа · EN"],
+                          ["resultEn", "Результат · EN"],
+                          ["reasonEn", "Причина проверки · EN"],
+                          ["educationEn", "Образование · EN"],
+                          ["biotIndustryEn", "Отрасль БиОТ · EN"],
+                          [
+                            "biotKnowledgeResultEn",
+                            "Результат проверки знаний · EN",
+                          ],
+                          [
+                            "biotProctoringResultEn",
+                            "Результат прокторинга · EN",
+                          ],
+                          ["biotNotesEn", "Примечания БиОТ · EN"],
+                        ] as const
+                      )
+                        .filter(([key]) => {
+                          const source =
+                            resolvedRecipient?.assignments[index] || assignment;
+                          const bases: Record<string, boolean> = {
+                            reasonEn: !!source.reason,
+                            educationEn: !!source.education,
+                            biotIndustryEn: !!(
+                              source.biotIndustryRu || source.biotIndustryKz
+                            ),
+                            biotKnowledgeResultEn: !!source.biotKnowledgeResult,
+                            biotProctoringResultEn:
+                              !!source.biotProctoringResult,
+                            biotNotesEn: !!source.biotNotes,
+                          };
+                          return bases[key] ?? true;
+                        })
+                        .map(([key, label]) => (
+                          <label key={key}>
+                            {label}
+                            <input
+                              disabled={disabled}
+                              value={assignment[key] || ""}
+                              {...field(index, key)}
+                              onChange={(event) =>
+                                changeAssignment(assignment.id, {
+                                  [key]: event.target.value,
+                                })
+                              }
+                            />
+                            {fieldError(index, key)}
+                            {key === "trainingSubjectEn" && (
+                              <TranslationSuggestion
+                                source={
+                                  (
+                                    resolvedRecipient?.assignments[index] ||
+                                    assignment
+                                  ).trainingSubject
+                                }
+                                field="trainingSubject"
+                                target="en"
+                                disabled={disabled}
+                                onApply={(text) =>
+                                  changeAssignment(assignment.id, {
+                                    trainingSubjectEn: text,
+                                  })
+                                }
+                              />
+                            )}
+                          </label>
+                        ))}
+                    </div>
+                  )}
                   {assignment.templateId === "ptm-protocol" && (
                     <label>
                       Причина проверки знаний
@@ -1168,7 +1458,9 @@ export function RecipientDetails({
                     <select
                       {...field(index, "protocolMode")}
                       disabled={
-                        disabled || assignment.templateId.endsWith("-protocol")
+                        disabled ||
+                        liveRules ||
+                        assignment.templateId.endsWith("-protocol")
                       }
                       value={assignment.protocolMode}
                       onChange={(event) =>
@@ -1189,6 +1481,12 @@ export function RecipientDetails({
                       </option>
                     </select>
                     {fieldError(index, "protocolMode")}
+                    {liveRules && (
+                      <small>
+                        Вариант протокола меняется в разделе «Обучения и
+                        протоколы» для всего обучения.
+                      </small>
+                    )}
                   </label>
                   <label>
                     Внешний номер основания
@@ -1209,7 +1507,7 @@ export function RecipientDetails({
                     основания хранится отдельно.
                   </small>
                 </div>
-                {!disabled && (
+                {!disabled && !liveRules && (
                   <button
                     className="text-button danger-text"
                     onClick={() =>
@@ -1228,7 +1526,7 @@ export function RecipientDetails({
             </details>
           );
         })}
-        {!disabled && (
+        {!disabled && !liveRules && (
           <button
             className="add-document"
             disabled={recipient.assignments.length >= 10}

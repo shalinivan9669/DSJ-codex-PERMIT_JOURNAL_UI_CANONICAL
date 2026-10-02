@@ -132,7 +132,7 @@ export async function duplicateIssuanceWarnings(
   tx: Prisma.TransactionClient = db,
   excludeRequestId?: string,
 ) {
-  if (!["ADMIN", "OPERATOR", "VIEWER"].includes(c.role))
+  if (!["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role))
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");
   const recipientIds = [
     ...new Set(

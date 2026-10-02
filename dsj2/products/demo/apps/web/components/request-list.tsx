@@ -4,11 +4,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon, Notice } from "@demo/ui";
 import { today } from "@demo/contracts";
-import {
-  newRequestBundle,
-  requestBundles,
-  type RequestBundle,
-} from "@/lib/request-bundles";
 import { api, downloadExport, errorText, json } from "@/lib/api";
 import {
   newRecipient,
@@ -20,7 +15,7 @@ import {
 
 export const statusNames: Record<string, string> = {
   DRAFT: "Черновик",
-  FINALIZED: "Оформлено",
+  FINALIZED: "Подготовлено",
   ISSUED: "Оформлено",
   REGISTERED: "Зарегистрировано",
   CANCELLED: "Отменено",
@@ -28,7 +23,14 @@ export const statusNames: Record<string, string> = {
   REPLACED: "Заменён исправленным выпуском",
   READY: "Готово",
   QUEUED: "В очереди",
-  PENDING: "В очереди",
+  PENDING: "На согласовании",
+  APPROVED: "Согласовано",
+  REJECTED: "На доработке",
+  SUPERSEDED: "Заменено новой редакцией",
+  RENDERING: "Подготовка документов",
+  AWAITING_SIGNATURE: "Ожидает подписи",
+  SIGNED: "Подписано",
+  LEGACY_ISSUED: "Исторический выпуск",
   RUNNING: "Формируется",
   FAILED: "Ошибка",
   PARTIAL: "Частично готово",
@@ -62,7 +64,11 @@ type RequestSummary = {
   recipientCount?: number;
   updatedAt?: string;
   createdAt?: string;
+  archived?: boolean;
+  lifecycle?: string | null;
+  approval?: { status: string } | null;
   customer?: Customer;
+  customerName?: string | null;
 };
 export function RequestList({
   context,
@@ -77,13 +83,13 @@ export function RequestList({
   });
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState(history ? "FINALIZED" : "");
+  const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refresh, setRefresh] = useState(0);
   useEffect(() => {
     setPage(1);
-    setFilter(history ? "FINALIZED" : "");
+    setFilter("");
   }, [history]);
   useEffect(() => {
     let active = true;
@@ -96,7 +102,7 @@ export function RequestList({
         search,
       });
       if (filter) params.set("status", filter);
-      if (history) params.set("history", "true");
+      params.set("archive", String(history));
       api<Page<RequestSummary>>(`/print-requests?${params}`)
         .then((result) => {
           if (active) setRows(result);
@@ -117,11 +123,11 @@ export function RequestList({
     <>
       <div className="page-heading">
         <div>
-          <h1>{history ? "История документов" : "Заявки на печать"}</h1>
+          <h1>{history ? "Архив документов" : "Заявки на печать"}</h1>
           <p>
             {history
-              ? "Зарегистрированные редакции и сохранённые оригиналы."
-              : "От получателей и данных до готового комплекта."}
+              ? "Завершённые выпуски, оригиналы, подписи и история исправлений."
+              : "Рабочие версии, согласование директора и подготовка к подписанию."}
           </p>
         </div>
         {context.user.role !== "VIEWER" && (
@@ -156,7 +162,7 @@ export function RequestList({
             >
               <option value="">Все статусы</option>
               {!history && <option value="DRAFT">Черновики</option>}
-              <option value="FINALIZED">Оформленные</option>
+              <option value="FINALIZED">Подготовленные комплекты</option>
               <option value="CANCELLED">Отменённые</option>
             </select>
           </label>
@@ -166,7 +172,7 @@ export function RequestList({
                 "/print-requests/export",
                 {
                   search,
-                  ...(history ? { history: true } : {}),
+                  archive: history,
                   ...(filter ? { status: filter } : {}),
                   format: "XLSX",
                 },
@@ -222,14 +228,22 @@ export function RequestList({
                       {row.title || "Без названия"}
                     </Link>
                     <small>
-                      {row.kind === "PERSON" ? "Человек" : "Организация"} ·
-                      редакция {row.revision}
+                      {row.kind === "PERSON"
+                        ? "Физическое лицо"
+                        : "Организация"}{" "}
+                      · редакция {row.revision}
                     </small>
                   </td>
-                  <td>{row.customer?.nameRu || "—"}</td>
+                  <td>{row.customerName || row.customer?.nameRu || "—"}</td>
                   <td>{row.itemCount ?? row.recipientCount ?? "—"}</td>
                   <td>
-                    <Status value={row.status} />
+                    <Status
+                      value={
+                        row.lifecycle ||
+                        (row.status === "DRAFT" && row.approval?.status) ||
+                        row.status
+                      }
+                    />
                   </td>
                   <td>{dateTime(row.updatedAt || row.createdAt)}</td>
                   <td>
@@ -312,8 +326,7 @@ export function NewRequest({ context }: { context: AppContext }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [kind, setKind] = useState<"PERSON" | "COMPANY">("PERSON");
-  const [bundle, setBundle] = useState<RequestBundle | "">("");
-  async function create(kind: "PERSON" | "COMPANY", bundle?: RequestBundle) {
+  async function create(kind: "PERSON" | "COMPANY") {
     setBusy(true);
     setError("");
     try {
@@ -322,17 +335,16 @@ export function NewRequest({ context }: { context: AppContext }) {
         body: json({
           kind,
           schemaVersion: 2,
+          businessRuleVersion: "LIVE_V1",
+          englishAppendix: false,
           commonFields: { documentDate: today(context.tenant.timezone) },
-          title: bundle
-            ? `БиОТ · ${requestBundles[bundle].label}`
-            : kind === "PERSON"
+          title:
+            kind === "PERSON"
               ? "Новая заявка на человека"
               : "Новая заявка организации",
           customerId: null,
           demoMode: !!context.tenant.demoOnly,
-          ...(bundle
-            ? newRequestBundle(bundle)
-            : { items: [{ ...newRecipient(), assignments: [] }] }),
+          items: [{ ...newRecipient(), assignments: [] }],
         }),
       });
       router.push(`/requests/${draft.id}/edit`);
@@ -342,18 +354,11 @@ export function NewRequest({ context }: { context: AppContext }) {
     }
   }
   return (
-    <>
+    <section className="request-entry">
       <Link className="back-link" href="/requests">
         ← К заявкам
       </Link>
-      <div className="page-heading">
-        <div>
-          <h1>Новая заявка</h1>
-          <p>
-            Укажите заказчика. Затем добавьте людей и отметьте нужные документы.
-          </p>
-        </div>
-      </div>
+      <h1>Новая заявка</h1>
       {error && <Notice>{error}</Notice>}
       {context.user.role === "VIEWER" ? (
         <Notice kind="info">
@@ -361,92 +366,45 @@ export function NewRequest({ context }: { context: AppContext }) {
         </Notice>
       ) : (
         <form
-          className="panel request-start"
+          className="request-entry-form"
           onSubmit={(event) => {
             event.preventDefault();
-            if (!busy) void create(kind, bundle || undefined);
+            if (!busy) void create(kind);
           }}
         >
-          <fieldset className="choice-fieldset" disabled={busy}>
-            <legend>Кто заказчик?</legend>
-            <div className="customer-kind-choices">
-              <label className="choice-option">
-                <input
-                  type="radio"
-                  name="customer-kind"
-                  value="PERSON"
-                  checked={kind === "PERSON"}
-                  onChange={() => setKind("PERSON")}
-                />
-                <span>
-                  <strong>Физическое лицо</strong>
-                  <small>Личные данные и документы человека</small>
-                </span>
-              </label>
-              <label className="choice-option">
-                <input
-                  type="radio"
-                  name="customer-kind"
-                  value="COMPANY"
-                  checked={kind === "COMPANY"}
-                  onChange={() => setKind("COMPANY")}
-                />
-                <span>
-                  <strong>Организация</strong>
-                  <small>Название компании и список людей</small>
-                </span>
-              </label>
-            </div>
+          <fieldset className="request-entry-choice" disabled={busy}>
+            <legend className="sr-only">Тип заказчика</legend>
+            <label>
+              <input
+                type="radio"
+                name="customer-kind"
+                value="PERSON"
+                checked={kind === "PERSON"}
+                onChange={() => setKind("PERSON")}
+              />
+              <span>Физическое лицо</span>
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="customer-kind"
+                value="COMPANY"
+                checked={kind === "COMPANY"}
+                onChange={() => setKind("COMPANY")}
+              />
+              <span>Организация</span>
+            </label>
           </fieldset>
-          <p className="request-start-context" role="status">
-            {kind === "COMPANY"
-              ? "В заявке выберите компанию или добавьте новую по форме и названию. Дополнительные реквизиты можно заполнить позже."
-              : "Начните с ФИО и должности. При необходимости добавьте ещё людей; документы выбираются для каждого отдельно или сразу для всех."}
-          </p>
-          <details className="request-start-bundles">
-            <summary>Начать с готового комплекта БиОТ</summary>
-            <fieldset className="choice-fieldset" disabled={busy}>
-              <legend className="sr-only">Начальный комплект документов</legend>
-              <label className="checkbox-label">
-                <input
-                  type="radio"
-                  name="initial-bundle"
-                  checked={!bundle}
-                  onChange={() => setBundle("")}
-                />
-                Выберу документы рядом с людьми
-              </label>
-              {(Object.keys(requestBundles) as RequestBundle[]).map((key) => (
-                <label className="checkbox-label" key={key}>
-                  <input
-                    type="radio"
-                    name="initial-bundle"
-                    checked={bundle === key}
-                    onChange={() => setBundle(key)}
-                  />
-                  {requestBundles[key].label} —{" "}
-                  {requestBundles[key].description.toLowerCase()}
-                </label>
-              ))}
-            </fieldset>
-          </details>
-          <div className="request-start-footer">
-            <span className="muted">
-              {bundle
-                ? `Начальный комплект: ${requestBundles[bundle].label}`
-                : "БиОТ, ПТМ, ПБ и ПС — на следующем экране"}
-            </span>
-            <button type="submit" className="primary" disabled={busy}>
-              {busy ? "Создаём заявку…" : "Перейти к людям и документам"}
-              <Icon name="chevron" />
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="primary request-entry-next"
+            disabled={busy}
+          >
+            {busy ? "Создаём заявку…" : "Далее"}
+            <Icon name="chevron" />
+          </button>
         </form>
       )}
-      <p className="fine-print">
-        Номера документов назначаются только при оформлении. Черновик можно
-        дополнить позже.
-      </p>
-    </>
+    </section>
   );
 }

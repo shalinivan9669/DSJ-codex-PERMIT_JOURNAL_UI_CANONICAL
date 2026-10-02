@@ -27,6 +27,9 @@ import {
   updateNumbering,
 } from "./settings";
 import * as requests from "./requests";
+import * as approvals from "./approvals";
+import * as signing from "./signing";
+import { suggestTranslations } from "./translation-suggestions";
 import * as files from "./files";
 import * as people from "./recipients";
 import * as imports from "./imports";
@@ -295,6 +298,79 @@ export class DemoController {
     @Query() query: Record<string, unknown>,
   ) {
     return requests.listRequests(ctx(req), query);
+  }
+  @Post("translations/suggest") suggestTranslations(
+    @Req() req: DemoRequest,
+    @Body() body: unknown,
+  ) {
+    return suggestTranslations(ctx(req, true), body);
+  }
+  @Get("approvals") approvals(
+    @Req() req: DemoRequest,
+    @Query() query: Record<string, unknown>,
+  ) {
+    return approvals.listApprovals(ctx(req), query);
+  }
+  @Get("approvals/:id") approval(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    return approvals.approvalDetail(ctx(req), id);
+  }
+  @Post("approvals/:id/decision") approvalDecision(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return approvals.decideProposal(ctx(req, true), id, body);
+  }
+  @Get("print-requests/:id/approval") requestApproval(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    return approvals.requestApproval(ctx(req), id);
+  }
+  @Post("print-requests/:id/approval/submit") submitApproval(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return approvals.submitApproval(ctx(req, true), id, body);
+  }
+  @Get("print-requests/:id/activity") requestActivity(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    return approvals.requestActivity(ctx(req), id);
+  }
+  @Get("print-requests/:id/signing") signing(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    return signing.signingState(ctx(req), id);
+  }
+  @Post("print-requests/:id/signing/start") startSigning(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return signing.startSigning(ctx(req, true), id, body);
+  }
+  @Post("signing/:id/complete") completeSigning(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return signing.completeSigning(ctx(req, true), id, body);
+  }
+  @Get("settings/signatories") signatories(@Req() req: DemoRequest) {
+    return signing.listSignatories(ctx(req));
+  }
+  @Post("settings/signatories") saveSignatory(
+    @Req() req: DemoRequest,
+    @Body() body: unknown,
+  ) {
+    return signing.saveSignatory(ctx(req, true, true), body);
   }
   @Post("print-requests") createRequest(
     @Req() req: DemoRequest,
@@ -583,7 +659,7 @@ export class DemoController {
     ctx(req);
     sendFile(res, {
       buffer: Buffer.from(
-        "\uFEFFФИО RU,ФИО KZ,Должность RU,Должность KZ,Место работы RU,Место работы KZ\r\n",
+        "\uFEFFТабельный номер,Категория сотрудника,ФИО RU,ФИО KZ,Должность RU,Должность KZ,Место работы RU,Место работы KZ,ФИО EN,Должность EN,Место работы EN\r\n",
         "utf8",
       ),
       mimeType: "text/csv; charset=utf-8",

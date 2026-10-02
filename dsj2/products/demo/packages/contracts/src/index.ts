@@ -3,10 +3,12 @@ import { BIOT_CATEGORIES, biotCategoryIds, biotValidUntil } from "./biot";
 import { dateOriginsSchema, trainingDateRuleSchema } from "./date-calculation";
 import { customerSchema, organizationFormSchema } from "./organization";
 import { documentPlan } from "./resolution";
+import { validateBusinessRules } from "./business-rules";
 export { z } from "zod";
 export * from "./biot";
 export * from "./date-calculation";
 export * from "./registration";
+export * from "./business-rules";
 export const LIMITS = {
   rows: 250,
   documents: 1000,
@@ -29,7 +31,13 @@ export const templateIds = [
   "ps-protocol",
   "ps-witness",
 ] as const;
-export const roleSchema = z.enum(["ADMIN", "OPERATOR", "VIEWER", "EMPLOYER"]);
+export const roleSchema = z.enum([
+  "ADMIN",
+  "DIRECTOR",
+  "OPERATOR",
+  "VIEWER",
+  "EMPLOYER",
+]);
 export type Role = z.infer<typeof roleSchema>;
 const text = z
   .string()
@@ -66,8 +74,11 @@ export const commonFieldsSchema = z
     protocolDate: z.string().max(10).optional(),
     validUntil: z.string().max(10).optional(),
     trainingSubject: optionalText,
+    trainingSubjectEn: optionalText,
     reason: optionalText,
+    reasonEn: optionalText,
     education: optionalText,
+    educationEn: optionalText,
     externalBasisNumber: z.string().max(100).optional(),
     hours: z.string().max(30).optional(),
     productionHours: z.string().max(30).optional(),
@@ -75,6 +86,7 @@ export const commonFieldsSchema = z
     biotCheckType: z.enum(["", "PERIODIC", "REPEAT"]).optional(),
     biotIndustryRu: optionalText,
     biotIndustryKz: optionalText,
+    biotIndustryEn: optionalText,
   })
   .strict();
 export const trainingEventSchema = z
@@ -89,6 +101,8 @@ export const trainingEventSchema = z
       "ps-protocol",
     ]),
     revision: z.number().int().nonnegative().default(0),
+    protocolMode: z.enum(["GROUP", "INDIVIDUAL"]).optional(),
+    protocolModeSource: z.enum(["AUTO", "MANUAL"]).optional(),
     commonFields: commonFieldsSchema,
     profileVersionId: z.string().max(80).optional(),
     serviceRuleVersionId: z.string().max(80).optional(),
@@ -106,10 +120,15 @@ export const assignmentSchema = z
     trainingEnd: date,
     protocolDate: date,
     validUntil: date,
+    validityMode: z.enum(["FIXED", "UNLIMITED"]).optional(),
     trainingSubject: text,
+    trainingSubjectEn: optionalText,
     result: text,
+    resultEn: optionalText,
     reason: text,
+    reasonEn: optionalText,
     education: text,
+    educationEn: optionalText,
     hours: z.string().max(30).default(""),
     productionHours: z.string().max(30).optional(),
     biotCategory: z.enum(biotCategoryIds).optional(),
@@ -120,10 +139,14 @@ export const assignmentSchema = z
     biotCheckType: z.enum(["", "PERIODIC", "REPEAT"]).optional(),
     biotIndustryRu: optionalText,
     biotIndustryKz: optionalText,
+    biotIndustryEn: optionalText,
     biotKnowledgeResult: optionalText,
+    biotKnowledgeResultEn: optionalText,
     biotProctoringResult: optionalText,
+    biotProctoringResultEn: optionalText,
     biotUniqueNumber: optionalText,
     biotNotes: optionalText,
+    biotNotesEn: optionalText,
     externalBasisNumber: z.string().max(100).default(""),
     eventId: z.string().max(80).optional(),
     retakeOf: z
@@ -166,17 +189,23 @@ export const assignmentSchema = z
 export const itemSchema = z
   .object({
     id: z.string().min(1).max(80),
+    employeeCategory: z.enum(["WORKER", "ITR"]).optional(),
     fullNameRu: text,
     fullNameKz: text,
+    fullNameEn: optionalText,
     positionRu: text,
     positionKz: text,
+    positionEn: optionalText,
     workplaceRu: text,
     workplaceKz: text,
+    workplaceEn: optionalText,
     departmentRu: optionalText,
     departmentKz: optionalText,
+    departmentEn: optionalText,
     employerBin: z.string().max(50).optional(),
     employerAddressRu: optionalText,
     employerAddressKz: optionalText,
+    employerAddressEn: optionalText,
     photoAssetId: z.string().max(80).nullable().default(null),
     assignments: z.array(assignmentSchema).max(10).default([]),
     sourceRow: z.number().int().positive().optional(),
@@ -189,12 +218,29 @@ export const itemSchema = z
     sourceOrder: z.number().int().nonnegative().optional(),
   })
   .strict();
+export const organizationSnapshotSchema = z
+  .object({
+    id: z.string().min(1).max(80),
+    nameRu: z.string().max(500),
+    nameKz: z.string().max(500).nullable(),
+    bin: z.string().max(50).nullable(),
+    addressRu: z.string().max(500).nullable(),
+    addressKz: z.string().max(500).nullable(),
+  })
+  .strict();
+export type OrganizationSnapshot = z.infer<typeof organizationSnapshotSchema>;
 export const draftSchema = z
   .object({
     kind: z.enum(["PERSON", "COMPANY"]),
     title: z.string().max(255).default(""),
     customerId: z.string().max(80).nullable().default(null),
+    organizationSnapshots: z
+      .array(organizationSnapshotSchema)
+      .max(LIMITS.rows + 1)
+      .optional(),
     demoMode: z.boolean().default(false),
+    businessRuleVersion: z.literal("LIVE_V1").optional(),
+    englishAppendix: z.boolean().optional(),
     schemaVersion: z.literal(2).optional(),
     profileVersionId: z.string().max(80).optional(),
     presetFields: commonFieldsSchema.optional(),
@@ -263,19 +309,26 @@ export const profileSchema = z
       .min(1, "Введите название на русском")
       .max(500, "Максимум 500 символов в названии"),
     nameKz: text,
+    nameEn: optionalText,
     addressRu: text,
     addressKz: text,
+    addressEn: optionalText,
     cityRu: text,
     cityKz: text,
+    cityEn: optionalText,
     approvalBasis: text,
+    approvalBasisEn: optionalText,
     headName: optionalText,
+    headNameEn: optionalText,
     bin: z.string().max(50).optional(),
     commission: z
       .array(
         z
           .object({
             name: z.string().min(1).max(255),
+            nameEn: z.string().max(255).optional(),
             position: z.string().max(255),
+            positionEn: z.string().max(255).optional(),
           })
           .strict(),
       )
@@ -347,8 +400,11 @@ export type ValidationIssue = {
 export function validateDraft(
   draft: Draft,
   profile: IssuerProfile | null,
+  options: { skipBusinessRules?: boolean } = {},
 ): ValidationIssue[] {
-  const issues: ValidationIssue[] = [];
+  const issues: ValidationIssue[] = options.skipBusinessRules
+    ? []
+    : validateBusinessRules(draft, profile);
   const add = (code: string, path: string, message: string, rowId?: string) =>
     issues.push({ code, path, message, rowId });
   const printable = (value: unknown, path: string, rowId?: string) => {
@@ -392,7 +448,10 @@ export function validateDraft(
     const protocols = item.assignments.filter((a) =>
       a.templateId.endsWith("-protocol"),
     );
-    if (new Set(protocols.map((a) => a.templateId)).size !== protocols.length)
+    if (
+      new Set(protocols.map((a) => `${a.templateId}:${a.eventId || ""}`))
+        .size !== protocols.length
+    )
       add(
         "AMBIGUOUS_PROTOCOL",
         `items.${n}.assignments`,
@@ -497,10 +556,10 @@ export function validateDraft(
             `Производственное обучение: не менее ${category.minimumProductionHours} часов`,
             item.id,
           );
-        const until = biotValidUntil(
-          assignment.documentDate,
-          assignment.biotCategory,
-        );
+        const until =
+          draft.businessRuleVersion === "LIVE_V1"
+            ? null
+            : biotValidUntil(assignment.documentDate, assignment.biotCategory);
         if (
           until &&
           !assignment.validUntil &&

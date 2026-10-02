@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Notice } from "@demo/ui";
 import { downloadExport, errorText } from "@/lib/api";
 import {
-  templateLabels,
+  documentTitle,
   type Artifact,
   type Draft,
   type Issuance,
@@ -38,7 +38,7 @@ export function SavedPrintSet({
     if (
       !artifact.issuanceId ||
       !document ||
-      !["PDF", "DOCX"].includes(artifact.format || "")
+      !["PDF", "DOCX"].includes((artifact.format || "").toUpperCase())
     )
       return [];
     const row = draft.items.find((value) => value.id === document.rowId);
@@ -55,11 +55,14 @@ export function SavedPrintSet({
     ...new Map(files.map((file) => [file.personId, file.personName])).entries(),
   ];
   const forms = [...new Set(documents.map((document) => document.templateId))];
+  const awaitingSignatures = issuances.some((issuance) =>
+    ["RENDERING", "AWAITING_SIGNATURE"].includes(issuance.status || ""),
+  );
   const visible = files.filter(
     (file) =>
       (!person || file.personId === person) &&
       (!form || file.document.templateId === form) &&
-      (!format || file.artifact.format === format),
+      (!format || file.artifact.format?.toUpperCase() === format),
   );
   const available = visible.filter(
     (file) => file.artifact.availability !== "MISSING",
@@ -128,7 +131,7 @@ export function SavedPrintSet({
             <option value="">Все формы</option>
             {forms.map((id) => (
               <option key={id} value={id}>
-                {templateLabels[id] || id}
+                {documentTitle(id)}
               </option>
             ))}
           </select>
@@ -204,8 +207,8 @@ export function SavedPrintSet({
                 </td>
                 <td>{personName}</td>
                 <td>
-                  {templateLabels[document.templateId] || document.templateId} ·
-                  № {document.number}
+                  {documentTitle(document.templateId, !document.rowId)} · №{" "}
+                  {document.number}
                 </td>
                 <td>{artifact.format}</td>
                 <td>
@@ -223,7 +226,17 @@ export function SavedPrintSet({
         </table>
       </div>
       {!visible.length && <p>Под выбранный фильтр файлы не найдены.</p>}
-      <button disabled={busy || !chosen.length} onClick={() => void download()}>
+      {awaitingSignatures && (
+        <p>
+          До проверки всех подписей отдельные PDF доступны выше кнопками
+          «Печать» и «Скачать». Выборочный комплект ZIP будет доступен после
+          подписания.
+        </p>
+      )}
+      <button
+        disabled={busy || !chosen.length || awaitingSignatures}
+        onClick={() => void download()}
+      >
         {busy
           ? "Подготавливаем выбранные файлы…"
           : `Скачать выбранные файлы (${chosen.length})`}

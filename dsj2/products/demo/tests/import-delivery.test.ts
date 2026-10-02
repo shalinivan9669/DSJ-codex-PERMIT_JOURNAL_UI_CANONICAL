@@ -131,6 +131,49 @@ test("blank retention and field mask never copy list assignments or assessment r
     "",
   );
 });
+
+test("reconciliation exposes explicit employee category and supplied English corrections without overwriting assessment facts", () => {
+  const existing = itemSchema.parse({
+    id: "existing",
+    externalId: "stable-en",
+    employeeCategory: "WORKER",
+    fullNameRu: "Тест",
+    fullNameEn: "Test Old",
+    positionEn: "Operator",
+    workplaceEn: "Original Company",
+    assignments: [
+      assignmentSchema.parse({
+        id: "assessment",
+        templateId: "ptm-card",
+        result: "Подтверждённый факт",
+      }),
+    ],
+  });
+  const incoming = itemSchema.parse({
+    id: "incoming",
+    externalId: "stable-en",
+    employeeCategory: "ITR",
+    fullNameRu: "Тест",
+    fullNameEn: "Test New",
+    positionEn: "Engineer",
+    workplaceEn: "",
+    assignments: [
+      assignmentSchema.parse({
+        id: "untrusted-assessment",
+        templateId: "ptm-card",
+        result: "Подмена",
+      }),
+    ],
+  });
+  const diff = compareImportedRows([existing], [incoming]);
+  assert.equal(diff.counts.changed, 1);
+  assert.deepEqual(
+    diff.rows[0].changes.map((change) => change.field),
+    ["employeeCategory", "fullNameEn", "positionEn"],
+  );
+  assert.equal(existing.assignments[0].result, "Подтверждённый факт");
+  assert.equal(existing.workplaceEn, "Original Company");
+});
 const profile = customerExportProfileSchema.parse({
   name: "Реестр заказчика",
   columns: [

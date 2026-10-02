@@ -88,6 +88,13 @@ export const RecipientGridRow = memo(
           const path = `${rowPrefix}${field}`;
           const error = fieldErrors[path];
           const errorId = `${instanceId}-${item.id}-${field}-error`;
+          const value =
+            item[field] ||
+            (field === "fullNameRu"
+              ? item.fullNameKz
+              : field === "positionRu"
+                ? item.positionKz
+                : "");
           return (
             <td
               key={field}
@@ -105,8 +112,8 @@ export const RecipientGridRow = memo(
                     ? 100
                     : 500
                 }
-                value={item[field] || ""}
-                title={item[field] || undefined}
+                value={value}
+                title={value || undefined}
                 aria-label={`${label}, строка ${index + 1}`}
                 aria-invalid={!!error}
                 aria-describedby={error ? errorId : undefined}
@@ -145,10 +152,54 @@ export const RecipientGridRow = memo(
                   {error}
                 </small>
               )}
-              <TextQualityHint value={item[field] || ""} />
+              <TextQualityHint value={value} />
             </td>
           );
         })}
+        <td className="recipient-grid-category-cell">
+          <label className="recipient-grid-category">
+            <span className="sr-only">
+              Категория сотрудника, строка {index + 1}
+            </span>
+            <select
+              aria-label={`Категория сотрудника, строка ${index + 1}`}
+              data-field-path={`${rowPrefix}employeeCategory`}
+              aria-invalid={!!fieldErrors[`${rowPrefix}employeeCategory`]}
+              aria-describedby={
+                fieldErrors[`${rowPrefix}employeeCategory`]
+                  ? `${instanceId}-${item.id}-category-error`
+                  : undefined
+              }
+              value={
+                item.employeeCategory ||
+                (item.assignments.some(
+                  (assignment) =>
+                    assignment.templateId === "biot-itr-certificate",
+                )
+                  ? "ITR"
+                  : "WORKER")
+              }
+              disabled={disabled || readonly}
+              onChange={(event) =>
+                actions.current.onEdit({
+                  ...item,
+                  employeeCategory: event.target.value as "WORKER" | "ITR",
+                })
+              }
+            >
+              <option value="WORKER">Рабочий</option>
+              <option value="ITR">ИТР</option>
+            </select>
+          </label>
+          {fieldErrors[`${rowPrefix}employeeCategory`] && (
+            <small
+              className="field-error"
+              id={`${instanceId}-${item.id}-category-error`}
+            >
+              {fieldErrors[`${rowPrefix}employeeCategory`]}
+            </small>
+          )}
+        </td>
         <td className="recipient-grid-documents has-document-choices">
           <div
             className="recipient-document-labels"
@@ -187,22 +238,11 @@ export const RecipientGridRow = memo(
                 type="button"
                 disabled={disabled}
                 onClick={() => actions.current.onDocuments?.(item.id)}
-                aria-label={`Выбрать документы получателя ${index + 1}`}
+                aria-label={`Назначить обучение получателю ${index + 1}`}
               >
-                Выбрать документы
+                Обучение
               </button>
             )}
-            <button
-              type="button"
-              className="text-button"
-              disabled={disabled}
-              onClick={() => actions.current.onOpen(item.id)}
-              aria-label={`Документы и даты получателя ${index + 1}`}
-              title={`Документов: ${documentCount}. Открыть даты и детали`}
-            >
-              Даты и детали
-              <Icon name="chevron" size={14} />
-            </button>
           </div>
           {rowErrors > 0 && (
             <small className="recipient-grid-row-errors">
@@ -210,19 +250,31 @@ export const RecipientGridRow = memo(
             </small>
           )}
         </td>
-        {!readonly && (
-          <td className="recipient-grid-actions">
+        <td className="recipient-grid-actions">
+          <div className="recipient-grid-row-actions">
             <button
               type="button"
+              className="text-button recipient-grid-details-button"
               disabled={disabled}
-              aria-label={`Удалить получателя ${index + 1}`}
-              title="Удалить получателя"
-              onClick={() => actions.current.onRemove(item.id)}
+              onClick={() => actions.current.onOpen(item.id)}
+              aria-label={`Документы и даты получателя ${index + 1}`}
+              title={`Документов: ${documentCount}. Открыть даты и детали`}
             >
-              ×
+              Детали <Icon name="chevron" size={14} />
             </button>
-          </td>
-        )}
+            {!readonly && (
+              <button
+                type="button"
+                disabled={disabled}
+                aria-label={`Удалить получателя ${index + 1}`}
+                title="Удалить получателя"
+                onClick={() => actions.current.onRemove(item.id)}
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </td>
       </tr>
     );
   },
@@ -241,6 +293,8 @@ export const RecipientGridRow = memo(
     before.instanceId === after.instanceId &&
     before.inputs === after.inputs &&
     before.actions === after.actions &&
+    before.fieldErrors[`items.${before.index}.employeeCategory`] ===
+      after.fieldErrors[`items.${after.index}.employeeCategory`] &&
     after.columns.every(
       ([field]) =>
         before.fieldErrors[`items.${before.index}.${field}`] ===

@@ -1,0 +1,131 @@
+"use client";
+
+import { setTrainingProtocolMode } from "@/lib/request-bundles";
+import type { Draft } from "@/lib/types";
+
+export function TrainingOverview({
+  draft,
+  disabled,
+  onChange,
+  resolvedEvents,
+}: {
+  draft: Draft;
+  disabled: boolean;
+  onChange: (patch: Partial<Draft>) => void;
+  resolvedEvents?: Draft["events"];
+}) {
+  const events = draft.events || [];
+  if (!events.length) return null;
+  return (
+    <section
+      className="panel training-overview"
+      aria-label="Обучения и протоколы"
+    >
+      <h2>Обучения и протоколы</h2>
+      <p className="muted">
+        Дата общего протокола задаётся здесь. Дату выдачи комплекта каждому
+        человеку можно изменить в его карточке.
+      </p>
+      {events.map((event) => {
+        const displayedEvent =
+          resolvedEvents?.find((row) => row.id === event.id) || event;
+        const displayTitle = event.title
+          .replace(/^PS$/, "ПС — обучение по профессии")
+          .replace(/^BIOT/, "БиОТ")
+          .replace(/^PTM$/, "ПТМ")
+          .replace(/^PB$/, "ПБ");
+        const members = draft.items.filter((item) =>
+          item.assignments.some(
+            (assignment) => assignment.eventId === event.id,
+          ),
+        );
+        const mode =
+          event.protocolMode ||
+          (members.some((item) =>
+            item.assignments.some(
+              (assignment) =>
+                assignment.eventId === event.id &&
+                assignment.protocolMode === "GROUP",
+            ),
+          )
+            ? "GROUP"
+            : "INDIVIDUAL");
+        return (
+          <div className="training-event-row" key={event.id}>
+            <div>
+              <strong>{displayTitle}</strong>
+              <small>Сотрудников: {members.length}</small>
+              {!disabled && (
+                <button
+                  className="text-button danger-text"
+                  onClick={() =>
+                    onChange({
+                      events: events.filter((row) => row.id !== event.id),
+                      items: draft.items.map((item) => ({
+                        ...item,
+                        assignments: item.assignments.filter(
+                          (assignment) => assignment.eventId !== event.id,
+                        ),
+                      })),
+                    })
+                  }
+                >
+                  Убрать обучение из заявки
+                </button>
+              )}
+            </div>
+            <label>
+              Протокол
+              <select
+                aria-label={`Протокол: ${displayTitle}`}
+                value={mode}
+                disabled={disabled}
+                onChange={(change) => {
+                  const next = setTrainingProtocolMode(
+                    draft,
+                    event.id,
+                    change.target.value as "GROUP" | "INDIVIDUAL",
+                  );
+                  onChange({ items: next.items, events: next.events });
+                }}
+              >
+                <option value="GROUP">Общий по обучению</option>
+                <option value="INDIVIDUAL">Отдельный на каждого</option>
+              </select>
+            </label>
+            <label>
+              Дата протокола
+              <input
+                type="date"
+                value={displayedEvent.commonFields.protocolDate || ""}
+                disabled={disabled}
+                onChange={(change) =>
+                  onChange({
+                    events: events.map((row) =>
+                      row.id === event.id
+                        ? {
+                            ...row,
+                            revision: row.revision + 1,
+                            commonFields: {
+                              ...row.commonFields,
+                              protocolDate: change.target.value,
+                              dateOrigins: {
+                                ...row.commonFields.dateOrigins,
+                                protocolDate: change.target.value
+                                  ? "MANUAL"
+                                  : "CLEARED",
+                              },
+                            },
+                          }
+                        : row,
+                    ),
+                  })
+                }
+              />
+            </label>
+          </div>
+        );
+      })}
+    </section>
+  );
+}

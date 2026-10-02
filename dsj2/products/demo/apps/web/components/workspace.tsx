@@ -23,6 +23,7 @@ import { PublicVerification } from "./public-verification";
 import { SessionDialog } from "./session-dialog";
 import { Register } from "./register";
 import { CenterOnboarding } from "./center-onboarding";
+import { Approvals } from "./approvals";
 
 export function Workspace() {
   const pathname = usePathname();
@@ -68,9 +69,11 @@ export function Workspace() {
       router.replace(
         context.user.role === "EMPLOYER"
           ? "/portal"
-          : pathname === "/register"
-            ? "/onboarding"
-            : "/requests",
+          : context.user.role === "DIRECTOR"
+            ? "/approvals"
+            : pathname === "/register"
+              ? "/onboarding"
+              : "/requests",
       );
   }, [context, pathname, router]);
   async function logout() {
@@ -114,15 +117,17 @@ export function Workspace() {
         <button onClick={() => void load()}>Повторить подключение</button>
       </main>
     );
-  const section = pathname.startsWith("/workbench")
-    ? "workbench"
-    : pathname.startsWith("/customers")
-      ? "customers"
-      : pathname.startsWith("/history")
-        ? "history"
-        : pathname.startsWith("/settings")
-          ? "settings"
-          : "requests";
+  const section = pathname.startsWith("/approvals")
+    ? "approvals"
+    : pathname.startsWith("/workbench")
+      ? "workbench"
+      : pathname.startsWith("/customers")
+        ? "customers"
+        : pathname.startsWith("/history")
+          ? "history"
+          : pathname.startsWith("/settings")
+            ? "settings"
+            : "requests";
   const requestMatch = /^\/requests\/([^/]+)(?:\/edit)?$/.exec(pathname);
   return (
     <>
@@ -142,9 +147,15 @@ export function Workspace() {
             ? [["portal", "Мои заказы"]]
             : [
                 ["requests", "Заявки"],
+                [
+                  "approvals",
+                  context.user.role === "DIRECTOR"
+                    ? "Кабинет директора"
+                    : "Согласование",
+                ],
                 ["workbench", "Работа центра"],
                 ["customers", "Заказчики"],
-                ["history", "История"],
+                ["history", "Архив"],
                 ["settings", "Настройки"],
               ]
           ).map(([path, label]) => (
@@ -190,6 +201,8 @@ export function Workspace() {
             id={requestMatch[1]}
             context={context}
           />
+        ) : section === "approvals" ? (
+          <Approvals context={context} />
         ) : section === "workbench" ? (
           <Workbench context={context} />
         ) : section === "customers" ? (

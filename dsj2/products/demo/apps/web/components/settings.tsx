@@ -5,6 +5,7 @@ import { api, errorText, json } from "@/lib/api";
 import { profileSchema } from "@demo/contracts";
 import { OrganizationNameFields } from "./organization-name-fields";
 import { CenterTrainingSchedule } from "./center-training-schedule";
+import { SignatorySettings } from "./signatory-settings";
 import "./center-onboarding.css";
 import {
   templateLabels,
@@ -32,6 +33,7 @@ export function Settings({
           ["templates", "Формы"],
           ["numbering", "Нумерация"],
           ["users", "Пользователи"],
+          ["signatories", "Подписанты ЭЦП"],
           ["export", "Полная выгрузка"],
           ["account", "Мой пароль"],
         ]
@@ -74,6 +76,8 @@ export function Settings({
             <Numbering />
           ) : tab === "users" ? (
             <Users currentUserId={context.user.id} />
+          ) : tab === "signatories" ? (
+            <SignatorySettings />
           ) : tab === "export" && context.user.role === "ADMIN" ? (
             <>
               <h2>Полная копия данных центра</h2>
@@ -185,8 +189,12 @@ export function ProfileForm({
         {[
           ["bin", "БИН учебного центра"],
           ["headName", "ФИО руководителя учебного центра"],
+          ["headNameEn", "ФИО руководителя латиницей · EN"],
           ["cityRu", "Город · RU"],
           ["cityKz", "Город · KZ"],
+          ["nameEn", "Название учебного центра · EN"],
+          ["cityEn", "Город · EN"],
+          ["addressEn", "Адрес · EN"],
           ["addressRu", "Адрес · RU"],
           ["addressKz", "Адрес · KZ"],
         ].map(([key, label]) => (
@@ -233,6 +241,13 @@ export function ProfileForm({
             : "Добавить председателя"}
         </button>
       </div>
+      <label>
+        Основание утверждения / полномочий · EN
+        <textarea
+          value={value.approvalBasisEn || ""}
+          onChange={(event) => change({ approvalBasisEn: event.target.value })}
+        />
+      </label>
       {value.commission.length === 0 && (
         <p className="muted">
           Состав комиссии не указан. Внесите фактические утверждённые данные.
@@ -290,6 +305,38 @@ export function ProfileForm({
             >
               Удалить
             </button>
+          </div>
+          <div className="form-grid english-fields">
+            <label>
+              ФИО латиницей · EN
+              <input
+                value={person.nameEn || ""}
+                onChange={(event) =>
+                  change({
+                    commission: value.commission.map((row, i) =>
+                      i === index
+                        ? { ...row, nameEn: event.target.value }
+                        : row,
+                    ),
+                  })
+                }
+              />
+            </label>
+            <label>
+              Роль / должность · EN
+              <input
+                value={person.positionEn || ""}
+                onChange={(event) =>
+                  change({
+                    commission: value.commission.map((row, i) =>
+                      i === index
+                        ? { ...row, positionEn: event.target.value }
+                        : row,
+                    ),
+                  })
+                }
+              />
+            </label>
           </div>
         </div>
       ))}
@@ -706,7 +753,8 @@ function Users({ currentUserId }: { currentUserId: string }) {
                   {
                     {
                       ADMIN: "Администратор",
-                      OPERATOR: "Оператор",
+                      OPERATOR: "Менеджер",
+                      DIRECTOR: "Директор",
                       EMPLOYER: "Представитель заказчика",
                       VIEWER: "Просмотр",
                     }[user.role]
@@ -816,7 +864,8 @@ function UserDialog({
             }
           >
             <option value="ADMIN">Администратор</option>
-            <option value="OPERATOR">Оператор</option>
+            <option value="OPERATOR">Менеджер</option>
+            <option value="DIRECTOR">Директор</option>
             <option value="VIEWER">Просмотр</option>
             <option value="EMPLOYER">Представитель заказчика</option>
           </select>

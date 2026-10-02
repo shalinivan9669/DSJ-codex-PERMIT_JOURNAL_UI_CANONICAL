@@ -256,3 +256,102 @@
     min-height: 44px;
   }
 }
+.request-entry {
+  max-width: 860px;
+  margin: 24px auto 80px;
+}
+.request-entry h1 {
+  margin: 40px 0 52px;
+  font-size: clamp(30px, 4vw, 42px);
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.request-entry-form {
+  max-width: 680px;
+}
+.request-entry-choice {
+  border: 0;
+  padding: 0;
+  margin: 0 0 48px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 48px;
+}
+.request-entry-choice label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 16px 0;
+  cursor: pointer;
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+}
+.request-entry-choice input {
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.request-entry-choice label:has(input:checked) {
+  color: var(--accent-dark);
+  border-bottom-color: var(--accent);
+}
+.request-entry-choice label:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+.request-entry-next {
+  min-width: 180px;
+  min-height: 54px;
+  justify-content: space-between;
+  font-size: 17px;
+  padding-inline: 24px;
+}
+.import-mapping-options {
+  margin-block: 16px;
+}
+.import-mapping-options summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: list-item;
+  align-content: center;
+  color: var(--accent-dark);
+}
+.import-document-options {
+  align-items: start;
+}
+.import-preview {
+  height: clamp(260px, 38dvh, 430px);
+  min-height: 260px;
+  flex-shrink: 0;
+}
+.import-preview:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (max-width: 600px) {
+  .request-entry {
+    margin-top: 12px;
+  }
+  .request-entry h1 {
+    margin: 32px 0;
+  }
+  .request-entry-choice {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .request-entry-choice label {
+    align-self: flex-start;
+  }
+  .request-entry-next {
+    width: 100%;
+  }
+  .import-document-options {
+    grid-template-columns: 1fr;
+  }
+}

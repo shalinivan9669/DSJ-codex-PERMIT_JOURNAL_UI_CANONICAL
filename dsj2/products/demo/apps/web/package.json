@@ -14,6 +14,7 @@
     "@demo/contracts": "workspace:*",
     "@demo/ui": "workspace:*",
     "next": "15.5.25",
+    "pdfjs-dist": "6.3.289",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -21,7 +22,7 @@
     "@types/node": "22.18.6",
     "@types/react": "19.1.16",
     "@types/react-dom": "19.1.9",
-    "typescript": "5.9.3",
-    "tsx": "4.23.15"
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
   }
 }

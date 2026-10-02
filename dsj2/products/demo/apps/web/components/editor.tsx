@@ -6,12 +6,17 @@ import { CustomerOutput } from "./customer-output";
 import { CustomerReview } from "./customer-review";
 import { RequestOperations } from "./request-operations";
 import { GridPasteDialog } from "./grid-paste-dialog";
-import { gridColumns, type GridField } from "@/lib/grid-paste";
+import { type GridField } from "@/lib/grid-paste";
 import { BulkPhotoDialog } from "./bulk-photo-dialog";
 import { RecipientGrid } from "./recipient-grid";
-import { DocumentSelectionDialog } from "./document-selection-dialog";
+import { TrainingBundleDialog } from "./training-bundle-dialog";
+import { TrainingOverview } from "./training-overview";
+import { RequestActivity } from "./request-activity";
+import { ApprovalBanner } from "./approvals";
+import { SigningPanel } from "./signing-panel";
 import { SharedEmployerDialog } from "./shared-employer-dialog";
 import { groupValidationIssues } from "@/lib/validation-groups";
+import { validationErrors } from "@/lib/validation-errors";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -19,15 +24,19 @@ import { Icon, Modal, Notice } from "@demo/ui";
 import {
   LIMITS,
   resolveDraft,
+  resolveRecipientText,
   documentPlan,
   type CommonFields,
+  applyBusinessRules,
 } from "@demo/contracts";
 import { api, ApiError, errorText, json, BEFORE_LOGOUT_EVENT } from "@/lib/api";
 import { AutosaveLane } from "@/lib/autosave";
+import { requestActions } from "@/lib/request-actions";
 import { useUnsavedNavigation } from "@/lib/use-unsaved-navigation";
 import { recipientForRequest, requestBundles } from "@/lib/request-bundles";
 import {
   draftPayload,
+  personRequestName,
   newRecipient,
   type AppContext,
   type Customer,
@@ -42,31 +51,6 @@ import { ImportDialog } from "./import-dialog";
 import { FilesPanel } from "./files-panel";
 import { Status } from "./request-list";
 
-function validationErrors(caught: unknown): Validation["errors"] {
-  if (!(caught instanceof ApiError)) return [];
-  const details = (caught.details as { details?: unknown } | undefined)
-    ?.details;
-  if (!Array.isArray(details)) return [];
-  return details.flatMap((issue: unknown) => {
-    if (!issue || typeof issue !== "object" || !("message" in issue)) return [];
-    const value = issue as {
-      message: string;
-      path?: string | (string | number)[];
-      rowId?: string;
-    };
-    return [
-      {
-        message: value.message,
-        path: (Array.isArray(value.path)
-          ? value.path.join(".")
-          : value.path || ""
-        ).replace(/^draft\./, ""),
-        itemId: value.rowId,
-      },
-    ];
-  });
-}
-
 export function Editor({ id, context }: { id: string; context: AppContext }) {
   const router = useRouter();
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -80,6 +64,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [editingSearchId, setEditingSearchId] = useState("");
   const [entryView, setEntryView] = useState<"table" | "card">("table");
   const [reviewStale, setReviewStale] = useState(false);
+  const [focusFieldPath, setFocusFieldPath] = useState<string | null>(null);
+  const validationRequested = useRef(false);
+  const validationSerial = useRef(0);
+  const focusValidation = useRef(false);
   const [removeId, setRemoveId] = useState<string | null>(null);
   const [pastedRange, setPastedRange] = useState<{
     startRow: number;
@@ -148,11 +136,16 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     | "conflict"
     | null
   >(null);
+  const [extraPanel, setExtraPanel] = useState<
+    "menu" | "dates" | "review" | "output" | "operations" | null
+  >(null);
+  function closeExtraPanel() {
+    if (document.activeElement instanceof HTMLElement)
+      document.activeElement.blur();
+    setExtraPanel(null);
+  }
   const [refreshFiles, setRefreshFiles] = useState(0);
   const [previewRevision, setPreviewRevision] = useState<number | null>(null);
-  const [readyPreviewRevision, setReadyPreviewRevision] = useState<
-    number | null
-  >(null);
   const lane = useRef<AutosaveLane<ReturnType<typeof draftPayload>> | null>(
     null,
   );
@@ -246,18 +239,53 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     });
   }
   useEffect(() => {
-    if (validation) {
+    if (validation && focusValidation.current) {
+      focusValidation.current = false;
       errorsRef.current?.focus({ preventScroll: true });
       errorsRef.current?.scrollIntoView({ block: "start" });
     }
   }, [validation]);
   const alive = useRef(true);
+  const refreshValidation = useCallback(
+    async (revision: number) => {
+      const serial = ++validationSerial.current;
+      const [resolved, result] = await Promise.all([
+        api<ReturnType<typeof resolveDraft>>(`/print-requests/${id}/resolved`),
+        api<Validation & { issues?: Validation["errors"] }>(
+          `/print-requests/${id}/validate`,
+          {
+            method: "POST",
+            body: json({ expectedRevision: revision }),
+          },
+        ),
+      ]);
+      // A response from an older save must not replace feedback for newer input.
+      if (
+        !alive.current ||
+        serial !== validationSerial.current ||
+        current.current?.revision !== revision ||
+        lane.current?.dirty
+      )
+        return;
+      setServerResolution({ revision, value: resolved });
+      setValidation({
+        ...result,
+        errors: result.errors || result.issues || [],
+      });
+      setValidationRevision(revision);
+      setReviewStale(false);
+    },
+    [id],
+  );
   const initialize = useCallback(
     (value: Draft) => {
       current.current = value;
       setDraft(value);
       setServerResolution(null);
       setValidation(null);
+      validationRequested.current = false;
+      validationSerial.current++;
+      setFocusFieldPath(null);
       setReviewStale(false);
       setChecked((ids) =>
         ids.filter((itemId) => value.items.some((item) => item.id === itemId)),
@@ -271,11 +299,21 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       lane.current = new AutosaveLane(
         draftPayload(value),
         value.revision,
-        (payload, expectedRevision) =>
-          api<{ revision: number }>(`/print-requests/${id}`, {
+        async (payload, expectedRevision) => {
+          const result = await api<
+            Pick<Draft, "revision" | "approval" | "approvedRevision">
+          >(`/print-requests/${id}`, {
             method: "PATCH",
             body: json({ expectedRevision, draft: payload }),
-          }),
+          });
+          if (current.current)
+            current.current = {
+              ...current.current,
+              approval: result.approval,
+              approvedRevision: result.approvedRevision,
+            };
+          return result;
+        },
         (state, revision, caught, capturedVersion) => {
           if (!alive.current) return;
           setSaveState(state);
@@ -288,23 +326,38 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             setError(saveError.current);
             const errors = validationErrors(caught);
             if (errors.length) {
+              validationRequested.current = true;
               setValidation({ valid: false, errors });
               setValidationRevision(revision);
               setReviewStale(capturedVersion !== lane.current?.currentVersion);
             }
             if (caught instanceof ApiError && caught.status === 409)
               setDialog("conflict");
-          } else if (state === "saved" && saveError.current) {
-            const previousSaveError = saveError.current;
-            setError((message) =>
-              message === previousSaveError ? "" : message,
-            );
-            saveError.current = "";
+          } else if (state === "saved") {
+            if (saveError.current) {
+              const previousSaveError = saveError.current;
+              setError((message) =>
+                message === previousSaveError ? "" : message,
+              );
+              saveError.current = "";
+            }
+            if (validationRequested.current)
+              void refreshValidation(revision).catch(() => {
+                // Keep the last review visible if the connection drops.
+                if (alive.current) setReviewStale(true);
+              });
           }
         },
       );
+      if (new URLSearchParams(window.location.search).get("check") === "1") {
+        validationRequested.current = true;
+        focusValidation.current = true;
+        void refreshValidation(value.revision).catch((caught) => {
+          if (alive.current) setError(errorText(caught));
+        });
+      }
     },
-    [id],
+    [id, refreshValidation],
   );
   useEffect(() => {
     alive.current = true;
@@ -389,6 +442,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   }, [router]);
   function edit(patch: Partial<Draft>) {
     if (!current.current || !lane.current) return;
+    validationSerial.current++;
     if (patch.items) {
       const structure = (items: Recipient[]) =>
         JSON.stringify(
@@ -404,11 +458,16 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       if (structure(patch.items) !== structure(current.current.items))
         setValidation(null);
     }
-    const next = { ...current.current, ...patch };
+    const next = applyBusinessRules({
+      ...current.current,
+      ...patch,
+      businessRuleVersion: "LIVE_V1" as const,
+    });
+    next.title = personRequestName(next) || next.title;
     current.current = next;
     setDraft(next);
     lane.current.edit(draftPayload(next));
-    // Keep the review queue stable while the operator fixes successive rows.
+    // Preserve feedback while typing; refresh it after the new revision saves.
     setReviewStale(true);
     setServerResolution(null);
     setError("");
@@ -447,17 +506,24 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     try {
       const expectedRevision = await flush();
       const before = structuredClone(current.current);
-      const next = { ...before, ...patch };
+      const next = applyBusinessRules({
+        ...before,
+        ...patch,
+        businessRuleVersion: "LIVE_V1" as const,
+      });
+      next.title = personRequestName(next) || next.title;
       if (
         JSON.stringify(draftPayload(before)) ===
         JSON.stringify(draftPayload(next))
       )
         return true;
-      const result = await api<{ revision: number }>(`/print-requests/${id}`, {
+      const result = await api<
+        Pick<Draft, "revision" | "approval" | "approvedRevision">
+      >(`/print-requests/${id}`, {
         method: "PATCH",
         body: json({ expectedRevision, draft: draftPayload(next) }),
       });
-      initialize({ ...next, revision: result.revision });
+      initialize({ ...next, ...result });
       setUndo({ before, revision: result.revision, removedId });
       setValidation(null);
       return true;
@@ -491,22 +557,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     try {
       const revision = await flush();
       if (kind === "validate") {
-        const resolved = await api<ReturnType<typeof resolveDraft>>(
-          `/print-requests/${id}/resolved`,
-        );
-        setServerResolution({ revision, value: resolved });
-        const result = await api<
-          Validation & { issues?: Validation["errors"] }
-        >(`/print-requests/${id}/validate`, {
-          method: "POST",
-          body: json({ expectedRevision: revision }),
-        });
-        setValidation({
-          ...result,
-          errors: result.errors || result.issues || [],
-        });
-        setValidationRevision(revision);
-        setReviewStale(false);
+        validationRequested.current = true;
+        focusValidation.current = true;
+        await refreshValidation(revision);
       } else if (kind === "preview") {
         await api(`/print-requests/${id}/preview`, {
           method: "POST",
@@ -531,6 +584,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       setError(errorText(caught));
       const errors = validationErrors(caught);
       if (errors.length) {
+        validationRequested.current = true;
+        focusValidation.current = true;
         setValidation({ valid: false, errors });
         setValidationRevision(lane.current?.currentRevision ?? null);
         setReviewStale(false);
@@ -608,7 +663,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         )}
       </>
     );
-  const readonly = draft.status !== "DRAFT" || context.user.role === "VIEWER";
+  const readonly =
+    draft.status !== "DRAFT" ||
+    !!draft.archived ||
+    !!draft.archivedAt ||
+    context.user.role === "VIEWER";
   const visibleItems = draft.items.filter(
     (item) =>
       (item.id === editingSearchId ||
@@ -659,10 +718,44 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         ? pinnedCenter.commonFields
         : {}
       : context.profile?.commonFields || {};
+  const requestEmployer =
+    draft.kind === "COMPANY"
+      ? (readonly
+          ? draft.organizationSnapshots?.find(
+              (entry) => entry.id === draft.customerId,
+            )
+          : undefined) ||
+        customers.find((entry) => entry.id === draft.customerId) ||
+        null
+      : null;
+  const employerRecords = new Map(
+    [...customers, ...(readonly ? draft.organizationSnapshots || [] : [])].map(
+      (entry) => [entry.id, entry],
+    ),
+  );
   const resolved =
     serverResolution?.revision === draft.revision
       ? serverResolution.value
-      : resolveDraft(draft, centerCommon);
+      : resolveDraft(
+          {
+            ...draft,
+            items: draft.items.map((item) => {
+              const employer = item.employerId
+                ? employerRecords.get(item.employerId)
+                : requestEmployer;
+              return resolveRecipientText({
+                ...item,
+                workplaceRu: item.workplaceRu || employer?.nameRu || "",
+                workplaceKz:
+                  item.workplaceKz ||
+                  employer?.nameKz ||
+                  employer?.nameRu ||
+                  "",
+              });
+            }),
+          },
+          centerCommon,
+        );
   const plan = documentPlan(resolved.draft);
   const assignmentCount = draft.items.reduce(
     (sum, item) => sum + item.assignments.length,
@@ -682,13 +775,17 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const dirty =
     saveState === "dirty" || saveState === "saving" || saveState === "error";
   const saveLabel = {
-    saved: `Сохранено · редакция ${draft.revision}`,
+    saved: `${draft.approval?.status === "APPROVED" ? "Согласовано" : "Рабочая версия сохранена"} · редакция ${draft.revision}`,
     dirty: "Есть изменения",
     saving: "Сохраняем…",
     error: "Не сохранено",
   }[saveState];
-  const reviewCurrent = validation?.valid && !reviewStale;
-  const previewCurrent = readyPreviewRevision === draft.revision && !dirty;
+  const actions = requestActions({
+    draft,
+    role: context.user.role,
+    dirty,
+    busy: operationBusy,
+  });
   const fieldErrors = Object.fromEntries(
     (validation?.errors || []).flatMap((issue) =>
       typeof issue !== "string" && issue.path
@@ -709,7 +806,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       <div className="page-heading editor-heading">
         <div>
           <div className="title-with-status">
-            <h1>{draft.title || "Без названия"}</h1>
+            <h1>{personRequestName(draft) || draft.title || "Без названия"}</h1>
             <Status value={draft.status} />
           </div>
           <p>
@@ -750,17 +847,38 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       >
         К списку получателей
       </button>
+      {actions.showDocuments && (
+        <a className="button primary entry-jump" href="#request-files">
+          <Icon name="print" /> Документы и печать
+        </a>
+      )}
+      <button
+        className="entry-jump"
+        aria-haspopup="dialog"
+        onClick={() => setExtraPanel("menu")}
+      >
+        Прочее
+      </button>
       <ol className="workflow" aria-label="Этапы оформления">
         <li className={readonly ? "complete" : "active"}>
-          <span>1</span>Получатели и документы
+          <span>1</span>Сотрудники и обучение
         </li>
         <li className={validation?.valid && !reviewStale ? "complete" : ""}>
-          <span>2</span>Проверка и макет
+          <span>2</span>Проверка и согласование
         </li>
         <li className={readonly ? "active" : ""}>
-          <span>3</span>Оформление и файлы
+          <span>3</span>Подписание и выдача
         </li>
       </ol>
+      <ApprovalBanner
+        draft={draft}
+        role={context.user.role}
+        compact
+        onRefresh={async () => {
+          if (!readonly) await flush();
+          await reload();
+        }}
+      />
       {error && (
         <Notice>
           {error}
@@ -779,19 +897,25 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       )}
       <section className="panel request-meta">
         <label>
-          Название заявки
+          {draft.kind === "PERSON"
+            ? "Заказчик и название заявки"
+            : "Название заявки"}
           <input
             aria-label="Название заявки"
             disabled={readonly || operationBusy}
-            value={draft.title}
+            readOnly={draft.kind === "PERSON"}
+            value={personRequestName(draft) || draft.title}
             maxLength={255}
             onChange={(event) => edit({ title: event.target.value })}
           />
+          {draft.kind === "PERSON" && (
+            <small>Заполняется из ФИО получателя ниже.</small>
+          )}
         </label>
         {draft.kind === "COMPANY" && (
           <div className="request-customer">
             <label>
-              Заказчик
+              Компания / работодатель всех сотрудников
               <select
                 disabled={readonly || operationBusy}
                 value={draft.customerId || ""}
@@ -808,6 +932,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 ))}
               </select>
             </label>
+            <small>
+              Компания применяется ко всем получателям. Особые сведения старых
+              заявок доступны в деталях сотрудника.
+            </small>
             {!readonly && (
               <button
                 className="text-button"
@@ -975,20 +1103,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               >
                 <Icon name="plus" />
                 {checked.length
-                  ? `Документы выбранным (${checked.length})`
-                  : "Документы для всех"}
-              </button>
-              <button
-                disabled={operationBusy || !draft.items.length}
-                onClick={() =>
-                  setEmployerTargets(
-                    checked.length
-                      ? [...checked]
-                      : draft.items.map((item) => item.id),
-                  )
-                }
-              >
-                Общая организация
+                  ? `Обучение выбранным (${checked.length})`
+                  : "Обучение для всех"}
               </button>
               <button
                 disabled={operationBusy}
@@ -1007,6 +1123,20 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               <details className="recipient-extra-tools">
                 <summary>Ещё</summary>
                 <div>
+                  {draft.kind === "PERSON" && (
+                    <button
+                      disabled={operationBusy || !draft.items.length}
+                      onClick={() =>
+                        setEmployerTargets(
+                          checked.length
+                            ? [...checked]
+                            : draft.items.map((item) => item.id),
+                        )
+                      }
+                    >
+                      Указать место работы
+                    </button>
+                  )}
                   <button
                     disabled={
                       operationBusy || draft.items.length >= LIMITS.rows
@@ -1146,7 +1276,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </div>
           <span className="muted">
             {entryView === "table"
-              ? "Введите людей и выберите документы рядом с ними. В карточке — даты и индивидуальные изменения."
+              ? "Введите людей, укажите категорию и назначьте обучение. Обязательные документы включаются автоматически."
               : "Индивидуальные документы, даты и исключения выбранного человека."}
           </span>
         </div>
@@ -1251,7 +1381,20 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 onChange={editRecipient}
                 context={context}
                 rowIndex={draft.items.indexOf(selected)}
+                focusFieldPath={focusFieldPath}
                 fieldErrors={fieldErrors}
+                liveRules={draft.businessRuleVersion === "LIVE_V1"}
+                englishAppendix={draft.englishAppendix}
+                requestEmployer={
+                  requestEmployer
+                    ? {
+                        id: requestEmployer.id,
+                        nameRu: requestEmployer.nameRu,
+                        nameKz:
+                          requestEmployer.nameKz || requestEmployer.nameRu,
+                      }
+                    : null
+                }
               />
             ) : (
               <p className="muted">
@@ -1261,15 +1404,34 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </aside>
         </div>
       </section>
-      <EventContext
+      <section
+        className="panel training-overview"
+        aria-label="Языки документов"
+      >
+        <h2>Языки документов</h2>
+        <label className="english-appendix-toggle">
+          <input
+            type="checkbox"
+            checked={!!draft.englishAppendix}
+            disabled={readonly || operationBusy}
+            onChange={(event) =>
+              edit({ englishAppendix: event.target.checked })
+            }
+          />
+          <span>
+            <strong>Добавить английскую страницу</strong>
+            <small>
+              Основные формы всегда казахско-русские. Английская версия
+              добавляется в тот же документ с тем же номером.
+            </small>
+          </span>
+        </label>
+      </section>
+      <TrainingOverview
         draft={draft}
-        centerCommon={centerCommon}
-        selectedIds={checked}
+        resolvedEvents={resolved.draft.events}
         disabled={readonly || operationBusy}
         onChange={edit}
-        onApply={applyOperation}
-        onContextCommit={rememberContextOperation}
-        onBusyChange={setContextBusy}
       />
       {validation && (
         <div ref={errorsRef} tabIndex={-1} className="validation-result">
@@ -1286,11 +1448,20 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             <span>
               Редакция {validationRevision}.{" "}
               {reviewStale &&
-                "Список замечаний сохранён для последовательного исправления. Выполните проверку повторно."}
+                "После сохранения замечания обновятся автоматически. Можно также проверить заявку повторно."}
               {validation.valid
                 ? `Документов: ${validation.documentCount ?? documentCount}. Проверьте макет перед оформлением.`
                 : ""}
             </span>
+            {reviewStale && (
+              <button
+                className="text-button"
+                disabled={operationBusy}
+                onClick={() => void command("validate")}
+              >
+                Проверить снова
+              </button>
+            )}
             {validation.errors.length > 0 && (
               <div className="review-issue-groups">
                 {reviewGroups.map((group) => (
@@ -1311,11 +1482,27 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                                   const path = Array.isArray(issue.path)
                                     ? issue.path.join(".")
                                     : issue.path || "";
+                                  setFocusFieldPath(path);
+                                  const targetRow =
+                                    draft.items.find(
+                                      (item) => item.id === rowId,
+                                    ) ||
+                                    draft.items[
+                                      Number(/^items\.(\d+)/.exec(path)?.[1])
+                                    ];
+                                  if (
+                                    /^items\.\d+\.assignments$/.test(path) &&
+                                    targetRow &&
+                                    !targetRow.assignments.length
+                                  ) {
+                                    setDocumentTargets([targetRow.id]);
+                                    return;
+                                  }
                                   const personField =
                                     /^items\.\d+\.([^.]+)$/.exec(path)?.[1];
-                                  const inGrid = gridColumns.some(
-                                    ([field]) => field === personField,
-                                  );
+                                  const inGrid =
+                                    personField === "fullNameRu" ||
+                                    personField === "positionRu";
                                   setEntryView(inGrid ? "table" : "card");
                                   const rowIndex = /items\.(\d+)/.exec(
                                     path,
@@ -1396,21 +1583,13 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </Notice>
         </div>
       )}
-      <CustomerReview
-        draft={draft}
-        flush={flush}
-        canManage={context.user.role !== "VIEWER"}
-      />
-      <CustomerOutput
-        draft={draft}
-        canManage={context.user.role !== "VIEWER"}
-      />
-      <RequestOperations
-        draft={draft}
-        selected={selected}
-        flush={flush}
-        canManage={context.user.role !== "VIEWER"}
-      />
+      {draft.status !== "DRAFT" && (
+        <SigningPanel
+          requestId={id}
+          role={context.user.role}
+          onChanged={() => void reload()}
+        />
+      )}
       <FilesPanel
         requestId={id}
         draft={draft}
@@ -1420,59 +1599,172 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           (previewRevision !== draft.revision || dirty)
         }
         readonly={readonly}
+        allowPrint={actions.showDocuments}
         canManage={context.user.role !== "VIEWER"}
         onChanged={() => void reload()}
-        onPreviewReady={setReadyPreviewRevision}
       />
-      {!readonly && (
-        <div className="action-bar">
-          <div>
-            <strong>
-              {draft.items.length} получателей · {documentCount} документов
-            </strong>
-            <small
-              className={
-                saveState === "error" ? "action-save-error" : undefined
-              }
-            >
-              {saveLabel}. Номера — при оформлении.
-            </small>
-          </div>
-          <div className="action-buttons">
-            <button
-              disabled={operationBusy}
-              onClick={() => void command("save")}
-            >
-              {busy === "save" ? "Сохраняем…" : "Сохранить"}
-            </button>
-            <button
-              className={!reviewCurrent ? "primary" : undefined}
-              disabled={operationBusy}
-              onClick={() => void command("validate")}
-            >
-              {busy === "validate" ? "Проверяем…" : "Проверить"}
-            </button>
-            <button
-              className={
-                reviewCurrent && !previewCurrent ? "primary" : undefined
-              }
-              disabled={operationBusy}
-              onClick={() => void command("preview")}
-            >
-              {busy === "preview" ? "Готовим…" : "Предпросмотр"}
-            </button>
-            <button
-              className={
-                reviewCurrent && previewCurrent ? "primary" : undefined
-              }
-              disabled={operationBusy || !draft.items.length}
-              onClick={() => setDialog("finalize")}
-            >
-              <Icon name="print" />
-              Оформить комплект
-            </button>
-          </div>
-        </div>
+      <RequestActivity
+        requestId={id}
+        role={context.user.role}
+        revision={draft.revision}
+      />
+      {extraPanel && (
+        <Modal
+          key={extraPanel}
+          wide={extraPanel !== "menu"}
+          title={
+            {
+              menu: "Прочее",
+              dates: "Общие даты и протоколы",
+              review: "Согласование и передача",
+              output: "Комплект для заказчика",
+              operations: "Связанные действия",
+            }[extraPanel]
+          }
+          onClose={closeExtraPanel}
+        >
+          {extraPanel === "menu" && (
+            <div className="request-more-actions">
+              <div className="request-menu-group">
+                {actions.showSave && (
+                  <button
+                    disabled={operationBusy}
+                    onClick={() => {
+                      closeExtraPanel();
+                      void command("save");
+                    }}
+                  >
+                    Сохранить для согласования
+                  </button>
+                )}
+                {actions.showValidate && (
+                  <button
+                    disabled={operationBusy}
+                    onClick={() => {
+                      closeExtraPanel();
+                      void command("validate");
+                    }}
+                  >
+                    Проверить заявку
+                  </button>
+                )}
+                {actions.showPreview && (
+                  <button
+                    disabled={operationBusy}
+                    onClick={() => {
+                      closeExtraPanel();
+                      void command("preview");
+                    }}
+                  >
+                    Предпросмотр документов
+                  </button>
+                )}
+                {actions.showDecision && draft.approval && (
+                  <Link
+                    className="button"
+                    href={`/approvals?proposal=${encodeURIComponent(draft.approval.proposalId)}`}
+                  >
+                    Проверить и принять решение
+                  </Link>
+                )}
+                {!actions.showDecision && draft.approval && (
+                  <Link
+                    className="button"
+                    href={`/approvals?proposal=${encodeURIComponent(draft.approval.proposalId)}`}
+                  >
+                    Состояние согласования
+                  </Link>
+                )}
+                {actions.showPrepareSigning && (
+                  <button
+                    disabled={actions.prepareSigningDisabled}
+                    onClick={() => {
+                      closeExtraPanel();
+                      setDialog("finalize");
+                    }}
+                  >
+                    Подготовить к подписанию
+                  </button>
+                )}
+                <button
+                  disabled={operationBusy}
+                  onClick={() => {
+                    closeExtraPanel();
+                    void (readonly ? reload() : flush().then(reload)).catch(
+                      (caught) => setError(errorText(caught)),
+                    );
+                  }}
+                >
+                  Обновить состояние
+                </button>
+              </div>
+              <div className="request-menu-group">
+                <button onClick={() => setExtraPanel("dates")}>
+                  Общие даты и протоколы
+                </button>
+                <button onClick={() => setExtraPanel("review")}>
+                  Согласование и передача
+                </button>
+                <button onClick={() => setExtraPanel("output")}>
+                  Комплект для заказчика
+                </button>
+                <button onClick={() => setExtraPanel("operations")}>
+                  Связанные действия
+                </button>
+              </div>
+            </div>
+          )}
+          {extraPanel === "dates" && (
+            <EventContext
+              embedded
+              draft={draft}
+              centerCommon={centerCommon}
+              selectedIds={checked}
+              disabled={readonly || operationBusy}
+              onChange={edit}
+              onApply={applyOperation}
+              onContextCommit={rememberContextOperation}
+              onBusyChange={setContextBusy}
+            />
+          )}
+          {extraPanel === "review" && (
+            <CustomerReview
+              embedded
+              draft={draft}
+              flush={flush}
+              canManage={context.user.role !== "VIEWER"}
+            />
+          )}
+          {extraPanel === "output" && (
+            <CustomerOutput
+              embedded
+              draft={draft}
+              canManage={context.user.role !== "VIEWER"}
+            />
+          )}
+          {extraPanel === "operations" && (
+            <RequestOperations
+              embedded
+              draft={draft}
+              selected={selected}
+              flush={flush}
+              canManage={context.user.role !== "VIEWER"}
+            />
+          )}
+          {extraPanel !== "menu" && (
+            <div className="modal-actions">
+              <button
+                onClick={() => {
+                  if (document.activeElement instanceof HTMLElement)
+                    document.activeElement.blur();
+                  setExtraPanel("menu");
+                }}
+              >
+                ← К меню «Прочее»
+              </button>
+            </div>
+          )}
+        </Modal>
       )}
       {removeId && (
         <Modal
@@ -1613,13 +1905,19 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         />
       )}{" "}
       {documentTargets && !readonly && (
-        <DocumentSelectionDialog
-          items={draft.items}
+        <TrainingBundleDialog
+          draft={draft}
           selectedIds={documentTargets}
           disabled={operationBusy}
           onClose={() => setDocumentTargets(null)}
-          onApply={async (items) => {
-            if (!(await applyOperation({ items })))
+          onApply={async (next) => {
+            if (
+              !(await applyOperation({
+                items: next.items,
+                events: next.events,
+                businessRuleVersion: "LIVE_V1",
+              }))
+            )
               throw new Error(
                 "Не удалось сохранить документы. Повторите попытку.",
               );
@@ -1650,19 +1948,20 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       )}
       {dialog === "finalize" && (
         <Modal
-          title="Оформить комплект документов?"
+          title="Подготовить комплект к подписанию?"
           onClose={() => {
             if (!busy) setDialog(null);
           }}
         >
           <p>
-            Будет зарегистрирована последняя сохранённая редакция:{" "}
+            Будет зафиксирована согласованная директором редакция:{" "}
             {draft.items.length} получателей, {documentCount} документов. Сервер
             назначит номера и начнёт подготовку файлов.
           </p>
           <p>
-            Зарегистрированную редакцию нельзя изменить. Для исправлений
-            создаётся связанная заявка; оригиналы остаются в истории.
+            После подготовки файлы подписывают назначенные подписанты. Только
+            после проверки всех ЭЦП комплект считается выданным и попадает в
+            архив. Исправления оформляются отдельной связанной заявкой.
           </p>
           {error && <Notice>{error}</Notice>}
           <div className="modal-actions">
@@ -1674,7 +1973,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               disabled={operationBusy}
               onClick={() => void command("finalize")}
             >
-              {busy === "finalize" ? "Оформляем…" : "Оформить"}
+              {busy === "finalize"
+                ? "Подготавливаем…"
+                : "Подготовить к подписанию"}
             </button>
           </div>
         </Modal>

@@ -5,6 +5,7 @@ import {
   commonFieldKeys,
   LIMITS,
   type BiotCategory,
+  type EmployeeCategory,
 } from "@demo/contracts";
 import {
   biotCategoriesForTemplate,
@@ -54,35 +55,49 @@ export const importFields: [string, string][] = [
   ["externalId", "Внешний ID"],
   ["personnelNumber", "Табельный номер"],
   ["employerId", "ID работодателя"],
+  ["employeeCategory", "Категория сотрудника"],
   ["fullNameRu", "ФИО RU"],
   ["fullNameKz", "ФИО KZ"],
+  ["fullNameEn", "ФИО EN"],
   ["positionRu", "Должность RU"],
   ["positionKz", "Должность KZ"],
+  ["positionEn", "Должность EN"],
   ["workplaceRu", "Место работы RU"],
   ["workplaceKz", "Место работы KZ"],
+  ["workplaceEn", "Место работы EN"],
   ["departmentRu", "Подразделение RU"],
   ["departmentKz", "Подразделение KZ"],
+  ["departmentEn", "Подразделение EN"],
   ["employerBin", "БИН работодателя"],
   ["employerAddressRu", "Юридический адрес работодателя RU"],
   ["employerAddressKz", "Юридический адрес работодателя KZ"],
+  ["employerAddressEn", "Юридический адрес работодателя EN"],
   ["documentDate", "Дата документа"],
   ["trainingStart", "Начало обучения"],
   ["trainingEnd", "Окончание обучения"],
   ["protocolDate", "Дата протокола"],
   ["trainingSubject", "Программа / тема"],
+  ["trainingSubjectEn", "Программа / тема EN"],
   ["result", "Результат / оценка"],
+  ["resultEn", "Результат / оценка EN"],
   ["hours", "Часы"],
   ["productionHours", "Производственное обучение, часов"],
   ["biotCategory", "Категория обучения БиОТ"],
   ["biotIndustryRu", "Отрасль специальных компетенций RU"],
   ["biotIndustryKz", "Отрасль специальных компетенций KZ"],
+  ["biotIndustryEn", "Отрасль специальных компетенций EN"],
   ["biotCheckType", "Вид проверки знаний БиОТ"],
   ["biotKnowledgeResult", "Фактический результат проверки знаний"],
+  ["biotKnowledgeResultEn", "Фактический результат проверки знаний EN"],
   ["biotProctoringResult", "Фактический результат прокторинга"],
+  ["biotProctoringResultEn", "Фактический результат прокторинга EN"],
   ["biotUniqueNumber", "Уникальный номер сертификата БиОТ"],
   ["biotNotes", "Примечание к протоколу БиОТ"],
+  ["biotNotesEn", "Примечание к протоколу БиОТ EN"],
   ["reason", "Причина проверки знаний"],
+  ["reasonEn", "Причина проверки знаний EN"],
   ["education", "Образование"],
+  ["educationEn", "Образование EN"],
   ["validUntil", "Действителен до"],
   ["externalBasisNumber", "Внешний номер основания"],
 ];
@@ -99,20 +114,49 @@ export function inferMapping(columns: string[]): string[] {
     );
     let field =
       (lower === "externalpersonkey" ? "externalId" : "") ||
+      ([
+        "категория работника",
+        "worker itr",
+        "рабочий итр",
+        "қызметкер санаты",
+        "employee category",
+      ].includes(lower)
+        ? "employeeCategory"
+        : "") ||
       match?.[0] ||
       (/фио|full.?name|аты.?жөні|ф\.и\.о/.test(lower)
-        ? /kz|каз|қаз|аты/.test(lower)
-          ? "fullNameKz"
-          : "fullNameRu"
-        : /должност/.test(lower)
-          ? /kz|каз/.test(lower)
-            ? "positionKz"
-            : "positionRu"
+        ? /\ben\b|eng|англ/.test(lower)
+          ? "fullNameEn"
+          : /kz|каз|қаз|аты/.test(lower)
+            ? "fullNameKz"
+            : "fullNameRu"
+        : /должност|position|лауазым/.test(lower)
+          ? /\ben\b|eng|англ/.test(lower)
+            ? "positionEn"
+            : /kz|каз|лауазым/.test(lower)
+              ? "positionKz"
+              : "positionRu"
           : "");
     if (used.has(field)) field = "";
     if (field) used.add(field);
     return field;
   });
+}
+
+export function importedEmployeeCategory(
+  value: string,
+  sourceRow: number,
+): EmployeeCategory | undefined {
+  const normalized = value.trim().toLocaleUpperCase("ru");
+  if (!normalized) return undefined;
+  if (
+    ["WORKER", "РАБОЧИЙ", "РАБОЧАЯ", "РАБОЧИЕ", "ЖҰМЫСШЫ"].includes(normalized)
+  )
+    return "WORKER";
+  if (["ITR", "ИТР", "ИТҚ"].includes(normalized)) return "ITR";
+  throw new Error(
+    `Исходная строка ${sourceRow}: категория сотрудника должна быть «Рабочий» (WORKER) или «ИТР» (ITR). Должность не определяет категорию автоматически.`,
+  );
 }
 export function mapImportRow(
   preview: ImportPreview,
@@ -122,11 +166,32 @@ export function mapImportRow(
   category?: BiotCategory,
 ): Recipient {
   const id = `${preview.importId.slice(0, 55)}-${row.sourceRow}`;
-  let assignment = { ...newAssignment(templateId), id: `${id}-doc` };
+  const employeeColumn = mapping.indexOf("employeeCategory");
+  const employeeCategory = importedEmployeeCategory(
+    employeeColumn < 0 ? "" : String(row.values[employeeColumn] ?? ""),
+    row.sourceRow,
+  );
+  const resolvedTemplate =
+    employeeCategory && templateId?.startsWith("biot-")
+      ? templateId.endsWith("-protocol")
+        ? employeeCategory === "ITR"
+          ? "biot-itr-protocol"
+          : "biot-protocol"
+        : employeeCategory === "ITR"
+          ? "biot-itr-certificate"
+          : "biot-worker-card"
+      : templateId;
+  let assignment = { ...newAssignment(resolvedTemplate), id: `${id}-doc` };
   const categoryColumn = mapping.indexOf("biotCategory");
   const importedCategory =
     categoryColumn < 0 ? "" : String(row.values[categoryColumn] ?? "").trim();
-  const selectedCategory = importedCategory || category;
+  const selectedCategory =
+    importedCategory ||
+    (employeeCategory &&
+    category &&
+    BIOT_CATEGORIES[category].form !== employeeCategory
+      ? assignment.biotCategory
+      : category);
   if (selectedCategory) {
     const known = (Object.keys(BIOT_CATEGORIES) as BiotCategory[]).find(
       (key) =>
@@ -147,6 +212,11 @@ export function mapImportRow(
     id,
     importId: preview.importId,
     sourceRow: row.sourceRow,
+    employeeCategory:
+      employeeCategory ||
+      (assignment.biotCategory
+        ? BIOT_CATEGORIES[assignment.biotCategory].form
+        : "WORKER"),
     fullNameRu: "",
     fullNameKz: "",
     positionRu: "",
@@ -165,15 +235,20 @@ export function mapImportRow(
         "employerId",
         "fullNameRu",
         "fullNameKz",
+        "fullNameEn",
         "positionRu",
         "positionKz",
+        "positionEn",
         "workplaceRu",
         "workplaceKz",
+        "workplaceEn",
         "departmentRu",
         "departmentKz",
+        "departmentEn",
         "employerBin",
         "employerAddressRu",
         "employerAddressKz",
+        "employerAddressEn",
       ].includes(field)
     )
       (result as unknown as Record<string, unknown>)[field] = value;
@@ -193,6 +268,7 @@ export function mapImportRow(
       assignment.biotCheckType = checkType;
     } else if (
       field !== "biotCategory" &&
+      field !== "employeeCategory" &&
       importFields.some(([key]) => key === field)
     )
       (assignment as unknown as Record<string, unknown>)[field] = value;

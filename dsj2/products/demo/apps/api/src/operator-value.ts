@@ -48,11 +48,16 @@ import {
   scopedRequest,
   type Context,
 } from "./core";
+import {
+  createProposedContainer,
+  submitProposal,
+  workingRequest,
+} from "./approvals";
 
 type Tx = Prisma.TransactionClient;
 function center(c: Context, write = false, admin = false) {
   if (
-    !["ADMIN", "OPERATOR", "VIEWER"].includes(c.role) ||
+    !["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
     (write && c.role === "VIEWER") ||
     (admin && c.role !== "ADMIN")
   )
@@ -83,7 +88,7 @@ async function operator(
         tenantId: c.tenantId,
         id,
         active: true,
-        role: { in: ["ADMIN", "OPERATOR"] },
+        role: { in: ["ADMIN", "DIRECTOR", "OPERATOR"] },
       },
     }))
   )
@@ -1094,28 +1099,7 @@ export async function repeatFromRenewal(
       need.sourceRowId,
       need.assignmentId,
     );
-    const record = await tx.printRequest.create({
-      data: {
-        tenantId: c.tenantId,
-        kind: draft.kind,
-        title: draft.title,
-        customerId: draft.customerId,
-        demoMode: draft.demoMode,
-        draft: json(draft),
-        itemCount: draft.items.length,
-        searchText: draft.items.map((i) => i.fullNameRu).join(" "),
-        createdBy: c.userId,
-      },
-    });
-    await tx.requestItem.createMany({
-      data: draft.items.map((item, position) => ({
-        tenantId: c.tenantId,
-        requestId: record.id,
-        rowId: item.id,
-        position,
-        payload: json(item),
-      })),
-    });
+    const record = await createProposedContainer(tx, c, draft);
     await tx.renewalNeed.update({
       where: { id },
       data: { newRequestId: record.id, state: "ORDER_AGREED" },
@@ -1124,7 +1108,7 @@ export async function repeatFromRenewal(
       requestId: record.id,
       sourceRequestId: source.id,
     });
-    return { id: record.id, ...draft, revision: record.revision };
+    return record;
   });
 }
 
@@ -2060,7 +2044,7 @@ export async function resolveEmployerProposal(
     if (proposal.status !== "PENDING")
       fail(409, "PROPOSAL_RESOLVED", "Предложение уже рассмотрено");
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${proposal.requestId} AND "tenantId"=${c.tenantId} FOR UPDATE`;
-    const request = await scopedRequest(c, proposal.requestId, tx);
+    const request = await workingRequest(c, proposal.requestId, tx);
     if (
       data.status === "ACCEPTED" &&
       request.revision !== proposal.requestRevision
@@ -2131,35 +2115,7 @@ export async function resolveEmployerProposal(
           draft.items = draft.items.filter((i) => i.id !== change.rowId);
       }
       const validated = draftSchema.parse(draft);
-      await tx.printRequest.update({
-        where: { id: request.id },
-        data: {
-          draft: json(validated),
-          itemCount: validated.items.length,
-          revision: { increment: 1 },
-          searchText: [
-            validated.title,
-            ...validated.items.flatMap((i) => [
-              i.fullNameRu,
-              i.fullNameKz,
-              i.positionRu,
-            ]),
-          ].join(" "),
-        },
-      });
-      await tx.requestItem.deleteMany({
-        where: { tenantId: c.tenantId, requestId: request.id },
-      });
-      if (validated.items.length)
-        await tx.requestItem.createMany({
-          data: validated.items.map((item, position) => ({
-            tenantId: c.tenantId,
-            requestId: request.id,
-            rowId: item.id,
-            position,
-            payload: json(item),
-          })),
-        });
+      await submitProposal(tx, c, request.id, validated, request.revision);
     }
     let newRequestId: string | undefined;
     let newOrderId: string | undefined;
@@ -2225,28 +2181,7 @@ export async function resolveEmployerProposal(
         demoMode: request.demoMode,
         items,
       });
-      const repeated = await tx.printRequest.create({
-        data: {
-          tenantId: c.tenantId,
-          kind: draft.kind,
-          title: draft.title,
-          customerId: draft.customerId,
-          demoMode: draft.demoMode,
-          draft: json(draft),
-          itemCount: items.length,
-          searchText: items.map((row) => row.fullNameRu).join(" "),
-          createdBy: c.userId,
-        },
-      });
-      await tx.requestItem.createMany({
-        data: items.map((item, position) => ({
-          tenantId: c.tenantId,
-          requestId: repeated.id,
-          rowId: item.id,
-          position,
-          payload: json(item),
-        })),
-      });
+      const repeated = await createProposedContainer(tx, c, draft);
       const nextOrder = await tx.serviceOrder.create({
         data: {
           tenantId: c.tenantId,

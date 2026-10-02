@@ -14,7 +14,7 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
-export const RENDERER_VERSION = "demo-ooxml-7/libreoffice-26.2.6.3";
+export const RENDERER_VERSION = "demo-ooxml-8/libreoffice-26.2.6.3";
 export const PRODUCT_ROOT = resolve(__dirname, "../../..");
 export type RenderCommand =
   | "docx"

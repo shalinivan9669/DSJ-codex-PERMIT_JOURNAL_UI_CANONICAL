@@ -54,6 +54,7 @@ export function EventContext({
   onApply,
   onContextCommit,
   onBusyChange,
+  embedded = false,
 }: {
   draft: Draft;
   centerCommon?: CommonFields;
@@ -63,8 +64,9 @@ export function EventContext({
   onApply: (patch: Partial<Draft>) => Promise<boolean | undefined>;
   onContextCommit: (previousEvents: TrainingEventInput[]) => Promise<void>;
   onBusyChange: (busy: boolean) => void;
+  embedded?: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(embedded);
   const [contextBusy, setContextBusy] = useState(false);
   const applying = useRef(false);
   const disabled = externalDisabled || contextBusy;
@@ -297,25 +299,30 @@ export function EventContext({
   }
   return (
     <section
-      className="panel common-context"
+      className={embedded ? undefined : "panel common-context"}
       onBlurCapture={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null))
           void commitContext();
       }}
     >
-      <div className="toolbar">
-        <div>
-          <h2>Общие даты и групповые протоколы</h2>
-          <span className="muted">
-            {events.length
-              ? `${events.length} событий · ${events.reduce((n, e) => n + draft.items.filter((i) => i.assignments.some((a) => a.eventId === e.id)).length, 0)} участников событий`
-              : "Период обучения, программа и протокол для группы"}
-          </span>
+      {!embedded && (
+        <div className="toolbar">
+          <div>
+            <h2>Общие даты и групповые протоколы</h2>
+            <span className="muted">
+              {events.length
+                ? `${events.length} событий · ${events.reduce((n, e) => n + draft.items.filter((i) => i.assignments.some((a) => a.eventId === e.id)).length, 0)} участников событий`
+                : "Период обучения, программа и протокол для группы"}
+            </span>
+          </div>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            aria-expanded={expanded}
+          >
+            {expanded ? "Свернуть" : "Настроить даты и протоколы"}
+          </button>
         </div>
-        <button onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
-          {expanded ? "Свернуть" : "Настроить даты и протоколы"}
-        </button>
-      </div>
+      )}
       {expanded && (
         <div className="context-body">
           <p>

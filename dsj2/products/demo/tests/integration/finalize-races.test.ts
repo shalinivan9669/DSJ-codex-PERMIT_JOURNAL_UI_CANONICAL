@@ -13,6 +13,8 @@ import { draftSchema, type Draft } from "../../packages/contracts/src";
 import { AutosaveLane } from "../../apps/web/lib/autosave";
 import { provision } from "../../scripts/setup";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
+import { workingRequest } from "../../apps/api/src/approvals";
 
 function gate() {
   let release!: () => void;
@@ -98,19 +100,24 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
     },
   });
   const second = { ...c, userId: secondUser.id, role: "OPERATOR" };
+  const approvals = await createApprovalFixture(c).catch(async (error) => {
+    await db.$disconnect();
+    throw error;
+  });
   try {
     await t.test(
       "AT135 last typed characters remain dirty after a competing session saves; successful flush finalizes exact acknowledged revision",
       async () => {
         const input = fixture();
         const request = await createRequest(c, input);
+        await approvals.approve(request.id);
         const local = structuredClone(input);
         local.items[0].fullNameRu += " Последние символы ЯӘ";
         const captured = gate(),
           continueSave = gate();
         const lane = new AutosaveLane<Draft>(
           input,
-          0,
+          request.revision,
           async (draft, revision) => {
             assert.equal(draft.items[0].fullNameRu, local.items[0].fullNameRu);
             captured.release();
@@ -136,21 +143,28 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
         const other = structuredClone(input);
         other.items[0].positionRu = "Изменение второй сессии";
         await patchRequest(second, request.id, {
-          expectedRevision: 0,
+          expectedRevision: request.revision,
           draft: other,
         });
         continueSave.release();
         await conflict;
         assert.equal(lane.dirty, true);
-        assert.equal(lane.currentRevision, 0);
-        const afterConflict = await db.printRequest.findUniqueOrThrow({
-          where: { id: request.id },
-        });
+        assert.equal(lane.currentRevision, request.revision);
+        const afterConflict = await workingRequest(c, request.id);
         assert.equal(
           draftSchema.parse(afterConflict.draft).items[0].positionRu,
           other.items[0].positionRu,
         );
-        assert.equal(afterConflict.revision, 1);
+        assert.equal(afterConflict.revision, request.revision + 1);
+        assert.equal(
+          (
+            await db.printRequest.findUniqueOrThrow({
+              where: { id: request.id },
+            })
+          ).revision,
+          request.revision,
+          "Unapproved competing edits must not change the approved revision",
+        );
         assert.equal(
           await db.issuance.count({ where: { requestId: request.id } }),
           0,
@@ -166,6 +180,7 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
         );
         freshLane.edit(confirmed);
         const expectedRevision = await freshLane.flush();
+        await approvals.approve(request.id);
         assert.deepEqual(
           (await validateRequest(c, request.id, { expectedRevision })).issues,
           [],
@@ -182,7 +197,7 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
         const saved = draftSchema.parse(
           (issuance.snapshot as { draft: unknown }).draft,
         );
-        assert.equal(issuance.sourceRevision, 2);
+        assert.equal(issuance.sourceRevision, request.revision + 2);
         assert.equal(saved.items[0].fullNameRu, local.items[0].fullNameRu);
         assert.equal(saved.items[0].positionRu, other.items[0].positionRu);
         assert.equal(freshLane.dirty, false);
@@ -193,6 +208,7 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
       "AT136 a template change after real geometry preflight blocks commit; retry uses the new template and the explicitly pinned profile",
       async () => {
         const request = await createRequest(c, fixture());
+        await approvals.approve(request.id);
         const savedRequest = await db.printRequest.findUniqueOrThrow({
           where: { id: request.id },
         });
@@ -212,8 +228,11 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
         });
         let changedTemplateId: string;
         assert.deepEqual(
-          (await validateRequest(c, request.id, { expectedRevision: 0 }))
-            .issues,
+          (
+            await validateRequest(c, request.id, {
+              expectedRevision: request.revision,
+            })
+          ).issues,
           [],
         );
         const key = randomUUID(),
@@ -229,7 +248,12 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
           { timeout: 60000 },
         );
         await held.promise;
-        const attempted = finalize(c, request.id, { expectedRevision: 0 }, key);
+        const attempted = finalize(
+          c,
+          request.id,
+          { expectedRevision: request.revision },
+          key,
+        );
         const expectedConflict = assert.rejects(
           attempted,
           code("PRINT_INPUT_CHANGED"),
@@ -313,7 +337,7 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
         const result = await finalize(
           c,
           request.id,
-          { expectedRevision: 0 },
+          { expectedRevision: request.revision },
           key,
         );
         const issuance = await db.issuance.findUniqueOrThrow({
@@ -331,6 +355,7 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
       },
     );
   } finally {
+    await approvals.close();
     await db.$disconnect();
   }
 });

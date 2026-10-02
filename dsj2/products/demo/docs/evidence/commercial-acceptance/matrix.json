@@ -1,4 +1,44 @@
 {
+  "firstLiveIteration20261001": {
+    "branch": "codex/first-live-iteration",
+    "baseHead": "0a44022e7962f32fef4b0d03edb18349ad2ef0b9",
+    "report": "../../FIRST_LIVE_ITERATION_RU.md",
+    "unitPassed": 208,
+    "lint": "PASS",
+    "typecheckSevenPackages": "PASS",
+    "productionBuildLocal": "PASS",
+    "registrationIntegrationPassed": 9,
+    "finalizeRacesPassed": 3,
+    "lifecycleScenariosPassedAcrossRuns": 10,
+    "approvalSigningIntegrationPassed": 7,
+    "httpSecurityIntegrationPassed": 13,
+    "fullHistoricalIntegrationCI": "NOT_RUN; eleven legacy finalize fixtures and additional direct-status fixtures require compatibility review",
+    "rendererFinalSuite": "INTERRUPTED_BY_USER_NO_FINAL_RESULT",
+    "browser": "Actual director/manager approval cycle, mandatory kits, PTM 3-document preparation, 8 ready jobs, original PDF download and visible PDF preview verified",
+    "physicalPrinting": "NOT_VERIFIED",
+    "externalSignatureProvider": "NOT_CONFIGURED_FAIL_CLOSED",
+    "governmentRegistry": "NOT_CONNECTED",
+    "productionDeployment": "NOT_PERFORMED",
+    "preexistingChangesPreserved": true
+  },
+  "functionalAudit20260930": {
+    "date": "2026-09-30",
+    "status": "LOCAL_CORE_FUNCTIONAL_PASS_WITH_FINDINGS",
+    "branch": "codex/ot-center-dsj-forms-ux",
+    "head": "0a44022e7962f32fef4b0d03edb18349ad2ef0b9",
+    "report": "../../FUNCTIONAL_AUDIT_2026-09-30.md",
+    "evidence": "../functional-audit-20260930/summary.json",
+    "unitPassed": 179,
+    "integrationUniquePassedAcrossRuns": 137,
+    "rendererUniquePassedAcrossRuns": 43,
+    "httpStatusChecksPassed": 168,
+    "observedBrowserScenarios": 24,
+    "localReady": true,
+    "productionReadOnly": "PASS; Vercel frontend SHA not verified because metadata HTTP403",
+    "productSourceChanged": false,
+    "productionBusinessDataChanged": false,
+    "historicalMatrixEntriesPreserved": true
+  },
   "operatorCompletion20260929": {
     "date": "2026-09-29",
     "status": "LOCAL_OPERATOR_AND_PRINT_ENGINEERING_PASS",
@@ -12,7 +52,6 @@
     "productionChanged": false,
     "historicalMatrixEntriesPreserved": true
   },
-
   "operatorUx20260929": {
     "date": "2026-09-29",
     "status": "LOCAL_UI_AND_CAPACITY_PASS",
@@ -2160,5 +2199,55 @@
   ],
   "currentBaseRevision": "3ad8e6bb5aba016df01da8f387c1bbe19a93011f",
   "updatedAt": "2026-09-22T15:54:44.907Z",
-  "overall": "IN_PROGRESS: subsystem PASS is not unconditional commercial release approval"
+  "overall": "IN_PROGRESS: subsystem PASS is not unconditional commercial release approval",
+  "compactEntry20261001": {
+    "branch": "codex/first-live-iteration",
+    "localUrl": "http://localhost:3132",
+    "report": "../first-live-iteration/compact-entry/persistence.json",
+    "grid": "PASS: one name, one position/profession, category, training, actions; optional language and legacy employer details preserved",
+    "personSaveListReopen": "PASS: 6a335031-029c-4c83-a390-2c1c3e9358f2; supplied name persisted as proposal title and customerName",
+    "companyTwoEmployeesSaveListReopen": "PASS: 0a3177e4-dfcb-4dae-9037-f9993d58acea; one company selected, empty row workplace/KZ, server inheritance verified",
+    "approval": "PENDING preserved; no promotion or issuance for the two new checks",
+    "organizationSnapshots": "PASS: server-pinned reference present; regression refuses changed directory reads",
+    "webTests": 87,
+    "resolutionTests": 6,
+    "customerAndApprovalTests": 9,
+    "targetedRendererTests": 2,
+    "scopedLint": "PASS",
+    "apiWebTypecheck": "PASS",
+    "localProductionWebBuild": "PASS",
+    "ptmExpiry": "PASS: exactly one Действительно до 01.10.2029 г. in one freshly generated synthetic PDF",
+    "ptmPdf": "../first-live-iteration/expiry-fix/ptm-expiry-fixed.pdf",
+    "screenshots": [
+      "../first-live-iteration/compact-entry/person.jpg",
+      "../first-live-iteration/compact-entry/company.jpg"
+    ],
+    "fullVerify": "NOT_RUN",
+    "productionDeployment": "NOT_PERFORMED",
+    "immutableIssuedArtifacts": "PRESERVED"
+  },
+  "simpleCycleHandoff20261001": {
+    "timestamp": "2026-10-01T18:53:10.416Z",
+    "status": "STOPPED_BY_USER_HANDOFF_CREATED",
+    "handoff": "docs/handoffs/2026-10-01-simple-cycle/00_PROMPT.md",
+    "branch": "codex/first-live-iteration",
+    "head": "0a44022e7962f32fef4b0d03edb18349ad2ef0b9",
+    "twoRoleModel": "REQUIRED_NOT_YET_IMPLEMENTED",
+    "uiActions": "IMPLEMENTED_PENDING_STAGE_BROWSER_SMOKE_ONLY",
+    "approvalDataGuard": "IMPLEMENTED_ATOMIC_TARGETED_TEST_PASS",
+    "validationCorrectionCycle": "IMPLEMENTED_BROWSER_NOT_COMPLETED",
+    "webBuild": "PASS_NEXT_FIRST_LIVE_MORE",
+    "webUnitTests": {
+      "pass": 96,
+      "fail": 0,
+      "skip": 0
+    },
+    "scopedApprovalCustomerTests": {
+      "pass": 11
+    },
+    "fullVerify": "NOT_RUN_AFTER_LATEST_CHANGES",
+    "externalSigning": "NOT_CONFIGURED",
+    "physicalPrint": "NOT_VERIFIED",
+    "commitPushDeployment": "NOT_REQUESTED_NOT_PERFORMED"
+  }
 }

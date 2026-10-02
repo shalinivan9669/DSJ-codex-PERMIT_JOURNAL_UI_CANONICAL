@@ -1,0 +1,167 @@
+[
+  {
+    "id": "biot-worker-card",
+    "source": "biot/biot-card-template.docx",
+    "sourceSha256": "6dcadf33f59c8d50cac3c2c079c35482c3a83c3804c99a9e03912812f8ec8a41",
+    "previous": "biot-worker-card.v17.docx",
+    "file": "biot-worker-card.v18.docx",
+    "sha256": "366a5604a12015a56cde602943b8dab54bf4bdc6231272fc66dd0828d366a91c",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "biot-itr-certificate",
+    "source": "biot/biot-itr-certificate-template.docx",
+    "sourceSha256": "d817d041ab6153508c851d1f6318561afd7988331619aac7f144f8c688c8d135",
+    "previous": "biot-itr-certificate.v15.docx",
+    "file": "biot-itr-certificate.v16.docx",
+    "sha256": "20b2f85c0ad615a720c6b304db7dff9185838b3b50457eeefca6d3605294ab1f",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "biot-protocol",
+    "source": "biot/biot-protocol-template.docx",
+    "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+    "previous": "biot-protocol.v11.docx",
+    "file": "biot-protocol.v12.docx",
+    "sha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "ptm-card",
+    "source": "ptm/ptm-card-template.docx",
+    "sourceSha256": "51b4f7bcc6bf615e33165fc7c94cdd357600ffa246e7f2ac537be62e699d5993",
+    "previous": "ptm-card.v14.docx",
+    "file": "ptm-card.v15.docx",
+    "sha256": "db147f3e14f08b3190cd525e97caf74767ebecce9639716a2f95fdfea99f989d",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "ptm-protocol",
+    "source": "ptm/ptm-protocol-template.docx",
+    "sourceSha256": "3a00ea89bd065f9028b0c7160fbbdd6fd0938bff9d4e57af9d33212549fd463d",
+    "previous": "ptm-protocol.v9.docx",
+    "file": "ptm-protocol.v10.docx",
+    "sha256": "519d4dd4eeb6789eb2425839d0357879b076241a98c549116524a96a3be5622a",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "pb-card",
+    "source": "pb/pb-card-template.docx",
+    "sourceSha256": "c7ef42764a704361f4d1b25f38eac80e37085d469faa606102ec9641c984b286",
+    "previous": "pb-card.v14.docx",
+    "file": "pb-card.v15.docx",
+    "sha256": "b6b4ff4cc3457eca168c3ea78938f4f90f37c752c6c4954ea29acbdafed9bb20",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "pb-protocol",
+    "source": "pb/pb-protocol-template.docx",
+    "sourceSha256": "97efee62080313e92c189d7c773512edc12823a6a0a8619262c5c422e1272cb9",
+    "previous": "pb-protocol.v9.docx",
+    "file": "pb-protocol.v10.docx",
+    "sha256": "e7bc3573923bfe039c8196e7df2effeb0eb940fef43db9531d32ea50e8ff9f91",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "ps-card",
+    "source": "ps/ps-card-template.docx",
+    "sourceSha256": "5b15ccfcd0060e40fbb8802f1b043bbeabf8995768c352adbca0beafe86c8de4",
+    "previous": "ps-card.v15.docx",
+    "file": "ps-card.v16.docx",
+    "sha256": "61b772c29425b7c6ae6f66e21d576736cc06244c524e15ff3a9559371e582198",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "ps-protocol",
+    "source": "ps/ps-protocol-template.docx",
+    "sourceSha256": "27991f16de5cda63ab96d9739d7b0a43e48bbb9e89fc2f9dd8e78a06e1afbbc8",
+    "previous": "ps-protocol.v9.docx",
+    "file": "ps-protocol.v10.docx",
+    "sha256": "7e47a469436057e2f099114c75c51ae350da555a747e39a0bd3fde3b7f3a0175",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "ps-witness",
+    "source": "ps/ps-witness-certificate-template.docx",
+    "sourceSha256": "3bdded624486820c538362bcef9c10dabfd2a63570d26d8aa3e827bbea2b11b1",
+    "previous": "ps-witness.v11.docx",
+    "file": "ps-witness.v12.docx",
+    "sha256": "26a0ff059d5488e08af8cb2de0d780dad01146d771e7b04e0abe12353c5c9bfa",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  },
+  {
+    "id": "biot-itr-protocol",
+    "source": "biot/biot-protocol-template.docx",
+    "sourceSha256": "31309ce6db0990d98c235fc80364ba21ccd0ae9c0fc262917be3601a0268047b",
+    "previous": "biot-itr-protocol.v2.docx",
+    "file": "biot-itr-protocol.v3.docx",
+    "sha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+    "intentionalChanges": [
+      "cached sample values replaced in original field slots",
+      "former issuer logo and contact slots filled at render time",
+      "former handwritten signature and stamp left blank",
+      "equivalent bundled Liberation fonts",
+      "protocol sample row filled and headings repeat for group pagination"
+    ]
+  }
+]

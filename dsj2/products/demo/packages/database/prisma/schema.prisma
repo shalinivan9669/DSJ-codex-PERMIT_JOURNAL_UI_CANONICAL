@@ -88,6 +88,10 @@ model PrintRequest {
   correctsIssuanceId String?
   correctionReason String?
   legacySourceId String?
+  workingRevision Int @default(0)
+  approvalPolicy Boolean @default(true)
+  approvedProposalId String?
+  archivedAt DateTime?
   @@unique([tenantId,id])
   @@unique([tenantId,legacySourceId])
   @@index([tenantId,status,createdAt])
@@ -633,4 +637,99 @@ model DocumentCorrectionRequest {
   createdAt DateTime @default(now())
   @@unique([tenantId,id])
   @@index([tenantId,status,createdAt])
+}
+
+model RequestProposal {
+  id String @id @default(uuid())
+  tenantId String
+  requestId String
+  revision Int
+  baseRevision Int
+  operation String @default("SAVE")
+  payload Json
+  before Json
+  diff Json
+  proposalHash String
+  status String @default("PENDING")
+  submittedBy String
+  submittedAt DateTime @default(now())
+  reason String @default("")
+  @@unique([tenantId,id])
+  @@unique([requestId,revision])
+  @@index([tenantId,status,submittedAt])
+}
+model ProposalDecision {
+  id String @id @default(uuid())
+  tenantId String
+  proposalId String
+  decision String
+  comment String
+  proposalHash String
+  decidedBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,proposalId])
+}
+model IssuanceWorkflow {
+  id String @id @default(uuid())
+  tenantId String
+  requestId String
+  issuanceId String
+  proposalId String
+  status String @default("RENDERING")
+  requiredSigners Json
+  completedAt DateTime?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,issuanceId])
+  @@unique([tenantId,id])
+}
+model SignatoryBinding {
+  id String @id @default(uuid())
+  tenantId String
+  userId String
+  iin String
+  bin String?
+  displayName String
+  kind String
+  active Boolean @default(true)
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,userId,active])
+}
+model SigningSession {
+  id String @id @default(uuid())
+  tenantId String
+  issuanceId String
+  artifactId String
+  bindingId String
+  provider String
+  providerReference String?
+  documentSha256 String
+  inputHash String
+  status String @default("PENDING")
+  createdBy String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+}
+model DocumentSignature {
+  id String @id @default(uuid())
+  tenantId String
+  issuanceId String
+  artifactId String
+  bindingId String
+  signingSessionId String @unique
+  documentSha256 String
+  signatureSha256 String
+  signatureStorageKey String @unique
+  signerIin String
+  signerBin String?
+  certificateSerial String
+  certificateFingerprint String
+  provider String
+  verification Json
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,artifactId,bindingId])
 }

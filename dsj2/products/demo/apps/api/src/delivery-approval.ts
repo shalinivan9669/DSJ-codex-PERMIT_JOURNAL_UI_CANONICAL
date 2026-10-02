@@ -18,6 +18,7 @@ import {
   type Context,
 } from "./core";
 import { resolvedRequest } from "./requests";
+import { workingRequest } from "./approvals";
 import { flattenExportRow } from "./delivery";
 import { readArtifact } from "./files";
 
@@ -66,7 +67,7 @@ export function meaningfulControlData(draft: Draft) {
   };
 }
 export async function controlSheet(c: Context, id: string) {
-  const record = await scopedRequest(c, id);
+  const record = await workingRequest(c, id);
   const issuance = await db.issuance.findFirst({
     where: { tenantId: c.tenantId, requestId: id },
     orderBy: { createdAt: "desc" },
@@ -147,7 +148,7 @@ export async function confirmControlSheet(
   );
   return transaction(async (tx) => {
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
-    const record = await scopedRequest(c, id, tx);
+    const record = await workingRequest(c, id, tx);
     if (record.revision !== data.expectedRevision)
       fail(
         409,
@@ -220,7 +221,7 @@ export async function clarificationRequest(
   id: string,
   customerId?: string,
 ) {
-  const record = await scopedRequest(c, id);
+  const record = await workingRequest(c, id);
   const { draft, issues: resolvedIssues } = await resolvedRequest(c, id);
   if (customerId) {
     parse(z.string().uuid(), customerId);
