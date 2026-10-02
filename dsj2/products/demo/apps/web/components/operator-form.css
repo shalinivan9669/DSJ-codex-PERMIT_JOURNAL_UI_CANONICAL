@@ -1,25 +1,30 @@
 .operator-form {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 12px 0 64px;
+  padding: 0 0 40px;
+  min-width: 0;
+}
+.operator-form > .back-link {
+  margin-bottom: 12px;
 }
 .operator-form .operator-heading {
-  align-items: flex-start;
-  gap: 20px;
-  margin: 8px 0 20px;
+  align-items: center;
+  gap: 16px 24px;
+  margin: 0 0 20px;
 }
 .operator-heading .title-with-status {
   flex-wrap: wrap;
   gap: 10px;
 }
 .operator-heading h1 {
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: clamp(24px, 2.4vw, 30px);
   line-height: 1.25;
+  margin: 0;
 }
 .operator-heading-actions {
   display: grid;
   justify-items: end;
-  gap: 8px;
+  gap: 4px;
 }
 .operator-heading-actions > button {
   font-size: 12px;
@@ -30,7 +35,7 @@
   box-shadow: none;
   border: 0;
   border-radius: 12px;
-  padding: 20px 24px;
+  padding: 20px;
   margin-bottom: 16px;
 }
 .operator-form .section-heading {
@@ -39,7 +44,7 @@
   flex-wrap: wrap;
 }
 .operator-form h2 {
-  font-size: 21px;
+  font-size: 19px;
   margin: 0;
 }
 .operator-form label {
@@ -51,7 +56,7 @@
   border-radius: 7px;
 }
 .operator-form .form-grid {
-  gap: 20px 28px;
+  gap: 16px 24px;
 }
 .operator-form .operator-request-options {
   margin: 14px 0 0;
@@ -71,8 +76,9 @@
 }
 .operator-form .request-organization-fields {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
+  grid-template-columns: minmax(0, 620px) minmax(0, 1fr);
+  justify-content: start;
+  gap: 12px 16px;
 }
 .request-organization-fields > .request-organization-mode,
 .request-organization-fields > .request-organization-new,
@@ -85,8 +91,9 @@
 }
 .operator-form .request-organization-selected {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 4px 20px;
+  grid-template-columns: minmax(0, 620px) minmax(0, 1fr);
+  align-items: start;
+  gap: 8px 24px;
 }
 .request-organization-selected > p {
   grid-column: 1 / -1;
@@ -97,8 +104,19 @@
   margin: 0;
   padding: 0;
   background: transparent;
-  display: flex;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
+}
+.request-organization-selected .organization-name-preview small {
+  color: var(--muted);
+  font-size: 12px;
+}
+.request-organization-selected > div:last-child > .text-button {
+  min-height: 32px;
+  padding: 0;
+  text-align: left;
+  justify-content: flex-start;
 }
 .operator-form .request-organization-selected .fine-print {
   margin: 4px 0 0;
@@ -118,11 +136,13 @@
   font-size: 13px;
 }
 .request-organization-fields > label {
-  max-width: 620px;
+  min-width: 0;
 }
 .request-organization-fields > .text-button {
   justify-self: start;
   align-self: end;
+  min-height: 40px;
+  padding-inline: 0;
 }
 .request-organization-new {
   display: grid;
@@ -172,7 +192,7 @@
   background: var(--canvas);
   border: 0;
   border-radius: 8px;
-  padding: 14px 18px;
+  padding: 12px 16px;
 }
 .organization-name-preview p {
   margin: 3px 0 0;
@@ -195,8 +215,24 @@
 .operator-form .recipients-panel > .toolbar > .toolbar {
   gap: 8px;
 }
+.operator-form .recipients-panel > .toolbar h2 {
+  margin-right: 0;
+}
+.operator-form .recipients-panel > .toolbar .toolbar-actions {
+  gap: 8px;
+}
+.operator-form .recipients-panel > .toolbar button,
+.operator-form .recipient-extra-tools > summary {
+  min-height: 40px;
+  padding: 8px 12px;
+}
 .operator-list-tools {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+}
+.operator-list-tools > summary,
+.operator-request-options > summary {
+  padding-block: 4px;
+  line-height: 1.5;
 }
 .operator-list-tools .selection-toolbar {
   padding: 12px 0;
@@ -281,7 +317,7 @@
 }
 .operator-form .operator-readiness {
   margin: 12px 0;
-  padding: 0 24px;
+  padding: 0 20px;
 }
 .operator-readiness summary {
   cursor: pointer;
@@ -313,7 +349,7 @@
   border-left: 2px solid var(--line);
 }
 .operator-completion {
-  padding: 18px 24px;
+  padding: 20px;
   background: white;
   border-radius: 12px;
   margin-bottom: 16px;
@@ -351,19 +387,25 @@
   align-items: flex-end;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 16px 28px;
+  gap: 12px 24px;
+}
+.operator-common-bar .request-training-choices {
+  gap: 8px;
+  margin: 0;
+  min-height: 40px;
 }
 .operator-row-common-date {
   display: grid;
   gap: 6px;
-  min-width: 170px;
+  width: 180px;
+  min-width: 0;
   margin: 0;
   font-size: 12px;
 }
 .operator-common-settings {
-  margin: 12px 0 20px;
+  margin: 12px 0 16px;
   border-bottom: 1px solid var(--line);
-  padding-bottom: 16px;
+  padding-bottom: 12px;
 }
 .operator-common-settings > summary {
   cursor: pointer;
@@ -394,6 +436,12 @@
   box-shadow: none;
 }
 @media (max-width: 960px) {
+  .operator-form .request-organization-fields {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .operator-form .request-organization-selected {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .request-organization-new {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -407,16 +455,17 @@
   }
   .operator-form > .panel,
   .operator-completion {
-    padding: 22px 18px;
+    padding: 16px;
   }
   .operator-form .operator-heading {
     display: grid;
+    gap: 12px;
   }
   .operator-heading-actions {
     justify-items: start;
   }
   .operator-form .operator-readiness {
-    padding: 0 18px;
+    padding: 0 16px;
   }
   .request-organization-new .organization-name-fields {
     grid-template-columns: minmax(0, 1fr);
@@ -438,8 +487,26 @@
     grid-template-columns: minmax(0, 1fr);
   }
   .operator-form .request-organization-selected .organization-name-preview {
-    flex-wrap: wrap;
-    gap: 8px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .operator-form .recipients-panel > .toolbar {
+    gap: 12px;
+  }
+  .operator-form .recipients-panel > .toolbar .toolbar-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+  .operator-form .recipients-panel > .toolbar button,
+  .operator-form .recipient-extra-tools > summary {
+    min-height: 44px;
+  }
+  .operator-common-settings > summary > .muted {
+    display: block;
+    margin: 4px 0 0 16px;
+  }
+  .operator-row-common-date {
+    width: 100%;
   }
   .operator-form .title-with-status {
     align-items: flex-start;
