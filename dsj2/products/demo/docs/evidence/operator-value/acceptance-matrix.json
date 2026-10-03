@@ -1,5 +1,19 @@
 {
   "version": "2026-09-22.2",
+  "operatorUXAnalysisPreparation20261003": {
+    "status": "PREPARED_FOR_ANALYSIS_NOT_IMPLEMENTED",
+    "baseCommit": "592d15cc331c20ae1b7b97d0b7ad6e1d3a9ef420",
+    "branch": "codex/operator-flow-refinement-20261003",
+    "scope": "Operator-perspective input and visual UX audit prompt, context and two original user screenshots; no application changes",
+    "confirmedBySourceAndUserScreenshots": [
+      "Training chips deliberately disable complete state and offer only assignment",
+      "Conditional messages beneath inputs combine with middle-aligned table cells to misalign primary controls"
+    ],
+    "humanUXAcceptance": "OPEN: previous scoped engineering PASS did not cover these user-reported defects",
+    "browserAndRuntimeChecksThisPreparation": "NOT_RUN",
+    "pushAndDeploymentThisPreparation": "NOT_RUN",
+    "handoff": "docs/handoffs/2026-10-03-operator-flow-refinement/PROMPT_RU.md"
+  },
   "operatorLayout20261002": {
     "status": "DEPLOYED_SCOPED_UI_PASS",
     "codeCommit": "1dc69a704304512a69747ac6396c6ab17e8da3a5",
