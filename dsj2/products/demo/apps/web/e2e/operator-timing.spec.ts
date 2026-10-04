@@ -86,16 +86,25 @@ for (const count of [10, 100, 150, 250]) {
     await page.goto("/requests/timing/edit");
     await expect(page.locator(".operator-grid tbody tr")).toHaveCount(count);
     timings.openMs = performance.now() - opened;
-    const first = page.getByLabel("ФИО RU, строка 1", { exact: true });
+    const first = page.getByLabel("ФИО, строка 1", { exact: true });
     let started = performance.now();
     await first.fill("Андреев Андрей Анатольевич");
     await expect(first).toHaveValue("Андреев Андрей Анатольевич");
     timings.inputActionMs = performance.now() - started;
-    await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+    await expect(page.locator(".save-indicator")).toContainText(
+      "Рабочая версия сохранена",
+    );
     expect(draft.items[0].fullNameRu).toBe("Андреев Андрей Анатольевич");
     timings.firstSaveFromInputMs = performance.now() - started;
     const middle = Math.floor(count / 2);
     const search = page.getByLabel("Поиск в заявке", { exact: true });
+    const searchTools = page.locator(".operator-list-tools");
+    if (
+      !(await searchTools.evaluate(
+        (element) => (element as HTMLDetailsElement).open,
+      ))
+    )
+      await searchTools.locator(":scope > summary").click();
     started = performance.now();
     await search.fill(String(middle).padStart(3, "0"));
     await expect(page.locator(".operator-grid tbody tr")).toHaveCount(1);
@@ -108,26 +117,25 @@ for (const count of [10, 100, 150, 250]) {
       page.getByLabel(`Выбрать строку ${middle}`, { exact: true }),
     ).toBeChecked();
     timings.selectActionMs = performance.now() - started;
-    const row = page.getByLabel(`ФИО RU, строка ${middle}`, { exact: true });
+    const row = page.getByLabel(`ФИО, строка ${middle}`, { exact: true });
     await row.fill("Найденная Исправленная Запись");
     await expect(row).toBeFocused();
     await expect(page.locator(".operator-grid tbody tr")).toHaveCount(1);
-    await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-    await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+    await expect(page.locator(".save-indicator")).toContainText(
+      "Рабочая версия сохранена",
+    );
     await page
       .getByRole("button", { name: "Сбросить фильтры", exact: true })
       .click();
     const opener = page.getByRole("button", {
-      name: `Документы и даты получателя ${middle}`,
+      name: `Детали получателя ${middle}`,
       exact: true,
     });
     started = performance.now();
     await opener.click();
-    await expect(
-      page.getByRole("complementary", { name: "Редактор получателя" }),
-    ).toBeVisible();
+    await expect(page.getByRole("dialog")).toBeVisible();
     await page
-      .getByRole("button", { name: "Вернуться к таблице", exact: true })
+      .getByRole("button", { name: "Вернуться к списку", exact: true })
       .click();
     await expect(row).toBeVisible();
     timings.cardRoundtripMs = performance.now() - started;

@@ -3,6 +3,7 @@ import { open, realpath, stat } from "node:fs/promises";
 import { relative, isAbsolute } from "node:path";
 import { ArtifactStore } from "@demo/printing";
 import { db, fail, audit, type Context } from "./core";
+import { assertArtifactDownloadAllowed } from "./artifact-access";
 
 const store = new ArtifactStore();
 /** Verify using bounded buffers, then stream the SAME open inode to the response. */
@@ -11,6 +12,8 @@ export async function openArtifact(c: Context, id: string) {
     where: { id, tenantId: c.tenantId },
   });
   if (!artifact) fail(404, "NOT_FOUND", "Файл не найден");
+  // Authorization precedes storage verification so a denied bundle stays 409.
+  await assertArtifactDownloadAllowed(c, artifact);
   let handle: Awaited<ReturnType<typeof open>> | undefined;
   try {
     const actual = await realpath(store.path(artifact.storageKey));

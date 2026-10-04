@@ -1,6 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { loginIsolated } from "./operator-full-fix-session";
+import { openFinalPanel } from "./final-approval-fixture";
+import { openLegacyPersonal } from "./operator-legacy-lifecycle-fixture";
+import { randomUUID } from "node:crypto";
 import { createHash } from "node:crypto";
 
 const product = path.resolve(__dirname, "../../..");
@@ -8,7 +12,7 @@ const sourceDirectory = path.resolve(
   process.env.DEMO_E2E_REPEAT_SOURCE ||
     path.join(
       product,
-      "docs/evidence/final-completion/operator/common-history-resume-v3",
+      "docs/evidence/operator-flow-full-fix-20261003/preparation/common-history-browser",
     ),
 );
 const evidence = path.resolve(
@@ -35,6 +39,13 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
     ),
   );
   expect(source.status).toBe("PASS");
+  if (process.env.DEMO_E2E_FULL_CHECKPOINTS === "1") {
+    expect(process.env.DEMO_E2E_FULL_RUN_ID, "Full-suite source identity is required").toBeTruthy();
+    expect(source.suiteRunId, "Repeat basis must use this full run's freshly produced history").toBe(process.env.DEMO_E2E_FULL_RUN_ID);
+  }
+  const companyIds = source.companies.map((company: { id: string }) => company.id) as string[];
+  expect(companyIds).toHaveLength(2);
+  for (const id of companyIds) expect(id).toMatch(/^[a-f0-9-]{36}$/);
   const started = Date.now();
   const steps: Record<string, unknown>[] = [];
   async function record(action: string, proof: Record<string, unknown>) {
@@ -48,26 +59,16 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
       ),
     );
   }
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL!);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD!);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать" }),
-  ).toBeVisible();
+  await loginIsolated(page);
   const original = await get(page, `/print-requests/${source.requestId}`);
   const current = await get(page, `/recipients/${source.personId}`);
-  const employerB = await get(page, `/customers/${source.companies[1]}`);
+  const employerB = await get(page, `/customers/${companyIds[1]}`);
   expect(current.employment).toHaveLength(2);
-  expect(current.data.employerId).toBe(source.companies[1]);
+  expect(current.data.employerId).toBe(companyIds[1]);
   const historicalRow = original.items.find(
     (p: { recipientId: string }) => p.recipientId === source.personId,
   );
-  expect(historicalRow.employerId).toBe(source.companies[0]);
+  expect(historicalRow.employerId).toBe(companyIds[0]);
   const oldSnapshot = original.issuances[0].snapshot;
   const oldNumbers = original.documents.map(
     (d: { number: string }) => d.number,
@@ -81,12 +82,7 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
   );
   expect(artifact).toBeTruthy();
   await page.goto(`/requests/${source.requestId}`);
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
-    .click();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
   const download = page.waitForEvent("download");
   await page
     .locator(`.artifact-list a[href="/api/artifacts/${artifact.id}"]`)
@@ -95,9 +91,7 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
   expect(
     sha(await fs.readFile(path.join(evidence, "historical-original.pdf"))),
   ).toBe(artifact.sha256);
-  await page
-    .getByRole("button", { name: "Открыть действия", exact: true })
-    .click();
+  await openFinalPanel(page, "operations");
   await page
     .getByText(
       `Повторное обращение по получателю «${historicalRow.fullNameRu}»`,
@@ -196,10 +190,8 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
     sameIdentity: true,
     oldIssuerSnapshotUnchanged: true,
   });
-  await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
-    .click();
-  await page.getByRole("tab", { name: "Личные данные", exact: true }).click();
+  const personal = await openLegacyPersonal(page);
+  await personal.locator(".employer-document-wording > summary").click();
   await page
     .getByText("Постоянная запись, работодатель и история", { exact: true })
     .click();
@@ -214,21 +206,25 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
     .getByRole("button", { name: "Выбрать", exact: true })
     .click();
   await page
-    .getByLabel("Должность · RU", { exact: true })
+    .getByLabel("Должность / профессия", { exact: true })
     .fill(current.data.positionRu);
   await page
     .getByLabel("Период работы / основание актуальности", { exact: true })
     .fill(current.data.employmentPeriod);
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await personal
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   await page.reload();
   const updated = await get(page, `/print-requests/${nextId}`);
-  expect(updated.items[0].employerId).toBe(source.companies[1]);
+  expect(updated.items[0].employerId).toBe(companyIds[1]);
   expect(updated.items[0].recipientId).toBe(source.personId);
   const validatePending = page.waitForResponse(
     (r) => r.url().endsWith("/validate") && r.request().method() === "POST",
   );
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   await expect(
     page.getByText("Исправьте данные перед оформлением", { exact: true }),
   ).toBeVisible();
@@ -238,18 +234,24 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
   expect(JSON.stringify(validation)).toMatch(
     /RESULT_REQUIRED|RESULT_UNCONFIRMED/,
   );
-  await page
-    .getByRole("button", { name: "Оформить комплект", exact: true })
-    .click();
-  const finalizePending = page.waitForResponse(
-    (r) => r.url().endsWith("/finalize") && r.request().method() === "POST",
+  await expect(
+    page.getByRole("button", { name: "Сформировать документы", exact: true }),
+  ).toHaveCount(0);
+  const session = await get(page, "/auth/session");
+  const finalized = await page.request.post(
+    `/api/print-requests/${nextId}/finalize`,
+    {
+      headers: {
+        origin: process.env.DEMO_ORIGIN!,
+        "x-csrf-token": session.csrfToken,
+        "Idempotency-Key": randomUUID(),
+      },
+      data: { expectedRevision: updated.revision },
+    },
   );
-  await page.getByRole("button", { name: "Оформить", exact: true }).click();
-  const finalized = await finalizePending;
-  expect(finalized.status()).toBe(422);
+  expect(finalized.status()).toBe(409);
   const refused = await finalized.json();
-  expect(refused.code).toBe("FINALIZE_VALIDATION");
-  expect(JSON.stringify(refused)).toMatch(/RESULT_REQUIRED|RESULT_UNCONFIRMED/);
+  expect(refused.code).toBe("DIRECTOR_APPROVAL_REQUIRED");
   await page.screenshot({
     path: path.join(evidence, "unknown-new-result-blocks-issuance.png"),
     fullPage: true,
@@ -273,7 +275,7 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
   await record(
     "current-employer-B-reload-validate-and-explicit-finalize-blocked",
     {
-      currentEmployerId: source.companies[1],
+      currentEmployerId: companyIds[1],
       validation,
       finalizeStatus: finalized.status(),
       errorCode: refused.code,
@@ -298,8 +300,8 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
         newRequestId: nextId,
         needId,
         personId: source.personId,
-        oldEmployerId: source.companies[0],
-        currentEmployerId: source.companies[1],
+        oldEmployerId: companyIds[0],
+        currentEmployerId: companyIds[1],
         sourceEvidence: path.relative(product, sourceDirectory),
         originalFileSha256: artifact.sha256,
         steps,
@@ -310,7 +312,7 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
         humanActiveMs: null,
         customerWaitingMs: null,
         limitation:
-          "Reuses actual issued100-person synthetic history and stable identity with two employment periods. One history repeat is reviewed for employer B through real UI; no fresh result is entered, actual UI finalize is rejected. No new document is rendered or issued, and human timing/production acceptance is not claimed.",
+          "Reuses actual issued100-person synthetic history and stable identity with two employment periods. One history repeat is reviewed for employer B through real UI; no fresh result is entered, actual UI does not offer generation and an independent HTTP finalize is rejected before any issuance. No new document is rendered or issued, and human timing/production acceptance is not claimed.",
       },
       null,
       2,

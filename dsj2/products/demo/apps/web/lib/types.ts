@@ -17,6 +17,7 @@ export type Draft = DraftInput & {
   createdAt?: string;
   updatedAt?: string;
   customerName?: string;
+  importScaffoldId?: string | null;
   approval?: {
     proposalId: string;
     status: "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
@@ -218,6 +219,7 @@ export function draftPayload(draft: Draft) {
     presetFields,
     commonFields,
     events,
+    trainingDefaults,
   } = draft;
   return {
     kind,
@@ -233,6 +235,7 @@ export function draftPayload(draft: Draft) {
     presetFields,
     commonFields,
     events,
+    trainingDefaults,
   };
 }
 

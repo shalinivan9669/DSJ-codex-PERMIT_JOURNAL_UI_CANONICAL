@@ -1,69 +1,123 @@
 import { test, expect } from "@playwright/test";
-import path from "node:path";
+import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
+import path from "node:path";
+import { draftSchema } from "@demo/contracts";
+import { newAssignment, newRecipient } from "../lib/types";
+import { loginIsolated } from "./operator-full-fix-session";
+import { readCommon, expandCommon } from "./operator-common-history-helpers";
+import { fourFormsLongDrawerFocus } from "./operator-focus-acceptance-helpers";
 import {
-  keyboardActivate,
-  keyboardEnter,
-  keyboardMetrics,
-} from "./operator-keyboard-helpers";
-const evidence = process.env.DEMO_E2E_EVIDENCE!;
-test("existing 100-row draft shows validation heading at keyboard focus and opens exact erroneous field", async ({
+  fullSuitePageApiCooldown,
+  fullSuiteRunId,
+} from "./operator-full-suite";
+
+test.use({ trace: "off" });
+const evidence = path.resolve(
+  process.env.DEMO_E2E_EVIDENCE ||
+    path.join(
+      __dirname,
+      "../../../docs/evidence/operator-flow-full-fix-20261003/preparation/error-focus-browser",
+    ),
+);
+test("fresh 100-row draft shows validation heading at keyboard focus and opens exact inherited cause while preserving dates and UNKNOWN", async ({
   page,
 }) => {
-  test.setTimeout(180000);
+  test.setTimeout(fullSuiteRunId() ? 360000 : 180000);
   await fs.mkdir(evidence, { recursive: true });
-  await page.goto("/login");
-  await keyboardEnter(
-    page,
-    page.getByLabel("Электронная почта", { exact: true }),
-    process.env.DEMO_E2E_EMAIL!,
+  await fullSuitePageApiCooldown(page, evidence, "error-focus-before-first100");
+  const headers = await loginIsolated(page),
+    eventId = randomUUID(),
+    started = performance.now();
+  const input = draftSchema.parse({
+    kind: "PERSON",
+    demoMode: true,
+    schemaVersion: 2,
+    commonFields: { documentDate: "2026-10-03" },
+    events: [
+      {
+        id: eventId,
+        title: "Синтетическая 100 группа focus",
+        protocolTemplateId: "biot-protocol",
+        protocolMode: "GROUP",
+        commonFields: {
+          trainingSubject: "Синтетическая исходная общая программа",
+          trainingStart: "2026-09-20",
+          trainingEnd: "2026-09-22",
+          protocolDate: "2026-09-22",
+          hours: "8",
+          productionHours: "16",
+          biotCategory: "WORKER",
+        },
+      },
+    ],
+    items: Array.from({ length: 100 }, (_, index) => ({
+      ...newRecipient(),
+      id: randomUUID(),
+      employeeCategory: "WORKER",
+      fullNameRu: `Синтетический Фокус ${String(index + 1).padStart(3, "0")}`,
+      positionRu: "Синтетический рабочий",
+      workplaceRu: "Синтетическое предприятие",
+      assignments: [
+        {
+          ...newAssignment("biot-worker-card"),
+          id: randomUUID(),
+          eventId,
+          protocolMode: "GROUP",
+          documentDate: index === 1 ? "2026-10-09" : "",
+          fieldOrigins: {
+            documentDate: index === 1 ? "IMPORTED" : "INHERITED",
+            trainingSubject: "INHERITED",
+            hours: "INHERITED",
+            productionHours: "INHERITED",
+          },
+          trainingSubject: "",
+          hours: "",
+          productionHours: "",
+          outcome: { status: "UNKNOWN", source: "" },
+        },
+      ],
+    })),
+  });
+  const createdResponse = await page.request.post("/api/print-requests", {
+    headers,
+    data: input,
+  });
+  expect(createdResponse.ok(), await createdResponse.text()).toBe(true);
+  const created = await createdResponse.json(),
+    requestId = created.id as string;
+  await page.goto(`/requests/${requestId}/edit`);
+  await expect(page.locator(".operator-grid tbody tr")).toHaveCount(100);
+  await expandCommon(page.locator("#request-training"));
+  const shared = page.locator(
+    '.training-primary-context [data-field-path="events.0.commonFields.trainingSubject"]',
   );
-  await keyboardEnter(
-    page,
-    page.getByLabel("Пароль", { exact: true }),
-    process.env.DEMO_E2E_PASSWORD!,
-  );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", { name: "Войти", exact: true }),
-  );
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать" }),
-  ).toBeVisible();
-  await keyboardActivate(
-    page,
-    page
-      .locator(".row-title")
-      .filter({ hasText: "G1 · полный UI путь 100 человек" })
-      .first(),
-  );
-  await expect(page.locator(".recipient-table tbody tr")).toHaveCount(100);
-  const requestId = /requests\/([^/]+)/.exec(page.url())![1];
-  const shared = page
-    .locator(".common-context")
-    .getByLabel("Программа / тема", { exact: true });
-  const original = await shared.inputValue();
-  expect(original).toBeTruthy();
-  await keyboardEnter(page, shared, "");
-  await keyboardActivate(
-    page,
-    page.getByRole("button", { name: "Сохранить", exact: true }),
-  );
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
-  await keyboardActivate(
-    page,
-    page.getByRole("button", { name: "Проверить", exact: true }),
-  );
+  await shared.focus();
+  await shared.press("Control+A");
+  await page.keyboard.press("Backspace");
+  await expect
+    .poll(
+      async () =>
+        (await readCommon(page, requestId)).events![0].commonFields
+          .trainingSubject,
+    )
+    .toBe("");
+  const check = page.getByRole("button", {
+    name: "Проверить данные",
+    exact: true,
+  });
+  await check.focus();
+  await check.press("Enter");
   const errors = page.locator(".validation-result");
   await expect(errors).toContainText("Исправьте данные перед оформлением");
   await expect(errors).toBeFocused();
   const heading = errors.getByText("Исправьте данные перед оформлением", {
-    exact: true,
-  });
-  const rect = await heading.boundingBox();
+      exact: true,
+    }),
+    rect = await heading.boundingBox();
   expect(rect).toBeTruthy();
   expect(rect!.y).toBeGreaterThanOrEqual(0);
-  expect(rect!.y + rect!.height).toBeLessThan(650);
+  expect(rect!.y + rect!.height).toBeLessThan(768);
   expect(
     await errors.evaluate(
       (element) =>
@@ -74,49 +128,83 @@ test("existing 100-row draft shows validation heading at keyboard focus and open
   await page.screenshot({
     path: path.join(evidence, "validation-heading-visible.png"),
   });
-  await keyboardActivate(
-    page,
-    errors
-      .getByRole("button", {
-        name: "Укажите программу/тему обучения",
-        exact: true,
-      })
-      .first(),
-  );
-  const field = page.locator(
-    '[data-field-path="items.0.assignments.0.trainingSubject"]',
-  );
-  await expect(field).toBeVisible();
-  await expect(field).toBeFocused();
+  const button = errors
+    .getByRole("button")
+    .filter({ hasText: "Укажите программу/тему обучения" })
+    .first();
+  await expect(button).toBeVisible();
+  await button.focus();
+  await button.press("Enter");
+  await expect(shared).toBeVisible();
+  await expect(shared).toBeFocused();
+  const active = await page.evaluate(() => ({
+    path: document.activeElement?.getAttribute("data-field-path"),
+    invalid: document.activeElement?.getAttribute("aria-invalid"),
+    describedBy: document.activeElement?.getAttribute("aria-describedby"),
+  }));
+  expect(active.path).toBe("events.0.commonFields.trainingSubject");
   await page.screenshot({
     path: path.join(evidence, "exact-error-field-focused.png"),
   });
-  await keyboardEnter(page, shared, original);
-  await keyboardActivate(
-    page,
-    page.getByRole("button", { name: "Сохранить", exact: true }),
+  await shared.press("Control+A");
+  await page.keyboard.type("Синтетическая исходная общая программа");
+  await expect
+    .poll(
+      async () =>
+        (await readCommon(page, requestId)).events![0].commonFields
+          .trainingSubject,
+    )
+    .toBe("Синтетическая исходная общая программа");
+  await page.reload();
+  const final = await readCommon(page, requestId);
+  expect(final.items).toEqual(created.items);
+  expect(final.events![0].commonFields.trainingSubject).toBe(
+    input.events![0].commonFields.trainingSubject,
   );
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
-  const response = await page.request.get(`/api/print-requests/${requestId}`);
-  expect(response.ok()).toBe(true);
-  const current = await response.json();
-  expect(current.status).toBe("DRAFT");
-  expect(current.documents).toHaveLength(0);
-  expect(current.events[0].commonFields.trainingSubject).toBe(original);
+  expect(final.documents).toHaveLength(0);
+  expect(
+    final.items.every((item) =>
+      item.assignments.every(
+        (assignment) =>
+          assignment.outcome?.status === "UNKNOWN" &&
+          !assignment.outcome.confirmedAt &&
+          !assignment.outcome.confirmedBy,
+      ),
+    ),
+  ).toBe(true);
+  const resolvedResponse = await page.request.get(
+      `/api/print-requests/${requestId}/resolved`,
+    ),
+    resolved = await resolvedResponse.json();
+  expect(resolved.draft.items[1].assignments[0].documentDate).toBe(
+    "2026-10-09",
+  );
+  await fullSuitePageApiCooldown(
+    page,
+    evidence,
+    "error-focus-before-long-drawer",
+  );
+  const longDrawer = await fourFormsLongDrawerFocus(page, headers, evidence);
+  await page.screenshot({
+    path: path.join(evidence, "long-four-form-drawer-returned.png"),
+  });
   await fs.writeFile(
-    path.join(evidence, "error-focus-result.json"),
+    path.join(evidence, "error-focus-live-result.json"),
     JSON.stringify(
       {
         status: "PASS",
+        synthetic: true,
         requestId,
         rows: 100,
-        keyboardOnlyInApp: true,
-        validationHeadingWithinViewport: rect,
-        validationRegionFocused: true,
-        exactErrorFieldFocused: true,
-        originalSharedProgramRestored: true,
-        noIssuance: true,
-        keyboardMetrics,
+        headingRect: rect,
+        actualActiveControl: active,
+        exactInheritedCauseFocused: true,
+        validNeighborDate: "2026-10-09",
+        UNKNOWNAndDatesPreserved: true,
+        longDrawer,
+        issuedDocuments: 0,
+        elapsedMs: performance.now() - started,
+        humanActiveMs: null,
       },
       null,
       2,

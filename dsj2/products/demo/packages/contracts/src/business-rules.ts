@@ -5,6 +5,7 @@ import type {
   IssuerProfile,
   RequestItemInput,
   ValidationIssue,
+  TrainingEventInput,
 } from "./index";
 
 /** Agreed centre policy. This version is not a statement of regulatory approval. */
@@ -73,6 +74,34 @@ function cloneForTemplate(
     templateId,
   };
 }
+/** Category lineage is by identity, never by a user-visible group title. */
+export function trainingEventContext(event: TrainingEventInput): string {
+  const ordered = (value: unknown): unknown =>
+    Array.isArray(value)
+      ? value.map(ordered)
+      : value && typeof value === "object"
+        ? Object.fromEntries(
+            Object.entries(value)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([key, child]) => [key, ordered(child)]),
+          )
+        : value;
+  return JSON.stringify(
+    ordered({
+      commonFields: event.commonFields,
+      profileVersionId: event.profileVersionId,
+      serviceRuleVersionId: event.serviceRuleVersionId,
+    }),
+  );
+}
+function rootForEvent(events: TrainingEventInput[], event: TrainingEventInput) {
+  if (event.rootEventId)
+    return events.find((entry) => entry.id === event.rootEventId) || event;
+  // Support drafts produced by the old deterministic category suffix without
+  // guessing from names or merging independent events with the same title.
+  const originalId = event.id.replace(/(?:-(?:ITR|WORKER))+$/, "");
+  return events.find((entry) => entry.id === originalId) || event;
+}
 
 /** Apply only to editable/proposed drafts. Never invoke on issued snapshots. */
 export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
@@ -107,13 +136,39 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
       );
       if (event && event.protocolTemplateId !== protocolTemplate) {
         const previous = event;
-        const id = `${previous.id.slice(0, 64)}-${category}`;
-        event = draft.events.find((candidate) => candidate.id === id);
+        const root = rootForEvent(draft.events, previous);
+        const rootCompatible = root.protocolTemplateId === protocolTemplate;
+        const confirmed =
+          (original.outcome?.status && original.outcome.status !== "UNKNOWN") ||
+          !!original.result.trim();
+        const conflict =
+          rootCompatible &&
+          previous.rootEventId &&
+          previous.lineageContext !== trainingEventContext(root) &&
+          confirmed;
+        if (conflict) {
+          // Keep the full old fact in its former context until the operator
+          // resolves the incompatible category; changing the select is not a
+          // new confirmation of a different program or group.
+          normalized.push(...entries);
+          continue;
+        }
+        const id = `${root.id.slice(0, 64)}-${category}`;
+        event = rootCompatible
+          ? root
+          : draft.events.find(
+              (candidate) =>
+                candidate.id === id &&
+                (!candidate.rootEventId || candidate.rootEventId === root.id),
+            );
         if (!event) {
           event = {
-            ...structuredClone(previous),
+            ...structuredClone(root),
             id,
-            title: `${previous.title} — ${category === "ITR" ? "ИТР" : "Рабочие"}`,
+            title: `${root.title.replace(/(?: — (?:ИТР|Рабочие))+$/, "")} — ${category === "ITR" ? "ИТР" : "Рабочие"}`,
+            rootEventId: root.id,
+            derivedCategory: category,
+            lineageContext: trainingEventContext(root),
             protocolTemplateId:
               protocolTemplate as typeof previous.protocolTemplateId,
           };
@@ -144,6 +199,8 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
               ? String(preset.defaultProductionHours)
               : "";
         }
+        if (event.rootEventId && !event.lineageOwnContext)
+          event.lineageOwnContext = trainingEventContext(event);
       }
       const mode =
         event?.protocolMode ||
@@ -256,18 +313,15 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
               primary.protocolDate ||
               primary.documentDate;
           assignment.protocolDate = assignment.documentDate;
+          const protocolDateOrigin = explicitProtocolDate
+            ? dateOrigin || "MANUAL"
+            : dateOrigin === "AUTO"
+              ? "AUTO"
+              : "INHERITED";
           assignment.fieldOrigins = {
             ...assignment.fieldOrigins,
-            documentDate: explicitProtocolDate
-              ? dateOrigin || "MANUAL"
-              : assignment.documentDate
-                ? "MANUAL"
-                : "INHERITED",
-            protocolDate: explicitProtocolDate
-              ? dateOrigin || "MANUAL"
-              : assignment.protocolDate
-                ? "MANUAL"
-                : "INHERITED",
+            documentDate: protocolDateOrigin,
+            protocolDate: protocolDateOrigin,
           };
         }
         if (direction === "BIOT") {
@@ -296,6 +350,17 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
     }
     item.assignments = normalized;
   }
+  // Only automatically derived, untouched empty containers are disposable.
+  // Independently created events and edited derived facts remain available.
+  draft.events = draft.events.filter(
+    (event) =>
+      !event.rootEventId ||
+      draft.items.some((item) =>
+        item.assignments.some((assignment) => assignment.eventId === event.id),
+      ) ||
+      (!!event.lineageOwnContext &&
+        event.lineageOwnContext !== trainingEventContext(event)),
+  );
   let modeChanged = false;
   for (const event of draft.events) {
     if (event.protocolModeSource !== "AUTO") continue;
@@ -336,6 +401,34 @@ export function validateBusinessRules(
     for (const [column, assignment] of item.assignments.entries()) {
       const path = `${itemPath}.assignments.${column}`;
       const direction = trainingDirection(assignment.templateId);
+      const event = draft.events?.find(
+        (entry) => entry.id === assignment.eventId,
+      );
+      const root = event?.rootEventId
+        ? draft.events?.find((entry) => entry.id === event.rootEventId)
+        : undefined;
+      if (
+        event &&
+        root &&
+        root.protocolTemplateId ===
+          mandatoryTemplates(direction, employeeCategoryFor(item)).at(-1) &&
+        event.protocolTemplateId !== root.protocolTemplateId &&
+        event.lineageContext !== trainingEventContext(root) &&
+        ((assignment.outcome?.status &&
+          assignment.outcome.status !== "UNKNOWN") ||
+          assignment.result.trim())
+      )
+        issues.push({
+          code: "CATEGORY_LINEAGE_CONFLICT",
+          path: `${itemPath}.employeeCategory`,
+          rowId: item.id,
+          recipientId: item.id,
+          eventId: event.id,
+          assignmentId: assignment.id,
+          field: "employeeCategory",
+          message:
+            "Исходная группа изменилась, пока человек был в другой категории. Подтверждённый факт сохранён в прежнем событии; выберите совместимую группу и проверьте результат по источнику.",
+        });
       const templates = mandatoryTemplates(
         direction,
         employeeCategoryFor(item),

@@ -1,6 +1,45 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { AutosaveLane } from "../lib/autosave";
+test("conflict pause retains subsequent local input without another PATCH until a new explicit base", async () => {
+  let calls = 0;
+  const conflict = new Error("conflict");
+  const states: string[] = [];
+  const lane = new AutosaveLane(
+    "base",
+    7,
+    async () => {
+      calls++;
+      throw conflict;
+    },
+    (state) => states.push(state),
+  );
+  lane.edit("local first");
+  await assert.rejects(lane.flush(), /conflict/);
+  lane.pause(conflict);
+  lane.edit("local second");
+  lane.edit("local final");
+  await assert.rejects(lane.flush(), /conflict/);
+  await assert.rejects(lane.flush(), /conflict/);
+  assert.equal(calls, 1);
+  assert.equal(lane.currentVersion, 3);
+  assert.equal(lane.currentRevision, 7);
+  assert.equal(lane.dirty, true);
+  assert.deepEqual(states.slice(-2), ["paused", "paused"]);
+  const saved: string[] = [];
+  const reloaded = new AutosaveLane(
+    "server",
+    8,
+    async (value) => {
+      saved.push(value);
+      return { revision: 9 };
+    },
+    () => {},
+  );
+  reloaded.edit("new edit after resolution");
+  assert.equal(await reloaded.flush(), 9);
+  assert.deepEqual(saved, ["new edit after resolution"]);
+});
 function deferred<T>() {
   let resolve!: (value: T) => void;
   let reject!: (error: unknown) => void;

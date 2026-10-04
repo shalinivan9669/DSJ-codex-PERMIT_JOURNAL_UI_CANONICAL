@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
+import { loginRole } from "./operator-role-fixture";
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../docs/evidence/final-completion/handover",
@@ -26,13 +27,7 @@ test("V05 exact live handover: eight people, two events, unknown result and untr
     socket.close(),
   );
   await fs.mkdir(evidence, { recursive: true });
-  const auth = JSON.parse(
-    await fs.readFile(
-      path.resolve("../../.runtime/invites-ui-auth.json"),
-      "utf8",
-    ),
-  );
-  await login(page, auth.email, auth.password);
+  await loginRole(page, "ADMIN");
   const csrf = (await context.cookies()).find(
     (c) => c.name === "demo_csrf",
   )!.value;

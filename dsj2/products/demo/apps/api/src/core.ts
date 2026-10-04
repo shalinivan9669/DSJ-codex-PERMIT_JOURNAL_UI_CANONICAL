@@ -41,8 +41,60 @@ export function parse<T>(
   try {
     return schema.parse(input);
   } catch (e) {
-    if (e instanceof z.ZodError)
-      fail(400, "VALIDATION", "Проверьте заполнение полей", e.issues);
+    if (e instanceof z.ZodError) {
+      const object =
+        input && typeof input === "object"
+          ? (input as Record<string, unknown>)
+          : {};
+      const draft =
+        object.draft && typeof object.draft === "object"
+          ? (object.draft as Record<string, unknown>)
+          : object;
+      const rows = Array.isArray(draft.items)
+        ? draft.items
+        : Array.isArray(draft.rows)
+          ? draft.rows
+          : [];
+      fail(
+        400,
+        "VALIDATION",
+        "Проверьте заполнение полей",
+        e.issues.map((issue) => {
+          const start = issue.path.findIndex(
+            (part) => part === "items" || part === "rows",
+          );
+          const row =
+            start >= 0
+              ? (rows[Number(issue.path[start + 1])] as
+                  | Record<string, unknown>
+                  | undefined)
+              : undefined;
+          const assignmentStart = issue.path.indexOf("assignments");
+          const assignment =
+            assignmentStart >= 0 && Array.isArray(row?.assignments)
+              ? (row.assignments[Number(issue.path[assignmentStart + 1])] as
+                  | Record<string, unknown>
+                  | undefined)
+              : undefined;
+          return {
+            ...issue,
+            ...(row?.id ? { rowId: row.id, recipientId: row.id } : {}),
+            ...(assignment?.id
+              ? { assignmentId: assignment.id, eventId: assignment.eventId }
+              : {}),
+            field: issue.path
+              .slice(
+                assignmentStart >= 0
+                  ? assignmentStart + 2
+                  : start >= 0
+                    ? start + 2
+                    : 0,
+              )
+              .join("."),
+          };
+        }),
+      );
+    }
     throw e;
   }
 }

@@ -3,8 +3,12 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID, createHash } from "node:crypto";
 import { inflateRawSync } from "node:zlib";
+import { realApprovalRoles } from "./operator-role-fixture";
+import { fullSuiteApiCooldown } from "./operator-full-suite";
 const evidence = path.resolve(
-  process.env.DEMO_E2E_EVIDENCE ||
+  (process.env.DEMO_E2E_FULL_CHECKPOINTS === "1"
+    ? path.join(process.env.DEMO_E2E_EVIDENCE!, "portal-producer")
+    : process.env.DEMO_E2E_EVIDENCE) ||
     "../../docs/evidence/final-completion/portal-three",
 );
 test.use({ trace: "off" });
@@ -53,17 +57,13 @@ test("V07 portal: three own people download issued individual files, two foreign
   browser,
 }) => {
   test.setTimeout(900000);
+  await fullSuiteApiCooldown(evidence, "portal-producer-before-ui");
   await context.routeWebSocket("**/_next/webpack-hmr", (socket) =>
     socket.close(),
   );
   await fs.mkdir(evidence, { recursive: true });
-  const auth = JSON.parse(
-    await fs.readFile(
-      path.resolve("../../.runtime/invites-ui-auth.json"),
-      "utf8",
-    ),
-  );
-  await login(page, auth.email, auth.password);
+  const approvalRoles = await realApprovalRoles(browser, page);
+  await approvalRoles.configureSignatories();
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -76,8 +76,16 @@ test("V07 portal: three own people download issued individual files, two foreign
     data: unknown,
     extra: Record<string, string> = {},
   ) => {
-    const r = await page.request.post(`/api${endpoint}`, {
-      headers: { ...headers, ...extra },
+    const administrative = ["/users", "/employer-memberships"].includes(
+      endpoint,
+    );
+    const r = await (
+      administrative ? approvalRoles.adminPage : page
+    ).request.post(`/api${endpoint}`, {
+      headers: {
+        ...(administrative ? approvalRoles.admin.headers : headers),
+        ...extra,
+      },
       data,
     });
     expect(r.ok(), await r.text()).toBe(true);
@@ -126,6 +134,7 @@ test("V07 portal: three own people download issued individual files, two foreign
             trainingStart: "2026-09-23",
             trainingEnd: "2026-09-24",
             trainingSubject: "Синтетическая промышленная безопасность",
+            hours: "16",
           },
         },
       ],
@@ -165,12 +174,14 @@ test("V07 portal: three own people download issued individual files, two foreign
       contact: `INTERNAL_B_NOTE_${suffix}`,
     });
     const validation = await post(`/print-requests/${request.id}/validate`, {
-      expectedRevision: 0,
+      expectedRevision: request.revision,
     });
     expect(validation.issues).toEqual([]);
+    await approvalRoles.approve(request.id);
+    const approved = await get(`/print-requests/${request.id}`);
     await post(
       `/print-requests/${request.id}/finalize`,
-      { expectedRevision: 0 },
+      { expectedRevision: approved.revision },
       { "idempotency-key": randomUUID() },
     );
     await fs.writeFile(
@@ -253,6 +264,24 @@ test("V07 portal: three own people download issued individual files, two foreign
     )
     .toBe(5);
   const issued = await get(`/print-requests/${request.id}`);
+  if (!process.env.DEMO_E2E_PORTAL_FRESH_SOURCE)
+    throw new Error("Explicit fresh portal checkpoint destination required");
+  await fs.writeFile(
+    path.resolve(process.env.DEMO_E2E_PORTAL_FRESH_SOURCE),
+    JSON.stringify(
+      {
+        status: "PREPARED",
+        fullRunId: process.env.DEMO_E2E_FULL_RUN_ID || null,
+        requestId: request.id,
+        orderId: order.id,
+        tenantId: approvalRoles.operator.session.tenant.id,
+        source: "actual fresh real-role browser preparation",
+        createdAt: new Date().toISOString(),
+      },
+      null,
+      2,
+    ),
+  );
   const oldNumbers = issued.documents.map(
     (d: { id: string; number: string }) => ({ id: d.id, number: d.number }),
   );
@@ -526,7 +555,25 @@ test("V07 portal: three own people download issued individual files, two foreign
         2,
       ),
     );
+    await fs.writeFile(
+      path.resolve(process.env.DEMO_E2E_PORTAL_FRESH_SOURCE),
+      JSON.stringify(
+        {
+          status: "PASS",
+          fullRunId: process.env.DEMO_E2E_FULL_RUN_ID || null,
+          requestId: request.id,
+          orderId: order.id,
+          tenantId: approvalRoles.operator.session.tenant.id,
+          source:
+            "actual fresh real-role browser preparation and portal journey",
+          createdAt: new Date().toISOString(),
+        },
+        null,
+        2,
+      ),
+    );
   } finally {
     await ec.close();
+    await approvalRoles.close();
   }
 });

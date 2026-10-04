@@ -12,15 +12,21 @@ export function validationErrors(caught: unknown): Validation["errors"] {
       message: string;
       path?: string | (string | number)[];
       rowId?: string;
+      recipientId?: string;
+      assignmentId?: string;
+      eventId?: string;
+      field?: string;
+      code?: string;
     };
     return [
       {
+        ...value,
         message: value.message,
         path: (Array.isArray(value.path)
           ? value.path.join(".")
           : value.path || ""
         ).replace(/^draft\./, ""),
-        itemId: value.rowId,
+        itemId: value.recipientId || value.rowId,
       },
     ];
   });

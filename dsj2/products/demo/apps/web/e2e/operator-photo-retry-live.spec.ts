@@ -5,6 +5,7 @@ import {
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { loginIsolated } from "./operator-full-fix-session";
 const product = path.resolve(__dirname, "../../..");
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
@@ -31,14 +32,7 @@ test("real photo throttle can be cancelled and resumed without reuploading accep
         );
     }
   });
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL!);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD!);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await loginIsolated(page);
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -47,6 +41,11 @@ test("real photo throttle can be cancelled and resumed without reuploading accep
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Убрать из заявки", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
     .click();
@@ -70,8 +69,9 @@ test("real photo throttle can be cancelled and resumed without reuploading accep
   await page
     .getByRole("button", { name: "Добавить 31 строк в черновик", exact: true })
     .click();
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await expect(page.locator(".save-indicator")).toContainText(
+    "Рабочая версия сохранена",
+  );
   const requestId = /requests\/([^/]+)/.exec(page.url())![1];
   await openRecipientExtraTools(page);
   await page

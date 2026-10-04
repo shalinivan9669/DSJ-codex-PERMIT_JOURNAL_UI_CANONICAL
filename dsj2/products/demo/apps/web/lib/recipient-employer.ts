@@ -1,6 +1,45 @@
 import { customerSchema, type OrganizationNames } from "@demo/contracts";
 import type { Customer, Recipient } from "./types";
 
+/** Both languages describe one effective employer; a local exception never borrows the other employer's name. */
+export function effectiveRecipientEmployer(
+  recipient: Recipient,
+  employer:
+    | {
+        nameRu: string;
+        nameKz?: string | null;
+        bin?: string | null;
+        addressRu?: string | null;
+        addressKz?: string | null;
+      }
+    | null
+    | undefined,
+) {
+  const localName = !!(
+    recipient.workplaceRu?.trim() || recipient.workplaceKz?.trim()
+  );
+  return {
+    ...recipient,
+    workplaceRu: localName
+      ? recipient.workplaceRu || recipient.workplaceKz
+      : employer?.nameRu || employer?.nameKz || "",
+    workplaceKz: localName
+      ? recipient.workplaceKz || recipient.workplaceRu
+      : employer?.nameKz || employer?.nameRu || "",
+    employerBin: recipient.employerBin || employer?.bin || "",
+    employerAddressRu:
+      recipient.employerAddressRu ||
+      employer?.addressRu ||
+      employer?.addressKz ||
+      "",
+    employerAddressKz:
+      recipient.employerAddressKz ||
+      employer?.addressKz ||
+      employer?.addressRu ||
+      "",
+  };
+}
+
 /** Selecting an employer is explicit; no form or company is inferred from text. */
 export function patchRecipientEmployer(
   recipient: Recipient,

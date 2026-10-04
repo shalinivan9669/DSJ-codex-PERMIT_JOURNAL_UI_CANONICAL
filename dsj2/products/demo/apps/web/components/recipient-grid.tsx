@@ -172,9 +172,9 @@ export function RecipientGrid({
   }, [active, items, resolvedById, onOpen]);
 
   function moveInColumn(
-    event: KeyboardEvent<HTMLInputElement>,
+    event: KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
     visibleIndex: number,
-    field: GridField,
+    field: GridField | "employeeCategory" | "documentDate",
   ) {
     if (
       event.key !== "Enter" ||

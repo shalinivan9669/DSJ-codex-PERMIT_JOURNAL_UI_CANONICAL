@@ -3,6 +3,10 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { approveFinalFixture, openFinalPanel } from "./final-approval-fixture";
+import { openLegacyPersonal } from "./operator-legacy-lifecycle-fixture";
+import { unsignedPublicState } from "./final-unsigned-public-qa";
+test.use({ trace: "off" });
 
 const product = path.resolve(__dirname, "../../..");
 const evidence = path.resolve(
@@ -81,24 +85,27 @@ test("real history UI preserves original files across search, damaged copy, reco
     return sha(await fs.readFile(file));
   }
   async function issue() {
-    await page.getByRole("button", { name: "Проверить", exact: true }).click();
+    const id = /requests\/([^/]+)/.exec(page.url())![1];
+    await page
+      .getByRole("button", { name: "Проверить данные", exact: true })
+      .click();
     await expect(
       page.getByText("Данные прошли проверку", { exact: true }),
     ).toBeVisible();
-    await page
-      .getByRole("button", { name: "Оформить комплект", exact: true })
-      .click();
+    await approveFinalFixture(browser, page, auth, id);
+    await page.reload();
     const pending = page.waitForResponse(
       (r) => r.url().endsWith("/finalize") && r.request().method() === "POST",
     );
-    await page.getByRole("button", { name: "Оформить", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Сформировать документы", exact: true })
+      .click();
     const response = await pending;
     expect(response.ok(), await response.text()).toBe(true);
-    const id = /requests\/([^/]+)/.exec(page.url())![1];
     const drain = fixture("drain", id);
     await record("real-worker-drain", drain);
     await page.reload();
-    await expect(page.locator(".files-panel")).toContainText("Готово 4 из 4", {
+    await expect(page.locator(".files-panel")).toContainText("Готово 6 из 6", {
       timeout: 60000,
     });
     return get(`/print-requests/${id}`);
@@ -107,6 +114,8 @@ test("real history UI preserves original files across search, damaged copy, reco
   await page.getByLabel("Электронная почта", { exact: true }).fill(auth.email);
   await page.getByLabel("Пароль", { exact: true }).fill(auth.password);
   await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
+  await page.goto("/requests");
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -119,7 +128,8 @@ test("real history UI preserves original files across search, damaged copy, reco
   const originalNumber = original.documents[0].number;
   expect(await savedDownload(pdf.id, "original.pdf")).toBe(pdf.sha256);
   const baseline = fixture("state");
-  expect(baseline.reservations).toBe(1);
+  expect(original.documents.map((document: { templateId: string }) => document.templateId).sort()).toEqual(["pb-card", "pb-protocol"]);
+  expect(baseline.reservations).toBe(2);
   await record("original-issued-through-ui", {
     requestId: original.id,
     number: originalNumber,
@@ -152,7 +162,7 @@ test("real history UI preserves original files across search, damaged copy, reco
   await expect(page.locator(".files-panel")).toContainText(
     "Synthetic one-time files polling interruption",
   );
-  await expect(page.locator(".files-panel")).toContainText("Готово 4 из 4", {
+  await expect(page.locator(".files-panel")).toContainText("Готово 6 из 6", {
     timeout: 15000,
   });
   await expect(page.locator(".files-panel")).not.toContainText(
@@ -167,7 +177,10 @@ test("real history UI preserves original files across search, damaged copy, reco
     noReissue: true,
   });
 
-  await page.getByRole("link", { name: "История", exact: true }).click();
+  // Generated originals await a real NCA signature. They remain in the
+  // working request list; the official signed archive correctly excludes
+  // them. Number search still opens the saved bytes without issuing again.
+  await page.goto("/requests");
   await page
     .getByLabel("Поиск по заявкам", { exact: true })
     .fill(originalNumber);
@@ -182,7 +195,9 @@ test("real history UI preserves original files across search, damaged copy, reco
   });
 
   await page.goto(`/requests/${auth.duplicateId}`);
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   const oldLink = page.getByRole("link", {
     name: `Открыть прежний документ № ${originalNumber}`,
     exact: true,
@@ -200,9 +215,7 @@ test("real history UI preserves original files across search, damaged copy, reco
     externalManualActions: 0,
   });
 
-  await page
-    .getByRole("button", { name: "Открыть согласование", exact: true })
-    .click();
+  await openFinalPanel(page, "review");
   await page
     .getByText("Зафиксировать передачу или повторную печать", { exact: true })
     .click();
@@ -234,9 +247,7 @@ test("real history UI preserves original files across search, damaged copy, reco
     }),
   ).toBeVisible();
   await page.reload();
-  await page
-    .getByRole("button", { name: "Открыть согласование", exact: true })
-    .click();
+  await openFinalPanel(page, "review");
   await page
     .getByText("История передачи и перепечатки (1)", { exact: true })
     .click();
@@ -329,18 +340,35 @@ test("real history UI preserves original files across search, damaged copy, reco
   expect(sha(await restoredOriginal.body())).toBe(pdf.sha256);
 
   await page.goto(`/requests/${auth.duplicateId}`);
-  const fields = page.locator(".assignment-list");
+  await page
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
+    .click();
+  const detail = page.getByRole("dialog", {
+    name: "Настройки строки 1",
+    exact: true,
+  });
+  // LIVE kits contain both the credential and its mandatory companion. Edit
+  // the primary credential; the shared linked-field handler updates its kit.
+  const fields = detail.locator(".assignment-list > details").first();
+  await fields.locator(".document-date-details > summary").click();
   for (const [label, value] of [
     ["Дата документа", "2026-10-01"],
     ["Начало обучения", "2026-09-30"],
     ["Окончание обучения", "2026-10-01"],
     ["Дата протокола", "2026-10-01"],
-    ["Внешний номер основания", "SYNTHETIC-NEW-ACTUAL-EVENT-2026-10"],
   ])
     await fields.getByLabel(label, { exact: true }).fill(value);
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await fields.getByRole("tab", { name: "Настройки", exact: true }).click();
+  await fields
+    .getByLabel("Внешний номер основания", { exact: true })
+    .fill("SYNTHETIC-NEW-ACTUAL-EVENT-2026-10");
+  await detail
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   await expect(
     page.getByText("Данные прошли проверку", { exact: true }),
   ).toBeVisible();
@@ -363,24 +391,19 @@ test("real history UI preserves original files across search, damaged copy, reco
   });
 
   await page.goto(`/requests/${original.id}`);
-  await page
-    .getByText("Ссылка и QR для проверки записи", { exact: true })
-    .click();
-  await page
-    .getByRole("combobox", { name: "Выданный документ", exact: true })
-    .selectOption(original.documents[0].id);
-  await page
-    .getByLabel("Разрешаю публичную проверку выбранной записи эмитента", {
-      exact: true,
-    })
-    .check();
-  await page
-    .getByRole("button", { name: "Создать ссылку и QR", exact: true })
-    .click();
-  const publicPath = await page
-    .getByRole("link", { name: "Открыть публичную проверку", exact: true })
-    .getAttribute("href");
-  expect(publicPath).toBeTruthy();
+  await expect(page.getByText("Ссылка и QR для проверки записи", { exact: true })).toHaveCount(0);
+  const publicationSession = await (await page.request.get("/api/auth/session")).json();
+  const publicationResponse = await page.request.post("/api/verification-links", {
+    headers: { origin: process.env.DEMO_ORIGIN!, "x-csrf-token": publicationSession.csrfToken },
+    data: { documentId: original.documents[0].id, publicationConfirmed: true },
+  });
+  expect(publicationResponse.status()).toBe(409);
+  expect((await publicationResponse.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
+  await expect(page.locator(".files-panel")).toContainText("Комплект ожидает электронных подписей");
+  await expect(page.getByRole("link", { name: "Открыть публичную проверку", exact: true })).toHaveCount(0);
+  expect((await get(`/print-requests/${original.id}/signing`)).status).toBe("AWAITING_SIGNATURE");
+  const unsignedState = unsignedPublicState(auth.tenantId, original.id);
+  await record("unsigned-public-record-refused-before-any-publication", { status: 409, code: "ISSUANCE_NOT_COMPLETE", signingStatus: "AWAITING_SIGNATURE", publicUiControlHidden: true, createdPublicLink: false, actualReadOnlyState: unsignedState });
   await page
     .getByRole("button", { name: "Создать исправление", exact: true })
     .click();
@@ -400,12 +423,14 @@ test("real history UI preserves original files across search, damaged copy, reco
     .getByRole("button", { name: "Создать исправление", exact: true })
     .click();
   await expect(page).toHaveURL(/\/requests\/[^/]+\/edit$/);
-  await page.getByRole("tab", { name: "Личные данные", exact: true }).click();
-  await page
-    .getByLabel("Должность · RU", { exact: true })
+  const personal = await openLegacyPersonal(page);
+  await personal
+    .getByLabel("Должность / профессия", { exact: true })
     .fill("Старший инженер");
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await personal
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   const corrected = await issue();
   expect(corrected.issuances[0].correctsIssuanceId).toBe(
     original.issuances[0].id,
@@ -438,61 +463,36 @@ test("real history UI preserves original files across search, damaged copy, reco
   await page
     .getByRole("link", { name: "Открыть исходный выпуск", exact: true })
     .click();
+  await expect(page).toHaveURL(new RegExp(`/requests/${original.id}(?:/edit)?$`));
   await expect(page.locator(".issuance-details")).toContainText(
-    "Заменён исправленным выпуском",
+    "Ожидает подписи",
   );
-  await page.locator(".issuance-details summary").click();
-  await expect(page.locator(".issuance-details")).toContainText(
-    correctionReason,
-  );
+  // REPLACED and its reverse link are legal completion effects, emitted only
+  // after genuine mandatory signatures. The unsigned correction must preserve
+  // the original state while keeping its explicit new-to-source relation.
+  await expect(page.locator(".issuance-details")).not.toContainText("Выпуск заменён");
   await expect(
     page.getByRole("link", {
       name: "Открыть исправленный выпуск",
       exact: true,
     }),
-  ).toHaveAttribute("href", `/requests/${corrected.id}`);
+  ).toHaveCount(0);
   expect(await savedDownload(pdf.id, "original-after-correction.pdf")).toBe(
     pdf.sha256,
   );
   const reread = await get(`/print-requests/${original.id}`);
   expect(reread.issuances[0].snapshot).toEqual(originalSnapshot);
   expect(reread.documents[0].number).toBe(originalNumber);
+  expect(Array.isArray(reread.issuanceEvents)).toBe(true);
+  expect(reread.issuanceEvents.some((event: { kind: string; issuanceId: string }) => event.issuanceId === original.issuances[0].id && event.kind === "REPLACED")).toBe(false);
+  const originalUnsigned = unsignedPublicState(auth.tenantId, original.id);
+  expect((await get(`/print-requests/${corrected.id}/signing`)).status).toBe("AWAITING_SIGNATURE");
+  const correctedUnsigned = unsignedPublicState(auth.tenantId, corrected.id);
   await page.screenshot({
     path: path.join(evidence, "linked-correction-history.png"),
     fullPage: true,
   });
-  const anonymous = await browser.newContext({
-    baseURL: process.env.DEMO_ORIGIN,
-  });
-  try {
-    const publicPage = await anonymous.newPage();
-    await publicPage.goto(publicPath!);
-    await expect(
-      publicPage.getByText("Заменена исправленным документом", { exact: true }),
-    ).toBeVisible();
-    await expect(
-      publicPage.getByText(
-        `Заменяющий документ: № ${corrected.documents[0].number}, 2026-09-24.`,
-        { exact: true },
-      ),
-    ).toBeVisible();
-    await expect(
-      publicPage.getByText(
-        "Проверка записи не является электронной подписью и не подтверждает неизменность стороннего файла.",
-        { exact: true },
-      ),
-    ).toBeVisible();
-    await expect(publicPage.locator("body")).not.toContainText(
-      "Синтетический Слушатель Истории",
-    );
-    await publicPage.screenshot({
-      path: path.join(evidence, "public-replaced-record.png"),
-      fullPage: true,
-    });
-  } finally {
-    await anonymous.close();
-  }
-  await record("correction-visible-both-directions-and-public-minimal-state", {
+  await record("unsigned-correction-source-link-and-immutable-original-with-no-premature-replacement", {
     originalRequestId: original.id,
     correctionRequestId: corrected.id,
     originalNumber,
@@ -502,6 +502,11 @@ test("real history UI preserves original files across search, damaged copy, reco
     originalSnapshotUnchanged: true,
     correctionFieldsReentered: 1,
     reasonRequired: true,
+    publicReplacedRecordVerified: false,
+    originalUnsigned,
+    correctedUnsigned,
+    signedReverseReplacementLinkVerified: false,
+    reason: "The real product requires mandatory signatures before publication; no genuine local NCA configuration has been supplied",
   });
   await fs.writeFile(
     path.join(evidence, "history-checkpoint.json"),
@@ -516,12 +521,12 @@ test("real history UI preserves original files across search, damaged copy, reco
         tenantId: auth.tenantId,
         browser: browser.version(),
         wallMs: Date.now() - started,
-        acceptance: ["AT064", "AT065", "AT067", "AT177", "AT178"].map((id) => ({
-          id,
-          status: "PASS",
-          layer: "REAL_UI_HTTP_POSTGRESQL_RENDERER",
-          evidence: "history-checkpoint.json",
-        })),
+        legacyAcceptanceReferences: ["AT064", "AT065", "AT067", "AT177", "AT178"],
+        officialSignedPublicSubscope: {
+          status: "BLOCKED_MISSING_GENUINE_NCA_CONFIGURATION",
+          originalPositivePublicReplacementClaim: false,
+          actualNegativeGuard: "409 ISSUANCE_NOT_COMPLETE; no publication/link",
+        },
         scenarios: [
           {
             id: "V09",
@@ -529,11 +534,10 @@ test("real history UI preserves original files across search, damaged copy, reco
             execution_layer:
               "REAL_CHROME_HISTORY_SEARCH_CORRECTION_AND_ORIGINAL_FILES",
             scope:
-              "Actual number search and duplicate warning open the saved original. Authorized correction requires a reason, copies existing details and changes one position field. Both UI directions, immutable original snapshot/number/files and minimal anonymous replaced status are verified.",
+              "Actual working-request number search and duplicate warning open the saved original. Authorized correction requires a reason, copies existing details and changes one position field. The correction UI opens its actual source; original snapshot/number/files remain immutable and neither unsigned workflow creates a premature REPLACED event or reverse replacement link. Unsigned public publication rejects409; positive signed reverse/public replacement remains unverified.",
             evidence: [
               "history-checkpoint.json",
               "linked-correction-history.png",
-              "public-replaced-record.png",
               "original-after-correction.pdf",
               "corrected.pdf",
             ],
@@ -544,7 +548,7 @@ test("real history UI preserves original files across search, damaged copy, reco
               correctionFieldsEdited: 1,
               externalManualActions: 0,
             },
-            remaining: null,
+            remaining: "Positive official signed public replacement requires genuine NCA configuration; no signature/provider/workflow bypass",
           },
         ],
         steps,

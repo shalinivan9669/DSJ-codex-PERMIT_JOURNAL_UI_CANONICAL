@@ -1,36 +1,65 @@
 import { expect, test, type Download } from "@playwright/test";
 import fs from "node:fs/promises";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import type { Artifact, Draft, Job } from "../lib/types";
+import { draftSchema } from "@demo/contracts";
+import { realApprovalRoles, write } from "./operator-role-fixture";
+import { fullSuitePageApiCooldown } from "./operator-full-suite";
 
 test.use({ trace: "off" });
 
-test("real operator validates, previews, explicitly issues, downloads and reopens the same immutable document set", async ({
+test("real operator validates, previews, explicitly generates, downloads saved print forms and reopens immutable originals while official unsigned delivery remains blocked", async ({
   page,
+  browser,
 }, testInfo) => {
   test.setTimeout(360000);
-  const credentialsPath = process.env.DEMO_E2E_PRINT_CREDENTIALS;
-  const requestId = process.env.DEMO_E2E_PRINT_REQUEST_ID;
-  if (
-    !credentialsPath ||
-    !requestId ||
-    process.env.DEMO_E2E_ISOLATED_TENANT !== "1"
-  ) {
-    throw new Error(
-      "Explicit isolated print fixture and private credentials path are required",
-    );
-  }
-  const credentials = JSON.parse(await fs.readFile(credentialsPath, "utf8"));
-  await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(credentials.email);
-  await page.getByLabel("Пароль", { exact: true }).fill(credentials.password);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать", exact: true }),
-  ).toBeVisible();
+  await fullSuitePageApiCooldown(
+    page,
+    testInfo.outputDir,
+    "before-print-lifecycle",
+  );
+  const roles = await realApprovalRoles(browser, page);
+  await roles.configureSignatories();
+  const created = await write(
+    page,
+    roles.operator.headers,
+    "/print-requests",
+    draftSchema.parse({
+      kind: "PERSON",
+      schemaVersion: 2,
+      demoMode: true,
+      title: `СИНТЕТИЧЕСКИЙ saved-print UI ${Date.now()}`,
+      commonFields: { documentDate: "2026-10-03" },
+      items: [
+        {
+          id: randomUUID(),
+          fullNameRu: "Синтетический Печатный Получатель",
+          fullNameKz: "Синтетикалық Ә Ғ Қ Ң Ө Ұ Ү Һ І",
+          positionRu: "Инженер",
+          workplaceRu: "Синтетическое предприятие",
+          assignments: [
+            {
+              id: randomUUID(),
+              templateId: "pb-card",
+              protocolMode: "INDIVIDUAL",
+              documentDate: "2026-10-03",
+              protocolDate: "2026-10-02",
+              trainingStart: "2026-10-01",
+              trainingEnd: "2026-10-02",
+              trainingSubject: "Синтетическая программа",
+              result: "Сдал / Тапсырды (ТЕСТ)",
+              outcome: {
+                status: "PASSED",
+                source:
+                  "СИНТЕТИЧЕСКАЯ известная ведомость saved print, не реальное обучение",
+              },
+            },
+          ],
+        },
+      ],
+    }),
+  );
+  const requestId = created.id as string;
   type Detail = Draft & {
     documents: Array<{ id: string; number: string; templateId: string }>;
     artifacts: Artifact[];
@@ -41,7 +70,7 @@ test("real operator validates, previews, explicitly issues, downloads and reopen
     return (await response.json()) as Detail;
   };
   const before = await read();
-  expect(before.status, "Use a fresh, explicitly approved draft fixture").toBe(
+  expect(before.status, "Use a fresh draft with a pending real decision").toBe(
     "DRAFT",
   );
   expect(before.documents).toHaveLength(0);
@@ -49,7 +78,9 @@ test("real operator validates, previews, explicitly issues, downloads and reopen
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(
     before.items.length,
   );
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   await expect(
     page.getByText("Данные прошли проверку", { exact: true }),
   ).toBeVisible();
@@ -57,9 +88,23 @@ test("real operator validates, previews, explicitly issues, downloads and reopen
     path: testInfo.outputPath("print-validation.png"),
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Предпросмотр", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Посмотреть документы", exact: true })
+    .click();
+  await expect
+    .poll(
+      async () =>
+        (await read()).artifacts.some(
+          (artifact) =>
+            artifact.provenance === "PREVIEW" && artifact.format === "PDF",
+        ),
+      { timeout: 240000, intervals: [1000, 2500] },
+    )
+    .toBe(true);
+  await roles.approve(requestId);
+  await page.reload();
   const finalize = page.getByRole("button", {
-    name: "Оформить комплект",
+    name: "Сформировать документы",
     exact: true,
   });
   await expect(finalize).toHaveClass(/primary/, { timeout: 240000 });
@@ -79,7 +124,7 @@ test("real operator validates, previews, explicitly issues, downloads and reopen
     response.url().includes(`/api/artifacts/${previewPdf!.id}?inline=1`),
   );
   await previewCard
-    .getByRole("button", { name: "Посмотреть", exact: true })
+    .getByRole("button", { name: "Печать макета", exact: true })
     .click();
   expect((await previewResponse).ok()).toBe(true);
   await expect(page.getByRole("dialog")).toBeVisible();
@@ -91,19 +136,6 @@ test("real operator validates, previews, explicitly issues, downloads and reopen
     .getByRole("button", { name: "Закрыть диалог", exact: true })
     .click();
   await finalize.click();
-  const confirmation = page.getByRole("dialog", {
-    name: "Оформить комплект документов?",
-    exact: true,
-  });
-  await expect(confirmation).toContainText("Сервер назначит номера");
-  expect((await read()).status).toBe("DRAFT");
-  await page.screenshot({
-    path: testInfo.outputPath("print-issuance-confirmation.png"),
-  });
-  await confirmation
-    .getByRole("button", { name: "Оформить", exact: true })
-    .click();
-  await expect(confirmation).toHaveCount(0);
   await expect.poll(async () => (await read()).status).toBe("FINALIZED");
   await expect(finalize).toHaveCount(0);
   await expect
@@ -170,18 +202,21 @@ test("real operator validates, previews, explicitly issues, downloads and reopen
       kind === "PDF" ? "%PDF-" : "PK",
     );
   }
-  for (const [kind, label] of [
-    ["XLSX", "Реестр XLSX"],
-    ["ZIP", "Скачать ZIP"],
-  ]) {
-    const event = page.waitForEvent("download");
-    await page
-      .locator(".files-panel")
-      .getByRole("button", { name: label, exact: true })
-      .click();
-    const bytes = await keep(await event, kind);
-    expect(bytes.subarray(0, 2).toString()).toBe("PK");
-  }
+  for (const label of ["Реестр XLSX", "Скачать ZIP"])
+    await expect(
+      page
+        .locator(".files-panel")
+        .getByRole("button", { name: label, exact: true }),
+    ).toBeDisabled();
+  const blocked = await page.request.post(
+    `/api/print-requests/${requestId}/export`,
+    {
+      headers: roles.operator.headers,
+      data: { format: "ZIP" },
+    },
+  );
+  expect(blocked.status()).toBe(409);
+  expect((await blocked.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
   await page.screenshot({
     path: testInfo.outputPath("print-issued-files.png"),
     fullPage: true,
@@ -209,7 +244,9 @@ test("real operator validates, previews, explicitly issues, downloads and reopen
         downloads,
         validationViaUi: true,
         previewBeforeIssuance: true,
-        explicitIssuanceConfirmation: true,
+        explicitGenerateClickAfterRealDirectorApproval: true,
+        officialUnsignedDeliveryGuard: "ISSUANCE_NOT_COMPLETE",
+        ncaSignatureAcceptanceVerified: false,
         allInputPreserved: true,
         reopenedImmutableDocumentAndArtifactMetadata: true,
         contentInspection:
@@ -220,4 +257,5 @@ test("real operator validates, previews, explicitly issues, downloads and reopen
       2,
     ),
   );
+  await roles.close();
 });

@@ -14,7 +14,7 @@ import {
   itemSchema,
   draftSchema,
   protocolTemplateFor,
-  initialImportScaffoldId,
+  validDate,
   z,
 } from "@demo/contracts";
 import {
@@ -28,9 +28,15 @@ import {
   scopedRequest,
   type Context,
 } from "./core";
-import { patchRequest, requestFilter, resolvedRequest } from "./requests";
-import { workingRequest } from "./approvals";
+import {
+  protectOutcomeMetadata,
+  requestFilter,
+  resolvedRequest,
+} from "./requests";
+import { assertStaff, submitProposal, workingRequest } from "./approvals";
+import { replaceableImportScaffoldId } from "./import-scaffold";
 import { companyEmployerId } from "./request-customer";
+import { assertArtifactDownloadAllowed } from "./artifact-access";
 import {
   customerExportProfileSchema,
   deliveryFileNames,
@@ -176,23 +182,7 @@ export async function readArtifact(c: Context, id: string) {
     where: { id, tenantId: c.tenantId },
   });
   if (!artifact) fail(404, "NOT_FOUND", "Файл не найден");
-  if (["ZIP", "XLSX"].includes(artifact.format) && artifact.issuanceId) {
-    const workflow = await db.issuanceWorkflow.findFirst({
-      where: { tenantId: c.tenantId, issuanceId: artifact.issuanceId },
-    });
-    if (workflow && workflow.status !== "ISSUED")
-      fail(
-        409,
-        "ISSUANCE_NOT_COMPLETE",
-        "Комплект доступен после формирования и обязательных подписей; отдельные PDF доступны для проверки и печати",
-      );
-    if (workflow && artifact.format === "ZIP")
-      fail(
-        409,
-        "USE_SIGNED_BUNDLE_EXPORT",
-        "Скачайте актуальный комплект через экспорт ZIP: он включает проверенные откреплённые подписи и их контрольные суммы",
-      );
-  }
+  await assertArtifactDownloadAllowed(c, artifact);
   try {
     const buffer = await store.read(artifact.storageKey, artifact.sha256);
     if (buffer.length !== artifact.size) throw new Error("SIZE");
@@ -356,6 +346,7 @@ export async function importPreview(
   };
 }
 export async function applyImport(c: Context, id: string, input: unknown) {
+  assertStaff(c, true);
   const data = parse(
     z
       .object({
@@ -366,86 +357,155 @@ export async function applyImport(c: Context, id: string, input: unknown) {
       .strict(),
     input,
   );
-  const batch = await db.importBatch.findFirst({
-    where: { id: data.importId, tenantId: c.tenantId },
-  });
-  if (!batch) fail(404, "IMPORT_NOT_FOUND", "Импорт не найден");
-  const record = await workingRequest(c, id);
-  const draft = draftSchema.parse(record.draft);
-  const previous = draft.items.filter((i) => i.importId === data.importId);
-  if (previous.length)
-    return {
-      id,
-      status: record.status,
-      revision: record.revision,
-      ...draft,
-      importResult: { applied: previous.length, repeated: true },
-    };
-  const source = (batch.rows as { rows: Array<{ sourceRow: number }> }).rows;
-  const sourceRows = new Set(source.map((r) => r.sourceRow));
-  if (
-    data.rows.some(
-      (r) =>
-        r.importId !== batch.id ||
-        r.sourceRow === undefined ||
-        !sourceRows.has(r.sourceRow),
-    )
-  )
-    fail(400, "IMPORT_SOURCE", "Неверная ссылка на исходную строку");
-  if (new Set(data.rows.map((r) => r.sourceRow)).size !== data.rows.length)
-    fail(400, "IMPORT_DUPLICATE", "Исходная строка выбрана дважды");
-  let retainedItems = draft.items;
-  const scaffoldId = data.rows.length
-    ? initialImportScaffoldId({
-        ...draft,
-        approvedRevision: record.approvedRevision,
-      })
-    : undefined;
-  if (scaffoldId) {
-    const history = await db.requestProposal.findMany({
-      where: { tenantId: c.tenantId, requestId: id, operation: "SAVE" },
-      select: { payload: true },
+  return transaction(async (tx) => {
+    await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    const batch = await tx.importBatch.findFirst({
+      where: { id: data.importId, tenantId: c.tenantId },
     });
-    // A row cleared after a previous edit is not an untouched starter. Replace
-    // only when every retained proposal confirms the same empty starter row.
+    if (!batch) fail(404, "IMPORT_NOT_FOUND", "Импорт не найден");
+    const record = await workingRequest(c, id, tx);
+    const draft = draftSchema.parse(record.draft);
+    const batchData = batch.rows as {
+      rows: Array<{ sourceRow: number; errors?: unknown[] }>;
+      errors?: unknown[];
+    };
+    const source = batchData.rows;
+    const sourceRows = new Set(source.map((r) => r.sourceRow));
     if (
-      history.length &&
-      history.every(({ payload }) => {
-        const prior = draftSchema.safeParse(payload);
-        return (
-          prior.success &&
-          initialImportScaffoldId({ ...prior.data, approvedRevision: 0 }) ===
-            scaffoldId
-        );
-      })
+      data.rows.some(
+        (r) =>
+          r.importId !== batch.id ||
+          r.sourceRow === undefined ||
+          !sourceRows.has(r.sourceRow),
+      )
+    )
+      fail(400, "IMPORT_SOURCE", "Неверная ссылка на исходную строку");
+    if (new Set(data.rows.map((r) => r.sourceRow)).size !== data.rows.length)
+      fail(400, "IMPORT_DUPLICATE", "Исходная строка выбрана дважды");
+    const previous = new Set(
+      draft.items
+        .filter((item) => item.importId === data.importId)
+        .map((item) => item.sourceRow),
+    );
+    const rows = data.rows.filter((row) => !previous.has(row.sourceRow));
+    const skipped = data.rows.length - rows.length;
+    if (!rows.length)
+      return {
+        id,
+        status: record.status,
+        revision: record.revision,
+        ...draft,
+        importResult: {
+          source: source.length,
+          applied: 0,
+          skipped,
+          excluded: source.length - previous.size,
+          repeated: true,
+        },
+      };
+    const fatalSourceErrors = (batchData.errors || []).filter((error) => {
+      if (!error || typeof error !== "object") return true;
+      const problem = error as { code?: string; row?: unknown };
+      if (problem.code === "ROW_LIMIT") return false;
+      // Workbook formulas are reported both here and on their source row.
+      // A row-bound error blocks that row, while independently valid selected
+      // rows remain importable. Header/unscoped errors still block the source.
+      if (
+        typeof problem.row === "number" &&
+        source.some((entry) => entry.sourceRow === problem.row)
+      )
+        return rows.some((row) => row.sourceRow === problem.row);
+      return true;
+    });
+    if (
+      fatalSourceErrors.length ||
+      rows.some(
+        (row) =>
+          source.find((entry) => entry.sourceRow === row.sourceRow)?.errors
+            ?.length,
+      )
+    )
+      fail(
+        422,
+        "IMPORT_SOURCE_INVALID",
+        "Источник содержит ошибки или неподдерживаемые формулы. Исправьте источник; ошибочные строки не добавлены.",
+      );
+    for (const row of rows)
+      for (const assignment of row.assignments)
+        for (const field of [
+          "documentDate",
+          "trainingStart",
+          "trainingEnd",
+          "protocolDate",
+          "validUntil",
+        ] as const)
+          if (assignment[field].trim() && !validDate(assignment[field]))
+            fail(
+              422,
+              "IMPORT_DATE_INVALID",
+              `Исходная строка ${row.sourceRow}: в поле ${field} нужна действительная календарная дата`,
+              {
+                recipientId: row.id,
+                assignmentId: assignment.id,
+                eventId: assignment.eventId,
+                field,
+                sourceRow: row.sourceRow,
+              },
+            );
+    if (record.status !== "DRAFT")
+      fail(
+        409,
+        "REGISTERED_IMMUTABLE",
+        "Оформленная заявка изменяется отдельным исправлением",
+      );
+    if (record.revision !== data.expectedRevision)
+      fail(409, "REVISION_CONFLICT", "Заявка изменена другим оператором", {
+        revision: record.revision,
+      });
+    if (rows.some((row) => draft.items.some((item) => item.id === row.id)))
+      fail(
+        409,
+        "IMPORT_ROW_ID_CONFLICT",
+        "Идентификатор новой исходной строки уже занят другим получателем",
+      );
+    let retainedItems = draft.items;
+    if (
+      await replaceableImportScaffoldId(
+        tx,
+        c,
+        id,
+        draft,
+        record.approvedRevision,
+      )
     )
       retainedItems = [];
-  }
-  if (retainedItems.length + data.rows.length > LIMITS.rows)
-    fail(
-      422,
-      "ROW_LIMIT",
-      `Максимум ${LIMITS.rows} получателей; строки не обрезаны`,
-    );
-  const result = await patchRequest(c, id, {
-    expectedRevision: data.expectedRevision,
-    draft: { ...draft, items: [...retainedItems, ...data.rows] },
-  });
-  await audit(db, c, "IMPORT_APPLIED", id, {
-    importId: batch.id,
-    source: source.length,
-    applied: data.rows.length,
-    excluded: source.length - data.rows.length,
-  });
-  return {
-    ...result,
-    importResult: {
+    if (retainedItems.length + rows.length > LIMITS.rows)
+      fail(
+        422,
+        "ROW_LIMIT",
+        `Максимум ${LIMITS.rows} получателей; строки не обрезаны`,
+      );
+    const next = { ...draft, items: [...retainedItems, ...rows] };
+    protectOutcomeMetadata(c, next, draft);
+    const result = await submitProposal(tx, c, id, next, data.expectedRevision);
+    await audit(tx, c, "IMPORT_APPLIED", id, {
+      importId: batch.id,
       source: source.length,
-      applied: data.rows.length,
-      excluded: source.length - data.rows.length,
-      repeated: false,
-    },
-  };
+      applied: rows.length,
+      skipped,
+      excluded: source.length - previous.size - rows.length,
+    });
+    return {
+      ...result,
+      importResult: {
+        source: source.length,
+        applied: rows.length,
+        skipped,
+        excluded: source.length - previous.size - rows.length,
+        repeated: false,
+      },
+    };
+  });
 }
 export async function retryJob(c: Context, id: string) {
   return transaction(async (tx) => {
@@ -477,8 +537,8 @@ export async function retryJob(c: Context, id: string) {
     return { ok: true };
   });
 }
-export async function registryExport(c: Context, input: unknown, id?: string) {
-  const query = parse(
+function registryDeliveryQuery(input: unknown) {
+  return parse(
     z
       .object({
         search: z.string().max(255).default(""),
@@ -496,6 +556,9 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
       .strict(),
     input || {},
   );
+}
+export async function registryExport(c: Context, input: unknown, id?: string) {
+  const query = registryDeliveryQuery(input);
   const requested = id ? await scopedRequest(c, id) : null;
   if (requested) {
     const workflow = await db.issuanceWorkflow.findFirst({
@@ -509,6 +572,25 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
         "Передавать официальный комплект можно после формирования и обязательных подписей",
       );
   }
+  const source = await collectRegistryRows(
+    c,
+    { ...query, customerId: undefined },
+    id,
+  );
+  return buildSavedRegistryDelivery(c, query, source, id);
+}
+/** Internal delivery builder for already selected saved records. Public routes
+ * use registryExport, which checks issuance and signatures before supplying a
+ * source. This function routes existing bytes and serializes derivatives; it
+ * never changes issuance state or supplies a signature. */
+export async function buildSavedRegistryDelivery(
+  c: Context,
+  input: unknown,
+  source: Awaited<ReturnType<typeof collectRegistryRows>>,
+  id?: string,
+) {
+  const query = registryDeliveryQuery(input);
+  const requested = id ? await scopedRequest(c, id) : null;
   let profile = await resolveExportProfile(c, query.profileId, query.profile);
   if (
     profile?.customerId &&
@@ -536,13 +618,7 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
   let cachedData: Awaited<ReturnType<typeof collectRegistryRows>> | undefined;
   const exportData = async () => {
     if (cachedData) return cachedData;
-    const data = await collectRegistryRows(
-      c,
-      // A mixed request can contain the company even when another company is
-      // the order customer. Scope by frozen row employment, never today's person card.
-      { ...query, customerId: undefined },
-      id,
-    );
+    const data = { records: [...source.records], rows: [...source.rows] };
     if (customerScope) {
       data.rows = data.rows.filter((row) => row.employerId === customerScope);
       const visibleRequests = new Set(data.rows.map((row) => row.requestId));

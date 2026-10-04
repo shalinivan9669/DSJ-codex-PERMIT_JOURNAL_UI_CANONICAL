@@ -110,8 +110,13 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
       title: "Сверка списка",
       items: old,
     });
+    // Baseline the persisted JSON shape, including generated companion and AUTO
+    // fields; optional undefined service properties are absent after HTTP/storage.
+    old[0].assignments = JSON.parse(
+      JSON.stringify(request.items[0].assignments),
+    );
     const data = {
-      expectedRevision: 0,
+      expectedRevision: request.revision,
       importId,
       rows: revised,
       operationKey: randomUUID(),
@@ -140,6 +145,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
         });
         await applyImportReconciliation(c, retainRequest.id, {
           ...data,
+          expectedRevision: retainRequest.revision,
           operationKey: randomUUID(),
         });
         const retained = await requestDetail(c, retainRequest.id);
@@ -147,7 +153,10 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
         assert.deepEqual(retained.items[0].assignments, old[0].assignments);
         assert.ok(retained.items.some((row) => row.id === "DEMO-P099"));
         assert.ok(retained.items.some((row) => row.id === "DEMO-P100"));
-        assert.equal((await requestDetail(c, request.id)).revision, 0);
+        assert.equal(
+          (await requestDetail(c, request.id)).revision,
+          request.revision,
+        );
         assert.equal(
           await db.idempotencyOperation.count({
             where: { tenantId: c.tenantId, idempotencyKey: data.operationKey },
@@ -191,7 +200,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           items: [...old, ...additional],
         });
         const operation = {
-          expectedRevision: 0,
+          expectedRevision: capacityRequest.revision,
           importId: capacityImportId,
           rows: source,
           operationKey: randomUUID(),
@@ -208,7 +217,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           /превышает 250/,
         );
         const unchanged = await requestDetail(c, capacityRequest.id);
-        assert.equal(unchanged.revision, 0);
+        assert.equal(unchanged.revision, capacityRequest.revision);
         assert.equal(unchanged.items.length, 249);
         assert.deepEqual(unchanged.items[0].assignments, old[0].assignments);
         assert.equal(
@@ -226,7 +235,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           exclusionReason: "Подтверждённый состав заявки на 250 человек",
         });
         const accepted = await requestDetail(c, capacityRequest.id);
-        assert.equal(accepted.revision, 1);
+        assert.equal(accepted.revision, capacityRequest.revision + 1);
         assert.equal(accepted.items.length, 250);
         assert.ok(!accepted.items.some((row) => row.id === "DEMO-P099"));
         assert.ok(accepted.items.some((row) => row.id === "DEMO-P100"));
@@ -249,9 +258,12 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           applyImportReconciliation(c, request.id, apply),
           applyImportReconciliation(c, request.id, apply),
         ]);
-        assert.deepEqual(first, replay);
+        assert.deepEqual(
+          JSON.parse(JSON.stringify(first)),
+          JSON.parse(JSON.stringify(replay)),
+        );
         const saved = await requestDetail(c, request.id);
-        assert.equal(saved.revision, 1);
+        assert.equal(saved.revision, request.revision + 1);
         assert.equal(saved.items.length, 100);
         assert.deepEqual(saved.items[0].assignments, old[0].assignments);
         assert.equal(
@@ -295,7 +307,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
         });
         await assert.rejects(
           previewImportReconciliation(c, request.id, {
-            expectedRevision: 1,
+            expectedRevision: (await requestDetail(c, request.id)).revision,
             importId: foreignBatch.id,
             rows: [],
           }),
@@ -349,7 +361,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
         const ownRequest = await createRequest(
           c,
           draftSchema.parse({
-            kind: "PERSON",
+            kind: "COMPANY",
             customerId: customer.id,
             items: [
               {
@@ -435,7 +447,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           data: {
             tenantId: c.tenantId,
             requestId: mixed.id,
-            sourceRevision: 0,
+            sourceRevision: mixed.revision,
             snapshot: json({ draft }),
             inputHash: hash(draft),
             profileVersionId: issuer.id,
@@ -507,7 +519,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           data: {
             tenantId: c.tenantId,
             requestId: mixed.id,
-            revision: 0,
+            revision: mixed.revision,
             issuanceId: issuance.id,
             profileVersionId: issuer.id,
             input: json({ draft }),
@@ -672,7 +684,16 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
               sourceRow: 12,
               personnelNumber: "000012",
               fullNameRu: "",
-              fullNameKz: "Ә Ғ Қ Ң Ө Ұ Ү Һ І",
+              fullNameKz: "",
+              positionRu: "Синтетическая должность",
+              workplaceRu: "Синтетическая компания",
+              assignments: [
+                {
+                  id: "control-pb",
+                  templateId: "pb-card",
+                  documentDate: "2026-10-03",
+                },
+              ],
             },
           ],
         });
@@ -680,7 +701,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
         const sheet = await controlSheet(c, request.id);
         assert.match(sheet.title, /не выданный документ/);
         await confirmControlSheet(c, request.id, {
-          expectedRevision: 0,
+          expectedRevision: request.revision,
           meaningfulHash: sheet.meaningfulHash,
           confirmedBy: "Синтетический представитель",
           source: "Сверка по телефону",
@@ -693,8 +714,8 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
         assert.match(message.text, /Строка 12 — таб. № 000012/);
         assert.ok(!message.text.includes("control-person"));
         assert.equal(message.sent, false);
-        await patchRequest(c, request.id, {
-          expectedRevision: 0,
+        const titlePatch = await patchRequest(c, request.id, {
+          expectedRevision: request.revision,
           draft: { ...draft, title: "Новая внутренняя заметка" },
         });
         assert.equal(
@@ -705,8 +726,8 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           ...draft,
           items: [{ ...draft.items[0], fullNameRu: "Проверенный Получатель" }],
         };
-        await patchRequest(c, request.id, {
-          expectedRevision: 1,
+        const personPatch = await patchRequest(c, request.id, {
+          expectedRevision: titlePatch.revision,
           draft: changed,
         });
         assert.equal(
@@ -715,7 +736,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
         );
         await assert.rejects(
           confirmControlSheet(c, request.id, {
-            expectedRevision: 2,
+            expectedRevision: personPatch.revision,
             meaningfulHash: sheet.meaningfulHash,
             confirmedBy: "Представитель",
             source: "Старое подтверждение",

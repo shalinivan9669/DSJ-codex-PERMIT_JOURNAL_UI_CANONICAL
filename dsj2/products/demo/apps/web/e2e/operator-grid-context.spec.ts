@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { resolveDraft } from "@demo/contracts";
+import { applyBusinessRules, resolveDraft } from "@demo/contracts";
 import { newRecipient, type Draft } from "../lib/types";
 
 const longKz = "Әбдірахманов Нұрсұлтан Мұхамеджанұлы";
@@ -36,6 +36,7 @@ async function workspace(page: Page, count = 150) {
       personnelNumber: `Т-${index + 1}`,
     })),
   };
+  draft = applyBusinessRules(draft);
   await page.route("**/api/**", async (route) => {
     const path = new URL(route.request().url()).pathname.slice(4);
     let value: unknown = { items: [], total: 0 };
@@ -59,10 +60,13 @@ async function workspace(page: Page, count = 150) {
           nameKz: "Тест",
           addressRu: "",
           addressKz: "",
-          cityRu: "",
-          cityKz: "",
+          cityRu: "Синтетический город",
+          cityKz: "Синтетикалық қала",
           approvalBasis: "",
-          commission: [],
+          commission: [0, 1, 2].map((index) => ({
+            name: `Синтетический член ${index + 1}`,
+            position: index ? "Член комиссии" : "Председатель",
+          })),
           approved: true,
         },
         templates: [],
@@ -101,20 +105,39 @@ async function workspace(page: Page, count = 150) {
           });
           return;
         }
-        draft = { ...draft, ...body.draft, revision: draft.revision + 1 };
-        value = { revision: draft.revision };
+        draft = {
+          ...draft,
+          ...body.draft,
+          revision: draft.revision + 1,
+          ...(draft.approval
+            ? { approval: { ...draft.approval, status: "PENDING" as const } }
+            : {}),
+        };
+        value = {
+          revision: draft.revision,
+          approval: draft.approval,
+          approvedRevision: draft.approvedRevision,
+        };
       } else value = draft;
     }
     await route.fulfill({ json: value });
   });
   await page.goto("/requests/grid-context/edit");
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
+  const listTools = page.locator(".operator-list-tools");
+  if (
+    !(await listTools.evaluate(
+      (element) => (element as HTMLDetailsElement).open,
+    ))
+  )
+    await listTools.locator(":scope > summary").click();
   return () => draft;
 }
 
 async function openExtraTools(page: Page) {
+  const list = page.locator(".operator-list-tools");
+  if (!(await list.evaluate((element) => (element as HTMLDetailsElement).open)))
+    await list.locator(":scope > summary").click();
   const tools = page.locator(".recipient-extra-tools");
   if ((await tools.getAttribute("open")) === null)
     await tools.locator("summary").click();
@@ -124,14 +147,14 @@ test("ten rows preserve ordinary Tab, Shift+Tab, Enter and IME confirmation", as
   page,
 }) => {
   const current = await workspace(page, 10);
-  const first = page.getByLabel("ФИО RU, строка 1", { exact: true });
+  const first = page.getByLabel("ФИО, строка 1", { exact: true });
   await first.focus();
   for (let row = 1; row <= 10; row++) {
-    const name = page.getByLabel(`ФИО RU, строка ${row}`, { exact: true });
+    const name = page.getByLabel(`ФИО, строка ${row}`, { exact: true });
     await expect(name).toBeFocused();
     await name.fill(`Сергеев Сергей ${row}`);
     await name.press("Tab");
-    const position = page.getByLabel(`Должность RU, строка ${row}`, {
+    const position = page.getByLabel(`Должность · RU, строка ${row}`, {
       exact: true,
     });
     await expect(position).toBeFocused();
@@ -141,16 +164,14 @@ test("ten rows preserve ordinary Tab, Shift+Tab, Enter and IME confirmation", as
     if (row < 10) await name.press("Enter");
   }
   await page.keyboard.press("Shift+Enter");
-  await expect(
-    page.getByLabel("ФИО RU, строка 9", { exact: true }),
-  ).toBeFocused();
+  await expect(page.getByLabel("ФИО, строка 9", { exact: true })).toBeFocused();
   await first.focus();
   await first.dispatchEvent("keydown", { key: "Enter", isComposing: true });
   await expect(first).toBeFocused();
   // Some IME implementations report keyCode 229 for the confirmation event.
   await first.dispatchEvent("keydown", { key: "Enter", keyCode: 229 });
   await expect(first).toBeFocused();
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   await expect
     .poll(() => current().items[9].positionRu)
     .toBe("Мастер участка 10");
@@ -160,31 +181,51 @@ test("return from a card preserves the row, input focus, selection and table scr
   page,
 }, testInfo) => {
   await workspace(page, 250);
-  await page.getByRole("button", { name: "RU + KZ", exact: true }).click();
-  await page.getByLabel("Табельный номер и ID", { exact: true }).check();
+  await expect(
+    page.getByLabel("Должность · RU, строка 125", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("Должность · KZ, строка 125", { exact: true }),
+  ).toBeVisible();
   await page.getByLabel("Выбрать строку 125", { exact: true }).check();
-  const input = page.getByLabel("Должность KZ, строка 125", { exact: true });
+  const input = page.getByLabel("Должность · KZ, строка 125", { exact: true });
   await input.focus();
+  // Finish the focus bookmark before the operator scrolls the active field.
+  // Otherwise a pending focus frame can accidentally hide a stale bookmark.
+  await input.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
   await input.evaluate((element: HTMLInputElement) => {
     element.scrollIntoView({ block: "center", inline: "center" });
     element.setSelectionRange(3, 12);
   });
   const scroll = page.locator(".recipient-grid-scroll");
+  await scroll.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
   const before = await scroll.evaluate((element) => ({
     top: element.scrollTop,
     left: element.scrollLeft,
+    windowY: window.scrollY,
   }));
   await page
-    .getByRole("button", { name: "Карточка получателя", exact: true })
+    .getByRole("button", { name: "Детали получателя 125", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Вернуться к таблице", exact: true })
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
     .click();
   await expect(input).toBeFocused();
   expect(
     await scroll.evaluate((element) => ({
       top: element.scrollTop,
       left: element.scrollLeft,
+      windowY: window.scrollY,
     })),
   ).toEqual(before);
   expect(
@@ -197,8 +238,11 @@ test("return from a card preserves the row, input focus, selection and table scr
     page.getByLabel("Выбрать строку 125", { exact: true }),
   ).toBeChecked();
   await expect(
-    page.getByRole("button", { name: "RU + KZ", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
+    page.getByLabel("Должность · RU, строка 125", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("Должность · KZ, строка 125", { exact: true }),
+  ).toHaveValue("Еңбек қауіпсіздігі және еңбекті қорғау инженері");
   await page.screenshot({ path: testInfo.outputPath("restored-row-125.png") });
 });
 
@@ -206,10 +250,14 @@ test("error links reveal exact hidden grid columns and nested document fields", 
   page,
 }, testInfo) => {
   await workspace(page, 100);
-  await page.getByRole("button", { name: "KZ", exact: true }).click();
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await expect(
+    page.getByLabel("Должность · KZ, строка 2", { exact: true }),
+  ).toBeVisible();
   await page
-    .getByRole("button", { name: "Уточните должность Иванова", exact: true })
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: /Уточните должность Иванова$/ })
     .click();
   const position = page.locator(
     '.operator-grid [data-field-path="items.1.positionRu"]',
@@ -223,16 +271,21 @@ test("error links reveal exact hidden grid columns and nested document fields", 
     "Уточните должность Иванова",
   );
   await position.fill("Исправленная должность");
-  await page
-    .getByRole("button", { name: "Уточните табельный номер", exact: true })
-    .click();
+  await page.getByRole("button", { name: /Уточните табельный номер$/ }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
   await expect(
-    page.getByLabel("Табельный номер и ID", { exact: true }),
-  ).toBeChecked();
+    page.getByRole("tab", { name: /^Личные данные/ }),
+  ).toHaveAttribute("aria-selected", "true");
   await expect(
-    page.locator('.operator-grid [data-field-path="items.2.personnelNumber"]'),
+    page.locator(
+      '.recipient-details [data-field-path="items.2.personnelNumber"]',
+    ),
   ).toBeFocused();
   await page.screenshot({ path: testInfo.outputPath("exact-grid-error.png") });
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
   await page
     .getByRole("button", {
       name: /Укажите тему обучения четвёртого получателя$/,
@@ -253,10 +306,12 @@ test("Kazakh-only recipient retains identity in the card and keyboard tabs", asy
 }, testInfo) => {
   await workspace(page, 10);
   await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: longKz, exact: true }),
+    page
+      .getByRole("dialog")
+      .getByRole("heading", { name: longKz, exact: true }),
   ).toBeVisible();
   const documents = page.getByRole("tab", { name: /^Документы \(/ });
   await documents.focus();
@@ -269,7 +324,7 @@ test("Kazakh-only recipient retains identity in the card and keyboard tabs", asy
   await page.screenshot({ path: testInfo.outputPath("kazakh-card.png") });
 });
 
-test("narrow and enlarged layouts keep keyboard-focused cells unobscured", async ({
+test("narrow and short viewports keep keyboard-focused cells unobscured", async ({
   page,
 }, testInfo) => {
   await workspace(page, 100);
@@ -278,11 +333,13 @@ test("narrow and enlarged layouts keep keyboard-focused cells unobscured", async
     { width: 683, height: 384 },
   ]) {
     await page.setViewportSize(viewport);
-    await page.getByRole("button", { name: "RU + KZ", exact: true }).click();
-    const input = page.getByLabel("Должность RU, строка 50", { exact: true });
+    await expect(
+      page.getByLabel("Должность · KZ, строка 50", { exact: true }),
+    ).toBeVisible();
+    const input = page.getByLabel("Должность · RU, строка 50", { exact: true });
     await input.focus();
     await input.press("Enter");
-    const next = page.getByLabel("Должность RU, строка 51", { exact: true });
+    const next = page.getByLabel("Должность · RU, строка 51", { exact: true });
     await expect(next).toBeFocused();
     const geometry = await next.evaluate((element) => {
       const rect = element.getBoundingClientRect();
@@ -336,7 +393,9 @@ test("shared organization previews selected people, preserves exceptions, confir
   await modal
     .getByLabel("Общее значение: Место работы RU", { exact: true })
     .fill("Общая организация");
-  await modal.getByLabel("Направление", { exact: true }).selectOption("");
+  await modal
+    .getByRole("combobox", { name: "Направление", exact: true })
+    .selectOption("");
   await modal
     .getByRole("button", { name: "Показать изменения", exact: true })
     .click();
@@ -413,7 +472,7 @@ test("return after appending a stored person targets that new person instead of 
       json: { id: "stored-person", data: person, employment: [], requests: [] },
     }),
   );
-  await page.getByLabel("Должность RU, строка 2", { exact: true }).focus();
+  await page.getByLabel("Должность · RU, строка 2", { exact: true }).focus();
   await openExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
@@ -422,27 +481,32 @@ test("return after appending a stored person targets that new person instead of 
     .getByRole("dialog")
     .getByRole("button", { name: "Выбрать", exact: true })
     .click();
+  await expect(page.getByLabel("ФИО, строка 4", { exact: true })).toHaveValue(
+    person.fullNameRu,
+  );
   await expect(
-    page.getByRole("heading", { name: person.fullNameRu, exact: true }),
+    page
+      .getByRole("dialog")
+      .getByRole("heading", { name: person.fullNameRu, exact: true }),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "Вернуться к таблице", exact: true })
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
     .click();
   await expect(
     page.getByRole("button", {
-      name: "Документы и даты получателя 4",
+      name: "Детали получателя 4",
       exact: true,
     }),
   ).toBeFocused();
   await expect(page.locator(".operator-grid tr.is-active")).toHaveAttribute(
     "data-recipient-id",
     await page
-      .getByLabel("ФИО RU, строка 4", { exact: true })
+      .getByLabel("ФИО, строка 4", { exact: true })
       .evaluate(
         (element) => element.closest("tr")!.getAttribute("data-recipient-id")!,
       ),
   );
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   await expect.poll(() => current().items.length).toBe(4);
   expect(current().items[3].recipientId).toBe("stored-person");
 });
@@ -508,10 +572,40 @@ test("failed bulk save explains the error inside the dialog and retains the exac
   expect(current().items[2]).toEqual(before[2]);
 });
 
-test("primary finalize guidance waits for every current preview artifact and resets after editing", async ({
+test("current preview jobs retain statuses while preparation requires approval of this revision and editing invalidates that approval", async ({
   page,
 }) => {
   const current = await workspace(page, 1);
+  current().items[0].fullNameRu = "Синтетический макет";
+  current().items[0].assignments = current().items[0].assignments.map(
+    (assignment) => ({
+      ...assignment,
+      documentDate: "2026-10-03",
+      trainingStart: "2026-10-01",
+      trainingEnd: "2026-10-02",
+      protocolDate: "2026-10-03",
+      trainingSubject: "Синтетическая программа",
+      result: "Сдал",
+      outcome: { status: "PASSED", source: "Синтетическая ведомость" },
+      fieldOrigins: {
+        ...assignment.fieldOrigins,
+        documentDate: "MANUAL",
+        trainingStart: "MANUAL",
+        trainingEnd: "MANUAL",
+        protocolDate: "MANUAL",
+        trainingSubject: "MANUAL",
+      },
+    }),
+  );
+  current().approval = {
+    proposalId: "synthetic-proposal",
+    status: "PENDING",
+    baseRevision: 0,
+    proposalHash: "synthetic",
+    submittedBy: "operator",
+    submittedAt: "2026-10-03T00:00:00Z",
+  };
+  await page.reload();
   let status = "QUEUED";
   const artifacts = ["preview-docx", "preview-pdf"].map((id) => ({
     id,
@@ -521,7 +615,13 @@ test("primary finalize guidance waits for every current preview artifact and res
     fileName: `${id}.${id.endsWith("pdf") ? "pdf" : "docx"}`,
   }));
   await page.route("**/api/print-requests/grid-context/validate", (route) =>
-    route.fulfill({ json: { valid: true, errors: [], documentCount: 1 } }),
+    route.fulfill({
+      json: {
+        valid: true,
+        errors: [],
+        documentCount: current().items[0].assignments.length,
+      },
+    }),
   );
   await page.route("**/api/print-requests/grid-context/preview", (route) =>
     route.fulfill({ status: 201, json: { jobs: [] } }),
@@ -542,18 +642,20 @@ test("primary finalize guidance waits for every current preview artifact and res
       },
     }),
   );
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   const preview = page.getByRole("button", {
-    name: "Предпросмотр",
+    name: "Посмотреть документы",
     exact: true,
   });
   const finalize = page.getByRole("button", {
-    name: "Оформить комплект",
+    name: "Сформировать документы",
     exact: true,
   });
   await preview.click();
   await expect(page.locator(".files-panel")).toContainText("В очереди");
-  await expect(finalize).not.toHaveClass(/primary/);
+  await expect(finalize).toHaveCount(0);
   await expect(preview).toHaveClass(/primary/);
   status = "RUNNING";
   await page
@@ -561,7 +663,7 @@ test("primary finalize guidance waits for every current preview artifact and res
     .getByRole("button", { name: "Обновить", exact: true })
     .click();
   await expect(page.locator(".files-panel")).toContainText("Формируется");
-  await expect(finalize).not.toHaveClass(/primary/);
+  await expect(finalize).toHaveCount(0);
   status = "FAILED";
   await page
     .locator(".files-panel")
@@ -572,21 +674,25 @@ test("primary finalize guidance waits for every current preview artifact and res
       .getByRole("button", { name: "Повторить неготовые", exact: true })
       .first(),
   ).toBeVisible();
-  await expect(finalize).not.toHaveClass(/primary/);
+  await expect(finalize).toHaveCount(0);
   status = "SUCCEEDED";
   await page
     .locator(".files-panel")
     .getByRole("button", { name: "Обновить", exact: true })
     .click();
+  await expect(finalize).toHaveCount(0);
+  current().approval = { ...current().approval!, status: "APPROVED" };
+  current().approvedRevision = current().revision;
+  await page.reload();
   await expect(finalize).toHaveClass(/primary/);
+  await expect(finalize).toBeEnabled();
   await page
-    .getByLabel("Должность RU, строка 1", { exact: true })
+    .getByLabel("Должность · RU, строка 1", { exact: true })
     .fill("Новая должность после макета");
-  await expect(finalize).not.toHaveClass(/primary/);
-  await expect(
-    page.getByRole("button", { name: "Проверить", exact: true }),
-  ).toHaveClass(/primary/);
+  await expect(finalize).toBeDisabled();
   await expect
     .poll(() => current().items[0].positionRu)
     .toBe("Новая должность после макета");
+  await expect(finalize).toHaveCount(0);
+  await expect(preview).toHaveClass(/primary/);
 });

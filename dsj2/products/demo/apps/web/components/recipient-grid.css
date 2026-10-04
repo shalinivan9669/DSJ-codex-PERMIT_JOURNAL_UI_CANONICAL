@@ -142,7 +142,7 @@
 .recipient-grid-table th,
 .recipient-grid-table td {
   padding: 5px 6px;
-  vertical-align: middle;
+  vertical-align: top;
   border-bottom: 1px solid var(--line);
   background: var(--paper);
 }
@@ -524,7 +524,7 @@
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
   line-height: 1.4;
   font-size: 12px;
 }

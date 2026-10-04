@@ -25,6 +25,7 @@ async function fixture(page: Page) {
         id: `mixed-person-${index}`,
         fullNameRu: name,
         positionRu: index ? "Инженер" : "Монтажник",
+        employeeCategory: index ? "ITR" : "WORKER",
         assignments: [],
       }),
     ),
@@ -81,59 +82,59 @@ async function fixture(page: Page) {
     await route.fulfill({ json: value });
   });
   await page.goto(`/requests/${requestId}/edit`);
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
   return () => draft;
 }
 
 async function selectDocumentsAndDates(page: Page, current: () => Draft) {
-  for (const [index, label] of [
-    "БиОТ — удостоверение рабочего",
-    "БиОТ — сертификат ИТР",
-  ].entries()) {
+  for (const index of [0, 1]) {
     await page
       .getByRole("button", {
-        name: `Выбрать документы получателя ${index + 1}`,
-        exact: true,
+        name: new RegExp(`^Настройки обучения получателя ${index + 1}:`),
       })
       .click();
     const dialog = page.getByRole("dialog", {
-      name: "Выбрать документы",
+      name: "Назначить обучение",
       exact: true,
     });
     await dialog
-      .getByRole("checkbox", { name: new RegExp(`^${label}`) })
+      .getByRole("checkbox", { name: /^Безопасность и охрана труда/ })
       .check();
     await dialog
       .getByRole("button", {
-        name: "Добавить выбранные документы",
+        name: "Добавить обучение и комплект",
         exact: true,
       })
       .click();
     await expect(dialog).toHaveCount(0);
-    await expect.poll(() => current().items[index].assignments.length).toBe(1);
+    await expect.poll(() => current().items[index].assignments.length).toBe(2);
     await page
       .getByRole("button", {
-        name: `Документы и даты получателя ${index + 1}`,
+        name: `Детали получателя ${index + 1}`,
         exact: true,
       })
       .click();
+    await page.getByRole("tab", { name: /^Документы/ }).click();
     await page
+      .getByRole("dialog")
       .getByLabel("Дата документа", { exact: true })
+      .first()
       .fill(manualDates[index]);
     await page
+      .getByRole("dialog")
       .getByText("Период обучения, протокол и срок действия", { exact: true })
+      .first()
       .click();
     await page
+      .getByRole("dialog")
       .getByLabel("Начало обучения", { exact: true })
+      .first()
       .fill(manualStarts[index]);
-    await page.getByRole("button", { name: "Сохранить", exact: true }).click();
     await expect
       .poll(() => current().items[index].assignments[0].documentDate)
       .toBe(manualDates[index]);
     await page
-      .getByRole("button", { name: "Вернуться к таблице", exact: true })
+      .getByRole("button", { name: "Вернуться к списку", exact: true })
       .click();
   }
 }
@@ -145,7 +146,7 @@ function assertMixedAssignments(draft: Draft) {
     "biot-worker-card",
     "biot-itr-certificate",
   ].entries()) {
-    expect(draft.items[index].assignments).toHaveLength(1);
+    expect(draft.items[index].assignments).toHaveLength(2);
     expect(draft.items[index].assignments[0]).toMatchObject({
       templateId,
       biotCategory: index ? "OHS_SPECIALIST_SPECIAL" : "WORKER",
@@ -164,33 +165,43 @@ test("one company request saves workers and ITR with separate forms, categories 
   assertMixedAssignments(current());
   const saved = structuredClone(current().items);
   await page.reload();
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
-  for (const [index, chip] of ["БиОТ · рабочий", "БиОТ · ИТР"].entries()) {
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
+  for (const [index, category] of ["WORKER", "ITR"].entries()) {
     const row = page.locator(`[data-recipient-id="mixed-person-${index}"]`);
-    await expect(row.getByText(chip, { exact: true })).toBeVisible();
+    await expect(
+      row.getByRole("button", { name: /^Настройки обучения/ }),
+    ).toContainText("БиОТ");
+    await expect(
+      row.getByRole("combobox", { name: /^Категория сотрудника/ }),
+    ).toHaveValue(category);
     await page
       .getByRole("button", {
-        name: `Документы и даты получателя ${index + 1}`,
+        name: `Детали получателя ${index + 1}`,
         exact: true,
       })
       .click();
+    await page.getByRole("tab", { name: /^Документы/ }).click();
     await expect(
-      page.getByLabel("Дата документа", { exact: true }),
+      page
+        .getByRole("dialog")
+        .getByLabel("Дата документа", { exact: true })
+        .first(),
     ).toHaveValue(manualDates[index]);
     await expect(
-      page.getByRole("combobox", {
-        name: "Категория обучения БиОТ",
-        exact: true,
-      }),
+      page
+        .getByRole("dialog")
+        .getByRole("combobox", {
+          name: "Категория обучения БиОТ",
+          exact: true,
+        })
+        .first(),
     ).toHaveValue(index ? "OHS_SPECIALIST_SPECIAL" : "WORKER");
     await page
-      .getByRole("button", { name: "Вернуться к таблице", exact: true })
+      .getByRole("button", { name: "Вернуться к списку", exact: true })
       .click();
   }
   expect(current().items).toEqual(saved);
-  expect(current().events).toEqual([]);
+  expect(current().events).toHaveLength(2);
 });
 
 test("a mixed request joins existing documents to separate compatible group protocols without duplicates", async ({
@@ -201,51 +212,59 @@ test("a mixed request joins existing documents to separate compatible group prot
   const assignmentIds = current().items.map(
     (person) => person.assignments[0].id,
   );
-  await page
-    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
-    .click();
-  await page
-    .getByRole("checkbox", {
-      name: /^Присоединить к событию существующее назначение/,
-    })
-    .check();
-  for (const [index, direction] of ["biot", "biot-itr"].entries()) {
-    if (index)
-      await page.getByLabel("Выбрать строку 1", { exact: true }).uncheck();
-    await page
-      .getByLabel(`Выбрать строку ${index + 1}`, { exact: true })
-      .check();
-    await page
-      .getByRole("combobox", {
-        name: "Направление нового события",
-        exact: true,
-      })
-      .selectOption(direction);
-    await page
-      .getByRole("button", { name: "Добавить событие", exact: true })
-      .click();
-    await expect.poll(() => current().events?.length).toBe(index + 1);
-    const assign = page.getByRole("button", {
-      name: "Назначить набор выбранным (1)",
-      exact: true,
+  const eventIds = current().events!.map((event) => event.id);
+  await page.locator("#request-training > summary").click();
+  for (const [index, title] of ["БиОТ · рабочие", "БиОТ · ИТР"].entries()) {
+    const protocol = page.getByRole("combobox", {
+      name: new RegExp(`^Протокол:.*(?:${index ? "ITR|ИТР" : "WORKER|рабоч"})`, "i"),
     });
-    await assign.click();
+    // Mode changes are explicit on the existing event; they preserve assignment IDs and manual dates.
+    await protocol.selectOption("GROUP");
     await expect
       .poll(() => current().items[index].assignments[0].protocolMode)
       .toBe("GROUP");
-    await expect(assign).toBeEnabled();
-    await assign.click();
-    await expect(assign).toBeEnabled();
+    await page
+      .getByRole("button", {
+        name: new RegExp(`^Настройки обучения получателя ${index + 1}:`),
+      })
+      .click();
+    const dialog = page.getByRole("dialog", {
+      name: "Назначить обучение",
+      exact: true,
+    });
+    await dialog
+      .getByRole("checkbox", { name: /^Безопасность и охрана труда/ })
+      .check();
+    await dialog
+      .getByRole("button", {
+        name: "Добавить обучение и комплект",
+        exact: true,
+      })
+      .click();
+    await expect(dialog).toHaveCount(0);
+    // A GROUP protocol is a virtual event document, so the row retains only
+    // its credential. Repeating the choice must not restore a redundant
+    // individual protocol or replace the original event identity.
     expect(current().items[index].assignments).toHaveLength(1);
+    expect(current().events).toHaveLength(2);
+    expect(current().events!.map((event) => event.id)).toEqual(eventIds);
+    expect(title).toBeTruthy();
   }
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
   await page.reload();
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
   const draft = current();
-  assertMixedAssignments(draft);
+  expect(draft.kind).toBe("COMPANY");
+  expect(draft.items).toHaveLength(2);
+  for (const [index, person] of draft.items.entries()) {
+    expect(person.assignments).toHaveLength(1);
+    expect(person.assignments[0]).toMatchObject({
+      documentDate: manualDates[index],
+      trainingStart: manualStarts[index],
+      fieldOrigins: { documentDate: "MANUAL", trainingStart: "MANUAL" },
+    });
+  }
   expect(draft.events).toHaveLength(2);
+  expect(draft.events!.map((event) => event.id)).toEqual(eventIds);
   expect(draft.events!.map((event) => event.protocolTemplateId)).toEqual([
     "biot-protocol",
     "biot-itr-protocol",

@@ -19,6 +19,7 @@ import {
   recipientForRequest,
 } from "../../apps/web/lib/request-bundles";
 import { editTrainingAssignment } from "../../apps/web/lib/training-assignment-edit";
+import { newRecipient } from "../../apps/web/lib/types";
 
 test("manager and director prepare worker and ITR bundles for 1/3/100/250 people with individual or shared protocols", async (t) => {
   assertTestDatabase();
@@ -79,6 +80,11 @@ test("manager and director prepare worker and ITR bundles for 1/3/100/250 people
           schemaVersion: 2,
           demoMode: true,
           commonFields: { documentDate: "2026-09-25" },
+          // The manager explicitly assigns this course to subsequent people.
+          // Existing courses alone do not make newly added people participants.
+          trainingDefaults: [
+            { direction: "BIOT", eventIds: [seed.events[0].id] },
+          ],
           ...seed,
         });
         Object.assign(draft.events![0].commonFields, {
@@ -90,7 +96,13 @@ test("manager and director prepare worker and ITR bundles for 1/3/100/250 people
           biotIndustryKz: "Сынақ саласы",
         });
         while (draft.items.length < count)
-          draft.items.push(recipientForRequest(draft));
+          draft.items.push(
+            recipientForRequest(draft, {
+              ...newRecipient(),
+              employeeCategory: category,
+              assignments: [],
+            }),
+          );
         draft.items.forEach((item, index) => {
           Object.assign(item, {
             fullNameRu: `Тестовый Получатель ${String(index + 1).padStart(3, "0")}`,

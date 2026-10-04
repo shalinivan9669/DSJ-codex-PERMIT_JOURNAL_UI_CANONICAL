@@ -1,6 +1,6 @@
 "use client";
 
-import { trainingDirection } from "@demo/contracts";
+import { trainingDirection, type TrainingDirection } from "@demo/contracts";
 import { assignTrainingBundle } from "@/lib/request-bundles";
 import type { Draft } from "@/lib/types";
 import "./request-training-choices.css";
@@ -17,20 +17,28 @@ export function RequestTrainingChoices({
   disabled,
   readonly,
   selectedIds,
+  hiddenSelectedCount = 0,
   onChange,
+  onRemove,
 }: {
   draft: Draft;
   disabled: boolean;
   readonly: boolean;
   selectedIds?: readonly string[];
+  hiddenSelectedCount?: number;
   onChange: (nextDraft: Draft) => void;
+  onRemove?: (
+    direction: TrainingDirection,
+    recipientIds: string[],
+    all: boolean,
+  ) => void;
 }) {
   if (readonly) return null;
   const selected = selectedIds?.length ? new Set(selectedIds) : null;
   const recipients = selected
     ? draft.items.filter((item) => selected.has(item.id))
     : draft.items;
-  const scope = selected ? "выбранным" : "всем";
+  const scope = selected ? "отмеченным" : "всем в заявке";
   const targetIds = recipients.map((item) => item.id);
   return (
     <div
@@ -39,7 +47,10 @@ export function RequestTrainingChoices({
       aria-label={`Добавить обучение ${scope} участникам`}
     >
       <span className="request-training-scope">
-        Обучение {scope} ({recipients.length}):
+        {selected
+          ? `Отмеченные ${recipients.length}, скрытых фильтрами ${hiddenSelectedCount}`
+          : `Все ${recipients.length} в заявке`}
+        :
       </span>
       {choices.map((choice) => {
         const assigned = recipients.filter((item) =>
@@ -51,34 +62,66 @@ export function RequestTrainingChoices({
         const complete =
           recipients.length > 0 && assigned === recipients.length;
         return (
-          <button
+          <div
             key={choice.id}
-            type="button"
-            className="request-training-chip"
-            data-complete={complete || undefined}
-            disabled={disabled || !recipients.length || complete}
-            title={`${choice.name}. ${complete ? "Уже назначено всем участникам этого выбора." : `Добавить комплект документов ${scope} участникам.`}`}
-            aria-label={`${choice.label}: ${complete ? `назначено всем (${assigned})` : `добавить ${scope} участникам (${recipients.length})`}`}
-            onClick={() => {
-              if (disabled || !recipients.length || complete) return;
-              onChange(assignTrainingBundle(draft, targetIds, choice.id));
-            }}
+            className="request-training-choice"
+            data-state={complete ? "all" : assigned ? "partial" : "none"}
           >
-            {choice.label}
-            {complete ? (
-              <span aria-hidden="true"> ✓</span>
-            ) : assigned > 0 ? (
-              <span className="request-training-count" aria-hidden="true">
-                {assigned}/{recipients.length}
-              </span>
-            ) : null}
-          </button>
+            <button
+              key={choice.id}
+              type="button"
+              className="request-training-chip"
+              data-complete={complete || undefined}
+              disabled={disabled || !recipients.length}
+              title={`${choice.name}. ${assigned} из ${recipients.length}.`}
+              aria-label={`${choice.label}: ${complete ? `снять у этой группы (${assigned})` : assigned ? `добавить остальным (${recipients.length - assigned})` : `добавить ${scope} (${recipients.length})`}`}
+              onClick={() => {
+                if (disabled || !recipients.length) return;
+                if (complete) onRemove?.(choice.id, targetIds, !selected);
+                else
+                  onChange(
+                    assignTrainingBundle(
+                      draft,
+                      targetIds,
+                      choice.id,
+                      undefined,
+                      !selected,
+                    ),
+                  );
+              }}
+            >
+              {choice.label}
+              {complete ? (
+                <span> ✓ · Снять {assigned}</span>
+              ) : assigned > 0 ? (
+                <span className="request-training-count" aria-hidden="true">
+                  {assigned}/{recipients.length} · Добавить остальным
+                </span>
+              ) : null}
+            </button>
+            {!!assigned && !complete && (
+              <button
+                type="button"
+                className="text-button request-training-remove"
+                disabled={disabled}
+                onClick={() => onRemove?.(choice.id, targetIds, !selected)}
+                aria-label={`${choice.label}: снять у этой группы (${assigned})`}
+              >
+                Снять у этой группы ({assigned})
+              </button>
+            )}
+          </div>
         );
       })}
       {!recipients.length && (
         <span className="request-training-empty">
           {selected ? "Выберите участников." : "Сначала добавьте участника."}
         </span>
+      )}
+      {!selected && (
+        <small className="request-training-policy">
+          Общее назначение действует и для следующих людей подходящей категории.
+        </small>
       )}
     </div>
   );

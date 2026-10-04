@@ -389,6 +389,21 @@
     },
     {
       "surface": "api",
+      "method": "GET",
+      "path": "/print-requests/:id/training-removals"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/training-removals"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/training-removals/:operationId/restore"
+    },
+    {
+      "surface": "api",
       "method": "POST",
       "path": "/print-requests/:id/import-reconciliation/preview"
     },

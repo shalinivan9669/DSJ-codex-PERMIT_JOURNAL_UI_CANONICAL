@@ -143,7 +143,10 @@ test("order progress uses scoped factual results and counts people/events instea
     source: "Actual synthetic result from signed sheet",
   };
   draft.items[7].assignments[0].result = "Сдал";
-  await patchRequest(c, request.id, { expectedRevision: 0, draft });
+  const withResult = await patchRequest(c, request.id, {
+    expectedRevision: request.revision,
+    draft,
+  });
   detail = await value.serviceOrderDetail(c, order.id);
   assert.equal(detail.completion.training, true);
   assert.equal(detail.completion.documents, false);
@@ -158,7 +161,10 @@ test("order progress uses scoped factual results and counts people/events instea
     legacyAssignments: 0,
   });
   draft.events![0].commonFields.documentDate = "2026-09-24";
-  await patchRequest(c, request.id, { expectedRevision: 1, draft });
+  await patchRequest(c, request.id, {
+    expectedRevision: withResult.revision,
+    draft,
+  });
   const inheritedDate = await value.serviceOrderDetail(c, order.id);
   assert.equal(
     inheritedDate.nextActions.filter(
@@ -171,7 +177,7 @@ test("order progress uses scoped factual results and counts people/events instea
   );
 
   await t.test(
-    "the default issuance date does not supply training dates, protocol dates or factual outcomes",
+    "the default issue date supplies the planned LIVE protocol date without training dates or factual outcomes",
     async () => {
       const eventId = randomUUID();
       const request = await createRequest(c, {
@@ -206,13 +212,21 @@ test("order progress uses scoped factual results and counts people/events instea
       });
       const saved = draftSchema.parse(request.draft);
       assert.equal(saved.commonFields!.documentDate, today(tenant.timezone));
-      const resolved = resolveDraft(saved).draft;
-      const assignment = resolved.items[0].assignments[0];
+      const resolved = resolveDraft(saved);
+      const assignment = resolved.draft.items[0].assignments[0];
       assert.equal(assignment.documentDate, today(tenant.timezone));
       assert.equal(assignment.trainingStart, "");
       assert.equal(assignment.trainingEnd, "");
-      assert.equal(assignment.protocolDate, "");
+      assert.equal(assignment.protocolDate, today(tenant.timezone));
+      assert.equal(
+        resolved.provenance[`${saved.items[0].id}:${assignment.id}`]
+          .protocolDate,
+        "AUTO",
+      );
       assert.equal(assignment.outcome?.status, "UNKNOWN");
+      assert.equal(assignment.outcome?.source, "");
+      assert.equal(assignment.outcome?.confirmedBy, undefined);
+      assert.equal(assignment.outcome?.confirmedAt, undefined);
       const order = await value.createServiceOrder(c, {
         title: "Unknown training outcome",
         customerId: customer.id,
@@ -229,7 +243,7 @@ test("order progress uses scoped factual results and counts people/events instea
   );
 
   await t.test(
-    "identical names without linked recipients remain distinct and legacy assignments are explicit",
+    "identical names without linked recipients remain distinct while new unbound inputs receive the mandatory LIVE kit",
     async () => {
       const legacy = await createRequest(
         c,
@@ -254,12 +268,30 @@ test("order progress uses scoped factual results and counts people/events instea
         customerId: customer.id,
         requestIds: [legacy.id],
       });
+      const saved = draftSchema.parse(legacy.draft);
+      assert.equal(saved.businessRuleVersion, "LIVE_V1");
+      assert.deepEqual(
+        saved.items.map((row) =>
+          row.assignments.map((assignment) => assignment.templateId),
+        ),
+        [
+          ["pb-card", "pb-protocol"],
+          ["pb-card", "pb-protocol"],
+        ],
+      );
+      assert.ok(
+        saved.items
+          .flatMap((row) => row.assignments)
+          .every((assignment) => !assignment.eventId),
+      );
       const result = await value.serviceOrderDetail(c, legacyOrder.id);
       assert.deepEqual(result.summary, {
         people: 2,
         events: 0,
         personEventServices: 0,
-        legacyAssignments: 2,
+        // No event identity is invented by normalization: both output forms
+        // remain explicitly unbound, while the two distinct people are counted.
+        legacyAssignments: 4,
       });
       assert.equal(result.completion.training, true);
     },

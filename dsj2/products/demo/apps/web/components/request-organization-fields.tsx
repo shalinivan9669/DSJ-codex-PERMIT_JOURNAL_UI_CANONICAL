@@ -63,6 +63,7 @@ export function RequestOrganizationFields({
 }) {
   const id = useId();
   const [touched, setTouched] = useState(false);
+  const [choicesOpen, setChoicesOpen] = useState(false);
   const newNames = useRef<OrganizationNames | null>(null);
   const previousCustomerId = useRef("");
   if (value.mode === "new") newNames.current = value.names;
@@ -77,6 +78,50 @@ export function RequestOrganizationFields({
     : "Сохранённое название — как введено";
   const creationIssue =
     value.mode === "new" ? customerSchema.safeParse(value.names) : null;
+  if (selected && !choicesOpen)
+    return (
+      <div className="request-organization-selected-compact">
+        <strong>{selected.nameRu || selected.nameKz}</strong>
+        <span className="muted">
+          {selected.bin ? `БИН ${selected.bin}` : "БИН не указан"}
+        </span>
+        <button
+          type="button"
+          className="text-button"
+          disabled={disabled || busy}
+          onClick={() => setChoicesOpen(true)}
+        >
+          Сменить компанию
+        </button>
+        <details>
+          <summary>Названия и общая карточка</summary>
+          <p>
+            RU: {selected.nameRu || "—"}
+            <br />
+            KZ: {selected.nameKz || "—"}
+          </p>
+          <small>{selectedForm}</small>
+          {onEdit && !disabled && (
+            <button
+              type="button"
+              className="text-button"
+              disabled={busy}
+              onClick={() => onEdit(selected)}
+            >
+              Изменить общую карточку организации
+            </button>
+          )}
+          <p className="fine-print">
+            Общая карточка используется и в других заявках.
+          </p>
+        </details>
+        {error && (
+          <p className="field-error" role="alert">
+            {error}
+          </p>
+        )}
+      </div>
+    );
   return (
     <div className="request-organization-fields stack">
       <div
@@ -172,25 +217,48 @@ export function RequestOrganizationFields({
             hideEmptyPreview
             showRequiredErrors={touched || !!error}
           />
-          {onCreate && (
-            <div className="toolbar">
-              <button
-                type="button"
-                className="primary"
-                disabled={!creationIssue?.success || busy}
-                onClick={onCreate}
-              >
-                {busy ? "Сохраняем компанию…" : "Использовать эту компанию"}
-              </button>
-              {onCancelNew && (
-                <button type="button" onClick={onCancelNew}>
-                  Отмена
-                </button>
-              )}
-            </div>
-          )}
+          <p className="fine-print">
+            Введённое название ещё не добавлено в заявку. Нажмите «Использовать
+            эту компанию» или отмените ввод.
+          </p>
         </fieldset>
       ) : selected ? (
+        <button
+          type="button"
+          className="text-button"
+          onClick={() => setChoicesOpen(false)}
+        >
+          Готово: {selected.nameRu}
+        </button>
+      ) : null}
+      {value.mode === "new" && onCreate && (
+        <div className="toolbar">
+          <button
+            type="button"
+            className="primary"
+            disabled={disabled || !creationIssue?.success || busy}
+            onClick={() => {
+              setChoicesOpen(false);
+              onCreate();
+            }}
+          >
+            {busy ? "Сохраняем компанию…" : "Использовать эту компанию"}
+          </button>
+          {onCancelNew && (
+            <button
+              type="button"
+              disabled={disabled}
+              onClick={() => {
+                setChoicesOpen(false);
+                onCancelNew();
+              }}
+            >
+              Отмена
+            </button>
+          )}
+        </div>
+      )}
+      {value.mode === "existing" && selected && choicesOpen ? (
         <div className="request-organization-selected stack">
           <p>
             <strong>Форма компании:</strong> {selectedForm}

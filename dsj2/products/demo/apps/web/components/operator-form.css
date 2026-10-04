@@ -4,6 +4,74 @@
   padding: 0 0 40px;
   min-width: 0;
 }
+.request-organization-selected-compact {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 13px;
+}
+.request-organization-selected-compact > strong {
+  max-width: 70ch;
+  overflow-wrap: anywhere;
+}
+.request-organization-selected-compact details {
+  font-size: 12px;
+}
+.request-organization-selected-compact summary {
+  cursor: pointer;
+  min-height: 32px;
+  align-content: center;
+}
+.recipient-details-footer {
+  position: sticky;
+  bottom: -20px;
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+  z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.recipient-details-footer > div {
+  flex: 1 1 260px;
+}
+.recipient-details-save { display: grid; gap: 4px; }
+.operator-form .modal:has(.recipient-details-footer) { scroll-padding-block: 80px 130px; }
+.recipient-details :is(input, select, textarea, button, summary) { scroll-margin-block: 80px 130px; }
+.recipient-details-footer p {
+  margin: 4px 0 0;
+}
+.training-choice-with-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.training-choice-with-actions .training-choice {
+  flex: 1 1 360px;
+}
+.operator-next-action {
+  text-align: left;
+  justify-content: flex-start;
+  margin-bottom: 6px;
+}
+.recipient-grid-date-source {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 3px;
+}
+.recipient-grid-date-source .text-button {
+  min-height: 24px;
+  padding: 2px 4px;
+  font-size: 11px;
+}
 .operator-form > .back-link {
   margin-bottom: 12px;
 }

@@ -3,22 +3,10 @@ import { useEffect, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import { api, errorText } from "@/lib/api";
 import { type Customer, type Page, type Recipient } from "@/lib/types";
+import { recordQueryIsCurrent, recordQueryKey } from "@/lib/record-query";
+import { reuseRecipient, type StoredRecipient } from "@/lib/stored-recipient";
 
-type StoredRecipient = { id: string; data: Recipient; archived?: boolean };
-export function reuseRecipient(record: StoredRecipient): Recipient {
-  const {
-    assignments: _oldAssignments,
-    importId: _importId,
-    sourceRow: _sourceRow,
-    ...person
-  } = record.data;
-  return {
-    ...person,
-    id: crypto.randomUUID(),
-    recipientId: record.id,
-    assignments: [],
-  };
-}
+export { reuseRecipient } from "@/lib/stored-recipient";
 export function RecordPicker({
   kind,
   onClose,
@@ -38,21 +26,33 @@ export function RecordPicker({
   });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [loadedQuery, setLoadedQuery] = useState<string>();
+  const [failedQuery, setFailedQuery] = useState<string>();
+  const [retry, setRetry] = useState(0);
+  const query = recordQueryKey(kind, search, page);
+  const current = recordQueryIsCurrent(query, loadedQuery, failedQuery);
+  const loading = busy || (!current && failedQuery !== query);
   useEffect(() => {
     let active = true;
+    setBusy(true);
+    setError("");
     const timer = setTimeout(() => {
-      setBusy(true);
       api<Page<Customer | StoredRecipient>>(
         `/${kind}?${new URLSearchParams({ search, page: String(page), pageSize: "20" })}`,
       )
         .then((data) => {
           if (active) {
             setResult(data);
+            setLoadedQuery(query);
+            setFailedQuery(undefined);
             setError("");
           }
         })
         .catch((caught) => {
-          if (active) setError(errorText(caught));
+          if (active) {
+            setError(errorText(caught));
+            setFailedQuery(query);
+          }
         })
         .finally(() => {
           if (active) setBusy(false);
@@ -62,7 +62,7 @@ export function RecordPicker({
       active = false;
       clearTimeout(timer);
     };
-  }, [kind, page, search]);
+  }, [kind, page, search, query, retry]);
   return (
     <Modal
       title={
@@ -79,6 +79,8 @@ export function RecordPicker({
           autoFocus
           value={search}
           onChange={(e) => {
+            setLoadedQuery(undefined);
+            setFailedQuery(undefined);
             setSearch(e.target.value);
             setPage(1);
           }}
@@ -95,8 +97,14 @@ export function RecordPicker({
           результаты и документы выбираются заново.
         </p>
       )}
-      {error && <Notice>{error}</Notice>}
-      <div className="table-scroll" aria-busy={busy}>
+      {error && failedQuery === query && (
+        <Notice>
+          {error} Результаты этого поиска недоступны; измените запрос или
+          повторите поиск.
+        </Notice>
+      )}
+      {loading && <p role="status">Ищем по текущему запросу…</p>}
+      <div className="table-scroll" aria-busy={loading}>
         <table>
           <thead>
             <tr>
@@ -106,7 +114,7 @@ export function RecordPicker({
             </tr>
           </thead>
           <tbody>
-            {result.items.map((record) => {
+            {(current && !busy ? result.items : []).map((record) => {
               const customer = record as Customer;
               const recipient = record as StoredRecipient;
               return (
@@ -132,7 +140,9 @@ export function RecordPicker({
                   </td>
                   <td>
                     <button
+                      disabled={!current || loading}
                       onClick={() => {
+                        if (!current || loading) return;
                         if (kind === "customers") onCustomer?.(customer);
                         else onRecipient?.(reuseRecipient(recipient));
                       }}
@@ -146,27 +156,48 @@ export function RecordPicker({
           </tbody>
         </table>
       </div>
-      {!busy && !result.items.length && (
+      {current && !loading && !result.items.length && (
         <p>Записи не найдены. Измените поиск или добавьте новую запись.</p>
       )}
       <div className="pagination">
         <span>
-          Найдено: {result.total} · страница {page}
+          {current
+            ? `Найдено: ${result.total} · страница ${page}`
+            : `Страница ${page}`}
         </span>
         <div>
           <button
-            disabled={busy || page === 1}
-            onClick={() => setPage(page - 1)}
+            disabled={loading || page === 1}
+            onClick={() => {
+              setLoadedQuery(undefined);
+              setFailedQuery(undefined);
+              setPage(page - 1);
+            }}
           >
             Назад
           </button>
           <button
-            disabled={busy || page * 20 >= result.total}
-            onClick={() => setPage(page + 1)}
+            disabled={loading || !current || page * 20 >= result.total}
+            onClick={() => {
+              setLoadedQuery(undefined);
+              setFailedQuery(undefined);
+              setPage(page + 1);
+            }}
           >
             Далее
           </button>
         </div>
+        {failedQuery === query && (
+          <button
+            onClick={() => {
+              setFailedQuery(undefined);
+              setLoadedQuery(undefined);
+              setRetry(retry + 1);
+            }}
+          >
+            Повторить поиск
+          </button>
+        )}
       </div>
     </Modal>
   );

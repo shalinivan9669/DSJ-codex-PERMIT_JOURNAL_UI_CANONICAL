@@ -13,6 +13,7 @@ import {
   setCsrf,
   SESSION_EXPIRED_EVENT,
   BEFORE_LOGOUT_EVENT,
+  NavigationBlockedError,
 } from "@/lib/api";
 import type { AppContext } from "@/lib/types";
 import { RequestList, NewRequest } from "./request-list";
@@ -87,7 +88,7 @@ export function Workspace() {
       setUnauthorized(true);
       router.replace("/login");
     } catch (caught) {
-      setError(errorText(caught));
+      if (!(caught instanceof NavigationBlockedError)) setError(errorText(caught));
     }
   }
   if (pathname.startsWith("/verify/"))

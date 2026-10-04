@@ -13,14 +13,34 @@ import {
 } from "@demo/contracts";
 import { api, errorText } from "@/lib/api";
 import { bulkFields } from "@/lib/bulk-edit";
+import { trainingDisplayTitle } from "@/lib/training-display";
 import { newAssignment, type Assignment, type Draft } from "@/lib/types";
-import { eligibleForEvent, joinEventAssignment } from "@/lib/event-assignment";
+import {
+  eligibleForEvent,
+  joinEventAssignmentKit,
+} from "@/lib/event-assignment";
 import {
   applyEventOutcomes,
   eventOutcomeRecipients,
 } from "@/lib/event-outcomes";
 import { TrainingDateSettings } from "./training-date-settings";
 import { DateCalculationStatus } from "./date-calculation-status";
+import {
+  flushPreparations,
+  useDurablePreparation,
+} from "@/lib/use-durable-preparation";
+import {
+  emptyOutcomePreparation,
+  eventPreparationContext,
+  preparationPrefix,
+  parsePreparation,
+  validOutcomePreparation,
+  type OutcomePreparation,
+  type PreparationOwner,
+  type PreparationRecord,
+} from "@/lib/preparation-storage";
+import { biotCategoryDescription } from "@/lib/validity-display";
+import { validCalendarCandidate } from "@/lib/calendar-preparation";
 
 const directions = [
   {
@@ -81,6 +101,7 @@ export function EventContext({
   embedded = false,
   primary = false,
   fieldHints = {},
+  preparationOwner,
 }: {
   draft: Draft;
   centerCommon?: CommonFields;
@@ -93,6 +114,7 @@ export function EventContext({
   embedded?: boolean;
   primary?: boolean;
   fieldHints?: Record<string, string>;
+  preparationOwner?: PreparationOwner;
 }) {
   const [expanded, setExpanded] = useState(embedded || primary);
   const sectionRef = useRef<HTMLElement>(null);
@@ -125,19 +147,11 @@ export function EventContext({
   }
   const [direction, setDirection] = useState("pb");
   const [activeId, setActiveId] = useState(draft.events?.[0]?.id || "");
-  const [outcome, setOutcome] = useState<
-    "UNKNOWN" | "PASSED" | "FAILED" | "ABSENT"
-  >("UNKNOWN");
-  const [source, setSource] = useState("");
-  const [knowledge, setKnowledge] = useState("");
-  const [proctoring, setProctoring] = useState("");
   const [review, setReview] = useState(false);
   const [reviewSignature, setReviewSignature] = useState("");
-  const [outcomeScope, setOutcomeScope] = useState<"event" | "selected">(
-    "event",
-  );
   const [replaceEmpty, setReplaceEmpty] = useState(false);
   const [joinExisting, setJoinExisting] = useState(false);
+  const [joinError, setJoinError] = useState("");
   const [moveTarget, setMoveTarget] = useState("");
   const [moveConfirmed, setMoveConfirmed] = useState(false);
   const requestCommon = draft.commonFields || {};
@@ -198,14 +212,98 @@ export function EventContext({
   const event = events.find((e) => e.id === activeId) || events[0];
   const activeEventId = event?.id || "";
   const eventIndex = events.findIndex((row) => row.id === activeEventId);
+  const preparation = useDurablePreparation<OutcomePreparation>({
+    identity:
+      preparationOwner && activeEventId
+        ? {
+            ...preparationOwner,
+            requestId: draft.id,
+            targetId: activeEventId,
+            kind: "outcome",
+          }
+        : undefined,
+    defaults: emptyOutcomePreparation,
+    context: eventPreparationContext(draft, event),
+    revision: draft.revision,
+    title: event?.title || "Удалённое обучение",
+    validate: validOutcomePreparation,
+  });
+  const {
+    status: outcome,
+    source,
+    knowledge,
+    proctoring,
+    scope: outcomeScope,
+  } = preparation.value;
+  const updatePreparation = (patch: Partial<OutcomePreparation>) => {
+    preparation.setValue({ ...preparation.value, ...patch });
+    setReview(false);
+  };
+  const [removedPreparations, setRemovedPreparations] = useState<
+    PreparationRecord<unknown>[]
+  >([]);
+  const [removedPreparationError, setRemovedPreparationError] = useState("");
+  const eventIds = events.map((row) => row.id).join(":");
+  useEffect(() => {
+    if (!preparationOwner) return;
+    try {
+      const prefix = preparationPrefix(preparationOwner, draft.id);
+      const removed: PreparationRecord<unknown>[] = [];
+      for (let index = 0; index < localStorage.length; index++) {
+        const key = localStorage.key(index);
+        if (!key?.startsWith(prefix)) continue;
+        const [kind, encodedTarget] = key.slice(prefix.length).split(":");
+        if ((kind !== "outcome" && kind !== "calendar") || !encodedTarget)
+          continue;
+        const targetId = decodeURIComponent(encodedTarget);
+        if (targetId === "request" || events.some((row) => row.id === targetId))
+          continue;
+        const record = parsePreparation<unknown>(
+          localStorage.getItem(key),
+          { ...preparationOwner, requestId: draft.id, targetId, kind },
+          (value): value is unknown =>
+            kind === "outcome"
+              ? validOutcomePreparation(value)
+              : validCalendarCandidate(value),
+        );
+        if (record) removed.push(record);
+      }
+      setRemovedPreparations(removed);
+      setRemovedPreparationError("");
+    } catch {
+      setRemovedPreparationError(
+        "Не удалось проверить подготовку удалённых обучений. Сохранённый ввод не удалён.",
+      );
+    }
+  }, [
+    draft.id,
+    eventIds,
+    preparationOwner?.tenantId,
+    preparationOwner?.userId,
+  ]);
+  const resolvedForDisplay = expanded
+    ? resolveDraft(draft, centerCommon).draft
+    : undefined;
   const displayedCommon =
     (expanded
-      ? resolveDraft(draft, centerCommon).draft.events?.find(
-          (e) => e.id === activeEventId,
-        )?.commonFields
+      ? resolvedForDisplay?.events?.find((e) => e.id === activeEventId)
+          ?.commonFields
       : undefined) ||
     event?.commonFields ||
     {};
+  const resolvedExpiryDates = [
+    ...new Set(
+      (resolvedForDisplay?.items || []).flatMap((item) =>
+        item.assignments
+          .filter((assignment) => assignment.eventId === activeEventId)
+          .map((assignment) =>
+            assignment.validityMode === "UNLIMITED"
+              ? "Бессрочно"
+              : assignment.validUntil || "Дата документа не указана",
+          ),
+      ),
+    ),
+  ];
   const displayedRequestCommon = expanded
     ? resolveCommonDates(requestCommon, centerCommon, draft.presetFields)
     : requestCommon;
@@ -254,21 +352,27 @@ export function EventContext({
     source,
     knowledge,
     proctoring,
+    eventPreparationContext(
+      draft,
+      event,
+      outcomeRecipients.map((item) => item.id),
+    ),
   ]);
-  const reviewed = review && reviewSignature === outcomeSignature;
+  const reviewed =
+    review && reviewSignature === outcomeSignature && !preparation.stale;
+  const outcomeLengthErrors = {
+    source: source.length > 500,
+    knowledge: knowledge.length > 500,
+    proctoring: proctoring.length > 500,
+  };
   useEffect(() => {
     function focusTraining(nativeEvent: Event) {
       const target = (
         nativeEvent as CustomEvent<{ eventId: string; field: string }>
       ).detail;
       if (!target?.eventId || !target.field) return;
-      if (target.eventId !== activeEventId) {
-        setOutcome("UNKNOWN");
-        setSource("");
-        setKnowledge("");
-        setProctoring("");
-        setReview(false);
-      }
+      if (target.eventId !== activeEventId && !flushPreparations()) return;
+      if (target.eventId !== activeEventId) setReview(false);
       setActiveId(target.eventId);
       setExpanded(true);
       setFocusTarget(target);
@@ -348,6 +452,11 @@ export function EventContext({
   }
   function renderEventField([field, label, type]: (typeof bulkFields)[number]) {
     const hint = fieldHints[`events.${eventIndex}.commonFields.${field}`];
+    const value = String(displayedCommon[field] || "");
+    const limit =
+      field === "hours" ? 30 : field === "externalBasisNumber" ? 100 : 500;
+    const lengthError = type === "text" && value.length > limit;
+    const feedbackId = `event-${activeEventId}-${field}-feedback`;
     return (
       <label key={field}>
         {label}
@@ -357,15 +466,26 @@ export function EventContext({
           data-field-path={`events.${eventIndex}.commonFields.${field}`}
           type={type}
           disabled={disabled}
-          value={String(displayedCommon[field] || "")}
+          aria-invalid={lengthError || !!hint || undefined}
+          aria-describedby={feedbackId}
+          value={value}
           onChange={(change) =>
             changeEventCommon({ [field]: change.target.value })
           }
         />
-        {hint ? (
-          <small className="field-hint">{hint}</small>
+        {lengthError ? (
+          <small className="field-error" id={feedbackId}>
+            Не больше {limit} символов; сейчас {value.length}. Сократите текст
+            для сохранения.
+          </small>
+        ) : hint ? (
+          <small className="field-hint" id={feedbackId}>
+            {hint}
+          </small>
         ) : (
-          !primary && <small>Общее значение события</small>
+          <small id={feedbackId}>
+            {primary ? "\u00a0" : "Общее значение события"}
+          </small>
         )}
       </label>
     );
@@ -408,6 +528,31 @@ export function EventContext({
       (d) => d.protocol === event.protocolTemplateId,
     );
     if (!choice) return;
+    const joined = new Map<string, Assignment[]>();
+    const conflicts: string[] = [];
+    if (joinExisting)
+      for (const item of draft.items) {
+        if (!selectedIds.includes(item.id)) continue;
+        const candidates = item.assignments.filter((a) =>
+          eligibleForEvent(a, choice.card),
+        );
+        if (candidates.length !== 1) continue;
+        const kit = joinEventAssignmentKit(
+          draft,
+          item,
+          candidates[0],
+          event.id,
+        );
+        if (kit) joined.set(item.id, kit);
+        else conflicts.push(item.fullNameRu || item.id);
+      }
+    if (conflicts.length) {
+      setJoinError(
+        `Присоединение не выполнено: в индивидуальном протоколе есть отдельные изменения у ${conflicts.length} получателей (${conflicts.slice(0, 3).join(", ")}). Проверьте индивидуальные документы перед объединением; введённые сведения сохранены.`,
+      );
+      return;
+    }
+    setJoinError("");
     void apply({
       items: draft.items.map((item) => {
         if (
@@ -423,9 +568,7 @@ export function EventContext({
         if (joinExisting && candidates.length === 1)
           return {
             ...item,
-            assignments: item.assignments.map((a) =>
-              a.id === candidates[0].id ? joinEventAssignment(a, event.id) : a,
-            ),
+            assignments: joined.get(item.id)!,
           };
         const assignment: Assignment = {
           ...newAssignment(choice.card),
@@ -602,7 +745,23 @@ export function EventContext({
   const eventDateSettings = event ? (
     <>
       <TrainingDateSettings
+        key={event.id}
         rule={displayedCommon.trainingDateRule}
+        preparationIdentity={
+          preparationOwner
+            ? {
+                ...preparationOwner,
+                requestId: draft.id,
+                targetId: event.id,
+                kind: "calendar",
+              }
+            : undefined
+        }
+        preparationContext={eventPreparationContext(draft, event)}
+        requestRevision={draft.revision}
+        targetTitle={event.title}
+        fieldPath={`events.${eventIndex}.commonFields.trainingDateRule`}
+        fieldHints={fieldHints}
         disabled={disabled}
         onChange={(rule) =>
           updateEvent({
@@ -615,6 +774,8 @@ export function EventContext({
       />
       <DateCalculationStatus
         values={displayedCommon}
+        forceValidity={draft.businessRuleVersion === "LIVE_V1"}
+        validityDescription={`Сроки документов участников: ${resolvedExpiryDates.join("; ") || "дата документа не указана"}. Рабочий — 1 год, ИТР — 3 года от даты документа; ПС — бессрочно. Ручное исключение срока действующим правилом центра не предусмотрено.`}
         rule={displayedCommon.trainingDateRule}
         origins={Object.fromEntries(
           calculatedDateKeys.map((key) => [
@@ -657,6 +818,7 @@ export function EventContext({
           {eventAssignments.length} назначений · 1 общий протокол при оформлении
         </span>
       </div>
+      {joinError && <Notice>{joinError}</Notice>}
     </AdvancedTrainingSettings>
   ) : null;
   const moveSettings = event ? (
@@ -681,7 +843,7 @@ export function EventContext({
           <option value="">Выберите совместимое событие</option>
           {moveTargets.map((target) => (
             <option key={target.id} value={target.id}>
-              {target.title} ·{" "}
+              {trainingDisplayTitle(target.title)} ·{" "}
               {target.commonFields.trainingStart || "дата не задана"}
             </option>
           ))}
@@ -689,7 +851,7 @@ export function EventContext({
       </label>
       <p>
         Будет перенесено: {selectedAssignments.length} назначений из события «
-        {event.title}».
+        {trainingDisplayTitle(event.title)}».
       </p>
       {moveConflicts.length > 0 && (
         <Notice>
@@ -836,7 +998,26 @@ export function EventContext({
           ))}
       </div>
       <TrainingDateSettings
+        key="request-calendar"
         rule={displayedRequestCommon.trainingDateRule}
+        preparationIdentity={
+          preparationOwner
+            ? {
+                ...preparationOwner,
+                requestId: draft.id,
+                targetId: "request",
+                kind: "calendar",
+              }
+            : undefined
+        }
+        preparationContext={JSON.stringify({
+          commonFields: draft.commonFields,
+          eventIds,
+        })}
+        requestRevision={draft.revision}
+        targetTitle="Общий график заявки"
+        fieldPath="commonFields.trainingDateRule"
+        fieldHints={fieldHints}
         disabled={disabled}
         onChange={(rule) =>
           setRequestCommon((old) => ({ ...old, trainingDateRule: rule }))
@@ -844,6 +1025,7 @@ export function EventContext({
       />
       <DateCalculationStatus
         values={displayedRequestCommon}
+        forceValidity={draft.businessRuleVersion === "LIVE_V1"}
         rule={displayedRequestCommon.trainingDateRule}
         origins={Object.fromEntries(
           calculatedDateKeys.map((key) => [
@@ -898,7 +1080,10 @@ export function EventContext({
           </div>
           {!primary && (
             <button
-              onClick={() => setExpanded(!expanded)}
+              onClick={() => {
+                if (expanded && !flushPreparations()) return;
+                setExpanded(!expanded);
+              }}
               aria-expanded={expanded}
             >
               {expanded ? "Свернуть" : "Настроить даты и протоколы"}
@@ -908,6 +1093,53 @@ export function EventContext({
       )}
       {expanded && (
         <div className="context-body">
+          {removedPreparationError && (
+            <Notice kind="error">{removedPreparationError}</Notice>
+          )}
+          {removedPreparations.map((record) => (
+            <Notice
+              key={`${record.identity.kind}:${record.identity.targetId}`}
+              kind="info"
+            >
+              Подготовка{" "}
+              {record.identity.kind === "outcome" ? "результата" : "графика"}{" "}
+              для «{trainingDisplayTitle(record.title)}» сохранена в этом
+              браузере, но обучение удалено. Она не применяется к другому
+              обучению. Восстановите исходное обучение командой отмены снятия,
+              чтобы продолжить, либо отмените эту подготовку.
+              <details>
+                <summary>Сохранённый ввод</summary>
+                <pre>{JSON.stringify(record.value, null, 2)}</pre>
+              </details>
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => {
+                  try {
+                    const prefix = preparationPrefix(
+                      preparationOwner!,
+                      draft.id,
+                    );
+                    const key =
+                      prefix +
+                      [record.identity.kind, record.identity.targetId]
+                        .map(encodeURIComponent)
+                        .join(":");
+                    localStorage.removeItem(key);
+                    setRemovedPreparations((rows) =>
+                      rows.filter((row) => row !== record),
+                    );
+                  } catch {
+                    setRemovedPreparationError(
+                      "Не удалось отменить подготовку. Сохранённый ввод остаётся в браузере.",
+                    );
+                  }
+                }}
+              >
+                Отменить подготовку удалённого обучения
+              </button>
+            </Notice>
+          ))}
           {!primary && (
             <p>
               Задайте общие даты и программу для группы. Индивидуальные
@@ -930,11 +1162,8 @@ export function EventContext({
                   value={activeEventId}
                   disabled={disabled}
                   onChange={(e) => {
+                    if (!flushPreparations()) return;
                     setActiveId(e.target.value);
-                    setOutcome("UNKNOWN");
-                    setSource("");
-                    setKnowledge("");
-                    setProctoring("");
                     setReview(false);
                   }}
                 >
@@ -945,7 +1174,7 @@ export function EventContext({
                   </option>
                   {events.map((e) => (
                     <option key={e.id} value={e.id}>
-                      {e.title}
+                      {trainingDisplayTitle(e.title)}
                     </option>
                   ))}
                 </select>
@@ -977,11 +1206,7 @@ export function EventContext({
                     {bulkFields
                       .filter(
                         ([field]) =>
-                          ![
-                            "trainingSubject",
-                            "hours",
-                            "protocolDate",
-                          ].includes(field),
+                          !["trainingSubject", "hours"].includes(field),
                       )
                       .map(renderEventField)}
                   </div>
@@ -1111,16 +1336,31 @@ export function EventContext({
                       data-field-path={`events.${eventIndex}.commonFields.validUntil`}
                       type="date"
                       disabled={disabled}
-                      value={displayedCommon.validUntil || ""}
+                      readOnly={draft.businessRuleVersion === "LIVE_V1"}
+                      value={
+                        draft.businessRuleVersion === "LIVE_V1"
+                          ? resolvedExpiryDates.length === 1 &&
+                            /^\d{4}-\d{2}-\d{2}$/.test(resolvedExpiryDates[0])
+                            ? resolvedExpiryDates[0]
+                            : ""
+                          : displayedCommon.validUntil || ""
+                      }
                       onChange={(e) =>
                         changeEventCommon({ validUntil: e.target.value })
                       }
                     />
                     {fieldHint("validUntil")}
-                    {!primary && (
+                    <small>
+                      {draft.businessRuleVersion === "LIVE_V1"
+                        ? "Срок каждого документа рассчитывается от его даты: рабочий — 1 год, ИТР — 3 года; ПС — бессрочно. Индивидуальные сроки видны в деталях людей. Ручной срок в текущем правиле не применяется."
+                        : "Расчёт предлагается по категории. Ручная дата сохраняется в этой версии заявки."}
+                    </small>
+                    {draft.businessRuleVersion === "LIVE_V1" && (
                       <small>
-                        Расчёт предлагается по категории. Проверяйте
-                        применимость к фактическому событию.
+                        Расчётные сроки участников:{" "}
+                        {resolvedExpiryDates.join("; ") ||
+                          "Сначала назначьте обучение людям"}
+                        .
                       </small>
                     )}
                   </label>
@@ -1128,7 +1368,12 @@ export function EventContext({
               )}
 
               {!primary && event.protocolTemplateId === "biot-protocol" && (
-                <p className="fine-print">{BIOT_CATEGORIES.WORKER.hint}</p>
+                <p className="fine-print">
+                  {biotCategoryDescription(
+                    "WORKER",
+                    draft.businessRuleVersion === "LIVE_V1",
+                  )}
+                </p>
               )}
               {!primary && assignmentSettings}
               {draft.status === "DRAFT" &&
@@ -1174,17 +1419,61 @@ export function EventContext({
                 className="outcome-entry"
                 key={`${activeEventId}:${hasUnconfirmedResults}`}
                 open={(primary && hasUnconfirmedResults) || undefined}
-                data-training-field="outcomes"
-                data-field-path={`events.${eventIndex}.outcomes`}
-                tabIndex={-1}
               >
-                <summary>
+                <summary
+                  data-training-field="outcomes"
+                  data-field-path={`events.${eventIndex}.outcomes`}
+                >
                   {primary
                     ? hasUnconfirmedResults
                       ? "Фактические результаты обучения"
                       : "Изменить результаты обучения"
                     : "Подтвердить фактические результаты события"}
                 </summary>
+                <p
+                  className="preparation-status"
+                  role="status"
+                  aria-live="polite"
+                >
+                  Подготовка для «{trainingDisplayTitle(event.title)}»:{" "}
+                  {preparation.status === "loading"
+                    ? "загружается"
+                    : preparation.status === "pending"
+                      ? "сохраняется в этом браузере"
+                      : preparation.status === "error"
+                        ? "не сохранена"
+                        : preparation.record
+                          ? "сохранена в этом браузере, не применена"
+                          : "ещё не заполнена"}
+                  . Подготовка не меняет подтверждённые результаты.
+                </p>
+                {preparation.error && (
+                  <Notice kind="error">
+                    {preparation.error}
+                    <button type="button" onClick={preparation.retry}>
+                      Повторить сохранение подготовки
+                    </button>
+                    <button type="button" onClick={preparation.reload}>
+                      Загрузить сохранённую подготовку
+                    </button>
+                  </Notice>
+                )}
+                {preparation.stale && (
+                  <Notice kind="info">
+                    Данные обучения изменились после подготовки. Ввод сохранён;
+                    проверьте программу и состав людей перед применением.
+                    <button
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => {
+                        preparation.acceptContext();
+                        setReview(false);
+                      }}
+                    >
+                      Подготовить применение к текущим данным
+                    </button>
+                  </Notice>
+                )}
                 {primary && (
                   <label>
                     Кому подтвердить результат
@@ -1193,10 +1482,9 @@ export function EventContext({
                       value={outcomeScope}
                       disabled={disabled}
                       onChange={(change) => {
-                        setOutcomeScope(
-                          change.target.value as "event" | "selected",
-                        );
-                        setReview(false);
+                        updatePreparation({
+                          scope: change.target.value as "event" | "selected",
+                        });
                       }}
                     >
                       <option value="event">
@@ -1231,8 +1519,9 @@ export function EventContext({
                       disabled={disabled}
                       value={outcome}
                       onChange={(e) => {
-                        setOutcome(e.target.value as typeof outcome);
-                        setReview(false);
+                        updatePreparation({
+                          status: e.target.value as typeof outcome,
+                        });
                       }}
                     >
                       <option value="UNKNOWN">Не подтверждён</option>
@@ -1249,13 +1538,26 @@ export function EventContext({
                       data-field-path={`events.${eventIndex}.outcomes.source`}
                       disabled={disabled}
                       value={source}
+                      aria-invalid={outcomeLengthErrors.source || undefined}
+                      aria-describedby={`preparation-${event.id}-source-feedback`}
                       onChange={(e) => {
-                        setSource(e.target.value);
-                        setReview(false);
+                        updatePreparation({ source: e.target.value });
                       }}
                       placeholder="Ведомость, дата и ответственный"
                     />
                     {fieldHint("source", "outcomes")}
+                    <small
+                      id={`preparation-${event.id}-source-feedback`}
+                      className={
+                        outcomeLengthErrors.source
+                          ? "field-error"
+                          : "field-hint"
+                      }
+                    >
+                      {outcomeLengthErrors.source
+                        ? `Не больше 500 символов; сейчас ${source.length}. Сократите источник для применения.`
+                        : "Источник сохраняется только в подготовке до явного подтверждения результатов."}
+                    </small>
                   </label>
                 </div>
                 {event.protocolTemplateId === "biot-itr-protocol" && (
@@ -1267,13 +1569,29 @@ export function EventContext({
                         data-field-path={`events.${eventIndex}.outcomes.biotKnowledgeResult`}
                         disabled={disabled}
                         value={knowledge}
+                        aria-invalid={
+                          outcomeLengthErrors.knowledge || undefined
+                        }
+                        aria-describedby={
+                          outcomeLengthErrors.knowledge
+                            ? `preparation-${event.id}-knowledge-feedback`
+                            : undefined
+                        }
                         onChange={(e) => {
-                          setKnowledge(e.target.value);
-                          setReview(false);
+                          updatePreparation({ knowledge: e.target.value });
                         }}
                         placeholder="Только подтверждённые сведения ведомости"
                       />
                       {fieldHint("biotKnowledgeResult", "outcomes")}
+                      {outcomeLengthErrors.knowledge && (
+                        <small
+                          id={`preparation-${event.id}-knowledge-feedback`}
+                          className="field-error"
+                        >
+                          Не больше 500 символов; сейчас {knowledge.length}.
+                          Сократите текст для применения.
+                        </small>
+                      )}
                       <small>
                         Заполненное значение применяется к указанным выше людям.
                         Пустое поле сохраняет их индивидуальные результаты.
@@ -1286,12 +1604,28 @@ export function EventContext({
                         data-field-path={`events.${eventIndex}.outcomes.biotProctoringResult`}
                         disabled={disabled}
                         value={proctoring}
+                        aria-invalid={
+                          outcomeLengthErrors.proctoring || undefined
+                        }
+                        aria-describedby={
+                          outcomeLengthErrors.proctoring
+                            ? `preparation-${event.id}-proctoring-feedback`
+                            : undefined
+                        }
                         onChange={(e) => {
-                          setProctoring(e.target.value);
-                          setReview(false);
+                          updatePreparation({ proctoring: e.target.value });
                         }}
                       />
                       {fieldHint("biotProctoringResult", "outcomes")}
+                      {outcomeLengthErrors.proctoring && (
+                        <small
+                          id={`preparation-${event.id}-proctoring-feedback`}
+                          className="field-error"
+                        >
+                          Не больше 500 символов; сейчас {proctoring.length}.
+                          Сократите текст для применения.
+                        </small>
+                      )}
                       <small>
                         Оставьте пустым, чтобы сохранить индивидуальные
                         результаты.
@@ -1302,7 +1636,8 @@ export function EventContext({
                 {reviewed && (
                   <Notice kind="info">
                     Будет заменён результат у {selectedParticipantCount}{" "}
-                    участников {primary ? "обучения" : "события"} «{event.title}
+                    участников {primary ? "обучения" : "события"} «
+                    {trainingDisplayTitle(event.title)}
                     ». Основание: {source}. Это действие не регистрирует
                     документы.
                   </Notice>
@@ -1312,7 +1647,10 @@ export function EventContext({
                     disabled ||
                     !selectedParticipantCount ||
                     !source.trim() ||
-                    outcome === "UNKNOWN"
+                    outcome === "UNKNOWN" ||
+                    preparation.stale ||
+                    preparation.status !== "saved" ||
+                    Object.values(outcomeLengthErrors).some(Boolean)
                   }
                   onClick={() => {
                     if (!reviewed) {
@@ -1327,6 +1665,8 @@ export function EventContext({
                         outcomeRecipients.map((item) => item.id),
                         { status: outcome, source, knowledge, proctoring },
                       ),
+                    }).then((saved) => {
+                      if (saved) preparation.discard();
                     });
                     setReview(false);
                   }}
@@ -1336,6 +1676,19 @@ export function EventContext({
                     ? "Подтвердить результаты"
                     : "Проверить применение результатов"}
                 </button>
+                {(preparation.record || preparation.status === "error") && (
+                  <button
+                    type="button"
+                    className="text-button"
+                    disabled={disabled}
+                    onClick={() => {
+                      preparation.discard();
+                      setReview(false);
+                    }}
+                  >
+                    Отменить только подготовку результата
+                  </button>
+                )}
               </details>
             </>
           )}
@@ -1349,7 +1702,12 @@ export function EventContext({
               {moveSettings}
               {requestSettings}
               {event?.protocolTemplateId === "biot-protocol" && (
-                <p className="fine-print">{BIOT_CATEGORIES.WORKER.hint}</p>
+                <p className="fine-print">
+                  {biotCategoryDescription(
+                    "WORKER",
+                    draft.businessRuleVersion === "LIVE_V1",
+                  )}
+                </p>
               )}
             </details>
           )}

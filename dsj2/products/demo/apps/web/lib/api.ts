@@ -9,6 +9,8 @@ export class ApiError extends Error {
     super(message);
   }
 }
+/** A navigation guard has already explained its required action at the field. */
+export class NavigationBlockedError extends Error {}
 let csrf = "";
 export const SESSION_EXPIRED_EVENT = "demo:session-expired";
 export const BEFORE_LOGOUT_EVENT = "demo:before-logout";

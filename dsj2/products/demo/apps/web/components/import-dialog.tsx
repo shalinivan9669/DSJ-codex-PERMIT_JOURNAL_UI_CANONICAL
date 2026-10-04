@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
@@ -20,12 +20,15 @@ import {
   importApplyErrorText,
   inferMapping,
   importIssueText,
-  importRowIssueText,
   mapImportRow,
   initialImportTemplate,
+  importedSourceRows,
+  validateMappedImportRow,
+  applyImportCorrections,
   type ImportPreview,
 } from "@/lib/imports";
 import { templateLabels, type Assignment, type Draft } from "@/lib/types";
+import { biotCategoryDescription } from "@/lib/validity-display";
 type Reconciliation = {
   retainedTotal: number;
   revision: number;
@@ -43,7 +46,7 @@ type Reconciliation = {
 export function ImportDialog({
   requestId,
   existingDraft,
-  existingImportIds,
+  existingImportIds: _existingImportIds,
   bundleEvent,
   flush,
   onClose,
@@ -70,6 +73,10 @@ export function ImportDialog({
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
   const [mapping, setMapping] = useState<string[]>([]);
+  const [mappingColumns, setMappingColumns] = useState<string[]>([]);
+  const [corrections, setCorrections] = useState<
+    Record<number, Record<number, string>>
+  >({});
   const [excluded, setExcluded] = useState<number[]>([]);
   const bundle = Object.values(requestBundles).find(
     (choice) => choice.protocol === bundleEvent?.protocolTemplateId,
@@ -91,10 +98,48 @@ export function ImportDialog({
   const [exclusionReason, setExclusionReason] = useState("");
   const [overwriteConfirmed, setOverwriteConfirmed] = useState(false);
   const [operationKey, setOperationKey] = useState("");
+  const errorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (error) errorRef.current?.focus();
+  }, [error]);
   useEffect(() => {
     setReconciliation(null);
     setOverwriteConfirmed(false);
-  }, [mapping, excluded, templateId, biotCategory, blankMode]);
+  }, [
+    mapping,
+    excluded,
+    templateId,
+    biotCategory,
+    blankMode,
+    corrections,
+    revisionMode,
+    existingDraft.revision,
+  ]);
+  const workingPreview = preview && {
+    ...preview,
+    rows: preview.rows.map((row) => ({
+      ...row,
+      values: row.values.map(
+        (value, column) => corrections[row.sourceRow]?.[column] ?? value,
+      ),
+    })),
+  };
+  const alreadyAdded = importedSourceRows(
+    existingDraft.items,
+    preview?.importId || "",
+  );
+  const rowChecks = new Map(
+    (workingPreview?.rows || []).map((row) => [
+      row.sourceRow,
+      validateMappedImportRow(
+        workingPreview!,
+        row,
+        mapping,
+        templateId,
+        biotCategory,
+      ),
+    ]),
+  );
   useEffect(() => {
     let active = true;
     void api<{ items: SavedMapping[] }>("/imports/mappings")
@@ -154,12 +199,32 @@ export function ImportDialog({
         body,
       });
       setPreview(result);
+      setCorrections({});
       setReconciliation(null);
       setOperationKey(crypto.randomUUID());
-      setMapping(inferMapping(result.columns));
+      setMapping(
+        result.columns.map((column, index) => {
+          const previous =
+            mappingColumns[index] === column
+              ? index
+              : mappingColumns.indexOf(column);
+          return previous >= 0
+            ? mapping[previous] || ""
+            : inferMapping(result.columns)[index];
+        }),
+      );
+      setMappingColumns(result.columns);
       setExcluded(
         result.rows
-          .filter((row) => row.duplicate || row.errors?.length)
+          .filter(
+            (row) =>
+              row.duplicate ||
+              row.errors?.length ||
+              (!revisionMode &&
+                importedSourceRows(existingDraft.items, result.importId).has(
+                  row.sourceRow,
+                )),
+          )
           .map((row) => row.sourceRow),
       );
     } catch (caught) {
@@ -169,20 +234,33 @@ export function ImportDialog({
     }
   }
   async function apply() {
-    if (!preview) return;
+    if (!preview || !workingPreview) return;
     setBusy(true);
     setError("");
     try {
       const expectedRevision = await flush();
-      const rows = preview.rows
-        .filter((row) => !excluded.includes(row.sourceRow))
+      const rows = workingPreview.rows
+        .filter(
+          (row) =>
+            !excluded.includes(row.sourceRow) &&
+            (revisionMode || !alreadyAdded.has(row.sourceRow)),
+        )
         .map((row) => {
-          const mapped = mapImportRow(
-            preview,
-            row,
+          const check = rowChecks.get(row.sourceRow);
+          if (check?.issues.length)
+            throw new Error(
+              check.issues.map((issue) => issue.message).join(" "),
+            );
+          const mapped = applyImportCorrections(
+            mapImportRow(
+              workingPreview,
+              row,
+              mapping,
+              templateId,
+              biotCategory,
+            ),
             mapping,
-            templateId,
-            biotCategory,
+            corrections[row.sourceRow] || {},
           );
           if (
             bundleEvent &&
@@ -275,7 +353,14 @@ export function ImportDialog({
     }
   }
   const selected =
-    preview?.rows.filter((row) => !excluded.includes(row.sourceRow)) || [];
+    workingPreview?.rows.filter(
+      (row) =>
+        !excluded.includes(row.sourceRow) &&
+        (revisionMode || !alreadyAdded.has(row.sourceRow)),
+    ) || [];
+  const invalidSelected = selected.filter(
+    (row) => rowChecks.get(row.sourceRow)?.issues.length,
+  );
   function downloadReport() {
     if (!preview) return;
     const cell = (value: unknown) => {
@@ -288,13 +373,29 @@ export function ImportDialog({
       );
     };
     const rows = [
-      ["Исходная строка", "Состояние", "Пояснение", ...preview.columns],
+      [
+        "Исходная строка",
+        "Состояние",
+        "Пояснение",
+        ...preview.columns,
+        ...preview.columns.map((column) => `${column} — переносимое значение`),
+      ],
       ...preview.rows.map((row) => [
         row.sourceRow,
-        excluded.includes(row.sourceRow) ? "Исключена" : "Выбрана",
-        row.errors?.map(importRowIssueText).join("; ") ||
+        !revisionMode && alreadyAdded.has(row.sourceRow)
+          ? "Уже добавлена"
+          : excluded.includes(row.sourceRow)
+            ? "Исключена"
+            : "Выбрана",
+        rowChecks
+          .get(row.sourceRow)
+          ?.issues.map((issue) => issue.message)
+          .join("; ") ||
           (row.duplicate ? "Возможный дубль" : "Готова к переносу"),
         ...row.values,
+        ...(workingPreview?.rows.find(
+          (item) => item.sourceRow === row.sourceRow,
+        )?.values || row.values),
       ]),
     ];
     const url = URL.createObjectURL(
@@ -309,20 +410,17 @@ export function ImportDialog({
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
-  const repeated = !!preview && existingImportIds.includes(preview.importId);
   const existingCount = existingDraft.items.length;
-  const replacesStarter =
-    !revisionMode &&
-    !repeated &&
-    selected.length > 0 &&
-    !!initialImportScaffoldId(existingDraft);
+  const scaffoldId =
+    existingDraft.importScaffoldId !== undefined
+      ? existingDraft.importScaffoldId
+      : initialImportScaffoldId(existingDraft);
+  const replacesStarter = !revisionMode && selected.length > 0 && !!scaffoldId;
   const total = revisionMode
     ? reconciliation
       ? reconciliation.retainedTotal - exclusions.length
       : existingCount
-    : existingCount -
-      (replacesStarter ? 1 : 0) +
-      (repeated ? 0 : selected.length);
+    : existingCount - (replacesStarter ? 1 : 0) + selected.length;
   const mappedFields = mapping.filter(Boolean);
   const duplicateMapping = new Set(mappedFields).size !== mappedFields.length;
   return (
@@ -338,7 +436,11 @@ export function ImportDialog({
         проверьте строки. Неполные строки сохраняются в черновик, номера ещё не
         назначаются.
       </p>
-      {error && <Notice>{error}</Notice>}
+      {error && (
+        <div ref={errorRef} tabIndex={-1}>
+          <Notice>{error}</Notice>
+        </div>
+      )}
       {existingCount > 0 && (
         <label className="checkbox">
           <input
@@ -348,6 +450,11 @@ export function ImportDialog({
             onChange={(e) => {
               setRevisionMode(e.target.checked);
               setReconciliation(null);
+              setExcluded(
+                e.target.checked
+                  ? excluded.filter((row) => !alreadyAdded.has(row))
+                  : [...new Set([...excluded, ...alreadyAdded])],
+              );
             }}
           />
           Это исправленный список для существующей заявки
@@ -396,8 +503,17 @@ export function ImportDialog({
           <div className="import-summary">
             <strong>Прочитано: {preview.total}</strong>
             <span>Выбрано: {selected.length}</span>
-            <span>Исключено: {excluded.length}</span>
+            <span>
+              Исключено:{" "}
+              {
+                excluded.filter((row) => revisionMode || !alreadyAdded.has(row))
+                  .length
+              }
+            </span>
             <span>В черновике: {existingCount}</span>
+            {!revisionMode && (
+              <span>Уже добавлено из источника: {alreadyAdded.size}</span>
+            )}
           </div>
           {!!preview.sheets?.length && (
             <label>
@@ -625,6 +741,7 @@ export function ImportDialog({
             <label>
               Документ для импортируемых строк
               <select
+                aria-label="Документ для импортируемых строк"
                 value={templateId}
                 onChange={(event) => {
                   const nextTemplate = event.target.value as
@@ -650,6 +767,7 @@ export function ImportDialog({
               <label>
                 Категория БиОТ для импортируемых строк
                 <select
+                  aria-label="Категория БиОТ для импортируемых строк"
                   value={biotCategory}
                   onChange={(event) =>
                     setBiotCategory(event.target.value as BiotCategory)
@@ -662,9 +780,12 @@ export function ImportDialog({
                   ))}
                 </select>
                 <small>
-                  {BIOT_CATEGORIES[biotCategory].hint} Если в таблице есть
-                  категория, используются значения строк. Часы и даты из
-                  выбранных колонок сохраняются.
+                  {biotCategoryDescription(
+                    biotCategory,
+                    existingDraft.businessRuleVersion === "LIVE_V1",
+                  )}{" "}
+                  Если в таблице есть категория, используются значения строк.
+                  Часы и даты из выбранных колонок сохраняются.
                 </small>
               </label>
             )}
@@ -676,10 +797,10 @@ export function ImportDialog({
               учитываться в лимите.
             </p>
           )}
-          {repeated && (
+          {alreadyAdded.size > 0 && !revisionMode && (
             <Notice kind="info">
-              Этот файл уже добавлен в заявку. Повторные строки не будут
-              созданы.
+              Уже добавленные исходные строки сохранены без изменений. Можно
+              дозагрузить оставшиеся строки; повтор не создаёт дублей.
             </Notice>
           )}
           {total > LIMITS.rows && (
@@ -692,6 +813,14 @@ export function ImportDialog({
             <Notice>
               Одно поле назначено нескольким колонкам. Оставьте для каждого поля
               одну колонку.
+            </Notice>
+          )}
+          {!!invalidSelected.length && (
+            <Notice>
+              В выбранных строках есть неприемлемые значения:{" "}
+              {invalidSelected.map((row) => row.sourceRow).join(", ")}.
+              Исправьте отмеченные ячейки или снимите выбор строки. Неполные
+              допустимые строки можно переносить в черновик.
             </Notice>
           )}
           <div
@@ -734,11 +863,14 @@ export function ImportDialog({
                 </tr>
               </thead>
               <tbody>
-                {preview.rows.map((row) => (
+                {workingPreview!.rows.map((row) => (
                   <tr
                     key={row.sourceRow}
                     className={
-                      excluded.includes(row.sourceRow) ? "excluded" : ""
+                      excluded.includes(row.sourceRow) ||
+                      (!revisionMode && alreadyAdded.has(row.sourceRow))
+                        ? "excluded"
+                        : ""
                     }
                   >
                     <td>
@@ -746,8 +878,15 @@ export function ImportDialog({
                         <input
                           type="checkbox"
                           aria-label={`Импортировать исходную строку ${row.sourceRow}`}
-                          disabled={!!row.errors?.length}
-                          checked={!excluded.includes(row.sourceRow)}
+                          disabled={
+                            busy ||
+                            !!row.errors?.length ||
+                            (!revisionMode && alreadyAdded.has(row.sourceRow))
+                          }
+                          checked={
+                            !excluded.includes(row.sourceRow) &&
+                            (revisionMode || !alreadyAdded.has(row.sourceRow))
+                          }
                           onChange={(event) =>
                             setExcluded(
                               event.target.checked
@@ -761,16 +900,140 @@ export function ImportDialog({
                         {row.sourceRow}
                       </label>
                     </td>
-                    {row.values.map((cell, index) => (
-                      <td key={index}>
-                        {cell || <span className="muted">пусто</span>}
-                      </td>
-                    ))}
+                    {row.values.map((cell, index) => {
+                      const issues =
+                        rowChecks
+                          .get(row.sourceRow)
+                          ?.issues.filter((issue) => issue.column === index) ||
+                        [];
+                      const corrected = Object.hasOwn(
+                        corrections[row.sourceRow] || {},
+                        index,
+                      );
+                      const original =
+                        preview.rows.find(
+                          (source) => source.sourceRow === row.sourceRow,
+                        )?.values[index] || "";
+                      const inputId = `import-cell-${row.sourceRow}-${index}`;
+                      return (
+                        <td key={index}>
+                          {(issues.length > 0 || corrected) &&
+                          !row.errors?.length ? (
+                            <>
+                              <label htmlFor={inputId}>
+                                {importFields.find(
+                                  ([field]) => field === mapping[index],
+                                )?.[1] || preview.columns[index]}
+                              </label>
+                              <input
+                                id={inputId}
+                                aria-label={`Исправленное значение, исходная строка ${row.sourceRow}, ${preview.columns[index]}`}
+                                aria-invalid={issues.length > 0}
+                                aria-describedby={
+                                  issues.length ? `${inputId}-error` : undefined
+                                }
+                                value={cell}
+                                disabled={
+                                  busy ||
+                                  (!revisionMode &&
+                                    alreadyAdded.has(row.sourceRow))
+                                }
+                                onChange={(event) =>
+                                  setCorrections((current) => ({
+                                    ...current,
+                                    [row.sourceRow]: {
+                                      ...current[row.sourceRow],
+                                      [index]: event.target.value,
+                                    },
+                                  }))
+                                }
+                              />
+                              <small>
+                                Исходное значение: {original || "пусто"}
+                              </small>
+                              {!!issues.length && (
+                                <small
+                                  id={`${inputId}-error`}
+                                  className="field-error"
+                                >
+                                  {issues
+                                    .map((issue) => issue.message)
+                                    .join(" ")}
+                                </small>
+                              )}
+                              {corrected && (
+                                <button
+                                  className="text-button"
+                                  disabled={busy}
+                                  onClick={() =>
+                                    setCorrections((current) => {
+                                      const next = {
+                                        ...current,
+                                        [row.sourceRow]: {
+                                          ...current[row.sourceRow],
+                                        },
+                                      };
+                                      delete next[row.sourceRow][index];
+                                      return next;
+                                    })
+                                  }
+                                >
+                                  Вернуть исходное значение
+                                </button>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              {cell || <span className="muted">пусто</span>}
+                              {!!mapping[index] &&
+                                !row.errors?.length &&
+                                (revisionMode ||
+                                  !alreadyAdded.has(row.sourceRow)) && (
+                                  <details>
+                                    <summary>Исправить ячейку</summary>
+                                    <button
+                                      className="text-button"
+                                      disabled={busy}
+                                      onClick={() =>
+                                        setCorrections((current) => ({
+                                          ...current,
+                                          [row.sourceRow]: {
+                                            ...current[row.sourceRow],
+                                            [index]: cell,
+                                          },
+                                        }))
+                                      }
+                                    >
+                                      Редактировать значение
+                                    </button>
+                                  </details>
+                                )}
+                            </>
+                          )}
+                        </td>
+                      );
+                    })}
                     <td>
-                      {row.errors?.map(importRowIssueText).join("; ") ||
-                        (row.duplicate
-                          ? "Возможный дубль"
-                          : "Готово к переносу")}
+                      {!revisionMode && alreadyAdded.has(row.sourceRow)
+                        ? "Уже добавлена · без изменений"
+                        : rowChecks
+                            .get(row.sourceRow)
+                            ?.issues.map((issue) => issue.message)
+                            .join("; ") ||
+                          (row.duplicate
+                            ? "Возможный дубль"
+                            : rowChecks.get(row.sourceRow)?.incomplete
+                              ? "Допустимая неполная строка · документы потребуют проверки"
+                              : "Готово к переносу в черновик")}
+                      {!revisionMode &&
+                        !alreadyAdded.has(row.sourceRow) &&
+                        !rowChecks.get(row.sourceRow)?.issues.length && (
+                          <small>
+                            {templateId
+                              ? "Обучение из выбранного документа"
+                              : "Без обучения — общий выбор заявки не применяется"}
+                          </small>
+                        )}
                     </td>
                   </tr>
                 ))}
@@ -797,6 +1060,7 @@ export function ImportDialog({
               disabled={
                 busy ||
                 !selected.length ||
+                !!invalidSelected.length ||
                 total > LIMITS.rows ||
                 duplicateMapping ||
                 !mappedFields.length ||
@@ -805,9 +1069,7 @@ export function ImportDialog({
                   (!overwriteConfirmed ||
                     (exclusions.length > 0 && !exclusionReason.trim())))
               }
-              onClick={() =>
-                repeated && !revisionMode ? onClose() : void apply()
-              }
+              onClick={() => void apply()}
             >
               {revisionMode
                 ? busy
@@ -815,11 +1077,9 @@ export function ImportDialog({
                   : reconciliation
                     ? "Применить согласованные изменения"
                     : "Сравнить с текущим списком"
-                : repeated
-                  ? "Закрыть повторный импорт"
-                  : busy
-                    ? "Сохраняем строки…"
-                    : `Добавить ${selected.length} строк в черновик`}
+                : busy
+                  ? "Сохраняем строки…"
+                  : `Добавить ${selected.length} строк в черновик`}
             </button>
           </div>
         </>

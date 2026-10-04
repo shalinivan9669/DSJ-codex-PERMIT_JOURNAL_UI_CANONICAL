@@ -3,6 +3,9 @@ import { resolveDraft } from "@demo/contracts";
 import { newRecipient, type Draft } from "../lib/types";
 
 async function workspace(page: Page, count = 150) {
+  page.on("pageerror", (error) =>
+    process.stderr.write(`Mock editor page error: ${error.stack}\n`),
+  );
   let draft: Draft = {
     id: "operator-table",
     revision: 0,
@@ -25,6 +28,17 @@ async function workspace(page: Page, count = 150) {
     const path = new URL(route.request().url()).pathname.slice(4);
     let value: unknown = { items: [], total: 0 };
     if (path === "/auth/session") value = { csrfToken: "fixture" };
+    else if (path === "/print-requests/operator-table/signing")
+      value = {
+        status: null,
+        archived: false,
+        providers: {
+          EGOV_QR: { available: false, reason: "Synthetic UI fixture" },
+          NCALAYER: { available: false },
+        },
+        documents: [],
+        missingBindings: [],
+      };
     else if (path === "/context")
       value = {
         user: {
@@ -81,9 +95,12 @@ async function workspace(page: Page, count = 150) {
     await route.fulfill({ json: value });
   });
   await page.goto("/requests/operator-table/edit");
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
+  const tools = page.locator(".operator-list-tools");
+  if (
+    !(await tools.evaluate((element) => (element as HTMLDetailsElement).open))
+  )
+    await tools.locator(":scope > summary").click();
   return () => draft;
 }
 
@@ -101,17 +118,15 @@ test("150 rows: keyboard entry, search selection, explicit card and new-row focu
   page,
 }) => {
   const current = await workspace(page);
-  const first = page.getByLabel("ФИО RU, строка 1", { exact: true });
+  const first = page.getByLabel("ФИО, строка 1", { exact: true });
   await first.fill("Иванов Иван");
   await first.press("Enter");
-  await expect(
-    page.getByLabel("ФИО RU, строка 2", { exact: true }),
-  ).toBeFocused();
+  await expect(page.getByLabel("ФИО, строка 2", { exact: true })).toBeFocused();
   await page.keyboard.press("Shift+Enter");
   await expect(first).toBeFocused();
   await first.press("Tab");
   await expect(
-    page.getByLabel("Должность RU, строка 1", { exact: true }),
+    page.getByLabel("Должность · RU, строка 1", { exact: true }),
   ).toBeFocused();
   await page.getByLabel("Поиск в заявке").fill("Мастер");
   await page.getByLabel("Выбрать видимых получателей").check();
@@ -126,20 +141,22 @@ test("150 rows: keyboard entry, search selection, explicit card and new-row focu
     page.getByLabel("Выбрать строку 2", { exact: true }),
   ).toBeChecked();
   await page
-    .getByRole("button", { name: "Документы и даты получателя 2", exact: true })
+    .getByRole("button", { name: "Детали получателя 2", exact: true })
     .click();
   await expect(
     page.getByRole("complementary", { name: "Редактор получателя" }),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "Вернуться к таблице", exact: true })
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
     .click();
   await expect(first).toHaveValue("Иванов Иван");
-  await page.getByRole("button", { name: "Получатель", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Добавить строку", exact: true })
+    .click();
   await expect(
-    page.getByLabel("ФИО RU, строка 151", { exact: true }),
+    page.getByLabel("ФИО, строка 151", { exact: true }),
   ).toBeFocused();
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   await expect.poll(() => current().items.length).toBe(151);
   await page.reload();
   await expect(first).toHaveValue("Иванов Иван");
@@ -149,11 +166,7 @@ test("visible-column paste is previewed, filtered paste is blocked, removal can 
   page,
 }) => {
   const current = await workspace(page, 2);
-  await paste(
-    page,
-    "ФИО RU, строка 1",
-    "Новое имя\tНовая должность\tНовое место",
-  );
+  await paste(page, "ФИО, строка 1", "Новое имя\tНовая должность\tНовое место");
   const modal = page.getByRole("dialog");
   await modal.getByLabel("Режим вставки").selectOption("REPLACE");
   await modal
@@ -165,10 +178,11 @@ test("visible-column paste is previewed, filtered paste is blocked, removal can 
   await expect
     .poll(() => current().items[0].positionRu)
     .toBe("Новая должность");
-  expect(current().items[0].workplaceRu).toBe("Новое место");
+  expect(current().items[0].positionKz).toBe("Новое место");
+  expect(current().items[0].workplaceRu).toBe("Тестовая организация");
   expect(current().items[0].fullNameKz).toBe("");
   await page.getByLabel("Поиск в заявке").fill("Новое имя");
-  await paste(page, "ФИО RU, строка 1", "Скрытая замена\nОпасная замена");
+  await paste(page, "ФИО, строка 1", "Скрытая замена\nОпасная замена");
   await expect(
     page.getByText(/Перед вставкой диапазона сбросьте поиск/),
   ).toBeVisible();
@@ -190,48 +204,52 @@ test("visible-column paste is previewed, filtered paste is blocked, removal can 
     .click();
   await expect.poll(() => current().items.length).toBe(2);
   expect(current().items[0].positionRu).toBe("Новая должность");
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeFocused();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeFocused();
 });
 
 test("error queue survives editing and shared fields use the same autosave", async ({
   page,
 }) => {
   const current = await workspace(page, 3);
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   await expect(
     page.getByText("Исправьте данные перед оформлением", { exact: true }),
   ).toBeVisible();
   await page.getByLabel("Показать строки").selectOption("errors");
   await page
-    .getByLabel("Должность RU, строка 1", { exact: true })
+    .getByLabel("Должность · RU, строка 1", { exact: true })
     .fill("Исправлено");
   await expect(
-    page.getByLabel("Должность RU, строка 2", { exact: true }),
+    page.getByLabel("Должность · RU, строка 2", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByText("Данные изменены после проверки", { exact: true }),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "Уточните должность в строке 2", exact: true })
+    .getByRole("button", { name: /Уточните должность в строке 2$/ })
     .click();
   await expect(
     page.locator('.operator-grid [data-field-path="items.1.positionRu"]'),
   ).toBeFocused();
   await page
-    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
     .click();
-  await expect(
-    page.getByText("Даты и программа для всей заявки", { exact: true }),
-  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Общие даты и протоколы", exact: true })
+    .click();
   await page
     .getByLabel("Программа / тема для заявки", { exact: true })
     .fill("Общая программа");
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   await expect
     .poll(() => current().commonFields?.trainingSubject)
     .toBe("Общая программа");
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
+    .click();
   await page.reload();
   await expect.poll(() => current().items[0].positionRu).toBe("Исправлено");
 });
@@ -241,12 +259,12 @@ test("a search result stays available while its name is corrected; readonly docu
 }) => {
   const current = await workspace(page, 3);
   await page.getByLabel("Поиск в заявке").fill("Слушатель 002");
-  const name = page.getByLabel("ФИО RU, строка 2", { exact: true });
+  const name = page.getByLabel("ФИО, строка 2", { exact: true });
   await name.fill("Исправленное имя");
   await expect(name).toBeVisible();
   await name.press("End");
   await name.pressSequentially(" полностью");
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   await expect
     .poll(() => current().items[1].fullNameRu)
     .toBe("Исправленное имя полностью");
@@ -255,13 +273,13 @@ test("a search result stays available while its name is corrected; readonly docu
   current().status = "FINALIZED";
   await page.reload();
   await page
-    .getByRole("button", { name: "Документы и даты получателя 2", exact: true })
+    .getByRole("button", { name: "Детали получателя 2", exact: true })
     .click();
   await expect(
     page.getByRole("complementary", { name: "Редактор получателя" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Получатель", exact: true }),
+    page.getByRole("button", { name: "Добавить строку", exact: true }),
   ).toHaveCount(0);
 });
 
@@ -271,7 +289,7 @@ test("250 rows stay within a scroll region at desktop and narrow widths", async 
   await workspace(page, 250);
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(250);
   await expect(
-    page.getByRole("button", { name: "Получатель", exact: true }),
+    page.getByRole("button", { name: "Добавить строку", exact: true }),
   ).toBeDisabled();
   await page.locator(".operator-grid").scrollIntoViewIfNeeded();
   await page.screenshot({ path: testInfo.outputPath("table-desktop.png") });
@@ -287,7 +305,7 @@ test("250 rows stay within a scroll region at desktop and narrow widths", async 
   ).toBeLessThanOrEqual(390);
   await page.getByLabel("Поиск в заявке").fill("Слушатель 250");
   await expect(
-    page.getByLabel("ФИО RU, строка 250", { exact: true }),
+    page.getByLabel("ФИО, строка 250", { exact: true }),
   ).toBeVisible();
 });
 
@@ -297,7 +315,7 @@ test("a new empty request starts at the name field without scrolling through set
   const current = await workspace(page, 1);
   current().items[0].fullNameRu = "";
   await page.reload();
-  const name = page.getByLabel("ФИО RU, строка 1", { exact: true });
+  const name = page.getByLabel("ФИО, строка 1", { exact: true });
   await expect(name).toBeFocused();
   const rect = await name.boundingBox();
   expect(rect!.y).toBeGreaterThanOrEqual(0);

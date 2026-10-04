@@ -18,6 +18,7 @@ export async function keyboardFocus(page: Page, target: Locator) {
   await expect(target).toBeVisible();
   await expect(target).toBeEnabled();
   let backwards: boolean | undefined;
+  let nativeDateTextAttempts = 0;
   for (let count = 0; count < 1800; count++) {
     const state = await target.evaluate((element) => {
       if (document.activeElement === element) {
@@ -41,7 +42,11 @@ export async function keyboardFocus(page: Page, target: Locator) {
         (control) =>
           control.tabIndex >= 0 &&
           !control.matches(":disabled,[aria-hidden=true]") &&
-          control.getClientRects().length > 0,
+          control.getClientRects().length > 0 &&
+          control.checkVisibility({
+            checkOpacity: true,
+            checkVisibilityCSS: true,
+          }),
       );
       const wanted = controls.indexOf(element as HTMLElement);
       if (wanted < 0)
@@ -77,9 +82,22 @@ export async function keyboardFocus(page: Page, target: Locator) {
     });
     if (state.available === false) {
       await expect(target).toBeVisible();
-      continue;
+      throw new Error(
+        "Keyboard control is outside the visible tab order; open its containing section before navigating to it.",
+      );
     }
     if (state.focused) {
+      // A native date's calendar icon can own focus inside the input host.
+      // Move by keyboard into its text segment before checking the host outline.
+      if (
+        !state.visible &&
+        (await target.getAttribute("type")) === "date" &&
+        nativeDateTextAttempts++ < 3
+      ) {
+        await page.keyboard.press("Shift+Tab");
+        keyboardMetrics.shiftTabs++;
+        continue;
+      }
       expect(
         state.visible,
         "Focused UI control has a visible keyboard outline",
@@ -107,8 +125,12 @@ export async function keyboardEnter(
   await keyboardFocus(page, target);
   if ((await target.getAttribute("type")) === "date") {
     const [year, month, day] = value.split("-");
-    const order = await page.evaluate(() =>
-      new Intl.DateTimeFormat()
+    // Chromium localises its native date segments using the input's inherited
+    // language; Intl's browser default can differ from the Russian app shell.
+    const order = await target.evaluate((element) =>
+      new Intl.DateTimeFormat(
+        element.closest("[lang]")?.getAttribute("lang") || navigator.language,
+      )
         .formatToParts(new Date(2026, 8, 22))
         .filter((part) => ["year", "month", "day"].includes(part.type))
         .map((part) => part.type),
@@ -169,10 +191,16 @@ export async function keyboardReopen(page: Page) {
   await expect(
     page.getByRole("heading", { name: "Заявки на печать", exact: true }),
   ).toBeVisible();
-  await keyboardActivate(
-    page,
-    page.getByRole("link", { name: title, exact: true }),
-  );
+  const requestLink = page.getByRole("link", { name: title, exact: true });
+  if (!(await requestLink.isVisible())) {
+    await keyboardEnter(
+      page,
+      page.getByLabel("Поиск по заявкам", { exact: true }),
+      title,
+    );
+    await expect(requestLink).toBeVisible();
+  }
+  await keyboardActivate(page, requestLink);
   await expect(page.getByLabel("Название заявки", { exact: true })).toHaveValue(
     title,
   );
@@ -208,21 +236,18 @@ export async function createRequestWithWorkerDocument(
       name: kind === "COMPANY" ? /^Организация/ : /^Физическое лицо/,
     })
     .check();
-  await page
-    .getByRole("button", { name: "Перейти к людям и документам", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
   await page
     .getByRole("button", {
-      name: "Выбрать документы получателя 1",
-      exact: true,
+      name: /^Настройки обучения получателя 1:/,
     })
     .click();
   const dialog = page.getByRole("dialog");
   await dialog
-    .getByRole("checkbox", { name: /^БиОТ — удостоверение рабочего/ })
+    .getByRole("checkbox", { name: /Безопасность и охрана труда/ })
     .check();
   await dialog
-    .getByRole("button", { name: "Добавить выбранные документы", exact: true })
+    .getByRole("button", { name: "Добавить обучение и комплект", exact: true })
     .click();
   await expect(dialog).toHaveCount(0);
 }
@@ -241,26 +266,25 @@ export async function keyboardCreateRequestWithWorkerDocument(
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Перейти к людям и документам",
+      name: "Далее",
       exact: true,
     }),
   );
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Выбрать документы получателя 1",
-      exact: true,
+      name: /^Настройки обучения получателя 1:/,
     }),
   );
   const dialog = page.getByRole("dialog");
   await keyboardCheck(
     page,
-    dialog.getByRole("checkbox", { name: /^БиОТ — удостоверение рабочего/ }),
+    dialog.getByRole("checkbox", { name: /Безопасность и охрана труда/ }),
   );
   await keyboardActivate(
     page,
     dialog.getByRole("button", {
-      name: "Добавить выбранные документы",
+      name: "Добавить обучение и комплект",
       exact: true,
     }),
   );
@@ -268,12 +292,18 @@ export async function keyboardCreateRequestWithWorkerDocument(
 }
 
 export async function openRecipientExtraTools(page: Page) {
+  const listTools = page.locator(".operator-list-tools");
+  if ((await listTools.getAttribute("open")) === null)
+    await listTools.locator(":scope > summary").click();
   const menu = page.locator(".recipient-extra-tools");
   if ((await menu.getAttribute("open")) === null)
     await menu.locator("summary").click();
 }
 
 export async function keyboardOpenRecipientExtraTools(page: Page) {
+  const listTools = page.locator(".operator-list-tools");
+  if ((await listTools.getAttribute("open")) === null)
+    await keyboardActivate(page, listTools.locator(":scope > summary"));
   const menu = page.locator(".recipient-extra-tools");
   if ((await menu.getAttribute("open")) === null)
     await keyboardActivate(page, menu.locator("summary"));

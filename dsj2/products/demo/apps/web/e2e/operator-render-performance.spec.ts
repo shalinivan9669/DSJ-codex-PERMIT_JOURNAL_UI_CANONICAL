@@ -78,12 +78,14 @@ test("250 recipients: trusted key events to next paint, focus and saved value", 
   });
   await page.goto("/requests/render-performance/edit");
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(250);
-  const input = page.getByLabel("ФИО RU, строка 126", { exact: true });
+  const input = page.getByLabel("ФИО, строка 126", { exact: true });
   await input.focus();
   await input.press("End");
   await input.press("a");
   await input.press("b");
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await expect(page.locator(".save-indicator")).toContainText(
+    "Рабочая версия сохранена",
+  );
   const originalValue = await input.inputValue();
   await input.evaluate((element) => {
     type Sample = {
@@ -170,7 +172,9 @@ test("250 recipients: trusted key events to next paint, focus and saved value", 
         .operatorPaintMeasurements,
   );
   await expect(input).toHaveValue(`${originalValue}cdefghijklmn`);
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await expect(page.locator(".save-indicator")).toContainText(
+    "Рабочая версия сохранена",
+  );
   expect(draft.items[125].fullNameRu).toBe(`${originalValue}cdefghijklmn`);
   await fs.writeFile(
     path.join(evidence, "paint-measurements.json"),

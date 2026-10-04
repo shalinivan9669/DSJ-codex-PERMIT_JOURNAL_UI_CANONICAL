@@ -3,7 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { execFileSync } from "node:child_process";
-import { db, hash, type Context } from "../../apps/api/src/core";
+import { db, hash, scopedRequest, type Context } from "../../apps/api/src/core";
 import { provision } from "../setup";
 import { context, saveCustomer, saveUser } from "../../apps/api/src/settings";
 import {
@@ -26,6 +26,7 @@ import {
   collectRegistryRows,
   readArtifact,
   registryExport,
+  buildSavedRegistryDelivery,
   store,
 } from "../../apps/api/src/files";
 import {
@@ -44,18 +45,22 @@ import {
 import * as value from "../../apps/api/src/operator-value";
 import {
   claimJob,
+  DeferredJob,
   executeJob,
   heartbeat,
+  settleFailure,
 } from "../../apps/render-worker/src/queue";
 import {
   draftSchema,
   itemSchema,
   assignmentSchema,
+  protocolTemplateFor,
   type Draft,
   type RequestItemInput,
 } from "../../packages/contracts/src";
 import { PRODUCT_ROOT } from "../../packages/printing/src";
 import { assertTestDatabase } from "../../tests/integration/test-database";
+import { createApprovalFixture } from "../../tests/integration/live-approval-fixture";
 import { businessBackupEvidence } from "./business-backup-evidence";
 
 type Step = {
@@ -224,6 +229,7 @@ export async function runBusinessScenarios(
     }
   };
   let c: Context;
+  let approvals: Awaited<ReturnType<typeof createApprovalFixture>> | undefined;
   let operator: Context;
   const person = new Map<string, RequestItemInput>();
   let customerA: string, customerB: string;
@@ -244,7 +250,8 @@ export async function runBusinessScenarios(
     });
     assert.equal(tenant.demoOnly, true);
     const user = await db.user.findFirstOrThrow({
-      where: { tenantId: tenant.id, role: "ADMIN" },
+      where: { tenantId: tenant.id, role: { in: ["ADMIN", "DIRECTOR"] } },
+      orderBy: { createdAt: "asc" },
     });
     c = {
       tenantId: tenant.id,
@@ -317,13 +324,59 @@ export async function runBusinessScenarios(
     assignments: [assignment()],
     ...(order === undefined ? {} : { sourceOrder: order }),
   });
+  // Read-only verification input for the canonical serializer below. These
+  // actual immutable prepared bytes remain unsigned and cannot be exported
+  // through the official route; no lifecycle or signature state is changed.
+  const frozenDeliverySource = async (requestId: string) => {
+    const record = await scopedRequest(c, requestId);
+    const issuance = await db.issuance.findFirstOrThrow({
+      where: { tenantId: c.tenantId, requestId },
+    });
+    const frozen = draftSchema.parse(
+      (issuance.snapshot as { draft: unknown }).draft,
+    );
+    const documents = await db.issuedDocument.findMany({
+      where: { tenantId: c.tenantId, requestId },
+    });
+    const rows = frozen.items.flatMap((item) =>
+      item.assignments.map((assignment) => {
+        const document = documents.find(
+          (entry) =>
+            entry.rowId === item.id && entry.assignmentId === assignment.id,
+        );
+        const protocol = documents.find(
+          (entry) =>
+            entry.templateId === protocolTemplateFor(assignment.templateId) &&
+            (assignment.protocolMode === "GROUP"
+              ? entry.groupEventId === assignment.eventId
+              : entry.rowId === item.id),
+        );
+        return {
+          ...item,
+          assignment,
+          requestId,
+          employerId: item.employerId || frozen.customerId || undefined,
+          number: document?.number || "",
+          registrationNumber: document?.registrationNumber || "",
+          documentId: document?.id,
+          protocolDocumentId: protocol?.id,
+          protocolNumber: protocol?.number || assignment.externalBasisNumber,
+          status: record.status,
+          revision: record.revision,
+          createdAt: record.createdAt.toISOString(),
+        };
+      }),
+    );
+    return { records: [record], rows };
+  };
   const drain = async (requestId: string) => {
     const owner = "business-scenarios-" + randomUUID();
     const initial = await db.generationJob.count({
       where: { tenantId: c.tenantId, requestId },
     });
     assert.ok(initial > 0);
-    for (let n = 0; n < initial + 1; n++) {
+    const deadline = Date.now() + 360_000;
+    for (let n = 0; n < initial * 4 + 4 && Date.now() < deadline; n++) {
       const pending = await db.generationJob.count({
         where: {
           tenantId: c.tenantId,
@@ -336,7 +389,12 @@ export async function runBusinessScenarios(
         "render-worker.claim-and-execute",
         async () => {
           const job = await claimJob(db, owner, c.tenantId);
-          assert.ok(job, "Expected a claimable real generation job");
+          if (!job) {
+            // A real dependency deferral may leave only jobs whose runAfter is
+            // still in the future. Preserve the worker's bounded queue timing.
+            await new Promise((resolve) => setTimeout(resolve, 250));
+            return "WAITING_FOR_QUEUE_ELIGIBILITY";
+          }
           assert.equal(job.requestId, requestId);
           const beat = setInterval(() => {
             void heartbeat(db, job, owner);
@@ -349,6 +407,12 @@ export async function runBusinessScenarios(
               owner,
               new AbortController().signal,
             );
+          } catch (error) {
+            await settleFailure(db, job, owner, error);
+            // The production worker releases this lease and tries the source
+            // DOCX next; it does not call a pending PDF dependency a failure.
+            if (error instanceof DeferredJob) return "DEPENDENCY_PENDING";
+            throw error;
           } finally {
             clearInterval(beat);
           }
@@ -380,11 +444,20 @@ export async function runBusinessScenarios(
       createRequest(c, draft),
     );
     const validation = await step("requests.validate", () =>
-      validateRequest(c, request.id, { expectedRevision: 0 }),
+      validateRequest(c, request.id, { expectedRevision: request.revision }),
     );
     assert.deepEqual(validation.issues, []);
+    approvals ||= await createApprovalFixture(c);
+    await step("director.approve-actual-working-proposal", () =>
+      approvals!.approve(request.id),
+    );
     await step("requests.finalize", () =>
-      finalize(c, request.id, { expectedRevision: 0 }, randomUUID()),
+      finalize(
+        c,
+        request.id,
+        { expectedRevision: request.revision },
+        randomUUID(),
+      ),
     );
     await drain(request.id);
     return request.id;
@@ -435,7 +508,9 @@ export async function runBusinessScenarios(
         createRequest(c, initialDraft),
       );
       const help = await step("requests.validate-contextual-issues", () =>
-        validateRequest(c, incomplete.id, { expectedRevision: 0 }),
+        validateRequest(c, incomplete.id, {
+          expectedRevision: incomplete.revision,
+        }),
       );
       assert.ok(
         help.issues.some(
@@ -453,22 +528,33 @@ export async function runBusinessScenarios(
           assignments: [assignment()],
         })),
       };
-      await step("requests.save-explicit-synthetic-result", () =>
+      const saved = await step("requests.save-explicit-synthetic-result", () =>
         patchRequest(c, incomplete.id, {
-          expectedRevision: 0,
+          expectedRevision: incomplete.revision,
           draft: completed,
         }),
       );
       assert.deepEqual(
         (
           await step("requests.validate-complete", () =>
-            validateRequest(c, incomplete.id, { expectedRevision: 1 }),
+            validateRequest(c, incomplete.id, {
+              expectedRevision: saved.revision,
+            }),
           )
         ).issues,
         [],
       );
+      approvals ||= await createApprovalFixture(c);
+      await step("director.approve-actual-working-proposal", () =>
+        approvals!.approve(incomplete.id),
+      );
       await step("requests.finalize", () =>
-        finalize(c, incomplete.id, { expectedRevision: 1 }, randomUUID()),
+        finalize(
+          c,
+          incomplete.id,
+          { expectedRevision: saved.revision },
+          randomUUID(),
+        ),
       );
       simpleRequest = incomplete.id;
       await drain(simpleRequest);
@@ -653,8 +739,23 @@ export async function runBusinessScenarios(
       assert.equal(fresh.items[0].assignments[0].result, "");
       await step("requests.reject-new-unknown-result-issuance", () =>
         assert.rejects(
-          finalize(c, fresh.id, { expectedRevision: 0 }, randomUUID()),
-          code("FINALIZE_VALIDATION"),
+          finalize(
+            c,
+            fresh.id,
+            { expectedRevision: fresh.revision },
+            randomUUID(),
+          ),
+          code("DIRECTOR_APPROVAL_REQUIRED"),
+        ),
+      );
+      const missingFacts = await step(
+        "requests.validate-new-unknown-result",
+        () =>
+          validateRequest(c, fresh.id, { expectedRevision: fresh.revision }),
+      );
+      assert.ok(
+        missingFacts.issues.some((issue) =>
+          ["RESULT_REQUIRED", "RESULT_UNCONFIRMED"].includes(issue.code),
         ),
       );
       assert.equal(
@@ -725,7 +826,10 @@ export async function runBusinessScenarios(
         },
       };
       await step("requests.change-shared-value", () =>
-        patchRequest(c, created.id, { expectedRevision: 0, draft: changed }),
+        patchRequest(c, created.id, {
+          expectedRevision: created.revision,
+          draft: changed,
+        }),
       );
       const reopened = await step("requests.reopen", () =>
         requestDetail(c, created.id),
@@ -736,7 +840,7 @@ export async function runBusinessScenarios(
       assert.equal(reopened.items.length, 3);
       assert.equal(
         resolved.draft.items.flatMap((p) => p.assignments).length,
-        6,
+        12,
       );
       assert.ok(
         resolved.draft.items
@@ -756,13 +860,14 @@ export async function runBusinessScenarios(
       active.evidence = {
         requestId: created.id,
         revision: reopened.revision,
-        assignments: 6,
+        assignments: 12,
+        personServices: 6,
         individualPosition: reopened.items.find((p) => p.id === "DEMO-P003")!
           .positionRu,
       };
       active.assertions.push(
-        "Three persisted people each retain two assignments",
-        "Shared value change resolves across six assignments on reopen while individual position exception persists",
+        "Three persisted people each retain two services and their mandatory personal document/protocol pairs",
+        "Shared value change resolves across twelve output assignments on reopen while individual position exception persists",
       );
     });
     await scenario("V04", async () => {
@@ -777,6 +882,10 @@ export async function runBusinessScenarios(
       });
       const request = await step("requests.create-six-source-rows", () =>
         createRequest(c, initial),
+      );
+      const persistedBefore = await step(
+        "requests.read-persisted-source-before-import",
+        () => requestDetail(c, request.id),
       );
       const changedPeople = fixture.cases.V04.revisedPeople as Record<
         string,
@@ -820,7 +929,7 @@ export async function runBusinessScenarios(
         });
       });
       const payload = {
-        expectedRevision: 0,
+        expectedRevision: request.revision,
         importId: imported.importId,
         rows: incoming,
       };
@@ -844,7 +953,7 @@ export async function runBusinessScenarios(
       const after = await step("requests.reopen-reconciled", () =>
         requestDetail(c, request.id),
       );
-      assert.equal(after.revision, 1);
+      assert.equal(after.revision, request.revision + 1);
       assert.equal(after.items.length, 7);
       assert.ok(
         after.items.every((p) => /^0\d{5}$/.test(p.personnelNumber || "")),
@@ -856,7 +965,7 @@ export async function runBusinessScenarios(
       assert.ok(after.items.some((p) => p.externalId === "DEMO-P006"));
       assert.deepEqual(
         after.items.find((p) => p.externalId === "DEMO-P001")!.assignments,
-        request.items[0].assignments,
+        persistedBefore.items[0].assignments,
       );
       assert.ok(
         await db.recipient.findFirst({
@@ -888,7 +997,9 @@ export async function runBusinessScenarios(
       );
       const withMissingName = draftSchema.parse(after.draft);
       withMissingName.items = withMissingName.items.map((p) =>
-        p.externalId === "DEMO-P007" ? { ...p, fullNameRu: "" } : p,
+        p.externalId === "DEMO-P007"
+          ? { ...p, fullNameRu: "", fullNameKz: "" }
+          : p,
       );
       await step("requests.change-significant-confirmed-field", () =>
         patchRequest(c, request.id, {
@@ -1263,12 +1374,37 @@ export async function runBusinessScenarios(
           },
         }),
       );
-      const registry = await step("delivery.export-customer-registry", () =>
-        registryExport(
-          c,
-          { format: "XLSX", profileId: profile.id },
-          historyRequest,
-        ),
+      active.layer =
+        "API_UNSIGNED_PUBLIC_EXPORT_GUARD_AND_CANONICAL_SERIALIZER_ASSEMBLY_OF_REAL_SAVED_BYTES";
+      const guardedRegistry = await step(
+        "registry.withhold-unsigned-public-rows",
+        () => collectRegistryRows(c, { history: true }, historyRequest),
+      );
+      assert.deepEqual(guardedRegistry.rows, []);
+      const source = await frozenDeliverySource(historyRequest);
+      for (const format of ["XLSX", "ZIP"] as const)
+        await step(
+          "delivery.deny-unsigned-official-" + format.toLowerCase(),
+          () =>
+            assert.rejects(
+              registryExport(
+                c,
+                { format, profileId: profile.id },
+                historyRequest,
+              ),
+              code("ISSUANCE_NOT_COMPLETE"),
+            ),
+        );
+      const registry = await step(
+        "serializer.build-customer-registry-from-frozen-input",
+        () =>
+          buildSavedRegistryDelivery(
+            c,
+            { format: "XLSX", profileId: profile.id },
+            source,
+            historyRequest,
+          ),
+        "RENDER",
       );
       const artifacts = await db.artifact.findMany({
         where: {
@@ -1278,16 +1414,20 @@ export async function runBusinessScenarios(
           format: { in: ["PDF", "DOCX"] },
         },
       });
-      const bundle = await step("delivery.export-selected-saved-files", () =>
-        registryExport(
-          c,
-          {
-            format: "ZIP",
-            profileId: profile.id,
-            artifactIds: artifacts.map((a) => a.id),
-          },
-          historyRequest,
-        ),
+      const bundle = await step(
+        "assembly.build-selected-saved-unsigned-files",
+        () =>
+          buildSavedRegistryDelivery(
+            c,
+            {
+              format: "ZIP",
+              profileId: profile.id,
+              artifactIds: artifacts.map((a) => a.id),
+            },
+            source,
+            historyRequest,
+          ),
+        "RENDER",
       );
       const xlsxPath = join(directory, "V08-registry.xlsx"),
         zipPath = join(directory, bundle.fileName);
@@ -1307,16 +1447,17 @@ export async function runBusinessScenarios(
       );
       assert.deepEqual(
         inspection.rows.slice(1).map((r: string[]) => r[0]),
-        ["000003", "000001", "000002"],
+        ["000003", "000003", "000001", "000001", "000002", "000002"],
       );
       assert.ok(
         inspection.rows
           .slice(1)
           .every(
-            (r: string[]) => /^PB-CARD-/.test(r[2]) && r[3] === "22.09.2026",
+            (r: string[]) =>
+              /^PB-(?:CARD|PROTOCOL)-/.test(r[2]) && r[3] === "22.09.2026",
           ),
       );
-      assert.equal(inspection.files.length, 6);
+      assert.equal(inspection.files.length, 12);
       assert.ok(
         inspection.names.includes("Реестр.xlsx") &&
           inspection.names.includes("Опись.tsv") &&
@@ -1380,14 +1521,18 @@ export async function runBusinessScenarios(
         transferId: transfer.items[0].id,
         personnelOrder: inspection.rows.slice(1).map((r: string[]) => r[0]),
         inspection:
-          "Independent openpyxl/zipfile readback and SHA256 check; human recipient review not run",
+          "Independent openpyxl/zipfile readback and SHA256 check of canonical low-level serializer/assembly; unsigned official public export was separately denied. No workflow or signatures modified, human recipient review not run.",
+        publicOfficialExport: "DENIED_ISSUANCE_NOT_COMPLETE",
+        verifiedScope:
+          "CANONICAL_SERIALIZER_AND_ASSEMBLY_OF_REAL_SAVED_UNSIGNED_BYTES",
       };
       active.assertions.push(
-        "Configured source order and leading zeros appear in real XLSX",
-        "Six actual saved files keep original hashes under friendly names",
+        "Unsigned official XLSX and ZIP public export remain denied until mandatory signing completes",
+        "Configured source order and leading zeros appear in canonical low-level XLSX serialization of frozen rows",
+        "Twelve actual saved files for mandatory personal/protocol pairs keep original hashes under friendly names in low-level assembly",
         "Registry, inventory and cover text included automatically",
         "Repeated existing file download changes neither bytes nor number count",
-        "Download does not create handover; explicit handover names exactly one existing artifact",
+        "Low-level serialization does not create handover; explicit synthetic internal handover names exactly one existing artifact",
       );
     });
     await scenario("V09", async () => {
@@ -1398,10 +1543,20 @@ export async function runBusinessScenarios(
         }),
       );
       assert.ok(matches.items.some((r) => r.id === historyRequest));
-      const historical = await step("registry.find-document-number", () =>
-        collectRegistryRows(c, { history: true }, historyRequest),
+      const guardedRegistry = await step(
+        "registry.withhold-unsigned-public-history",
+        () => collectRegistryRows(c, { history: true }, historyRequest),
       );
-      assert.ok(JSON.stringify(historical.rows).includes(originalPdf.number));
+      assert.deepEqual(guardedRegistry.rows, []);
+      const historical = await step(
+        "requests.find-saved-historical-document-number",
+        () => requestDetail(c, historyRequest),
+      );
+      assert.ok(
+        historical.documents.some(
+          (document) => document.number === originalPdf.number,
+        ),
+      );
       const before = await db.numberReservation.count({
         where: { tenantId: c.tenantId },
       });
@@ -1484,6 +1639,10 @@ export async function runBusinessScenarios(
         ).issues,
         [],
       );
+      approvals ||= await createApprovalFixture(c);
+      await step("director.approve-correction-working-proposal", () =>
+        approvals!.approve(corrected.id),
+      );
       await step("correction.finalize-linked-edition", () =>
         finalize(
           c,
@@ -1498,10 +1657,10 @@ export async function runBusinessScenarios(
         () => requestDetail(c, corrected.id),
       );
       assert.equal(issuedCorrection.status, "FINALIZED");
-      assert.equal(issuedCorrection.documents.length, 3);
+      assert.equal(issuedCorrection.documents.length, 6);
       assert.equal(
         issuedCorrection.artifacts.filter((a) => a.format === "PDF").length,
-        3,
+        6,
       );
       assert.equal(
         issuedCorrection.correctsIssuanceId,
@@ -1509,7 +1668,7 @@ export async function runBusinessScenarios(
       );
       assert.equal(
         await db.numberReservation.count({ where: { tenantId: c.tenantId } }),
-        before + 3,
+        before + 6,
       );
       assert.equal(
         sha(
@@ -1532,10 +1691,10 @@ export async function runBusinessScenarios(
           .filter((a) => a.format === "PDF")
           .map((a) => a.id),
         boundary:
-          "Separate authorized correction issuance with reason and three new saved PDFs; original bytes and number still readable, no claim of e-signature authenticity.",
+          "Separate director-approved correction issuance with reason and six new saved PDFs in mandatory document/protocol pairs; original bytes and number still readable, no claim of e-signature authenticity.",
       };
       active.assertions.push(
-        "Person search and registry reach real historical document",
+        "Person search and saved immutable document detail reach the historical number; public registry withholds unsigned rows",
         "Redownload preserves original SHA and number",
         "Empty correction reason rejected; corrected edition validated, finalized and rendered under new document IDs while original SHA and issuance link remain",
       );
@@ -1836,6 +1995,8 @@ export async function runBusinessScenarios(
     report.status = "FAIL";
     await persist();
     throw error;
+  } finally {
+    await approvals?.close();
   }
 }
 

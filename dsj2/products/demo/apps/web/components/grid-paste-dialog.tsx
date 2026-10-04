@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import {
   gridColumns,
@@ -13,6 +13,8 @@ export function GridPasteDialog({
   startField,
   text,
   columns,
+  newRecipientsTraining,
+  operationError,
   onClose,
   onApply,
 }: {
@@ -21,12 +23,22 @@ export function GridPasteDialog({
   startField: GridField;
   text: string;
   columns?: readonly GridField[];
+  newRecipientsTraining?: string;
+  operationError?: string;
   onClose: () => void;
-  onApply: (items: Recipient[]) => void | Promise<void>;
+  onApply: (items: Recipient[]) => void | boolean | Promise<void | boolean>;
 }) {
   const [mode, setMode] = useState<"EMPTY" | "REPLACE">("EMPTY");
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [blankRows, setBlankRows] = useState<"KEEP" | "SKIP" | "">("");
+  const [saveError, setSaveError] = useState("");
+  const [attempted, setAttempted] = useState(false);
+  const visibleSaveError = attempted ? operationError || saveError : "";
+  const errorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (visibleSaveError) errorRef.current?.focus();
+  }, [visibleSaveError]);
   let preview: ReturnType<typeof previewGridPaste> | undefined;
   let error = "";
   try {
@@ -37,6 +49,7 @@ export function GridPasteDialog({
       text,
       mode,
       columns,
+      blankRows || "KEEP",
     );
   } catch (c) {
     error = c instanceof Error ? c.message : "Не удалось прочитать диапазон";
@@ -75,6 +88,11 @@ export function GridPasteDialog({
         </select>
       </label>
       {error && <Notice>{error}</Notice>}
+      {visibleSaveError && (
+        <div ref={errorRef} tabIndex={-1}>
+          <Notice>{visibleSaveError}</Notice>
+        </div>
+      )}
       {preview && (
         <>
           <p>
@@ -82,6 +100,60 @@ export function GridPasteDialog({
             {preview.changes.length} изменений · новых получателей:{" "}
             {preview.added}
           </p>
+          {!!preview.blankRows.length && (
+            <label>
+              Полностью пустые строки диапазона: {preview.blankRows.join(", ")}
+              <select
+                aria-label="Полностью пустые строки диапазона"
+                value={blankRows}
+                onChange={(event) => {
+                  setBlankRows(event.target.value as typeof blankRows);
+                  setConfirmed(false);
+                  setSaveError("");
+                }}
+              >
+                <option value="">Выберите, сохранять ли пустые строки</option>
+                <option value="KEEP">
+                  Сохранить пустые строки, включая новых пустых получателей
+                </option>
+                <option value="SKIP">
+                  Пропустить пустые строки и сдвинуть следующие строки диапазона
+                  вверх
+                </option>
+              </select>
+            </label>
+          )}
+          {preview.added > 0 && (
+            <section aria-label="Новые строки диапазона">
+              <p>
+                Каждая новая строка будет создана в черновике.{" "}
+                {newRecipientsTraining ||
+                  "Обучение не назначается; его можно выбрать после вставки."}
+              </p>
+              <ul>
+                {preview.createdRows.map((row) => (
+                  <li key={row.sourceRow}>
+                    Строка диапазона {row.sourceRow} → получатель {row.row}:{" "}
+                    {row.blank
+                      ? "полностью пустая строка"
+                      : "данные из диапазона"}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          <p className="fine-print">
+            Пропущено заполненных ячеек: {preview.skippedFilled}. Ячеек без
+            изменений: {preview.unchanged}.
+            {preview.skippedBlankRows > 0 &&
+              ` Пустых строк пропущено по вашему выбору: ${preview.skippedBlankRows}.`}
+          </p>
+          {!preview.appliedRows && (
+            <Notice kind="info">
+              Все строки диапазона пустые и пропущены по вашему выбору.
+              Изменений для применения нет.
+            </Notice>
+          )}
           <div className="table-scroll bulk-preview">
             <table>
               <thead>
@@ -126,14 +198,27 @@ export function GridPasteDialog({
           className="primary"
           disabled={
             busy ||
-            !preview?.changes.length ||
+            (!preview?.changes.length && !preview?.added) ||
+            (!!preview?.blankRows.length && !blankRows) ||
             (mode === "REPLACE" && !confirmed)
           }
           onClick={async () => {
             if (!preview) return;
             setBusy(true);
+            setSaveError("");
+            setAttempted(true);
             try {
-              await onApply(preview.items);
+              const applied = await onApply(preview.items);
+              if (applied === false)
+                setSaveError(
+                  "Диапазон не сохранён. План вставки остаётся в диалоге; исправьте причину и повторите применение.",
+                );
+            } catch (caught) {
+              setSaveError(
+                caught instanceof Error
+                  ? caught.message
+                  : "Не удалось сохранить диапазон. План вставки сохранён; повторите применение.",
+              );
             } finally {
               setBusy(false);
             }

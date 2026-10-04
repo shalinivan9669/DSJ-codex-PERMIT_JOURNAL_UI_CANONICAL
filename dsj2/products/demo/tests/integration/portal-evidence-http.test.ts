@@ -13,6 +13,8 @@ import {
 import { createRequest } from "../../apps/api/src/requests";
 import * as value from "../../apps/api/src/operator-value";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
+import { provision } from "../../scripts/setup";
 
 test("HTTP employer evidence and matrix scope: stable recipient, tenant, permission, private file and revoke", async (t) => {
   assertTestDatabase();
@@ -25,9 +27,8 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
   });
   const base = await app.getUrl();
   const password = "Portal-Evidence-HTTP-Secret!";
-  const tenant = await db.tenant.create({
-    data: { name: "Синтетический центр портала" },
-  });
+  const seed = await provision({ email: `${randomUUID()}@example.test`, password, name: "Синтетический центр портала", sample: true });
+  const tenant = await db.tenant.findUniqueOrThrow({ where: { id: seed.tenantId } });
   const foreignTenant = await db.tenant.create({
     data: { name: "Чужой центр" },
   });
@@ -116,7 +117,7 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
         title: "Общий состав",
         protocolTemplateId: "biot-protocol",
         serviceRuleVersionId: rule.id,
-        commonFields: {},
+        commonFields: { documentDate: "2026-09-24", protocolDate: "2026-09-24", trainingStart: "2026-09-20", trainingEnd: "2026-09-24", trainingSubject: "Синтетическая программа", hours: "24", productionHours: "16" },
       },
     ],
     items: people.map((person, index) =>
@@ -125,6 +126,7 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
         recipientId: person.id,
         employerId: index === 2 ? other.id : customer.id,
         fullNameRu: `Участник ${index}`,
+        positionRu: "Синтетический рабочий",
         assignments: [
           assignmentSchema.parse({
             id: randomUUID(),
@@ -132,12 +134,17 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
             biotCategory: "WORKER",
             eventId,
             protocolMode: "GROUP",
+            outcome: { status: "PASSED", source: "Явно заданный синтетический результат" },
+            result: "Сдал",
           }),
         ],
       }),
     ),
   });
+  const approvals = await createApprovalFixture(c);
+  t.after(() => approvals.close());
   const request = await createRequest(c, draft);
+  await approvals.approve(request.id);
   await value.createServiceOrder(c, {
     title: "Согласованный заказ",
     customerId: customer.id,
@@ -575,11 +582,12 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
           status: "FAILED",
           source: "Синтетический сохранённый результат",
         };
+        const previousProfile = await db.issuerProfileVersion.findFirstOrThrow({ where: { tenantId: tenant.id }, orderBy: { version: "desc" } });
         const ownProfile = await db.issuerProfileVersion.create({
           data: {
             tenantId: tenant.id,
-            version: 1,
-            profile: {},
+            version: previousProfile.version + 1,
+            profile: previousProfile.profile,
             createdBy: users[0].id,
           },
         });
@@ -598,7 +606,7 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
             data: {
               tenantId: tenant.id,
               requestId: request.id,
-              sourceRevision: 0,
+              sourceRevision: request.revision,
               snapshot: json({ draft: failedDraft }),
               inputHash: "synthetic",
               profileVersionId: ownProfile.id,

@@ -9,10 +9,58 @@ import { provision } from "../../scripts/setup";
 import { db, type Context } from "../../apps/api/src/core";
 import { saveCustomer } from "../../apps/api/src/settings";
 import { createRequest, finalize } from "../../apps/api/src/requests";
-import { registryExport, store } from "../../apps/api/src/files";
+import {
+  registryExport,
+  buildSavedRegistryDelivery,
+  store,
+} from "../../apps/api/src/files";
 import { saveExportProfile } from "../../apps/api/src/delivery";
-import { draftSchema } from "../../packages/contracts/src";
+import { draftSchema, protocolTemplateFor } from "../../packages/contracts/src";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
+
+/** Internal routing fixture starts with actual immutable prepared inputs; it
+ * never claims those unsigned bytes form an officially issued/signature-valid bundle. */
+async function delivery(c: Context, input: unknown, requestId: string) {
+  const record = await db.printRequest.findUniqueOrThrow({
+    where: { id: requestId },
+  });
+  const issuance = await db.issuance.findFirstOrThrow({ where: { requestId } });
+  const frozen = draftSchema.parse(
+    (issuance.snapshot as { draft: unknown }).draft,
+  );
+  const documents = await db.issuedDocument.findMany({ where: { requestId } });
+  const rows = frozen.items.flatMap((item) =>
+    item.assignments.map((assignment) => {
+      const document = documents.find(
+        (entry) =>
+          entry.rowId === item.id && entry.assignmentId === assignment.id,
+      );
+      const protocol = documents.find(
+        (entry) =>
+          entry.groupEventId === assignment.eventId &&
+          entry.templateId === protocolTemplateFor(assignment.templateId),
+      );
+      return {
+        ...item,
+        assignment,
+        requestId,
+        employerId: item.employerId || frozen.customerId || undefined,
+        number: document?.number || "",
+        registrationNumber: document?.registrationNumber || "",
+        protocolNumber: protocol?.number || "",
+        status: record.status,
+        revision: record.revision,
+      };
+    }),
+  );
+  return buildSavedRegistryDelivery(
+    c,
+    input,
+    { records: [record], rows },
+    requestId,
+  );
+}
 
 const errorCode = (expected: string) => (error: unknown) =>
   typeof error === "object" &&
@@ -36,6 +84,7 @@ test("staff company output scopes frozen mixed-employer rows, individual bytes, 
     sessionId: "test",
     csrfHash: "test",
   };
+  const approvals = await createApprovalFixture(c);
   try {
     const a = await saveCustomer(c, { nameRu: "OWN_CUSTOMER_A" });
     const b = await saveCustomer(c, { nameRu: "FOREIGN_CUSTOMER_B" });
@@ -102,7 +151,19 @@ test("staff company output scopes frozen mixed-employer rows, individual bytes, 
       ],
     });
     const request = await createRequest(c, draft);
-    await finalize(c, request.id, { expectedRevision: 0 }, randomUUID());
+    await approvals.approve(request.id);
+    await finalize(
+      c,
+      request.id,
+      { expectedRevision: request.revision },
+      randomUUID(),
+    );
+    for (const format of ["TSV", "XLSX", "ZIP"]) {
+      await assert.rejects(
+        registryExport(c, { format }, request.id),
+        errorCode("ISSUANCE_NOT_COMPLETE"),
+      );
+    }
     const documents = await db.issuedDocument.findMany({
       where: { requestId: request.id },
     });
@@ -167,32 +228,32 @@ test("staff company output scopes frozen mixed-employer rows, individual bytes, 
     const before = await db.numberReservation.count({
       where: { tenantId: c.tenantId },
     });
-    const onlyA = await registryExport(
+    const onlyA = await delivery(
       c,
       { format: "TSV", profileId: profileA.id },
       request.id,
     );
     assert.match(onlyA.buffer.toString(), /OWN_PERSON_A/);
     assert.doesNotMatch(onlyA.buffer.toString(), /FOREIGN_PERSON_B/);
-    const onlyB = await registryExport(
+    const onlyB = await delivery(
       c,
       { format: "TSV", profileId: profileB.id },
       request.id,
     );
     assert.match(onlyB.buffer.toString(), /FOREIGN_PERSON_B/);
     assert.doesNotMatch(onlyB.buffer.toString(), /OWN_PERSON_A/);
-    const queryOnly = await registryExport(
+    const queryOnly = await delivery(
       c,
       { format: "TSV", customerId: b.id },
       request.id,
     );
     assert.match(queryOnly.buffer.toString(), /FOREIGN_PERSON_B/);
     assert.doesNotMatch(queryOnly.buffer.toString(), /OWN_PERSON_A/);
-    const internal = await registryExport(c, { format: "TSV" }, request.id);
+    const internal = await delivery(c, { format: "TSV" }, request.id);
     assert.match(internal.buffer.toString(), /OWN_PERSON_A/);
     assert.match(internal.buffer.toString(), /FOREIGN_PERSON_B/);
     await assert.rejects(
-      registryExport(c, { format: "ZIP", profileId: profileA.id }, request.id),
+      delivery(c, { format: "ZIP", profileId: profileA.id }, request.id),
       errorCode("PARTIAL_BUNDLE"),
     );
     const directory = await mkdtemp(join(tmpdir(), "demo-customer-scope-"));
@@ -204,7 +265,7 @@ test("staff company output scopes frozen mixed-employer rows, individual bytes, 
     ] as const) {
       const secondCompany = mode.endsWith("_B");
       const forbiddenName = secondCompany ? "OWN_PERSON_A" : "FOREIGN_PERSON_B";
-      const bundle = await registryExport(
+      const bundle = await delivery(
         c,
         {
           format: "ZIP",
@@ -248,7 +309,7 @@ test("staff company output scopes frozen mixed-employer rows, individual bytes, 
       },
     });
     await assert.rejects(
-      registryExport(
+      delivery(
         c,
         {
           format: "ZIP",
@@ -285,7 +346,17 @@ test("staff company output scopes frozen mixed-employer rows, individual bytes, 
         },
       ],
     });
-    await finalize(c, whollyOwned.id, { expectedRevision: 0 }, randomUUID());
+    await approvals.approve(whollyOwned.id);
+    await finalize(
+      c,
+      whollyOwned.id,
+      { expectedRevision: whollyOwned.revision },
+      randomUUID(),
+    );
+    await assert.rejects(
+      registryExport(c, { format: "ZIP", customerId: a.id }, whollyOwned.id),
+      errorCode("ISSUANCE_NOT_COMPLETE"),
+    );
     for (const job of await db.generationJob.findMany({
       where: { requestId: whollyOwned.id, documentId: { not: null } },
     })) {
@@ -313,7 +384,7 @@ test("staff company output scopes frozen mixed-employer rows, individual bytes, 
         data: { status: "SUCCEEDED", artifactId: artifact.id },
       });
     }
-    const complete = await registryExport(
+    const complete = await delivery(
       c,
       { format: "ZIP", customerId: a.id },
       whollyOwned.id,
@@ -333,7 +404,18 @@ test("staff company output scopes frozen mixed-employer rows, individual bytes, 
       ),
     );
     assert.equal(completeManifest.readyCount, 4);
+    assert.equal(
+      await db.documentSignature.count({ where: { tenantId: c.tenantId } }),
+      0,
+    );
+    assert.equal(
+      await db.issuanceWorkflow.count({
+        where: { tenantId: c.tenantId, status: "ISSUED" },
+      }),
+      0,
+    );
   } finally {
+    await approvals.close();
     await db.$disconnect();
   }
 });

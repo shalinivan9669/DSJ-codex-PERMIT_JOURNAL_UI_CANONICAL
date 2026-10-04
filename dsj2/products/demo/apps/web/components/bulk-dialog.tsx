@@ -5,15 +5,19 @@ import {
   bulkFields,
   bulkRecipientFields,
   previewBulk,
+  bulkPatchIssues,
   type BulkField,
   type BulkMode,
 } from "@/lib/bulk-edit";
 import { templateLabels, type Recipient } from "@/lib/types";
+import type { TrainingEventInput } from "@demo/contracts";
 
 export function BulkDialog({
   items,
   resolvedItems,
   selectedIds,
+  events,
+  sourceRevision,
   operationError,
   onClose,
   onApply,
@@ -21,6 +25,8 @@ export function BulkDialog({
   items: Recipient[];
   resolvedItems?: Recipient[];
   selectedIds: string[];
+  events?: TrainingEventInput[];
+  sourceRevision?: number;
   operationError?: string;
   onClose: () => void;
   onApply: (items: Recipient[]) => Promise<void>;
@@ -35,6 +41,22 @@ export function BulkDialog({
   const [direction, setDirection] = useState(
     directions.length === 1 ? directions[0] : "",
   );
+  const [eventScope, setEventScope] = useState("");
+  const matchingEvents = [
+    ...new Set(
+      items
+        .filter((item) => selectedIds.includes(item.id))
+        .flatMap((item) =>
+          item.assignments
+            .filter((assignment) =>
+              assignment.templateId.startsWith(direction + "-"),
+            )
+            .map((assignment) => assignment.eventId || "__individual"),
+        ),
+    ),
+  ];
+  const effectiveEventScope =
+    matchingEvents.length === 1 ? matchingEvents[0] : eventScope;
   const [mode, setMode] = useState<BulkMode>("EMPTY");
   const [patch, setPatch] = useState<Partial<Record<BulkField, string>>>({});
   const [review, setReview] = useState(false);
@@ -42,6 +64,18 @@ export function BulkDialog({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [attempted, setAttempted] = useState(false);
+  const scopeKey = JSON.stringify({
+    sourceRevision,
+    selectedIds,
+    items: items.filter((item) => selectedIds.includes(item.id)),
+    resolvedItems: resolvedItems?.filter((item) =>
+      selectedIds.includes(item.id),
+    ),
+  });
+  useEffect(() => {
+    setReview(false);
+    setConfirmed(false);
+  }, [scopeKey]);
   const errorRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLElement>(null);
   const visibleError = error || (attempted ? operationError : "");
@@ -57,6 +91,11 @@ export function BulkDialog({
     patch,
     mode,
     resolvedItems,
+    effectiveEventScope && effectiveEventScope !== "__all"
+      ? effectiveEventScope === "__individual"
+        ? ""
+        : effectiveEventScope
+      : undefined,
   );
   const reset = () => {
     setReview(false);
@@ -67,6 +106,7 @@ export function BulkDialog({
   const documentFieldsSelected = bulkFields.some(([field]) =>
     Object.hasOwn(patch, field),
   );
+  const patchIssues = bulkPatchIssues(patch);
   return (
     <Modal
       title={`Общие значения для ${selectedIds.length} получателей`}
@@ -114,7 +154,10 @@ export function BulkDialog({
               </label>
               <input
                 aria-label={`Общее значение: ${label}`}
-                maxLength={500}
+                aria-invalid={!!patchIssues[field]}
+                aria-describedby={
+                  patchIssues[field] ? `bulk-${field}-error` : undefined
+                }
                 disabled={mode === "INHERITED" || !Object.hasOwn(patch, field)}
                 value={patch[field] || ""}
                 onChange={(event) => {
@@ -122,6 +165,11 @@ export function BulkDialog({
                   reset();
                 }}
               />
+              {patchIssues[field] && (
+                <small id={`bulk-${field}-error`} className="field-error">
+                  {patchIssues[field]}
+                </small>
+              )}
             </div>
           ))}
         </div>
@@ -135,6 +183,7 @@ export function BulkDialog({
             value={direction}
             onChange={(e) => {
               setDirection(e.target.value);
+              setEventScope("");
               reset();
             }}
           >
@@ -156,6 +205,32 @@ export function BulkDialog({
             Нужно только для отмеченных полей документов.
           </small>
         </label>
+        {matchingEvents.length > 1 && (
+          <label>
+            Событие обучения
+            <select
+              aria-label="Событие для массовых полей"
+              value={eventScope}
+              onChange={(event) => {
+                setEventScope(event.target.value);
+                reset();
+              }}
+            >
+              <option value="">Выберите адресата изменений</option>
+              {matchingEvents.map((id) => (
+                <option key={id} value={id}>
+                  {id === "__individual"
+                    ? "Индивидуальные назначения без общего события"
+                    : events?.find((event) => event.id === id)?.title ||
+                      `Событие ${id}`}
+                </option>
+              ))}
+              <option value="__all">
+                Все события выбранного направления — явная общая замена
+              </option>
+            </select>
+          </label>
+        )}
         <label>
           Режим применения
           <select
@@ -209,12 +284,21 @@ export function BulkDialog({
               aria-label={`Общее значение: ${label}`}
               disabled={!Object.hasOwn(patch, field)}
               type={type}
+              aria-invalid={!!patchIssues[field]}
+              aria-describedby={
+                patchIssues[field] ? `bulk-${field}-error` : undefined
+              }
               value={patch[field] || ""}
               onChange={(e) => {
                 setPatch({ ...patch, [field]: e.target.value });
                 reset();
               }}
             />
+            {patchIssues[field] && (
+              <small id={`bulk-${field}-error`} className="field-error">
+                {patchIssues[field]}
+              </small>
+            )}
           </div>
         ))}
       </div>
@@ -268,8 +352,21 @@ export function BulkDialog({
                         )?.[1]
                       }
                     </td>
-                    <td>{c.before || "пусто"}</td>
-                    <td>{c.after || "будет очищено"}</td>
+                    <td>
+                      {c.before || "пусто"}
+                      {c.beforeSourceLabel && (
+                        <small>{c.beforeSourceLabel}</small>
+                      )}
+                    </td>
+                    <td>
+                      {c.after || "будет очищено"}
+                      {(c.beforeSource === "EFFECTIVE" ||
+                        c.beforeSource === "LANGUAGE") && (
+                        <small>
+                          Станет индивидуальным значением этого человека
+                        </small>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -297,7 +394,11 @@ export function BulkDialog({
             className="primary"
             disabled={
               (documentFieldsSelected && !direction) ||
-              !Object.keys(patch).length
+              (documentFieldsSelected &&
+                matchingEvents.length > 1 &&
+                !eventScope) ||
+              !Object.keys(patch).length ||
+              !!Object.keys(patchIssues).length
             }
             onClick={() => {
               setReview(true);
@@ -315,6 +416,7 @@ export function BulkDialog({
             disabled={
               busy ||
               !preview.changes.length ||
+              !!Object.keys(patchIssues).length ||
               (mode === "REPLACE" && !confirmed)
             }
             onClick={async () => {

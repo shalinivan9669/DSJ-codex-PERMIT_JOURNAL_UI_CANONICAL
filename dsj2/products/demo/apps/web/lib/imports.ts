@@ -5,6 +5,8 @@ import {
   biotValidUntil,
   commonFieldKeys,
   LIMITS,
+  itemSchema,
+  validDate,
   type BiotCategory,
   type EmployeeCategory,
   type TrainingEventInput,
@@ -13,6 +15,15 @@ import {
   biotCategoriesForTemplate,
   updateAssignment,
 } from "./assignment-presets";
+import { isBlankText } from "./blank-text";
+export class ImportMappingError extends Error {
+  constructor(
+    public field: string,
+    message: string,
+  ) {
+    super(message);
+  }
+}
 export type ImportRow = {
   sourceRow: number;
   values: string[];
@@ -171,7 +182,8 @@ export function importedEmployeeCategory(
   )
     return "WORKER";
   if (["ITR", "ИТР", "ИТҚ"].includes(normalized)) return "ITR";
-  throw new Error(
+  throw new ImportMappingError(
+    "employeeCategory",
     `Исходная строка ${sourceRow}: категория сотрудника должна быть «Рабочий» (WORKER) или «ИТР» (ITR). Должность не определяет категорию автоматически.`,
   );
 }
@@ -228,7 +240,8 @@ export function mapImportRow(
         String(row.values[index] ?? "").trim(),
     );
     if (trainingColumn >= 0)
-      throw new Error(
+      throw new ImportMappingError(
+        mapping[trainingColumn],
         `Исходная строка ${row.sourceRow}: выберите документ для переноса учебных данных из колонки «${preview.columns[trainingColumn]}».`,
       );
   }
@@ -266,7 +279,8 @@ export function mapImportRow(
       !known ||
       !biotCategoriesForTemplate(assignment.templateId).includes(known)
     ) {
-      throw new Error(
+      throw new ImportMappingError(
+        "biotCategory",
         `Исходная строка ${row.sourceRow}: категория БиОТ не соответствует выбранной форме. Проверьте категорию и документ.`,
       );
     }
@@ -304,7 +318,8 @@ export function mapImportRow(
         } as const
       )[value as "PERIODIC" | "REPEAT" | "Периодическая" | "Повторная"];
       if (value && !checkType)
-        throw new Error(
+        throw new ImportMappingError(
+          "biotCheckType",
           `Исходная строка ${row.sourceRow}: выберите периодическую или повторную проверку знаний.`,
         );
       assignment.biotCheckType = checkType;
@@ -336,4 +351,113 @@ export function mapImportRow(
     ),
   };
   return result;
+}
+
+export type MappedImportIssue = {
+  field?: string;
+  column?: number;
+  message: string;
+};
+/** Validate the mapped draft, not document readiness. Missing draft text remains allowed. */
+export function validateMappedImportRow(
+  preview: ImportPreview,
+  row: ImportRow,
+  mapping: string[],
+  templateId: Assignment["templateId"] | "",
+  category?: BiotCategory,
+): { item?: Recipient; issues: MappedImportIssue[]; incomplete: boolean } {
+  const issues: MappedImportIssue[] = [];
+  const add = (field: string | undefined, message: string) => {
+    const column = field ? mapping.indexOf(field) : -1;
+    issues.push({ field, column: column >= 0 ? column : undefined, message });
+  };
+  if (row.errors?.length) {
+    row.errors.forEach((code) => add(undefined, importRowIssueText(code)));
+    return { issues, incomplete: false };
+  }
+  let item: Recipient | undefined;
+  try {
+    item = mapImportRow(preview, row, mapping, templateId, category);
+  } catch (caught) {
+    add(
+      caught instanceof ImportMappingError ? caught.field : undefined,
+      caught instanceof Error
+        ? caught.message
+        : "Проверьте сопоставленные данные.",
+    );
+  }
+  for (const field of [
+    "documentDate",
+    "trainingStart",
+    "trainingEnd",
+    "protocolDate",
+    "validUntil",
+  ]) {
+    const column = mapping.indexOf(field);
+    if (column < 0) continue;
+    const value = String(row.values[column] ?? "");
+    if (!isBlankText(value) && !validDate(value))
+      add(
+        field,
+        "Укажите существующую календарную дату в формате ГГГГ-ММ-ДД. Исходное значение сохранено.",
+      );
+  }
+  if (item) {
+    const parsed = itemSchema.safeParse(item);
+    if (!parsed.success)
+      parsed.error.issues.forEach((issue) => {
+        const field = String(issue.path.at(-1) ?? "");
+        add(
+          field,
+          issue.code === "too_big"
+            ? `Максимум ${issue.maximum} символов. Исходное значение сохранено; исправьте поле без потери обязательных данных.`
+            : issue.message,
+        );
+      });
+  }
+  return {
+    item,
+    issues,
+    incomplete:
+      !!item && isBlankText(item.fullNameRu) && isBlankText(item.fullNameKz),
+  };
+}
+
+export function importedSourceRows(
+  items: Recipient[],
+  importId: string,
+): Set<number> {
+  return new Set(
+    items.flatMap((item) =>
+      item.importId === importId && item.sourceRow ? [item.sourceRow] : [],
+    ),
+  );
+}
+
+/** A correction entered in preview is manual input; the original batch stays immutable. */
+export function applyImportCorrections(
+  item: Recipient,
+  mapping: string[],
+  corrections: Record<number, string>,
+): Recipient {
+  const origins = Object.fromEntries(
+    Object.entries(corrections).flatMap(([column, value]) => {
+      const field = mapping[Number(column)];
+      return commonFieldKeys.some((key) => key === field)
+        ? [
+            [
+              field,
+              isBlankText(value) ? ("CLEARED" as const) : ("MANUAL" as const),
+            ],
+          ]
+        : [];
+    }),
+  );
+  return {
+    ...item,
+    assignments: item.assignments.map((assignment) => ({
+      ...assignment,
+      fieldOrigins: { ...assignment.fieldOrigins, ...origins },
+    })),
+  };
 }

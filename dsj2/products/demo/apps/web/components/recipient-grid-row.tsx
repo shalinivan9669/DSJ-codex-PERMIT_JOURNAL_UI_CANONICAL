@@ -20,6 +20,7 @@ import {
 } from "@/lib/recipient-row-date";
 import type { RecipientGridProps } from "./recipient-grid";
 import { TextQualityHint } from "./text-quality-hint";
+import { restoreTrainingAssignmentField } from "@/lib/training-assignment-edit";
 
 export type GridRowActions = Pick<
   RecipientGridProps,
@@ -33,9 +34,9 @@ export type GridRowActions = Pick<
 > & {
   toggleChecked: (id: string, checked: boolean) => void;
   moveInColumn: (
-    event: KeyboardEvent<HTMLInputElement>,
+    event: KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
     visibleIndex: number,
-    field: GridField,
+    field: GridField | "employeeCategory" | "documentDate",
   ) => void;
 };
 type Props = {
@@ -123,6 +124,13 @@ export const RecipientGridRow = memo(
   }: Props) {
     const prefix = `items.${index}.`;
     const date = recipientRowDate(item, resolvedItem);
+    const personalDate = item.assignments.some(
+      (entry) =>
+        !entry.templateId.endsWith("-protocol") &&
+        ["MANUAL", "IMPORTED", "CLEARED"].includes(
+          entry.fieldOrigins?.documentDate || "",
+        ),
+    );
     const templates = [...assignedDocumentTemplates(resolvedItem)];
     const primaryTemplates = templates.filter(
       (template) => !template.endsWith("-protocol"),
@@ -231,7 +239,7 @@ export const RecipientGridRow = memo(
                 title={trainingLabel}
                 aria-label={`Настройки обучения получателя ${index + 1}: ${trainingLabel}`}
                 onClick={() =>
-                  !item.assignments.length && !readonly && canSelectDocuments
+                  !readonly && canSelectDocuments
                     ? actions.current.onDocuments?.(item.id)
                     : actions.current.onOpen(item.id)
                 }
@@ -303,6 +311,38 @@ export const RecipientGridRow = memo(
                 }
               />
             )}
+            {date.kind === "single" && (
+              <small className="recipient-grid-date-source">
+                {personalDate ? "Личная дата" : "Общая дата"}
+                {personalDate && !readonly && (
+                  <button
+                    type="button"
+                    className="text-button"
+                    disabled={disabled}
+                    onClick={() =>
+                      actions.current.onEdit(
+                        item.assignments
+                          .filter(
+                            (entry) => !entry.templateId.endsWith("-protocol"),
+                          )
+                          .reduce(
+                            (next, entry) =>
+                              restoreTrainingAssignmentField(
+                                next,
+                                entry.id,
+                                "documentDate",
+                                liveRules,
+                              ),
+                            item,
+                          ),
+                      )
+                    }
+                  >
+                    Вернуть общую
+                  </button>
+                )}
+              </small>
+            )}
             {feedback(dateField)}
             {feedback("employeeCategory")}
           </td>
@@ -319,7 +359,6 @@ export const RecipientGridRow = memo(
                 <input
                   ref={ref(field)}
                   type="text"
-                  maxLength={500}
                   value={value}
                   title={value || undefined}
                   aria-label={`${label}, строка ${index + 1}`}
@@ -412,7 +451,10 @@ export const RecipientGridRow = memo(
           </td>
         </tr>
         {itr && (
-          <tr className={`recipient-grid-supplement ${rowClass}`}>
+          <tr
+            data-recipient-id={item.id}
+            className={`recipient-grid-supplement ${rowClass}`}
+          >
             <td colSpan={columns.length + 3 + (showPhotoColumn ? 1 : 0)}>
               <details
                 open={employerExpanded}
@@ -431,7 +473,6 @@ export const RecipientGridRow = memo(
                       <input
                         ref={ref(field)}
                         value={resolvedItem[field] || item[field] || ""}
-                        maxLength={field === "employerBin" ? 50 : 500}
                         inputMode={
                           field === "employerBin" ? "numeric" : undefined
                         }

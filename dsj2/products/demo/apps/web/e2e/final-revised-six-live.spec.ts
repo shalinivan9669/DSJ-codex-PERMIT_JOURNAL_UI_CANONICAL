@@ -3,6 +3,7 @@ import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+test.use({ trace: "off" });
 test("V04 exact revised list: six imported people, four unchanged, one changed, one added, one absent, and actionable copied clarification", async ({
   page,
   context,
@@ -63,6 +64,8 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
   await page.getByLabel("Электронная почта", { exact: true }).fill(auth.email);
   await page.getByLabel("Пароль", { exact: true }).fill(auth.password);
   await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
+  await page.goto("/requests");
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -70,6 +73,10 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
   await createRequestWithWorkerDocument(page, "PERSON");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Убрать из заявки", exact: true })
     .click();
   async function openImport(tsv: string, revised = false) {
     await page
@@ -96,9 +103,8 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
   await page
     .getByRole("button", { name: "Добавить 6 строк в черновик", exact: true })
     .click();
-  await expect(page.locator(".recipient-table tbody tr")).toHaveCount(6);
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await expect(page.locator(".operator-grid tbody tr")).toHaveCount(6);
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   const id = /requests\/([^/]+)/.exec(page.url())![1];
   const read = async () => {
     const r = await page.request.get(`/api/print-requests/${id}`);
@@ -140,7 +146,7 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
     .click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.reload();
-  await expect(page.locator(".recipient-table tbody tr")).toHaveCount(7);
+  await expect(page.locator(".operator-grid tbody tr")).toHaveCount(7);
   const revised = await read();
   const keyed = (
     items: {
@@ -169,12 +175,29 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
   expect(before.has("DEMO-P007")).toBe(false);
   // The exact revised fixture is complete. Exercise a separate missing-field
   // branch after proving its reconciliation, rather than inventing an issue.
-  await page.getByLabel("ФИО RU, строка 7", { exact: true }).fill("");
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await page.getByLabel("ФИО, строка 7", { exact: true }).fill("");
+  await page
+    .getByRole("button", { name: "Детали получателя 7", exact: true })
+    .click();
+  const personal = page.getByRole("dialog", {
+    name: "Настройки строки 7",
+    exact: true,
+  });
+  await personal
+    .getByRole("tab", { name: "Личные данные", exact: true })
+    .click();
+  await personal.locator("summary", { hasText: "Казахский вариант" }).click();
+  await personal.getByLabel("ФИО · KZ", { exact: true }).fill("");
+  await personal
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   const withMissingName = await read();
   await page
-    .getByRole("button", { name: "Открыть согласование", exact: true })
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Согласование и передача", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Подготовить запрос уточнений", exact: true })

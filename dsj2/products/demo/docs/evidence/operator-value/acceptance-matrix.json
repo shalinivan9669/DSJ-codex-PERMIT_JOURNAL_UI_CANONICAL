@@ -7325,5 +7325,147 @@
       "proofScope": "Safe inert PDF parsed in memory; no upload, no DB changes, no JavaScript or viewer execution; no tenant/customer leakage demonstrated.",
       "resolution": "NOT_FIXED_IN_THIS_ASSURANCE_REVIEW"
     }
-  ]
+  ],
+  "operatorFullUxFix20261003": {
+    "status": "LOCAL_UX32_AND_RISKS_COMPLETE",
+    "updatedAt": "2026-10-04T01:06:28.354Z",
+    "branch": "codex/operator-flow-refinement-20261003",
+    "baseHead": "c438d33c2a0fa4f1ad2024892cf5f39e677b9c02",
+    "uxPass": 32,
+    "riskPass": 4,
+    "scope": "UX01..32 and R1..R4; exact fresh mandatory acceptance; historical entries preserved",
+    "implementationEvidence": "docs/evidence/operator-flow-full-fix-20261003",
+    "closureMatrix": "docs/evidence/operator-flow-full-fix-20261003/UX_01_32_CLOSURE_MATRIX_RU.md",
+    "report": "docs/evidence/operator-flow-full-fix-20261003/IMPLEMENTATION_REPORT_RU.md",
+    "finalRuntime": {
+      "web": "http://127.0.0.1:3134",
+      "api": "http://127.0.0.1:4134",
+      "dist": ".next-operator-flow-full-fix-v30",
+      "buildId": "tRmlmp5O3h110hD5-uVvp",
+      "isolatedSynthetic": true
+    },
+    "verifiedGates": {
+      "unit": {
+        "status": "PASS",
+        "log": "gates/test-1791067026157.log",
+        "runtime": "v30",
+        "buildId": "tRmlmp5O3h110hD5-uVvp",
+        "logSha256": "0628d282b622f0a422299ce170f9f6d4bf5f57bdb3d7221f74a3754b6d72de6c",
+        "bytes": 31973,
+        "core": 147,
+        "web": 170,
+        "failed": 0,
+        "skipped": 0
+      },
+      "fullE2E": {
+        "status": "FINISHED_WITH_VERIFIED_FROZEN_FAILURE",
+        "runtime": "v30",
+        "evidenceVersion": 31,
+        "runId": "89caa06e-a555-4695-8697-ced29b2256b1",
+        "buildId": "tRmlmp5O3h110hD5-uVvp",
+        "evidence": "final-full-v31-89caa06e-a555-4695-8697-ced29b2256b1",
+        "enabledCases": 155,
+        "actualExecutedCases": 155,
+        "retries": 0,
+        "workers": 1,
+        "startTime": "2026-10-03T23:01:36.354Z",
+        "duration": 5643011.731,
+        "expected": 154,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0,
+        "exitCode": 1,
+        "finishedUtc": "2026-10-04T00:35:39.5669935Z",
+        "frozenException": "final-full-v31-89caa06e-a555-4695-8697-ced29b2256b1/company37-frozen-failure.json",
+        "fullSuiteGreen": false
+      },
+      "typecheck": {
+        "status": "PASS",
+        "log": "gates/typecheck-1791068441985.log",
+        "runtime": "v30",
+        "buildId": "tRmlmp5O3h110hD5-uVvp",
+        "logSha256": "db300eda06ae621631e3a4af1427bfea57ae0444875b094b25e367d802398a38",
+        "bytes": 926
+      },
+      "lint": {
+        "status": "PASS",
+        "log": "gates/lint-1791068440139.log",
+        "runtime": "v30",
+        "buildId": "tRmlmp5O3h110hD5-uVvp",
+        "logSha256": "050c69da23536758722729aeda55a8d0fb9d557495ef6d33d70873a3b64a71c1",
+        "bytes": 11
+      },
+      "render": {
+        "log": "gates/test_render-1791016790155.log",
+        "rendererTemplatesUnchanged": true,
+        "failed": 0,
+        "skipped": 0,
+        "passed": 90,
+        "status": "PASS",
+        "bytes": 15783,
+        "logSha256": "355832bd2c76a99c139d5b25108428d957910c4861d7cf234ea29cb7a6bc162f"
+      },
+      "integration": {
+        "log": "gates/test_integration-1791033879863.log",
+        "apiRuntimeSourceUnchanged": true,
+        "failed": 0,
+        "skipped": 0,
+        "passed": 184,
+        "status": "PASS",
+        "bytes": 22589,
+        "logSha256": "6ad6c0a312a6521b95bad01b1b931b81fe63d4c1e7b90ccbaa5a49ee63c58390"
+      },
+      "build": {
+        "status": "PASS",
+        "log": "gates/build-1791066845521.log",
+        "runtime": "v30",
+        "buildId": "tRmlmp5O3h110hD5-uVvp",
+        "logSha256": "d51e92bce4afde2f8b05c40e96383a070a5a1bfdb1ce5a44684edcff846db739",
+        "bytes": 5135
+      },
+      "proxyLargeValidation": {
+        "businessDraftUnchanged": true,
+        "documents": 101,
+        "actualHeadersMs": 32845.744,
+        "evidence": "domain/proxy-layout-v26-b3efa3c3-c95c-4111-b0ed-2c018721f5af",
+        "revision": 14,
+        "approvalOrIssueWrites": 0,
+        "recipients": 100,
+        "status": "PASS",
+        "valid": true
+      },
+      "nonfrozenTarget29": {
+        "status": "PASS",
+        "expected": 10,
+        "unexpected": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "exitCode": 0,
+        "evidence": "current29-nonfrozen-target-4892380d-d402-4831-862c-17f0dc390a57",
+        "runtime": "v29",
+        "notCompleteProductSuite": true
+      }
+    },
+    "fullRunId": "89caa06e-a555-4695-8697-ced29b2256b1",
+    "fullStats": {
+      "startTime": "2026-10-03T23:01:36.354Z",
+      "duration": 5643011.731,
+      "expected": 154,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "fullExitCode": 1,
+    "mandatoryCases": 38,
+    "verifiedFreshRequirements": 437,
+    "savedFilesChecked": 416,
+    "pdfsChecked": 206,
+    "ownPendingRequirements": 0,
+    "frozenFailures": [
+      "company: 12 independent bilingual recipients and 18 training choices produce all 37 mandatory current forms"
+    ],
+    "frozenBoundary": "Actual full exit retained. Renderer/templates/normative rules unchanged. Unsigned XLSX/ZIP409 retained, read-only saved bytes checked. No NCA/legal/physical/human acceptance claimed.",
+    "productionChanged": false,
+    "pushed": false
+  }
 }

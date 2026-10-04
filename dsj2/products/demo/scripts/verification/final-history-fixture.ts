@@ -15,6 +15,7 @@ import { createRequest } from "../../apps/api/src/requests";
 import { saveRecipient } from "../../apps/api/src/recipients";
 import { ArtifactStore } from "../../packages/printing/src";
 import { assertTestDatabase } from "../../tests/integration/test-database";
+import { finalApprovalActors } from "./final-approval-actors";
 import {
   claimJob,
   executeJob,
@@ -38,7 +39,7 @@ async function main() {
     });
     const c: Context = {
       ...principal,
-      role: "ADMIN",
+      role: "DIRECTOR",
       sessionId: "fixture",
       csrfHash: "fixture",
       correlationId: randomUUID(),
@@ -53,6 +54,7 @@ async function main() {
       workplaceKz: "Сынақ ұйымы",
       assignments: [],
     };
+    const director = await finalApprovalActors(c);
     const person = await saveRecipient(c, personData);
     const draft = {
       kind: "PERSON",
@@ -101,6 +103,7 @@ async function main() {
         email,
         password,
         ...principal,
+        director,
         originalId: original.id,
         duplicateId: duplicate.id,
       }),

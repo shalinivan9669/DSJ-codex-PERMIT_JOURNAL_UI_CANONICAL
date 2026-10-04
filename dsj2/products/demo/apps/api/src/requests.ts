@@ -14,6 +14,8 @@ import {
   eventProtocolAssignment,
   today,
   z,
+  stableValidationIssue,
+  isBlankText,
 } from "@demo/contracts";
 import { Prisma } from "@demo/database";
 import { ArtifactStore, runRender } from "@demo/printing";
@@ -31,6 +33,7 @@ import {
 import { artifactAvailability } from "./storage";
 import { duplicateIssuanceWarnings } from "./duplicate-issuance";
 import { groupHeaderWorkplace } from "./group-workplace";
+import { replaceableImportScaffoldId } from "./import-scaffold";
 import {
   companyEmployerId,
   personCustomerName,
@@ -137,9 +140,16 @@ export function employerFields(
   const employer = item.employerId
     ? organizations.get(item.employerId)
     : customer;
+  const localRu = isBlankText(item.workplaceRu) ? "" : item.workplaceRu;
+  const localKz = isBlankText(item.workplaceKz) ? "" : item.workplaceKz;
+  const localEmployer = !!(localRu || localKz);
   return {
-    workplaceRu: item.workplaceRu || employer?.nameRu || "",
-    workplaceKz: item.workplaceKz || employer?.nameKz || employer?.nameRu || "",
+    workplaceRu: localEmployer
+      ? localRu || localKz
+      : employer?.nameRu || employer?.nameKz || "",
+    workplaceKz: localEmployer
+      ? localKz || localRu
+      : employer?.nameKz || employer?.nameRu || "",
     employerBin: item.employerBin || employer?.bin || "",
     employerAddressRu: item.employerAddressRu || employer?.addressRu || "",
     employerAddressKz:
@@ -359,7 +369,11 @@ export async function persistItems(
       })),
     });
 }
-export async function createRequest(c: Context, input: unknown) {
+export async function createRequest(
+  c: Context,
+  input: unknown,
+  idempotencyKey?: unknown,
+) {
   assertStaff(c, true);
   const draft = parse(draftSchema, input);
   const tenant = await db.tenant.findUniqueOrThrow({
@@ -378,11 +392,14 @@ export async function createRequest(c: Context, input: unknown) {
   for (const item of draft.items)
     for (const assignment of item.assignments)
       if (assignment.outcome)
-        assignment.outcome = {
-          ...assignment.outcome,
-          confirmedBy: c.userId,
-          confirmedAt: new Date().toISOString(),
-        };
+        assignment.outcome =
+          assignment.outcome.status === "UNKNOWN"
+            ? { status: "UNKNOWN", source: assignment.outcome.source }
+            : {
+                ...assignment.outcome,
+                confirmedBy: c.userId,
+                confirmedAt: new Date().toISOString(),
+              };
   if (tenant.demoOnly) draft.demoMode = true;
   if (draft.schemaVersion === 2 && !draft.profileVersionId) {
     const profile = await db.issuerProfileVersion.findFirst({
@@ -391,8 +408,50 @@ export async function createRequest(c: Context, input: unknown) {
     });
     if (profile) draft.profileVersionId = profile.id;
   }
+  const key =
+    typeof idempotencyKey === "string" &&
+    /^[a-zA-Z0-9_-]{16,128}$/.test(idempotencyKey)
+      ? idempotencyKey
+      : undefined;
+  if (idempotencyKey !== undefined && !key)
+    fail(400, "KEY_INVALID", "Неверный ключ повторяемости команды");
+  const payloadHash = hash({ userId: c.userId, input });
   return transaction(async (tx) => {
-    return createProposedContainer(tx, c, draft);
+    if (key) {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":create:" + key},0))`;
+      const prior = await tx.idempotencyOperation.findUnique({
+        where: {
+          tenantId_command_idempotencyKey: {
+            tenantId: c.tenantId,
+            command: "CREATE_REQUEST",
+            idempotencyKey: key,
+          },
+        },
+      });
+      if (prior) {
+        if (prior.payloadHash !== payloadHash)
+          fail(
+            409,
+            "IDEMPOTENCY_MISMATCH",
+            "Этот ключ уже использован с другими данными",
+          );
+        return prior.result as unknown as Awaited<
+          ReturnType<typeof createProposedContainer>
+        >;
+      }
+    }
+    const result = await createProposedContainer(tx, c, draft);
+    if (key)
+      await tx.idempotencyOperation.create({
+        data: {
+          tenantId: c.tenantId,
+          command: "CREATE_REQUEST",
+          idempotencyKey: key,
+          payloadHash,
+          result: json(result),
+        },
+      });
+    return result;
   });
 }
 export async function patchRequest(c: Context, id: string, input: unknown) {
@@ -415,27 +474,44 @@ export async function patchRequest(c: Context, id: string, input: unknown) {
       fail(409, "REVISION_CONFLICT", "Заявка изменена другим оператором", {
         revision: record.revision,
       });
-    for (const item of draft.items)
-      for (const assignment of item.assignments) {
-        if (!assignment.outcome) continue;
-        const old = draftSchema
-          .parse(record.draft)
-          .items.find((i) => i.id === item.id)
-          ?.assignments.find((a) => a.id === assignment.id);
-        assignment.outcome =
-          old?.outcome &&
-          old.outcome.status === assignment.outcome.status &&
-          old.outcome.source === assignment.outcome.source &&
-          old.result === assignment.result
-            ? old.outcome
-            : {
-                ...assignment.outcome,
-                confirmedBy: c.userId,
-                confirmedAt: new Date().toISOString(),
-              };
-      }
+    protectOutcomeMetadata(c, draft, draftSchema.parse(record.draft));
     return submitProposal(tx, c, id, draft, expectedRevision);
   });
+}
+/** Confirmation metadata comes exclusively from authenticated server actions. */
+export function protectOutcomeMetadata(
+  c: Context,
+  draft: Draft,
+  before: Draft,
+) {
+  for (const item of draft.items)
+    for (const assignment of item.assignments) {
+      if (!assignment.outcome) continue;
+      if (assignment.outcome.status === "UNKNOWN") {
+        assignment.outcome = {
+          status: "UNKNOWN",
+          source: assignment.outcome.source,
+        };
+        continue;
+      }
+      const old = before.items
+        .find((row) => row.id === item.id)
+        ?.assignments.find((entry) => entry.id === assignment.id);
+      assignment.outcome =
+        old?.outcome &&
+        old.outcome.status === assignment.outcome.status &&
+        old.outcome.source === assignment.outcome.source &&
+        old.result === assignment.result &&
+        old.biotKnowledgeResult === assignment.biotKnowledgeResult &&
+        old.biotProctoringResult === assignment.biotProctoringResult
+          ? old.outcome
+          : {
+              status: assignment.outcome.status,
+              source: assignment.outcome.source,
+              confirmedBy: c.userId,
+              confirmedAt: new Date().toISOString(),
+            };
+    }
 }
 export async function requestFilter(
   c: Context,
@@ -721,6 +797,13 @@ export async function requestDetail(c: Context, id: string) {
   return {
     ...record,
     ...displayDraft,
+    importScaffoldId: await replaceableImportScaffoldId(
+      db,
+      c,
+      id,
+      displayDraft,
+      record.approvedRevision,
+    ),
     ...(displayDraft.kind === "PERSON"
       ? { customerName: personCustomerName(displayDraft) || null }
       : {}),
@@ -886,22 +969,47 @@ async function validation(
       else issues.push(...binding.issues);
     }
     for (const member of members) {
-      const protocol = eventProtocolAssignment(event, member.assignment);
+      const protocol = eventProtocolAssignment(
+        event,
+        member.assignment,
+        draft.businessRuleVersion === "LIVE_V1",
+      );
+      const memberDraft: Draft = {
+        ...draft,
+        items: [
+          {
+            ...member.item,
+            ...employerFields(member.item, customer, organizations),
+            assignments: [member.assignment, protocol],
+          },
+        ],
+      };
       issues.push(
         ...validateDraft(
-          {
-            ...draft,
-            items: [
-              {
-                ...member.item,
-                ...employerFields(member.item, customer, organizations),
-                assignments: [member.assignment, protocol],
-              },
-            ],
-          },
+          memberDraft,
           row ? profileSchema.parse(row.profile) : null,
           { skipBusinessRules: true },
-        ),
+        ).map((issue) => {
+          const addressed = stableValidationIssue(memberDraft, issue);
+          const rowIndex = draft.items.findIndex(
+            (item) => item.id === addressed.recipientId,
+          );
+          const assignmentIndex = draft.items[rowIndex]?.assignments.findIndex(
+            (assignment) => assignment.id === addressed.assignmentId,
+          );
+          return {
+            ...addressed,
+            eventId: event.id,
+            path:
+              addressed.assignmentId &&
+              assignmentIndex !== undefined &&
+              assignmentIndex >= 0
+                ? `items.${rowIndex}.assignments.${assignmentIndex}${addressed.field ? `.${addressed.field}` : ""}`
+                : addressed.assignmentId === protocol.id
+                  ? `events.${event.id}.commonFields.${addressed.field}`
+                  : addressed.path.replace(/^items\.0\./, `items.${rowIndex}.`),
+          };
+        }),
       );
       const pinnedRule = eventRules.get(event.id);
       if (pinnedRule) {
@@ -1004,7 +1112,10 @@ async function prepareLayout(
           (a.protocolMode !== "GROUP" && !a.outcome) ||
           a.outcome?.status === "PASSED",
       )
-      .map((assignment, column) => {
+      .map((assignment) => {
+        const column = item.assignments.findIndex(
+          (entry) => entry.id === assignment.id,
+        );
         const template = v.selected.get(assignment.templateId)!;
         const linkedProtocol =
           assignment.protocolMode === "GROUP" ||
@@ -1060,7 +1171,15 @@ async function prepareLayout(
             },
           ],
         };
-        return { snapshot, row, column, rowId: item.id, template };
+        return {
+          snapshot,
+          row,
+          column,
+          rowId: item.id,
+          template,
+          assignmentId: assignment.id as string | undefined,
+          eventId: assignment.eventId,
+        };
       }),
   );
   for (const { event, members } of documentPlan(v.draft).groups) {
@@ -1068,7 +1187,11 @@ async function prepareLayout(
     const rows = members.map(({ item, assignment }) => ({
       ...item,
       ...employerFields(item, customer, organizations),
-      assignment: eventProtocolAssignment(event, assignment),
+      assignment: eventProtocolAssignment(
+        event,
+        assignment,
+        v.draft.businessRuleVersion === "LIVE_V1",
+      ),
       number: numberFor(namespace(event.protocolTemplateId)),
       credentialNumber:
         assignment.outcome?.status === "PASSED"
@@ -1077,9 +1200,11 @@ async function prepareLayout(
       protocolNumber: numberFor(namespace(event.protocolTemplateId)),
     }));
     plans.push({
-      row: 0,
+      row: v.draft.items.findIndex((item) => item.id === members[0].item.id),
       column: 0,
       rowId: members[0].item.id,
+      assignmentId: undefined,
+      eventId: event.id,
       template,
       snapshot: {
         mode: "issued-document",
@@ -1170,12 +1295,19 @@ async function checkLayout(
     for (const [index, valid] of results.entries())
       if (!valid) {
         const plan = prepared.plans[index];
-        v.issues.push({
-          code: "PRINT_LAYOUT_OVERFLOW",
-          path: `items.${plan.row}.assignments.${plan.column}`,
-          rowId: plan.rowId,
-          message: `Строка ${plan.row + 1}: текст не помещается в выбранную форму при читаемом размере. Проверьте ФИО, должность, организацию и поля документа; исправьте данные или выберите подходящую форму.`,
-        });
+        v.issues.push(
+          stableValidationIssue(v.draft, {
+            code: "PRINT_LAYOUT_OVERFLOW",
+            path: plan.assignmentId
+              ? `items.${plan.row}.assignments.${plan.column}`
+              : `events.${plan.eventId}`,
+            rowId: plan.rowId,
+            assignmentId: plan.assignmentId,
+            eventId: plan.eventId,
+            field: plan.assignmentId ? "assignments" : "events",
+            message: `Строка ${plan.row + 1}: текст не помещается в выбранную форму при читаемом размере. Проверьте ФИО, должность, организацию и поля документа; исправьте данные или выберите подходящую форму.`,
+          }),
+        );
       }
     return prepared.fingerprint;
   } catch (error) {
@@ -1671,7 +1803,11 @@ export async function finalize(
           ...item,
           ...employerFields(item, customer, organizations),
           assignments: undefined,
-          assignment: eventProtocolAssignment(event, assignment),
+          assignment: eventProtocolAssignment(
+            event,
+            assignment,
+            v.draft.businessRuleVersion === "LIVE_V1",
+          ),
           number,
           documentId,
           protocolNumber: number,
@@ -1839,21 +1975,22 @@ export async function preview(c: Context, id: string, input: unknown) {
     const v = await validation(tx, c, id, expectedRevision);
     if (!v.profile || !v.parsedProfile)
       fail(422, "ISSUER_REQUIRED", "Сохраните профиль центра");
-    const categoryIssues = v.issues.filter((issue) =>
+    const previewIssues = v.issues.filter((issue) =>
       [
         "BIOT_ECS_REQUIRED",
         "BIOT_CATEGORY_TEMPLATE",
         "BIOT_CATEGORY_REQUIRED",
         "BIOT_UNIQUE_NUMBER_CONFLICT",
         "BIOT_CREDENTIAL_AMBIGUOUS",
+        "DATE_INVALID",
       ].includes(issue.code),
     );
-    if (categoryIssues.length)
+    if (previewIssues.length)
       fail(
         422,
         "PREVIEW_VALIDATION",
-        "Выберите доступную форму для этой категории",
-        categoryIssues,
+        "Исправьте ошибки полей перед просмотром документов",
+        previewIssues,
       );
     const photos = await photoMap(tx, c, v.draft);
     const organizations = await organizationMap(tx, c, v.draft);
@@ -1946,7 +2083,11 @@ export async function preview(c: Context, id: string, input: unknown) {
       const items = members.map(({ item, assignment }) => ({
         ...item,
         ...employerFields(item, customer, organizations),
-        assignment: eventProtocolAssignment(event, assignment),
+        assignment: eventProtocolAssignment(
+          event,
+          assignment,
+          v.draft.businessRuleVersion === "LIVE_V1",
+        ),
         number: "ПРЕДПРОСМОТР",
         credentialNumber: "",
         protocolNumber: "",

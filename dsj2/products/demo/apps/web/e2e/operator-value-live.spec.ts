@@ -1,7 +1,12 @@
-import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
+import { loginIsolated } from "./operator-full-fix-session";
+import {
+  commonSettings,
+  expandCommon,
+} from "./operator-common-history-helpers";
 import { test, expect } from "@playwright/test";
 import path from "node:path";
 import fs from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE || "../../docs/evidence/operator-value-browser",
 );
@@ -10,78 +15,84 @@ test("live operator creates a simple request, grouped event, linked order, oblig
   page,
 }) => {
   test.setTimeout(300000);
-  expect(process.env.DEMO_E2E_EMAIL).toBeTruthy();
-  expect(process.env.DEMO_E2E_PASSWORD).toBeTruthy();
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL!);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD!);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать" }),
-  ).toBeVisible();
+  const personName = `Синтетический Получатель Рабочего Цикла ${randomUUID()}`;
+  await loginIsolated(page);
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
-  await expect(page.getByLabel("ФИО RU, строка 1")).toBeVisible();
-  const title = `Проверка рабочего цикла ${Date.now()}`;
-  await page.getByLabel("Название заявки").fill(title);
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
+  await page.getByLabel("ФИО, строка 1", { exact: true }).fill(personName);
   await page
-    .getByLabel("ФИО RU, строка 1")
-    .fill("Синтетический Получатель Рабочего Цикла");
-  await page
-    .getByLabel("ФИО KZ, строка 1")
-    .fill("Синтетикалық Ә Ғ Қ Ң Ө Ұ Ү Һ І");
-  await page.getByLabel("Выбрать всех получателей").check();
-  await page.getByRole("button", { name: "Настроить даты и протоколы" }).click();
-  await page
-    .getByRole("button", { name: "Добавить событие", exact: true })
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
+  const modal = page.getByRole("dialog");
+  await modal.getByRole("tab", { name: "Личные данные", exact: true }).click();
+  await expandCommon(modal.locator("details.person-fields-wide").first());
+  await modal
+    .locator('[data-field-path="items.0.fullNameKz"]')
+    .fill("Синтетикалық Ә Ғ Қ Ң Ө Ұ Ү Һ І");
+  await modal
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
+  await expandCommon(page.locator("#request-training"));
   await page
+    .getByRole("button", {
+      name: "ПБ: добавить всем в заявке (1)",
+      exact: true,
+    })
+    .click();
+  const eventPanel = await commonSettings(page);
+  await page
+    .getByRole("combobox", { name: /^Протокол:/ })
+    .selectOption("GROUP");
+  await expandCommon(
+    eventPanel
+      .getByText("Название группы, профиль центра и паспорт услуги", {
+        exact: true,
+      })
+      .locator(".."),
+  );
+  await eventPanel
     .getByLabel("Название события", { exact: true })
     .fill("Синтетическая программа ПБ");
-  const eventPanel = page.locator("section").filter({
-    has: page.getByRole("heading", { name: "Общие сведения и события" }),
-  });
-  await eventPanel
-    .getByLabel("Дата документа", { exact: true })
-    .fill("2026-09-24");
-  await eventPanel
-    .getByLabel("Начало обучения", { exact: true })
-    .fill("2026-09-20");
-  await eventPanel
-    .getByLabel("Окончание обучения", { exact: true })
-    .fill("2026-09-24");
-  await eventPanel
-    .getByLabel("Дата проверки / протокола", { exact: true })
-    .fill("2026-09-24");
   await eventPanel
     .getByLabel("Программа / тема", { exact: true })
     .fill("Синтетическая программа ПБ 2026");
   await eventPanel
     .getByLabel("Объём обучения, часов", { exact: true })
     .fill("40");
-  await page
-    .getByRole("button", { name: "Назначить набор выбранным (1)" })
-    .click();
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  for (const [label, value] of [
+    ["Дата документа для заявки", "2026-09-24"],
+    ["Начало обучения для заявки", "2026-09-20"],
+    ["Окончание обучения для заявки", "2026-09-24"],
+    ["Дата проверки / протокола для заявки", "2026-09-24"],
+  ])
+    await eventPanel.getByLabel(label, { exact: true }).fill(value);
+  await expect(page.locator(".save-indicator")).toContainText(
+    "Рабочая версия сохранена",
+  );
   const requestPath = new URL(page.url()).pathname;
+  const requestId = /requests\/([^/]+)/.exec(page.url())![1];
   await page.reload();
-  await expect(
-    page.getByLabel("Название события", { exact: true }),
-  ).toHaveValue("Синтетическая программа ПБ");
-  await expect(
-    page.getByText("1 назначений · 1 общий протокол при оформлении"),
-  ).toBeVisible();
+  const record = await (
+    await page.request.get(`/api/print-requests/${requestId}`)
+  ).json();
+  const title = record.title;
+  expect(title).toBe(personName);
+  expect(record.events).toHaveLength(1);
+  expect(record.events[0].title).toBe("Синтетическая программа ПБ");
+  expect(record.events[0].protocolMode).toBe("GROUP");
+  expect(record.items).toHaveLength(1);
+  expect(record.items[0].assignments[0].eventId).toBe(record.events[0].id);
+  await expandCommon(page.locator("#request-training"));
   await page.screenshot({
     path: path.join(evidence, "live-request-context-desktop.png"),
     fullPage: true,
   });
   await page
-    .getByRole("button", { name: "Открыть действия", exact: true })
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
+    .click();
+  await page
+    .getByRole("dialog", { name: "Прочее", exact: true })
+    .getByRole("button", { name: "Связанные действия", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Создать связанный заказ", exact: true })
@@ -95,7 +106,9 @@ test("live operator creates a simple request, grouped event, linked order, oblig
   await expect(
     page.getByRole("heading", { name: "Работа центра", exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: title, exact: true }).click();
+  const currentOrder = page.getByRole("button", { name: title, exact: true });
+  await expect(currentOrder).toHaveCount(1);
+  await currentOrder.click();
   await page
     .getByText("Добавить согласованное обязательство", { exact: true })
     .click();
@@ -159,9 +172,7 @@ test("live operator creates a simple request, grouped event, linked order, oblig
     ),
   ).toBe(true);
   await page.goto(requestPath);
-  await expect(page.getByLabel("ФИО RU, строка 1")).toHaveValue(
-    "Синтетический Получатель Рабочего Цикла",
-  );
+  await expect(page.getByLabel("ФИО, строка 1")).toHaveValue(personName);
   await page.screenshot({
     path: path.join(evidence, "live-request-mobile.png"),
     fullPage: true,

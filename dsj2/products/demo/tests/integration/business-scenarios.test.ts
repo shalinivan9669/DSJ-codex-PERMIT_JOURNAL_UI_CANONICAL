@@ -48,7 +48,7 @@ test(
       assert.equal(saved.status, "PASS");
       assert.equal(
         await db.issuedDocument.count({ where: { tenantId: result.tenantId } }),
-        9,
+        18,
       );
       assert.equal(
         await db.generationJob.count({

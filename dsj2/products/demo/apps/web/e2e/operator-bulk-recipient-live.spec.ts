@@ -2,6 +2,8 @@ import { openRecipientExtraTools } from "./operator-keyboard-helpers";
 import { expect, test } from "@playwright/test";
 import fs from "node:fs/promises";
 import { newAssignment, newRecipient, type Draft } from "../lib/types";
+import { loginIsolated } from "./operator-full-fix-session";
+test.use({ trace: "off" });
 
 test("real API preserves selected-only workplace changes, individual exceptions, RU/KZ and undo after reload", async ({
   page,
@@ -14,17 +16,7 @@ test("real API preserves selected-only workplace changes, individual exceptions,
     throw new Error("An explicitly isolated synthetic tenant is required");
   }
   await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать", exact: true }),
-  ).toBeVisible();
+  await loginIsolated(page);
   const session = await page.request.get("/api/auth/session");
   expect(session.ok()).toBe(true);
   const csrf = (await session.json()).csrfToken;
@@ -66,7 +58,7 @@ test("real API preserves selected-only workplace changes, individual exceptions,
     await page.getByLabel(`Выбрать строку ${row}`, { exact: true }).check();
   await page.getByLabel("Поиск в заявке", { exact: true }).fill("Получатель 3");
   await expect(page.locator(".selection-toolbar")).toContainText(
-    "скрыто поиском: 2",
+    "скрыто фильтрами: 2",
   );
   const open = page.getByRole("button", {
     name: "Изменить данные выбранных (3)",
@@ -82,9 +74,9 @@ test("real API preserves selected-only workplace changes, individual exceptions,
   await modal
     .getByLabel("Общее значение: Место работы RU", { exact: true })
     .fill(expected[0].workplaceRu!);
-  await expect(modal.getByLabel("Направление", { exact: true })).toHaveValue(
-    "",
-  );
+  await expect(
+    modal.getByRole("combobox", { name: "Направление", exact: true }),
+  ).toHaveValue("");
   await modal
     .getByRole("button", { name: "Показать изменения", exact: true })
     .click();
@@ -136,11 +128,31 @@ test("real API preserves selected-only workplace changes, individual exceptions,
     .click();
   await expect.poll(async () => (await read()).items).toEqual(expected);
   await page.reload();
+  await page
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
+    .click();
+  await page.getByRole("tab", { name: /^Личные данные/ }).click();
+  await page.locator(".employer-document-wording > summary").click();
   await expect(
-    page.getByLabel("Место работы RU, строка 1", { exact: true }),
+    page.getByRole("dialog").getByLabel("Место работы · RU", { exact: true }),
   ).toHaveValue(expected[0].workplaceRu!);
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Детали получателя 2", exact: true })
+    .click();
+  await page.getByRole("tab", { name: /^Личные данные/ }).click();
+  const employerDetails = page.locator(".employer-document-wording");
+  if (
+    !(await employerDetails.evaluate(
+      (node) => (node as HTMLDetailsElement).open,
+    ))
+  )
+    await employerDetails.locator(":scope > summary").click();
   await expect(
-    page.getByLabel("Место работы RU, строка 2", { exact: true }),
+    page.getByRole("dialog").getByLabel("Место работы · RU", { exact: true }),
   ).toHaveValue("Индивидуальная организация");
   const after = await read();
   expect(after.items).toEqual(expected);

@@ -6,8 +6,9 @@ import { db, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
 import { draftSchema } from "../../packages/contracts/src";
 import { createRequest, finalize, preview } from "../../apps/api/src/requests";
+import { createApprovalFixture } from "./live-approval-fixture";
 
-test("preview and issuance freeze the same factual mixed-employer heading without changing participant names", async () => {
+test("preview and issuance freeze the same factual mixed-employer heading without changing participant names", async (t) => {
   assertTestDatabase();
   const who = await provision({
     email: `group-workplace-${randomUUID()}@example.test`,
@@ -22,6 +23,8 @@ test("preview and issuance freeze the same factual mixed-employer heading withou
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  const approvals = await createApprovalFixture(c);
+  t.after(() => approvals.close());
   try {
     const eventId = randomUUID();
     const draft = draftSchema.parse({
@@ -62,8 +65,14 @@ test("preview and issuance freeze the same factual mixed-employer heading withou
       })),
     });
     const created = await createRequest(c, draft);
-    await preview(c, created.id, { expectedRevision: 0 });
-    await finalize(c, created.id, { expectedRevision: 0 }, randomUUID());
+    await preview(c, created.id, { expectedRevision: created.revision });
+    await approvals.approve(created.id);
+    await finalize(
+      c,
+      created.id,
+      { expectedRevision: created.revision },
+      randomUUID(),
+    );
     const snapshots = await db.renderInputSnapshot.findMany({
       where: { requestId: created.id },
     });

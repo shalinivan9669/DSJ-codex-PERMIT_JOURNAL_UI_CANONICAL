@@ -5,7 +5,7 @@ import {
   BIOT_CATEGORIES,
   LIMITS,
   calculatedDateKeys,
-  type CalculatedDateKey,
+  isBlankText,
   type BiotCategory,
 } from "@demo/contracts";
 import { api, errorText } from "@/lib/api";
@@ -13,12 +13,16 @@ import { TextQualityHint } from "./text-quality-hint";
 import { RecipientRecord } from "./recipient-record";
 import { DateCalculationStatus } from "./date-calculation-status";
 import { TrainingDateSettings } from "./training-date-settings";
-import { TranslationSuggestion } from "./translation-suggestion";
-import { editTrainingAssignment } from "@/lib/training-assignment-edit";
 import {
-  biotCategoriesForTemplate,
-  restoreAssignmentDate,
-} from "@/lib/assignment-presets";
+  liveValidityDescription,
+  biotCategoryDescription,
+} from "@/lib/validity-display";
+import { TranslationSuggestion } from "./translation-suggestion";
+import {
+  editTrainingAssignment,
+  restoreTrainingAssignmentField,
+} from "@/lib/training-assignment-edit";
+import { biotCategoriesForTemplate } from "@/lib/assignment-presets";
 import {
   newAssignment,
   templateLabels,
@@ -108,6 +112,7 @@ export function RecipientDetails({
   context,
   rowIndex,
   fieldErrors,
+  fieldHints = {},
   resolvedRecipient,
   provenance,
   liveRules = false,
@@ -121,6 +126,7 @@ export function RecipientDetails({
   context: AppContext;
   rowIndex: number;
   fieldErrors: Record<string, string>;
+  fieldHints?: Record<string, string>;
   resolvedRecipient?: Recipient;
   provenance?: Record<string, Record<string, string>>;
   liveRules?: boolean;
@@ -215,7 +221,10 @@ export function RecipientDetails({
       outcome: "Исход обучения",
       "outcome.source": "Источник подтверждения результата",
       externalBasisNumber: "Внешний номер основания",
-      reason: "Причина проверки знаний",
+      reason:
+        recipient.assignments[index].templateId === "ptm-protocol"
+          ? "Причина проверки знаний"
+          : "Причина / основание",
       education: "Образование",
       biotCategory: "Категория обучения БиОТ",
       hours: category
@@ -237,9 +246,13 @@ export function RecipientDetails({
       "aria-describedby":
         [
           fieldErrors[path] ? `error-${recipient.id}-${index}-${key}` : "",
+          !fieldErrors[path] && fieldHints[path]
+            ? `feedback-${recipient.id}-${index}-${key}`
+            : "",
           (category && key === "hours") || key === "productionHours"
             ? `hint-${recipient.id}-${index}-${key}`
             : "",
+          key === "reason" ? `hint-${recipient.id}-${index}-reason` : "",
         ]
           .filter(Boolean)
           .join(" ") || undefined,
@@ -248,12 +261,13 @@ export function RecipientDetails({
   function fieldError(index: number, key: string) {
     const message =
       fieldErrors[`items.${rowIndex}.assignments.${index}.${key}`];
-    return message ? (
+    const hint = fieldHints[`items.${rowIndex}.assignments.${index}.${key}`];
+    return message || hint ? (
       <small
-        className="field-error"
-        id={`error-${recipient.id}-${index}-${key}`}
+        className={message ? "field-error" : "field-hint"}
+        id={`${message ? "error" : "feedback"}-${recipient.id}-${index}-${key}`}
       >
-        {message}
+        {message || hint}
       </small>
     ) : null;
   }
@@ -265,16 +279,21 @@ export function RecipientDetails({
     return {
       "data-field-path": path,
       "aria-invalid": !!fieldErrors[path],
-      "aria-describedby": fieldErrors[path]
-        ? `error-${recipient.id}-${key}`
-        : undefined,
+      "aria-describedby":
+        fieldErrors[path] || fieldHints[path]
+          ? `${fieldErrors[path] ? "error" : "feedback"}-${recipient.id}-${key}`
+          : undefined,
     };
   }
   function personError(key: string) {
     const message = fieldErrors[`items.${rowIndex}.${key}`];
-    return message ? (
-      <small className="field-error" id={`error-${recipient.id}-${key}`}>
-        {message}
+    const hint = fieldHints[`items.${rowIndex}.${key}`];
+    return message || hint ? (
+      <small
+        className={message ? "field-error" : "field-hint"}
+        id={`${message ? "error" : "feedback"}-${recipient.id}-${key}`}
+      >
+        {message || hint}
       </small>
     ) : null;
   }
@@ -529,6 +548,9 @@ export function RecipientDetails({
             recipient={recipient}
             disabled={disabled}
             onChange={onChange}
+            rowIndex={rowIndex}
+            fieldErrors={fieldErrors}
+            fieldHints={fieldHints}
           />
           <p className="fine-print">
             Отдельные названия работодателя для документов · RU/KZ
@@ -742,11 +764,17 @@ export function RecipientDetails({
                         (BIOT_CATEGORIES[assignment.biotCategory]
                           .requiresExternalCertificate ? (
                           <Notice kind="info">
-                            {BIOT_CATEGORIES[assignment.biotCategory].hint}
+                            {biotCategoryDescription(
+                              assignment.biotCategory,
+                              liveRules,
+                            )}
                           </Notice>
                         ) : (
                           <small>
-                            {BIOT_CATEGORIES[assignment.biotCategory].hint}
+                            {biotCategoryDescription(
+                              assignment.biotCategory,
+                              liveRules,
+                            )}
                           </small>
                         ))}
                     </label>
@@ -804,6 +832,7 @@ export function RecipientDetails({
                           disabled={
                             disabled || assignment.validityMode === "UNLIMITED"
                           }
+                          readOnly={liveRules}
                           value={
                             (
                               resolvedRecipient?.assignments[index] ||
@@ -817,12 +846,19 @@ export function RecipientDetails({
                           }
                         />
                         {fieldError(index, "validUntil")}
-                        {assignment.validityMode === "UNLIMITED" && (
+                        {liveRules && (
                           <small>
-                            ПС — бессрочно. Дата окончания не указывается.
+                            {liveValidityDescription(recipient, assignment)}
                           </small>
                         )}
-                        {assignment.biotCategory &&
+                        {!liveRules &&
+                          assignment.validityMode === "UNLIMITED" && (
+                            <small>
+                              ПС — бессрочно. Дата окончания не указывается.
+                            </small>
+                          )}
+                        {!liveRules &&
+                          assignment.biotCategory &&
                           BIOT_CATEGORIES[assignment.biotCategory]
                             .validityYears && (
                             <small>
@@ -900,6 +936,11 @@ export function RecipientDetails({
                     <details className="assignment-help">
                       <summary>Расчёт дат и пояснения</summary>
                       <DateCalculationStatus
+                        forceValidity={liveRules}
+                        validityDescription={liveValidityDescription(
+                          recipient,
+                          assignment,
+                        )}
                         values={
                           resolvedRecipient?.assignments[index] || assignment
                         }
@@ -926,14 +967,14 @@ export function RecipientDetails({
                             : undefined
                         }
                         onRestore={(key) =>
-                          onChange({
-                            ...recipient,
-                            assignments: recipient.assignments.map((a) =>
-                              a.id !== assignment.id
-                                ? a
-                                : restoreAssignmentDate(a, key),
+                          onChange(
+                            restoreTrainingAssignmentField(
+                              recipient,
+                              assignment.id,
+                              key,
+                              liveRules,
                             ),
-                          })
+                          )
                         }
                       />
                     </details>
@@ -1062,7 +1103,6 @@ export function RecipientDetails({
                             <input
                               {...field(index, key)}
                               disabled={disabled}
-                              maxLength={500}
                               value={String(
                                 assignment[key as keyof Assignment] || "",
                               )}
@@ -1098,7 +1138,6 @@ export function RecipientDetails({
                           <input
                             {...field(index, key)}
                             disabled={disabled}
-                            maxLength={500}
                             value={String(
                               assignment[key as keyof Assignment] || "",
                             )}
@@ -1128,7 +1167,6 @@ export function RecipientDetails({
                       <textarea
                         {...field(index, "biotNotes")}
                         disabled={disabled}
-                        maxLength={500}
                         value={assignment.biotNotes || ""}
                         onChange={(event) =>
                           changeAssignment(assignment.id, {
@@ -1205,7 +1243,6 @@ export function RecipientDetails({
                         <input
                           {...field(index, "outcome.source")}
                           disabled={disabled}
-                          maxLength={500}
                           value={assignment.outcome?.source || ""}
                           placeholder="Ведомость, дата и ответственный"
                           onChange={(event) =>
@@ -1272,7 +1309,10 @@ export function RecipientDetails({
                             {label}
                             <input
                               disabled={disabled}
-                              value={assignment[key] || ""}
+                              value={
+                                (resolvedRecipient?.assignments[index] ||
+                                  assignment)[key] || ""
+                              }
                               {...field(index, key)}
                               onChange={(event) =>
                                 changeAssignment(assignment.id, {
@@ -1303,13 +1343,25 @@ export function RecipientDetails({
                         ))}
                     </div>
                   )}
-                  {assignment.templateId === "ptm-protocol" && (
+                  {(assignment.templateId === "ptm-protocol" ||
+                    !isBlankText(assignment.reason || "") ||
+                    !isBlankText(
+                      (resolvedRecipient?.assignments[index] || assignment)
+                        .reason || "",
+                    ) ||
+                    !!fieldErrors[
+                      `items.${rowIndex}.assignments.${index}.reason`
+                    ] ||
+                    !!fieldHints[
+                      `items.${rowIndex}.assignments.${index}.reason`
+                    ]) && (
                     <label>
-                      Причина проверки знаний
+                      {assignment.templateId === "ptm-protocol"
+                        ? "Причина проверки знаний"
+                        : "Причина / основание"}
                       <input
                         {...field(index, "reason")}
                         disabled={disabled}
-                        maxLength={500}
                         value={
                           (resolvedRecipient?.assignments[index] || assignment)
                             .reason || ""
@@ -1321,9 +1373,39 @@ export function RecipientDetails({
                         }
                       />
                       {fieldError(index, "reason")}
-                      <small>
+                      <small id={`hint-${recipient.id}-${index}-reason`}>
                         Укажите фактическую причину, если она применима.
+                        {assignment.protocolMode === "GROUP" &&
+                          " Для группового документа она должна совпадать с общей причиной обучения. Используйте общее значение, чтобы убрать индивидуальное исключение."}
                       </small>
+                      {(!!fieldErrors[
+                        `items.${rowIndex}.assignments.${index}.reason`
+                      ] ||
+                        !isBlankText(assignment.reason || "") ||
+                        ["MANUAL", "IMPORTED", "CLEARED"].includes(
+                          assignment.fieldOrigins?.reason ||
+                            provenance?.[`${recipient.id}:${assignment.id}`]
+                              ?.reason ||
+                            "",
+                        )) && (
+                        <button
+                          type="button"
+                          className="text-button"
+                          disabled={disabled}
+                          onClick={() =>
+                            onChange(
+                              restoreTrainingAssignmentField(
+                                recipient,
+                                assignment.id,
+                                "reason",
+                                liveRules,
+                              ),
+                            )
+                          }
+                        >
+                          Использовать общее значение причины
+                        </button>
+                      )}
                     </label>
                   )}
                   {assignment.templateId === "pb-protocol" && (
@@ -1332,7 +1414,6 @@ export function RecipientDetails({
                       <input
                         {...field(index, "education")}
                         disabled={disabled}
-                        maxLength={500}
                         value={
                           (resolvedRecipient?.assignments[index] || assignment)
                             .education || ""
@@ -1391,9 +1472,15 @@ export function RecipientDetails({
                                   trainingEnd: "Окончание обучения",
                                   protocolDate: "Дата протокола",
                                   trainingSubject: "Программа",
+                                  trainingSubjectEn: "Программа · EN",
                                   hours: "Часы",
                                   validUntil: "Действителен до",
                                   reason: "Причина",
+                                  reasonEn: "Причина · EN",
+                                  education: "Образование",
+                                  educationEn: "Образование · EN",
+                                  externalBasisNumber:
+                                    "Внешний номер основания",
                                   biotCategory: "Категория",
                                   productionHours: "Производственные часы",
                                   biotCheckType: "Вид проверки",
@@ -1420,28 +1507,14 @@ export function RecipientDetails({
                                   className="text-button"
                                   disabled={disabled}
                                   onClick={() =>
-                                    onChange({
-                                      ...recipient,
-                                      assignments: recipient.assignments.map(
-                                        (a) =>
-                                          a.id !== assignment.id
-                                            ? a
-                                            : calculatedDateKeys.includes(
-                                                  key as CalculatedDateKey,
-                                                )
-                                              ? restoreAssignmentDate(
-                                                  a,
-                                                  key as CalculatedDateKey,
-                                                )
-                                              : {
-                                                  ...a,
-                                                  fieldOrigins: {
-                                                    ...a.fieldOrigins,
-                                                    [key]: "INHERITED",
-                                                  },
-                                                },
+                                    onChange(
+                                      restoreTrainingAssignmentField(
+                                        recipient,
+                                        assignment.id,
+                                        key,
+                                        liveRules,
                                       ),
-                                    })
+                                    )
                                   }
                                 >
                                   Вернуть общее значение
@@ -1493,7 +1566,10 @@ export function RecipientDetails({
                     <input
                       {...field(index, "externalBasisNumber")}
                       disabled={disabled}
-                      value={assignment.externalBasisNumber}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .externalBasisNumber
+                      }
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
                           externalBasisNumber: event.target.value,

@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { resolveDraft } from "@demo/contracts";
+import { applyBusinessRules, resolveDraft } from "@demo/contracts";
 import {
   newAssignment,
   newRecipient,
@@ -17,6 +17,13 @@ const manualDocument = {
     documentDate: "MANUAL" as const,
     trainingStart: "MANUAL" as const,
   },
+};
+// Pinning LIVE preserves entered dates and derives the existing worker/PTM
+// one-year validity from the manual document date.
+const manualDocumentAfterLive = {
+  ...manualDocument,
+  validUntil: "2027-08-15",
+  fieldOrigins: { ...manualDocument.fieldOrigins, validUntil: "AUTO" as const },
 };
 
 async function fixture(
@@ -78,12 +85,12 @@ async function fixture(
         numbering: {},
       };
     else if (path === "/print-requests" && method === "POST") {
-      draft = {
+      draft = applyBusinessRules({
         ...route.request().postDataJSON(),
         id: requestId,
         revision: 0,
         status: "DRAFT",
-      };
+      } as Draft);
       created.push(structuredClone(draft));
       value = draft;
     } else if (path === `/print-requests/${requestId}/resolved`)
@@ -121,9 +128,7 @@ async function fixture(
 
 async function openEditor(page: Page) {
   await page.goto(`/requests/${requestId}/edit`);
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
 }
 
 for (const [kind, label] of [
@@ -141,12 +146,12 @@ for (const [kind, label] of [
     ).toBeChecked();
     await page
       .getByRole("button", {
-        name: "Перейти к людям и документам",
+        name: "Далее",
         exact: true,
       })
       .click();
     await expect(
-      page.getByLabel("ФИО RU, строка 1", { exact: true }),
+      page.getByLabel("ФИО, строка 1", { exact: true }),
     ).toBeVisible();
     expect(state.created).toHaveLength(1);
     expect(state.created[0].kind).toBe(kind);
@@ -157,10 +162,12 @@ for (const [kind, label] of [
       /^\d{4}-\d{2}-\d{2}$/,
     );
     await expect(
-      page.getByText("Документы не выбраны", { exact: true }),
+      page.getByRole("button", {
+        name: /Настройки обучения получателя 1: Выбрать обучение/,
+      }),
     ).toBeVisible();
     await expect(
-      page.getByRole("combobox", { name: "Заказчик", exact: true }),
+      page.getByLabel("Название компании", { exact: true }),
     ).toHaveCount(kind === "COMPANY" ? 1 : 0);
   });
 }
@@ -171,18 +178,18 @@ test("optional worker bundle keeps one shared protocol when a recipient is added
   const state = await fixture(page);
   await page.goto("/requests/new");
   await page.getByRole("radio", { name: /^Организация/ }).check();
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
   await page
-    .getByText("Начать с готового комплекта БиОТ", { exact: true })
+    .getByRole("button", {
+      name: "БиОТ: добавить всем в заявке (1)",
+      exact: true,
+    })
     .click();
-  await page.getByRole("radio", { name: /^Рабочие —/ }).check();
+  await expect.poll(() => state.current().trainingDefaults?.length).toBe(1);
   await page
-    .getByRole("button", { name: "Перейти к людям и документам", exact: true })
+    .getByRole("button", { name: "Добавить строку", exact: true })
     .click();
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Получатель", exact: true }).click();
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
   await expect.poll(() => state.current().items.length).toBe(2);
   const draft = state.current();
   expect(draft.kind).toBe("COMPANY");
@@ -199,27 +206,22 @@ test("optional worker bundle keeps one shared protocol when a recipient is added
   }
   await page
     .getByRole("button", {
-      name: "Выбрать документы получателя 1",
-      exact: true,
+      name: /Настройки обучения получателя 1:/,
     })
     .click();
   const dialog = page.getByRole("dialog", {
-    name: "Выбрать документы",
+    name: "Назначить обучение",
     exact: true,
   });
-  await dialog
-    .getByText("Протоколы и дополнительные формы", { exact: true })
-    .click();
   await expect(
-    dialog.getByRole("checkbox", {
-      name: /^БиОТ рабочих — отдельный протокол/,
-    }),
-  ).toBeChecked();
+    dialog.getByText(
+      "Назначено 1 из 1. Выбор добавит отсутствующий комплект.",
+      { exact: true },
+    ),
+  ).toBeVisible();
   await expect(
-    dialog.getByRole("checkbox", {
-      name: /^БиОТ рабочих — отдельный протокол/,
-    }),
-  ).toBeDisabled();
+    dialog.getByRole("button", { name: "Снять БиОТ · 1", exact: true }),
+  ).toBeEnabled();
   await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
   expect(state.current().events).toHaveLength(1);
 });
@@ -231,77 +233,124 @@ test("row and bulk document choices add only missing forms and retain manual dat
   await openEditor(page);
   await page
     .getByRole("button", {
-      name: "Выбрать документы получателя 1",
-      exact: true,
+      name: /Настройки обучения получателя 1:/,
     })
     .click();
   let dialog = page.getByRole("dialog", {
-    name: "Выбрать документы",
+    name: "Назначить обучение",
     exact: true,
   });
   await expect(
-    dialog.getByRole("checkbox", { name: /^ПТМ — удостоверение/ }),
-  ).toBeChecked();
+    dialog.getByText(
+      "Назначено 1 из 1. Выбор добавит отсутствующий комплект.",
+      { exact: true },
+    ),
+  ).toBeVisible();
   await expect(
-    dialog.getByRole("checkbox", { name: /^ПТМ — удостоверение/ }),
-  ).toBeDisabled();
-  await dialog.getByRole("checkbox", { name: /^ПБ — удостоверение/ }).check();
-  await dialog.getByRole("checkbox", { name: /^ПС — удостоверение/ }).check();
+    dialog.getByRole("button", { name: "Снять ПТМ · 1", exact: true }),
+  ).toBeEnabled();
+  await dialog
+    .getByRole("checkbox", { name: /^Промышленная безопасность/ })
+    .check();
+  await dialog
+    .getByRole("checkbox", { name: /^ПС — обучение по профессии/ })
+    .check();
   await page.screenshot({
     path: test.info().outputPath("document-selection.png"),
     fullPage: false,
   });
   await dialog
-    .getByRole("button", { name: "Добавить выбранные документы", exact: true })
+    .getByRole("button", { name: "Добавить обучение и комплект", exact: true })
     .click();
   await expect(dialog).toHaveCount(0);
-  await expect.poll(() => state.current().items[0].assignments.length).toBe(3);
-  expect(state.current().items[0].assignments[0]).toEqual(manualDocument);
+  await expect.poll(() => state.current().items[0].assignments.length).toBe(7);
+  expect(
+    state
+      .current()
+      .items[0].assignments.map((assignment) => assignment.templateId)
+      .sort(),
+  ).toEqual(
+    [
+      "ptm-card",
+      "ptm-protocol",
+      "pb-card",
+      "pb-protocol",
+      "ps-card",
+      "ps-witness",
+      "ps-protocol",
+    ].sort(),
+  );
+  expect(state.current().items[0].assignments[0]).toMatchObject(
+    manualDocumentAfterLive,
+  );
   expect(state.current().items[1].assignments).toEqual([]);
 
   await page.getByLabel("Выбрать строку 1", { exact: true }).check();
   await page.getByLabel("Выбрать строку 2", { exact: true }).check();
   await page
-    .getByRole("button", { name: "Документы выбранным (2)", exact: true })
+    .getByRole("button", { name: "ПТМ: добавить остальным (1)", exact: true })
     .click();
-  dialog = page.getByRole("dialog", { name: "Выбрать документы", exact: true });
-  await dialog.getByRole("checkbox", { name: /^ПТМ — удостоверение/ }).check();
-  await dialog.getByRole("checkbox", { name: /^ПБ — удостоверение/ }).check();
-  await dialog
-    .getByRole("button", { name: "Добавить выбранные документы", exact: true })
+  await expect
+    .poll(() =>
+      state
+        .current()
+        .items[1].assignments.map((assignment) => assignment.templateId),
+    )
+    .toEqual(["ptm-card", "ptm-protocol"]);
+  await page
+    .getByRole("button", { name: "ПБ: добавить остальным (1)", exact: true })
     .click();
-  await expect(dialog).toHaveCount(0);
-  await expect.poll(() => state.current().items[1].assignments.length).toBe(2);
-  expect(state.current().items[0].assignments).toHaveLength(3);
-  expect(state.current().items[0].assignments[0]).toEqual(manualDocument);
+  await expect
+    .poll(() =>
+      state
+        .current()
+        .items[1].assignments.map((assignment) => assignment.templateId)
+        .sort(),
+    )
+    .toEqual(["pb-card", "ptm-card", "ptm-protocol"]);
+  for (const item of state.current().items.slice(0, 2)) {
+    const keys = item.assignments.map(
+      (assignment) =>
+        `${assignment.eventId || "standalone"}:${assignment.templateId}`,
+    );
+    expect(new Set(keys).size).toBe(keys.length);
+  }
+  expect(state.current().items[0].assignments[0]).toMatchObject(
+    manualDocumentAfterLive,
+  );
   expect(state.current().items[2].assignments).toEqual([]);
 
   await page
-    .getByRole("button", { name: "Документы выбранным (2)", exact: true })
+    .getByRole("button", { name: /Настройки обучения получателя 1:/ })
     .click();
-  dialog = page.getByRole("dialog", { name: "Выбрать документы", exact: true });
-  for (const label of [/^ПТМ — удостоверение/, /^ПБ — удостоверение/]) {
-    await expect(dialog.getByRole("checkbox", { name: label })).toBeChecked();
-    await expect(dialog.getByRole("checkbox", { name: label })).toBeDisabled();
-  }
-  await expect(
-    dialog.getByRole("button", {
-      name: "Добавить выбранные документы",
-      exact: true,
-    }),
-  ).toBeDisabled();
-  await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
+  dialog = page.getByRole("dialog", {
+    name: "Назначить обучение",
+    exact: true,
+  });
+  await dialog
+    .getByRole("checkbox", { name: /^Промышленная безопасность/ })
+    .check();
+  const unchanged = structuredClone(state.current().items);
+  await dialog
+    .getByRole("button", { name: "Добавить обучение и комплект", exact: true })
+    .click();
+  await expect(dialog).toHaveCount(0);
+  expect(state.current().items).toEqual(unchanged);
   await page.reload();
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
   await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
+  await page.getByRole("tab", { name: /^Документы/ }).click();
   await expect(
-    page.getByLabel("Дата документа", { exact: true }).first(),
+    page
+      .getByRole("dialog")
+      .getByLabel("Дата документа", { exact: true })
+      .first(),
   ).toHaveValue("2026-08-15");
-  expect(state.current().items[0].assignments[0]).toEqual(manualDocument);
+  expect(state.current().items[0].assignments[0]).toMatchObject(
+    manualDocumentAfterLive,
+  );
 });
 
 test("validation opens the hidden date section and focuses its required field", async ({
@@ -316,16 +365,19 @@ test("validation opens the hidden date section and focuses its required field", 
   ]);
   await openEditor(page);
   await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
+  await page.getByRole("tab", { name: /^Документы/ }).click();
   const field = page.locator(
     '[data-field-path="items.0.assignments.0.trainingStart"]',
   );
   await expect(field).toBeHidden();
   await page
-    .getByRole("button", { name: "Вернуться к таблице", exact: true })
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
     .click();
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   await page
     .getByRole("button", {
       name: /Укажите начало обучения первого слушателя/,

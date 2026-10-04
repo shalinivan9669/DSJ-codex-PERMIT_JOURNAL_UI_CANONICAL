@@ -3,27 +3,32 @@
 import { useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import { assignTrainingBundle } from "@/lib/request-bundles";
+import { trainingDirection } from "@demo/contracts";
 import { errorText } from "@/lib/api";
 import type { Draft } from "@/lib/types";
 
 const trainings = [
   {
     id: "BIOT",
+    shortLabel: "БиОТ",
     label: "Безопасность и охрана труда",
     detail: "Рабочий: удостоверение и протокол. ИТР: сертификат и протокол.",
   },
   {
     id: "PTM",
+    shortLabel: "ПТМ",
     label: "Пожарно-технический минимум",
     detail: "Удостоверение и протокол.",
   },
   {
     id: "PB",
+    shortLabel: "ПБ",
     label: "Промышленная безопасность",
     detail: "Удостоверение и протокол.",
   },
   {
     id: "PS",
+    shortLabel: "ПС",
     label: "ПС — обучение по профессии",
     detail: "Удостоверение, свидетельство и протокол. Бессрочно.",
   },
@@ -36,12 +41,14 @@ export function TrainingBundleDialog({
   disabled,
   onClose,
   onApply,
+  onRemove,
 }: {
   draft: Draft;
   selectedIds: string[];
   disabled: boolean;
   onClose: () => void;
   onApply: (draft: Draft) => Promise<void>;
+  onRemove?: (direction: Direction, recipientIds: string[]) => void;
 }) {
   const [chosen, setChosen] = useState<Direction[]>([]);
   const [mode, setMode] = useState<"AUTO" | "GROUP" | "INDIVIDUAL">("AUTO");
@@ -70,25 +77,53 @@ export function TrainingBundleDialog({
       {error && <Notice>{error}</Notice>}
       <fieldset disabled={busy || disabled} className="training-choices">
         <legend>Направления обучения</legend>
-        {trainings.map((training) => (
-          <label key={training.id} className="training-choice">
-            <input
-              type="checkbox"
-              checked={chosen.includes(training.id)}
-              onChange={(event) =>
-                setChosen((current) =>
-                  event.target.checked
-                    ? [...current, training.id]
-                    : current.filter((id) => id !== training.id),
-                )
-              }
-            />
-            <span>
-              <strong>{training.label}</strong>
-              <small>{training.detail}</small>
-            </span>
-          </label>
-        ))}
+        {trainings.map((training) => {
+          const assigned = recipients.filter((item) =>
+            item.assignments.some(
+              (a) => trainingDirection(a.templateId) === training.id,
+            ),
+          );
+          return (
+            <div key={training.id} className="training-choice-with-actions">
+              <label className="training-choice">
+                <input
+                  type="checkbox"
+                  checked={chosen.includes(training.id)}
+                  onChange={(event) =>
+                    setChosen((current) =>
+                      event.target.checked
+                        ? [...current, training.id]
+                        : current.filter((id) => id !== training.id),
+                    )
+                  }
+                />
+                <span>
+                  <strong>{training.label}</strong>
+                  <small>{training.detail}</small>
+                  <small>
+                    {assigned.length
+                      ? `Назначено ${assigned.length} из ${recipients.length}. Выбор добавит отсутствующий комплект.`
+                      : "Ещё не назначено"}
+                  </small>
+                </span>
+              </label>
+              {!!assigned.length && onRemove && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onRemove(
+                      training.id,
+                      assigned.map((item) => item.id),
+                    );
+                  }}
+                >
+                  Снять {training.shortLabel} · {assigned.length}
+                </button>
+              )}
+            </div>
+          );
+        })}
       </fieldset>
       <label>
         Протокол при добавлении

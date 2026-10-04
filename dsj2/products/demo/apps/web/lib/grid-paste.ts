@@ -1,5 +1,6 @@
 import { LIMITS } from "@demo/contracts";
 import { newRecipient, type Recipient } from "./types";
+import { isBlankText } from "./blank-text";
 export const gridColumns = [
   ["fullNameRu", "ФИО RU"],
   ["fullNameKz", "ФИО KZ"],
@@ -67,14 +68,25 @@ export function previewGridPaste(
   text: string,
   mode: "EMPTY" | "REPLACE",
   columns: readonly GridField[] = gridColumns.map(([field]) => field),
+  blankRows: "KEEP" | "SKIP" = "KEEP",
 ) {
-  const data = parseClipboardRange(text);
+  const source = parseClipboardRange(text);
+  const sourceRows = source.map((values, index) => ({
+    values,
+    sourceRow: index + 1,
+    blank: values.every(isBlankText),
+  }));
+  const data = sourceRows.filter((row) => blankRows === "KEEP" || !row.blank);
   const startColumn = columns.indexOf(startField);
   if (startColumn < 0 || new Set(columns).size !== columns.length)
     throw new Error("Выберите доступную колонку для начала вставки.");
   if (startRow + data.length > LIMITS.rows)
     throw new Error(`Диапазон выходит за предел ${LIMITS.rows} получателей.`);
-  if (startColumn + data[0].length > columns.length)
+  if (!Number.isInteger(startRow) || startRow < 0 || startRow > items.length)
+    throw new Error(
+      "Начало диапазона должно быть существующей строкой или следующей новой строкой заявки.",
+    );
+  if (startColumn + source[0].length > columns.length)
     throw new Error(
       "Диапазон выходит за доступные колонки. Начните с ФИО RU или скопируйте меньше колонок.",
     );
@@ -85,15 +97,28 @@ export function previewGridPaste(
     before: string;
     after: string;
   }[] = [];
-  data.forEach((values, rowIndex) => {
+  const createdRows: { row: number; sourceRow: number; blank: boolean }[] = [];
+  let skippedFilled = 0;
+  let unchanged = 0;
+  data.forEach(({ values, sourceRow, blank }, rowIndex) => {
     const index = startRow + rowIndex;
-    if (!next[index]) next[index] = { ...newRecipient(), assignments: [] };
+    if (!next[index]) {
+      next[index] = { ...newRecipient(), assignments: [] };
+      createdRows.push({ row: index + 1, sourceRow, blank });
+    }
     values.forEach((value, columnIndex) => {
       const field = columns[startColumn + columnIndex];
       const before = next[index][field] || "";
-      if ((mode === "EMPTY" && before) || before === value) return;
       if (value.length > 500)
         throw new Error(`Строка ${index + 1}: поле длиннее 500 символов.`);
+      if (mode === "EMPTY" && !isBlankText(before)) {
+        skippedFilled++;
+        return;
+      }
+      if (before === value) {
+        unchanged++;
+        return;
+      }
       next[index][field] = value;
       changes.push({ row: index + 1, field, before, after: value });
     });
@@ -102,7 +127,15 @@ export function previewGridPaste(
     items: next,
     changes,
     added: Math.max(0, next.length - items.length),
-    rows: data.length,
-    columns: data[0].length,
+    rows: source.length,
+    appliedRows: data.length,
+    columns: source[0].length,
+    blankRows: sourceRows
+      .filter((row) => row.blank)
+      .map((row) => row.sourceRow),
+    skippedBlankRows: source.length - data.length,
+    createdRows,
+    skippedFilled,
+    unchanged,
   };
 }

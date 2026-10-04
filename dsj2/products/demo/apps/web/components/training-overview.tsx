@@ -1,6 +1,7 @@
 "use client";
 
 import { setTrainingProtocolMode } from "@/lib/request-bundles";
+import { trainingDisplayTitle } from "@/lib/training-display";
 import type { Draft } from "@/lib/types";
 
 export function TrainingOverview({
@@ -8,11 +9,15 @@ export function TrainingOverview({
   disabled,
   onChange,
   resolvedEvents,
+  selectedIds = [],
+  onRemove,
 }: {
   draft: Draft;
   disabled: boolean;
   onChange: (patch: Partial<Draft>) => void;
   resolvedEvents?: Draft["events"];
+  selectedIds?: string[];
+  onRemove?: (eventId: string, recipientIds: string[], all: boolean) => void;
 }) {
   const events = draft.events || [];
   if (!events.length) return null;
@@ -29,11 +34,7 @@ export function TrainingOverview({
       {events.map((event, eventIndex) => {
         const displayedEvent =
           resolvedEvents?.find((row) => row.id === event.id) || event;
-        const displayTitle = event.title
-          .replace(/^PS$/, "ПС — обучение по профессии")
-          .replace(/^BIOT/, "БиОТ")
-          .replace(/^PTM$/, "ПТМ")
-          .replace(/^PB$/, "ПБ");
+        const displayTitle = trainingDisplayTitle(event.title);
         const members = draft.items.filter((item) =>
           item.assignments.some(
             (assignment) => assignment.eventId === event.id,
@@ -59,18 +60,23 @@ export function TrainingOverview({
                 <button
                   className="text-button danger-text"
                   onClick={() =>
-                    onChange({
-                      events: events.filter((row) => row.id !== event.id),
-                      items: draft.items.map((item) => ({
-                        ...item,
-                        assignments: item.assignments.filter(
-                          (assignment) => assignment.eventId !== event.id,
-                        ),
-                      })),
-                    })
+                    onRemove?.(
+                      event.id,
+                      members
+                        .filter(
+                          (item) =>
+                            !selectedIds.length ||
+                            selectedIds.includes(item.id),
+                        )
+                        .map((item) => item.id),
+                      !selectedIds.length,
+                    )
                   }
                 >
-                  Убрать обучение из заявки
+                  Снять обучение{" "}
+                  {selectedIds.length
+                    ? `у отмеченных (${members.filter((item) => selectedIds.includes(item.id)).length})`
+                    : `у всех ${members.length} в этой группе`}
                 </button>
               )}
             </div>

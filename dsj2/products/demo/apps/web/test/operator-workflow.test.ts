@@ -405,7 +405,20 @@ test("pasted rows choose no document implicitly, while an explicit bundle can jo
   assert.equal(result.items[0].assignments[0].documentDate, "2026-08-14");
   assert.equal(result.items[0].assignments[0].hours, "32");
   assert.deepEqual(result.items[1].assignments, []);
-  const joined = recipientForRequest(bundle, result.items[1]);
+  // A selected-only group is not a default; appending requires explicit common policy and matching category.
+  assert.deepEqual(
+    recipientForRequest(bundle, result.items[1]).assignments,
+    [],
+  );
+  const joined = recipientForRequest(
+    {
+      ...bundle,
+      trainingDefaults: [
+        { direction: "BIOT", eventIds: [bundle.events[0].id] },
+      ],
+    },
+    { ...result.items[1], employeeCategory: "ITR" },
+  );
   assert.equal(joined.fullNameRu, "Новый");
   assert.equal(joined.assignments.length, 1);
   assert.equal(joined.assignments[0].templateId, "biot-itr-certificate");

@@ -16,6 +16,10 @@ import {
   verifyExternalEvidence,
 } from "../../apps/api/src/operator-value";
 import { assertTestDatabase } from "../../tests/integration/test-database";
+import {
+  finalApprovalActors,
+  approveFinalFixtureRequest,
+} from "./final-approval-actors";
 import { ArtifactStore } from "../../packages/printing/src";
 import {
   claimJob,
@@ -58,12 +62,13 @@ async function main() {
       });
       const c: Context = {
         ...principal,
-        role: "ADMIN",
+        role: "DIRECTOR",
         sessionId: "fixture",
         csrfHash: "fixture",
         correlationId: randomUUID(),
       };
       const initialCounts = await counts(c.tenantId);
+      const director = await finalApprovalActors(c);
       assert.equal(initialCounts.requests, 0);
       assert.equal(initialCounts.customers, 0);
       assert.equal(initialCounts.orders, 0);
@@ -73,6 +78,7 @@ async function main() {
           ...principal,
           email,
           password,
+          director,
           initialCounts,
           setupPath: "scripts/setup.ts provision(sample:true)",
           demoOnly: true,
@@ -151,10 +157,16 @@ async function main() {
         })),
       });
       const validation = await validateRequest(c, historical.id, {
-        expectedRevision: 0,
+        expectedRevision: historical.revision,
       });
       assert.deepEqual(validation.issues, []);
-      await finalize(c, historical.id, { expectedRevision: 0 }, randomUUID());
+      await approveFinalFixtureRequest(director, historical.id);
+      await finalize(
+        c,
+        historical.id,
+        { expectedRevision: historical.revision },
+        randomUUID(),
+      );
       const needs = [];
       for (const p of people) {
         const need = await createRenewalNeed(c, {
@@ -187,6 +199,7 @@ async function main() {
         ...principal,
         email,
         password,
+        director,
         customerId: customer.id,
         customerName: customer.nameRu,
         historyId: historical.id,

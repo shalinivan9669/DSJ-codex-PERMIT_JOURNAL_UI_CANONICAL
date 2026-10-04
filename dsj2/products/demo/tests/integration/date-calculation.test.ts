@@ -6,6 +6,7 @@ import {
   createRequest,
   patchRequest,
   resolvedRequest,
+  requestDetail,
 } from "../../apps/api/src/requests";
 import { draftSchema, today } from "../../packages/contracts/src";
 import {
@@ -101,10 +102,8 @@ test("API creation defaults to tenant calendar date once; saved/blank/imported d
       "2029-03-01",
     );
     assert.equal(
-      draftSchema.parse(
-        (await db.printRequest.findUniqueOrThrow({ where: { id: created.id } }))
-          .draft,
-      ).commonFields!.documentDate,
+      draftSchema.parse((await requestDetail(c, created.id)).draft)
+        .commonFields!.documentDate,
       "2028-03-01",
     );
     saved.items[0].assignments[0].trainingStart = "2028-02-28";

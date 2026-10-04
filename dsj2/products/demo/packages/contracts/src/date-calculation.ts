@@ -71,6 +71,15 @@ export type DateValues = Partial<
 > & {
   biotCategory?: BiotCategory;
 };
+export type DateCalculationProblem = {
+  code: string;
+  field:
+    | "documentDate"
+    | "hours"
+    | "productionHours"
+    | `trainingDateRule.${string}`;
+  message: string;
+};
 
 function calendarDate(value?: string): Date | null {
   if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
@@ -94,19 +103,52 @@ export function calculateDates(
 ) {
   const proposed: Partial<Record<CalculatedDateKey, string>> = {};
   const problems: string[] = [];
+  const problemDetails: DateCalculationProblem[] = [];
+  const problem = (
+    code: string,
+    field: DateCalculationProblem["field"],
+    message: string,
+  ) => {
+    problems.push(message);
+    problemDetails.push({ code, field, message });
+  };
   const anchor = calendarDate(values.documentDate);
   if (values.biotCategory && anchor)
     proposed.validUntil =
       biotValidUntil(values.documentDate!, values.biotCategory) || "";
   let trainingDays: number | null = null;
-  if (rule && anchor) {
+  if (rule && !anchor)
+    problem(
+      "DATE_INVALID",
+      "documentDate",
+      "Для расчёта периода укажите действительную календарную дату документа.",
+    );
+  const parsedRule = rule ? trainingDateRuleSchema.safeParse(rule) : undefined;
+  if (parsedRule && !parsedRule.success) {
+    for (const issue of parsedRule.error.issues)
+      problem(
+        "TRAINING_RULE_INVALID",
+        `trainingDateRule.${issue.path.join(".")}`,
+        "Проверьте параметр графика: часы учебного дня должны быть больше 0 и не больше 24; источник и календарь должны быть указаны.",
+      );
+  }
+  if (rule && anchor && parsedRule?.success) {
     const theory = countHours(values.hours);
     const production =
       rule.hoursSource !== "THEORY" ? countHours(values.productionHours) : 0;
     if (theory === null || production === null) {
-      problems.push(
-        "Для расчёта периода укажите положительное число часов, предусмотренных графиком.",
-      );
+      if (theory === null)
+        problem(
+          "TRAINING_HOURS_INVALID",
+          "hours",
+          "Для расчёта периода укажите положительное число часов без единицы измерения, например 8 или 8,5.",
+        );
+      if (production === null)
+        problem(
+          "TRAINING_PRODUCTION_HOURS_INVALID",
+          "productionHours",
+          "Для расчёта периода укажите положительное число производственных часов без единицы измерения.",
+        );
     } else {
       trainingDays =
         rule.hoursSource === "SEPARATE_BLOCKS"
@@ -118,13 +160,17 @@ export function calculateDates(
         trainingDays < 1 ||
         trainingDays > 3660
       ) {
-        problems.push(
+        problem(
+          "TRAINING_PERIOD_LIMIT",
+          "hours",
           "Расчётный период превышает 3660 учебных дней. Проверьте часы и график.",
         );
       } else {
         const eligible = (date: Date): boolean | null => {
           if (date.getUTCFullYear() < 1 || date.getUTCFullYear() > 9999) {
-            problems.push(
+            problem(
+              "TRAINING_CALENDAR_RANGE",
+              "documentDate",
               "Расчётный период выходит за допустимые календарные даты.",
             );
             return null;
@@ -132,7 +178,9 @@ export function calculateDates(
           if (rule.calendar === "KZ_FIVE_DAY") {
             const day = kzTrainingDay(date);
             if (day === null)
-              problems.push(
+              problem(
+                "TRAINING_CALENDAR_UNAVAILABLE",
+                "trainingDateRule.calendar",
                 "Календарь Казахстана проверен только для 2025–2026 годов. Для этого периода укажите даты вручную или выберите подтверждённый график; праздники других лет не предполагаются.",
               );
             return day;
@@ -152,7 +200,9 @@ export function calculateDates(
         } else {
           firstEligible = eligible(first);
           if (firstEligible === false)
-            problems.push(
+            problem(
+              "TRAINING_ANCHOR_NONWORKING",
+              "documentDate",
               "Дата документа попадает на неучебный день выбранного графика. Измените дату или выберите обучение до даты документа.",
             );
         }
@@ -177,7 +227,7 @@ export function calculateDates(
       }
     }
   }
-  return { proposed, trainingDays, problems };
+  return { proposed, trainingDays, problems, problemDetails };
 }
 
 export function trainingRuleDescription(

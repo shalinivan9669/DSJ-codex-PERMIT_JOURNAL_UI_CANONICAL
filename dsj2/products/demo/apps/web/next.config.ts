@@ -14,7 +14,12 @@ const config: NextConfig = {
       }),
   poweredByHeader: false,
   transpilePackages: ["@demo/contracts", "@demo/ui"],
-  experimental: { cpus: 2 },
+  experimental: {
+    cpus: 2,
+    // External API validation includes the bounded 180s document layout check.
+    // Next's 30s proxy default would abort a valid operator request mid-check.
+    proxyTimeout: 210_000,
+  },
   images: { unoptimized: true },
   async rewrites() {
     return { beforeFiles: externalApiRewrites(process.env) };

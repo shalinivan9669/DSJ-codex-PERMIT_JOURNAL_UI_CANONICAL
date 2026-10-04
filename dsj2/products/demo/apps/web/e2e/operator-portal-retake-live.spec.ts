@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { realApprovalRoles } from "./operator-role-fixture";
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../docs/evidence/operator-value/portal-retake-browser",
@@ -19,11 +20,8 @@ test("live failed attempt gets linked clean retake; scoped employer evidence sta
   test.setTimeout(180000);
   await fs.mkdir(evidence, { recursive: true });
   const suffix = Date.now();
-  await login(
-    page,
-    process.env.DEMO_E2E_EMAIL!,
-    process.env.DEMO_E2E_PASSWORD!,
-  );
+  const approvalRoles = await realApprovalRoles(browser, page);
+  await approvalRoles.configureSignatories();
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -36,8 +34,18 @@ test("live failed attempt gets linked clean retake; scoped employer evidence sta
     data: unknown,
     extra: Record<string, string> = {},
   ) => {
-    const response = await page.request.post(`/api${endpoint}`, {
-      headers: { ...headers, ...extra },
+    const administrative = [
+      "/users",
+      "/employer-memberships",
+      "/service-rules",
+    ].includes(endpoint);
+    const response = await (
+      administrative ? approvalRoles.adminPage : page
+    ).request.post(`/api${endpoint}`, {
+      headers: {
+        ...(administrative ? approvalRoles.admin.headers : headers),
+        ...extra,
+      },
       data,
     });
     expect(response.ok(), await response.text()).toBe(true);
@@ -89,6 +97,7 @@ test("live failed attempt gets linked clean retake; scoped employer evidence sta
           trainingStart: "2026-09-23",
           trainingEnd: "2026-09-24",
           trainingSubject: "Синтетическая программа",
+          hours: "16",
         },
       },
     ],
@@ -111,17 +120,30 @@ test("live failed attempt gets linked clean retake; scoped employer evidence sta
       },
     ],
   });
+  const checked = await post(`/print-requests/${request.id}/validate`, {
+    expectedRevision: request.revision,
+  });
+  expect(checked.issues).toEqual([]);
+  await approvalRoles.approve(request.id);
+  const approved = await (
+    await page.request.get(`/api/print-requests/${request.id}`)
+  ).json();
   await post(
     `/print-requests/${request.id}/finalize`,
-    { expectedRevision: request.revision },
+    { expectedRevision: approved.revision },
     { "Idempotency-Key": crypto.randomUUID() },
   );
   const original = await (
     await page.request.get(`/api/print-requests/${request.id}`)
   ).json();
   await page.goto(`/requests/${request.id}`);
+  await page.getByLabel("ФИО, строка 1", { exact: true }).click();
   await page
-    .getByRole("button", { name: "Открыть действия", exact: true })
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
+    .click();
+  await page
+    .getByRole("dialog", { name: "Прочее", exact: true })
+    .getByRole("button", { name: "Связанные действия", exact: true })
     .click();
   await page
     .getByText(`Создать пересдачу по получателю «${person.data.fullNameRu}»`, {
@@ -329,5 +351,6 @@ test("live failed attempt gets linked clean retake; scoped employer evidence sta
     );
   } finally {
     await employerContext.close();
+    await approvalRoles.close();
   }
 });

@@ -6,7 +6,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { PRODUCT_ROOT } from "@demo/printing";
 import { db, json, type Context } from "../../apps/api/src/core";
-import { createRequest, patchRequest } from "../../apps/api/src/requests";
+import { createRequest, patchRequest, finalize } from "../../apps/api/src/requests";
+import { provision } from "../../scripts/setup";
+import { createApprovalFixture } from "./live-approval-fixture";
+import { workingRequest } from "../../apps/api/src/approvals";
 import {
   draftSchema,
   itemSchema,
@@ -37,9 +40,8 @@ function code(expected: string) {
 test("persistent service workflow: obligations, renewal, exact finance, proposals, tenant/customer isolation and revocation", async (t) => {
   assertTestDatabase();
   const suffix = randomUUID();
-  const tenantA = await db.tenant.create({
-    data: { name: "Синтетический центр A", demoOnly: true },
-  });
+  const seed = await provision({ email: `seed-${suffix}@example.test`, password: "Synthetic-Operator-Value-Password!", name: "Синтетический центр A", sample: true });
+  const tenantA = await db.tenant.findUniqueOrThrow({ where: { id: seed.tenantId } });
   const tenantB = await db.tenant.create({
     data: { name: "Синтетический центр B", demoOnly: true },
   });
@@ -99,6 +101,10 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         recipientId: recipient.id,
         employerId: customer.id,
         fullNameRu: "Синтетический Қайрат",
+        fullNameKz: "Синтетикалық Қайрат",
+        positionRu: "Синтетический рабочий",
+        positionKz: "Синтетикалық жұмысшы",
+        workplaceRu: "Заказчик А",
         assignments: [
           assignmentSchema.parse({
             id: "source-assignment",
@@ -106,14 +112,23 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
             biotCategory: "WORKER",
             documentDate: "2026-09-22",
             protocolDate: "2026-09-22",
+            trainingStart: "2026-09-20",
+            trainingEnd: "2026-09-22",
+            trainingSubject: "Синтетическая программа",
+            hours: "24",
+            productionHours: "16",
             result: "Исторический подтверждённый результат",
+            outcome: { status: "PASSED", source: "Явно заданный синтетический результат" },
             validUntil: "2027-09-22",
           }),
         ],
       }),
     ],
   });
+  const approvals = await createApprovalFixture(ca);
+  t.after(() => approvals.close());
   const request = await createRequest(ca, sourceDraft);
+  await approvals.approve(request.id);
   const serviceOrder = await value.createServiceOrder(ca, {
     title: "Рабочий заказ",
     customerId: customer.id,
@@ -281,12 +296,12 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
       assert.ok(!("contact" in portal.orders[0]));
       const stale = await value.submitEmployerProposal(ce, serviceOrder.id, {
         requestId: request.id,
-        requestRevision: 0,
+        requestRevision: request.revision,
         kind: "CONFIRM_LIST",
         message: "Проверено",
       });
       await patchRequest(ca, request.id, {
-        expectedRevision: 0,
+        expectedRevision: request.revision,
         draft: { ...sourceDraft, title: "Изменённый состав" },
       });
       await assert.rejects(
@@ -300,9 +315,10 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         status: "REJECTED",
         resolution: "Редакция изменилась",
       });
+      await approvals.approve(request.id);
       const proposal = await value.submitEmployerProposal(ce, serviceOrder.id, {
         requestId: request.id,
-        requestRevision: 1,
+        requestRevision: request.revision + 1,
         kind: "UPDATE_LIST",
         changes: [{ rowId: "source-row", fullNameRu: "Уточнённый Қайрат" }],
       });
@@ -311,7 +327,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         serviceOrder.id,
         {
           requestId: request.id,
-          requestRevision: 1,
+          requestRevision: request.revision + 1,
           kind: "UPDATE_LIST",
           changes: [{ rowId: "source-row", fullNameRu: "Уточнённый Қайрат" }],
         },
@@ -321,10 +337,11 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         status: "ACCEPTED",
         resolution: "Сверено с исходником",
       });
+      await approvals.approve(request.id);
       const latest = await db.printRequest.findUniqueOrThrow({
         where: { id: request.id },
       });
-      assert.equal(latest.revision, 2);
+      assert.equal(latest.revision, request.revision + 2);
       assert.equal(
         draftSchema.parse(latest.draft).items[0].fullNameRu,
         "Уточнённый Қайрат",
@@ -337,7 +354,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
       await assert.rejects(
         value.submitEmployerProposal(ce, serviceOrder.id, {
           requestId: request.id,
-          requestRevision: 2,
+          requestRevision: request.revision + 2,
           kind: "UPDATE_LIST",
           changes: [{ rowId: "unauthorized", fullNameRu: "Подмена" }],
         }),
@@ -346,7 +363,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
       await assert.rejects(
         value.submitEmployerProposal(ce, serviceOrder.id, {
           requestId: request.id,
-          requestRevision: 2,
+          requestRevision: request.revision + 2,
           kind: "UPDATE_LIST",
           changes: [{ rowId: "source-row", result: "Успешно" }],
         }),
@@ -505,11 +522,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
   await t.test(
     "confirmed renewal creates one linked draft across concurrent retries and resets results",
     async () => {
-      // Historical fixture represents an already migrated finalized request; issuance/render are tested independently.
-      await db.printRequest.update({
-        where: { id: request.id },
-        data: { status: "FINALIZED" },
-      });
+      await finalize(ca, request.id, { expectedRevision: request.revision + 2 }, randomUUID());
       const payload = {
         customerId: customer.id,
         recipientId: recipient.id,
@@ -539,9 +552,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         ),
       );
       assert.equal(new Set(results.map((r) => r.id)).size, 1);
-      const repeated = await db.printRequest.findUniqueOrThrow({
-        where: { id: results[0].id },
-      });
+      const repeated = await workingRequest(ca, results[0].id);
       const repeatedDraft = draftSchema.parse(repeated.draft);
       assert.equal(repeated.status, "DRAFT");
       assert.equal(repeatedDraft.items[0].assignments[0].result, "");
@@ -575,7 +586,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
     async () => {
       const proposal = await value.submitEmployerProposal(ce, serviceOrder.id, {
         requestId: request.id,
-        requestRevision: 2,
+        requestRevision: request.revision + 2,
         kind: "REPEAT_REQUEST",
         message:
           "Подтверждаем актуальность указанного сотрудника и направления",
@@ -596,7 +607,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         where: { id: resolved.newRequestId },
       });
       assert.equal(fresh.status, "DRAFT");
-      const freshDraft = draftSchema.parse(fresh.draft);
+      const freshDraft = draftSchema.parse((await workingRequest(ca, fresh.id)).draft);
       assert.equal(freshDraft.items[0].recipientId, recipient.id);
       assert.equal(freshDraft.items[0].assignments[0].result, "");
       assert.equal(freshDraft.items[0].assignments[0].protocolDate, "");
@@ -656,6 +667,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         customerId: customer.id,
         requestIds: [mixed.id],
       });
+      await approvals.approve(mixed.id);
       const portal = await value.employerPortal(ce);
       const visible = portal.orders.find((o) => o.id === mixedOrder.id)!;
       assert.equal(visible.requests[0].rows.length, 1);
@@ -664,7 +676,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
       await assert.rejects(
         value.submitEmployerProposal(ce, mixedOrder.id, {
           requestId: mixed.id,
-          requestRevision: 0,
+          requestRevision: mixed.revision,
           kind: "CONFIRM_LIST",
         }),
         code("FULL_ROSTER_DENIED"),
@@ -674,7 +686,7 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
       await assert.rejects(
         value.submitEmployerProposal(ce, mixedOrder.id, {
           requestId: mixed.id,
-          requestRevision: 0,
+          requestRevision: mixed.revision,
           kind: "CLARIFICATION",
           message: "Старый доступ",
         }),

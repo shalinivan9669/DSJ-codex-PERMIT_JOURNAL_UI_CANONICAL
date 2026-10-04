@@ -27,6 +27,7 @@ import {
   updateNumbering,
 } from "./settings";
 import * as requests from "./requests";
+import * as trainingRemovals from "./training-removals";
 import * as approvals from "./approvals";
 import * as signing from "./signing";
 import { suggestTranslations } from "./translation-suggestions";
@@ -376,7 +377,11 @@ export class DemoController {
     @Req() req: DemoRequest,
     @Body() body: unknown,
   ) {
-    return requests.createRequest(ctx(req, true), body);
+    return requests.createRequest(
+      ctx(req, true),
+      body,
+      req.headers["idempotency-key"],
+    );
   }
   @Get("print-requests/:id") request(
     @Req() req: DemoRequest,
@@ -390,6 +395,33 @@ export class DemoController {
     @Body() body: unknown,
   ) {
     return requests.patchRequest(ctx(req, true), id, body);
+  }
+  @Get("print-requests/:id/training-removals") trainingRemovalList(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+  ) {
+    return trainingRemovals.listTrainingRemovals(ctx(req), id);
+  }
+  @Post("print-requests/:id/training-removals") trainingRemove(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return trainingRemovals.removeTraining(ctx(req, true), id, body);
+  }
+  @Post("print-requests/:id/training-removals/:operationId/restore")
+  trainingRestore(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Param("operationId") operationId: string,
+    @Body() body: unknown,
+  ) {
+    return trainingRemovals.restoreTraining(
+      ctx(req, true),
+      id,
+      operationId,
+      body,
+    );
   }
   @Delete("print-requests/:id") delete(
     @Req() req: DemoRequest,

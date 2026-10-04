@@ -115,7 +115,7 @@ export async function createApprovalFixture(admin: Context) {
   };
   return {
     directorContext,
-    async approve(requestId: string) {
+    async approve(requestId: string, expectedIncompleteProblem?: string) {
       const current = await requestWithRateLimit(
         `${base}/print-requests/${requestId}/approval`,
         { headers: auth },
@@ -152,7 +152,19 @@ export async function createApprovalFixture(admin: Context) {
           }),
         },
       );
-      assert.equal(decision.status, 201, await decision.clone().text());
+      if (expectedIncompleteProblem) {
+        const error = (await decision.json()) as {
+          code: string;
+          details: Array<{ code: string }>;
+        };
+        assert.equal(decision.status, 422);
+        assert.equal(error.code, "APPROVAL_DATA_INCOMPLETE");
+        assert.ok(
+          error.details.some(
+            (issue) => issue.code === expectedIncompleteProblem,
+          ),
+        );
+      } else assert.equal(decision.status, 201, await decision.clone().text());
     },
     async close() {
       await app.close();

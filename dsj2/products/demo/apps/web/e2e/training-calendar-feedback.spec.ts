@@ -117,11 +117,20 @@ async function fixture(
 async function open(page: Page) {
   await page.goto(`/requests/${requestId}/edit`);
   await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
   await expect(
     page.getByLabel("Дата документа", { exact: true }).first(),
   ).toHaveValue("2026-03-26");
+}
+
+async function requestSchedule(page: Page) {
+  await page.getByRole("button", { name: "Вернуться к списку", exact: true }).click();
+  await page.getByRole("button", { name: "Дополнительные действия", exact: true }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Общие даты и протоколы", exact: true }).click();
+  const context = page.getByRole("dialog");
+  await context.getByText("Правило расчёта периода обучения", { exact: true }).click();
+  return context;
 }
 
 test("center schedule renders a compact range, preserves a retroactive document date and reveals a precise invalid override", async ({
@@ -160,7 +169,6 @@ test("center schedule renders a compact range, preserves a retroactive document 
     page.locator('[data-field-path="items.0.assignments.0.trainingStart"]'),
   ).toHaveValue("2025-01-05");
   await end.fill("2025-01-08");
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
   await expect
     .poll(
       () => state.current().items[0].assignments[0].fieldOrigins?.trainingEnd,
@@ -168,19 +176,22 @@ test("center schedule renders a compact range, preserves a retroactive document 
     .toBe("MANUAL");
   await dates.locator("summary").first().click();
   await page
-    .getByRole("button", { name: "Вернуться к таблице", exact: true })
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
     .click();
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  const invalid = resolveDraft(state.current(), { trainingDateRule: schedule });
+  expect(invalid.issues).toEqual(expect.arrayContaining([expect.objectContaining({ code: "TRAINING_BEFORE_DOCUMENT", path: "items.0.assignments.0.trainingEnd", rowId: "person-one" })]));
+  await page.getByRole("button", { name: "Проверить данные", exact: true }).click();
   await page
     .getByRole("button", {
-      name: /Окончание обучения должно быть раньше даты документа/,
+      name: /^ПТМ — удостоверение: Окончание обучения должно быть раньше даты документа/,
     })
     .click();
   await expect(end).toBeFocused();
+  await expect(end).toHaveAttribute("aria-invalid", "true");
   await expect(end).toHaveValue("2025-01-08");
   await page.reload();
   await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
   await expect(
     page.getByLabel("Дата документа", { exact: true }).first(),
@@ -199,13 +210,7 @@ test("a request pinned to the old center profile uses its schedule in the card a
     page.locator(".document-date-details summary").first(),
   ).toContainText("19.03.2026 — 20.03.2026");
   expect(state.profileReads()).toBeGreaterThan(0);
-  await page
-    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
-    .click();
-  const context = page.locator(".common-context");
-  await context
-    .getByText("Правило расчёта периода обучения", { exact: true })
-    .click();
+  const context = await requestSchedule(page);
   await expect(
     context.getByLabel("Часов в учебном дне", { exact: true }),
   ).toHaveValue("8");
@@ -222,18 +227,12 @@ test("a new schedule requires entered daily hours and persists the selected cale
   await expect(
     page.locator(".document-date-details summary").first(),
   ).toContainText("Период обучения не задан");
-  await page
-    .getByRole("button", { name: "Настроить даты и протоколы", exact: true })
-    .click();
-  const context = page.locator(".common-context");
-  await context
-    .getByText("Правило расчёта периода обучения", { exact: true })
-    .click();
-  const apply = context.getByRole("button", {
-    name: "Применить правило расчёта",
+  const context = await requestSchedule(page);
+  const review = context.getByRole("button", {
+    name: "Проверить применение графика",
     exact: true,
   });
-  await expect(apply).toBeDisabled();
+  await expect(review).toBeDisabled();
   await expect(
     context.getByLabel("Часов в учебном дне", { exact: true }),
   ).toHaveValue("");
@@ -241,18 +240,22 @@ test("a new schedule requires entered daily hours and persists the selected cale
     context.getByLabel("Связь с датой документа", { exact: true }),
   ).toHaveValue("DOCUMENT_AFTER_TRAINING");
   await context.getByLabel("Часов в учебном дне", { exact: true }).fill("8");
-  await apply.click();
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(review).toBeEnabled();
+  expect(state.current().commonFields?.trainingDateRule).toBeUndefined();
+  await review.click();
+  await context.getByRole("button", { name: "Применить правило расчёта", exact: true }).click();
+  await context.getByRole("button", { name: "Закрыть диалог", exact: true }).click();
   await expect
     .poll(() => state.current().commonFields?.trainingDateRule?.calendarVersion)
     .toBe(KZ_TRAINING_CALENDAR_VERSION);
   expect(state.current().items[0].assignments[0].trainingStart).toBe("");
+  await page.getByRole("button", { name: "Детали получателя 1", exact: true }).click();
   await expect(
     page.locator(".document-date-details summary").first(),
   ).toContainText("19.03.2026 — 20.03.2026");
   await page.reload();
   await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
   await expect(
     page.locator(".document-date-details summary").first(),

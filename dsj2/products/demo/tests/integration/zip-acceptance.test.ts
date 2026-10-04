@@ -13,6 +13,8 @@ import {
 } from "../../apps/render-worker/src/queue";
 import { provision } from "../../scripts/setup";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
+import { buildZip } from "@demo/printing";
 
 function inspectZip(bytes: Buffer) {
   return JSON.parse(
@@ -36,7 +38,7 @@ function inspectZip(bytes: Buffer) {
   };
 }
 
-test("ZIP validates actual original bytes, requires partial consent and names every missing/failed file", async () => {
+test("ZIP manifests validate actual original bytes and every missing/failed file; unsigned public export remains blocked", async (t) => {
   assertTestDatabase();
   const who = await provision({
     email: `zip-${randomUUID()}@example.test`,
@@ -51,6 +53,8 @@ test("ZIP validates actual original bytes, requires partial consent and names ev
     csrfHash: "fixture",
     correlationId: randomUUID(),
   };
+  const approvals = await createApprovalFixture(c);
+  t.after(() => approvals.close());
   try {
     const request = await createRequest(c, {
       kind: "PERSON",
@@ -59,6 +63,8 @@ test("ZIP validates actual original bytes, requires partial consent and names ev
           id: randomUUID(),
           fullNameRu: "Синтетический Проверяемый Архив",
           fullNameKz: "Ә Ғ Қ Ң Ө Ұ Ү Һ І",
+          positionRu: "Инженер",
+          workplaceRu: "Синтетическое предприятие",
           assignments: [
             {
               id: randomUUID(),
@@ -75,10 +81,16 @@ test("ZIP validates actual original bytes, requires partial consent and names ev
         },
       ],
     });
-    await finalize(c, request.id, { expectedRevision: 0 }, randomUUID());
-    for (let index = 0; index < 4; index++) {
+    await approvals.approve(request.id);
+    await finalize(
+      c,
+      request.id,
+      { expectedRevision: request.revision },
+      randomUUID(),
+    );
+    for (let index = 0; index < 20; index++) {
       const job = await claimJob(db, "zip-acceptance", c.tenantId);
-      assert.ok(job);
+      if (!job) break;
       const controller = new AbortController();
       const pulse = setInterval(() => {
         void heartbeat(db, job, "zip-acceptance")
@@ -93,13 +105,68 @@ test("ZIP validates actual original bytes, requires partial consent and names ev
         clearInterval(pulse);
       }
     }
-    const original = await registryExport(c, { format: "ZIP" }, request.id);
-    assert.equal(original.fileName, "DEMO-complete.zip");
+    // The renderer/manifest boundary is verified without manufacturing a CMS
+    // signature or changing workflow status. The public endpoint must continue
+    // denying an unsigned official bundle, including explicit partial consent.
+    for (const allowPartial of [false, true])
+      await assert.rejects(
+        registryExport(c, { format: "ZIP", allowPartial }, request.id),
+        (error: any) => error.getResponse().code === "ISSUANCE_NOT_COMPLETE",
+      );
+    async function assembled() {
+      const jobs = await db.generationJob.findMany({
+        where: {
+          tenantId: c.tenantId,
+          requestId: request.id,
+          kind: { not: "ZIP" },
+        },
+      });
+      const artifacts = await db.artifact.findMany({
+        where: {
+          tenantId: c.tenantId,
+          requestId: request.id,
+          id: {
+            in: jobs.flatMap((job) =>
+              job.status === "SUCCEEDED" && job.artifactId
+                ? [job.artifactId]
+                : [],
+            ),
+          },
+        },
+      });
+      return buildZip(
+        artifacts,
+        jobs[0].issuanceId!,
+        jobs.length,
+        jobs
+          .filter(
+            (job) =>
+              !artifacts.some((artifact) => artifact.id === job.artifactId),
+          )
+          .map((job) => ({
+            jobId: job.id,
+            documentId: job.documentId,
+            format: job.kind,
+            reason: job.errorCode || job.status,
+          })),
+      );
+    }
+    const original = await assembled();
     const complete = inspectZip(original.buffer);
     assert.equal(complete.manifest.complete, true);
-    assert.equal(complete.manifest.expectedCount, 3);
+    assert.equal(
+      complete.manifest.expectedCount,
+      5,
+      "LIVE mandatory credential + protocol each have DOCX/PDF, plus registry",
+    );
     for (const file of complete.manifest.files) {
-      const downloaded = await readArtifact(c, file.id);
+      const artifact = await db.artifact.findUniqueOrThrow({
+        where: { id: file.id },
+      });
+      const downloaded =
+        artifact.format === "XLSX"
+          ? { buffer: await store.read(artifact.storageKey, artifact.sha256) }
+          : await readArtifact(c, file.id);
       assert.equal(
         createHash("sha256").update(downloaded.buffer).digest("hex"),
         file.sha256,
@@ -116,14 +183,10 @@ test("ZIP validates actual original bytes, requires partial consent and names ev
     });
     await assert.rejects(
       registryExport(c, { format: "ZIP" }, request.id),
-      /неполный/,
+      /обязательных подписей/,
     );
-    const failed = await registryExport(
-      c,
-      { format: "ZIP", allowPartial: true },
-      request.id,
-    );
-    assert.equal(failed.fileName, "DEMO-PARTIAL.zip");
+    const failed = await assembled();
+    assert.equal(inspectZip(failed.buffer).manifest.complete, false);
     assert.deepEqual(
       inspectZip(failed.buffer).manifest.missing.map(({ jobId, reason }) => ({
         jobId,
@@ -142,14 +205,10 @@ test("ZIP validates actual original bytes, requires partial consent and names ev
     await unlink(store.path(pdfArtifact.storageKey));
     await assert.rejects(
       registryExport(c, { format: "ZIP" }, request.id),
-      /недоступны/,
+      /обязательных подписей/,
     );
-    const missing = await registryExport(
-      c,
-      { format: "ZIP", allowPartial: true },
-      request.id,
-    );
-    assert.equal(missing.fileName, "DEMO-PARTIAL.zip");
+    const missing = await assembled();
+    assert.equal(inspectZip(missing.buffer).manifest.complete, false);
     assert.ok(
       inspectZip(missing.buffer).manifest.missing.some(
         (entry) =>
@@ -160,12 +219,8 @@ test("ZIP validates actual original bytes, requires partial consent and names ev
       where: { id: jobs.find((job) => job.kind === "DOCX")!.artifactId! },
     });
     await writeFile(store.path(docx.storageKey), "synthetic corruption drill");
-    const corrupted = await registryExport(
-      c,
-      { format: "ZIP", allowPartial: true },
-      request.id,
-    );
-    assert.equal(corrupted.fileName, "DEMO-PARTIAL.zip");
+    const corrupted = await assembled();
+    assert.equal(inspectZip(corrupted.buffer).manifest.complete, false);
     assert.ok(
       inspectZip(corrupted.buffer).manifest.missing.some(
         (entry) => entry.id === docx.id && entry.reason === "HASH_MISMATCH",

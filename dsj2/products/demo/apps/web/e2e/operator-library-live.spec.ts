@@ -1,6 +1,9 @@
+import { loginIsolated } from "./operator-full-fix-session";
+import { loginRole } from "./operator-role-fixture";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
+test.use({ trace: "off" });
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../docs/evidence/operator-value/library-browser",
@@ -8,6 +11,7 @@ const evidence = path.resolve(
 test("live source document verification, person/program matrix and selected center dossier ZIP", async ({
   page,
   context,
+  browser,
 }) => {
   test.setTimeout(180000);
   await fs.mkdir(evidence, { recursive: true });
@@ -15,17 +19,7 @@ test("live source document verification, person/program matrix and selected cent
   const title = `Синтетический источник ${suffix}`;
   const customerName = `Заказчик матрицы ${suffix}`;
   const personName = `Получатель матрицы ${suffix}`;
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL!);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD!);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать" }),
-  ).toBeVisible();
+  await loginIsolated(page);
   const csrf = (await context.cookies()).find(
     (cookie) => cookie.name === "demo_csrf",
   )!.value;
@@ -48,21 +42,40 @@ test("live source document verification, person/program matrix and selected cent
     employerId: customer.id,
     assignments: [],
   });
-  const rule = await post("/service-rules", {
-    serviceKey: `matrix_${suffix}`,
-    title,
-    status: "APPROVED",
-    source: "Синтетическое подтверждённое правило для UI",
-    applicability: "Только тестовый набор",
-    checkedOn: "2026-09-24",
-    definition: {
-      programVersion: "1",
-      category: "",
-      compatibleTemplateIds: ["pb-card", "pb-protocol"],
-      requirements: [],
-      limitation: "Не подтверждает допуск",
-    },
+  // The administrator prepares a rule; every workbench action below uses the operator.
+  const administratorContext = await browser.newContext({
+    baseURL: process.env.DEMO_ORIGIN,
   });
+  let rule: { id: string; serviceKey: string };
+  try {
+    const administratorPage = await administratorContext.newPage();
+    const administrator = await loginRole(administratorPage, "ADMIN");
+    const ruleResponse = await administratorPage.request.post(
+      "/api/service-rules",
+      {
+        headers: administrator.headers,
+        data: {
+          serviceKey: `matrix_${suffix}`,
+          title,
+          status: "APPROVED",
+          source: "Синтетическое подтверждённое правило для UI",
+          applicability: "Только тестовый набор",
+          checkedOn: "2026-09-24",
+          definition: {
+            programVersion: "1",
+            category: "",
+            compatibleTemplateIds: ["pb-card", "pb-protocol"],
+            requirements: [],
+            limitation: "Не подтверждает допуск",
+          },
+        },
+      },
+    );
+    expect(ruleResponse.ok(), await ruleResponse.text()).toBe(true);
+    rule = await ruleResponse.json();
+  } finally {
+    await administratorContext.close();
+  }
   await page.goto("/workbench");
   await page
     .getByRole("tab", { name: "Источники и правила", exact: true })

@@ -7,6 +7,7 @@ import {
 } from "@demo/contracts";
 import type { Prisma } from "@demo/database";
 import { personCustomerName, withCustomerIdentity } from "./request-customer";
+import { replaceableImportScaffoldId } from "./import-scaffold";
 import {
   audit,
   db,
@@ -225,6 +226,10 @@ export async function submitProposal(
       submittedBy: proposal.submittedBy,
       submittedAt: proposal.submittedAt,
     },
+    importScaffoldId:
+      operation === "SAVE"
+        ? await replaceableImportScaffoldId(tx, c, id, draft, record.revision)
+        : null,
   };
 }
 export async function createProposedContainer(

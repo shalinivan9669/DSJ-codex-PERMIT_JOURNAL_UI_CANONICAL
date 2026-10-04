@@ -2,10 +2,14 @@ import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
+import { loginRole } from "./operator-role-fixture";
+import { fullSuiteApiCooldown } from "./operator-full-suite";
 
 const product = path.resolve(__dirname, "../../..");
 const evidence = path.resolve(
-  process.env.DEMO_E2E_EVIDENCE ||
+  (process.env.DEMO_E2E_FULL_CHECKPOINTS === "1"
+    ? path.join(process.env.DEMO_E2E_EVIDENCE!, "portal-consumer")
+    : process.env.DEMO_E2E_EVIDENCE) ||
     path.join(product, "docs/evidence/final-completion/portal-390"),
 );
 async function login(page: Page, email: string, password: string) {
@@ -29,20 +33,24 @@ test("existing V07 three-person portal at390x844 retains private scopes, friendl
   await fs.mkdir(evidence, { recursive: true });
   const source = JSON.parse(
     await fs.readFile(
-      path.join(
-        product,
-        "docs/evidence/final-completion/portal-three-complete/summary.json",
+      path.resolve(
+        process.env.DEMO_E2E_PORTAL_FRESH_SOURCE ||
+          (() => {
+            throw new Error(
+              "Fresh portal-three checkpoint from this isolated cycle is required",
+            );
+          })(),
       ),
       "utf8",
     ),
   );
-  const admin = JSON.parse(
-    await fs.readFile(
-      path.join(product, ".runtime/invites-ui-auth.json"),
-      "utf8",
-    ),
-  );
-  await login(page, admin.email, admin.password);
+  expect(source.status).toBe("PASS");
+  if (process.env.DEMO_E2E_FULL_CHECKPOINTS === "1") {
+    expect(process.env.DEMO_E2E_FULL_RUN_ID).toBeTruthy();
+    expect(source.fullRunId).toBe(process.env.DEMO_E2E_FULL_RUN_ID);
+  }
+  const admin = await loginRole(page, "ADMIN");
+  expect(source.tenantId).toBe(admin.session.tenant.id);
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -244,6 +252,7 @@ test("existing V07 three-person portal at390x844 retains private scopes, friendl
         2,
       ),
     );
+    await fullSuiteApiCooldown(evidence, "portal-390-after-file-readback");
   } finally {
     await portalContext.close();
   }

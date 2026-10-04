@@ -35,3 +35,24 @@
   font-size: 12px;
   font-weight: 400;
 }
+
+.request-training-choice {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.request-training-choice[data-state="partial"] .request-training-chip {
+  border-style: dashed;
+  border-color: var(--accent);
+}
+.request-training-choices .request-training-remove {
+  min-height: 34px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+.request-training-policy {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 12px;
+}

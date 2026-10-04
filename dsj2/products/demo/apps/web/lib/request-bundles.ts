@@ -85,35 +85,25 @@ export function newRequestBundle(category: RequestBundle) {
   };
 }
 
-/** Empty new rows inherit one unambiguous event per direction, without replacing facts. */
+/** Only an explicit common assignment is a default for subsequent recipients. */
 export function recipientForRequest(
-  draft: Pick<Draft, "events">,
+  draft: Pick<Draft, "events" | "trainingDefaults">,
   person?: Recipient,
 ): Recipient {
-  const recipient = person ?? newRecipient();
+  const recipient = person ?? { ...newRecipient(), assignments: [] };
   // Callers pass empty assignments for freshly added, pasted or directory rows.
   // A supplied assignment may contain dates/results or represent a separate course.
   if (person?.assignments.length) return person;
   const events = trainingDirections.flatMap((direction) => {
+    const policy = draft.trainingDefaults?.find((entry) => entry.direction === direction);
+    if (!policy) return [];
     const candidates = (draft.events || []).filter(
-      (event) => trainingDirection(event.protocolTemplateId) === direction,
+      (event) => policy.eventIds.includes(event.id) && trainingDirection(event.protocolTemplateId) === direction,
     );
-    return candidates.length === 1 ? candidates : [];
+    return candidates;
   });
   if (!events.length) return recipient;
-  const biot = events.find(
-    (event) => trainingDirection(event.protocolTemplateId) === "BIOT",
-  );
-  const storedCategory = recipient.recipientId
-    ? recipient.employeeCategory
-    : undefined;
-  const category =
-    storedCategory ??
-    (biot
-      ? biot.protocolTemplateId === "biot-itr-protocol"
-        ? "ITR"
-        : "WORKER"
-      : employeeCategoryFor(recipient));
+  const category = employeeCategoryFor(recipient);
   const compatibleEvents = events.filter(
     (event) =>
       event.protocolTemplateId ===
@@ -149,6 +139,7 @@ export function assignTrainingBundle<T extends Draft>(
   selectedIds: readonly string[],
   direction: TrainingDirection,
   protocolMode?: "GROUP" | "INDIVIDUAL",
+  commonForNewRecipients = false,
 ): T {
   const draft = structuredClone(input);
   draft.events ||= [];
@@ -220,7 +211,10 @@ export function assignTrainingBundle<T extends Draft>(
         (assignment) => trainingDirection(assignment.templateId) === direction,
       );
       if (existing) {
-        if (!existing.eventId)
+        // Adding a missing kit is not consent to move an existing independent
+        // course into a shared event. An explicit protocol mode selection is
+        // the only action here that may enroll an unbound existing kit.
+        if (!existing.eventId && protocolMode)
           for (const assignment of item.assignments.filter(
             (candidate) =>
               !candidate.eventId &&
@@ -257,6 +251,16 @@ export function assignTrainingBundle<T extends Draft>(
         item.assignments.some((assignment) => assignment.eventId === event.id),
       ),
   );
+  if (commonForNewRecipients) {
+    const eventIds = [...new Set(draft.items.flatMap((item) =>
+      item.assignments.filter((assignment) => trainingDirection(assignment.templateId) === direction)
+        .flatMap((assignment) => assignment.eventId ? [assignment.eventId] : []),
+    ))];
+    draft.trainingDefaults = [
+      ...(draft.trainingDefaults || []).filter((entry) => entry.direction !== direction),
+      { direction, eventIds },
+    ];
+  }
   return applyBusinessRules(draft);
 }
 

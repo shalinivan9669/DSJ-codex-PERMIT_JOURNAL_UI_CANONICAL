@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID, createHash } from "node:crypto";
 import { inflateRawSync } from "node:zlib";
+import { loginRole, realApprovalRoles } from "./operator-role-fixture";
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../docs/evidence/final-completion/sources",
@@ -13,16 +14,8 @@ async function start(page: Page, context: BrowserContext) {
     socket.close(),
   );
   await fs.mkdir(evidence, { recursive: true });
-  const auth = JSON.parse(
-    await fs.readFile(
-      path.resolve("../../.runtime/invites-ui-auth.json"),
-      "utf8",
-    ),
-  );
-  await page.goto("/login");
-  await page.getByLabel("Электронная почта", { exact: true }).fill(auth.email);
-  await page.getByLabel("Пароль", { exact: true }).fill(auth.password);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
+  const management = await loginRole(page, "ADMIN");
+  const actorName = management.session.user.displayName;
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -54,7 +47,7 @@ async function start(page: Page, context: BrowserContext) {
       .click();
     await page.getByRole("tab", { name: section, exact: true }).click();
   };
-  return { post, get, library, auth };
+  return { post, get, library, actorName };
 }
 function zipEntries(bytes: Buffer) {
   let end = bytes.length - 22;
@@ -91,9 +84,16 @@ function zipEntries(bytes: Buffer) {
 test("live service passport versions preserve issued history, optional obligations and distinct renewal dates/contact history", async ({
   page,
   context,
+  browser,
 }) => {
   test.setTimeout(240000);
-  const { post, get, library } = await start(page, context);
+  const { post, get, library, actorName } = await start(page, context);
+  const approvalContext = await browser.newContext({
+    baseURL: process.env.DEMO_ORIGIN,
+  });
+  const approvalPage = await approvalContext.newPage();
+  const approvalRoles = await realApprovalRoles(browser, approvalPage);
+  await approvalRoles.configureSignatories();
   const suffix = Date.now(),
     title = `Паспорт полного источника ${suffix}`,
     serviceKey = `source_${suffix}`;
@@ -184,7 +184,7 @@ test("live service passport versions preserve issued history, optional obligatio
   await expect(ruleRow).toContainText("Договорное");
   await expect(ruleRow).toContainText("Рекомендованное");
   await expect(ruleRow).toContainText(
-    "Проверка источника: 2026-09-24 · Администратор",
+    `Проверка источника: 2026-09-24 · ${actorName}`,
   );
   await ruleRow
     .getByText("Версии форм, поля и выходные документы", { exact: true })
@@ -233,6 +233,7 @@ test("live service passport versions preserve issued history, optional obligatio
           trainingStart: "2026-09-23",
           trainingEnd: "2026-09-24",
           trainingSubject: "Синтетическая промышленная безопасность",
+          hours: "16",
         },
       },
     ],
@@ -269,12 +270,14 @@ test("live service passport versions preserve issued history, optional obligatio
   });
   expect((await get(`/orders/${order.id}`)).milestones).toHaveLength(3);
   const validation = await post(`/print-requests/${request.id}/validate`, {
-    expectedRevision: 0,
+    expectedRevision: request.revision,
   });
   expect(validation.issues).toEqual([]);
+  await approvalRoles.approve(request.id);
+  const currentApproved = await get(`/print-requests/${request.id}`);
   await post(
     `/print-requests/${request.id}/finalize`,
-    { expectedRevision: 0 },
+    { expectedRevision: currentApproved.revision },
     { "idempotency-key": randomUUID() },
   );
   const saved = await get(`/print-requests/${request.id}`);
@@ -310,12 +313,18 @@ test("live service passport versions preserve issued history, optional obligatio
   await page
     .getByLabel("Источник документа / требования", { exact: true })
     .fill("Новый проверенный источник: дополнительные выходы не требуются");
+  const savedSecondVersion = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      response.url().endsWith("/api/service-rules"),
+  );
   await page
     .getByRole("button", {
       name: "Сохранить запись как утверждённую версию",
       exact: true,
     })
     .click();
+  expect((await savedSecondVersion).status()).toBe(201);
   const versions = (await get("/service-rules")).items.filter(
     (v: { serviceKey: string }) => v.serviceKey === serviceKey,
   );
@@ -467,6 +476,8 @@ test("live service passport versions preserve issued history, optional obligatio
       2,
     ),
   );
+  await approvalRoles.close();
+  await approvalContext.close();
 });
 
 test("live external evidence state distinctions and private qualified dossier exclusion", async ({
@@ -474,7 +485,7 @@ test("live external evidence state distinctions and private qualified dossier ex
   context,
 }) => {
   test.setTimeout(180000);
-  const { post, get, library } = await start(page, context);
+  const { post, get, library, actorName } = await start(page, context);
   const suffix = Date.now(),
     title = `Матрица статусов ${suffix}`;
   const customer = await post("/customers", {
@@ -555,7 +566,7 @@ test("live external evidence state distinctions and private qualified dossier ex
       })
       .click();
     await expect(row).toContainText(`Ручное решение ${person.state}`);
-    await expect(row).toContainText("Администратор");
+    await expect(row).toContainText(actorName);
     await expect(
       row.getByLabel("Основание проверки", { exact: true }),
     ).toHaveValue("");
@@ -655,7 +666,7 @@ test("live external evidence state distinctions and private qualified dossier ex
       .getByRole("button", { name: "Сохранить запись", exact: true })
       .click();
     const row = page.getByRole("row").filter({ hasText: record.title });
-    await expect(row).toContainText("Ответственный: Администратор");
+    await expect(row).toContainText(`Ответственный: ${actorName}`);
     await row.getByText("Файлы источника (0)", { exact: true }).click();
     await row
       .getByLabel("Источник вложения", { exact: true })
@@ -752,9 +763,7 @@ test("live external evidence state distinctions and private qualified dossier ex
     categories.some((c) => c.title === v.title),
   );
   expect(
-    records.every(
-      (r: { ownerName: string }) => r.ownerName === "Администратор",
-    ),
+    records.every((r: { ownerName: string }) => r.ownerName === actorName),
   ).toBe(true);
   await fs.writeFile(
     path.join(evidence, "matrix-dossier-summary.json"),

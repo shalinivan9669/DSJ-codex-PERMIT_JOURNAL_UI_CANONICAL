@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
-import { resolveDraft } from "@demo/contracts";
+import { applyBusinessRules, resolveDraft } from "@demo/contracts";
+import { openRecipientExtraTools } from "./operator-keyboard-helpers";
 import {
   newAssignment,
   newRecipient,
@@ -28,12 +29,15 @@ const employer: Customer = {
 };
 
 async function fixture(page: Page) {
+  page.on("pageerror", (error) =>
+    console.error("Shared employer page error:", error.stack),
+  );
   await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
   let draft: Draft = {
     id: requestId,
     revision: 0,
     status: "DRAFT",
-    kind: "COMPANY",
+    kind: "PERSON",
     title: "Синтетическая проверка общего работодателя",
     customerId: payer.id,
     demoMode: true,
@@ -73,8 +77,36 @@ async function fixture(page: Page) {
       ],
     })),
   };
+  // The current API returns canonical LIVE documents. Keep this mock baseline
+  // equally canonical so the employer operation must preserve every document,
+  // including the manually entered date and imported hours, byte for byte.
+  // Match the real JSON response boundary: undefined optional keys are absent.
+  draft = JSON.parse(JSON.stringify(applyBusinessRules(draft))) as Draft;
   const initial = structuredClone(draft);
-  const customers: Customer[] = [payer, employer];
+  initial.items.forEach((item, index) => {
+    expect(
+      item.assignments.find(
+        (assignment) => assignment.id === `manual-document-${index}`,
+      ),
+    ).toMatchObject({
+      documentDate: `2026-08-1${index}`,
+      hours: "24",
+      fieldOrigins: { documentDate: "MANUAL", hours: "IMPORTED" },
+    });
+  });
+  const customers: Customer[] = [
+    payer,
+    employer,
+    ...initial.items.slice(1).map((item) => ({
+      id: item.employerId!,
+      nameRu: item.workplaceRu,
+      nameKz: item.workplaceKz,
+      bin: item.employerBin ?? "",
+      addressRu: item.employerAddressRu ?? "",
+      addressKz: item.employerAddressKz ?? "",
+      archived: false,
+    })),
+  ];
   let rejectNextSave = false;
   const accepted: Draft[] = [];
   let attempts = 0;
@@ -147,10 +179,18 @@ async function fixture(page: Page) {
         customers.push(created);
         value = created;
       } else value = { items: customers, total: customers.length };
-    } else if (path.startsWith("/customers/"))
+    } else if (path.startsWith("/customers/")) {
       value = customers.find(
         (customer) => path === `/customers/${customer.id}`,
       );
+      if (!value) {
+        await route.fulfill({
+          status: 404,
+          json: { message: "Организация не найдена" },
+        });
+        return;
+      }
+    }
     await route.fulfill({ json: value });
   });
   return {
@@ -167,12 +207,9 @@ async function fixture(page: Page) {
 
 async function openEditor(page: Page) {
   await page.goto(`/requests/${requestId}/edit`);
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("combobox", { name: "Заказчик", exact: true }),
-  ).toHaveValue(payer.id);
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
+  // This personal legacy request retains its payer in saved data; employer
+  // selection below must never change that identity.
 }
 
 function sharedDialog(page: Page) {
@@ -182,9 +219,27 @@ function sharedDialog(page: Page) {
   });
 }
 
-async function chooseEmployer(page: Page) {
+async function recipientEmployerDetails(page: Page, row: number) {
+  await page.getByLabel(`ФИО, строка ${row}`, { exact: true }).focus();
   await page
-    .getByRole("button", { name: "Общая организация", exact: true })
+    .getByRole("button", { name: `Детали получателя ${row}`, exact: true })
+    .click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("tab", { name: /^Личные данные/ }).click();
+  const employerDetails = dialog.locator("details.employer-document-wording");
+  if (
+    !(await employerDetails.evaluate(
+      (element) => (element as HTMLDetailsElement).open,
+    ))
+  )
+    await employerDetails.locator(":scope > summary").click();
+  return dialog;
+}
+
+async function chooseEmployer(page: Page) {
+  await openRecipientExtraTools(page);
+  await page
+    .getByRole("button", { name: "Указать место работы", exact: true })
     .click();
   await sharedDialog(page)
     .getByRole("button", { name: "Выбрать организацию", exact: true })
@@ -264,16 +319,16 @@ test("shared employer defaults to empty people and preserves filled employers, p
   expect(state.current().items.slice(1)).toEqual(state.initial.items.slice(1));
   expectPreservedDocuments(state.initial, state.current());
   await page.reload();
+  const person = await recipientEmployerDetails(page, 1);
   await expect(
-    page.getByLabel("Место работы RU, строка 1", { exact: true }),
+    person.locator('[data-field-path="items.0.workplaceRu"]'),
   ).toHaveValue(employer.nameRu);
-  await page.getByRole("button", { name: "RU + KZ", exact: true }).click();
   await expect(
-    page.getByLabel("Место работы KZ, строка 1", { exact: true }),
+    person.locator('[data-field-path="items.0.workplaceKz"]'),
   ).toHaveValue(employer.nameKz);
-  await expect(
-    page.getByLabel("Место работы KZ, строка 2", { exact: true }),
-  ).toHaveValue(state.initial.items[1].workplaceKz);
+  await expect(state.current().items[1].workplaceKz).toBe(
+    state.initial.items[1].workplaceKz,
+  );
 });
 
 test("explicit replacement targets selected IDs only and changes both language names without changing the payer", async ({
@@ -334,15 +389,21 @@ test("a failed save retains the shared employer dialog and original recipient da
   });
   await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
   await expect(dialog).toHaveCount(0);
-  await expect(
-    page.getByLabel("Место работы RU, строка 1", { exact: true }),
-  ).toHaveValue("");
-  await expect(
-    page.getByLabel("Место работы RU, строка 2", { exact: true }),
-  ).toHaveValue(state.initial.items[1].workplaceRu);
-  await expect(
-    page.getByRole("combobox", { name: "Заказчик", exact: true }),
-  ).toHaveValue(payer.id);
+  for (const row of [1, 2]) {
+    const person = await recipientEmployerDetails(page, row);
+    await expect(
+      person.locator(`[data-field-path="items.${row - 1}.workplaceRu"]`),
+    ).toHaveValue(state.initial.items[row - 1].workplaceRu);
+    await person
+      .getByRole("button", { name: "Вернуться к списку", exact: true })
+      .click();
+    await expect(person).toHaveCount(0);
+    await expect(
+      page.getByLabel(`ФИО, строка ${row}`, { exact: true }),
+    ).toBeFocused();
+  }
+  expect(state.current()).toEqual(state.initial);
+  expect(state.current().customerId).toBe(payer.id);
 });
 
 test("shared employer remains within a 390px viewport while the recipient table scrolls independently", async ({
@@ -392,9 +453,11 @@ test("a newly created employer becomes available without reload and does not rep
   page,
 }) => {
   const state = await fixture(page);
+  const customerCountBefore = state.customers.length;
   await openEditor(page);
+  await openRecipientExtraTools(page);
   await page
-    .getByRole("button", { name: "Общая организация", exact: true })
+    .getByRole("button", { name: "Указать место работы", exact: true })
     .click();
   await sharedDialog(page)
     .getByRole("button", { name: "Новая организация", exact: true })
@@ -419,15 +482,15 @@ test("a newly created employer becomes available without reload and does not rep
     .getByRole("button", { name: "Применить для 1", exact: true })
     .click();
   await expect(sharedDialog(page)).toHaveCount(0);
-  const payerSelect = page.getByRole("combobox", {
-    name: "Заказчик",
-    exact: true,
-  });
-  await expect(payerSelect).toHaveValue(payer.id);
-  await expect(
-    payerSelect.locator('option[value="created-employer"]'),
-  ).toHaveText("ТОО Новый работодатель");
-  expect(state.customers).toHaveLength(3);
+  await expect.poll(() => state.accepted.length).toBe(1);
+  expect(state.current().customerId).toBe(payer.id);
+  expect(
+    state.customers.find((value) => value.id === "created-employer")?.nameRu,
+  ).toBe("ТОО Новый работодатель");
+  expect(state.customers).toHaveLength(customerCountBefore + 1);
+  expect(
+    state.customers.filter((value) => value.id === "created-employer"),
+  ).toHaveLength(1);
   expect(state.current().items[0]).toMatchObject({
     employerId: "created-employer",
     workplaceRu: "ТОО Новый работодатель",

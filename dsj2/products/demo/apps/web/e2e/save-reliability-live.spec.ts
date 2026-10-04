@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { newRecipient, type Draft } from "../lib/types";
+import { loginIsolated } from "./operator-full-fix-session";
 
 test.use({ trace: "off" });
 
@@ -21,14 +22,7 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   );
   await fs.mkdir(evidence, { recursive: true });
   await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await loginIsolated(page);
   await expect(
     page.getByRole("heading", { name: "Заявки на печать", exact: true }),
   ).toBeVisible();
@@ -58,9 +52,17 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   expect(created.status(), await created.text()).toBe(201);
   const original = (await created.json()) as Draft;
   await page.reload();
-  await page.getByLabel("Поиск по заявкам", { exact: true }).fill(title);
-  await page.getByRole("link", { name: title, exact: true }).click();
-  const input = page.getByLabel("ФИО RU, строка 1", { exact: true });
+  expect(original.title).toBe(original.items[0].fullNameRu);
+  await page
+    .getByLabel("Поиск по заявкам", { exact: true })
+    .fill(original.title);
+  const link = page
+    .getByRole("link", { name: original.title, exact: true })
+    .and(page.locator(`a[href="/requests/${original.id}"]`));
+  await expect(link).toHaveCount(1);
+  await expect(link).toHaveAccessibleName(original.title);
+  await link.click();
+  const input = page.getByLabel("ФИО, строка 1", { exact: true });
   await expect(input).toBeVisible();
   const endpoint = `**/api/print-requests/${original.id}`;
   const savedRevisions: number[] = [];
@@ -82,13 +84,28 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   await expect.poll(() => savedRevisions.length).toBe(1);
   const finalName = "Ахметова Әлия Сергеевна · сохранённый ввод";
   await input.fill(finalName);
-  await page.getByRole("button", { name: "RU + KZ", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
+    .click();
+  await page.getByRole("tab", { name: /^Личные данные/ }).click();
+  await page
+    .locator("details.person-fields-wide")
+    .filter({ has: page.getByText(/^Казахский вариант/) })
+    .locator(":scope > summary")
+    .click();
   const kzName = "Ахметова Әлия Серікқызы Ә Ғ Қ Ң Ө Ұ Ү Һ І";
-  await page.getByLabel("ФИО KZ, строка 1", { exact: true }).fill(kzName);
+  await page
+    .locator('.recipient-details [data-field-path="items.0.fullNameKz"]')
+    .fill(kzName);
+  await page
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
   await page.waitForTimeout(850);
   expect(calls).toBe(1);
   release();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await expect(page.locator(".save-indicator")).toContainText(
+    "Рабочая версия сохранена",
+  );
   expect(calls).toBe(2);
   await page.unroute(endpoint);
   const afterDelayed = (await (
@@ -103,12 +120,12 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   );
   const finalPosition = "Ведущий инженер синтетической группы";
   await page
-    .getByLabel("Должность RU, строка 1", { exact: true })
+    .getByLabel("Должность · RU, строка 1", { exact: true })
     .fill(finalPosition);
   await page.evaluate(() => history.back());
   await expect(page.locator(".save-indicator")).toContainText("Не сохранено");
   await expect(
-    page.getByLabel("Должность RU, строка 1", { exact: true }),
+    page.getByLabel("Должность · RU, строка 1", { exact: true }),
   ).toHaveValue(finalPosition);
   await page.screenshot({
     path: path.join(evidence, "offline-back-retains-input.png"),
@@ -127,15 +144,31 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   expect(afterBack.items[0].positionRu).toBe(finalPosition);
   expect(afterBack.status).toBe("DRAFT");
   expect(afterBack.documents).toHaveLength(0);
-  await page.getByLabel("Поиск по заявкам", { exact: true }).fill(title);
-  await page.getByRole("link", { name: title, exact: true }).click();
+  expect(afterBack.title).toBe(finalName);
+  await page
+    .getByLabel("Поиск по заявкам", { exact: true })
+    .fill(afterBack.title);
+  const restoredLink = page
+    .getByRole("link", { name: afterBack.title, exact: true })
+    .and(page.locator(`a[href="/requests/${original.id}"]`));
+  await expect(restoredLink).toHaveCount(1);
+  await expect(restoredLink).toHaveAccessibleName(afterBack.title);
+  await restoredLink.click();
   await expect(input).toHaveValue(finalName);
   await expect(
-    page.getByLabel("Должность RU, строка 1", { exact: true }),
+    page.getByLabel("Должность · RU, строка 1", { exact: true }),
   ).toHaveValue(finalPosition);
-  await page.getByRole("button", { name: "RU + KZ", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
+    .click();
+  await page.getByRole("tab", { name: /^Личные данные/ }).click();
+  await page
+    .locator("details.person-fields-wide")
+    .filter({ has: page.getByText(/^Казахский вариант/) })
+    .locator(":scope > summary")
+    .click();
   await expect(
-    page.getByLabel("ФИО KZ, строка 1", { exact: true }),
+    page.locator('.recipient-details [data-field-path="items.0.fullNameKz"]'),
   ).toHaveValue(kzName);
   await page.screenshot({
     path: path.join(evidence, "reopened-confirmed-save.png"),

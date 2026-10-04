@@ -5,6 +5,7 @@ export class AutosaveLane<T> {
   private inFlight: Promise<void> | undefined;
   private value: T;
   private revision: number;
+  private pauseReason: unknown;
   constructor(
     value: T,
     revision: number,
@@ -13,7 +14,7 @@ export class AutosaveLane<T> {
       revision: number,
     ) => Promise<{ revision: number }>,
     private readonly changed: (
-      state: "dirty" | "saving" | "saved" | "error",
+      state: "dirty" | "saving" | "saved" | "error" | "paused",
       revision: number,
       error?: unknown,
       capturedVersion?: number,
@@ -25,7 +26,14 @@ export class AutosaveLane<T> {
   edit(value: T) {
     this.value = value;
     this.localVersion += 1;
-    this.changed("dirty", this.revision);
+    this.changed(this.paused ? "paused" : "dirty", this.revision);
+  }
+  /** A conflict requires an explicit new base, never a retry after another edit. */
+  pause(reason: unknown) {
+    this.pauseReason = reason;
+  }
+  get paused() {
+    return this.pauseReason !== undefined;
   }
   get dirty() {
     return this.savedVersion !== this.localVersion;
@@ -42,6 +50,7 @@ export class AutosaveLane<T> {
     return this.persist(value, revision);
   }
   async flush(): Promise<number> {
+    if (this.paused) throw this.pauseReason;
     if (this.inFlight) {
       await this.inFlight;
       return this.flush();

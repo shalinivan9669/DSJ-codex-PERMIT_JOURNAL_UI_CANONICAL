@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
+import { loginRole } from "./operator-role-fixture";
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../docs/evidence/final-completion/invites/browser",
@@ -14,19 +15,7 @@ test("live invitation UI: administrator grants selected-person scope, new employ
 }) => {
   test.setTimeout(180000);
   await fs.mkdir(evidence, { recursive: true });
-  const auth = JSON.parse(
-    await fs.readFile(
-      path.resolve("../../.runtime/invites-ui-auth.json"),
-      "utf8",
-    ),
-  );
-  await page.goto("/login");
-  await page.getByLabel("Электронная почта", { exact: true }).fill(auth.email);
-  await page.getByLabel("Пароль", { exact: true }).fill(auth.password);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать" }),
-  ).toBeVisible();
+  await loginRole(page, "ADMIN");
   const csrf = (await context.cookies()).find(
     (c) => c.name === "demo_csrf",
   )!.value;
@@ -188,11 +177,9 @@ test("live invitation UI: administrator grants selected-person scope, new employ
     ).toBeVisible();
     expect(urls.every((url) => !url.includes(token))).toBe(true);
     expect(referrers.every((value) => !value.includes(token))).toBe(true);
-    const apiLogs = await Promise.all(
-      ["local-api.log", "local-api.error.log"].map((file) =>
-        fs.readFile(path.resolve("../../.runtime", file), "utf8"),
-      ),
-    );
+    const logPaths = [process.env.DEMO_E2E_API_LOG, process.env.DEMO_E2E_API_ERROR_LOG];
+    expect(logPaths.every(Boolean), "Current isolated API stdout/stderr files are required; historical logs cannot prove token handling").toBe(true);
+    const apiLogs = await Promise.all(logPaths.map((file) => fs.readFile(file!, "utf8")));
     expect(apiLogs.every((value) => !value.includes(token))).toBe(true);
     expect(
       (await employerContext.cookies()).find((c) => c.name === "demo_session")

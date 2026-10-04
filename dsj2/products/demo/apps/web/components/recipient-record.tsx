@@ -27,10 +27,16 @@ export function RecipientRecord({
   recipient,
   disabled,
   onChange,
+  rowIndex,
+  fieldErrors = {},
+  fieldHints = {},
 }: {
   recipient: Recipient;
   disabled: boolean;
   onChange: (recipient: Recipient) => void;
+  rowIndex?: number;
+  fieldErrors?: Record<string, string>;
+  fieldHints?: Record<string, string>;
 }) {
   const [history, setHistory] = useState<History | null>(null);
   const [employer, setEmployer] = useState<Customer | null>(null);
@@ -231,12 +237,44 @@ export function RecipientRecord({
               {label}
               <input
                 disabled={disabled}
+                data-field-path={
+                  rowIndex === undefined
+                    ? undefined
+                    : `items.${rowIndex}.${key}`
+                }
+                aria-invalid={
+                  rowIndex === undefined
+                    ? undefined
+                    : !!fieldErrors[`items.${rowIndex}.${key}`]
+                }
+                aria-describedby={
+                  rowIndex !== undefined &&
+                  (fieldErrors[`items.${rowIndex}.${key}`] ||
+                    fieldHints[`items.${rowIndex}.${key}`])
+                    ? `record-feedback-${recipient.id}-${key}`
+                    : undefined
+                }
                 value={String(recipient[key as keyof Recipient] || "")}
                 onChange={(e) => {
                   onChange({ ...recipient, [key]: e.target.value });
                   setConfirmed(false);
                 }}
               />
+              {rowIndex !== undefined &&
+                (fieldErrors[`items.${rowIndex}.${key}`] ||
+                  fieldHints[`items.${rowIndex}.${key}`]) && (
+                  <small
+                    id={`record-feedback-${recipient.id}-${key}`}
+                    className={
+                      fieldErrors[`items.${rowIndex}.${key}`]
+                        ? "field-error"
+                        : "field-hint"
+                    }
+                  >
+                    {fieldErrors[`items.${rowIndex}.${key}`] ||
+                      fieldHints[`items.${rowIndex}.${key}`]}
+                  </small>
+                )}
             </label>
           ))}
         </div>

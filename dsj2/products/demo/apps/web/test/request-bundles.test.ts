@@ -28,9 +28,18 @@ for (const category of ["WORKER", "ITR"] as const) {
         schemaVersion: 2,
         commonFields: { documentDate: "2026-09-25" },
         ...seed,
+        trainingDefaults: [
+          { direction: "BIOT", eventIds: seed.events.map((event) => event.id) },
+        ],
       });
       while (draft.items.length < count)
-        draft.items.push(recipientForRequest(draft));
+        draft.items.push(
+          recipientForRequest(draft, {
+            ...newRecipient(),
+            employeeCategory: category,
+            assignments: [],
+          }),
+        );
       draft = applyBusinessRules(draft);
       const first = resolveDraft(draft);
       assert.equal(
@@ -80,7 +89,7 @@ for (const category of ["WORKER", "ITR"] as const) {
 test("multiple events require explicit selection and never mix worker/ITR", () => {
   const worker = newRequestBundle("WORKER");
   const itr = newRequestBundle("ITR");
-  const person = newRecipient();
+  const person = { ...newRecipient(), assignments: [] };
   assert.equal(
     recipientForRequest({ events: [...worker.events, ...itr.events] }, person),
     person,
@@ -116,6 +125,7 @@ for (const direction of ["PTM", "PB", "PS"] as const) {
       [first.id],
       direction,
       "INDIVIDUAL",
+      true,
     );
     const event = draft.events![0];
     event.commonFields = {
@@ -167,18 +177,31 @@ for (const direction of ["PTM", "PB", "PS"] as const) {
   });
 }
 
-test("a new recipient inherits each unique direction and the unique BiOT category", () => {
+test("a new matching recipient inherits only explicitly common directions", () => {
   const seed = newRequestBundle("ITR");
   let draft = {
-    ...draftSchema.parse({ kind: "PERSON", ...seed }),
+    ...draftSchema.parse({
+      kind: "PERSON",
+      ...seed,
+      trainingDefaults: [
+        { direction: "BIOT", eventIds: seed.events.map((event) => event.id) },
+      ],
+    }),
     id: "request",
     revision: 0,
     status: "DRAFT",
   };
   for (const direction of ["PTM", "PB", "PS"] as const)
-    draft = assignTrainingBundle(draft, [draft.items[0].id], direction);
+    draft = assignTrainingBundle(
+      draft,
+      [draft.items[0].id],
+      direction,
+      undefined,
+      true,
+    );
   const added = recipientForRequest(draft, {
     ...newRecipient(),
+    employeeCategory: "ITR",
     assignments: [],
   });
   assert.equal(added.employeeCategory, "ITR");
@@ -195,7 +218,7 @@ test("a new recipient inherits each unique direction and the unique BiOT categor
   );
 });
 
-test("ambiguous courses are skipped per direction while other unique courses still inherit", () => {
+test("explicit common policy identifies its event even beside another same-direction course", () => {
   const worker = newRequestBundle("WORKER");
   const itr = newRequestBundle("ITR");
   let draft = {
@@ -205,7 +228,13 @@ test("ambiguous courses are skipped per direction while other unique courses sti
     status: "DRAFT",
   };
   for (const direction of ["PTM", "PB"] as const)
-    draft = assignTrainingBundle(draft, [draft.items[0].id], direction);
+    draft = assignTrainingBundle(
+      draft,
+      [draft.items[0].id],
+      direction,
+      undefined,
+      true,
+    );
   const ptm = draft.events!.find(
     (event) => event.protocolTemplateId === "ptm-protocol",
   )!;
@@ -219,12 +248,18 @@ test("ambiguous courses are skipped per direction while other unique courses sti
   });
   assert.deepEqual(
     added.assignments.map((assignment) => assignment.templateId),
-    ["pb-card"],
+    ["ptm-card", "pb-card"],
   );
   assert.equal(
-    added.assignments[0].eventId,
+    added.assignments[1].eventId,
     draft.events!.find((event) => event.protocolTemplateId === "pb-protocol")!
       .id,
+  );
+  assert.equal(added.assignments[0].eventId, ptm.id);
+  assert.ok(
+    !added.assignments.some(
+      (assignment) => assignment.eventId === "another-ptm",
+    ),
   );
 });
 
@@ -254,7 +289,13 @@ for (const category of ["WORKER", "ITR"] as const) {
   test(`directory ${category} retains its category and skips incompatible BiOT while inheriting other directions`, () => {
     const seed = newRequestBundle(category === "ITR" ? "WORKER" : "ITR");
     let draft = {
-      ...draftSchema.parse({ kind: "PERSON", ...seed }),
+      ...draftSchema.parse({
+        kind: "PERSON",
+        ...seed,
+        trainingDefaults: [
+          { direction: "BIOT", eventIds: seed.events.map((event) => event.id) },
+        ],
+      }),
       id: "request",
       revision: 0,
       status: "DRAFT",
@@ -272,7 +313,13 @@ for (const category of ["WORKER", "ITR"] as const) {
       "incompatible-only event does not enroll the person",
     );
     for (const direction of ["PTM", "PB", "PS"] as const)
-      draft = assignTrainingBundle(draft, [draft.items[0].id], direction);
+      draft = assignTrainingBundle(
+        draft,
+        [draft.items[0].id],
+        direction,
+        undefined,
+        true,
+      );
     const added = recipientForRequest(draft, person);
     assert.equal(added.employeeCategory, category);
     assert.equal(added.recipientId, "stored-person");
@@ -299,6 +346,40 @@ for (const category of ["WORKER", "ITR"] as const) {
     );
   });
 }
+
+test("adding missing training preserves an existing independent manual course rather than silently joining it to an automatic group", () => {
+  const manual = {
+    ...newAssignment("ptm-card"),
+    id: "independent-manual",
+    documentDate: "2026-08-15",
+    trainingStart: "2026-08-01",
+    fieldOrigins: { documentDate: "IMPORTED" as const, trainingStart: "MANUAL" as const },
+    result: "Синтетический известный факт",
+    outcome: { status: "PASSED" as const, source: "Синтетическая независимая ведомость", confirmedBy: "historical-actor", confirmedAt: "2026-08-15T12:00:00Z" },
+  };
+  const input = {
+    ...applyBusinessRules(draftSchema.parse({ kind: "PERSON", schemaVersion: 2, items: [
+      { ...newRecipient(), id: "existing", assignments: [manual] },
+      { ...newRecipient(), id: "missing", assignments: [] },
+      { ...newRecipient(), id: "excluded", assignments: [] },
+    ] })),
+    id: "request", revision: 0, status: "DRAFT",
+  };
+  const independent = structuredClone(input.items[0].assignments);
+  const reselected = assignTrainingBundle(input, ["existing"], "PTM");
+  assert.deepEqual(reselected.items[0].assignments, independent);
+  assert.deepEqual(reselected.events, []);
+  const added = assignTrainingBundle(reselected, ["existing", "missing"], "PTM");
+  assert.deepEqual(added.items[0].assignments, independent);
+  assert.equal(added.items[0].assignments[0].protocolMode, "INDIVIDUAL");
+  assert.equal(added.items[0].assignments[0].eventId, undefined);
+  assert.deepEqual(added.items[1].assignments.map((assignment) => assignment.templateId), ["ptm-card", "ptm-protocol"]);
+  assert.equal(added.events!.length, 1);
+  assert.equal(added.events![0].protocolMode, "INDIVIDUAL");
+  assert.ok(added.items[1].assignments.every((assignment) => assignment.eventId === added.events![0].id));
+  assert.deepEqual(added.items[2].assignments, []);
+  assert.deepEqual(assignTrainingBundle(added, ["existing", "missing"], "PTM"), added);
+});
 
 test("training selection is idempotent, separates BiOT categories and defaults two people to a group", () => {
   const worker = { ...newRecipient(), id: "worker", assignments: [] };
@@ -461,7 +542,13 @@ test("joining imported participant preserves imported dates and source; repeated
 test("automatic protocol mode follows participant count while an operator's explicit choice survives new rows", () => {
   const seed = newRequestBundle("WORKER");
   let draft = {
-    ...draftSchema.parse({ kind: "PERSON", ...seed }),
+    ...draftSchema.parse({
+      kind: "PERSON",
+      ...seed,
+      trainingDefaults: [
+        { direction: "BIOT", eventIds: seed.events.map((event) => event.id) },
+      ],
+    }),
     id: "request",
     revision: 0,
     status: "DRAFT",
@@ -481,7 +568,13 @@ test("automatic protocol mode follows participant count while an operator's expl
 test("changing one participant to ITR splits the BiOT event and retains another participant's worker kit", () => {
   const seed = newRequestBundle("WORKER");
   let draft = {
-    ...draftSchema.parse({ kind: "PERSON", ...seed }),
+    ...draftSchema.parse({
+      kind: "PERSON",
+      ...seed,
+      trainingDefaults: [
+        { direction: "BIOT", eventIds: seed.events.map((event) => event.id) },
+      ],
+    }),
     id: "request",
     revision: 0,
     status: "DRAFT",
@@ -505,4 +598,38 @@ test("changing one participant to ITR splits the BiOT event and retains another 
     draft.events?.every((event) => event.protocolMode === "INDIVIDUAL"),
   );
   assert.deepEqual(applyBusinessRules(draft), draft);
+});
+
+test("selected-only assignment and legacy events never become a hidden default for new people", () => {
+  const first = { ...newRecipient(), assignments: [] };
+  const base = {
+    ...draftSchema.parse({ kind: "PERSON", schemaVersion: 2, items: [first] }),
+    id: "request",
+    revision: 0,
+    status: "DRAFT",
+  };
+  const selected = assignTrainingBundle(base, [first.id], "PTM");
+  assert.equal(selected.trainingDefaults, undefined);
+  const next = { ...newRecipient(), assignments: [] };
+  assert.equal(recipientForRequest(selected, next), next);
+  assert.deepEqual(recipientForRequest(selected).assignments, []);
+  const explicit = assignTrainingBundle(
+    base,
+    [first.id],
+    "PTM",
+    undefined,
+    true,
+  );
+  const added = recipientForRequest(explicit, next);
+  assert.equal(added.assignments[0].eventId, explicit.events![0].id);
+  const joined = applyBusinessRules({
+    ...explicit,
+    items: [...explicit.items, added],
+  });
+  assert.equal(joined.events![0].protocolMode, "GROUP");
+  const keptSeparate = applyBusinessRules({
+    ...selected,
+    items: [...selected.items, next],
+  });
+  assert.equal(keptSeparate.events![0].protocolMode, "INDIVIDUAL");
 });

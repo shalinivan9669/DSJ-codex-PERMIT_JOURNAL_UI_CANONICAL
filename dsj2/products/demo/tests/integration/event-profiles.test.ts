@@ -3,16 +3,19 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { db, hash, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
-import { saveProfile } from "../../apps/api/src/settings";
+import { saveProfile, saveUser } from "../../apps/api/src/settings";
+import { saveSignatory } from "../../apps/api/src/signing";
 import {
   createRequest,
   finalize,
   correction,
+  requestDetail,
 } from "../../apps/api/src/requests";
 import { draftSchema } from "../../packages/contracts/src";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
 
-test("named commissions are pinned per distinct event across credentials/protocol, correction gets new events and old snapshots persist", async () => {
+test("named commissions are pinned per distinct event across credentials/protocol, correction gets new events and old snapshots persist", async (t) => {
   assertTestDatabase();
   const seeded = await provision({
     email: `profiles-${randomUUID()}@example.test`,
@@ -27,6 +30,8 @@ test("named commissions are pinned per distinct event across credentials/protoco
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  const approvals = await createApprovalFixture(c);
+  t.after(() => approvals.close());
   try {
     const source = await db.issuerProfileVersion.findFirstOrThrow({
       where: { tenantId: c.tenantId },
@@ -36,10 +41,32 @@ test("named commissions are pinned per distinct event across credentials/protoco
         saveProfile(c, {
           ...(source.profile as object),
           commissionTitle: title,
-          commission: [{ name: title, position: "Председатель" }],
+          commission: Array.from({ length: 3 }, (_, index) => ({
+            name: `${title} ${index}`,
+            position: index ? "Член комиссии" : "Председатель",
+          })),
         }),
       ),
     );
+    for (const version of versions) {
+      const profile = version.profile as {
+        commission: { name: string; position: string }[];
+      };
+      for (const [index, member] of profile.commission.entries()) {
+        const user = await saveUser(c, {
+          email: `event-signer-${randomUUID()}@example.test`,
+          password: "Synthetic-event-signer!",
+          displayName: member.name,
+          role: "OPERATOR",
+        });
+        await saveSignatory(c, {
+          userId: user.id,
+          displayName: member.name,
+          role: index ? "MEMBER" : "CHAIR",
+          iin: `00000000000${index + 2}`,
+        });
+      }
+    }
     const events = versions.map((p, i) => ({
       id: randomUUID(),
       title: "Одинаковое название " + i,
@@ -74,7 +101,13 @@ test("named commissions are pinned per distinct event across credentials/protoco
       })),
     });
     const request = await createRequest(c, draft);
-    await finalize(c, request.id, { expectedRevision: 0 }, randomUUID());
+    await approvals.approve(request.id);
+    await finalize(
+      c,
+      request.id,
+      { expectedRevision: request.revision },
+      randomUUID(),
+    );
     const docs = await db.issuedDocument.findMany({
       where: { requestId: request.id },
     });
@@ -119,17 +152,21 @@ test("named commissions are pinned per distinct event across credentials/protoco
         data: { title: "Нельзя менять выданное событие" },
       }),
     );
-    await assert.rejects(createRequest(c, draft));
+    const conflicting = await createRequest(c, draft);
+    await assert.rejects(
+      approvals.approve(conflicting.id),
+      /выдан|событи|обучени|состав/i,
+      "A pending proposal cannot reuse an already-issued event identity when approved",
+    );
     const corrected = await correction(c, request.id, {
       reason: "Синтетическая проверка отдельного исправления",
       expectedRevision: (
         await db.printRequest.findUniqueOrThrow({ where: { id: request.id } })
       ).revision,
     });
-    const copy = await db.printRequest.findUniqueOrThrow({
-      where: { id: corrected.id },
-    });
-    const copied = draftSchema.parse(copy.draft);
+    const copied = draftSchema.parse(
+      (await requestDetail(c, corrected.id)).draft,
+    );
     assert.equal(copied.events?.length, 2);
     assert.ok(
       copied.events!.every((e) => !events.some((old) => old.id === e.id)),

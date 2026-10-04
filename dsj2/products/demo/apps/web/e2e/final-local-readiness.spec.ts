@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { loginIsolated } from "./operator-full-fix-session";
+import { loginRole } from "./operator-role-fixture";
+test.use({ trace: "off" });
 
 test("delivered local account opens final build and authenticated readiness without business mutations", async ({
   page,
@@ -36,9 +39,7 @@ test("delivered local account opens final build and authenticated readiness with
   const response = await page.goto("/login");
   expect(response?.status()).toBe(200);
   expect(response?.headers()["x-powered-by"]).toBeUndefined();
-  await page.getByLabel("Электронная почта", { exact: true }).fill(email!);
-  await page.getByLabel("Пароль", { exact: true }).fill(password!);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await loginIsolated(page);
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -47,9 +48,17 @@ test("delivered local account opens final build and authenticated readiness with
   const app = await appResponse.json();
   expect(app.tenant.demoOnly).toBe(true);
   expect(app.user.email).toBe(email);
-  const readyResponse = await context.request.get("/api/ready");
+  const operatorReady = await context.request.get("/api/ready");
+  expect(operatorReady.status()).toBe(403);
+  expect((await operatorReady.json()).code).toBe("ROLE_DENIED");
+  const managementContext = await browser.newContext();
+  const managementPage = await managementContext.newPage();
+  const management = await loginRole(managementPage, "ADMIN");
+  expect(management.session.tenant.id).toBe(app.tenant.id);
+  const readyResponse = await managementPage.request.get("/api/ready");
   expect(readyResponse.status()).toBe(200);
   const ready = await readyResponse.json();
+  await managementContext.close();
   expect(ready.status).toBe("ready");
   expect(ready.storage).toBe("ok");
   await page.goto("/workbench");
@@ -101,6 +110,8 @@ test("delivered local account opens final build and authenticated readiness with
         pageErrors,
         serverErrors,
         readiness: ready,
+        readinessRole: management.session.user.role,
+        operatorReadinessDenied: true,
         viewports: [1366, 390],
       },
       null,

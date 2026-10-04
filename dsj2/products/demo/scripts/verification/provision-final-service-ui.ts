@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { provision } from "../setup";
 import { db } from "../../apps/api/src/core";
 import { assertTestDatabase } from "../../tests/integration/test-database";
+import { finalApprovalActors } from "./final-approval-actors";
 
 async function main() {
   assertTestDatabase();
@@ -16,6 +17,13 @@ async function main() {
     sample: true,
   });
   const directory = process.argv.includes("--directory");
+  const director = await finalApprovalActors({
+    ...user,
+    role: "DIRECTOR",
+    sessionId: "fixture",
+    csrfHash: "fixture",
+    correlationId: randomUUID(),
+  });
   let directoryData: Record<string, unknown> = {};
   if (directory) {
     const customers = Array.from({ length: 101 }, (_, index) => ({
@@ -52,6 +60,8 @@ async function main() {
       email,
       password,
       tenantId: user.tenantId,
+      userId: user.userId,
+      director,
       ...directoryData,
     }),
   );

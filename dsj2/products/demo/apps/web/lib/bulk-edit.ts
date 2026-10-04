@@ -1,5 +1,7 @@
 import { updateAssignment } from "./assignment-presets";
 import type { Assignment, Recipient } from "./types";
+import { isBlankText } from "./blank-text";
+import { validDate } from "@demo/contracts";
 
 export const bulkFields = [
   ["documentDate", "Дата документа", "date"],
@@ -28,8 +30,32 @@ export type BulkChange = {
   templateId: string;
   field: BulkField;
   before: string;
+  rawBefore?: string;
+  beforeSource?: "INDIVIDUAL" | "EFFECTIVE" | "LANGUAGE";
+  beforeSourceLabel?: string;
   after: string;
 };
+export function bulkPatchIssues(
+  patch: Partial<Record<BulkField, string>>,
+): Partial<Record<BulkField, string>> {
+  const issues: Partial<Record<BulkField, string>> = {};
+  for (const [field, value] of Object.entries(patch) as [BulkField, string][]) {
+    const limit =
+      field === "hours" ? 30 : field === "externalBasisNumber" ? 100 : 500;
+    if (value.length > limit)
+      issues[field] =
+        `Максимум ${limit} символов. Введённый текст сохранён; проверьте его без потери обязательных данных.`;
+    if (
+      ["documentDate", "trainingStart", "trainingEnd", "protocolDate"].includes(
+        field,
+      ) &&
+      !isBlankText(value) &&
+      !validDate(value)
+    )
+      issues[field] = "Укажите существующую календарную дату.";
+  }
+  return issues;
+}
 /** A preview is also the exact patch. Explicit field mask prevents unrelated results or directions being changed. */
 export function previewBulk(
   items: Recipient[],
@@ -38,6 +64,7 @@ export function previewBulk(
   patch: Partial<Record<BulkField, string>>,
   mode: BulkMode,
   resolvedItems?: Recipient[],
+  eventId?: string,
 ) {
   const selected = new Set(selectedIds);
   const changes: BulkChange[] = [];
@@ -50,10 +77,29 @@ export function previewBulk(
     if (mode !== "INHERITED") {
       for (const [field] of bulkRecipientFields) {
         if (!Object.hasOwn(patch, field)) continue;
-        const before = item[field] || "";
+        const rawBefore = item[field] || "";
+        const before =
+          resolvedItems?.find((row) => row.id === item.id)?.[field] ||
+          rawBefore;
         const after = patch[field] || "";
-        if ((mode === "EMPTY" && before) || before === after) continue;
+        if (
+          (mode === "EMPTY" && !isBlankText(rawBefore)) ||
+          rawBefore === after
+        )
+          continue;
         recipientPatch[field] = after;
+        const counterpart = field.endsWith("Ru")
+          ? field.replace(/Ru$/, "Kz")
+          : field.replace(/Kz$/, "Ru");
+        const otherLanguage = (item as unknown as Record<string, string>)[
+          counterpart
+        ];
+        const beforeSource =
+          isBlankText(rawBefore) && !isBlankText(before)
+            ? !isBlankText(otherLanguage)
+              ? "LANGUAGE"
+              : "EFFECTIVE"
+            : "INDIVIDUAL";
         changes.push({
           recipientId: item.id,
           name: item.fullNameRu || item.fullNameKz || "Без имени",
@@ -61,6 +107,14 @@ export function previewBulk(
           templateId: "",
           field,
           before,
+          rawBefore,
+          beforeSource,
+          beforeSourceLabel:
+            beforeSource === "EFFECTIVE"
+              ? "Действующее общее значение; индивидуальное поле пусто"
+              : beforeSource === "LANGUAGE"
+                ? "Использовано введённое написание другого языка; индивидуальное поле пусто"
+                : "Индивидуальное значение",
           after,
         });
       }
@@ -69,7 +123,11 @@ export function previewBulk(
       ...item,
       ...recipientPatch,
       assignments: item.assignments.map((assignment) => {
-        if (!direction || !assignment.templateId.startsWith(direction + "-")) {
+        if (
+          !direction ||
+          !assignment.templateId.startsWith(direction + "-") ||
+          (eventId !== undefined && (assignment.eventId || "") !== eventId)
+        ) {
           skipped += 1;
           return assignment;
         }
@@ -85,7 +143,8 @@ export function previewBulk(
           const inherited =
             origin === "INHERITED" || (!origin && !assignment[field]);
           if (mode === "INHERITED" && !inherited) continue;
-          if ((mode === "EMPTY" && before) || before === after) continue;
+          if ((mode === "EMPTY" && !isBlankText(before)) || before === after)
+            continue;
           allowed[field] = after;
           changes.push({
             recipientId: item.id,
@@ -95,6 +154,19 @@ export function previewBulk(
             field,
             before,
             after,
+            beforeSourceLabel:
+              (
+                {
+                  MANUAL: "Ручное значение",
+                  IMPORTED: "Импортированное значение",
+                  CLEARED: "Явно очищенное значение",
+                  AUTO: "Рассчитанное значение",
+                  INHERITED: "Общие действующие сведения (наследование)",
+                } as Record<string, string>
+              )[origin || ""] ||
+              (inherited
+                ? "Общие действующие сведения (наследование)"
+                : "Индивидуальное значение"),
           });
         }
         return Object.keys(allowed).length

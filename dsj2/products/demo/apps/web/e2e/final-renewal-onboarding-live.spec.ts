@@ -4,6 +4,9 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { approveFinalFixture } from "./final-approval-fixture";
+import { setLegacyKz } from "./operator-legacy-lifecycle-fixture";
+import { draftPayload, type Draft } from "../lib/types";
 
 const product = path.resolve(__dirname, "../../..");
 const evidence = path.resolve(
@@ -57,6 +60,8 @@ async function login(page: Page, key: string) {
   await page.getByLabel("Электронная почта", { exact: true }).fill(auth.email);
   await page.getByLabel("Пароль", { exact: true }).fill(auth.password);
   await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
+  await page.goto("/requests");
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -328,7 +333,7 @@ test("V06 exact five states: only two confirmed needs create clean linked repeat
   );
 });
 
-test("V10 fresh supported synthetic center obtains its first actual UI PDF with no company, finance, portal or dossier dependency", async ({
+test("V10 fresh supported synthetic center obtains its first actual UI PDF and all mandatory forms without company, finance, portal or dossier dependencies", async ({
   page,
   browser,
 }) => {
@@ -349,83 +354,130 @@ test("V10 fresh supported synthetic center obtains its first actual UI PDF with 
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
   await createRequestWithWorkerDocument(page, "PERSON");
   await page
-    .getByLabel("Название заявки", { exact: true })
-    .fill("V10 — первый синтетический документ нового центра");
+    .getByLabel("ФИО, строка 1", { exact: true })
+    .fill("Тестов Иван Первый");
+  await setLegacyKz(page, "Сынақ Әли Қасымұлы");
   await page
-    .getByLabel("ФИО RU, строка 1")
-    .fill("Демонстрационный Слушатель 001");
-  await page
-    .getByLabel("ФИО KZ, строка 1")
-    .fill("Демонстрациялық Тыңдаушы 001");
-  await page
-    .getByLabel("Форма документа", { exact: true })
-    .selectOption("biot-worker-card");
-  await page.getByLabel("Дата документа", { exact: true }).fill("2026-09-24");
-  await page
-    .getByLabel("Программа / тема обучения", { exact: true })
-    .fill("V10 синтетическая проверка одиночной услуги БиОТ");
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   await expect(
     page.getByText("Исправьте данные перед оформлением", { exact: true }),
   ).toBeVisible();
-  await expect(
-    page.getByLabel("Подтверждённый результат / оценка", { exact: true }),
-  ).toHaveValue("");
   expect(fixture("state", "V10").reservations).toBe(0);
-  await page
-    .getByLabel("Подтверждённый результат / оценка", { exact: true })
-    .fill("Сдано — явный синтетический результат");
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  const requestId = /requests\/([^/]+)/.exec(page.url())![1];
+  const current = (await get(page, `/print-requests/${requestId}`)) as Draft;
+  current.items[0].positionRu = "Синтетический инженер";
+  current.items[0].workplaceRu = "Тест Альфа";
+  expect(
+    current.items.every((row) =>
+      row.assignments.every((a) => a.outcome?.status === "UNKNOWN"),
+    ),
+  ).toBe(true);
+  for (const event of current.events || [])
+    event.commonFields = {
+      ...event.commonFields,
+      trainingSubject: "Тестовая программа БиОТ",
+      documentDate: "2026-10-03",
+      protocolDate: "2026-10-02",
+      trainingStart: "2026-10-01",
+      trainingEnd: "2026-10-02",
+    };
+  const session = await get(page, "/auth/session");
+  const headers = {
+    origin: process.env.DEMO_ORIGIN!,
+    "x-csrf-token": session.csrfToken,
+  };
+  const patch = await page.request.patch(`/api/print-requests/${requestId}`, {
+    headers,
+    data: { expectedRevision: current.revision, draft: draftPayload(current) },
+  });
+  expect(patch.ok(), await patch.text()).toBe(true);
   await page.reload();
-  await expect(page.getByLabel("ФИО KZ, строка 1")).toHaveValue(
-    "Демонстрациялық Тыңдаушы 001",
-  );
-  await page.getByRole("button", { name: "Проверить", exact: true }).click();
+  const disclosure = page.locator("#request-training");
+  await disclosure.locator(":scope > summary").click();
+  const training = page.locator(".training-primary-context");
+  await training
+    .getByLabel("Известный результат", { exact: true })
+    .selectOption("PASSED");
+  await training
+    .getByLabel("Источник подтверждения", { exact: true })
+    .fill("СИНТЕТИЧЕСКАЯ известная ведомость V10; не реальное обучение");
+  await training
+    .getByRole("button", {
+      name: "Проверить применение результатов",
+      exact: true,
+    })
+    .click();
+  await training
+    .getByRole("button", { name: "Подтвердить результаты", exact: true })
+    .click();
+  await expect
+    .poll(async () =>
+      (await get(page, `/print-requests/${requestId}`)).items.every(
+        (row: {
+          assignments: Array<{
+            outcome: { status: string; confirmedBy: string };
+          }>;
+        }) =>
+          row.assignments.every(
+            (a) =>
+              a.outcome.status === "PASSED" &&
+              a.outcome.confirmedBy === session.user.id,
+          ),
+      ),
+    )
+    .toBe(true);
+  await page.reload();
+  expect(
+    (await get(page, `/print-requests/${requestId}`)).items[0].fullNameKz,
+  ).toBe("Сынақ Әли Қасымұлы");
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   await expect(
     page.getByText("Данные прошли проверку", { exact: true }),
   ).toBeVisible();
-  await page.screenshot({
-    path: path.join(evidence, "v10-first-document-ready.png"),
-    fullPage: true,
-  });
-  await page
-    .getByRole("button", { name: "Оформить комплект", exact: true })
-    .click();
+  await approveFinalFixture(browser, page, auth, requestId);
+  await page.reload();
   const pending = page.waitForResponse(
     (r) => r.url().endsWith("/finalize") && r.request().method() === "POST",
   );
-  await page.getByRole("button", { name: "Оформить", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Сформировать документы", exact: true })
+    .click();
   const response = await pending;
   expect(response.ok(), await response.text()).toBe(true);
-  const requestId = /requests\/([^/]+)/.exec(page.url())![1];
   const render = fixture("drain", "V10", requestId);
   await page.reload();
-  await expect(page.locator(".files-panel")).toContainText("Готово 4 из 4", {
+  await expect(page.locator(".files-panel")).toContainText("Готово 6 из 6", {
     timeout: 60000,
   });
   const issued = await get(page, `/print-requests/${requestId}`);
   expect(issued.customerId).toBeNull();
   expect(issued.items).toHaveLength(1);
-  expect(issued.documents).toHaveLength(1);
+  expect(issued.documents).toHaveLength(2);
   expect(issued.issuances).toHaveLength(1);
   const pdf = issued.artifacts.find(
-    (a: { format: string }) => a.format === "PDF",
+    (a: { format: string; provenance: string }) =>
+      a.format === "PDF" && a.provenance === "ORIGINAL",
   );
-  expect(pdf).toBeTruthy();
-  const pendingDownload = page.waitForEvent("download");
+  const download = page.waitForEvent("download");
   await page
     .locator(`.artifact-list a[href="/api/artifacts/${pdf.id}"]`)
     .click();
-  await (
-    await pendingDownload
-  ).saveAs(path.join(evidence, "v10-first-original.pdf"));
+  await (await download).saveAs(path.join(evidence, "v10-first-original.pdf"));
   const bytes = await fs.readFile(
     path.join(evidence, "v10-first-original.pdf"),
   );
   expect(bytes.subarray(0, 5).toString()).toBe("%PDF-");
   const sha256 = createHash("sha256").update(bytes).digest("hex");
   expect(sha256).toBe(pdf.sha256);
+  const guarded = await page.request.post(
+    `/api/print-requests/${requestId}/export`,
+    { headers, data: { format: "ZIP" } },
+  );
+  expect(guarded.status()).toBe(409);
+  expect((await guarded.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
   const final = fixture("state", "V10");
   for (const name of [
     "customers",
@@ -437,7 +489,7 @@ test("V10 fresh supported synthetic center obtains its first actual UI PDF with 
     expect(final[name]).toBe(0);
   expect(final.requests).toBe(1);
   expect(final.issuances).toBe(1);
-  expect(final.reservations).toBe(1);
+  expect(final.reservations).toBe(2);
   await page.screenshot({
     path: path.join(evidence, "v10-first-document-issued.png"),
     fullPage: true,
@@ -452,8 +504,6 @@ test("V10 fresh supported synthetic center obtains its first actual UI PDF with 
         tenantId: auth.tenantId,
         browser: browser.version(),
         setupPath: auth.setupPath,
-        setupScope:
-          "Fresh disposable demoOnly center with explicitly synthetic approved profile and supported installed templates. No real customer's profile was replaced or guessed.",
         baseline,
         final,
         requestId,
@@ -461,13 +511,14 @@ test("V10 fresh supported synthetic center obtains its first actual UI PDF with 
         file: "v10-first-original.pdf",
         sha256,
         form: "biot-worker-card",
+        mandatoryProtocol: true,
+        realDirectorDecision: true,
+        officialUnsignedDelivery: "blocked409",
         automatedWallMs: Date.now() - started,
         render,
         activeHumanMs: null,
-        customerWaitingMs: null,
-        humanBaselineMs: null,
         limitation:
-          "Supported provisioning is a recorded setup command; first draft, validation failure/correction, reload, form choice, issuance and original PDF download are real UI. This proves isolated synthetic onboarding, not production configuration/legal approval or a paid pilot.",
+          "First actual saved PDF and mandatory companion generated in a disposable supported center after explicit synthetic outcome and real director UI decision. NCA signature and production/legal approval are not supplied.",
       },
       null,
       2,

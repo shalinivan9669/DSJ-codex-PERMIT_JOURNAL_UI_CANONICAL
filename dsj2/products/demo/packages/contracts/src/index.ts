@@ -4,6 +4,8 @@ import { dateOriginsSchema, trainingDateRuleSchema } from "./date-calculation";
 import { customerSchema, organizationFormSchema } from "./organization";
 import { documentPlan } from "./resolution";
 import { validateBusinessRules } from "./business-rules";
+import { isBlankText } from "./blank-text";
+export { isBlankText } from "./blank-text";
 export { z } from "zod";
 export * from "./biot";
 export * from "./date-calculation";
@@ -105,6 +107,10 @@ export const trainingEventSchema = z
     revision: z.number().int().nonnegative().default(0),
     protocolMode: z.enum(["GROUP", "INDIVIDUAL"]).optional(),
     protocolModeSource: z.enum(["AUTO", "MANUAL"]).optional(),
+    rootEventId: z.string().min(1).max(80).optional(),
+    derivedCategory: z.enum(["WORKER", "ITR"]).optional(),
+    lineageContext: z.string().max(16000).optional(),
+    lineageOwnContext: z.string().max(16000).optional(),
     commonFields: commonFieldsSchema,
     profileVersionId: z.string().max(80).optional(),
     serviceRuleVersionId: z.string().max(80).optional(),
@@ -248,6 +254,17 @@ export const draftSchema = z
     presetFields: commonFieldsSchema.optional(),
     commonFields: commonFieldsSchema.optional(),
     events: z.array(trainingEventSchema).max(30).optional(),
+    trainingDefaults: z
+      .array(
+        z
+          .object({
+            direction: z.enum(["BIOT", "PTM", "PB", "PS"]),
+            eventIds: z.array(z.string().min(1).max(80)).max(30),
+          })
+          .strict(),
+      )
+      .max(4)
+      .optional(),
     items: z.array(itemSchema).max(LIMITS.rows).default([]),
   })
   .strict()
@@ -397,8 +414,45 @@ export type ValidationIssue = {
   code: string;
   path: string;
   rowId?: string;
+  recipientId?: string;
+  eventId?: string;
+  assignmentId?: string;
+  field?: string;
   message: string;
 };
+/** Attach identities before a subset is reordered or merged into another view. */
+export function stableValidationIssue(
+  draft: Draft,
+  issue: ValidationIssue,
+): ValidationIssue {
+  const parts = /^items\.(\d+)(?:\.assignments\.(\d+))?(?:\.(.*))?$/.exec(
+    issue.path,
+  );
+  const item =
+    draft.items.find(
+      (entry) => entry.id === (issue.recipientId || issue.rowId),
+    ) || (parts ? draft.items[Number(parts[1])] : undefined);
+  const assignment =
+    item?.assignments.find((entry) => entry.id === issue.assignmentId) ||
+    (parts?.[2] !== undefined
+      ? item?.assignments[Number(parts[2])]
+      : undefined);
+  const row = item ? draft.items.indexOf(item) : -1;
+  const column = item && assignment ? item.assignments.indexOf(assignment) : -1;
+  const path =
+    parts && row >= 0
+      ? `items.${row}${parts[2] !== undefined && column >= 0 ? `.assignments.${column}` : ""}${parts[3] ? `.${parts[3]}` : ""}`
+      : issue.path;
+  return {
+    ...issue,
+    ...(item ? { rowId: item.id, recipientId: item.id } : {}),
+    path,
+    ...(assignment
+      ? { assignmentId: assignment.id, eventId: assignment.eventId }
+      : {}),
+    field: issue.field || parts?.[3] || issue.path.split(".").at(-1),
+  };
+}
 export function validateDraft(
   draft: Draft,
   profile: IssuerProfile | null,
@@ -460,7 +514,7 @@ export function validateDraft(
         "Для получателя выберите один индивидуальный протокол по каждому направлению",
         item.id,
       );
-    if (!item.fullNameRu.trim())
+    if (isBlankText(item.fullNameRu))
       add(
         "NAME_REQUIRED",
         `items.${n}.fullNameRu`,
@@ -754,7 +808,7 @@ export function validateDraft(
       "items",
       `В одном выпуске допускается до ${LIMITS.documents} документов, включая общие протоколы. Сейчас ${count}. Разделите заявку или уменьшите комплект документов`,
     );
-  return issues;
+  return issues.map((issue) => stableValidationIssue(draft, issue));
 }
 export const TEMPLATE_LABELS: Record<(typeof templateIds)[number], string> = {
   "biot-worker-card": "БиОТ — удостоверение рабочего",

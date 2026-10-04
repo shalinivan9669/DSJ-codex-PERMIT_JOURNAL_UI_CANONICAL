@@ -3,10 +3,33 @@ import {
   eventProtocolAssignment,
   resolveDraft,
   validateDraft,
+  draftSchema,
   type Draft,
   type IssuerProfile,
   type ValidationIssue,
 } from "@demo/contracts";
+
+/** Each result is one person in one training, including historical omitted UNKNOWN metadata. */
+export function trainingOutcomeSummary(draft: Pick<Draft, "items">) {
+  return draft.items.reduce(
+    (summary, item) => {
+      const trainings = new Set(
+        item.assignments
+          .filter(
+            (assignment) =>
+              (assignment.protocolMode === "GROUP" || !!assignment.outcome) &&
+              (!assignment.outcome || assignment.outcome.status === "UNKNOWN"),
+          )
+          .map((assignment) => assignment.eventId || assignment.id),
+      ).size;
+      return {
+        trainings: summary.trainings + trainings,
+        recipients: summary.recipients + (trainings > 0 ? 1 : 0),
+      };
+    },
+    { trainings: 0, recipients: 0 },
+  );
+}
 
 /**
  * Immediate, side-effect-free hints for the current input. A supplied resolution
@@ -22,6 +45,39 @@ export function draftReadiness(
 ) {
   const current = resolved || resolveDraft(draft, profile?.commonFields);
   const contractIssues = validateDraft(current.draft, profile);
+  const format = draftSchema.safeParse(draft);
+  if (!format.success)
+    for (const issue of format.error.issues) {
+      const path = issue.path.join(".");
+      if (
+        issue.code !== "too_big" ||
+        !/^(items|events|commonFields|title)(\.|$)/.test(path)
+      )
+        continue;
+      const row = /^items\.(\d+)(?:\.assignments\.(\d+))?/.exec(path);
+      const recipient = row ? draft.items[Number(row[1])] : undefined;
+      const assignment =
+        row?.[2] !== undefined
+          ? recipient?.assignments[Number(row[2])]
+          : undefined;
+      const value = issue.path.reduce<unknown>(
+        (parent, key) =>
+          parent && typeof parent === "object"
+            ? (parent as Record<string | number, unknown>)[
+                key as string | number
+              ]
+            : undefined,
+        draft,
+      );
+      contractIssues.push({
+        code: "FIELD_LENGTH",
+        path,
+        rowId: recipient?.id,
+        assignmentId: assignment?.id,
+        eventId: assignment?.eventId,
+        message: `Максимум ${issue.maximum} символов. Сейчас ${String(value || "").length}. Текст остаётся в поле для исправления.`,
+      });
+    }
   // Group protocols are virtual assignments. Match the server's contract check
   // so fields required only by their print form are visible before preparation.
   const rowIndex = new Map(

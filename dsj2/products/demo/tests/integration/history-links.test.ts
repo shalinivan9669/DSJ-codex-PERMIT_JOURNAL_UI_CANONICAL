@@ -10,8 +10,9 @@ import {
   requestDetail,
 } from "../../apps/api/src/requests";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
 
-test("history readback links corrected and original requests within tenant, preserves snapshot and refuses foreign link targets", async () => {
+test("history readback links corrected and original requests within tenant, preserves snapshot and refuses foreign link targets", async (t) => {
   assertTestDatabase();
   try {
     async function center() {
@@ -21,15 +22,19 @@ test("history readback links corrected and original requests within tenant, pres
         name: "History links test",
         sample: true,
       });
-      return {
+      const context = {
         ...user,
         role: "ADMIN",
         sessionId: "test",
         csrfHash: "test",
         correlationId: randomUUID(),
       } as Context;
+      const approvals = await createApprovalFixture(context);
+      t.after(() => approvals.close());
+      return { context, approvals };
     }
-    async function original(c: Context) {
+    async function original(centerFixture: Awaited<ReturnType<typeof center>>) {
+      const c = centerFixture.context;
       const request = await createRequest(c, {
         kind: "PERSON",
         demoMode: true,
@@ -60,6 +65,7 @@ test("history readback links corrected and original requests within tenant, pres
           },
         ],
       });
+      await centerFixture.approvals.approve(request.id);
       await finalize(
         c,
         request.id,
@@ -68,13 +74,15 @@ test("history readback links corrected and original requests within tenant, pres
       );
       return requestDetail(c, request.id);
     }
-    const own = await center();
-    const source = await original(own);
+    const ownCenter = await center();
+    const own = ownCenter.context;
+    const source = await original(ownCenter);
     const cause = "Синтетическое согласованное исправление";
     const changed = await correction(own, source.id, {
       expectedRevision: source.revision,
       reason: cause,
     });
+    await ownCenter.approvals.approve(changed.id);
     await finalize(
       own,
       changed.id,
@@ -86,14 +94,15 @@ test("history readback links corrected and original requests within tenant, pres
     assert.equal(current.issuances[0].correctsRequestId, source.id);
     assert.equal(current.issuances[0].correctionReason, cause);
     assert.equal(
-      old.issuanceEvents.find((event) => event.kind === "REPLACED")
-        ?.relatedRequestId,
-      changed.id,
+      old.issuanceEvents.filter((event) => event.kind === "REPLACED").length,
+      0,
+      "A generated correction does not replace the original before mandatory signatures",
     );
     assert.deepEqual(old.issuances[0].snapshot, source.issuances[0].snapshot);
     assert.deepEqual(old.documents, source.documents);
-    const foreign = await center();
-    const foreignOriginal = await original(foreign);
+    const foreignCenter = await center();
+    const foreign = foreignCenter.context;
+    const foreignOriginal = await original(foreignCenter);
     await assert.rejects(requestDetail(foreign, source.id), /не найдена/);
     await assert.rejects(
       db.issuance.update({

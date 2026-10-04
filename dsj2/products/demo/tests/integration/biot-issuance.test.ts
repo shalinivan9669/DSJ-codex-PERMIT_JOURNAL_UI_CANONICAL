@@ -17,8 +17,10 @@ import {
   requestDetail,
   preview,
   namespace,
+  validateRequest,
 } from "../../apps/api/src/requests";
 import { saveProfile } from "../../apps/api/src/settings";
+import { createApprovalFixture } from "./live-approval-fixture";
 function context(tenantId: string, userId: string): Context {
   return {
     tenantId,
@@ -41,6 +43,7 @@ function fixture(n = 1): Draft {
         fullNameKz: `Ә Ғ Қ Ң Ө Ұ Ү Һ І ${i}`,
         positionRu: "Инженер",
         positionKz: "Маман",
+        workplaceRu: "Синтетическое предприятие",
         assignments: [
           assignmentSchema.parse({
             id: randomUUID(),
@@ -79,6 +82,20 @@ test("BIOT category and linked credential issuance in isolated PostgreSQL", asyn
   });
   const ca = context(a.tenantId, a.userId),
     cb = context(b.tenantId, b.userId);
+  const profile = await db.issuerProfileVersion.findFirstOrThrow({
+    where: { tenantId: ca.tenantId },
+    orderBy: { version: "desc" },
+  });
+  await saveProfile(ca, {
+    ...(profile.profile as object),
+    headName: "Синтетический Руководитель",
+    commission: Array.from({ length: 3 }, (_, i) => ({
+      name: `Синтетический Член ${i}`,
+      position: "Синтетическая должность",
+    })),
+  });
+  const approvals = await createApprovalFixture(ca);
+  t.after(() => approvals.close());
   await t.test(
     "explicit BIOT category rejects insufficient practical hours before allocation and persists corrected snapshot fields",
     async () => {
@@ -90,18 +107,27 @@ test("BIOT category and linked credential issuance in isolated PostgreSQL", asyn
         validUntil: "2027-09-22",
       });
       const request = await createRequest(ca, draft);
+      assert.ok(
+        (
+          await validateRequest(ca, request.id, {
+            expectedRevision: request.revision,
+          })
+        ).issues.some((issue) => issue.code === "BIOT_PRODUCTION_HOURS_MIN"),
+      );
+      await approvals.approve(request.id, "BIOT_PRODUCTION_HOURS_MIN");
       const before = await db.numberReservation.count({
         where: { tenantId: ca.tenantId },
       });
       await assert.rejects(
-        finalize(ca, request.id, { expectedRevision: 0 }, randomUUID()),
+        finalize(
+          ca,
+          request.id,
+          { expectedRevision: request.revision },
+          randomUUID(),
+        ),
         (error: any) =>
-          error.getStatus() === 422 &&
-          error
-            .getResponse()
-            .details.some(
-              (issue: any) => issue.code === "BIOT_PRODUCTION_HOURS_MIN",
-            ),
+          error.getStatus() === 409 &&
+          error.getResponse().code === "DIRECTOR_APPROVAL_REQUIRED",
       );
       assert.equal(
         await db.issuance.count({ where: { requestId: request.id } }),
@@ -112,8 +138,17 @@ test("BIOT category and linked credential issuance in isolated PostgreSQL", asyn
         before,
       );
       draft.items[0].assignments[0].productionHours = "16";
-      await patchRequest(ca, request.id, { expectedRevision: 0, draft });
-      await finalize(ca, request.id, { expectedRevision: 1 }, randomUUID());
+      const saved = await patchRequest(ca, request.id, {
+        expectedRevision: request.revision,
+        draft,
+      });
+      await approvals.approve(request.id);
+      await finalize(
+        ca,
+        request.id,
+        { expectedRevision: saved.revision },
+        randomUUID(),
+      );
       const snapshots = await db.renderInputSnapshot.findMany({
         where: { requestId: request.id, templateVersionId: { not: null } },
       });
@@ -123,7 +158,13 @@ test("BIOT category and linked credential issuance in isolated PostgreSQL", asyn
         assert.equal(assignment.biotCategory, "WORKER");
         assert.equal(assignment.hours, "10");
         assert.equal(assignment.productionHours, "16");
-        assert.equal(assignment.validUntil, "2027-09-22");
+        assert.equal(
+          assignment.validUntil,
+          assignment.templateId.endsWith("-protocol")
+            ? "2027-09-21"
+            : "2027-09-22",
+          "LIVE expiry derives from the actual date of each issued form",
+        );
       }
     },
   );
@@ -192,15 +233,21 @@ test("BIOT category and linked credential issuance in isolated PostgreSQL", asyn
       );
       const request = await createRequest(ca, draft);
       await assert.rejects(
-        preview(cb, request.id, { expectedRevision: 0 }),
+        preview(cb, request.id, { expectedRevision: request.revision }),
         (error: any) => error.getStatus() === 404,
       );
-      await preview(ca, request.id, { expectedRevision: 0 });
+      await preview(ca, request.id, { expectedRevision: request.revision });
       assert.equal(
         await db.issuance.count({ where: { requestId: request.id } }),
         0,
       );
-      await finalize(ca, request.id, { expectedRevision: 0 }, randomUUID());
+      await approvals.approve(request.id);
+      await finalize(
+        ca,
+        request.id,
+        { expectedRevision: request.revision },
+        randomUUID(),
+      );
       assert.equal(namespace("biot-itr-certificate"), "BIOT:CERTIFICATE");
       const documents = await db.issuedDocument.findMany({
         where: { requestId: request.id },

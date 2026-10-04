@@ -30,6 +30,8 @@ import {
   assignmentSchema,
 } from "../../packages/contracts/src";
 import { claimJob, executeJob } from "../../apps/render-worker/src/queue";
+import { createApprovalFixture } from "./live-approval-fixture";
+import { exportRegistry } from "../../packages/printing/src";
 
 test("real image/import/export/original/reconstruction integration", async (t) => {
   assert.match(process.env.DATABASE_URL || "", /demo_test|demo_integration/);
@@ -54,6 +56,7 @@ test("real image/import/export/original/reconstruction integration", async (t) =
   let photoId = "";
   let requestId = "";
   let revision = 0;
+  const approvals = await createApprovalFixture(c);
   try {
     await t.test(
       "PNG decoding, rotated crop, corrupt bytes, upload budget, private scope",
@@ -153,7 +156,7 @@ test("real image/import/export/original/reconstruction integration", async (t) =
           }),
         );
         const result = await applyImport(c, draft.id, {
-          expectedRevision: 0,
+          expectedRevision: draft.revision,
           importId: a.importId,
           rows,
         });
@@ -227,6 +230,10 @@ test("real image/import/export/original/reconstruction integration", async (t) =
           productionHours: "16",
           validUntil: "2027-09-22",
           biotCheckType: "PERIODIC",
+          outcome: {
+            status: "PASSED",
+            source: "Явный синтетический результат интеграционной проверки",
+          },
         });
         const draft = draftSchema.parse({
           kind: "PERSON",
@@ -248,10 +255,14 @@ test("real image/import/export/original/reconstruction integration", async (t) =
         });
         const saved = await createRequest(c, draft);
         requestId = saved.id;
-        await patchRequest(c, saved.id, { expectedRevision: 0, draft });
-        revision = 1;
+        const patched = await patchRequest(c, saved.id, {
+          expectedRevision: saved.revision,
+          draft,
+        });
+        revision = patched.revision;
+        await approvals.approve(saved.id);
         const key = randomUUID();
-        await finalize(c, saved.id, { expectedRevision: 1 }, key);
+        await finalize(c, saved.id, { expectedRevision: revision }, key);
         const card = await db.issuedDocument.findFirstOrThrow({
           where: { requestId: saved.id, templateId: "biot-worker-card" },
         });
@@ -389,19 +400,41 @@ test("real image/import/export/original/reconstruction integration", async (t) =
         const response = await finalize(
           c,
           saved.id,
-          { expectedRevision: 1 },
+          { expectedRevision: revision },
           randomUUID(),
         );
         assert.deepEqual(
           response,
-          await finalize(c, saved.id, { expectedRevision: 1 }, key),
+          await finalize(c, saved.id, { expectedRevision: revision }, key),
         );
       },
     );
     await t.test(
-      "full XLSX retains literal formula text and all documents independent of pagination",
+      "unsigned official export is blocked; frozen-document XLSX serializer keeps literal formula text independent of pagination",
       async () => {
-        const output = await registryExport(c, { format: "XLSX" }, requestId);
+        await assert.rejects(
+          registryExport(c, { format: "XLSX" }, requestId),
+          /обязательных подписей/,
+        );
+        const issuance = await db.issuance.findFirstOrThrow({
+          where: { requestId },
+        });
+        const frozen = draftSchema.parse(
+          (issuance.snapshot as { draft: unknown }).draft,
+        );
+        const documents = await db.issuedDocument.findMany({
+          where: { issuanceId: issuance.id },
+        });
+        // Verify serialization from immutable, real saved inputs. This internal renderer
+        // call neither releases a public bundle nor fabricates a signature or ISSUED state.
+        const output = await exportRegistry(
+          documents.map((document) => ({
+            fullNameRu: frozen.items[0].fullNameRu,
+            fullNameKz: frozen.items[0].fullNameKz,
+            registrationNumber: document.number,
+            templateId: document.templateId,
+          })),
+        );
         assert.equal(output.buffer.subarray(0, 2).toString(), "PK");
         const parsed = await importPreview(c, {
           buffer: output.buffer,
@@ -445,13 +478,13 @@ test("real image/import/export/original/reconstruction integration", async (t) =
           size: output.buffer.length,
           originalname: "all-history.xlsx",
         } as Express.Multer.File);
-        // Full history includes the earlier 100-row partial draft as well as
-        // the two finalized documents; empty new drafts have no export rows.
-        assert.equal(parsed.total, 102);
+        // The prepared two-document request still awaits real signatures and
+        // is omitted by the public registry; the earlier 100-row draft remains.
+        assert.equal(parsed.total, 100);
         assert.ok(parsed.columns.includes("status"));
         assert.equal(
           parsed.rows.filter((row) => row.values.includes("FINALIZED")).length,
-          2,
+          0,
         );
         const filteredHistory = await listRequests(c, { history: "true" });
         assert.equal(filteredHistory.total, 1);
@@ -466,10 +499,11 @@ test("real image/import/export/original/reconstruction integration", async (t) =
           size: historyExport.buffer.length,
           originalname: "history.xlsx",
         } as Express.Multer.File);
-        assert.equal(parsedHistory.total, 2);
+        assert.equal(parsedHistory.total, 0);
       },
     );
   } finally {
+    await approvals.close();
     await db.$disconnect();
   }
 });

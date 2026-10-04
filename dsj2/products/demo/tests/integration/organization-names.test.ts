@@ -10,9 +10,11 @@ import {
   createRequest,
   finalize,
   preview,
+  patchRequest,
   requestDetail,
   resolvedRequest,
 } from "../../apps/api/src/requests";
+import { createApprovalFixture } from "./live-approval-fixture";
 
 type RenderInput = {
   templateId?: string;
@@ -32,7 +34,7 @@ function status(expected: number) {
     (error as { getStatus(): number }).getStatus() === expected;
 }
 
-test("structured organization names reach resolved data, group/individual/registry snapshots and preserve previous issuances", async () => {
+test("structured organization names reach resolved data, group/individual/registry snapshots and preserve previous issuances", async (t) => {
   assertTestDatabase();
   const seeded = await provision({
     email: `organization-${randomUUID()}@example.test`,
@@ -47,6 +49,8 @@ test("structured organization names reach resolved data, group/individual/regist
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  const approvals = await createApprovalFixture(c);
+  t.after(() => approvals.close());
   const foreign = await db.tenant.create({
     data: { name: "Другой центр организаций", demoOnly: true },
   });
@@ -158,7 +162,7 @@ test("structured organization names reach resolved data, group/individual/regist
   assert.equal(resolved.draft.items[2].employerBin, "000000000033");
   assert.equal((await requestDetail(c, request.id)).items[1].workplaceRu, "");
 
-  await preview(c, request.id, { expectedRevision: 0 });
+  await preview(c, request.id, { expectedRevision: request.revision });
   const beforePreview = await db.renderInputSnapshot.findMany({
     where: { requestId: request.id, issuanceId: null },
   });
@@ -168,14 +172,27 @@ test("structured organization names reach resolved data, group/individual/regist
     { legalForm: "IP", ownNameRu: "Әділ Өмір", bin: employer.bin },
     employer.id,
   );
-  await preview(c, request.id, { expectedRevision: 0 });
+  await preview(c, request.id, { expectedRevision: request.revision });
+  const frozenPreview = await db.renderInputSnapshot.findMany({
+    where: { requestId: request.id, issuanceId: null },
+  });
+  assert.deepEqual(
+    frozenPreview.sort((a, b) => a.id.localeCompare(b.id)),
+    beforePreview.sort((a, b) => a.id.localeCompare(b.id)),
+    "Changing the organization card does not silently refresh reference values in an existing proposal",
+  );
+  const refreshed = await patchRequest(c, request.id, {
+    expectedRevision: request.revision,
+    draft,
+  });
+  await preview(c, request.id, { expectedRevision: refreshed.revision });
   const afterPreview = await db.renderInputSnapshot.findMany({
     where: { requestId: request.id, issuanceId: null },
   });
   assert.equal(
     afterPreview.length,
     beforePreview.length * 2,
-    "A changed organization gets fresh preview snapshots at the same draft revision",
+    "An explicitly saved proposal freezes the changed organization and gets fresh preview snapshots",
   );
   assert.deepEqual(
     afterPreview
@@ -184,7 +201,13 @@ test("structured organization names reach resolved data, group/individual/regist
     beforePreview.sort((a, b) => a.id.localeCompare(b.id)),
   );
 
-  await finalize(c, request.id, { expectedRevision: 0 }, randomUUID());
+  await approvals.approve(request.id);
+  await finalize(
+    c,
+    request.id,
+    { expectedRevision: refreshed.revision },
+    randomUUID(),
+  );
   const issued = await db.renderInputSnapshot.findMany({
     where: { requestId: request.id, issuanceId: { not: null } },
     orderBy: { id: "asc" },

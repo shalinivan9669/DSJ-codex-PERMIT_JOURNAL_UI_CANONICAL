@@ -94,16 +94,18 @@ test("request validation enforces tenant-scoped pinned service version and actua
     });
   }
   const request = await createRequest(c, fixture(draftRule.id));
-  const invalid = await validateRequest(c, request.id, { expectedRevision: 0 });
+  const invalid = await validateRequest(c, request.id, {
+    expectedRevision: request.revision,
+  });
   assert.ok(
     invalid.issues.some((issue) => issue.code === "SERVICE_RULE_NOT_APPROVED"),
   );
   const approved = await createServiceRule(c, baseRule);
   const late = await createRequest(c, fixture(approved.id, "2027-01-01"));
   assert.ok(
-    (await validateRequest(c, late.id, { expectedRevision: 0 })).issues.some(
-      (issue) => issue.code === "SERVICE_RULE_OUTSIDE_PERIOD",
-    ),
+    (
+      await validateRequest(c, late.id, { expectedRevision: late.revision })
+    ).issues.some((issue) => issue.code === "SERVICE_RULE_OUTSIDE_PERIOD"),
   );
   const wrong = await createServiceRule(c, {
     ...baseRule,
@@ -111,9 +113,11 @@ test("request validation enforces tenant-scoped pinned service version and actua
   });
   const badForm = await createRequest(c, fixture(wrong.id));
   assert.ok(
-    (await validateRequest(c, badForm.id, { expectedRevision: 0 })).issues.some(
-      (issue) => issue.code === "SERVICE_RULE_FORM_MISMATCH",
-    ),
+    (
+      await validateRequest(c, badForm.id, {
+        expectedRevision: badForm.revision,
+      })
+    ).issues.some((issue) => issue.code === "SERVICE_RULE_FORM_MISMATCH"),
   );
   await assert.rejects(
     createRequest(c, fixture(randomUUID())),

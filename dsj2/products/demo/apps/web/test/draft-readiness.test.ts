@@ -6,8 +6,30 @@ import {
   resolveDraft,
   type Draft,
 } from "@demo/contracts";
-import { draftReadiness } from "../lib/draft-readiness";
+import { draftReadiness, trainingOutcomeSummary } from "../lib/draft-readiness";
 import { newAssignment, newRecipient } from "../lib/types";
+
+test("result reminder counts the same unknown trainings and people when GROUP metadata is omitted, without counting known results or paired forms twice", () => {
+  const people = [
+    { ...newRecipient(), assignments: [
+      { ...newAssignment("pb-card"), protocolMode: "GROUP" as const, eventId: "PB" },
+      { ...newAssignment("pb-protocol"), protocolMode: "GROUP" as const, eventId: "PB" },
+      { ...newAssignment("ptm-card"), protocolMode: "GROUP" as const, eventId: "PTM", outcome: { status: "UNKNOWN" as const, source: "" } },
+    ] },
+    { ...newRecipient(), assignments: [
+      { ...newAssignment("pb-card"), protocolMode: "GROUP" as const, eventId: "PB", outcome: { status: "PASSED" as const, source: "Known synthetic source" } },
+      { ...newAssignment("ptm-card"), protocolMode: "GROUP" as const, eventId: "PTM", outcome: { status: "FAILED" as const, source: "Known synthetic failed attempt" } },
+    ] },
+    { ...newRecipient(), assignments: [] },
+  ];
+  const before = structuredClone(people);
+  assert.deepEqual(trainingOutcomeSummary({ items: people }), { trainings: 2, recipients: 1 });
+  assert.deepEqual(people, before);
+  const large = Array.from({ length: 250 }, () => ({
+    ...newRecipient(), assignments: [{ ...newAssignment("pb-card"), protocolMode: "GROUP" as const, eventId: "PB" }],
+  }));
+  assert.deepEqual(trainingOutcomeSummary({ items: large }), { trainings: 250, recipients: 250 });
+});
 
 const profile = profileSchema.parse({
   nameRu: "Синтетический центр",

@@ -3,6 +3,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash, randomUUID } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { approveFinalFixture, openFinalPanel } from "./final-approval-fixture";
+import { unsignedPublicState } from "./final-unsigned-public-qa";
+test.use({ trace: "off" });
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../docs/evidence/final-completion/service",
@@ -34,8 +37,10 @@ async function login(page: Page, email: string, password: string) {
   await page.getByLabel("Электронная почта", { exact: true }).fill(email);
   await page.getByLabel("Пароль", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
+  await page.goto("/requests");
 }
-test("real service UI: evidence, ownership, exact payment, portal changes and confirmed clean renewal", async ({
+test("real service UI: evidence, ownership, exact payment, portal changes, clean renewal and unsigned public guard", async ({
   page,
   context,
   browser,
@@ -123,11 +128,20 @@ test("real service UI: evidence, ownership, exact payment, portal changes and co
             eventId,
             protocolMode: "GROUP",
             outcome: { status: "FAILED", source: "Синтетическая ведомость" },
+            result: "Не сдал — известный синтетический результат",
           },
         ],
       },
     ],
   });
+  // An event in a pending proposal is not yet a persisted training event.
+  // The real director decision materialises the exact event before order-bound
+  // evidence can truthfully point at it; no approval or event is fabricated.
+  await approveFinalFixture(browser, page, auth, request.id);
+  const approvedEvent = (await get(`/print-requests/${request.id}`)).events.find(
+    (event: { id: string }) => event.id === eventId,
+  );
+  expect(approvedEvent?.id).toBe(eventId);
   const order = await post("/orders", {
     title: `Проверка полного исполнения ${suffix}`,
     customerId: customer.id,
@@ -413,6 +427,7 @@ test("real service UI: evidence, ownership, exact payment, portal changes and co
     await ec.close();
   }
   const revision = (await get(`/print-requests/${request.id}`)).revision;
+  await approveFinalFixture(browser, page, auth, request.id);
   await post(
     `/print-requests/${request.id}/finalize`,
     { expectedRevision: revision },
@@ -482,86 +497,26 @@ test("real service UI: evidence, ownership, exact payment, portal changes and co
     fullPage: true,
   });
   await page.goto(`/requests/${request.id}`);
-  await page
-    .getByText("Ссылка и QR для проверки записи", { exact: true })
-    .click();
-  await page
-    .getByRole("combobox", { name: "Выданный документ", exact: true })
-    .selectOption({ index: 1 });
-  await page
-    .getByLabel("Разрешаю публичную проверку выбранной записи эмитента", {
-      exact: true,
-    })
-    .check();
-  await page
-    .getByRole("button", { name: "Создать ссылку и QR", exact: true })
-    .click();
+  await expect(page.getByText("Ссылка и QR для проверки записи", { exact: true })).toHaveCount(0);
+  // Current UI hides publication while signatures are pending. A real scoped
+  // HTTP attempt must also fail, so bypassing the hidden control cannot publish.
+  const publicationResponse = await page.request.post("/api/verification-links", {
+    headers,
+    data: { documentId: frozen.documents[0].id, publicationConfirmed: true },
+  });
   const publicLink = page.getByRole("link", {
     name: "Открыть публичную проверку",
     exact: true,
   });
-  await expect(publicLink).toBeVisible();
-  await expect(
-    page.getByRole("img", {
-      name: "QR для проверки записи эмитента",
-      exact: true,
-    }),
-  ).toBeVisible();
-  const publicPath = await publicLink.getAttribute("href");
-  const publicContext = await browser.newContext({
-    baseURL: process.env.DEMO_ORIGIN,
-  });
-  await publicContext.routeWebSocket("**/_next/webpack-hmr", (socket) =>
-    socket.close(),
-  );
-  try {
-    const publicPage = await publicContext.newPage();
-    await publicPage.goto(publicPath!);
-    await expect(
-      publicPage.getByText("Действующая запись", { exact: true }),
-    ).toBeVisible();
-    await expect(
-      publicPage.getByText(person.data.fullNameRu, { exact: false }),
-    ).toHaveCount(0);
-    await expect(
-      publicPage.getByRole("link", { name: /скачать/i }),
-    ).toHaveCount(0);
-    await publicPage
-      .getByText("Сообщить об ошибке в документе", { exact: true })
-      .click();
-    await publicPage
-      .getByLabel("Что требуется проверить", { exact: true })
-      .fill("Синтетическая проверка маршрута уточнения");
-    await publicPage
-      .getByRole("button", { name: "Передать обращение эмитенту", exact: true })
-      .click();
-    await expect(
-      publicPage.getByText("Обращение принято для проверки эмитентом.", {
-        exact: true,
-      }),
-    ).toBeVisible();
-    await publicPage.screenshot({
-      path: path.join(evidence, "public-minimal-record.png"),
-      fullPage: true,
-    });
-    await page
-      .getByRole("button", { name: "Отозвать публичную ссылку", exact: true })
-      .click();
-    await expect(
-      page.getByText("Ссылка отозвана. Публичная проверка по ней недоступна.", {
-        exact: true,
-      }),
-    ).toBeVisible();
-    await publicPage.reload();
-    await expect(
-      publicPage.getByText(
-        "Запись недоступна. Проверьте ссылку или обратитесь к эмитенту документа.",
-        { exact: true },
-      ),
-    ).toBeVisible();
-  } finally {
-    await publicContext.close();
-  }
+  expect(publicationResponse.status()).toBe(409);
+  expect((await publicationResponse.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
+  await expect(publicLink).toHaveCount(0);
+  await expect(page.locator(".files-panel")).toContainText("Комплект ожидает электронных подписей");
+  await expect.poll(async () => (await get(`/print-requests/${request.id}/signing`)).status,
+    { timeout: 120000, intervals: [1500, 2500, 5000] }).toBe("AWAITING_SIGNATURE");
+  const unsignedState = unsignedPublicState(auth.tenantId, request.id);
+  await fs.writeFile(path.join(evidence, "unsigned-public-state.json"), JSON.stringify(unsignedState, null, 2));
+  await page.screenshot({ path: path.join(evidence, "unsigned-public-record-blocked.png"), fullPage: true });
   await page.goto("/workbench");
   await page.getByRole("button", { name: order.title, exact: true }).click();
   await page
@@ -593,6 +548,9 @@ test("real service UI: evidence, ownership, exact payment, portal changes and co
         repeatId,
         realBrowser: true,
         mockedResponses: false,
+        officialSignedPublicScope: "BLOCKED_MISSING_GENUINE_NCA_CONFIGURATION",
+        publicPublicationDenied: { status: 409, code: "ISSUANCE_NOT_COMPLETE", createdLink: false },
+        legalApproval: false,
         checks: [
           "ownership and date persisted",
           "unfinished obligation blocks completion",
@@ -603,7 +561,7 @@ test("real service UI: evidence, ownership, exact payment, portal changes and co
           "unconfirmed renewal has no repeat action",
           "confirmed contact creates clean linked draft",
           "historical snapshot unchanged",
-          "public QR record has no person or file access, correction accepted and link revoked",
+          "unsigned public QR publication refused with409; external signed public record/correction/revocation remain unverified without genuine NCA configuration",
           "duplicate invoice returns actionable conflict without another record",
           "three then two services calculate 30000 then 20000 KZT while unknown tax remains unknown",
           "order completes only after actual prerequisites and persists after reload",
@@ -618,6 +576,7 @@ test("real service UI: evidence, ownership, exact payment, portal changes and co
 test("one shared group serves two customer orders and an existing order accepts another date without copying history", async ({
   page,
   context,
+  browser,
 }) => {
   test.setTimeout(180000);
   const auth = JSON.parse(
@@ -702,6 +661,7 @@ test("one shared group serves two customer orders and an existing order accepts 
             eventId: event,
             protocolMode: "GROUP",
             outcome: { status: "FAILED", source: "Синтетическая ведомость" },
+            result: "Не сдал — известный синтетический результат",
           },
         ],
       })),
@@ -709,16 +669,15 @@ test("one shared group serves two customer orders and an existing order accepts 
   }
   const shared = await fixture(`Общая группа ${suffix}`, true, "2026-09-24");
   const second = await fixture(`Другая дата ${suffix}`, false, "2026-10-05");
+  const approved = await approveFinalFixture(browser, page, auth, shared.id);
   await post(
     `/print-requests/${shared.id}/finalize`,
-    { expectedRevision: shared.revision },
+    { expectedRevision: approved.revision },
     { "Idempotency-Key": randomUUID() },
   );
   const frozen = await get(`/print-requests/${shared.id}`);
   await page.goto(`/requests/${shared.id}`);
-  await page
-    .getByRole("button", { name: "Открыть действия", exact: true })
-    .click();
+  await openFinalPanel(page, "operations");
   await page
     .getByRole("button", { name: "Создать связанный заказ", exact: true })
     .click();
@@ -799,9 +758,7 @@ test("one shared group serves two customer orders and an existing order accepts 
     .poll(async () => (await get(`/orders/${orderA.id}`)).requests.length)
     .toBe(2);
   await page.goto(`/requests/${second.id}`);
-  await page
-    .getByRole("button", { name: "Открыть действия", exact: true })
-    .click();
+  await openFinalPanel(page, "operations");
   await page
     .getByText("Связать группу с заказом или другим работодателем", {
       exact: true,
@@ -835,9 +792,7 @@ test("one shared group serves two customer orders and an existing order accepts 
     (await get(`/print-requests/${shared.id}`)).issuances[0].snapshot,
   ).toEqual(frozen.issuances[0].snapshot);
   await page.reload();
-  await page
-    .getByRole("button", { name: "Открыть действия", exact: true })
-    .click();
+  await openFinalPanel(page, "operations");
   await page
     .getByText("Связать группу с заказом или другим работодателем", {
       exact: true,

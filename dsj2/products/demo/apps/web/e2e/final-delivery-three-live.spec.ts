@@ -3,13 +3,16 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID, createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { approveFinalFixture, openFinalPanel } from "./final-approval-fixture";
+test.use({ trace: "off" });
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../docs/evidence/final-completion/delivery-three",
 );
 const hash = (b: Buffer) => createHash("sha256").update(b).digest("hex");
-test("V08/V12: three issued people retain source order, saved output profile, exact original files, explicit transfer and missing signed evidence", async ({
+test("V08/V12: three saved people retain source order/profile/original bytes, unsigned official guards and explicit transfer without invented signed evidence", async ({
   page,
+  browser,
   context,
 }) => {
   test.setTimeout(1200000);
@@ -31,6 +34,8 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
   await page.getByLabel("Электронная почта", { exact: true }).fill(auth.email);
   await page.getByLabel("Пароль", { exact: true }).fill(auth.password);
   await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
+  await page.goto("/requests");
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
@@ -136,6 +141,7 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
     ],
     items,
   });
+  await approveFinalFixture(browser, page, auth, request.id);
   await post(
     `/print-requests/${request.id}/finalize`,
     { expectedRevision: request.revision },
@@ -170,10 +176,12 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
             a.availability !== "MISSING",
         ).length;
       },
-      { timeout: 900000, intervals: [2000, 5000] },
+      { timeout: 60000, intervals: [2000, 5000] },
     )
-    .toBe(6);
+    .toBe(12);
   const original = await get(`/print-requests/${request.id}`);
+  expect(original.documents).toHaveLength(6);
+  expect(original.documents.filter((doc: { templateId: string }) => doc.templateId === "pb-protocol")).toHaveLength(3);
   const files = original.artifacts.filter(
     (a: { documentId?: string; format: string }) =>
       a.documentId && ["PDF", "DOCX"].includes(a.format),
@@ -218,12 +226,44 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
   await page
     .getByLabel("Выбрать все доступные файлы по фильтру", { exact: true })
     .check();
-  const selectedWait = page.waitForEvent("download");
-  await page
-    .getByRole("button", { name: "Скачать выбранные файлы (1)", exact: true })
-    .click();
-  const selectedZip = path.join(evidence, "selected-one-original.zip");
-  await (await selectedWait).saveAs(selectedZip);
+  await expect(
+    page.getByRole("button", {
+      name: "Скачать выбранные файлы (1)",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  const internalFolder = path.join(evidence, "internal-unsigned-qa");
+  const internalReadback = execFileSync(
+    process.execPath,
+    [
+      "--import",
+      "tsx",
+      "scripts/verification/final-delivery-internal-qa.ts",
+      auth.tenantId,
+      request.id,
+      profile.id,
+      internalFolder,
+    ],
+    {
+      cwd: product,
+      env: process.env,
+      windowsHide: true,
+      encoding: "utf8",
+      timeout: 360000,
+    },
+  );
+  const internalProof = JSON.parse(
+    internalReadback.trim().split(/\r?\n/).at(-1)!,
+  );
+  expect(internalProof.provenance).toBe("INTERNAL_UNSIGNED_SAVED_BYTES_QA");
+  await fs.writeFile(
+    path.join(evidence, "internal-unsigned-assembly.json"),
+    JSON.stringify(internalProof, null, 2),
+  );
+  const selectedZip = path.join(
+    internalFolder,
+    "internal-unsigned-selected.zip",
+  );
   const selectedManifest = JSON.parse(
     execFileSync(
       process.env.DEMO_PYTHON!,
@@ -245,18 +285,7 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
   expect((await get(`/print-requests/${request.id}`)).issuances).toEqual(
     original.issuances,
   );
-  await page
-    .getByRole("button", { name: "Открыть действия", exact: true })
-    .click();
-  const output = page.locator("section").filter({
-    has: page.getByRole("heading", {
-      name: "Комплект для заказчика",
-      exact: true,
-    }),
-  });
-  await output
-    .getByRole("button", { name: "Настроить выдачу", exact: true })
-    .click();
+  const output = await openFinalPanel(page, "output");
   await page
     .getByRole("button", {
       name: "Применить сохранённые настройки",
@@ -266,16 +295,25 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
   await expect(
     page.getByRole("combobox", { name: "Сохранённый профиль", exact: true }),
   ).toHaveValue(profile.id);
-  const xlsxWait = page.waitForEvent("download");
-  await output
-    .getByRole("button", { name: "Реестр XLSX", exact: true })
-    .click();
-  const xlsx = path.join(evidence, "registry.xlsx");
-  await (await xlsxWait).saveAs(xlsx);
-  const zipWait = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Комплект ZIP", exact: true }).click();
-  const zip = path.join(evidence, "customer.zip");
-  await (await zipWait).saveAs(zip);
+  const guards = [];
+  for (const [format, label] of [
+    ["XLSX", "Реестр XLSX"],
+    ["ZIP", "Комплект ZIP"],
+  ] as const) {
+    const pending = page.waitForResponse(
+      (r) =>
+        r.request().method() === "POST" &&
+        r.url().endsWith(`/print-requests/${request.id}/export`),
+    );
+    await output.getByRole("button", { name: label, exact: true }).click();
+    const response = await pending;
+    expect(response.status()).toBe(409);
+    const error = await response.json();
+    expect(error.code).toBe("ISSUANCE_NOT_COMPLETE");
+    guards.push({ format, status: response.status(), code: error.code });
+  }
+  const xlsx = path.join(internalFolder, "internal-unsigned-registry.xlsx"),
+    zip = path.join(internalFolder, "internal-unsigned-customer.zip");
   const inspection = JSON.parse(
     execFileSync(
       process.env.DEMO_PYTHON!,
@@ -290,10 +328,13 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
   );
   expect(inspection.rows.slice(1).map((r: string[]) => r[0])).toEqual([
     "000003",
+    "000003",
+    "000001",
     "000001",
     "000002",
+    "000002",
   ]);
-  expect(inspection.files).toHaveLength(6);
+  expect(inspection.files).toHaveLength(12);
   expect(inspection.names).toEqual(
     expect.arrayContaining([
       "Реестр.xlsx",
@@ -319,15 +360,7 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
   expect(
     (await get(`/print-requests/${request.id}/transfers`)).items,
   ).toHaveLength(0);
-  const review = page.locator("section").filter({
-    has: page.getByRole("heading", {
-      name: "Согласование и передача",
-      exact: true,
-    }),
-  });
-  await review
-    .getByRole("button", { name: "Открыть согласование", exact: true })
-    .click();
+  const review = await openFinalPanel(page, "review");
   await page
     .getByText("Зафиксировать передачу или повторную печать", { exact: true })
     .click();
@@ -336,7 +369,7 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
       exact: true,
     }),
   });
-  await transfer.getByRole("checkbox").first().check();
+  await transfer.getByLabel(first.fileName, { exact: true }).check();
   await page
     .getByLabel("Получатель комплекта", { exact: true })
     .fill("Синтетический представитель А");
@@ -354,19 +387,7 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
     )
     .toBe(1);
   await page.reload();
-  await page
-    .getByRole("button", { name: "Открыть действия", exact: true })
-    .click();
-  await page
-    .locator("section")
-    .filter({
-      has: page.getByRole("heading", {
-        name: "Согласование и передача",
-        exact: true,
-      }),
-    })
-    .getByRole("button", { name: "Открыть согласование", exact: true })
-    .click();
+  await openFinalPanel(page, "review");
   await page
     .getByText("История передачи и перепечатки (1)", { exact: true })
     .click();
@@ -462,6 +483,8 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
         profileId: profile.id,
         sourceOrder: ["000003", "000001", "000002"],
         inspection,
+        officialExportGuards: guards,
+        internalAssembly: internalProof,
         originalFileHashes: files.map((a: { id: string; sha256: string }) => ({
           id: a.id,
           sha256: a.sha256,
@@ -469,7 +492,7 @@ test("V08/V12: three issued people retain source order, saved output profile, ex
         dossier: dossierReport,
         checks: [
           "saved profile applied through actual UI",
-          "real XLSX and ZIP downloaded through UI",
+          "official UI XLSX and ZIP reject unsigned workflow with409; internal frozen-byte assembly is reported separately",
           "all six original files match stored hashes",
           "repeat download creates no issuance or transfer",
           "explicit selected transfer survives reload",

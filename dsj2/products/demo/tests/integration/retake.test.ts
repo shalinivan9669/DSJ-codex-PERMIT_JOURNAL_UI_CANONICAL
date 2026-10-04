@@ -9,6 +9,7 @@ import {
   retake,
   patchRequest,
   listRequests,
+  requestDetail,
 } from "../../apps/api/src/requests";
 import {
   draftSchema,
@@ -16,8 +17,9 @@ import {
   documentPlan,
 } from "../../packages/contracts/src";
 import { assertTestDatabase } from "./test-database";
+import { createApprovalFixture } from "./live-approval-fixture";
 
-test("retake preserves failed issued attempt, creates an explicitly linked unknown attempt with new event and no dates/numbers, isolates references", async () => {
+test("retake preserves failed issued attempt, creates an explicitly linked unknown attempt with new event and no dates/numbers, isolates references", async (t) => {
   assertTestDatabase();
   const seeded = await provision({
     email: `retake-${randomUUID()}@example.test`,
@@ -32,6 +34,8 @@ test("retake preserves failed issued attempt, creates an explicitly linked unkno
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  const approvals = await createApprovalFixture(c);
+  t.after(() => approvals.close());
   try {
     const eventId = randomUUID();
     const input = draftSchema.parse({
@@ -70,7 +74,13 @@ test("retake preserves failed issued attempt, creates an explicitly linked unkno
       ],
     });
     const original = await createRequest(c, input);
-    await finalize(c, original.id, { expectedRevision: 0 }, randomUUID());
+    await approvals.approve(original.id);
+    await finalize(
+      c,
+      original.id,
+      { expectedRevision: original.revision },
+      randomUUID(),
+    );
     const oldRecord = await db.printRequest.findUniqueOrThrow({
       where: { id: original.id },
     });
@@ -103,10 +113,7 @@ test("retake preserves failed issued attempt, creates an explicitly linked unkno
       retake({ ...c, tenantId: randomUUID() }, original.id, args),
     );
     const copy = await retake(c, original.id, args);
-    const next = draftSchema.parse(
-      (await db.printRequest.findUniqueOrThrow({ where: { id: copy.id } }))
-        .draft,
-    );
+    const next = draftSchema.parse((await requestDetail(c, copy.id)).draft);
     const assignment = next.items[0].assignments[0];
     assert.deepEqual(assignment.retakeOf, {
       requestId: original.id,
@@ -156,14 +163,22 @@ test("retake preserves failed issued attempt, creates an explicitly linked unkno
     const forged = structuredClone(next);
     forged.items[0].fullNameRu = "Другой Получатель";
     await assert.rejects(
-      patchRequest(c, copy.id, { expectedRevision: 0, draft: forged }),
+      patchRequest(c, copy.id, {
+        expectedRevision: copy.revision,
+        draft: forged,
+      }),
     );
     const foreign = structuredClone(next);
     foreign.items[0].assignments[0].retakeOf!.requestId = randomUUID();
     await assert.rejects(
-      patchRequest(c, copy.id, { expectedRevision: 0, draft: foreign }),
+      patchRequest(c, copy.id, {
+        expectedRevision: copy.revision,
+        draft: foreign,
+      }),
     );
-    await assert.rejects(retake(c, copy.id, { ...args, expectedRevision: 0 }));
+    await assert.rejects(
+      retake(c, copy.id, { ...args, expectedRevision: copy.revision }),
+    );
     const namesake = await db.recipient.create({
       data: {
         tenantId: c.tenantId,
@@ -173,7 +188,10 @@ test("retake preserves failed issued attempt, creates an explicitly linked unkno
     const wrongIdentity = structuredClone(next);
     wrongIdentity.items[0].recipientId = namesake.id;
     await assert.rejects(
-      patchRequest(c, copy.id, { expectedRevision: 0, draft: wrongIdentity }),
+      patchRequest(c, copy.id, {
+        expectedRevision: copy.revision,
+        draft: wrongIdentity,
+      }),
     );
     await db.issuanceEvent.create({
       data: {
@@ -186,7 +204,10 @@ test("retake preserves failed issued attempt, creates an explicitly linked unkno
     });
     await assert.rejects(retake(c, original.id, args));
     await assert.rejects(
-      patchRequest(c, copy.id, { expectedRevision: 0, draft: next }),
+      patchRequest(c, copy.id, {
+        expectedRevision: copy.revision,
+        draft: next,
+      }),
     );
     assert.equal(
       await db.auditEvent.count({

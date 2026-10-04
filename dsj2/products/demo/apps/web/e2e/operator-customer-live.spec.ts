@@ -1,18 +1,48 @@
-import {
-  createRequestWithWorkerDocument,
-  openRecipientExtraTools,
-} from "./operator-keyboard-helpers";
+import { loginIsolated } from "./operator-full-fix-session";
+import { openRecipientExtraTools } from "./operator-keyboard-helpers";
+import type { Customer } from "../lib/types";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+test.use({ trace: "off" });
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../docs/evidence/final-completion/operator/customer",
 );
 async function save(page: Page) {
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await expect(page.locator(".save-indicator").first()).toContainText(
+    /сохранена/i,
+  );
+}
+async function createEmpty(page: Page, kind: "PERSON" | "COMPANY") {
+  await page
+    .getByRole("radio", {
+      name: kind === "PERSON" ? /^Физическое лицо/ : /^Организация/,
+    })
+    .check();
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
+}
+async function panel(page: Page, name: string) {
+  await page
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
+    .click();
+  await page.getByRole("button", { name, exact: true }).click();
+}
+async function closePanel(page: Page) {
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
+    .click();
+}
+async function employerDetails(page: Page) {
+  const employer = page.locator(".employer-document-wording");
+  if (!(await employer.evaluate((node) => (node as HTMLDetailsElement).open)))
+    await employer.locator(":scope > summary").click();
+  const record = page.locator(".recipient-details .outcome-entry");
+  if (!(await record.evaluate((node) => (node as HTMLDetailsElement).open)))
+    await record.locator(":scope > summary").click();
 }
 test("real customer clarification can be scoped, reduced, edited and copied; employer change preserves periods and clean reuse", async ({
   page,
@@ -22,18 +52,8 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   await fs.mkdir(evidence, { recursive: true });
   await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL!);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD!);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать" }),
-  ).toBeVisible();
-  const companies = [];
+  await loginIsolated(page);
+  const companies: Customer[] = [];
   const stamp = Date.now();
   for (const [index, suffix] of ["A", "B"].entries()) {
     await page.goto("/customers");
@@ -41,10 +61,22 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
       .getByRole("button", { name: "Добавить заказчика", exact: true })
       .click();
     const name = `Работодатель ${suffix} ${stamp}`;
-    await page.getByLabel("Название на русском", { exact: true }).fill(name);
     await page
-      .getByLabel("Название на казахском", { exact: true })
+      .getByRole("textbox", { name: /^Собственное наименование(?:\s|$)/ })
+      .first()
+      .fill(name);
+    await page
+      .getByText("Другое наименование на казахском", { exact: true })
+      .click();
+    await page
+      .getByLabel("Собственное наименование на казахском отличается", {
+        exact: true,
+      })
+      .check();
+    await page
+      .getByLabel("Собственное наименование · KZ", { exact: true })
       .fill(`Жұмыс беруші ${suffix}`);
+    await page.getByText("Дополнительные реквизиты", { exact: true }).click();
     await page
       .getByLabel("БИН", { exact: true })
       .fill(`00000000000${index + 1}`);
@@ -62,12 +94,13 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   }
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
-  await page
-    .getByLabel("Название заявки", { exact: true })
-    .fill(`Уточнения и история ${stamp}`);
+  await createEmpty(page, "PERSON");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Убрать из заявки", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
@@ -89,16 +122,26 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   await page
     .getByRole("button", { name: "Добавить 2 строк в черновик", exact: true })
     .click();
-  await page.getByLabel("ФИО RU, строка 1", { exact: true }).fill("");
-  await page.getByLabel("ФИО RU, строка 2", { exact: true }).fill("");
+  await page.getByLabel("ФИО, строка 1", { exact: true }).fill("");
+  await page.getByLabel("ФИО, строка 2", { exact: true }).fill("");
+  for (const row of [1, 2]) {
+    await page
+      .getByRole("button", { name: `Детали получателя ${row}`, exact: true })
+      .click();
+    const personal = page.getByRole("dialog");
+    await personal.getByRole("tab", { name: /^Личные данные/ }).click();
+    const kzName = personal.getByLabel("ФИО · KZ", { exact: true });
+    if (!(await kzName.isVisible()))
+      await personal.getByText(/^Казахский вариант/).click();
+    await kzName.fill("");
+    await closePanel(page);
+  }
   await save(page);
   const requestId = /requests\/([^/]+)/.exec(page.url())![1];
   const originalPath = new URL(page.url()).pathname;
   const read = async () =>
     (await page.request.get(`/api/print-requests/${requestId}`)).json();
-  await page
-    .getByRole("button", { name: "Открыть согласование", exact: true })
-    .click();
+  await panel(page, "Согласование и передача");
   await page
     .getByRole("button", { name: "Подготовить запрос уточнений", exact: true })
     .click();
@@ -155,16 +198,15 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
     path: path.join(evidence, "scoped-edited-clarification.png"),
     fullPage: true,
   });
+  await closePanel(page);
   await page
-    .getByLabel("ФИО RU, строка 1", { exact: true })
+    .getByLabel("ФИО, строка 1", { exact: true })
     .fill("Синтетический Однофамилец");
   await page
-    .getByLabel("ФИО RU, строка 2", { exact: true })
+    .getByLabel("ФИО, строка 2", { exact: true })
     .fill("Синтетический Однофамилец");
   await save(page);
-  await page
-    .getByRole("button", { name: "Настроить выдачу", exact: true })
-    .click();
+  await panel(page, "Комплект для заказчика");
   await page
     .getByRole("combobox", { name: "Заказчик этого комплекта", exact: true })
     .selectOption(companies[0].id);
@@ -185,15 +227,14 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   await expect(
     page.getByText("Профиль сохранён для следующих заказов.", { exact: true }),
   ).toBeVisible();
+  await closePanel(page);
   await page
-    .getByRole("button", { name: "Документы и даты получателя 1", exact: true })
+    .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
   await page.getByRole("tab", { name: "Личные данные", exact: true }).click();
+  await employerDetails(page);
   await page
-    .getByText("Постоянная запись, работодатель и история", { exact: true })
-    .click();
-  await page
-    .getByLabel("Должность · RU", { exact: true })
+    .getByLabel("Должность / профессия", { exact: true })
     .fill("Должность компании A");
   await page
     .getByLabel("Период работы / основание актуальности", { exact: true })
@@ -233,7 +274,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
     page.getByLabel("Место работы · RU", { exact: true }),
   ).toHaveValue(companies[1].nameRu);
   await page
-    .getByLabel("Должность · RU", { exact: true })
+    .getByLabel("Должность / профессия", { exact: true })
     .fill("Должность компании B");
   await page
     .getByLabel("Период работы / основание актуальности", { exact: true })
@@ -270,9 +311,12 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
     await page.request.get(`/api/recipients/${first.recipientId}`)
   ).json();
   expect(history.employment).toHaveLength(2);
+  await page
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
+  await createEmpty(page, "PERSON");
   await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
@@ -297,15 +341,79 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   expect(next.documents).toHaveLength(0);
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "COMPANY");
+  await createEmpty(page, "COMPANY");
   await page
-    .getByRole("combobox", { name: "Заказчик", exact: true })
-    .selectOption(companies[0].id);
+    .getByRole("button", { name: "Из справочника", exact: true })
+    .click();
+  const companyRequestId = /requests\/([^/]+)/.exec(page.url())![1];
+  await save(page);
+  const companyBeforeResponse = await page.request.get(
+    `/api/print-requests/${companyRequestId}`,
+  );
+  expect(companyBeforeResponse.ok()).toBe(true);
+  const companyBefore = await companyBeforeResponse.json();
+  const initialNativeCompanyOptionCount = await page
+    .getByRole("combobox", { name: "Компания", exact: true })
+    .locator(`option[value="${companies[0].id}"]`)
+    .count();
+  await page
+    .getByRole("button", { name: "Найти в справочнике", exact: true })
+    .click();
+  const companyPicker = page.getByRole("dialog", {
+    name: "Найти заказчика",
+    exact: true,
+  });
+  const companySearchResponse = page.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return (
+      response.request().method() === "GET" &&
+      url.pathname === "/api/customers" &&
+      url.searchParams.get("search") === companies[0].nameRu &&
+      url.searchParams.get("page") === "1"
+    );
+  });
+  await companyPicker
+    .getByLabel("Поиск по справочнику", { exact: true })
+    .fill(companies[0].nameRu);
+  const searchedCompanyResponse = await companySearchResponse;
+  expect(searchedCompanyResponse.ok()).toBe(true);
+  const searchedCompany = await searchedCompanyResponse.json();
+  expect(
+    searchedCompany.items.map((company: { id: string }) => company.id),
+  ).toEqual([companies[0].id]);
+  const companyRow = companyPicker.locator("tbody tr").filter({
+    has: page.getByText(companies[0].nameRu, { exact: true }),
+  });
+  await expect(companyRow).toHaveCount(1);
+  const companyPatchResponse = page.waitForResponse((response) =>
+    response.request().method() === "PATCH" &&
+    new URL(response.url()).pathname ===
+      `/api/print-requests/${companyRequestId}` &&
+    response.request().postDataJSON()?.draft?.customerId === companies[0].id,
+  );
+  await companyRow
+    .getByRole("button", { name: "Выбрать", exact: true })
+    .click();
+  await expect(companyPicker).toHaveCount(0);
+  const selectedCompanyPatch = await companyPatchResponse;
+  expect(selectedCompanyPatch.ok()).toBe(true);
+  const companySaved = await selectedCompanyPatch.json();
+  expect(companySaved.customerId).toBe(companies[0].id);
+  expect(companySaved.items).toEqual(companyBefore.items);
+  expect(companySaved.events).toEqual(companyBefore.events);
   await save(page);
   await page.reload();
-  await page
-    .getByRole("button", { name: "Настроить выдачу", exact: true })
-    .click();
+  const companyReloadResponse = await page.request.get(
+    `/api/print-requests/${companyRequestId}`,
+  );
+  expect(companyReloadResponse.ok()).toBe(true);
+  const companyReloaded = await companyReloadResponse.json();
+  expect(companyReloaded.customerId).toBe(companies[0].id);
+  expect(companyReloaded.revision).toBe(companySaved.revision);
+  expect(companyReloaded.items).toEqual(companyBefore.items);
+  expect(companyReloaded.events).toEqual(companyBefore.events);
+  expect(companyReloaded.documents).toEqual(companyBefore.documents);
+  await panel(page, "Комплект для заказчика");
   await expect(
     page.getByText(`Для заказчика сохранён профиль «${profileName}».`, {
       exact: false,
@@ -351,15 +459,19 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
       .getByRole("option", { name: profileName, exact: true }),
   ).toHaveCount(0);
   await page.goto(originalPath);
-  await expect(page.locator(".recipient-table tbody tr")).toHaveCount(2);
+  await expect(page.locator(".operator-grid tbody tr")).toHaveCount(2);
   expect((await read()).items[1].recipientId).toBeFalsy();
   // Same name and personnel number in different employers are two explicit permanent people.
   const sameName = `Совпадающее ФИО ${stamp}`;
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
+  await createEmpty(page, "PERSON");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Убрать из заявки", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
@@ -378,20 +490,12 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   for (const row of [1, 2]) {
     await page
       .getByRole("button", {
-        name: `Документы и даты получателя ${row}`,
+        name: `Детали получателя ${row}`,
         exact: true,
       })
       .click();
     await page.getByRole("tab", { name: "Личные данные", exact: true }).click();
-    const record = page.locator("details").filter({
-      has: page.getByText("Постоянная запись, работодатель и история", {
-        exact: true,
-      }),
-    });
-    if ((await record.getAttribute("open")) === null)
-      await page
-        .getByText("Постоянная запись, работодатель и история", { exact: true })
-        .click();
+    await employerDetails(page);
     await page
       .getByLabel(
         "Подтверждаю актуальность сведений для постоянной записи человека",
@@ -409,6 +513,9 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
       ),
     ).toBeVisible();
     await save(page);
+    await page
+      .getByRole("button", { name: "Вернуться к списку", exact: true })
+      .click();
   }
   await page.reload();
   const sameNameSearch = await (
@@ -453,6 +560,19 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
         newAssignmentsNoOldOutcomeOrEvent: true,
         employerSelectionUpdatesCurrentRequisites: true,
         savedCustomerProfileOfferedAfterNewRequestReload: true,
+        companyDirectorySelection: {
+          companyRequestId,
+          initialNativeOptionCount: initialNativeCompanyOptionCount,
+          searchedName: companies[0].nameRu,
+          exactSearchResultIds: searchedCompany.items.map(
+            (company: { id: string }) => company.id,
+          ),
+          selectedId: companySaved.customerId,
+          patchRevision: companySaved.revision,
+          reloadedRevision: companyReloaded.revision,
+          before: companyBefore,
+          after: companyReloaded,
+        },
         anotherCustomerProfileAndContactExcluded: true,
         noMocks: true,
       },

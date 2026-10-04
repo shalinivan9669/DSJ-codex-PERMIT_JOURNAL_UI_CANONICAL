@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+test.use({ trace: "off" });
 
 const product = path.resolve("../..");
 const evidence = path.resolve(
@@ -36,6 +37,8 @@ test("customer A, payer B and employer C stay separate in the actual order UI an
   await page.getByLabel("Электронная почта", { exact: true }).fill(auth.email);
   await page.getByLabel("Пароль", { exact: true }).fill(auth.password);
   await page.getByRole("button", { name: "Войти", exact: true }).click();
+  await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
+  await page.goto("/requests");
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();

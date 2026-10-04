@@ -23,6 +23,8 @@ export function DateCalculationStatus({
   disabled,
   onRestore,
   restoreKeys,
+  forceValidity = false,
+  validityDescription,
 }: {
   values: DateValues;
   rule?: TrainingDateRule | null;
@@ -30,13 +32,17 @@ export function DateCalculationStatus({
   disabled: boolean;
   onRestore: (key: CalculatedDateKey) => void;
   restoreKeys?: CalculatedDateKey[];
+  forceValidity?: boolean;
+  validityDescription?: string;
 }) {
   const calculation = calculateDates(values, rule);
   const overrides = calculatedDateKeys.filter(
     (key) =>
+      !(forceValidity && key === "validUntil") &&
       ["MANUAL", "IMPORTED", "CLEARED", "REQUEST", "EVENT", "CENTER"].includes(
         origins?.[key] || "",
-      ) && calculation.proposed[key] !== undefined,
+      ) &&
+      calculation.proposed[key] !== undefined,
   );
   return (
     <div className="fine-print" aria-live="polite">
@@ -49,7 +55,13 @@ export function DateCalculationStatus({
           {calculation.proposed.trainingEnd || "—"}.
         </p>
       )}
-      {values.biotCategory && (
+      {forceValidity && (
+        <p>
+          {validityDescription ||
+            "Срок документа рассчитывается по действующему правилу центра: рабочий — 1 год, ИТР — 3 года, ПС — бессрочно. Ручное исключение срока не предусмотрено."}
+        </p>
+      )}
+      {!forceValidity && values.biotCategory && (
         <p>
           Срок по категории:{" "}
           {BIOT_CATEGORIES[values.biotCategory].validityYears

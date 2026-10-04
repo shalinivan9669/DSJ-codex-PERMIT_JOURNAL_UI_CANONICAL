@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import assert from "node:assert/strict";
 import { assertTestDatabase } from "../../../tests/integration/test-database";
+import { expandCommon } from "./operator-common-history-helpers";
 
 test("real local proxy registration, cookies, onboarding version save and first draft", async ({
   page,
@@ -39,7 +40,7 @@ test("real local proxy registration, cookies, onboarding version save and first 
   const contextResponse = await page.request.get("/api/context");
   expect(contextResponse.status()).toBe(200);
   const initialContext = await contextResponse.json();
-  expect(initialContext.user.role).toBe("ADMIN");
+  expect(initialContext.user.role).toBe("DIRECTOR");
   expect(initialContext.profile.approved).toBe(false);
   expect(initialContext.templates).toHaveLength(16);
   expect(
@@ -78,12 +79,11 @@ test("real local proxy registration, cookies, onboarding version save and first 
   expect(after.profile.headName).toBe("Синтетический руководитель E2E");
   expect(after.profile.approved).toBe(false);
   await page.getByRole("link", { name: "Начать черновик заявки" }).click();
-  await page
-    .getByRole("button", { name: "Перейти к людям и документам" })
-    .click();
+  await page.getByRole("button", { name: "Далее" }).click();
   await expect(page).toHaveURL(/\/requests\/[0-9a-f-]+\/edit$/);
+  await expandCommon(page.locator("#request-training"));
   await expect(
-    page.getByRole("button", { name: "Документы для всех" }),
+    page.getByRole("button", { name: "БиОТ: добавить всем в заявке (1)" }),
   ).toBeVisible();
   const requestId = page.url().split("/").at(-2);
   const draft = await (

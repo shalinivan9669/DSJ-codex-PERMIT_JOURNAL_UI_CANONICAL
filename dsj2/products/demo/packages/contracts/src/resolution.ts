@@ -5,7 +5,8 @@ import type {
   RequestItemInput,
   ValidationIssue,
 } from "./index";
-import { protocolTemplateFor } from "./index";
+import { protocolTemplateFor, stableValidationIssue } from "./index";
+import { isBlankText } from "./blank-text";
 import {
   businessValidUntil,
   employeeCategoryFor,
@@ -126,8 +127,8 @@ export function resolveRecipientText<T extends RequestItemInput>(item: T): T {
     ["positionRu", "positionKz"],
     ["workplaceRu", "workplaceKz"],
   ] as const) {
-    if (!result[ru].trim()) result[ru] = result[kz];
-    if (!result[kz].trim()) result[kz] = result[ru];
+    if (isBlankText(result[ru])) result[ru] = result[kz];
+    if (isBlankText(result[kz])) result[kz] = result[ru];
   }
   return result;
 }
@@ -299,12 +300,15 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
         delete (assignment as Assignment & { dateOrigins?: unknown })
           .dateOrigins;
         if (rule !== undefined) assignment.trainingDateRule = rule;
-        for (const message of calculation.problems)
+        for (const problem of calculation.problemDetails)
           issues.push({
-            code: "TRAINING_DATE_RULE",
-            path: `${path}.documentDate`,
+            code: problem.code,
+            path: `${path}.${problem.field}`,
             rowId: item.id,
-            message,
+            eventId: assignment.eventId,
+            assignmentId: assignment.id,
+            field: problem.field,
+            message: problem.message,
           });
         for (const problem of trainingBeforeIssueProblems(assignment, rule))
           issues.push({
@@ -379,7 +383,11 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
       context.fields.protocolDate = context.fields.documentDate;
     event.commonFields = context.fields;
   }
-  return { draft, provenance, issues };
+  return {
+    draft,
+    provenance,
+    issues: issues.map((issue) => stableValidationIssue(draft, issue)),
+  };
 }
 
 export function documentPlan(draft: Draft) {
@@ -417,6 +425,7 @@ export function documentPlan(draft: Draft) {
 export function eventProtocolAssignment(
   event: NonNullable<Draft["events"]>[number],
   member: Assignment,
+  liveRules = false,
 ): Assignment {
   // Common context contains calculation metadata that is not an Assignment
   // field. Keep generated protocol payloads compatible with the strict schema.
@@ -425,6 +434,9 @@ export function eventProtocolAssignment(
       .filter((key) => event.commonFields[key] !== undefined)
       .map((key) => [key, event.commonFields[key]]),
   );
+  // LIVE_V1 validity was already resolved from the employee category. A legacy
+  // preset in the common event must not overwrite it in the generated form.
+  if (liveRules) delete fields.validUntil;
   return {
     ...member,
     ...fields,

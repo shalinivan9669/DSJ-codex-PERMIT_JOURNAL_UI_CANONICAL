@@ -1,7 +1,10 @@
 import { assertTestDatabase } from "./test-database";
 import test from "node:test";
 import assert from "node:assert/strict";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { ArtifactStore, PRODUCT_ROOT } from "@demo/printing";
 import { db, hash, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
 import {
@@ -390,15 +393,55 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
     },
   );
   await t.test(
-    "unprintable fields fail before immutable issuance or number allocation; the same draft remains correctable",
+    "pinned historical PBv15 geometry rejects overflow before immutable issuance or numbering; the same draft remains correctable",
     async () => {
+      // Active PBv17 preserves the raw reference fill policy. This retained
+      // geometry regression belongs to PBv15's immutable transformed form.
+      // Register its exact original bytes only in a fresh synthetic tenant;
+      // current assets and their registry records remain untouched.
+      const center = await provision({
+        email: `historical-pb-overflow-${randomUUID()}@example.test`,
+        password: "Synthetic-historical-overflow-only!",
+        name: "СИНТЕТИЧЕСКАЯ историческая геометрия PBv15",
+        sample: true,
+      });
+      const ca = context(center.tenantId, center.userId);
+      const approvals = await createApprovalFixture(ca);
+      t.after(() => approvals.close());
+      const active = await db.templateVersion.findFirstOrThrow({
+        where: { tenantId: ca.tenantId, templateId: "pb-card" },
+        orderBy: { createdAt: "desc" },
+      });
+      const bytes = await readFile(
+        join(PRODUCT_ROOT, "assets/templates/pb-card.v15.docx"),
+      );
+      const stored = await new ArtifactStore().put(bytes, "docx");
+      const checksum = createHash("sha256").update(bytes).digest("hex");
+      await db.templateVersion.create({
+        data: {
+          tenantId: ca.tenantId,
+          templateId: "pb-card",
+          version: "15",
+          checksum,
+          storageKey: stored.storageKey,
+          approved: true,
+          contract: {
+            ...(active.contract as Record<string, unknown>),
+            version: 15,
+            file: "pb-card.v15.docx",
+            sha256: checksum,
+          },
+        },
+      });
       const draft = fixture();
-      draft.items[0].fullNameRu = "Оченьдлинное ".repeat(35).trim();
-      // The current BIOT form is a flowing full-page bilingual table and this
-      // value fits it. Exercise real overflow on the fixed-size PB card.
+      draft.items[0].fullNameRu = "Ш".repeat(79);
+      // The synthetic wide token stays below the 80-character lexical guard
+      // and the 500-character contract. Its physical width cannot fit even
+      // at the renderer's minimum readable font on the fixed-size PB card.
       draft.items[0].assignments[0].templateId = "pb-card";
       delete draft.items[0].assignments[0].biotCategory;
-      const request = await createApprovedRequest(ca, draft);
+      const request = await createRequest(ca, draft);
+      await approvals.approve(request.id);
       const before = await db.numberReservation.count({
         where: { tenantId: ca.tenantId },
       });
@@ -433,6 +476,11 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       );
       assert.equal((await requestDetail(ca, request.id)).status, "DRAFT");
       draft.items[0].fullNameRu = "Исправленный Синтетический Получатель";
+      draft.items[0].fullNameKz = "Синтетикалық Тыңдаушы";
+      draft.items[0].positionRu = "Инженер";
+      draft.items[0].positionKz = "Маман";
+      draft.items[0].workplaceRu = "Синтетическое предприятие";
+      draft.items[0].workplaceKz = "Синтетикалық кәсіпорын";
       const corrected = await patchRequest(ca, request.id, {
         expectedRevision: request.revision,
         draft,

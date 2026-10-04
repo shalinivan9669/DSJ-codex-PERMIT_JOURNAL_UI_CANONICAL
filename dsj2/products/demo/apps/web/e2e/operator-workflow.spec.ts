@@ -1,8 +1,29 @@
 import { openRecipientExtraTools } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import { newAssignment, newRecipient, type Draft } from "../lib/types";
+import { resolveDraft } from "@demo/contracts";
+test.use({ trace: "off" });
+async function dates(page: Page) {
+  await page
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Общие даты и протоколы", exact: true })
+    .click();
+  const modal = page.getByRole("dialog");
+  return modal;
+}
+async function closeDates(page: Page) {
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
+    .click();
+}
 
 async function mockWorkspace(page: Page) {
+  page.on("pageerror", (error) =>
+    process.stderr.write(`Mock editor page error: ${error.stack}\n`),
+  );
   let draft: Draft = {
     id: "ui-contract",
     revision: 0,
@@ -39,8 +60,19 @@ async function mockWorkspace(page: Page) {
   await page.route("**/api/**", async (route) => {
     const url = new URL(route.request().url());
     const path = url.pathname.slice(4);
-    let result: unknown = {};
+    let result: unknown = { items: [], total: 0 };
     if (path === "/auth/session") result = { csrfToken: "test-csrf" };
+    else if (path === "/print-requests/ui-contract/signing")
+      result = {
+        status: null,
+        archived: false,
+        providers: {
+          EGOV_QR: { available: false, reason: "Synthetic UI fixture" },
+          NCALAYER: { available: false },
+        },
+        documents: [],
+        missingBindings: [],
+      };
     else if (path === "/context")
       result = {
         user: {
@@ -86,6 +118,8 @@ async function mockWorkspace(page: Page) {
       result = { revision: draft.revision };
     } else if (path === "/print-requests/ui-contract")
       result = { ...draft, artifacts: [], issuances: [], issuanceEvents: [] };
+    else if (path === "/print-requests/ui-contract/resolved")
+      result = resolveDraft(draft);
     else if (
       path === "/customers" ||
       path === "/jobs" ||
@@ -126,8 +160,8 @@ async function mockWorkspace(page: Page) {
     await route.fulfill({ json: result });
   });
   await page.goto("/requests/ui-contract/edit");
-  await expect(page.getByLabel("ФИО RU, строка 1")).toBeVisible();
-  await page.getByRole("button", { name: "RU + KZ", exact: true }).click();
+  await expect(page.getByLabel("ФИО, строка 1")).toBeVisible();
+  await page.locator(".operator-list-tools > summary").click();
   return {
     getDraft: () => draft,
     saves,
@@ -145,7 +179,7 @@ test("rectangular paste is one undo operation and conflict preserves another ope
   page,
 }) => {
   const state = await mockWorkspace(page);
-  await page.getByLabel("ФИО RU, строка 1").evaluate((element) => {
+  await page.getByLabel("ФИО, строка 1").evaluate((element) => {
     const data = new DataTransfer();
     data.setData("text/plain", "Новый RU\tЖаңа KZ");
     element.dispatchEvent(
@@ -160,7 +194,13 @@ test("rectangular paste is one undo operation and conflict preserves another ope
   await dialog.getByRole("button", { name: "Применить диапазон" }).click();
   await expect(dialog).not.toBeVisible();
   expect(state.getDraft().items[0].fullNameRu).toBe("Новый RU");
-  expect(state.getDraft().items[0].assignments[1].templateId).toBe("ptm-card");
+  expect(state.getDraft().items[0].positionRu).toBe("Жаңа KZ");
+  expect(state.getDraft().items[0].fullNameKz).toBe("");
+  expect(
+    state
+      .getDraft()
+      .items[0].assignments.find((entry) => entry.id === "ptm-one")?.templateId,
+  ).toBe("ptm-card");
   state.foreignSave();
   await page
     .getByRole("button", { name: "Отменить массовое изменение" })
@@ -177,14 +217,14 @@ test("event set and confirmed outcomes are separate single undo operations", asy
 }) => {
   const state = await mockWorkspace(page);
   await page.getByLabel("Выбрать видимых получателей").check();
-  await page.getByRole("button", { name: "Настроить даты и протоколы" }).click();
-  await page
+  const eventPanel = await dates(page);
+  await eventPanel
     .getByRole("button", { name: "Добавить событие", exact: true })
     .click();
   await expect(
-    page.getByLabel("Название события", { exact: true }),
+    page.getByRole("dialog").getByLabel("Название события", { exact: true }),
   ).toBeVisible();
-  await page
+  await eventPanel
     .getByRole("button", { name: "Назначить набор выбранным (2)" })
     .click();
   await expect
@@ -200,17 +240,18 @@ test("event set and confirmed outcomes are separate single undo operations", asy
   const assignmentIds = state
     .getDraft()
     .items.map((item) => item.assignments.map((assignment) => assignment.id));
-  await page
+  await eventPanel
     .getByRole("button", { name: "Назначить набор выбранным (2)" })
     .click();
   await expect(
-    page.getByRole("button", { name: "Назначить набор выбранным (2)" }),
+    eventPanel.getByRole("button", { name: "Назначить набор выбранным (2)" }),
   ).toBeEnabled();
   expect(
     state
       .getDraft()
       .items.map((item) => item.assignments.map((assignment) => assignment.id)),
   ).toEqual(assignmentIds);
+  await closeDates(page);
   await page
     .getByRole("button", { name: "Отменить массовое изменение" })
     .click();
@@ -224,7 +265,8 @@ test("event set and confirmed outcomes are separate single undo operations", asy
           ).length,
     )
     .toBe(0);
-  await page
+  await dates(page);
+  await eventPanel
     .getByRole("button", { name: "Назначить набор выбранным (2)" })
     .click();
   await expect
@@ -237,19 +279,19 @@ test("event set and confirmed outcomes are separate single undo operations", asy
           ).length,
     )
     .toBe(2);
-  await page
+  await eventPanel
     .getByText("Подтвердить фактические результаты события", { exact: true })
     .click();
-  await page
+  await eventPanel
     .getByLabel("Известный результат", { exact: true })
     .selectOption("PASSED");
-  await page
+  await eventPanel
     .getByLabel("Источник подтверждения", { exact: true })
     .fill("Синтетическая ведомость");
-  await page
+  await eventPanel
     .getByRole("button", { name: "Проверить применение результатов" })
     .click();
-  await page
+  await eventPanel
     .getByRole("button", { name: "Подтвердить результаты", exact: true })
     .click();
   await expect
@@ -261,6 +303,7 @@ test("event set and confirmed outcomes are separate single undo operations", asy
           ?.status,
     )
     .toBe("PASSED");
+  await closeDates(page);
   await page
     .getByRole("button", { name: "Отменить массовое изменение" })
     .click();
@@ -283,8 +326,8 @@ test("keyboard edits preserve focus order and event common fields undo as one sa
   page,
 }) => {
   const state = await mockWorkspace(page);
-  const ru = page.getByLabel("ФИО RU, строка 1");
-  const kz = page.getByLabel("ФИО KZ, строка 1");
+  const ru = page.getByLabel("ФИО, строка 1");
+  const kz = page.getByLabel("Должность · RU, строка 1", { exact: true });
   await ru.focus();
   await page.keyboard.press("Tab");
   await expect(kz).toBeFocused();
@@ -293,17 +336,16 @@ test("keyboard edits preserve focus order and event common fields undo as one sa
   await page.keyboard.press("Enter");
   expect(state.getDraft().status).toBe("DRAFT");
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await page.getByRole("button", { name: "Настроить даты и протоколы" }).click();
-  await page
+  const eventPanel = await dates(page);
+  await eventPanel
     .getByRole("button", { name: "Добавить событие", exact: true })
     .click();
   const before = structuredClone(state.getDraft().events);
   await page
+    .getByRole("dialog")
     .getByLabel("Название события", { exact: true })
     .fill("Общий контекст после изменения");
-  await page
-    .getByRole("textbox", { name: "Название заявки", exact: true })
-    .focus();
+  await closeDates(page);
   const undo = page.getByRole("button", {
     name: "Отменить массовое изменение",
   });
@@ -318,9 +360,11 @@ test("operator bulk preview applies only selected PB empty dates and supports re
   const state = await mockWorkspace(page);
   await page.getByLabel("Выбрать видимых получателей").check();
   await page.getByLabel("Поиск в заявке").fill("Первый");
-  await expect(page.getByText(/из них скрыто поиском: 1/)).toBeVisible();
+  await expect(page.getByText(/из них скрыто фильтрами: 1/)).toBeVisible();
   await openRecipientExtraTools(page);
-  await page.getByRole("button", { name: "Изменить данные выбранных (2)" }).click();
+  await page
+    .getByRole("button", { name: "Изменить данные выбранных (2)" })
+    .click();
   const dialog = page.getByRole("dialog");
   await dialog
     .getByRole("combobox", { name: "Направление", exact: true })
@@ -340,7 +384,12 @@ test("operator bulk preview applies only selected PB empty dates and supports re
   expect(state.getDraft().items[0].assignments[0].documentDate).toBe(
     "2026-09-24",
   );
-  expect(state.getDraft().items[0].assignments[1].documentDate).toBe("");
+  expect(
+    state
+      .getDraft()
+      .items[0].assignments.find((entry) => entry.id === "ptm-one")
+      ?.documentDate,
+  ).toBe("");
   expect(state.getDraft().items[1].assignments[0].documentDate).toBe(
     "2026-01-01",
   );
@@ -364,15 +413,18 @@ test("recipient lookup pages beyond first hundred and never reuses historical re
   for (let n = 0; n < 5; n++) {
     await dialog.getByRole("button", { name: "Далее", exact: true }).click();
     await expect(
-      dialog.getByText(`Найдено: 101 · страница ${n + 2}`),
+      dialog.getByText(`Страница ${n + 2}`, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      dialog.getByRole("button", { name: "Выбрать", exact: true }),
     ).toBeVisible();
   }
   await expect(dialog.getByText("Сто первый получатель")).toBeVisible();
   await dialog.getByRole("button", { name: "Выбрать", exact: true }).click();
-  await expect(page.getByLabel("ФИО RU, строка 3")).toHaveValue(
+  await expect(page.getByLabel("ФИО, строка 3")).toHaveValue(
     "Сто первый получатель",
   );
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   const reused = state.getDraft().items[2];
   expect(reused.recipientId).toBe("saved-6");
   expect(reused.personnelNumber).toBe("00101");
@@ -464,7 +516,10 @@ test("mixed customer output selects employer B, binds its profile and requires e
   );
   await page.reload();
   await page
-    .getByRole("button", { name: "Настроить выдачу", exact: true })
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Комплект для заказчика", exact: true })
     .click();
   const company = page.getByRole("combobox", {
     name: "Заказчик этого комплекта",

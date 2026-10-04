@@ -1,4 +1,9 @@
-import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
+import {
+  legacyPrintFixture,
+  openLegacyPersonal,
+} from "./operator-legacy-lifecycle-fixture";
+import { newAssignment, type Assignment } from "../lib/types";
+test.use({ trace: "off" });
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -104,269 +109,200 @@ function mediaEntries(bytes: Buffer) {
   return found;
 }
 
-test("generated portrait: upload, crop, refresh, preview, issue and exact embedded photo", async ({
+test("synthetic photo fixture: actual upload, crop, reload, preview, director decision and exact embedded saved image", async ({
   page,
   browser,
 }) => {
-  test.skip(
-    !fixture,
-    "This acceptance uses an explicitly generated fictional portrait, supplied by DEMO_E2E_PORTRAIT.",
-  );
-  test.setTimeout(Math.max(300000, templates.length * 180000));
+  if (!fixture) throw new Error("EXPLICIT_SYNTHETIC_PHOTO_FIXTURE_REQUIRED");
+  test.setTimeout(Math.max(360000, templates.length * 180000));
   await fs.mkdir(evidence, { recursive: true });
   const strictTlsProof = await verifyLocalTls();
-  const navigation = await page.goto("/login");
-  const tlsDetails = await navigation?.securityDetails();
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL!);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD!);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать" }),
-  ).toBeVisible();
-  const secureTransport = page.url().startsWith("https:");
-  const sessionCookies = (await page.context().cookies()).filter((cookie) =>
-    cookie.name.startsWith("demo_"),
-  );
-  if (secureTransport) {
-    expect(tlsDetails).toBeTruthy();
-    expect(sessionCookies.length).toBeGreaterThan(0);
-    expect(sessionCookies.every((cookie) => cookie.secure)).toBe(true);
-  }
-  const resumeRequest = process.env.DEMO_E2E_RESUME_REQUEST;
-  let photoBytes: Buffer;
-  if (resumeRequest) {
-    // Only an explicitly identified acceptance request may be resumed. This
-    // branch reads the finalized result without changing its draft or numbers.
-    await page.goto(`/requests/${resumeRequest}/edit`);
-    const existingPhoto = page.getByRole("img", { name: "Фото получателя" });
-    await expect(existingPhoto).toBeVisible();
-    const response = await page.request.get(
-      (await existingPhoto.getAttribute("src"))!,
-    );
-    expect(response.ok()).toBe(true);
-    photoBytes = await response.body();
-    await fs.writeFile(
-      path.join(evidence, "normalized-portrait.png"),
-      photoBytes,
-    );
-  } else {
-    await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-    await createRequestWithWorkerDocument(page, "PERSON");
-    await page
-      .getByLabel("Название заявки", { exact: true })
-      .fill(`ТЕСТ · созданный портрет · ${template} · ${Date.now()}`);
-    await page
-      .getByLabel("ФИО RU, строка 1")
-      .fill("Тестовый Вымышленный Получатель");
-    await page.getByLabel("ФИО KZ, строка 1").fill("Сынақ Әли Қасымұлы");
-    const demoMode = page.getByLabel("Тестовый комплект", { exact: true });
-    if (await demoMode.isEnabled()) await demoMode.check();
-    else await expect(demoMode).toBeChecked();
-    for (const [index, id] of templates.entries()) {
-      if (index > 0)
-        await page
-          .getByRole("button", { name: "Добавить документ", exact: true })
-          .click();
-      const assignment = page.locator(".assignment-list details").nth(index);
-      if (!(await assignment.getAttribute("open"))) {
-        // Boolean HTML attributes may be the empty string, so inspect the property.
-        if (
-          !(await assignment.evaluate(
-            (element) => (element as HTMLDetailsElement).open,
-          ))
-        )
-          await assignment.locator("summary").click();
-      }
-      await assignment
-        .getByLabel("Форма документа", { exact: true })
-        .selectOption(id);
-      await assignment
-        .getByLabel("Дата документа", { exact: true })
-        .fill("2026-09-22");
-      await assignment
-        .getByLabel("Действителен до", { exact: true })
-        .fill("2027-09-22");
-      await assignment
-        .getByLabel("Дата протокола", { exact: true })
-        .fill("2026-09-22");
-      await assignment
-        .getByLabel("Программа / тема обучения", { exact: true })
-        .fill("Тестовая программа безопасности");
-      await assignment
-        .getByLabel("Подтверждённый результат / оценка")
-        .fill("ТЕСТ: хорошо / жақсы");
-    }
-    await page.getByRole("tab", { name: "Личные данные", exact: true }).click();
-    await page.getByLabel("Должность · RU", { exact: true }).fill("Инженер");
-    await page.getByLabel("Должность · KZ", { exact: true }).fill("Инженер");
-    await page
-      .getByLabel("Место работы · RU", { exact: true })
-      .fill("Тестовая организация");
-    await page
-      .getByLabel("Место работы · KZ", { exact: true })
-      .fill("Сынақ ұйымы");
-    await page.getByRole("button", { name: "Фото", exact: true }).click();
-    await page.getByLabel("Выбрать фотографию").setInputFiles(fixture!);
+  const f = await legacyPrintFixture(page, browser);
+  try {
+    await f.patch((draft) => {
+      draft.items[0].fullNameRu = "Тестовый Получатель Фото";
+      draft.items[0].fullNameKz = "Сынақ Әли Қасымұлы";
+      draft.items[0].positionRu = "Инженер";
+      draft.items[0].positionKz = "Инженер";
+      draft.items[0].workplaceRu = "Тест Альфа";
+      draft.items[0].workplaceKz = "Тест Альфа";
+      draft.items[0].employeeCategory = templates.some((id) =>
+        id.startsWith("biot-itr-"),
+      )
+        ? "ITR"
+        : "WORKER";
+      draft.items[0].assignments = templates.map((id) => ({
+        ...newAssignment(id as Assignment["templateId"]),
+        documentDate: "2026-10-03",
+        protocolDate: "2026-10-02",
+        trainingStart: "2026-10-01",
+        trainingEnd: "2026-10-02",
+        trainingSubject: "Тестовая программа безопасности",
+        result: "Сдал / Тапсырды (ТЕСТ)",
+        outcome: {
+          status: "PASSED",
+          source:
+            "СИНТЕТИЧЕСКАЯ известная ведомость embedded-photo fixture; не реальное обучение",
+        },
+        ...(id.startsWith("biot-itr-")
+          ? {
+              biotKnowledgeResult: "ТЕСТ:92 из100",
+              biotProctoringResult: "ТЕСТ: прошел",
+            }
+          : {}),
+      }));
+    });
+    const personal = await openLegacyPersonal(page);
+    await personal.getByRole("button", { name: "Фото", exact: true }).click();
+    const photoDialog = page.getByRole("dialog", {
+      name: "Фото для печати",
+      exact: true,
+    });
+    await photoDialog.getByLabel("Выбрать фотографию").setInputFiles(fixture);
     await expect(
-      page.getByRole("button", { name: "Сохранить фото", exact: true }),
+      photoDialog.getByRole("button", { name: "Сохранить фото", exact: true }),
     ).toBeEnabled();
     await page.screenshot({
       path: path.join(evidence, "portrait-crop.png"),
       fullPage: true,
     });
-    await page
+    await photoDialog
       .getByRole("button", { name: "Сохранить фото", exact: true })
       .click();
-    await expect(page.getByRole("dialog")).toHaveCount(0);
-    await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-    await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+    await expect(photoDialog).toHaveCount(0);
+    await personal
+      .getByRole("button", { name: "Вернуться к списку", exact: true })
+      .click();
+    await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
     await page.reload();
-    const img = page.getByRole("img", { name: "Фото получателя" });
+    const readback = await openLegacyPersonal(page);
+    const img = readback.getByRole("img", {
+      name: "Фото получателя",
+      exact: true,
+    });
     await expect(img).toBeVisible();
     const photo = await page.request.get((await img.getAttribute("src"))!);
     expect(photo.ok()).toBe(true);
-    photoBytes = await photo.body();
-    await fs.writeFile(
-      path.join(evidence, "normalized-portrait.png"),
-      photoBytes,
-    );
-    await page.getByRole("button", { name: "Проверить", exact: true }).click();
+    const photoBytes = await photo.body();
+    await fs.writeFile(path.join(evidence, "normalized-photo.png"), photoBytes);
+    await readback
+      .getByRole("button", { name: "Вернуться к списку", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Проверить данные", exact: true })
+      .click();
     await expect(
       page.getByText("Данные прошли проверку", { exact: true }),
     ).toBeVisible();
     await page
-      .getByRole("button", { name: "Предпросмотр", exact: true })
+      .getByRole("button", { name: "Посмотреть документы", exact: true })
       .click();
-    const view = page
-      .getByRole("button", { name: "Посмотреть", exact: true })
-      .first();
-    await expect(view).toBeVisible({ timeout: 180000 });
-    await view.click();
+    await expect
+      .poll(
+        async () =>
+          (await f.read()).artifacts.some(
+            (a) => a.provenance === "PREVIEW" && a.format === "PDF",
+          ),
+        { timeout: 240000 },
+      )
+      .toBe(true);
+    await page
+      .locator(".files-panel")
+      .getByRole("button", { name: "Обновить", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Просмотр PDF", exact: true })
+      .first()
+      .click();
+    const previewDialog = page.getByRole("dialog", { name: "Предпросмотр PDF", exact: true });
+    await expect(previewDialog.getByRole("img", { name: /^Страница 1 из/ })).toBeVisible();
     const preview = await page.request.get(
-      (await page.locator("iframe").getAttribute("src"))!,
+      (await previewDialog.getByRole("link", { name: "Открыть PDF отдельно", exact: true }).getAttribute("href"))!,
     );
     expect(preview.headers()["content-type"]).toContain("application/pdf");
     await fs.writeFile(
       path.join(evidence, "browser-preview.pdf"),
       await preview.body(),
     );
-    await page.waitForTimeout(2500);
     await page.screenshot({ path: path.join(evidence, "pdf-preview.png") });
-    await page.getByRole("button", { name: "Закрыть", exact: true }).click();
     await page
-      .getByRole("button", { name: "Оформить комплект", exact: true })
+      .getByRole("dialog")
+      .getByRole("button", { name: "Закрыть диалог", exact: true })
       .click();
-    await page.getByRole("button", { name: "Оформить", exact: true }).click();
-    await expect(page.locator(".title-with-status .status")).toHaveText(
-      "Оформлено",
-    );
-  }
-  const artifactCount = templates.length * 4 + 2;
-  await expect(page.locator(".files-panel")).toContainText(
-    `Готово ${artifactCount} из ${artifactCount}`,
-    { timeout: Math.max(180000, templates.length * 120000) },
-  );
-  await page.screenshot({
-    path: path.join(evidence, "issued-portrait.png"),
-    fullPage: true,
-  });
-  const requestId = /requests\/([^/]+)/.exec(page.url())![1];
-  const snapshot = await (
-    await page.request.get(`/api/print-requests/${requestId}`)
-  ).json();
-  expect(snapshot.issuances).toHaveLength(1);
-  expect(snapshot.documents).toHaveLength(templates.length);
-  expect(snapshot.artifacts).toHaveLength(artifactCount);
-  expect(
-    snapshot.issuances[0].snapshot.draft.items[0].photoAssetId,
-  ).toBeTruthy();
-  const artifacts = [];
-  let embeddedMatches = 0;
-  for (const artifact of snapshot.artifacts) {
-    const response = await page.request.get(`/api/artifacts/${artifact.id}`);
-    expect(response.ok()).toBe(true);
-    const bytes = await response.body();
-    expect(sha(bytes)).toBe(artifact.sha256);
-    const file = `${artifact.id}-${artifact.fileName}`;
-    await fs.writeFile(path.join(evidence, file), bytes);
-    const media =
-      artifact.format === "DOCX"
-        ? mediaEntries(bytes).map((entry) => ({
-            name: entry.name,
-            sha256: sha(entry.bytes),
-            matchesUploadedPhoto: sha(entry.bytes) === sha(photoBytes),
-          }))
-        : [];
-    embeddedMatches += media.filter(
-      (entry) => entry.matchesUploadedPhoto,
-    ).length;
-    artifacts.push({
-      file,
-      format: artifact.format,
-      provenance: artifact.provenance,
-      sha256: sha(bytes),
-      bytes: bytes.length,
-      media,
+    const snapshot = await f.issue();
+    expect(snapshot.issuances).toHaveLength(1);
+    expect(
+      snapshot.issuances[0].snapshot.draft.items[0].photoAssetId,
+    ).toBeTruthy();
+    await page.screenshot({
+      path: path.join(evidence, "issued-photo.png"),
+      fullPage: true,
     });
-  }
-  const expectedPhotoMatches =
-    snapshot.issuances[0].snapshot.templates.filter(
-      (item: { contract: { photo: boolean } }) => item.contract.photo,
-    ).length * 2;
-  expect(embeddedMatches).toBe(expectedPhotoMatches);
-  await fs.writeFile(
-    path.join(evidence, "photo-result.json"),
-    JSON.stringify(
-      {
-        status: "PASS",
-        scenario: resumeRequest
-          ? "Readback of the same finalized acceptance request; no second issuance"
-          : "Complete upload, crop, preview and issue browser cycle",
-        origin: process.env.DEMO_ORIGIN,
-        requestId,
-        requestUrl: page.url(),
-        browserVersion: browser.version(),
-        syntheticDataOnly: true,
-        transport: {
-          https: secureTransport,
-          securityDetails: tlsDetails,
-          strictTlsProof,
-          browserLeafSpkiPin: process.env.DEMO_E2E_CERT_SPKI || null,
-          nodeExtraCaFile: process.env.NODE_EXTRA_CA_CERTS
-            ? path.basename(process.env.NODE_EXTRA_CA_CERTS)
-            : null,
-          cookies: sessionCookies.map(
-            ({ name, secure, httpOnly, sameSite }) => ({
-              name,
-              secure,
-              httpOnly,
-              sameSite,
-            }),
-          ),
+    const artifacts = [];
+    let embeddedMatches = 0;
+    for (const artifact of snapshot.artifacts.filter((a) =>
+      ["PDF", "DOCX"].includes(a.format || ""),
+    )) {
+      const response = await page.request.get(`/api/artifacts/${artifact.id}`);
+      expect(response.ok()).toBe(true);
+      const bytes = await response.body();
+      expect(sha(bytes)).toBe(artifact.sha256);
+      const file = `${artifact.id}-${artifact.fileName}`;
+      await fs.writeFile(path.join(evidence, file), bytes);
+      const media =
+        artifact.format === "DOCX"
+          ? mediaEntries(bytes).map((entry) => ({
+              name: entry.name,
+              sha256: sha(entry.bytes),
+              matchesUploadedPhoto: sha(entry.bytes) === sha(photoBytes),
+            }))
+          : [];
+      embeddedMatches += media.filter((m) => m.matchesUploadedPhoto).length;
+      artifacts.push({
+        file,
+        format: artifact.format,
+        provenance: artifact.provenance,
+        sha256: sha(bytes),
+        bytes: bytes.length,
+        media,
+      });
+    }
+    // Count actual rendered individual photo-bearing forms, not training choices;
+    // mandatory companion kits may add supported forms without a photo slot.
+    const actual = await page.request.get(`/api/print-requests/${f.id}`);
+    const full = await actual.json();
+    const photoTemplates = full.issuances[0].snapshot.templates.filter(
+      (t: { contract: { photo: boolean } }) => t.contract.photo,
+    ).length;
+    expect(embeddedMatches).toBe(photoTemplates * 2);
+    expect(embeddedMatches).toBeGreaterThan(0);
+    await fs.writeFile(
+      path.join(evidence, "photo-result.json"),
+      JSON.stringify(
+        {
+          status: "PASS",
+          scenario:
+            "Actual UI upload/crop/reload/preview/generate after real director decision; exact normalized image embedded in saved DOCX",
+          fixtureMeaning:
+            "Explicit synthetic test image only; no real human portrait or human crop-quality claim",
+          origin: process.env.DEMO_ORIGIN,
+          requestId: f.id,
+          browserVersion: browser.version(),
+          syntheticDataOnly: true,
+          transport: { https: page.url().startsWith("https:"), strictTlsProof },
+          photoSource: path.basename(fixture),
+          photoSourceSha256: sha(await fs.readFile(fixture)),
+          normalizedPhotoSha256: sha(photoBytes),
+          exactEmbeddedPhotoMatches: embeddedMatches,
+          documentCount: snapshot.documents.length,
+          officialUnsignedDelivery: "blocked409",
+          artifacts,
         },
-        portraitSource: path.basename(fixture!),
-        portraitSourceSha256: sha(await fs.readFile(fixture!)),
-        normalizedPhotoSha256: sha(photoBytes),
-        exactEmbeddedPhotoMatches: embeddedMatches,
-        templates: snapshot.issuances[0].snapshot.templates.map(
-          (item: {
-            contract: { id: string };
-            version: string;
-            checksum: string;
-          }) => ({
-            id: item.contract.id,
-            version: item.version,
-            sha256: item.checksum,
-          }),
-        ),
-        artifacts,
-      },
-      null,
-      2,
-    ),
-  );
+        null,
+        2,
+      ),
+    );
+  } finally {
+    await f.roles.close();
+  }
 });

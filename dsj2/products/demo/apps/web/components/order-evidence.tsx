@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
+import { trainingDisplayTitle } from "@/lib/training-display";
 export function OrderEvidence({
   orderId,
   canManage,
@@ -119,7 +120,7 @@ export function OrderEvidence({
               </a>
               <small style={{ display: "block" }}>
                 {file.eventId
-                  ? `Событие: ${events.find((e) => e.id === file.eventId)?.title || "связано с заявкой"}`
+                  ? `Событие: ${trainingDisplayTitle(events.find((e) => e.id === file.eventId)?.title || "связано с заявкой")}`
                   : "Заказ в целом"}
                 {file.source ? ` · ${file.source}` : ""}
               </small>
@@ -138,7 +139,7 @@ export function OrderEvidence({
               <option value="">К заказу в целом</option>
               {events.map((event) => (
                 <option key={event.id} value={event.id}>
-                  {event.title}
+                  {trainingDisplayTitle(event.title)}
                 </option>
               ))}
             </select>

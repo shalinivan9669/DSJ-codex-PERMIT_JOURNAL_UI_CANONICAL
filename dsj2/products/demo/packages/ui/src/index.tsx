@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { useId, useLayoutEffect, useRef, type ReactNode } from "react";
 
 export function Modal({
   title,
@@ -14,11 +14,14 @@ export function Modal({
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const heading = useId();
-  useEffect(() => {
+  useLayoutEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     dialog.current?.showModal();
     return () => {
-      previous?.focus();
+      // Release modal inertness before restoring the opener during unmount.
+      dialog.current?.close();
+      if (previous?.isConnected && !previous.matches(":disabled"))
+        previous.focus();
     };
   }, []);
   return (

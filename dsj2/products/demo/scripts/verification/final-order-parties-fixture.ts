@@ -6,6 +6,7 @@ import { createRequest } from "../../apps/api/src/requests";
 import { createServiceOrder } from "../../apps/api/src/operator-value";
 import { draftSchema } from "../../packages/contracts/src";
 import { assertTestDatabase } from "../../tests/integration/test-database";
+import { finalApprovalActors } from "./final-approval-actors";
 
 async function main() {
   assertTestDatabase();
@@ -19,11 +20,12 @@ async function main() {
   });
   const c: Context = {
     ...identity,
-    role: "ADMIN",
+    role: "DIRECTOR",
     sessionId: "fixture",
     csrfHash: "fixture",
     correlationId: randomUUID(),
   };
+  await finalApprovalActors(c);
   const parties = await Promise.all(
     [
       "Заказчик А — три стороны",

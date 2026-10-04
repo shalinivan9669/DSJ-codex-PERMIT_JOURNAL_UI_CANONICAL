@@ -1,30 +1,17 @@
+import { loginIsolated } from "./operator-full-fix-session";
 import { openRecipientExtraTools } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { newRecipient, type Draft } from "../lib/types";
 
+test.use({ trace: "off" });
 const evidence = process.env.DEMO_E2E_EVIDENCE!;
 async function login(page: Page) {
   expect(process.env.DEMO_E2E_ISOLATED_TENANT).toBe("1");
   await fs.mkdir(evidence, { recursive: true });
   await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
-  await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(process.env.DEMO_E2E_EMAIL!);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(process.env.DEMO_E2E_PASSWORD!);
-  await page.getByRole("button", { name: "Войти", exact: true }).click();
-  await expect(
-    page.getByRole("heading", { name: "Заявки на печать", exact: true }),
-  ).toBeVisible();
-  const session = await page.request.get("/api/auth/session");
-  return {
-    origin: new URL(page.url()).origin,
-    "x-csrf-token": (await session.json()).csrfToken,
-  };
+  return loginIsolated(page);
 }
 async function create(page: Page, company = false) {
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
@@ -33,12 +20,8 @@ async function create(page: Page, company = false) {
       name: company ? /^Организация/ : /^Физическое лицо/,
     })
     .check();
-  await page
-    .getByRole("button", { name: "Перейти к людям и документам", exact: true })
-    .click();
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toBeVisible();
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
   return /requests\/([^/]+)/.exec(page.url())![1];
 }
 async function read(page: Page, id: string): Promise<Draft> {
@@ -47,8 +30,9 @@ async function read(page: Page, id: string): Promise<Draft> {
   return response.json();
 }
 async function save(page: Page) {
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await expect(page.locator(".save-indicator")).toContainText("Сохранено");
+  await expect(page.locator(".save-indicator").first()).toContainText(
+    /сохранена/i,
+  );
 }
 
 test("real UI creates one, then keyboard enters ten without opening cards and persists every field", async ({
@@ -57,7 +41,7 @@ test("real UI creates one, then keyboard enters ten without opening cards and pe
   await login(page);
   const start = performance.now();
   const id = await create(page);
-  const first = page.getByLabel("ФИО RU, строка 1", { exact: true });
+  const first = page.getByLabel("ФИО, строка 1", { exact: true });
   await expect(first).toBeFocused();
   await page.keyboard.insertText("Синтетический Андрей Александрович");
   await save(page);
@@ -66,20 +50,20 @@ test("real UI creates one, then keyboard enters ten without opening cards and pe
   );
   const firstSavedMs = performance.now() - start;
   for (let i = 1; i < 10; i++)
-    await page.getByRole("button", { name: "Получатель", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Добавить строку", exact: true })
+      .click();
   await first.fill("");
   const entryStart = performance.now();
   const expected = [];
   for (let i = 1; i <= 10; i++) {
     await expect(
-      page.getByLabel(`ФИО RU, строка ${i}`, { exact: true }),
+      page.getByLabel(`ФИО, строка ${i}`, { exact: true }),
     ).toBeFocused();
     const values = [
       `${i % 2 ? "Иванов" : "Иванова"} ${i} Синтетический`,
       i % 2 ? "Электромонтёр" : "Мастер участка",
-      i === 7
-        ? "Индивидуальная организация"
-        : "Синтетическая организация Альфа",
+      i % 2 ? "Электрмонтер" : "Учаске шебері",
     ];
     await page.keyboard.insertText(values[0]);
     await page.keyboard.press("Tab");
@@ -87,14 +71,17 @@ test("real UI creates one, then keyboard enters ten without opening cards and pe
     await page.keyboard.press("Tab");
     await page.keyboard.insertText(values[2]);
     expected.push(values);
-    if (i < 10)
-      for (let tab = 0; tab < 5; tab++) await page.keyboard.press("Tab");
+    if (i < 10) {
+      await page.keyboard.press("Shift+Tab");
+      await page.keyboard.press("Shift+Tab");
+      await page.keyboard.press("Enter");
+    }
   }
   await save(page);
   const keyboardSavedMs = performance.now() - entryStart;
   const persisted = await read(page, id);
   expect(
-    persisted.items.map((i) => [i.fullNameRu, i.positionRu, i.workplaceRu]),
+    persisted.items.map((i) => [i.fullNameRu, i.positionRu, i.positionKz]),
   ).toEqual(expected);
   await page.reload();
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(10);
@@ -156,6 +143,9 @@ test("real existing organization and recipient reuse keeps personal data and res
   const record = await stored.json();
   const id = await create(page, true);
   await page
+    .getByRole("button", { name: "Из справочника", exact: true })
+    .click();
+  await page
     .getByRole("button", { name: "Найти в справочнике", exact: true })
     .click();
   await page
@@ -192,9 +182,9 @@ test("real existing organization and recipient reuse keeps personal data and res
   // No implicit worker document or previous result/date survives reuse.
   expect(result.items[0].assignments).toEqual([]);
   await page.reload();
-  await expect(
-    page.getByLabel("ФИО RU, строка 1", { exact: true }),
-  ).toHaveValue(person.fullNameRu);
+  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toHaveValue(
+    person.fullNameRu,
+  );
   await fs.writeFile(
     path.join(evidence, "reuse-result.json"),
     JSON.stringify(
@@ -240,8 +230,12 @@ test("real CSV import explains duplicates and missing names, explicit exclusions
     .click();
   const modal = page.getByRole("dialog");
   await expect(
-    modal.getByText("Возможный дубль", { exact: true }),
-  ).toBeVisible();
+    modal.getByRole("row").filter({
+      has: page.getByLabel("Импортировать исходную строку 7", {
+        exact: true,
+      }),
+    }),
+  ).toContainText("Возможный дубль");
   await modal
     .getByLabel("Импортировать исходную строку 4", { exact: true })
     .uncheck();
@@ -257,6 +251,9 @@ test("real CSV import explains duplicates and missing names, explicit exclusions
   await page.screenshot({
     path: path.join(evidence, "import-errors-review.png"),
   });
+  await modal
+    .getByText("Сохранённые правила сопоставления", { exact: true })
+    .click();
   const download = page.waitForEvent("download");
   await modal
     .getByRole("button", { name: "Скачать отчёт по строкам", exact: true })
