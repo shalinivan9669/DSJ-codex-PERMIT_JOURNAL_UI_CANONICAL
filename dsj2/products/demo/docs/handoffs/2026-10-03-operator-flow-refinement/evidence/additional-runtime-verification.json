@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-03",
+  "requestId": "2d860079-5170-42ff-a5d5-da1f92f9843c",
+  "scope": "Synthetic local company draft created for UX audit",
+  "method": {
+    "database": "demo_test_first_live_ui",
+    "address": "127.0.0.1",
+    "port": 55439,
+    "sql": "SELECT RequestProposal.payload fields inside BEGIN READ ONLY / COMMIT; psql -X -t -A -v ON_ERROR_STOP=1",
+    "newLogin": false,
+    "apiCalls": false,
+    "dataMutationsByIndependentVerifier": false,
+    "timestampField": "submittedAt"
+  },
+  "rowIds": {
+    "row1": "25b2aa38-12f4-4fe9-81e3-756986d17daf",
+    "row3": "5722b850-c115-4cf7-a2f2-20bf4cf84444"
+  },
+  "categoryCorrection": {
+    "sequence": "WORKER -> ITR -> WORKER",
+    "primaryAssignmentId": "3553d86d-3409-46a6-9356-52ff6efe8616",
+    "initialEventId": "29a7c112-64a8-4201-aa92-b40cd1e1ada4",
+    "revisions": [
+      {
+        "revision": 17,
+        "submittedAt": "2026-10-03T05:20:40.373Z",
+        "category": "WORKER",
+        "events": 4,
+        "row1Assignments": 3,
+        "row1Event": "29a7c112-64a8-4201-aa92-b40cd1e1ada4",
+        "row3Event": "29a7c112-64a8-4201-aa92-b40cd1e1ada4",
+        "biotGroups": [
+          {
+            "id": "29a7c112-64a8-4201-aa92-b40cd1e1ada4",
+            "title": "BIOT — Рабочие",
+            "members": 2
+          }
+        ],
+        "documentDate": "2026-10-06",
+        "documentDateOrigin": "MANUAL",
+        "validUntil": "2027-10-06",
+        "validUntilOrigin": "AUTO"
+      },
+      {
+        "revision": 18,
+        "submittedAt": "2026-10-03T05:20:58.507Z",
+        "category": "ITR",
+        "events": 5,
+        "row1Assignments": 4,
+        "row1Event": "29a7c112-64a8-4201-aa92-b40cd1e1ada4-ITR",
+        "row3Event": "29a7c112-64a8-4201-aa92-b40cd1e1ada4",
+        "biotGroups": [
+          {
+            "id": "29a7c112-64a8-4201-aa92-b40cd1e1ada4",
+            "title": "BIOT — Рабочие",
+            "members": 1
+          },
+          {
+            "id": "29a7c112-64a8-4201-aa92-b40cd1e1ada4-ITR",
+            "title": "BIOT — Рабочие — ИТР",
+            "members": 1
+          }
+        ],
+        "documentDate": "2026-10-06",
+        "documentDateOrigin": "MANUAL",
+        "validUntil": "2029-10-06",
+        "validUntilOrigin": "AUTO"
+      },
+      {
+        "revision": 19,
+        "submittedAt": "2026-10-03T05:21:21.288Z",
+        "category": "WORKER",
+        "events": 6,
+        "row1Assignments": 4,
+        "row1Event": "29a7c112-64a8-4201-aa92-b40cd1e1ada4-ITR-WORKER",
+        "row3Event": "29a7c112-64a8-4201-aa92-b40cd1e1ada4",
+        "biotGroups": [
+          {
+            "id": "29a7c112-64a8-4201-aa92-b40cd1e1ada4",
+            "title": "BIOT — Рабочие",
+            "members": 1
+          },
+          {
+            "id": "29a7c112-64a8-4201-aa92-b40cd1e1ada4-ITR",
+            "title": "BIOT — Рабочие — ИТР",
+            "members": 0
+          },
+          {
+            "id": "29a7c112-64a8-4201-aa92-b40cd1e1ada4-ITR-WORKER",
+            "title": "BIOT — Рабочие — ИТР — Рабочие",
+            "members": 1
+          }
+        ],
+        "documentDate": "2026-10-06",
+        "documentDateOrigin": "MANUAL",
+        "validUntil": "2027-10-06",
+        "validUntilOrigin": "AUTO"
+      }
+    ],
+    "protocolAddedId": "3553d86d-3409-46a6-9356-52ff6efe8616-biot-itr-protocol",
+    "protocolAfterReturnTemplate": "biot-protocol",
+    "limitations": [
+      "No confirmed-result transfer/loss experiment",
+      "Dates stated for row1 assignments; no legal interpretation of expiry rule",
+      "Revisions17/18/19 superseded by later synthetic edits"
+    ]
+  },
+  "programRestore": {
+    "eventId": "29a7c112-64a8-4201-aa92-b40cd1e1ada4-ITR-WORKER",
+    "common": "СИНТЕТИЧЕСКАЯ общая программа UX",
+    "individual": "СИНТЕТИЧЕСКАЯ индивидуальная программа UX",
+    "saved": [
+      {
+        "revision": 25,
+        "submittedAt": "2026-10-03T05:27:56.804Z",
+        "action": "Nonempty common added",
+        "primaryOrigin": "INHERITED",
+        "protocolOrigin": "INHERITED"
+      },
+      {
+        "revision": 26,
+        "submittedAt": "2026-10-03T05:27:58.591Z",
+        "action": "Individual value set",
+        "primaryOrigin": "MANUAL",
+        "protocolOrigin": "MANUAL"
+      },
+      {
+        "revision": 27,
+        "submittedAt": "2026-10-03T05:28:20.577Z",
+        "action": "Restore common on protocol",
+        "primaryOrigin": "MANUAL",
+        "protocolOrigin": "MANUAL"
+      },
+      {
+        "revision": 28,
+        "submittedAt": "2026-10-03T05:28:22.255Z",
+        "action": "Restore common on primary",
+        "primaryOrigin": "INHERITED",
+        "protocolOrigin": "INHERITED"
+      }
+    ],
+    "rawProgramInAllFourRevisions": "СИНТЕТИЧЕСКАЯ индивидуальная программа UX",
+    "explanation": "Dormant raw value remains with INHERITED; resolved common value in both forms verified in browser, not from raw SQL. Earlier empty-common experiment excluded from success comparison.",
+    "datesPreserved": {
+      "documentDate": "2026-10-06",
+      "origin": "MANUAL",
+      "validUntil": "2027-10-06",
+      "validUntilOrigin": "AUTO"
+    }
+  }
+}

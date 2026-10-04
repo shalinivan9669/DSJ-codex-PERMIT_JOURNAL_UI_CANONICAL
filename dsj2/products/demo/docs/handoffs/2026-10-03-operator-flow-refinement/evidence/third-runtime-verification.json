@@ -1,0 +1,102 @@
+{
+  "snapshotAtUtc": "2026-10-03T05:58:10.022297Z",
+  "snapshotStatus": "Финальный срез после завершения всех UI-мутаций третьего прохода.",
+  "method": {
+    "database": "demo_test_first_live_ui",
+    "serverAddress": "127.0.0.1",
+    "serverPort": 55439,
+    "transaction": "BEGIN READ ONLY; SELECT выбранных полей; SELECT now(); COMMIT;",
+    "sqlAuditorNewApiCalls": false,
+    "sqlAuditorNewLogin": false,
+    "sqlAuditorBrowserActions": false,
+    "sqlAuditorDatabaseMutations": false,
+    "workingDataSource": "Последняя RequestProposal с operation=SAVE, связанная с PrintRequest.",
+    "resultCounting": "Отдельно посчитаны UNKNOWN, исходы кроме UNKNOWN, непустой result и непустой outcome.source.",
+    "resultInterpretation": "UNKNOWN и расчётные даты не считаются подтверждением результата. Служебные confirmedAt/confirmedBy у UNKNOWN не являются подтверждением сдачи.",
+    "uiAuditScope": "Root выполнял UI-изменения только в синтетическом PERSON. SQL-аудитор выполнял независимые SELECT без изменений."
+  },
+  "requests": [
+    {
+      "requestId": "8a73eb3f-b513-401f-a76b-ed72d1e1f978",
+      "kind": "PERSON",
+      "requestStatus": "DRAFT",
+      "workingRevision": 16,
+      "latestProposalRevision": 16,
+      "latestProposalStatus": "PENDING",
+      "latestProposalSubmittedAtUtc": "2026-10-03T05:57:13.530Z",
+      "recipientCount": 5,
+      "eventCount": 2,
+      "assignmentCount": 4,
+      "unknownOutcomeCount": 4,
+      "nonUnknownOutcomeCount": 0,
+      "nonEmptyResultTextCount": 0,
+      "nonEmptyOutcomeSourceCount": 0,
+      "confirmedResultCount": 0,
+      "issuanceCount": 0,
+      "issuedDocumentCount": 0,
+      "selectedRows": [
+        {"displayRow": 3, "rowId": "b34e3758-e7e7-42aa-9f49-4146ba632191-2", "positionRu": "Тестовый рабочий", "assignmentCount": 0},
+        {"displayRow": 4, "rowId": "b34e3758-e7e7-42aa-9f49-4146ba632191-3", "positionRu": "Тестовый инженер", "assignmentCount": 0}
+      ],
+      "finalPositionsMatchRequestedBaseline": true,
+      "events": [
+        {
+          "eventId": "98366ea2-2eb8-423d-96f4-b0ab2693b4f8",
+          "title": "BIOT — Рабочие",
+          "protocolTemplateId": "biot-protocol",
+          "hours": "10",
+          "trainingDateRule": null
+        },
+        {
+          "eventId": "f8f463b4-dd23-4169-afe1-f2dcacdd4b5e",
+          "title": "PTM",
+          "protocolTemplateId": "ptm-protocol",
+          "hours": "8",
+          "trainingDateRule": {
+            "anchor": "DOCUMENT_AFTER_TRAINING",
+            "source": "График учебного центра",
+            "calendar": "KZ_FIVE_DAY",
+            "hoursPerDay": 4,
+            "hoursSource": "THEORY",
+            "protocolDate": "MANUAL",
+            "calendarVersion": "KZ_2025_2026_V1"
+          },
+          "interpretation": "Синтетические параметры расчёта, не подтверждение реального обучения."
+        }
+      ],
+      "conflictEvidenceBoundary": "SQL подтверждает итоговые должности. Диалоги конфликта и действия по исправлению подтверждаются браузерным протоколом; числовые HTTP-коды этим JSON не доказываются."
+    },
+    {
+      "requestId": "2d860079-5170-42ff-a5d5-da1f92f9843c",
+      "kind": "COMPANY",
+      "requestStatus": "DRAFT",
+      "workingRevision": 28,
+      "latestProposalRevision": 28,
+      "latestProposalStatus": "PENDING",
+      "latestProposalSubmittedAtUtc": "2026-10-03T05:28:22.255Z",
+      "recipientCount": 10,
+      "eventCount": 6,
+      "assignmentCount": 23,
+      "unknownOutcomeCount": 23,
+      "nonUnknownOutcomeCount": 0,
+      "nonEmptyResultTextCount": 0,
+      "nonEmptyOutcomeSourceCount": 0,
+      "confirmedResultCount": 0,
+      "issuanceCount": 0,
+      "issuedDocumentCount": 0,
+      "rawWorkplaceEvidence": {
+        "snapshotAtUtc": "2026-10-03T05:54:04.504859Z",
+        "verifiedRevision": 28,
+        "revisionUnchangedInFinalSnapshot": true,
+        "inspectedDisplayRows": [1,2,3,4,5,6,7,8,9,10],
+        "allWorkplaceRuValues": "",
+        "allWorkplaceKzValues": "",
+        "nonEmptyWorkplaceRuCount": 0,
+        "nonEmptyWorkplaceKzCount": 0,
+        "hasCustomerId": true,
+        "limitation": "Raw workplace прочитаны в промежуточном READ ONLY срезе из той же неизменившейся редакции 28; в финальном SELECT повторно не извлекались."
+      }
+    }
+  ],
+  "supportedFinalConclusion": "Оба синтетических черновика остаются DRAFT с рабочими редакциями на согласовании. Подтверждённых результатов, выпусков и выданных документов в этих двух заявках нет."
+}

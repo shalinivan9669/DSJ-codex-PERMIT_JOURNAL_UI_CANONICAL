@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-10-03T04:58:26Z",
+  "finalApiCheckAtUtc": "2026-10-03T05:03:08.118Z",
+  "purpose": "Санитизированные read-only доказательства локального окружения и сохранённых состояний синтетического UX-аудита. Не выпуск документов и не проверка production.",
+  "worktree": {
+    "path": "C:/Users/Admin/.codex/worktrees/ot-center-business-value/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL",
+    "branch": "codex/operator-flow-refinement-20261003",
+    "head": "c438d33c2a0fa4f1ad2024892cf5f39e677b9c02"
+  },
+  "method": {
+    "mutationsByVerifier": true,
+    "mutationScope": "Только авторизованный обычный вход в изолированный локальный test API: новая Session и AUTH_LOGIN audit. Завершающая проверка не полностью read-only из-за login. Данные заявок, права, пароли, production, номера и выпуск не изменены. Все SQL-вызовы были READ ONLY.",
+    "requestDataMutationsByVerifier": false,
+    "databaseQueries": "psql -X -v ON_ERROR_STOP=1; только SELECT внутри BEGIN READ ONLY / COMMIT. Учётные данные считывались в памяти из локального config.private.json и не включены в результат.",
+    "processInspection": "Get-CimInstance Win32_Process и Get-NetTCPConnection, чтение runtime scripts/processes.json/BUILD_ID",
+    "http": "GET http://localhost:3132/api/health и GET http://127.0.0.1:4132/health; завершающий авторизованный normal POST /auth/login и compute POST /print-requests/2d860079-5170-42ff-a5d5-da1f92f9843c/validate только в локальном test API 4132, без сохранения/выпуска. Credentials/cookies не сохранялись и не выводились.",
+    "syntheticDraftCreationAndInput": "Выполнены root-агентом штатным локальным интерфейсом; этот файл фиксирует независимое чтение сохранённых редакций.",
+    "notExecuted": ["seed", "migrations", "process starts", "deployment", "push", "document issuance", "production data writes"]
+  },
+  "runtime": {
+    "frontend": {
+      "origin": "http://localhost:3132",
+      "listenerAddress": "127.0.0.1",
+      "listenerPort": 3132,
+      "pid": 40820,
+      "command": "next start -H 127.0.0.1 -p 3132",
+      "nextDependencyRoot": "dsj2/products/demo/node_modules в указанном worktree",
+      "dist": ".next-operator-rows-reviewed",
+      "buildId": "uIecRo71N04T58Q-IozHo",
+      "processManifestPidMatchesListener": true,
+      "actualBuildIdMatchesProcessManifest": true,
+      "buildSummaryExitCode": 0,
+      "buildSummaryCompletedAtUtc": "2026-10-02T15:17:14.332Z",
+      "startedAtUtc": "2026-10-02T15:18:16.093Z",
+      "evidencePaths": [
+        ".runtime/operator-rows/processes.json",
+        ".runtime/operator-rows/runtime.cjs",
+        ".runtime/operator-rows/start-verified.cjs",
+        ".runtime/operator-rows/production-build-summary.json",
+        "apps/web/.next-operator-rows-reviewed/BUILD_ID"
+      ],
+      "apiTransport": "apps/web/app/api/[...path]/route.ts: proxy использует process.env.DEMO_API_ORIGIN. Runtime передаёт http://127.0.0.1:4132."
+    },
+    "api": {
+      "origin": "http://127.0.0.1:4132",
+      "listenerAddress": "127.0.0.1",
+      "listenerPort": 4132,
+      "pid": 4648,
+      "command": "tsx src/main.ts с preflight/loader из node_modules указанного worktree",
+      "verifiedConnectionsToDatabase": [51852, 51854, 51855, 51856, 51857, 63311, 63312]
+    },
+    "postgres": {
+      "pid": 30296,
+      "dataDirectory": "dsj2/products/demo/.runtime/pgdata-operator-value в указанном worktree",
+      "serverAddress": "127.0.0.1",
+      "serverPort": 55439,
+      "database": "demo_test_first_live_ui",
+      "verifiedBySql": "current_database(), inet_server_addr(), inet_server_port()",
+      "apiConnectionProof": "client_port соединений pg_stat_activity указанной БД совпадает с LocalPort TCP-соединений к 127.0.0.1:55439, OwningProcess=4648",
+      "tenantCount": 1,
+      "tenantDemoOnly": true,
+      "tenantDescription": "Локальный проверочный центр"
+    },
+    "health": {
+      "frontendProxyStatus": 200,
+      "directApiStatus": 200,
+      "bodyAtBothOrigins": {"status": "ok", "product": "DEMO", "version": "2.0.0"}
+    }
+  },
+  "syntheticPerson": {
+    "requestId": "725cfc6f-26d9-46f8-8bc4-c5951c1e3369",
+    "scope": "Созданный для этого аудита синтетический локальный черновик",
+    "removalUiPathReportedByRoot": "Параметры обучения и документов → Убрать обучение из заявки",
+    "revision7BeforeRemoval": {
+      "statusAtRead": "SUPERSEDED",
+      "eventCount": 1,
+      "assignmentCount": 2,
+      "templates": ["biot-worker-card", "biot-protocol"],
+      "eventId": "9c3a33f0-1da8-4272-ab85-5a870c7aa696",
+      "eventTrainingSubject": "СИНТЕТИЧЕСКИЙ UX-ТЕСТ — программа БиОТ",
+      "assignmentResult": "Сдал",
+      "assignmentOutcomeStatus": "PASSED",
+      "assignmentOutcomeSource": "СИНТЕТИЧЕСКАЯ ведомость UX-теста; не реальное обучение",
+      "commonDocumentDate": "2026-10-03",
+      "assignmentDocumentDate": "",
+      "assignmentDocumentDateOrigin": "INHERITED",
+      "eventDocumentDatePresent": false
+    },
+    "revision8AfterRemoval": {
+      "statusAtRead": "SUPERSEDED",
+      "eventCount": 0,
+      "assignmentCount": 0,
+      "commonDocumentDate": "2026-10-03"
+    },
+    "revision9AfterReaddition": {
+      "statusAtRead": "PENDING",
+      "eventCount": 1,
+      "assignmentCount": 2,
+      "templates": ["biot-worker-card", "biot-protocol"],
+      "eventId": "f3f6ca11-504d-4049-9c2b-39a85092d2b3",
+      "eventTrainingSubjectPresent": false,
+      "assignmentResult": "",
+      "assignmentOutcomeStatus": "UNKNOWN",
+      "assignmentOutcomeSource": "",
+      "commonDocumentDate": "2026-10-03",
+      "assignmentDocumentDate": "",
+      "assignmentDocumentDateOrigin": "INHERITED",
+      "eventDocumentDatePresent": false
+    },
+    "supportedConclusion": "Сохранённая программа и синтетический результат удалены вместе с обучением; повторное назначение создаёт новые объекты без восстановления этих фактов.",
+    "dateLimitation": "Попытка ввода 2026-10-06 в этом черновике до удаления не подтверждена сохранённой редакцией. Во всех прочитанных редакциях 7/8/9 общая дата осталась 2026-10-03. Нельзя утверждать потерю сохранённой даты 2026-10-06."
+  },
+  "syntheticCompany": {
+    "requestId": "2d860079-5170-42ff-a5d5-da1f92f9843c",
+    "scope": "Созданный для этого аудита синтетический локальный черновик",
+    "latestRevisionAtRead": 15,
+    "latestStatusAtRead": "PENDING",
+    "latestSubmittedAtUtc": "2026-10-03T04:55:26.873Z",
+    "itemCount": 10,
+    "dateSequence": [
+      {"revision": 12, "commonDocumentDate": "2026-10-03", "row1Dates": "", "row1DateOrigin": "INHERITED", "row2Dates": "", "row2DateOrigin": "INHERITED"},
+      {"revision": 13, "commonDocumentDate": "", "row1Dates": "", "row1DateOrigin": "INHERITED", "row2Dates": "", "row2DateOrigin": "INHERITED"},
+      {"revision": 14, "commonDocumentDate": "2026-10-03", "row1Dates": "2026-10-06", "row1DateOrigin": "MANUAL", "row2Dates": "", "row2DateOrigin": "INHERITED"},
+      {"revision": 15, "commonDocumentDate": "2026-10-03", "row1Dates": "2026-10-06", "row1DateOrigin": "MANUAL", "row2Dates": "", "row2DateOrigin": "INHERITED"}
+    ],
+    "latestRow1": {
+      "templates": ["biot-worker-card", "ptm-card", "pb-card"],
+      "allAssignmentDocumentDates": "2026-10-06",
+      "allAssignmentDocumentDateOrigins": "MANUAL"
+    },
+    "latestRow2": {
+      "templates": ["biot-itr-certificate", "biot-itr-protocol", "pb-card"],
+      "allAssignmentDocumentDates": "",
+      "allAssignmentDocumentDateOrigins": "INHERITED"
+    },
+    "supportedConclusion": "Пустая общая дата была сохранена в редакции 13; последующая ручная дата строки 1 сохранена как MANUAL и остаётся 2026-10-06 при итоговой общей дате 2026-10-03. Строка 2 сохраняет наследование.",
+    "dateLimitation": "Промежуточная общая дата 2026-10-04, наблюдавшаяся root в UI, отсутствует среди сохранённых редакций. SQL подтверждает итог после восстановления 2026-10-03, но не отдельное сохранение состояния 2026-10-04."
+  },
+  "existing250RowFixture": {
+    "requestId": "b9065773-908f-475b-a61a-b7a9c8810d36",
+    "kind": "COMPANY",
+    "requestStatus": "DRAFT",
+    "workingRevisionBeforeAndAfter": 3,
+    "latestProposalRevisionBeforeAndAfter": 3,
+    "latestProposalStatus": "PENDING",
+    "latestProposalItemCountBeforeAndAfter": 250,
+    "latestProposalSubmittedAtUtcBeforeAndAfter": "2026-10-02T11:15:33.942Z",
+    "requestUpdatedAtUtcBeforeAndAfter": "2026-10-02T11:15:33.973Z",
+    "basePrintRequestDraftItemCount": 0,
+    "baseRequestItemCount": 0,
+    "workingDataLocation": "RequestProposal.payload.items; PrintRequest.draft и RequestItem не отражают эти 250 рабочих строк",
+    "limitation": "Это существующая fixture, не новый импорт. Revision/count/timestamps не изменились между чтениями; полный baseline hash содержимого до аудита не снимался."
+  },
+  "validationPathMismatch": {
+    "verifiedAtUtc": "2026-10-03T05:03:08.118Z",
+    "requestId": "2d860079-5170-42ff-a5d5-da1f92f9843c",
+    "revision": 15,
+    "endpoint": "POST http://127.0.0.1:4132/print-requests/2d860079-5170-42ff-a5d5-da1f92f9843c/validate",
+    "input": {"expectedRevision": 15},
+    "httpStatus": 201,
+    "valid": false,
+    "recipientCount": 10,
+    "nameRequiredIssueCount": 20,
+    "nameRequiredCorrectPathCount": 7,
+    "nameRequiredMismatchedPathCount": 13,
+    "correctPaths": ["items.3.fullNameRu", "items.4.fullNameRu", "items.5.fullNameRu", "items.6.fullNameRu", "items.7.fullNameRu", "items.8.fullNameRu", "items.9.fullNameRu"],
+    "mismatchedPath": "items.0.fullNameRu",
+    "actualRowsForMismatchedIssues": [
+      {"rowId": "92c24c89-e627-439d-8c0e-dddaa43f12da", "actualIndexZeroBased": 3, "actualDisplayRow": 4, "actualRowBlankName": true, "mismatchedIssueCount": 1},
+      {"rowId": "b099fb37-7efc-4016-a09e-320dd59a026a", "actualIndexZeroBased": 4, "actualDisplayRow": 5, "actualRowBlankName": true, "mismatchedIssueCount": 2},
+      {"rowId": "7c1055b7-56f6-427f-a734-fa8b6a07e1eb", "actualIndexZeroBased": 5, "actualDisplayRow": 6, "actualRowBlankName": true, "mismatchedIssueCount": 2},
+      {"rowId": "4da95cf8-fbe7-49c4-a117-4e07047a0db3", "actualIndexZeroBased": 6, "actualDisplayRow": 7, "actualRowBlankName": true, "mismatchedIssueCount": 2},
+      {"rowId": "53066034-dd21-420e-afc1-1dee0f86076d", "actualIndexZeroBased": 7, "actualDisplayRow": 8, "actualRowBlankName": true, "mismatchedIssueCount": 2},
+      {"rowId": "56cbc8b5-91c2-4d5f-97c9-847cb2c006ee", "actualIndexZeroBased": 8, "actualDisplayRow": 9, "actualRowBlankName": true, "mismatchedIssueCount": 2},
+      {"rowId": "d3533f2b-12e7-4759-a40d-7be231c02f89", "actualIndexZeroBased": 9, "actualDisplayRow": 10, "actualRowBlankName": true, "mismatchedIssueCount": 2}
+    ],
+    "comparisonMethod": "API issues с code=NAME_REQUIRED сопоставлены по rowId с индексами строк последнего сохранённого RequestProposal.payload.items, прочитанного отдельным SELECT внутри READ ONLY.",
+    "sourceCause": {
+      "api": "apps/api/src/requests.ts:888–905 валидирует каждого участника группы как items:[member.item] и добавляет ошибки без восстановления исходного индекса.",
+      "contract": "packages/contracts/src/index.ts:440–469 строит path из локального индекса n и сохраняет корректный item.id в rowId.",
+      "frontend": "apps/web/components/editor.tsx:1109–1119 создаёт fieldErrors по issue.path и не использует rowId."
+    },
+    "supportedConclusion": "В реальном ответе API есть ошибки пустых строк 4–10 с path первой строки при корректных rowId. Это подтверждает причину ошибочной подсветки уже заполненного ФИО строки 1, наблюдавшейся root в браузере.",
+    "authenticationSideEffects": ["Создана только локальная Session штатным login", "Создана локальная AUTH_LOGIN audit запись"],
+    "savedDraftChangesByThisCheck": false,
+    "issuancePerformed": false
+  },
+  "limitations": [
+    "Совпадение фактического BUILD_ID с process manifest и успешным build summary проверено; полное тождество собранного frontend всем исходникам нынешнего HEAD отдельным сравнением хешей не установлено.",
+    "Значения INHERITED здесь описывают сохранённый источник; отдельный вызов серверного resolve/preview для определения полного результирующего документа не выполнялся.",
+    "Сохранённые синтетические результаты введены исключительно для UX-проверки удаления; они не доказывают реальное обучение и не использовались для выпуска.",
+    "SQL не доказывает качество визуального взаимодействия; для этого используются отдельные browser-observations.json и снимки."
+  ]
+}
