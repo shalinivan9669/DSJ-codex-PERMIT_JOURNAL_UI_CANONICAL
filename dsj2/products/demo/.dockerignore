@@ -17,6 +17,7 @@ docs
 tests
 apps/web/e2e
 apps/web/test
+apps/web/playwright.config.ts
 .mempalace
 .serena
 .git
