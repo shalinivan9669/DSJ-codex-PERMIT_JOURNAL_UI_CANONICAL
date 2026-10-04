@@ -29,7 +29,7 @@ test("policy artifact is exact, versioned and identical to autonomous source", (
   const independent = readFileSync(resolve(__dirname, "../../../../products/demo/packages/contracts/src/product-policy.json"));
   assert.equal(createHash("sha256").update(local).digest("hex"), createHash("sha256").update(independent).digest("hex"));
   const policy = JSON.parse(local.toString());
-  assert.equal(policy.version, 1); assert.equal(policy.productId, "DEMO");
+  assert.equal(policy.version, 2); assert.equal(policy.productId, "DEMO");
   const keys = policy.legacyRoutes.map((route: { surface: string; method: string; path: string }) => {
     assert.ok(["api", "web"].includes(route.surface));
     assert.ok(["GET", "HEAD", "POST", "PUT", "DELETE"].includes(route.method));

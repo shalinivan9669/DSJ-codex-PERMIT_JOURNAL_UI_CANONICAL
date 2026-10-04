@@ -1,8 +1,108 @@
 {
   "demoProductId": "demo-product",
   "productId": "DEMO",
-  "version": 1,
+  "version": 2,
   "demoRoutes": [
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/print-requests/:id/activity"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/translations/suggest"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/approvals"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/approvals"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/approvals"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/approvals/:id"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/approvals/:id/decision"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/print-requests/:id/approval"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/approval/submit"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/print-requests/:id/signing"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/signing/start"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/signing/:id/complete"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/settings/signatories"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/settings/signatories"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/auth/register"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/register"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/register"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/onboarding"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/onboarding"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/print-requests/:id/retake"
+    },
     {
       "method": "GET",
       "surface": "api",
@@ -52,6 +152,11 @@
       "method": "GET",
       "surface": "api",
       "path": "/users"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/staff-directory"
     },
     {
       "method": "GET",
@@ -322,6 +427,426 @@
       "surface": "api",
       "method": "POST",
       "path": "/imports/mappings"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/customers/:id"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/recipients/:id"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/print-requests/:id/resolved"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/print-requests/:id/training-removals"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/training-removals"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/training-removals/:operationId/restore"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/import-reconciliation/preview"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/import-reconciliation/apply"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/customer-export-profiles"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/customer-export-profiles"
+    },
+    {
+      "surface": "web",
+      "method": "GET",
+      "path": "/workbench"
+    },
+    {
+      "surface": "web",
+      "method": "HEAD",
+      "path": "/workbench"
+    },
+    {
+      "surface": "web",
+      "method": "GET",
+      "path": "/portal"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/portal/evidence"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/portal/evidence"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/portal/matrix"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/portal/evidence/:id/attachments"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/portal/evidence-attachments/:id"
+    },
+    {
+      "surface": "web",
+      "method": "HEAD",
+      "path": "/portal"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/operator-value/summary"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/orders"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/orders"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/orders/:id"
+    },
+    {
+      "surface": "api",
+      "method": "PATCH",
+      "path": "/orders/:id"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/orders/:id/milestones"
+    },
+    {
+      "surface": "api",
+      "method": "PATCH",
+      "path": "/orders/:id/milestones/:milestoneId"
+    },
+    {
+      "surface": "api",
+      "method": "PUT",
+      "path": "/orders/:id/commercial"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/orders/:id/commercial-export"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/orders/:id/payments"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/orders/:id/financial-documents"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/orders/:id/dossier"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/renewals"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/renewals"
+    },
+    {
+      "surface": "api",
+      "method": "PATCH",
+      "path": "/renewals/:id"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/renewals/scan"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/evidence/matrix"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/renewals/:id/contacts"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/renewals/:id/repeat"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/evidence"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/evidence"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/evidence/:id/verify"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/service-rules"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/service-rules"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/dossier"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/dossier"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/value-attachments"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/value-attachments/:id"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/employer-memberships"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/employer-memberships"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/employer-memberships/:id/revoke"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/portal"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/portal/artifacts/:id"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/portal/orders/:id/proposals"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/orders/:id/proposals/:proposalId/resolve"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/settings/profiles"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/print-requests/:id/control-sheet"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/control-sheet/confirm"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/control-sheet/export"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/print-requests/:id/clarification"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/print-requests/:id/transfers"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/print-requests/:id/transfers"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/verification/:token"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/verification/:token/corrections"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/verification-links"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/verification-links"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/verification-links/:id/revoke"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/document-corrections"
+    },
+    {
+      "surface": "api",
+      "method": "POST",
+      "path": "/document-corrections/:id/resolve"
+    },
+    {
+      "surface": "web",
+      "method": "GET",
+      "path": "/verify/:token"
+    },
+    {
+      "surface": "web",
+      "method": "HEAD",
+      "path": "/verify/:token"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/tenant-export"
+    },
+    {
+      "surface": "api",
+      "method": "GET",
+      "path": "/orders/:id/dossier/export"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/dossier/reminders"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/dossier/export"
+    },
+    {
+      "path": "/employer-invites",
+      "method": "GET",
+      "surface": "api"
+    },
+    {
+      "path": "/employer-invites",
+      "method": "POST",
+      "surface": "api"
+    },
+    {
+      "path": "/employer-invites/:id/revoke",
+      "method": "POST",
+      "surface": "api"
+    },
+    {
+      "path": "/auth/employer-invite/inspect",
+      "method": "POST",
+      "surface": "api"
+    },
+    {
+      "path": "/auth/employer-invite/exchange",
+      "method": "POST",
+      "surface": "api"
+    },
+    {
+      "path": "/invite",
+      "method": "GET",
+      "surface": "web"
+    },
+    {
+      "path": "/invite",
+      "method": "HEAD",
+      "surface": "web"
+    },
+    {
+      "method": "POST",
+      "path": "/print-requests/:id/print-set/plan",
+      "surface": "api"
+    },
+    {
+      "method": "POST",
+      "path": "/print-requests/:id/print-set",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/training-topics",
+      "surface": "api"
     }
   ],
   "legacyRoutes": [

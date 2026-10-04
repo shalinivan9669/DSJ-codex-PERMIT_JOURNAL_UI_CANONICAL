@@ -1,7 +1,7 @@
 import manifest from "./manifest.json";
 
 /** This gate intentionally has no role, Public, cookie or environment bypass. */
-export const productPolicyVersion = 1;
+export const productPolicyVersion = 2;
 export type Surface = "web" | "api";
 type Route = { surface: string; method: string; path: string };
 
