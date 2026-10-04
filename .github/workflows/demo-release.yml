@@ -62,6 +62,7 @@ jobs:
       - name: Required legacy gateway and startup boundary tests
         run: |
           corepack enable
+          corepack prepare pnpm@9.15.4 --activate
           corepack pnpm --dir dsj2 install --frozen-lockfile
           corepack pnpm --dir dsj2 --filter @dsj/api exec tsx --test src/common/product-boundary.test.ts
       - name: Preserve legacy source and copy only autonomous product
