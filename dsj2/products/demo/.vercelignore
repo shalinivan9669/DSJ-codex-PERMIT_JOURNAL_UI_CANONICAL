@@ -1,0 +1,17 @@
+# Frontend builds install @demo/web dependencies only. Browser/integration tests
+# remain in Git and run locally with the complete disposable test environment.
+apps/web/e2e
+apps/web/test
+apps/web/playwright.config.ts
+docs
+output
+outputs
+tests
+**/.runtime
+**/node_modules
+**/.next
+**/.next-*
+**/*.tsbuildinfo
+.env
+.env.*
+*.log
