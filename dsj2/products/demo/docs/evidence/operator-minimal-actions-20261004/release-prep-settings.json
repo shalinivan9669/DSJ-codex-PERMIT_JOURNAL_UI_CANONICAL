@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-04T18:30:22.182Z",
+  "project": {
+    "id": "prj_JMxxnkngWKGZRePXdvbn6jOCnk2V",
+    "name": "dsj-demo-rows-20261002",
+    "accountId": "team_omsifNnhVJe540dSiQvWq7H1",
+    "rootDirectory": "apps/web",
+    "framework": "nextjs",
+    "buildCommand": "cd ../.. && corepack pnpm --filter @demo/web build",
+    "installCommand": "cd ../.. && corepack pnpm install --frozen-lockfile --filter @demo/web...",
+    "outputDirectory": null,
+    "link": null,
+    "environmentNames": [
+      "DEMO_ORIGIN",
+      "ENABLE_EXPERIMENTAL_COREPACK",
+      "DEMO_API_ORIGIN"
+    ]
+  },
+  "deployment": {
+    "id": "dpl_BPwv2qXMjxUQysfmDMe28E5d6E57",
+    "projectId": "prj_JMxxnkngWKGZRePXdvbn6jOCnk2V",
+    "url": "dsj-demo-rows-20261002-ivf9xb8gw-shalinivan9669s-projects.vercel.app",
+    "state": "READY",
+    "aliases": [
+      "dsj-demo-rows-20261002-shalinivan9669s-projects.vercel.app"
+    ],
+    "meta": {
+      "commit": "05a59455ef7f9346735e9d3c319d3d5a53c9cc78",
+      "branch": "codex/operator-flow-refinement-20261003"
+    },
+    "projectSettings": {
+      "buildCommand": "cd ../.. && corepack pnpm --filter @demo/web build",
+      "installCommand": "cd ../.. && corepack pnpm install --frozen-lockfile --filter @demo/web..."
+    }
+  },
+  "privateRoles": {
+    "source": "C:/Users/Admin/Documents/DSJ-DEMO-cloud-20261002/credentials.json",
+    "origin": "https://dsj-demo-rows-20261002.vercel.app",
+    "directorAvailable": true,
+    "operatorAvailable": true
+  },
+  "canonicalAlias": {
+    "alias": "dsj-demo-rows-20261002.vercel.app",
+    "deploymentId": "dpl_BPwv2qXMjxUQysfmDMe28E5d6E57"
+  }
+}

@@ -1,4 +1,11 @@
-import { trainingDirection, type TrainingDirection } from "@demo/contracts";
+import {
+  courseProgramDefaults,
+  hasAutomaticPositiveOutcome,
+  positiveAssignmentDefaults,
+  trainingDirection,
+  type Assignment,
+  type TrainingDirection,
+} from "@demo/contracts";
 import { newAssignment, type Draft } from "./types";
 import {
   trainingDirectionLabel,
@@ -23,6 +30,41 @@ export type RemovalTarget = {
   protected: boolean;
 };
 
+function hasRecordedTrainingFacts(assignment: Assignment): boolean {
+  const defaults = positiveAssignmentDefaults(assignment.templateId);
+  const defaultResult = (key: "result" | "resultKz") =>
+    assignment.fieldOrigins?.[key] === "COURSE" &&
+    assignment[key] === defaults[key];
+  const programOrigin = assignment.fieldOrigins?.trainingSubject;
+  const defaultProgram =
+    ["COURSE", "AUTO", "INHERITED"].includes(programOrigin || "") &&
+    assignment.trainingSubject ===
+      courseProgramDefaults(assignment.templateId).trainingSubject;
+  return (
+    (assignment.outcome?.status !== undefined &&
+      assignment.outcome.status !== "UNKNOWN" &&
+      !hasAutomaticPositiveOutcome(assignment)) ||
+    (!!assignment.result && !defaultResult("result")) ||
+    (!!assignment.resultKz && !defaultResult("resultKz")) ||
+    !!assignment.resultEn ||
+    (!!assignment.trainingSubject && !defaultProgram) ||
+    !!assignment.biotKnowledgeResult ||
+    !!assignment.biotKnowledgeResultEn ||
+    !!assignment.biotProctoringResult ||
+    !!assignment.biotProctoringResultEn ||
+    !!assignment.biotUniqueNumber ||
+    !!assignment.biotNotes ||
+    !!assignment.biotNotesEn ||
+    !!assignment.externalBasisNumber ||
+    !!assignment.retakeOf ||
+    !!assignment.trainingDateRule ||
+    !!assignment.biotManualFields?.length ||
+    Object.values(assignment.fieldOrigins || {}).some((origin) =>
+      ["MANUAL", "IMPORTED", "CLEARED"].includes(origin),
+    )
+  );
+}
+
 /** The confirmation names the affected saved facts, never treats an empty selection as an exam record. */
 export function trainingRemovalTarget(
   draft: Draft,
@@ -45,21 +87,15 @@ export function trainingRemovalTarget(
     ...new Set(assignments.flatMap((a) => (a.eventId ? [a.eventId] : []))),
   ];
   const events = (draft.events || []).filter((e) => ids.includes(e.id));
-  const protectedAssignment = assignments.some(
-    (a) =>
-      (a.outcome?.status !== undefined && a.outcome.status !== "UNKNOWN") ||
-      !!a.result ||
-      (!!a.trainingSubject && a.fieldOrigins?.trainingSubject !== "COURSE") ||
-      !!a.trainingDateRule ||
-      Object.values(a.fieldOrigins || {}).some((origin) =>
-        ["MANUAL", "IMPORTED", "CLEARED"].includes(origin),
-      ),
-  );
+  const protectedAssignment = assignments.some(hasRecordedTrainingFacts);
   const protectedEvent = events.some(
     (e) =>
       (!!e.commonFields.trainingSubject &&
         e.commonFields.fieldOrigins?.trainingSubject !== "COURSE") ||
       !!e.commonFields.trainingDateRule ||
+      Object.values(e.commonFields.fieldOrigins || {}).some((origin) =>
+        ["MANUAL", "IMPORTED", "CLEARED"].includes(origin),
+      ) ||
       Object.values(e.commonFields.dateOrigins || {}).some((origin) =>
         ["MANUAL", "IMPORTED", "CLEARED"].includes(origin),
       ) ||

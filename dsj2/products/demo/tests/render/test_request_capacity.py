@@ -9,13 +9,14 @@ from lxml import etree as E
 from openpyxl import Workbook
 from test_render import fixture
 from renderer import import_table, render_docx
+from request_limits import MAX_REQUEST_ROWS
 
 
 class RequestCapacityTests(unittest.TestCase):
-    def test_xlsx_and_tsv_preserve_250_and_account_for_251(self):
+    def test_xlsx_and_tsv_preserve_400_and_account_for_resource_overflow(self):
         with tempfile.TemporaryDirectory(prefix='demo-capacity-import-') as temp:
             root = Path(temp)
-            for count in [250, 251]:
+            for count in [400, MAX_REQUEST_ROWS + 1]:
                 values = [['fullNameRu', 'fullNameKz', 'personnelNumber']]
                 values.extend([[f'Слушатель {n}', f'Қатысушы {n}', f'{n:06d}'] for n in range(1, count + 1)])
                 workbook = Workbook()
@@ -29,12 +30,12 @@ class RequestCapacityTests(unittest.TestCase):
                         result = import_table({'inputPath': str(root / f'{count}.{extension}'), 'format': extension}, root / 'output.json')
                         self.assertEqual(result['count'], count)
                         self.assertEqual(len(result['rawRows']), count)
-                        self.assertEqual(result['canApply'], count == 250)
+                        self.assertEqual(result['canApply'], count <= MAX_REQUEST_ROWS)
                         self.assertEqual(result['rawRows'][-1]['values'], values[-1])
-                        if count == 251:
-                            self.assertIn({'code': 'ROW_LIMIT', 'count': 251, 'limit': 250}, result['errors'])
+                        if count > MAX_REQUEST_ROWS:
+                            self.assertIn({'code': 'ROW_LIMIT', 'count': count, 'limit': MAX_REQUEST_ROWS}, result['errors'])
 
-    def test_individual_docx_preserves_all_250_people_and_rejects_251(self):
+    def test_individual_docx_preserves_all_250_people_and_rejects_resource_overflow(self):
         with tempfile.TemporaryDirectory(prefix='demo-capacity-docx-') as temp:
             snapshot = fixture('ptm-protocol')
             prototype = snapshot['items'][0]
@@ -48,8 +49,8 @@ class RequestCapacityTests(unittest.TestCase):
             self.assertEqual(positions, sorted(positions), 'original source order must survive rendering')
             for n in range(1, 251):
                 self.assertEqual(text.count(f'Участник-{n:03d}'), 1)
-            snapshot['items'].append(deepcopy(prototype))
-            rejected = Path(temp) / 'rejected-251.docx'
+            snapshot['items'] = [prototype] * (MAX_REQUEST_ROWS + 1)
+            rejected = Path(temp) / 'rejected-overflow.docx'
             with self.assertRaisesRegex(ValueError, 'ROW_LIMIT'):
                 render_docx(snapshot, rejected)
             self.assertFalse(rejected.exists())

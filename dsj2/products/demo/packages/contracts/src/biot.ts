@@ -128,7 +128,15 @@ export function biotValidUntil(
   category: BiotCategory,
 ): string | null {
   const years = BIOT_CATEGORIES[category].validityYears;
-  if (!years || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  return years === null ? null : calendarAnniversary(date, years);
+}
+
+/** Shared calendar arithmetic for configured product rules, not a legal rule. */
+export function calendarAnniversary(
+  date: string,
+  years: number,
+): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
   const parsed = new Date(`${date}T12:00:00Z`);
   if (isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== date)
     return null;

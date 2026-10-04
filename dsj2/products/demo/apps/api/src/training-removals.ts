@@ -1,4 +1,10 @@
-import { draftSchema, z, type Draft, type Assignment } from "@demo/contracts";
+import {
+  draftSchema,
+  LIMITS,
+  z,
+  type Draft,
+  type Assignment,
+} from "@demo/contracts";
 import { assertStaff, workingRequest, submitProposal } from "./approvals";
 import {
   db,
@@ -51,9 +57,13 @@ const scopeSchema = z
     expectedRevision: z.number().int().nonnegative(),
     operationId: z.string().uuid(),
     eventId: z.string().min(1).max(80).optional(),
-    eventIds: z.array(z.string().min(1).max(80)).min(1).max(30).optional(),
+    eventIds: z
+      .array(z.string().min(1).max(80))
+      .min(1)
+      .max(LIMITS.documents)
+      .optional(),
     direction: z.enum(["BIOT", "PTM", "PB", "PS"]).optional(),
-    recipientIds: z.array(z.string().min(1).max(80)).min(1).max(250),
+    recipientIds: z.array(z.string().min(1).max(80)).min(1).max(LIMITS.rows),
     removeDefault: z.boolean().default(false),
   })
   .strict()
@@ -62,11 +72,26 @@ const scopeSchema = z
     "Выберите обучение",
   );
 const metadata = (event: { metadata: unknown }) => event.metadata as Removal;
-function insertRestored<T extends { id: string }>(current: T[], restored: T[], order: string[] = []) {
+function insertRestored<T extends { id: string }>(
+  current: T[],
+  restored: T[],
+  order: string[] = [],
+) {
   for (const entry of structuredClone(restored)) {
     const originalIndex = order.indexOf(entry.id);
-    const following = originalIndex < 0 ? undefined : order.slice(originalIndex + 1).find((id) => current.some((value) => value.id === id));
-    const preceding = originalIndex < 0 ? undefined : order.slice(0, originalIndex).reverse().find((id) => current.some((value) => value.id === id));
+    const following =
+      originalIndex < 0
+        ? undefined
+        : order
+            .slice(originalIndex + 1)
+            .find((id) => current.some((value) => value.id === id));
+    const preceding =
+      originalIndex < 0
+        ? undefined
+        : order
+            .slice(0, originalIndex)
+            .reverse()
+            .find((id) => current.some((value) => value.id === id));
     const index = following
       ? current.findIndex((value) => value.id === following)
       : preceding
@@ -426,10 +451,22 @@ export async function restoreTraining(
         { operationId, conflicts },
       );
     for (const snapshot of operation.removed) {
-      const assignments = draft.items.find((item) => item.id === snapshot.recipientId)!.assignments;
-      insertRestored(assignments, snapshot.assignments, snapshot.assignmentOrder);
+      const assignments = draft.items.find(
+        (item) => item.id === snapshot.recipientId,
+      )!.assignments;
+      insertRestored(
+        assignments,
+        snapshot.assignments,
+        snapshot.assignmentOrder,
+      );
     }
-    insertRestored((draft.events ||= []), operation.events.filter((snapshot) => !draft.events!.some((event) => event.id === snapshot.id)), operation.eventOrder);
+    insertRestored(
+      (draft.events ||= []),
+      operation.events.filter(
+        (snapshot) => !draft.events!.some((event) => event.id === snapshot.id),
+      ),
+      operation.eventOrder,
+    );
     if (operation.removeDefault)
       draft.trainingDefaults = [
         ...(draft.trainingDefaults || []).filter(

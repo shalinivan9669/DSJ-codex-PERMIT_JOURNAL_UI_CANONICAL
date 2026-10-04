@@ -8,6 +8,7 @@ import {
   resolveDraft,
   trainingDirection,
   validateBusinessRules,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
 } from "@demo/contracts";
 import {
   assignTrainingBundle,
@@ -49,8 +50,8 @@ for (const category of ["WORKER", "ITR"] as const) {
       assert.equal(documentPlan(first.draft).groups.length, count > 1 ? 1 : 0);
       assert.equal(
         documentPlan(first.draft).individuals.length,
-        count === 1 ? 1 : 0,
-        "no outcome is invented",
+        count === 1 ? 2 : count,
+        "new assignments use the explicitly configured positive default",
       );
       for (const item of draft.items) {
         item.assignments[0].outcome = {
@@ -109,7 +110,7 @@ test("multiple events require explicit selection and never mix worker/ITR", () =
 });
 
 for (const direction of ["PTM", "PB", "PS"] as const) {
-  test(`new empty recipient inherits the unique ${direction} event and its common dates without an outcome`, () => {
+  test(`new empty recipient inherits the unique ${direction} event and common dates with the positive creation default`, () => {
     const first = { ...newRecipient(), assignments: [] };
     const draft = assignTrainingBundle(
       {
@@ -144,8 +145,8 @@ for (const direction of ["PTM", "PB", "PS"] as const) {
     assert.equal(trainingDirection(added.assignments[0].templateId), direction);
     assert.equal(added.assignments[0].protocolMode, "INDIVIDUAL");
     assert.deepEqual(added.assignments[0].outcome, {
-      status: "UNKNOWN",
-      source: "",
+      status: "PASSED",
+      source: DEFAULT_POSITIVE_OUTCOME_SOURCE,
     });
     for (const key of commonFieldKeys)
       assert.equal(added.assignments[0].fieldOrigins?.[key], "INHERITED");
@@ -286,7 +287,7 @@ test("a supplied recipient with existing assignments is never rewritten or enrol
 });
 
 for (const category of ["WORKER", "ITR"] as const) {
-  test(`directory ${category} retains its category and skips incompatible BiOT while inheriting other directions`, () => {
+  test(`directory ${category} inherits common BiOT through category derivation and retains other directions`, () => {
     const seed = newRequestBundle(category === "ITR" ? "WORKER" : "ITR");
     let draft = {
       ...draftSchema.parse({
@@ -307,10 +308,25 @@ for (const category of ["WORKER", "ITR"] as const) {
       assignments: [],
     };
     const before = structuredClone(person);
+    const initial = recipientForRequest(draft, person);
+    assert.equal(initial.assignments.length, 1);
     assert.equal(
-      recipientForRequest(draft, person),
-      person,
-      "incompatible-only event does not enroll the person",
+      initial.assignments[0].templateId,
+      category === "ITR" ? "biot-itr-certificate" : "biot-worker-card",
+    );
+    const initialNormalized = applyBusinessRules({
+      ...draft,
+      items: [...draft.items, initial],
+    });
+    const variant = initialNormalized.events!.find(
+      (event) => event.rootEventId === seed.events[0].id,
+    );
+    assert.ok(variant);
+    assert.equal(variant.derivedCategory, category);
+    assert.equal(initialNormalized.items[1].assignments[0].eventId, variant.id);
+    assert.equal(
+      initialNormalized.items[0].assignments[0].eventId,
+      seed.events[0].id,
     );
     for (const direction of ["PTM", "PB", "PS"] as const)
       draft = assignTrainingBundle(
@@ -327,11 +343,11 @@ for (const category of ["WORKER", "ITR"] as const) {
       added.assignments.map((assignment) =>
         trainingDirection(assignment.templateId),
       ),
-      ["PTM", "PB", "PS"],
+      ["BIOT", "PTM", "PB", "PS"],
     );
     assert.ok(
       added.assignments.every(
-        (assignment) => assignment.outcome?.status === "UNKNOWN",
+        (assignment) => assignment.outcome?.status === "PASSED",
       ),
     );
     assert.deepEqual(person, before);
@@ -341,8 +357,8 @@ for (const category of ["WORKER", "ITR"] as const) {
     });
     assert.equal(
       normalized.events!.length,
-      draft.events!.length,
-      "no incompatible BiOT event is implicitly split",
+      draft.events!.length + 1,
+      "one category variant is derived without modifying the existing group",
     );
   });
 }
@@ -353,32 +369,62 @@ test("adding missing training preserves an existing independent manual course ra
     id: "independent-manual",
     documentDate: "2026-08-15",
     trainingStart: "2026-08-01",
-    fieldOrigins: { documentDate: "IMPORTED" as const, trainingStart: "MANUAL" as const },
+    fieldOrigins: {
+      documentDate: "IMPORTED" as const,
+      trainingStart: "MANUAL" as const,
+    },
     result: "Синтетический известный факт",
-    outcome: { status: "PASSED" as const, source: "Синтетическая независимая ведомость", confirmedBy: "historical-actor", confirmedAt: "2026-08-15T12:00:00Z" },
+    outcome: {
+      status: "PASSED" as const,
+      source: "Синтетическая независимая ведомость",
+      confirmedBy: "historical-actor",
+      confirmedAt: "2026-08-15T12:00:00Z",
+    },
   };
   const input = {
-    ...applyBusinessRules(draftSchema.parse({ kind: "PERSON", schemaVersion: 2, items: [
-      { ...newRecipient(), id: "existing", assignments: [manual] },
-      { ...newRecipient(), id: "missing", assignments: [] },
-      { ...newRecipient(), id: "excluded", assignments: [] },
-    ] })),
-    id: "request", revision: 0, status: "DRAFT",
+    ...applyBusinessRules(
+      draftSchema.parse({
+        kind: "PERSON",
+        schemaVersion: 2,
+        items: [
+          { ...newRecipient(), id: "existing", assignments: [manual] },
+          { ...newRecipient(), id: "missing", assignments: [] },
+          { ...newRecipient(), id: "excluded", assignments: [] },
+        ],
+      }),
+    ),
+    id: "request",
+    revision: 0,
+    status: "DRAFT",
   };
   const independent = structuredClone(input.items[0].assignments);
   const reselected = assignTrainingBundle(input, ["existing"], "PTM");
   assert.deepEqual(reselected.items[0].assignments, independent);
   assert.deepEqual(reselected.events, []);
-  const added = assignTrainingBundle(reselected, ["existing", "missing"], "PTM");
+  const added = assignTrainingBundle(
+    reselected,
+    ["existing", "missing"],
+    "PTM",
+  );
   assert.deepEqual(added.items[0].assignments, independent);
   assert.equal(added.items[0].assignments[0].protocolMode, "INDIVIDUAL");
   assert.equal(added.items[0].assignments[0].eventId, undefined);
-  assert.deepEqual(added.items[1].assignments.map((assignment) => assignment.templateId), ["ptm-card", "ptm-protocol"]);
+  assert.deepEqual(
+    added.items[1].assignments.map((assignment) => assignment.templateId),
+    ["ptm-card", "ptm-protocol"],
+  );
   assert.equal(added.events!.length, 1);
   assert.equal(added.events![0].protocolMode, "INDIVIDUAL");
-  assert.ok(added.items[1].assignments.every((assignment) => assignment.eventId === added.events![0].id));
+  assert.ok(
+    added.items[1].assignments.every(
+      (assignment) => assignment.eventId === added.events![0].id,
+    ),
+  );
   assert.deepEqual(added.items[2].assignments, []);
-  assert.deepEqual(assignTrainingBundle(added, ["existing", "missing"], "PTM"), added);
+  assert.deepEqual(
+    assignTrainingBundle(added, ["existing", "missing"], "PTM"),
+    added,
+  );
 });
 
 test("training selection is idempotent, separates BiOT categories and defaults two people to a group", () => {
@@ -479,7 +525,7 @@ for (const direction of ["BIOT", "PTM", "PB", "PS"] as const) {
       );
       assert.ok(added.length > 0);
       assert.ok(
-        added.every((assignment) => assignment.outcome?.status === "UNKNOWN"),
+        added.every((assignment) => assignment.outcome?.status === "PASSED"),
       );
     }
     assert.deepEqual(
@@ -530,6 +576,7 @@ test("joining imported participant preserves imported dates and source; repeated
     ...newRecipient().assignments[0],
     documentDate: "2026-01-01",
     fieldOrigins: { documentDate: "IMPORTED" as const },
+    outcome: { status: "UNKNOWN" as const, source: "" },
   };
   const joined = joinEventAssignment(assignment, bundle.events[0].id);
   const twice = joinEventAssignment(joined, bundle.events[0].id);

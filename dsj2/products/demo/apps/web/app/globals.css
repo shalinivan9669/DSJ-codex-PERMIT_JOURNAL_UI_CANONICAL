@@ -802,6 +802,21 @@ tbody tr:hover {
   padding-top: 22px;
   margin: 20px 0 24px;
 }
+.approval-effective-review th,
+.approval-effective-review td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  padding: 12px;
+}
+.approval-course-summary {
+  min-width: 570px;
+  table-layout: fixed;
+}
+.approval-course-summary th[scope="row"] {
+  font-size: 14px;
+  color: var(--text);
+}
 .template-list article {
   padding: 22px 0;
   border-top: 1px solid var(--line);

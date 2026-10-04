@@ -11,6 +11,8 @@ import { isBlankText } from "../lib/blank-text";
 import { previewGridPaste } from "../lib/grid-paste";
 import { previewBulk } from "../lib/bulk-edit";
 import { newRecipient } from "../lib/types";
+import { LIMITS } from "@demo/contracts";
+import type { Recipient } from "../lib/types";
 import { newAssignment } from "../lib/types";
 import { recordQueryIsCurrent, recordQueryKey } from "../lib/record-query";
 
@@ -109,7 +111,7 @@ test("partial import plan consumes only source rows of this source, preserving s
   assert.equal(new Set(people.map((person) => person.id)).size, 3);
 });
 
-test("preview corrections mark manual and cleared origins without changing original imported source or confirming results", () => {
+test("preview corrections mark manual and cleared origins without changing original imported source or explicit waiting and negative outcomes", () => {
   const check = validateMappedImportRow(
     source,
     { sourceRow: 2, values: ["Тест", "ITR", "2026-02-28"] },
@@ -117,19 +119,40 @@ test("preview corrections mark manual and cleared origins without changing origi
     "ptm-card",
   );
   assert.ok(check.item);
-  const original = structuredClone(check.item);
-  const corrected = applyImportCorrections(check.item, mapping, {
-    2: "2026-02-28",
-  });
-  assert.equal(corrected.assignments[0].fieldOrigins?.documentDate, "MANUAL");
-  assert.equal(original.assignments[0].fieldOrigins?.documentDate, "IMPORTED");
-  assert.deepEqual(check.item, original);
-  assert.equal(
-    corrected.assignments[0].outcome?.status || "UNKNOWN",
-    "UNKNOWN",
-  );
-  const cleared = applyImportCorrections(check.item, mapping, { 2: "" });
-  assert.equal(cleared.assignments[0].fieldOrigins?.documentDate, "CLEARED");
+  for (const status of ["UNKNOWN", "FAILED", "ABSENT"] as const) {
+    // This scenario corrects a previously reviewed exception; a fresh import
+    // has the new positive default unless the operator explicitly changes it.
+    const reviewed: Recipient = structuredClone(check.item);
+    reviewed.assignments[0].outcome = {
+      status,
+      source: status === "UNKNOWN" ? "" : `Синтетический источник ${status}`,
+    };
+    reviewed.assignments[0].fieldOrigins = {
+      ...reviewed.assignments[0].fieldOrigins,
+      outcome: "MANUAL",
+    };
+    const original: Recipient = structuredClone(reviewed);
+    const corrected = applyImportCorrections(reviewed, mapping, {
+      2: "2026-02-28",
+    });
+    assert.equal(corrected.assignments[0].fieldOrigins?.documentDate, "MANUAL");
+    assert.equal(
+      original.assignments[0].fieldOrigins?.documentDate,
+      "IMPORTED",
+    );
+    assert.deepEqual(reviewed, original);
+    assert.deepEqual(
+      corrected.assignments[0].outcome,
+      original.assignments[0].outcome,
+    );
+    assert.equal(corrected.assignments[0].fieldOrigins?.outcome, "MANUAL");
+    const cleared = applyImportCorrections(reviewed, mapping, { 2: "" });
+    assert.equal(cleared.assignments[0].fieldOrigins?.documentDate, "CLEARED");
+    assert.deepEqual(
+      cleared.assignments[0].outcome,
+      original.assignments[0].outcome,
+    );
+  }
 });
 
 test("EMPTY range accepts whitespace NBSP and invisible-only cells without changing meaningful spaced names", () => {
@@ -193,14 +216,14 @@ test("blank source rows are explicit creation operations; selected omission comp
     () =>
       previewGridPaste(
         [],
-        248,
+        LIMITS.rows - 2,
         "fullNameRu",
         text,
         "EMPTY",
         ["fullNameRu", "positionRu", "workplaceRu"],
         "KEEP",
       ),
-    /250/,
+    new RegExp(String(LIMITS.rows)),
   );
   assert.throws(
     () =>

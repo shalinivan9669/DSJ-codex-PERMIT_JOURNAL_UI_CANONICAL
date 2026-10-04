@@ -13,7 +13,7 @@ import {
 import { importPreview, applyImport } from "../../apps/api/src/files";
 import { draftSchema, itemSchema, LIMITS } from "../../packages/contracts/src";
 
-test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without partial writes", async () => {
+test("400 imported recipients save/reload in PostgreSQL; resource overflow is rejected without partial writes", async () => {
   assertTestDatabase();
   const who = await provision({
     email: `capacity-${randomUUID()}@example.test`,
@@ -43,7 +43,7 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
     const csv = Buffer.from(
       "fullNameRu,fullNameKz,personnelNumber,externalId\r\n" +
         Array.from(
-          { length: 250 },
+          { length: 400 },
           (_, index) =>
             `Слушатель ${index + 1},Қатысушы ${index + 1},${String(index + 1).padStart(6, "0")},person-${index + 1}`,
         ).join("\r\n"),
@@ -54,8 +54,8 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
         size: buffer.length,
         originalname,
       }) as Express.Multer.File;
-    const preview = await importPreview(context, upload(csv, "250.csv"));
-    assert.equal(preview.total, 250);
+    const preview = await importPreview(context, upload(csv, "400.csv"));
+    assert.equal(preview.total, 400);
     assert.equal(preview.canApply, true);
     const rows = preview.rows.map((row) =>
       itemSchema.parse({
@@ -81,21 +81,21 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
       importId: preview.importId,
       rows,
     });
-    assert.equal(imported.items.length, 250);
+    assert.equal(imported.items.length, 400);
     assert.equal(
       imported.items.some((row) => row.id === "empty-starter"),
       false,
     );
-    assert.equal(imported.items[249].personnelNumber, "000250");
+    assert.equal(imported.items[399].personnelNumber, "000400");
     assert.equal(
       await db.requestItem.count({ where: { requestId: created.id } }),
-      250,
+      400,
       "autosave durably stores every imported working row before review",
     );
     assert.equal(
       (await db.printRequest.findUniqueOrThrow({ where: { id: created.id } }))
         .itemCount,
-      250,
+      400,
       "the working container retains the complete imported composition",
     );
     const working = await requestDetail(context, created.id);
@@ -127,20 +127,22 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
       0,
     );
     const draft = draftSchema.parse({ kind: "COMPANY", items: imported.items });
-    draft.items[249].positionRu = "Последний инженер";
+    draft.items[399].positionRu = "Последний инженер";
     const body = { expectedRevision: imported.revision, draft };
     assert.ok(Buffer.byteLength(JSON.stringify(body)) < LIMITS.jsonBytes);
     const saved = await patchRequest(context, created.id, body);
     const reloaded = await requestDetail(context, created.id);
-    assert.equal(reloaded.items.length, 250);
-    assert.equal(reloaded.items[249].positionRu, "Последний инженер");
+    assert.equal(reloaded.items.length, 400);
+    assert.equal(reloaded.items[399].positionRu, "Последний инженер");
     assert.deepEqual(
       reloaded.items.map((row) => row.id),
       rows.map((row) => row.id),
     );
     const tooMany = {
       ...draft,
-      items: [...draft.items, itemSchema.parse({ id: "row-251" })],
+      items: Array.from({ length: LIMITS.rows + 1 }, (_, index) =>
+        itemSchema.parse({ id: `resource-${index}` }),
+      ),
     };
     await assert.rejects(createRequest(context, tooMany));
     await assert.rejects(
@@ -152,21 +154,28 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
     await assert.rejects(
       db.printRequest.update({
         where: { id: created.id },
-        data: { itemCount: 251 },
+        data: { itemCount: LIMITS.rows + 1 },
       }),
     );
     const afterRejections = await requestDetail(context, created.id);
     assert.equal(afterRejections.revision, saved.revision);
-    assert.equal(afterRejections.items.length, 250);
-    assert.equal(afterRejections.items[249].positionRu, "Последний инженер");
+    assert.equal(afterRejections.items.length, 400);
+    assert.equal(afterRejections.items[399].positionRu, "Последний инженер");
     const overflow = await importPreview(
       context,
       upload(
-        Buffer.concat([csv, Buffer.from("\r\nЛишний,Артық,000251,person-251")]),
-        "251.csv",
+        Buffer.from(
+          "fullNameRu,fullNameKz,personnelNumber,externalId\r\n" +
+            Array.from(
+              { length: LIMITS.rows + 1 },
+              (_, index) =>
+                `Слушатель ${index},Қатысушы ${index},${String(index).padStart(6, "0")},overflow-${index}`,
+            ).join("\r\n"),
+        ),
+        "401.csv",
       ),
     );
-    assert.equal(overflow.total, 251);
+    assert.equal(overflow.total, LIMITS.rows + 1);
     assert.equal(overflow.canApply, false);
     assert.ok(
       (
@@ -174,13 +183,13 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
       ).some(
         (error) =>
           error.code === "ROW_LIMIT" &&
-          error.count === 251 &&
-          error.limit === 250,
+          error.count === LIMITS.rows + 1 &&
+          error.limit === LIMITS.rows,
       ),
     );
     assert.equal(
-      overflow.rows[250].values[2],
-      "000251",
+      overflow.rows[LIMITS.rows].values[2],
+      String(LIMITS.rows).padStart(6, "0"),
       "overflow source must remain visible, never silently truncated",
     );
   } finally {

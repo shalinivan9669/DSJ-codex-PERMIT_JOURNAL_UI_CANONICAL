@@ -186,7 +186,7 @@ test("real image/import/export/original/reconstruction integration", async (t) =
           originalname: "251.csv",
         } as Express.Multer.File);
         assert.equal(larger.total, 251);
-        assert.equal(larger.canApply, false);
+        assert.equal(larger.canApply, true);
         const tooMany = Array.from({ length: 251 }, (_, index) => ({
           ...rows[0],
           id: String(index),

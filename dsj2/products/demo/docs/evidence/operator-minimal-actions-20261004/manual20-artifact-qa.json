@@ -1,0 +1,938 @@
+{
+  "synthetic": true,
+  "requestId": "470126a8-23b7-4aa6-9cab-afc32d5231b3",
+  "proposalId": "c09e8984-cf03-4515-af00-edc661835b06",
+  "issuanceId": "08d2de10-343e-49f0-a688-16675a2ef0e5",
+  "singleUninterruptedE2E": false,
+  "phases": {
+    "manual20Source": "manual20-v6: UI through successful PENDING, then preview locator failed",
+    "uiCompletion": "manual20-completed-v1: real director preview/approval, operator refresh without reload, real finalize; read-only job poll interrupted by coordinated runtime restart",
+    "artifactOnlyContinuation": "manual20-files-v1: 1 PASS; no repeat finalize"
+  },
+  "totals": {
+    "people": 20,
+    "documents": 105,
+    "originalArtifacts": 210,
+    "forms": 11
+  },
+  "jobs": {
+    "issuanceJobs": 212,
+    "succeeded": 212,
+    "failed": 0,
+    "scope": "105 PDF + 105 DOCX + two auxiliary issuance jobs"
+  },
+  "downloadAndBytesChecks": {
+    "selectedExamples": 22,
+    "selectedSha256Matches": true,
+    "earlierArtifactsReadAgain": 23,
+    "earlierArtifactsAllUnchanged": true,
+    "scope": "All 210 original artifact records exist; bytes downloaded/hashed for 22 form examples and all 23 checkpoint artifacts, with overlap."
+  },
+  "textComparison": {
+    "requestId": "470126a8-23b7-4aa6-9cab-afc32d5231b3",
+    "count": 22,
+    "allPassed": true,
+    "results": [
+      {
+        "form": "biot-itr-certificate",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:documentDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-09-28",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2029-10-04"
+        },
+        "sourceHours": "40",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "biot-itr-certificate",
+        "format": "PDF",
+        "pages": 1,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:documentDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-09-28",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2029-10-04"
+        },
+        "sourceHours": "40",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "biot-itr-protocol",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-09-28",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2029-10-04"
+        },
+        "sourceHours": "40",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "biot-itr-protocol",
+        "format": "PDF",
+        "pages": 1,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-09-28",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2029-10-04"
+        },
+        "sourceHours": "40",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "biot-protocol",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 19,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "name:66dd8bbe-417f-4886-a937-d8f991e5323b": true,
+          "name:b6ce2e82-47fa-411a-9097-d912a8e55186": true,
+          "name:53bd65f6-0283-4ff2-8ea2-fcb466309a42": true,
+          "name:3740fd64-5842-4800-974e-a12fa87e1302": true,
+          "name:c8f6ca00-9f79-4d0e-bcf2-21d3fa6208c5": true,
+          "name:bc52a50b-0208-4f2c-af72-c55fd283961b": true,
+          "name:bf904e14-0de3-46f1-aaad-2a0c6d122e3a": true,
+          "name:9c660beb-317c-4f4d-96ba-6f1d9af6aab2": true,
+          "name:e4089dd2-0997-4f09-a923-aa295fbe7e57": true,
+          "name:88f7ba17-a977-4b8f-ab42-716e77063405": true,
+          "name:9b36c0ab-a930-4f6f-9746-461856a5487b": true,
+          "name:a128169c-684a-4a91-ae19-bb2b5d47a83e": true,
+          "name:297c79e2-7162-4699-930b-76dab39fa791": true,
+          "name:5e711c40-1637-436a-ba86-c44b4af00930": true,
+          "name:aacf3fe2-42f1-4f9d-9c9b-b3dfccde1b97": true,
+          "name:048c9301-80f9-45d3-8a6e-ac235104613f": true,
+          "name:434fddb2-b3bc-4162-9a39-45728b579694": true,
+          "name:f34ebee6-cbef-4a6d-a826-0082036e4e13": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "10",
+        "sourceProductionHours": "16"
+      },
+      {
+        "form": "biot-protocol",
+        "format": "PDF",
+        "pages": 3,
+        "peopleChecked": 19,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "name:66dd8bbe-417f-4886-a937-d8f991e5323b": true,
+          "name:b6ce2e82-47fa-411a-9097-d912a8e55186": true,
+          "name:53bd65f6-0283-4ff2-8ea2-fcb466309a42": true,
+          "name:3740fd64-5842-4800-974e-a12fa87e1302": true,
+          "name:c8f6ca00-9f79-4d0e-bcf2-21d3fa6208c5": true,
+          "name:bc52a50b-0208-4f2c-af72-c55fd283961b": true,
+          "name:bf904e14-0de3-46f1-aaad-2a0c6d122e3a": true,
+          "name:9c660beb-317c-4f4d-96ba-6f1d9af6aab2": true,
+          "name:e4089dd2-0997-4f09-a923-aa295fbe7e57": true,
+          "name:88f7ba17-a977-4b8f-ab42-716e77063405": true,
+          "name:9b36c0ab-a930-4f6f-9746-461856a5487b": true,
+          "name:a128169c-684a-4a91-ae19-bb2b5d47a83e": true,
+          "name:297c79e2-7162-4699-930b-76dab39fa791": true,
+          "name:5e711c40-1637-436a-ba86-c44b4af00930": true,
+          "name:aacf3fe2-42f1-4f9d-9c9b-b3dfccde1b97": true,
+          "name:048c9301-80f9-45d3-8a6e-ac235104613f": true,
+          "name:434fddb2-b3bc-4162-9a39-45728b579694": true,
+          "name:f34ebee6-cbef-4a6d-a826-0082036e4e13": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "10",
+        "sourceProductionHours": "16"
+      },
+      {
+        "form": "biot-worker-card",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "date:protocolDate": true,
+          "employerRu": true,
+          "positionRu": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "10",
+        "sourceProductionHours": "16"
+      },
+      {
+        "form": "biot-worker-card",
+        "format": "PDF",
+        "pages": 2,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "date:protocolDate": true,
+          "employerRu": true,
+          "positionRu": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "10",
+        "sourceProductionHours": "16"
+      },
+      {
+        "form": "pb-card",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "date:documentDate": true,
+          "date:validUntil": true,
+          "employerRu": true,
+          "positionRu": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "pb-card",
+        "format": "PDF",
+        "pages": 2,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "date:documentDate": true,
+          "date:validUntil": true,
+          "employerRu": true,
+          "positionRu": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "pb-protocol",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 20,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "name:66dd8bbe-417f-4886-a937-d8f991e5323b": true,
+          "name:b6ce2e82-47fa-411a-9097-d912a8e55186": true,
+          "name:53bd65f6-0283-4ff2-8ea2-fcb466309a42": true,
+          "name:3740fd64-5842-4800-974e-a12fa87e1302": true,
+          "name:c8f6ca00-9f79-4d0e-bcf2-21d3fa6208c5": true,
+          "name:bc52a50b-0208-4f2c-af72-c55fd283961b": true,
+          "name:bf904e14-0de3-46f1-aaad-2a0c6d122e3a": true,
+          "name:9c660beb-317c-4f4d-96ba-6f1d9af6aab2": true,
+          "name:e4089dd2-0997-4f09-a923-aa295fbe7e57": true,
+          "name:88f7ba17-a977-4b8f-ab42-716e77063405": true,
+          "name:9b36c0ab-a930-4f6f-9746-461856a5487b": true,
+          "name:a128169c-684a-4a91-ae19-bb2b5d47a83e": true,
+          "name:297c79e2-7162-4699-930b-76dab39fa791": true,
+          "name:5e711c40-1637-436a-ba86-c44b4af00930": true,
+          "name:aacf3fe2-42f1-4f9d-9c9b-b3dfccde1b97": true,
+          "name:048c9301-80f9-45d3-8a6e-ac235104613f": true,
+          "name:434fddb2-b3bc-4162-9a39-45728b579694": true,
+          "name:f34ebee6-cbef-4a6d-a826-0082036e4e13": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:protocolDate": true,
+          "hoursRu": true,
+          "hoursKz": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "pb-protocol",
+        "format": "PDF",
+        "pages": 2,
+        "peopleChecked": 20,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "name:66dd8bbe-417f-4886-a937-d8f991e5323b": true,
+          "name:b6ce2e82-47fa-411a-9097-d912a8e55186": true,
+          "name:53bd65f6-0283-4ff2-8ea2-fcb466309a42": true,
+          "name:3740fd64-5842-4800-974e-a12fa87e1302": true,
+          "name:c8f6ca00-9f79-4d0e-bcf2-21d3fa6208c5": true,
+          "name:bc52a50b-0208-4f2c-af72-c55fd283961b": true,
+          "name:bf904e14-0de3-46f1-aaad-2a0c6d122e3a": true,
+          "name:9c660beb-317c-4f4d-96ba-6f1d9af6aab2": true,
+          "name:e4089dd2-0997-4f09-a923-aa295fbe7e57": true,
+          "name:88f7ba17-a977-4b8f-ab42-716e77063405": true,
+          "name:9b36c0ab-a930-4f6f-9746-461856a5487b": true,
+          "name:a128169c-684a-4a91-ae19-bb2b5d47a83e": true,
+          "name:297c79e2-7162-4699-930b-76dab39fa791": true,
+          "name:5e711c40-1637-436a-ba86-c44b4af00930": true,
+          "name:aacf3fe2-42f1-4f9d-9c9b-b3dfccde1b97": true,
+          "name:048c9301-80f9-45d3-8a6e-ac235104613f": true,
+          "name:434fddb2-b3bc-4162-9a39-45728b579694": true,
+          "name:f34ebee6-cbef-4a6d-a826-0082036e4e13": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:protocolDate": true,
+          "hoursRu": true,
+          "hoursKz": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ps-card",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": ""
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ps-card",
+        "format": "PDF",
+        "pages": 2,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": ""
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ps-protocol",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 20,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "name:66dd8bbe-417f-4886-a937-d8f991e5323b": true,
+          "name:b6ce2e82-47fa-411a-9097-d912a8e55186": true,
+          "name:53bd65f6-0283-4ff2-8ea2-fcb466309a42": true,
+          "name:3740fd64-5842-4800-974e-a12fa87e1302": true,
+          "name:c8f6ca00-9f79-4d0e-bcf2-21d3fa6208c5": true,
+          "name:bc52a50b-0208-4f2c-af72-c55fd283961b": true,
+          "name:bf904e14-0de3-46f1-aaad-2a0c6d122e3a": true,
+          "name:9c660beb-317c-4f4d-96ba-6f1d9af6aab2": true,
+          "name:e4089dd2-0997-4f09-a923-aa295fbe7e57": true,
+          "name:88f7ba17-a977-4b8f-ab42-716e77063405": true,
+          "name:9b36c0ab-a930-4f6f-9746-461856a5487b": true,
+          "name:a128169c-684a-4a91-ae19-bb2b5d47a83e": true,
+          "name:297c79e2-7162-4699-930b-76dab39fa791": true,
+          "name:5e711c40-1637-436a-ba86-c44b4af00930": true,
+          "name:aacf3fe2-42f1-4f9d-9c9b-b3dfccde1b97": true,
+          "name:048c9301-80f9-45d3-8a6e-ac235104613f": true,
+          "name:434fddb2-b3bc-4162-9a39-45728b579694": true,
+          "name:f34ebee6-cbef-4a6d-a826-0082036e4e13": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": ""
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ps-protocol",
+        "format": "PDF",
+        "pages": 3,
+        "peopleChecked": 20,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "name:66dd8bbe-417f-4886-a937-d8f991e5323b": true,
+          "name:b6ce2e82-47fa-411a-9097-d912a8e55186": true,
+          "name:53bd65f6-0283-4ff2-8ea2-fcb466309a42": true,
+          "name:3740fd64-5842-4800-974e-a12fa87e1302": true,
+          "name:c8f6ca00-9f79-4d0e-bcf2-21d3fa6208c5": true,
+          "name:bc52a50b-0208-4f2c-af72-c55fd283961b": true,
+          "name:bf904e14-0de3-46f1-aaad-2a0c6d122e3a": true,
+          "name:9c660beb-317c-4f4d-96ba-6f1d9af6aab2": true,
+          "name:e4089dd2-0997-4f09-a923-aa295fbe7e57": true,
+          "name:88f7ba17-a977-4b8f-ab42-716e77063405": true,
+          "name:9b36c0ab-a930-4f6f-9746-461856a5487b": true,
+          "name:a128169c-684a-4a91-ae19-bb2b5d47a83e": true,
+          "name:297c79e2-7162-4699-930b-76dab39fa791": true,
+          "name:5e711c40-1637-436a-ba86-c44b4af00930": true,
+          "name:aacf3fe2-42f1-4f9d-9c9b-b3dfccde1b97": true,
+          "name:048c9301-80f9-45d3-8a6e-ac235104613f": true,
+          "name:434fddb2-b3bc-4162-9a39-45728b579694": true,
+          "name:f34ebee6-cbef-4a6d-a826-0082036e4e13": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": ""
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ps-witness",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "registrationNumber": true,
+          "date:trainingStart": true,
+          "date:trainingEnd": true,
+          "date:protocolDate": true,
+          "date:documentDate": true,
+          "profession": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": ""
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ps-witness",
+        "format": "PDF",
+        "pages": 2,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "registrationNumber": true,
+          "date:trainingStart": true,
+          "date:trainingEnd": true,
+          "date:protocolDate": true,
+          "date:documentDate": true,
+          "profession": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": ""
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ptm-card",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "date:documentDate": true,
+          "date:validUntil": true,
+          "employerRu": true,
+          "positionRu": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ptm-card",
+        "format": "PDF",
+        "pages": 1,
+        "peopleChecked": 1,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "number": true,
+          "date:documentDate": true,
+          "date:validUntil": true,
+          "employerRu": true,
+          "positionRu": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ptm-protocol",
+        "format": "DOCX",
+        "pages": null,
+        "peopleChecked": 20,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "name:66dd8bbe-417f-4886-a937-d8f991e5323b": true,
+          "name:b6ce2e82-47fa-411a-9097-d912a8e55186": true,
+          "name:53bd65f6-0283-4ff2-8ea2-fcb466309a42": true,
+          "name:3740fd64-5842-4800-974e-a12fa87e1302": true,
+          "name:c8f6ca00-9f79-4d0e-bcf2-21d3fa6208c5": true,
+          "name:bc52a50b-0208-4f2c-af72-c55fd283961b": true,
+          "name:bf904e14-0de3-46f1-aaad-2a0c6d122e3a": true,
+          "name:9c660beb-317c-4f4d-96ba-6f1d9af6aab2": true,
+          "name:e4089dd2-0997-4f09-a923-aa295fbe7e57": true,
+          "name:88f7ba17-a977-4b8f-ab42-716e77063405": true,
+          "name:9b36c0ab-a930-4f6f-9746-461856a5487b": true,
+          "name:a128169c-684a-4a91-ae19-bb2b5d47a83e": true,
+          "name:297c79e2-7162-4699-930b-76dab39fa791": true,
+          "name:5e711c40-1637-436a-ba86-c44b4af00930": true,
+          "name:aacf3fe2-42f1-4f9d-9c9b-b3dfccde1b97": true,
+          "name:048c9301-80f9-45d3-8a6e-ac235104613f": true,
+          "name:434fddb2-b3bc-4162-9a39-45728b579694": true,
+          "name:f34ebee6-cbef-4a6d-a826-0082036e4e13": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      },
+      {
+        "form": "ptm-protocol",
+        "format": "PDF",
+        "pages": 2,
+        "peopleChecked": 20,
+        "checks": {
+          "sha256": true,
+          "name:d10a9f91-794b-43ea-8f1d-862d1af58129": true,
+          "name:66dd8bbe-417f-4886-a937-d8f991e5323b": true,
+          "name:b6ce2e82-47fa-411a-9097-d912a8e55186": true,
+          "name:53bd65f6-0283-4ff2-8ea2-fcb466309a42": true,
+          "name:3740fd64-5842-4800-974e-a12fa87e1302": true,
+          "name:c8f6ca00-9f79-4d0e-bcf2-21d3fa6208c5": true,
+          "name:bc52a50b-0208-4f2c-af72-c55fd283961b": true,
+          "name:bf904e14-0de3-46f1-aaad-2a0c6d122e3a": true,
+          "name:9c660beb-317c-4f4d-96ba-6f1d9af6aab2": true,
+          "name:e4089dd2-0997-4f09-a923-aa295fbe7e57": true,
+          "name:88f7ba17-a977-4b8f-ab42-716e77063405": true,
+          "name:9b36c0ab-a930-4f6f-9746-461856a5487b": true,
+          "name:a128169c-684a-4a91-ae19-bb2b5d47a83e": true,
+          "name:297c79e2-7162-4699-930b-76dab39fa791": true,
+          "name:5e711c40-1637-436a-ba86-c44b4af00930": true,
+          "name:aacf3fe2-42f1-4f9d-9c9b-b3dfccde1b97": true,
+          "name:048c9301-80f9-45d3-8a6e-ac235104613f": true,
+          "name:434fddb2-b3bc-4162-9a39-45728b579694": true,
+          "name:f34ebee6-cbef-4a6d-a826-0082036e4e13": true,
+          "name:973d1c69-0872-4b04-aa3f-7ac3c0861df2": true,
+          "number": true,
+          "date:protocolDate": true,
+          "no_unexpanded_tokens": true
+        },
+        "failed": [],
+        "assignmentDates": {
+          "documentDate": "2026-10-04",
+          "protocolDate": "2026-10-04",
+          "trainingStart": "2026-10-01",
+          "trainingEnd": "2026-10-02",
+          "validUntil": "2027-10-04"
+        },
+        "sourceHours": "16",
+        "sourceProductionHours": null
+      }
+    ],
+    "scope": "Text/bytes of real outputs compared against the fixed issuance draft. Fields absent from preserved form are not claimed as printed; visual review is recorded separately."
+  },
+  "visualReview": {
+    "sampleOriginalPdfCount": 11,
+    "sampleOriginalPdfPages": 21,
+    "allSamplePagesReviewed": true,
+    "all105DocumentsIndividuallyViewed": false,
+    "noWholeRequiredNameDateNumberFieldLostObserved": true,
+    "flawlessLayoutClaimed": false,
+    "limitations": [
+      "PB card: first approximately 2.1 pt of some left-aligned text lies outside MediaBox; inherited negative VML geometry matches pinned source.",
+      "PTM card: lower descriptive signature label partly clips against its internal frame; actual director name remains readable.",
+      "Long synthetic employer crosses internal frame on some cards.",
+      "PS witness KZ protocol number wraps to three lines across form rules; all characters remain present.",
+      "BiOT worker group protocol has signature block split across page boundary; all commission names present."
+    ]
+  },
+  "independentDocxRender": {
+    "form": "ps-witness",
+    "renderer": "documents skill render_docx.py",
+    "pages": 2,
+    "sameExtractedTextIgnoringWhitespace": true,
+    "bothPagesVisuallyReviewed": true,
+    "output": ".runtime/manual20-docx-qa/ps-witness"
+  },
+  "pinnedPbSource": {
+    "path": "assets\\templates\\pb-card.v17.docx",
+    "sourceMatchesPinnedHash": true,
+    "sameNegativeShapeStyles": true
+  },
+  "forms": [
+    {
+      "templateId": "biot-itr-certificate",
+      "issuedCount": 1,
+      "samplePdfPagesReviewed": 1,
+      "peopleCheckedInSample": 1,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "40",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-09-28",
+        "trainingEnd": "2026-10-02",
+        "validUntil": "2029-10-04"
+      }
+    },
+    {
+      "templateId": "biot-itr-protocol",
+      "issuedCount": 1,
+      "samplePdfPagesReviewed": 1,
+      "peopleCheckedInSample": 1,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "40",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-09-28",
+        "trainingEnd": "2026-10-02",
+        "validUntil": "2029-10-04"
+      }
+    },
+    {
+      "templateId": "biot-protocol",
+      "issuedCount": 1,
+      "samplePdfPagesReviewed": 3,
+      "peopleCheckedInSample": 19,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "10",
+      "sourceProductionHours": "16",
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": "2027-10-04"
+      }
+    },
+    {
+      "templateId": "biot-worker-card",
+      "issuedCount": 19,
+      "samplePdfPagesReviewed": 2,
+      "peopleCheckedInSample": 1,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "10",
+      "sourceProductionHours": "16",
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": "2027-10-04"
+      }
+    },
+    {
+      "templateId": "pb-card",
+      "issuedCount": 20,
+      "samplePdfPagesReviewed": 2,
+      "peopleCheckedInSample": 1,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "16",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": "2027-10-04"
+      }
+    },
+    {
+      "templateId": "pb-protocol",
+      "issuedCount": 1,
+      "samplePdfPagesReviewed": 2,
+      "peopleCheckedInSample": 20,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "16",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": "2027-10-04"
+      }
+    },
+    {
+      "templateId": "ps-card",
+      "issuedCount": 20,
+      "samplePdfPagesReviewed": 2,
+      "peopleCheckedInSample": 1,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "16",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": ""
+      }
+    },
+    {
+      "templateId": "ps-protocol",
+      "issuedCount": 1,
+      "samplePdfPagesReviewed": 3,
+      "peopleCheckedInSample": 20,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "16",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": ""
+      }
+    },
+    {
+      "templateId": "ps-witness",
+      "issuedCount": 20,
+      "samplePdfPagesReviewed": 2,
+      "peopleCheckedInSample": 1,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "16",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": ""
+      }
+    },
+    {
+      "templateId": "ptm-card",
+      "issuedCount": 20,
+      "samplePdfPagesReviewed": 1,
+      "peopleCheckedInSample": 1,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "16",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": "2027-10-04"
+      }
+    },
+    {
+      "templateId": "ptm-protocol",
+      "issuedCount": 1,
+      "samplePdfPagesReviewed": 2,
+      "peopleCheckedInSample": 20,
+      "pdfAndDocxTextPassed": true,
+      "sourceHours": "16",
+      "sourceProductionHours": null,
+      "assignmentDates": {
+        "documentDate": "2026-10-04",
+        "protocolDate": "2026-10-04",
+        "trainingStart": "2026-10-01",
+        "trainingEnd": "2026-10-02",
+        "validUntil": "2027-10-04"
+      }
+    }
+  ],
+  "limits": [
+    "No API prefill of the manual20 recipients/course common fields; API readback used only for verification and original downloads.",
+    "Center 8 h/day and non-BiOT course 16 h are synthetic fixture settings, not approved real-center schedule or legal requirements.",
+    "Printed field matrix follows preserved form. ITR expiry and hours exist in snapshot but ITR legacy certificate has no printed fields for them. PB protocol does print 16 hours in RU/KZ and these are asserted.",
+    "21 pages are one representative per each of 11 forms, not all 105 individual documents.",
+    "Original/source template files and issued artifacts were not edited. Runtime API/web not restarted by this QA task."
+  ]
+}

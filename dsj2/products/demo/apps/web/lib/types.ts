@@ -1,6 +1,7 @@
 import {
   TEMPLATE_LABELS,
   courseProgramDefaults,
+  positiveAssignmentDefaults,
   type Draft as DraftInput,
   type Assignment,
   type RequestItemInput,
@@ -188,7 +189,6 @@ export function newAssignment(
     trainingEnd: "",
     protocolDate: "",
     trainingSubject: "",
-    result: "",
     hours: "",
     reason: "",
     education: "",
@@ -197,8 +197,10 @@ export function newAssignment(
     protocolMode: "INDIVIDUAL",
     ...biotAssignmentDefaults(templateId),
     ...courseProgramDefaults(templateId),
+    ...positiveAssignmentDefaults(templateId),
     fieldOrigins: {
       ...biotAssignmentDefaults(templateId).fieldOrigins,
+      ...positiveAssignmentDefaults(templateId).fieldOrigins,
       ...Object.fromEntries(
         Object.keys(courseProgramDefaults(templateId)).map((key) => [
           key,

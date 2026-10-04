@@ -13,7 +13,7 @@ export function liveValidityDescription(
 ) {
   if (trainingDirection(assignment.templateId) === "PS")
     return "ПС — бессрочно. Дата окончания не указывается. Срок определяется действующим правилом центра и не вводится вручную.";
-  return `Расчётный срок: ${employeeCategoryFor(item) === "ITR" ? "3 года для ИТР" : "1 год для рабочего"} от даты этого документа. Измените дату документа для пересчёта. Ручное исключение срока действующим правилом центра не предусмотрено.`;
+  return `Расчётный срок: ${employeeCategoryFor(item) === "ITR" ? "3 года для ИТР" : "1 год для рабочего"} от даты этого документа. Введённая вручную или импортированная дата сохраняется; для пересчёта верните автоматический расчёт. Явная очистка также сохраняется и требует заполнения перед передачей директору.`;
 }
 export function presetValidityLabel(category: BiotCategory) {
   const years = BIOT_CATEGORIES[category].validityYears;
@@ -33,7 +33,7 @@ export function biotCategoryDescription(
     : "";
   const discrepancy =
     preset.form === "ITR" && preset.validityYears !== 3
-      ? ` Описание категории указывает ${presetValidityLabel(category).toLowerCase()}; действующее правило печати центра устанавливает 3 года для ИТР. Расхождение сохраняется как предметный вопрос; экран показывает срок, который попадёт в документ.`
+      ? ` Описание категории указывает ${presetValidityLabel(category).toLowerCase()}; выбранное центром правило печати устанавливает 3 года для ИТР с сохранением ручных исключений. Расхождение с описанием категории не является подтверждением актуальной нормы закона.`
       : "";
   return hours + ecs + discrepancy;
 }

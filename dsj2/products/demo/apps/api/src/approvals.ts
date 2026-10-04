@@ -360,6 +360,7 @@ export async function requestApproval(c: Context, id: string) {
     requestId: id,
     revision: record.revision,
     approvedRevision: record.approvedRevision,
+    requestStatus: record.status,
     approval: record.approval,
   };
 }
@@ -602,7 +603,9 @@ export async function approvalDetail(c: Context, id: string) {
       ).draft
     : null;
   const visibleDiff =
-    scopedDraft && scopedBefore ? proposalDiff(scopedBefore, scopedDraft) : diff;
+    scopedDraft && scopedBefore
+      ? proposalDiff(scopedBefore, scopedDraft)
+      : diff;
   const references = new Set<string>();
   const findReferences = (value: unknown) => {
     if (!value || typeof value !== "object") return;
@@ -633,11 +636,30 @@ export async function approvalDetail(c: Context, id: string) {
       select: { id: true, version: true, profile: true },
     }),
   ]);
+  let review = null;
+  let reviewUnavailable = false;
+  if (proposal.operation === "SAVE") {
+    const { proposalDataReview } = await import("./requests");
+    try {
+      review = await proposalDataReview(
+        c,
+        proposal.requestId,
+        scopedDraft || parse(draftSchema, proposal.payload),
+      );
+    } catch {
+      // A historical missing reference must not hide the immutable revision or
+      // the director's explicit return action. Approval still fails closed.
+      reviewUnavailable = true;
+    }
+  }
   return {
     ...safeProposal,
     payloadHash: proposal.proposalHash,
     expectedProposalHash: proposal.proposalHash,
     requestedAction: proposal.operation,
+    review,
+    reviewUnavailable,
+    currentRevision: request.revision,
     draft:
       proposal.operation === "SAVE" ? scopedDraft || proposal.payload : null,
     requestRevision: proposal.revision,
@@ -728,6 +750,7 @@ export async function decideProposal(c: Context, id: string, input: unknown) {
         record.id,
         proposal.scopeHash ? record.revision : proposal.revision,
         proposal.assignments as AssignmentIdentity[] | undefined,
+        parse(draftSchema, proposal.payload),
       );
     }
     await tx.proposalDecision.create({

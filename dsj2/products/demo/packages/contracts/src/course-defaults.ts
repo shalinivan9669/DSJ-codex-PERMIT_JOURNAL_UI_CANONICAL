@@ -58,6 +58,38 @@ export function nonPassedResultKz(status: "UNKNOWN" | "FAILED" | "ABSENT") {
   ];
 }
 
+export const DEFAULT_POSITIVE_OUTCOME_SOURCE =
+  "Стандартный положительный результат при создании назначения";
+
+/** The centre explicitly chose this default for newly created assignments only.
+ * It does not claim an examination, assessment sheet or external protocol. */
+export function positiveAssignmentDefaults(templateId: string) {
+  return {
+    result: courseResultText(templateId, "PASSED"),
+    resultKz:
+      templateId.startsWith("biot-") || templateId.startsWith("ptm-")
+        ? "Өтті"
+        : "Тапсырды",
+    outcome: {
+      status: "PASSED" as const,
+      source: DEFAULT_POSITIVE_OUTCOME_SOURCE,
+    },
+    fieldOrigins: {
+      result: "COURSE" as const,
+      resultKz: "COURSE" as const,
+      outcome: "AUTO" as const,
+    },
+  };
+}
+
+export function hasAutomaticPositiveOutcome(assignment: Assignment): boolean {
+  return (
+    assignment.fieldOrigins?.outcome === "AUTO" &&
+    assignment.outcome?.status === "PASSED" &&
+    assignment.outcome.source === DEFAULT_POSITIVE_OUTCOME_SOURCE
+  );
+}
+
 /** Actual operator-entered grades/scores remain data even after a failure.
  * Old positive template literals and our generated status words are not grades. */
 export function factualAssessmentText(value?: string, origin?: string): string {

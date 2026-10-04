@@ -35,7 +35,7 @@ export function applyEventOutcomes(
   input: EventOutcomeInput,
 ) {
   const event = draft.events?.find((row) => row.id === eventId);
-  if (!event || input.status === "UNKNOWN" || !input.source.trim())
+  if (!event || (input.status !== "UNKNOWN" && !input.source.trim()))
     throw new Error(
       "Выберите известный результат и укажите источник подтверждения.",
     );
@@ -85,6 +85,7 @@ export function applyEventOutcomes(
                     : {}),
                   fieldOrigins: {
                     ...assignment.fieldOrigins,
+                        outcome: "MANUAL" as const,
                     result:
                       input.status === "PASSED" &&
                       assignment.result.trim() &&
@@ -101,7 +102,8 @@ export function applyEventOutcomes(
                   },
                   outcome: {
                     status: input.status,
-                    source: input.source.trim(),
+                    source:
+                      input.status === "UNKNOWN" ? "" : input.source.trim(),
                   },
                 },
           ),

@@ -227,23 +227,50 @@ test("resetting a protocol date keeps inheritance after normalization and follow
   raw.events![0].protocolModeSource = "MANUAL";
   raw.events![0].commonFields.protocolDate = "2026-10-02";
   raw.items[0].assignments[0].protocolDate = "2026-09-29";
-  raw.items[0].assignments[0].fieldOrigins = { ...raw.items[0].assignments[0].fieldOrigins, protocolDate: "IMPORTED" };
+  raw.items[0].assignments[0].fieldOrigins = {
+    ...raw.items[0].assignments[0].fieldOrigins,
+    protocolDate: "IMPORTED",
+  };
   const normalized = applyBusinessRules(raw);
   const before = structuredClone(normalized.items[0].assignments);
-  const protocol = before.find((assignment) => assignment.templateId === "biot-protocol")!;
-  normalized.items[0] = restoreTrainingAssignmentField(normalized.items[0], protocol.id, "documentDate", true);
+  const protocol = before.find(
+    (assignment) => assignment.templateId === "biot-protocol",
+  )!;
+  normalized.items[0] = restoreTrainingAssignmentField(
+    normalized.items[0],
+    protocol.id,
+    "documentDate",
+    true,
+  );
   const restored = applyBusinessRules(normalized);
   for (const assignment of restored.items[0].assignments) {
     assert.equal(assignment.fieldOrigins?.protocolDate, "INHERITED");
-    if (assignment.templateId.endsWith("-protocol")) assert.equal(assignment.fieldOrigins?.documentDate, "INHERITED");
-    assert.deepEqual(assignment.outcome, before.find((entry) => entry.id === assignment.id)!.outcome);
+    if (assignment.templateId.endsWith("-protocol"))
+      assert.equal(assignment.fieldOrigins?.documentDate, "INHERITED");
+    assert.deepEqual(
+      assignment.outcome,
+      before.find((entry) => entry.id === assignment.id)!.outcome,
+    );
   }
-  assert.equal(resolveDraft(restored).draft.items[0].assignments.find((assignment) => assignment.id === protocol.id)!.documentDate, "2026-10-02");
+  assert.equal(
+    resolveDraft(restored).draft.items[0].assignments.find(
+      (assignment) => assignment.id === protocol.id,
+    )!.documentDate,
+    "2026-10-02",
+  );
   const serialized = draftSchema.parse(JSON.parse(JSON.stringify(restored)));
   serialized.events![0].commonFields.protocolDate = "2026-10-03";
   const updated = resolveDraft(applyBusinessRules(serialized));
-  assert.equal(updated.draft.items[0].assignments.find((assignment) => assignment.id === protocol.id)!.documentDate, "2026-10-03");
-  assert.equal(updated.provenance[`recipient-1:${protocol.id}`].protocolDate, "EVENT");
+  assert.equal(
+    updated.draft.items[0].assignments.find(
+      (assignment) => assignment.id === protocol.id,
+    )!.documentDate,
+    "2026-10-03",
+  );
+  assert.equal(
+    updated.provenance[`recipient-1:${protocol.id}`].protocolDate,
+    "EVENT",
+  );
 });
 
 test("resetting an independent document basis preserves the companion basis and every confirmed fact", () => {
@@ -253,13 +280,27 @@ test("resetting an independent document basis preserves the companion basis and 
   const person = applyBusinessRules(draft).items[0];
   for (const [index, assignment] of person.assignments.entries()) {
     assignment.externalBasisNumber = `INDEPENDENT-${index}`;
-    assignment.fieldOrigins = { ...assignment.fieldOrigins, externalBasisNumber: "IMPORTED" };
+    assignment.fieldOrigins = {
+      ...assignment.fieldOrigins,
+      externalBasisNumber: "IMPORTED",
+    };
   }
   const before = structuredClone(person);
-  const changed = restoreTrainingAssignmentField(person, person.assignments[0].id, "externalBasisNumber", true);
-  assert.equal(changed.assignments[0].fieldOrigins?.externalBasisNumber, "INHERITED");
+  const changed = restoreTrainingAssignmentField(
+    person,
+    person.assignments[0].id,
+    "externalBasisNumber",
+    true,
+  );
+  assert.equal(
+    changed.assignments[0].fieldOrigins?.externalBasisNumber,
+    "INHERITED",
+  );
   assert.deepEqual(changed.assignments[1], before.assignments[1]);
-  assert.deepEqual(changed.assignments[0].outcome, before.assignments[0].outcome);
+  assert.deepEqual(
+    changed.assignments[0].outcome,
+    before.assignments[0].outcome,
+  );
   assert.equal(changed.assignments[0].id, before.assignments[0].id);
 });
 
@@ -317,11 +358,27 @@ test("stable validation addresses follow recipient and assignment IDs across reo
   assert.equal(issue.recipientId, "recipient-2");
   assert.equal(issue.field, "fullNameRu");
   assert.equal(issue.path, "items.1.fullNameRu");
-  draft.items[1].assignments.unshift({ ...structuredClone(draft.items[1].assignments[0]), id: "other-independent-assignment" });
-  const addressed = [...commonFieldKeys, "outcome.source", "biotKnowledgeResult", "biotProctoringResult", "templateId"].map((field) => stableValidationIssue(draft, {
-    code: "FIELD_ERROR", recipientId: "recipient-2", assignmentId: "credential-2", eventId: "original-event", field,
-    path: `items.0.assignments.0.${field}`, message: "Synthetic field issue",
-  }));
+  draft.items[1].assignments.unshift({
+    ...structuredClone(draft.items[1].assignments[0]),
+    id: "other-independent-assignment",
+  });
+  const addressed = [
+    ...commonFieldKeys,
+    "outcome.source",
+    "biotKnowledgeResult",
+    "biotProctoringResult",
+    "templateId",
+  ].map((field) =>
+    stableValidationIssue(draft, {
+      code: "FIELD_ERROR",
+      recipientId: "recipient-2",
+      assignmentId: "credential-2",
+      eventId: "original-event",
+      field,
+      path: `items.0.assignments.0.${field}`,
+      message: "Synthetic field issue",
+    }),
+  );
   for (const issue of addressed) {
     assert.equal(issue.recipientId, "recipient-2");
     assert.equal(issue.assignmentId, "credential-2");
@@ -346,6 +403,7 @@ test("LIVE grouped protocols retain resolved employee-category validity instead 
         commonFields: {
           documentDate: "2026-10-03",
           validUntil: "2027-10-03",
+          dateOrigins: { validUntil: "AUTO" },
           biotCategory: "INSPECTOR_SPECIAL",
           hours: "40",
         },

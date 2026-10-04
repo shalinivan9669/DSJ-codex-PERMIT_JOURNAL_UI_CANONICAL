@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-04T19:20:48.639Z",
+  "baseSha": "e10f3f77b195953555811c0b6c2b9de622dea4d4",
+  "branch": "codex/operator-flow-refinement-20261003",
+  "local": {
+    "manual20": {
+      "status": "PASS_BY_STAGES_NOT_ONE_UNINTERRUPTED_TEST",
+      "requestId": "470126a8-23b7-4aa6-9cab-afc32d5231b3",
+      "recipients": 20,
+      "documents": 105,
+      "jobsSucceeded": 212,
+      "originalPdfDocx": 210,
+      "forms": 11,
+      "sampleTextChecks": 22,
+      "earlyArtifactHashesUnchanged": 23
+    },
+    "excel400": {
+      "status": "PASS",
+      "requestId": "6dbcd3ab-e4b2-4d1c-a7cf-422acdcd930a",
+      "recipients": 400,
+      "documents": 1203,
+      "fullValidation": true,
+      "oneDirectorDecision": true,
+      "issued": false,
+      "durationMs": 181060,
+      "validationMs": 145645
+    },
+    "exceptions": {
+      "status": "PASS",
+      "requestId": "82dd0e05-b298-4ab2-803d-743d64174666"
+    },
+    "directorSummary": {
+      "status": "PASS",
+      "heightPx": 586.296875
+    },
+    "finalWebBuild": {
+      "dist": ".next-minimal-actions-v4",
+      "buildId": "SQm7fsNOUdnvAB22YEGeE"
+    },
+    "unitBeforeFinalTargetedChanges": {
+      "serverDomain": 184,
+      "web": 209,
+      "skipped": 0
+    },
+    "lateTargeted": {
+      "preflight": 3,
+      "review": 3,
+      "issuanceBatchesIntegration": 6,
+      "dateIntegration": 1
+    }
+  },
+  "limitations": {
+    "originalPrintLayout": "NOT_ACCEPTED_SOURCE_LIBREOFFICE_LIMITS",
+    "realCenterSchedule": "DEFERRED_BY_USER_SYNTHETIC_LOCAL_ONLY",
+    "itrFieldsWithoutOriginalPrintSlots": "SNAPSHOT_VERIFIED_NOT_PRINTED",
+    "fullHistoricalE2eAndCi": "NOT_RERUN"
+  },
+  "production": {
+    "status": "PENDING_RELEASE",
+    "verifiedBackup": true,
+    "precutoverUnchanged": true
+  }
+}

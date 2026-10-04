@@ -4,9 +4,10 @@ import {
   draftSchema,
   documentPlan,
   validateDraft,
+  LIMITS,
 } from "../packages/contracts/src";
 
-function fixture() {
+function fixture(rows = 250, assignments = 4) {
   return draftSchema.parse({
     kind: "PERSON",
     schemaVersion: 2,
@@ -18,10 +19,10 @@ function fixture() {
         commonFields: {},
       },
     ],
-    items: Array.from({ length: 250 }, (_, row) => ({
+    items: Array.from({ length: rows }, (_, row) => ({
       id: `row-${row}`,
       fullNameRu: `Синтетический Получатель ${row}`,
-      assignments: Array.from({ length: 4 }, (_, column) => ({
+      assignments: Array.from({ length: assignments }, (_, column) => ({
         id: `assignment-${row}-${column}`,
         templateId: "pb-card",
         documentDate: "2026-09-29",
@@ -39,20 +40,20 @@ function fixture() {
   });
 }
 
-test("1000-document limit counts the shared protocol alongside personal documents", () => {
-  const draft = fixture();
-  assert.equal(documentPlan(draft).documentCount, 1001);
+test("resource document guard counts the shared protocol alongside personal documents", () => {
+  const draft = fixture(400, LIMITS.documents / 400);
+  assert.equal(documentPlan(draft).documentCount, LIMITS.documents + 1);
   const issue = validateDraft(draft, null).find(
     (entry) => entry.code === "DOCUMENT_LIMIT",
   );
   assert.ok(
     issue,
-    "1000 personal documents plus one protocol must be rejected",
+    "the resource guard counts a shared protocol as well as personal forms",
   );
-  assert.match(issue.message, /1000/);
-  assert.match(issue.message, /1001/);
+  assert.ok(issue.message.includes(String(LIMITS.documents)));
+  assert.ok(issue.message.includes(String(LIMITS.documents + 1)));
   draft.items.at(-1)!.assignments.pop();
-  assert.equal(documentPlan(draft).documentCount, 1000);
+  assert.equal(documentPlan(draft).documentCount, LIMITS.documents);
   assert.equal(
     validateDraft(draft, null).some((entry) => entry.code === "DOCUMENT_LIMIT"),
     false,

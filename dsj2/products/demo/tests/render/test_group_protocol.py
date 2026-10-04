@@ -12,6 +12,7 @@ from zipfile import ZipFile
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
 from renderer import render_docx, convert_pdf
+from request_limits import MAX_REQUEST_ROWS
 from group_protocol import roster_table, W
 from lxml import etree as E
 from test_render import EVIDENCE_ROOT, STORE, fixture
@@ -72,13 +73,13 @@ class GroupProtocolTests(unittest.TestCase):
                             self.assertEqual(sum(widths), 9464)
                             self.assertFalse(list(rows[headings].findall(W + 'tc')[0].iter(W + 'numPr')))
 
-    def test_251_group_members_are_rejected_before_output(self):
+    def test_resource_overflow_group_members_are_rejected_before_output(self):
         with tempfile.TemporaryDirectory(prefix='demo-group-capacity-') as temp:
             for template_id in FORMS:
                 with self.subTest(template=template_id):
                     path = Path(temp) / (template_id + '.docx')
                     with self.assertRaisesRegex(ValueError, 'ROW_LIMIT'):
-                        render_docx(group_fixture(template_id, 251), path)
+                        render_docx(group_fixture(template_id, MAX_REQUEST_ROWS + 1), path)
                     self.assertFalse(path.exists())
 
     def test_ptm_250_actual_pdf_keeps_all_ordinals_and_repeats_headings(self):

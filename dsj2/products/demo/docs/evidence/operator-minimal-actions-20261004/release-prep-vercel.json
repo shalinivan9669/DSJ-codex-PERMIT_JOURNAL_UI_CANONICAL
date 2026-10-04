@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-04T18:28:26.854Z",
+  "deployments": [
+    {
+      "target": "dsj-demo-rows-20261002.vercel.app",
+      "keys": [
+        "id",
+        "name",
+        "url",
+        "target",
+        "readyState",
+        "createdAt",
+        "aliases",
+        "builds",
+        "contextName"
+      ],
+      "id": "dpl_BPwv2qXMjxUQysfmDMe28E5d6E57",
+      "name": "dsj-demo-rows-20261002",
+      "url": "dsj-demo-rows-20261002-ivf9xb8gw-shalinivan9669s-projects.vercel.app",
+      "state": "READY",
+      "createdAt": 1791134487419,
+      "environment": "production",
+      "aliases": [
+        "dsj-demo-rows-20261002-shalinivan9669s-projects.vercel.app"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "prj_u8VO55gVnabBqJp3QMpoogzVkFgo",
+      "name": "dsj-demo-test-01-20260930"
+    },
+    {
+      "id": "prj_JMxxnkngWKGZRePXdvbn6jOCnk2V",
+      "name": "dsj-demo-rows-20261002"
+    },
+    {
+      "id": "prj_rACiq8zGLjIZYICjBKIB6aZMRFtZ",
+      "name": "dsj-demo-test-02-20260930"
+    },
+    {
+      "id": "prj_DdqMTF0uTq4e7SLJqTIuW2KNwoA5",
+      "name": "dsj-demo-test-03-20260930"
+    },
+    {
+      "id": "prj_hZ0qi9OYwP53afMHXwcukhEgXG0G",
+      "name": "dsj-demo-operator-ux-20260929"
+    }
+  ]
+}

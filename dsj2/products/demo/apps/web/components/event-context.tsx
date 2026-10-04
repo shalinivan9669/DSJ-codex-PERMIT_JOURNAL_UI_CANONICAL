@@ -8,6 +8,9 @@ import {
   calculatedDateKeys,
   commonFieldKeys,
   courseProgramKeys,
+  courseResultText,
+  hasAutomaticPositiveOutcome,
+  positiveAssignmentDefaults,
   trainingDirection,
   type CommonFields,
   type BiotCategory,
@@ -168,7 +171,11 @@ export function EventContext({
     !assignment.protocolDate &&
     (!assignment.trainingSubject ||
       assignment.fieldOrigins?.trainingSubject === "COURSE") &&
-    !assignment.result &&
+    (!assignment.result ||
+      (hasAutomaticPositiveOutcome(assignment) &&
+        assignment.fieldOrigins?.result === "COURSE" &&
+        assignment.result ===
+          courseResultText(assignment.templateId, "PASSED"))) &&
     !assignment.externalBasisNumber &&
     !assignment.reason &&
     !assignment.education &&
@@ -351,7 +358,12 @@ export function EventContext({
     ),
   ];
   const displayedRequestCommon = expanded
-    ? resolveCommonDates(requestCommon, centerCommon, draft.presetFields)
+    ? resolveCommonDates(
+        requestCommon,
+        centerCommon,
+        draft.presetFields,
+        draft.businessRuleVersion === "LIVE_V1",
+      )
     : requestCommon;
   const eventAssignments = expanded
     ? draft.items.flatMap((item) =>
@@ -726,10 +738,13 @@ export function EventContext({
           ...newAssignment(choice.card),
           eventId: event.id,
           protocolMode: "GROUP",
-          fieldOrigins: Object.fromEntries(
-            commonFieldKeys.map((key) => [key, "INHERITED" as const]),
-          ),
-          outcome: { status: "UNKNOWN", source: "" },
+          ...positiveAssignmentDefaults(choice.card),
+          fieldOrigins: {
+            ...Object.fromEntries(
+              commonFieldKeys.map((key) => [key, "INHERITED" as const]),
+            ),
+            ...positiveAssignmentDefaults(choice.card).fieldOrigins,
+          },
         };
         return {
           ...item,
@@ -741,7 +756,6 @@ export function EventContext({
                   pristine(a) &&
                   !a.eventId &&
                   !a.documentDate &&
-                  !a.result &&
                   (!a.trainingSubject ||
                     a.fieldOrigins?.trainingSubject === "COURSE")
                 ),
@@ -928,7 +942,7 @@ export function EventContext({
       <DateCalculationStatus
         values={displayedCommon}
         forceValidity={draft.businessRuleVersion === "LIVE_V1"}
-        validityDescription={`Сроки документов участников: ${resolvedExpiryDates.join("; ") || "дата документа не указана"}. Рабочий — 1 год, ИТР — 3 года от даты документа; ПС — бессрочно. Ручное исключение срока действующим правилом центра не предусмотрено.`}
+        validityDescription={`Сроки документов участников: ${resolvedExpiryDates.join("; ") || "дата документа не указана"}. Рабочий — 1 год, ИТР — 3 года от даты документа; ПС — бессрочно. Ручные и импортированные исключения сохраняются.`}
         rule={displayedCommon.trainingDateRule}
         origins={Object.fromEntries(
           calculatedDateKeys.map((key) => [
@@ -1550,7 +1564,6 @@ export function EventContext({
                       data-field-path={`events.${eventIndex}.commonFields.validUntil`}
                       type="date"
                       disabled={disabled}
-                      readOnly={draft.businessRuleVersion === "LIVE_V1"}
                       value={
                         draft.businessRuleVersion === "LIVE_V1"
                           ? resolvedExpiryDates.length === 1 &&
@@ -1566,7 +1579,7 @@ export function EventContext({
                     {fieldHint("validUntil")}
                     <small>
                       {draft.businessRuleVersion === "LIVE_V1"
-                        ? "Срок каждого документа рассчитывается от его даты: рабочий — 1 год, ИТР — 3 года; ПС — бессрочно. Индивидуальные сроки видны в деталях людей. Ручной срок в текущем правиле не применяется."
+                        ? "Стандартный срок: рабочий — 1 год, ИТР — 3 года; ПС — бессрочно. Общая дата применяется к людям без индивидуального исключения. Ручные и импортированные даты сохраняются; верните автоматический расчёт, чтобы снова использовать стандартный срок."
                         : "Расчёт предлагается по категории. Ручная дата сохраняется в этой версии заявки."}
                     </small>
                     {draft.businessRuleVersion === "LIVE_V1" && (
@@ -1860,8 +1873,7 @@ export function EventContext({
                   disabled={
                     disabled ||
                     !selectedParticipantCount ||
-                    !source.trim() ||
-                    outcome === "UNKNOWN" ||
+                    (outcome !== "UNKNOWN" && !source.trim()) ||
                     preparation.stale ||
                     preparation.status !== "saved" ||
                     Object.values(outcomeLengthErrors).some(Boolean)

@@ -56,6 +56,9 @@ import {
   validatePinnedServiceRule,
   ruleApplicabilityIssues,
 } from "./service-rule-applicability";
+import { resetRetakeAttempt, resetRetakeEvent } from "./retake-attempt";
+import { approvalPreviewSamples } from "./approval-preview";
+import { checkLayoutBatches } from "./layout-preflight";
 export function namespace(templateId: string) {
   const family = templateId.split("-")[0].toUpperCase();
   const kind = templateId.endsWith("protocol")
@@ -142,12 +145,35 @@ export function employerFields(
 ) {
   // Explicit imported/manual text stays intact. A separately linked employer
   // supplies missing fields. The request's company is the default employer.
-  const employer = item.employerId
+  const candidate = item.employerId
     ? organizations.get(item.employerId)
     : customer;
   const localRu = isBlankText(item.workplaceRu) ? "" : item.workplaceRu;
   const localKz = isBlankText(item.workplaceKz) ? "" : item.workplaceKz;
   const localEmployer = !!(localRu || localKz);
+  const normalized = (value: string | null | undefined) =>
+    (value || "").trim().replace(/\s+/g, " ").toLocaleLowerCase("ru");
+  const names = new Set(
+    [normalized(candidate?.nameRu), normalized(candidate?.nameKz)].filter(
+      Boolean,
+    ),
+  );
+  const bin = normalized(item.employerBin);
+  const matchingBin = !bin || bin === normalized(candidate?.bin);
+  const matchingNames =
+    !!item.employerId ||
+    (localEmployer
+      ? [localRu, localKz]
+          .filter(Boolean)
+          .every((name) => names.has(normalized(name)))
+      : !!bin ||
+        [
+          item.employerAddressRu,
+          item.employerAddressKz,
+          item.employerAddressEn,
+        ].every((address) => !normalized(address)));
+  // An unrelated manual employer must never receive the customer's BIN/address.
+  const employer = matchingBin && matchingNames ? candidate : undefined;
   return {
     workplaceRu: localEmployer
       ? localRu || localKz
@@ -155,7 +181,9 @@ export function employerFields(
     workplaceKz: localEmployer
       ? localKz || localRu
       : employer?.nameKz || employer?.nameRu || "",
-    employerBin: item.employerBin || employer?.bin || "",
+    employerBin: isBlankText(item.employerBin)
+      ? employer?.bin || ""
+      : item.employerBin || "",
     employerAddressRu: item.employerAddressRu || employer?.addressRu || "",
     employerAddressKz:
       item.employerAddressKz ||
@@ -943,24 +971,28 @@ async function validation(
   expectedRevision: number,
   assignments?: AssignmentIdentity[],
   fullWorkingDraft = false,
+  proposalDraft?: Draft,
 ) {
   const record = await workingRequest(c, id, tx);
   if (record.revision !== expectedRevision)
     fail(409, "REVISION_CONFLICT", "Сначала сохраните актуальную версию", {
       revision: record.revision,
     });
-  const workingDraft = draftSchema.parse(record.draft);
-  const selectedScope = fullWorkingDraft
-    ? {
-        draft: workingDraft,
-        assignments: workingDraft.items.flatMap((item) =>
-          item.assignments.map((assignment) => ({
-            rowId: item.id,
-            assignmentId: assignment.id,
-          })),
-        ),
-      }
-    : await selectBatch(tx, c, id, workingDraft, assignments);
+  const workingDraft = proposalDraft || draftSchema.parse(record.draft);
+  const selectedScope =
+    proposalDraft && assignments
+      ? selectAssignmentScope(proposalDraft, assignments)
+      : fullWorkingDraft || proposalDraft
+        ? {
+            draft: workingDraft,
+            assignments: workingDraft.items.flatMap((item) =>
+              item.assignments.map((assignment) => ({
+                rowId: item.id,
+                assignmentId: assignment.id,
+              })),
+            ),
+          }
+        : await selectBatch(tx, c, id, workingDraft, assignments);
   const savedDraft = selectedScope.draft;
   let resolved = resolveDraft(savedDraft);
   let draft = resolved.draft;
@@ -1244,8 +1276,17 @@ export async function assertApprovalDataComplete(
   id: string,
   expectedRevision: number,
   assignments?: AssignmentIdentity[],
+  proposalDraft?: Draft,
 ) {
-  const checked = await validation(tx, c, id, expectedRevision, assignments);
+  const checked = await validation(
+    tx,
+    c,
+    id,
+    expectedRevision,
+    assignments,
+    false,
+    proposalDraft,
+  );
   if (checked.issues.length)
     fail(
       422,
@@ -1253,6 +1294,31 @@ export async function assertApprovalDataComplete(
       "Сначала заполните обязательные данные заявки и повторите проверку",
       checked.issues,
     );
+}
+
+/** Read-only view of the submitted payload through the same print-data resolver. */
+export async function proposalDataReview(c: Context, id: string, draft: Draft) {
+  const record = await workingRequest(c, id);
+  const reviewed = await validation(
+    db,
+    c,
+    id,
+    record.revision,
+    undefined,
+    false,
+    draft,
+  );
+  return {
+    draft: {
+      ...reviewed.draft,
+      items: reviewed.draft.items.map((item) => ({
+        ...item,
+        ...employerFields(item, reviewed.customer, reviewed.organizations),
+      })),
+    },
+    provenance: reviewed.provenance,
+    issues: reviewed.issues,
+  };
 }
 
 async function prepareLayout(
@@ -1437,16 +1503,10 @@ async function checkLayout(
     });
     if (pending.size) {
       const entries = [...pending.entries()];
-      const batch = boundedLayoutCheck(
+      const batch = checkLayoutBatches(
         entries.map(([, plan]) => plan.snapshot),
-      ).then((result) => {
-        const issues = result.metadata.issues as Array<{
-          index: number;
-          code: string;
-        }>;
-        if (!Array.isArray(issues)) throw new Error("PREFLIGHT_INVALID_OUTPUT");
-        return new Set(issues.map((issue) => issue.index));
-      });
+        boundedLayoutCheck,
+      );
       for (const [index, [key]] of entries.entries()) {
         const check = batch.then((failures) => !failures.has(index));
         layoutChecks.set(key, check);
@@ -2232,7 +2292,21 @@ export async function finalize(
   });
 }
 export async function preview(c: Context, id: string, input: unknown) {
-  const { expectedRevision } = parse(finalizeSchema, input);
+  const data = parse(
+    finalizeSchema
+      .extend({
+        proposalId: z.string().min(1).max(80).optional(),
+        expectedProposalHash: z
+          .string()
+          .regex(/^[a-f0-9]{64}$/)
+          .optional(),
+      })
+      .refine(
+        (value) => !!value.proposalId === !!value.expectedProposalHash,
+        "Укажите редакцию и её контрольную сумму вместе",
+      ),
+    input,
+  );
   return transaction(async (tx) => {
     // Serialize enqueueing with edits and archive decisions on this request.
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
@@ -2243,7 +2317,37 @@ export async function preview(c: Context, id: string, input: unknown) {
         "REQUEST_ARCHIVED",
         "Архивная заявка доступна только для просмотра сохранённых документов",
       );
-    const v = await validation(tx, c, id, expectedRevision, undefined, true);
+    const proposal = data.proposalId
+      ? await tx.requestProposal.findFirst({
+          where: {
+            id: data.proposalId,
+            requestId: id,
+            tenantId: c.tenantId,
+            operation: "SAVE",
+            status: { not: "DRAFT" },
+          },
+        })
+      : null;
+    if (
+      data.proposalId &&
+      (!proposal || proposal.proposalHash !== data.expectedProposalHash)
+    )
+      fail(409, "APPROVAL_STALE", "Сначала обновите переданную редакцию");
+    const expectedRevision = proposal?.revision ?? data.expectedRevision;
+    const v = await validation(
+      tx,
+      c,
+      id,
+      proposal ? (await workingRequest(c, id, tx)).revision : expectedRevision,
+      proposal?.assignments
+        ? (proposal.assignments as AssignmentIdentity[])
+        : undefined,
+      !proposal,
+      proposal ? parse(draftSchema, proposal.payload) : undefined,
+    );
+    const previewKey = proposal
+      ? `approval-preview:${proposal.id}:${proposal.proposalHash}`
+      : `preview:${id}:${expectedRevision}`;
     if (!v.profile || !v.parsedProfile)
       fail(422, "ISSUER_REQUIRED", "Сохраните профиль центра");
     const previewIssues = v.issues.filter((issue) =>
@@ -2269,11 +2373,25 @@ export async function preview(c: Context, id: string, input: unknown) {
     const customer = employerId ? organizations.get(employerId) || null : null;
     const organizationFingerprint = hash([...organizations.values()]);
     const jobs = [];
+    const samples = proposal ? approvalPreviewSamples(v.draft) : null;
+    const sampleKeys = samples
+      ? new Set(samples.map(assignmentIdentityKey))
+      : null;
     for (const item of v.draft.items)
       for (const assignment of item.assignments) {
+        if (
+          sampleKeys &&
+          !sampleKeys.has(
+            assignmentIdentityKey({
+              rowId: item.id,
+              assignmentId: assignment.id,
+            }),
+          )
+        )
+          continue;
         const template = v.selected.get(assignment.templateId);
         if (!template) fail(422, "TEMPLATE_REQUIRED", "Шаблон отсутствует");
-        const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:${item.id}:${assignment.id}:${organizationFingerprint}`;
+        const logicalKey = `${previewKey}:${v.profile.id}:${template.id}:${item.id}:${assignment.id}:${organizationFingerprint}`;
         const previous = await tx.generationJob.findMany({
           where: {
             logicalKey: { startsWith: logicalKey + ":" },
@@ -2340,7 +2458,7 @@ export async function preview(c: Context, id: string, input: unknown) {
       const template = v.groupSelected.get(event.protocolTemplateId);
       if (!template)
         fail(422, "TEMPLATE_REQUIRED", "Групповой шаблон отсутствует");
-      const logicalKey = `preview:${id}:${expectedRevision}:${v.profile.id}:${template.id}:group:${event.id}:${organizationFingerprint}:header-v1`;
+      const logicalKey = `${previewKey}:${v.profile.id}:${template.id}:group:${event.id}:${organizationFingerprint}:header-v1`;
       const existing = await tx.generationJob.findMany({
         where: {
           tenantId: c.tenantId,
@@ -2409,8 +2527,21 @@ export async function preview(c: Context, id: string, input: unknown) {
     await audit(tx, c, "PREVIEW_QUEUED", id, {
       revision: expectedRevision,
       jobs: jobs.length,
+      ...(proposal
+        ? { proposalId: proposal.id, proposalHash: proposal.proposalHash }
+        : {}),
     });
-    return { jobs, revision: expectedRevision };
+    return {
+      jobs,
+      revision: expectedRevision,
+      ...(proposal
+        ? {
+            proposalId: proposal.id,
+            proposalHash: proposal.proposalHash,
+            samples,
+          }
+        : {}),
+    };
   });
 }
 export async function retake(c: Context, id: string, input: unknown) {
@@ -2468,7 +2599,7 @@ export async function retake(c: Context, id: string, input: unknown) {
         "Пересдача доступна после неуспешной проверки или неявки",
       );
     const sourceEvent = source.events?.find((e) => e.id === old.eventId);
-    const assignment = structuredClone(old);
+    const assignment = resetRetakeAttempt(old);
     assignment.id = randomUUID();
     assignment.retakeOf = {
       requestId: id,
@@ -2476,38 +2607,11 @@ export async function retake(c: Context, id: string, input: unknown) {
       assignmentId: old.id,
       reason: data.reason,
     };
-    assignment.outcome = { status: "UNKNOWN", source: "" };
-    assignment.result = "";
-    assignment.externalBasisNumber = "";
-    assignment.biotKnowledgeResult = "";
-    assignment.biotProctoringResult = "";
-    assignment.biotUniqueNumber = "";
-    assignment.biotNotes = "";
-    assignment.fieldOrigins = {};
-    for (const key of [
-      "documentDate",
-      "protocolDate",
-      "trainingStart",
-      "trainingEnd",
-      "validUntil",
-    ] as const)
-      assignment[key] = "";
-    if (assignment.templateId.startsWith("biot-"))
-      assignment.biotCheckType = "REPEAT";
-    const event = sourceEvent ? structuredClone(sourceEvent) : undefined;
+    const event = sourceEvent ? resetRetakeEvent(sourceEvent) : undefined;
     if (event) {
       event.id = randomUUID();
       event.revision = 0;
       event.title = `Пересдача: ${event.title}`.slice(0, 255);
-      for (const key of [
-        "documentDate",
-        "protocolDate",
-        "trainingStart",
-        "trainingEnd",
-        "validUntil",
-        "externalBasisNumber",
-      ] as const)
-        delete event.commonFields[key];
       assignment.eventId = event.id;
       if (assignment.biotCheckType)
         event.commonFields.biotCheckType = assignment.biotCheckType;

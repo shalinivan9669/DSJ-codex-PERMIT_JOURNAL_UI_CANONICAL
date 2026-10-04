@@ -7,7 +7,7 @@ import {
   profileSchema,
 } from "../packages/contracts/src";
 import { db, type Context } from "../apps/api/src/core";
-import { decideProposal } from "../apps/api/src/approvals";
+import { decideProposal, submitApproval } from "../apps/api/src/approvals";
 import { assertApprovalDataComplete } from "../apps/api/src/requests";
 
 const context: Context = {
@@ -187,4 +187,57 @@ test("complete PTM card/protocol data passes preapproval without rendering or ch
   assert.equal(f.writes(), 0);
   assert.equal(f.record.draft.items.length, 0);
   assert.equal(f.proposal.status, "PENDING");
+});
+
+test("explicit submission cannot promote incomplete saved input to PENDING", async (t) => {
+  const f = fixture(false);
+  f.record.draft = f.proposal.payload;
+  f.record.revision = f.proposal.revision;
+  f.proposal.status = "DRAFT";
+  const transactionHost = db as unknown as {
+    $transaction: (
+      run: (tx: Prisma.TransactionClient) => Promise<unknown>,
+    ) => Promise<unknown>;
+  };
+  const original = transactionHost.$transaction;
+  transactionHost.$transaction = async (run) => run(f.tx);
+  t.after(() => {
+    transactionHost.$transaction = original;
+  });
+  await assert.rejects(
+    submitApproval(context, f.record.id, {
+      expectedRevision: f.record.revision,
+    }),
+    (error: unknown) => {
+      assert.equal(
+        (error as { getResponse: () => { code: string } }).getResponse().code,
+        "APPROVAL_DATA_INCOMPLETE",
+      );
+      return true;
+    },
+  );
+  assert.equal(f.writes(), 0);
+  assert.equal(f.proposal.status, "DRAFT");
+});
+
+test("approval validates frozen proposal values even when current working data is complete", async () => {
+  const f = fixture(true);
+  const incomplete = structuredClone(f.proposal.payload);
+  incomplete.items[0].assignments[0].result = "";
+  incomplete.items[0].assignments[0].outcome = {
+    status: "UNKNOWN",
+    source: "",
+  };
+  await assert.rejects(
+    assertApprovalDataComplete(
+      f.tx,
+      context,
+      f.record.id,
+      f.proposal.revision,
+      undefined,
+      incomplete,
+    ),
+  );
+  assert.equal(f.writes(), 0);
+  assert.equal(f.proposal.payload.items[0].assignments[0].result, "Сдал");
 });

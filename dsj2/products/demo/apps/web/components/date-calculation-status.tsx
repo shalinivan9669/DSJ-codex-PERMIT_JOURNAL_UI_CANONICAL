@@ -38,11 +38,11 @@ export function DateCalculationStatus({
   const calculation = calculateDates(values, rule);
   const overrides = calculatedDateKeys.filter(
     (key) =>
-      !(forceValidity && key === "validUntil") &&
       ["MANUAL", "IMPORTED", "CLEARED", "REQUEST", "EVENT", "CENTER"].includes(
         origins?.[key] || "",
       ) &&
-      calculation.proposed[key] !== undefined,
+      ((forceValidity && key === "validUntil") ||
+        calculation.proposed[key] !== undefined),
   );
   return (
     <div className="fine-print" aria-live="polite">
@@ -58,7 +58,7 @@ export function DateCalculationStatus({
       {forceValidity && (
         <p>
           {validityDescription ||
-            "Срок документа рассчитывается по действующему правилу центра: рабочий — 1 год, ИТР — 3 года, ПС — бессрочно. Ручное исключение срока не предусмотрено."}
+            "Стандартный срок: рабочий — 1 год, ИТР — 3 года, ПС — бессрочно. Ручные и импортированные исключения сохраняются."}
         </p>
       )}
       {!forceValidity && values.biotCategory && (
@@ -85,8 +85,12 @@ export function DateCalculationStatus({
           {labels[key]}:{" "}
           {origins?.[key] === "IMPORTED" ? "импортированное" : "явно заданное"}{" "}
           исключение {values[key] || "(пусто)"}; расчёт:{" "}
-          {calculation.proposed[key] || "(не назначается)"}.{" "}
-          {values[key] !== calculation.proposed[key]
+          {forceValidity && key === "validUntil"
+            ? "по общему правилу центра"
+            : calculation.proposed[key] || "(не назначается)"}
+          .{" "}
+          {!(forceValidity && key === "validUntil") &&
+          values[key] !== calculation.proposed[key]
             ? "Отличается от расчёта."
             : "Сохранится даже при изменении расчёта."}{" "}
           {!restoreKeys || restoreKeys.includes(key) ? (

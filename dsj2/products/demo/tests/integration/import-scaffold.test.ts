@@ -175,7 +175,7 @@ test("import replaces only an untouched live starter atomically and preserves ex
     );
 
     await t.test(
-      "250 with a real retained row is rejected without a partial proposal",
+      "250 imported people preserve a real retained row in the same 251-person request",
       async () => {
         const created = await createRequest(
           context,
@@ -184,17 +184,14 @@ test("import replaces only an untouched live starter atomically and preserves ex
         const before = await db.requestProposal.count({
           where: { requestId: created.id },
         });
-        await assert.rejects(
-          apply(created.id, created.revision, rows),
-          rejectsWithCode("ROW_LIMIT"),
-        );
+        await apply(created.id, created.revision, rows);
         const after = await requestDetail(context, created.id);
-        assert.equal(after.revision, created.revision);
-        assert.equal(after.items.length, 1);
+        assert.equal(after.revision, created.revision + 1);
+        assert.equal(after.items.length, 251);
         assert.equal(after.items[0].fullNameRu, "Сохранить");
         assert.equal(
           await db.requestProposal.count({ where: { requestId: created.id } }),
-          before,
+          before + 1,
         );
       },
     );

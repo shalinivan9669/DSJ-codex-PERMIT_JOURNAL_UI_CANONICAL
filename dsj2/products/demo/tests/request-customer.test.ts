@@ -118,6 +118,55 @@ test("one pinned company supplies all empty employee rows and preserves explicit
   );
 });
 
+test("manual employer identity never receives unrelated company BIN or address", () => {
+  const row = draft("COMPANY").items[0];
+  const organizations = new Map([[company.id, company]]);
+  const own = employerFields(
+    { ...row, workplaceRu: "Другая организация" },
+    company,
+    organizations,
+  );
+  assert.equal(own.workplaceRu, "Другая организация");
+  assert.equal(own.employerBin, "");
+  assert.equal(own.employerAddressRu, "");
+  const matching = employerFields(
+    { ...row, workplaceRu: `  ${company.nameRu.toUpperCase()}  ` },
+    company,
+    organizations,
+  );
+  assert.equal(matching.employerBin, company.bin);
+  assert.equal(matching.employerAddressRu, company.addressRu);
+  const linked = employerFields(
+    { ...row, employerId: company.id, workplaceRu: "Короткое имя" },
+    null,
+    organizations,
+  );
+  assert.equal(linked.employerBin, company.bin);
+  const conflict = employerFields(
+    {
+      ...row,
+      employerId: company.id,
+      employerBin: "000000000002",
+      workplaceRu: company.nameRu,
+    },
+    company,
+    organizations,
+  );
+  assert.equal(conflict.employerBin, "000000000002");
+  assert.equal(conflict.employerAddressRu, "");
+  const addressOnly = employerFields(
+    { ...row, employerAddressRu: "Введённый адрес неизвестного работодателя" },
+    company,
+    organizations,
+  );
+  assert.equal(addressOnly.workplaceRu, "");
+  assert.equal(addressOnly.employerBin, "");
+  assert.equal(
+    addressOnly.employerAddressRu,
+    "Введённый адрес неизвестного работодателя",
+  );
+});
+
 test("autosave persists the person title and working data without submitting director review", async () => {
   const input = draft();
   const approvedDraft = draftSchema.parse({ kind: "PERSON", items: [] });

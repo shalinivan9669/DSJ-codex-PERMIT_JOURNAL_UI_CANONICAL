@@ -3,6 +3,7 @@ import {
   commonFieldKeys,
   employeeCategoryFor,
   mandatoryTemplates,
+  positiveAssignmentDefaults,
   trainingDirection,
   trainingDirections,
   type TrainingDirection,
@@ -40,10 +41,13 @@ export function bundleAssignment(event: TrainingEventInput) {
     ...newAssignment(bundle.card),
     eventId: event.id,
     protocolMode: event.protocolMode || ("GROUP" as const),
-    fieldOrigins: Object.fromEntries(
-      commonFieldKeys.map((key) => [key, "INHERITED" as const]),
-    ),
-    outcome: { status: "UNKNOWN" as const, source: "" },
+    ...positiveAssignmentDefaults(bundle.card),
+    fieldOrigins: {
+      ...Object.fromEntries(
+        commonFieldKeys.map((key) => [key, "INHERITED" as const]),
+      ),
+      ...positiveAssignmentDefaults(bundle.card).fieldOrigins,
+    },
   };
 }
 
@@ -95,27 +99,42 @@ export function recipientForRequest(
   // A supplied assignment may contain dates/results or represent a separate course.
   if (person?.assignments.length) return person;
   const events = trainingDirections.flatMap((direction) => {
-    const policy = draft.trainingDefaults?.find((entry) => entry.direction === direction);
+    const policy = draft.trainingDefaults?.find(
+      (entry) => entry.direction === direction,
+    );
     if (!policy) return [];
     const candidates = (draft.events || []).filter(
-      (event) => policy.eventIds.includes(event.id) && trainingDirection(event.protocolTemplateId) === direction,
+      (event) =>
+        policy.eventIds.includes(event.id) &&
+        trainingDirection(event.protocolTemplateId) === direction,
     );
     return candidates;
   });
   if (!events.length) return recipient;
   const category = employeeCategoryFor(recipient);
+  const matchesCategory = (event: TrainingEventInput) =>
+    event.protocolTemplateId ===
+    mandatoryTemplates(
+      trainingDirection(event.protocolTemplateId),
+      category,
+    ).at(-1);
   const compatibleEvents = events.filter(
     (event) =>
-      event.protocolTemplateId ===
-      mandatoryTemplates(
-        trainingDirection(event.protocolTemplateId),
-        category,
-      ).at(-1),
+      matchesCategory(event) ||
+      !events.some(
+        (candidate) =>
+          trainingDirection(candidate.protocolTemplateId) ===
+            trainingDirection(event.protocolTemplateId) &&
+          matchesCategory(candidate),
+      ),
   );
   if (!compatibleEvents.length) return recipient;
   return {
     ...recipient,
     employeeCategory: category,
+    // edit() and submitProposal() apply the existing business-rule engine to
+    // the complete request. A missing category variant is derived there with
+    // preserved lineage; never silently drop an explicitly common direction.
     assignments: compatibleEvents.map((event) => ({
       ...newAssignment(
         mandatoryTemplates(
@@ -125,10 +144,23 @@ export function recipientForRequest(
       ),
       eventId: event.id,
       protocolMode: event.protocolMode || ("GROUP" as const),
-      fieldOrigins: Object.fromEntries(
-        commonFieldKeys.map((key) => [key, "INHERITED" as const]),
+      ...positiveAssignmentDefaults(
+        mandatoryTemplates(
+          trainingDirection(event.protocolTemplateId),
+          category,
+        )[0],
       ),
-      outcome: { status: "UNKNOWN" as const, source: "" },
+      fieldOrigins: {
+        ...Object.fromEntries(
+          commonFieldKeys.map((key) => [key, "INHERITED" as const]),
+        ),
+        ...positiveAssignmentDefaults(
+          mandatoryTemplates(
+            trainingDirection(event.protocolTemplateId),
+            category,
+          )[0],
+        ).fieldOrigins,
+      },
     })),
   };
 }
@@ -239,7 +271,10 @@ export function assignTrainingBundle<T extends Draft>(
       primary.fieldOrigins = Object.fromEntries(
         commonFieldKeys.map((key) => [key, "INHERITED" as const]),
       );
-      primary.outcome = { status: "UNKNOWN", source: "" };
+      primary.fieldOrigins = {
+        ...primary.fieldOrigins,
+        ...positiveAssignmentDefaults(primary.templateId).fieldOrigins,
+      };
       item.assignments.push(primary);
     }
   }
@@ -252,12 +287,24 @@ export function assignTrainingBundle<T extends Draft>(
       ),
   );
   if (commonForNewRecipients) {
-    const eventIds = [...new Set(draft.items.flatMap((item) =>
-      item.assignments.filter((assignment) => trainingDirection(assignment.templateId) === direction)
-        .flatMap((assignment) => assignment.eventId ? [assignment.eventId] : []),
-    ))];
+    const eventIds = [
+      ...new Set(
+        draft.items.flatMap((item) =>
+          item.assignments
+            .filter(
+              (assignment) =>
+                trainingDirection(assignment.templateId) === direction,
+            )
+            .flatMap((assignment) =>
+              assignment.eventId ? [assignment.eventId] : [],
+            ),
+        ),
+      ),
+    ];
     draft.trainingDefaults = [
-      ...(draft.trainingDefaults || []).filter((entry) => entry.direction !== direction),
+      ...(draft.trainingDefaults || []).filter(
+        (entry) => entry.direction !== direction,
+      ),
       { direction, eventIds },
     ];
   }

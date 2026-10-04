@@ -2,6 +2,11 @@ import { randomUUID } from "node:crypto";
 import {
   draftSchema,
   assignmentSchema,
+  BIOT_CATEGORIES,
+  courseProgramDefaults,
+  courseProgramKeys,
+  positiveAssignmentDefaults,
+  protocolTemplateFor,
   resolveDraft,
   validateDraft,
   profileSchema,
@@ -12,6 +17,9 @@ import {
   approvalScopeValue,
   z,
   type Draft,
+  type Assignment,
+  type TrainingEventInput,
+  type CommonFields,
 } from "@demo/contracts";
 import {
   serviceOrderSchema,
@@ -1057,22 +1065,76 @@ export async function recordRenewalContact(
     return value;
   });
 }
-/** Whitelist reusable facts. Never carry event dates, results, numbers, confirmations or signatures. */
+/** A new ordinary attempt gets the centre's creation defaults, never an old
+ * score, proctoring assertion, external number or confirmation. Retakes use a
+ * separate UNKNOWN path; this helper is only for a new repeat request. */
+export function repeatAssignment(source: Assignment): Assignment {
+  const category = source.templateId.startsWith("biot-")
+    ? source.biotCategory ||
+      (source.templateId.startsWith("biot-itr")
+        ? "OHS_SPECIALIST_SPECIAL"
+        : "WORKER")
+    : undefined;
+  const preset = category ? BIOT_CATEGORIES[category] : undefined;
+  const defaults = positiveAssignmentDefaults(source.templateId);
+  const programs = courseProgramDefaults(source.templateId);
+  return assignmentSchema.parse({
+    ...programs,
+    ...defaults,
+    id: randomUUID(),
+    templateId: source.templateId,
+    biotCategory: category,
+    ...(preset
+      ? {
+          hours: String(preset.defaultHours),
+          productionHours: preset.defaultProductionHours
+            ? String(preset.defaultProductionHours)
+            : undefined,
+          biotCheckType: "PERIODIC",
+        }
+      : {}),
+    trainingSubject: source.trainingSubject || programs.trainingSubject,
+    trainingSubjectKz: source.trainingSubjectKz || programs.trainingSubjectKz,
+    fieldOrigins: {
+      ...defaults.fieldOrigins,
+      biotCategory: "AUTO",
+      hours: "AUTO",
+      productionHours: "AUTO",
+      documentDate: "INHERITED",
+      trainingSubject: source.trainingSubject ? "MANUAL" : "COURSE",
+      trainingSubjectKz: source.trainingSubjectKz ? "MANUAL" : "COURSE",
+    },
+  });
+}
+
+async function repeatCreationContext(tx: Tx, c: Context) {
+  const tenant = await tx.tenant.findUniqueOrThrow({
+    where: { id: c.tenantId },
+    select: { timezone: true },
+  });
+  const profile = await tx.issuerProfileVersion.findFirst({
+    where: { tenantId: c.tenantId },
+    orderBy: { version: "desc" },
+    select: { id: true },
+  });
+  return {
+    documentDate: today(tenant.timezone),
+    profileVersionId: profile?.id,
+  };
+}
+
+/** Whitelist reusable facts. Dates belong to the new request, not its history. */
 export function repeatDraft(
   source: Draft,
   rowId: string,
   assignmentId: string,
+  creation: { documentDate: string; profileVersionId?: string },
 ): Draft {
   const row = source.items.find((i) => i.id === rowId);
   const assignment = row?.assignments.find((a) => a.id === assignmentId);
   if (!row || !assignment)
     fail(404, "ASSIGNMENT_NOT_FOUND", "Историческое назначение не найдено");
-  const nextAssignment = assignmentSchema.parse({
-    id: randomUUID(),
-    templateId: assignment.templateId,
-    biotCategory: assignment.biotCategory,
-    trainingSubject: assignment.trainingSubject,
-  });
+  const nextAssignment = repeatAssignment(assignment);
   const clean = {
     ...row,
     id: randomUUID(),
@@ -1085,8 +1147,81 @@ export function repeatDraft(
     title: `Повторная заявка — ${row.fullNameRu}`.slice(0, 255),
     customerId: source.customerId,
     demoMode: source.demoMode,
+    schemaVersion: 2,
+    commonFields: { documentDate: creation.documentDate },
+    profileVersionId: creation.profileVersionId,
     items: [clean],
   });
+}
+
+/** Preserve distinct old training identities as new events. Only reusable
+ * program/industry/profession text crosses the boundary; dates and assessment
+ * facts belong exclusively to the new attempt. */
+export function repeatRequestRoster(
+  source: Draft,
+  selected: Draft["items"],
+  creation: { documentDate: string; profileVersionId?: string },
+) {
+  const events = new Map<string, TrainingEventInput>();
+  const items = selected.map((row) => {
+    const clean = repeatDraft(source, row.id, row.assignments[0].id, creation)
+      .items[0];
+    clean.assignments = row.assignments.map((previous) => {
+      const assignment = repeatAssignment(previous);
+      if (!previous.eventId) return assignment;
+      let event = events.get(previous.eventId);
+      if (!event) {
+        const original = source.events?.find(
+          (candidate) => candidate.id === previous.eventId,
+        );
+        const protocolTemplateId = protocolTemplateFor(
+          previous.templateId,
+        ) as TrainingEventInput["protocolTemplateId"];
+        const commonFields: CommonFields = {
+          ...courseProgramDefaults(protocolTemplateId),
+        };
+        for (const key of [
+          ...courseProgramKeys,
+          "trainingSubjectEn",
+          "biotIndustryRu",
+          "biotIndustryKz",
+          "biotIndustryEn",
+          "professionRu",
+          "professionKz",
+          "psQualificationRu",
+          "psQualificationKz",
+        ] as const) {
+          const value = original?.commonFields[key];
+          if (value?.trim()) {
+            commonFields[key] = value;
+            commonFields.fieldOrigins = {
+              ...commonFields.fieldOrigins,
+              [key]: "MANUAL",
+            };
+          }
+        }
+        event = {
+          id: randomUUID(),
+          title: original?.title || TEMPLATE_LABELS[protocolTemplateId],
+          protocolTemplateId,
+          protocolMode:
+            original?.protocolMode ||
+            (previous.protocolMode === "GROUP" ? "GROUP" : "INDIVIDUAL"),
+          protocolModeSource: original?.protocolModeSource || "AUTO",
+          revision: 0,
+          commonFields,
+        };
+        events.set(previous.eventId, event);
+      }
+      assignment.eventId = event.id;
+      assignment.protocolMode = assignment.templateId.endsWith("-protocol")
+        ? "INDIVIDUAL"
+        : event.protocolMode || "INDIVIDUAL";
+      return assignment;
+    });
+    return clean;
+  });
+  return { items, events: [...events.values()] };
 }
 export async function repeatFromRenewal(
   c: Context,
@@ -1110,6 +1245,7 @@ export async function repeatFromRenewal(
       draftSchema.parse(source.draft),
       need.sourceRowId,
       need.assignmentId,
+      await repeatCreationContext(tx, c),
     );
     const record = await createProposedContainer(tx, c, draft);
     await tx.renewalNeed.update({
@@ -2681,17 +2817,10 @@ export async function resolveEmployerProposal(
           "REPEAT_SCOPE_REQUIRED",
           "Уточните состав и согласованные направления перед созданием повторной заявки",
         );
-      const items = selected.map((row) => {
-        const clean = repeatDraft(source, row.id, row.assignments[0].id)
-          .items[0];
-        clean.assignments = row.assignments.map((assignment) =>
-          assignmentSchema.parse({
-            id: randomUUID(),
-            templateId: assignment.templateId,
-            biotCategory: assignment.biotCategory,
-            trainingSubject: assignment.trainingSubject,
-          }),
-        );
+      const creation = await repeatCreationContext(tx, c);
+      const repeatedRoster = repeatRequestRoster(source, selected, creation);
+      const items = repeatedRoster.items.map((clean, index) => {
+        const row = selected[index];
         const change = changes.find((entry) => entry.rowId === row.id);
         if (change)
           for (const field of [
@@ -2708,6 +2837,10 @@ export async function resolveEmployerProposal(
         title: `Повторное обращение — ${request.title}`.slice(0, 255),
         customerId: membership.customerId,
         demoMode: request.demoMode,
+        schemaVersion: 2,
+        commonFields: { documentDate: creation.documentDate },
+        profileVersionId: creation.profileVersionId,
+        events: repeatedRoster.events,
         items,
       });
       const repeated = await createProposedContainer(tx, c, draft);

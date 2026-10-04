@@ -2,7 +2,10 @@
 import { useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import type { Customer, Recipient } from "@/lib/types";
-import { patchRecipientEmployer } from "@/lib/recipient-employer";
+import {
+  patchRecipientEmployer,
+  supplementRecipientEmployer,
+} from "@/lib/recipient-employer";
 import { RecordPicker } from "./record-picker";
 import { CustomerDialog } from "./customers";
 
@@ -31,14 +34,7 @@ export function SharedEmployerDialog({
   const affected = selected.filter(
     (item) =>
       mode === "all" ||
-      ![
-        item.employerId,
-        item.workplaceRu,
-        item.workplaceKz,
-        item.employerBin,
-        item.employerAddressRu,
-        item.employerAddressKz,
-      ].some(Boolean),
+      (!!employer && supplementRecipientEmployer(item, employer) !== item),
   );
   const choose = (value: Customer) => {
     onEmployerChosen?.(value);
@@ -100,7 +96,7 @@ export function SharedEmployerDialog({
             checked={mode === "empty"}
             onChange={() => setMode("empty")}
           />
-          Только людям без места работы
+          Дополнить пустые реквизиты этой организации и людей без места работы
         </label>
         <label className="checkbox-label">
           <input
@@ -134,7 +130,9 @@ export function SharedEmployerDialog({
               await onApply(
                 items.map((item) =>
                   changed.has(item.id)
-                    ? patchRecipientEmployer(item, employer)
+                    ? mode === "all"
+                      ? patchRecipientEmployer(item, employer)
+                      : supplementRecipientEmployer(item, employer)
                     : item,
                 ),
               );

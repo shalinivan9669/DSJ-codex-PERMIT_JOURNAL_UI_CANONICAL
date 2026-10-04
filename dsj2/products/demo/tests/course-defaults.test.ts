@@ -7,6 +7,7 @@ import {
   draftSchema,
   documentPlan,
   LEGACY_PB_PROGRAM,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
   resolveDraft,
 } from "../packages/contracts/src";
 import { newAssignment, newRecipient } from "../apps/web/lib/types";
@@ -34,6 +35,23 @@ for (const kind of ["PERSON", "COMPANY"] as const)
           draft.items.map((row) => row.id),
           direction,
           mode,
+        );
+      const created = resolveDraft(draft);
+      for (const item of created.draft.items)
+        for (const assignment of item.assignments) {
+          assert.equal(assignment.outcome?.status, "PASSED");
+          assert.equal(
+            assignment.outcome?.source,
+            DEFAULT_POSITIVE_OUTCOME_SOURCE,
+          );
+          assert.equal(assignment.fieldOrigins?.outcome, "AUTO");
+        }
+      for (const event of draft.events || [])
+        draft.items = applyEventOutcomes(
+          draft,
+          event.id,
+          draft.items.map((row) => row.id),
+          { status: "UNKNOWN", source: "Явно ожидает сдачи" },
         );
       const unknown = resolveDraft(draft);
       assert.equal(

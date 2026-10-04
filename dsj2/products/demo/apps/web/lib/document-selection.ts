@@ -1,8 +1,8 @@
-import { protocolTemplateFor, templateIds } from "@demo/contracts";
+import { LIMITS, protocolTemplateFor, templateIds } from "@demo/contracts";
 import { newAssignment, type Assignment, type Recipient } from "./types";
 
 export type DocumentTemplateId = Assignment["templateId"];
-export const MAX_RECIPIENT_DOCUMENTS = 10;
+export const MAX_RECIPIENT_DOCUMENTS = LIMITS.documents;
 
 export const documentChoices: readonly {
   templateId: DocumentTemplateId;
@@ -90,18 +90,24 @@ export function previewDocumentSelection(
       templates: templates.filter((template) => !assigned.has(template)),
     };
   });
-  const overLimit = additions.filter(
-    ({ recipient, templates: missing }) =>
-      recipient.assignments.length + missing.length > MAX_RECIPIENT_DOCUMENTS,
+  const addedDocuments = additions.reduce(
+    (count, entry) => count + entry.templates.length,
+    0,
   );
+  const totalDocuments =
+    items.reduce(
+      (count, recipient) => count + recipient.assignments.length,
+      0,
+    ) + addedDocuments;
+  const overLimit =
+    totalDocuments > LIMITS.documents
+      ? additions.filter((entry) => entry.templates.length)
+      : [];
   return {
     recipients,
     additions,
     people: additions.filter((entry) => entry.templates.length).length,
-    documents: additions.reduce(
-      (count, entry) => count + entry.templates.length,
-      0,
-    ),
+    documents: addedDocuments,
     overLimit,
   };
 }
@@ -115,7 +121,7 @@ export function addSelectedDocuments(
   const preview = previewDocumentSelection(items, selectedIds, chosenTemplates);
   if (preview.overLimit.length)
     throw new Error(
-      `У одного получателя может быть не более ${MAX_RECIPIENT_DOCUMENTS} документов. Уменьшите выбранный набор.`,
+      `Превышен технический объём заявки: ${LIMITS.documents} назначений. Состав сохранён; обратитесь к администратору центра.`,
     );
   const additions = new Map(
     preview.additions.map(({ recipient, templates }) => [

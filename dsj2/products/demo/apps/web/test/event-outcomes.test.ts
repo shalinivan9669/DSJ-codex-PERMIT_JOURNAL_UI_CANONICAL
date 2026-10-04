@@ -85,10 +85,9 @@ test("confirmation affects the reviewed event and people without clearing indivi
   assert.deepEqual(draft, before, "reviewed input remains unchanged");
 });
 
-test("unknown results, missing sources and missing events cannot become confirmed outcomes", () => {
+test("missing sources for known results and missing events cannot become confirmed outcomes", () => {
   const draft = sample();
   for (const [eventId, status, source] of [
-    ["itr", "UNKNOWN", "Assessment"],
     ["itr", "PASSED", "   "],
     ["missing", "PASSED", "Assessment"],
   ] as const) {
@@ -96,6 +95,33 @@ test("unknown results, missing sources and missing events cannot become confirme
       applyEventOutcomes(draft, eventId, ["person-0"], { status, source }),
     );
   }
+});
+
+test("explicit waiting removes automatic positive words and confirmation metadata only for the selected course and people", () => {
+  const draft = sample();
+  draft.items[0].assignments[0] = {
+    ...newAssignment("biot-itr-certificate"),
+    eventId: "itr",
+    outcome: {
+      ...newAssignment("biot-itr-certificate").outcome!,
+      confirmedBy: "previous-actor",
+      confirmedAt: "2026-10-04T00:00:00Z",
+    },
+  };
+  const before = structuredClone(draft);
+  const items = applyEventOutcomes(draft, "itr", ["person-0"], {
+    status: "UNKNOWN",
+    source: "",
+  });
+  assert.deepEqual(items[0].assignments[0].outcome, {
+    status: "UNKNOWN",
+    source: "",
+  });
+  assert.equal(items[0].assignments[0].result, "Не подтверждено");
+  assert.equal(items[0].assignments[0].resultKz, "Расталмаған");
+  assert.equal(items[0].assignments[0].fieldOrigins?.outcome, "MANUAL");
+  assert.deepEqual(items[0].assignments[1], before.items[0].assignments[1]);
+  assert.deepEqual(items.slice(1), before.items.slice(1));
 });
 
 test("explicit factual fields replace only the reviewed ITR participants", () => {

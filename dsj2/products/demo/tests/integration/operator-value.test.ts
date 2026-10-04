@@ -18,6 +18,9 @@ import {
   draftSchema,
   itemSchema,
   assignmentSchema,
+  courseResultText,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+  today,
 } from "../../packages/contracts/src";
 import * as value from "../../apps/api/src/operator-value";
 import { assertTestDatabase } from "./test-database";
@@ -578,7 +581,22 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
       const repeated = await workingRequest(ca, results[0].id);
       const repeatedDraft = draftSchema.parse(repeated.draft);
       assert.equal(repeated.status, "DRAFT");
-      assert.equal(repeatedDraft.items[0].assignments[0].result, "");
+      assert.equal(
+        repeatedDraft.items[0].assignments[0].result,
+        courseResultText(
+          repeatedDraft.items[0].assignments[0].templateId,
+          "PASSED",
+        ),
+      );
+      assert.equal(
+        repeatedDraft.items[0].assignments[0].outcome?.source,
+        DEFAULT_POSITIVE_OUTCOME_SOURCE,
+      );
+      assert.equal(repeatedDraft.schemaVersion, 2);
+      assert.equal(
+        repeatedDraft.commonFields?.documentDate,
+        today(tenantA.timezone),
+      );
       assert.equal(repeatedDraft.items[0].assignments[0].documentDate, "");
       assert.equal(
         draftSchema.parse(
@@ -634,7 +652,22 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         (await workingRequest(ca, fresh.id)).draft,
       );
       assert.equal(freshDraft.items[0].recipientId, recipient.id);
-      assert.equal(freshDraft.items[0].assignments[0].result, "");
+      assert.equal(
+        freshDraft.items[0].assignments[0].result,
+        courseResultText(
+          freshDraft.items[0].assignments[0].templateId,
+          "PASSED",
+        ),
+      );
+      assert.equal(
+        freshDraft.items[0].assignments[0].outcome?.source,
+        DEFAULT_POSITIVE_OUTCOME_SOURCE,
+      );
+      assert.equal(freshDraft.schemaVersion, 2);
+      assert.equal(
+        freshDraft.commonFields?.documentDate,
+        today(tenantA.timezone),
+      );
       assert.equal(freshDraft.items[0].assignments[0].protocolDate, "");
       assert.ok(
         await db.serviceOrderRequest.findFirst({

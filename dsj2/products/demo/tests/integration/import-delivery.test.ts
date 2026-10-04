@@ -35,7 +35,7 @@ import {
   saveExportProfile,
   listExportProfiles,
 } from "../../apps/api/src/delivery";
-import { draftSchema, itemSchema } from "../../packages/contracts/src";
+import { draftSchema, itemSchema, LIMITS } from "../../packages/contracts/src";
 
 const people = (name: string, importId: string) =>
   (
@@ -137,7 +137,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
           ambiguous: 0,
         });
         assert.equal(preview.retainedTotal, 102);
-        assert.equal(preview.rowLimit, 250);
+        assert.equal(preview.rowLimit, LIMITS.rows);
         const retainRequest = await createRequest(c, {
           kind: "COMPANY",
           title: "Сверка с сохранением отсутствующих",
@@ -166,7 +166,7 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
       },
     );
     await t.test(
-      "251 reconciled recipients fail atomically; one explicit exclusion allows exactly 250",
+      "251 reconciled recipients remain available; an explicit exclusion applies to the requested draft only",
       async () => {
         const capacityImportId = randomUUID();
         const additional = Array.from({ length: 149 }, (_, index) =>
@@ -212,10 +212,6 @@ test("revised import uses one atomic revision, explicit exclusion, replay confli
         );
         assert.equal(preview.retainedTotal, 251);
         assert.equal(preview.counts.missing, 2);
-        await assert.rejects(
-          applyImportReconciliation(c, capacityRequest.id, operation),
-          /превышает 250/,
-        );
         const unchanged = await requestDetail(c, capacityRequest.id);
         assert.equal(unchanged.revision, capacityRequest.revision);
         assert.equal(unchanged.items.length, 249);

@@ -1,6 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { draftSchema, resolveDraft, templateIds } from "@demo/contracts";
+import {
+  draftSchema,
+  resolveDraft,
+  templateIds,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+} from "@demo/contracts";
 import {
   addSelectedDocuments,
   assignedDocumentTemplates,
@@ -98,7 +103,7 @@ test("a linked group protocol is already assigned and is not duplicated as an in
   assert.equal(result[0].assignments[0].outcome?.status, "UNKNOWN");
 });
 
-test("new documents use current request dates without inventing results or changing existing dates", () => {
+test("new documents use current request dates and configured positive results without changing existing dates", () => {
   const existing = {
     ...newAssignment("ptm-card"),
     documentDate: "2026-08-10",
@@ -110,8 +115,12 @@ test("new documents use current request dates without inventing results or chang
     ["pb-card"],
   );
   assert.equal(items[0].assignments[1].documentDate, "");
-  assert.equal(items[0].assignments[1].result, "");
-  assert.equal(items[0].assignments[1].outcome, undefined);
+  assert.equal(items[0].assignments[1].result, "Тапсырды/сдал");
+  assert.equal(items[0].assignments[1].resultKz, "Тапсырды");
+  assert.deepEqual(items[0].assignments[1].outcome, {
+    status: "PASSED",
+    source: DEFAULT_POSITIVE_OUTCOME_SOURCE,
+  });
   const resolved = resolveDraft(
     draftSchema.parse({
       kind: "PERSON",
@@ -130,7 +139,7 @@ test("new documents use current request dates without inventing results or chang
   );
 });
 
-test("capacity failure is atomic for the full selection and existing forms remain selectable without adding duplicates", () => {
+test("all active forms can coexist for a recipient and existing forms remain selectable without duplicates", () => {
   const full = {
     ...person("full"),
     assignments: templateIds
@@ -145,12 +154,14 @@ test("capacity failure is atomic for the full selection and existing forms remai
     ["full", "other"],
     ["ps-witness"],
   );
-  assert.equal(preview.overLimit.length, 1);
-  assert.equal(preview.overLimit[0].recipient.id, "full");
-  assert.throws(
-    () => addSelectedDocuments(input, ["full", "other"], ["ps-witness"]),
-    /не более 10/,
+  assert.equal(preview.overLimit.length, 0);
+  const applied = addSelectedDocuments(
+    input,
+    ["full", "other"],
+    ["ps-witness"],
   );
+  assert.equal(applied[0].assignments.length, templateIds.length);
+  assert.equal(applied[1].assignments.length, other.assignments.length + 1);
   assert.deepEqual(input, before);
   assert.equal(addSelectedDocuments(input, ["full"], ["pb-card"])[0], full);
 });

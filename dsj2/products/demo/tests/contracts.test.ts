@@ -7,6 +7,7 @@ import {
   validDate,
   validateDraft,
   today,
+  LIMITS,
 } from "../packages/contracts/src";
 import { allowedRoute, PRODUCT_POLICY } from "../packages/contracts/src/policy";
 test("date-only validates leap days and never substitutes today", () => {
@@ -30,7 +31,7 @@ test("tenant midnight changes only new defaults, saved leap-day dates remain lit
   assert.equal(today("UTC"), "2026-09-22");
   assert.equal(assignmentSchema.parse(saved).documentDate, "2024-02-29");
 });
-test("partial draft retains independent RU/KZ, accepts 100/250 and rejects 251 rows", () => {
+test("partial draft retains independent RU/KZ, accepts 400 and rejects only resource overflow", () => {
   const item = itemSchema.parse({
     id: "r",
     fullNameRu: "Иванов",
@@ -43,7 +44,7 @@ test("partial draft retains independent RU/KZ, accepts 100/250 and rejects 251 r
   assert.throws(() =>
     draftSchema.parse({
       kind: "PERSON",
-      items: Array.from({ length: 251 }, (_, i) => ({
+      items: Array.from({ length: LIMITS.rows + 1 }, (_, i) => ({
         ...item,
         id: String(i),
       })),
@@ -61,10 +62,10 @@ test("partial draft retains independent RU/KZ, accepts 100/250 and rejects 251 r
   );
   const large = draftSchema.parse({
     kind: "COMPANY",
-    items: Array.from({ length: 250 }, (_, i) => ({ ...item, id: String(i) })),
+    items: Array.from({ length: 400 }, (_, i) => ({ ...item, id: String(i) })),
   });
-  assert.equal(large.items.length, 250);
-  assert.deepEqual(large.items[249], { ...item, id: "249" });
+  assert.equal(large.items.length, 400);
+  assert.deepEqual(large.items[399], { ...item, id: "399" });
   assert.ok(validateDraft(draft, null).length > 0);
 });
 test("organization reference snapshots retain approved empty and bilingual values in a bounded strict draft contract", () => {
@@ -95,10 +96,13 @@ test("organization reference snapshots retain approved empty and bilingual value
   assert.equal(
     draftSchema.safeParse({
       ...input,
-      organizationSnapshots: Array.from({ length: 252 }, (_, index) => ({
-        ...snapshot,
-        id: String(index),
-      })),
+      organizationSnapshots: Array.from(
+        { length: LIMITS.rows + 2 },
+        (_, index) => ({
+          ...snapshot,
+          id: String(index),
+        }),
+      ),
     }).success,
     false,
   );

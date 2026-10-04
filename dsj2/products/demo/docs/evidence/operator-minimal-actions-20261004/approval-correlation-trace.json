@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-04T18:26:17.347Z",
+  "project": "250bb4a5-6462-4933-b1a7-8f61e2e7f507",
+  "service": "f9c22605-78ca-41ee-a483-52aa54036fba",
+  "correlationIds": [
+    "3aea7378-234b-4b7a-bdca-bd8c0d73cf52",
+    "305132a3-9eca-49da-adb1-bc66b903a7a8"
+  ],
+  "logs": {
+    "searchedSince": "7d",
+    "matchingLines": 0
+  },
+  "databaseAndSource": {
+    "unavailable": false,
+    "at": "2026-10-04T18:47:00Z",
+    "matchingAuditEvents": 0,
+    "evidence": "production-backup-verified.json",
+    "priorAttempt": "SSH_UNAVAILABLE before authorized temporary key registration"
+  }
+}

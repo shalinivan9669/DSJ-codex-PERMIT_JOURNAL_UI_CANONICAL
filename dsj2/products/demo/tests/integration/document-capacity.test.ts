@@ -11,9 +11,8 @@ import {
   validateRequest,
 } from "../../apps/api/src/requests";
 import { draftSchema } from "../../packages/contracts/src";
-import { createApprovalFixture } from "./live-approval-fixture";
 
-test("1001 planned documents including a group protocol fail before issuing numbers or jobs", async (t) => {
+test("1001 planned documents including a group protocol no longer hit a business ceiling and remain unissued before approval", async () => {
   assertTestDatabase();
   const who = await provision({
     email: `document-capacity-${randomUUID()}@example.test`,
@@ -28,8 +27,6 @@ test("1001 planned documents including a group protocol fail before issuing numb
     csrfHash: "test",
     correlationId: randomUUID(),
   };
-  const approvals = await createApprovalFixture(context);
-  t.after(() => approvals.close());
   try {
     const eventId = randomUUID();
     const draft = draftSchema.parse({
@@ -77,8 +74,10 @@ test("1001 planned documents including a group protocol fail before issuing numb
       expectedRevision: created.revision,
     });
     assert.equal(checked.documentCount, 1001);
-    assert.ok(checked.issues.some((issue) => issue.code === "DOCUMENT_LIMIT"));
-    await approvals.approve(created.id, "DOCUMENT_LIMIT");
+    assert.equal(
+      checked.issues.some((issue) => issue.code === "DOCUMENT_LIMIT"),
+      false,
+    );
     await assert.rejects(
       finalize(
         context,

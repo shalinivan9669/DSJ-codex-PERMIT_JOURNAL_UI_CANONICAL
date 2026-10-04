@@ -15,11 +15,7 @@ import {
   nonPassedResultKz,
   factualAssessmentText,
 } from "./course-defaults";
-import {
-  businessValidUntil,
-  employeeCategoryFor,
-  trainingDirection,
-} from "./business-rules";
+import { applyBusinessValidity, employeeCategoryFor } from "./business-rules";
 import {
   calculateDates,
   calculatedDateKeys,
@@ -52,6 +48,14 @@ export const commonFieldKeys = [
   "biotIndustryRu",
   "biotIndustryKz",
   "biotIndustryEn",
+  "biotKnowledgeResult",
+  "biotKnowledgeResultEn",
+  "biotProctoringResult",
+  "biotProctoringResultEn",
+  "professionRu",
+  "professionKz",
+  "psQualificationRu",
+  "psQualificationKz",
 ] as const;
 export type FieldSource =
   | "COURSE"
@@ -63,6 +67,25 @@ export type FieldSource =
   | "IMPORTED"
   | "AUTO"
   | "CLEARED";
+
+// Shared entry is a convenience for individual protocol columns. A person's
+// factual grade or awarded qualification may differ from the course default.
+const individualCommonFields = new Set<string>([
+  "biotKnowledgeResult",
+  "biotKnowledgeResultEn",
+  "biotProctoringResult",
+  "biotProctoringResultEn",
+  "professionRu",
+  "professionKz",
+  "psQualificationRu",
+  "psQualificationKz",
+]);
+const assessmentCommonFields = new Set<string>([
+  "biotKnowledgeResult",
+  "biotKnowledgeResultEn",
+  "biotProctoringResult",
+  "biotProctoringResultEn",
+]);
 
 function commonContext(
   layers: readonly (readonly [CommonFields | undefined, FieldSource])[],
@@ -79,6 +102,21 @@ function commonContext(
         (programKey) => programKey === key,
       );
       if (programField && layer[key] === "" && !declaredOrigin) continue;
+      if (
+        individualCommonFields.has(key) &&
+        isBlankText(layer[key]) &&
+        !declaredOrigin
+      )
+        continue;
+      // Empty profile/request/event placeholders are not an instruction to
+      // erase the category's training hours. Explicit source/clear metadata
+      // still takes precedence over the built-in assignment values.
+      if (
+        (key === "hours" || key === "productionHours") &&
+        isBlankText(layer[key]) &&
+        !isProtectedField(declaredOrigin)
+      )
+        continue;
       // Previously resolved automatic text must never outrank a newly selected
       // centre/profile or a manual event exception.
       if (declaredOrigin === "COURSE" && origins[key]) continue;
@@ -114,6 +152,7 @@ export function resolveCommonDates(
   fields: CommonFields,
   center: CommonFields = {},
   preset: CommonFields = {},
+  liveRules = false,
 ): CommonFields {
   const result = commonContext([
     [center, "CENTER"],
@@ -124,6 +163,8 @@ export function resolveCommonDates(
     result.fields,
     result.origins,
     result.fields.trainingDateRule,
+    undefined,
+    !liveRules,
   );
   return result.fields;
 }
@@ -133,12 +174,14 @@ function applyDateCalculation(
   origins: Record<string, FieldSource>,
   rule?: TrainingDateRule | null,
   eventDocumentDate?: string,
+  calculateValidity = true,
 ) {
   const calculation = calculateDates(
     eventDocumentDate ? { ...values, documentDate: eventDocumentDate } : values,
     rule,
   );
   for (const key of calculatedDateKeys) {
+    if (key === "validUntil" && !calculateValidity) continue;
     if (origins[key] === "AUTO" || (!origins[key] && !values[key])) {
       if (calculation.proposed[key] !== undefined || origins[key] === "AUTO") {
         values[key] = calculation.proposed[key] || "";
@@ -186,6 +229,8 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           context.fields,
           context.origins,
           context.fields.trainingDateRule,
+          undefined,
+          draft.businessRuleVersion !== "LIVE_V1",
         );
       return [event.id, context] as const;
     }),
@@ -263,12 +308,17 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           explicit === "MANUAL" ||
           explicit === "IMPORTED" ||
           explicit === "CLEARED" ||
+          ((key === "hours" ||
+            key === "productionHours" ||
+            key === "validUntil") &&
+            assignment.biotManualFields?.includes(key)) ||
           (!explicit && !!own);
         if (
           event &&
           assignment.protocolMode === "GROUP" &&
           key !== "documentDate" &&
           key !== "validUntil" &&
+          !individualCommonFields.has(key) &&
           context.fields[key] !== undefined &&
           manual &&
           (explicit === "CLEARED" ? "" : own) !== context.fields[key]
@@ -289,6 +339,7 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
                 : "MANUAL";
         } else if (
           explicit === "AUTO" &&
+          !isProtectedField(source) &&
           assignment.protocolMode !== "GROUP" &&
           calculatedDateKeys.includes(
             key as (typeof calculatedDateKeys)[number],
@@ -301,8 +352,21 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
             explicit === "COURSE"
               ? "COURSE"
               : explicit === "AUTO"
-                ? "PRESET"
+                ? key === "validUntil"
+                  ? "AUTO"
+                  : "PRESET"
                 : source;
+        }
+        if (
+          assessmentCommonFields.has(key) &&
+          assignment.outcome &&
+          assignment.outcome.status !== "PASSED" &&
+          !manual
+        ) {
+          // A shared positive-course statement cannot establish this person's
+          // assessment after an explicit failure, absence or pending retake.
+          value = "";
+          source = "COURSE";
         }
         if (value !== undefined)
           (assignment as unknown as Record<string, unknown>)[key] = value;
@@ -335,6 +399,7 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
             assignment.protocolMode === "GROUP"
             ? context.fields.documentDate
             : undefined,
+          draft.businessRuleVersion !== "LIVE_V1",
         );
         // Metadata is exposed through provenance; keep assignment schema clean.
         delete (assignment as Assignment & { dateOrigins?: unknown })
@@ -414,15 +479,11 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           assignment.protocolDate
         )
           assignment.documentDate = assignment.protocolDate;
-        const unlimited = trainingDirection(assignment.templateId) === "PS";
-        assignment.validityMode = unlimited ? "UNLIMITED" : "FIXED";
-        assignment.validUntil = unlimited
-          ? ""
-          : businessValidUntil(
-              assignment.documentDate,
-              employeeCategoryFor(item),
-            );
-        origins.validUntil = "AUTO";
+        origins.validUntil = applyBusinessValidity(
+          assignment,
+          employeeCategoryFor(item),
+          origins.validUntil,
+        ) as FieldSource;
       }
     }
   for (const event of draft.events || []) {
@@ -494,6 +555,9 @@ export function eventProtocolAssignment(
   // LIVE_V1 validity was already resolved from the employee category. A legacy
   // preset in the common event must not overwrite it in the generated form.
   if (liveRules) delete fields.validUntil;
+  // These are individual columns in the shared protocol, not its header.
+  // The member has already resolved shared defaults and factual exceptions.
+  for (const key of individualCommonFields) delete fields[key];
   return {
     ...member,
     ...fields,

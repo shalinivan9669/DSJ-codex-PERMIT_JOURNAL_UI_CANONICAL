@@ -19,9 +19,11 @@ export function groupValidationIssues(errors: Issue[], items: Recipient[]) {
     const match = /^items\.(\d+)(?:\.assignments\.(\d+))?/.exec(path);
     const rowId =
       typeof issue === "string" ? undefined : issue.rowId || issue.itemId;
-    const person =
-      (rowId ? items.find((item) => item.id === rowId) : undefined) ||
-      (match ? items[Number(match[1])] : undefined);
+    const shared = /^(events|commonFields|profile|issuer)(\.|$)/.test(path);
+    const person = shared
+      ? undefined
+      : (rowId ? items.find((item) => item.id === rowId) : undefined) ||
+        (match ? items[Number(match[1])] : undefined);
     const key = person?.id || "common";
     const message = typeof issue === "string" ? issue : issue.message;
     const identity = JSON.stringify([key, path, message]);

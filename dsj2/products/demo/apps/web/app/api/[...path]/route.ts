@@ -90,7 +90,14 @@ async function proxy(request: NextRequest) {
       body: body as BodyInit | undefined,
       cache: "no-store",
       redirect: "manual",
-      signal: AbortSignal.timeout(60000),
+      // Layout checks cover every selected document in bounded renderer batches.
+      // Keep the local transport aligned with the external rewrite timeout.
+      signal: AbortSignal.timeout(
+        request.method === "POST" &&
+          /^\/print-requests\/[^/]+\/(?:validate|finalize)$/.test(path)
+          ? 210000
+          : 60000,
+      ),
     });
     const output = new Headers({
       "Cache-Control": "no-store",

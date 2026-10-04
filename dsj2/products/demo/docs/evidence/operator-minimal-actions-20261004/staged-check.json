@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-04T19:21:39.570Z",
+  "status": "PASS",
+  "stagedFiles": 119,
+  "scope": "dsj2/products/demo",
+  "knownPrivateValuesChecked": 8,
+  "privateValuesFound": 0,
+  "generatedLocalConfigExcluded": true
+}

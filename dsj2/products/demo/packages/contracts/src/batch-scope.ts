@@ -1,5 +1,9 @@
 import type { Assignment, Draft, RequestItemInput } from "./index";
 import { trainingDirection } from "./business-rules";
+import {
+  hasAutomaticPositiveOutcome,
+  positiveAssignmentDefaults,
+} from "./course-defaults";
 
 export type AssignmentIdentity = { rowId: string; assignmentId: string };
 export function assignmentIdentityKey(value: AssignmentIdentity): string {
@@ -41,6 +45,7 @@ export function isTechnicalBlankRecipient(item: RequestItemInput): boolean {
   return !item.assignments.some((assignment) => {
     if (
       assignment.outcome &&
+      !hasAutomaticPositiveOutcome(assignment) &&
       (assignment.outcome.status !== "UNKNOWN" ||
         assignment.outcome.source.trim() ||
         assignment.outcome.confirmedAt ||
@@ -81,11 +86,22 @@ export function isTechnicalBlankRecipient(item: RequestItemInput): boolean {
     )
       return true;
     // A default bundle may carry a course program, hours and inherited dates.
-    // Results and actual external grounds are never course defaults.
+    // Newly configured course words are automatic; operator input stays protected.
+    const defaults = positiveAssignmentDefaults(assignment.templateId);
+    if (
+      ["result", "resultKz", "resultEn"].some((field) => {
+        const value = assignment[field as "result" | "resultKz" | "resultEn"];
+        return (
+          String(value || "").trim() &&
+          !(
+            assignment.fieldOrigins?.[field] === "COURSE" &&
+            value === defaults[field as "result" | "resultKz"]
+          )
+        );
+      })
+    )
+      return true;
     return !![
-      assignment.result,
-      assignment.resultKz,
-      assignment.resultEn,
       assignment.externalBasisNumber,
       assignment.biotKnowledgeResult,
       assignment.biotProctoringResult,

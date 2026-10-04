@@ -2,7 +2,7 @@
 import { isDirectorRole } from "@demo/contracts";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import type { AppContext, Draft, Page, Role } from "@/lib/types";
@@ -12,6 +12,10 @@ import { validationErrors } from "@/lib/validation-errors";
 import { rejectionReason } from "@/lib/rejection-reason";
 import { approvedScopeIssued } from "@/lib/request-actions";
 import { addressIssue, type AddressedIssue } from "@/lib/validation-address";
+import type { ApprovalReview } from "@/lib/approval-review";
+import { ApprovalReviewPanel } from "./approval-review";
+import { approvalRefreshRequired } from "@/lib/approval-refresh";
+import { ApprovalPreview } from "./approval-preview";
 
 type Proposal = {
   id: string;
@@ -30,6 +34,9 @@ type Proposal = {
   decision?: { decision: string; comment: string; createdAt: string } | null;
   draft?: Draft | null;
   assignments?: { rowId: string; assignmentId: string }[] | null;
+  review?: ApprovalReview | null;
+  reviewUnavailable?: boolean;
+  currentRevision?: number;
 };
 const labels: Record<string, string> = {
   title: "Название заявки",
@@ -78,6 +85,11 @@ const labels: Record<string, string> = {
   outcome: "Результат обучения",
   personnelNumber: "Табельный номер",
   resultEn: "Результат EN",
+  resultKz: "Результат KZ",
+  professionRu: "Профессия RU",
+  professionKz: "Профессия KZ",
+  psQualificationRu: "Присвоенная квалификация RU",
+  psQualificationKz: "Присвоенная квалификация KZ",
   reasonEn: "Основание EN",
   education: "Образование",
   educationEn: "Образование EN",
@@ -110,6 +122,7 @@ const labels: Record<string, string> = {
 };
 function fieldLabel(path: string) {
   return path
+    .replace(/\b(items|assignments|events)\.(\d+)(?=\.|$)/g, "$1[$2]")
     .replace(/items\[(\d+)\]/g, (_, index) => `Сотрудник ${Number(index) + 1}`)
     .replace(
       /assignments\[(\d+)\]/g,
@@ -184,6 +197,48 @@ export function ApprovalBanner({
   );
   const [returnError, setReturnError] = useState("");
   const approval = draft.approval;
+  const refreshDraft = useRef(onRefresh);
+  const currentDraft = useRef(draft);
+  useEffect(() => {
+    refreshDraft.current = onRefresh;
+    currentDraft.current = draft;
+  }, [onRefresh, draft]);
+  useEffect(() => {
+    if (
+      !approval?.status ||
+      !["PENDING", "APPROVED"].includes(approval.status) ||
+      draft.status !== "DRAFT"
+    )
+      return;
+    let active = true;
+    let checking = false;
+    const check = async () => {
+      if (!active || checking || document.visibilityState !== "visible") return;
+      checking = true;
+      try {
+        const latest = await api<Parameters<typeof approvalRefreshRequired>[1]>(
+          `/print-requests/${encodeURIComponent(draft.id)}/approval`,
+        );
+        if (active && approvalRefreshRequired(currentDraft.current, latest))
+          await refreshDraft.current();
+      } catch {
+        // A transient background read does not interrupt typing. The explicit
+        // refresh remains available, and the next visible check retries.
+      } finally {
+        checking = false;
+      }
+    };
+    const interval = window.setInterval(() => void check(), 6000);
+    const onVisible = () => void check();
+    window.addEventListener("focus", onVisible);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+      window.removeEventListener("focus", onVisible);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [draft.id, draft.status, approval?.status]);
   useEffect(() => {
     let active = true;
     setReturnedProposal(null);
@@ -359,6 +414,16 @@ export function Approvals({ context }: { context: AppContext }) {
           if (active) {
             setDetail(result);
             setReason("");
+            if (
+              result.status === "PENDING" &&
+              result.requestedAction === "SAVE"
+            ) {
+              setDataIssues(result.review?.issues || []);
+              if (result.reviewUnavailable || result.review?.issues.length)
+                setError(
+                  "Переданная редакция требует исправления. Верните её менеджеру, проверьте актуальный черновик и передайте подготовленный состав повторно.",
+                );
+            }
           }
         })
         .catch((caught) => {
@@ -368,7 +433,7 @@ export function Approvals({ context }: { context: AppContext }) {
       active = false;
     };
   }, [selected, refresh]);
-  async function decide(decision: "APPROVE" | "REJECT") {
+  async function decide(decision: "APPROVE" | "REJECT", returnReason?: string) {
     if (!detail) return;
     setBusy(decision);
     setError("");
@@ -380,6 +445,7 @@ export function Approvals({ context }: { context: AppContext }) {
         body: json({
           decision,
           reason:
+            returnReason ||
             reason.trim() ||
             (decision === "APPROVE"
               ? "Проверено и согласовано директором"
@@ -468,7 +534,12 @@ export function Approvals({ context }: { context: AppContext }) {
                                 ? `${documentTitle(assignment.templateId)} · `
                                 : ""}
                               {fieldLabel(
-                                String(addressed.path || addressed.field || ""),
+                                String(
+                                  (assignment && addressed.field) ||
+                                    addressed.path ||
+                                    addressed.field ||
+                                    "",
+                                ),
                               )}
                               : {issue.message}. Исправить поле
                             </Link>
@@ -564,8 +635,24 @@ export function Approvals({ context }: { context: AppContext }) {
                 {detail.author?.displayName} · редакция {detail.requestRevision}{" "}
                 · <Status value={detail.status} />
               </p>
-              {detail.assignments && (
-                <details open>
+              {detail.review && (
+                <ApprovalReviewPanel
+                  key={detail.id}
+                  review={detail.review}
+                  submitted={detail.draft}
+                />
+              )}
+              {detail.requestedAction === "SAVE" && detail.review && (
+                <ApprovalPreview
+                  key={`preview:${detail.id}`}
+                  requestId={detail.requestId}
+                  proposalId={detail.id}
+                  proposalHash={detail.proposalHash}
+                  revision={detail.requestRevision}
+                />
+              )}
+              {!detail.review && detail.assignments && (
+                <details>
                   <summary>
                     Согласуемый состав:{" "}
                     {
@@ -589,8 +676,40 @@ export function Approvals({ context }: { context: AppContext }) {
                 </details>
               )}
               <Link className="button" href={`/requests/${detail.requestId}`}>
-                Открыть заявку и предпросмотр
+                Открыть рабочую заявку и файлы
               </Link>
+              {detail.status === "PENDING" &&
+                detail.requestedAction === "SAVE" &&
+                (detail.reviewUnavailable ||
+                  !!detail.review?.issues.length) && (
+                  <Notice kind="info">
+                    Сохранённая редакция не меняется при появлении новых
+                    стандартных значений. Для исправления используется текущая
+                    рабочая версия и новая передача директору.
+                    <div className="action-buttons">
+                      {director && (
+                        <button
+                          disabled={!!busy}
+                          onClick={() =>
+                            void decide(
+                              "REJECT",
+                              reason.trim() ||
+                                "Проверить обязательные данные в актуальном черновике и повторно передать готовый состав.",
+                            )
+                          }
+                        >
+                          Вернуть для проверки актуального черновика
+                        </button>
+                      )}
+                      <Link
+                        className="button"
+                        href={`/requests/${detail.requestId}/edit?check=1`}
+                      >
+                        Открыть актуальный черновик
+                      </Link>
+                    </div>
+                  </Notice>
+                )}
               {detail.requestedAction !== "SAVE" && (
                 <Notice kind="info">
                   Запрошено{" "}
@@ -601,8 +720,12 @@ export function Approvals({ context }: { context: AppContext }) {
                 </Notice>
               )}
               {director && (
-                <>
-                  <h3>Предлагаемые изменения</h3>
+                <details>
+                  <summary>Подробное сравнение сохранённых полей</summary>
+                  <p>
+                    Это исходные изменения. Общие и рассчитанные значения
+                    показаны выше в подготовленных данных.
+                  </p>
                   {changes.length ? (
                     <div className="table-scroll">
                       <table className="approval-diff">
@@ -641,7 +764,7 @@ export function Approvals({ context }: { context: AppContext }) {
                   ) : (
                     <p>Содержательные поля не изменены.</p>
                   )}
-                </>
+                </details>
               )}
               {detail.decision && (
                 <Notice
@@ -667,7 +790,12 @@ export function Approvals({ context }: { context: AppContext }) {
                   <div className="action-buttons">
                     <button
                       className="primary"
-                      disabled={!!busy}
+                      disabled={
+                        !!busy ||
+                        (detail.requestedAction === "SAVE" &&
+                          (detail.reviewUnavailable ||
+                            !!detail.review?.issues.length))
+                      }
                       onClick={() => void decide("APPROVE")}
                     >
                       {busy === "APPROVE"

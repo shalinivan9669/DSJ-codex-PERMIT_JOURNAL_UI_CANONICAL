@@ -19,11 +19,13 @@ test("result reminder counts the same unknown trainings and people when GROUP me
           ...newAssignment("pb-card"),
           protocolMode: "GROUP" as const,
           eventId: "PB",
+          outcome: undefined,
         },
         {
           ...newAssignment("pb-protocol"),
           protocolMode: "GROUP" as const,
           eventId: "PB",
+          outcome: undefined,
         },
         {
           ...newAssignment("ptm-card"),
@@ -72,6 +74,7 @@ test("result reminder counts the same unknown trainings and people when GROUP me
         ...newAssignment("pb-card"),
         protocolMode: "GROUP" as const,
         eventId: "PB",
+        outcome: undefined,
       },
     ],
   }));
@@ -178,6 +181,7 @@ test("group outcome and source issues retain the recipient and exact focus path"
   const assignment = input.items[0].assignments[0];
   assignment.protocolMode = "GROUP";
   assignment.eventId = "training";
+  delete assignment.outcome;
   const missing = draftReadiness(input, profile);
   assert.ok(
     missing.issues.some(

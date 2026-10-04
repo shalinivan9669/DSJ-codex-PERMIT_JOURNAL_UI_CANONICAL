@@ -21,8 +21,8 @@ test("retained starter row-limit error explains recovery without masking unrelat
   );
   const message = importApplyErrorText(error, true);
   assert.match(message, /Ранее заполненная, затем очищенная строка/);
-  assert.match(message, /явно удалите ненужную пустую строку/);
-  assert.match(message, /не более 249 исходных строк/);
+  assert.match(message, /Состав сохранён/);
+  assert.match(message, /администратору центра/);
   assert.match(message, /trace-import/);
   assert.doesNotMatch(importApplyErrorText(error, false), /очищенная строка/);
   assert.equal(
@@ -117,10 +117,84 @@ test("recipient-only import never silently discards mapped factual training data
   );
   assert.deepEqual(empty.assignments, []);
 });
+
+test("explicit imported waiting and negative result words override positive defaults while grades and free text stay independent", () => {
+  const preview: ImportPreview = {
+    importId: "explicit-import-outcomes",
+    columns: ["ФИО RU", "Результат / оценка"],
+    rows: [],
+    total: 1,
+  };
+  const cases = [
+    ["Не сдал", "FAILED", "Тапсырмады"],
+    ["Тапсырмады", "FAILED", "Тапсырмады"],
+    [" НЕ СДАЛ / ТАПСЫРМАДЫ ", "FAILED", "Тапсырмады"],
+    ["Не явился", "ABSENT", "Келмеді"],
+    ["Келмеді", "ABSENT", "Келмеді"],
+    ["Не явился/Келмеді", "ABSENT", "Келмеді"],
+    ["Не подтверждено", "UNKNOWN", "Расталмаған"],
+    ["Расталмаған", "UNKNOWN", "Расталмаған"],
+    ["Не подтверждено / Расталмаған", "UNKNOWN", "Расталмаған"],
+  ] as const;
+  for (const template of ["biot-worker-card", "ptm-card", "pb-card"] as const) {
+    for (const [result, status, resultKz] of cases) {
+      const sourceRow = { sourceRow: 8, values: ["Тест исключения", result] };
+      const originalSource = structuredClone(sourceRow);
+      const assignment = mapImportRow(
+        preview,
+        sourceRow,
+        ["fullNameRu", "result"],
+        template,
+      ).assignments[0];
+      assert.equal(assignment.result, result);
+      assert.equal(assignment.resultKz, resultKz);
+      assert.deepEqual(assignment.outcome, {
+        status,
+        source: "Импортированный результат, строка 8",
+      });
+      assert.equal(assignment.fieldOrigins?.result, "IMPORTED");
+      assert.equal(assignment.fieldOrigins?.outcome, "IMPORTED");
+      assert.deepEqual(sourceRow, originalSource);
+    }
+  }
+  for (const result of ["", "\u00a0\u200b"]) {
+    const assignment = mapImportRow(
+      preview,
+      { sourceRow: 9, values: ["Тест", result] },
+      ["fullNameRu", "result"],
+      "pb-card",
+    ).assignments[0];
+    assert.equal(assignment.result, result);
+    assert.equal(assignment.outcome?.status, "UNKNOWN");
+    assert.equal(assignment.fieldOrigins?.result, "CLEARED");
+    assert.equal(assignment.fieldOrigins?.outcome, "IMPORTED");
+  }
+  for (const result of [
+    "62 балла",
+    "Сдал",
+    "Проверка не завершена",
+    "Не сдал / Келмеді",
+    "constructor",
+  ]) {
+    const assignment = mapImportRow(
+      preview,
+      { sourceRow: 10, values: ["Тест", result] },
+      ["fullNameRu", "result"],
+      "ptm-card",
+    ).assignments[0];
+    assert.equal(assignment.result, result);
+    assert.equal(assignment.outcome?.status, "PASSED");
+    assert.equal(
+      assignment.outcome?.source,
+      "Стандартный положительный результат при создании назначения",
+    );
+    assert.equal(assignment.fieldOrigins?.result, "IMPORTED");
+  }
+});
 test("structured server row-limit issue becomes operator text rather than a React child object", () => {
   assert.equal(
     importIssueText({ code: "ROW_LIMIT", count: 101, limit: 100 }),
-    "В исходном листе 101 строк. Для одной заявки выберите не более 100 получателей.",
+    "В исходном листе 101 строк. Технический объём одной заявки — 100 получателей. Строки не обрезаны; обратитесь к администратору центра.",
   );
   assert.equal(
     importIssueText("Ошибка исходной строки"),
@@ -303,7 +377,14 @@ test("mapping keeps independent RU/KZ, leading zeros, Unicode and partial source
   assert.equal(value.fullNameRu, "00123");
   assert.equal(value.fullNameKz, "Ә Ғ Қ Ң Ө Ұ Ү Һ І");
   assert.equal(value.sourceRow, 12);
-  assert.equal(value.assignments[0].result, "");
+  assert.equal(value.assignments[0].result, "Сдал/Тапсырды");
+  assert.equal(value.assignments[0].resultKz, "Тапсырды");
+  assert.deepEqual(value.assignments[0].outcome, {
+    status: "PASSED",
+    source: "Стандартный положительный результат при создании назначения",
+  });
+  assert.equal(value.assignments[0].fieldOrigins?.outcome, "AUTO");
+  assert.equal(value.assignments[0].fieldOrigins?.result, "COURSE");
   assert.equal(value.assignments[0].documentDate, "");
   assert.equal(
     mapImportRow(preview, row, inferMapping(preview.columns), "ps-witness").id,

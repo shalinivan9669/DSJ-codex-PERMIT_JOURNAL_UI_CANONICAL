@@ -1,5 +1,9 @@
-import { BIOT_CATEGORIES } from "./biot";
-import { courseProgramKeys, withCourseProgram } from "./course-defaults";
+import { BIOT_CATEGORIES, calendarAnniversary } from "./biot";
+import {
+  courseProgramKeys,
+  isProtectedField,
+  withCourseProgram,
+} from "./course-defaults";
 import type {
   Assignment,
   Draft,
@@ -53,16 +57,72 @@ export function businessValidUntil(
   documentDate: string,
   category: EmployeeCategory,
 ): string {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(documentDate)) return "";
-  const date = new Date(`${documentDate}T12:00:00Z`);
-  if (isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== documentDate)
-    return "";
-  const year = date.getUTCFullYear() + (category === "ITR" ? 3 : 1);
-  if (year > 9999) return "";
-  const month = date.getUTCMonth();
-  const last = new Date(date);
-  last.setUTCFullYear(year, month + 1, 0);
-  return `${String(year).padStart(4, "0")}-${String(month + 1).padStart(2, "0")}-${String(Math.min(date.getUTCDate(), last.getUTCDate())).padStart(2, "0")}`;
+  return calendarAnniversary(documentDate, category === "ITR" ? 3 : 1) || "";
+}
+
+/** Centre policy explicitly confirmed on 2026-10-04: worker +1 year, ITR +3
+ * years, PS unlimited, explicit exceptions retained. This is not legal approval.
+ * Legacy category presets remain unchanged for snapshots without LIVE_V1. */
+export function businessValidity(
+  assignment: Pick<Assignment, "templateId" | "documentDate" | "biotCategory">,
+  category: EmployeeCategory,
+) {
+  const direction = trainingDirection(assignment.templateId);
+  if (direction === "PS")
+    return { validityMode: "UNLIMITED" as const, validUntil: "", years: null };
+  return {
+    validityMode: "FIXED" as const,
+    validUntil: businessValidUntil(assignment.documentDate, category),
+    years: category === "ITR" ? 3 : 1,
+  };
+}
+
+export function hasProtectedValidity(
+  assignment: Assignment,
+  origin: string | undefined = assignment.fieldOrigins?.validUntil,
+) {
+  return (
+    isProtectedField(origin) ||
+    (!!assignment.validUntil &&
+      ["CENTER", "PRESET", "REQUEST", "EVENT"].includes(origin || "")) ||
+    assignment.biotManualFields?.includes("validUntil") ||
+    (!origin && !!assignment.validUntil)
+  );
+}
+
+/** A source-aware override is retained even when validation will ask the user
+ * to correct it. Clearing a required date must not silently restore it. */
+export function applyBusinessValidity(
+  assignment: Assignment,
+  category: EmployeeCategory,
+  origin: string | undefined = assignment.fieldOrigins?.validUntil,
+) {
+  const rule = businessValidity(assignment, category);
+  assignment.validityMode = rule.validityMode;
+  if (!hasProtectedValidity(assignment, origin)) {
+    assignment.validUntil = rule.validUntil;
+    assignment.fieldOrigins = {
+      ...assignment.fieldOrigins,
+      validUntil: "AUTO",
+    };
+    return "AUTO" as const;
+  }
+  if (origin === "CLEARED") assignment.validUntil = "";
+  // Legacy manual flags and untagged values are source data, too.
+  if (!origin || assignment.biotManualFields?.includes("validUntil")) {
+    assignment.fieldOrigins = {
+      ...assignment.fieldOrigins,
+      validUntil: "MANUAL",
+    };
+    return "MANUAL" as const;
+  }
+  assignment.fieldOrigins = {
+    ...assignment.fieldOrigins,
+    validUntil: isProtectedField(origin)
+      ? (origin as "MANUAL" | "IMPORTED" | "CLEARED")
+      : "MANUAL",
+  };
+  return origin;
 }
 
 function cloneForTemplate(
@@ -358,15 +418,7 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
               (primary.biotCheckType ? "MANUAL" : "INHERITED"),
           };
         }
-        assignment.validityMode = direction === "PS" ? "UNLIMITED" : "FIXED";
-        assignment.validUntil =
-          direction === "PS"
-            ? ""
-            : businessValidUntil(assignment.documentDate, category);
-        assignment.fieldOrigins = {
-          ...assignment.fieldOrigins,
-          validUntil: "AUTO",
-        };
+        applyBusinessValidity(assignment, category);
         normalized.push(assignment);
       }
     }
@@ -511,24 +563,25 @@ export function validateBusinessRules(
           "В комплект этой заявки должен входить собственный протокол",
           item.id,
         );
-      const expected =
-        direction === "PS"
-          ? ""
-          : businessValidUntil(
-              assignment.documentDate,
-              employeeCategoryFor(item),
-            );
+      const validity = businessValidity(assignment, employeeCategoryFor(item));
+      const explicitValidity = hasProtectedValidity(assignment);
+      const outsideRange =
+        !!assignment.validUntil &&
+        assignment.validUntil < assignment.documentDate;
       if (
-        assignment.validityMode !==
-          (direction === "PS" ? "UNLIMITED" : "FIXED") ||
-        assignment.validUntil !== expected
+        assignment.validityMode !== validity.validityMode ||
+        (direction === "PS"
+          ? !!assignment.validUntil
+          : explicitValidity
+            ? outsideRange || (!!validity.validUntil && !assignment.validUntil)
+            : assignment.validUntil !== validity.validUntil)
       )
         add(
           "BUSINESS_VALIDITY_MISMATCH",
           `${path}.validUntil`,
           direction === "PS"
             ? "ПС выдаётся бессрочно, дата окончания не указывается"
-            : "Срок рассчитывается от даты выдачи: рабочий — один год, ИТР — три года",
+            : "Укажите действительную дату окончания не раньше даты выдачи или восстановите автоматический расчёт: рабочий — 1 год, ИТР — 3 года",
           item.id,
         );
       if (draft.englishAppendix && !assignment.trainingSubjectEn?.trim())

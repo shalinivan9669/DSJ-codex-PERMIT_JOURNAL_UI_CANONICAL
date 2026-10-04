@@ -15,9 +15,11 @@ export * from "./course-defaults";
 export * from "./roles";
 export * from "./import-scaffold";
 export const LIMITS = {
-  rows: 250,
-  documents: 1000,
-  jsonBytes: 2 * 1024 * 1024,
+  // Resource guards for a single in-memory request, not course/group policy.
+  // Keep rows aligned with scripts/render/request_limits.py and the DB CHECK.
+  rows: 10_000,
+  documents: 50_000,
+  jsonBytes: 32 * 1024 * 1024,
   photoBytes: 5 * 1024 * 1024,
   imagePixels: 20_000_000,
   importBytes: 5 * 1024 * 1024,
@@ -110,6 +112,14 @@ export const commonFieldsSchema = z
     biotIndustryRu: optionalText,
     biotIndustryKz: optionalText,
     biotIndustryEn: optionalText,
+    biotKnowledgeResult: optionalText,
+    biotKnowledgeResultEn: optionalText,
+    biotProctoringResult: optionalText,
+    biotProctoringResultEn: optionalText,
+    professionRu: optionalText,
+    professionKz: optionalText,
+    psQualificationRu: optionalText,
+    psQualificationKz: optionalText,
   })
   .strict();
 export const trainingEventSchema = z
@@ -251,7 +261,7 @@ export const itemSchema = z
     employerAddressKz: optionalText,
     employerAddressEn: optionalText,
     photoAssetId: z.string().max(80).nullable().default(null),
-    assignments: z.array(assignmentSchema).max(10).default([]),
+    assignments: z.array(assignmentSchema).max(LIMITS.documents).default([]),
     sourceRow: z.number().int().positive().optional(),
     importId: z.string().max(100).optional(),
     recipientId: z.string().max(80).optional(),
@@ -289,13 +299,13 @@ export const draftSchema = z
     profileVersionId: z.string().max(80).optional(),
     presetFields: commonFieldsSchema.optional(),
     commonFields: commonFieldsSchema.optional(),
-    events: z.array(trainingEventSchema).max(30).optional(),
+    events: z.array(trainingEventSchema).max(LIMITS.documents).optional(),
     trainingDefaults: z
       .array(
         z
           .object({
             direction: z.enum(["BIOT", "PTM", "PB", "PS"]),
-            eventIds: z.array(z.string().min(1).max(80)).max(30),
+            eventIds: z.array(z.string().min(1).max(80)).max(LIMITS.documents),
           })
           .strict(),
       )
@@ -305,6 +315,15 @@ export const draftSchema = z
   })
   .strict()
   .superRefine((v, ctx) => {
+    if (
+      v.items.reduce((count, item) => count + item.assignments.length, 0) >
+      LIMITS.documents
+    )
+      ctx.addIssue({
+        code: "custom",
+        path: ["items"],
+        message: `Превышен технический объём заявки: ${LIMITS.documents} назначений. Изменения не применены; обратитесь к администратору центра`,
+      });
     if (new Set(v.events?.map((e) => e.id)).size !== (v.events?.length || 0))
       ctx.addIssue({
         code: "custom",
@@ -901,7 +920,7 @@ export function validateDraft(
     add(
       "DOCUMENT_LIMIT",
       "items",
-      `В одном выпуске допускается до ${LIMITS.documents} документов, включая общие протоколы. Сейчас ${count}. Разделите заявку или уменьшите комплект документов`,
+      `Превышен технический объём одного выпуска: ${LIMITS.documents} документов, включая общие протоколы. Сейчас ${count}. Состав сохранён; обратитесь к администратору центра`,
     );
   return issues.map((issue) => stableValidationIssue(draft, issue));
 }

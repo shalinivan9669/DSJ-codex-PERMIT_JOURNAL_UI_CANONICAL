@@ -863,9 +863,9 @@ export function RecipientDetails({
                           {...field(index, "validUntil")}
                           type="date"
                           disabled={
-                            disabled || assignment.validityMode === "UNLIMITED"
+                            documentDisabled ||
+                            assignment.validityMode === "UNLIMITED"
                           }
-                          readOnly={liveRules}
                           value={
                             (
                               resolvedRecipient?.assignments[index] ||

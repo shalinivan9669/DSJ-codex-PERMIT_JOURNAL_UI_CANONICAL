@@ -83,6 +83,8 @@ export function updateAssignment(
   patch: Partial<Assignment>,
 ): Assignment {
   const next = { ...assignment, ...patch };
+  if (Object.hasOwn(patch, "outcome"))
+    next.fieldOrigins = { ...next.fieldOrigins, outcome: "MANUAL" };
   for (const field of [
     ...commonFieldKeys,
     "result",

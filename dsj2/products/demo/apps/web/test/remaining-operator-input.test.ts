@@ -4,6 +4,7 @@ import {
   resolveDraft,
   draftSchema,
   isTechnicalBlankRecipient,
+  LIMITS,
 } from "@demo/contracts";
 import { newAssignment, newRecipient } from "../lib/types";
 import { quickGridPaste } from "../lib/grid-paste";
@@ -60,7 +61,7 @@ test("quick paste accepts only exact empty effective target cells and retains or
     false,
   );
 });
-test("quick paste requires explicit blank-row decisions and preserves 250 boundary without truncation", () => {
+test("quick paste requires explicit blank-row decisions and rejects resource overflow without truncation", () => {
   const item = newRecipient();
   assert.equal(
     quickGridPaste([item], [item], {
@@ -86,12 +87,12 @@ test("quick paste requires explicit blank-row decisions and preserves 250 bounda
   assert.throws(
     () =>
       quickGridPaste([], [], {
-        startRow: 0,
+        startRow: LIMITS.rows - 250,
         startField: "fullNameRu",
         text: [...rows, "Лишний\tРабочий"].join("\n"),
         columns,
       }),
-    /250/,
+    new RegExp(String(LIMITS.rows)),
   );
   assert.throws(
     () =>

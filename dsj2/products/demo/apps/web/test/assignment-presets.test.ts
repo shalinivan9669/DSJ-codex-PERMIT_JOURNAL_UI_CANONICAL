@@ -43,12 +43,13 @@ test("worker and ITR use distinct theory/production presets and calendar expiry"
   assert.equal(worker.biotCheckType, "PERIODIC");
   const itrProtocol = newAssignment("biot-itr-protocol");
   assert.equal(itrProtocol.biotCheckType, "PERIODIC");
-  assert.equal(itrProtocol.result, "");
+  assert.equal(itrProtocol.result, "Өтті/прошел");
+  assert.equal(itrProtocol.outcome?.status, "PASSED");
   assert.equal(itrProtocol.biotKnowledgeResult, undefined);
   assert.equal(itrProtocol.biotProctoringResult, undefined);
 });
 
-test("new ITR protocol import retains employer identity and actual results without claiming a pass", () => {
+test("new ITR protocol import keeps standard positive defaults and preserves employer identity and separately imported actual results", () => {
   const preview = { importId: "itr-fields", columns: [], rows: [], total: 1 };
   const row = mapImportRow(
     preview,
@@ -85,7 +86,15 @@ test("new ITR protocol import retains employer identity and actual results witho
   assert.equal(assignment.biotKnowledgeResult, "62 балла");
   assert.equal(assignment.biotProctoringResult, "Проверка не завершена");
   assert.equal(assignment.biotUniqueNumber, "000071");
-  assert.equal(assignment.result, "");
+  assert.equal(assignment.result, "Өтті/прошел");
+  assert.equal(assignment.resultKz, "Өтті");
+  assert.deepEqual(assignment.outcome, {
+    status: "PASSED",
+    source: "Стандартный положительный результат при создании назначения",
+  });
+  assert.equal(assignment.fieldOrigins?.outcome, "AUTO");
+  assert.equal(assignment.fieldOrigins?.result, "COURSE");
+  assert.equal(assignment.fieldOrigins?.resultKz, "COURSE");
   assert.equal(assignment.validUntil, "2031-02-28");
 });
 

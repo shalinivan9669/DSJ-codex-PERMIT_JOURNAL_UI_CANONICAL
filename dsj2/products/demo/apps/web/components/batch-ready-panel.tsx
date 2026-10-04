@@ -16,8 +16,9 @@ export function BatchReadyPanel({
   onSave: () => Promise<unknown>;
   onRefresh: () => Promise<void>;
 }) {
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[] | null>(null);
   const [busy, setBusy] = useState(false);
+  const [stage, setStage] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [issues, setIssues] = useState<Validation["errors"]>([]);
@@ -54,12 +55,17 @@ export function BatchReadyPanel({
       }));
     });
   const ready = courses.filter((course) => !course.issued && course.passed);
-  const chosen = ready.filter((course) => selected.includes(course.key));
+  const chosen = ready.filter(
+    (course) => selected === null || selected.includes(course.key),
+  );
+  const selectedKeys = chosen.map((course) => course.key);
   useEffect(() => {
     setSelected((before) =>
-      before.filter((key) =>
-        courses.some((course) => course.key === key && !course.issued),
-      ),
+      before === null
+        ? null
+        : before.filter((key) =>
+            courses.some((course) => course.key === key && !course.issued),
+          ),
     );
     // Keep operator selection stable through ordinary autosave and reload metadata.
   }, [draft.id, JSON.stringify(draft.issuedAssignments)]);
@@ -69,6 +75,7 @@ export function BatchReadyPanel({
     setNotice("");
     setIssues([]);
     try {
+      setStage("Сохраняем состав заявки…");
       await onSave();
       const saved = await api<Draft>(`/print-requests/${draft.id}`);
       const assignments = chosen.flatMap((course) =>
@@ -80,6 +87,9 @@ export function BatchReadyPanel({
             rowId: course.row.id,
             assignmentId: assignment.id,
           })),
+      );
+      setStage(
+        `Проверяем данные и макеты: ${new Set(chosen.map((course) => course.row.id)).size} человек, ${chosen.length} назначений. Большой состав обрабатывается автоматически по частям.`,
       );
       const validation = await api<Validation>(
         `/print-requests/${draft.id}/validate`,
@@ -94,6 +104,7 @@ export function BatchReadyPanel({
           "Исправьте данные выбранного состава перед передачей директору",
         );
       }
+      setStage("Передаём проверенную редакцию директору…");
       await api(`/print-requests/${draft.id}/approval/submit`, {
         method: "POST",
         body: json({ expectedRevision: saved.revision, assignments }),
@@ -108,6 +119,7 @@ export function BatchReadyPanel({
       if (addressed.length) setIssues(addressed);
     } finally {
       setBusy(false);
+      setStage("");
     }
   }
   if (draft.status !== "DRAFT" || !courses.length) return null;
@@ -129,12 +141,18 @@ export function BatchReadyPanel({
         {courses.filter((course) => !course.issued && course.failed).length}.
       </p>
       <p className="fine-print">
-        Выберите людей и курсы для этой партии. Несданные курсы остаются в этой
-        же заявке. Передача директору проверяет выбранные данные и обязательные
+        Все сданные ещё не оформленные курсы выбраны автоматически. При
+        необходимости измените состав. Несданные курсы остаются в этой же
+        заявке. Передача директору проверяет выбранные данные и обязательные
         поля.
       </p>
       {error && <Notice>{error}</Notice>}
       {notice && <Notice kind="success">{notice}</Notice>}
+      {busy && (
+        <p role="status" aria-live="polite">
+          {stage}
+        </p>
+      )}
       {!!issues.length && (
         <ul>
           {issues.map((issue, index) => (
@@ -169,7 +187,7 @@ export function BatchReadyPanel({
           disabled={busy || !ready.length}
           checked={
             !!ready.length &&
-            ready.every((course) => selected.includes(course.key))
+            ready.every((course) => selectedKeys.includes(course.key))
           }
           onChange={(event) =>
             setSelected(
@@ -186,12 +204,12 @@ export function BatchReadyPanel({
             <input
               type="checkbox"
               disabled={busy || course.issued || !course.passed}
-              checked={selected.includes(course.key)}
+              checked={selectedKeys.includes(course.key)}
               onChange={(event) =>
                 setSelected(
                   event.target.checked
-                    ? [...selected, course.key]
-                    : selected.filter((key) => key !== course.key),
+                    ? [...selectedKeys, course.key]
+                    : selectedKeys.filter((key) => key !== course.key),
                 )
               }
             />

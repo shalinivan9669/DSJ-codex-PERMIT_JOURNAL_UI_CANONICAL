@@ -1,6 +1,8 @@
 import {
   applyBusinessRules,
   commonFieldKeys,
+  hasAutomaticPositiveOutcome,
+  courseResultText,
   type Assignment,
   type Draft as DraftInput,
   type RequestItemInput,
@@ -17,15 +19,18 @@ export function joinEventAssignment(
     ...assignment,
     eventId,
     protocolMode: "GROUP",
-    fieldOrigins: Object.fromEntries(
-      commonFieldKeys.map((key) => [
-        key,
-        assignment.fieldOrigins?.[key] ||
-          (assignment[key] && assignment[key] !== presets[key]
-            ? "MANUAL"
-            : "INHERITED"),
-      ]),
-    ),
+    fieldOrigins: {
+      ...assignment.fieldOrigins,
+      ...Object.fromEntries(
+        commonFieldKeys.map((key) => [
+          key,
+          assignment.fieldOrigins?.[key] ||
+            (assignment[key] && assignment[key] !== presets[key]
+              ? "MANUAL"
+              : "INHERITED"),
+        ]),
+      ),
+    },
     outcome: assignment.outcome || { status: "UNKNOWN", source: "" },
   };
 }
@@ -34,8 +39,14 @@ export function eligibleForEvent(assignment: Assignment, templateId: string) {
   return (
     assignment.templateId === templateId &&
     !assignment.eventId &&
-    !assignment.result &&
-    (!assignment.outcome || assignment.outcome.status === "UNKNOWN") &&
+    (!assignment.result ||
+      (hasAutomaticPositiveOutcome(assignment) &&
+        assignment.fieldOrigins?.result === "COURSE" &&
+        assignment.result ===
+          courseResultText(assignment.templateId, "PASSED"))) &&
+    (!assignment.outcome ||
+      assignment.outcome.status === "UNKNOWN" ||
+      hasAutomaticPositiveOutcome(assignment)) &&
     !assignment.externalBasisNumber &&
     !assignment.retakeOf
   );
@@ -63,7 +74,9 @@ export function joinEventAssignmentKit(
     ...draft,
     items: [{ ...item, assignments: [assignment] }],
   }).items[0].assignments;
-  const generatedProtocol = expected.find((a) => a.templateId.endsWith("-protocol"));
+  const generatedProtocol = expected.find((a) =>
+    a.templateId.endsWith("-protocol"),
+  );
   const companion = generatedProtocol
     ? item.assignments.find((a) => a.id === generatedProtocol.id)
     : undefined;

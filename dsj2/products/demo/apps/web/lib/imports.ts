@@ -6,6 +6,7 @@ import {
   commonFieldKeys,
   LIMITS,
   itemSchema,
+  nonPassedResultKz,
   validDate,
   type BiotCategory,
   type EmployeeCategory,
@@ -55,7 +56,7 @@ export function importApplyErrorText(
     "code" in details &&
     details.code === "ROW_LIMIT";
   return retainedStarterLimit
-    ? `${errorText(error)} Ранее заполненная, затем очищенная строка не удаляется автоматически и учитывается в лимите. Закройте импорт, явно удалите ненужную пустую строку и повторите импорт либо выберите не более ${LIMITS.rows - 1} исходных строк.`
+    ? `${errorText(error)} Ранее заполненная, затем очищенная строка не удаляется автоматически. Состав сохранён; проверьте эту строку или обратитесь к администратору центра.`
     : errorText(error);
 }
 export function importIssueText(
@@ -63,7 +64,7 @@ export function importIssueText(
 ): string {
   if (typeof issue === "string") return issue;
   if (issue.code === "ROW_LIMIT")
-    return `В исходном листе ${issue.count ?? `более ${LIMITS.rows}`} строк. Для одной заявки выберите не более ${issue.limit ?? LIMITS.rows} получателей.`;
+    return `В исходном листе ${issue.count ?? `более ${LIMITS.rows}`} строк. Технический объём одной заявки — ${issue.limit ?? LIMITS.rows} получателей. Строки не обрезаны; обратитесь к администратору центра.`;
   return (
     issue.message ||
     "Проверьте исходный файл и отмеченные строки перед импортом."
@@ -129,6 +130,61 @@ export const importFields: [string, string][] = [
   ["validUntil", "Действителен до"],
   ["externalBasisNumber", "Внешний номер основания"],
 ];
+export type SavedImportMapping = {
+  id: string;
+  name: string;
+  columns: string[];
+  mapping: Record<string, string>;
+};
+/** Reuse only an exact, unambiguous header set; conflicting rules need review. */
+export function recognizedImportMapping(
+  columns: string[],
+  saved: SavedImportMapping[],
+) {
+  const normalize = (value: string) =>
+    value.normalize("NFKC").trim().toLocaleLowerCase("ru").replace(/\s+/g, " ");
+  const headers = columns.map(normalize);
+  const uniqueHeaders = new Set(headers).size === headers.length;
+  const allowed = new Set(importFields.map(([field]) => field));
+  const candidates = uniqueHeaders
+    ? saved.flatMap((rule) => {
+        const known = rule.columns.map(normalize);
+        if (
+          known.length !== headers.length ||
+          new Set(known).size !== known.length ||
+          headers.some((header) => !known.includes(header))
+        )
+          return [];
+        const mapping = headers.map(
+          (header) => rule.mapping[rule.columns[known.indexOf(header)]] || "",
+        );
+        const fields = mapping.filter(Boolean);
+        return fields.length &&
+          fields.every((field) => allowed.has(field)) &&
+          new Set(fields).size === fields.length
+          ? [{ rule, mapping }]
+          : [];
+      })
+    : [];
+  const variants = new Set(
+    candidates.map((candidate) => JSON.stringify(candidate.mapping)),
+  );
+  if (variants.size === 1)
+    return {
+      mapping: candidates[0].mapping,
+      savedName: candidates[0].rule.name,
+      needsReview: false,
+      conflictingSavedRules: false,
+    };
+  const mapping = inferMapping(columns);
+  return {
+    mapping,
+    savedName: "",
+    needsReview:
+      !uniqueHeaders || variants.size > 1 || mapping.some((field) => !field),
+    conflictingSavedRules: variants.size > 1,
+  };
+}
 export function inferMapping(columns: string[]): string[] {
   const used = new Set<string>();
   return columns.map((column) => {
@@ -216,6 +272,30 @@ export function initialImportTemplate(
   if (event?.protocolTemplateId === "biot-itr-protocol")
     return "biot-itr-certificate";
   return "";
+}
+
+/** Only exact standard status words change the default fact; grades and
+ * free text remain independent imported assessments. */
+function importedNonPassedStatus(value: string) {
+  const known: Record<string, "UNKNOWN" | "FAILED" | "ABSENT"> = {
+    неподтверждено: "UNKNOWN",
+    расталмаған: "UNKNOWN",
+    несдал: "FAILED",
+    тапсырмады: "FAILED",
+    неявился: "ABSENT",
+    келмеді: "ABSENT",
+  };
+  const parts = value
+    .normalize("NFKC")
+    .toLocaleLowerCase("ru")
+    .replace(/\s+/g, "")
+    .split("/");
+  const statuses = parts.map((part) =>
+    Object.hasOwn(known, part) ? known[part] : undefined,
+  );
+  return statuses.every(Boolean) && new Set(statuses).size === 1
+    ? statuses[0]
+    : undefined;
 }
 
 export function mapImportRow(
@@ -350,6 +430,28 @@ export function mapImportRow(
         .map((field) => [field, "IMPORTED" as const]),
     ),
   };
+  const resultColumn = mapping.indexOf("result");
+  if (templateId && resultColumn >= 0) {
+    const importedResult = String(row.values[resultColumn] ?? "");
+    const clearedResult = isBlankText(importedResult);
+    assignment.fieldOrigins.result = clearedResult ? "CLEARED" : "IMPORTED";
+    const status = clearedResult
+      ? "UNKNOWN"
+      : importedNonPassedStatus(importedResult);
+    if (status) {
+      assignment.outcome = {
+        status,
+        source: `Импортированный результат, строка ${row.sourceRow}`,
+      };
+      assignment.resultKz = nonPassedResultKz(status);
+      assignment.fieldOrigins = {
+        ...assignment.fieldOrigins,
+        outcome: "IMPORTED",
+        result: clearedResult ? "CLEARED" : "IMPORTED",
+        resultKz: "COURSE",
+      };
+    }
+  }
   return result;
 }
 

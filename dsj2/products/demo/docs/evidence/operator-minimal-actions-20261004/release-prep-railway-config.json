@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-04T18:33:45.349Z",
+  "projectId": "250bb4a5-6462-4933-b1a7-8f61e2e7f507",
+  "environmentId": "fc776e13-94fd-45ff-b14c-06b91a2b1380",
+  "serviceId": "f9c22605-78ca-41ee-a483-52aa54036fba",
+  "deploymentId": "4554ceda-96c8-4d00-8739-92e9573496c7",
+  "rootDirectory": null,
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "deployment/Dockerfile"
+  },
+  "deploy": {
+    "preDeployCommand": [
+      "pnpm db:deploy"
+    ],
+    "healthcheckPath": "/health",
+    "healthcheckTimeout": 300,
+    "drainingSeconds": 60,
+    "numReplicas": 1,
+    "sleepApplication": false,
+    "startCommand": null
+  },
+  "volumeMounts": [
+    "/data"
+  ]
+}

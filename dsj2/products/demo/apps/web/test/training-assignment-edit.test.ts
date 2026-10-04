@@ -121,7 +121,10 @@ test("editing individual PTM protocol result and subject updates its card and su
     draft.items[0].assignments.find((a) => a.id === "pb")?.result,
     "Отдельная оценка",
   );
-  assert.equal(draft.items[1].assignments[0].result, "");
+  assert.equal(
+    draft.items[1].assignments[0].result,
+    other.assignments[0].result,
+  );
   assert.equal(
     draft.items[1].assignments[0].trainingSubject,
     "ПТМ",
@@ -138,12 +141,16 @@ test("explicit individual PTM outcome and source unlock the card without inventi
         id: "card",
         eventId: "ptm",
         outcome: { status: "UNKNOWN" as const, source: "" },
+        result: "",
+        resultKz: "",
       },
       {
         ...newAssignment("ptm-protocol"),
         id: "protocol",
         eventId: "ptm",
         outcome: { status: "UNKNOWN" as const, source: "" },
+        result: "",
+        resultKz: "",
       },
     ],
   };

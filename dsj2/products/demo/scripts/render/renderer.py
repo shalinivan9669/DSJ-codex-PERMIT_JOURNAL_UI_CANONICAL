@@ -873,7 +873,11 @@ def main():
     elif command=='qr':
         from verification_qr import verification_qr
         result=verification_qr(payload,out)
-    elif command=='import': result=import_table(payload,out)
+    elif command=='import':
+        imported=import_table(payload,out)
+        # Full source rows live in output.json. Repeating them on stdout would
+        # hit the bounded metadata channel for legitimate large spreadsheets.
+        result={'count':imported['count'],'canApply':imported['canApply']}
     elif command=='xlsx': result=export_registry(payload,out)
     elif command=='control-sheet':
         from control_sheet import control_sheet

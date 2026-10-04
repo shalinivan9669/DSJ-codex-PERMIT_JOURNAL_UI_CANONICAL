@@ -5,7 +5,11 @@ import { newAssignment, newRecipient, draftPayload } from "../lib/types";
 import { updateAssignment } from "../lib/assignment-presets";
 import { inferMapping, mapImportRow } from "../lib/imports";
 import { kztToMinor, minorToKzt } from "../lib/money";
-import { resolveDraft } from "@demo/contracts";
+import {
+  resolveDraft,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+  LIMITS,
+} from "@demo/contracts";
 import { parseClipboardRange, previewGridPaste } from "../lib/grid-paste";
 import { textQualityHints } from "../lib/text-quality";
 import { eligibleForEvent, joinEventAssignment } from "../lib/event-assignment";
@@ -17,6 +21,9 @@ test("joining an explicitly selected existing form preserves imported/manual/cle
     hours: "16",
     trainingSubject: "Manual",
     documentDate: "",
+    result: "",
+    resultKz: "",
+    outcome: { status: "UNKNOWN" as const, source: "" },
     fieldOrigins: {
       hours: "IMPORTED" as const,
       trainingSubject: "MANUAL" as const,
@@ -287,12 +294,12 @@ test("rectangular clipboard handles quoted tabs, multiline values, Unicode and t
   assert.equal(first.fullNameKz, "");
   assert.throws(() => parseClipboardRange("a\tb\nc"), /количество ячеек/);
   assert.throws(
-    () => previewGridPaste([], 249, "fullNameRu", "a\nb", "EMPTY"),
+    () => previewGridPaste([], LIMITS.rows - 1, "fullNameRu", "a\nb", "EMPTY"),
     /предел/,
   );
 });
 
-test("paste preserves all 250 bilingual rows and textual IDs; row 251 is rejected without mutation", () => {
+test("paste preserves all 250 bilingual rows and textual IDs; resource overflow is rejected without mutation", () => {
   const rows = Array.from({ length: 250 }, (_, index) =>
     [
       `Слушатель ${index + 1}`,
@@ -328,12 +335,12 @@ test("paste preserves all 250 bilingual rows and textual IDs; row 251 is rejecte
     () =>
       previewGridPaste(
         [first],
-        0,
+        LIMITS.rows - 249,
         "fullNameRu",
         [...rows, rows[0]].join("\n"),
         "EMPTY",
       ),
-    /250/,
+    new RegExp(String(LIMITS.rows)),
   );
   assert.equal(first.fullNameRu, "Сохранённое имя");
   assert.equal(first.fullNameKz, "");
@@ -423,6 +430,9 @@ test("pasted rows choose no document implicitly, while an explicit bundle can jo
   assert.equal(joined.assignments.length, 1);
   assert.equal(joined.assignments[0].templateId, "biot-itr-certificate");
   assert.equal(joined.assignments[0].eventId, bundle.events[0].id);
-  assert.equal(joined.assignments[0].outcome?.status, "UNKNOWN");
+  assert.deepEqual(joined.assignments[0].outcome, {
+    status: "PASSED",
+    source: DEFAULT_POSITIVE_OUTCOME_SOURCE,
+  });
   assert.deepEqual(result.items[1].assignments, []);
 });

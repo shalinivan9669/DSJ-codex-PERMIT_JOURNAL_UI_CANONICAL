@@ -23,6 +23,8 @@ import { ApprovalBanner } from "./approvals";
 import { BatchReadyPanel } from "./batch-ready-panel";
 import { SigningPanel } from "./signing-panel";
 import { SharedEmployerDialog } from "./shared-employer-dialog";
+import { RecipientCommonFields } from "./recipient-common-fields";
+import { CourseSharedFields } from "./course-shared-fields";
 import { groupValidationIssues } from "@/lib/validation-groups";
 import { validationErrors } from "@/lib/validation-errors";
 import { draftReadiness, trainingOutcomeSummary } from "@/lib/draft-readiness";
@@ -1431,6 +1433,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     }
     if (
       event &&
+      !individualOverride &&
       [
         "outcome",
         "outcome.source",
@@ -1451,7 +1454,20 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     ...new Map(
       readiness.issues.map((issue) => {
         const mapped = operatorIssue(issue);
-        return [JSON.stringify(mapped), mapped] as const;
+        const path =
+          typeof mapped === "string" ? "" : String(mapped.path || "");
+        return [
+          typeof mapped === "string"
+            ? mapped
+            : JSON.stringify([
+                path,
+                mapped.message,
+                /^(events|commonFields|profile|issuer)(\.|$)/.test(path)
+                  ? "shared"
+                  : (mapped as AddressedIssue).rowId,
+              ]),
+          mapped,
+        ] as const;
       }),
     ).values(),
   ];
@@ -1492,6 +1508,19 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     }
     const training = /^events\.(\d+)\.(?:commonFields\.)?(.+)$/.exec(path);
     if (training) {
+      const sharedInput = document.querySelector<HTMLInputElement>(
+        `.course-shared-fields [data-field-path="${CSS.escape(path)}"]`,
+      );
+      if (sharedInput) {
+        let parent = sharedInput.parentElement;
+        while (parent) {
+          if (parent instanceof HTMLDetailsElement) parent.open = true;
+          parent = parent.parentElement;
+        }
+        sharedInput.focus();
+        sharedInput.scrollIntoView({ block: "center" });
+        return;
+      }
       const event = draft!.events?.[Number(training[1])];
       const settings = document.getElementById("request-training");
       if (settings instanceof HTMLDetailsElement) settings.open = true;
@@ -1953,6 +1982,13 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             </small>
           </label>
         </div>
+        <CourseSharedFields
+          draft={draft}
+          resolvedEvents={resolved.draft.events}
+          fieldHints={sharedHints}
+          disabled={readonly || operationBusy}
+          onChange={edit}
+        />
         <details className="operator-common-settings" id="request-training">
           <summary>
             <span>Параметры обучения и документов</span>
@@ -2115,6 +2151,21 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             </div>
           )}
         </div>
+        {!readonly && (
+          <RecipientCommonFields
+            items={draft.items}
+            selectedIds={checked}
+            disabled={operationBusy}
+            onApply={(items) => edit({ items })}
+            onEmployer={() =>
+              setEmployerTargets(
+                checked.length
+                  ? [...checked]
+                  : draft.items.map((item) => item.id),
+              )
+            }
+          />
+        )}
         {!readonly &&
           entryView === "table" &&
           draft.items.length > 10 &&

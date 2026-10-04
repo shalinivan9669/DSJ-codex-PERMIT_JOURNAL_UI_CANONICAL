@@ -19,6 +19,7 @@ import {
 
 export function measuredValidityRows(
   origin: "MANUAL" | "IMPORTED" | "INHERITED" | "CLEARED" = "MANUAL",
+  validityOrigin: "MANUAL" | "IMPORTED" | "AUTO" | "CLEARED" = "AUTO",
 ) {
   const specs: {
     category: EmployeeCategory;
@@ -78,8 +79,11 @@ export function measuredValidityRows(
                   origin === "CLEARED" || origin === "INHERITED"
                     ? ""
                     : "2026-10-03",
-                validUntil: "2035-12-31",
-                fieldOrigins: { documentDate: origin, validUntil: "MANUAL" },
+                validUntil: validityOrigin === "CLEARED" ? "" : "2035-12-31",
+                fieldOrigins: {
+                  documentDate: origin,
+                  validUntil: validityOrigin,
+                },
                 outcome: { status: "UNKNOWN", source: "" },
               },
             ],
@@ -140,14 +144,18 @@ export function measuredValidityRows(
           resolvedOrigin: provenance?.validUntil,
           validityMode: assignment.validityMode,
           expectedUntil:
-            spec.direction === "PS"
-              ? ""
-              : businessValidUntil(
-                  groupProtocol
-                    ? item.assignments[0].documentDate
-                    : assignment.documentDate,
-                  spec.category,
-                ),
+            validityOrigin !== "AUTO"
+              ? validityOrigin === "CLEARED"
+                ? ""
+                : "2035-12-31"
+              : spec.direction === "PS"
+                ? ""
+                : businessValidUntil(
+                    groupProtocol
+                      ? item.assignments[0].documentDate
+                      : assignment.documentDate,
+                    spec.category,
+                  ),
           legalApproval: false,
         });
       }

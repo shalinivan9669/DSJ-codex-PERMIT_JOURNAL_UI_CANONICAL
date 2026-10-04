@@ -193,7 +193,17 @@ export function RecipientGrid({
       return;
     event.preventDefault();
     const next = visibleItems[visibleIndex + (event.shiftKey ? -1 : 1)];
-    if (!next) return;
+    if (!next) {
+      if (
+        !event.shiftKey &&
+        field === "fullNameRu" &&
+        canAdd &&
+        !disabled &&
+        visibleItems[visibleIndex]?.fullNameRu.trim()
+      )
+        onAdd();
+      return;
+    }
     const input = inputs.current.get(`${next.id}:${field}`);
     input?.focus({ preventScroll: true });
     input?.scrollIntoView({ block: "nearest", inline: "nearest" });
@@ -352,7 +362,8 @@ export function RecipientGrid({
           автоматического перевода.
         </span>
         <span className="recipient-grid-keyboard-hint" id={helpId}>
-          Tab — следующее поле · Enter — строка ниже · Shift + Enter — выше
+          Tab — следующее поле · Enter — строка ниже (после последнего ФИО
+          добавит строку) · Shift + Enter — выше
         </span>
         {!readonly && items.length > 10 && (
           <button

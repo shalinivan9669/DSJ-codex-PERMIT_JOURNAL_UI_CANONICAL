@@ -11,6 +11,7 @@ from zipfile import ZipFile
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts/render'))
 from renderer import render_docx,convert_pdf,photo_normalize,export_registry,import_table,build_bundle
+from request_limits import MAX_REQUEST_ROWS
 from openpyxl import Workbook,load_workbook
 from PIL import Image
 from lxml import etree as E
@@ -94,7 +95,7 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(pdf_text.count(item['fullNameRu']),1)
             self.assertIn(item['protocolNumber'],docx_text)
             self.assertIn(item['protocolNumber'],pdf_text)
-        hundred['items'] = [hundred['items'][0]] * 251
+        hundred['items'] = [hundred['items'][0]] * (MAX_REQUEST_ROWS + 1)
         with self.assertRaisesRegex(ValueError,'ROW_LIMIT'):render_docx(hundred,OUT/'invalid.docx')
     def test_03_safe_registry_all_fields_and_import(self):
         item=fixture('ps-witness')['items'][0];item['fullNameRu']='=1+1';item['registrationNumber']='00012'
@@ -106,11 +107,11 @@ class RenderTests(unittest.TestCase):
     def test_04_formulas_rejected_and_limits(self):
         wb=Workbook();ws=wb.active;ws.append(['fullNameRu','number']);ws.append(['=1+1','001']);wb.save(OUT/'formula-input.xlsx')
         result=import_table({'inputPath':str(OUT/'formula-input.xlsx')},OUT/'formula-result.json');self.assertFalse(result['canApply']);self.assertEqual(result['errors'][0]['code'],'FORMULA_NOT_ALLOWED')
-        for count in [100,101,250,251]:
+        for count in [100,250,400,MAX_REQUEST_ROWS + 1]:
             path=OUT/f'{count}.csv';path.write_text('fullNameRu,fullNameKz\n'+'\n'.join(f'Тестов {i},Әділбек {i}' for i in range(count)),encoding='utf8')
-            result=import_table({'inputPath':str(path)},OUT/f'{count}.json');self.assertEqual(result['canApply'],count<=250)
+            result=import_table({'inputPath':str(path)},OUT/f'{count}.json');self.assertEqual(result['canApply'],count<=MAX_REQUEST_ROWS)
             self.assertEqual(len(result['rawRows']), count, 'over-limit source rows must remain available for explicit exclusion')
-            if count > 250: self.assertIn({'code':'ROW_LIMIT','count':251,'limit':250}, result['errors'])
+            if count > MAX_REQUEST_ROWS: self.assertIn({'code':'ROW_LIMIT','count':count,'limit':MAX_REQUEST_ROWS}, result['errors'])
         path=OUT/'duplicate.csv';path.write_text('fullNameRu\nА\nА\n',encoding='utf8');result=import_table({'inputPath':str(path)},OUT/'duplicate.json');self.assertEqual(result['rows'][1]['errors'],['DUPLICATE_ROW'])
     def test_05_photo_decode_crop_rotation(self):
         path=OUT/'source-photo.png';Image.new('RGB',(800,1000),(100,160,180)).save(path)

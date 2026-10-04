@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-04T18:28:11.898Z",
+  "expectedSha": "e10f3f77b195953555811c0b6c2b9de622dea4d4",
+  "branch": "codex/operator-flow-refinement-20261003",
+  "vercel": {
+    "error": "Vercel HTTP 403"
+  },
+  "railway": {
+    "projectId": "250bb4a5-6462-4933-b1a7-8f61e2e7f507",
+    "projectName": "dsj-demo-rows-20261002",
+    "environments": [
+      {
+        "id": "fc776e13-94fd-45ff-b14c-06b91a2b1380",
+        "name": "production",
+        "services": [
+          {
+            "serviceId": "f9c22605-78ca-41ee-a483-52aa54036fba",
+            "serviceName": "demo-backend",
+            "source": {
+              "image": null,
+              "repo": null
+            },
+            "domains": {
+              "customDomains": [],
+              "serviceDomains": [
+                {
+                  "domain": "demo-backend-production-2d4c.up.railway.app",
+                  "id": "db6dd50e-8be0-4421-9e99-e4991af988ea",
+                  "targetPort": 4100
+                }
+              ]
+            },
+            "latest": {
+              "id": "4554ceda-96c8-4d00-8739-92e9573496c7",
+              "status": "SUCCESS",
+              "createdAt": "2026-10-04T17:21:17.168Z"
+            },
+            "active": [
+              {
+                "id": "4554ceda-96c8-4d00-8739-92e9573496c7",
+                "status": "SUCCESS"
+              }
+            ]
+          },
+          {
+            "serviceId": "5e1e59b4-628a-427a-8104-7fdf07027f7e",
+            "serviceName": "Postgres",
+            "source": {
+              "image": "ghcr.io/railwayapp-templates/postgres-ssl:18",
+              "repo": null
+            },
+            "domains": {
+              "customDomains": [],
+              "serviceDomains": []
+            },
+            "latest": {
+              "id": "3848dc35-6fff-45c8-abdf-db7efd02f20e",
+              "status": "SUCCESS",
+              "createdAt": "2026-10-02T11:33:13.302Z"
+            },
+            "active": [
+              {
+                "id": "3848dc35-6fff-45c8-abdf-db7efd02f20e",
+                "status": "SUCCESS"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

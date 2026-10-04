@@ -76,3 +76,22 @@ test("R4 inspector/council preset discrepancy is explicit without changing hours
     /бессрочно/,
   );
 });
+
+test("explicit manual imported and cleared validity remains visible in individual and group forms", () => {
+  for (const origin of ["MANUAL", "IMPORTED", "CLEARED"] as const) {
+    const rows = measuredValidityRows("MANUAL", origin);
+    for (const row of rows) {
+      assert.equal(row.savedUntil, origin === "CLEARED" ? "" : "2035-12-31");
+      assert.equal(row.resolvedUntil, row.savedUntil);
+      assert.equal(row.savedOrigin, origin);
+      assert.equal(row.resolvedOrigin, origin);
+    }
+  }
+  assert.match(
+    liveValidityDescription(
+      { employeeCategory: "ITR", assignments: [] },
+      { templateId: "biot-itr-certificate" },
+    ),
+    /импортированная дата сохраняется/,
+  );
+});

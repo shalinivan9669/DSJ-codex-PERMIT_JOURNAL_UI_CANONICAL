@@ -4,6 +4,7 @@ import {
   validateDraft,
   validDate,
   z,
+  LIMITS,
   type Draft,
 } from "@demo/contracts";
 import { exportRegistry, MIME, runRender } from "@demo/printing";
@@ -335,7 +336,10 @@ export async function recordTransfer(c: Context, id: string, input: unknown) {
   const data = parse(
     z
       .object({
-        artifactIds: z.array(z.string().max(80)).min(1).max(1000),
+        artifactIds: z
+          .array(z.string().max(80))
+          .min(1)
+          .max(LIMITS.documents * 2 + 2),
         recipient: z.string().trim().min(2).max(500),
         occurredOn: z.string().refine(validDate, "Укажите календарную дату"),
         method: z.enum(["EMAIL", "PORTAL", "PAPER", "OTHER"]),

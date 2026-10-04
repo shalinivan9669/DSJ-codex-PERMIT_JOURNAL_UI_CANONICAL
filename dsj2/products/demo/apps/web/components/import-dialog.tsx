@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
@@ -9,7 +9,7 @@ import {
   type TrainingEventInput,
 } from "@demo/contracts";
 import { joinEventAssignment } from "@/lib/event-assignment";
-import { requestBundles } from "@/lib/request-bundles";
+import { recipientForRequest, requestBundles } from "@/lib/request-bundles";
 import {
   biotCategoriesForTemplate,
   defaultBiotCategory,
@@ -18,7 +18,7 @@ import { api, errorText, json } from "@/lib/api";
 import {
   importFields,
   importApplyErrorText,
-  inferMapping,
+  recognizedImportMapping,
   importIssueText,
   mapImportRow,
   initialImportTemplate,
@@ -26,6 +26,7 @@ import {
   validateMappedImportRow,
   applyImportCorrections,
   type ImportPreview,
+  type SavedImportMapping,
 } from "@/lib/imports";
 import { templateLabels, type Assignment, type Draft } from "@/lib/types";
 import { biotCategoryDescription } from "@/lib/validity-display";
@@ -60,13 +61,7 @@ export function ImportDialog({
   onClose: () => void;
   onApplied: (draft: Draft) => void;
 }) {
-  type SavedMapping = {
-    id: string;
-    name: string;
-    columns: string[];
-    mapping: Record<string, string>;
-  };
-  const [savedMappings, setSavedMappings] = useState<SavedMapping[]>([]);
+  const [savedMappings, setSavedMappings] = useState<SavedImportMapping[]>([]);
   const [mappingName, setMappingName] = useState("");
   const [mappingSaved, setMappingSaved] = useState(false);
   const [paste, setPaste] = useState("");
@@ -74,6 +69,11 @@ export function ImportDialog({
   const [preview, setPreview] = useState<ImportPreview | null>(null);
   const [mapping, setMapping] = useState<string[]>([]);
   const [mappingColumns, setMappingColumns] = useState<string[]>([]);
+  const [editMapping, setEditMapping] = useState(false);
+  const [mappingSource, setMappingSource] = useState("");
+  const [conflictingMappings, setConflictingMappings] = useState(false);
+  const [problemsOnly, setProblemsOnly] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(50);
   const [corrections, setCorrections] = useState<
     Record<number, Record<number, string>>
   >({});
@@ -82,7 +82,12 @@ export function ImportDialog({
     (choice) => choice.protocol === bundleEvent?.protocolTemplateId,
   );
   const [templateId, setTemplateId] = useState<Assignment["templateId"] | "">(
-    initialImportTemplate(bundleEvent),
+    existingDraft.trainingDefaults?.length
+      ? ""
+      : initialImportTemplate(bundleEvent),
+  );
+  const [useRequestTraining, setUseRequestTraining] = useState(
+    !!existingDraft.trainingDefaults?.length,
   );
   const [biotCategory, setBiotCategory] = useState<BiotCategory | undefined>(
     bundleEvent?.commonFields.biotCategory,
@@ -113,36 +118,45 @@ export function ImportDialog({
     blankMode,
     corrections,
     revisionMode,
+    useRequestTraining,
     existingDraft.revision,
   ]);
-  const workingPreview = preview && {
-    ...preview,
-    rows: preview.rows.map((row) => ({
-      ...row,
-      values: row.values.map(
-        (value, column) => corrections[row.sourceRow]?.[column] ?? value,
-      ),
-    })),
-  };
+  const workingPreview = useMemo(
+    () =>
+      preview && {
+        ...preview,
+        rows: preview.rows.map((row) => ({
+          ...row,
+          values: row.values.map(
+            (value, column) => corrections[row.sourceRow]?.[column] ?? value,
+          ),
+        })),
+      },
+    [preview, corrections],
+  );
   const alreadyAdded = importedSourceRows(
     existingDraft.items,
     preview?.importId || "",
   );
-  const rowChecks = new Map(
-    (workingPreview?.rows || []).map((row) => [
-      row.sourceRow,
-      validateMappedImportRow(
-        workingPreview!,
-        row,
-        mapping,
-        templateId,
-        biotCategory,
+  const rowChecks = useMemo(
+    () =>
+      new Map(
+        (workingPreview?.rows || []).map((row) => [
+          row.sourceRow,
+          validateMappedImportRow(
+            workingPreview!,
+            row,
+            mapping,
+            templateId,
+            biotCategory,
+          ),
+        ]),
       ),
-    ]),
+    [workingPreview, mapping, templateId, biotCategory],
   );
   useEffect(() => {
     let active = true;
-    void api<{ items: SavedMapping[] }>("/imports/mappings")
+    void api<{ items: SavedImportMapping[] }>("/imports/mappings")
       .then((result) => {
         if (active) setSavedMappings(result.items);
       })
@@ -171,7 +185,7 @@ export function ImportDialog({
         }),
       });
       setSavedMappings(
-        (await api<{ items: SavedMapping[] }>("/imports/mappings")).items,
+        (await api<{ items: SavedImportMapping[] }>("/imports/mappings")).items,
       );
       setMappingSaved(true);
     } catch (caught) {
@@ -180,39 +194,43 @@ export function ImportDialog({
       setBusy(false);
     }
   }
-  async function parse(sheet?: string) {
+  async function parse(sheet?: string, selectedFile?: File) {
     setBusy(true);
     setError("");
     try {
       const source =
+        selectedFile ||
         file ||
         new File([paste], "вставка.tsv", { type: "text/tab-separated-values" });
       if (source.size > LIMITS.importBytes)
         throw new Error(
-          "Файл больше 5 МБ. Разделите список на несколько файлов.",
+          "Файл больше 5 МиБ. Сохраните только таблицу значений без изображений и лишнего оформления; строки не обрезаны.",
         );
       const body = new FormData();
       body.set("file", source);
       if (sheet) body.set("sheet", sheet);
-      const result = await api<ImportPreview>("/imports/preview", {
-        method: "POST",
-        body,
-      });
+      const [result, rules] = await Promise.all([
+        api<ImportPreview>("/imports/preview", { method: "POST", body }),
+        api<{ items: SavedImportMapping[] }>("/imports/mappings"),
+      ]);
+      setSavedMappings(rules.items);
       setPreview(result);
       setCorrections({});
       setReconciliation(null);
       setOperationKey(crypto.randomUUID());
-      setMapping(
-        result.columns.map((column, index) => {
-          const previous =
-            mappingColumns[index] === column
-              ? index
-              : mappingColumns.indexOf(column);
-          return previous >= 0
-            ? mapping[previous] || ""
-            : inferMapping(result.columns)[index];
-        }),
-      );
+      const recognized = recognizedImportMapping(result.columns, rules.items);
+      const preserveCurrent =
+        !selectedFile &&
+        mappingColumns.length === result.columns.length &&
+        mappingColumns.every(
+          (column, index) => column === result.columns[index],
+        );
+      setMapping(preserveCurrent ? mapping : recognized.mapping);
+      setMappingSource(recognized.savedName);
+      setConflictingMappings(recognized.conflictingSavedRules);
+      setEditMapping(preserveCurrent ? editMapping : recognized.needsReview);
+      setVisibleCount(50);
+      setProblemsOnly(false);
       setMappingColumns(result.columns);
       setExcluded(
         result.rows
@@ -251,7 +269,7 @@ export function ImportDialog({
             throw new Error(
               check.issues.map((issue) => issue.message).join(" "),
             );
-          const mapped = applyImportCorrections(
+          let mapped = applyImportCorrections(
             mapImportRow(
               workingPreview,
               row,
@@ -262,6 +280,8 @@ export function ImportDialog({
             mapping,
             corrections[row.sourceRow] || {},
           );
+          if (!templateId && useRequestTraining && !revisionMode)
+            mapped = recipientForRequest(existingDraft, mapped);
           if (
             bundleEvent &&
             bundle?.card === templateId &&
@@ -423,6 +443,16 @@ export function ImportDialog({
     : existingCount - (replacesStarter ? 1 : 0) + selected.length;
   const mappedFields = mapping.filter(Boolean);
   const duplicateMapping = new Set(mappedFields).size !== mappedFields.length;
+  const attentionRows =
+    workingPreview?.rows.filter(
+      (row) =>
+        row.duplicate ||
+        row.errors?.length ||
+        rowChecks.get(row.sourceRow)?.issues.length ||
+        rowChecks.get(row.sourceRow)?.incomplete,
+    ) || [];
+  const listedRows = problemsOnly ? attentionRows : workingPreview?.rows || [];
+  const visibleRows = listedRows.slice(0, visibleCount);
   return (
     <Modal
       title="Импорт получателей"
@@ -432,9 +462,9 @@ export function ImportDialog({
       wide
     >
       <p>
-        Выберите XLSX / CSV или вставьте таблицу. Сначала сопоставьте колонки и
-        проверьте строки. Неполные строки сохраняются в черновик, номера ещё не
-        назначаются.
+        Выберите XLSX / CSV или вставьте таблицу. Знакомые колонки распознаются
+        автоматически; проверьте состав и отмеченные проблемы. Неполные строки
+        сохраняются в черновик, номера ещё не назначаются.
       </p>
       {error && (
         <div ref={errorRef} tabIndex={-1}>
@@ -467,7 +497,12 @@ export function ImportDialog({
             <input
               type="file"
               accept=".xlsx,.csv,.tsv"
-              onChange={(event) => setFile(event.target.files?.[0] || null)}
+              disabled={busy}
+              onChange={(event) => {
+                const selected = event.target.files?.[0] || null;
+                setFile(selected);
+                if (selected) void parse(undefined, selected);
+              }}
             />
           </label>
           <label>
@@ -494,7 +529,7 @@ export function ImportDialog({
               disabled={busy || (!file && !paste.trim())}
               onClick={() => void parse()}
             >
-              {busy ? "Читаем таблицу…" : "Перейти к сопоставлению"}
+              {busy ? "Читаем таблицу…" : "Проверить таблицу"}
             </button>
           </div>
         </>
@@ -515,15 +550,15 @@ export function ImportDialog({
               <span>Уже добавлено из источника: {alreadyAdded.size}</span>
             )}
           </div>
-          {!!preview.sheets?.length && (
+          {(preview.sheets?.length || 0) > 1 && (
             <label>
               Лист таблицы
               <select
-                value={preview.sheet || preview.sheets[0]}
+                value={preview.sheet || preview.sheets![0]}
                 disabled={busy}
                 onChange={(event) => void parse(event.target.value)}
               >
-                {preview.sheets.map((sheet) => (
+                {preview.sheets!.map((sheet) => (
                   <option key={sheet} value={sheet}>
                     {sheet}
                   </option>
@@ -531,6 +566,16 @@ export function ImportDialog({
               </select>
             </label>
           )}
+          <p role="status">
+            {mappingSource
+              ? `Использовано сохранённое сопоставление «${mappingSource}».`
+              : "Колонки распознаны по заголовкам."}{" "}
+            {conflictingMappings
+              ? "Подходящие сохранённые правила различаются: проверьте сопоставление."
+              : editMapping
+                ? "Проверьте нераспознанные и неоднозначные колонки."
+                : "Повторно выбирать поля не требуется."}
+          </p>
           {preview.errors?.map((message, index) => (
             <Notice key={index}>{importIssueText(message)}</Notice>
           ))}
@@ -737,59 +782,90 @@ export function ImportDialog({
               </Notice>
             )}
           </details>
-          <div className="form-grid import-document-options">
-            <label>
-              Документ для импортируемых строк
-              <select
-                aria-label="Документ для импортируемых строк"
-                value={templateId}
-                onChange={(event) => {
-                  const nextTemplate = event.target.value as
-                    | Assignment["templateId"]
-                    | "";
-                  setTemplateId(nextTemplate);
-                  setBiotCategory(
-                    nextTemplate
-                      ? defaultBiotCategory(nextTemplate)
-                      : undefined,
-                  );
-                }}
-              >
-                <option value="">Без обучения — выбрать после импорта</option>
-                {Object.entries(templateLabels).map(([id, title]) => (
-                  <option key={id} value={id}>
-                    {title}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {biotCategory && templateId && (
+          <details className="import-document-options">
+            <summary>
+              {useRequestTraining && !templateId
+                ? "Общие курсы заявки применяются ко всем новым строкам"
+                : templateId
+                  ? templateLabels[templateId]
+                  : "Обучение можно выбрать для всего списка после импорта"}
+            </summary>
+            <div className="form-grid">
+              {!!existingDraft.trainingDefaults?.length && (
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    checked={useRequestTraining && !templateId}
+                    disabled={busy || revisionMode}
+                    onChange={(event) => {
+                      setUseRequestTraining(event.target.checked);
+                      if (event.target.checked) {
+                        setTemplateId("");
+                        setBiotCategory(undefined);
+                      }
+                    }}
+                  />
+                  Применить общие курсы заявки к новым людям
+                </label>
+              )}
               <label>
-                Категория БиОТ для импортируемых строк
+                Документ для импортируемых строк
                 <select
-                  aria-label="Категория БиОТ для импортируемых строк"
-                  value={biotCategory}
-                  onChange={(event) =>
-                    setBiotCategory(event.target.value as BiotCategory)
-                  }
+                  aria-label="Документ для импортируемых строк"
+                  value={templateId}
+                  onChange={(event) => {
+                    const nextTemplate = event.target.value as
+                      | Assignment["templateId"]
+                      | "";
+                    setTemplateId(nextTemplate);
+                    setUseRequestTraining(false);
+                    setBiotCategory(
+                      nextTemplate
+                        ? defaultBiotCategory(nextTemplate)
+                        : undefined,
+                    );
+                  }}
                 >
-                  {biotCategoriesForTemplate(templateId).map((category) => (
-                    <option key={category} value={category}>
-                      {BIOT_CATEGORIES[category].label}
+                  <option value="">
+                    {useRequestTraining
+                      ? "Общие курсы заявки"
+                      : "Без обучения — выбрать после импорта"}
+                  </option>
+                  {Object.entries(templateLabels).map(([id, title]) => (
+                    <option key={id} value={id}>
+                      {title}
                     </option>
                   ))}
                 </select>
-                <small>
-                  {biotCategoryDescription(
-                    biotCategory,
-                    existingDraft.businessRuleVersion === "LIVE_V1",
-                  )}{" "}
-                  Если в таблице есть категория, используются значения строк.
-                  Часы и даты из выбранных колонок сохраняются.
-                </small>
               </label>
-            )}
-          </div>
+              {biotCategory && templateId && (
+                <label>
+                  Категория БиОТ для импортируемых строк
+                  <select
+                    aria-label="Категория БиОТ для импортируемых строк"
+                    value={biotCategory}
+                    onChange={(event) =>
+                      setBiotCategory(event.target.value as BiotCategory)
+                    }
+                  >
+                    {biotCategoriesForTemplate(templateId).map((category) => (
+                      <option key={category} value={category}>
+                        {BIOT_CATEGORIES[category].label}
+                      </option>
+                    ))}
+                  </select>
+                  <small>
+                    {biotCategoryDescription(
+                      biotCategory,
+                      existingDraft.businessRuleVersion === "LIVE_V1",
+                    )}{" "}
+                    Если в таблице есть категория, используются значения строк.
+                    Часы и даты из выбранных колонок сохраняются.
+                  </small>
+                </label>
+              )}
+            </div>
+          </details>
           {replacesStarter && (
             <p className="muted">
               Нетронутая стартовая строка заменится импортируемым списком. Ранее
@@ -805,8 +881,9 @@ export function ImportDialog({
           )}
           {total > LIMITS.rows && (
             <Notice>
-              После импорта получится {total} получателей. Лимит — {LIMITS.rows}
-              . Исключите лишние строки до применения.
+              После импорта получится {total} получателей. Технический объём
+              одной заявки — {LIMITS.rows}. Строки не обрезаны; обратитесь к
+              администратору центра.
             </Notice>
           )}
           {duplicateMapping && (
@@ -823,6 +900,34 @@ export function ImportDialog({
               допустимые строки можно переносить в черновик.
             </Notice>
           )}
+          <div className="file-actions">
+            <button
+              className="text-button"
+              onClick={() => setEditMapping(!editMapping)}
+              aria-expanded={editMapping}
+            >
+              {editMapping
+                ? "Скрыть настройки колонок"
+                : "Изменить сопоставление колонок"}
+            </button>
+            {!!attentionRows.length && (
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  checked={problemsOnly}
+                  onChange={(event) => {
+                    setProblemsOnly(event.target.checked);
+                    setVisibleCount(50);
+                  }}
+                />
+                Только требующие внимания ({attentionRows.length})
+              </label>
+            )}
+            <span>
+              Показано {visibleRows.length} из {listedRows.length}. В импорт
+              входят все {selected.length} выбранных строк.
+            </span>
+          </div>
           <div
             className="table-scroll import-preview"
             role="region"
@@ -836,34 +941,42 @@ export function ImportDialog({
                   {preview.columns.map((column, index) => (
                     <th key={index}>
                       <span>{column || `Колонка ${index + 1}`}</span>
-                      <select
-                        aria-label={`Поле для колонки ${column || index + 1}`}
-                        value={mapping[index]}
-                        disabled={busy}
-                        onChange={(event) => {
-                          setReconciliation(null);
-                          setOverwriteConfirmed(false);
-                          setMapping(
-                            mapping.map((field, i) =>
-                              i === index ? event.target.value : field,
-                            ),
-                          );
-                        }}
-                      >
-                        <option value="">Не импортировать колонку</option>
-                        {importFields.map(([field, label]) => (
-                          <option key={field} value={field}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
+                      {editMapping ? (
+                        <select
+                          aria-label={`Поле для колонки ${column || index + 1}`}
+                          value={mapping[index]}
+                          disabled={busy}
+                          onChange={(event) => {
+                            setReconciliation(null);
+                            setOverwriteConfirmed(false);
+                            setMapping(
+                              mapping.map((field, i) =>
+                                i === index ? event.target.value : field,
+                              ),
+                            );
+                          }}
+                        >
+                          <option value="">Не импортировать колонку</option>
+                          {importFields.map(([field, label]) => (
+                            <option key={field} value={field}>
+                              {label}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <small>
+                          {importFields.find(
+                            ([field]) => field === mapping[index],
+                          )?.[1] || "Не импортировать колонку"}
+                        </small>
+                      )}
                     </th>
                   ))}
                   <th>Проверка</th>
                 </tr>
               </thead>
               <tbody>
-                {workingPreview!.rows.map((row) => (
+                {visibleRows.map((row) => (
                   <tr
                     key={row.sourceRow}
                     className={
@@ -1031,7 +1144,9 @@ export function ImportDialog({
                           <small>
                             {templateId
                               ? "Обучение из выбранного документа"
-                              : "Без обучения — общий выбор заявки не применяется"}
+                              : useRequestTraining
+                                ? "Общие курсы заявки"
+                                : "Без обучения — общий выбор заявки не применяется"}
                           </small>
                         )}
                     </td>
@@ -1040,6 +1155,15 @@ export function ImportDialog({
               </tbody>
             </table>
           </div>
+          {visibleRows.length < listedRows.length && (
+            <button
+              className="text-button"
+              onClick={() => setVisibleCount((count) => count + 50)}
+            >
+              Показать следующие{" "}
+              {Math.min(50, listedRows.length - visibleRows.length)} строк
+            </button>
+          )}
           <p className="fine-print">
             Исходные номера строк и ведущие нули сохраняются. Формулы, макросы и
             внешние ссылки не исполняются. Повтор этого импорта не добавляет те
