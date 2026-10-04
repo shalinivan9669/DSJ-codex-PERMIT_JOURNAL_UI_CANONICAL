@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-04T19:30:18.0388232Z",
+  "applicationCommit": "17aab8af222a3683b5da1048082e96b46407505b",
+  "productDirectory": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "webDist": ".next-minimal-actions-v4",
+  "webBuildId": "SQm7fsNOUdnvAB22YEGeE",
+  "listeners": [
+    {
+      "port": 3135,
+      "pid": 45164,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "commandLine": "node   \"C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\node_modules\\.bin\\\\..\\next\\dist\\bin\\next\" \"start\" \"-p\" \"3135\" \"-H\" \"127.0.0.1\""
+    },
+    {
+      "port": 4135,
+      "pid": 30096,
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "commandLine": "\"C:\\Program Files\\nodejs\\node.exe\" --require C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\node_modules\\.pnpm\\tsx@4.23.15\\node_modules\\tsx\\dist\\preflight.cjs --import file:///C:/Users/Admin/.codex/worktrees/ot-center-business-value/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/node_modules/.pnpm/tsx@4.23.15/node_modules/tsx/dist/loader.mjs apps/api/src/main.ts"
+    }
+  ],
+  "extraAcceptanceWorkerStopped": true
+}

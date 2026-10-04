@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-04T19:32:31.8017475Z",
+  "name": "codex-demo-minimal-actions-backup-20261004",
+  "fingerprint": "SHA256:Yn+RWwiOgzU72eB8urZVyyLQeYPLpJDVBaXDpLfNXS0",
+  "revoked": true,
+  "absentFromRegisteredKeys": true,
+  "privateFileAbsent": false,
+  "publicFileAbsent": false,
+  "localDeletionBlockedByAutomaticApproval": true,
+  "blockReason": "blocked by policy",
+  "remoteAccessClosed": true
+}

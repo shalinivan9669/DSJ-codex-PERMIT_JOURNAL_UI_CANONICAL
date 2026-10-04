@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-04T19:27:43.481Z",
+  "status": "PASS_ALL_GIT_BLOBS_EXACT",
+  "sha": "fbf69b28c044f46da1704f73a2c70cfffe258559",
+  "root": "C:/Users/Admin/Documents/DSJ-DEMO-cloud-20261002/releases/minimal-actions-fbf69b28c044",
+  "gitBlobsCompared": 1019,
+  "textCrlfNormalized": 0,
+  "mismatches": [],
+  "nonRuntimeOutputNames": [],
+  "nonRuntimeOutputNote": "Final archive created with core.autocrlf=false and extracted with Python tarfile: all 1019 Git blobs and filenames match exactly, including historical non-runtime outputs.",
+  "archiveBytes": 162467840,
+  "archiveSha256": "1827a1a92cf8c0a13b29ef202082f8e6d737f797df7b1d7d0bb4947b1162923f",
+  "firstEmptyArchiveRejectedBeforeUpload": true
+}

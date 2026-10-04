@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-04T19:33:55.699Z",
+  "origin": "https://dsj-demo-rows-20261002.vercel.app",
+  "releaseSha": "fbf69b28c044f46da1704f73a2c70cfffe258559",
+  "roles": [
+    {
+      "role": "OPERATOR",
+      "email": "operator@demo-rows.local",
+      "loginUi": "PASS",
+      "sessionStatus": 200,
+      "contextStatus": 200,
+      "tenantId": "5aeb0cab-4c7a-4102-b86f-bf57a78fedeb",
+      "demoOnly": true,
+      "requestsUi": "PASS",
+      "requestCount": 5,
+      "pageErrors": []
+    },
+    {
+      "role": "DIRECTOR",
+      "email": "director@demo-rows.local",
+      "loginUi": "PASS",
+      "sessionStatus": 200,
+      "contextStatus": 200,
+      "tenantId": "5aeb0cab-4c7a-4102-b86f-bf57a78fedeb",
+      "demoOnly": true,
+      "requestsUi": "PASS",
+      "requestCount": 5,
+      "pageErrors": [],
+      "readiness": {
+        "status": "ready",
+        "workerSeenAt": "2026-10-04T19:34:02.508Z",
+        "templates": 11,
+        "rendererVersion": "demo-ooxml-11/libreoffice-26.2.6.3",
+        "storage": "ok"
+      },
+      "approvalsUi": "PASS",
+      "pendingApprovalCount": 2
+    }
+  ],
+  "health": {
+    "status": "ok",
+    "product": "DEMO",
+    "version": "2.0.0"
+  },
+  "status": "PASS"
+}

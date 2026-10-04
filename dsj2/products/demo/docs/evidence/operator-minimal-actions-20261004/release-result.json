@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-04T19:35:57.197Z",
+  "status": "PUBLISHED_AND_VERIFIED",
+  "origin": "https://dsj-demo-rows-20261002.vercel.app",
+  "branch": "codex/operator-flow-refinement-20261003",
+  "applicationSha": "17aab8af222a3683b5da1048082e96b46407505b",
+  "frontendPackagingSha": "fbf69b28c044f46da1704f73a2c70cfffe258559",
+  "applicationCodeIdenticalBetweenDeployments": true,
+  "onlyDifference": [
+    "dsj2/products/demo/.vercelignore"
+  ],
+  "frontend": {
+    "id": "dpl_EFyMu5RAWCShGRwBycR4aZVx8pAh",
+    "status": "READY",
+    "canonicalAliasConfirmed": true
+  },
+  "backend": {
+    "id": "8f79e67a-85c6-489b-910e-f552454fc2ed",
+    "status": "SUCCESS",
+    "migrations": 22,
+    "capacityCheck": 10000,
+    "shippingSourceFilesMatched": 269,
+    "historyHashesUnchanged": true,
+    "storageFilesUnchanged": 42
+  },
+  "productionBrowserSmoke": {
+    "status": "PASS",
+    "roles": [
+      {
+        "role": "OPERATOR",
+        "email": "operator@demo-rows.local",
+        "requests": 5,
+        "login": "PASS",
+        "sessionStatus": 200,
+        "contextStatus": 200,
+        "pageErrors": []
+      },
+      {
+        "role": "DIRECTOR",
+        "email": "director@demo-rows.local",
+        "requests": 5,
+        "login": "PASS",
+        "sessionStatus": 200,
+        "contextStatus": 200,
+        "pageErrors": []
+      }
+    ],
+    "ready": {
+      "status": "ready",
+      "workerSeenAt": "2026-10-04T19:34:02.508Z",
+      "templates": 11,
+      "rendererVersion": "demo-ooxml-11/libreoffice-26.2.6.3",
+      "storage": "ok"
+    },
+    "productionBusinessWrites": false
+  },
+  "temporarySsh": {
+    "remoteRevoked": true,
+    "localDeletionBlockedByAutomaticApproval": true
+  },
+  "credentialsSource": "C:/Users/Admin/Documents/DSJ-DEMO-cloud-20261002/credentials.json",
+  "passwordsChanged": false,
+  "failedVercelAttempt": {
+    "id": "dpl_HdokychU8pH6jvBcxFL7yeUN4hef",
+    "reason": "Frontend-only dependency install included old e2e Prisma helper; fixed upload exclusions in .vercelignore"
+  },
+  "evidenceOnlyFollowupCommit": true
+}

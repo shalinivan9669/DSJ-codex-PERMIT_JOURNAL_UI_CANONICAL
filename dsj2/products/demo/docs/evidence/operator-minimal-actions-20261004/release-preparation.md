@@ -1,5 +1,7 @@
 # Подготовка публикации и проверенная резервная копия — 04.10.2026
 
+**Последующее выполнение backend release:** deployment `8f79e67a-85c6-489b-910e-f552454fc2ed` SUCCESS, SHA `17aab8af222a3683b5da1048082e96b46407505b`, migration22/CHECK10000, source/history/file attestation PASS, SSH отозван. См. `production-backend-release.md`. Сведения ниже описывают подготовку до этого выпуска.
+
 Deployment, миграция и изменение product credentials/переменных в рамках этой подготовки не выполнены. Сведения о hosting прочитаны 18:28–18:33 UTC; свежая резервная копия получена 18:47 UTC и независимо проверена локально 18:51 UTC. Для backup зарегистрирован временный SSH-ключ, его отзыв требуется после final attestation. Целевой новый commit формируется основным агентом после локальной приёмки. Текущий HEAD при исходном чтении — `e10f3f77b195953555811c0b6c2b9de622dea4d4`, ветка `codex/operator-flow-refinement-20261003`, remote `https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL.git`.
 
 ## Существующие цели, подтверждены live API/CLI

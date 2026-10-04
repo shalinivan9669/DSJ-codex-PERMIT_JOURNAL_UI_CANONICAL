@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-04T19:26:05.930Z",
+  "status": "PASS_RUNTIME_SOURCE_AND_ASSETS",
+  "sha": "17aab8af222a3683b5da1048082e96b46407505b",
+  "root": "C:/Users/Admin/Documents/DSJ-DEMO-cloud-20261002/releases/minimal-actions-17aab8af222a-v2",
+  "gitBlobsCompared": 1000,
+  "textCrlfNormalized": 822,
+  "mismatches": [],
+  "nonRuntimeOutputNames": [
+    "output/presentation/DEMO_5_кейсов_сценарий_2026-09-30.docx",
+    "output/presentation/DEMO_5_кейсов_сценарий_2026-09-30.pdf",
+    "output/presentation/DEMO_презентация_5_кейсов_2026-09-30.zip",
+    "output/presentation/Пример_исправленного_комплекта.zip",
+    "output/presentation/Пример_исходного_комплекта.zip",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/00_Начните_здесь.txt",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/02_DEMO_рабочие_и_ИТР.xlsx",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/03_DEMO_календарь_ПТМ.xlsx",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/04_Исходный_комплект.zip",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/05_Исправленный_комплект.zip",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/06_DEMO_5_кейсов_200_сотрудников.docx",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/06_DEMO_5_кейсов_200_сотрудников.pdf",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/Ссылки_для_показа/01_Список_200_получателей.url",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/Ссылки_для_показа/02_Рабочие_и_ИТР_черновик.url",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/Ссылки_для_показа/03_Расчёт_учебных_дат.url",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/Ссылки_для_показа/04_Проверка_и_выпуск_черновик.url",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_комплект_200/Ссылки_для_показа/05_Исправление_и_история.url",
+    "outputs/01a0f07f-d8e5-71c0-9b22-d6e94bd27aaf/DEMO_полный_комплект_200_2026-09-30.zip"
+  ],
+  "nonRuntimeOutputNote": "Windows tar extracted historical output filenames with mojibake; these are not application source or templates. Their archive bytes remain original; no claim of exact extracted filenames for these old outputs.",
+  "archiveBytes": 162764800,
+  "archiveSha256": "d7d7861db0d8efda39474c5ccc5775c41b930124d205ea7dbf749493ae887ccd",
+  "firstEmptyArchiveRejectedBeforeUpload": true
+}

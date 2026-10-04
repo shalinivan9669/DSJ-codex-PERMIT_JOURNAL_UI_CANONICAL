@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-04T19:31:22.036Z",
+  "id": "dpl_EFyMu5RAWCShGRwBycR4aZVx8pAh",
+  "projectId": "prj_JMxxnkngWKGZRePXdvbn6jOCnk2V",
+  "url": "dsj-demo-rows-20261002-liq6jo4w3-shalinivan9669s-projects.vercel.app",
+  "state": "READY",
+  "aliases": [
+    "dsj-demo-rows-20261002-shalinivan9669s-projects.vercel.app"
+  ],
+  "sha": "fbf69b28c044f46da1704f73a2c70cfffe258559",
+  "branch": "codex/operator-flow-refinement-20261003",
+  "projectSettings": {
+    "buildCommand": "cd ../.. && corepack pnpm --filter @demo/web build",
+    "installCommand": "cd ../.. && corepack pnpm install --frozen-lockfile --filter @demo/web..."
+  },
+  "canonicalAlias": "dsj-demo-rows-20261002.vercel.app",
+  "canonicalDeploymentId": "dpl_EFyMu5RAWCShGRwBycR4aZVx8pAh",
+  "canonicalAliasConfirmed": true
+}

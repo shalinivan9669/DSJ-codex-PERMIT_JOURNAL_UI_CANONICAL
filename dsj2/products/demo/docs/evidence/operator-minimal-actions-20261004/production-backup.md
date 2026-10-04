@@ -1,5 +1,7 @@
 # Проверенная production-копия перед выпуском — 04.10.2026
 
+После выпуска19:29:57 UTC все прежние ID/payload/file hashes и42 файла совпали с этой копией, source/migration/process attestation PASS. Временный SSH ключ отозван; удаление локального private/public pair отклонено automatic approval review (`blocked by policy`). Подробности: `production-backend-release.md`, `production-ssh-cleanup.json`. Последующие инструкции об отзыве ниже выполнены в части server-side доступа.
+
 Backup завершён в18:47 UTC, дополнительная независимая локальная проверка —18:51 UTC. Никакие migrations/deploy/product credentials не изменялись. Существующий Railway project `250bb4a5-6462-4933-b1a7-8f61e2e7f507`, production environment `fc776e13-94fd-45ff-b14c-06b91a2b1380`, backend service `f9c22605-78ca-41ee-a483-52aa54036fba`; target проверялся внутри remote process до чтения БД/файлов.
 
 Повторная read-only сверка перед cutover: **04.10.2026 19:16:36 UTC — baseline unchanged**, active generation jobs0. Counts и business-state hashes всех10 таблиц, per-ID historical hashes6 таблиц и все42 файла совпадают с backup18:47; differences пуст. Evidence `production-precutover-check.json`. Deployment и runtime release SHA не изменились. По этой сверке новая копия не требуется.

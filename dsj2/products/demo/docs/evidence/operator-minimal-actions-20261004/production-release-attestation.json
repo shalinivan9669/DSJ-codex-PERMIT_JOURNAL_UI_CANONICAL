@@ -1,0 +1,116 @@
+{
+  "at": "2026-10-04T19:29:57.635Z",
+  "projectId": "250bb4a5-6462-4933-b1a7-8f61e2e7f507",
+  "serviceId": "f9c22605-78ca-41ee-a483-52aa54036fba",
+  "environment": "production",
+  "deploymentId": "8f79e67a-85c6-489b-910e-f552454fc2ed",
+  "releaseSha": "17aab8af222a3683b5da1048082e96b46407505b",
+  "expectedReleaseSha": "17aab8af222a3683b5da1048082e96b46407505b",
+  "shippingSourceSha256": "a9a131764afc6e2ce0228799fff5594ce90049413aa62386579c2d08e37619ea",
+  "expectedShippingSourceSha256": "a9a131764afc6e2ce0228799fff5594ce90049413aa62386579c2d08e37619ea",
+  "shippingSourceFileCount": 269,
+  "sourceHashes": {
+    "apps/api/src/approval-preview.ts": "c6e81293c3f1b867dfc06cfe24ffd04dfe1b28e9a570a7e9546133d13a19bd25",
+    "apps/api/src/approvals.ts": "f11e0989cbde6210deb3e7d82da6818bbd10265cc81a49cba16802d01a40d77c",
+    "apps/api/src/requests.ts": "bbec74752e2109e798f1a9d02211e84c5fc0f61c4843a4c2e67446c80f4d8c03",
+    "apps/api/src/retake-attempt.ts": "46ea7cf55d1345fcd45252156f3ad976ddaaa0e34a9619aa54e4e81fce418310",
+    "packages/contracts/src/course-defaults.ts": "fc77c85c2e72d77dc914e1483ea878677849bfcaa90218e9a62ad130087b9af5",
+    "packages/contracts/src/index.ts": "438aef98026dc144b35061631f9668deddc0e252b44adb8719517a01c4a36c99",
+    "packages/contracts/src/resolution.ts": "589d1b5fd69da426159a9d60ea3884aa1077ae2e3abb7f397f556d2c7e4f0470",
+    "packages/database/prisma/migrations/202610040029_request_resource_capacity/migration.sql": "b19ad07edf7d336ce8250bd4d3bde60d57c37b025f1d1a19557f1b6243d1bde0",
+    "scripts/render/renderer.py": "bc01cfd1d909fc4a1f35ed10e241e7e329f4c40f5ec090b799c63d927ede30e8"
+  },
+  "constraints": [
+    {
+      "name": "request_rows",
+      "definition": "CHECK (((\"itemCount\" >= 0) AND (\"itemCount\" <= 10000)))"
+    }
+  ],
+  "migrations": [
+    "202609220001_demo",
+    "202609220002_invariants",
+    "202609220003_demo_import",
+    "202609220004_import_mapping",
+    "202609220005_utc_runtime",
+    "202609240006_group_events",
+    "202609240007_operator_value",
+    "202609240008_core_integrity",
+    "202609240009_public_verification",
+    "202609240010_value_attachment_event",
+    "202609240011_group_revision_required",
+    "202609240012_employer_invites",
+    "202609250013_order_employer_scope",
+    "202609250014_organization_names",
+    "202609290015_request_capacity_250",
+    "202610010016_director_approval",
+    "202610010017_approval_lifecycle_guard",
+    "202610020018_two_working_roles",
+    "202610040019_partial_issuance_scope",
+    "202610040020_draft_proposal_status",
+    "202610040021_legacy_issuance_compatibility",
+    "202610040029_request_resource_capacity"
+  ],
+  "migrationCount": 22,
+  "preservedHistorical": {
+    "PrintRequest": 5,
+    "RequestProposal": 44,
+    "Issuance": 1,
+    "Artifact": 22,
+    "IssuedDocument": 2,
+    "RenderInputSnapshot": 11
+  },
+  "preservedFiles": 42,
+  "differences": [],
+  "newRecordCounts": {
+    "PrintRequest": 0,
+    "RequestProposal": 0,
+    "Issuance": 0,
+    "Artifact": 0,
+    "IssuedDocument": 0,
+    "RenderInputSnapshot": 0
+  },
+  "processes": [
+    {
+      "pid": 14,
+      "cwd": "/app/apps/api",
+      "uid": 1000
+    },
+    {
+      "pid": 15,
+      "cwd": "/app/apps/render-worker",
+      "uid": 1000
+    },
+    {
+      "pid": 32,
+      "cwd": "/app/apps/api",
+      "uid": 1000
+    },
+    {
+      "pid": 37,
+      "cwd": "/app/apps/render-worker",
+      "uid": 1000
+    }
+  ],
+  "uid": 0,
+  "releaseMatches": true,
+  "sourceMatches": true,
+  "capacityMigrationApplied": true,
+  "pass": true,
+  "businessCounts": {
+    "PrintRequest": 5,
+    "RequestProposal": 44,
+    "RequestItem": 3,
+    "Issuance": 1,
+    "IssuedDocument": 2,
+    "Artifact": 22,
+    "RenderInputSnapshot": 11,
+    "TemplateVersion": 16,
+    "User": 2,
+    "CustomerOrganization": 2
+  },
+  "changedBusinessTables": [],
+  "workerHeartbeat": {
+    "seenAt": "2026-10-04T19:29:52.501",
+    "ageSeconds": 4.896729
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-04T19:32:33.9335852Z",
+  "releaseSha": "17aab8af222a3683b5da1048082e96b46407505b",
+  "archiveRoot": "C:/Users/Admin/Documents/DSJ-DEMO-cloud-20261002/releases/minimal-actions-17aab8af222a-v2",
+  "deploymentId": "8f79e67a-85c6-489b-910e-f552454fc2ed",
+  "status": "SUCCESS",
+  "createdAt": "2026-10-04T19:24:11.358Z",
+  "imageDigest": "sha256:1bdfa6bbb599b16ccd44cfb395c6f1fbbc45d19e4d10c64af10029454692b301",
+  "message": "codex/operator-flow-refinement-20261003@17aab8af222a3683b5da1048082e96b46407505b",
+  "healthStatus": 200,
+  "previousDeploymentId": "4554ceda-96c8-4d00-8739-92e9573496c7",
+  "changedVariableNames": [
+    "DEMO_RELEASE_SHA"
+  ],
+  "otherProductCredentialsChanged": false,
+  "attestation": "production-release-attestation.json",
+  "sshCleanup": "production-ssh-cleanup.json"
+}

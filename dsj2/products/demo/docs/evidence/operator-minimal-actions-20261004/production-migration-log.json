@@ -1,0 +1,30 @@
+[
+  {
+    "timestamp": "2026-10-04T19:27:03.280964863Z",
+    "message": "22 migrations found in prisma/migrations"
+  },
+  {
+    "timestamp": "2026-10-04T19:27:03.360692586Z",
+    "message": "Applying migration `202610040029_request_resource_capacity`"
+  },
+  {
+    "timestamp": "2026-10-04T19:27:03.360702506Z",
+    "message": "The following migration(s) have been applied:"
+  },
+  {
+    "timestamp": "2026-10-04T19:27:03.360710576Z",
+    "message": "migrations/"
+  },
+  {
+    "timestamp": "2026-10-04T19:27:03.360714055Z",
+    "message": "  └─ 202610040029_request_resource_capacity/"
+  },
+  {
+    "timestamp": "2026-10-04T19:27:03.360717725Z",
+    "message": "    └─ migration.sql"
+  },
+  {
+    "timestamp": "2026-10-04T19:27:03.360724816Z",
+    "message": "All migrations have been successfully applied."
+  }
+]
