@@ -12,7 +12,7 @@ import {
 } from "./operator-g1-helpers";
 
 test.use({ trace: "off" });
-test("G1 resume: explicitly selected fresh checkpoint retains the original 100 people, 101 documents and all 204 bytes after reload", async ({
+test("G1 resume: explicitly selected fresh checkpoint retains the original 100 people, 101 documents and every saved original after reload", async ({
   page,
   browser,
 }) => {
@@ -59,7 +59,7 @@ test("G1 resume: explicitly selected fresh checkpoint retains the original 100 p
         recipients: 100,
         photos: 100,
         documentCount: 101,
-        artifacts: 204,
+        artifacts: files.length,
         allFilesHashVerified: true,
         resumedBrowserVerificationMs: Date.now() - started,
         humanOperatorMs: null,

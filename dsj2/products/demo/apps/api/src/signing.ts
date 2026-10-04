@@ -418,7 +418,15 @@ async function assertEligible(
       kind: { in: ["CANCELLED", "REPLACED"] },
     },
   });
-  if (request.status !== "FINALIZED" || invalid)
+  if (
+    !(await requestAllowsSigning(
+      tx,
+      request,
+      issuanceId,
+      issuance.scopeHash,
+    )) ||
+    invalid
+  )
     fail(
       409,
       "SIGNING_TARGET_CANCELLED",
@@ -426,18 +434,55 @@ async function assertEligible(
     );
   return request;
 }
+async function requestAllowsSigning(
+  tx: Prisma.TransactionClient,
+  request: { id: string; tenantId: string; status: string },
+  issuanceId: string,
+  scopeHash?: string | null,
+) {
+  if (request.status === "FINALIZED") return true;
+  if (request.status !== "DRAFT") return false;
+  const issuance =
+    scopeHash === undefined
+      ? await tx.issuance.findFirst({
+          where: {
+            id: issuanceId,
+            tenantId: request.tenantId,
+            requestId: request.id,
+          },
+          select: { scopeHash: true },
+        })
+      : { scopeHash };
+  if (!issuance?.scopeHash) return false;
+  return !!(await tx.issuanceAssignment.findFirst({
+    where: {
+      tenantId: request.tenantId,
+      requestId: request.id,
+      issuanceId,
+    },
+    select: { id: true },
+  }));
+}
 export async function signingState(
   c: Context,
   id: string,
   tx: Prisma.TransactionClient = db,
+  selectedIssuanceId?: string,
 ) {
   assertStaff(c);
+  const selection = parse(z.string().uuid().optional(), selectedIssuanceId);
   const request = await scopedRequest(c, id, tx);
   const workflow = await tx.issuanceWorkflow.findFirst({
-    where: { tenantId: c.tenantId, requestId: id },
+    where: {
+      tenantId: c.tenantId,
+      requestId: id,
+      ...(selection ? { issuanceId: selection } : {}),
+    },
     orderBy: { createdAt: "desc" },
   });
   const providers = signingConfiguration().providers;
+  if (selection && !workflow)
+    fail(404, "NOT_FOUND", "Выпуск не найден в этой заявке");
   if (!workflow)
     return {
       status: request.status === "FINALIZED" ? "LEGACY_ISSUED" : null,
@@ -478,6 +523,7 @@ export async function signingState(
       orderBy: { createdAt: "desc" },
     }),
   ]);
+  const eligible = await requestAllowsSigning(tx, request, workflow.issuanceId);
   const policy = workflow.requiredSigners as unknown as SigningPolicy;
   const details = documents.map((document) => {
     const artifact = artifacts.find(
@@ -499,7 +545,7 @@ export async function signingState(
       canSign:
         signer.userId === c.userId &&
         c.role !== "VIEWER" &&
-        request.status === "FINALIZED" &&
+        eligible &&
         !invalid,
       signed: !!(
         artifact &&
@@ -560,7 +606,7 @@ export async function signingState(
     }
   }
   const status =
-    request.status === "CANCELLED" || invalid
+    !eligible || invalid
       ? "FAILED"
       : !intact
         ? "FAILED"
@@ -577,9 +623,12 @@ export async function signingState(
       data: { status },
     });
   // Only verified signatures plus the entire generated set complete a new issuance.
+  let archived = !!request.archivedAt;
   if (status === "ISSUED" && !workflow.completedAt) {
     const finish = async (inner: Prisma.TransactionClient) => {
       await inner.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+      const currentRequest = await scopedRequest(c, id, inner);
+      archived = !!currentRequest.archivedAt;
       const current = await inner.issuanceWorkflow.findFirst({
         where: { id: workflow.id, tenantId: c.tenantId },
       });
@@ -589,10 +638,22 @@ export async function signingState(
         where: { id: workflow.id },
         data: { status: "ISSUED", completedAt: new Date() },
       });
-      await inner.printRequest.update({
-        where: { id },
-        data: { archivedAt: new Date() },
+      const remaining = await inner.issuanceWorkflow.findFirst({
+        where: {
+          tenantId: c.tenantId,
+          requestId: id,
+          status: { not: "ISSUED" },
+        },
+        select: { id: true },
       });
+      const archive = currentRequest.status === "FINALIZED" && !remaining;
+      if (archive) {
+        await inner.printRequest.update({
+          where: { id },
+          data: { archivedAt: new Date() },
+        });
+        archived = true;
+      }
       if (request.correctsIssuanceId)
         await inner.issuanceEvent.create({
           data: {
@@ -606,7 +667,7 @@ export async function signingState(
         });
       await audit(inner, c, "ISSUANCE_COMPLETED", workflow.issuanceId, {
         requestId: id,
-        archive: true,
+        archive,
         signatures: signatures.length,
       });
     };
@@ -621,7 +682,7 @@ export async function signingState(
     historicalLifecycle: workflow.completedAt ? "ISSUED" : null,
     invalidatedBy:
       invalid?.kind || (request.status === "CANCELLED" ? "CANCELLED" : null),
-    archived: status === "ISSUED" || !!request.archivedAt,
+    archived,
     providers,
     documents: details,
     missingBindings: details.flatMap((document) =>
@@ -710,11 +771,26 @@ export async function startSigning(c: Context, id: string, input: unknown) {
   );
   const configuration = signingConfiguration();
   const request = await scopedRequest(c, id);
-  const currentWorkflow = await db.issuanceWorkflow.findFirst({
-    where: { requestId: id, tenantId: c.tenantId },
-    orderBy: { createdAt: "desc" },
+  const targetArtifact = await db.artifact.findFirst({
+    where: {
+      id: data.artifactId,
+      tenantId: c.tenantId,
+      requestId: id,
+      provenance: "ORIGINAL",
+      format: "PDF",
+      issuanceId: { not: null },
+    },
   });
-  if (request.status !== "FINALIZED" || !currentWorkflow)
+  if (!targetArtifact?.issuanceId)
+    fail(404, "ARTIFACT_NOT_FOUND", "Оригинальный файл выпуска не найден");
+  const currentWorkflow = await db.issuanceWorkflow.findFirst({
+    where: {
+      requestId: id,
+      tenantId: c.tenantId,
+      issuanceId: targetArtifact.issuanceId,
+    },
+  });
+  if (request.status === "CANCELLED" || !currentWorkflow)
     fail(
       409,
       "SIGNING_NOT_READY",
@@ -728,7 +804,7 @@ export async function startSigning(c: Context, id: string, input: unknown) {
       configuration.providers[data.provider].reason ||
         "Сервис подписи не подключён",
     );
-  const state = await signingState(c, id);
+  const state = await signingState(c, id, db, currentWorkflow.issuanceId);
   if (state.status !== "AWAITING_SIGNATURE")
     fail(
       409,
@@ -1020,7 +1096,12 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
   const issuance = await db.issuance.findFirstOrThrow({
     where: { id: session.issuanceId, tenantId: c.tenantId },
   });
-  const state = await signingState(c, issuance.requestId);
+  const state = await signingState(
+    c,
+    issuance.requestId,
+    db,
+    session.issuanceId,
+  );
   return {
     status: "VERIFIED",
     signatureId: signature.id,

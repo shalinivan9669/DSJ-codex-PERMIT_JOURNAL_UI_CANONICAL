@@ -1,6 +1,19 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
+/** A fresh technical spare row is removed immediately and persisted, without a modal. */
+export async function assertTechnicalBlankRemoval(page: Page) {
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  const requestId = /requests\/([^/]+)/.exec(page.url())?.[1];
+  expect(requestId).toBeTruthy();
+  await expect
+    .poll(async () => {
+      const response = await page.request.get(`/api/print-requests/${requestId}`);
+      expect(response.status()).toBe(200);
+      return (await response.json()).items;
+    })
+    .toEqual([]);
+}
 export const keyboardMetrics = {
   tabs: 0,
   shiftTabs: 0,

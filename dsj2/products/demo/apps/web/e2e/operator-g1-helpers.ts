@@ -244,6 +244,35 @@ function embeddedPhotoHashes(bytes: Buffer) {
   }
   return hashes;
 }
+function zipEntryBytes(bytes: Buffer, wanted: string) {
+  let end = bytes.length - 22;
+  while (end >= Math.max(0, bytes.length - 65557) && bytes.readUInt32LE(end) !== 0x06054b50) end--;
+  expect(end).toBeGreaterThanOrEqual(0);
+  let cursor = bytes.readUInt32LE(end + 16);
+  for (let index = 0; index < bytes.readUInt16LE(end + 10); index++) {
+    const nameLength = bytes.readUInt16LE(cursor + 28);
+    const extraLength = bytes.readUInt16LE(cursor + 30);
+    const commentLength = bytes.readUInt16LE(cursor + 32);
+    const name = bytes.subarray(cursor + 46, cursor + 46 + nameLength).toString();
+    if (name === wanted) {
+      const local = bytes.readUInt32LE(cursor + 42);
+      const start = local + 30 + bytes.readUInt16LE(local + 26) + bytes.readUInt16LE(local + 28);
+      const compressed = bytes.subarray(start, start + bytes.readUInt32LE(cursor + 20));
+      return bytes.readUInt16LE(cursor + 10) === 8 ? inflateRawSync(compressed) : compressed;
+    }
+    cursor += 46 + nameLength + extraLength + commentLength;
+  }
+  throw new Error(`G1_ZIP_ENTRY_MISSING:${wanted}`);
+}
+/** Exact former 202 document originals plus one registry and every canonical ZIP part. */
+export function assertG1FilesComposition(files: { format: string }[]) {
+  expect(files.filter((file) => file.format === "DOCX")).toHaveLength(101);
+  expect(files.filter((file) => file.format === "PDF")).toHaveLength(101);
+  expect(files.filter((file) => file.format === "XLSX")).toHaveLength(1);
+  const parts = files.filter((file) => file.format === "ZIP");
+  expect(parts.length).toBeGreaterThan(0);
+  expect(files).toHaveLength(203 + parts.length);
+}
 export async function verifyG1Files(
   page: Page,
   checkpoint: G1Checkpoint,
@@ -295,7 +324,7 @@ export async function verifyG1Files(
   expect(issued.items).toEqual(checkpoint.items);
   expect(issued.documents).toHaveLength(101);
   expect(issued.issuances).toHaveLength(1);
-  expect(issued.artifacts).toHaveLength(204);
+  assertG1FilesComposition(issued.artifacts.map((artifact) => ({ format: artifact.format || "" })));
   const groups = issued.documents.filter(
     (document) => document.ownerKind === "GROUP",
   );
@@ -430,6 +459,11 @@ export async function verifyG1Files(
   expect(session.tenant.demoOnly).toBe(true);
   const db = new PrismaClient({ log: [] });
   const internalReadback: unknown[] = [];
+  const coveredSourceIds: string[] = [];
+  const zipPartIndices: number[] = [];
+  const savedZipPartCount = issued.artifacts.filter((artifact) => artifact.format === "ZIP").length;
+  const originalSources = issued.artifacts.filter((artifact) => artifact.format !== "ZIP");
+  expect(originalSources).toHaveLength(203);
   try {
     const tenant = await db.tenant.findUnique({
       where: { id: session.tenant.id },
@@ -444,7 +478,10 @@ export async function verifyG1Files(
         format: { in: ["XLSX", "ZIP"] },
       },
     });
-    expect(stored).toHaveLength(2);
+    expect(stored.filter((artifact) => artifact.format === "XLSX")).toHaveLength(1);
+    expect(stored.filter((artifact) => artifact.format === "ZIP")).toHaveLength(savedZipPartCount);
+    expect(savedZipPartCount).toBeGreaterThan(0);
+    expect(stored).toHaveLength(1 + savedZipPartCount);
     const storageRoot = await fs.realpath(process.env.DEMO_ARTIFACT_ROOT!);
     for (const artifact of stored) {
       expect(
@@ -466,6 +503,30 @@ export async function verifyG1Files(
       expect(sha256).toBe(artifact.sha256);
       expect(bytes.length).toBe(artifact.size);
       expect(bytes.subarray(0, 2).toString()).toBe("PK");
+      if (artifact.format === "ZIP") {
+        expect(bytes.length).toBeLessThanOrEqual(100 * 1024 * 1024);
+        const manifest = JSON.parse(zipEntryBytes(bytes, "manifest.json").toString("utf8")) as {
+          issuanceId: string; complete: boolean; expectedCount: number; readyCount: number;
+          partIndex?: number; partCount?: number; wholeExpectedCount?: number;
+          missing: unknown[]; files: { id: string; file: string; sha256: string }[];
+        };
+        expect(manifest.issuanceId).toBe(issued.issuances[0].id);
+        expect(manifest.complete).toBe(true);
+        expect(manifest.missing).toEqual([]);
+        expect(manifest.expectedCount).toBe(manifest.files.length);
+        expect(manifest.readyCount).toBe(manifest.files.length);
+        expect(manifest.partCount || 1).toBe(savedZipPartCount);
+        expect(manifest.wholeExpectedCount || manifest.expectedCount).toBe(203);
+        zipPartIndices.push(manifest.partIndex || 0);
+        for (const entry of manifest.files) {
+          const source = originalSources.find((candidate) => candidate.id === entry.id);
+          expect(source, `Unexpected G1 canonical ZIP source ${entry.id}`).toBeDefined();
+          expect(entry.sha256).toBe(source!.sha256);
+          expect(createHash("sha256").update(zipEntryBytes(bytes, entry.file)).digest("hex")).toBe(source!.sha256);
+          coveredSourceIds.push(entry.id);
+        }
+        internalReadback.push({ artifactId: artifact.id, scope: "INTERNAL_CANONICAL_ZIP_MANIFEST_QA", manifest });
+      }
       const prior = checkpoint.files?.find((file) => file.id === artifact.id);
       if (checkpoint.files) expect(prior?.sha256).toBe(sha256);
       const file = `files/${artifact.id}.${artifact.format.toLowerCase()}`;
@@ -494,7 +555,10 @@ export async function verifyG1Files(
   } finally {
     await db.$disconnect();
   }
-  expect(files).toHaveLength(204);
+  assertG1FilesComposition(files);
+  expect(coveredSourceIds.sort()).toEqual(originalSources.map((artifact) => artifact.id).sort());
+  expect(new Set(coveredSourceIds).size).toBe(203);
+  expect(zipPartIndices.sort((a, b) => a - b)).toEqual(Array.from({ length: savedZipPartCount }, (_, index) => index));
   await fs.writeFile(
     path.join(evidence, "g1-internal-saved-derivative-readback.json"),
     JSON.stringify(
@@ -503,6 +567,9 @@ export async function verifyG1Files(
         syntheticTenantVerified: true,
         noDatabaseWrites: true,
         noPublicSignatureBypass: true,
+        originalSourceArtifacts: 203,
+        canonicalZipPartCount: savedZipPartCount,
+        actualOriginalArtifactCount: files.length,
         files: internalReadback,
       },
       null,
@@ -522,7 +589,7 @@ export async function verifyG1Files(
         exactMatchedPhotoHashes: Object.fromEntries(photoHashes),
         photosEmbedded: 100,
         publicDocumentDownloads: 202,
-        internalSavedDerivatives: 2,
+        internalSavedDerivatives: 1 + savedZipPartCount,
         publicUnsignedDeliveryScope: "GUARDED",
         legalApproval: false,
       },

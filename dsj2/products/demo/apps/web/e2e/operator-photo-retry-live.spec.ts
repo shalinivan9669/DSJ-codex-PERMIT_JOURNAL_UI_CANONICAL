@@ -1,4 +1,5 @@
 import {
+  assertTechnicalBlankRemoval,
   createRequestWithWorkerDocument,
   openRecipientExtraTools,
 } from "./operator-keyboard-helpers";
@@ -41,10 +42,7 @@ test("real photo throttle can be cancelled and resumed without reuploading accep
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })

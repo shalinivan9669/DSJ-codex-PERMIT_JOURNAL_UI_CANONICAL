@@ -1,4 +1,4 @@
-import { draftSchema, today, z } from "@demo/contracts";
+import { today, z } from "@demo/contracts";
 import { ArtifactStore } from "@demo/printing";
 import { Prisma } from "@demo/database";
 import {
@@ -6,7 +6,10 @@ import {
   evidenceState,
 } from "../../../packages/contracts/src/operator-value";
 import { audit, db, fail, parse, transaction, type Context } from "./core";
-import { persistValueAttachment } from "./operator-value";
+import {
+  persistValueAttachment,
+  publishedPortalRequest,
+} from "./operator-value";
 import { buildCustomerEvidenceMatrix } from "./renewal-matrix";
 
 type Tx = Prisma.TransactionClient;
@@ -91,10 +94,12 @@ async function access(
   );
   const ruleIds = new Set<string>();
   for (const request of requests) {
-    const draft = draftSchema.parse(request.draft);
+    const published = await publishedPortalRequest(c, request, tx);
+    if (!published) continue;
+    const draft = published.draft;
     for (const row of draft.items) {
       if (
-        (row.employerId || request.customerId) !== customerId ||
+        (row.employerId || draft.customerId) !== customerId ||
         !row.recipientId ||
         !permitted(row.recipientId)
       )

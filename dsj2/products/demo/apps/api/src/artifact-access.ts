@@ -3,9 +3,10 @@ import { db, fail, type Context } from "./core";
 /** Reuse the existing official-bundle gate before either buffered or streamed reads. */
 export async function assertArtifactDownloadAllowed(
   c: Context,
-  artifact: { format: string; issuanceId: string | null },
+  artifact: { format: string; issuanceId: string | null; provenance?: string },
 ) {
-  if (!["ZIP", "XLSX"].includes(artifact.format) || !artifact.issuanceId) return;
+  if (!["ZIP", "XLSX"].includes(artifact.format) || !artifact.issuanceId)
+    return;
   const workflow = await db.issuanceWorkflow.findFirst({
     where: { tenantId: c.tenantId, issuanceId: artifact.issuanceId },
   });
@@ -15,7 +16,11 @@ export async function assertArtifactDownloadAllowed(
       "ISSUANCE_NOT_COMPLETE",
       "Комплект доступен после формирования и обязательных подписей; отдельные PDF доступны для проверки и печати",
     );
-  if (workflow && artifact.format === "ZIP")
+  if (
+    workflow &&
+    artifact.format === "ZIP" &&
+    artifact.provenance !== "PRINT_SET_DERIVATIVE"
+  )
     fail(
       409,
       "USE_SIGNED_BUNDLE_EXPORT",

@@ -21,6 +21,7 @@ const g1Consumers = [
 ];
 const portalProducer = /final-portal-three-live\.spec\.ts$/;
 const portalConsumer = /final-portal-390-live\.spec\.ts$/;
+const printPackScale = /remaining-print-pack-scale-live\.spec\.ts$/;
 if (fullRun) {
   if (!process.env.DEMO_E2E_EVIDENCE)
     throw new Error("FULL_SUITE_EVIDENCE_DIRECTORY_REQUIRED");
@@ -69,8 +70,19 @@ export default defineConfig({
             ...g1Consumers,
             portalProducer,
             portalConsumer,
+            printPackScale,
           ],
           dependencies: ["common-producer", "g1-producer", "portal-producer"],
+        },
+        {
+          name: "print-pack-scale",
+          testMatch: printPackScale,
+          dependencies: [
+            "common-consumers",
+            "g1-consumers",
+            "portal-consumer",
+            "remaining",
+          ],
         },
       ]
     : undefined,

@@ -196,7 +196,12 @@ export class DemoController {
     @Req() req: DemoRequest,
     @Body() body: unknown,
   ) {
-    return saveCustomer(ctx(req, true), body);
+    return saveCustomer(
+      ctx(req, true),
+      body,
+      undefined,
+      req.headers["idempotency-key"],
+    );
   }
   @Patch("customers/:id") updateCustomer(
     @Req() req: DemoRequest,
@@ -347,8 +352,13 @@ export class DemoController {
   @Get("print-requests/:id/signing") signing(
     @Req() req: DemoRequest,
     @Param("id") id: string,
+    @Query("issuanceId") issuanceId?: string,
   ) {
-    return signing.signingState(ctx(req), id);
+    const selected =
+      issuanceId === undefined
+        ? undefined
+        : parse(z.string().uuid(), issuanceId);
+    return signing.signingState(ctx(req), id, db, selected);
   }
   @Post("print-requests/:id/signing/start") startSigning(
     @Req() req: DemoRequest,

@@ -16,6 +16,11 @@ import {
   z,
   stableValidationIssue,
   isBlankText,
+  selectAssignmentScope,
+  approvalScopeValue,
+  assignmentIdentityKey,
+  isTechnicalBlankRecipient,
+  type AssignmentIdentity,
 } from "@demo/contracts";
 import { Prisma } from "@demo/database";
 import { ArtifactStore, runRender } from "@demo/printing";
@@ -254,14 +259,29 @@ export async function checkReferences(
       const ref = assignment.retakeOf;
       if (!ref) continue;
       const previous = await scopedRequest(c, ref.requestId, tx);
-      if (previous.status === "DRAFT" || previous.status === "CANCELLED")
+      const previousOwnership = await tx.issuanceAssignment.findFirst({
+        where: {
+          tenantId: c.tenantId,
+          requestId: ref.requestId,
+          rowId: ref.rowId,
+          assignmentId: ref.assignmentId,
+        },
+      });
+      if (
+        (previous.status === "DRAFT" && !previousOwnership) ||
+        previous.status === "CANCELLED"
+      )
         fail(
           409,
           "RETAKE_HISTORY_REQUIRED",
           "Пересдача требует сохранённую действующую историю попытки",
         );
       const previousIssuance = await tx.issuance.findFirst({
-        where: { tenantId: c.tenantId, requestId: previous.id },
+        where: {
+          tenantId: c.tenantId,
+          requestId: previous.id,
+          ...(previousOwnership ? { id: previousOwnership.issuanceId } : {}),
+        },
         orderBy: { createdAt: "desc" },
       });
       if (
@@ -324,18 +344,6 @@ export async function persistItems(
         "EVENT_OWNERSHIP",
         "Событие принадлежит другой заявке; выберите самостоятельное событие",
       );
-    if (
-      existing &&
-      hash(existing.data) !== hash(event) &&
-      (await tx.issuedDocument.count({
-        where: { tenantId: c.tenantId, groupEventId: event.id },
-      }))
-    )
-      fail(
-        409,
-        "EVENT_IMMUTABLE",
-        "Оформленное событие изменяется только отдельным исправлением",
-      );
     await tx.trainingEvent.upsert({
       where: { id: event.id },
       create: {
@@ -368,6 +376,76 @@ export async function persistItems(
         payload: json(item),
       })),
     });
+}
+export async function selectBatch(
+  tx: Prisma.TransactionClient,
+  c: Context,
+  id: string,
+  draft: Draft,
+  assignments?: AssignmentIdentity[],
+) {
+  const issued = await tx.issuanceAssignment.findMany({
+    where: { tenantId: c.tenantId, requestId: id },
+    select: { rowId: true, assignmentId: true },
+  });
+  try {
+    const scope = selectAssignmentScope(draft, assignments, issued);
+    if (!scope.assignments.length && assignments)
+      fail(
+        422,
+        "EMPTY_ISSUANCE_SELECTION",
+        "Выберите ещё не оформленные назначения готовых людей",
+      );
+    return scope;
+  } catch (error) {
+    if (error instanceof Error && error.message === "ASSIGNMENT_ALREADY_ISSUED")
+      fail(
+        409,
+        "ASSIGNMENT_ALREADY_ISSUED",
+        "Это обучение уже оформлено; откройте сохранённые документы или создайте исправление",
+      );
+    if (
+      error instanceof Error &&
+      error.message === "ASSIGNMENT_SELECTION_INVALID"
+    )
+      fail(
+        422,
+        "ASSIGNMENT_SELECTION_INVALID",
+        "Выбранные человек и курс отсутствуют в актуальной заявке",
+      );
+    throw error;
+  }
+}
+export async function protectIssuedAssignments(
+  tx: Prisma.TransactionClient,
+  c: Context,
+  id: string,
+  draft: Draft,
+  before: Draft,
+) {
+  const issued = await tx.issuanceAssignment.findMany({
+    where: { tenantId: c.tenantId, requestId: id },
+    select: { rowId: true, assignmentId: true },
+  });
+  for (const identity of issued) {
+    const previous = before.items
+      .find((item) => item.id === identity.rowId)
+      ?.assignments.find(
+        (assignment) => assignment.id === identity.assignmentId,
+      );
+    const next = draft.items
+      .find((item) => item.id === identity.rowId)
+      ?.assignments.find(
+        (assignment) => assignment.id === identity.assignmentId,
+      );
+    if (!previous || !next || hash(previous) !== hash(next))
+      fail(
+        409,
+        "ISSUED_ASSIGNMENT_IMMUTABLE",
+        "Оформленное обучение изменяется только явным исправлением; продолжайте работу с оставшимися курсами",
+        identity,
+      );
+  }
 }
 export async function createRequest(
   c: Context,
@@ -526,8 +604,29 @@ export async function requestFilter(
 ): Promise<Prisma.PrintRequestWhereInput> {
   return {
     tenantId: c.tenantId,
-    status:
-      q.status || (q.history ? { in: ["FINALIZED", "CANCELLED"] } : undefined),
+    status: q.status,
+    ...(q.history
+      ? {
+          AND: [
+            {
+              OR: [
+                { status: { in: ["FINALIZED", "CANCELLED"] } },
+                {
+                  id: {
+                    in: (
+                      await db.issuance.findMany({
+                        where: { tenantId: c.tenantId },
+                        select: { requestId: true },
+                        distinct: ["requestId"],
+                      })
+                    ).map((issuance) => issuance.requestId),
+                  },
+                },
+              ],
+            },
+          ],
+        }
+      : {}),
     kind: q.kind,
     customerId: q.customerId,
     ...(q.archive !== undefined
@@ -815,6 +914,15 @@ export async function requestDetail(c: Context, id: string) {
         : null,
     })),
     documents,
+    issuedAssignments: await db.issuanceAssignment.findMany({
+      where: { tenantId: c.tenantId, requestId: id },
+      select: {
+        rowId: true,
+        assignmentId: true,
+        issuanceId: true,
+        createdAt: true,
+      },
+    }),
     jobs: jobs.map((j) => ({
       ...j,
       sourceRevision: snapshots.find((s) => s.id === j.snapshotId)?.revision,
@@ -833,13 +941,27 @@ async function validation(
   c: Context,
   id: string,
   expectedRevision: number,
+  assignments?: AssignmentIdentity[],
+  fullWorkingDraft = false,
 ) {
   const record = await workingRequest(c, id, tx);
   if (record.revision !== expectedRevision)
     fail(409, "REVISION_CONFLICT", "Сначала сохраните актуальную версию", {
       revision: record.revision,
     });
-  const savedDraft = draftSchema.parse(record.draft);
+  const workingDraft = draftSchema.parse(record.draft);
+  const selectedScope = fullWorkingDraft
+    ? {
+        draft: workingDraft,
+        assignments: workingDraft.items.flatMap((item) =>
+          item.assignments.map((assignment) => ({
+            rowId: item.id,
+            assignmentId: assignment.id,
+          })),
+        ),
+      }
+    : await selectBatch(tx, c, id, workingDraft, assignments);
+  const savedDraft = selectedScope.draft;
   let resolved = resolveDraft(savedDraft);
   let draft = resolved.draft;
   await checkReferences(tx, c, draft);
@@ -869,6 +991,44 @@ async function validation(
     parsedProfile,
   );
   issues.push(...resolved.issues);
+  if (draft.businessRuleVersion === "LIVE_V1")
+    for (const [row, item] of draft.items.entries())
+      for (const [column, assignment] of item.assignments.entries()) {
+        if (!assignment.outcome || assignment.outcome.status === "UNKNOWN")
+          issues.push(
+            stableValidationIssue(draft, {
+              code: "OUTCOME_UNCONFIRMED",
+              path: `items.${row}.assignments.${column}.outcome`,
+              rowId: item.id,
+              assignmentId: assignment.id,
+              eventId: assignment.eventId,
+              field: "outcome",
+              message:
+                "Это обучение ожидает фактической сдачи. Подтвердите результат и источник или исключите его из текущей партии.",
+            }),
+          );
+        else if (
+          !assignment.outcome.source.trim() &&
+          !issues.some(
+            (issue) =>
+              issue.code === "OUTCOME_SOURCE_REQUIRED" &&
+              issue.assignmentId === assignment.id &&
+              issue.rowId === item.id,
+          )
+        )
+          issues.push(
+            stableValidationIssue(draft, {
+              code: "OUTCOME_SOURCE_REQUIRED",
+              path: `items.${row}.assignments.${column}.outcome.source`,
+              rowId: item.id,
+              assignmentId: assignment.id,
+              eventId: assignment.eventId,
+              field: "outcome.source",
+              message:
+                "Укажите источник фактического результата выбранного обучения.",
+            }),
+          );
+      }
   if (documentPlan(draft).documentCount === 0 && draft.items.length)
     issues.push({
       code: "NO_ISSUABLE_DOCUMENTS",
@@ -1030,6 +1190,17 @@ async function validation(
       }
     }
   }
+  if (fullWorkingDraft) {
+    const technicalRows = new Set(
+      workingDraft.items
+        .filter(isTechnicalBlankRecipient)
+        .map((item) => item.id),
+    );
+    const retainedIssues = issues.filter(
+      (issue) => !technicalRows.has(issue.rowId || issue.recipientId || ""),
+    );
+    issues.splice(0, issues.length, ...retainedIssues);
+  }
   return {
     record,
     draft,
@@ -1043,6 +1214,7 @@ async function validation(
     provenance: resolved.provenance,
     organizations,
     customer,
+    assignments: selectedScope.assignments,
   };
 }
 
@@ -1071,8 +1243,9 @@ export async function assertApprovalDataComplete(
   c: Context,
   id: string,
   expectedRevision: number,
+  assignments?: AssignmentIdentity[],
 ) {
-  const checked = await validation(tx, c, id, expectedRevision);
+  const checked = await validation(tx, c, id, expectedRevision, assignments);
   if (checked.issues.length)
     fail(
       422,
@@ -1325,8 +1498,8 @@ async function checkLayout(
   }
 }
 export async function validateRequest(c: Context, id: string, input: unknown) {
-  const { expectedRevision } = parse(finalizeSchema, input);
-  const v = await validation(db, c, id, expectedRevision);
+  const { expectedRevision, assignments } = parse(finalizeSchema, input);
+  const v = await validation(db, c, id, expectedRevision, assignments);
   if (!v.issues.length) await checkLayout(c, v);
   return {
     valid: v.issues.length === 0,
@@ -1344,6 +1517,7 @@ export async function validateRequest(c: Context, id: string, input: unknown) {
         0,
       ),
     warnings: await duplicateIssuanceWarnings(c, v.draft, db, id),
+    assignments: v.assignments,
   };
 }
 async function reserve(
@@ -1418,12 +1592,70 @@ export async function finalize(
   if (typeof key !== "string" || !/^[a-zA-Z0-9_-]{16,128}$/.test(key))
     fail(400, "KEY_REQUIRED", "Требуется ключ повторяемости команды");
   const payloadHash = hash({ requestId: id, ...data });
-  const before = await scopedRequest(c, id);
-  if (before.status === "DRAFT")
-    await requireApproved(c, id, data.expectedRevision);
+  const before = await workingRequest(c, id);
+  const replay = await db.idempotencyOperation.findUnique({
+    where: {
+      tenantId_command_idempotencyKey: {
+        tenantId: c.tenantId,
+        command: "FINALIZE",
+        idempotencyKey: key,
+      },
+    },
+  });
+  if (replay) {
+    if (replay.payloadHash !== payloadHash)
+      fail(
+        409,
+        "IDEMPOTENCY_MISMATCH",
+        "Этот ключ уже использован с другими данными",
+      );
+    return replay.result;
+  }
+  // Explicit selections also identify a prior batch for safe different-key
+  // replay. The omitted selection on an open request means remaining work.
+  const defaultIssued =
+    !data.assignments && before.status === "DRAFT"
+      ? await db.issuanceAssignment.findMany({
+          where: { tenantId: c.tenantId, requestId: id },
+          select: { rowId: true, assignmentId: true },
+        })
+      : [];
+  let replayScope: AssignmentIdentity[];
+  try {
+    replayScope = selectAssignmentScope(
+      draftSchema.parse(before.draft),
+      data.assignments,
+      defaultIssued,
+    ).assignments;
+  } catch {
+    fail(
+      422,
+      "ASSIGNMENT_SELECTION_INVALID",
+      "Выбранные человек и курс отсутствуют в актуальной заявке",
+    );
+  }
+  const requestedScopeHash = hash(
+    approvalScopeValue(draftSchema.parse(before.draft), replayScope),
+  );
+  const matchingIssuance = await db.issuance.findFirst({
+    where: {
+      tenantId: c.tenantId,
+      requestId: id,
+      sourceRevision: data.expectedRevision,
+      OR: [{ scopeHash: requestedScopeHash }, { scopeHash: null }],
+    },
+  });
+  if (before.status === "DRAFT" && !matchingIssuance)
+    await requireApproved(c, id, data.expectedRevision, db, data.assignments);
   let layoutFingerprint: string | undefined;
-  if (before.status === "DRAFT") {
-    const checked = await validation(db, c, id, data.expectedRevision);
+  if (before.status === "DRAFT" && !matchingIssuance) {
+    const checked = await validation(
+      db,
+      c,
+      id,
+      data.expectedRevision,
+      data.assignments,
+    );
     if (!checked.issues.length)
       layoutFingerprint = await checkLayout(c, checked);
     if (checked.issues.length)
@@ -1456,12 +1688,12 @@ export async function finalize(
     }
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
     const record = await scopedRequest(c, id, tx);
-    const existing = await tx.issuance.findUnique({
+    const existing = await tx.issuance.findFirst({
       where: {
-        requestId_sourceRevision: {
-          requestId: id,
-          sourceRevision: data.expectedRevision,
-        },
+        tenantId: c.tenantId,
+        requestId: id,
+        sourceRevision: data.expectedRevision,
+        OR: [{ scopeHash: requestedScopeHash }, { scopeHash: null }],
       },
     });
     if (existing) {
@@ -1514,8 +1746,15 @@ export async function finalize(
       id,
       data.expectedRevision,
       tx,
+      data.assignments,
     );
-    const v = await validation(tx, c, id, data.expectedRevision);
+    const v = await validation(
+      tx,
+      c,
+      id,
+      data.expectedRevision,
+      data.assignments,
+    );
     if (v.issues.length || !v.profile || !v.parsedProfile)
       fail(
         422,
@@ -1570,6 +1809,7 @@ export async function finalize(
         tenantId: c.tenantId,
         requestId: id,
         sourceRevision: data.expectedRevision,
+        scopeHash: requestedScopeHash,
         snapshot: json({
           draft: v.draft,
           serviceRules: [...v.eventRules.values()],
@@ -1595,6 +1835,14 @@ export async function finalize(
         correctsIssuanceId: record.correctsIssuanceId,
         correctionReason: record.correctionReason,
       },
+    });
+    await tx.issuanceAssignment.createMany({
+      data: v.assignments.map((identity) => ({
+        ...identity,
+        tenantId: c.tenantId,
+        requestId: id,
+        issuanceId: issued.id,
+      })),
     });
     const documentIds: string[] = [];
     const jobIds: string[] = [];
@@ -1910,10 +2158,30 @@ export async function finalize(
       });
       jobIds.push(job.id);
     }
+    const allIssued = await tx.issuanceAssignment.findMany({
+      where: { tenantId: c.tenantId, requestId: id },
+      select: { rowId: true, assignmentId: true },
+    });
+    const issuedKeys = new Set(allIssued.map(assignmentIdentityKey));
+    const remaining = draftSchema
+      .parse(record.draft)
+      .items.filter((item) => !isTechnicalBlankRecipient(item))
+      .flatMap((item) =>
+        item.assignments.filter(
+          (assignment) =>
+            !issuedKeys.has(
+              assignmentIdentityKey({
+                rowId: item.id,
+                assignmentId: assignment.id,
+              }),
+            ),
+        ),
+      );
+    const requestStatus = remaining.length ? "DRAFT" : "FINALIZED";
     await tx.printRequest.update({
       where: { id },
       data: {
-        status: "FINALIZED",
+        status: requestStatus,
         searchText:
           record.searchText +
           " " +
@@ -1947,6 +2215,9 @@ export async function finalize(
       ...issuanceResult(issued, documentIds, jobIds),
       lifecycle: "RENDERING",
       archived: false,
+      assignments: v.assignments,
+      requestStatus,
+      remainingAssignmentCount: remaining.length,
     };
     await tx.idempotencyOperation.create({
       data: {
@@ -1972,7 +2243,7 @@ export async function preview(c: Context, id: string, input: unknown) {
         "REQUEST_ARCHIVED",
         "Архивная заявка доступна только для просмотра сохранённых документов",
       );
-    const v = await validation(tx, c, id, expectedRevision);
+    const v = await validation(tx, c, id, expectedRevision, undefined, true);
     if (!v.profile || !v.parsedProfile)
       fail(422, "ISSUER_REQUIRED", "Сохраните профиль центра");
     const previewIssues = v.issues.filter((issue) =>
@@ -2158,9 +2429,32 @@ export async function retake(c: Context, id: string, input: unknown) {
     const original = await scopedRequest(c, id, tx);
     if (original.revision !== data.expectedRevision)
       fail(409, "REVISION_CONFLICT", "Редакция изменилась");
-    if (original.status === "DRAFT" || original.status === "CANCELLED")
+    const ownership = await tx.issuanceAssignment.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        requestId: id,
+        rowId: data.rowId,
+        assignmentId: data.assignmentId,
+      },
+    });
+    if (
+      (original.status === "DRAFT" && !ownership) ||
+      original.status === "CANCELLED"
+    )
       fail(409, "RETAKE_HISTORY_REQUIRED", "Сначала оформите исходную попытку");
-    const source = draftSchema.parse(original.draft);
+    const issuance = await tx.issuance.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        requestId: id,
+        ...(ownership ? { id: ownership.issuanceId } : {}),
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    if (!issuance)
+      fail(409, "RETAKE_HISTORY_REQUIRED", "Сначала оформите исходную попытку");
+    const source = draftSchema.parse(
+      (issuance.snapshot as { draft: unknown }).draft,
+    );
     const row = source.items.find((i) => i.id === data.rowId);
     const old = row?.assignments.find((a) => a.id === data.assignmentId);
     if (
@@ -2255,6 +2549,7 @@ export async function correction(c: Context, id: string, input: unknown) {
       .object({
         reason: z.string().trim().min(3).max(1000),
         expectedRevision: z.number().int(),
+        issuanceId: z.string().min(1).max(80).optional(),
       })
       .strict(),
     input,
@@ -2264,12 +2559,19 @@ export async function correction(c: Context, id: string, input: unknown) {
     if (record.revision !== data.expectedRevision)
       fail(409, "REVISION_CONFLICT", "Редакция изменилась");
     const issued = await tx.issuance.findFirst({
-      where: { tenantId: c.tenantId, requestId: id },
+      where: {
+        tenantId: c.tenantId,
+        requestId: id,
+        ...(data.issuanceId ? { id: data.issuanceId } : {}),
+      },
       orderBy: { createdAt: "desc" },
     });
     if (!issued)
       fail(409, "NOT_REGISTERED", "Сначала оформите исходную заявку");
-    const draft = draftSchema.parse(record.draft);
+    // Correct exactly one frozen batch, including its actual roster and grounds.
+    const draft = draftSchema.parse(
+      (issued.snapshot as { draft: unknown }).draft,
+    );
     const eventIds = new Map(
       (draft.events || []).map((e) => [e.id, randomUUID()]),
     );
@@ -2359,7 +2661,7 @@ export async function deleteDraft(c: Context, id: string) {
 
 export async function resolvedRequest(c: Context, id: string) {
   const record = await workingRequest(c, id);
-  const v = await validation(db, c, id, record.revision);
+  const v = await validation(db, c, id, record.revision, undefined, true);
   return {
     draft: {
       ...v.draft,

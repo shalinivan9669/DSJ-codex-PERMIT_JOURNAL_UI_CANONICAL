@@ -1,19 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
+import {
+  translationReviewIsCurrent,
+  type TranslationSnapshot,
+} from "@/lib/translation-review";
 
 export function TranslationSuggestion({
   source,
   field,
   target,
   disabled,
+  currentText = "",
+  compact = false,
   onApply,
 }: {
   source: string;
   field: "positionRu" | "trainingSubject";
   target: "kk" | "en";
   disabled: boolean;
+  currentText?: string;
+  compact?: boolean;
   onApply: (text: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -21,7 +29,35 @@ export function TranslationSuggestion({
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [note, setNote] = useState("");
+  const [snapshot, setSnapshot] = useState<TranslationSnapshot | null>(null);
+  const serial = useRef(0);
+  const controller = useRef<AbortController | null>(null);
+  const latest = useRef({ source, currentText, disabled, onApply });
+  latest.current = { source, currentText, disabled, onApply };
+  const current = translationReviewIsCurrent(snapshot, source, currentText);
+  useEffect(
+    () => () => {
+      serial.current++;
+      controller.current?.abort();
+    },
+    [],
+  );
+  function close() {
+    serial.current++;
+    controller.current?.abort();
+    setBusy(false);
+    setOpen(false);
+  }
   async function suggest() {
+    controller.current?.abort();
+    const abort = new AbortController();
+    controller.current = abort;
+    const attempt = ++serial.current;
+    const reviewed = {
+      source: latest.current.source,
+      destination: latest.current.currentText,
+    };
+    setSnapshot(reviewed);
     setOpen(true);
     setBusy(true);
     setError("");
@@ -33,8 +69,10 @@ export function TranslationSuggestion({
         providerConfigured: boolean;
       }>("/translations/suggest", {
         method: "POST",
-        body: json({ target, texts: [{ key: field, text: source }] }),
+        signal: abort.signal,
+        body: json({ target, texts: [{ key: field, text: reviewed.source }] }),
       });
+      if (attempt !== serial.current || abort.signal.aborted) return;
       setText(result.items[0]?.translation || "");
       setNote(
         result.items[0]?.translation
@@ -42,26 +80,43 @@ export function TranslationSuggestion({
           : "Для этого текста нет предложения. Введите перевод вручную; сервис автоматического перевода пока не подключён.",
       );
     } catch (caught) {
-      setError(errorText(caught));
+      if (attempt === serial.current && !abort.signal.aborted)
+        setError(errorText(caught));
     } finally {
-      setBusy(false);
+      if (attempt === serial.current) setBusy(false);
     }
   }
   return (
     <>
       <button
         type="button"
-        className="text-button"
+        className={`text-button${compact ? " recipient-grid-translate" : ""}`}
         disabled={disabled || !source.trim() || busy}
         onClick={() => void suggest()}
       >
-        Предложить перевод · {target === "kk" ? "KZ" : "EN"}
+        {busy
+          ? "Переводим…"
+          : compact
+            ? "Перевести на KZ"
+            : `Предложить перевод · ${target === "kk" ? "KZ" : "EN"}`}
       </button>
       {open && (
-        <Modal title="Проверка перевода" onClose={() => setOpen(false)}>
+        <Modal title="Проверка перевода" onClose={close}>
           <p>
-            <strong>Исходный текст:</strong> {source}
+            <strong>Исходный текст:</strong> {snapshot?.source}
           </p>
+          {snapshot?.destination && (
+            <p>
+              Существующий вариант: {snapshot.destination}. Применение заменит
+              его только после вашего подтверждения.
+            </p>
+          )}
+          {!current && (
+            <Notice>
+              Исходный текст или языковой вариант изменился. Старое предложение
+              нельзя применить. Получите новый перевод для текущего ввода.
+            </Notice>
+          )}
           {busy && <p role="status">Получаем предложение…</p>}
           {error && <Notice>{error}</Notice>}
           {note && <p>{note}</p>}
@@ -75,13 +130,30 @@ export function TranslationSuggestion({
             />
           </label>
           <div className="modal-actions">
-            <button onClick={() => setOpen(false)}>Отмена</button>
+            <button onClick={close}>Отмена</button>
+            {(error || !current || (!busy && !text)) && (
+              <button
+                disabled={busy || disabled || !source.trim()}
+                onClick={() => void suggest()}
+              >
+                Повторить перевод
+              </button>
+            )}
             <button
               className="primary"
-              disabled={busy || !text.trim()}
+              disabled={disabled || busy || !text.trim() || !current}
               onClick={() => {
-                onApply(text.trim());
-                setOpen(false);
+                if (
+                  latest.current.disabled ||
+                  !translationReviewIsCurrent(
+                    snapshot,
+                    latest.current.source,
+                    latest.current.currentText,
+                  )
+                )
+                  return;
+                latest.current.onApply(text.trim());
+                close();
               }}
             >
               Применить проверенный текст

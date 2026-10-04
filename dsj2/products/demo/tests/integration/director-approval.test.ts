@@ -18,8 +18,8 @@ import {
   type Draft,
 } from "../../packages/contracts/src";
 import {
-  createRequest,
-  patchRequest,
+  createRequest as createSavedRequest,
+  patchRequest as saveWorkingRequest,
   requestDetail,
   finalize,
   validateRequest,
@@ -29,6 +29,7 @@ import {
 } from "../../apps/api/src/requests";
 import {
   approvalDetail,
+  submitApproval,
   decideProposal,
   workingRequest,
   requireApproved,
@@ -111,6 +112,31 @@ function editable(value: { draft: unknown }): Draft {
   return draftSchema.parse(value.draft);
 }
 
+// These review tests explicitly hand saved work to the director. Autosave itself
+// is asserted separately to persist data while leaving the review queue empty.
+async function createRequest(c: Context, input: unknown) {
+  const saved = await createSavedRequest(c, input);
+  const submitted = await submitApproval(c, saved.id, {
+    expectedRevision: saved.revision,
+  });
+  return {
+    ...saved,
+    revision: submitted.revision,
+    approval: submitted.approval,
+  };
+}
+async function patchRequest(c: Context, id: string, input: unknown) {
+  const saved = await saveWorkingRequest(c, id, input);
+  const submitted = await submitApproval(c, id, {
+    expectedRevision: saved.revision,
+  });
+  return {
+    ...saved,
+    revision: submitted.revision,
+    approval: submitted.approval,
+  };
+}
+
 test("director approval, immutable official versions and real CMS rejection in isolated PostgreSQL", async (t) => {
   assertTestDatabase();
   const suffix = randomUUID();
@@ -146,7 +172,7 @@ test("director approval, immutable official versions and real CMS rejection in i
   const director = approvals.directorContext;
   try {
     await t.test(
-      "any create or save stores a proposal and cannot bypass mandatory LIVE_V1 rules",
+      "saved work is explicitly submitted and cannot bypass mandatory LIVE_V1 rules",
       async () => {
         const created = await createRequest(operator, fixture());
         assert.equal(created.revision, 1);
@@ -154,8 +180,8 @@ test("director approval, immutable official versions and real CMS rejection in i
         const official = await db.printRequest.findUniqueOrThrow({
           where: { id: created.id },
         });
-        assert.equal(official.revision, 0);
-        assert.equal(draftSchema.parse(official.draft).items.length, 0);
+        assert.equal(official.revision, created.revision);
+        assert.equal(draftSchema.parse(official.draft).items.length, 1);
         const pending = editable(await workingRequest(admin, created.id));
         assert.equal(pending.businessRuleVersion, "LIVE_V1");
         assert.ok(pending.profileVersionId);
@@ -253,16 +279,18 @@ test("director approval, immutable official versions and real CMS rejection in i
               })
             ).draft,
           ).title,
-          pending.title,
+          nextDraft.title,
         );
         await assert.rejects(
           requireApproved(admin, created.id, approved.revision),
-          rejectedCode("DIRECTOR_APPROVAL_REQUIRED"),
+          rejectedCode("REVISION_CONFLICT"),
         );
         await assert.rejects(
           db.printRequest.update({
             where: { id: created.id },
-            data: { draft: json(nextDraft) },
+            data: {
+              draft: json({ ...nextDraft, title: "SQL bypass unreviewed" }),
+            },
           }),
           /DEMO_APPROVAL_REQUIRED/,
         );
@@ -295,7 +323,7 @@ test("director approval, immutable official versions and real CMS rejection in i
         const rejected = await workingRequest(operator, created.id);
         assert.equal(rejected.approval?.status, "REJECTED");
         assert.equal(editable(rejected).title, nextDraft.title);
-        assert.equal(rejected.approvedRevision, 1);
+        assert.equal(rejected.approvedRevision, created.revision);
         await assert.rejects(
           db.proposalDecision.updateMany({
             where: { proposalId: next.approval.proposalId },
@@ -388,7 +416,7 @@ test("director approval, immutable official versions and real CMS rejection in i
           created.id,
           input,
         )) as { revision: number; approval: { status: string } };
-        assert.equal(result.approval.status, "PENDING");
+        assert.equal(result.approval, null);
         assert.equal(result.revision, current.revision + 1);
         const official = draftSchema.parse(
           (
@@ -397,7 +425,7 @@ test("director approval, immutable official versions and real CMS rejection in i
             })
           ).draft,
         );
-        assert.equal(official.items[0].fullNameRu, draft.items[0].fullNameRu);
+        assert.equal(official.items[0].fullNameRu, imported.fullNameRu);
         const pending = editable(await workingRequest(operator, created.id));
         assert.equal(pending.items[0].employeeCategory, "ITR");
         assert.equal(pending.items[0].assignments[0].validUntil, "2029-10-01");
@@ -864,7 +892,13 @@ test("director approval, immutable official versions and real CMS rejection in i
             expectedRevision: created.revision,
             reason: "Синтетическое связанное исправление",
           });
-          assert.equal(corrected.approval.status, "PENDING");
+          assert.equal(corrected.approval, null);
+          const submittedCorrection = await submitApproval(
+            operator,
+            corrected.id,
+            { expectedRevision: corrected.revision },
+          );
+          assert.equal(submittedCorrection.approval.status, "PENDING");
           assert.equal(
             await db.issuanceEvent.count({
               where: { issuanceId: issued.issuanceId, kind: "REPLACED" },

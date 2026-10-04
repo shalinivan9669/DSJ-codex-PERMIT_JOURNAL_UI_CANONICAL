@@ -215,10 +215,13 @@ test("optional worker bundle keeps one shared protocol when a recipient is added
   });
   await expect(
     dialog.getByText(
-      "Назначено 1 из 1. Выбор добавит отсутствующий комплект.",
+      "Сейчас назначено 1 из 1 · всем.",
       { exact: true },
     ),
   ).toBeVisible();
+  await expect(
+    dialog.getByRole("checkbox", { name: /^Безопасность и охрана труда/ }),
+  ).toBeChecked();
   await expect(
     dialog.getByRole("button", { name: "Снять БиОТ · 1", exact: true }),
   ).toBeEnabled();
@@ -242,10 +245,13 @@ test("row and bulk document choices add only missing forms and retain manual dat
   });
   await expect(
     dialog.getByText(
-      "Назначено 1 из 1. Выбор добавит отсутствующий комплект.",
+      "Сейчас назначено 1 из 1 · всем.",
       { exact: true },
     ),
   ).toBeVisible();
+  await expect(
+    dialog.getByRole("checkbox", { name: /^Пожарно-технический минимум/ }),
+  ).toBeChecked();
   await expect(
     dialog.getByRole("button", { name: "Снять ПТМ · 1", exact: true }),
   ).toBeEnabled();
@@ -331,9 +337,13 @@ test("row and bulk document choices add only missing forms and retain manual dat
     .getByRole("checkbox", { name: /^Промышленная безопасность/ })
     .check();
   const unchanged = structuredClone(state.current().items);
-  await dialog
-    .getByRole("button", { name: "Добавить обучение и комплект", exact: true })
-    .click();
+  await expect(
+    dialog.getByRole("checkbox", { name: /^Промышленная безопасность/ }),
+  ).toBeChecked();
+  await expect(
+    dialog.getByRole("button", { name: "Добавить обучение и комплект", exact: true }),
+  ).toBeDisabled();
+  await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
   await expect(dialog).toHaveCount(0);
   expect(state.current().items).toEqual(unchanged);
   await page.reload();

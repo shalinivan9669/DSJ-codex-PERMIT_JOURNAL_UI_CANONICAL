@@ -39,6 +39,17 @@ function fixture(complete: boolean) {
             trainingSubject:
               complete || index === 0 ? "Синтетическая программа ПТМ" : "",
             result: complete ? "Сдал" : "",
+            ...(complete
+              ? {
+                  outcome: {
+                    status: "PASSED",
+                    source: "Синтетическая ведомость",
+                  },
+                }
+              : {}),
+            ...(complete || index === 0
+              ? {}
+              : { fieldOrigins: { trainingSubject: "CLEARED" } }),
           },
         ],
       })),
@@ -82,6 +93,7 @@ function fixture(complete: boolean) {
     printRequest: { findFirst: async () => record, update: write },
     requestProposal: { findFirst: async () => proposal, update: write },
     proposalDecision: { create: write },
+    issuanceAssignment: { findMany: async () => [] },
     recipient: { count: async () => 0 },
     customerOrganization: { count: async () => 0, findMany: async () => [] },
     issuerProfileVersion: {

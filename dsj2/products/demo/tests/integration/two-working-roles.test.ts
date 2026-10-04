@@ -242,14 +242,23 @@ test("two working roles own setup, isolate tenants and retain legacy director au
           await createdResponse.clone().text(),
         );
         const created = await createdResponse.json();
+        assert.equal(created.approval, null);
+        const submission = await send(
+          managerSession,
+          `/print-requests/${created.id}/approval/submit`,
+          "POST",
+          { expectedRevision: created.revision },
+        );
+        assert.equal(submission.status, 201, await submission.clone().text());
+        const submitted = await submission.json();
         const approval = await send(
           directorSession,
-          `/approvals/${created.approval.proposalId}/decision`,
+          `/approvals/${submitted.approval.proposalId}/decision`,
           "POST",
           {
             decision: "APPROVE",
             reason: "Синтетическая проверка заполненных данных",
-            expectedProposalHash: created.approval.proposalHash,
+            expectedProposalHash: submitted.approval.proposalHash,
           },
         );
         assert.equal(approval.status, 201, await approval.clone().text());
@@ -500,26 +509,27 @@ test("two working roles own setup, isolate tenants and retain legacy director au
           title: "Синтетическая проверка прежней роли",
           items: [],
         });
+        const submitted = await deleteDraft(legacy, created.id);
         await assert.rejects(
-          decideProposal(manager, created.approval.proposalId, {
+          decideProposal(manager, submitted.approval.proposalId, {
             decision: "REJECT",
             reason: "Forbidden",
-            expectedProposalHash: created.approval.proposalHash,
+            expectedProposalHash: submitted.approval.proposalHash,
           }),
           code("DIRECTOR_REQUIRED"),
         );
         await assert.rejects(
-          decideProposal(director, created.approval.proposalId, {
+          decideProposal(director, submitted.approval.proposalId, {
             decision: "REJECT",
             reason: "Foreign tenant",
-            expectedProposalHash: created.approval.proposalHash,
+            expectedProposalHash: submitted.approval.proposalHash,
           }),
           code("NOT_FOUND"),
         );
-        await decideProposal(legacy, created.approval.proposalId, {
+        await decideProposal(legacy, submitted.approval.proposalId, {
           decision: "REJECT",
           reason: "Проверено прежней учётной записью директора",
-          expectedProposalHash: created.approval.proposalHash,
+          expectedProposalHash: submitted.approval.proposalHash,
         });
         const saved = await db.user.findUniqueOrThrow({
           where: { id: legacyUser.id },
@@ -527,7 +537,7 @@ test("two working roles own setup, isolate tenants and retain legacy director au
         assert.equal(saved.role, "ADMIN");
         assert.equal(saved.passwordHash, original.passwordHash);
         const decision = await db.proposalDecision.findFirstOrThrow({
-          where: { proposalId: created.approval.proposalId },
+          where: { proposalId: submitted.approval.proposalId },
         });
         assert.equal(decision.decidedBy, legacyUser.id);
       },

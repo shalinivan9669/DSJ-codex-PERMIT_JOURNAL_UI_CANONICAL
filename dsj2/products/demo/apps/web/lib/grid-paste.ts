@@ -139,3 +139,67 @@ export function previewGridPaste(
     unchanged,
   };
 }
+
+/** Fast paste has an exact visible schema and touches only empty effective cells. */
+export function quickGridPaste(
+  items: Recipient[],
+  effectiveItems: Recipient[],
+  range: {
+    startRow: number;
+    startField: GridField;
+    text: string;
+    columns?: readonly GridField[];
+  },
+  filtered = false,
+) {
+  if (filtered)
+    return {
+      eligible: false as const,
+      reason:
+        "Под поиском или фильтром порядок целей неоднозначен. Сбросьте фильтры перед вставкой.",
+    };
+  if (!range.columns?.length)
+    return {
+      eligible: false as const,
+      reason:
+        "Порядок колонок не подтверждён. Проверьте диапазон перед применением.",
+    };
+  const preview = previewGridPaste(
+    items,
+    range.startRow,
+    range.startField,
+    range.text,
+    "EMPTY",
+    range.columns,
+  );
+  if (preview.blankRows.length)
+    return {
+      eligible: false as const,
+      reason:
+        "В диапазоне есть пустые строки. Выберите явно, сохранить или пропустить их.",
+    };
+  if (preview.skippedFilled)
+    return {
+      eligible: false as const,
+      reason:
+        "Диапазон содержит заполненные поля. Проверьте, какие значения оставить или заменить.",
+    };
+  const effectiveById = new Map(effectiveItems.map((item) => [item.id, item]));
+  const startColumn = range.columns.indexOf(range.startField);
+  const source = parseClipboardRange(range.text);
+  for (let row = 0; row < source.length; row++) {
+    const item = items[range.startRow + row];
+    if (!item) continue;
+    const effective = effectiveById.get(item.id) || item;
+    for (let column = 0; column < source[row].length; column++) {
+      const field = range.columns[startColumn + column];
+      if (!isBlankText(effective[field] || ""))
+        return {
+          eligible: false as const,
+          reason:
+            "В диапазоне есть подставленные или сохранённые значения. Проверьте изменения перед применением.",
+        };
+    }
+  }
+  return { eligible: true as const, preview };
+}

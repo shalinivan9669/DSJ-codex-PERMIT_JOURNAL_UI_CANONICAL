@@ -1,4 +1,4 @@
-import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
+import { assertTechnicalBlankRemoval, createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -74,10 +74,7 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   async function openImport(tsv: string, revised = false) {
     await page
       .getByRole("button", { name: "Импорт / вставка", exact: true })

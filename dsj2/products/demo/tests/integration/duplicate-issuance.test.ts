@@ -59,10 +59,13 @@ test("duplicate lookup reads immutable PostgreSQL history by stable recipient, s
       }),
     ],
   });
+  const legacySourceId = `SYNTHETIC-HISTORICAL-${randomUUID()}`;
   const request = await db.printRequest.create({
     data: {
       tenantId: tenant.id,
       kind: "PERSON",
+      status: "FINALIZED",
+      legacySourceId,
       draft: json(draft),
       createdBy: user.id,
     },
@@ -84,6 +87,7 @@ test("duplicate lookup reads immutable PostgreSQL history by stable recipient, s
     data: {
       tenantId: tenant.id,
       requestId: request.id,
+      legacySourceId,
       sourceRevision: 0,
       snapshot: json({ draft }),
       inputHash: "test",

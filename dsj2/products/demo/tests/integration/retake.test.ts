@@ -18,6 +18,7 @@ import {
 } from "../../packages/contracts/src";
 import { assertTestDatabase } from "./test-database";
 import { createApprovalFixture } from "./live-approval-fixture";
+import { submitApproval } from "../../apps/api/src/approvals";
 
 test("retake preserves failed issued attempt, creates an explicitly linked unknown attempt with new event and no dates/numbers, isolates references", async (t) => {
   assertTestDatabase();
@@ -218,4 +219,116 @@ test("retake preserves failed issued attempt, creates an explicitly linked unkno
   } finally {
     await db.$disconnect();
   }
+});
+
+test("failed partial batch remains a frozen retake source while the same request prepares waiting people", async (t) => {
+  assertTestDatabase();
+  const seeded = await provision({
+    email: `partial-retake-${randomUUID()}@example.test`,
+    password: "Synthetic-Test-Password!",
+    name: "Синтетический центр частичной пересдачи",
+    sample: true,
+  });
+  const c: Context = {
+    ...seeded,
+    role: "ADMIN",
+    sessionId: "test",
+    csrfHash: "test",
+    correlationId: randomUUID(),
+  };
+  const approvals = await createApprovalFixture(c);
+  t.after(async () => {
+    await approvals.close();
+    await db.$disconnect();
+  });
+  const eventId = randomUUID();
+  const original = await createRequest(
+    c,
+    draftSchema.parse({
+      kind: "PERSON",
+      schemaVersion: 2,
+      events: [
+        {
+          id: eventId,
+          title: "Проверка ПБ",
+          protocolTemplateId: "pb-protocol",
+          commonFields: {
+            documentDate: "2026-10-04",
+            protocolDate: "2026-10-04",
+            trainingStart: "2026-10-01",
+            trainingEnd: "2026-10-03",
+          },
+        },
+      ],
+      items: ["failed", "waiting"].map((rowId) => ({
+        id: rowId,
+        fullNameRu: `Синтетический Получатель ${rowId}`,
+        positionRu: "Оператор",
+        assignments: [
+          {
+            id: "course",
+            templateId: "pb-card",
+            eventId,
+            protocolMode: "GROUP",
+            outcome: {
+              status: rowId === "failed" ? "FAILED" : "UNKNOWN",
+              source: rowId === "failed" ? "Синтетическая ведомость" : "",
+            },
+          },
+        ],
+      })),
+    }),
+  );
+  const assignments = [{ rowId: "failed", assignmentId: "course" }];
+  await submitApproval(c, original.id, {
+    expectedRevision: original.revision,
+    assignments,
+  });
+  await approvals.approve(original.id);
+  await finalize(
+    c,
+    original.id,
+    { expectedRevision: original.revision, assignments },
+    randomUUID(),
+  );
+  const detail = await requestDetail(c, original.id);
+  assert.equal(detail.status, "DRAFT");
+  assert.equal(detail.documents.length, 1);
+  assert.equal(detail.documents[0].ownerKind, "GROUP");
+  const snapshots = await db.renderInputSnapshot.findMany({
+    where: { tenantId: c.tenantId, requestId: original.id },
+  });
+  const draft = draftSchema.parse(detail.draft);
+  draft.items.find((row) => row.id === "failed")!.fullNameRu =
+    "Синтетическое имя для следующей подготовки";
+  draft.items.find((row) => row.id === "waiting")!.positionRu =
+    "Исправленная должность ожидающего";
+  const saved = await patchRequest(c, original.id, {
+    expectedRevision: detail.revision,
+    draft,
+  });
+  const args = {
+    expectedRevision: saved.revision,
+    rowId: "failed",
+    assignmentId: "course",
+    reason: "Явная синтетическая пересдача неуспешной попытки",
+  };
+  await assert.rejects(retake(c, original.id, { ...args, rowId: "waiting" }));
+  const copied = await retake(c, original.id, args);
+  const next = draftSchema.parse(copied.draft);
+  assert.equal(next.items.length, 1);
+  assert.equal(next.items[0].fullNameRu, "Синтетический Получатель failed");
+  assert.equal(next.items[0].assignments[0].outcome?.status, "UNKNOWN");
+  assert.equal(next.items[0].assignments[0].retakeOf?.requestId, original.id);
+  assert.notEqual(next.events?.[0].id, eventId);
+  assert.equal(next.items[0].assignments[0].documentDate, "");
+  assert.equal(
+    hash(
+      await db.renderInputSnapshot.findMany({
+        where: { tenantId: c.tenantId, requestId: original.id },
+      }),
+    ),
+    hash(snapshots),
+  );
+  assert.equal((await requestDetail(c, original.id)).status, "DRAFT");
 });

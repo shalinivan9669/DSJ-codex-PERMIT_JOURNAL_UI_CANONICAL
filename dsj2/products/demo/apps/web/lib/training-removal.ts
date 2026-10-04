@@ -49,7 +49,7 @@ export function trainingRemovalTarget(
     (a) =>
       (a.outcome?.status !== undefined && a.outcome.status !== "UNKNOWN") ||
       !!a.result ||
-      !!a.trainingSubject ||
+      (!!a.trainingSubject && a.fieldOrigins?.trainingSubject !== "COURSE") ||
       !!a.trainingDateRule ||
       Object.values(a.fieldOrigins || {}).some((origin) =>
         ["MANUAL", "IMPORTED", "CLEARED"].includes(origin),
@@ -57,7 +57,8 @@ export function trainingRemovalTarget(
   );
   const protectedEvent = events.some(
     (e) =>
-      !!e.commonFields.trainingSubject ||
+      (!!e.commonFields.trainingSubject &&
+        e.commonFields.fieldOrigins?.trainingSubject !== "COURSE") ||
       !!e.commonFields.trainingDateRule ||
       Object.values(e.commonFields.dateOrigins || {}).some((origin) =>
         ["MANUAL", "IMPORTED", "CLEARED"].includes(origin),

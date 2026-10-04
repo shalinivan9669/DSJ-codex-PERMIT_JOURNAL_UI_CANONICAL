@@ -514,7 +514,10 @@ export async function runBusinessScenarios(
       );
       assert.ok(
         help.issues.some(
-          (i) => i.code === "RESULT_UNCONFIRMED" || i.code.includes("RESULT"),
+          (i) =>
+            i.code === "OUTCOME_UNCONFIRMED" ||
+            i.code === "RESULT_UNCONFIRMED" ||
+            i.code.includes("RESULT"),
         ),
       );
       assert.equal(
@@ -755,7 +758,11 @@ export async function runBusinessScenarios(
       );
       assert.ok(
         missingFacts.issues.some((issue) =>
-          ["RESULT_REQUIRED", "RESULT_UNCONFIRMED"].includes(issue.code),
+          [
+            "OUTCOME_UNCONFIRMED",
+            "RESULT_REQUIRED",
+            "RESULT_UNCONFIRMED",
+          ].includes(issue.code),
         ),
       );
       assert.equal(

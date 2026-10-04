@@ -517,17 +517,43 @@ export function FilesPanel({
                         ? "После подписания"
                         : "Скачать"}
                     </a>
-                    {canManage && missing.includes(artifact.id) && (
-                      <button
-                        disabled={!!busy}
-                        onClick={() => {
-                          setRestoreReason("");
-                          setRestoreArtifact(artifact);
-                        }}
-                      >
-                        Восстановить файл
-                      </button>
-                    )}
+                    {canManage &&
+                      missing.includes(artifact.id) &&
+                      artifact.provenance === "PRINT_SET_DERIVATIVE" && (
+                        <button
+                          disabled={!!busy}
+                          onClick={() => {
+                            const savedSet = window.document.getElementById(
+                              "saved-print-set",
+                            ) as HTMLDetailsElement | null;
+                            if (savedSet) {
+                              savedSet.open = true;
+                              savedSet.scrollIntoView({
+                                block: "center",
+                                behavior: "smooth",
+                              });
+                              savedSet
+                                .querySelector<HTMLButtonElement>("button")
+                                ?.focus();
+                            }
+                          }}
+                        >
+                          Получить комплект снова
+                        </button>
+                      )}
+                    {canManage &&
+                      missing.includes(artifact.id) &&
+                      artifact.provenance !== "PRINT_SET_DERIVATIVE" && (
+                        <button
+                          disabled={!!busy}
+                          onClick={() => {
+                            setRestoreReason("");
+                            setRestoreArtifact(artifact);
+                          }}
+                        >
+                          Восстановить файл
+                        </button>
+                      )}
                   </div>
                 </article>
               );

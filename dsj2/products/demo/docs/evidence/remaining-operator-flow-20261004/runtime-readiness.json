@@ -1,0 +1,161 @@
+{
+  "capturedAt": "2026-10-04T16:36:42.002Z",
+  "origin": "http://127.0.0.1:3135",
+  "apiPort": 4135,
+  "dist": ".next-remaining-operator-v5",
+  "buildId": "IaZWxKNS7yKZA9n-T7KQc",
+  "tenant": {
+    "id": "b4aa90dd-9d4a-4130-b1a2-962eead08104",
+    "demoOnly": true
+  },
+  "session": {
+    "role": "ADMIN",
+    "tenantId": "b4aa90dd-9d4a-4130-b1a2-962eead08104",
+    "demoOnly": true
+  },
+  "readyStatus": 200,
+  "ready": {
+    "status": "ready",
+    "workerSeenAt": "2026-10-04T16:36:38.518Z",
+    "templates": 11,
+    "rendererVersion": "demo-ooxml-11/libreoffice-26.2.6.3",
+    "storage": "ok"
+  },
+  "requests": [
+    {
+      "id": "974736a5-588b-4d8e-b31f-2878e7a17146",
+      "status": "DRAFT",
+      "revision": 7,
+      "createdAt": "2026-10-04T16:32:56.169Z",
+      "approvedProposalId": null
+    },
+    {
+      "id": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "status": "DRAFT",
+      "revision": 2,
+      "createdAt": "2026-10-04T16:31:50.546Z",
+      "approvedProposalId": "8b1cc94b-88c8-4254-9208-92089fdf9711"
+    },
+    {
+      "id": "19865043-7898-487b-b06d-f9b541f5a840",
+      "status": "DRAFT",
+      "revision": 3,
+      "createdAt": "2026-10-04T15:20:26.771Z",
+      "approvedProposalId": null
+    }
+  ],
+  "jobs": [
+    {
+      "id": "4271be8b-ccbf-4a7e-b67e-90f75a57a55e",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "e080f76e-5077-464b-8c01-d1319fce11fe"
+    },
+    {
+      "id": "e096169b-4512-4fb6-a328-b637f4cf27a9",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "c24fde38-cca4-4147-af43-cabab2ffe0b1"
+    },
+    {
+      "id": "7bc30c25-5052-489e-977b-ee73d7c6533d",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "da468b37-d645-4359-bc74-4a2938ba48fe"
+    },
+    {
+      "id": "5b24bc1d-4bdb-468e-a242-6987aaaab478",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "7ed7e5af-c1be-40a0-8a28-fa478e65a644"
+    },
+    {
+      "id": "b94ec9c8-0bee-4419-8582-8e99bff291b8",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "0c0cf113-7529-4711-ad20-e7a9d4af768f"
+    },
+    {
+      "id": "e08752ea-d55d-42de-be02-4787b0089553",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "XLSX",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "2f05220b-bce2-4080-bfaf-3279a85b350d"
+    },
+    {
+      "id": "7db3b1c2-32da-47d8-92aa-61fedea1ac38",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "ZIP",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "dfe74f68-3ded-40f1-be6c-0232930b0104"
+    },
+    {
+      "id": "6431761c-e818-428d-8b82-b05ea2eca8e0",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "6bc9dd66-ff0c-4aa8-a26c-6576867c96a9"
+    },
+    {
+      "id": "7634284d-8b70-467e-aafb-2f0987894603",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "b531a05e-b94e-467c-a1f6-c9ba4761cf8d"
+    },
+    {
+      "id": "35438a90-fcb6-491b-8e55-c07d1de6176a",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "DOCX",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "cca6f80e-77c9-4ac8-9dba-a90943c77873"
+    },
+    {
+      "id": "5fa0cc93-99d7-495f-8269-929a9d33ab2c",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "8bbdad86-b374-483c-b8c2-0820d71de095"
+    },
+    {
+      "id": "1f187096-fe59-48f1-84e6-b816cf76f606",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "XLSX",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "812ecc52-7887-4b07-a666-fdf563b59df6"
+    },
+    {
+      "id": "d3c2c432-3007-4708-b0df-48e1aec82499",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "ZIP",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "4e33ec9d-39e9-4b91-96c8-69237a9f0f43"
+    },
+    {
+      "id": "5499e755-505a-4255-8abb-1a0d18411382",
+      "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+      "kind": "PDF",
+      "status": "SUCCEEDED",
+      "errorCode": null,
+      "artifactId": "9412404f-6537-4818-b156-1e738364283b"
+    }
+  ]
+}

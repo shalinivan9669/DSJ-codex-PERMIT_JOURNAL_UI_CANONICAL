@@ -1,4 +1,5 @@
 import { loginIsolated } from "./operator-full-fix-session";
+import { assertTechnicalBlankRemoval } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import path from "node:path";
 import fs from "node:fs/promises";
@@ -120,10 +121,7 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
     .click();

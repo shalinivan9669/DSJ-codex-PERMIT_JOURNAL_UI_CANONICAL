@@ -1,13 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
 import { api, downloadArtifact, errorText, json } from "@/lib/api";
-import { documentTitle } from "@/lib/types";
+import { documentTitle, type Issuance } from "@/lib/types";
 import { signWithNCALayer } from "@/lib/ncalayer";
 
 type Provider = "EGOV_QR" | "NCALAYER";
 type SigningState = {
+  issuanceId?: string;
   status: string | null;
   archived: boolean;
   providers: Record<Provider, { available: boolean; reason?: string | null }>;
@@ -40,10 +41,12 @@ type Session = {
 
 export function SigningPanel({
   requestId,
+  issuances = [],
   role,
   onChanged,
 }: {
   requestId: string;
+  issuances?: Pick<Issuance, "id" | "createdAt">[];
   role: string;
   onChanged: () => void;
 }) {
@@ -52,20 +55,29 @@ export function SigningPanel({
   const [error, setError] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [success, setSuccess] = useState("");
-  const load = useCallback(
-    async () =>
-      setState(await api<SigningState>(`/print-requests/${requestId}/signing`)),
-    [requestId],
+  const [selectedIssuanceId, setSelectedIssuanceId] = useState("");
+  const loadScope = useRef(0);
+  const stages = useMemo(
+    () => [...issuances].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+    [issuances],
   );
+  const latestIssuanceId = stages[0]?.id;
+  const signingPath = `/print-requests/${requestId}/signing${selectedIssuanceId ? `?issuanceId=${encodeURIComponent(selectedIssuanceId)}` : ""}`;
+  const load = useCallback(async () => {
+    const scope = loadScope.current;
+    const value = await api<SigningState>(signingPath);
+    if (scope === loadScope.current) setState(value);
+  }, [signingPath]);
   useEffect(() => {
     let active = true;
+    const scope = ++loadScope.current;
+    setState(null);
+    setError("");
     let timer: ReturnType<typeof setTimeout>;
     async function poll() {
       try {
-        const value = await api<SigningState>(
-          `/print-requests/${requestId}/signing`,
-        );
-        if (!active) return;
+        const value = await api<SigningState>(signingPath);
+        if (!active || scope !== loadScope.current) return;
         setState(value);
         if (
           value.status === "RENDERING" ||
@@ -73,15 +85,16 @@ export function SigningPanel({
         )
           timer = setTimeout(() => void poll(), 10000);
       } catch (caught) {
-        if (active) setError(errorText(caught));
+        if (active && scope === loadScope.current) setError(errorText(caught));
       }
     }
     void poll();
     return () => {
       active = false;
       clearTimeout(timer);
+      if (scope === loadScope.current) loadScope.current++;
     };
-  }, [requestId]);
+  }, [signingPath, latestIssuanceId]);
   async function complete(value: Session, signatureBase64?: string) {
     await api(`/signing/${value.id}/complete`, {
       method: "POST",
@@ -121,6 +134,7 @@ export function SigningPanel({
       <div className="section-heading">
         <h2>Подписание документов</h2>
         <button
+          disabled={!!busy || !!session}
           onClick={() =>
             void load().catch((caught) => setError(errorText(caught)))
           }
@@ -128,6 +142,32 @@ export function SigningPanel({
           Обновить
         </button>
       </div>
+      {stages.length > 1 && (
+        <label>
+          Выпуск для подписания
+          <select
+            value={selectedIssuanceId || latestIssuanceId}
+            disabled={!!busy || !!session}
+            onChange={(event) => {
+              loadScope.current++;
+              setState(null);
+              setError("");
+              setSuccess("");
+              setSelectedIssuanceId(event.target.value);
+            }}
+          >
+            {stages.map((stage, index) => (
+              <option key={stage.id} value={stage.id}>
+                Выпуск {stages.length - index}
+                {stage.createdAt
+                  ? ` · ${new Date(stage.createdAt).toLocaleString("ru-RU")}`
+                  : ""}
+                {index === 0 ? " · последний" : ""}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       {error && <Notice>{error}</Notice>}
       {success && <Notice kind="success">{success}</Notice>}
       {!state && <p role="status">Проверяем готовность документов…</p>}
@@ -151,15 +191,17 @@ export function SigningPanel({
       )}
       {state?.status === "ISSUED" && (
         <Notice kind="success">
-          Все необходимые подписи проверены. Комплект выдан и автоматически
-          помещён в архив.
+          {state.archived
+            ? "Все необходимые подписи проверены. Комплект выдан и автоматически помещён в архив."
+            : "Все необходимые подписи этого выпуска проверены. Заявка остаётся доступной до завершения всех её выпусков и обучений."}
         </Notice>
       )}
       {state && !["LEGACY_ISSUED", "ISSUED"].includes(state.status || "") && (
         <>
           <p>
             Каждый подписант подписывает окончательный PDF своим ключом. После
-            проверки всех подписей комплект автоматически попадёт в архив.
+            проверки всех подписей этот выпуск будет выдан. Заявка попадёт в
+            архив после завершения всех её обучений и выпусков.
           </p>
           {!state.providers.EGOV_QR.available && (
             <p className="muted">

@@ -5,7 +5,7 @@ import { assertTestDatabase } from "./test-database";
 import { db, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
 import { saveProfile, saveUser } from "../../apps/api/src/settings";
-import { decideProposal } from "../../apps/api/src/approvals";
+import { decideProposal, submitApproval } from "../../apps/api/src/approvals";
 import {
   createRequest,
   patchRequest,
@@ -160,10 +160,13 @@ test("manager and director prepare worker and ITR bundles for 1/3/100/250 people
         });
         assert.deepEqual(checked.issues, []);
         assert.equal(checked.documentCount, count + 1);
-        await decideProposal(context, saved.approval.proposalId, {
+        const submitted = await submitApproval(manager, created.id, {
+          expectedRevision: saved.revision,
+        });
+        await decideProposal(context, submitted.approval.proposalId, {
           decision: "APPROVE",
           reason: "Синтетическая проверка массового комплекта",
-          expectedProposalHash: saved.approval.proposalHash,
+          expectedProposalHash: submitted.approval.proposalHash,
         });
         const approved = await requestDetail(manager, created.id);
         const key = randomUUID();

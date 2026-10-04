@@ -245,7 +245,31 @@ test("public self-registration isolates a complete unapproved center atomically"
             kind: "PERSON",
             schemaVersion: 2,
             title: "Synthetic incomplete draft",
-            items: [],
+            items: [
+              {
+                id: randomUUID(),
+                fullNameRu: "Синтетический Получатель Неутверждённого Центра",
+                positionRu: "Синтетический оператор",
+                assignments: [
+                  {
+                    id: randomUUID(),
+                    templateId: "pb-card",
+                    protocolMode: "INDIVIDUAL",
+                    documentDate: "2026-10-04",
+                    protocolDate: "2026-10-04",
+                    trainingStart: "2026-10-01",
+                    trainingEnd: "2026-10-03",
+                    trainingSubject:
+                      "Синтетическая программа проверки неутверждённого центра",
+                    outcome: {
+                      status: "PASSED",
+                      source:
+                        "СИНТЕТИЧЕСКАЯ ведомость теста; не реальное обучение",
+                    },
+                  },
+                ],
+              },
+            ],
           },
           auth,
         );
@@ -298,30 +322,39 @@ test("public self-registration isolates a complete unapproved center atomically"
           "Director login must establish a real session",
         );
         const directorAuth = credentials(login, (await login.json()).csrfToken);
-        const proposal = await (
-          await send(
-            `/approvals/${draft.approval.proposalId}`,
-            "GET",
-            undefined,
-            directorAuth,
-          )
-        ).json();
+        assert.equal(
+          draft.approval,
+          null,
+          "autosave does not submit an unapproved center's incomplete draft",
+        );
+        const submission = await send(
+          `/print-requests/${draft.id}/approval/submit`,
+          "POST",
+          { expectedRevision: draft.revision },
+          directorAuth,
+        );
+        assert.equal(submission.status, 422, await submission.clone().text());
+        assert.equal(
+          (await submission.json()).code,
+          "APPROVAL_DATA_INCOMPLETE",
+        );
+        const proposalId = randomUUID();
         const decision = await send(
-          `/approvals/${proposal.id}/decision`,
+          `/approvals/${proposalId}/decision`,
           "POST",
           {
             decision: "APPROVE",
             reason:
               "Verify unapproved setup still blocks issuance after director approval",
-            expectedProposalHash: proposal.proposalHash,
+            expectedProposalHash: "0".repeat(64),
           },
           directorAuth,
         );
-        assert.equal(decision.status, 422, await decision.clone().text());
-        assert.equal((await decision.json()).code, "APPROVAL_DATA_INCOMPLETE");
+        assert.equal(decision.status, 404, await decision.clone().text());
+        assert.equal((await decision.json()).code, "NOT_FOUND");
         assert.equal(
           await db.proposalDecision.count({
-            where: { proposalId: proposal.id },
+            where: { tenantId: first.tenant.id },
           }),
           0,
         );

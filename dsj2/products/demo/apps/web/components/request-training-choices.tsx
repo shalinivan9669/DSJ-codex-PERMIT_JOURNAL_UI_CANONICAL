@@ -74,6 +74,7 @@ export function RequestTrainingChoices({
               data-complete={complete || undefined}
               disabled={disabled || !recipients.length}
               title={`${choice.name}. ${assigned} из ${recipients.length}.`}
+              aria-pressed={complete ? true : assigned ? "mixed" : false}
               aria-label={`${choice.label}: ${complete ? `снять у этой группы (${assigned})` : assigned ? `добавить остальным (${recipients.length - assigned})` : `добавить ${scope} (${recipients.length})`}`}
               onClick={() => {
                 if (disabled || !recipients.length) return;
@@ -91,6 +92,7 @@ export function RequestTrainingChoices({
               }}
             >
               {choice.label}
+              {!assigned && <span> · Никому</span>}
               {complete ? (
                 <span> ✓ · Снять {assigned}</span>
               ) : assigned > 0 ? (

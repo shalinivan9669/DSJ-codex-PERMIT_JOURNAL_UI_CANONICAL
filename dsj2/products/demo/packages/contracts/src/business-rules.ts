@@ -1,4 +1,5 @@
 import { BIOT_CATEGORIES } from "./biot";
+import { courseProgramKeys, withCourseProgram } from "./course-defaults";
 import type {
   Assignment,
   Draft,
@@ -205,7 +206,7 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
       const mode =
         event?.protocolMode ||
         (original.protocolMode === "GROUP" ? "GROUP" : "INDIVIDUAL");
-      const primary = {
+      const primary = withCourseProgram({
         ...original,
         id:
           original.templateId !== templates[0] &&
@@ -215,7 +216,7 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
         templateId: templates[0],
         eventId: event?.id || original.eventId,
         protocolMode: mode,
-      };
+      });
       if (
         direction === "BIOT" &&
         (!primary.biotCategory ||
@@ -260,11 +261,16 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
               : cloneForTemplate(primary, templateId);
         if (templateId !== primary.templateId) {
           for (const key of [
-            "trainingSubject",
+            ...courseProgramKeys,
+            "professionRu",
+            "professionKz",
+            "psQualificationRu",
+            "psQualificationKz",
             "trainingSubjectEn",
             "trainingStart",
             "trainingEnd",
             "result",
+            "resultKz",
             "resultEn",
             "outcome",
           ] as const) {
@@ -273,6 +279,22 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
           }
           assignment.fieldOrigins = {
             ...assignment.fieldOrigins,
+            ...Object.fromEntries(
+              ["result", "resultKz", "resultEn"].map((key) => [
+                key,
+                primary.fieldOrigins?.[key] ||
+                  (primary[key as "result" | "resultKz" | "resultEn"]
+                    ? "MANUAL"
+                    : "COURSE"),
+              ]),
+            ),
+            ...Object.fromEntries(
+              courseProgramKeys.map((key) => [
+                key,
+                primary.fieldOrigins?.[key] ||
+                  (primary[key] ? "MANUAL" : "INHERITED"),
+              ]),
+            ),
             trainingSubject:
               primary.fieldOrigins?.trainingSubject ||
               (primary.trainingSubject ? "MANUAL" : "INHERITED"),

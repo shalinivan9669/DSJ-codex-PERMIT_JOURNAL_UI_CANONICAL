@@ -179,9 +179,26 @@ export async function realApprovalRoles(browser: Browser, page: Page) {
       });
     },
     async approve(id: string) {
-      const before = (await (
+      let before = (await (
         await page.request.get(`/api/print-requests/${id}`)
       ).json()) as Draft;
+      if (before.approval?.status !== "PENDING") {
+        const session = await (
+          await page.request.get("/api/auth/session")
+        ).json();
+        await write(
+          page,
+          {
+            origin: new URL(page.url()).origin,
+            "x-csrf-token": session.csrfToken,
+          },
+          `/print-requests/${id}/approval/submit`,
+          { expectedRevision: before.revision },
+        );
+        before = await (
+          await page.request.get(`/api/print-requests/${id}`)
+        ).json();
+      }
       expect(before.approval?.status).toBe("PENDING");
       await directorPage.goto(
         `/approvals?proposal=${before.approval!.proposalId}`,

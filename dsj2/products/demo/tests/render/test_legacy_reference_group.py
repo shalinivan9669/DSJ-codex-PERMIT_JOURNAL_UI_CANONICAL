@@ -69,7 +69,7 @@ class LegacyReferenceGroupTests(unittest.TestCase):
         self.assertEqual(reference_group_item(item)['assignment']['result'], original_result)
         item['assignment'].update(result='', outcome={'status': 'PASSED'})
         normalized = reference_group_item(item)
-        self.assertEqual(normalized['assignment']['result'], 'Сдал / Тапсырды')
+        self.assertEqual(normalized['assignment']['result'], 'Прошел/ Өтті')
         self.assertEqual(normalized['number'], '')
         self.assertEqual(item['assignment']['result'], '')
         self.assertEqual(normalized['protocolNumber'], item['protocolNumber'])

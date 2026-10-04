@@ -13,6 +13,7 @@ import {
   audit,
   transaction,
   json,
+  hash,
   type Context,
 } from "./core";
 import { passwordSchema, passwordHash } from "./auth";
@@ -96,8 +97,21 @@ export async function saveProfile(c: Context, input: unknown) {
     return record;
   });
 }
-export async function saveCustomer(c: Context, input: unknown, id?: string) {
+export async function saveCustomer(
+  c: Context,
+  input: unknown,
+  id?: string,
+  idempotencyKey?: unknown,
+) {
   const data = parse(customerSchema, input);
+  const key =
+    typeof idempotencyKey === "string" &&
+    /^[a-zA-Z0-9_-]{16,128}$/.test(idempotencyKey)
+      ? idempotencyKey
+      : undefined;
+  if (idempotencyKey !== undefined && !key)
+    fail(400, "KEY_INVALID", "Неверный ключ повторяемости команды");
+  const payloadHash = hash({ userId: c.userId, data });
   const previous = id
     ? await db.customerOrganization.findFirst({
         where: { id, tenantId: c.tenantId },
@@ -115,13 +129,46 @@ export async function saveCustomer(c: Context, input: unknown, id?: string) {
     data.ownNameRu = null;
     data.ownNameKz = null;
   }
-  return db.$transaction(async (tx) => {
+  return transaction(async (tx) => {
+    if (!id && key) {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":customer:" + key},0))`;
+      const prior = await tx.idempotencyOperation.findUnique({
+        where: {
+          tenantId_command_idempotencyKey: {
+            tenantId: c.tenantId,
+            command: "CREATE_CUSTOMER",
+            idempotencyKey: key,
+          },
+        },
+      });
+      if (prior) {
+        if (prior.payloadHash !== payloadHash)
+          fail(
+            409,
+            "IDEMPOTENCY_MISMATCH",
+            "Этот ключ компании уже использован с другим названием",
+          );
+        return prior.result as unknown as Awaited<
+          ReturnType<typeof tx.customerOrganization.create>
+        >;
+      }
+    }
     const result = id
       ? await tx.customerOrganization.update({ where: { id }, data })
       : await tx.customerOrganization.create({
           data: { tenantId: c.tenantId, ...data },
         });
     await audit(tx, c, id ? "CUSTOMER_UPDATED" : "CUSTOMER_CREATED", result.id);
+    if (!id && key)
+      await tx.idempotencyOperation.create({
+        data: {
+          tenantId: c.tenantId,
+          command: "CREATE_CUSTOMER",
+          idempotencyKey: key,
+          payloadHash,
+          result: json(result),
+        },
+      });
     return result;
   });
 }

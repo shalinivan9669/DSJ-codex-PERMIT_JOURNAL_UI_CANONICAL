@@ -54,6 +54,10 @@ function fixture(n = 1): Draft {
             protocolDate: "2026-09-21",
             trainingSubject: "Синтетическая программа",
             result: "Тестовое значение",
+            outcome: {
+              status: "PASSED",
+              source: "Явный синтетический факт проверки БиОТ",
+            },
             biotCategory: "WORKER",
             hours: "10",
             productionHours: "16",

@@ -6,7 +6,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { PRODUCT_ROOT } from "@demo/printing";
 import { db, json, type Context } from "../../apps/api/src/core";
-import { createRequest, patchRequest, finalize } from "../../apps/api/src/requests";
+import {
+  createRequest,
+  patchRequest,
+  finalize,
+} from "../../apps/api/src/requests";
 import { provision } from "../../scripts/setup";
 import { createApprovalFixture } from "./live-approval-fixture";
 import { workingRequest } from "../../apps/api/src/approvals";
@@ -40,8 +44,15 @@ function code(expected: string) {
 test("persistent service workflow: obligations, renewal, exact finance, proposals, tenant/customer isolation and revocation", async (t) => {
   assertTestDatabase();
   const suffix = randomUUID();
-  const seed = await provision({ email: `seed-${suffix}@example.test`, password: "Synthetic-Operator-Value-Password!", name: "Синтетический центр A", sample: true });
-  const tenantA = await db.tenant.findUniqueOrThrow({ where: { id: seed.tenantId } });
+  const seed = await provision({
+    email: `seed-${suffix}@example.test`,
+    password: "Synthetic-Operator-Value-Password!",
+    name: "Синтетический центр A",
+    sample: true,
+  });
+  const tenantA = await db.tenant.findUniqueOrThrow({
+    where: { id: seed.tenantId },
+  });
   const tenantB = await db.tenant.create({
     data: { name: "Синтетический центр B", demoOnly: true },
   });
@@ -118,7 +129,10 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
             hours: "24",
             productionHours: "16",
             result: "Исторический подтверждённый результат",
-            outcome: { status: "PASSED", source: "Явно заданный синтетический результат" },
+            outcome: {
+              status: "PASSED",
+              source: "Явно заданный синтетический результат",
+            },
             validUntil: "2027-09-22",
           }),
         ],
@@ -316,9 +330,12 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         resolution: "Редакция изменилась",
       });
       await approvals.approve(request.id);
+      portal = await value.employerPortal(ce);
+      const publishedRevision = portal.orders[0].requests[0].revision;
+      assert.equal(publishedRevision, request.revision);
       const proposal = await value.submitEmployerProposal(ce, serviceOrder.id, {
         requestId: request.id,
-        requestRevision: request.revision + 1,
+        requestRevision: publishedRevision,
         kind: "UPDATE_LIST",
         changes: [{ rowId: "source-row", fullNameRu: "Уточнённый Қайрат" }],
       });
@@ -327,12 +344,13 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         serviceOrder.id,
         {
           requestId: request.id,
-          requestRevision: request.revision + 1,
+          requestRevision: publishedRevision,
           kind: "UPDATE_LIST",
           changes: [{ rowId: "source-row", fullNameRu: "Уточнённый Қайрат" }],
         },
       );
       assert.equal(duplicated.id, proposal.id);
+      assert.equal(proposal.requestRevision, request.revision + 1);
       await value.resolveEmployerProposal(ca, serviceOrder.id, proposal.id, {
         status: "ACCEPTED",
         resolution: "Сверено с исходником",
@@ -522,7 +540,12 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
   await t.test(
     "confirmed renewal creates one linked draft across concurrent retries and resets results",
     async () => {
-      await finalize(ca, request.id, { expectedRevision: request.revision + 2 }, randomUUID());
+      await finalize(
+        ca,
+        request.id,
+        { expectedRevision: request.revision + 2 },
+        randomUUID(),
+      );
       const payload = {
         customerId: customer.id,
         recipientId: recipient.id,
@@ -607,7 +630,9 @@ test("persistent service workflow: obligations, renewal, exact finance, proposal
         where: { id: resolved.newRequestId },
       });
       assert.equal(fresh.status, "DRAFT");
-      const freshDraft = draftSchema.parse((await workingRequest(ca, fresh.id)).draft);
+      const freshDraft = draftSchema.parse(
+        (await workingRequest(ca, fresh.id)).draft,
+      );
       assert.equal(freshDraft.items[0].recipientId, recipient.id);
       assert.equal(freshDraft.items[0].assignments[0].result, "");
       assert.equal(freshDraft.items[0].assignments[0].protocolDate, "");

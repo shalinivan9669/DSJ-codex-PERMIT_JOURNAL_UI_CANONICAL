@@ -138,6 +138,7 @@ test("editing other values leaves legacy category-less records unchanged; moving
   assert.deepEqual(updateAssignment(legacy, { result: "Проверено" }), {
     ...legacy,
     result: "Проверено",
+    fieldOrigins: { ...legacy.fieldOrigins, result: "MANUAL" },
   });
   const worker = updateAssignment(newAssignment(), {
     documentDate: "2028-02-29",

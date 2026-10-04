@@ -11,6 +11,7 @@ export * from "./biot";
 export * from "./date-calculation";
 export * from "./registration";
 export * from "./business-rules";
+export * from "./course-defaults";
 export * from "./roles";
 export * from "./import-scaffold";
 export const LIMITS = {
@@ -78,6 +79,24 @@ export const commonFieldsSchema = z
     protocolDate: z.string().max(10).optional(),
     validUntil: z.string().max(10).optional(),
     trainingSubject: optionalText,
+    trainingSubjectKz: optionalText,
+    psGeneralSubjectRu: optionalText,
+    psGeneralSubjectKz: optionalText,
+    psSpecialSubjectRu: optionalText,
+    psSpecialSubjectKz: optionalText,
+    fieldOrigins: z
+      .record(
+        z.string().max(60),
+        z.enum([
+          "MANUAL",
+          "IMPORTED",
+          "INHERITED",
+          "CLEARED",
+          "AUTO",
+          "COURSE",
+        ]),
+      )
+      .optional(),
     trainingSubjectEn: optionalText,
     reason: optionalText,
     reasonEn: optionalText,
@@ -130,8 +149,18 @@ export const assignmentSchema = z
     validUntil: date,
     validityMode: z.enum(["FIXED", "UNLIMITED"]).optional(),
     trainingSubject: text,
+    trainingSubjectKz: optionalText,
+    psGeneralSubjectRu: optionalText,
+    psGeneralSubjectKz: optionalText,
+    psSpecialSubjectRu: optionalText,
+    psSpecialSubjectKz: optionalText,
     trainingSubjectEn: optionalText,
     result: text,
+    professionRu: optionalText,
+    professionKz: optionalText,
+    psQualificationRu: optionalText,
+    psQualificationKz: optionalText,
+    resultKz: optionalText,
     resultEn: optionalText,
     reason: text,
     reasonEn: optionalText,
@@ -169,7 +198,14 @@ export const assignmentSchema = z
     fieldOrigins: z
       .record(
         z.string().max(60),
-        z.enum(["MANUAL", "IMPORTED", "INHERITED", "CLEARED", "AUTO"]),
+        z.enum([
+          "MANUAL",
+          "IMPORTED",
+          "INHERITED",
+          "CLEARED",
+          "AUTO",
+          "COURSE",
+        ]),
       )
       .optional(),
     outcome: z
@@ -300,9 +336,35 @@ export const patchSchema = z
     draft: draftSchema,
   })
   .strict();
+export const assignmentSelectionSchema = z
+  .array(
+    z
+      .object({
+        rowId: z.string().min(1).max(80),
+        assignmentId: z.string().min(1).max(80),
+      })
+      .strict(),
+  )
+  .min(1)
+  .max(LIMITS.documents)
+  .superRefine((items, ctx) => {
+    if (
+      new Set(
+        items.map((item) => JSON.stringify([item.rowId, item.assignmentId])),
+      ).size !== items.length
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Выбранное назначение повторяется",
+      });
+  });
 export const finalizeSchema = z
-  .object({ expectedRevision: z.number().int().nonnegative() })
+  .object({
+    expectedRevision: z.number().int().nonnegative(),
+    assignments: assignmentSelectionSchema.optional(),
+  })
   .strict();
+export * from "./batch-scope";
 export * from "./organization";
 export const profileSchema = z
   .object({
@@ -532,12 +594,45 @@ export function validateDraft(
       const path = `items.${n}.assignments.${a}`;
       for (const key of [
         "trainingSubject",
+        "trainingSubjectKz",
+        "psGeneralSubjectRu",
+        "psGeneralSubjectKz",
+        "psSpecialSubjectRu",
+        "psSpecialSubjectKz",
+        "professionRu",
+        "professionKz",
+        "psQualificationRu",
+        "psQualificationKz",
         "result",
         "reason",
         "education",
         "externalBasisNumber",
       ] as const)
-        printable(assignment[key], `${path}.${key}`, item.id);
+        printable(assignment[key] || "", `${path}.${key}`, item.id);
+      if (
+        assignment.templateId.startsWith("ps-") &&
+        isBlankText(
+          ["ps-witness", "ps-protocol"].includes(assignment.templateId)
+            ? assignment.psQualificationRu ||
+                assignment.psQualificationKz ||
+                assignment.professionRu ||
+                assignment.professionKz ||
+                item.positionRu ||
+                item.positionKz
+            : assignment.professionRu ||
+                assignment.professionKz ||
+                item.positionRu ||
+                item.positionKz,
+        )
+      )
+        add(
+          "PS_PROFESSION_REQUIRED",
+          `${path}.${["ps-witness", "ps-protocol"].includes(assignment.templateId) ? "psQualificationRu" : "professionRu"}`,
+          ["ps-witness", "ps-protocol"].includes(assignment.templateId)
+            ? "Укажите присвоенную квалификацию для свидетельства и протокола ПС или общее значение строки"
+            : "Укажите профессию для ПС или общее значение строки",
+          item.id,
+        );
       for (const key of [
         "documentDate",
         "trainingStart",

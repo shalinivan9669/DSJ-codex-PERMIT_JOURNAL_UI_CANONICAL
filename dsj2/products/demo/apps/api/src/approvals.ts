@@ -4,6 +4,10 @@ import {
   isDirectorRole,
   z,
   type Draft,
+  finalizeSchema,
+  selectAssignmentScope,
+  approvalScopeValue,
+  type AssignmentIdentity,
 } from "@demo/contracts";
 import type { Prisma } from "@demo/database";
 import { personCustomerName, withCustomerIdentity } from "./request-customer";
@@ -73,22 +77,45 @@ export async function workingRequest(
   tx: Prisma.TransactionClient = db,
 ) {
   const record = await scopedRequest(c, id, tx);
-  const proposal = await tx.requestProposal.findFirst({
+  const latest = await tx.requestProposal.findFirst({
     where: { tenantId: c.tenantId, requestId: id },
     orderBy: { revision: "desc" },
   });
-  const working =
+  const proposal =
+    latest?.status === "DRAFT"
+      ? await tx.requestProposal.findFirst({
+          where: {
+            tenantId: c.tenantId,
+            requestId: id,
+            status: { in: ["PENDING", "APPROVED", "REJECTED"] },
+          },
+          orderBy: { revision: "desc" },
+        })
+      : latest;
+  // Compatibility with submitted revisions saved before explicit submission existed.
+  const legacyWorking =
     proposal?.operation === "SAVE" &&
     ["PENDING", "REJECTED"].includes(proposal.status) &&
+    proposal.revision > record.revision &&
     record.status === "DRAFT";
+  const approved = record.approvedProposalId
+    ? await tx.requestProposal.findFirst({
+        where: {
+          id: record.approvedProposalId,
+          tenantId: c.tenantId,
+          requestId: id,
+          operation: "SAVE",
+        },
+      })
+    : null;
   return {
     ...record,
-    ...(working ? { draft: proposal.payload } : {}),
-    ...(proposal && ["PENDING", "REJECTED"].includes(proposal.status)
-      ? { revision: proposal.revision }
+    ...(legacyWorking
+      ? { draft: proposal.payload, revision: proposal.revision }
       : {}),
-    approvedDraft: record.draft,
-    approvedRevision: record.revision,
+    approvedDraft: approved?.payload || record.draft,
+    approvedRevision:
+      approved?.revision || (record.status !== "DRAFT" ? record.revision : 0),
     archived: !!record.archivedAt,
     approval: proposal
       ? {
@@ -98,6 +125,8 @@ export async function workingRequest(
           proposalHash: proposal.proposalHash,
           submittedBy: proposal.submittedBy,
           submittedAt: proposal.submittedAt,
+          assignments: proposal.assignments as AssignmentIdentity[] | null,
+          scopeHash: proposal.scopeHash,
         }
       : null,
   };
@@ -181,10 +210,41 @@ export async function submitProposal(
     operation,
     payload,
   });
-  await tx.requestProposal.updateMany({
-    where: { tenantId: c.tenantId, requestId: id, status: "PENDING" },
-    data: { status: "SUPERSEDED" },
-  });
+  if (operation === "SAVE") {
+    // Editing unrelated waiting assignments preserves the selected approval.
+    const approvals = await tx.requestProposal.findMany({
+      where: {
+        tenantId: c.tenantId,
+        requestId: id,
+        status: { in: ["PENDING", "APPROVED"] },
+        operation: "SAVE",
+      },
+    });
+    for (const approved of approvals) {
+      let unchanged = false;
+      try {
+        unchanged =
+          !!approved.scopeHash &&
+          hash(
+            approvalScopeValue(
+              draft,
+              approved.assignments as AssignmentIdentity[],
+            ),
+          ) === approved.scopeHash;
+      } catch {
+        /* Removed or changed selected assignment invalidates review. */
+      }
+      if (!unchanged)
+        await tx.requestProposal.update({
+          where: { id: approved.id },
+          data: { status: "SUPERSEDED" },
+        });
+    }
+  } else
+    await tx.requestProposal.updateMany({
+      where: { tenantId: c.tenantId, requestId: id, status: "PENDING" },
+      data: { status: "SUPERSEDED" },
+    });
   const proposal = await tx.requestProposal.create({
     data: {
       tenantId: c.tenantId,
@@ -198,19 +258,52 @@ export async function submitProposal(
       proposalHash,
       submittedBy: c.userId,
       reason,
+      status: operation === "SAVE" ? "DRAFT" : "PENDING",
     },
   });
-  await tx.printRequest.update({
-    where: { id },
-    data: { workingRevision: revision },
-  });
-  await audit(tx, c, "CHANGE_PROPOSED", id, {
-    proposalId: proposal.id,
-    operation,
-    revision,
-    proposalHash,
-    changedFields: diff.map((item) => item.path),
-  });
+  if (operation === "SAVE") {
+    const { persistItems, searchable, protectIssuedAssignments } =
+      await import("./requests");
+    await protectIssuedAssignments(
+      tx,
+      c,
+      id,
+      draft,
+      parse(draftSchema, working.draft),
+    );
+    await persistItems(tx, c, id, draft);
+    await tx.printRequest.update({
+      where: { id },
+      data: {
+        draft: json(draft),
+        revision,
+        workingRevision: revision,
+        title: draft.title,
+        kind: draft.kind,
+        customerId: draft.customerId,
+        demoMode: draft.demoMode,
+        itemCount: draft.items.length,
+        searchText: searchable(draft),
+      },
+    });
+  } else
+    await tx.printRequest.update({
+      where: { id },
+      data: { workingRevision: revision },
+    });
+  await audit(
+    tx,
+    c,
+    operation === "SAVE" ? "DRAFT_SAVED" : "CHANGE_PROPOSED",
+    id,
+    {
+      proposalId: proposal.id,
+      operation,
+      revision,
+      proposalHash,
+      changedFields: diff.map((item) => item.path),
+    },
+  );
   return {
     ...(await workingRequest(c, id, tx)),
     ...(operation === "SAVE" ? draft : {}),
@@ -218,17 +311,15 @@ export async function submitProposal(
       ? { customerName: personCustomerName(draft) || null }
       : {}),
     revision,
-    approval: {
-      proposalId: proposal.id,
-      status: proposal.status,
-      baseRevision: proposal.baseRevision,
-      proposalHash: proposal.proposalHash,
-      submittedBy: proposal.submittedBy,
-      submittedAt: proposal.submittedAt,
-    },
     importScaffoldId:
       operation === "SAVE"
-        ? await replaceableImportScaffoldId(tx, c, id, draft, record.revision)
+        ? await replaceableImportScaffoldId(
+            tx,
+            c,
+            id,
+            draft,
+            working.approvedRevision,
+          )
         : null,
   };
 }
@@ -274,22 +365,138 @@ export async function requestApproval(c: Context, id: string) {
 }
 export async function submitApproval(c: Context, id: string, input: unknown) {
   assertStaff(c, true);
-  const { expectedRevision } = parse(
-    z.object({ expectedRevision: z.number().int().nonnegative() }).strict(),
-    input,
-  );
-  const record = await workingRequest(c, id);
-  if (record.archivedAt)
-    fail(
-      409,
-      "REQUEST_ARCHIVED",
-      "Архивная заявка недоступна для согласования",
+  const data = parse(finalizeSchema, input);
+  return transaction(async (tx) => {
+    await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    const record = await workingRequest(c, id, tx);
+    if (record.archivedAt)
+      fail(
+        409,
+        "REQUEST_ARCHIVED",
+        "Архивная заявка недоступна для согласования",
+      );
+    if (record.status !== "DRAFT")
+      fail(409, "REGISTERED_IMMUTABLE", "Все назначения уже оформлены");
+    if (record.revision !== data.expectedRevision)
+      fail(409, "REVISION_CONFLICT", "Обновите рабочую версию");
+    const { selectBatch, assertApprovalDataComplete } =
+      await import("./requests");
+    const selected = await selectBatch(
+      tx,
+      c,
+      id,
+      parse(draftSchema, record.draft),
+      data.assignments,
     );
-  if (record.revision !== expectedRevision)
-    fail(409, "REVISION_CONFLICT", "Обновите рабочую версию");
-  if (record.approval?.status !== "PENDING")
-    fail(409, "PROPOSAL_REQUIRED", "Сохраните изменения для согласования");
-  return requestApproval(c, id);
+    await assertApprovalDataComplete(
+      tx,
+      c,
+      id,
+      data.expectedRevision,
+      selected.assignments,
+    );
+    const scopeHash = hash(
+      approvalScopeValue(
+        parse(draftSchema, record.draft),
+        selected.assignments,
+      ),
+    );
+    const prior = await tx.requestProposal.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        requestId: id,
+        operation: "SAVE",
+        scopeHash,
+        status: { in: ["PENDING", "APPROVED"] },
+      },
+      orderBy: { revision: "desc" },
+    });
+    if (prior)
+      return {
+        requestId: id,
+        revision: record.revision,
+        approval: {
+          proposalId: prior.id,
+          status: prior.status,
+          proposalHash: prior.proposalHash,
+          assignments: selected.assignments,
+        },
+      };
+    await tx.requestProposal.updateMany({
+      where: {
+        tenantId: c.tenantId,
+        requestId: id,
+        status: "PENDING",
+        operation: "SAVE",
+      },
+      data: { status: "SUPERSEDED" },
+    });
+    const staging = await tx.requestProposal.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        requestId: id,
+        revision: record.revision,
+        status: "DRAFT",
+      },
+    });
+    const revision = staging
+      ? record.revision
+      : Math.max(record.revision, record.workingRevision) + 1;
+    const proposalHash = hash({
+      requestId: id,
+      revision,
+      operation: "SAVE",
+      scopeHash,
+      assignments: selected.assignments,
+    });
+    const fields = {
+      status: "PENDING",
+      assignments: json(selected.assignments),
+      scopeHash,
+      proposalHash,
+      payload: json(parse(draftSchema, record.draft)),
+      submittedBy: c.userId,
+      submittedAt: new Date(),
+    };
+    const proposal = staging
+      ? await tx.requestProposal.update({
+          where: { id: staging.id },
+          data: fields,
+        })
+      : await tx.requestProposal.create({
+          data: {
+            tenantId: c.tenantId,
+            requestId: id,
+            revision,
+            baseRevision: record.revision,
+            operation: "SAVE",
+            before: record.draft as Prisma.InputJsonValue,
+            diff: json([]),
+            ...fields,
+          },
+        });
+    if (revision !== record.revision)
+      await tx.printRequest.update({
+        where: { id },
+        data: { revision, workingRevision: revision },
+      });
+    await audit(tx, c, "CHANGE_PROPOSED", id, {
+      proposalId: proposal.id,
+      revision,
+      scopeHash,
+      assignments: selected.assignments,
+    });
+    return {
+      requestId: id,
+      revision,
+      approval: {
+        proposalId: proposal.id,
+        status: proposal.status,
+        proposalHash,
+        assignments: selected.assignments,
+      },
+    };
+  });
 }
 export async function listApprovals(c: Context, query: unknown) {
   assertStaff(c);
@@ -304,7 +511,7 @@ export async function listApprovals(c: Context, query: unknown) {
   );
   const where = {
     tenantId: c.tenantId,
-    ...(q.status ? { status: q.status } : {}),
+    ...(q.status ? { status: q.status } : { status: { not: "DRAFT" } }),
   };
   const [records, total] = await Promise.all([
     db.requestProposal.findMany({
@@ -366,6 +573,36 @@ export async function approvalDetail(c: Context, id: string) {
     }),
   ]);
   const { before, diff, ...safeProposal } = proposal;
+  const scopeAssignments =
+    proposal.operation === "SAVE" && proposal.assignments
+      ? (proposal.assignments as AssignmentIdentity[])
+      : null;
+  const scopedDraft = scopeAssignments
+    ? selectAssignmentScope(
+        parse(draftSchema, proposal.payload),
+        scopeAssignments,
+      ).draft
+    : null;
+  const previousDraft = scopedDraft ? parse(draftSchema, before) : null;
+  const previousKeys = new Set(
+    previousDraft
+      ? selectAssignmentScope(previousDraft).assignments.map((assignment) =>
+          JSON.stringify([assignment.rowId, assignment.assignmentId]),
+        )
+      : [],
+  );
+  const scopedBefore = previousDraft
+    ? selectAssignmentScope(
+        previousDraft,
+        scopeAssignments!.filter((assignment) =>
+          previousKeys.has(
+            JSON.stringify([assignment.rowId, assignment.assignmentId]),
+          ),
+        ),
+      ).draft
+    : null;
+  const visibleDiff =
+    scopedDraft && scopedBefore ? proposalDiff(scopedBefore, scopedDraft) : diff;
   const references = new Set<string>();
   const findReferences = (value: unknown) => {
     if (!value || typeof value !== "object") return;
@@ -401,7 +638,8 @@ export async function approvalDetail(c: Context, id: string) {
     payloadHash: proposal.proposalHash,
     expectedProposalHash: proposal.proposalHash,
     requestedAction: proposal.operation,
-    draft: proposal.operation === "SAVE" ? proposal.payload : null,
+    draft:
+      proposal.operation === "SAVE" ? scopedDraft || proposal.payload : null,
     requestRevision: proposal.revision,
     createdAt: proposal.submittedAt,
     request: {
@@ -426,7 +664,7 @@ export async function approvalDetail(c: Context, id: string) {
     ]),
     author,
     ...(isDirectorRole(c.role)
-      ? { diff, before, decision }
+      ? { diff: visibleDiff, before: scopedBefore || before, decision }
       : {
           diff: [],
           decision: decision
@@ -464,8 +702,17 @@ export async function decideProposal(c: Context, id: string, input: unknown) {
     });
     if (
       proposal.status !== "PENDING" ||
-      current?.id !== id ||
-      record.revision !== proposal.baseRevision ||
+      (proposal.scopeHash
+        ? hash(
+            approvalScopeValue(
+              parse(
+                draftSchema,
+                (await workingRequest(c, record.id, tx)).draft,
+              ),
+              proposal.assignments as AssignmentIdentity[],
+            ),
+          ) !== proposal.scopeHash
+        : current?.id !== id || record.revision !== proposal.baseRevision) ||
       proposal.proposalHash !== data.expectedProposalHash
     )
       fail(
@@ -475,7 +722,13 @@ export async function decideProposal(c: Context, id: string, input: unknown) {
       );
     if (data.decision === "APPROVE" && proposal.operation === "SAVE") {
       const { assertApprovalDataComplete } = await import("./requests");
-      await assertApprovalDataComplete(tx, c, record.id, proposal.revision);
+      await assertApprovalDataComplete(
+        tx,
+        c,
+        record.id,
+        proposal.scopeHash ? record.revision : proposal.revision,
+        proposal.assignments as AssignmentIdentity[] | undefined,
+      );
     }
     await tx.proposalDecision.create({
       data: {
@@ -492,7 +745,14 @@ export async function decideProposal(c: Context, id: string, input: unknown) {
       data: { status: data.decision === "APPROVE" ? "APPROVED" : "REJECTED" },
     });
     if (data.decision === "APPROVE") {
-      if (proposal.operation === "SAVE") {
+      if (proposal.operation === "SAVE" && proposal.scopeHash) {
+        if (record.status !== "DRAFT")
+          fail(409, "REGISTERED_IMMUTABLE", "Все назначения уже оформлены");
+        await tx.printRequest.update({
+          where: { id: record.id },
+          data: { approvedProposalId: id },
+        });
+      } else if (proposal.operation === "SAVE") {
         if (record.status !== "DRAFT")
           fail(
             409,
@@ -569,44 +829,36 @@ export async function requireApproved(
   id: string,
   expectedRevision: number,
   tx: Prisma.TransactionClient = db,
+  assignments?: AssignmentIdentity[],
 ) {
-  const record = await scopedRequest(c, id, tx);
-  const latest = await tx.requestProposal.findFirst({
-    where: { tenantId: c.tenantId, requestId: id },
+  const record = await workingRequest(c, id, tx);
+  if (record.revision !== expectedRevision)
+    fail(409, "REVISION_CONFLICT", "Сначала сохраните актуальную версию");
+  const draft = parse(draftSchema, record.draft);
+  const { selectBatch } = await import("./requests");
+  const selected = await selectBatch(tx, c, id, draft, assignments);
+  const scopeHash = hash(approvalScopeValue(draft, selected.assignments));
+  const candidates = await tx.requestProposal.findMany({
+    where: {
+      tenantId: c.tenantId,
+      requestId: id,
+      operation: "SAVE",
+      status: "APPROVED",
+    },
     orderBy: { revision: "desc" },
   });
-  if (
-    !latest ||
-    latest.operation !== "SAVE" ||
-    latest.status !== "APPROVED" ||
-    latest.id !== record.approvedProposalId ||
-    latest.revision !== expectedRevision ||
-    record.revision !== expectedRevision
-  )
+  const latest = candidates.find((proposal) =>
+    proposal.scopeHash
+      ? proposal.scopeHash === scopeHash
+      : proposal.id === record.approvedProposalId &&
+        proposal.revision === expectedRevision &&
+        hash(proposal.payload) === hash(draft),
+  );
+  if (!latest)
     fail(
       409,
       "DIRECTOR_APPROVAL_REQUIRED",
-      "Текущая редакция должна быть согласована директором до оформления",
-    );
-  const draft = parse(draftSchema, latest.payload);
-  const ids = [
-    ...new Set([
-      ...(draft.customerId ? [draft.customerId] : []),
-      ...draft.items.flatMap((item) =>
-        item.employerId ? [item.employerId] : [],
-      ),
-    ]),
-  ].sort();
-  if (
-    ids.length &&
-    (!draft.organizationSnapshots ||
-      hash(draft.organizationSnapshots.map((value) => value.id).sort()) !==
-        hash(ids))
-  )
-    fail(
-      409,
-      "DIRECTOR_APPROVAL_REQUIRED",
-      "Сохраните редакцию с зафиксированными реквизитами организаций и согласуйте её с директором",
+      "Выбранный состав и его актуальные данные должны быть согласованы директором до оформления",
     );
   return latest;
 }

@@ -21,6 +21,12 @@ import {
 import type { RecipientGridProps } from "./recipient-grid";
 import { TextQualityHint } from "./text-quality-hint";
 import { restoreTrainingAssignmentField } from "@/lib/training-assignment-edit";
+import { editTrainingAssignment } from "@/lib/training-assignment-edit";
+import {
+  recipientCourses,
+  recipientPositionLabel,
+} from "@/lib/recipient-course-context";
+import { TranslationSuggestion } from "./translation-suggestion";
 
 export type GridRowActions = Pick<
   RecipientGridProps,
@@ -41,6 +47,7 @@ export type GridRowActions = Pick<
 };
 type Props = {
   item: Recipient;
+  issuedAssignmentIds: readonly string[];
   resolvedItem: Recipient;
   index: number;
   visibleIndex: number;
@@ -77,6 +84,10 @@ function resolvedRowKey(item: Recipient) {
     ...item.assignments.map((entry) => [
       entry.templateId,
       entry.documentDate,
+      entry.protocolDate,
+      entry.trainingStart,
+      entry.trainingEnd,
+      entry.fieldOrigins,
       entry.protocolMode,
       entry.eventId,
     ]),
@@ -91,6 +102,8 @@ function feedbackKey(props: Props, values: Record<string, string>) {
     ...props.item.assignments.flatMap((_, index) => [
       `assignments.${index}.documentDate`,
       `assignments.${index}.protocolDate`,
+      `assignments.${index}.trainingStart`,
+      `assignments.${index}.trainingEnd`,
     ]),
   ];
   return fields
@@ -102,6 +115,7 @@ function feedbackKey(props: Props, values: Record<string, string>) {
 export const RecipientGridRow = memo(
   function RecipientGridRow({
     item,
+    issuedAssignmentIds,
     resolvedItem,
     index,
     visibleIndex,
@@ -123,6 +137,9 @@ export const RecipientGridRow = memo(
     actions,
   }: Props) {
     const prefix = `items.${index}.`;
+    const positionLabel = recipientPositionLabel(item);
+    const courses = recipientCourses(item, resolvedItem);
+    const [datesExpanded, setDatesExpanded] = useState(false);
     const date = recipientRowDate(item, resolvedItem);
     const personalDate = item.assignments.some(
       (entry) =>
@@ -260,7 +277,15 @@ export const RecipientGridRow = memo(
                     ? "ITR"
                     : "WORKER")
                 }
-                disabled={disabled || readonly}
+                disabled={
+                  disabled ||
+                  readonly ||
+                  item.assignments.some(
+                    (entry) =>
+                      entry.templateId.startsWith("biot-") &&
+                      issuedAssignmentIds.includes(entry.id),
+                  )
+                }
                 onChange={(event) =>
                   actions.current.onEdit({
                     ...item,
@@ -277,8 +302,22 @@ export const RecipientGridRow = memo(
                 type="button"
                 className="recipient-grid-mixed-date"
                 disabled={disabled}
-                onClick={() => actions.current.onOpen(item.id)}
-                title="У обучений разные даты. Измените их в деталях."
+                onClick={() => {
+                  setDatesExpanded(true);
+                  requestAnimationFrame(() => {
+                    const panel = document.getElementById(
+                      `${instanceId}-${item.id}-course-dates`,
+                    );
+                    panel
+                      ?.querySelector<HTMLInputElement>("input:enabled")
+                      ?.focus();
+                    panel?.scrollIntoView({
+                      block: "nearest",
+                      inline: "nearest",
+                    });
+                  });
+                }}
+                title="У курсов разные даты. Раскрыть даты рядом в этой строке."
               >
                 Разные даты <Icon name="chevron" size={12} />
               </button>
@@ -291,7 +330,11 @@ export const RecipientGridRow = memo(
                 aria-invalid={!!fieldErrors[`${prefix}${dateField}`]}
                 aria-describedby={describedBy(dateField)}
                 data-field-path={datePath}
-                disabled={disabled || date.kind === "none"}
+                disabled={
+                  disabled ||
+                  date.kind === "none" ||
+                  issuedAssignmentIds.length > 0
+                }
                 readOnly={readonly}
                 title={
                   date.kind === "none"
@@ -318,7 +361,7 @@ export const RecipientGridRow = memo(
                   <button
                     type="button"
                     className="text-button"
-                    disabled={disabled}
+                    disabled={disabled || issuedAssignmentIds.length > 0}
                     onClick={() =>
                       actions.current.onEdit(
                         item.assignments
@@ -345,6 +388,20 @@ export const RecipientGridRow = memo(
             )}
             {feedback(dateField)}
             {feedback("employeeCategory")}
+            {!!courses.length && (
+              <button
+                type="button"
+                className="text-button recipient-grid-course-toggle"
+                aria-label={`Даты курсов, строка ${index + 1}`}
+                aria-expanded={datesExpanded}
+                aria-controls={`${instanceId}-${item.id}-course-dates`}
+                disabled={disabled}
+                onClick={() => setDatesExpanded((value) => !value)}
+              >
+                {datesExpanded ? "Скрыть даты курсов" : "Даты курсов"} ·{" "}
+                {courses.length}
+              </button>
+            )}
           </td>
           {columns.map(([field, label], columnIndex) => {
             const value =
@@ -360,8 +417,12 @@ export const RecipientGridRow = memo(
                   ref={ref(field)}
                   type="text"
                   value={value}
-                  title={value || undefined}
-                  aria-label={`${label}, строка ${index + 1}`}
+                  title={
+                    field.startsWith("position")
+                      ? `${positionLabel}${value ? `: ${value}` : ""}`
+                      : value || undefined
+                  }
+                  aria-label={`${field.startsWith("position") ? `${positionLabel} · ${field.endsWith("Kz") ? "KZ" : "RU"}` : label}, строка ${index + 1}`}
                   aria-invalid={!!fieldErrors[`${prefix}${field}`]}
                   aria-describedby={describedBy(field)}
                   data-field-path={`${prefix}${field}`}
@@ -396,6 +457,19 @@ export const RecipientGridRow = memo(
                 />
                 {feedback(field)}
                 <TextQualityHint value={value} />
+                {field === "positionKz" && (
+                  <TranslationSuggestion
+                    compact
+                    source={item.positionRu}
+                    currentText={item.positionKz}
+                    field="positionRu"
+                    target="kk"
+                    disabled={disabled || readonly}
+                    onApply={(text) =>
+                      actions.current.onEdit({ ...item, positionKz: text })
+                    }
+                  />
+                )}
               </td>
             );
           })}
@@ -432,15 +506,35 @@ export const RecipientGridRow = memo(
                 Детали <Icon name="chevron" size={12} />
               </button>
               {!readonly && (
-                <button
-                  type="button"
-                  disabled={disabled}
-                  aria-label={`Удалить получателя ${index + 1}`}
-                  title="Удалить получателя"
-                  onClick={() => actions.current.onRemove(item.id)}
-                >
-                  ×
-                </button>
+                <>
+                  <button
+                    type="button"
+                    disabled={disabled || issuedAssignmentIds.length > 0}
+                    aria-label={`Удалить получателя ${index + 1}`}
+                    aria-describedby={
+                      issuedAssignmentIds.length > 0
+                        ? `${instanceId}-issued-removal-${index}`
+                        : undefined
+                    }
+                    title={
+                      issuedAssignmentIds.length > 0
+                        ? "Получателя с выпущенными документами нельзя удалить. Продолжайте оставшиеся обучения в этой строке."
+                        : "Удалить получателя"
+                    }
+                    onClick={() => actions.current.onRemove(item.id)}
+                  >
+                    ×
+                  </button>
+                  {issuedAssignmentIds.length > 0 && (
+                    <span
+                      id={`${instanceId}-issued-removal-${index}`}
+                      className="sr-only"
+                    >
+                      Получателя с выпущенными документами нельзя удалить.
+                      Продолжайте оставшиеся обучения в этой строке.
+                    </span>
+                  )}
+                </>
               )}
             </div>
             {rowErrors > 0 && (
@@ -450,6 +544,109 @@ export const RecipientGridRow = memo(
             )}
           </td>
         </tr>
+        {datesExpanded && courses.length > 0 && (
+          <tr
+            data-recipient-id={item.id}
+            className={`recipient-grid-date-supplement ${rowClass}`}
+          >
+            <td colSpan={columns.length + 3 + (showPhotoColumn ? 1 : 0)}>
+              <div
+                id={`${instanceId}-${item.id}-course-dates`}
+                className="recipient-grid-course-dates"
+              >
+                {courses.map((course) => (
+                  <fieldset
+                    key={course.key}
+                    disabled={
+                      disabled ||
+                      readonly ||
+                      issuedAssignmentIds.includes(course.assignment.id)
+                    }
+                  >
+                    <legend>{course.label}</legend>
+                    {issuedAssignmentIds.includes(course.assignment.id) && (
+                      <small>
+                        Оформлено · изменение через исправление документа
+                      </small>
+                    )}
+                    {(
+                      [
+                        ["documentDate", "Выдача"],
+                        ["protocolDate", "Протокол"],
+                        ["trainingStart", "Начало"],
+                        ["trainingEnd", "Окончание"],
+                      ] as const
+                    )
+                      .filter(
+                        ([field]) =>
+                          !course.protocolOnly || field !== "documentDate",
+                      )
+                      .map(([field, label]) => {
+                        const path = `assignments.${course.assignmentIndex}.${field}`;
+                        const origin = course.assignment.fieldOrigins?.[field];
+                        const exception = [
+                          "MANUAL",
+                          "IMPORTED",
+                          "CLEARED",
+                        ].includes(origin || "");
+                        return (
+                          <label key={field}>
+                            <span>{label}</span>
+                            <input
+                              type="date"
+                              value={course.resolved[field] || ""}
+                              data-field-path={`${prefix}${path}`}
+                              aria-label={`${course.label}: ${label.toLowerCase()}, строка ${index + 1}`}
+                              aria-invalid={!!fieldErrors[`${prefix}${path}`]}
+                              aria-describedby={describedBy(path)}
+                              onChange={(event) =>
+                                actions.current.onEdit(
+                                  editTrainingAssignment(
+                                    item,
+                                    course.assignment.id,
+                                    { [field]: event.target.value },
+                                    liveRules,
+                                  ),
+                                )
+                              }
+                            />
+                            <small>
+                              {exception
+                                ? origin === "IMPORTED"
+                                  ? "Из импорта · исключение"
+                                  : origin === "CLEARED"
+                                    ? "Явно очищено"
+                                    : "Личное исключение"
+                                : "Общая дата курса"}
+                            </small>
+                            {exception && !readonly && (
+                              <button
+                                type="button"
+                                className="text-button"
+                                onClick={() =>
+                                  actions.current.onEdit(
+                                    restoreTrainingAssignmentField(
+                                      item,
+                                      course.assignment.id,
+                                      field,
+                                      liveRules,
+                                    ),
+                                  )
+                                }
+                              >
+                                Вернуть общую
+                              </button>
+                            )}
+                            {feedback(path)}
+                          </label>
+                        );
+                      })}
+                  </fieldset>
+                ))}
+              </div>
+            </td>
+          </tr>
+        )}
         {itr && (
           <tr
             data-recipient-id={item.id}
@@ -502,6 +699,8 @@ export const RecipientGridRow = memo(
   },
   (before, after) =>
     before.item === after.item &&
+    before.issuedAssignmentIds.join("\u0000") ===
+      after.issuedAssignmentIds.join("\u0000") &&
     before.index === after.index &&
     before.visibleIndex === after.visibleIndex &&
     before.active === after.active &&

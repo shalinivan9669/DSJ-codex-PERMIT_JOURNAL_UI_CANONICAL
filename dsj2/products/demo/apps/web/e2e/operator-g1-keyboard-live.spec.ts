@@ -18,6 +18,7 @@ import {
   type G1Checkpoint,
 } from "./operator-g1-helpers";
 import {
+  assertTechnicalBlankRemoval,
   keyboardMetrics,
   keyboardFocus,
   keyboardActivate,
@@ -358,12 +359,7 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         page,
         page.getByRole("button", { name: "Удалить получателя 1", exact: true }),
       );
-      await keyboardActivate(
-        page,
-        page
-          .getByRole("dialog")
-          .getByRole("button", { name: "Убрать из заявки", exact: true }),
-      );
+      await assertTechnicalBlankRemoval(page);
       await keyboardActivate(
         page,
         page.getByRole("button", { name: "Импорт / вставка", exact: true }),
@@ -886,6 +882,17 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
       path.join(evidence, "g1-validation-response.json"),
       JSON.stringify(responseEvidence, null, 2),
     );
+    await keyboardCheck(
+      page,
+      page.getByLabel(/Все подтверждённые ещё не оформленные курсы/),
+    );
+    await keyboardActivate(
+      page,
+      page.getByRole("button", { name: /Проверить и передать директору/ }),
+    );
+    await expect
+      .poll(async () => (await readCommon(page, requestId)).approval?.status)
+      .toBe("PENDING");
     const applied = await readCommon(page, requestId);
     expect(applied.approval?.status).toBe("PENDING");
     const directorContext = await browser.newContext({
@@ -1047,7 +1054,7 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         photos: 100,
         individualPanelsOpened,
         documentCount: 101,
-        artifacts: 204,
+        artifacts: files.length,
         groupProtocolCount: 1,
         groupNumber: group.number,
         allFilesHashVerified: true,

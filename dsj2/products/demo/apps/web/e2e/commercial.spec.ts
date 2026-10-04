@@ -1,4 +1,4 @@
-import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
+import { assertTechnicalBlankRemoval, createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -70,10 +70,7 @@ test("XLSX formulas are excluded with an actionable row error and no silent loss
   await login(page);
   await person(page);
   await page.getByRole("button", { name: "Удалить получателя 1" }).click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
     .click();
@@ -597,10 +594,7 @@ test("CSV formula text and optional PTM/PB semantic fields survive import and re
     await page.goto("/requests");
     await person(page);
     await page.getByRole("button", { name: "Удалить получателя 1" }).click();
-    await page
-      .getByRole("dialog")
-      .getByRole("button", { name: "Убрать из заявки", exact: true })
-      .click();
+    await assertTechnicalBlankRemoval(page);
     await page
       .getByRole("button", { name: "Импорт / вставка", exact: true })
       .click();

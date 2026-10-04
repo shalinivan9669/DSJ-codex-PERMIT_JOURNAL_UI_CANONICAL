@@ -325,11 +325,17 @@ def reference_group_item(item):
               'UNKNOWN': ('Не подтверждено', 'Расталмаған')}
     if status in labels:
         ru, kz = labels[status]
-        assignment.update(result=ru + ' / ' + kz, resultRu=ru, resultKz=kz)
+        # build_legacy_payload owns the common individual/group sanitation and
+        # retains operator-entered scores. Leave its frozen input intact here.
+        if not str(assignment.get('result') or '').strip():
+            assignment.update(result=ru + ' / ' + kz, resultRu=ru, resultKz=kz)
     elif status == 'PASSED' and not str(assignment.get('result') or '').strip():
         ru = str(assignment.get('resultRu') or '').strip()
         kz = str(assignment.get('resultKz') or '').strip()
-        assignment['result'] = ' / '.join(value for value in [ru, kz] if value) or 'Сдал / Тапсырды'
+        default = ('Өтті/прошел' if assignment.get('templateId', '').startswith('biot-') else
+                   'Прошел/ Өтті' if assignment.get('templateId', '').startswith('ptm-') else
+                   'Тапсырды/сдал' if assignment.get('templateId', '').startswith('pb-') else 'Сдал/Тапсырды')
+        assignment['result'] = ' / '.join(value for value in [ru, kz] if value) or default
     return {**item, 'number': item.get('credentialNumber') or '', 'assignment': assignment}
 
 

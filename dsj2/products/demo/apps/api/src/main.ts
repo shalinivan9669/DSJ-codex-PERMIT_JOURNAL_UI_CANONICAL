@@ -11,6 +11,8 @@ import { OperatorValueController } from "./operator-value-controller";
 import { DeliveryController } from "./delivery-controller";
 import { PublicVerificationController } from "./public-verification-controller";
 import { EmployerInviteController } from "./employer-invite-controller";
+import { PrintSetsController } from "./print-sets-controller";
+import { TrainingTopicsController } from "./training-topics-controller";
 import { authenticate } from "./auth";
 import { db, type DemoRequest } from "./core";
 @Module({
@@ -20,6 +22,8 @@ import { db, type DemoRequest } from "./core";
     DeliveryController,
     PublicVerificationController,
     EmployerInviteController,
+    PrintSetsController,
+    TrainingTopicsController,
   ],
 })
 class DemoModule {}

@@ -8,6 +8,8 @@ import {
   TEMPLATE_LABELS,
   today,
   canManageCenter,
+  selectAssignmentScope,
+  approvalScopeValue,
   z,
   type Draft,
 } from "@demo/contracts";
@@ -1725,6 +1727,394 @@ async function artifactVisibleToMembership(
   }
   return allowed.some((row) => row.id === document.rowId);
 }
+/** External readers see approved scope and immutable issued history only. */
+function mergedPortalScope(drafts: Draft[]) {
+  const latest = drafts[drafts.length - 1];
+  if (!latest) return undefined;
+  const rows = new Map<string, Draft["items"][number]>();
+  const events = new Map<string, NonNullable<Draft["events"]>[number]>();
+  for (const draft of drafts) {
+    for (const event of draft.events || []) events.set(event.id, event);
+    for (const row of draft.items) {
+      const assignments = new Map(
+        rows.get(row.id)?.assignments.map((entry) => [entry.id, entry]) || [],
+      );
+      for (const assignment of row.assignments)
+        assignments.set(assignment.id, assignment);
+      rows.set(row.id, { ...row, assignments: [...assignments.values()] });
+    }
+  }
+  return { ...latest, items: [...rows.values()], events: [...events.values()] };
+}
+function portalScopeHash(draft: Draft) {
+  return hash(
+    approvalScopeValue(
+      draft,
+      draft.items.flatMap((row) =>
+        row.assignments.map((assignment) => ({
+          rowId: row.id,
+          assignmentId: assignment.id,
+        })),
+      ),
+    ),
+  );
+}
+async function recoverLegacyPortalProposalSource(
+  c: Context,
+  proposal: {
+    id: string;
+    requestId: string;
+    requestRevision: number;
+    createdAt: Date;
+  },
+  workingDraft: Draft,
+  tx: Tx,
+) {
+  const candidates = await tx.requestProposal.findMany({
+    where: {
+      tenantId: c.tenantId,
+      requestId: proposal.requestId,
+      operation: "SAVE",
+      status: { in: ["APPROVED", "SUPERSEDED"] },
+      submittedAt: { lte: proposal.createdAt },
+      revision: { lte: proposal.requestRevision },
+    },
+    orderBy: { revision: "asc" },
+  });
+  const [decisions, oldAudits, issuances] = await Promise.all([
+    tx.proposalDecision.findMany({
+      where: {
+        tenantId: c.tenantId,
+        proposalId: { in: candidates.map((candidate) => candidate.id) },
+        decision: "APPROVE",
+        createdAt: { lte: proposal.createdAt },
+      },
+    }),
+    tx.auditEvent.findMany({
+      where: {
+        tenantId: c.tenantId,
+        entityId: proposal.requestId,
+        action: "CHANGE_APPROVED",
+        createdAt: { lte: proposal.createdAt },
+      },
+      select: { metadata: true },
+    }),
+    tx.issuance.findMany({
+      where: {
+        tenantId: c.tenantId,
+        requestId: proposal.requestId,
+        createdAt: { lte: proposal.createdAt },
+        sourceRevision: { lte: proposal.requestRevision },
+      },
+      orderBy: { createdAt: "asc" },
+      select: { id: true, snapshot: true, scopeHash: true },
+    }),
+  ]);
+  const approved: {
+    id: string;
+    draft: Draft;
+    scopeHash: string | null;
+  }[] = [];
+  for (const candidate of candidates) {
+    const decided = decisions.some(
+      (decision) =>
+        decision.proposalId === candidate.id &&
+        decision.proposalHash === candidate.proposalHash,
+    );
+    const audited = oldAudits.some(
+      (event) =>
+        z
+          .object({
+            proposalId: z.literal(candidate.id),
+            proposalHash: z.literal(candidate.proposalHash),
+            operation: z.literal("SAVE"),
+          })
+          .safeParse(event.metadata).success,
+    );
+    if (!decided && !audited) continue;
+    const parsed = draftSchema.safeParse(candidate.payload);
+    if (!parsed.success) continue;
+    try {
+      const draft = candidate.scopeHash
+        ? selectAssignmentScope(
+            parsed.data,
+            z
+              .array(
+                z
+                  .object({ rowId: z.string(), assignmentId: z.string() })
+                  .strict(),
+              )
+              .min(1)
+              .parse(candidate.assignments),
+          ).draft
+        : parsed.data;
+      if (candidate.scopeHash && portalScopeHash(draft) !== candidate.scopeHash)
+        continue;
+      approved.push({
+        id: candidate.id,
+        draft,
+        scopeHash: candidate.scopeHash,
+      });
+    } catch {
+      /* Malformed historical scope cannot recover an old command. */
+    }
+  }
+  const issued: { id: string; draft: Draft }[] = [];
+  for (const issuance of issuances) {
+    const frozen = z
+      .object({ draft: draftSchema })
+      .safeParse(issuance.snapshot);
+    if (!frozen.success) continue;
+    const identities = frozen.data.draft.items.flatMap((row) =>
+      row.assignments.map((assignment) => ({
+        rowId: row.id,
+        assignmentId: assignment.id,
+      })),
+    );
+    let source = frozen.data.draft;
+    if (issuance.scopeHash) {
+      const raw = approved.find((candidate) => {
+        if (candidate.scopeHash !== issuance.scopeHash) return false;
+        try {
+          return (
+            hash(approvalScopeValue(candidate.draft, identities)) ===
+            issuance.scopeHash
+          );
+        } catch {
+          return false;
+        }
+      });
+      if (raw) source = selectAssignmentScope(raw.draft, identities).draft;
+      else if (portalScopeHash(source) !== issuance.scopeHash) continue;
+    }
+    issued.push({ id: issuance.id, draft: source });
+  }
+  const latest = approved[approved.length - 1];
+  const publishedDraft = mergedPortalScope([
+    ...issued.map((entry) => entry.draft),
+    ...(latest ? [latest.draft] : []),
+  ]);
+  if (!publishedDraft) return undefined;
+  const identities = publishedDraft.items.flatMap((row) =>
+    row.assignments.map((assignment) => ({
+      rowId: row.id,
+      assignmentId: assignment.id,
+    })),
+  );
+  try {
+    if (
+      hash(approvalScopeValue(workingDraft, identities)) !==
+      portalScopeHash(publishedDraft)
+    )
+      return undefined;
+  } catch {
+    return undefined;
+  }
+  return {
+    publishedDraft,
+    repeatDraft: mergedPortalScope(issued.map((entry) => entry.draft)),
+    approvalId: latest?.id,
+    issuanceIds: issued.map((entry) => entry.id),
+  };
+}
+export async function publishedPortalRequest(
+  c: Context,
+  request: {
+    id: string;
+    title: string;
+    status: string;
+    revision: number;
+    approvedProposalId: string | null;
+    draft: Prisma.JsonValue;
+  },
+  tx: Tx = db,
+) {
+  const [approved, issuances] = await Promise.all([
+    request.approvedProposalId
+      ? tx.requestProposal.findFirst({
+          where: {
+            tenantId: c.tenantId,
+            requestId: request.id,
+            id: request.approvedProposalId,
+            status: "APPROVED",
+            operation: "SAVE",
+          },
+        })
+      : null,
+    tx.issuance.findMany({
+      where: { tenantId: c.tenantId, requestId: request.id },
+      orderBy: { createdAt: "asc" },
+      select: { snapshot: true, sourceRevision: true, scopeHash: true },
+    }),
+  ]);
+  // Issuance snapshots are resolved for printing. Recover the corresponding
+  // raw agreed values by their immutable scope hash when proving a later edit.
+  const hashes = issuances.flatMap((issuance) =>
+    issuance.scopeHash ? [issuance.scopeHash] : [],
+  );
+  const agreedSources = hashes.length
+    ? await tx.requestProposal.findMany({
+        where: {
+          tenantId: c.tenantId,
+          requestId: request.id,
+          operation: "SAVE",
+          scopeHash: { in: hashes },
+        },
+        select: { payload: true, scopeHash: true },
+      })
+    : [];
+  const published: {
+    draft: Draft;
+    proofDraft: Draft;
+    revision: number;
+    issued?: boolean;
+  }[] = [];
+  for (const issuance of issuances) {
+    const frozen = z
+      .object({ draft: draftSchema })
+      .safeParse(issuance.snapshot);
+    if (frozen.success) {
+      const identities = frozen.data.draft.items.flatMap((row) =>
+        row.assignments.map((assignment) => ({
+          rowId: row.id,
+          assignmentId: assignment.id,
+        })),
+      );
+      let proofDraft = frozen.data.draft;
+      for (const source of agreedSources) {
+        if (source.scopeHash !== issuance.scopeHash) continue;
+        const parsed = draftSchema.safeParse(source.payload);
+        if (!parsed.success) continue;
+        try {
+          if (
+            hash(approvalScopeValue(parsed.data, identities)) ===
+            issuance.scopeHash
+          ) {
+            proofDraft = selectAssignmentScope(parsed.data, identities).draft;
+            break;
+          }
+        } catch {
+          /* A mismatched historical source cannot prove the published scope. */
+        }
+      }
+      published.push({
+        draft: frozen.data.draft,
+        proofDraft,
+        revision: issuance.sourceRevision,
+        issued: true,
+      });
+    }
+  }
+  if (approved) {
+    const parsed = draftSchema.safeParse(approved.payload);
+    if (parsed.success) {
+      const identities = z
+        .array(
+          z.object({ rowId: z.string(), assignmentId: z.string() }).strict(),
+        )
+        .safeParse(approved.assignments);
+      if (identities.success) {
+        try {
+          published.push({
+            draft: selectAssignmentScope(parsed.data, identities.data).draft,
+            proofDraft: selectAssignmentScope(parsed.data, identities.data)
+              .draft,
+            revision: approved.revision,
+          });
+        } catch {
+          /* A malformed saved scope must not expose the full payload. */
+        }
+      } else if (!approved.scopeHash) {
+        // Earlier approvals covered the complete saved request.
+        published.push({
+          draft: parsed.data,
+          proofDraft: parsed.data,
+          revision: approved.revision,
+        });
+      }
+    }
+  }
+  if (!published.length && request.status === "FINALIZED") {
+    const historic = draftSchema.safeParse(request.draft);
+    if (historic.success)
+      published.push({
+        draft: historic.data,
+        proofDraft: historic.data,
+        revision: request.revision,
+        issued: true,
+      });
+  }
+  if (!published.length) return null;
+  const rows = new Map<string, Draft["items"][number]>();
+  const events = new Map<string, NonNullable<Draft["events"]>[number]>();
+  for (const entry of published)
+    for (const event of entry.draft.events || []) events.set(event.id, event);
+  for (const entry of published)
+    for (const row of entry.draft.items) {
+      const assignments = new Map(
+        rows
+          .get(row.id)
+          ?.assignments.map((assignment) => [assignment.id, assignment]) || [],
+      );
+      for (const assignment of row.assignments)
+        assignments.set(assignment.id, assignment);
+      rows.set(row.id, { ...row, assignments: [...assignments.values()] });
+    }
+  const latest = published[published.length - 1];
+  const proofRows = new Map<string, Draft["items"][number]>();
+  const proofEvents = new Map<string, NonNullable<Draft["events"]>[number]>();
+  for (const entry of published) {
+    for (const event of entry.proofDraft.events || [])
+      proofEvents.set(event.id, event);
+    for (const row of entry.proofDraft.items) {
+      const assignments = new Map(
+        proofRows
+          .get(row.id)
+          ?.assignments.map((assignment) => [assignment.id, assignment]) || [],
+      );
+      for (const assignment of row.assignments)
+        assignments.set(assignment.id, assignment);
+      proofRows.set(row.id, { ...row, assignments: [...assignments.values()] });
+    }
+  }
+  return {
+    ...request,
+    title: latest.draft.title || "",
+    revision: latest.revision,
+    draft: {
+      ...latest.draft,
+      items: [...rows.values()],
+      events: [...events.values()],
+    },
+    // Internal only: employerPortal projects an explicit response whitelist.
+    scopeProofDraft: {
+      ...latest.proofDraft,
+      items: [...proofRows.values()],
+      events: [...proofEvents.values()],
+    },
+    issuedSourceDraft: mergedPortalScope(
+      published
+        .filter((entry) => entry.issued)
+        .map((entry) => entry.proofDraft),
+    ),
+  };
+}
+async function portalArtifactDraft(
+  c: Context,
+  artifact: { requestId: string; issuanceId: string | null },
+) {
+  if (!artifact.issuanceId) return null;
+  const issuance = await db.issuance.findFirst({
+    where: {
+      tenantId: c.tenantId,
+      requestId: artifact.requestId,
+      id: artifact.issuanceId,
+    },
+    select: { snapshot: true },
+  });
+  const parsed = z.object({ draft: draftSchema }).safeParse(issuance?.snapshot);
+  return parsed.success ? parsed.data.draft : null;
+}
 export async function employerPortal(c: Context) {
   const member = await memberships(c);
   const customerIds = member.map((m) => m.customerId);
@@ -1747,12 +2137,17 @@ export async function employerPortal(c: Context) {
     const links = await db.serviceOrderRequest.findMany({
       where: { tenantId: c.tenantId, orderId: value.id },
     });
-    const requests = await db.printRequest.findMany({
+    const storedRequests = await db.printRequest.findMany({
       where: {
         tenantId: c.tenantId,
         id: { in: links.map((l) => l.requestId) },
       },
     });
+    const requests = (
+      await Promise.all(
+        storedRequests.map((request) => publishedPortalRequest(c, request)),
+      )
+    ).filter((request) => request !== null);
     const visible = requests
       .map((r) => {
         const draft = draftSchema.parse(r.draft);
@@ -1793,6 +2188,7 @@ export async function employerPortal(c: Context) {
             id: true,
             requestId: true,
             documentId: true,
+            issuanceId: true,
             fileName: true,
             format: true,
             sha256: true,
@@ -1801,16 +2197,16 @@ export async function employerPortal(c: Context) {
       : [];
     const artifacts = [];
     for (const candidate of candidates) {
-      const request = requests.find((r) => r.id === candidate.requestId)!;
+      const frozen = await portalArtifactDraft(c, candidate);
       if (
-        await artifactVisibleToMembership(
-          c,
-          candidate,
-          draftSchema.parse(request.draft),
-          membership,
-        )
+        frozen &&
+        (await artifactVisibleToMembership(c, candidate, frozen, membership))
       ) {
-        const { documentId: _documentId, ...safe } = candidate;
+        const {
+          documentId: _documentId,
+          issuanceId: _issuanceId,
+          ...safe
+        } = candidate;
         artifacts.push({
           ...safe,
           label: await portalArtifactLabel(c, candidate),
@@ -1913,7 +2309,8 @@ export async function employerArtifactAccess(c: Context, id: string) {
     where: { tenantId: c.tenantId, id: artifact.requestId },
   });
   if (!request) fail(404, "NOT_FOUND", "Файл не найден");
-  const draft = draftSchema.parse(request.draft);
+  const draft = await portalArtifactDraft(c, artifact);
+  if (!draft) fail(404, "NOT_FOUND", "Файл не найден");
   const members = (await memberships(c, "DOWNLOAD")).filter(
     (member) =>
       allowedRows(draft, member.recipientIds as string[], member.customerId)
@@ -1976,13 +2373,36 @@ export async function submitEmployerProposal(
       }))
     )
       fail(404, "NOT_FOUND", "Заявка не найдена");
-    if (request.revision !== data.requestRevision)
+    const published = await publishedPortalRequest(c, request, tx);
+    if (!published) fail(404, "NOT_FOUND", "Согласованный состав не найден");
+    if (published.revision !== data.requestRevision)
       fail(
         409,
         "REVISION_CONFLICT",
-        "Редакция списка изменилась. Откройте актуальную версию",
+        "Согласованный состав изменился. Откройте актуальную версию",
       );
-    const draft = draftSchema.parse(request.draft);
+    const identities = published.draft.items.flatMap((row) =>
+      row.assignments.map((assignment) => ({
+        rowId: row.id,
+        assignmentId: assignment.id,
+      })),
+    );
+    let unchanged = false;
+    try {
+      unchanged =
+        hash(
+          approvalScopeValue(draftSchema.parse(request.draft), identities),
+        ) === hash(approvalScopeValue(published.scopeProofDraft, identities));
+    } catch {
+      /* Removed or changed selected data must require a fresh agreed scope. */
+    }
+    if (!unchanged)
+      fail(
+        409,
+        "REVISION_CONFLICT",
+        "Предоставленный состав изменён в рабочей редакции; требуется повторное согласование",
+      );
+    const draft = published.draft;
     const allowed = allowedRows(
       draft,
       member.recipientIds as string[],
@@ -2001,7 +2421,7 @@ export async function submitEmployerProposal(
         tenantId: c.tenantId,
         membershipId: member.id,
         requestId: request.id,
-        requestRevision: data.requestRevision,
+        requestRevision: request.revision,
         kind: data.kind,
         status: "PENDING",
       },
@@ -2015,6 +2435,9 @@ export async function submitEmployerProposal(
     const proposal = await tx.portalProposal.create({
       data: {
         ...data,
+        // The caller pins the visible publication; acceptance retains the
+        // current working CAS so intervening private edits still conflict.
+        requestRevision: request.revision,
         changes: json(data.changes),
         tenantId: c.tenantId,
         orderId: id,
@@ -2025,6 +2448,15 @@ export async function submitEmployerProposal(
       proposalId: proposal.id,
       requestId: request.id,
       revision: request.revision,
+      publishedRevision: published.revision,
+      publishedDraft: published.scopeProofDraft,
+      publishedScopeHash: portalScopeHash(published.scopeProofDraft),
+      ...(published.issuedSourceDraft
+        ? {
+            repeatDraft: published.issuedSourceDraft,
+            repeatScopeHash: portalScopeHash(published.issuedSourceDraft),
+          }
+        : {}),
     });
     return proposal;
   });
@@ -2064,17 +2496,91 @@ export async function resolveEmployerProposal(
         "REVISION_CONFLICT",
         "Предложение относится к прежней редакции; требуется повторное согласование",
       );
+    const submitted = await tx.auditEvent.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        action: "EMPLOYER_PROPOSAL_SUBMITTED",
+        entityId: id,
+        metadata: { path: ["proposalId"], equals: proposal.id },
+      },
+      orderBy: { createdAt: "asc" },
+    });
+    const savedSource = z
+      .object({
+        proposalId: z.literal(proposal.id),
+        requestId: z.literal(proposal.requestId),
+        revision: z.literal(proposal.requestRevision),
+        publishedDraft: draftSchema,
+        publishedScopeHash: z.string(),
+        repeatDraft: draftSchema.optional(),
+        repeatScopeHash: z.string().optional(),
+      })
+      .safeParse(submitted?.metadata);
+    let proposalSource: Draft | undefined;
+    let repeatSource: Draft | undefined;
+    if (savedSource.success) {
+      if (
+        portalScopeHash(savedSource.data.publishedDraft) ===
+        savedSource.data.publishedScopeHash
+      )
+        proposalSource = savedSource.data.publishedDraft;
+      if (
+        savedSource.data.repeatDraft &&
+        portalScopeHash(savedSource.data.repeatDraft) ===
+          savedSource.data.repeatScopeHash
+      )
+        repeatSource = savedSource.data.repeatDraft;
+    }
+    let recoveredSource:
+      | Awaited<ReturnType<typeof recoverLegacyPortalProposalSource>>
+      | undefined;
+    // Older pending proposals stored only their revision. Recover from sources
+    // that were already published when they were sent, never from today's
+    // approval status or a later private working payload.
+    const legacySubmission =
+      !submitted ||
+      z
+        .object({ publishedDraft: z.never().optional() })
+        .safeParse(submitted.metadata).success;
+    if (data.status === "ACCEPTED" && !proposalSource && legacySubmission) {
+      recoveredSource = await recoverLegacyPortalProposalSource(
+        c,
+        proposal,
+        draftSchema.parse(request.draft),
+        tx,
+      );
+      proposalSource = recoveredSource?.publishedDraft;
+      repeatSource = recoveredSource?.repeatDraft;
+    }
+    if (data.status === "ACCEPTED" && !proposalSource)
+      fail(
+        409,
+        "PROPOSAL_SOURCE_REQUIRED",
+        "Исходный согласованный состав не подтверждён. Отклоните это предложение; затем представитель откроет актуальный состав и отправит новое. Повторная отправка без отклонения может вернуть то же ожидающее предложение.",
+      );
     if (data.status === "ACCEPTED") {
+      await tx.$executeRaw`SELECT id FROM "EmployerMembership" WHERE id=${proposal.membershipId} AND "tenantId"=${c.tenantId} FOR UPDATE`;
       const membership = await tx.employerMembership.findFirst({
-        where: { tenantId: c.tenantId, id: proposal.membershipId },
+        where: {
+          tenantId: c.tenantId,
+          id: proposal.membershipId,
+          active: true,
+          OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+        },
       });
-      if (!membership || membership.customerId !== orderEmployer(currentOrder))
+      if (
+        !membership ||
+        membership.customerId !== orderEmployer(currentOrder) ||
+        !(membership.permissions as string[]).includes(
+          proposal.kind === "CONFIRM_LIST" ? "APPROVE_DATA" : "PROPOSE",
+        )
+      )
         fail(
           409,
           "PROPOSAL_SCOPE_CHANGED",
           "Предложение относится к прежнему работодателю участников; требуется повторное согласование.",
         );
-      const draft = draftSchema.parse(request.draft);
+      const draft = proposalSource!;
       const permitted = allowedRows(
         draft,
         membership.recipientIds as string[],
@@ -2101,6 +2607,19 @@ export async function resolveEmployerProposal(
           "FULL_ROSTER_DENIED",
           "Подтверждение всего списка требует доступа ко всему составу",
         );
+      if (recoveredSource)
+        await audit(tx, c, "EMPLOYER_PROPOSAL_SOURCE_RECOVERED", id, {
+          proposalId: proposal.id,
+          requestId: request.id,
+          revision: proposal.requestRevision,
+          sourceExistedAt: proposal.createdAt.toISOString(),
+          approvalId: recoveredSource.approvalId,
+          issuanceIds: recoveredSource.issuanceIds,
+          publishedScopeHash: portalScopeHash(draft),
+          ...(repeatSource
+            ? { repeatScopeHash: portalScopeHash(repeatSource) }
+            : {}),
+        });
     }
     if (data.status === "ACCEPTED" && proposal.kind === "UPDATE_LIST") {
       if (request.status !== "DRAFT")
@@ -2130,7 +2649,7 @@ export async function resolveEmployerProposal(
     let newRequestId: string | undefined;
     let newOrderId: string | undefined;
     if (data.status === "ACCEPTED" && proposal.kind === "REPEAT_REQUEST") {
-      if (request.status === "DRAFT")
+      if (!repeatSource)
         fail(
           409,
           "HISTORY_REQUIRED",
@@ -2141,7 +2660,7 @@ export async function resolveEmployerProposal(
       });
       if (!membership)
         fail(404, "NOT_FOUND", "Исходный доступ представителя не найден");
-      const source = draftSchema.parse(request.draft);
+      const source = repeatSource;
       const changes = proposalSchema.shape.changes.parse(proposal.changes);
       const selected = allowedRows(
         source,

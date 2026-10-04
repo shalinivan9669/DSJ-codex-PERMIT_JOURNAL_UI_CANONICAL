@@ -1,0 +1,99 @@
+{
+  "evidence": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\remaining-operator-flow-20261004\\final-actual-v5-c3061a20-bae3-452b-b8f1-fb58a88e3227",
+  "stats": {
+    "startTime": "2026-10-04T16:31:47.468Z",
+    "duration": 71907.59599999999,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d",
+  "status": "DRAFT",
+  "revision": 2,
+  "people": 2,
+  "issuanceIds": [
+    "8f6ec7f4-714b-457e-bdf9-5889fe20d81c",
+    "fc2521c5-be14-4019-b3c5-c257f4f8ad1d"
+  ],
+  "issuedAssignmentCount": 2,
+  "artifacts": [
+    {
+      "id": "0c0cf113-7529-4711-ad20-e7a9d4af768f",
+      "issuanceId": "fc2521c5-be14-4019-b3c5-c257f4f8ad1d",
+      "format": "PDF",
+      "sha256": "8a74ee3b7944a003bc9974dfe14b3877a6de91477e63839ceba0554d4dad0f11"
+    },
+    {
+      "id": "2f05220b-bce2-4080-bfaf-3279a85b350d",
+      "issuanceId": "fc2521c5-be14-4019-b3c5-c257f4f8ad1d",
+      "format": "XLSX",
+      "sha256": "17828d792cc868df434bac8557c3b2f69c5f0627423915f41b5f27a705c5171d"
+    },
+    {
+      "id": "4e33ec9d-39e9-4b91-96c8-69237a9f0f43",
+      "issuanceId": "8f6ec7f4-714b-457e-bdf9-5889fe20d81c",
+      "format": "ZIP",
+      "sha256": "3dfe378fd33c6e0051de9632910fbdcb981366b96497b1ca30ac79f85044ded1"
+    },
+    {
+      "id": "6bc9dd66-ff0c-4aa8-a26c-6576867c96a9",
+      "issuanceId": "8f6ec7f4-714b-457e-bdf9-5889fe20d81c",
+      "format": "DOCX",
+      "sha256": "7665329a4ad8791a7924f729bef1c379ae8c8aaab1b96c3b52d17cfe271a04bf"
+    },
+    {
+      "id": "7ed7e5af-c1be-40a0-8a28-fa478e65a644",
+      "issuanceId": "fc2521c5-be14-4019-b3c5-c257f4f8ad1d",
+      "format": "DOCX",
+      "sha256": "3f7458b0fcd0289f448f2a38458e1bdd925316cfba9a39b39ebc9a9ebb5b2425"
+    },
+    {
+      "id": "812ecc52-7887-4b07-a666-fdf563b59df6",
+      "issuanceId": "8f6ec7f4-714b-457e-bdf9-5889fe20d81c",
+      "format": "XLSX",
+      "sha256": "1805757b326860e6f21786ad958b4ccdabe3d24c06dfcddeb07784b9106e1892"
+    },
+    {
+      "id": "8bbdad86-b374-483c-b8c2-0820d71de095",
+      "issuanceId": "8f6ec7f4-714b-457e-bdf9-5889fe20d81c",
+      "format": "PDF",
+      "sha256": "a56c80551c461344e02f051e9adf477f7cc602a93182dfe051e150dd7d376cf6"
+    },
+    {
+      "id": "b531a05e-b94e-467c-a1f6-c9ba4761cf8d",
+      "issuanceId": "8f6ec7f4-714b-457e-bdf9-5889fe20d81c",
+      "format": "PDF",
+      "sha256": "677674cbdf7d986010373caa503331f20a75c1802175c1a67a2b85b42c6ce2e2"
+    },
+    {
+      "id": "c24fde38-cca4-4147-af43-cabab2ffe0b1",
+      "issuanceId": "fc2521c5-be14-4019-b3c5-c257f4f8ad1d",
+      "format": "DOCX",
+      "sha256": "8ea7851538413ec7d73060cdaf363f7fd56e6b5a48a9cc6ec692808ef30925b5"
+    },
+    {
+      "id": "cca6f80e-77c9-4ac8-9dba-a90943c77873",
+      "issuanceId": "8f6ec7f4-714b-457e-bdf9-5889fe20d81c",
+      "format": "DOCX",
+      "sha256": "c225458118ffbcd322e50ada71d92a27365366c506a3d37fd67ff538e8db40b5"
+    },
+    {
+      "id": "da468b37-d645-4359-bc74-4a2938ba48fe",
+      "issuanceId": "fc2521c5-be14-4019-b3c5-c257f4f8ad1d",
+      "format": "PDF",
+      "sha256": "0cb8c7e1ec848d528c060a05640eecb1c728869f1db2624951a8f8945c066766"
+    },
+    {
+      "id": "dfe74f68-3ded-40f1-be6c-0232930b0104",
+      "issuanceId": "fc2521c5-be14-4019-b3c5-c257f4f8ad1d",
+      "format": "ZIP",
+      "sha256": "88d787c12e19fcbccec2930231d41f2fb4de92e1ac18afd25fbe77329a5d207d"
+    }
+  ],
+  "firstStageId": "fc2521c5-be14-4019-b3c5-c257f4f8ad1d",
+  "firstStageNumbers": [
+    "BIOT-CARD-00004",
+    "BIOT-PROTOCOL-00004"
+  ]
+}

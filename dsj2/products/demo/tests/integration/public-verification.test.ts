@@ -26,6 +26,12 @@ function code(expected: string) {
 }
 test("public record has hashed random tokens, minimal data, real status, bounded corrections and immediate link revocation", async (t) => {
   assertTestDatabase();
+  const previousOrigin = process.env.DEMO_ORIGIN;
+  process.env.DEMO_ORIGIN = "http://localhost:3119";
+  t.after(() => {
+    if (previousOrigin === undefined) delete process.env.DEMO_ORIGIN;
+    else process.env.DEMO_ORIGIN = previousOrigin;
+  });
   const tenant = await db.tenant.create({
     data: { name: "Синтетический центр проверки", demoOnly: true },
   });

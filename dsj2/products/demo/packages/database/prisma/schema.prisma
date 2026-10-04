@@ -132,9 +132,21 @@ model Issuance {
   correctsIssuanceId String?
   correctionReason String?
   legacySourceId String?
-  @@unique([requestId,sourceRevision])
+  scopeHash String?
+  @@index([requestId,sourceRevision])
   @@unique([tenantId,id])
   @@unique([tenantId,legacySourceId])
+}
+model IssuanceAssignment {
+  id String @id @default(uuid())
+  tenantId String
+  requestId String
+  issuanceId String
+  rowId String
+  assignmentId String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,requestId,rowId,assignmentId])
+  @@index([tenantId,issuanceId])
 }
 model IssuanceEvent {
   id String @id @default(uuid())
@@ -167,7 +179,7 @@ model IssuedDocument {
   createdAt DateTime @default(now())
   @@unique([tenantId,id])
   @@unique([issuanceId,rowId,assignmentId])
-  @@unique([tenantId,groupEventId,groupEventRevision])
+  @@unique([issuanceId,groupEventId])
 }
 model TrainingEvent {
   id String @id
@@ -650,6 +662,8 @@ model RequestProposal {
   before Json
   diff Json
   proposalHash String
+  assignments Json?
+  scopeHash String?
   status String @default("PENDING")
   submittedBy String
   submittedAt DateTime @default(now())

@@ -18,6 +18,18 @@ def text(value):
     return str(value).strip() if value is not None else ''
 
 
+def factual_assessment_text(value, origin=None):
+    if origin in ['COURSE', 'AUTO']:
+        return ''
+    value = text(value)
+    literal = re.sub(r'\s+', '', value).lower()
+    placeholders = ['', 'хорошо', 'жақсы', 'жаксы', 'сдал', 'тапсырды', 'прошел', 'прошёл', 'өтті',
+                    'сдал/тапсырды', 'тапсырды/сдал', 'прошел/өтті', 'өтті/прошел',
+                    'несдал', 'тапсырмады', 'неявился', 'келмеді', 'неподтверждено', 'расталмаған',
+                    'несдал/тапсырмады', 'неявился/келмеді', 'неподтверждено/расталмаған']
+    return '' if all(part in placeholders for part in literal.split('/')) else value
+
+
 def frozen_date(value, field):
     try:
         return date.fromisoformat(text(value))
@@ -104,6 +116,11 @@ def source_literals(snapshot, assignment, item):
         workplace = text(item.get('workplaceRu')) or text(item.get('workplaceKz'))
         pairs.extend([('ТОО QNP Solutions', workplace), ('ТОО QNP  Solutions', workplace),
                       ('ТОО Аттестац', issuer_ru)])
+    if snapshot['templateId'] == 'biot-itr-certificate' and 'trainingSubjectKz' in assignment:
+        # New snapshots carry the selected course program explicitly. The
+        # source form has literal course-name slots rather than merge fields.
+        pairs.extend([('Безопасность и охрана труда', text(assignment.get('trainingSubject'))),
+                      ('Еңбек қауіпсіздігі және еңбекті қорғау', text(assignment.get('trainingSubjectKz')) or text(assignment.get('trainingSubject')))])
     if snapshot['templateId'] == 'ps-witness':
         pairs.extend([('Астана қаласы', text(issuer.get('cityKz')) + ' қаласы'),
                       ('город Астана', 'город ' + text(issuer.get('cityRu')))])
@@ -147,6 +164,27 @@ def protocol_replacements(tid, dates, workplace, workplace_kz):
 def build_legacy_payload(snapshot, item):
     tid = snapshot['templateId']
     assignment = item['assignment']
+    outcome = assignment.get('outcome') or {}
+    status = outcome.get('status')
+    nonpassed = {'FAILED': ('Не сдал', 'Тапсырмады'),
+                 'ABSENT': ('Не явился', 'Келмеді'),
+                 'UNKNOWN': ('Не подтверждено', 'Расталмаған')}
+    if status in nonpassed:
+        # The saved status remains authoritative even if an old/manual
+        # positive result phrase survived an import. Work on a copy only.
+        ru, kz = nonpassed[status]
+        origins = assignment.get('fieldOrigins') or {}
+        actual = factual_assessment_text(assignment.get('result'), origins.get('result'))
+        actual_kz = factual_assessment_text(assignment.get('resultKz'), origins.get('resultKz'))
+        # A numeric score such as 30/100 is one assessment value, not two
+        # language spellings separated by a slash.
+        if actual and not actual_kz and re.fullmatch(r'[\d\s/.,%+-]+', actual):
+            actual_kz = actual
+        if actual:
+            ru += '; ' + actual
+        if actual_kz:
+            kz += '; ' + actual_kz
+        assignment = {**assignment, 'result': ru + '/' + kz, 'resultRu': ru, 'resultKz': kz}
     issue = date_fields(frozen_date(assignment.get('documentDate'), 'documentDate'))
     protocol = date_fields(frozen_date(assignment.get('protocolDate', assignment.get('documentDate')), 'protocolDate'))
     name = text(item.get('fullNameRu'))
@@ -154,6 +192,14 @@ def build_legacy_payload(snapshot, item):
     issued_to = text(item.get('issuedTo')) or name_kz
     position = text(item.get('positionRu')) or text(item.get('positionKz'))
     position_kz = text(item.get('positionKz')) or position
+    if tid.startswith('ps-'):
+        profession_ru = text(assignment.get('professionRu')) or text(assignment.get('professionKz')) or position
+        profession_kz = text(assignment.get('professionKz')) or text(assignment.get('professionRu')) or position_kz
+        if tid in ['ps-witness', 'ps-protocol']:
+            position = text(assignment.get('psQualificationRu')) or text(assignment.get('psQualificationKz')) or profession_ru
+            position_kz = text(assignment.get('psQualificationKz')) or text(assignment.get('psQualificationRu')) or profession_kz
+        else:
+            position, position_kz = profession_ru, profession_kz
     workplace = text(item.get('workplaceRu')) or text(item.get('workplaceKz'))
     workplace_kz = text(item.get('workplaceKz')) or workplace
     number = text(item.get('number'))
@@ -183,7 +229,7 @@ def build_legacy_payload(snapshot, item):
         expiry = date_fields(frozen_date(assignment.get('validUntil'), 'validUntil'))
         fields.update({'В_том_что': subject, 'Год': issue['year'],
                        'Действительно_Год': expiry['year'], 'Действительно_Мес': '',
-                       'Должность': position, 'Емтихан_тапсырды': 'ӨТМ',
+                       'Должность': position, 'Емтихан_тапсырды': (text(assignment.get('trainingSubjectKz')) or subject) if 'trainingSubjectKz' in assignment else 'ӨТМ',
                        'Жұмыс_орны': workplace_kz, 'Лауазымы': position_kz,
                        'Месяц': issue['dayMonth'], 'Место_работы': workplace,
                        'Номер_удостоверения': number, 'Протокол_': protocol_number, 'ФИО': name})
@@ -201,10 +247,18 @@ def build_legacy_payload(snapshot, item):
             'Год': expiry['year'], 'День': expiry['dayPadded'], 'Месяц': expiry['month'], '"Месяц"': expiry['month']}})
     elif tid == 'ps-card':
         subject_ru, subject_kz = bilingual_parts(subject, assignment.get('trainingSubjectRu'), assignment.get('trainingSubjectKz'))
+        # Explicit two-discipline data is resolved before issuance. Missing
+        # keys retain the old snapshot mapping so past frozen files never gain
+        # a new course retrospectively.
+        explicit_disciplines = any(key in assignment for key in ['psGeneralSubjectRu', 'psGeneralSubjectKz', 'psSpecialSubjectRu', 'psSpecialSubjectKz'])
+        general_ru = text(assignment.get('psGeneralSubjectRu')) if explicit_disciplines else subject_ru
+        general_kz = text(assignment.get('psGeneralSubjectKz')) if explicit_disciplines else subject_kz
+        special_ru = text(assignment.get('psSpecialSubjectRu')) if explicit_disciplines else ''
+        special_kz = text(assignment.get('psSpecialSubjectKz')) if explicit_disciplines else ''
         result_ru, result_kz = bilingual_parts(assignment.get('result'), assignment.get('resultRu'), assignment.get('resultKz'))
-        fields.update({'M_1__пп': '1', 'M_1_Наименование_дисциплины': subject_ru,
-                       'M_1_Пәндер_атауы_': subject_kz, 'M_2__пп': '',
-                       'M_2_Наименование_дисциплины': '', 'M_2_Пәндер_атауы_': '',
+        fields.update({'M_1__пп': '1' if general_ru or general_kz else '', 'M_1_Наименование_дисциплины': general_ru,
+                       'M_1_Пәндер_атауы_': general_kz, 'M_2__пп': '2' if special_ru or special_kz else '',
+                       'M_2_Наименование_дисциплины': special_ru, 'M_2_Пәндер_атауы_': special_kz,
                        'Баға': result_kz, 'Біліктілік_берілгендігі_туралы': position_kz,
                        'Выдано_ФИО': text(item.get('issuedTo')) or name,
                        'ГОД': issue['year'], 'День_месяц': issue['dayMonth'], 'Номер_серии': '',

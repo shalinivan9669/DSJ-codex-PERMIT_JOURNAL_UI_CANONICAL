@@ -7,6 +7,8 @@ import {
   resolveCommonDates,
   calculatedDateKeys,
   commonFieldKeys,
+  courseProgramKeys,
+  trainingDirection,
   type CommonFields,
   type BiotCategory,
   type TrainingEventInput,
@@ -164,7 +166,8 @@ export function EventContext({
     !assignment.trainingStart &&
     !assignment.trainingEnd &&
     !assignment.protocolDate &&
-    !assignment.trainingSubject &&
+    (!assignment.trainingSubject ||
+      assignment.fieldOrigins?.trainingSubject === "COURSE") &&
     !assignment.result &&
     !assignment.externalBasisNumber &&
     !assignment.reason &&
@@ -212,6 +215,49 @@ export function EventContext({
   const event = events.find((e) => e.id === activeId) || events[0];
   const activeEventId = event?.id || "";
   const eventIndex = events.findIndex((row) => row.id === activeEventId);
+  const [topics, setTopics] = useState<
+    (Pick<CommonFields, (typeof courseProgramKeys)[number]> & {
+      id: string;
+      origin: "COURSE" | "SAVED";
+    })[]
+  >([]);
+  const [topicStatus, setTopicStatus] = useState<"loading" | "ready" | "error">(
+    "loading",
+  );
+  const [topicError, setTopicError] = useState("");
+  const [topicRetry, setTopicRetry] = useState(0);
+  const [topicChoice, setTopicChoice] = useState("");
+  const [topicReviewed, setTopicReviewed] = useState(false);
+  useEffect(() => {
+    let active = true;
+    setTopicChoice("");
+    setTopicReviewed(false);
+    if (!expanded || !event) return;
+    setTopicStatus("loading");
+    const direction = trainingDirection(event.protocolTemplateId);
+    const category =
+      event.protocolTemplateId === "biot-itr-protocol" ? "ITR" : "WORKER";
+    void api<{ items: typeof topics }>(
+      `/training-topics?direction=${direction}&category=${category}`,
+    )
+      .then((result) => {
+        if (active) {
+          setTopics(result.items);
+          setTopicStatus("ready");
+          setTopicError("");
+        }
+      })
+      .catch((error) => {
+        if (active) {
+          setTopics([]);
+          setTopicStatus("error");
+          setTopicError(errorText(error));
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, [expanded, activeEventId, event?.protocolTemplateId, topicRetry]);
   const preparation = useDurablePreparation<OutcomePreparation>({
     identity:
       preparationOwner && activeEventId
@@ -442,6 +488,12 @@ export function EventContext({
   function changeEventCommon(patch: Partial<CommonFields>) {
     if (!event) return;
     const next = { ...event.commonFields, ...patch };
+    for (const key of courseProgramKeys)
+      if (Object.hasOwn(patch, key))
+        next.fieldOrigins = {
+          ...next.fieldOrigins,
+          [key]: patch[key] ? "MANUAL" : "CLEARED",
+        };
     for (const key of calculatedDateKeys)
       if (Object.hasOwn(patch, key))
         next.dateOrigins = {
@@ -450,6 +502,90 @@ export function EventContext({
         };
     updateEvent({ commonFields: next });
   }
+  const selectedTopic = topics.find((topic) => topic.id === topicChoice);
+  const topicSettings = event && (
+    <details className="training-topic-settings">
+      <summary>Выбрать типовую или сохранённую программу</summary>
+      <p className="fine-print">
+        Сохраняются только темы этого направления вашего центра. Выбор программы
+        не переносит результаты, оценки, даты и основания.
+      </p>
+      {topicStatus === "loading" ? (
+        <p role="status">Загружаются программы…</p>
+      ) : topicStatus === "error" ? (
+        <Notice kind="error">
+          {topicError}
+          <button
+            type="button"
+            onClick={() => setTopicRetry((value) => value + 1)}
+          >
+            Повторить загрузку программ
+          </button>
+        </Notice>
+      ) : (
+        <label>
+          Программа из списка
+          <select
+            aria-label="Типовая или сохранённая программа"
+            disabled={disabled}
+            value={topicChoice}
+            onChange={(change) => {
+              setTopicChoice(change.target.value);
+              setTopicReviewed(false);
+            }}
+          >
+            <option value="">Текущее или собственное значение</option>
+            {topics.map((topic) => (
+              <option key={topic.id} value={topic.id}>
+                {topic.origin === "COURSE" ? "Типовая" : "Сохранённая"}:{" "}
+                {topic.trainingSubject}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {selectedTopic && (
+        <>
+          <p>
+            Выбранная программа: {selectedTopic.trainingSubject}
+            {selectedTopic.trainingSubjectKz
+              ? ` · KZ: ${selectedTopic.trainingSubjectKz}`
+              : " · отдельный KZ не задан"}
+            .
+          </p>
+          {topicReviewed && (
+            <Notice kind="info">
+              Будет заменена программа этого обучения «
+              {displayedCommon.trainingSubject || "не задана"}» и её KZ-вариант
+              «{displayedCommon.trainingSubjectKz || "не задан"}». Дисциплины ПС
+              будут заменены значениями выбранной программы. Индивидуальные
+              ручные исключения сохраняются.
+            </Notice>
+          )}
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => {
+              if (!topicReviewed) {
+                setTopicReviewed(true);
+                return;
+              }
+              const patch = Object.fromEntries(
+                courseProgramKeys.map((key) => [key, selectedTopic[key] || ""]),
+              );
+              changeEventCommon(patch);
+              setTopicChoice("");
+              setTopicReviewed(false);
+            }}
+          >
+            {topicReviewed
+              ? "Применить выбранную программу"
+              : "Проверить замену программы"}
+          </button>
+        </>
+      )}
+    </details>
+  );
   function renderEventField([field, label, type]: (typeof bulkFields)[number]) {
     const hint = fieldHints[`events.${eventIndex}.commonFields.${field}`];
     const value = String(displayedCommon[field] || "");
@@ -484,7 +620,23 @@ export function EventContext({
           </small>
         ) : (
           <small id={feedbackId}>
-            {primary ? "\u00a0" : "Общее значение события"}
+            {field === "trainingSubject"
+              ? event?.commonFields.fieldOrigins?.trainingSubject === "CLEARED"
+                ? "Программа явно очищена"
+                : event?.commonFields.trainingSubject &&
+                    event.commonFields.fieldOrigins?.trainingSubject !==
+                      "COURSE"
+                  ? "Программа этого обучения"
+                  : draft.commonFields?.trainingSubject
+                    ? "Общая программа заявки"
+                    : draft.presetFields?.trainingSubject
+                      ? "Программа пользовательского набора"
+                      : centerCommon.trainingSubject
+                        ? "Программа из настроек центра"
+                        : "Типовая программа курса"
+              : primary
+                ? "\u00a0"
+                : "Общее значение события"}
           </small>
         )}
       </label>
@@ -590,7 +742,8 @@ export function EventContext({
                   !a.eventId &&
                   !a.documentDate &&
                   !a.result &&
-                  !a.trainingSubject
+                  (!a.trainingSubject ||
+                    a.fieldOrigins?.trainingSubject === "COURSE")
                 ),
             ),
             assignment,
@@ -1192,7 +1345,68 @@ export function EventContext({
                       !primary || ["trainingSubject", "hours"].includes(field),
                   )
                   .map(renderEventField)}
+                <label>
+                  Программа — отдельный KZ-вариант
+                  <input
+                    aria-label="Программа — отдельный KZ-вариант"
+                    data-training-field="trainingSubjectKz"
+                    data-field-path={`events.${eventIndex}.commonFields.trainingSubjectKz`}
+                    disabled={disabled}
+                    value={displayedCommon.trainingSubjectKz || ""}
+                    onChange={(change) =>
+                      changeEventCommon({
+                        trainingSubjectKz: change.target.value,
+                      })
+                    }
+                  />
+                  <small>
+                    Необязательно. Без отдельного варианта используется
+                    введённая программа; это не автоматический перевод.
+                  </small>
+                </label>
               </div>
+              {topicSettings}
+              {event.protocolTemplateId === "ps-protocol" && (
+                <AdvancedTrainingSettings
+                  primary={primary}
+                  title="Дисциплины удостоверения ПС"
+                >
+                  <div className="form-grid">
+                    {(
+                      [
+                        [
+                          "psGeneralSubjectRu",
+                          "Общепрофессиональная дисциплина — RU",
+                        ],
+                        [
+                          "psGeneralSubjectKz",
+                          "Общепрофессиональная дисциплина — KZ",
+                        ],
+                        ["psSpecialSubjectRu", "Специальная дисциплина — RU"],
+                        ["psSpecialSubjectKz", "Специальная дисциплина — KZ"],
+                      ] as const
+                    ).map(([key, label]) => (
+                      <label key={key}>
+                        {label}
+                        <input
+                          aria-label={label}
+                          data-training-field={key}
+                          data-field-path={`events.${eventIndex}.commonFields.${key}`}
+                          disabled={disabled}
+                          value={displayedCommon[key] || ""}
+                          onChange={(change) =>
+                            changeEventCommon({ [key]: change.target.value })
+                          }
+                        />
+                      </label>
+                    ))}
+                  </div>
+                  <small>
+                    Названия исходной формы подставляются автоматически. Оценки
+                    берутся только из подтверждённых сведений.
+                  </small>
+                </AdvancedTrainingSettings>
+              )}
               {primary && (
                 <AdvancedTrainingSettings
                   primary

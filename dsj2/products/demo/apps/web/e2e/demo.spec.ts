@@ -1,4 +1,5 @@
 import {
+  assertTechnicalBlankRemoval,
   createRequestWithWorkerDocument,
   keyboardCreateRequestWithWorkerDocument,
 } from "./operator-keyboard-helpers";
@@ -22,6 +23,9 @@ import {
   write,
 } from "./operator-role-fixture";
 import { draftPayload } from "../lib/types";
+import { PrismaClient } from "../../../packages/database/src";
+import { ArtifactStore } from "../../../packages/printing/src";
+import { assertTestDatabase } from "../../../tests/integration/test-database";
 test.use({ trace: "off" });
 const evidence = process.env.DEMO_E2E_EVIDENCE
   ? path.resolve(process.env.DEMO_E2E_EVIDENCE)
@@ -50,7 +54,7 @@ test.beforeAll(async ({ browser }) => {
     ),
   );
 });
-function zipText(bytes: Buffer, wanted: string) {
+function zipEntry(bytes: Buffer, wanted: string) {
   let end = bytes.length - 22;
   while (end >= 0 && bytes.readUInt32LE(end) !== 0x06054b50) end--;
   if (end < 0) throw new Error("ZIP directory missing");
@@ -73,15 +77,57 @@ function zipText(bytes: Buffer, wanted: string) {
         start,
         start + bytes.readUInt32LE(cursor + 20),
       );
-      return (
-        bytes.readUInt16LE(cursor + 10) === 8
-          ? inflateRawSync(compressed)
-          : compressed
-      ).toString("utf8");
+      return bytes.readUInt16LE(cursor + 10) === 8
+        ? inflateRawSync(compressed)
+        : compressed;
     }
     cursor += 46 + nameLength + extraLength + commentLength;
   }
   throw new Error(`ZIP entry missing: ${wanted}`);
+}
+function zipText(bytes: Buffer, wanted: string) {
+  return zipEntry(bytes, wanted).toString("utf8");
+}
+/** Internal read-only worker-byte QA in the disposable synthetic center, never public delivery. */
+async function internalCanonicalZipBytes(
+  page: Page,
+  issued: Awaited<ReturnType<typeof readPrintDetail>>,
+) {
+  assertTestDatabase();
+  expect(process.env.DEMO_E2E_ISOLATED_TENANT).toBe("1");
+  expect(process.env.DEMO_ARTIFACT_ROOT).toBeTruthy();
+  const session = await (await page.request.get("/api/auth/session")).json();
+  expect(session.tenant.demoOnly).toBe(true);
+  const db = new PrismaClient({ log: [] });
+  try {
+    const tenant = await db.tenant.findUnique({
+      where: { id: session.tenant.id },
+      select: { demoOnly: true },
+    });
+    expect(tenant?.demoOnly).toBe(true);
+    const stored = await db.artifact.findMany({
+      where: {
+        tenantId: session.tenant.id,
+        requestId: issued.id!,
+        issuanceId: issued.issuances[0].id,
+        provenance: "ORIGINAL",
+        format: "ZIP",
+      },
+    });
+    expect(stored.map((artifact) => artifact.id).sort()).toEqual(
+      issued.artifacts.filter((artifact) => artifact.provenance === "ORIGINAL" && artifact.format === "ZIP").map((artifact) => artifact.id).sort(),
+    );
+    const storage = new ArtifactStore(process.env.DEMO_ARTIFACT_ROOT!);
+    const bytes = new Map<string, Buffer>();
+    for (const artifact of stored) {
+      const buffer = await storage.read(artifact.storageKey, artifact.sha256);
+      expect(buffer.length).toBe(artifact.size);
+      bytes.set(artifact.id, buffer);
+    }
+    return bytes;
+  } finally {
+    await db.$disconnect();
+  }
 }
 async function login(page: Page) {
   await loginIsolated(page);
@@ -322,9 +368,8 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
     extraSix: true,
   });
   try {
-    // A bounded, explicitly synthetic image replaces the large untouched
-    // reference placeholders; the preserved no-photo attempt exceeds the frozen
-    // renderer's 100 MiB ZIP limit and is evidenced separately.
+    // All source forms use the explicitly synthetic photo. The canonical ZIP
+    // may comprise several bounded parts; every original must occur once.
     const syntheticPhoto = await page.request.post("/api/photos", {
       headers: f.roles.operator.headers,
       multipart: { file: { name: "shared-synthetic-blue.png", mimeType: "image/png", buffer: await fs.readFile(path.resolve(__dirname, "../../../tests/fixtures/source-photo.png")) } },
@@ -363,6 +408,70 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
       path.join(evidence, `company-${f.id}`),
     );
     expect(files).toHaveLength(74);
+    const originalSources = issued.artifacts.filter(
+      (artifact) => artifact.provenance === "ORIGINAL" && artifact.format !== "ZIP",
+    );
+    expect(originalSources).toHaveLength(75);
+    expect(originalSources.filter((artifact) => artifact.format === "DOCX")).toHaveLength(37);
+    expect(originalSources.filter((artifact) => artifact.format === "PDF")).toHaveLength(37);
+    expect(originalSources.filter((artifact) => artifact.format === "XLSX")).toHaveLength(1);
+    const canonicalParts = issued.artifacts.filter(
+      (artifact) => artifact.provenance === "ORIGINAL" && artifact.format === "ZIP",
+    );
+    expect(canonicalParts.length).toBeGreaterThan(0);
+    const internalZipBytes = await internalCanonicalZipBytes(page, issued);
+    const coveredSourceIds: string[] = [];
+    const zipParts = [];
+    for (const artifact of canonicalParts) {
+      const response = await page.request.get(`/api/artifacts/${artifact.id}`);
+      expect(response.status()).toBe(409);
+      expect((await response.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
+      const bytes = internalZipBytes.get(artifact.id)!;
+      expect(bytes.length).toBeGreaterThan(0);
+      expect(bytes.length).toBeLessThanOrEqual(100 * 1024 * 1024);
+      expect(createHash("sha256").update(bytes).digest("hex")).toBe(artifact.sha256);
+      const manifest = JSON.parse(zipText(bytes, "manifest.json")) as {
+        complete: boolean;
+        issuanceId: string;
+        expectedCount: number;
+        readyCount: number;
+        partIndex?: number;
+        partCount?: number;
+        wholeExpectedCount?: number;
+        files: Array<{ id: string; file: string; sha256: string }>;
+        missing: unknown[];
+      };
+      expect(manifest.complete).toBe(true);
+      expect(manifest.issuanceId).toBe(issued.issuances[0].id);
+      expect(manifest.missing).toEqual([]);
+      expect(manifest.expectedCount).toBe(manifest.files.length);
+      expect(manifest.readyCount).toBe(manifest.files.length);
+      expect(manifest.partCount || 1).toBe(canonicalParts.length);
+      expect(manifest.wholeExpectedCount || manifest.expectedCount).toBe(75);
+      for (const entry of manifest.files) {
+        const source = originalSources.find((candidate) => candidate.id === entry.id);
+        expect(source, `Unexpected ZIP source ${entry.id}`).toBeDefined();
+        expect(entry.sha256).toBe(source!.sha256);
+        expect(createHash("sha256").update(zipEntry(bytes, entry.file)).digest("hex")).toBe(source!.sha256);
+        coveredSourceIds.push(entry.id);
+      }
+      await fs.writeFile(path.join(evidence, `company-${f.id}`, artifact.fileName || `${artifact.id}.zip`), bytes);
+      zipParts.push({
+        artifactId: artifact.id,
+        fileName: artifact.fileName,
+        sha256: artifact.sha256,
+        bytes: bytes.length,
+        index: manifest.partIndex || 0,
+        scope: "INTERNAL_SAVED_DERIVATIVE_READONLY",
+        publicUnsignedDelivery: "blocked409",
+        manifest,
+      });
+    }
+    expect(coveredSourceIds.sort()).toEqual(originalSources.map((artifact) => artifact.id).sort());
+    expect(new Set(coveredSourceIds).size).toBe(75);
+    expect(zipParts.map((part) => part.index).sort((a, b) => a - b)).toEqual(
+      Array.from({ length: canonicalParts.length }, (_, index) => index),
+    );
     for (const artifact of issued.artifacts.filter(
       (x) => x.provenance === "ORIGINAL" && x.format === "DOCX",
     )) {
@@ -390,6 +499,10 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
           recipientCount: 12,
           trainingSelections: 18,
           documentCount: 37,
+          originalSourceArtifactCount: originalSources.length,
+          canonicalZipPartCount: canonicalParts.length,
+          actualOriginalArtifactCount: originalSources.length + canonicalParts.length,
+          canonicalZipCoverage: zipParts,
         originalFiles: files.map(({ bytes: _bytes, ...meta }) => meta),
           originalItemIsolation: true,
           photoFixture: "All twelve rows explicitly use the same small synthetic blue image; no real portrait or no-photo ZIP success claimed",
@@ -420,10 +533,7 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
@@ -672,10 +782,7 @@ test("XLSX sheet selection, saved mapping, leading zeros, partial rows and row r
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
     .click();

@@ -6,7 +6,7 @@ import { db, json, type Context } from "../../apps/api/src/core";
 import { passwordHash } from "../../apps/api/src/auth";
 import { draftSchema, itemSchema } from "../../packages/contracts/src";
 import { createRequest } from "../../apps/api/src/requests";
-import { decideProposal } from "../../apps/api/src/approvals";
+import { decideProposal, submitApproval } from "../../apps/api/src/approvals";
 import { saveProfile } from "../../apps/api/src/settings";
 import { provision } from "../../scripts/setup";
 import {
@@ -143,13 +143,17 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
   );
   assert.equal(
     await db.requestItem.count({ where: { requestId: request.id } }),
-    0,
+    2,
   );
+  assert.equal(request.approval, null);
+  const submitted = await submitApproval(managerContext, request.id, {
+    expectedRevision: request.revision,
+  });
   await assert.rejects(
-    decideProposal(managerContext, request.approval.proposalId, {
+    decideProposal(managerContext, submitted.approval.proposalId, {
       decision: "APPROVE",
       reason: "Менеджер не принимает решение директора",
-      expectedProposalHash: request.approval.proposalHash,
+      expectedProposalHash: submitted.approval.proposalHash,
     }),
     (error: unknown) => {
       assert.equal(
@@ -159,10 +163,10 @@ test("HTTP service boundary: employer auth and scoped files, public privacy/Orig
       return true;
     },
   );
-  await decideProposal(c, request.approval.proposalId, {
+  await decideProposal(c, submitted.approval.proposalId, {
     decision: "APPROVE",
     reason: "Синтетическая проверка заявки",
-    expectedProposalHash: request.approval.proposalHash,
+    expectedProposalHash: submitted.approval.proposalHash,
   });
   assert.equal(
     await db.requestItem.count({ where: { requestId: request.id } }),

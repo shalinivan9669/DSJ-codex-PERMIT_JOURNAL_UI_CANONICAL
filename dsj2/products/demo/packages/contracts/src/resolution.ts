@@ -8,6 +8,14 @@ import type {
 import { protocolTemplateFor, stableValidationIssue } from "./index";
 import { isBlankText } from "./blank-text";
 import {
+  courseProgramDefaults,
+  courseProgramKeys,
+  courseResultText,
+  isProtectedField,
+  nonPassedResultKz,
+  factualAssessmentText,
+} from "./course-defaults";
+import {
   businessValidUntil,
   employeeCategoryFor,
   trainingDirection,
@@ -26,6 +34,11 @@ export const commonFieldKeys = [
   "protocolDate",
   "validUntil",
   "trainingSubject",
+  "trainingSubjectKz",
+  "psGeneralSubjectRu",
+  "psGeneralSubjectKz",
+  "psSpecialSubjectRu",
+  "psSpecialSubjectKz",
   "trainingSubjectEn",
   "reason",
   "reasonEn",
@@ -41,6 +54,7 @@ export const commonFieldKeys = [
   "biotIndustryEn",
 ] as const;
 export type FieldSource =
+  | "COURSE"
   | "CENTER"
   | "PRESET"
   | "REQUEST"
@@ -60,6 +74,14 @@ function commonContext(
     if (layer.trainingDateRule !== undefined)
       fields.trainingDateRule = layer.trainingDateRule;
     for (const key of commonFieldKeys) {
+      const declaredOrigin = layer.fieldOrigins?.[key];
+      const programField = courseProgramKeys.some(
+        (programKey) => programKey === key,
+      );
+      if (programField && layer[key] === "" && !declaredOrigin) continue;
+      // Previously resolved automatic text must never outrank a newly selected
+      // centre/profile or a manual event exception.
+      if (declaredOrigin === "COURSE" && origins[key]) continue;
       if (
         layer[key] === undefined &&
         layer.dateOrigins?.[
@@ -67,13 +89,24 @@ function commonContext(
         ] !== "AUTO"
       )
         continue;
-      (fields as Record<string, unknown>)[key] = layer[key];
+      (fields as Record<string, unknown>)[key] =
+        declaredOrigin === "CLEARED" ? "" : layer[key];
       origins[key] =
         layer.dateOrigins?.[
           key as keyof NonNullable<CommonFields["dateOrigins"]>
-        ] || source;
+        ] ||
+        (declaredOrigin && declaredOrigin !== "INHERITED"
+          ? declaredOrigin
+          : source);
     }
   }
+  const preservedOrigins = Object.fromEntries(
+    Object.entries(origins).filter(([, origin]) =>
+      ["COURSE", "MANUAL", "IMPORTED", "CLEARED", "AUTO"].includes(origin),
+    ),
+  ) as NonNullable<CommonFields["fieldOrigins"]>;
+  if (Object.keys(preservedOrigins).length)
+    fields.fieldOrigins = preservedOrigins;
   return { fields, origins };
 }
 
@@ -142,6 +175,7 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
   const eventContexts = new Map(
     (draft.events || []).map((event) => {
       const context = commonContext([
+        [courseProgramDefaults(event.protocolTemplateId), "COURSE"],
         [center, "CENTER"],
         [draft.presetFields, "PRESET"],
         [draft.commonFields, "REQUEST"],
@@ -178,6 +212,7 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
       const context =
         eventContexts.get(assignment.eventId || "") ||
         commonContext([
+          [courseProgramDefaults(assignment.templateId), "COURSE"],
           [center, "CENTER"],
           [draft.presetFields, "PRESET"],
           [draft.commonFields, "REQUEST"],
@@ -262,7 +297,12 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           source = "AUTO";
         } else if (value === undefined && own) {
           value = own;
-          source = explicit === "AUTO" ? "PRESET" : source;
+          source =
+            explicit === "COURSE"
+              ? "COURSE"
+              : explicit === "AUTO"
+                ? "PRESET"
+                : source;
         }
         if (value !== undefined)
           (assignment as unknown as Record<string, unknown>)[key] = value;
@@ -318,18 +358,33 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
             message: problem.message,
           });
       }
-      if (
-        event &&
-        assignment.protocolMode === "GROUP" &&
-        assignment.outcome?.status !== "PASSED" &&
-        !assignment.result
-      )
-        assignment.result = {
-          FAILED: "Не сдал",
-          ABSENT: "Не явился",
-          UNKNOWN: "Не подтверждено",
-          PASSED: "",
-        }[assignment.outcome?.status || "UNKNOWN"];
+      if (assignment.outcome && assignment.outcome.status !== "PASSED") {
+        // A saved positive phrase cannot override a later factual failed,
+        // absent or unconfirmed state. Do not preserve template sample grades.
+        const actualResult = factualAssessmentText(
+          assignment.result,
+          assignment.fieldOrigins?.result,
+        );
+        const actualResultKz = factualAssessmentText(
+          assignment.resultKz,
+          assignment.fieldOrigins?.resultKz,
+        );
+        assignment.result =
+          actualResult ||
+          courseResultText(assignment.templateId, assignment.outcome.status);
+        assignment.resultKz =
+          actualResultKz || nonPassedResultKz(assignment.outcome.status);
+        assignment.resultEn = "";
+        origins.result = actualResult ? "MANUAL" : "COURSE";
+      } else if (
+        assignment.outcome?.status === "PASSED" &&
+        (!assignment.result.trim() ||
+          assignment.fieldOrigins?.result === "COURSE") &&
+        !isProtectedField(assignment.fieldOrigins?.result)
+      ) {
+        assignment.result = courseResultText(assignment.templateId, "PASSED");
+        origins.result = "COURSE";
+      }
       if (draft.businessRuleVersion === "LIVE_V1") {
         // A simple kit has one issue date until a separate protocol date or
         // schedule is supplied. Resolve it before freezing the print snapshot;
@@ -396,7 +451,9 @@ export function documentPlan(draft: Draft) {
       .filter(
         (a) =>
           a.templateId.endsWith("-protocol") ||
-          (a.protocolMode !== "GROUP" && !a.outcome) ||
+          (draft.businessRuleVersion !== "LIVE_V1" &&
+            a.protocolMode !== "GROUP" &&
+            !a.outcome) ||
           a.outcome?.status === "PASSED",
       )
       .map((assignment) => ({ item, assignment })),

@@ -7,9 +7,11 @@ import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import type { AppContext, Draft, Page, Role } from "@/lib/types";
 import { dateTime, Status } from "./request-list";
-import { templateLabels } from "@/lib/types";
+import { templateLabels, documentTitle } from "@/lib/types";
 import { validationErrors } from "@/lib/validation-errors";
 import { rejectionReason } from "@/lib/rejection-reason";
+import { approvedScopeIssued } from "@/lib/request-actions";
+import { addressIssue, type AddressedIssue } from "@/lib/validation-address";
 
 type Proposal = {
   id: string;
@@ -26,6 +28,8 @@ type Proposal = {
   referenceLabels?: Record<string, string>;
   diff?: { path: string; before: unknown; after: unknown }[];
   decision?: { decision: string; comment: string; createdAt: string } | null;
+  draft?: Draft | null;
+  assignments?: { rowId: string; assignmentId: string }[] | null;
 };
 const labels: Record<string, string> = {
   title: "Название заявки",
@@ -224,7 +228,9 @@ export function ApprovalBanner({
             ? "Редакция согласована директором"
             : approval?.status === "REJECTED"
               ? "Директор вернул редакцию на доработку"
-              : "Рабочая версия ожидает согласования"}
+              : approval?.status === "PENDING"
+                ? "Выбранный состав передан директору"
+                : "Рабочий черновик сохраняется"}
         </strong>
         {approval && <Status value={approval.status} />}
       </div>
@@ -249,8 +255,12 @@ export function ApprovalBanner({
         {approval?.status === "APPROVED"
           ? draft.status === "FINALIZED"
             ? "Документы подготовлены и доступны для печати."
-            : "Можно подготовить документы и распечатать. Изменения потребуют нового решения."
-          : "Изменения сохраняются автоматически и поступают директору. Он согласует текущую редакцию или вернёт её с замечаниями."}
+            : approvedScopeIssued(draft)
+              ? "Согласованная партия уже оформлена; документы доступны для печати. Для следующего выпуска подтвердите и передайте новый состав выше."
+              : "Можно оформить согласованный состав. Следующие люди и курсы продолжат работу в этой заявке. Изменение согласованных данных потребует нового решения."
+          : approval?.status === "PENDING"
+            ? "Директор рассматривает выбранных людей и курсы. Остальные назначения остаются рабочим черновиком."
+            : "Ввод сохраняется автоматически. Готовый состав передаётся директору отдельной командой после проверки."}
       </p>
       {!compact && (
         <div className="action-buttons">
@@ -423,7 +433,47 @@ export function Approvals({ context }: { context: AppContext }) {
               <ul>
                 {dataIssues.map((issue, index) => (
                   <li key={index}>
-                    {typeof issue === "string" ? issue : issue.message}
+                    {typeof issue === "string"
+                      ? issue
+                      : (() => {
+                          const addressed = addressIssue(
+                            issue,
+                            detail.draft?.items || [],
+                            detail.draft?.events || [],
+                          ) as AddressedIssue;
+                          const row = detail.draft?.items.find(
+                            (item) =>
+                              item.id ===
+                              (addressed.rowId ||
+                                addressed.recipientId ||
+                                addressed.itemId),
+                          );
+                          const assignment = row?.assignments.find(
+                            (item) => item.id === addressed.assignmentId,
+                          );
+                          const query = new URLSearchParams({
+                            check: "1",
+                            issuePath: String(addressed.path || ""),
+                            issueField: addressed.field || "",
+                            issueRow: row?.id || "",
+                            issueAssignment: assignment?.id || "",
+                            issueEvent: addressed.eventId || "",
+                          });
+                          return (
+                            <Link
+                              href={`/requests/${detail.requestId}/edit?${query}`}
+                            >
+                              {row?.fullNameRu ? `${row.fullNameRu} · ` : ""}
+                              {assignment
+                                ? `${documentTitle(assignment.templateId)} · `
+                                : ""}
+                              {fieldLabel(
+                                String(addressed.path || addressed.field || ""),
+                              )}
+                              : {issue.message}. Исправить поле
+                            </Link>
+                          );
+                        })()}
                   </li>
                 ))}
               </ul>
@@ -514,6 +564,30 @@ export function Approvals({ context }: { context: AppContext }) {
                 {detail.author?.displayName} · редакция {detail.requestRevision}{" "}
                 · <Status value={detail.status} />
               </p>
+              {detail.assignments && (
+                <details open>
+                  <summary>
+                    Согласуемый состав:{" "}
+                    {
+                      new Set(detail.assignments.map((entry) => entry.rowId))
+                        .size
+                    }{" "}
+                    человек, {detail.assignments.length} назначений документов
+                  </summary>
+                  <ul>
+                    {detail.draft?.items.map((row) => (
+                      <li key={row.id}>
+                        {row.fullNameRu}:{" "}
+                        {row.assignments
+                          .map((assignment) =>
+                            documentTitle(assignment.templateId),
+                          )
+                          .join(", ")}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
               <Link className="button" href={`/requests/${detail.requestId}`}>
                 Открыть заявку и предпросмотр
               </Link>

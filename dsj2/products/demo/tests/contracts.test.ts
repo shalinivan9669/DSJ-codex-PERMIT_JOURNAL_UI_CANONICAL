@@ -236,12 +236,18 @@ test("registered API controller method/path map equals deny-by-default policy", 
     await import("../apps/api/src/public-verification-controller");
   const { EmployerInviteController } =
     await import("../apps/api/src/employer-invite-controller");
+  const { PrintSetsController } =
+    await import("../apps/api/src/print-sets-controller");
+  const { TrainingTopicsController } =
+    await import("../apps/api/src/training-topics-controller");
   const routes = [
     DemoController,
     OperatorValueController,
     DeliveryController,
     PublicVerificationController,
     EmployerInviteController,
+    PrintSetsController,
+    TrainingTopicsController,
   ]
     .flatMap((controller) =>
       Object.getOwnPropertyNames(controller.prototype)

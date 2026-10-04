@@ -1,5 +1,6 @@
 import {
   TEMPLATE_LABELS,
+  courseProgramDefaults,
   type Draft as DraftInput,
   type Assignment,
   type RequestItemInput,
@@ -20,11 +21,12 @@ export type Draft = DraftInput & {
   importScaffoldId?: string | null;
   approval?: {
     proposalId: string;
-    status: "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
+    status: "DRAFT" | "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
     baseRevision: number;
     proposalHash: string;
     submittedBy: string;
     submittedAt: string;
+    assignments?: { rowId: string; assignmentId: string }[];
   };
   approvedDraft?: Draft;
   approvedRevision?: number;
@@ -38,6 +40,11 @@ export type Draft = DraftInput & {
     | "LEGACY_ISSUED"
     | null;
   issuances?: Issuance[];
+  issuedAssignments?: {
+    rowId: string;
+    assignmentId: string;
+    issuanceId?: string;
+  }[];
 };
 export type Customer = {
   id: string;
@@ -111,6 +118,7 @@ export type Job = {
 };
 export type Issuance = {
   id: string;
+  snapshot?: { draft?: Draft };
   status?: string;
   sourceRevision: number;
   createdAt: string;
@@ -188,6 +196,16 @@ export function newAssignment(
     externalBasisNumber: "",
     protocolMode: "INDIVIDUAL",
     ...biotAssignmentDefaults(templateId),
+    ...courseProgramDefaults(templateId),
+    fieldOrigins: {
+      ...biotAssignmentDefaults(templateId).fieldOrigins,
+      ...Object.fromEntries(
+        Object.keys(courseProgramDefaults(templateId)).map((key) => [
+          key,
+          "COURSE" as const,
+        ]),
+      ),
+    },
   };
 }
 export function newRecipient(): Recipient {

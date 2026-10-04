@@ -89,14 +89,42 @@ test("250 imported recipients save/reload in PostgreSQL; 251 is rejected without
     assert.equal(imported.items[249].personnelNumber, "000250");
     assert.equal(
       await db.requestItem.count({ where: { requestId: created.id } }),
-      0,
-      "imported working rows must not replace approved records before director review",
+      250,
+      "autosave durably stores every imported working row before review",
     );
     assert.equal(
       (await db.printRequest.findUniqueOrThrow({ where: { id: created.id } }))
         .itemCount,
+      250,
+      "the working container retains the complete imported composition",
+    );
+    const working = await requestDetail(context, created.id);
+    assert.equal(
+      working.approvedProposalId,
+      null,
+      "import does not create a director decision",
+    );
+    assert.equal(working.approvedRevision, 0);
+    assert.equal(
+      working.approval,
+      null,
+      "unsubmitted import stays out of the pending queue",
+    );
+    assert.equal(
+      await db.proposalDecision.count({
+        where: { tenantId: context.tenantId },
+      }),
       0,
-      "working import must not promote the approved container",
+    );
+    assert.equal(
+      await db.issuance.count({ where: { requestId: created.id } }),
+      0,
+    );
+    assert.equal(
+      await db.numberReservation.count({
+        where: { tenantId: context.tenantId },
+      }),
+      0,
     );
     const draft = draftSchema.parse({ kind: "COMPANY", items: imported.items });
     draft.items[249].positionRu = "Последний инженер";

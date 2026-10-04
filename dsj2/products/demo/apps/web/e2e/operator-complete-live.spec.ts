@@ -1,5 +1,5 @@
 import { loginIsolated } from "./operator-full-fix-session";
-import { openRecipientExtraTools } from "./operator-keyboard-helpers";
+import { assertTechnicalBlankRemoval, openRecipientExtraTools } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -209,10 +209,7 @@ test("real CSV import explains duplicates and missing names, explicit exclusions
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon, Notice } from "@demo/ui";
 import { today } from "@demo/contracts";
+import { PrintSetDownloads } from "./print-set-downloads";
 import { api, downloadExport, errorText, json } from "@/lib/api";
 import {
   newRecipient,
@@ -254,6 +255,7 @@ export function RequestList({
                     >
                       <Icon name="chevron" />
                     </Link>
+                    <PrintSetDownloads requestId={row.id} compact />
                   </td>
                 </tr>
               ))}

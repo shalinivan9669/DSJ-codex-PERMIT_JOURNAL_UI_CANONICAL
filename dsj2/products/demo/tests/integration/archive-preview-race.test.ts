@@ -10,7 +10,7 @@ import {
   deleteDraft,
   preview,
 } from "../../apps/api/src/requests";
-import { decideProposal } from "../../apps/api/src/approvals";
+import { decideProposal, submitApproval } from "../../apps/api/src/approvals";
 import { assertTestDatabase } from "./test-database";
 
 function deferred<T = void>() {
@@ -74,10 +74,13 @@ test("archive decision serializes with preview so a concurrent archive cannot en
       },
     ],
   });
-  await decideProposal(director, created.approval.proposalId, {
+  const submitted = await submitApproval(manager, created.id, {
+    expectedRevision: created.revision,
+  });
+  await decideProposal(director, submitted.approval.proposalId, {
     decision: "APPROVE",
     reason: "Синтетическая проверка",
-    expectedProposalHash: created.approval.proposalHash,
+    expectedProposalHash: submitted.approval.proposalHash,
   });
   const archive = await deleteDraft(manager, created.id);
   const archiveHoldingRow = deferred();

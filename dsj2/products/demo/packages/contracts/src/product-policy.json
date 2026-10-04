@@ -8,12 +8,36 @@
       "surface": "api",
       "path": "/print-requests/:id/activity"
     },
-    { "method": "POST", "surface": "api", "path": "/translations/suggest" },
-    { "method": "GET", "surface": "web", "path": "/approvals" },
-    { "method": "HEAD", "surface": "web", "path": "/approvals" },
-    { "method": "GET", "surface": "api", "path": "/approvals" },
-    { "method": "GET", "surface": "api", "path": "/approvals/:id" },
-    { "method": "POST", "surface": "api", "path": "/approvals/:id/decision" },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/translations/suggest"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/approvals"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/approvals"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/approvals"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/approvals/:id"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/approvals/:id/decision"
+    },
     {
       "method": "GET",
       "surface": "api",
@@ -34,14 +58,46 @@
       "surface": "api",
       "path": "/print-requests/:id/signing/start"
     },
-    { "method": "POST", "surface": "api", "path": "/signing/:id/complete" },
-    { "method": "GET", "surface": "api", "path": "/settings/signatories" },
-    { "method": "POST", "surface": "api", "path": "/settings/signatories" },
-    { "method": "POST", "surface": "api", "path": "/auth/register" },
-    { "method": "GET", "surface": "web", "path": "/register" },
-    { "method": "HEAD", "surface": "web", "path": "/register" },
-    { "method": "GET", "surface": "web", "path": "/onboarding" },
-    { "method": "HEAD", "surface": "web", "path": "/onboarding" },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/signing/:id/complete"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/settings/signatories"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/settings/signatories"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/auth/register"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/register"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/register"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/onboarding"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/onboarding"
+    },
     {
       "method": "POST",
       "surface": "api",
@@ -776,6 +832,21 @@
       "path": "/invite",
       "method": "HEAD",
       "surface": "web"
+    },
+    {
+      "method": "POST",
+      "path": "/print-requests/:id/print-set/plan",
+      "surface": "api"
+    },
+    {
+      "method": "POST",
+      "path": "/print-requests/:id/print-set",
+      "surface": "api"
+    },
+    {
+      "method": "GET",
+      "path": "/training-topics",
+      "surface": "api"
     }
   ],
   "legacyRoutes": [

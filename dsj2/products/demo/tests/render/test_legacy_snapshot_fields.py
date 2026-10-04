@@ -3,6 +3,8 @@ from copy import deepcopy
 from pathlib import Path
 import sys
 import tempfile
+import json
+import hashlib
 import unittest
 from zipfile import ZipFile
 from lxml import etree as E
@@ -65,6 +67,28 @@ class LegacySnapshotFieldsTests(unittest.TestCase):
         self.assertEqual(actual['fields']['Оценка'], '')
         self.assertEqual(actual['fields']['Баға'], '')
         self.assertEqual(next(value['replaceText'] for value in actual['sourceLiteralValues'] if value['matchText'] == 'хорошо'), '')
+
+    def test_nonpassed_status_removes_stale_positive_text_from_actual_individual_protocols(self):
+        for template in ['biot-protocol', 'biot-itr-protocol', 'ptm-protocol', 'pb-protocol', 'ps-protocol']:
+            for status, label in [('FAILED', 'Не сдал'), ('ABSENT', 'Не явился'), ('UNKNOWN', 'Не подтверждено')]:
+                with self.subTest(template=template, status=status):
+                    snapshot, _ = self.payload(template, {'result': 'Хорошо', 'resultKz': 'Жақсы',
+                                                         'outcome': {'status': status, 'source': 'Ведомость'}})
+                    actual = self.rendered_text(snapshot)
+                    self.assertIn(label, actual)
+                    for positive in ['Хорошо', 'Жақсы', 'Өтті/прошел', 'Прошел/ Өтті', 'Тапсырды/сдал']:
+                        self.assertNotIn(positive, actual)
+
+    def test_failed_assessment_keeps_actual_score_in_both_languages_without_a_positive_literal(self):
+        snapshot, payload = self.payload('ps-card', {'result': '30/100', 'fieldOrigins': {'result': 'MANUAL'},
+                                                    'outcome': {'status': 'FAILED', 'source': 'Фактическая ведомость'}})
+        self.assertEqual(payload['fields']['Оценка'], 'Не сдал; 30/100')
+        self.assertEqual(payload['fields']['Баға'], 'Тапсырмады; 30/100')
+        actual = self.rendered_text(snapshot)
+        for label in ['Не сдал; 30/100', 'Тапсырмады; 30/100']:
+            self.assertIn(label, actual)
+        self.assertNotIn('Хорошо', actual)
+        self.assertEqual(snapshot['items'][0]['assignment']['result'], '30/100')
 
     def test_ptm_protocol_source_sample_pass_is_replaced_by_actual_failed_result(self):
         from legacy_reference import reference_sources, render_reference_document
@@ -133,6 +157,102 @@ class LegacySnapshotFieldsTests(unittest.TestCase):
         replacements = {value['matchText']: value['replaceText'] for value in actual['sourceLiteralValues']}
         self.assertEqual(replacements['10-часовой'], '74-часовой')
         self.assertEqual(replacements['10 сағаттық'], '74 сағаттық')
+
+    def test_explicit_ps_disciplines_reach_real_source_form_with_factual_grade(self):
+        snapshot, payload = self.payload('ps-card', {
+            'trainingSubject': 'ПС', 'psGeneralSubjectRu': 'Общепроф. курс',
+            'psGeneralSubjectKz': 'Жалпы кәсіби курс', 'psSpecialSubjectRu': 'Спец. Курс',
+            'psSpecialSubjectKz': 'арнайы курс', 'result': 'Сдал/Тапсырды',
+            'outcome': {'status': 'PASSED', 'source': 'Проверенная ведомость'}})
+        self.assertEqual(payload['fields']['M_1_Наименование_дисциплины'], 'Общепроф. курс')
+        self.assertEqual(payload['fields']['M_2_Наименование_дисциплины'], 'Спец. Курс')
+        self.assertEqual(payload['fields']['M_2__пп'], '2')
+        actual = self.rendered_text(snapshot)
+        for value in ['Общепроф. курс', 'Жалпы кәсіби курс', 'Спец. Курс', 'арнайы курс', 'Сдал', 'Тапсырды']:
+            self.assertIn(value, actual)
+        for fabricated in ['Хорошо', 'хорошо', 'Жаксы', 'Жақсы']:
+            self.assertNotIn(fabricated, actual)
+        snapshot['items'][0]['assignment'].update(psSpecialSubjectRu='Управление краном', psSpecialSubjectKz='Кранды басқару')
+        custom = self.rendered_text(snapshot)
+        self.assertIn('Управление краном', custom)
+        self.assertIn('Кранды басқару', custom)
+        self.assertNotIn('Спец. Курс', custom)
+
+    def test_itr_and_ptm_source_course_fields_keep_selected_language_exceptions(self):
+        for template in ['biot-itr-certificate', 'ptm-card']:
+            with self.subTest(template=template):
+                snapshot, _ = self.payload(template, {'trainingSubject': 'Сохранённая программа', 'trainingSubjectKz': 'Сақталған бағдарлама'})
+                actual = self.rendered_text(snapshot)
+                self.assertIn('Сохранённая программа', actual)
+                self.assertIn('Сақталған бағдарлама', actual)
+                if template == 'biot-itr-certificate':
+                    self.assertNotIn('«Безопасность и охрана труда»', actual)
+                    self.assertNotIn('«Еңбек қауіпсіздігі және еңбекті қорғау»', actual)
+
+    def test_ps_profession_and_witness_qualification_use_distinct_saved_values(self):
+        for template in ['ps-card', 'ps-protocol', 'ps-witness']:
+            with self.subTest(template=template):
+                snapshot, _ = self.payload(template, {'professionRu': 'Машинист крана', 'professionKz': 'Кран машинисі',
+                                                       'psQualificationRu': 'Машинист крана 5 разряда', 'psQualificationKz': '5 дәрежелі кран машинисі'})
+                actual = self.rendered_text(snapshot)
+                if template in ['ps-witness', 'ps-protocol']:
+                    self.assertIn('Машинист крана 5 разряда', actual)
+                    if template == 'ps-witness':
+                        self.assertIn('5 дәрежелі кран машинисі', actual)
+                else:
+                    self.assertIn('Машинист крана', actual)
+                    self.assertNotIn('Машинист крана 5 разряда', actual)
+                self.assertNotIn('Инженер', actual)
+
+    def test_ps_two_disciplines_witness_and_protocol_are_verified_in_actual_docx_pdf(self):
+        from renderer import render_docx, convert_pdf
+        from test_render import OUT
+        import pymupdf
+        records = []
+        for template in ['ps-card', 'ps-witness', 'ps-protocol']:
+            snapshot, _ = self.payload(template, {
+                'trainingSubject': 'ПС', 'psGeneralSubjectRu': 'Общепроф. курс',
+                'psGeneralSubjectKz': 'Жалпы кәсіби курс', 'psSpecialSubjectRu': 'Спец. Курс',
+                'psSpecialSubjectKz': 'арнайы курс', 'result': 'Сдал/Тапсырды',
+                'professionRu': 'Машинист крана', 'professionKz': 'Кран машинисі',
+                'psQualificationRu': 'Машинист крана 5 разряда', 'psQualificationKz': '5 дәрежелі кран машинисі',
+                'documentDate': '2026-10-02', 'protocolDate': '2026-09-20',
+                'trainingStart': '2026-07-01', 'trainingEnd': '2026-08-07',
+                'outcome': {'status': 'PASSED', 'source': 'Проверенная ведомость'}})
+            snapshot['demoMode'] = False
+            snapshot['items'][0]['credentialNumber'] = 'СОХР-ПС-777'
+            docx = OUT / ('remaining-course-defaults-' + template + '.docx')
+            pdf = docx.with_suffix('.pdf')
+            render_docx(snapshot, docx)
+            convert_pdf(docx, pdf)
+            with ZipFile(docx) as archive:
+                docx_text = '\n'.join(node.text or '' for node in E.fromstring(archive.read('word/document.xml')).iter('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t'))
+            with pymupdf.open(pdf) as document:
+                pdf_text = ' '.join(' '.join(page.get_text().split()) for page in document)
+                self.assertGreater(len(document), 0)
+            for actual in [docx_text, pdf_text]:
+                self.assertIn(snapshot['items'][0]['fullNameRu'], actual)
+                for fabricated in ['Хорошо', 'хорошо', 'Жаксы', 'Жақсы']:
+                    self.assertNotIn(fabricated, actual)
+            if template == 'ps-card':
+                for actual in [docx_text, pdf_text]:
+                    for value in ['Общепроф. курс', 'Жалпы кәсіби курс', 'Спец. Курс', 'арнайы курс']:
+                        self.assertIn(value, actual)
+            if template == 'ps-protocol':
+                self.assertIn('СОХР-ПС-777', docx_text)
+                self.assertIn('СОХР-ПС-777', pdf_text)
+            if template in ['ps-witness', 'ps-protocol']:
+                for actual in [docx_text, pdf_text]:
+                    self.assertIn('Машинист крана 5 разряда', actual)
+                    if template == 'ps-witness':
+                        self.assertIn('5 дәрежелі кран машинисі', actual)
+            else:
+                for actual in [docx_text, pdf_text]:
+                    self.assertIn('Машинист крана', actual)
+                    self.assertNotIn('Машинист крана 5 разряда', actual)
+            records.append({'templateId': template, 'docxSha256': hashlib.sha256(docx.read_bytes()).hexdigest(),
+                            'pdfSha256': hashlib.sha256(pdf.read_bytes()).hexdigest(), 'snapshot': snapshot})
+        (OUT / 'remaining-course-defaults-real-files.json').write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding='utf8')
 
     def test_mapping_does_not_mutate_the_saved_snapshot(self):
         for template in ['biot-worker-card', 'biot-itr-certificate', 'ptm-card', 'pb-card', 'ps-card',

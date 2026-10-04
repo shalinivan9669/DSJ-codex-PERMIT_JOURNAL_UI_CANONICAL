@@ -1,5 +1,5 @@
 import { loginIsolated } from "./operator-full-fix-session";
-import { openRecipientExtraTools } from "./operator-keyboard-helpers";
+import { assertTechnicalBlankRemoval, openRecipientExtraTools } from "./operator-keyboard-helpers";
 import type { Customer } from "../lib/types";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
@@ -98,10 +98,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
     .click();
@@ -469,10 +466,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Убрать из заявки", exact: true })
-    .click();
+  await assertTechnicalBlankRemoval(page);
   await page
     .getByRole("button", { name: "Импорт / вставка", exact: true })
     .click();

@@ -118,7 +118,7 @@ test("one pinned company supplies all empty employee rows and preserves explicit
   );
 });
 
-test("saving a person stores the derived title in the proposed payload without promoting the approved draft", async () => {
+test("autosave persists the person title and working data without submitting director review", async () => {
   const input = draft();
   const approvedDraft = draftSchema.parse({ kind: "PERSON", items: [] });
   const record = {
@@ -138,14 +138,17 @@ test("saving a person stores the derived title in the proposed payload without p
       findFirst: async () => record,
       update: async ({ data }: { data: Record<string, unknown> }) => {
         requestUpdate = data;
+        Object.assign(record, data);
         return record;
       },
     },
     requestProposal: {
-      findFirst: async () => proposed,
+      findFirst: async ({ where }: { where: { status?: unknown } }) =>
+        where.status && proposed?.status === "DRAFT" ? null : proposed,
+      findMany: async () => [],
       updateMany: async () => ({ count: 0 }),
       create: async ({ data }: { data: Record<string, unknown> }) => {
-        proposed = { ...data, id: "proposal", status: "PENDING" };
+        proposed = { ...data, id: "proposal" };
         return proposed;
       },
     },
@@ -153,6 +156,11 @@ test("saving a person stores the derived title in the proposed payload without p
       findFirst: async () => company,
       count: async () => 0,
       findMany: async () => [company],
+    },
+    issuanceAssignment: { findMany: async () => [] },
+    requestItem: {
+      deleteMany: async () => ({ count: 0 }),
+      createMany: async () => ({ count: 1 }),
     },
     recipient: { count: async () => 0 },
     issuerProfileVersion: { count: async () => 1 },
@@ -166,7 +174,9 @@ test("saving a person stores the derived title in the proposed payload without p
   assert.equal(result.title, input.items[0].fullNameRu);
   assert.equal(result.customerName, input.items[0].fullNameRu);
   assert.deepEqual(payload.organizationSnapshots, [company]);
-  assert.deepEqual(record.draft, approvedDraft);
-  assert.deepEqual(requestUpdate, { workingRevision: 1 });
-  assert.equal(result.approval.status, "PENDING");
+  assert.deepEqual(record.draft, payload);
+  assert.equal(requestUpdate.workingRevision, 1);
+  assert.equal(requestUpdate.revision, 1);
+  assert.equal(proposed!.status, "DRAFT");
+  assert.equal(result.approval, null);
 });

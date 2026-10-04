@@ -33,7 +33,7 @@ W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 R='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
 PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
 NS={'w':W[1:-1]}
-RENDERER_VERSION='demo-ooxml-10/libreoffice-26.2.6.3'
+RENDERER_VERSION='demo-ooxml-11/libreoffice-26.2.6.3'
 RU=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']
 KZ=['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан']
 Image.MAX_IMAGE_PIXELS=20_000_000
@@ -74,6 +74,14 @@ def fields_for(snapshot,item):
     for prefix,key in [('DOCUMENT','documentDate'),('PROTOCOL','protocolDate'),('VALID','validUntil'),('TRAINING_START','trainingStart'),('TRAINING_END','trainingEnd'),('ISSUE','documentDate')]:
         for part,value in date_parts(assignment.get(key)).items(): fields[f'{prefix}_{part}']=value
     fields.update(PROFESSION_RU=fields['POSITION_RU'],PROFESSION_KZ=fields['POSITION_KZ'],PROTOCOL_NUMBER_DISPLAY=fields['PROTOCOL_NUMBER'],CREDENTIAL_NUMBER=item.get('credentialNumber','') or number)
+    if snapshot['templateId'].startswith('ps-') and any(assignment.get(key) for key in ['professionRu', 'professionKz', 'psQualificationRu', 'psQualificationKz']):
+        ru = assignment.get('professionRu') or assignment.get('professionKz') or fields['POSITION_RU']
+        kz = assignment.get('professionKz') or assignment.get('professionRu') or fields['POSITION_KZ']
+        if snapshot['templateId'] in ['ps-witness', 'ps-protocol']:
+            ru = assignment.get('psQualificationRu') or assignment.get('psQualificationKz') or ru
+            kz = assignment.get('psQualificationKz') or assignment.get('psQualificationRu') or kz
+        fields.update(POSITION_RU=ru, POSITION_KZ=kz, PROFESSION_RU=ru, PROFESSION_KZ=kz,
+                      POSITION_BOTH=ru if ru == kz else ' / '.join(filter(None, [ru, kz])))
     from biot_2026 import current_fields
     fields.update(current_fields(snapshot,item))
     fields['TRAINING_START_YEAR_FULL']=fields['TRAINING_START_YEAR']; fields['TRAINING_END_YEAR_FULL']=fields['TRAINING_END_YEAR']
@@ -845,6 +853,8 @@ def build_bundle(payload,out):
         for entry in missing: writer.writerow(['Жоқ' if kazakh else 'Отсутствует',entry.get('format',''),'', '',entry.get('reason','')])
         add_derivative('Тізімдеме.tsv' if kazakh else 'Опись.tsv',inventory.getvalue().encode('utf8'))
     manifest={'version':2,'issuanceId':payload.get('issuanceId'),'complete':complete,'files':entries,'missing':missing,'expectedCount':payload.get('expectedCount',len(payload['artifacts'])),'readyCount':len(entries),'attachments':attachments,'deliveryProfile':payload.get('profile')}
+    if payload.get('partCount',1)>1:
+        manifest.update(partIndex=payload['partIndex'],partCount=payload['partCount'],wholeExpectedCount=payload['wholeExpectedCount'])
     content['manifest.json']=json.dumps(manifest,ensure_ascii=False,indent=2).encode()
     if kazakh:
         content['STATUS.txt']=(('ТОЛЫҚ ЖИНАҚ' if manifest['complete'] else 'ТОЛЫҚ ЕМЕС ЖИНАҚ')+f"\nФайлдар: {len(entries)} / {manifest['expectedCount']}.\nҚұрамы, бақылау сомалары және жетіспейтін файлдардың себептері manifest.json файлында.\n").encode('utf8')
@@ -869,6 +879,12 @@ def main():
         from control_sheet import control_sheet
         result=control_sheet(payload,out,convert_pdf)
     elif command=='zip': result=build_bundle(payload,out)
+    elif command=='merge-pdf':
+        from print_pack import merge_pdf
+        result=merge_pdf(payload,out)
+    elif command=='merge-docx':
+        from print_pack import merge_docx
+        result=merge_docx(payload,out)
     else: raise ValueError('UNKNOWN_COMMAND')
     if Path(out).exists(): result.update(size=Path(out).stat().st_size,sha256=hashlib.sha256(Path(out).read_bytes()).hexdigest())
     print(json.dumps(result,ensure_ascii=False))

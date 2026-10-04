@@ -15,6 +15,7 @@ export function GridPasteDialog({
   columns,
   newRecipientsTraining,
   operationError,
+  reason,
   onClose,
   onApply,
 }: {
@@ -25,6 +26,7 @@ export function GridPasteDialog({
   columns?: readonly GridField[];
   newRecipientsTraining?: string;
   operationError?: string;
+  reason?: string;
   onClose: () => void;
   onApply: (items: Recipient[]) => void | boolean | Promise<void | boolean>;
 }) {
@@ -67,6 +69,7 @@ export function GridPasteDialog({
         {gridColumns.find(([field]) => field === startField)?.[1]}. Строки
         следуют исходному порядку заявки, включая скрытые поиском.
       </p>
+      {reason && <Notice kind="info">{reason}</Notice>}
       <p className="muted">
         Порядок колонок:{" "}
         {(columns ?? gridColumns.map(([field]) => field))

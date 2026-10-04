@@ -7,12 +7,14 @@ import {
   type Draft,
   type IssuerProfile,
   type ValidationIssue,
+  isTechnicalBlankRecipient,
 } from "@demo/contracts";
 
 /** Each result is one person in one training, including historical omitted UNKNOWN metadata. */
 export function trainingOutcomeSummary(draft: Pick<Draft, "items">) {
   return draft.items.reduce(
     (summary, item) => {
+      if (isTechnicalBlankRecipient(item)) return summary;
       const trainings = new Set(
         item.assignments
           .filter(
@@ -133,6 +135,20 @@ export function draftReadiness(
   const fieldHints: Record<string, string> = {};
   const seen = new Set<string>();
   for (const issue of [...contractIssues, ...current.issues]) {
+    const row = /^items\.(\d+)(?:\.|$)/.exec(issue.path);
+    if (
+      row &&
+      draft.items[Number(row[1])] &&
+      isTechnicalBlankRecipient(draft.items[Number(row[1])])
+    )
+      continue;
+    if (
+      issue.rowId &&
+      draft.items.some(
+        (item) => item.id === issue.rowId && isTechnicalBlankRecipient(item),
+      )
+    )
+      continue;
     const key = JSON.stringify([
       issue.code,
       issue.path,

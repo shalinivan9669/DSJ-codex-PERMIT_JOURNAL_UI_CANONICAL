@@ -4,6 +4,53 @@
   background: var(--paper);
 }
 
+.recipient-grid-table .recipient-grid-translate {
+  min-height: 30px;
+  padding: 4px 0;
+  font-size: 12px;
+  color: var(--accent-dark);
+}
+.recipient-grid-language-rule {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 12px;
+}
+.recipient-grid-course-dates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 12px;
+  font-size: 12px;
+}
+.recipient-grid-course-toggle {
+  cursor: pointer;
+  min-height: 30px;
+  padding-block: 6px;
+}
+.recipient-grid-course-dates fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.recipient-grid-course-dates label {
+  margin: 0;
+  font-size: 12px;
+}
+.recipient-grid-date-supplement td {
+  padding: 8px 14px 14px;
+}
+.recipient-grid-course-dates label small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.recipient-grid-course-dates fieldset > small {
+  grid-column: 1 / -1;
+}
+
 .recipient-grid-options {
   display: flex;
   align-items: center;
@@ -632,6 +679,8 @@
   }
 
   .recipient-grid-language button,
+  .recipient-grid-table .recipient-grid-translate,
+  .recipient-grid-table .recipient-grid-course-toggle,
   .recipient-grid-table .recipient-grid-documents button,
   .recipient-grid-table .recipient-grid-actions button {
     min-height: 44px;

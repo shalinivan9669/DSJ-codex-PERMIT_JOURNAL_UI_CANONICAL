@@ -2,6 +2,7 @@ import {
   BIOT_CATEGORIES,
   biotValidUntil,
   commonFieldKeys,
+  withCourseProgram,
   type Assignment,
   type BiotCategory,
   type CalculatedDateKey,
@@ -82,7 +83,16 @@ export function updateAssignment(
   patch: Partial<Assignment>,
 ): Assignment {
   const next = { ...assignment, ...patch };
-  for (const field of commonFieldKeys) {
+  for (const field of [
+    ...commonFieldKeys,
+    "result",
+    "resultKz",
+    "resultEn",
+    "professionRu",
+    "professionKz",
+    "psQualificationRu",
+    "psQualificationKz",
+  ] as const) {
     if (Object.hasOwn(patch, field))
       next.fieldOrigins = {
         ...next.fieldOrigins,
@@ -156,5 +166,5 @@ export function updateAssignment(
     }
   }
   if (!next.biotCategory) delete next.biotCategory;
-  return next;
+  return withCourseProgram(next);
 }

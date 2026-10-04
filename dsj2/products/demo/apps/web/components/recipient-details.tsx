@@ -18,6 +18,7 @@ import {
   biotCategoryDescription,
 } from "@/lib/validity-display";
 import { TranslationSuggestion } from "./translation-suggestion";
+import { recipientPositionLabel } from "@/lib/recipient-course-context";
 import {
   editTrainingAssignment,
   restoreTrainingAssignmentField,
@@ -43,6 +44,16 @@ function sectionForField(key: string): DocumentSection {
   if (
     [
       "trainingSubject",
+      "trainingSubjectKz",
+      "psGeneralSubjectRu",
+      "psGeneralSubjectKz",
+      "psSpecialSubjectRu",
+      "psSpecialSubjectKz",
+      "resultKz",
+      "professionRu",
+      "professionKz",
+      "psQualificationRu",
+      "psQualificationKz",
       "trainingSubjectEn",
       "resultEn",
       "reasonEn",
@@ -119,6 +130,7 @@ export function RecipientDetails({
   englishAppendix = false,
   requestEmployer,
   focusFieldPath,
+  issuedAssignmentIds = [],
 }: {
   recipient: Recipient;
   disabled: boolean;
@@ -133,6 +145,7 @@ export function RecipientDetails({
   englishAppendix?: boolean;
   requestEmployer?: { id: string; nameRu: string; nameKz: string } | null;
   focusFieldPath?: string | null;
+  issuedAssignmentIds?: readonly string[];
 }) {
   const [photoOpen, setPhotoOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("documents");
@@ -217,6 +230,16 @@ export function RecipientDetails({
       trainingEnd: "Окончание обучения",
       protocolDate: "Дата протокола",
       trainingSubject: "Программа / тема обучения",
+      trainingSubjectKz: "Программа / тема обучения · KZ",
+      psGeneralSubjectRu: "Общепрофессиональный курс · RU",
+      psGeneralSubjectKz: "Общепрофессиональный курс · KZ",
+      psSpecialSubjectRu: "Специальный курс · RU",
+      psSpecialSubjectKz: "Специальный курс · KZ",
+      resultKz: "Текст результата / оценка · KZ",
+      professionRu: "Профессия для ПС · RU",
+      professionKz: "Профессия для ПС · KZ",
+      psQualificationRu: "Присвоенная квалификация ПС · RU",
+      psQualificationKz: "Присвоенная квалификация ПС · KZ",
       result: "Подтверждённый результат / оценка",
       outcome: "Исход обучения",
       "outcome.source": "Источник подтверждения результата",
@@ -394,6 +417,7 @@ export function RecipientDetails({
             ))}
           <TranslationSuggestion
             source={recipient.positionRu}
+            currentText={recipient.positionEn || ""}
             field="positionRu"
             target="en"
             disabled={disabled}
@@ -449,9 +473,9 @@ export function RecipientDetails({
           <TextQualityHint value={recipient.fullNameRu} />
         </label>
         <label>
-          Должность / профессия
+          {recipientPositionLabel(recipient)}
           <input
-            aria-label="Должность / профессия"
+            aria-label={recipientPositionLabel(recipient)}
             {...personField("positionRu")}
             disabled={disabled}
             value={recipient.positionRu || recipient.positionKz}
@@ -481,7 +505,7 @@ export function RecipientDetails({
             {(
               [
                 ["fullNameKz", "ФИО · KZ"],
-                ["positionKz", "Должность / профессия · KZ"],
+                ["positionKz", `${recipientPositionLabel(recipient)} · KZ`],
               ] as const
             ).map(([key, label]) => (
               <label key={key}>
@@ -501,6 +525,7 @@ export function RecipientDetails({
                 {key === "positionKz" && (
                   <TranslationSuggestion
                     source={recipient.positionRu}
+                    currentText={recipient.positionKz}
                     field="positionRu"
                     target="kk"
                     disabled={disabled}
@@ -638,6 +663,8 @@ export function RecipientDetails({
         hidden={activeTab !== "documents"}
       >
         {recipient.assignments.map((assignment, index) => {
+          const documentDisabled =
+            disabled || issuedAssignmentIds.includes(assignment.id);
           const activeSection = documentTabs[assignment.id] || "main";
           return (
             <details
@@ -656,6 +683,12 @@ export function RecipientDetails({
                 </span>
               </summary>
               <div className="assignment-fields">
+                {issuedAssignmentIds.includes(assignment.id) && (
+                  <p className="fine-print">
+                    Это назначение оформлено. Его данные защищены; изменение
+                    выданного документа доступно через явное исправление.
+                  </p>
+                )}
                 <div
                   className="tabs assignment-section-tabs"
                   role="tablist"
@@ -710,7 +743,7 @@ export function RecipientDetails({
                     Форма документа
                     <select
                       {...field(index, "templateId")}
-                      disabled={disabled || liveRules}
+                      disabled={documentDisabled || liveRules}
                       value={assignment.templateId}
                       onChange={(event) =>
                         changeAssignment(assignment.id, {
@@ -735,7 +768,7 @@ export function RecipientDetails({
                       Категория обучения БиОТ
                       <select
                         {...field(index, "biotCategory")}
-                        disabled={disabled}
+                        disabled={documentDisabled}
                         value={
                           (resolvedRecipient?.assignments[index] || assignment)
                             .biotCategory || ""
@@ -785,7 +818,7 @@ export function RecipientDetails({
                       <input
                         {...field(index, "documentDate")}
                         type="date"
-                        disabled={disabled}
+                        disabled={documentDisabled}
                         value={
                           (resolvedRecipient?.assignments[index] || assignment)
                             .documentDate
@@ -877,7 +910,7 @@ export function RecipientDetails({
                         <input
                           {...field(index, "trainingStart")}
                           type="date"
-                          disabled={disabled}
+                          disabled={documentDisabled}
                           value={
                             (
                               resolvedRecipient?.assignments[index] ||
@@ -897,7 +930,7 @@ export function RecipientDetails({
                         <input
                           {...field(index, "trainingEnd")}
                           type="date"
-                          disabled={disabled}
+                          disabled={documentDisabled}
                           value={
                             (
                               resolvedRecipient?.assignments[index] ||
@@ -917,7 +950,7 @@ export function RecipientDetails({
                         <input
                           {...field(index, "protocolDate")}
                           type="date"
-                          disabled={disabled}
+                          disabled={documentDisabled}
                           value={
                             (
                               resolvedRecipient?.assignments[index] ||
@@ -952,7 +985,7 @@ export function RecipientDetails({
                           provenance?.[`${recipient.id}:${assignment.id}`] ||
                           assignment.fieldOrigins
                         }
-                        disabled={disabled}
+                        disabled={documentDisabled}
                         restoreKeys={
                           assignment.protocolMode === "GROUP"
                             ? calculatedDateKeys.filter((key) =>
@@ -987,7 +1020,7 @@ export function RecipientDetails({
                       <input
                         {...field(index, "hours")}
                         inputMode="decimal"
-                        disabled={disabled}
+                        disabled={documentDisabled}
                         value={
                           (resolvedRecipient?.assignments[index] || assignment)
                             .hours
@@ -1020,7 +1053,7 @@ export function RecipientDetails({
                         <input
                           {...field(index, "productionHours")}
                           inputMode="decimal"
-                          disabled={disabled}
+                          disabled={documentDisabled}
                           value={
                             (
                               resolvedRecipient?.assignments[index] ||
@@ -1061,7 +1094,7 @@ export function RecipientDetails({
                       Вид проверки знаний БиОТ
                       <select
                         {...field(index, "biotCheckType")}
-                        disabled={disabled}
+                        disabled={documentDisabled}
                         value={
                           (resolvedRecipient?.assignments[index] || assignment)
                             .biotCheckType || ""
@@ -1102,7 +1135,7 @@ export function RecipientDetails({
                             {label}
                             <input
                               {...field(index, key)}
-                              disabled={disabled}
+                              disabled={documentDisabled}
                               value={String(
                                 assignment[key as keyof Assignment] || "",
                               )}
@@ -1137,7 +1170,7 @@ export function RecipientDetails({
                           {label}
                           <input
                             {...field(index, key)}
-                            disabled={disabled}
+                            disabled={documentDisabled}
                             value={String(
                               assignment[key as keyof Assignment] || "",
                             )}
@@ -1166,7 +1199,7 @@ export function RecipientDetails({
                       Примечание к протоколу БиОТ
                       <textarea
                         {...field(index, "biotNotes")}
-                        disabled={disabled}
+                        disabled={documentDisabled}
                         value={assignment.biotNotes || ""}
                         onChange={(event) =>
                           changeAssignment(assignment.id, {
@@ -1181,7 +1214,7 @@ export function RecipientDetails({
                     Программа / тема обучения
                     <textarea
                       {...field(index, "trainingSubject")}
-                      disabled={disabled}
+                      disabled={documentDisabled}
                       value={
                         (resolvedRecipient?.assignments[index] || assignment)
                           .trainingSubject
@@ -1194,11 +1227,150 @@ export function RecipientDetails({
                     />
                     {fieldError(index, "trainingSubject")}
                   </label>
+                  <label className="assignment-field-wide">
+                    Программа / тема обучения · KZ
+                    <textarea
+                      {...field(index, "trainingSubjectKz")}
+                      disabled={documentDisabled}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .trainingSubjectKz || ""
+                      }
+                      onChange={(event) =>
+                        changeAssignment(assignment.id, {
+                          trainingSubjectKz: event.target.value,
+                        })
+                      }
+                    />
+                    {fieldError(index, "trainingSubjectKz")}
+                    <small>
+                      KZ необязателен; без отдельного варианта используется
+                      введённый текст без перевода.
+                    </small>
+                  </label>
+                  {assignment.templateId.startsWith("ps-") && (
+                    <div className="form-grid assignment-field-wide">
+                      {(
+                        [
+                          [
+                            "psGeneralSubjectRu",
+                            "Удостоверение ПС: общепрофессиональная дисциплина · RU",
+                          ],
+                          [
+                            "psGeneralSubjectKz",
+                            "Удостоверение ПС: общепрофессиональная дисциплина · KZ",
+                          ],
+                          [
+                            "psSpecialSubjectRu",
+                            "Удостоверение ПС: специальная дисциплина · RU",
+                          ],
+                          [
+                            "psSpecialSubjectKz",
+                            "Удостоверение ПС: специальная дисциплина · KZ",
+                          ],
+                        ] as const
+                      ).map(([key, label]) => (
+                        <label key={key}>
+                          {label}
+                          <input
+                            {...field(index, key)}
+                            disabled={documentDisabled}
+                            value={
+                              (resolvedRecipient?.assignments[index] ||
+                                assignment)[key] || ""
+                            }
+                            onChange={(event) =>
+                              changeAssignment(assignment.id, {
+                                [key]: event.target.value,
+                              })
+                            }
+                          />
+                          {fieldError(index, key)}
+                        </label>
+                      ))}
+                      <p className="fine-print">
+                        Эти тексты печатаются в строках дисциплин удостоверения
+                        ПС. Свидетельство сохраняет названия
+                        «Общепрофессиональные дисциплины» и «Специальные
+                        дисциплины» исходного бланка.
+                      </p>
+                      <details className="assignment-field-wide">
+                        <summary>
+                          Профессия и квалификация ПС · исключения для этого
+                          курса
+                        </summary>
+                        <p className="fine-print">
+                          Без исключения используется общий ввод человека.
+                          Профессия печатается в удостоверении ПС; присвоенная
+                          квалификация — в свидетельстве и протоколе ПС. У
+                          смешанных курсов эти значения могут отличаться от
+                          должности.
+                        </p>
+                        <div className="form-grid">
+                          {(
+                            [
+                              ["professionRu", "Профессия для ПС · RU"],
+                              ["professionKz", "Профессия для ПС · KZ"],
+                              [
+                                "psQualificationRu",
+                                "Присвоенная квалификация — свидетельство и протокол ПС · RU",
+                              ],
+                              [
+                                "psQualificationKz",
+                                "Присвоенная квалификация — свидетельство и протокол ПС · KZ",
+                              ],
+                            ] as const
+                          ).map(([key, label]) => (
+                            <label key={key}>
+                              {label}
+                              <input
+                                {...field(index, key)}
+                                disabled={documentDisabled}
+                                value={assignment[key] || ""}
+                                placeholder={
+                                  key.endsWith("Kz")
+                                    ? recipient.positionKz ||
+                                      recipient.positionRu
+                                    : recipient.positionRu ||
+                                      recipient.positionKz
+                                }
+                                onChange={(event) =>
+                                  changeAssignment(assignment.id, {
+                                    [key]: event.target.value,
+                                  })
+                                }
+                              />
+                              {fieldError(index, key)}
+                              {assignment[key] && (
+                                <button
+                                  type="button"
+                                  disabled={documentDisabled}
+                                  className="text-button"
+                                  onClick={() =>
+                                    onChange(
+                                      restoreTrainingAssignmentField(
+                                        recipient,
+                                        assignment.id,
+                                        key,
+                                        liveRules,
+                                      ),
+                                    )
+                                  }
+                                >
+                                  Вернуть общий ввод
+                                </button>
+                              )}
+                            </label>
+                          ))}
+                        </div>
+                      </details>
+                    </div>
+                  )}
                   <label>
                     Подтверждённый результат / оценка
                     <input
                       {...field(index, "result")}
-                      disabled={disabled}
+                      disabled={documentDisabled}
                       value={assignment.result}
                       placeholder="Укажите фактический результат"
                       onChange={(event) =>
@@ -1209,6 +1381,23 @@ export function RecipientDetails({
                     />
                     {fieldError(index, "result")}
                   </label>
+                  <label>
+                    Текст результата / оценка · KZ
+                    <input
+                      {...field(index, "resultKz")}
+                      disabled={documentDisabled}
+                      value={
+                        (resolvedRecipient?.assignments[index] || assignment)
+                          .resultKz || ""
+                      }
+                      onChange={(event) =>
+                        changeAssignment(assignment.id, {
+                          resultKz: event.target.value,
+                        })
+                      }
+                    />
+                    {fieldError(index, "resultKz")}
+                  </label>
                   {(liveRules ||
                     assignment.outcome ||
                     assignment.protocolMode === "GROUP") && (
@@ -1217,7 +1406,7 @@ export function RecipientDetails({
                         Исход обучения
                         <select
                           {...field(index, "outcome")}
-                          disabled={disabled}
+                          disabled={documentDisabled}
                           value={assignment.outcome?.status || "UNKNOWN"}
                           onChange={(event) =>
                             changeAssignment(assignment.id, {
@@ -1242,7 +1431,7 @@ export function RecipientDetails({
                         Источник подтверждения результата
                         <input
                           {...field(index, "outcome.source")}
-                          disabled={disabled}
+                          disabled={documentDisabled}
                           value={assignment.outcome?.source || ""}
                           placeholder="Ведомость, дата и ответственный"
                           onChange={(event) =>
@@ -1308,7 +1497,7 @@ export function RecipientDetails({
                           <label key={key}>
                             {label}
                             <input
-                              disabled={disabled}
+                              disabled={documentDisabled}
                               value={
                                 (resolvedRecipient?.assignments[index] ||
                                   assignment)[key] || ""
@@ -1330,8 +1519,14 @@ export function RecipientDetails({
                                   ).trainingSubject
                                 }
                                 field="trainingSubject"
+                                currentText={
+                                  (
+                                    resolvedRecipient?.assignments[index] ||
+                                    assignment
+                                  ).trainingSubjectEn || ""
+                                }
                                 target="en"
-                                disabled={disabled}
+                                disabled={documentDisabled}
                                 onApply={(text) =>
                                   changeAssignment(assignment.id, {
                                     trainingSubjectEn: text,
@@ -1361,7 +1556,7 @@ export function RecipientDetails({
                         : "Причина / основание"}
                       <input
                         {...field(index, "reason")}
-                        disabled={disabled}
+                        disabled={documentDisabled}
                         value={
                           (resolvedRecipient?.assignments[index] || assignment)
                             .reason || ""
@@ -1391,7 +1586,7 @@ export function RecipientDetails({
                         <button
                           type="button"
                           className="text-button"
-                          disabled={disabled}
+                          disabled={documentDisabled}
                           onClick={() =>
                             onChange(
                               restoreTrainingAssignmentField(
@@ -1413,7 +1608,7 @@ export function RecipientDetails({
                       Образование
                       <input
                         {...field(index, "education")}
-                        disabled={disabled}
+                        disabled={documentDisabled}
                         value={
                           (resolvedRecipient?.assignments[index] || assignment)
                             .education || ""
@@ -1445,7 +1640,7 @@ export function RecipientDetails({
                         (resolvedRecipient?.assignments[index] || assignment)
                           .trainingDateRule
                       }
-                      disabled={disabled}
+                      disabled={documentDisabled}
                       onChange={(rule) =>
                         changeAssignment(assignment.id, {
                           trainingDateRule: rule,
@@ -1493,6 +1688,7 @@ export function RecipientDetails({
                                   EVENT: "Из события",
                                   REQUEST: "Из заявки",
                                   PRESET: "Из набора",
+                                  COURSE: "Программа курса",
                                   CENTER: "Из настроек центра",
                                   MANUAL: "Введено вручную",
                                   IMPORTED: "Импортировано",
@@ -1505,7 +1701,7 @@ export function RecipientDetails({
                               ) && (
                                 <button
                                   className="text-button"
-                                  disabled={disabled}
+                                  disabled={documentDisabled}
                                   onClick={() =>
                                     onChange(
                                       restoreTrainingAssignmentField(
@@ -1531,7 +1727,7 @@ export function RecipientDetails({
                     <select
                       {...field(index, "protocolMode")}
                       disabled={
-                        disabled ||
+                        documentDisabled ||
                         liveRules ||
                         assignment.templateId.endsWith("-protocol")
                       }
@@ -1565,7 +1761,7 @@ export function RecipientDetails({
                     Внешний номер основания
                     <input
                       {...field(index, "externalBasisNumber")}
-                      disabled={disabled}
+                      disabled={documentDisabled}
                       value={
                         (resolvedRecipient?.assignments[index] || assignment)
                           .externalBasisNumber
@@ -1583,7 +1779,7 @@ export function RecipientDetails({
                     основания хранится отдельно.
                   </small>
                 </div>
-                {!disabled && !liveRules && (
+                {!documentDisabled && !liveRules && (
                   <button
                     className="text-button danger-text"
                     onClick={() =>

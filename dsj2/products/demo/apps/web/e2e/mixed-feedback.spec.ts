@@ -232,15 +232,16 @@ test("a mixed request joins existing documents to separate compatible group prot
       name: "Назначить обучение",
       exact: true,
     });
-    await dialog
-      .getByRole("checkbox", { name: /^Безопасность и охрана труда/ })
-      .check();
-    await dialog
-      .getByRole("button", {
+    await expect(
+      dialog.getByRole("checkbox", { name: /^Безопасность и охрана труда/ }),
+    ).toBeChecked();
+    await expect(
+      dialog.getByRole("button", {
         name: "Добавить обучение и комплект",
         exact: true,
-      })
-      .click();
+      }),
+    ).toBeDisabled();
+    await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
     await expect(dialog).toHaveCount(0);
     // A GROUP protocol is a virtual event document, so the row retains only
     // its credential. Repeating the choice must not restore a redundant

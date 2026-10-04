@@ -5,6 +5,7 @@ import {
   RENDERER_VERSION,
   runRender,
   selectBundleJobs,
+  partitionSavedArtifacts,
 } from "@demo/printing";
 import { randomUUID } from "node:crypto";
 
@@ -67,6 +68,10 @@ export async function executeJob(
   if (!snapshot) throw new Error("SNAPSHOT_MISSING");
   const input = snapshot.input as Record<string, unknown>;
   let output: { buffer: Buffer; metadata: Record<string, unknown> };
+  const additionalOutputs: {
+    buffer: Buffer;
+    metadata: Record<string, unknown>;
+  }[] = [];
   if (job.kind === "DOCX") output = await runRender("docx", input, { signal });
   else if (job.kind === "PDF") {
     const dependency = await docxDependency(db, job);
@@ -111,26 +116,42 @@ export async function executeJob(
         },
       },
     });
-    output = await runRender(
-      "zip",
-      {
-        artifacts,
-        issuanceId: job.issuanceId,
-        expectedCount: jobs.length,
-        missing: jobs
-          .filter((j) => j.status === "FAILED")
-          .map((j) => ({
-            jobId: j.id,
-            documentId: j.documentId,
-            format: j.kind,
-            reason: j.errorCode || "FAILED",
-          })),
-      },
-      { signal },
-    );
+    const parts = partitionSavedArtifacts(artifacts);
+    if (!parts.length) throw new Error("EMPTY_BUNDLE");
+    const renderedParts = [];
+    for (const [partIndex, part] of parts.entries())
+      renderedParts.push(
+        await runRender(
+          "zip",
+          {
+            artifacts: part,
+            issuanceId: job.issuanceId,
+            expectedCount: parts.length === 1 ? jobs.length : part.length,
+            partIndex,
+            partCount: parts.length,
+            wholeExpectedCount: jobs.length,
+            missing: jobs
+              .filter((j) => j.status === "FAILED")
+              .map((j) => ({
+                jobId: j.id,
+                documentId: j.documentId,
+                format: j.kind,
+                reason: j.errorCode || "FAILED",
+              })),
+          },
+          { signal },
+        ),
+      );
+    output = renderedParts[0];
+    additionalOutputs.push(...renderedParts.slice(1));
   } else throw new Error("UNSUPPORTED_JOB_KIND");
   if (signal.aborted) throw new LostLease();
   const blob = await store.put(output.buffer, job.kind.toLowerCase());
+  const extraBlobs = await Promise.all(
+    additionalOutputs.map((part) =>
+      store.put(part.buffer, job.kind.toLowerCase()),
+    ),
+  );
   // Blob storage is immutable; only the lease owner may publish its pointer. Transaction rollback
   // leaves an unreferenced blob rather than corrupting a prior canonical artifact.
   return db.$transaction(async (tx) => {
@@ -150,7 +171,7 @@ export async function executeJob(
         format: job.kind,
         ...blob,
         mimeType: MIME[job.kind] || "application/octet-stream",
-        fileName: `${job.kind === "ZIP" && output.metadata.complete === false ? "PARTIAL-" : ""}${input.templateId || "registry"}-${job.documentId || job.requestId}.${job.kind.toLowerCase()}`,
+        fileName: `${extraBlobs.length ? `part-1-of-${extraBlobs.length + 1}-` : ""}${job.kind === "ZIP" && output.metadata.complete === false ? "PARTIAL-" : ""}${input.templateId || "registry"}-${job.documentId || job.requestId}.${job.kind.toLowerCase()}`,
         templateVersion:
           input.templateVersion == null ? null : String(input.templateVersion),
         rendererVersion: RENDERER_VERSION,
@@ -163,6 +184,15 @@ export async function executeJob(
               : "ORIGINAL",
       },
     });
+    for (const [partIndex, extraBlob] of extraBlobs.entries())
+      await tx.artifact.create({
+        data: {
+          ...artifact,
+          ...extraBlob,
+          id: randomUUID(),
+          fileName: `part-${partIndex + 2}-of-${extraBlobs.length + 1}-${input.templateId || "registry"}-${job.documentId || job.requestId}.${job.kind.toLowerCase()}`,
+        },
+      });
     await tx.generationJob.update({
       where: { id: job.id },
       data: {
@@ -184,6 +214,7 @@ export async function executeJob(
           format: job.kind,
           sha256: artifact.sha256,
           fencingToken: job.fencingToken,
+          partCount: extraBlobs.length + 1,
           ...(typeof input.restoreOfArtifactId === "string"
             ? {
                 restoreOfArtifactId: input.restoreOfArtifactId,

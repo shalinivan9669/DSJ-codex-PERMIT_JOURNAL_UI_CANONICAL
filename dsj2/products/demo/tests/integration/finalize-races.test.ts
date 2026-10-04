@@ -162,8 +162,8 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
               where: { id: request.id },
             })
           ).revision,
-          request.revision,
-          "Unapproved competing edits must not change the approved revision",
+          request.revision + 1,
+          "Competing autosave persists its working revision while invalidating selected approval",
         );
         assert.equal(
           await db.issuance.count({ where: { requestId: request.id } }),

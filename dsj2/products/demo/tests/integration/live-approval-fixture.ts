@@ -122,9 +122,37 @@ export async function createApprovalFixture(admin: Context) {
       );
       assert.equal(current.status, 200, await current.clone().text());
       const state = (await current.json()) as {
+        revision: number;
         approval: { proposalId: string; status: string } | null;
       };
       if (state.approval?.status === "APPROVED") return;
+      if (state.approval?.status !== "PENDING") {
+        const submission = await requestWithRateLimit(
+          `${base}/print-requests/${requestId}/approval/submit`,
+          {
+            method: "POST",
+            headers: { ...auth, "content-type": "application/json" },
+            body: JSON.stringify({ expectedRevision: state.revision }),
+          },
+        );
+        if (expectedIncompleteProblem) {
+          const error = (await submission.json()) as {
+            code: string;
+            details: Array<{ code: string }>;
+          };
+          assert.equal(submission.status, 422);
+          assert.equal(error.code, "APPROVAL_DATA_INCOMPLETE");
+          assert.ok(
+            error.details.some(
+              (issue) => issue.code === expectedIncompleteProblem,
+            ),
+          );
+          return;
+        }
+        assert.equal(submission.status, 201, await submission.clone().text());
+        const submitted = (await submission.json()) as typeof state;
+        state.approval = submitted.approval;
+      }
       assert.equal(state.approval?.status, "PENDING");
       const detailResponse = await requestWithRateLimit(
         `${base}/approvals/${state.approval!.proposalId}`,

@@ -39,7 +39,26 @@ export async function approveFinalFixture(
     `/api/print-requests/${id}`,
   );
   expect(currentResponse.ok(), await currentResponse.text()).toBe(true);
-  const current = await currentResponse.json();
+  let current = await currentResponse.json();
+  if (current.approval?.status !== "PENDING") {
+    const session = await (
+      await operator.request.get("/api/auth/session")
+    ).json();
+    const submitted = await operator.request.post(
+      `/api/print-requests/${id}/approval/submit`,
+      {
+        headers: {
+          origin: new URL(operator.url()).origin,
+          "x-csrf-token": session.csrfToken,
+        },
+        data: { expectedRevision: current.revision },
+      },
+    );
+    expect(submitted.ok(), await submitted.text()).toBe(true);
+    current = await (
+      await operator.request.get(`/api/print-requests/${id}`)
+    ).json();
+  }
   expect(current.approval?.status).toBe("PENDING");
   const context = await browser.newContext({
     baseURL: process.env.DEMO_ORIGIN,

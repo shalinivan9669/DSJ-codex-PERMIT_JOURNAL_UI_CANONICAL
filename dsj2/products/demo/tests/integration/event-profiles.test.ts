@@ -146,17 +146,26 @@ test("named commissions are pinned per distinct event across credentials/protoco
       ),
       before,
     );
-    await assert.rejects(
-      db.trainingEvent.update({
-        where: { id: events[0].id },
-        data: { title: "Нельзя менять выданное событие" },
-      }),
+    // The working event may prepare another day's batch; frozen issuances keep
+    // their original commission, roster and bytes independently of this record.
+    await db.trainingEvent.update({
+      where: { id: events[0].id },
+      data: { title: "Подготовка следующего состава" },
+    });
+    assert.equal(
+      hash(
+        (
+          await db.renderInputSnapshot.findMany({
+            where: { requestId: request.id, templateVersionId: { not: null } },
+          })
+        ).map((snapshot) => snapshot.input),
+      ),
+      before,
     );
-    const conflicting = await createRequest(c, draft);
     await assert.rejects(
-      approvals.approve(conflicting.id),
-      /выдан|событи|обучени|состав/i,
-      "A pending proposal cannot reuse an already-issued event identity when approved",
+      createRequest(c, draft),
+      /событи|заявк/i,
+      "A saved request cannot reuse an event identity owned by another request",
     );
     const corrected = await correction(c, request.id, {
       reason: "Синтетическая проверка отдельного исправления",

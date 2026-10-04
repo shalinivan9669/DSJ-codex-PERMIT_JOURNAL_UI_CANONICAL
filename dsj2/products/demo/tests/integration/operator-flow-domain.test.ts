@@ -35,15 +35,16 @@ const code = (expected: string) => (error: unknown) => {
   );
   return true;
 };
-const fixture = (): Draft =>
-  draftSchema.parse({
+const fixture = (): Draft => {
+  const eventId = randomUUID();
+  return draftSchema.parse({
     kind: "PERSON",
     schemaVersion: 2,
     commonFields: { documentDate: "2026-10-03" },
-    trainingDefaults: [{ direction: "BIOT", eventIds: ["biot-event"] }],
+    trainingDefaults: [{ direction: "BIOT", eventIds: [eventId] }],
     events: [
       {
-        id: "biot-event",
+        id: eventId,
         title: "Синтетическая исходная группа",
         protocolTemplateId: "biot-protocol",
         protocolMode: "GROUP",
@@ -65,7 +66,7 @@ const fixture = (): Draft =>
       assignments: [
         {
           id: `biot-${number}`,
-          eventId: "biot-event",
+          eventId,
           templateId: "biot-worker-card",
           protocolMode: "GROUP",
           documentDate: "2026-10-04",
@@ -85,6 +86,7 @@ const fixture = (): Draft =>
       ],
     })),
   });
+};
 
 test("operator-flow API integrity: scoped durable restoration, conflicts, metadata and incremental import", async (t) => {
   assertTestDatabase();
@@ -131,7 +133,7 @@ test("operator-flow API integrity: scoped durable restoration, conflicts, metada
         const removed = await removeTraining(c, created.id, {
           expectedRevision: created.revision,
           operationId,
-          eventId: "biot-event",
+          eventId: before.events![0].id,
           recipientIds: ["person-1"],
         });
         assert.equal(removed.items[0].assignments.length, 0);
@@ -180,34 +182,120 @@ test("operator-flow API integrity: scoped durable restoration, conflicts, metada
       "scoped restoration recovers original form positions and retains later independent forms and their order",
       async () => {
         const input = fixture();
-        input.events!.push({ id: "independent-pb", title: "Независимое обучение ПБ", protocolTemplateId: "pb-protocol", protocolMode: "GROUP", protocolModeSource: "MANUAL", commonFields: { documentDate: "2026-10-03", trainingSubject: "Независимая программа ПБ" } });
-        input.items[0].assignments.push({ ...structuredClone(input.items[0].assignments[0]), id: "independent-pb-primary", templateId: "pb-card", eventId: "independent-pb", protocolMode: "GROUP" });
+        const sourceEventId = input.events![0].id;
+        const independentEventId = randomUUID();
+        const laterEventId = randomUUID();
+        input.events!.push({
+          id: independentEventId,
+          title: "Независимое обучение ПБ",
+          protocolTemplateId: "pb-protocol",
+          protocolMode: "GROUP",
+          protocolModeSource: "MANUAL",
+          commonFields: {
+            documentDate: "2026-10-03",
+            trainingSubject: "Независимая программа ПБ",
+          },
+        });
+        input.items[0].assignments.push({
+          ...structuredClone(input.items[0].assignments[0]),
+          id: "independent-pb-primary",
+          templateId: "pb-card",
+          eventId: independentEventId,
+          protocolMode: "GROUP",
+        });
         const created = await createRequest(c, input);
         const before = draftSchema.parse(created.draft);
-        assert.deepEqual(before.items[0].assignments.map((entry) => entry.id), ["biot-1", "independent-pb-primary"]);
+        assert.deepEqual(
+          before.items[0].assignments.map((entry) => entry.id),
+          ["biot-1", "independent-pb-primary"],
+        );
         const operationId = randomUUID();
-        const removed = await removeTraining(c, created.id, { expectedRevision: created.revision, operationId, eventId: "biot-event", recipientIds: ["person-1"] });
+        const removed = await removeTraining(c, created.id, {
+          expectedRevision: created.revision,
+          operationId,
+          eventId: sourceEventId,
+          recipientIds: ["person-1"],
+        });
         const pending = await requestDetail(c, created.id);
-        const restored = await restoreTraining(c, created.id, operationId, { expectedRevision: pending.revision });
-        assert.deepEqual(draftSchema.parse(restored.draft).items[0].assignments, before.items[0].assignments);
+        const restored = await restoreTraining(c, created.id, operationId, {
+          expectedRevision: pending.revision,
+        });
+        assert.deepEqual(
+          draftSchema.parse(restored.draft).items[0].assignments,
+          before.items[0].assignments,
+        );
         const secondOperation = randomUUID();
-        const removedAgain = await removeTraining(c, created.id, { expectedRevision: restored.revision, operationId: secondOperation, eventId: "biot-event", recipientIds: ["person-1", "person-2"], removeDefault: true });
-        assert.deepEqual(removedAgain.events?.map((event) => event.id), ["independent-pb"]);
+        const removedAgain = await removeTraining(c, created.id, {
+          expectedRevision: restored.revision,
+          operationId: secondOperation,
+          eventId: sourceEventId,
+          recipientIds: ["person-1", "person-2"],
+          removeDefault: true,
+        });
+        assert.deepEqual(
+          removedAgain.events?.map((event) => event.id),
+          [independentEventId],
+        );
         const changed = draftSchema.parse(removedAgain.draft);
         changed.items[0].positionRu = "Независимая более поздняя должность";
-        changed.items[0].assignments.push({ ...structuredClone(changed.items[0].assignments[0]), id: "later-ptm-primary", templateId: "ptm-card", eventId: "later-ptm", protocolMode: "GROUP", trainingSubject: "Более поздняя программа ПТМ", fieldOrigins: { trainingSubject: "MANUAL" } });
-        changed.events!.push({ id: "later-ptm", title: "Более позднее независимое ПТМ", protocolTemplateId: "ptm-protocol", protocolMode: "GROUP", protocolModeSource: "MANUAL", commonFields: { trainingSubject: "Более поздняя программа ПТМ", documentDate: "2026-10-03" } });
-        const edited = await patchRequest(c, created.id, { expectedRevision: removedAgain.revision, draft: changed });
-        const independentBefore = draftSchema.parse(edited.draft).items[0].assignments;
-        const restoredAgain = await restoreTraining(c, created.id, secondOperation, { expectedRevision: edited.revision });
+        changed.items[0].assignments.push({
+          ...structuredClone(changed.items[0].assignments[0]),
+          id: "later-ptm-primary",
+          templateId: "ptm-card",
+          eventId: laterEventId,
+          protocolMode: "GROUP",
+          trainingSubject: "Более поздняя программа ПТМ",
+          fieldOrigins: { trainingSubject: "MANUAL" },
+        });
+        changed.events!.push({
+          id: laterEventId,
+          title: "Более позднее независимое ПТМ",
+          protocolTemplateId: "ptm-protocol",
+          protocolMode: "GROUP",
+          protocolModeSource: "MANUAL",
+          commonFields: {
+            trainingSubject: "Более поздняя программа ПТМ",
+            documentDate: "2026-10-03",
+          },
+        });
+        const edited = await patchRequest(c, created.id, {
+          expectedRevision: removedAgain.revision,
+          draft: changed,
+        });
+        const independentBefore = draftSchema.parse(edited.draft).items[0]
+          .assignments;
+        const restoredAgain = await restoreTraining(
+          c,
+          created.id,
+          secondOperation,
+          { expectedRevision: edited.revision },
+        );
         const actual = draftSchema.parse(restoredAgain.draft).items[0];
-        assert.deepEqual(actual.assignments.map((entry) => entry.id), ["biot-1", "independent-pb-primary", "later-ptm-primary"]);
+        assert.deepEqual(
+          actual.assignments.map((entry) => entry.id),
+          ["biot-1", "independent-pb-primary", "later-ptm-primary"],
+        );
         assert.deepEqual(actual.assignments[0], before.items[0].assignments[0]);
         assert.deepEqual(actual.assignments.slice(1), independentBefore);
         assert.equal(actual.positionRu, changed.items[0].positionRu);
-        assert.deepEqual(restoredAgain.events?.map((event) => event.id), ["biot-event", "independent-pb", "later-ptm"]);
-        assert.deepEqual(draftSchema.parse(restoredAgain.draft).items[1], before.items[1]);
-        evidence.scopedFormOrder = { requestId: created.id, removedRevision: removed.revision, originalOrder: before.items[0].assignments.map((entry) => entry.id), restoredOrder: actual.assignments.map((entry) => entry.id), restoredEventOrder: restoredAgain.events?.map((event) => event.id), exactRemovedFacts: actual.assignments[0], independentFormsUnchanged: true, laterPosition: actual.positionRu };
+        assert.deepEqual(
+          restoredAgain.events?.map((event) => event.id),
+          [sourceEventId, independentEventId, laterEventId],
+        );
+        assert.deepEqual(
+          draftSchema.parse(restoredAgain.draft).items[1],
+          before.items[1],
+        );
+        evidence.scopedFormOrder = {
+          requestId: created.id,
+          removedRevision: removed.revision,
+          originalOrder: before.items[0].assignments.map((entry) => entry.id),
+          restoredOrder: actual.assignments.map((entry) => entry.id),
+          restoredEventOrder: restoredAgain.events?.map((event) => event.id),
+          exactRemovedFacts: actual.assignments[0],
+          independentFormsUnchanged: true,
+          laterPosition: actual.positionRu,
+        };
       },
     );
     await t.test(
@@ -227,9 +315,9 @@ test("operator-flow API integrity: scoped durable restoration, conflicts, metada
         const restored = await restoreTraining(c, created.id, operationId, {
           expectedRevision: removed.revision,
         });
-        assert.equal(restored.events?.[0].id, "biot-event");
+        assert.equal(restored.events?.[0].id, created.events?.[0].id);
         assert.deepEqual(restored.trainingDefaults, [
-          { direction: "BIOT", eventIds: ["biot-event"] },
+          { direction: "BIOT", eventIds: [created.events![0].id] },
         ]);
         assert.deepEqual(
           restored.items[0].assignments[0].outcome,
@@ -259,7 +347,7 @@ test("operator-flow API integrity: scoped durable restoration, conflicts, metada
         const removed = await removeTraining(c, created.id, {
           expectedRevision: created.revision,
           operationId,
-          eventId: "biot-event",
+          eventId: created.events![0].id,
           recipientIds: ["person-1"],
         });
         const edited = draftSchema.parse(removed.draft);
@@ -314,41 +402,94 @@ test("operator-flow API integrity: scoped durable restoration, conflicts, metada
           input.events![0].protocolMode = "INDIVIDUAL";
           input.events![0].protocolModeSource = "MANUAL";
           input.events![0].commonFields.protocolDate = "2026-10-02";
-          input.events!.push({ ...structuredClone(input.events![0]), id: "unrelated-event", title: "Синтетическая независимая группа" });
-          input.items[1].assignments[0].eventId = "unrelated-event";
+          const unrelatedEventId = randomUUID();
+          input.events!.push({
+            ...structuredClone(input.events![0]),
+            id: unrelatedEventId,
+            title: "Синтетическая независимая группа",
+          });
+          input.items[1].assignments[0].eventId = unrelatedEventId;
           const primary = input.items[0].assignments[0];
           primary.protocolDate = origin === "CLEARED" ? "" : "2026-09-29";
-          primary.fieldOrigins = { ...primary.fieldOrigins, protocolDate: origin };
+          primary.fieldOrigins = {
+            ...primary.fieldOrigins,
+            protocolDate: origin,
+          };
           const created = await createRequest(c, input);
           const before = draftSchema.parse(created.draft);
-          const protocol = before.items[0].assignments.find((entry) => entry.templateId === "biot-protocol")!;
+          const protocol = before.items[0].assignments.find(
+            (entry) => entry.templateId === "biot-protocol",
+          )!;
           assert.ok(protocol);
           assert.equal(protocol.fieldOrigins?.protocolDate, origin);
           assert.equal(protocol.fieldOrigins?.documentDate, origin);
           assert.equal(protocol.documentDate, primary.protocolDate);
           const unrelated = structuredClone(before.items[1]);
-          before.items[0] = restoreTrainingAssignmentField(before.items[0], protocol.id, "documentDate", true);
-          const reset = await patchRequest(c, created.id, { expectedRevision: created.revision, draft: before });
+          before.items[0] = restoreTrainingAssignmentField(
+            before.items[0],
+            protocol.id,
+            "documentDate",
+            true,
+          );
+          const reset = await patchRequest(c, created.id, {
+            expectedRevision: created.revision,
+            draft: before,
+          });
           const reopened = await requestDetail(c, created.id);
           const reopenedDraft = draftSchema.parse(reopened.draft);
           for (const assignment of reopenedDraft.items[0].assignments) {
             assert.equal(assignment.fieldOrigins?.protocolDate, "INHERITED");
-            if (assignment.templateId.endsWith("-protocol")) assert.equal(assignment.fieldOrigins?.documentDate, "INHERITED");
-            assert.deepEqual(assignment.outcome, created.items[0].assignments.find((entry) => entry.id === assignment.id)!.outcome);
+            if (assignment.templateId.endsWith("-protocol"))
+              assert.equal(assignment.fieldOrigins?.documentDate, "INHERITED");
+            assert.deepEqual(
+              assignment.outcome,
+              created.items[0].assignments.find(
+                (entry) => entry.id === assignment.id,
+              )!.outcome,
+            );
           }
           assert.deepEqual(reopenedDraft.items[1], unrelated);
           const effective = await resolvedRequest(c, created.id);
-          assert.equal(effective.draft.items[0].assignments.find((entry) => entry.id === protocol.id)!.documentDate, "2026-10-02");
+          assert.equal(
+            effective.draft.items[0].assignments.find(
+              (entry) => entry.id === protocol.id,
+            )!.documentDate,
+            "2026-10-02",
+          );
           reopenedDraft.events![0].commonFields.protocolDate = "2026-10-03";
-          const changed = await patchRequest(c, created.id, { expectedRevision: reopened.revision, draft: reopenedDraft });
+          const changed = await patchRequest(c, created.id, {
+            expectedRevision: reopened.revision,
+            draft: reopenedDraft,
+          });
           const resolved = await resolvedRequest(c, created.id);
-          const updated = resolved.draft.items[0].assignments.find((entry) => entry.id === protocol.id)!;
+          const updated = resolved.draft.items[0].assignments.find(
+            (entry) => entry.id === protocol.id,
+          )!;
           assert.equal(updated.documentDate, "2026-10-03");
           assert.equal(updated.protocolDate, "2026-10-03");
-          assert.equal(resolved.provenance[`person-1:${protocol.id}`].protocolDate, "EVENT");
-          assert.deepEqual(draftSchema.parse(changed.draft).items[1], unrelated);
+          assert.equal(
+            resolved.provenance[`person-1:${protocol.id}`].protocolDate,
+            "EVENT",
+          );
+          assert.deepEqual(
+            draftSchema.parse(changed.draft).items[1],
+            unrelated,
+          );
           assert.deepEqual(updated.outcome, protocol.outcome);
-          proofs.push({ origin, requestId: created.id, protocolId: protocol.id, explicitDate: protocol.documentDate, resetRevision: reset.revision, changedRevision: changed.revision, updatedDate: updated.documentDate, protocolOrigin: changed.items[0].assignments.find((entry) => entry.id === protocol.id)!.fieldOrigins, outcome: updated.outcome, unrelatedRecipientUnchanged: true });
+          proofs.push({
+            origin,
+            requestId: created.id,
+            protocolId: protocol.id,
+            explicitDate: protocol.documentDate,
+            resetRevision: reset.revision,
+            changedRevision: changed.revision,
+            updatedDate: updated.documentDate,
+            protocolOrigin: changed.items[0].assignments.find(
+              (entry) => entry.id === protocol.id,
+            )!.fieldOrigins,
+            outcome: updated.outcome,
+            unrelatedRecipientUnchanged: true,
+          });
         }
         evidence.protocolResetAfterPatch = proofs;
       },

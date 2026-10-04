@@ -386,13 +386,8 @@ test("pinned policy requirements, mixed-employer scope, explicit history scan an
     { expectedRevision: request.revision },
     randomUUID(),
   );
-  const issuance = await db.issuance.findUniqueOrThrow({
-    where: {
-      requestId_sourceRevision: {
-        requestId: request.id,
-        sourceRevision: request.revision,
-      },
-    },
+  const issuance = await db.issuance.findFirstOrThrow({
+    where: { requestId: request.id, sourceRevision: request.revision },
   });
   const template = await db.templateVersion.findFirstOrThrow({
     where: {

@@ -5,6 +5,7 @@ import { fullSuiteApiCooldown, fullSuiteRunId } from "./operator-full-suite";
 import { loginIsolated } from "./operator-full-fix-session";
 import { readCommon } from "./operator-common-history-helpers";
 import {
+  assertG1FilesComposition,
   g1Evidence,
   loadG1Checkpoint,
   verifyG1Files,
@@ -21,7 +22,7 @@ test("G1 complete: fresh keyboard preparation has 100 original people and embedd
     evidence = g1Evidence("complete");
   const { checkpoint, directory } = await loadG1Checkpoint();
   expect(checkpoint.status).toBe("FILES_VERIFIED");
-  expect(checkpoint.files).toHaveLength(204);
+  assertG1FilesComposition(checkpoint.files || []);
   const originalMetrics = JSON.parse(
     await fs.readFile(path.join(directory, "keyboard-metrics.json"), "utf8"),
   );

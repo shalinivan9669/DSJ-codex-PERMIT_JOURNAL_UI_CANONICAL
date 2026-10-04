@@ -107,6 +107,30 @@ test("current preview printing requires the exact approved revision; historical 
   );
 });
 
+test("an already prepared selected batch leads to saved files, while a later approved course can be prepared", () => {
+  const request = input("APPROVED");
+  request.draft.approval!.assignments = [
+    { rowId: "row", assignmentId: "biot" },
+  ];
+  request.draft.issuedAssignments = [
+    { rowId: "other-row", assignmentId: "biot", issuanceId: "other" },
+  ];
+  assert.equal(requestActions(request).showPrepareSigning, true);
+  request.draft.issuedAssignments.push({
+    rowId: "row",
+    assignmentId: "biot",
+    issuanceId: "first",
+  });
+  const issued = requestActions(request);
+  assert.equal(issued.showPrepareSigning, false);
+  assert.equal(issued.showPreview, false);
+  assert.equal(issued.showDocuments, true);
+  assert.equal(issued.editable, true);
+  request.draft.approval!.assignments = [{ rowId: "row", assignmentId: "ptm" }];
+  assert.equal(requestActions(request).showPrepareSigning, true);
+  assert.equal(requestActions(request).prepareSigningDisabled, false);
+});
+
 test("rejected and superseded drafts only offer save after editing, without preparation or director decision", () => {
   for (const status of ["REJECTED", "SUPERSEDED"] as const) {
     const actions = requestActions(input(status, { role: "DIRECTOR" }));

@@ -1,4 +1,10 @@
 import type { Assignment, Draft } from "./types";
+import {
+  courseResultText,
+  isProtectedField,
+  nonPassedResultKz,
+  factualAssessmentText,
+} from "@demo/contracts";
 
 export type EventOutcomeInput = {
   status: NonNullable<Assignment["outcome"]>["status"];
@@ -55,11 +61,44 @@ export function applyEventOutcomes(
                       }
                     : {}),
                   result:
-                    input.status === "PASSED"
-                      ? "Сдал"
-                      : input.status === "FAILED"
-                        ? "Не сдал"
-                        : "Не явился",
+                    input.status === "PASSED" &&
+                    assignment.result.trim() &&
+                    (isProtectedField(assignment.fieldOrigins?.result) ||
+                      !assignment.fieldOrigins?.result)
+                      ? assignment.result
+                      : input.status !== "PASSED" &&
+                          factualAssessmentText(
+                            assignment.result,
+                            assignment.fieldOrigins?.result,
+                          )
+                        ? assignment.result
+                        : courseResultText(assignment.templateId, input.status),
+                  ...(input.status !== "PASSED"
+                    ? {
+                        resultKz:
+                          factualAssessmentText(
+                            assignment.resultKz,
+                            assignment.fieldOrigins?.resultKz,
+                          ) || nonPassedResultKz(input.status),
+                        resultEn: "",
+                      }
+                    : {}),
+                  fieldOrigins: {
+                    ...assignment.fieldOrigins,
+                    result:
+                      input.status === "PASSED" &&
+                      assignment.result.trim() &&
+                      (isProtectedField(assignment.fieldOrigins?.result) ||
+                        !assignment.fieldOrigins?.result)
+                        ? assignment.fieldOrigins?.result || "MANUAL"
+                        : input.status !== "PASSED" &&
+                            factualAssessmentText(
+                              assignment.result,
+                              assignment.fieldOrigins?.result,
+                            )
+                          ? assignment.fieldOrigins?.result || "MANUAL"
+                          : "COURSE",
+                  },
                   outcome: {
                     status: input.status,
                     source: input.source.trim(),

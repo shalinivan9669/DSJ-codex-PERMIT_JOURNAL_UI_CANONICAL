@@ -202,6 +202,15 @@ test("real operator preparation, director return/correction/new approval, render
         ),
       )
       .toBe(true);
+    await page
+      .getByLabel(/Все подтверждённые ещё не оформленные курсы/)
+      .check();
+    await page
+      .getByRole("button", { name: /Проверить и передать директору/ })
+      .click();
+    await expect
+      .poll(async () => (await read(page, id)).approval?.status)
+      .toBe("PENDING");
     const applied = await read(page, id);
     expect(applied.documents).toHaveLength(0);
     const rejectedProposal = applied.approval!;
@@ -231,6 +240,16 @@ test("real operator preparation, director return/correction/new approval, render
     await expect
       .poll(async () => (await read(page, id)).items[0].positionRu)
       .toBe("Мастер");
+    expect((await read(page, id)).approval?.status).toBe("DRAFT");
+    await page
+      .getByLabel(/Все подтверждённые ещё не оформленные курсы/)
+      .check();
+    await page
+      .getByRole("button", { name: /Проверить и передать директору/ })
+      .click();
+    await expect
+      .poll(async () => (await read(page, id)).approval?.status)
+      .toBe("PENDING");
     const corrected = await read(page, id);
     expect(corrected.approval?.status).toBe("PENDING");
     expect(corrected.revision).toBeGreaterThan(applied.revision);

@@ -7467,5 +7467,153 @@
     "frozenBoundary": "Actual full exit retained. Renderer/templates/normative rules unchanged. Unsigned XLSX/ZIP409 retained, read-only saved bytes checked. No NCA/legal/physical/human acceptance claimed.",
     "productionChanged": false,
     "pushed": false
+  },
+  "remainingOperatorFlow20261004": {
+    "status": "IMPLEMENTED_LOCAL_SCOPED_ACCEPTANCE_PASS_FULL_E2E_NOT_RUN_BY_USER",
+    "updatedAt": "2026-10-04T16:36:40.601Z",
+    "branch": "codex/operator-flow-refinement-20261003",
+    "baseHead": "648a6bdb7084c8fcd89445bbd54257ffb550de46",
+    "scope": "All REM-01...08 and exact18 DSJ conveniences; previous UX01...32 retained",
+    "report": "docs/evidence/remaining-operator-flow-20261004/IMPLEMENTATION_REPORT_RU.md",
+    "convenienceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md",
+    "requirements": [
+      {
+        "id": "REM-01",
+        "status": "IMPLEMENTED_AND_SCOPED_VERIFIED",
+        "evidenceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md"
+      },
+      {
+        "id": "REM-02",
+        "status": "IMPLEMENTED_AND_SCOPED_VERIFIED",
+        "evidenceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md"
+      },
+      {
+        "id": "REM-03",
+        "status": "IMPLEMENTED_AND_SCOPED_VERIFIED",
+        "evidenceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md"
+      },
+      {
+        "id": "REM-04",
+        "status": "IMPLEMENTED_AND_SCOPED_VERIFIED",
+        "evidenceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md"
+      },
+      {
+        "id": "REM-05",
+        "status": "IMPLEMENTED_AND_SCOPED_VERIFIED",
+        "evidenceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md"
+      },
+      {
+        "id": "REM-06",
+        "status": "IMPLEMENTED_AND_SCOPED_VERIFIED",
+        "evidenceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md"
+      },
+      {
+        "id": "REM-07",
+        "status": "IMPLEMENTED_AND_SCOPED_VERIFIED",
+        "evidenceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md"
+      },
+      {
+        "id": "REM-08",
+        "status": "IMPLEMENTED_AND_SCOPED_VERIFIED",
+        "evidenceMatrix": "docs/evidence/remaining-operator-flow-20261004/DSJ_CONVENIENCE_18_MATRIX_RU.md"
+      }
+    ],
+    "checks": {
+      "lint": {
+        "status": "PASS",
+        "exitCode": 0,
+        "log": "checks/lint-final-v8.log"
+      },
+      "typecheck": {
+        "status": "PASS",
+        "exitCode": 0,
+        "log": "checks/typecheck-final-v11.log"
+      },
+      "unit": {
+        "status": "PASS",
+        "passed": 341,
+        "failed": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "core": 162,
+        "web": 179,
+        "log": "checks/unit-final-v8.log"
+      },
+      "render": {
+        "status": "PASS_UNCHANGED_FINAL_RENDERER",
+        "passed": 101,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "exitCode": 0,
+        "log": "checks/render-v4.log"
+      },
+      "integration": {
+        "status": "PASS",
+        "passed": 203,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "exitCode": 0,
+        "durationMs": 1037898.3353,
+        "database": "demo_test_remaining_operator_integration_v6",
+        "log": "checks/integration-final-v4.log"
+      },
+      "browserFocused": {
+        "status": "PASS_CONTROLLED_HTTP_UI",
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "result": "browser-input-signing-final-v2/results.json"
+      },
+      "browserFull": {
+        "status": "NOT_RUN_AFTER_USER_REDUCED_CHECKS",
+        "collectedTests": 166,
+        "files": 65,
+        "claimsFreshUx32FullPass": false
+      },
+      "build": {
+        "status": "PASS",
+        "exitCode": 0,
+        "buildId": "IaZWxKNS7yKZA9n-T7KQc",
+        "dist": ".next-remaining-operator-v5",
+        "log": "checks/build-final-v7.log"
+      },
+      "browserActual": {
+        "status": "PASS_ACTUAL_UI_API_DB_WORKER_FILES",
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "exitCode": 0,
+        "durationMs": 71907.59599999999,
+        "result": "final-actual-v5-c3061a20-bae3-452b-b8f1-fb58a88e3227/results.json",
+        "requestId": "e7e4b0de-564e-458a-a307-e4cfa3755a7d"
+      },
+      "diff": {
+        "status": "PASS",
+        "exitCode": 0,
+        "log": "checks/diff-final.log"
+      }
+    },
+    "unchangedBoundaries": {
+      "sourceTemplateFilesChanged": 0,
+      "allChangesInsideAutonomousProduct": true,
+      "physicalPrintingVerified": false,
+      "genuineNcaVerified": false,
+      "productionDeployed": false,
+      "pushed": false,
+      "pullRequestCreated": false
+    },
+    "finalUserInstruction": "Too many checks; finish. Reduced final browser verification to actual input, two batches and printed-file download; no further broad runs.",
+    "runtime": {
+      "origin": "http://127.0.0.1:3135",
+      "apiPort": 4135,
+      "buildId": "IaZWxKNS7yKZA9n-T7KQc",
+      "dist": ".next-remaining-operator-v5",
+      "sourceFiles": 581,
+      "sourceSetSha256": "3c0560a243846c63a1fd47701250c7dc4d8064ba555b2790a03bc6b2a983ee60"
+    }
   }
 }

@@ -3,12 +3,43 @@ import { updateAssignment } from "./assignment-presets";
 import type { Assignment, Recipient } from "./types";
 
 const sharedTrainingFields = new Set([
-  "documentDate", "protocolDate", "trainingStart", "trainingEnd",
-  "trainingSubject", "trainingSubjectEn", "result", "resultEn", "outcome",
-  "hours", "productionHours", "reason", "reasonEn", "education", "educationEn",
-  "biotCategory", "biotCheckType", "biotIndustryRu", "biotIndustryKz",
-  "biotKnowledgeResult", "biotProctoringResult", "biotUniqueNumber", "biotNotes",
-  "biotIndustryEn", "biotKnowledgeResultEn", "biotProctoringResultEn", "biotNotesEn",
+  "documentDate",
+  "protocolDate",
+  "trainingStart",
+  "trainingEnd",
+  "trainingSubject",
+  "trainingSubjectKz",
+  "professionRu",
+  "professionKz",
+  "psQualificationRu",
+  "psQualificationKz",
+  "trainingSubjectEn",
+  "result",
+  "resultKz",
+  "resultEn",
+  "outcome",
+  "psGeneralSubjectRu",
+  "psGeneralSubjectKz",
+  "psSpecialSubjectRu",
+  "psSpecialSubjectKz",
+  "hours",
+  "productionHours",
+  "reason",
+  "reasonEn",
+  "education",
+  "educationEn",
+  "biotCategory",
+  "biotCheckType",
+  "biotIndustryRu",
+  "biotIndustryKz",
+  "biotKnowledgeResult",
+  "biotProctoringResult",
+  "biotUniqueNumber",
+  "biotNotes",
+  "biotIndustryEn",
+  "biotKnowledgeResultEn",
+  "biotProctoringResultEn",
+  "biotNotesEn",
   "trainingDateRule",
 ]);
 
@@ -92,7 +123,15 @@ export function restoreTrainingAssignmentField(
             field === "validUntil" ? ("AUTO" as const) : ("INHERITED" as const),
         },
       };
-      if (dates.has(field))
+      if (
+        dates.has(field) ||
+        [
+          "professionRu",
+          "professionKz",
+          "psQualificationRu",
+          "psQualificationKz",
+        ].includes(field)
+      )
         (next as unknown as Record<string, unknown>)[field] = "";
       next.biotManualFields = entry.biotManualFields?.filter(
         (manual) => manual !== field,

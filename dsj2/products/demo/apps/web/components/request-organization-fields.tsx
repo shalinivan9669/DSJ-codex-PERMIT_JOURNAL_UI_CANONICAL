@@ -26,7 +26,10 @@ export function emptyRequestOrganization(): RequestOrganizationSelection {
   };
 }
 
-export async function createRequestCustomer(names: OrganizationNames) {
+export async function createRequestCustomer(
+  names: OrganizationNames,
+  operationKey?: string,
+) {
   const parsed = customerSchema.safeParse(names);
   if (!parsed.success)
     throw new Error(
@@ -34,6 +37,7 @@ export async function createRequestCustomer(names: OrganizationNames) {
     );
   return api<Customer>("/customers", {
     method: "POST",
+    headers: operationKey ? { "Idempotency-Key": operationKey } : undefined,
     body: json(parsed.data),
   });
 }
@@ -218,8 +222,8 @@ export function RequestOrganizationFields({
             showRequiredErrors={touched || !!error}
           />
           <p className="fine-print">
-            Введённое название ещё не добавлено в заявку. Нажмите «Использовать
-            эту компанию» или отмените ввод.
+            Ввод сохраняется для этой заявки. Валидная компания будет применена
+            при сохранении или проверке данных; можно применить её сейчас.
           </p>
         </fieldset>
       ) : selected ? (
@@ -247,7 +251,7 @@ export function RequestOrganizationFields({
           {onCancelNew && (
             <button
               type="button"
-              disabled={disabled}
+              disabled={disabled || busy}
               onClick={() => {
                 setChoicesOpen(false);
                 onCancelNew();

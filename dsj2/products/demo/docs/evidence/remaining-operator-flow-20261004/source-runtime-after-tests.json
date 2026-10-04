@@ -1,0 +1,9 @@
+{
+  "capturedAt": "2026-10-04T16:36:42.290Z",
+  "status": "PASS",
+  "fileCount": 581,
+  "sourceSetSha256": "3c0560a243846c63a1fd47701250c7dc4d8064ba555b2790a03bc6b2a983ee60",
+  "buildId": "IaZWxKNS7yKZA9n-T7KQc",
+  "dist": ".next-remaining-operator-v5",
+  "allSourceHashesUnchanged": true
+}

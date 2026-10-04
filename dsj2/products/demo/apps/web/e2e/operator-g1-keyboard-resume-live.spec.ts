@@ -19,7 +19,7 @@ import {
 } from "./operator-keyboard-helpers";
 
 test.use({ trace: "off" });
-test("G1 keyboard resume: reopen and download the same 101 issued documents, verify 204 hashes and immutable snapshot with no business write", async ({
+test("G1 keyboard resume: reopen and download the same 101 issued documents, verify every original hash and immutable snapshot with no business write", async ({
   page,
   browser,
 }) => {
@@ -115,7 +115,7 @@ test("G1 keyboard resume: reopen and download the same 101 issued documents, ver
         recipients: 100,
         photos: 100,
         documentCount: 101,
-        artifacts: 204,
+        artifacts: files.length,
         allFilesHashVerified: true,
         resumedBrowserVerificationMs: Date.now() - started,
         humanOperatorMs: null,

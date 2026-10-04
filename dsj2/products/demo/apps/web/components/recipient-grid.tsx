@@ -7,6 +7,7 @@ import type { Recipient } from "@/lib/types";
 import { recipientRowDate } from "@/lib/recipient-row-date";
 import { RecipientGridRow, type GridRowActions } from "./recipient-grid-row";
 import "./recipient-grid.css";
+import { recipientPositionLabel } from "@/lib/recipient-course-context";
 
 export type RecipientGridProps = {
   items: Recipient[];
@@ -36,6 +37,7 @@ export type RecipientGridProps = {
   onAdd: () => void;
   canAdd: boolean;
   active?: boolean;
+  issuedAssignments?: readonly { rowId: string; assignmentId: string }[];
 };
 
 const columns: readonly (readonly [GridField, string])[] = [
@@ -69,6 +71,7 @@ export function RecipientGrid({
   onAdd,
   canAdd,
   active = true,
+  issuedAssignments = [],
 }: RecipientGridProps) {
   const root = useRef<HTMLDivElement>(null);
   const inputs = useRef(
@@ -106,6 +109,9 @@ export function RecipientGrid({
   const selectedVisible = visibleItems.filter((item) =>
     checkedIds.has(item.id),
   ).length;
+  const positionLabel = recipientPositionLabel({
+    assignments: items.flatMap((item) => item.assignments),
+  });
 
   useEffect(() => {
     if (!active) return;
@@ -265,7 +271,9 @@ export function RecipientGrid({
                     columnIndex === 0 ? "recipient-grid-name" : undefined
                   }
                 >
-                  {label}
+                  {field.startsWith("position")
+                    ? `${positionLabel} · ${field.endsWith("Kz") ? "KZ" : "RU"}`
+                    : label}
                 </th>
               ))}
               {showPhotoColumn && (
@@ -286,6 +294,9 @@ export function RecipientGrid({
                 <RecipientGridRow
                   key={item.id}
                   item={item}
+                  issuedAssignmentIds={issuedAssignments
+                    .filter((entry) => entry.rowId === item.id)
+                    .map((entry) => entry.assignmentId)}
                   resolvedItem={resolvedById.get(item.id) || item}
                   index={index}
                   visibleIndex={visibleIndex}
@@ -336,6 +347,10 @@ export function RecipientGrid({
         )}
       </div>
       <div className="recipient-grid-footer">
+        <span className="recipient-grid-language-rule">
+          KZ необязателен: пустой вариант использует введённый текст без
+          автоматического перевода.
+        </span>
         <span className="recipient-grid-keyboard-hint" id={helpId}>
           Tab — следующее поле · Enter — строка ниже · Shift + Enter — выше
         </span>
@@ -354,7 +369,8 @@ export function RecipientGrid({
             <summary>Как вставить из Excel</summary>
             <p>
               Скопируйте прямоугольный диапазон и вставьте в первую нужную
-              ячейку. Перед применением откроется проверка изменений.
+              ячейку. Однозначно пустой диапазон заполняется сразу с отменой;
+              при замене или неоднозначности откроется проверка изменений.
             </p>
             <p>
               Вставка следует видимым колонкам:{" "}

@@ -76,6 +76,10 @@ test("ZIP manifests validate actual original bytes and every missing/failed file
               validUntil: "2027-09-22",
               trainingSubject: "Синтетическая программа",
               result: "Синтетический результат",
+              outcome: {
+                status: "PASSED",
+                source: "Явная синтетическая ведомость проверки ZIP",
+              },
             },
           ],
         },

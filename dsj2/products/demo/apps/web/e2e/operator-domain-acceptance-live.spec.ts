@@ -266,7 +266,7 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
     }
     async function checkpoint(stage: string, extra: Record<string, unknown>) {
       const active = await page.evaluate(() => ({ tag: document.activeElement?.tagName, path: document.activeElement?.getAttribute("data-field-path"), label: document.activeElement?.getAttribute("aria-label"), text: document.activeElement?.textContent?.slice(0, 160) }));
-      stages.push({ stage, ...extra, active });
+      stages.push(structuredClone({ stage, ...extra, active }));
       await fs.writeFile(path.join(root, `${kind}-${category}.json`), JSON.stringify({ status: "RUNNING", requestId: draft.id, kind, category, stages, sessionCookies: await sessionCookieMetadata(page) }, null, 2));
       await page.screenshot({ path: path.join(root, `${kind}-${category}-${stage}.png`), fullPage: true });
     }

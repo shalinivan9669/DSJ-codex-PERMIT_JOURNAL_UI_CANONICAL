@@ -8,6 +8,7 @@ import {
   RENDERER_VERSION,
   buildZip,
   selectBundleJobs,
+  BUNDLE_PART_BYTES,
 } from "@demo/printing";
 import {
   LIMITS,
@@ -207,6 +208,13 @@ export async function restoreArtifact(c: Context, id: string, input: unknown) {
       where: { id, tenantId: c.tenantId },
     });
     if (!original) fail(404, "NOT_FOUND", "Файл не найден");
+    if (original.provenance === "PRINT_SET_DERIVATIVE")
+      fail(
+        422,
+        "PRINT_SET_REBUILD_REQUIRED",
+        "Получите печатный комплект снова из сохранённых оригиналов в этой заявке. Повторное объединение сохраняет номера и историю",
+        { requestId: original.requestId },
+      );
     // Reconstruction is explicit and retains the original record even when its bytes have been lost.
     const prior = await tx.generationJob.findMany({
       where: {
@@ -551,7 +559,7 @@ function registryDeliveryQuery(input: unknown) {
         format: z.enum(["XLSX", "ZIP", "TSV"]).default("XLSX"),
         profileId: z.string().max(80).optional(),
         profile: customerExportProfileSchema.optional(),
-        artifactIds: z.array(z.string().max(80)).max(1000).optional(),
+        artifactIds: z.array(z.string().max(80)).optional(),
       })
       .strict(),
     input || {},
@@ -560,12 +568,44 @@ function registryDeliveryQuery(input: unknown) {
 export async function registryExport(c: Context, input: unknown, id?: string) {
   const query = registryDeliveryQuery(input);
   const requested = id ? await scopedRequest(c, id) : null;
+  let selectedIssuanceIds: string[] | undefined;
   if (requested) {
-    const workflow = await db.issuanceWorkflow.findFirst({
-      where: { tenantId: c.tenantId, requestId: requested.id },
-      orderBy: { createdAt: "desc" },
-    });
-    if (workflow && workflow.status !== "ISSUED")
+    const selected = query.artifactIds
+      ? await db.artifact.findMany({
+          where: {
+            tenantId: c.tenantId,
+            requestId: requested.id,
+            id: { in: query.artifactIds },
+          },
+        })
+      : [];
+    if (query.artifactIds)
+      selectedIssuanceIds = [
+        ...new Set(
+          selected.flatMap((file) =>
+            file.issuanceId ? [file.issuanceId] : [],
+          ),
+        ),
+      ];
+    const workflows = query.artifactIds
+      ? await db.issuanceWorkflow.findMany({
+          where: {
+            tenantId: c.tenantId,
+            requestId: requested.id,
+            issuanceId: {
+              in: selected.flatMap((file) =>
+                file.issuanceId ? [file.issuanceId] : [],
+              ),
+            },
+          },
+        })
+      : [
+          await db.issuanceWorkflow.findFirst({
+            where: { tenantId: c.tenantId, requestId: requested.id },
+            orderBy: { createdAt: "desc" },
+          }),
+        ].filter((workflow) => !!workflow);
+    if (workflows.some((workflow) => workflow && workflow.status !== "ISSUED"))
       fail(
         409,
         "ISSUANCE_NOT_COMPLETE",
@@ -576,6 +616,7 @@ export async function registryExport(c: Context, input: unknown, id?: string) {
     c,
     { ...query, customerId: undefined },
     id,
+    selectedIssuanceIds,
   );
   return buildSavedRegistryDelivery(c, query, source, id);
 }
@@ -618,7 +659,11 @@ export async function buildSavedRegistryDelivery(
   let cachedData: Awaited<ReturnType<typeof collectRegistryRows>> | undefined;
   const exportData = async () => {
     if (cachedData) return cachedData;
-    const data = { records: [...source.records], rows: [...source.rows] };
+    const data = {
+      ...source,
+      records: [...source.records],
+      rows: [...source.rows],
+    };
     if (customerScope) {
       data.rows = data.rows.filter((row) => row.employerId === customerScope);
       const visibleRequests = new Set(data.rows.map((row) => row.requestId));
@@ -642,7 +687,9 @@ export async function buildSavedRegistryDelivery(
         where: {
           tenantId: c.tenantId,
           requestId: id,
-          issuanceId: { not: null },
+          issuanceId: source.eligibleIssuanceIds
+            ? { in: source.eligibleIssuanceIds }
+            : { not: null },
           kind: { not: "ZIP" },
         },
       }),
@@ -669,6 +716,13 @@ export async function buildSavedRegistryDelivery(
     if (customerScope) {
       const ownRows = (await exportData()).rows;
       const rowIds = new Set(ownRows.map((row) => row.id));
+      const ownDocumentIds = new Set(
+        ownRows.flatMap((row) =>
+          [row.documentId, row.protocolDocumentId].filter(
+            (value): value is string => typeof value === "string",
+          ),
+        ),
+      );
       const documentIds = jobs.flatMap((job) =>
         job.documentId ? [job.documentId] : [],
       );
@@ -685,7 +739,11 @@ export async function buildSavedRegistryDelivery(
         // The canonical whole-request registry is replaced by a scoped derivative.
         if (!document) return false;
         if (document.ownerKind !== "GROUP") {
-          const allowed = !!document.rowId && rowIds.has(document.rowId);
+          // Frozen rows carry exact document IDs. A legacy internal routing
+          // fixture without IDs retains its already selected row scope.
+          const allowed = ownDocumentIds.size
+            ? ownDocumentIds.has(document.id)
+            : !!document.rowId && rowIds.has(document.rowId);
           if (!allowed && query.artifactIds)
             scopeMissing.push({
               format: job.kind,
@@ -813,6 +871,19 @@ export async function buildSavedRegistryDelivery(
         ).toString("base64"),
       });
     let out;
+    if (
+      artifacts.reduce((sum, artifact) => sum + artifact.size, 0) >
+      BUNDLE_PART_BYTES
+    )
+      fail(
+        422,
+        "BUNDLE_PARTS_REQUIRED",
+        "Комплект превышает размер одной части. Используйте «Оригиналы ZIP по частям» в выборе сохранённых документов; исходные файлы доступны",
+        {
+          limitBytes: BUNDLE_PART_BYTES,
+          planPath: `/print-requests/${id}/print-set/plan`,
+        },
+      );
     try {
       out = await buildZip(
         profile
@@ -942,6 +1013,7 @@ export async function collectRegistryRows(
   c: Context,
   query: Parameters<typeof requestFilter>[1],
   id?: string,
+  selectedIssuanceIds?: string[],
 ) {
   let records = await db.printRequest.findMany({
     where: {
@@ -950,130 +1022,183 @@ export async function collectRegistryRows(
     },
     orderBy: { createdAt: "asc" },
   });
-  const pendingWorkflows = await db.issuanceWorkflow.findMany({
-    where: {
-      tenantId: c.tenantId,
-      requestId: { in: records.map((record) => record.id) },
-      status: { not: "ISSUED" },
-    },
-    select: { requestId: true },
-  });
-  records = records.filter(
-    (record) =>
-      !pendingWorkflows.some((workflow) => workflow.requestId === record.id),
-  );
   const ids = records.map((r) => r.id);
-  const [documents, issuances] = await Promise.all([
+  const [documents, issuances, workflows] = await Promise.all([
     db.issuedDocument.findMany({
       where: { tenantId: c.tenantId, requestId: { in: ids } },
     }),
     db.issuance.findMany({
       where: { tenantId: c.tenantId, requestId: { in: ids } },
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+    }),
+    db.issuanceWorkflow.findMany({
+      where: { tenantId: c.tenantId, requestId: { in: ids } },
+      select: { issuanceId: true, status: true },
     }),
   ]);
+  const eligible = issuances.filter((issuance) => {
+    if (selectedIssuanceIds && !selectedIssuanceIds.includes(issuance.id))
+      return false;
+    const workflow = workflows.find(
+      (entry) => entry.issuanceId === issuance.id,
+    );
+    // Existing legacy releases without the later workflow model retain their
+    // established registry path. New stages are published independently.
+    return !workflow || workflow.status === "ISSUED";
+  });
+  const aggregates = await db.renderInputSnapshot.findMany({
+    where: {
+      tenantId: c.tenantId,
+      issuanceId: { in: eligible.map((issuance) => issuance.id) },
+      templateVersionId: null,
+    },
+    select: { issuanceId: true, input: true },
+  });
+  records = records.filter(
+    (record) =>
+      eligible.some((issuance) => issuance.requestId === record.id) ||
+      (selectedIssuanceIds === undefined &&
+        !issuances.some((issuance) => issuance.requestId === record.id)),
+  );
   const rows: ExportRow[] = [];
   for (const record of records) {
-    const issuance = issuances.find((i) => i.requestId === record.id);
-    const draft = issuance
-      ? draftSchema.parse((issuance.snapshot as { draft: unknown }).draft)
-      : (await resolvedRequest(c, record.id)).draft;
-    const employerId = companyEmployerId(draft);
-    const customer = !employerId
-      ? null
-      : issuance
-        ? (
-            issuance.snapshot as {
-              customer?: {
-                nameRu?: string;
-                nameKz?: string;
-                bin?: string;
-                addressRu?: string;
-                addressKz?: string;
-              };
-            }
-          ).customer
-        : employerId
-          ? await db.customerOrganization.findFirst({
-              where: { tenantId: c.tenantId, id: employerId },
-            })
-          : null;
-    const frozenEmployers =
-      draft.organizationSnapshots ||
-      (
-        issuance?.snapshot as {
-          employers?: {
-            id: string;
-            nameRu?: string;
-            nameKz?: string | null;
-            bin?: string | null;
-            addressRu?: string | null;
-            addressKz?: string | null;
-          }[];
-        }
-      )?.employers ||
-      [];
-    for (const sourceItem of draft.items) {
-      const employer = sourceItem.employerId
-        ? frozenEmployers.find((entry) => entry.id === sourceItem.employerId)
-        : customer;
-      const item = {
-        ...sourceItem,
-        employerId: sourceItem.employerId || employerId || undefined,
-        workplaceRu: sourceItem.workplaceRu || employer?.nameRu || "",
-        workplaceKz:
-          sourceItem.workplaceKz || employer?.nameKz || employer?.nameRu || "",
-        employerBin: sourceItem.employerBin || employer?.bin || "",
-        employerAddressRu:
-          sourceItem.employerAddressRu || employer?.addressRu || "",
-        employerAddressKz:
-          sourceItem.employerAddressKz ||
-          employer?.addressKz ||
-          employer?.addressRu ||
-          "",
-      };
-      if (!item.assignments.length)
-        rows.push({
-          ...item,
-          requestId: record.id,
-          status: record.status,
-          revision: record.revision,
-        });
-      for (const assignment of item.assignments) {
-        const document = documents.find(
-          (d) =>
-            d.requestId === record.id &&
-            d.rowId === item.id &&
-            d.assignmentId === assignment.id,
-        );
-        const linkedProtocol =
-          assignment.protocolMode === "EXTERNAL_REFERENCE"
-            ? undefined
-            : documents.find(
-                (d) =>
-                  d.requestId === record.id &&
-                  (assignment.protocolMode === "GROUP"
-                    ? d.groupEventId === assignment.eventId
-                    : d.rowId === item.id) &&
-                  d.templateId === protocolTemplateFor(assignment.templateId),
-              );
-        rows.push({
-          ...item,
-          assignment,
-          number: document?.number || "",
-          registrationNumber: document?.registrationNumber || "",
-          documentId: document?.id,
-          protocolDocumentId: linkedProtocol?.id,
-          protocolNumber:
+    const stages = eligible.filter(
+      (issuance) => issuance.requestId === record.id,
+    );
+    for (const issuance of stages.length ? stages : [undefined]) {
+      const stageDocuments = documents.filter((document) =>
+        issuance
+          ? document.issuanceId === issuance.id
+          : document.requestId === record.id,
+      );
+      const renderedItems = aggregates.flatMap((snapshot) => {
+        if (snapshot.issuanceId !== issuance?.id) return [];
+        const input = snapshot.input as {
+          items?: { documentId?: string; linkedProtocolDocumentId?: string }[];
+        };
+        return Array.isArray(input.items) ? input.items : [];
+      });
+      const draft = issuance
+        ? draftSchema.parse((issuance.snapshot as { draft: unknown }).draft)
+        : (await resolvedRequest(c, record.id)).draft;
+      const employerId = companyEmployerId(draft);
+      const customer = !employerId
+        ? null
+        : issuance
+          ? (
+              issuance.snapshot as {
+                customer?: {
+                  nameRu?: string;
+                  nameKz?: string;
+                  bin?: string;
+                  addressRu?: string;
+                  addressKz?: string;
+                };
+              }
+            ).customer
+          : employerId
+            ? await db.customerOrganization.findFirst({
+                where: { tenantId: c.tenantId, id: employerId },
+              })
+            : null;
+      const frozenEmployers =
+        draft.organizationSnapshots ||
+        (
+          issuance?.snapshot as {
+            employers?: {
+              id: string;
+              nameRu?: string;
+              nameKz?: string | null;
+              bin?: string | null;
+              addressRu?: string | null;
+              addressKz?: string | null;
+            }[];
+          }
+        )?.employers ||
+        [];
+      for (const sourceItem of draft.items) {
+        const employer = sourceItem.employerId
+          ? frozenEmployers.find((entry) => entry.id === sourceItem.employerId)
+          : customer;
+        const item = {
+          ...sourceItem,
+          employerId: sourceItem.employerId || employerId || undefined,
+          workplaceRu: sourceItem.workplaceRu || employer?.nameRu || "",
+          workplaceKz:
+            sourceItem.workplaceKz ||
+            employer?.nameKz ||
+            employer?.nameRu ||
+            "",
+          employerBin: sourceItem.employerBin || employer?.bin || "",
+          employerAddressRu:
+            sourceItem.employerAddressRu || employer?.addressRu || "",
+          employerAddressKz:
+            sourceItem.employerAddressKz ||
+            employer?.addressKz ||
+            employer?.addressRu ||
+            "",
+        };
+        if (!item.assignments.length)
+          rows.push({
+            ...item,
+            requestId: record.id,
+            status: record.status,
+            revision: record.revision,
+          });
+        for (const assignment of item.assignments) {
+          const document = stageDocuments.find(
+            (d) =>
+              d.requestId === record.id &&
+              d.rowId === item.id &&
+              d.assignmentId === assignment.id,
+          );
+          const frozenProtocolId = renderedItems.find(
+            (entry) => entry.documentId === document?.id,
+          )?.linkedProtocolDocumentId;
+          const protocolCandidates = stageDocuments.filter(
+            (entry) =>
+              entry.templateId === protocolTemplateFor(assignment.templateId) &&
+              (frozenProtocolId
+                ? entry.id === frozenProtocolId
+                : assignment.protocolMode === "GROUP"
+                  ? entry.groupEventId === assignment.eventId
+                  : entry.rowId === item.id &&
+                    item.assignments.some(
+                      (protocol) =>
+                        protocol.id === entry.assignmentId &&
+                        (draft.businessRuleVersion !== "LIVE_V1" ||
+                          protocol.eventId === assignment.eventId),
+                    )),
+          );
+          const linkedProtocol =
             assignment.protocolMode === "EXTERNAL_REFERENCE"
-              ? assignment.externalBasisNumber
-              : linkedProtocol?.number || assignment.externalBasisNumber,
-          requestId: record.id,
-          status: record.status,
-          revision: record.revision,
-          createdAt: record.createdAt.toISOString(),
-        });
+              ? undefined
+              : protocolCandidates.length === 1
+                ? protocolCandidates[0]
+                : undefined;
+          rows.push({
+            ...item,
+            assignment,
+            number: document?.number || "",
+            registrationNumber: document?.registrationNumber || "",
+            documentId: document?.id,
+            protocolDocumentId: linkedProtocol?.id,
+            protocolNumber:
+              assignment.protocolMode === "EXTERNAL_REFERENCE"
+                ? assignment.externalBasisNumber
+                : linkedProtocol?.number || assignment.externalBasisNumber,
+            requestId: record.id,
+            issuanceId: issuance?.id,
+            status: record.status,
+            revision: issuance?.sourceRevision ?? record.revision,
+            createdAt: record.createdAt.toISOString(),
+          });
+        }
       }
     }
   }
-  return { records, rows };
+  const scope: { eligibleIssuanceIds?: string[] } = {
+    eligibleIssuanceIds: eligible.map((issuance) => issuance.id),
+  };
+  return { records, rows, ...scope };
 }

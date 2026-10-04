@@ -14,8 +14,26 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 
-export const RENDERER_VERSION = "demo-ooxml-10/libreoffice-26.2.6.3";
+export const RENDERER_VERSION = "demo-ooxml-11/libreoffice-26.2.6.3";
 export const PRODUCT_ROOT = resolve(__dirname, "../../..");
+export const BUNDLE_PART_BYTES = 64 * 1024 * 1024;
+export function partitionSavedArtifacts<T extends { size: number }>(
+  files: T[],
+) {
+  const parts: T[][] = [];
+  let used = 0;
+  for (const file of files) {
+    if (file.size > BUNDLE_PART_BYTES)
+      throw new Error("PRINT_SET_SINGLE_FILE_LIMIT");
+    if (!parts.length || used + file.size > BUNDLE_PART_BYTES) {
+      parts.push([]);
+      used = 0;
+    }
+    parts.at(-1)!.push(file);
+    used += file.size;
+  }
+  return parts;
+}
 export type RenderCommand =
   | "docx"
   | "pdf"
@@ -24,6 +42,8 @@ export type RenderCommand =
   | "import"
   | "xlsx"
   | "zip"
+  | "merge-pdf"
+  | "merge-docx"
   | "health"
   | "preflight"
   | "control-sheet";

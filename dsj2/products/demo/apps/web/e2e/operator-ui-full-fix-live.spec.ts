@@ -378,7 +378,10 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
     expectedPtmAfterCategory,
   );
   await chooser(1).click();
-  await expect(trainingDialog).toContainText("Назначено 1 из 1");
+  await expect(trainingDialog).toContainText("Сейчас назначено 1 из 1 · всем.");
+  await expect(
+    trainingDialog.getByRole("checkbox", { name: /^Безопасность и охрана труда/ }),
+  ).toBeChecked();
   await expect(
     trainingDialog.getByRole("button", { name: "Снять БиОТ · 1", exact: true }),
   ).toBeVisible();
@@ -1835,7 +1838,13 @@ test("UX22 deletion and restoration focus an existing row; query and fragment na
 }) => {
   test.setTimeout(300000);
   const headers = await login(page),
-    draft = await create(page, headers, 3);
+    draft = await create(page, headers, 3, {
+      items: Array.from({ length: 3 }, (_, index) => ({
+        ...newRecipient(),
+        assignments: [],
+        fullNameRu: `Синтетический защищённый получатель ${index + 1}`,
+      })),
+    });
   await page.goto(`/requests/${draft.id}/edit`);
   await page
     .getByRole("button", { name: "Удалить получателя 2", exact: true })
@@ -1993,7 +2002,13 @@ test("UX22 deletion and restoration focus an existing row; query and fragment na
     await page.unroute(endpoint);
   }
 
-  const single = await create(page, headers, 1);
+  const single = await create(page, headers, 1, {
+    items: [{
+      ...newRecipient(),
+      assignments: [],
+      fullNameRu: "Синтетический защищённый единственный получатель",
+    }],
+  });
   await page.goto(`/requests/${single.id}/edit`);
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
@@ -2322,9 +2337,16 @@ test("UX06/07/11/21 ten long bilingual rows, photo crop/error/retry and every re
   );
   await keyboardFocus(page, firstProgram);
   await firstProgram.press("Tab");
+  const firstProgramKz = firstForm.locator(
+    '[data-field-path="items.0.assignments.0.trainingSubjectKz"]',
+  );
+  await expect(firstProgramKz).toBeFocused();
+  await firstProgramKz.press("Tab");
   await expect(
     firstForm.locator('[data-field-path="items.0.assignments.0.result"]'),
   ).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
+  await expect(firstProgramKz).toBeFocused();
   await page.keyboard.press("Shift+Tab");
   await expect(firstProgram).toBeFocused();
   await expect(

@@ -122,7 +122,11 @@ test("editing individual PTM protocol result and subject updates its card and su
     "Отдельная оценка",
   );
   assert.equal(draft.items[1].assignments[0].result, "");
-  assert.equal(draft.items[1].assignments[0].trainingSubject, "");
+  assert.equal(
+    draft.items[1].assignments[0].trainingSubject,
+    "ПТМ",
+    "the untouched recipient keeps its course default without gaining the edited program",
+  );
 });
 
 test("explicit individual PTM outcome and source unlock the card without inventing a result", () => {

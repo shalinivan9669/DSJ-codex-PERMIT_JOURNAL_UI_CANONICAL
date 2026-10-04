@@ -4,7 +4,11 @@ import { randomUUID } from "node:crypto";
 import { db, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
 import { saveUser } from "../../apps/api/src/settings";
-import { createRequest, patchRequest } from "../../apps/api/src/requests";
+import {
+  createRequest,
+  patchRequest,
+  requestDetail,
+} from "../../apps/api/src/requests";
 import {
   createServiceOrder,
   serviceOrderDetail,
@@ -125,8 +129,10 @@ test("manager links a pending company request to its actual employer while priva
   const approvedRecord = await db.printRequest.findUniqueOrThrow({
     where: { id: request.id },
   });
-  assert.equal(approvedRecord.revision, 0);
-  assert.deepEqual(draftSchema.parse(approvedRecord.draft).items, []);
+  assert.equal(approvedRecord.revision, changed.revision);
+  assert.equal(draftSchema.parse(approvedRecord.draft).items.length, 2);
+  assert.equal(approvedRecord.approvedProposalId, null);
+  assert.equal((await requestDetail(manager, request.id)).approvedRevision, 0);
   assert.equal(
     await db.proposalDecision.count({ where: { tenantId: who.tenantId } }),
     0,

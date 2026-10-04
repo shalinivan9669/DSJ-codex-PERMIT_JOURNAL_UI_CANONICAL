@@ -7,7 +7,12 @@ import { CustomerOutput } from "./customer-output";
 import { CustomerReview } from "./customer-review";
 import { RequestOperations } from "./request-operations";
 import { GridPasteDialog } from "./grid-paste-dialog";
-import { type GridField } from "@/lib/grid-paste";
+import { quickGridPaste, type GridField } from "@/lib/grid-paste";
+import {
+  organizationPreparationKey,
+  parseOrganizationPreparation,
+  type OrganizationPreparation,
+} from "@/lib/organization-preparation";
 import { BulkPhotoDialog } from "./bulk-photo-dialog";
 import { RecipientGrid } from "./recipient-grid";
 import { RequestTrainingChoices } from "./request-training-choices";
@@ -15,6 +20,7 @@ import { TrainingBundleDialog } from "./training-bundle-dialog";
 import { TrainingOverview } from "./training-overview";
 import { RequestActivity } from "./request-activity";
 import { ApprovalBanner } from "./approvals";
+import { BatchReadyPanel } from "./batch-ready-panel";
 import { SigningPanel } from "./signing-panel";
 import { SharedEmployerDialog } from "./shared-employer-dialog";
 import { groupValidationIssues } from "@/lib/validation-groups";
@@ -44,6 +50,7 @@ import {
   commonFieldKeys,
   trainingDirection,
   type TrainingDirection,
+  isTechnicalBlankRecipient,
 } from "@demo/contracts";
 import {
   api,
@@ -97,6 +104,17 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const pendingOrganization = useRef(false);
   const organizationGeneration = useRef(0);
   const organizationInFlight = useRef(false);
+  const [organizationBusy, setOrganizationBusy] = useState(false);
+  const [organizationSaved, setOrganizationSaved] = useState(false);
+  const organizationPreparation = useRef<OrganizationPreparation | null>(null);
+  const organizationSelectionRef = useRef(organizationSelection);
+  const organizationStorageReady = useRef(true);
+  organizationSelectionRef.current = organizationSelection;
+  const organizationKey = organizationPreparationKey(
+    context.tenant.id,
+    context.user.id,
+    id,
+  );
   const [companyInputCancelled, setCompanyInputCancelled] = useState(false);
   pendingOrganization.current =
     organizationSelection?.mode === "new" &&
@@ -121,6 +139,42 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const validationRequested = useRef(false);
   const validationSerial = useRef(0);
   const focusValidation = useRef(false);
+  const focusIssueAction = useRef<
+    (issue: Validation["errors"][number]) => void
+  >(() => undefined);
+  const consumedIssueQuery = useRef("");
+  useEffect(() => {
+    const focus = (event: Event) =>
+      focusIssueAction.current(
+        (event as CustomEvent<Validation["errors"][number]>).detail,
+      );
+    window.addEventListener("demo:focus-issue", focus);
+    return () => window.removeEventListener("demo:focus-issue", focus);
+  }, []);
+  useEffect(() => {
+    if (!draft || draft.id !== id) return;
+    const query = new URLSearchParams(window.location.search);
+    const path = query.get("issuePath");
+    const signature = id + ":" + query.toString();
+    if (!path || consumedIssueQuery.current === signature) return;
+    consumedIssueQuery.current = signature;
+    const issue: AddressedIssue = {
+      message: "Замечание к выбранному составу",
+      path,
+      rowId: query.get("issueRow") || undefined,
+      assignmentId: query.get("issueAssignment") || undefined,
+      eventId: query.get("issueEvent") || undefined,
+      field: query.get("issueField") || undefined,
+    };
+    let inner = 0;
+    const frame = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => focusIssueAction.current(issue));
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      cancelAnimationFrame(inner);
+    };
+  }, [id, draft?.id]);
   const [removeId, setRemoveId] = useState<string | null>(null);
   const [trainingRemoval, setTrainingRemoval] = useState<RemovalTarget | null>(
     null,
@@ -161,7 +215,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     startField: GridField;
     text: string;
     columns?: GridField[];
+    reason?: string;
   } | null>(null);
+  const [pasteMessage, setPasteMessage] = useState("");
   const [undo, setUndo] = useState<{
     before: Draft;
     revision: number;
@@ -259,7 +315,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const saveError = useRef("");
   const [busy, setBusy] = useState("");
   const [contextBusy, setContextBusy] = useState(false);
-  const operationBusy = !!busy || contextBusy;
+  const operationBusy = !!busy || contextBusy || organizationBusy;
   const [pendingRecipientFocus, setPendingRecipientFocus] = useState("");
   const [validation, setValidation] = useState<Validation | null>(null);
   const [serverResolution, setServerResolution] = useState<{
@@ -521,6 +577,23 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       pendingOrganization.current = false;
       setOrganizationSelection(null);
       setOrganizationError("");
+      try {
+        const staged = parseOrganizationPreparation(
+          localStorage.getItem(organizationKey),
+        );
+        organizationPreparation.current = staged;
+        if (staged) {
+          setOrganizationSelection({ mode: "new", names: staged.names });
+          organizationSelectionRef.current = {
+            mode: "new",
+            names: staged.names,
+          };
+          setOrganizationSaved(true);
+          organizationStorageReady.current = true;
+        }
+      } catch (caught) {
+        setOrganizationError(errorText(caught));
+      }
       current.current = value;
       setDraft(value);
       setServerResolution(null);
@@ -599,13 +672,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       );
       if (new URLSearchParams(window.location.search).get("check") === "1") {
         validationRequested.current = true;
-        focusValidation.current = true;
+        focusValidation.current = !new URLSearchParams(
+          window.location.search,
+        ).has("issuePath");
         void refreshValidation(value.revision).catch((caught) => {
           if (alive.current) setError(errorText(caught));
         });
       }
     },
-    [id, refreshValidation],
+    [id, refreshValidation, organizationKey],
   );
   useEffect(() => {
     alive.current = true;
@@ -634,7 +709,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (
         lane.current?.dirty ||
-        pendingOrganization.current ||
+        (pendingOrganization.current && !organizationStorageReady.current) ||
         preparationsNeedSave()
       ) {
         event.preventDefault();
@@ -652,19 +727,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       const request = event as CustomEvent<{
         waitUntil: (save: Promise<unknown>) => void;
       }>;
-      if (pendingOrganization.current)
-        setOrganizationError(
-          "Добавьте организацию в заявку или отмените её ввод перед выходом.",
-        );
-      request.detail.waitUntil(
-        pendingOrganization.current
-          ? Promise.reject(
-              new NavigationBlockedError(
-                "Добавьте организацию в заявку или отмените её ввод перед выходом.",
-              ),
-            )
-          : flush(),
-      );
+      request.detail.waitUntil(flush(false));
     };
     const navigate = (event: MouseEvent) => {
       const link = (event.target as HTMLElement).closest("a");
@@ -688,16 +751,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         return;
       event.preventDefault();
       event.stopPropagation();
-      if (pendingOrganization.current) {
-        setOrganizationError(
-          "Добавьте организацию в заявку или отмените её ввод перед переходом.",
-        );
-        document
-          .getElementById("request-customer")
-          ?.scrollIntoView({ block: "center" });
-        return;
-      }
-      void flush()
+      void flush(false)
         .then(() => {
           if (
             target.pathname === window.location.pathname &&
@@ -778,18 +832,125 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         ),
       });
   }
-  async function flush() {
+  async function flush(applyOrganization = true) {
     clearTimeout(timer.current);
     if (!flushPreparations())
       throw new Error(
         "Подготовка результата или графика не сохранена. Повторите сохранение в блоке обучения перед переходом.",
       );
-    if (pendingOrganization.current)
-      throw new Error(
-        "Добавьте введённую организацию в заявку или отмените её ввод.",
+    if (pendingOrganization.current && applyOrganization)
+      await ensureOrganization();
+    if (
+      pendingOrganization.current &&
+      !applyOrganization &&
+      !organizationStorageReady.current
+    )
+      throw new NavigationBlockedError(
+        "Ввод компании ещё не сохранён. Сохраните его повторно перед переходом.",
       );
     if (!lane.current) throw new Error("Заявка ещё загружается.");
     return lane.current.flush();
+  }
+  function stageOrganization(value: RequestOrganizationSelection | null) {
+    organizationSelectionRef.current = value;
+    setOrganizationSelection(value);
+    setOrganizationSaved(false);
+    organizationStorageReady.current = false;
+    try {
+      if (value?.mode === "new") {
+        const old = organizationPreparation.current;
+        const same =
+          old && JSON.stringify(old.names) === JSON.stringify(value.names);
+        const record: OrganizationPreparation = same
+          ? old
+          : {
+              version: 1,
+              names: value.names,
+              operationKey: crypto.randomUUID(),
+            };
+        localStorage.setItem(organizationKey, JSON.stringify(record));
+        organizationPreparation.current = record;
+        setOrganizationSaved(true);
+        organizationStorageReady.current = true;
+      } else {
+        localStorage.removeItem(organizationKey);
+        organizationPreparation.current = null;
+        organizationStorageReady.current = true;
+      }
+    } catch (caught) {
+      setOrganizationError(
+        `Не удалось сохранить ввод компании: ${errorText(caught)}`,
+      );
+    }
+  }
+  async function ensureOrganization() {
+    const value = organizationSelectionRef.current;
+    if (value?.mode !== "new") return;
+    if (organizationInFlight.current)
+      throw new Error(
+        "Компания уже сохраняется. Дождитесь завершения команды.",
+      );
+    organizationInFlight.current = true;
+    setOrganizationBusy(true);
+    const generation = organizationGeneration.current;
+    setOrganizationError("");
+    try {
+      let record = organizationPreparation.current;
+      if (
+        !record ||
+        JSON.stringify(record.names) !== JSON.stringify(value.names)
+      ) {
+        record = {
+          version: 1,
+          names: value.names,
+          operationKey: crypto.randomUUID(),
+        };
+        localStorage.setItem(organizationKey, JSON.stringify(record));
+        organizationPreparation.current = record;
+      }
+      const customer =
+        record.customer ||
+        (await createRequestCustomer(value.names, record.operationKey));
+      record = { ...record, customer };
+      localStorage.setItem(organizationKey, JSON.stringify(record));
+      organizationPreparation.current = record;
+      if (!alive.current || generation !== organizationGeneration.current)
+        throw new Error(
+          "Ввод компании изменился. Проверьте текущую компанию перед продолжением.",
+        );
+      setCustomers((previous) => [
+        ...previous.filter((row) => row.id !== customer.id),
+        customer,
+      ]);
+      pendingOrganization.current = false;
+      edit({ customerId: customer.id });
+      await lane.current?.flush();
+      stageOrganization(null);
+    } catch (caught) {
+      pendingOrganization.current = true;
+      setOrganizationError(errorText(caught));
+      throw caught;
+    } finally {
+      organizationInFlight.current = false;
+      setOrganizationBusy(false);
+    }
+  }
+  async function removeRecipient(rowId: string) {
+    const source = current.current;
+    if (!source) return;
+    const next = source.items.filter((item) => item.id !== rowId);
+    if (!(await applyOperation({ items: next }, rowId))) return;
+    setChecked((ids) => ids.filter((item) => item !== rowId));
+    setRemoveId(null);
+    const oldIndex = source.items.findIndex((item) => item.id === rowId);
+    const neighbor = next[Math.min(oldIndex, next.length - 1)];
+    if (neighbor) focusRecipient(neighbor.id);
+    else
+      requestAnimationFrame(() =>
+        document
+          .querySelector<HTMLButtonElement>("[data-add-recipient]")
+          ?.focus(),
+      );
   }
   function focusRecipient(rowId: string) {
     setSelectedId(rowId);
@@ -817,7 +978,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     trainingOperationInFlight.current = true;
     setBusy("training-remove");
     try {
-      const expectedRevision = await flush();
+      const expectedRevision = await flush(false);
       const scope = JSON.stringify([
         target.direction,
         target.eventIds,
@@ -873,7 +1034,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     trainingOperationInFlight.current = true;
     setBusy("training-restore");
     try {
-      const expectedRevision = await flush();
+      const expectedRevision = await flush(false);
       await api(
         `/print-requests/${id}/training-removals/${operation.operationId}/restore`,
         { method: "POST", body: json({ expectedRevision }) },
@@ -911,7 +1072,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       !!lane.current?.dirty ||
       pendingOrganization.current ||
       preparationsNeedSave(),
-    flush,
+    flush: () => flush(false),
     onError: (caught) => setError(errorText(caught)),
     replace: (url) => router.replace(url),
   });
@@ -920,7 +1081,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     setBusy("bulk");
     setError("");
     try {
-      const expectedRevision = await flush();
+      const expectedRevision = await flush(false);
       const before = structuredClone(current.current);
       const next = applyBusinessRules({
         ...before,
@@ -979,7 +1140,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       } else if (kind === "preview") {
         await api(`/print-requests/${id}/preview`, {
           method: "POST",
-          body: json({ expectedRevision: revision }),
+          body: json({
+            expectedRevision: revision,
+            assignments: current.current?.approval?.assignments,
+          }),
         });
         setPreviewRevision(revision);
         setRefreshFiles((value) => value + 1);
@@ -989,7 +1153,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         await api(`/print-requests/${id}/finalize`, {
           method: "POST",
           headers: { "Idempotency-Key": idempotency.current.key },
-          body: json({ expectedRevision: revision }),
+          body: json({
+            expectedRevision: revision,
+            assignments: current.current?.approval?.assignments,
+          }),
         });
         const result = await api<Draft>(`/print-requests/${id}`);
         initialize(result);
@@ -1016,9 +1183,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       setBusy("");
     }
   }
-  async function reload() {
+  async function reload(preserveLocalInput = false) {
     setBusy("reload");
     try {
+      if (preserveLocalInput) await flush(false);
       const result = await api<Draft>(`/print-requests/${id}`);
       initialize(result);
       setReferenceRetry((attempt) => attempt + 1);
@@ -1078,29 +1246,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     );
   }
   async function addOrganization() {
-    if (organizationSelection?.mode !== "new" || organizationInFlight.current)
-      return;
-    organizationInFlight.current = true;
-    const generation = ++organizationGeneration.current;
-    setBusy("customer");
-    setOrganizationError("");
     try {
-      const customer = await createRequestCustomer(organizationSelection.names);
-      if (!alive.current || generation !== organizationGeneration.current)
-        return;
-      setCustomers((previous) => [
-        ...previous.filter((row) => row.id !== customer.id),
-        customer,
-      ]);
-      pendingOrganization.current = false;
-      setOrganizationSelection(null);
-      edit({ customerId: customer.id });
-    } catch (caught) {
-      if (generation === organizationGeneration.current)
-        setOrganizationError(errorText(caught));
-    } finally {
-      organizationInFlight.current = false;
-      setBusy("");
+      await ensureOrganization();
+    } catch {
+      /* Error stays next to the company input. */
     }
   }
   if (!draft)
@@ -1425,6 +1574,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       }),
     );
   }
+  focusIssueAction.current = focusIssue;
   function issueLabel(issue: Issue) {
     if (typeof issue === "string") return issue;
     const addressed = addressIssue(
@@ -1461,9 +1611,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     saveState === "dirty" ||
     saveState === "saving" ||
     saveState === "error" ||
-    conflictPaused;
+    conflictPaused ||
+    pendingOrganization.current;
   const saveLabel = pendingOrganization.current
-    ? "Название компании ещё не сохранено"
+    ? organizationBusy
+      ? "Сохраняем компанию…"
+      : organizationSaved
+        ? "Ввод компании сохранён · ожидает применения"
+        : "Ввод компании не сохранён"
     : {
         saved: `${draft.approval?.status === "APPROVED" ? "Согласовано" : "Рабочая версия сохранена"} · редакция ${draft.revision}`,
         dirty: "Есть изменения",
@@ -1592,23 +1747,23 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                     ? { mode: "existing", customerId: draft.customerId }
                     : emptyRequestOrganization())
                 }
-                disabled={operationBusy && busy !== "customer"}
-                busy={busy === "customer"}
+                disabled={operationBusy && !organizationBusy}
+                busy={organizationBusy}
                 error={organizationError}
                 onChange={(value) => {
                   organizationGeneration.current++;
                   setCompanyInputCancelled(false);
                   setOrganizationError("");
                   if (value.mode === "existing") {
-                    setOrganizationSelection(value);
+                    stageOrganization(value);
                     edit({ customerId: value.customerId || null });
-                  } else setOrganizationSelection(value);
+                  } else stageOrganization(value);
                 }}
                 onCreate={() => void addOrganization()}
                 onCancelNew={() => {
                   organizationGeneration.current++;
                   pendingOrganization.current = false;
-                  setOrganizationSelection(null);
+                  stageOrganization(null);
                   setOrganizationError("");
                   setCompanyInputCancelled(!draft.customerId);
                 }}
@@ -1619,6 +1774,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 }}
               />
             ))}
+          {organizationSelection?.mode === "new" && (
+            <p className="fine-print" role="status">
+              {organizationBusy
+                ? "Сохраняем и применяем компанию…"
+                : organizationSaved
+                  ? "Ввод компании сохранён для продолжения после возврата. При проверке данных компания будет применена."
+                  : "Ввод компании ещё не сохранён."}
+            </p>
+          )}
           <details className="operator-request-options">
             <summary>
               Название заявки и служебные параметры
@@ -2100,6 +2264,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           }}
         >
           <RecipientGrid
+            issuedAssignments={draft.issuedAssignments}
             active={entryView === "table"}
             items={draft.items}
             visibleItems={visibleItems}
@@ -2117,7 +2282,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             onOpen={openRecipient}
             onDocuments={(recipientId) => setDocumentTargets([recipientId])}
             onChecked={setChecked}
-            onRemove={setRemoveId}
+            onRemove={(rowId) => {
+              const item = current.current?.items.find(
+                (row) => row.id === rowId,
+              );
+              if (item && isTechnicalBlankRecipient(item))
+                void removeRecipient(rowId);
+              else setRemoveId(rowId);
+            }}
             onPaste={(range) => {
               if (rowSearch || rowScope) {
                 setError(
@@ -2125,13 +2297,50 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 );
                 return;
               }
-              setPastedRange(range);
+              try {
+                const quick = quickGridPaste(
+                  draft.items,
+                  resolved.draft.items,
+                  range,
+                );
+                if (!quick.eligible) {
+                  setPastedRange({ ...range, reason: quick.reason });
+                  return;
+                }
+                const existing = new Set(
+                  draft.items.map((person) => person.id),
+                );
+                const items = quick.preview.items.map((person) =>
+                  existing.has(person.id)
+                    ? person
+                    : recipientForRequest(draft, person),
+                );
+                void applyOperation({ items }).then((applied) => {
+                  if (applied)
+                    setPasteMessage(
+                      `Вставлено строк: ${quick.preview.appliedRows}. Изменения сохранены; доступна отмена.`,
+                    );
+                  else
+                    setPastedRange({
+                      ...range,
+                      reason:
+                        "Быстрая вставка не сохранена. Диапазон остаётся для проверки и повторного применения.",
+                    });
+                });
+              } catch (caught) {
+                setPastedRange({ ...range, reason: errorText(caught) });
+              }
             }}
             onAdd={addRecipient}
             canAdd={
               draft.items.length < LIMITS.rows && !operationBusy && !readonly
             }
           />
+          {pasteMessage && (
+            <p role="status" className="fine-print">
+              {pasteMessage}
+            </p>
+          )}
           {!!draft.items.length && !visibleItems.length && (
             <div className="empty-state" role="status">
               <h3>Получатели не найдены</h3>
@@ -2182,6 +2391,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             >
               {selected ? (
                 <RecipientDetails
+                  issuedAssignmentIds={draft.issuedAssignments
+                    ?.filter((entry) => entry.rowId === selected.id)
+                    .map((entry) => entry.assignmentId)}
                   recipient={selected}
                   resolvedRecipient={resolved.draft.items.find(
                     (item) => item.id === selected.id,
@@ -2287,6 +2499,16 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         className="operator-completion"
         aria-label="Подготовка документов"
       >
+        {!readonly && (
+          <BatchReadyPanel
+            draft={draft}
+            onSave={flush}
+            onRefresh={async () => {
+              initialize(await api<Draft>(`/print-requests/${id}`));
+              setRefreshFiles((value) => value + 1);
+            }}
+          />
+        )}
         {unconfirmedResults.trainings > 0 && (
           <p className="operator-result-reminder">
             Не подтверждены {unconfirmedResults.trainings} результатов по
@@ -2311,11 +2533,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           {actions.showPrepareSigning ? (
             <button
               className="primary"
-              disabled={
-                actions.prepareSigningDisabled ||
-                !readiness.locallyComplete ||
-                pendingOrganization.current
-              }
+              disabled={actions.prepareSigningDisabled || organizationBusy}
               onClick={() => void command("finalize")}
             >
               <Icon name="print" />
@@ -2326,11 +2544,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           ) : actions.showPreview ? (
             <button
               className="primary"
-              disabled={
-                operationBusy ||
-                !readiness.locallyComplete ||
-                pendingOrganization.current
-              }
+              disabled={operationBusy || !readiness.locallyComplete}
               onClick={() => void command("preview")}
             >
               {busy === "preview"
@@ -2344,7 +2558,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           ) : null}
           {actions.showValidate && (
             <button
-              disabled={operationBusy || pendingOrganization.current}
+              disabled={operationBusy}
               onClick={() => void command("validate")}
             >
               {busy === "validate" ? "Проверяем…" : "Проверить данные"}
@@ -2452,13 +2666,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </Notice>
         </div>
       )}
-      {draft.status !== "DRAFT" && (
+      {(draft.status !== "DRAFT" || !!draft.issuances?.length) && (
         <details className="panel">
           <summary>Электронные подписи</summary>
           <SigningPanel
             requestId={id}
+            issuances={draft.issuances}
             role={context.user.role}
-            onChanged={() => void reload()}
+            onChanged={() => void reload(true)}
           />
         </details>
       )}
@@ -2552,9 +2767,9 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   disabled={operationBusy}
                   onClick={() => {
                     closeExtraPanel();
-                    void (readonly ? reload() : flush().then(reload)).catch(
-                      (caught) => setError(errorText(caught)),
-                    );
+                    void (
+                      readonly ? reload() : flush().then(() => reload())
+                    ).catch((caught) => setError(errorText(caught)));
                   }}
                 >
                   Обновить состояние
@@ -2648,26 +2863,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             </button>
             <button
               disabled={operationBusy}
-              onClick={async () => {
-                const next = draft.items.filter((item) => item.id !== removeId);
-                if (await applyOperation({ items: next }, removeId)) {
-                  setChecked((ids) => ids.filter((item) => item !== removeId));
-                  setRemoveId(null);
-                  const oldIndex = draft.items.findIndex(
-                    (item) => item.id === removeId,
-                  );
-                  const neighbor = next[Math.min(oldIndex, next.length - 1)];
-                  if (neighbor) focusRecipient(neighbor.id);
-                  else
-                    requestAnimationFrame(() =>
-                      document
-                        .querySelector<HTMLButtonElement>(
-                          "[data-add-recipient]",
-                        )
-                        ?.focus(),
-                    );
-                }
-              }}
+              onClick={() => void removeRecipient(removeId)}
             >
               Убрать из заявки
             </button>

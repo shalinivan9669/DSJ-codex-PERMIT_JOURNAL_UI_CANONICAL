@@ -88,23 +88,59 @@ export function TrainingBundleDialog({
               <label className="training-choice">
                 <input
                   type="checkbox"
-                  checked={chosen.includes(training.id)}
-                  onChange={(event) =>
+                  checked={
+                    (assigned.length === recipients.length &&
+                      recipients.length > 0) ||
+                    chosen.includes(training.id)
+                  }
+                  ref={(element) => {
+                    if (element)
+                      element.indeterminate =
+                        assigned.length > 0 &&
+                        assigned.length < recipients.length &&
+                        !chosen.includes(training.id);
+                  }}
+                  aria-checked={
+                    assigned.length > 0 &&
+                    assigned.length < recipients.length &&
+                    !chosen.includes(training.id)
+                      ? "mixed"
+                      : undefined
+                  }
+                  onChange={(event) => {
+                    if (
+                      assigned.length === recipients.length &&
+                      !chosen.includes(training.id)
+                    ) {
+                      onClose();
+                      onRemove?.(
+                        training.id,
+                        assigned.map((item) => item.id),
+                      );
+                      return;
+                    }
                     setChosen((current) =>
                       event.target.checked
                         ? [...current, training.id]
                         : current.filter((id) => id !== training.id),
-                    )
-                  }
+                    );
+                  }}
                 />
                 <span>
                   <strong>{training.label}</strong>
                   <small>{training.detail}</small>
                   <small>
                     {assigned.length
-                      ? `Назначено ${assigned.length} из ${recipients.length}. Выбор добавит отсутствующий комплект.`
-                      : "Ещё не назначено"}
+                      ? `Сейчас назначено ${assigned.length} из ${recipients.length}${assigned.length === recipients.length ? " · всем" : " · части"}.`
+                      : "Сейчас никому не назначено"}
                   </small>
+                  {chosen.includes(training.id) && (
+                    <small role="status">
+                      Будет добавлено отсутствующим:{" "}
+                      {recipients.length - assigned.length}. Изменение ещё не
+                      сохранено.
+                    </small>
+                  )}
                 </span>
               </label>
               {!!assigned.length && onRemove && (

@@ -91,7 +91,7 @@ test("import replaces only an untouched live starter atomically and preserves ex
       });
 
     await t.test(
-      "100 source rows replace one scaffold; repeat is idempotent; approved container stays empty",
+      "100 source rows replace one scaffold and persist one working revision without review",
       async () => {
         const created = await createRequest(context, liveDraft());
         const imported = await apply(created.id, created.revision);
@@ -111,11 +111,11 @@ test("import replaces only an untouched live starter atomically and preserves ex
               where: { id: created.id },
             })
           ).itemCount,
-          0,
+          100,
         );
         assert.equal(
           await db.requestItem.count({ where: { requestId: created.id } }),
-          0,
+          100,
         );
       },
     );

@@ -204,6 +204,11 @@ test("commercial security: two tenants, all four genuine roles, HTTP object isol
                 validUntil: "2027-09-22",
                 trainingSubject: "Синтетическая программа",
                 result: "Синтетический результат",
+                outcome: {
+                  status: "PASSED",
+                  source:
+                    "СИНТЕТИЧЕСКАЯ ведомость проверки доступа; не реальное обучение",
+                },
               },
             ],
           },

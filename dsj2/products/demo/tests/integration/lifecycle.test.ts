@@ -27,6 +27,7 @@ import {
 import { saveProfile, updateNumbering } from "../../apps/api/src/settings";
 import { retryJob } from "../../apps/api/src/files";
 import { createApprovalFixture } from "./live-approval-fixture";
+import { submitApproval, decideProposal } from "../../apps/api/src/approvals";
 function context(tenantId: string, userId: string): Context {
   return {
     tenantId,
@@ -61,6 +62,10 @@ function fixture(n = 1): Draft {
             protocolDate: "2026-09-21",
             trainingSubject: "Синтетическая программа",
             result: "Тестовое значение",
+            outcome: {
+              status: "PASSED",
+              source: "Явный синтетический факт интеграционной проверки",
+            },
             biotCategory: "WORKER",
             hours: "10",
             productionHours: "16",
@@ -109,8 +114,30 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
   });
   const approvals = await createApprovalFixture(ca);
   t.after(() => approvals.close());
-  async function createApprovedRequest(c: Context, input: unknown) {
+  async function createApprovedRequest(
+    c: Context,
+    input: unknown,
+    direct = false,
+  ) {
     const request = await createRequest(c, input);
+    if (direct) {
+      // The history stress loop exercises the same authenticated actor's server
+      // commands and real DB role guard; HTTP/session coverage is above and in
+      // the separate security suite, without repeating throttled HTTP 3000 times.
+      const submitted = await submitApproval(c, request.id, {
+        expectedRevision: request.revision,
+      });
+      await decideProposal(
+        approvals.directorContext,
+        submitted.approval.proposalId,
+        {
+          decision: "APPROVE",
+          reason: "Синтетическая проверка истории и нумерации",
+          expectedProposalHash: submitted.approval.proposalHash,
+        },
+      );
+      return { ...request, revision: submitted.revision };
+    }
     await approvals.approve(request.id);
     return request;
   }
@@ -612,7 +639,7 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       for (let batch = 0; batch < 50; batch++) {
         const drafts = await Promise.all(
           Array.from({ length: 20 }, () =>
-            createApprovedRequest(ca, fixture()),
+            createApprovedRequest(ca, fixture(), true),
           ),
         );
         await Promise.all(
@@ -621,7 +648,7 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
           ),
         );
       }
-      const d = await createApprovedRequest(ca, fixture());
+      const d = await createApprovedRequest(ca, fixture(), true);
       await finalize(ca, d.id, { expectedRevision: d.revision }, randomUUID());
       const counter = await db.numberSequence.findUniqueOrThrow({
         where: {

@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { downloadExport, errorText } from "@/lib/api";
+import { PrintSetDownloads } from "./print-set-downloads";
 import {
   documentTitle,
   type Artifact,
@@ -22,9 +23,17 @@ export function SavedPrintSet({
     [form, setForm] = useState(""),
     [format, setFormat] = useState("PDF");
   const [selected, setSelected] = useState<string[]>([]);
+  const [issuanceId, setIssuanceId] = useState(issuances[0]?.id || "");
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
+  const latestIssuanceId = issuances[0]?.id || "";
+  useEffect(() => {
+    setIssuanceId(latestIssuanceId);
+    setSelected([]);
+    setNotice("");
+    setError("");
+  }, [latestIssuanceId]);
   const documents = issuances.flatMap((issuance) =>
     (issuance.documents || []).map((document) => ({
       ...document,
@@ -41,7 +50,10 @@ export function SavedPrintSet({
       !["PDF", "DOCX"].includes((artifact.format || "").toUpperCase())
     )
       return [];
-    const row = draft.items.find((value) => value.id === document.rowId);
+    const row = (
+      issuances.find((issuance) => issuance.id === artifact.issuanceId)
+        ?.snapshot?.draft?.items || draft.items
+    ).find((value) => value.id === document.rowId);
     return [
       {
         artifact,
@@ -62,6 +74,7 @@ export function SavedPrintSet({
     (file) =>
       (!person || file.personId === person) &&
       (!form || file.document.templateId === form) &&
+      (!issuanceId || file.artifact.issuanceId === issuanceId) &&
       (!format || file.artifact.format?.toUpperCase() === format),
   );
   const available = visible.filter(
@@ -98,7 +111,7 @@ export function SavedPrintSet({
   }
   if (!files.length) return null;
   return (
-    <details className="outcome-entry">
+    <details id="saved-print-set" className="outcome-entry">
       <summary>Выборочная печать и скачивание сохранённых документов</summary>
       <p>
         Выберите человека, форму и формат. Скачивание использует сохранённые
@@ -106,6 +119,21 @@ export function SavedPrintSet({
         согласовании.
       </p>
       <div className="form-grid">
+        <label>
+          Выпуск
+          <select
+            value={issuanceId}
+            onChange={(event) => change(setIssuanceId, event.target.value)}
+          >
+            <option value="">Все сохранённые выпуски</option>
+            {issuances.map((issuance) => (
+              <option key={issuance.id} value={issuance.id}>
+                {new Date(issuance.createdAt).toLocaleString("ru-RU")} ·{" "}
+                {issuance.id.slice(0, 8)}
+              </option>
+            ))}
+          </select>
+        </label>
         <label>
           Получатель для выборочной выдачи
           <select
@@ -226,6 +254,11 @@ export function SavedPrintSet({
         </table>
       </div>
       {!visible.length && <p>Под выбранный фильтр файлы не найдены.</p>}
+      <PrintSetDownloads
+        key={`${issuanceId}:${chosen.join(",")}`}
+        requestId={draft.id}
+        artifactIds={chosen}
+      />
       {awaitingSignatures && (
         <p>
           До проверки всех подписей отдельные PDF доступны выше кнопками

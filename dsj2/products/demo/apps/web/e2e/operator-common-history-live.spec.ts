@@ -415,7 +415,7 @@ test("100 common assignments and supported individual overrides render consisten
         )
         .toBe(true);
     }
-    const applied = await readCommon(page, requestId);
+    let applied = await readCommon(page, requestId);
     checkpoints.push({
       step: "explicit-UI-results-server-confirmed",
       elapsedMs: performance.now() - started,
@@ -428,6 +428,16 @@ test("100 common assignments and supported individual overrides render consisten
     await expect(
       page.getByText("Данные прошли проверку", { exact: true }),
     ).toBeVisible({ timeout: 180000 });
+    await page
+      .getByLabel(/Все подтверждённые ещё не оформленные курсы/)
+      .check();
+    await page
+      .getByRole("button", { name: /Проверить и передать директору/ })
+      .click();
+    await expect
+      .poll(async () => (await readCommon(page, requestId)).approval?.status)
+      .toBe("PENDING");
+    applied = await readCommon(page, requestId);
     const directorContext = await browser.newContext(),
       directorPage = await directorContext.newPage();
     try {
@@ -509,7 +519,8 @@ test("100 common assignments and supported individual overrides render consisten
       artifact.issuanceId === checkpoint.issued.issuances[0].id &&
       ["XLSX", "ZIP"].includes(artifact.format || ""),
   );
-  expect(savedAggregates).toHaveLength(2);
+  expect(savedAggregates.filter((artifact) => artifact.format === "XLSX")).toHaveLength(1);
+  expect(savedAggregates.filter((artifact) => artifact.format === "ZIP").length).toBeGreaterThanOrEqual(1);
   const aggregateGuardReadback = [];
   for (const artifact of savedAggregates) {
     const download = await page.request.get(`/api/artifacts/${artifact.id}`);
