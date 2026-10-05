@@ -1,4 +1,7 @@
-import { assertTechnicalBlankRemoval, createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
+import {
+  assertTechnicalBlankRemoval,
+  createRequestWithWorkerDocument,
+} from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -7,7 +10,6 @@ import { loginIsolated } from "./operator-full-fix-session";
 import {
   legacyPrintFixture,
   openLegacyPersonal,
-  savedLegacyDraft,
 } from "./operator-legacy-lifecycle-fixture";
 import {
   realApprovalRoles,
@@ -16,6 +18,11 @@ import {
   readPrintDetail,
 } from "./operator-role-fixture";
 import { randomUUID } from "node:crypto";
+import templateManifest from "../../../assets/templates/manifest.json";
+import {
+  courseResultText,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+} from "@demo/contracts";
 test.use({ trace: "off" });
 
 const evidence = process.env.DEMO_E2E_EVIDENCE
@@ -50,9 +57,9 @@ async function login(page: Page, user = email, secret = password) {
     throw error;
   }
 }
-async function person(page: Page) {
+async function companyTable(page: Page) {
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
+  await createRequestWithWorkerDocument(page, "COMPANY");
   await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
 }
 async function save(page: Page) {
@@ -68,16 +75,13 @@ test("XLSX formulas are excluded with an actionable row error and no silent loss
   page,
 }) => {
   await login(page);
-  await person(page);
+  await companyTable(page);
   await page.getByRole("button", { name: "Удалить получателя 1" }).click();
   await assertTechnicalBlankRemoval(page);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page
     .getByLabel("Табличный файл")
     .setInputFiles(path.join(__dirname, "fixtures/import-formula.xlsx"));
-  await page.getByRole("button", { name: "Перейти к сопоставлению" }).click();
   await page.getByLabel("Лист таблицы").selectOption("Получатели");
   await expect(page.getByText("Прочитано: 2", { exact: true })).toBeVisible();
   await expect(page.getByText("Исключено: 1", { exact: true })).toBeVisible();
@@ -93,6 +97,13 @@ test("XLSX formulas are excluded with an actionable row error and no silent loss
     path: path.join(evidence, "xlsx-formula-rejected.png"),
     fullPage: true,
   });
+  if (!(await page.getByLabel("Поле для колонки Сотрудник").isVisible()))
+    await page
+      .getByRole("button", {
+        name: "Изменить сопоставление колонок",
+        exact: true,
+      })
+      .click();
   await page
     .getByLabel("Поле для колонки Сотрудник")
     .selectOption("fullNameRu");
@@ -115,7 +126,9 @@ test("oldest saved originals survive 55 newer drafts, page three and archive exc
   const prefix = `Поиск-${Date.now()}`;
   const f = await legacyPrintFixture(page, browser, { title: `${prefix}-000` });
   try {
-    await f.patch((draft) => { draft.items[0].fullNameRu = `${prefix}-000`; });
+    await f.patch((draft) => {
+      draft.items[0].fullNameRu = `${prefix}-000`;
+    });
     const issued = await f.issue();
     const file = issued.artifacts.find(
       (a) => a.provenance === "ORIGINAL" && a.format === "PDF",
@@ -208,14 +221,21 @@ test("validation errors identify the field, focus the missing date and offline r
   context,
 }) => {
   await login(page);
-  await person(page);
-  const cleared = page.waitForResponse((response) => response.request().method() === "PATCH" && response.url().endsWith(`/print-requests/${requestId(page)}`));
+  await companyTable(page);
+  const cleared = page.waitForResponse(
+    (response) =>
+      response.request().method() === "PATCH" &&
+      response.url().endsWith(`/print-requests/${requestId(page)}`),
+  );
   await page.getByLabel("Дата выдачи, строка 1", { exact: true }).fill("");
   expect((await cleared).ok()).toBe(true);
   await page
     .getByRole("button", { name: "Проверить данные", exact: true })
     .click();
-  await page.locator(".review-issue-group").getByRole("button", { name: "Введите ФИО на русском", exact: true }).click();
+  await page
+    .locator(".review-issue-group")
+    .getByRole("button", { name: "Введите ФИО на русском", exact: true })
+    .click();
   await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeFocused();
   await expect(
     page.getByLabel("ФИО, строка 1", { exact: true }),
@@ -246,13 +266,8 @@ test("validation errors identify the field, focus the missing date and offline r
     .getByRole("button", { name: /Введите действительную календарную дату/ })
     .first()
     .click();
-  expect(
-    await page.evaluate(
-      () =>
-        document.activeElement instanceof HTMLInputElement &&
-        document.activeElement.type === "date",
-    ),
-  ).toBe(true);
+  // Addressed focus is scheduled after the validation panel opens.
+  await expect(page.getByLabel("Дата выдачи, строка 1", { exact: true })).toBeFocused();
   if (await page.getByRole("dialog").isVisible())
     await page
       .getByRole("dialog")
@@ -285,7 +300,7 @@ test("expired session: real cookie revocation, in-page reauthentication and unsa
   context,
 }) => {
   await login(page);
-  await person(page);
+  await companyTable(page);
   await page
     .getByLabel("ФИО, строка 1", { exact: true })
     .fill("Сохранённый получатель");
@@ -362,10 +377,15 @@ test("finalize response lost after commit: retry and double activation reuse one
   test.setTimeout(360000);
   const f = await legacyPrintFixture(page, browser);
   try {
-    await page
-      .getByLabel("ФИО, строка 1", { exact: true })
+    const person = page.locator(".person-editor");
+    await person
+      .getByRole("button", { name: "Изменить ФИО и должность", exact: true })
+      .click();
+    await person
+      .getByLabel("ФИО", { exact: true })
       .fill("Последние символы Ө І");
-    await savedLegacyDraft(page);
+    await person.getByRole("button", { name: "Готово", exact: true }).click();
+    await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
     await expect
       .poll(async () => (await f.read()).items[0].fullNameRu)
       .toBe("Последние символы Ө І");
@@ -500,7 +520,11 @@ test("administrator settings and an independent operator conflict preserve both 
       new Set(
         await admin.locator(".template-list article h3").allTextContents(),
       ).size,
-    ).toBe(16);
+    ).toBe(
+      templateManifest.templates.length +
+      templateManifest.groupTemplates.length +
+      templateManifest.specialTemplates.length,
+    );
     await admin.getByRole("button", { name: "Нумерация", exact: true }).click();
     await admin
       .getByLabel("Префикс PTM:PROTOCOL", { exact: true })
@@ -533,7 +557,7 @@ test("administrator settings and an independent operator conflict preserve both 
       .getByRole("button", { name: "Сохранить", exact: true })
       .click();
     await expect(dialog).toHaveCount(0);
-    await person(page);
+    await companyTable(page);
     await page
       .getByLabel("ФИО, строка 1", { exact: true })
       .fill("Исходная версия");
@@ -592,12 +616,10 @@ test("CSV formula text and optional PTM/PB semantic fields survive import and re
   const saved: unknown[] = [];
   for (const template of ["ptm-protocol", "pb-protocol"]) {
     await page.goto("/requests");
-    await person(page);
+    await companyTable(page);
     await page.getByRole("button", { name: "Удалить получателя 1" }).click();
     await assertTechnicalBlankRemoval(page);
-    await page
-      .getByRole("button", { name: "Импорт / вставка", exact: true })
-      .click();
+    await page.getByRole("button", { name: "Импорт", exact: true }).click();
     await page.getByLabel("Табличный файл").setInputFiles({
       name: "synthetic.csv",
       mimeType: "text/csv",
@@ -605,13 +627,28 @@ test("CSV formula text and optional PTM/PB semantic fields survive import and re
         'ФИО RU;ФИО KZ;Внешний номер основания;Причина проверки знаний;Образование\r\n"Тест CSV";"Ә Ғ Қ Ң Ө Ұ Ү Һ І";"00123";"Первичная проверка";"=1+1"\r\n',
       ),
     });
-    await page.getByRole("button", { name: "Перейти к сопоставлению" }).click();
+    await expect(page.getByText("Прочитано: 1", { exact: true })).toBeVisible();
+    await page
+      .getByRole("dialog")
+      .locator(".import-document-options > summary")
+      .click();
     await page
       .getByRole("combobox", {
         name: "Документ для импортируемых строк",
         exact: true,
       })
       .selectOption(template);
+    if (
+      !(await page
+        .getByLabel("Поле для колонки Причина проверки знаний")
+        .isVisible())
+    )
+      await page
+        .getByRole("button", {
+          name: "Изменить сопоставление колонок",
+          exact: true,
+        })
+        .click();
     await expect(
       page.getByLabel("Поле для колонки Причина проверки знаний"),
     ).toHaveValue("reason");
@@ -656,7 +693,13 @@ test("CSV formula text and optional PTM/PB semantic fields survive import and re
     expect(assignment.externalBasisNumber).toBe("00123");
     expect(assignment.reason).toBe("Первичная проверка");
     expect(assignment.education).toBe("=1+1");
-    expect(assignment.outcome?.status || "UNKNOWN").toBe("UNKNOWN");
+    // No imported result column clears the new assignment's ordinary default.
+    expect(assignment.outcome?.status).toBe("PASSED");
+    expect(assignment.outcome?.source).toBe(DEFAULT_POSITIVE_OUTCOME_SOURCE);
+    expect(assignment.result).toBe(
+      courseResultText(assignment.templateId, "PASSED"),
+    );
+    expect(assignment.fieldOrigins?.outcome).toBe("AUTO");
     await page
       .getByRole("button", { name: "Детали получателя 1", exact: true })
       .click();

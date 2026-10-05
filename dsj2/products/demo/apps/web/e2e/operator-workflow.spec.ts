@@ -28,7 +28,7 @@ async function mockWorkspace(page: Page) {
     id: "ui-contract",
     revision: 0,
     status: "DRAFT",
-    kind: "PERSON",
+    kind: "COMPANY",
     title: "Синтетическая проверка UI",
     customerId: null,
     demoMode: true,
@@ -284,15 +284,15 @@ test("event set and confirmed outcomes are separate single undo operations", asy
     .click();
   await eventPanel
     .getByLabel("Известный результат", { exact: true })
-    .selectOption("PASSED");
+    .selectOption("FAILED");
   await eventPanel
     .getByLabel("Источник подтверждения", { exact: true })
     .fill("Синтетическая ведомость");
   await eventPanel
-    .getByRole("button", { name: "Проверить применение результатов" })
-    .click();
-  await eventPanel
-    .getByRole("button", { name: "Подтвердить результаты", exact: true })
+    .getByRole("button", {
+      name: "Применить результат · 2 человек",
+      exact: true,
+    })
     .click();
   await expect
     .poll(
@@ -302,7 +302,7 @@ test("event set and confirmed outcomes are separate single undo operations", asy
           .items[0].assignments.find((a) => a.protocolMode === "GROUP")?.outcome
           ?.status,
     )
-    .toBe("PASSED");
+    .toBe("FAILED");
   await closeDates(page);
   await page
     .getByRole("button", { name: "Отменить массовое изменение" })
@@ -315,12 +315,12 @@ test("event set and confirmed outcomes are separate single undo operations", asy
           .items[0].assignments.find((a) => a.protocolMode === "GROUP")?.outcome
           ?.status,
     )
-    .toBe("UNKNOWN");
+    .toBe("PASSED");
   expect(
     state
       .getDraft()
       .items[0].assignments.find((a) => a.templateId === "ptm-card")?.result,
-  ).toBe("");
+  ).toBe("Прошел/ Өтті");
 });
 test("keyboard edits preserve focus order and event common fields undo as one saved operation", async ({
   page,

@@ -1,0 +1,174 @@
+{
+  "status": "PASS_EXISTING04_TITLE_AND_PRESERVATION_AFTER05",
+  "capturedUtc": "2026-10-05T23:02:37.578Z",
+  "publishedUtc": "2026-10-05T23:03:54.256882+00:00",
+  "buildId": "UE5EAW-MchsccxxskF32g",
+  "syntheticDataOnly": true,
+  "scope": "Existing approved PERSON/COMPANY proposals and issued04 originals revisited after05. No new issue, no new approval, no replacement baseline.",
+  "method": {
+    "databaseTransaction": "READ ONLY",
+    "apiMethods": [
+      "GET"
+    ],
+    "existingDirectorSession": true,
+    "accountsCreated": 0,
+    "issueOrApprovalCommands": 0,
+    "sourceGuards": 406,
+    "sourceDrift": 0,
+    "final05SourceFilesIndependentlyMatched": 380
+  },
+  "sourceManifestSha256": "eb5be1d1351ffa93876774a934814f02512256f630039a89454a13a80dfe6789",
+  "evidenceDigests": {
+    "originalBefore04": "6549e8c1882d93d0b5d440fab1cf15bb65b84783deef613832a60c5b1303a05c",
+    "correctedAfter05": "0dcf5074f36025abb46479069bde579660840f9d1e8ee0d987c43dd165af8c5a",
+    "independentFrozenIdentity": "4eee0b297a27fd2fc5d4bcffec5a615f638389fb07b8284ad51eb6a17f3bf240"
+  },
+  "historicalAttempt": {
+    "status": "FAILED_EXPECTED_TITLE_ASSERTION_RETAINED",
+    "diagnosticSha256": "e8d3ffc90d0a1ade1a89fae322db10eb5d8c7bb1b63b9ab7aebe6e5718dfb6a4",
+    "reason": "Initial expected COMPANY title came from a shorter synthetic test label. The API returned the complete name already stored in the immutable approved organization snapshot.",
+    "correction": "Only expected display title was corrected, bound to original04 baseline payload hash, customerId and proposalId. Original map, original baseline, all source/record/file guards and the failed diagnostic were retained."
+  },
+  "cases": [
+    {
+      "kind": "PERSON",
+      "requestId": "82cf78e8-8034-4336-88b8-f072c7a804ad",
+      "proposalId": "109b87d7-a3ae-4622-ac62-4b72613a61fb",
+      "revision": 3,
+      "queueTitle": "Синтетический Текущий Период",
+      "detailTitle": "Синтетический Текущий Период",
+      "displayMatchesFrozenIdentity": true,
+      "immutableRecordHashesUnchanged": {
+        "requestRecordSha256": "35344506117067552815cc5ff8832d6e06933d0cefb1220a1b09b4f813c0662a",
+        "proposalRecordSha256": "5a60759161daada035e3d607a9a46b068b63d0461373ae678e28c6717e42541c",
+        "proposalHash": "a0d3fcbe44a78b3b7615112b92cac93e42578b18b88fff6f84c8e88b8fe48ad9",
+        "payloadSha256": "075a8608f1a60d58ce30b7ea6aa10dd5f4fb9d31fb5bb448c842105744f4fe11",
+        "beforeSha256": "e4f8d2d059587fcb5e5f7fac7901aba4e7ca769413e245365e96c7a261442bab",
+        "resolvedSnapshotSha256": "e8c97adf53d8807ad3db39fd271e76382a7f0b46e9506fc7e58dd343c3ef57b5",
+        "issuancesSha256": "481e0de68973c54758988a20086a3955021c4fe83554e89ee777ac58ab30a1f1",
+        "issuedDocumentsSha256": "140d56264384925149d81dc0ad0bfdd967387b628cdf4efac1b8adfc86860e81",
+        "originalArtifactRecordsSha256": "87942a55122899448a633d936363e314093f62ebe8df6da2ba28444434b8162f"
+      },
+      "originals": [
+        {
+          "id": "0e001840-c351-4fcb-9636-e07728f41f49",
+          "format": "DOCX",
+          "sha256": "8d80a782700329e4cf7face5bb161a9852cb1214fce78c5cc3d382a3aa71beb0",
+          "bytes": 14752,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "327a8e17-7399-42dc-bada-86cbd3a33e85",
+          "format": "DOCX",
+          "sha256": "ab4dca40a8cfe022f76ea1adaf5ad023358cee1db4a0e63dc8143cfa2460e117",
+          "bytes": 20183,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "4194ff54-53c7-4955-82ac-e0b091b022b0",
+          "format": "PDF",
+          "sha256": "3f032b1de53366d2919b3f51f54c7cf7dba75122ea4ae02eb9d461fb9d5ca6f1",
+          "bytes": 112224,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "6dca2f4f-dc59-4863-a5db-fafd8b32c43d",
+          "format": "PDF",
+          "sha256": "0c637e883aafb52032151dee1b2430b6ee73d7197a296ae10aaab523438f49c1",
+          "bytes": 104489,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "a74e8b3d-2184-4592-9d65-0e2580735b3e",
+          "format": "PDF",
+          "sha256": "b9904e91acff90be7f0417e42d8c9a154fa0101006ae58ccd1cbb0a48f4fa15e",
+          "bytes": 134371,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "c783ac1c-3b94-45f2-b9b0-2e577a2d9617",
+          "format": "DOCX",
+          "sha256": "5036c64e8820ca58f90b40719c56cf9edc8e09589e362df30bf3aee6bc68e7f1",
+          "bytes": 24540,
+          "storedAndEvidenceBytesEqual": true
+        }
+      ]
+    },
+    {
+      "kind": "COMPANY",
+      "requestId": "98aa88c4-e329-4893-b063-19af36e38765",
+      "proposalId": "b126b8f4-1f79-4e9e-8710-ba0cd65a80b3",
+      "revision": 6,
+      "queueTitle": "ТОО Синтетическая компания 1791238791298",
+      "detailTitle": "ТОО Синтетическая компания 1791238791298",
+      "displayMatchesFrozenIdentity": true,
+      "immutableRecordHashesUnchanged": {
+        "requestRecordSha256": "35cedd95850d975f26772cfef9e3e9ddeeecb23fe010d8444cf2778040cf4851",
+        "proposalRecordSha256": "8c8025c8f4d964cdd75935506ac926862eebff18492b4d42bd4b2d303b82bb58",
+        "proposalHash": "4c7ca6f5c87c35044da34391abad80215bf0355be63967b5411ea049f1cbd166",
+        "payloadSha256": "bdf608069bf227400b3bf259dded5c969754c2a66817a8a927af0cb1c67e1736",
+        "beforeSha256": "70ec7d63798bf74ee8b00c97bf7b681218a2cedffa3409da8c648b17feb13d52",
+        "resolvedSnapshotSha256": "648536c3c3d97d8de76e6be121379914b3ee00d928cebbe184fe05ca0556118a",
+        "issuancesSha256": "c0d1a457e28f8ccbc6a70e1f1108171729f740aecd44a0ad4a61e1260400c1b7",
+        "issuedDocumentsSha256": "550b9e0202db711b5a2ba5f4b1c2c695cf60cf9ea7a9732748c4ea8252593f86",
+        "originalArtifactRecordsSha256": "c7d1ad64dac61543f315e096d195e2c0be07046bb5dfe6e4e432b894ccc313bf"
+      },
+      "originals": [
+        {
+          "id": "1b642650-97d6-455e-8eff-5cda227939b5",
+          "format": "DOCX",
+          "sha256": "a3aa0ef0b9a440c5efc8afacdc70e228ae8115d9c44cd05565d812f81440dd83",
+          "bytes": 20786,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "244cdb8e-e837-4576-88e8-ba901f15fd5f",
+          "format": "PDF",
+          "sha256": "ee4131755cbe7bf0671b2539cfe9fb95445efa18eeedfc039d34ec98796c93fd",
+          "bytes": 77687,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "51ab4096-a669-4400-adbf-a90577023b3d",
+          "format": "PDF",
+          "sha256": "5696b20b703415bd32e04b4534893fcb05e067439d9352e233d9d68ab68fd73b",
+          "bytes": 77890,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "a608619a-23e8-4556-8353-60f9cbe46f97",
+          "format": "DOCX",
+          "sha256": "d3cbf6b0ad97f255c7c10690748ccc60beef8f4fa9b7a2262c55ad91418e5d09",
+          "bytes": 7049796,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "bc00eb6a-8129-4f6b-8d57-84ff569a4077",
+          "format": "PDF",
+          "sha256": "b16b6194d2d7352b149dae74bd2047ce89c3f266fbb1cac9a023aad2fa96e7b4",
+          "bytes": 130207,
+          "storedAndEvidenceBytesEqual": true
+        },
+        {
+          "id": "c0d2ee56-1e65-4199-9422-794ef0ff34cf",
+          "format": "DOCX",
+          "sha256": "779cb964ad3019bc1142e744e1007f658c413282aeaa0c343516b1a48aa1ee5b",
+          "bytes": 20799,
+          "storedAndEvidenceBytesEqual": true
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "existingRequests": 2,
+    "existingProposals": 2,
+    "immutableRecordDigestsCompared": 18,
+    "originalPdfFiles": 6,
+    "originalDocxFiles": 6,
+    "unchangedOriginalFiles": 12
+  },
+  "limitations": [
+    "This proves API response titles and immutable records/original bytes. Root visual queue/detail and PDF/DOCX viewing are separate evidence.",
+    "This is one targeted preservation check, not a full-suite or production deployment result."
+  ]
+}

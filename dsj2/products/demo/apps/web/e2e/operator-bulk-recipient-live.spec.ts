@@ -23,7 +23,7 @@ test("real API preserves selected-only workplace changes, individual exceptions,
   const response = await page.request.post("/api/print-requests", {
     headers: { origin: new URL(page.url()).origin, "x-csrf-token": csrf },
     data: {
-      kind: "PERSON",
+      kind: "COMPANY",
       title: `Синтетическая общая организация · ${Date.now()}`,
       customerId: null,
       demoMode: true,

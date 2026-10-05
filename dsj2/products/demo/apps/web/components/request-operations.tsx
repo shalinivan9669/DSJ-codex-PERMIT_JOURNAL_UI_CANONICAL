@@ -161,18 +161,19 @@ export function RequestOperations({
             <button
               disabled={busy}
               onClick={() =>
-                void run(
-                  () =>
-                    api("/orders", {
-                      method: "POST",
-                      body: json({
-                        title: draft.title || "Заказ по заявке",
-                        customerId: draft.customerId,
-                        requestIds: [draft.id],
-                      }),
+                void run(async () => {
+                  // Saving may create and attach a prepared company. Read
+                  // the saved request after flush, not this render's draft.
+                  const saved = await api<Draft>(`/print-requests/${draft.id}`);
+                  return api("/orders", {
+                    method: "POST",
+                    body: json({
+                      title: saved.title || "Заказ по заявке",
+                      customerId: saved.customerId,
+                      requestIds: [saved.id],
                     }),
-                  "Создан заказ со связанной заявкой.",
-                )
+                  });
+                }, "Создан заказ со связанной заявкой.")
               }
             >
               Создать связанный заказ

@@ -252,15 +252,59 @@ export async function verifyCommonFiles(
 ) {
   await fs.mkdir(path.join(evidence, "files"), { recursive: true });
   let jobs: Job[] = [];
+  let rateLimitedUntil = 0;
+  let previousProgress = "";
+  const diagnosticPath = path.join(evidence, "jobs-poll-diagnostic.jsonl");
   await expect
     .poll(
       async () => {
+        if (performance.now() < rateLimitedUntil) return false;
         const response = await page.request.get(
           `/api/jobs?requestId=${checkpoint.requestId}`,
         );
-        expect(response.ok()).toBe(true);
+        if (!response.ok()) {
+          const error = await response.json().catch(() => ({}));
+          await fs.appendFile(
+            diagnosticPath,
+            JSON.stringify({
+              capturedUtc: new Date().toISOString(),
+              status: response.status(),
+              code: typeof error.code === "string" ? error.code : null,
+            }) + "\n",
+          );
+          if (response.status() === 429) {
+            // Respect the existing API's one-minute rate window without
+            // extending this poll's deadline or changing API limits.
+            rateLimitedUntil = performance.now() + 60_000;
+            return false;
+          }
+          throw new Error(
+            `COMMON_JOBS_HTTP_${response.status()}:${typeof error.code === "string" ? error.code : "UNSPECIFIED"}`,
+          );
+        }
         jobs = (await response.json()).items;
         const issuedJobs = jobs.filter((job) => job.issuanceId);
+        const progress = Object.fromEntries(
+          [...new Set(issuedJobs.map((job) => job.status))].map((status) => [
+            status,
+            issuedJobs.filter((job) => job.status === status).length,
+          ]),
+        );
+        const signature = JSON.stringify(progress);
+        if (signature !== previousProgress) {
+          previousProgress = signature;
+          await fs.appendFile(
+            diagnosticPath,
+            JSON.stringify({
+              capturedUtc: new Date().toISOString(),
+              status: response.status(),
+              progress,
+              failed: issuedJobs
+                .filter((job) => job.status === "FAILED")
+                .map((job) => ({ id: job.id, errorCode: job.errorCode })),
+            }) + "\n",
+          );
+        }
         return (
           issuedJobs.length >= checkpoint.expectedDocumentFiles &&
           issuedJobs.every(
@@ -268,7 +312,9 @@ export async function verifyCommonFiles(
           )
         );
       },
-      { timeout: 1200000, intervals: [2500, 5000] },
+      // A single renderer took 7.57 seconds per job for the measured 212-job
+      // fixture. Keep full file verification within a finite 45-minute budget.
+      { timeout: 2700000, intervals: [2500, 5000] },
     )
     .toBe(true);
   const issued = await readCommon(page, checkpoint.requestId);

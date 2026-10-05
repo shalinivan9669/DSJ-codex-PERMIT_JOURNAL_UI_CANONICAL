@@ -1,0 +1,168 @@
+{
+  "schema": "FINAL04_ROOT_VISUAL_REVIEW_1",
+  "status": "PASS_VISUAL_REVIEW_LIMITED_SYNTHETIC_DOCUMENTS",
+  "recordedUtc": "2026-10-05T22:55:37.007968+00:00",
+  "reviewer": "root agent",
+  "reviewBasis": "Explicit root verdict in this task after personally opening all16 original PDF and independently rendered DOCX page images; card page2 was reopened at original detail and full A4 header/frame confirmed.",
+  "allPagesViewedByRoot": true,
+  "independentDOCX": true,
+  "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+  "kind": "COMPANY",
+  "requestId": "98aa88c4-e329-4893-b063-19af36e38765",
+  "issuanceIds": [
+    "220fc91a-785e-4f07-ac86-733bc7728222"
+  ],
+  "sourceCycle": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-cycle.json",
+    "sha256": "637174544fcd927f4cfd36c128aa4ce1d014107151b96ba6ba8c131ce0e577b0",
+    "bytes": 6113
+  },
+  "sourceInspection": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/inspection.json",
+    "sha256": "bfa6dde3945da1f5144448f3476bdcf598a30177e15e6dd16ed43343dabc7ff4",
+    "bytes": 10492
+  },
+  "documents": [
+    {
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "templateId": "ptm-card",
+      "number": "PTM-CARD-00033"
+    },
+    {
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "templateId": "ptm-card",
+      "number": "PTM-CARD-00034"
+    },
+    {
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "templateId": "ptm-protocol",
+      "number": "TEST-PTM-00012"
+    }
+  ],
+  "originals": [
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-1b642650-97d6-455e-8eff-5cda227939b5-ptm-card-ce20ff78-512f-4077-8b43-810adb48ada6.docx",
+      "sha256": "a3aa0ef0b9a440c5efc8afacdc70e228ae8115d9c44cd05565d812f81440dd83",
+      "bytes": 20786,
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "templateId": "ptm-card",
+      "format": "DOCX"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-244cdb8e-e837-4576-88e8-ba901f15fd5f-ptm-card-ce20ff78-512f-4077-8b43-810adb48ada6.pdf",
+      "sha256": "ee4131755cbe7bf0671b2539cfe9fb95445efa18eeedfc039d34ec98796c93fd",
+      "bytes": 77687,
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "templateId": "ptm-card",
+      "format": "PDF"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-c0d2ee56-1e65-4199-9422-794ef0ff34cf-ptm-card-cc1bb0b2-c86f-40e5-bca8-01e688f63483.docx",
+      "sha256": "779cb964ad3019bc1142e744e1007f658c413282aeaa0c343516b1a48aa1ee5b",
+      "bytes": 20799,
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "templateId": "ptm-card",
+      "format": "DOCX"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-51ab4096-a669-4400-adbf-a90577023b3d-ptm-card-cc1bb0b2-c86f-40e5-bca8-01e688f63483.pdf",
+      "sha256": "5696b20b703415bd32e04b4534893fcb05e067439d9352e233d9d68ab68fd73b",
+      "bytes": 77890,
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "templateId": "ptm-card",
+      "format": "PDF"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-a608619a-23e8-4556-8353-60f9cbe46f97-ptm-protocol-4a6ce713-c4d7-45e2-8716-d3c1f0d16845.docx",
+      "sha256": "d3cbf6b0ad97f255c7c10690748ccc60beef8f4fa9b7a2262c55ad91418e5d09",
+      "bytes": 7049796,
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "templateId": "ptm-protocol",
+      "format": "DOCX"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-bc00eb6a-8129-4f6b-8d57-84ff569a4077-ptm-protocol-4a6ce713-c4d7-45e2-8716-d3c1f0d16845.pdf",
+      "sha256": "b16b6194d2d7352b149dae74bd2047ce89c3f266fbb1cac9a023aad2fa96e7b4",
+      "bytes": 130207,
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "templateId": "ptm-protocol",
+      "format": "PDF"
+    }
+  ],
+  "pageImages": [
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/pdf-ce20ff78-512f-4077-8b43-810adb48ada6/page-1.png",
+      "sha256": "40c321a13b80c42edc0b2c11396c7c072730c3c0fbde80f49d508182cb65e159",
+      "bytes": 62603,
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "templateId": "ptm-card",
+      "number": "PTM-CARD-00033",
+      "format": "PDF",
+      "page": 1
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/docx-ce20ff78-512f-4077-8b43-810adb48ada6/page-1.png",
+      "sha256": "bb0170011cdaf1b7342c37757d88bc8d5348d6cb706af19c0fff88bbb073cbb6",
+      "bytes": 108893,
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "templateId": "ptm-card",
+      "number": "PTM-CARD-00033",
+      "format": "DOCX",
+      "page": 1
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/pdf-cc1bb0b2-c86f-40e5-bca8-01e688f63483/page-1.png",
+      "sha256": "85d48490d39a37268dac2289d0cc7cea7146caf420339cc99300e4f171df98c2",
+      "bytes": 63024,
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "templateId": "ptm-card",
+      "number": "PTM-CARD-00034",
+      "format": "PDF",
+      "page": 1
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/docx-cc1bb0b2-c86f-40e5-bca8-01e688f63483/page-1.png",
+      "sha256": "f7dd47f9fa68c146432011e9bb4e1ad53d7855db6d6d9592113ad0cc1414e1ea",
+      "bytes": 109272,
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "templateId": "ptm-card",
+      "number": "PTM-CARD-00034",
+      "format": "DOCX",
+      "page": 1
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/pdf-4a6ce713-c4d7-45e2-8716-d3c1f0d16845/page-1.png",
+      "sha256": "4c3e4f71a21088ebd5e3350a6959f65c34574edd69678da662396c61b030646c",
+      "bytes": 169992,
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "templateId": "ptm-protocol",
+      "number": "TEST-PTM-00012",
+      "format": "PDF",
+      "page": 1
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/docx-4a6ce713-c4d7-45e2-8716-d3c1f0d16845/page-1.png",
+      "sha256": "192e43d59a1b50161be78767fb6239f8ad8bb0906a8aad16f89f1a366b663e41",
+      "bytes": 272122,
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "templateId": "ptm-protocol",
+      "number": "TEST-PTM-00012",
+      "format": "DOCX",
+      "page": 1
+    }
+  ],
+  "observations": [
+    "Both PTM cards00033/00034 show the two individual recipients and RU/KZ positions and employer.",
+    "Shared group protocol TEST-PTM-00012 contains both rows.",
+    "Photos and document text are readable; no observed overlap or clipping.",
+    "DEMO markings retained."
+  ],
+  "originalsUnchanged": true,
+  "originalInspectionUnchanged": true,
+  "limits": [
+    "Three synthetic documents in this cycle only; six documents across both final04 cycles.",
+    "Visual readability/layout inspection of electronic PDF and independently opened DOCX pages only.",
+    "No claim of legal approval, physical printing, or pending director UI acceptance.",
+    "No API, database mutation, reissue, template edit or renderer edit was performed by this review."
+  ]
+}

@@ -1,4 +1,7 @@
-import { assertTechnicalBlankRemoval, createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
+import {
+  assertTechnicalBlankRemoval,
+  createRequestWithWorkerDocument,
+} from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -11,8 +14,9 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
   test.setTimeout(240000);
   const product = path.resolve("../.."),
     evidence = path.resolve(
-      process.env.DEMO_E2E_EVIDENCE ||
-        "../../docs/evidence/final-completion/revised-six",
+      process.env.DEMO_E2E_EVIDENCE
+        ? path.join(process.env.DEMO_E2E_EVIDENCE, "revised-six")
+        : "../../docs/evidence/final-completion/revised-six",
     );
   await fs.mkdir(evidence, { recursive: true });
   execFileSync(
@@ -70,15 +74,13 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
+  await createRequestWithWorkerDocument(page, "COMPANY");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
   await assertTechnicalBlankRemoval(page);
   async function openImport(tsv: string, revised = false) {
-    await page
-      .getByRole("button", { name: "Импорт / вставка", exact: true })
-      .click();
+    await page.getByRole("button", { name: "Импорт", exact: true }).click();
     if (revised)
       await page
         .getByLabel("Это исправленный список для существующей заявки", {
@@ -87,7 +89,11 @@ test("V04 exact revised list: six imported people, four unchanged, one changed, 
         .check();
     await page.getByLabel("Или вставьте таблицу с заголовками").fill(tsv);
     await page
-      .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+      .getByRole("button", { name: "Проверить таблицу", exact: true })
+      .click();
+    await page
+      .getByRole("dialog")
+      .locator(".import-document-options > summary")
       .click();
     await page
       .getByRole("combobox", {

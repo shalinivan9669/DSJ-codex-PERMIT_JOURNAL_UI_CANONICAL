@@ -50,6 +50,10 @@ const previewSchema = z
       .max(reconciliationFields.length)
       .default([...reconciliationFields]),
     blankMode: z.enum(["RETAIN", "CLEAR"]).default("RETAIN"),
+    inheritEmployerSourceRows: z
+      .array(z.number().int().positive())
+      .max(LIMITS.rows)
+      .default([]),
   })
   .strict();
 const applySchema = previewSchema.extend({
@@ -73,6 +77,22 @@ type StableItem = RequestItemInput & {
   sourceOrder?: number;
 };
 type MatchKey = "recipientId" | "externalId" | "personnelNumber";
+const employerFields = [
+  "employerId",
+  "workplaceRu",
+  "workplaceKz",
+  "workplaceEn",
+  "employerBin",
+  "employerAddressRu",
+  "employerAddressKz",
+  "employerAddressEn",
+] as const;
+function inheritedEmployer(item: StableItem): StableItem {
+  return {
+    ...item,
+    ...Object.fromEntries(employerFields.map((field) => [field, ""])),
+  };
+}
 export type ImportDifference = {
   sourceRow?: number;
   targetId?: string;
@@ -111,6 +131,7 @@ export function compareImportedRows(
     fieldMask?: readonly string[];
     blankMode?: "RETAIN" | "CLEAR";
     customerId?: string | null;
+    inheritEmployerSourceRows?: readonly number[];
   } = {},
 ) {
   const rows: ImportDifference[] = [];
@@ -118,6 +139,9 @@ export function compareImportedRows(
   const claimed = new Set<string>();
   const present = new Set<string>();
   for (const item of incoming) {
+    const inheritEmployer =
+      !!item.sourceRow &&
+      !!options.inheritEmployerSourceRows?.includes(item.sourceRow);
     let candidates: StableItem[] = [];
     let matchedKey: MatchKey | undefined;
     let duplicateSourceKey = false;
@@ -175,20 +199,30 @@ export function compareImportedRows(
         category: "added",
         candidates: [],
         changes: [],
-        item,
+        item: inheritEmployer ? inheritedEmployer(item) : item,
       });
       continue;
     }
     claimed.add(target.id);
     const changes: ImportDifference["changes"] = [];
-    for (const field of options.fieldMask || reconciliationFields) {
+    const fields = new Set<string>(options.fieldMask || reconciliationFields);
+    if (inheritEmployer) employerFields.forEach((field) => fields.add(field));
+    for (const field of fields) {
       const oldValue = String(
         (target as unknown as Record<string, unknown>)[field] || "",
       );
-      const newValue = String(
-        (item as unknown as Record<string, unknown>)[field] || "",
-      );
-      if (newValue === "" && options.blankMode !== "CLEAR") continue;
+      const explicitlyInherited =
+        inheritEmployer &&
+        employerFields.includes(field as (typeof employerFields)[number]);
+      const newValue = explicitlyInherited
+        ? ""
+        : String((item as unknown as Record<string, unknown>)[field] || "");
+      if (
+        newValue === "" &&
+        options.blankMode !== "CLEAR" &&
+        !explicitlyInherited
+      )
+        continue;
       if (newValue !== oldValue)
         changes.push({ field, oldValue, newValue, sourceRow: item.sourceRow });
     }
@@ -252,6 +286,16 @@ async function checkedSource(
     fail(400, "IMPORT_SOURCE", "Неверная ссылка на исходную строку");
   if (new Set(data.rows.map((row) => row.sourceRow)).size !== data.rows.length)
     fail(400, "IMPORT_DUPLICATE", "Исходная строка выбрана дважды");
+  if (
+    data.inheritEmployerSourceRows.some(
+      (sourceRow) => !data.rows.some((row) => row.sourceRow === sourceRow),
+    )
+  )
+    fail(
+      400,
+      "IMPORT_SOURCE",
+      "Для компании выбрана неизвестная исходная строка",
+    );
   if (data.rows.some((row) => sourceRows.get(row.sourceRow!)?.errors?.length))
     fail(422, "IMPORT_ROW_ERROR", "Исправьте ошибки выбранных исходных строк");
 }
@@ -272,6 +316,11 @@ export async function previewImportReconciliation(
     fail(409, "REVISION_CONFLICT", "Заявка изменена другим оператором");
   await checkedSource(c, data);
   const draft = draftSchema.parse(record.draft);
+  if (
+    data.inheritEmployerSourceRows.length &&
+    (draft.kind !== "COMPANY" || !draft.customerId)
+  )
+    fail(422, "IMPORT_EMPLOYER", "Сначала выберите компанию заявки");
   return {
     revision: record.revision,
     importId: data.importId,
@@ -322,6 +371,11 @@ export async function applyImportReconciliation(
       fail(409, "REVISION_CONFLICT", "Заявка изменена другим оператором");
     await checkedSource(c, data, tx);
     const draft = draftSchema.parse(record.draft);
+    if (
+      data.inheritEmployerSourceRows.length &&
+      (draft.kind !== "COMPANY" || !draft.customerId)
+    )
+      fail(422, "IMPORT_EMPLOYER", "Сначала выберите компанию заявки");
     const diff = compareImportedRows(draft.items, data.rows, {
       ...data,
       customerId: draft.customerId,
@@ -440,6 +494,7 @@ export async function applyImportReconciliation(
       ...importResult,
       revision: record.revision + 1,
       fields: data.fieldMask,
+      inheritedEmployerSourceRows: data.inheritEmployerSourceRows,
       exclusionReason: data.exclusionReason,
       excludedRowIds: [...exclusions],
     });

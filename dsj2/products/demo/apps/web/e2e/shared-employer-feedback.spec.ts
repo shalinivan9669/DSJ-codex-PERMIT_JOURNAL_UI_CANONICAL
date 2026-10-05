@@ -1,6 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
 import { applyBusinessRules, resolveDraft } from "@demo/contracts";
-import { openRecipientExtraTools } from "./operator-keyboard-helpers";
 import {
   newAssignment,
   newRecipient,
@@ -37,7 +36,7 @@ async function fixture(page: Page) {
     id: requestId,
     revision: 0,
     status: "DRAFT",
-    kind: "PERSON",
+    kind: "COMPANY",
     title: "Синтетическая проверка общего работодателя",
     customerId: payer.id,
     demoMode: true,
@@ -208,53 +207,62 @@ async function fixture(page: Page) {
 async function openEditor(page: Page) {
   await page.goto(`/requests/${requestId}/edit`);
   await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
-  // This personal legacy request retains its payer in saved data; employer
-  // selection below must never change that identity.
-}
-
-function sharedDialog(page: Page) {
-  return page.getByRole("dialog", {
-    name: "Общая организация для людей",
-    exact: true,
-  });
+  // The bulk company workspace retains its payer in saved data; explicit
+  // recipient employers must never change that separate identity.
 }
 
 async function recipientEmployerDetails(page: Page, row: number) {
-  await page.getByLabel(`ФИО, строка ${row}`, { exact: true }).focus();
-  await page
-    .getByRole("button", { name: `Детали получателя ${row}`, exact: true })
-    .click();
-  const dialog = page.getByRole("dialog");
+  const dialog = page.getByRole("dialog", {
+    name: `Настройки строки ${row}`,
+    exact: true,
+  });
+  if (!(await dialog.isVisible())) {
+    await page.getByLabel(`ФИО, строка ${row}`, { exact: true }).focus();
+    await page
+      .getByRole("button", { name: `Детали получателя ${row}`, exact: true })
+      .click();
+  }
   await dialog.getByRole("tab", { name: /^Личные данные/ }).click();
-  const employerDetails = dialog.locator("details.employer-document-wording");
+  const details = dialog.locator("details.employer-document-wording");
   if (
-    !(await employerDetails.evaluate(
-      (element) => (element as HTMLDetailsElement).open,
-    ))
+    !(await details.evaluate((element) => (element as HTMLDetailsElement).open))
   )
-    await employerDetails.locator(":scope > summary").click();
+    await details.locator(":scope > summary").click();
   return dialog;
 }
 
-async function chooseEmployer(page: Page) {
-  await openRecipientExtraTools(page);
-  await page
-    .getByRole("button", { name: "Указать место работы", exact: true })
-    .click();
-  await sharedDialog(page)
-    .getByRole("button", { name: "Выбрать организацию", exact: true })
+async function employerPicker(page: Page, row: number) {
+  const dialog = await recipientEmployerDetails(page, row);
+  await dialog
+    .getByRole("button", { name: "Выбрать работодателя", exact: true })
     .click();
   const picker = page.getByRole("dialog", {
     name: "Найти заказчика",
     exact: true,
   });
+  await expect(picker).toBeVisible();
+  return picker;
+}
+
+async function chooseEmployer(page: Page, row: number) {
+  const picker = await employerPicker(page, row);
   await picker
     .getByRole("row")
     .filter({ hasText: employer.nameRu })
     .getByRole("button", { name: "Выбрать", exact: true })
     .click();
-  await expect(sharedDialog(page)).toContainText(employer.nameRu);
-  await expect(sharedDialog(page)).toContainText(employer.nameKz);
+  await expect(picker).toHaveCount(0);
+  return page.getByRole("dialog", {
+    name: `Настройки строки ${row}`,
+    exact: true,
+  });
+}
+
+async function closeDetails(page: Page, row: number) {
+  await page
+    .getByRole("dialog", { name: `Настройки строки ${row}`, exact: true })
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
 }
 
 function expectPreservedDocuments(before: Draft, after: Draft) {
@@ -293,28 +301,25 @@ function expectEmployer(draft: Draft, index: number) {
   });
 }
 
-test("shared employer defaults to empty people and preserves filled employers, payer and manual documents", async ({
+test("company inheritance and an explicit person employer preserve other exceptions, payer and manual documents", async ({
   page,
 }) => {
   const state = await fixture(page);
   await openEditor(page);
-  await chooseEmployer(page);
-  const dialog = sharedDialog(page);
-  await expect(
-    dialog.getByRole("radio", {
-      name: "Только людям без места работы",
-      exact: true,
-    }),
-  ).toBeChecked();
-  await expect(dialog.getByRole("status")).toContainText("Будет изменено: 1");
-  await expect(dialog.getByRole("status")).toContainText(
-    "Сохранят своё место работы: 2",
+  const initialDetails = await recipientEmployerDetails(page, 1);
+  await expect(initialDetails).toContainText(
+    `Работодатель заявки: ${payer.nameRu}`,
   );
-  await dialog
-    .getByRole("button", { name: "Применить для 1", exact: true })
-    .click();
-  await expect(dialog).toHaveCount(0);
+  await expect(
+    initialDetails.locator('[data-field-path="items.0.workplaceRu"]'),
+  ).toHaveValue("");
+  expect(state.current()).toEqual(state.initial);
+  expect(state.accepted).toHaveLength(0);
+  const dialog = await chooseEmployer(page, 1);
   await expect.poll(() => state.accepted.length).toBe(1);
+  await expect(
+    dialog.locator('[data-field-path="items.0.workplaceRu"]'),
+  ).toHaveValue(employer.nameRu);
   expectEmployer(state.current(), 0);
   expect(state.current().items.slice(1)).toEqual(state.initial.items.slice(1));
   expectPreservedDocuments(state.initial, state.current());
@@ -326,101 +331,81 @@ test("shared employer defaults to empty people and preserves filled employers, p
   await expect(
     person.locator('[data-field-path="items.0.workplaceKz"]'),
   ).toHaveValue(employer.nameKz);
-  await expect(state.current().items[1].workplaceKz).toBe(
+  expect(state.current().items[1].workplaceKz).toBe(
     state.initial.items[1].workplaceKz,
   );
 });
 
-test("explicit replacement targets selected IDs only and changes both language names without changing the payer", async ({
+test("explicit employer exceptions target two stable person IDs and preserve the third person and payer", async ({
   page,
 }) => {
   const state = await fixture(page);
   await openEditor(page);
-  await page.getByLabel("Выбрать строку 1", { exact: true }).check();
-  await page.getByLabel("Выбрать строку 2", { exact: true }).check();
-  await chooseEmployer(page);
-  const dialog = sharedDialog(page);
-  await dialog
-    .getByRole("radio", {
-      name: "Всем 2 выбранным, заменив текущее место работы",
-      exact: true,
-    })
-    .check();
-  await expect(dialog.getByRole("status")).toContainText("Будет изменено: 2");
-  await page.screenshot({
-    path: test.info().outputPath("shared-employer-selected-replacement.png"),
-    fullPage: true,
-  });
-  await dialog
-    .getByRole("button", { name: "Применить для 2", exact: true })
-    .click();
-  await expect(dialog).toHaveCount(0);
-  await expect.poll(() => state.accepted.length).toBe(1);
+  const targets = state.initial.items.slice(0, 2).map((item) => item.id);
+  for (const row of [1, 2]) {
+    await chooseEmployer(page, row);
+    await expect.poll(() => state.accepted.length).toBe(row);
+    await closeDetails(page, row);
+  }
+  expect(
+    state
+      .current()
+      .items.filter((item) => item.employerId === employer.id)
+      .map((item) => item.id),
+  ).toEqual(targets);
   expectEmployer(state.current(), 0);
   expectEmployer(state.current(), 1);
   expect(state.current().items[2]).toEqual(state.initial.items[2]);
   expectPreservedDocuments(state.initial, state.current());
+  await page.screenshot({
+    path: test.info().outputPath("person-employer-two-exceptions.png"),
+    fullPage: true,
+  });
 });
 
-test("a failed save retains the shared employer dialog and original recipient data", async ({
+test("cancelled employer selection leaves data intact and a failed exception save retains input until explicit retry", async ({
   page,
 }) => {
   const state = await fixture(page);
   await openEditor(page);
-  await chooseEmployer(page);
-  const dialog = sharedDialog(page);
-  state.rejectNext();
-  await dialog
-    .getByRole("button", { name: "Применить для 1", exact: true })
+  const picker = await employerPicker(page, 1);
+  await picker
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
     .click();
-  await expect(dialog.getByRole("alert")).toContainText(
-    "Не удалось сохранить организацию. Повторите попытку.",
-  );
+  expect(state.current()).toEqual(state.initial);
+  expect(state.accepted).toHaveLength(0);
+  state.rejectNext();
+  const dialog = await chooseEmployer(page, 1);
+  await expect(page.locator(".save-indicator")).toContainText("Не сохранено");
   await expect(dialog).toBeVisible();
   await expect(
-    dialog.getByRole("button", { name: "Применить для 1", exact: true }),
-  ).toBeEnabled();
+    dialog.locator('[data-field-path="items.0.workplaceRu"]'),
+  ).toHaveValue(employer.nameRu);
   expect(state.attempts()).toBe(1);
   expect(state.accepted).toHaveLength(0);
   expect(state.current()).toEqual(state.initial);
   await page.screenshot({
-    path: test.info().outputPath("shared-employer-save-error.png"),
+    path: test.info().outputPath("person-employer-save-error.png"),
     fullPage: true,
   });
-  await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
-  await expect(dialog).toHaveCount(0);
-  for (const row of [1, 2]) {
-    const person = await recipientEmployerDetails(page, row);
-    await expect(
-      person.locator(`[data-field-path="items.${row - 1}.workplaceRu"]`),
-    ).toHaveValue(state.initial.items[row - 1].workplaceRu);
-    await person
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
-      .click();
-    await expect(person).toHaveCount(0);
-    await expect(
-      page.getByLabel(`ФИО, строка ${row}`, { exact: true }),
-    ).toBeFocused();
-  }
+  await closeDetails(page, 1);
   expect(state.current()).toEqual(state.initial);
-  expect(state.current().customerId).toBe(payer.id);
+  await page
+    .getByRole("button", { name: "Повторить сохранение", exact: true })
+    .click();
+  await expect.poll(() => state.accepted.length).toBe(1);
+  expectEmployer(state.current(), 0);
+  expect(state.current().items.slice(1)).toEqual(state.initial.items.slice(1));
+  expectPreservedDocuments(state.initial, state.current());
 });
 
-test("shared employer remains within a 390px viewport while the recipient table scrolls independently", async ({
+test("company employer exceptions stay within a 390px details dialog while the person table scrolls independently", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const state = await fixture(page);
   await openEditor(page);
-  await chooseEmployer(page);
-  const dialog = sharedDialog(page);
-  await expect(dialog).toBeVisible();
-  await expect(
-    dialog.getByRole("radio", {
-      name: "Только людям без места работы",
-      exact: true,
-    }),
-  ).toBeChecked();
+  const dialog = await recipientEmployerDetails(page, 1);
   const bounds = await dialog.boundingBox();
   expect(bounds).not.toBeNull();
   expect(bounds!.x).toBeGreaterThanOrEqual(0);
@@ -433,34 +418,33 @@ test("shared employer remains within a 390px viewport while the recipient table 
       (element) => element.scrollWidth <= element.clientWidth + 1,
     ),
   ).toBe(true);
-  await page.screenshot({
-    path: test.info().outputPath("shared-employer-mobile-390.png"),
-    fullPage: true,
-  });
-  await dialog
-    .getByRole("button", { name: "Применить для 1", exact: true })
-    .click();
-  await expect(dialog).toHaveCount(0);
+  await chooseEmployer(page, 1);
   await expect.poll(() => state.accepted.length).toBe(1);
   expectEmployer(state.current(), 0);
+  expect(state.current().items.slice(1)).toEqual(state.initial.items.slice(1));
   expectPreservedDocuments(state.initial, state.current());
+  await page.screenshot({
+    path: test.info().outputPath("person-employer-mobile-390.png"),
+    fullPage: true,
+  });
+  await closeDetails(page, 1);
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth),
   ).toBeLessThanOrEqual(391);
 });
 
-test("a newly created employer becomes available without reload and does not replace the payer", async ({
+test("a newly created person employer is saved once without reload and does not replace the company payer", async ({
   page,
 }) => {
   const state = await fixture(page);
   const customerCountBefore = state.customers.length;
   await openEditor(page);
-  await openRecipientExtraTools(page);
-  await page
-    .getByRole("button", { name: "Указать место работы", exact: true })
-    .click();
-  await sharedDialog(page)
-    .getByRole("button", { name: "Новая организация", exact: true })
+  const person = await recipientEmployerDetails(page, 1);
+  await person
+    .getByRole("button", {
+      name: "Добавить организацию работодателя",
+      exact: true,
+    })
     .click();
   const createDialog = page.getByRole("dialog", {
     name: "Новая организация",
@@ -472,17 +456,14 @@ test("a newly created employer becomes available without reload and does not rep
   await createDialog
     .getByRole("textbox", { name: /^Собственное наименование/ })
     .fill("Новый работодатель");
+  expect(state.current()).toEqual(state.initial);
   await createDialog
     .getByRole("button", { name: "Сохранить", exact: true })
     .click();
-  await expect(sharedDialog(page)).toContainText("ТОО Новый работодатель");
-  await expect(sharedDialog(page)).toContainText("Новый работодатель ЖШС");
-  expect(state.current()).toEqual(state.initial);
-  await sharedDialog(page)
-    .getByRole("button", { name: "Применить для 1", exact: true })
-    .click();
-  await expect(sharedDialog(page)).toHaveCount(0);
+  await expect(createDialog).toHaveCount(0);
   await expect.poll(() => state.accepted.length).toBe(1);
+  await expect(person).toContainText("ТОО Новый работодатель");
+  await expect(person).toContainText("Новый работодатель ЖШС");
   expect(state.current().customerId).toBe(payer.id);
   expect(
     state.customers.find((value) => value.id === "created-employer")?.nameRu,

@@ -71,13 +71,26 @@ export function PdfPreview({ artifactId }: { artifactId: string }) {
   const pages = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [retry, setRetry] = useState(0);
   useEffect(() => {
     let cancelled = false;
     let task: { destroy: () => Promise<void> } | undefined;
+    const controller = new AbortController();
     const root = pages.current;
     root?.replaceChildren();
     setLoading(true);
     setError("");
+    const timeout = setTimeout(() => {
+      if (cancelled) return;
+      cancelled = true;
+      controller.abort();
+      void task?.destroy().catch(() => {});
+      root?.replaceChildren();
+      setLoading(false);
+      setError(
+        "Открытие PDF заняло больше 30 секунд. Проверьте связь и повторите открытие.",
+      );
+    }, 30_000);
     void (async () => {
       const pdfjs = await import("pdfjs-dist");
       if (cancelled || !root) return;
@@ -85,10 +98,35 @@ export function PdfPreview({ artifactId }: { artifactId: string }) {
         "pdfjs-dist/build/pdf.worker.min.mjs",
         import.meta.url,
       ).toString();
-      const loadingTask = pdfjs.getDocument({
-        url: `/api/artifacts/${encodeURIComponent(artifactId)}?inline=1`,
-        withCredentials: true,
-      });
+      // Fetch once so the storage error code remains available; pdf.js only
+      // reports an HTTP status for URL loading and cannot distinguish a lost
+      // saved artifact from a temporary upstream failure.
+      const response = await fetch(
+        `/api/artifacts/${encodeURIComponent(artifactId)}?inline=1`,
+        {
+          credentials: "same-origin",
+          cache: "no-store",
+          signal: controller.signal,
+        },
+      );
+      if (!response.ok) {
+        let code = "";
+        try {
+          code = ((await response.json()) as { code?: string }).code || "";
+        } catch {
+          /* A proxy may return a non-JSON error body. */
+        }
+        throw Object.assign(new Error("PDF_DOWNLOAD_FAILED"), {
+          name:
+            response.status === 404 || code === "ARTIFACT_UNAVAILABLE"
+              ? "MissingPDFException"
+              : "UnexpectedResponseException",
+          status: response.status,
+        });
+      }
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      if (cancelled) return;
+      const loadingTask = pdfjs.getDocument({ data: bytes });
       task = loadingTask;
       const pdf = await loadingTask.promise;
       for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
@@ -125,25 +163,44 @@ export function PdfPreview({ artifactId }: { artifactId: string }) {
         label.textContent = `Страница ${pageNumber} из ${pdf.numPages}`;
         root.append(label, canvas);
       }
-      if (!cancelled) setLoading(false);
-    })().catch((cause) => {
-      console.error("PDF preview failed", cause);
       if (!cancelled) {
+        clearTimeout(timeout);
+        setLoading(false);
+      }
+    })().catch((cause) => {
+      if (!cancelled) {
+        clearTimeout(timeout);
+        root?.replaceChildren();
+        console.error("PDF preview failed", cause);
+        const failure = cause as { name?: string; status?: number };
         setError(
-          "Не удалось показать PDF. Скачайте сохранённый файл или повторно откройте просмотр.",
+          failure.name === "MissingPDFException" || failure.status === 404
+            ? "Файл PDF отсутствует в хранилище. Повторите подготовку предпросмотра."
+            : failure.name === "InvalidPDFException"
+              ? "Сохранённый файл не удалось прочитать как PDF. Повторите подготовку или скачайте DOCX."
+              : "Не удалось загрузить или показать PDF. Проверьте связь и повторите открытие.",
         );
         setLoading(false);
       }
     });
     return () => {
       cancelled = true;
-      void task?.destroy();
+      clearTimeout(timeout);
+      controller.abort();
+      void task?.destroy().catch(() => {});
     };
-  }, [artifactId]);
+  }, [artifactId, retry]);
   return (
     <>
       {loading && <p role="status">Открываем страницы PDF…</p>}
-      {error && <Notice>{error}</Notice>}
+      {error && (
+        <Notice>
+          {error}{" "}
+          <button onClick={() => setRetry((value) => value + 1)}>
+            Повторить открытие PDF
+          </button>
+        </Notice>
+      )}
       <div
         className="pdf-pages"
         ref={pages}

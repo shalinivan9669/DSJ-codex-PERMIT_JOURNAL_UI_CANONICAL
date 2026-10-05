@@ -1,7 +1,9 @@
 import {
   assertTechnicalBlankRemoval,
   createRequestWithWorkerDocument,
-  keyboardCreateRequestWithWorkerDocument,
+  keyboardActivate,
+  keyboardCheck,
+  keyboardEnter,
 } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import path from "node:path";
@@ -11,9 +13,6 @@ import { inflateRawSync } from "node:zlib";
 import { loginIsolated } from "./operator-full-fix-session";
 import {
   legacyPrintFixture,
-  openLegacyPersonal,
-  setLegacyKz,
-  savedLegacyDraft,
   keepLegacyOriginals,
 } from "./operator-legacy-lifecycle-fixture";
 import {
@@ -23,6 +22,7 @@ import {
   write,
 } from "./operator-role-fixture";
 import { draftPayload } from "../lib/types";
+import { LIMITS } from "@demo/contracts";
 import { PrismaClient } from "../../../packages/database/src";
 import { ArtifactStore } from "../../../packages/printing/src";
 import { assertTestDatabase } from "../../../tests/integration/test-database";
@@ -115,7 +115,13 @@ async function internalCanonicalZipBytes(
       },
     });
     expect(stored.map((artifact) => artifact.id).sort()).toEqual(
-      issued.artifacts.filter((artifact) => artifact.provenance === "ORIGINAL" && artifact.format === "ZIP").map((artifact) => artifact.id).sort(),
+      issued.artifacts
+        .filter(
+          (artifact) =>
+            artifact.provenance === "ORIGINAL" && artifact.format === "ZIP",
+        )
+        .map((artifact) => artifact.id)
+        .sort(),
     );
     const storage = new ArtifactStore(process.env.DEMO_ARTIFACT_ROOT!);
     const bytes = new Map<string, Buffer>();
@@ -132,13 +138,26 @@ async function internalCanonicalZipBytes(
 async function login(page: Page) {
   await loginIsolated(page);
 }
-async function newPerson(page: Page) {
+async function newTableRequest(page: Page) {
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
+  await createRequestWithWorkerDocument(page, "COMPANY");
   await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
 }
 async function save(page: Page) {
   await page.getByLabel("ФИО, строка 1", { exact: true }).blur();
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
+}
+async function setPersonKz(page: Page, value: string) {
+  const person = page.locator(".person-editor");
+  if (!(await person.getByLabel("ФИО", { exact: true }).isVisible()))
+    await person
+      .getByRole("button", { name: "Изменить ФИО и должность", exact: true })
+      .click();
+  const extra = person.locator(".person-additional");
+  if ((await extra.getAttribute("open")) === null)
+    await extra.locator("summary").click();
+  await person.getByLabel("ФИО · KZ", { exact: true }).fill(value);
+  await person.getByRole("button", { name: "Готово", exact: true }).click();
   await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
 }
 test("person: bilingual refresh, final characters, real preview and immutable original files remain linked to a reasoned correction", async ({
@@ -150,13 +169,18 @@ test("person: bilingual refresh, final characters, real preview and immutable or
   const f = await legacyPrintFixture(page, browser, { title });
   try {
     const initial = await f.read();
-    expect(initial.title).toBe(initial.items[0].fullNameRu);
-    await page
-      .getByLabel("ФИО, строка 1", { exact: true })
+    expect(initial.title).toBe(title);
+    const person = page.locator(".person-editor");
+    await person
+      .getByRole("button", { name: "Изменить ФИО и должность", exact: true })
+      .click();
+    await person
+      .getByLabel("ФИО", { exact: true })
       .fill("Проверочный Иван Васильевич");
-    await setLegacyKz(page, "Тексеру Әли Қасымұлы");
-    const details = await openLegacyPersonal(page);
-    await details.getByRole("button", { name: "Фото", exact: true }).click();
+    await setPersonKz(page, "Тексеру Әли Қасымұлы");
+    await person
+      .getByRole("button", { name: /^(Добавить|Изменить) фото$/ })
+      .click();
     const photo = page.getByRole("dialog", {
       name: "Фото для печати",
       exact: true,
@@ -172,12 +196,9 @@ test("person: bilingual refresh, final characters, real preview and immutable or
       .click();
     await expect(photo).toHaveCount(0);
     await expect(
-      details.getByRole("img", { name: "Фото получателя" }),
+      person.getByRole("img", { name: "Фото получателя" }),
     ).toBeVisible();
-    await details
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
-      .click();
-    await savedLegacyDraft(page);
+    await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
     await page.reload();
     expect((await f.read()).items[0].fullNameKz).toBe("Тексеру Әли Қасымұлы");
     expect((await f.read()).items[0].photoAssetId).toBeTruthy();
@@ -207,10 +228,17 @@ test("person: bilingual refresh, final characters, real preview and immutable or
       .getByRole("button", { name: "Просмотр PDF", exact: true })
       .first()
       .click();
-    const preview = page.getByRole("dialog", { name: "Предпросмотр PDF", exact: true });
-    await expect(preview.getByRole("img", { name: /^Страница 1 из/ })).toBeVisible();
+    const preview = page.getByRole("dialog", {
+      name: "Предпросмотр PDF",
+      exact: true,
+    });
+    await expect(
+      preview.getByRole("img", { name: /^Страница 1 из/ }),
+    ).toBeVisible();
     const pdf = await page.request.get(
-      (await preview.getByRole("link", { name: "Открыть PDF отдельно", exact: true }).getAttribute("href"))!,
+      (await preview
+        .getByRole("link", { name: "Открыть PDF отдельно", exact: true })
+        .getAttribute("href"))!,
     );
     expect(pdf.headers()["content-type"]).toContain("application/pdf");
     await page.screenshot({ path: path.join(evidence, "person-preview.png") });
@@ -231,7 +259,7 @@ test("person: bilingual refresh, final characters, real preview and immutable or
       });
     }
     await page.setViewportSize({ width: 1366, height: 768 });
-    await setLegacyKz(page, "Тексеру Әли Қасымұлы соңғы І");
+    await setPersonKz(page, "Тексеру Әли Қасымұлы соңғы І");
     await expect
       .poll(async () => (await f.read()).items[0].fullNameKz)
       .toBe("Тексеру Әли Қасымұлы соңғы І");
@@ -261,7 +289,9 @@ test("person: bilingual refresh, final characters, real preview and immutable or
     await correction
       .getByRole("button", { name: "Создать исправление", exact: true })
       .click();
-    await expect(page).not.toHaveURL(new RegExp(`/requests/${f.id}(?:/edit)?$`));
+    await expect(page).not.toHaveURL(
+      new RegExp(`/requests/${f.id}(?:/edit)?$`),
+    );
     await expect(page).toHaveURL(/\/requests\/[^/]+\/edit$/);
     const copyId = /requests\/([^/]+)/.exec(page.url())![1];
     expect(copyId).not.toBe(f.id);
@@ -291,7 +321,7 @@ test("person: bilingual refresh, final characters, real preview and immutable or
           documentCount: 2,
           confirmedSyntheticSource: true,
           officialUnsignedDelivery: "blocked409",
-        artifacts: files.map(({ bytes: _bytes, ...meta }) => meta),
+          artifacts: files.map(({ bytes: _bytes, ...meta }) => meta),
         },
         null,
         2,
@@ -306,7 +336,7 @@ test("network failure retains data, retry saves; concurrent editor conflict has 
   context,
 }) => {
   await login(page);
-  await newPerson(page);
+  await newTableRequest(page);
   await save(page);
   const url = page.url();
   await page.route("**/api/print-requests/*", (route) =>
@@ -342,7 +372,9 @@ test("network failure retains data, retry saves; concurrent editor conflict has 
     name: "Заявка изменена в другом окне",
   });
   await expect(conflict).toBeVisible();
-  await expect(conflict.getByRole("button", { name: "Закрыть диалог", exact: true })).toBeFocused();
+  await expect(
+    conflict.getByRole("button", { name: "Закрыть диалог", exact: true }),
+  ).toBeFocused();
   await other.keyboard.press("Tab");
   await expect(
     conflict.getByRole("button", {
@@ -361,22 +393,34 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
   page,
   browser,
 }) => {
-  test.setTimeout(720000);
+  // 74 original files plus aggregate jobs run serially on this isolated worker.
+  test.setTimeout(1500000);
   const f = await legacyPrintFixture(page, browser, {
     kind: "COMPANY",
     count: 12,
     extraSix: true,
+    renderTimeout: 1200000,
   });
   try {
     // All source forms use the explicitly synthetic photo. The canonical ZIP
     // may comprise several bounded parts; every original must occur once.
     const syntheticPhoto = await page.request.post("/api/photos", {
       headers: f.roles.operator.headers,
-      multipart: { file: { name: "shared-synthetic-blue.png", mimeType: "image/png", buffer: await fs.readFile(path.resolve(__dirname, "../../../tests/fixtures/source-photo.png")) } },
+      multipart: {
+        file: {
+          name: "shared-synthetic-blue.png",
+          mimeType: "image/png",
+          buffer: await fs.readFile(
+            path.resolve(__dirname, "../../../tests/fixtures/source-photo.png"),
+          ),
+        },
+      },
     });
     expect(syntheticPhoto.ok(), await syntheticPhoto.text()).toBe(true);
     const photo = await syntheticPhoto.json();
-    await f.patch((draft) => { for (const row of draft.items) row.photoAssetId = photo.id; });
+    await f.patch((draft) => {
+      for (const row of draft.items) row.photoAssetId = photo.id;
+    });
     const before = await f.read();
     expect(before.items).toHaveLength(12);
     await page
@@ -402,6 +446,146 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
     expect(
       issued.documents.filter((x) => x.templateId === "ps-witness"),
     ).toHaveLength(1);
+    // These unchanged NEUTRAL_FORMS_V1 templates use frozen legacy slots.
+    // Their catalog fields are not the actual name-language merge contract.
+    const printContracts: Record<
+      string,
+      {
+        count: number;
+        version: number;
+        sha256: string;
+        nameKz: boolean;
+        positionKz: boolean;
+      }
+    > = {
+      "pb-card": {
+        count: 12,
+        version: 18,
+        sha256:
+          "edd414481ae70bc82a170494cf668d9963db007b3946bd2f9e2f766ce2589ab6",
+        nameKz: false,
+        positionKz: true,
+      },
+      "pb-protocol": {
+        count: 12,
+        version: 13,
+        sha256:
+          "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+        nameKz: false,
+        positionKz: true,
+      },
+      "ptm-card": {
+        count: 5,
+        version: 18,
+        sha256:
+          "5c79ada917fcca2ce83f0693853ba6ec76446f7c14892115101f1e6e10189881",
+        nameKz: false,
+        positionKz: true,
+      },
+      "ptm-protocol": {
+        count: 5,
+        version: 13,
+        sha256:
+          "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+        nameKz: false,
+        positionKz: true,
+      },
+      "ps-card": {
+        count: 1,
+        version: 19,
+        sha256:
+          "78f97e1c1fe91f6229ba40581d6f6c2fb21df6a107d490b71e93d93695faadd1",
+        nameKz: false,
+        positionKz: true,
+      },
+      "ps-protocol": {
+        count: 1,
+        version: 13,
+        sha256:
+          "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+        nameKz: false,
+        positionKz: false,
+      },
+      "ps-witness": {
+        count: 1,
+        version: 15,
+        sha256:
+          "4d6827fd5963c16894758da82f6a46cd7fcdccc490254be638ccbfecb39bda35",
+        nameKz: true,
+        positionKz: true,
+      },
+    };
+    const templateManifest = JSON.parse(
+      await fs.readFile(
+        path.resolve(__dirname, "../../../assets/templates/manifest.json"),
+        "utf8",
+      ),
+    ) as {
+      templates: Array<{
+        id: string;
+        version: number;
+        file: string;
+        sha256: string;
+      }>;
+    };
+    const frozenTemplates = (
+      issued.issuances[0].snapshot as {
+        draft: unknown;
+        templates: Array<{
+          templateId: string;
+          version: string;
+          checksum: string;
+          approved: boolean;
+        }>;
+      }
+    ).templates;
+    expect(
+      [...new Set(issued.documents.map((doc) => doc.templateId))].sort(),
+    ).toEqual(Object.keys(printContracts).sort());
+    for (const [templateId, contract] of Object.entries(printContracts)) {
+      expect(
+        issued.documents.filter((doc) => doc.templateId === templateId),
+      ).toHaveLength(contract.count);
+      const template = templateManifest.templates.find(
+        (entry) => entry.id === templateId,
+      )!;
+      expect(template.version).toBe(contract.version);
+      expect(template.sha256).toBe(contract.sha256);
+      expect(
+        createHash("sha256")
+          .update(
+            await fs.readFile(
+              path.resolve(
+                __dirname,
+                "../../../assets/templates",
+                template.file,
+              ),
+            ),
+          )
+          .digest("hex"),
+      ).toBe(contract.sha256);
+      expect(
+        frozenTemplates.find((entry) => entry.templateId === templateId),
+      ).toMatchObject({
+        version: String(contract.version),
+        checksum: contract.sha256,
+        approved: true,
+      });
+    }
+    // The renderer's one-name slot never authorizes losing the KZ source facts.
+    expect(issued.items).toEqual(edited.items);
+    for (const person of edited.items) {
+      const frozen = issued.issuances[0].snapshot.draft.items.find(
+        (row) => row.id === person.id,
+      )!;
+      expect(frozen).toMatchObject({
+        id: person.id,
+        fullNameRu: person.fullNameRu,
+        fullNameKz: person.fullNameKz,
+        positionRu: person.positionRu,
+        positionKz: person.positionKz,
+      });
+    }
     const files = await keepLegacyOriginals(
       page,
       f.id,
@@ -409,14 +593,22 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
     );
     expect(files).toHaveLength(74);
     const originalSources = issued.artifacts.filter(
-      (artifact) => artifact.provenance === "ORIGINAL" && artifact.format !== "ZIP",
+      (artifact) =>
+        artifact.provenance === "ORIGINAL" && artifact.format !== "ZIP",
     );
     expect(originalSources).toHaveLength(75);
-    expect(originalSources.filter((artifact) => artifact.format === "DOCX")).toHaveLength(37);
-    expect(originalSources.filter((artifact) => artifact.format === "PDF")).toHaveLength(37);
-    expect(originalSources.filter((artifact) => artifact.format === "XLSX")).toHaveLength(1);
+    expect(
+      originalSources.filter((artifact) => artifact.format === "DOCX"),
+    ).toHaveLength(37);
+    expect(
+      originalSources.filter((artifact) => artifact.format === "PDF"),
+    ).toHaveLength(37);
+    expect(
+      originalSources.filter((artifact) => artifact.format === "XLSX"),
+    ).toHaveLength(1);
     const canonicalParts = issued.artifacts.filter(
-      (artifact) => artifact.provenance === "ORIGINAL" && artifact.format === "ZIP",
+      (artifact) =>
+        artifact.provenance === "ORIGINAL" && artifact.format === "ZIP",
     );
     expect(canonicalParts.length).toBeGreaterThan(0);
     const internalZipBytes = await internalCanonicalZipBytes(page, issued);
@@ -429,7 +621,9 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
       const bytes = internalZipBytes.get(artifact.id)!;
       expect(bytes.length).toBeGreaterThan(0);
       expect(bytes.length).toBeLessThanOrEqual(100 * 1024 * 1024);
-      expect(createHash("sha256").update(bytes).digest("hex")).toBe(artifact.sha256);
+      expect(createHash("sha256").update(bytes).digest("hex")).toBe(
+        artifact.sha256,
+      );
       const manifest = JSON.parse(zipText(bytes, "manifest.json")) as {
         complete: boolean;
         issuanceId: string;
@@ -449,13 +643,26 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
       expect(manifest.partCount || 1).toBe(canonicalParts.length);
       expect(manifest.wholeExpectedCount || manifest.expectedCount).toBe(75);
       for (const entry of manifest.files) {
-        const source = originalSources.find((candidate) => candidate.id === entry.id);
+        const source = originalSources.find(
+          (candidate) => candidate.id === entry.id,
+        );
         expect(source, `Unexpected ZIP source ${entry.id}`).toBeDefined();
         expect(entry.sha256).toBe(source!.sha256);
-        expect(createHash("sha256").update(zipEntry(bytes, entry.file)).digest("hex")).toBe(source!.sha256);
+        expect(
+          createHash("sha256")
+            .update(zipEntry(bytes, entry.file))
+            .digest("hex"),
+        ).toBe(source!.sha256);
         coveredSourceIds.push(entry.id);
       }
-      await fs.writeFile(path.join(evidence, `company-${f.id}`, artifact.fileName || `${artifact.id}.zip`), bytes);
+      await fs.writeFile(
+        path.join(
+          evidence,
+          `company-${f.id}`,
+          artifact.fileName || `${artifact.id}.zip`,
+        ),
+        bytes,
+      );
       zipParts.push({
         artifactId: artifact.id,
         fileName: artifact.fileName,
@@ -467,7 +674,9 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
         manifest,
       });
     }
-    expect(coveredSourceIds.sort()).toEqual(originalSources.map((artifact) => artifact.id).sort());
+    expect(coveredSourceIds.sort()).toEqual(
+      originalSources.map((artifact) => artifact.id).sort(),
+    );
     expect(new Set(coveredSourceIds).size).toBe(75);
     expect(zipParts.map((part) => part.index).sort((a, b) => a - b)).toEqual(
       Array.from({ length: canonicalParts.length }, (_, index) => index),
@@ -485,10 +694,18 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
       ]
         .map((x) => x[1])
         .join(" ");
+      const contract = printContracts[doc.templateId];
+      expect(contract, `Unreviewed template ${doc.templateId}`).toBeDefined();
       expect(text).toContain(person.fullNameRu);
-      if (doc.templateId !== "pb-card") expect(text).toContain(person.fullNameKz);
-      for (const other of issued.items.filter((x) => x.id !== person.id))
+      if (contract.nameKz) expect(text).toContain(person.fullNameKz);
+      else expect(text).not.toContain(person.fullNameKz);
+      expect(text).toContain(person.positionRu);
+      if (contract.positionKz) expect(text).toContain(person.positionKz);
+      else expect(text).not.toContain(person.positionKz);
+      for (const other of issued.items.filter((x) => x.id !== person.id)) {
         expect(text).not.toContain(other.fullNameRu);
+        expect(text).not.toContain(other.fullNameKz);
+      }
     }
     await fs.writeFile(
       path.join(evidence, "company-12-18-result.json"),
@@ -501,13 +718,20 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
           documentCount: 37,
           originalSourceArtifactCount: originalSources.length,
           canonicalZipPartCount: canonicalParts.length,
-          actualOriginalArtifactCount: originalSources.length + canonicalParts.length,
+          actualOriginalArtifactCount:
+            originalSources.length + canonicalParts.length,
           canonicalZipCoverage: zipParts,
-        originalFiles: files.map(({ bytes: _bytes, ...meta }) => meta),
+          originalFiles: files.map(({ bytes: _bytes, ...meta }) => meta),
           originalItemIsolation: true,
-          photoFixture: "All twelve rows explicitly use the same small synthetic blue image; no real portrait or no-photo ZIP success claimed",
-          bilingualSourcePreserved: issued.items.every((row) => !!row.fullNameRu && !!row.fullNameKz),
-          frozenPbCardNameScope: "Current unchanged PB card prints RU only; individual protocol and other supported forms retain their existing bilingual name mappings",
+          photoFixture:
+            "All twelve rows explicitly use the same small synthetic blue image; no real portrait or no-photo ZIP success claimed",
+          bilingualSourcePreserved: issued.items.every(
+            (row) => !!row.fullNameRu && !!row.fullNameKz,
+          ),
+          frozenTemplateLanguageContracts: printContracts,
+          sourceAndSnapshotKzPreserved: true,
+          frozenNameScope:
+            "The seven exact approved template versions retain their existing slots: PS witness prints separate RU/KZ names; PB/PTM cards/protocols and PS card/protocol print the RU name. Position remains bilingual except the existing PS protocol RU qualification slot.",
           officialUnsignedDelivery: "blocked409",
         },
         null,
@@ -518,7 +742,7 @@ test("company: 12 independent bilingual recipients and 18 training choices produ
     await f.roles.close();
   }
 });
-test("251 imported rows are explained before apply; 250 save and all pages remain accessible by keyboard", async ({
+test("251 source rows allow explicit exclusion; all selected 250 save without truncation and reimport recognizes the existing source rows", async ({
   page,
 }) => {
   const started = Date.now();
@@ -527,7 +751,7 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
     if (request.url().includes("defaults")) defaultsRequests++;
   });
   await login(page);
-  await newPerson(page);
+  await newTableRequest(page);
   const requestId = /requests\/([^/]+)/.exec(page.url())![1];
   const requestUrl = page.url();
   await page
@@ -535,9 +759,7 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
     .click();
   await assertTechnicalBlankRemoval(page);
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page
     .getByLabel("Или вставьте таблицу с заголовками")
     .fill(
@@ -545,17 +767,24 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
         Array.from({ length: 251 }, (_, i) => `Строка ${i + 1}`).join("\n"),
     );
   await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
     .click();
-  await expect(
-    page.getByText(/После импорта получится 251 получателей/),
-  ).toBeVisible();
+  expect(LIMITS.rows).toBeGreaterThanOrEqual(251);
+  await expect(page.getByText("Прочитано: 251", { exact: true })).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Добавить 251 строк в черновик" }),
-  ).toBeDisabled();
+  ).toBeEnabled();
   await page.screenshot({
-    path: path.join(evidence, "import-251-limit.png"),
+    path: path.join(evidence, "import-251-selection.png"),
   });
+  while (
+    !(await page
+      .getByLabel("Импортировать исходную строку 252", { exact: true })
+      .count())
+  )
+    await page
+      .getByRole("button", { name: /^Показать следующие \d+ строк$/ })
+      .click();
   await page
     .getByLabel("Импортировать исходную строку 252", { exact: true })
     .uncheck();
@@ -598,9 +827,7 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
       2,
     ),
   );
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page
     .getByLabel("Или вставьте таблицу с заголовками")
     .fill(
@@ -608,7 +835,7 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
         Array.from({ length: 251 }, (_, i) => `Строка ${i + 1}`).join("\n"),
     );
   await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
     .click();
   await expect(
     page.getByText("Уже добавлено из источника: 250", { exact: true }),
@@ -618,7 +845,7 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
       name: "Добавить 1 строк в черновик",
       exact: true,
     }),
-  ).toBeDisabled();
+  ).toBeEnabled();
   await page
     .getByRole("button", { name: "Закрыть диалог", exact: true })
     .click();
@@ -633,9 +860,7 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
   await page.screenshot({
     path: path.join(evidence, "import-250-saved.png"),
   });
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   for (const name of ["Заказчики", "Архив", "Настройки", "Заявки"]) {
@@ -655,7 +880,9 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
         requestId,
         requestUrl,
         sourceRows: 251,
-        capacityPreventedBeforeApply: true,
+        currentRequestCapacity: LIMITS.rows,
+        sourceFitsCapacity: true,
+        explicitExcludedRow: 252,
         excluded: 1,
         savedRows: saved.items.length,
         reimportRows: repeated.items.length,
@@ -670,7 +897,7 @@ test("251 imported rows are explained before apply; 250 save and all pages remai
   );
 });
 
-test("keyboard creates and validates a person, traps focus in details, then generates after an actual director decision", async ({
+test("keyboard creates and validates a person, traps focus in the photo dialog, then generates after an actual director decision", async ({
   page,
   browser,
 }) => {
@@ -680,18 +907,58 @@ test("keyboard creates and validates a person, traps focus in details, then gene
   try {
     await page.getByRole("link", { name: "Новая заявка", exact: true }).focus();
     await page.keyboard.press("Enter");
-    await keyboardCreateRequestWithWorkerDocument(page, "PERSON");
-    const name = page.getByLabel("ФИО, строка 1", { exact: true });
-    await name.focus();
-    await page.keyboard.insertText("Клавиатурный Сценарий");
-    const detailsButton = page.getByRole("button", {
-      name: "Детали получателя 1",
-      exact: true,
-    });
-    await detailsButton.focus();
-    await page.keyboard.press("Enter");
+    await keyboardCheck(
+      page,
+      page.getByRole("radio", { name: /^Физическое лицо/ }),
+    );
+    await keyboardActivate(
+      page,
+      page.getByRole("button", { name: "Далее", exact: true }),
+    );
+    const person = page.locator(".person-editor");
+    await keyboardEnter(
+      page,
+      person.getByLabel("ФИО", { exact: true }),
+      "Клавиатурный Сценарий",
+    );
+    await keyboardEnter(
+      page,
+      person.getByLabel("Должность", { exact: true }),
+      "Синтетический инженер",
+    );
+    await keyboardActivate(
+      page,
+      person.getByRole("button", { name: "Далее", exact: true }),
+    );
+    await keyboardActivate(
+      page,
+      person.getByRole("button", { name: "Рабочий", exact: true }),
+    );
+    await keyboardActivate(
+      page,
+      person.getByRole("button", { name: "Далее", exact: true }),
+    );
+    await keyboardActivate(
+      page,
+      person.getByRole("button", { name: "БиОТ", exact: true }),
+    );
+    await keyboardActivate(
+      page,
+      person.getByRole("button", { name: "Готово", exact: true }),
+    );
+    // This unchanged BIOT worker form does not require a printed photo.
+    // Optional personal photo stays in the identity details; reach it by keyboard.
+    await keyboardActivate(
+      page,
+      person.getByRole("button", { name: "Изменить ФИО и должность", exact: true }),
+    );
+    await keyboardActivate(page, person.locator(".person-additional > summary"));
+    await keyboardActivate(
+      page,
+      person.getByRole("button", { name: "Добавить фото", exact: true }),
+    );
     const details = page.getByRole("dialog", {
-      name: "Настройки строки 1",
+      name: "Фото для печати",
       exact: true,
     });
     await expect(details).toBeVisible();
@@ -712,10 +979,15 @@ test("keyboard creates and validates a person, traps focus in details, then gene
       ).toBe(true);
     }
     await details
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
+      .getByRole("button", { name: "Закрыть диалог", exact: true })
       .focus();
     await page.keyboard.press("Enter");
-    await savedLegacyDraft(page);
+    await expect(details).toHaveCount(0);
+    await keyboardActivate(
+      page, person.getByRole("button", { name: "Готово", exact: true }),
+    );
+    await expect(person.locator('[data-person-stage="summary"]')).toBeVisible();
+    await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
     const id = /requests\/([^/]+)/.exec(page.url())![1];
     const current = await readPrintDetail(page, id);
     current.items[0].positionRu = "Синтетический инженер";
@@ -726,7 +998,7 @@ test("keyboard creates and validates a person, traps focus in details, then gene
         trainingSubject: "Тестовая программа БиОТ",
         trainingStart: "2026-10-01",
         trainingEnd: "2026-10-02",
-        protocolDate: "2026-10-02",
+        protocolDate: "2026-10-03",
         documentDate: "2026-10-03",
       };
     for (const row of current.items)
@@ -778,21 +1050,28 @@ test("XLSX sheet selection, saved mapping, leading zeros, partial rows and row r
 }) => {
   const mappingName = `Контроль Excel ${Date.now()}`;
   await login(page);
-  await newPerson(page);
+  await newTableRequest(page);
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
   await assertTechnicalBlankRemoval(page);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page
     .getByLabel("Табличный файл")
     .setInputFiles(path.join(__dirname, "fixtures/import-multiple.xlsx"));
-  await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
-    .click();
   await page.getByLabel("Лист таблицы").selectOption("Получатели");
+  await expect(page.getByText("Прочитано: 2", { exact: true })).toBeVisible();
+  if (
+    !(await page
+      .getByLabel("Поле для колонки Сотрудник", { exact: true })
+      .isVisible())
+  )
+    await page
+      .getByRole("button", {
+        name: "Изменить сопоставление колонок",
+        exact: true,
+      })
+      .click();
   await expect(
     page.getByLabel("Поле для колонки Сотрудник", { exact: true }),
   ).toBeVisible();
@@ -805,6 +1084,10 @@ test("XLSX sheet selection, saved mapping, leading zeros, partial rows and row r
   await page
     .getByLabel("Поле для колонки Табельный код", { exact: true })
     .selectOption("externalBasisNumber");
+  await page
+    .getByRole("dialog")
+    .locator(".import-document-options > summary")
+    .click();
   await page
     .getByRole("combobox", {
       name: "Документ для импортируемых строк",
@@ -877,16 +1160,23 @@ test("XLSX sheet selection, saved mapping, leading zeros, partial rows and row r
   ).json();
   expect(afterReload.items).toEqual(beforeReload.items);
   expect(afterReload.items[0].assignments[0].externalBasisNumber).toBe("00123");
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page
     .getByLabel("Табличный файл")
     .setInputFiles(path.join(__dirname, "fixtures/import-multiple.xlsx"));
-  await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
-    .click();
   await page.getByLabel("Лист таблицы").selectOption("Получатели");
+  await expect(page.getByText("Прочитано: 2", { exact: true })).toBeVisible();
+  if (
+    !(await page
+      .getByLabel("Поле для колонки Сотрудник", { exact: true })
+      .isVisible())
+  )
+    await page
+      .getByRole("button", {
+        name: "Изменить сопоставление колонок",
+        exact: true,
+      })
+      .click();
   await page
     .getByRole("dialog")
     .locator(".import-mapping-options > summary")

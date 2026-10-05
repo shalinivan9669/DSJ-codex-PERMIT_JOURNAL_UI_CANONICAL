@@ -6,8 +6,9 @@ import { execFileSync } from "node:child_process";
 import { approveFinalFixture, openFinalPanel } from "./final-approval-fixture";
 test.use({ trace: "off" });
 const evidence = path.resolve(
-  process.env.DEMO_E2E_EVIDENCE ||
-    "../../docs/evidence/final-completion/delivery-three",
+  process.env.DEMO_E2E_EVIDENCE
+    ? path.join(process.env.DEMO_E2E_EVIDENCE, "delivery-three")
+    : "../../docs/evidence/final-completion/delivery-three",
 );
 const hash = (b: Buffer) => createHash("sha256").update(b).digest("hex");
 test("V08/V12: three saved people retain source order/profile/original bytes, unsigned official guards and explicit transfer without invented signed evidence", async ({
@@ -181,7 +182,11 @@ test("V08/V12: three saved people retain source order/profile/original bytes, un
     .toBe(12);
   const original = await get(`/print-requests/${request.id}`);
   expect(original.documents).toHaveLength(6);
-  expect(original.documents.filter((doc: { templateId: string }) => doc.templateId === "pb-protocol")).toHaveLength(3);
+  expect(
+    original.documents.filter(
+      (doc: { templateId: string }) => doc.templateId === "pb-protocol",
+    ),
+  ).toHaveLength(3);
   const files = original.artifacts.filter(
     (a: { documentId?: string; format: string }) =>
       a.documentId && ["PDF", "DOCX"].includes(a.format),

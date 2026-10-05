@@ -6,7 +6,7 @@ import { bootstrap } from "../../apps/api/src/main";
 import { db } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
 import { passwordHash } from "../../apps/api/src/auth";
-import { draftSchema } from "../../packages/contracts/src";
+import { draftSchema, LIMITS } from "../../packages/contracts/src";
 test("real Nest HTTP authentication, role revocation, CSRF, uploads and tenant boundary", async (t) => {
   assert.match(process.env.DATABASE_URL || "", /demo_test|demo_integration/);
   assertTestDatabase();
@@ -379,7 +379,7 @@ test("real Nest HTTP authentication, role revocation, CSRF, uploads and tenant b
         );
         const large = await call("/print-requests", "POST", {
           kind: "PERSON",
-          title: "X".repeat(2 * 1024 * 1024),
+          title: "X".repeat(LIMITS.jsonBytes + 1),
         });
         assert.equal(large.status, 413);
         assert.ok(large.headers.get("x-correlation-id"));

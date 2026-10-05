@@ -14,11 +14,15 @@ const request = (kind: "PERSON" | "COMPANY"): Draft => ({
   status: "DRAFT",
 });
 
-test("person payload persists its person's name and updates when the operator changes it", () => {
+test("person payload preserves a historical title; generic display follows the saved person", () => {
   const draft = request("PERSON");
-  assert.equal(draftPayload(draft).title, "Тестов Оператор");
+  assert.equal(draftPayload(draft).title, "Старое название");
+  assert.equal(personRequestName(draft), "");
   draft.items[0].fullNameRu = "Тестов Новый";
-  assert.equal(draftPayload(draft).title, "Тестов Новый");
+  assert.equal(draftPayload(draft).title, "Старое название");
+  draft.title = "Новая заявка на человека";
+  assert.equal(personRequestName(draft), "Тестов Новый");
+  assert.equal(draftPayload(draft).title, "Новая заявка на человека");
   assert.equal(draftPayload(draft).customerId, null);
 });
 

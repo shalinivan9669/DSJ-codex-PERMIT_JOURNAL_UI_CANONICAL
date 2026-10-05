@@ -9,7 +9,7 @@ import {
 
 async function workspace(
   page: Page,
-  kind: "PERSON" | "COMPANY" = "PERSON",
+  kind: "PERSON" | "COMPANY" = "COMPANY",
   topics = false,
   professions = false,
 ) {
@@ -311,7 +311,7 @@ test("actual course selection and compact dates show the current kit and preserv
 test("standard and saved topic choices are scoped to the active course, require reviewed replacement and preserve personal exceptions after reload", async ({
   page,
 }, testInfo) => {
-  const state = await workspace(page, "PERSON", true);
+  const state = await workspace(page, "COMPANY", true);
   await page
     .getByText("Параметры обучения и документов", { exact: true })
     .click();
@@ -412,7 +412,7 @@ test("standard and saved topic choices are scoped to the active course, require 
 test("mixed courses distinguish the common position from optional PS profession and qualification and preserve linked forms after reload", async ({
   page,
 }, testInfo) => {
-  const state = await workspace(page, "PERSON", false, true);
+  const state = await workspace(page, "COMPANY", false, true);
   await expect(
     page.getByLabel("Должность / профессия / квалификация · RU, строка 1", {
       exact: true,
@@ -511,7 +511,9 @@ test("mixed courses distinguish the common position from optional PS profession 
   await dialog
     .getByRole("button", { name: "Закрыть диалог", exact: true })
     .click();
-  const savedAssignments = structuredClone(state.current().items[0].assignments);
+  const savedAssignments = structuredClone(
+    state.current().items[0].assignments,
+  );
   state.current().issuedAssignments = [
     { rowId: "first", assignmentId: "pb", issuanceId: "issued-pb-stage" },
   ];

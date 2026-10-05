@@ -1,0 +1,44 @@
+{
+  "reviewedUtc": "2026-10-05T21:23:15.224792+00:00",
+  "buildId": "uypqU8MKNYMwsb1NNghQ6",
+  "requestId": "e9663fb7-6627-4a41-8f01-955ebeb5f3c0",
+  "inspectionSha256": "3993080030a35f3d5548b694341dd75440e85f3a19470fca9cca05e4557f555b",
+  "pdfStatus": "PASS_ROOT_VIEWED_ALL_5_PAGES",
+  "pdfChecks": [
+    "Name and position readable",
+    "PS period RU/KZ 1-30 September 2026",
+    "Commission 18 October, issuance 20 October remain distinct",
+    "Document and related protocol numbers match",
+    "Photo displayed in card",
+    "No observed overlap or clipping",
+    "Synthetic/demo markings visible"
+  ],
+  "images": [
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-card-pdf-page-1.png",
+      "sha256": "870a7c492634bc0911cdd109fb2574ee91ee942258ac671a20d80aab81db9d26"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-card-pdf-page-2.png",
+      "sha256": "ea8056560340c4a6fe8bdc63ba9b6c00135836266215bc1ce69ffdac9fbf650a"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-witness-pdf-page-1.png",
+      "sha256": "76f3903b8c5d39ae4141cbf4fca7e47cb498380b58ade3999272c91588996ed9"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-witness-pdf-page-2.png",
+      "sha256": "58d2e793632dc2e6a37f0b261248313f3ddac0ebd8572cdba80463886c6680ac"
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-protocol-pdf-page-1.png",
+      "sha256": "ecd926d52348e99649d8cd4124f0d6f39dda9440bcbb6687e81c2fe89ac4bee8"
+    }
+  ],
+  "independentDocxStatus": "PENDING",
+  "screenshotsViewed": [
+    "person-390.png",
+    "ps-witness-preview.png"
+  ],
+  "scope": "Current synthetic PERSON issuance; no legal certification or physical print claim."
+}

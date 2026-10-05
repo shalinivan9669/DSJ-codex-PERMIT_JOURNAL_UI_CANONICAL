@@ -1,0 +1,459 @@
+{
+  "schema": "SANITIZED_BUSINESS_ATTEMPTS_1",
+  "notFullIntegrationPass": true,
+  "fullIntegrationResult": {
+    "passed": 209,
+    "failed": 1,
+    "skipped": 0
+  },
+  "attempts": [
+    {
+      "source": "docs/evidence/operator-details-ux-20261005/preview/business-regression.json",
+      "sourceSha256": "fc9bbb3b64a8c2df77631e6b1ccb6b66387f523a568774bddb534680f9171965",
+      "schema": "executed-daily-workflows-v1",
+      "synthetic": true,
+      "productionUseAllowed": false,
+      "executedAt": "2026-10-05T17:50:31.407Z",
+      "executionLayer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+      "status": "PASS",
+      "wallMs": 389578.3,
+      "measurement": "apiActionCount counts recorded calls to actual API service functions, including explicit denied/replayed calls. It is not clicks, human steps or SQL count. automationActiveMs sums API service wall durations, including server validation and import/XLSX/ZIP derivatives; renderWorkerMs separately sums canonical document worker durations including conversion. Wall time also includes assertions, fixture setup, file IO and evidence inspection. Human time, re-entry and ROI were not measured.",
+      "excluded": [
+        "V01 and V07 have separately owned browser evidence",
+        "No claim of human usability, ROI, legal approval, Microsoft Word verification or physical printing"
+      ],
+      "scenarios": [
+        {
+          "id": "V10",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Demo-only supported setup yields approved pinned form/profile/counters",
+            "Missing result produces contextual validation and no number",
+            "Explicit synthetic result then actual finalized PDF with no customer, order, payment or portal dependency"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 9,
+          "automationActiveMs": 2958.35,
+          "renderWorkerMs": 41260.33
+        },
+        {
+          "id": "FIXTURE_SETUP",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Fixture history was finalized by real product API and all jobs actually rendered, not inserted as fake finalized records"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 19,
+          "automationActiveMs": 10973.4,
+          "renderWorkerMs": 230861.97
+        },
+        {
+          "id": "V02",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Stable person lookup, old/new employer periods persist separately",
+            "Old request snapshot and PDF hash unchanged after current employer update",
+            "New employer request has explicit UNKNOWN and empty result"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 8,
+          "automationActiveMs": 88.6,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V03",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Three persisted people each retain two services and their mandatory personal document/protocol pairs",
+            "Shared value change resolves across twelve output assignments on reopen while individual position exception persists"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 4,
+          "automationActiveMs": 167.46,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V04",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Actual TSV parse retains leading-zero personnel identifiers",
+            "Exact fixture diff 1 added / 1 changed / 1 missing / 4 unchanged",
+            "One atomic revision with idempotent replay; missing person and assignments retained",
+            "Explicit control confirmation goes stale after significant edit; clarification names only current source row, sent=false"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 13,
+          "automationActiveMs": 1205.13,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V05",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Second operator sees persisted two-event order and assigned unfinished result",
+            "Actual result save precedes closing its task",
+            "Agreed missing material remains pending; order completion is rejected"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 13,
+          "automationActiveMs": 373.19,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V06",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "All five fixture states have persisted history-backed review records",
+            "Exactly two confirmed people get clean new drafts; retries reuse same IDs",
+            "Unknown, externally satisfied and explicitly ended cases cannot create repeats",
+            "Dates not inferred from a fabricated legal interval"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 22,
+          "automationActiveMs": 324.4,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V08",
+          "status": "PASS",
+          "layer": "API_UNSIGNED_PUBLIC_EXPORT_GUARD_AND_CANONICAL_SERIALIZER_ASSEMBLY_OF_REAL_SAVED_BYTES",
+          "assertions": [
+            "Unsigned official XLSX and ZIP public export remain denied until mandatory signing completes",
+            "Configured source order and leading zeros appear in canonical low-level XLSX serialization of frozen rows",
+            "Twelve actual saved files for mandatory personal/protocol pairs keep original hashes under friendly names in low-level assembly",
+            "Registry, inventory and cover text included automatically",
+            "Repeated existing file download changes neither bytes nor number count",
+            "Low-level serialization does not create handover; explicit synthetic internal handover names exactly one existing artifact"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 8,
+          "automationActiveMs": 43.86,
+          "renderWorkerMs": 1888.79
+        },
+        {
+          "id": "V09",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Person search and saved immutable document detail reach the historical number; public registry withholds unsigned rows",
+            "Redownload preserves original SHA and number",
+            "Empty correction reason rejected; corrected edition validated, finalized and rendered under new document IDs while original SHA and issuance link remain"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 16,
+          "automationActiveMs": 3387.83,
+          "renderWorkerMs": 93194.78
+        },
+        {
+          "id": "V11",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Existing payer reused, agreed 3→2 quantity change has durable explicit basis",
+            "30000→20000 KZT subtotal and 5000 KZT payment computed from integer minor units",
+            "Unknown tax remains unknown; no regulated invoice fabricated",
+            "Payment write denied to operator; ordinary real issuance independent of commercial workflow"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 12,
+          "automationActiveMs": 235.62,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V12",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Dossier includes saved available bytes and explicitly missing signed copy without inventing it",
+            "Export independently hash-verified and marked incomplete",
+            "Foreign tenant and employer full-center endpoint denied; customer membership allows only owned document",
+            "External backup/restore evidence NOT_PROVIDED; actual restore acceptance remains a separate requirement"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 13,
+          "automationActiveMs": 1452.41,
+          "renderWorkerMs": 0
+        }
+      ],
+      "failedAttemptCount": 0,
+      "rawSnapshotsAndErrorsExcluded": true
+    },
+    {
+      "source": "docs/evidence/operator-details-ux-20261005/preview/business-final.json",
+      "sourceSha256": "1c93b394322f6654bf62b83eab273a5fbaddacdfb26de71d36c67145a57f0212",
+      "schema": "executed-daily-workflows-v1",
+      "synthetic": true,
+      "productionUseAllowed": false,
+      "executedAt": "2026-10-05T18:02:45.718Z",
+      "executionLayer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+      "status": "FAIL",
+      "wallMs": 267480.85,
+      "measurement": "apiActionCount counts recorded calls to actual API service functions, including explicit denied/replayed calls. It is not clicks, human steps or SQL count. automationActiveMs sums API service wall durations, including server validation and import/XLSX/ZIP derivatives; renderWorkerMs separately sums canonical document worker durations including conversion. Wall time also includes assertions, fixture setup, file IO and evidence inspection. Human time, re-entry and ROI were not measured.",
+      "excluded": [
+        "V01 and V07 have separately owned browser evidence",
+        "No claim of human usability, ROI, legal approval, Microsoft Word verification or physical printing"
+      ],
+      "scenarios": [
+        {
+          "id": "V10",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Demo-only supported setup yields approved pinned form/profile/counters",
+            "Missing result produces contextual validation and no number",
+            "Explicit synthetic result then actual finalized PDF with no customer, order, payment or portal dependency"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 9,
+          "automationActiveMs": 4437.37,
+          "renderWorkerMs": 54330.25
+        },
+        {
+          "id": "FIXTURE_SETUP",
+          "status": "FAIL",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 19,
+          "automationActiveMs": 9729.94,
+          "renderWorkerMs": 198470.67
+        }
+      ],
+      "failedAttemptCount": 0,
+      "rawSnapshotsAndErrorsExcluded": true
+    },
+    {
+      "source": "docs/evidence/operator-details-ux-20261005/preview/business-isolated-final.json",
+      "sourceSha256": "9eeae964beb5f4f2d82db60cd7731735f959afa57a28dad27d4bd304c460ae2e",
+      "schema": "executed-daily-workflows-v1",
+      "synthetic": true,
+      "productionUseAllowed": false,
+      "executedAt": "2026-10-05T18:26:14.929Z",
+      "executionLayer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+      "status": "PASS",
+      "wallMs": 309577.56,
+      "measurement": "apiActionCount counts recorded calls to actual API service functions, including explicit denied/replayed calls. It is not clicks, human steps or SQL count. automationActiveMs sums API service wall durations, including server validation and import/XLSX/ZIP derivatives; renderWorkerMs separately sums canonical document worker durations including conversion. Wall time also includes assertions, fixture setup, file IO and evidence inspection. Human time, re-entry and ROI were not measured.",
+      "excluded": [
+        "V01 and V07 have separately owned browser evidence",
+        "No claim of human usability, ROI, legal approval, Microsoft Word verification or physical printing"
+      ],
+      "scenarios": [
+        {
+          "id": "V10",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Demo-only supported setup yields approved pinned form/profile/counters",
+            "Missing result produces contextual validation and no number",
+            "Explicit synthetic result then actual finalized PDF with no customer, order, payment or portal dependency"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 9,
+          "automationActiveMs": 2406.92,
+          "renderWorkerMs": 41716.25
+        },
+        {
+          "id": "FIXTURE_SETUP",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Fixture history was finalized by real product API and all jobs actually rendered, not inserted as fake finalized records"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 19,
+          "automationActiveMs": 6726.56,
+          "renderWorkerMs": 152550.1
+        },
+        {
+          "id": "V02",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Stable person lookup, old/new employer periods persist separately",
+            "Old request snapshot and PDF hash unchanged after current employer update",
+            "New employer request has explicit UNKNOWN and empty result"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 8,
+          "automationActiveMs": 70.26,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V03",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Three persisted people each retain two services and their mandatory personal document/protocol pairs",
+            "Shared value change resolves across twelve output assignments on reopen while individual position exception persists"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 4,
+          "automationActiveMs": 128,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V04",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Actual TSV parse retains leading-zero personnel identifiers",
+            "Exact fixture diff 1 added / 1 changed / 1 missing / 4 unchanged",
+            "One atomic revision with idempotent replay; missing person and assignments retained",
+            "Explicit control confirmation goes stale after significant edit; clarification names only current source row, sent=false"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 13,
+          "automationActiveMs": 1063.64,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V05",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Second operator sees persisted two-event order and assigned unfinished result",
+            "Actual result save precedes closing its task",
+            "Agreed missing material remains pending; order completion is rejected"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 13,
+          "automationActiveMs": 315.01,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V06",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "All five fixture states have persisted history-backed review records",
+            "Exactly two confirmed people get clean new drafts; retries reuse same IDs",
+            "Unknown, externally satisfied and explicitly ended cases cannot create repeats",
+            "Dates not inferred from a fabricated legal interval"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 22,
+          "automationActiveMs": 215.38,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V08",
+          "status": "PASS",
+          "layer": "API_UNSIGNED_PUBLIC_EXPORT_GUARD_AND_CANONICAL_SERIALIZER_ASSEMBLY_OF_REAL_SAVED_BYTES",
+          "assertions": [
+            "Unsigned official XLSX and ZIP public export remain denied until mandatory signing completes",
+            "Configured source order and leading zeros appear in canonical low-level XLSX serialization of frozen rows",
+            "Twelve actual saved files for mandatory personal/protocol pairs keep original hashes under friendly names in low-level assembly",
+            "Registry, inventory and cover text included automatically",
+            "Repeated existing file download changes neither bytes nor number count",
+            "Low-level serialization does not create handover; explicit synthetic internal handover names exactly one existing artifact"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 8,
+          "automationActiveMs": 36.26,
+          "renderWorkerMs": 1711.11
+        },
+        {
+          "id": "V09",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Person search and saved immutable document detail reach the historical number; public registry withholds unsigned rows",
+            "Redownload preserves original SHA and number",
+            "Empty correction reason rejected; corrected edition validated, finalized and rendered under new document IDs while original SHA and issuance link remain"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 16,
+          "automationActiveMs": 3402.65,
+          "renderWorkerMs": 96488.49
+        },
+        {
+          "id": "V11",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Existing payer reused, agreed 3→2 quantity change has durable explicit basis",
+            "30000→20000 KZT subtotal and 5000 KZT payment computed from integer minor units",
+            "Unknown tax remains unknown; no regulated invoice fabricated",
+            "Payment write denied to operator; ordinary real issuance independent of commercial workflow"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 12,
+          "automationActiveMs": 240.41,
+          "renderWorkerMs": 0
+        },
+        {
+          "id": "V12",
+          "status": "PASS",
+          "layer": "API_SERVICE_INTEGRATION_WITH_REAL_POSTGRESQL_AND_RENDER_WORKER",
+          "assertions": [
+            "Dossier includes saved available bytes and explicitly missing signed copy without inventing it",
+            "Export independently hash-verified and marked incomplete",
+            "Foreign tenant and employer full-center endpoint denied; customer membership allows only owned document",
+            "External backup/restore evidence NOT_PROVIDED; actual restore acceptance remains a separate requirement"
+          ],
+          "humanActiveMs": null,
+          "manualReentryCount": null,
+          "browserVerified": false,
+          "apiActionCount": 13,
+          "automationActiveMs": 1453.9,
+          "renderWorkerMs": 0
+        }
+      ],
+      "failedAttemptCount": 0,
+      "rawSnapshotsAndErrorsExcluded": true
+    }
+  ]
+}

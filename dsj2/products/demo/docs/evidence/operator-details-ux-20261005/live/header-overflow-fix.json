@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "source": "Real Codex in-app browser DOM geometry and screenshot, same saved COMPANY request",
+  "requestId": "ee15858a-b5de-49d1-a344-a04ceba16d40",
+  "browserViewportOverrideReset": true,
+  "before": {
+    "buildId": "9YDzL8TUp7IGaNOn-Ij1u",
+    "innerWidth": 788,
+    "clientWidth": 773,
+    "scrollWidth": 800,
+    "headingActionRight": 800.015625,
+    "screenshot": "company-final-9YDzL8-list.png"
+  },
+  "after": {
+    "buildId": "TWko2e-px8ie_96DA2zlp",
+    "innerWidth": 788,
+    "clientWidth": 773,
+    "scrollWidth": 773,
+    "headingActionRight": 751,
+    "screenshot": "company-final-TWko2e-list.png"
+  },
+  "tableKeepsOwnHorizontalScroll": true,
+  "businessDataModifiedByThisCheck": false
+}

@@ -1,0 +1,94 @@
+{
+  "status": "PASS",
+  "browser": "154.0.8037.95",
+  "pngNearByteLimit": 5237860,
+  "png20mp": 279263,
+  "jpeg20mp": 117644,
+  "overPixelLimitRejected": true,
+  "allocations": {
+    "bitmaps": [
+      {
+        "width": 1600,
+        "height": 1280
+      },
+      {
+        "width": 1600,
+        "height": 1280
+      },
+      {
+        "width": 1320,
+        "height": 1320
+      },
+      {
+        "width": 600,
+        "height": 800
+      }
+    ],
+    "canvases": [
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      },
+      {
+        "width": 300,
+        "height": 400
+      }
+    ]
+  }
+}

@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { loginIsolated } from "./operator-full-fix-session";
-import { fullSuiteApiCooldown } from "./operator-full-suite";
+import { fullSuiteApiCooldown, fullSuitePageApiCooldown } from "./operator-full-suite";
 import {
   applyBusinessRules,
   draftSchema,
@@ -99,7 +99,7 @@ async function create(
   }));
   const source = applyBusinessRules(
     draftSchema.parse({
-      kind: "PERSON",
+      kind: "COMPANY",
       schemaVersion: 2,
       demoMode: true,
       commonFields: { documentDate: "2026-10-06" },
@@ -145,7 +145,7 @@ async function create(
 }
 async function read(page: Page, id: string): Promise<Draft> {
   const response = await page.request.get(`/api/print-requests/${id}`);
-  expect(response.ok()).toBe(true);
+  expect(response.ok(), `REQUEST_READ_FAILED status=${response.status()} request=${id} body=${await response.text()}`).toBe(true);
   return response.json();
 }
 async function expand(details: Locator) {
@@ -269,24 +269,22 @@ for (const confirmed of [false, true])
     await root
       .getByLabel("Кому подтвердить результат", { exact: true })
       .selectOption("selected");
-    await root
-      .getByRole("button", {
-        name: "Проверить применение результатов",
-        exact: true,
-      })
-      .click();
     await expect(
-      root.getByRole("button", { name: "Подтвердить результаты", exact: true }),
-    ).toBeVisible();
+      root.getByRole("button", {
+        name: "Применить результат · 1 человек",
+        exact: true,
+      }),
+    ).toBeEnabled();
+    expect(facts(await read(page, fixture.id))).toEqual(facts(initial));
     await root
       .locator('[data-training-field="trainingSubject"]')
-      .fill("Синтетическая программа изменена после review");
+      .fill("Синтетическая программа изменена после подготовки");
     await expect(outcome()).toContainText(
       "Данные обучения изменились после подготовки",
     );
     await expect(
       root.getByRole("button", {
-        name: "Проверить применение результатов",
+        name: "Применить результат · 1 человек",
         exact: true,
       }),
     ).toBeDisabled();
@@ -296,15 +294,13 @@ for (const confirmed of [false, true])
         exact: true,
       })
       .click();
+    const beforeApply = await read(page, fixture.id);
+    expect(facts(beforeApply)).toEqual(facts(initial));
     await root
       .getByRole("button", {
-        name: "Проверить применение результатов",
+        name: "Применить результат · 1 человек",
         exact: true,
       })
-      .click();
-    const beforeApply = await read(page, fixture.id);
-    await root
-      .getByRole("button", { name: "Подтвердить результаты", exact: true })
       .click();
     await expect
       .poll(
@@ -732,7 +728,11 @@ test("UX13/R4 every supported category and personal form shows forced actual exp
     ),
   ];
   const observations = [];
-  for (const spec of specs) {
+  for (const [specIndex, spec] of specs.entries()) {
+    // Fifteen categories generate real editor/save/read traffic. Give the
+    // unchanged full-suite API window an idle boundary every three categories.
+    if (specIndex > 0 && specIndex % 3 === 0)
+      await fullSuitePageApiCooldown(page, evidence, `remaining-expiry-batch-${specIndex}`);
     const item = {
       ...newRecipient(),
       fullNameRu:
@@ -753,7 +753,7 @@ test("UX13/R4 every supported category and personal form shows forced actual exp
     };
     const source = applyBusinessRules(
       draftSchema.parse({
-        kind: "PERSON",
+        kind: "COMPANY",
         schemaVersion: 2,
         demoMode: true,
         items: [item],
@@ -792,7 +792,8 @@ test("UX13/R4 every supported category and personal form shows forced actual exp
       await expand(wrapper);
       await expand(wrapper.locator(".document-date-details"));
       const until = wrapper.getByLabel("Действителен до", { exact: true });
-      await expect(until).toHaveAttribute("readonly", "");
+      if (spec.direction === "PS") await expect(until).toBeDisabled();
+      else await expect(until).toBeEditable();
       await expect(until).toHaveValue(assignment.validUntil);
       expect(assignment.validUntil).toBe(
         spec.direction === "PS"
@@ -801,8 +802,10 @@ test("UX13/R4 every supported category and personal form shows forced actual exp
       );
       expect(assignment.fieldOrigins?.validUntil).toBe("AUTO");
       await expand(wrapper.locator(".assignment-help"));
-      await expect(wrapper).not.toContainText(
-        "Введённая вручную дата сохраняется",
+      await expect(wrapper).toContainText(
+        spec.direction === "PS"
+          ? "ПС — бессрочно. Дата окончания не указывается."
+          : "Введённая вручную или импортированная дата сохраняется",
       );
       if (
         spec.biot &&
@@ -820,6 +823,28 @@ test("UX13/R4 every supported category and personal form shows forced actual exp
         savedUntil: assignment.validUntil,
         savedOrigin: assignment.fieldOrigins?.validUntil,
       });
+    }
+    // Automatic values are defaults; an explicit personal expiry is source data.
+    // Exercise the actual editable field for every non-PS category, then change
+    // the issue date and verify the exception remains manual after saving/reload.
+    if (spec.direction !== "PS") {
+      const manualUntil = "2031-11-12";
+      const primaryBefore = saved.items[0].assignments.find((a) => a.id === primary.id)!;
+      await primaryFields.getByLabel("Действителен до", { exact: true }).fill(manualUntil);
+      await expect.poll(async () => {
+        const value = (await read(page, created.id)).items[0].assignments.find((a) => a.id === primary.id)!;
+        return { value: value.validUntil, origin: value.fieldOrigins?.validUntil };
+      }).toEqual({ value: manualUntil, origin: "MANUAL" });
+      await primaryFields.getByLabel("Дата документа", { exact: true }).fill("2026-10-10");
+      await expect.poll(async () => (await read(page, created.id)).items[0].assignments.find((a) => a.id === primary.id)?.documentDate).toBe("2026-10-10");
+      saved = await read(page, created.id);
+      const manual = saved.items[0].assignments.find((a) => a.id === primary.id)!;
+      expect(manual.validUntil).toBe(manualUntil);
+      expect(manual.fieldOrigins?.validUntil).toBe("MANUAL");
+      expect(manual.outcome).toEqual(primaryBefore.outcome);
+      expect(manual.templateId).toBe(primaryBefore.templateId);
+      await expect(primaryFields.getByLabel("Действителен до", { exact: true })).toHaveValue(manualUntil);
+      observations.push({ requestId: created.id, ...spec, templateId: manual.templateId, issueDate: manual.documentDate, displayed: manualUntil, savedUntil: manual.validUntil, savedOrigin: manual.fieldOrigins?.validUntil });
     }
     if (
       spec.biot === "INSPECTOR_SPECIAL" ||
@@ -850,6 +875,7 @@ test("UX13/R4 every supported category and personal form shows forced actual exp
     await page
       .getByRole("button", { name: "Детали получателя 1", exact: true })
       .click();
+    expect((await read(page, created.id)).items).toEqual(saved.items);
     for (const assignment of saved.items[0].assignments) {
       const wrapper = page.locator(`[data-assignment-id="${assignment.id}"]`);
       await expand(wrapper);

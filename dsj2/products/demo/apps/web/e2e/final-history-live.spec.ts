@@ -4,7 +4,6 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { approveFinalFixture, openFinalPanel } from "./final-approval-fixture";
-import { openLegacyPersonal } from "./operator-legacy-lifecycle-fixture";
 import { unsignedPublicState } from "./final-unsigned-public-qa";
 test.use({ trace: "off" });
 
@@ -341,10 +340,12 @@ test("real history UI preserves original files across search, damaged copy, reco
 
   await page.goto(`/requests/${auth.duplicateId}`);
   await page
-    .getByRole("button", { name: "Детали получателя 1", exact: true })
+    .locator(".person-document-list li")
+    .first()
+    .getByRole("button", { name: "Параметры", exact: true })
     .click();
   const detail = page.getByRole("dialog", {
-    name: "Настройки строки 1",
+    name: "Параметры документа",
     exact: true,
   });
   // LIVE kits contain both the credential and its mandatory companion. Edit
@@ -363,7 +364,7 @@ test("real history UI preserves original files across search, damaged copy, reco
     .getByLabel("Внешний номер основания", { exact: true })
     .fill("SYNTHETIC-NEW-ACTUAL-EVENT-2026-10");
   await detail
-    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .getByRole("button", { name: "Готово", exact: true })
     .click();
   await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   await page
@@ -423,12 +424,13 @@ test("real history UI preserves original files across search, damaged copy, reco
     .getByRole("button", { name: "Создать исправление", exact: true })
     .click();
   await expect(page).toHaveURL(/\/requests\/[^/]+\/edit$/);
-  const personal = await openLegacyPersonal(page);
+  const personal = page.locator(".person-editor");
+  await personal.getByRole("button", { name: "Изменить ФИО и должность", exact: true }).click();
   await personal
-    .getByLabel("Должность / профессия", { exact: true })
+    .getByLabel("Должность", { exact: true })
     .fill("Старший инженер");
   await personal
-    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .getByRole("button", { name: "Готово", exact: true })
     .click();
   await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   const corrected = await issue();

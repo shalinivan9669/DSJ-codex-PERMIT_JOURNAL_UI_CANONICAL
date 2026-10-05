@@ -1,0 +1,72 @@
+{
+  "status": "PASS_SOURCE_CHECKS_ONLY",
+  "capturedUtc": "2026-10-05T22:10:29.751143+00:00",
+  "runtimeBuildId": "iPAhpRSkuBMrPUIjjOnIx",
+  "sourceManifest": "runtime-source-current-final-04.json",
+  "sourceManifestSha256": "316bff314c93aaaba0c0d03ec28f97d76c8f88f2948d70c811483dc9a1ec9884",
+  "checks": [
+    {
+      "command": "pnpm build",
+      "exitCode": 0,
+      "logSha256": "073a016b174ae81c16d6103993d4d72701735601d6d30a2e283489fe859821be",
+      "privateLog": ".runtime/operator-details-ux-20261005/build-current-final-04.log"
+    },
+    {
+      "command": "pnpm lint",
+      "exitCode": 0,
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "privateLog": ".runtime/operator-details-ux-20261005/lint-current-final-04.log"
+    },
+    {
+      "command": "pnpm typecheck",
+      "exitCode": 0,
+      "logSha256": "6039675d5e2f102073411548cc8cb38ab8f94cb21e2f7ba05da4684b1005451f",
+      "privateLog": ".runtime/operator-details-ux-20261005/typecheck-current-final-04.log"
+    },
+    {
+      "command": "pnpm test",
+      "exitCode": 0,
+      "logSha256": "1b218216af6bb3dc73deaebfaf4f3faae41d463cd4e9d82cab94c69ffa95cc1c",
+      "privateLog": ".runtime/operator-details-ux-20261005/test-current-final-04.log",
+      "productUnit": {
+        "tests": 246,
+        "pass": 246,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "webUnit": {
+        "tests": 241,
+        "pass": 241,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "totalPassed": 487
+    }
+  ],
+  "preservedUserFiles": [
+    {
+      "path": "apps/web/next-env.d.ts",
+      "sha256": "f489d27df2cd32b4d0e5a97554d5233f34b755a4347e1278ec7d20c1d1c5d891",
+      "bytePreserved": true,
+      "excludedFromCommit": true
+    },
+    {
+      "path": "apps/web/tsconfig.json",
+      "sha256": "221e47810878e2f484ed213503d9997d4440ff6f140f8b649e2b35433b94bf32",
+      "bytePreserved": true,
+      "excludedFromCommit": true
+    },
+    {
+      "path": "docs/evidence/operator-minimal-actions-20261004/acceptance-matrix.json",
+      "sha256": "a86bff2d3870810d39069d2603cb1ed03a2be579294bdb0765e556aacdd9eecd",
+      "bytePreserved": true,
+      "excludedFromCommit": true
+    }
+  ],
+  "browserAcceptance": "IN_PROGRESS_SEPARATE",
+  "deployment": "NOT_STARTED_SEPARATE"
+}

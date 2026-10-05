@@ -1,0 +1,23 @@
+{
+  "capturedUtc": "2026-10-05T19:31:20.1673923Z",
+  "source": "Exact bytes compared to pre-edit baseline",
+  "files": [
+    {
+      "path": "apps/web/next-env.d.ts",
+      "unchanged": true,
+      "sha256": "f489d27df2cd32b4d0e5a97554d5233f34b755a4347e1278ec7d20c1d1c5d891"
+    },
+    {
+      "path": "apps/web/tsconfig.json",
+      "unchanged": true,
+      "sha256": "221e47810878e2f484ed213503d9997d4440ff6f140f8b649e2b35433b94bf32"
+    },
+    {
+      "path": "docs/evidence/operator-minimal-actions-20261004/acceptance-matrix.json",
+      "unchanged": true,
+      "sha256": "a86bff2d3870810d39069d2603cb1ed03a2be579294bdb0765e556aacdd9eecd"
+    }
+  ],
+  "allPreserved": true,
+  "willExcludeFromTaskCommit": true
+}

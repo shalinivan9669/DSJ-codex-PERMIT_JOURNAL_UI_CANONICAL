@@ -401,11 +401,6 @@ export function NewRequest({ context }: { context: AppContext }) {
               <span>Организация</span>
             </label>
           </fieldset>
-          <p className="field-hint">
-            Для выбранных курсов подставятся стандартные часы и положительный
-            результат. Если человек ожидает сдачи, не сдал или не явился,
-            измените результат в заявке перед согласованием.
-          </p>
           <button
             type="submit"
             className="primary request-entry-next"

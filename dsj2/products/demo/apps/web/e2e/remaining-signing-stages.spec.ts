@@ -154,7 +154,7 @@ test("a working request exposes earlier immutable signing stages and every signi
   await expect.poll(() => selectedQueries.at(-1)).toBe(earlier);
   blockSave = true;
   const updatedName = "Синтетический ожидающий — сохранённое продолжение";
-  const waitingName = page.getByLabel("ФИО, строка 1", { exact: true });
+  const waitingName = page.getByLabel("ФИО", { exact: true });
   await waitingName.fill(updatedName);
   await expect.poll(() => pendingPatch).toBe(true);
   const readsBeforeSigning = requestReads;

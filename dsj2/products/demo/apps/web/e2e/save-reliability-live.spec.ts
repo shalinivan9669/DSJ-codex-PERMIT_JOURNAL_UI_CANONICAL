@@ -52,7 +52,7 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   expect(created.status(), await created.text()).toBe(201);
   const original = (await created.json()) as Draft;
   await page.reload();
-  expect(original.title).toBe(original.items[0].fullNameRu);
+  expect(original.title).toBe(title);
   await page
     .getByLabel("Поиск по заявкам", { exact: true })
     .fill(original.title);
@@ -62,7 +62,7 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   await expect(link).toHaveCount(1);
   await expect(link).toHaveAccessibleName(original.title);
   await link.click();
-  const input = page.getByLabel("ФИО, строка 1", { exact: true });
+  const input = page.getByLabel("ФИО", { exact: true });
   await expect(input).toBeVisible();
   const endpoint = `**/api/print-requests/${original.id}`;
   const savedRevisions: number[] = [];
@@ -85,21 +85,14 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   const finalName = "Ахметова Әлия Сергеевна · сохранённый ввод";
   await input.fill(finalName);
   await page
-    .getByRole("button", { name: "Детали получателя 1", exact: true })
-    .click();
-  await page.getByRole("tab", { name: /^Личные данные/ }).click();
-  await page
-    .locator("details.person-fields-wide")
-    .filter({ has: page.getByText(/^Казахский вариант/) })
+    .locator(".person-editor details.person-additional")
+    .filter({ has: page.getByText(/^Дополнительные персональные данные/) })
     .locator(":scope > summary")
     .click();
   const kzName = "Ахметова Әлия Серікқызы Ә Ғ Қ Ң Ө Ұ Ү Һ І";
   await page
-    .locator('.recipient-details [data-field-path="items.0.fullNameKz"]')
+    .locator('.person-editor [data-field-path="items.0.fullNameKz"]')
     .fill(kzName);
-  await page
-    .getByRole("button", { name: "Вернуться к списку", exact: true })
-    .click();
   await page.waitForTimeout(850);
   expect(calls).toBe(1);
   release();
@@ -119,14 +112,12 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
       : route.continue(),
   );
   const finalPosition = "Ведущий инженер синтетической группы";
-  await page
-    .getByLabel("Должность · RU, строка 1", { exact: true })
-    .fill(finalPosition);
+  await page.getByLabel("Должность", { exact: true }).fill(finalPosition);
   await page.evaluate(() => history.back());
   await expect(page.locator(".save-indicator")).toContainText("Не сохранено");
-  await expect(
-    page.getByLabel("Должность · RU, строка 1", { exact: true }),
-  ).toHaveValue(finalPosition);
+  await expect(page.getByLabel("Должность", { exact: true })).toHaveValue(
+    finalPosition,
+  );
   await page.screenshot({
     path: path.join(evidence, "offline-back-retains-input.png"),
     fullPage: true,
@@ -144,7 +135,7 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   expect(afterBack.items[0].positionRu).toBe(finalPosition);
   expect(afterBack.status).toBe("DRAFT");
   expect(afterBack.documents).toHaveLength(0);
-  expect(afterBack.title).toBe(finalName);
+  expect(afterBack.title).toBe(title);
   await page
     .getByLabel("Поиск по заявкам", { exact: true })
     .fill(afterBack.title);
@@ -154,21 +145,21 @@ test("real API: delayed acknowledgement, rapid edits, offline Back and retry per
   await expect(restoredLink).toHaveCount(1);
   await expect(restoredLink).toHaveAccessibleName(afterBack.title);
   await restoredLink.click();
-  await expect(input).toHaveValue(finalName);
-  await expect(
-    page.getByLabel("Должность · RU, строка 1", { exact: true }),
-  ).toHaveValue(finalPosition);
+  // A complete saved person resumes on the compact card. Open only identity.
   await page
-    .getByRole("button", { name: "Детали получателя 1", exact: true })
+    .getByRole("button", { name: "Изменить ФИО и должность", exact: true })
     .click();
-  await page.getByRole("tab", { name: /^Личные данные/ }).click();
+  await expect(input).toHaveValue(finalName);
+  await expect(page.getByLabel("Должность", { exact: true })).toHaveValue(
+    finalPosition,
+  );
   await page
-    .locator("details.person-fields-wide")
-    .filter({ has: page.getByText(/^Казахский вариант/) })
+    .locator(".person-editor details.person-additional")
+    .filter({ has: page.getByText(/^Дополнительные персональные данные/) })
     .locator(":scope > summary")
     .click();
   await expect(
-    page.locator('.recipient-details [data-field-path="items.0.fullNameKz"]'),
+    page.locator('.person-editor [data-field-path="items.0.fullNameKz"]'),
   ).toHaveValue(kzName);
   await page.screenshot({
     path: path.join(evidence, "reopened-confirmed-save.png"),

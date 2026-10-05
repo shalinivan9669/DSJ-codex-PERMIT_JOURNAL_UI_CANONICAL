@@ -24,7 +24,7 @@ async function create(
   const response = await page.request.post("/api/print-requests", {
     headers,
     data: {
-      kind: "PERSON",
+      kind: "COMPANY",
       title: `Синтетический импорт full fix ${Date.now()}`,
       customerId: null,
       demoMode: true,
@@ -43,15 +43,13 @@ async function read(page: Page, id: string) {
   return (await response.json()) as Draft;
 }
 async function pasteImport(page: Page, text: string) {
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   const modal = page.getByRole("dialog");
   await modal
     .getByLabel("Или вставьте таблицу с заголовками", { exact: true })
     .fill(text);
   await modal
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
     .click();
   await expect(modal.locator(".import-preview tbody tr")).not.toHaveCount(0);
   return modal;
@@ -179,6 +177,7 @@ test("UX-31 mapped preview identifies exact category/date/length, preserves sour
     "ФИО RU\tКатегория сотрудника\tДата документа\tТабельный номер\nСинтетический Исправляемый\tИнженер\t2026-02-30\t00009\n\tWORKER\t\t" +
     "0".repeat(101);
   const modal = await pasteImport(page, text);
+  await modal.locator(".import-document-options > summary").click();
   await modal
     .getByRole("combobox", {
       name: "Документ для импортируемых строк",
@@ -224,9 +223,8 @@ test("UX-31 mapped preview identifies exact category/date/length, preserves sour
   expect(saved.items[0].assignments[0].fieldOrigins?.documentDate).toBe(
     "MANUAL",
   );
-  expect(saved.items[0].assignments[0].outcome?.status || "UNKNOWN").toBe(
-    "UNKNOWN",
-  );
+  expect(saved.items[0].assignments[0].outcome?.status).toBe("PASSED");
+  expect(saved.items[0].assignments[0].fieldOrigins?.outcome).toBe("AUTO");
   expect(saved.items[1].fullNameRu).toBe("");
   expect(saved.items[1].personnelNumber).toBe("00010");
   await fs.writeFile(
@@ -235,7 +233,7 @@ test("UX-31 mapped preview identifies exact category/date/length, preserves sour
   );
 });
 
-test("new real 250-row TSV import replaces only untouched starter and rejects 251 without truncating", async ({
+test("new real 251-row TSV import replaces only untouched starter without truncating the source", async ({
   page,
 }, testInfo) => {
   const headers = await login(page);
@@ -250,40 +248,34 @@ test("new real 250-row TSV import replaces only untouched starter and rejects 25
     page,
     "ФИО RU\tФИО KZ\tТабельный номер\n" + rows.join("\n"),
   );
-  await expect(modal).toContainText("После импорта получится 251");
+  // The current request capacity is 10,000; 251 source rows must not be truncated.
+  await expect(
+    modal.getByText("Прочитано: 251", { exact: true }),
+  ).toBeVisible();
   await expect(
     modal.getByRole("button", {
       name: "Добавить 251 строк в черновик",
       exact: true,
     }),
-  ).toBeDisabled();
-  await modal
-    .getByLabel("Импортировать исходную строку 252", { exact: true })
-    .uncheck();
-  await expect(
-    modal.getByRole("button", {
-      name: "Добавить 250 строк в черновик",
-      exact: true,
-    }),
   ).toBeEnabled();
-  await page.screenshot({ path: testInfo.outputPath("new-250-preview.png") });
+  await page.screenshot({ path: testInfo.outputPath("new-251-preview.png") });
   await modal
-    .getByRole("button", { name: "Добавить 250 строк в черновик", exact: true })
+    .getByRole("button", { name: "Добавить 251 строк в черновик", exact: true })
     .click();
   await expect(modal).toHaveCount(0);
   await page.reload();
   const saved = await read(page, created.id);
-  expect(saved.items).toHaveLength(250);
-  expect(saved.items[249].fullNameKz).toBe("Қатысушы 250");
-  expect(saved.items[249].personnelNumber).toBe("000250");
-  expect(new Set(saved.items.map((item) => item.id)).size).toBe(250);
+  expect(saved.items).toHaveLength(251);
+  expect(saved.items[250].fullNameKz).toBe("Қатысушы 251");
+  expect(saved.items[250].personnelNumber).toBe("000251");
+  expect(new Set(saved.items.map((item) => item.id)).size).toBe(251);
   expect(
     saved.items.every(
       (item) => item.importId && item.sourceRow && !item.assignments.length,
     ),
   ).toBe(true);
   await fs.writeFile(
-    testInfo.outputPath("new-250-readback.json"),
+    testInfo.outputPath("new-251-readback.json"),
     JSON.stringify(saved, null, 2),
   );
 });
@@ -825,24 +817,24 @@ test("real sizes 10/100/249 and filled-then-cleared starter preserve authoritati
       (_, index) => `Синтетическая новая строка ${index + 1}`,
     ).join("\n");
   const modal = await pasteImport(page, text);
-  await expect(modal).toContainText("После импорта получится 251");
+  await expect(
+    modal.getByText("Прочитано: 250", { exact: true }),
+  ).toBeVisible();
   await expect(
     modal.getByRole("button", {
       name: "Добавить 250 строк в черновик",
       exact: true,
     }),
-  ).toBeDisabled();
+  ).toBeEnabled();
   await modal
-    .getByLabel("Импортировать исходную строку 251", { exact: true })
-    .uncheck();
-  await modal
-    .getByRole("button", { name: "Добавить 249 строк в черновик", exact: true })
+    .getByRole("button", { name: "Добавить 250 строк в черновик", exact: true })
     .click();
   await expect(modal).toHaveCount(0);
   const saved = await read(page, touched.id);
-  expect(saved.items).toHaveLength(250);
+  expect(saved.items).toHaveLength(251);
   expect(saved.items[0].id).toBe(touched.items[0].id);
   expect(saved.items[0].fullNameRu).toBe("");
+  expect(saved.items[250].fullNameRu).toBe("Синтетическая новая строка 250");
   checks.push({ touchedStarter: true, saved });
   await fs.writeFile(
     testInfo.outputPath("capacity-sizes-readback.json"),
@@ -856,13 +848,11 @@ test("XLSX selected sheet and CSV quoted multiline data preserve zeros and indep
   const headers = await login(page);
   const created = await create(page, headers);
   await page.goto(`/requests/${created.id}/edit`);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   let modal = page.getByRole("dialog");
   const sourceText = modal.getByLabel("Или вставьте таблицу с заголовками");
   const continueToMapping = modal.getByRole("button", {
-    name: "Перейти к сопоставлению",
+    name: "Проверить таблицу",
     exact: true,
   });
   await expect(continueToMapping).toBeDisabled();
@@ -891,11 +881,20 @@ test("XLSX selected sheet and CSV quoted multiline data preserve zeros and indep
     .getByLabel("Табличный файл", { exact: true })
     .setInputFiles(path.join(__dirname, "fixtures/import-multiple.xlsx"));
   await modal
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
-    .click();
-  await modal
     .getByRole("combobox", { name: "Лист таблицы", exact: true })
     .selectOption("Получатели");
+  await expect(modal.getByText("Прочитано: 2", { exact: true })).toBeVisible();
+  if (
+    !(await modal
+      .getByLabel("Поле для колонки Сотрудник", { exact: true })
+      .isVisible())
+  )
+    await modal
+      .getByRole("button", {
+        name: "Изменить сопоставление колонок",
+        exact: true,
+      })
+      .click();
   await modal
     .getByLabel("Поле для колонки Сотрудник", { exact: true })
     .selectOption("fullNameRu");
@@ -913,9 +912,7 @@ test("XLSX selected sheet and CSV quoted multiline data preserve zeros and indep
   expect(xlsx.items[0].fullNameKz).toBe("Ә Ғ Қ Ң Ө Ұ Ү Һ І");
   expect(xlsx.items[0].personnelNumber).toBe("00123");
   expect(xlsx.items[1].fullNameKz).toBe("");
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   modal = page.getByRole("dialog");
   const csv =
     'ФИО RU;ФИО KZ;Табельный номер;Должность RU\r\n"Синтетический ""CSV"" Имя";"Ә Ғ Қ Ң Ө Ұ Ү Һ І";"000007";"Строка 1\tвнутри ячейки\nСтрока 2"\r\n';
@@ -924,9 +921,7 @@ test("XLSX selected sheet and CSV quoted multiline data preserve zeros and indep
     mimeType: "text/csv",
     buffer: Buffer.from(csv, "utf8"),
   });
-  await modal
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
-    .click();
+  await expect(modal.getByText("Прочитано: 1", { exact: true })).toBeVisible();
   await modal
     .getByRole("button", { name: "Добавить 1 строк в черновик", exact: true })
     .click();
@@ -1310,7 +1305,10 @@ test("UX32 real COMPANY search uses effective RU/KZ employers, exceptions and ch
   )
     await tools.locator(":scope > summary").click();
   const search = page.getByLabel("Поиск в заявке", { exact: true });
-  const rows = page.locator(".operator-grid tbody tr");
+  // Supplements share recipient identity for focus; count the primary input rows.
+  const rows = page.locator(
+    ".operator-grid tbody tr[data-recipient-id]:has(> td.recipient-grid-selection)",
+  );
   const searches: { query: string; expectedIds: string[] }[] = [];
   const find = async (query: string, indices: number[]) => {
     await search.fill(query);
@@ -1385,11 +1383,12 @@ test("UX32 real COMPANY search uses effective RU/KZ employers, exceptions and ch
       has: page.getByText(company.nameRu, { exact: true }),
     });
     await expect(row).toHaveCount(1);
-    const patchResponse = page.waitForResponse((response) =>
-      response.request().method() === "PATCH" &&
-      new URL(response.url()).pathname ===
-        `/api/print-requests/${created.id}` &&
-      response.request().postDataJSON()?.draft?.customerId === company.id,
+    const patchResponse = page.waitForResponse(
+      (response) =>
+        response.request().method() === "PATCH" &&
+        new URL(response.url()).pathname ===
+          `/api/print-requests/${created.id}` &&
+        response.request().postDataJSON()?.draft?.customerId === company.id,
     );
     await row.getByRole("button", { name: "Выбрать", exact: true }).click();
     await expect(picker).toHaveCount(0);

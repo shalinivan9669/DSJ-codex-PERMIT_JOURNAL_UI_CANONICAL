@@ -12,7 +12,8 @@ test("manual 20 people use one group position employer and courses, director rev
   page,
   browser,
 }, testInfo) => {
-  test.setTimeout(900000);
+  // The isolated single renderer measured about 27 minutes for 212 jobs.
+  test.setTimeout(3600000);
   expect(new URL(process.env.DEMO_ORIGIN!).hostname).toBe("127.0.0.1");
   const operator = await loginRole(page, "OPERATOR");
   const resumedId = process.env.DEMO_E2E_MANUAL_REQUEST_ID;
@@ -23,7 +24,7 @@ test("manual 20 people use one group position employer and courses, director rev
     expect(existing.items).toHaveLength(20);
     expect(existing.issuances).toHaveLength(1);
     expect(existing.documents).toHaveLength(105);
-    await waitOriginalJobs(page, resumedId, 600000);
+    await waitOriginalJobs(page, resumedId, 2700000);
     await verifyManualIssuance(
       page,
       resumedId,
@@ -115,66 +116,44 @@ test("manual 20 people use one group position employer and courses, director rev
     await setupContext.close();
   }
   await page.goto("/requests/new");
-  await page
-    .getByRole("radio", { name: "Физическое лицо", exact: true })
-    .check();
+  await page.getByRole("radio", { name: /^Организация/ }).check();
   await page.getByRole("button", { name: "Далее", exact: true }).click();
   await expect(page).toHaveURL(/\/requests\/[a-f0-9-]+\/edit$/);
   const id = /\/requests\/([a-f0-9-]+)\/edit$/.exec(page.url())![1];
-  steps.push("Создать физлицо: выбор типа и Далее");
+  const companyName = `Синтетический работодатель ${suffix}`;
+  await page.getByLabel("Название компании", { exact: true }).fill(companyName);
+  steps.push(
+    "Создать заявку организации: выбор типа и Далее; название компании введено один раз в общей карточке, без повторного работодателя у сотрудников",
+  );
+  const expectedPositions = Array.from({ length: 20 }, (_, index) => ({
+    ru: index === 19 ? "Инженер" : "Слесарь",
+    kz: index === 19 ? "Инженер" : "Жөндеуші",
+  }));
   for (let index = 1; index <= 20; index++) {
     const input = page.getByLabel(`ФИО, строка ${index}`, { exact: true });
     await input.fill(
       `Синтетический ${suffix} Человек ${String(index).padStart(2, "0")}`,
     );
+    await page
+      .getByLabel(`Должность · RU, строка ${index}`, { exact: true })
+      .fill(expectedPositions[index - 1].ru);
+    await page
+      .getByLabel(`Должность · KZ, строка ${index}`, { exact: true })
+      .fill(expectedPositions[index - 1].kz);
     if (index < 20) await input.press("Enter");
   }
   steps.push(
-    "20 уникальных ФИО, Enter создаёт следующую строку; карточки людей не открывались",
+    "20 уникальных ФИО введены в таблицу, 19 нажатий Enter создают следующие строки; 20 должностей RU и 20 отдельных KZ-вариантов введены по строкам, карточки людей не открывались",
   );
   await page
     .getByLabel("Категория сотрудника, строка 20", { exact: true })
     .selectOption("ITR");
-  await page
-    .getByLabel("Общая должность / профессия · RU", { exact: true })
-    .fill("Слесарь");
-  await page
-    .getByLabel("Общая должность / профессия · KZ", { exact: true })
-    .fill("Слесарь");
-  await page
-    .getByRole("button", {
-      name: "Заполнить пустые должности (20)",
-      exact: true,
-    })
-    .click();
   steps.push(
-    "Одна общая должность RU/KZ, одно применение к 20 людям; одна категория ИТР как исключение",
+    "19 сотрудников оставлены рабочими, у двадцатого явно выбрана категория ИТР; его должность введена самостоятельно",
   );
-  await page
-    .getByRole("button", { name: "Общий работодатель (20)", exact: true })
-    .click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Новая организация", exact: true })
-    .click();
-  const company = page.getByRole("dialog", {
-    name: "Новая организация",
-    exact: true,
-  });
-  await company
-    .getByRole("combobox", { name: "Форма организации", exact: true })
-    .selectOption("TOO");
-  await company
-    .getByRole("textbox", { name: /^Собственное наименование/ })
-    .fill(`Синтетический работодатель ${suffix}`);
-  await company.getByRole("button", { name: "Сохранить", exact: true }).click();
-  await page
-    .getByRole("dialog")
-    .getByRole("button", { name: "Применить для 20", exact: true })
-    .click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   steps.push(
-    "Новый работодатель введён один раз и применён ко всем; неизвестные БИН/адрес не выдумываются и ordinary ИТР не блокируют",
+    "Работодатель наследуется из компании заявки; неизвестные БИН и адрес не выдумываются и обычного ИТР не блокируют",
   );
   for (const course of ["БиОТ", "ПТМ", "ПБ", "ПС"])
     await page
@@ -220,11 +199,52 @@ test("manual 20 people use one group position employer and courses, director rev
       );
     })
     .toBe(true);
+  // Row autosave retains the prepared company without creating a directory
+  // entry. Explicit Save is the first business action that attaches it.
+  expect((await readPrintDetail(page, id)).customerId).toBeNull();
+  await page
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
+    .click();
+  const companyCreated = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      response.url().endsWith("/customers"),
+  );
+  await page
+    .getByRole("button", { name: "Сохранить изменения", exact: true })
+    .click();
+  const companyResponse = await companyCreated;
+  expect(companyResponse.ok(), await companyResponse.text()).toBe(true);
+  const attachedCompany = await companyResponse.json();
+  await expect
+    .poll(async () => (await readPrintDetail(page, id)).customerId)
+    .toBe(attachedCompany.id);
+  await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
+  steps.push(
+    "Явное Сохранить изменения создаёт и привязывает подготовленную компанию один раз; автосохранение строк до этого справочник не изменяло",
+  );
   await page.reload();
   await expect(page.getByLabel("ФИО, строка 20", { exact: true })).toHaveValue(
     `Синтетический ${suffix} Человек 20`,
   );
   const saved = await readPrintDetail(page, id);
+  expect(saved.kind).toBe("COMPANY");
+  expect(saved.customerId).toBeTruthy();
+  await expect(page.locator("#request-customer")).toContainText(companyName);
+  expect(
+    saved.items.filter((item) => item.employeeCategory === "WORKER"),
+  ).toHaveLength(19);
+  expect(
+    saved.items.filter((item) => item.employeeCategory === "ITR"),
+  ).toHaveLength(1);
+  expect(
+    saved.items.map((item) => ({ ru: item.positionRu, kz: item.positionKz })),
+  ).toEqual(expectedPositions);
+  for (const item of saved.items) {
+    expect(item.workplaceRu || "").toBe("");
+    expect(item.workplaceKz || "").toBe("");
+    expect(item.employerId || "").toBe("");
+  }
   expect(saved.status).toBe("DRAFT");
   expect(saved.approval?.status).not.toBe("PENDING");
   expect(
@@ -277,18 +297,38 @@ test("manual 20 people use one group position employer and courses, director rev
         name: "Подготовленные данные редакции",
       }),
     ).toContainText("20 человек");
-    await directorPage
-      .getByRole("button", {
-        name: "Посмотреть образцы PDF и общие протоколы",
-        exact: true,
-      })
+    const viewer = directorPage.getByRole("region", {
+      name: "Предпросмотр назначенных документов",
+    });
+    const reviewedPerson = submitted.items[19];
+    const reviewedAssignment = reviewedPerson.assignments.find(
+      (assignment) => assignment.templateId === "biot-itr-certificate",
+    )!;
+    const reviewedTarget = {
+      kind: "ASSIGNMENT",
+      rowId: reviewedPerson.id,
+      assignmentId: reviewedAssignment.id,
+    };
+    const selector = viewer.getByRole("combobox", {
+      name: "Человек и форма документа",
+      exact: true,
+    });
+    await selector.selectOption(JSON.stringify(reviewedTarget));
+    await expect(selector.locator("option:checked")).toContainText(
+      reviewedPerson.fullNameRu,
+    );
+    await viewer
+      .getByRole("button", { name: "Создать предпросмотр", exact: true })
       .click();
     await expect(
-      directorPage.getByRole("combobox", {
-        name: "Документ для просмотра",
-        exact: true,
-      }),
+      viewer.getByRole("img", { name: /^Страница 1 из/ }),
     ).toBeVisible({ timeout: 180000 });
+    await expect(
+      viewer.getByRole("link", { name: "Открыть PDF", exact: true }),
+    ).toBeVisible();
+    await expect(
+      viewer.getByRole("link", { name: "Скачать DOCX", exact: true }),
+    ).toBeVisible();
     await directorPage.screenshot({
       path: testInfo.outputPath("manual20-director-review.png"),
       fullPage: true,
@@ -300,7 +340,7 @@ test("manual 20 people use one group position employer and courses, director rev
       .poll(async () => (await readPrintDetail(page, id)).approval?.status)
       .toBe("APPROVED");
     steps.push(
-      "Директор: открыть редакцию, просмотреть сводку и образец PDF, одно согласование всего состава",
+      "Директор: открыть редакцию и сводку, выбрать удостоверяемого ИТР в строке 20 и его сертификат в адресном предпросмотре, дождаться реального PDF, одно согласование всего состава",
     );
     // The operator receives the decision automatically, without reload.
     const finalize = page.getByRole("button", {
@@ -313,7 +353,7 @@ test("manual 20 people use one group position employer and courses, director rev
       testInfo.outputPath("manual20-before-render-wait.json"),
       JSON.stringify({ requestId: id, steps, saved, submitted }, null, 2),
     );
-    await waitOriginalJobs(page, id, 600000);
+    await waitOriginalJobs(page, id, 2700000);
     await verifyManualIssuance(page, id, saved, steps, testInfo, submitted);
   } finally {
     await directorContext.close();
@@ -329,6 +369,7 @@ async function verifyManualIssuance(
   submitted?: Awaited<ReturnType<typeof readPrintDetail>>,
 ) {
   const issued = await readPrintDetail(page, id);
+  expect(issued.documents).toHaveLength(105);
   expect(
     [...new Set(issued.documents.map((entry) => entry.templateId))].sort(),
   ).toEqual([...templateIds].sort());
@@ -360,11 +401,26 @@ async function verifyManualIssuance(
   expect(snapshot.items.map((row) => row.fullNameRu)).toEqual(
     saved.items.map((row) => row.fullNameRu),
   );
-  const artifacts = issued.artifacts.filter((artifact) =>
-    ["PDF", "DOCX"].includes(artifact.format || ""),
+  expect(
+    snapshot.items.map((row) => ({ ru: row.positionRu, kz: row.positionKz })),
+  ).toEqual(
+    saved.items.map((row) => ({ ru: row.positionRu, kz: row.positionKz })),
   );
-  expect(artifacts.some((artifact) => artifact.format === "PDF")).toBe(true);
-  expect(artifacts.some((artifact) => artifact.format === "DOCX")).toBe(true);
+  if (saved.kind === "COMPANY") {
+    expect(snapshot.kind).toBe("COMPANY");
+    expect(snapshot.customerId).toBe(saved.customerId);
+  }
+  const artifacts = issued.artifacts.filter(
+    (artifact) =>
+      artifact.provenance === "ORIGINAL" &&
+      ["PDF", "DOCX"].includes(artifact.format || ""),
+  );
+  expect(
+    artifacts.filter((artifact) => artifact.format === "PDF"),
+  ).toHaveLength(105);
+  expect(
+    artifacts.filter((artifact) => artifact.format === "DOCX"),
+  ).toHaveLength(105);
   // Download each of the 11 template IDs in both formats. This flow uses
   // five group protocols; the separate render matrix also covers their
   // individual variants, for all 16 ordinary forms.
@@ -400,6 +456,22 @@ async function verifyManualIssuance(
       {
         synthetic: true,
         noApiPrefill: true,
+        newScenarioInput: submitted
+          ? {
+              kind: "COMPANY",
+              companyNameEntries: 1,
+              fullNameEntries: 20,
+              enterToAddRow: 19,
+              individualPositionRuEntries: 20,
+              individualPositionKzEntries: 20,
+              sharedPositionApplicationActions: 0,
+              repeatedEmployerEntries: 0,
+              explicitItrCategoryChoices: 1,
+              requestCourseChoices: 4,
+              courseHoursEntries: 3,
+              humanUsabilityMeasurement: false,
+            }
+          : undefined,
         resumedAfterRenderTimeout: !submitted,
         requestId: id,
         steps,

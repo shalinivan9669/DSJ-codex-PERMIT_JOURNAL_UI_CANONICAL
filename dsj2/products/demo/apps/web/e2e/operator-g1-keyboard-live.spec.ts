@@ -4,6 +4,10 @@ import path from "node:path";
 import { createHash } from "node:crypto";
 import { stripVTControlCharacters } from "node:util";
 import {
+  courseResultText,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+} from "@demo/contracts";
+import {
   fullSuiteApiCooldown,
   fullSuiteRunId,
   requireEmptyFullPreparation,
@@ -330,31 +334,13 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         page,
         page.getByRole("button", { name: "Далее", exact: true }),
       );
-      title = `G1 · исходные 100 человек · клавиатура ${Date.now()}`;
-      await expand(
-        page,
-        page.locator("details.operator-request-options").filter({
-          has: page.getByText(/^Название заявки и служебные параметры/),
-        }),
-      );
-      await keyboardEnter(
-        page,
-        page.getByLabel("Название заявки", { exact: true }),
-        title,
-      );
+      title = people[0].workplaceRu;
       await keyboardEnter(
         page,
         page.getByLabel("Название компании", { exact: true }),
         people[0].workplaceRu,
       );
-      await keyboardActivate(
-        page,
-        page.getByRole("button", {
-          name: "Использовать эту компанию",
-          exact: true,
-        }),
-      );
-      await saved(page);
+      // The staged company is resolved once by the explicit import action.
       await keyboardActivate(
         page,
         page.getByRole("button", { name: "Удалить получателя 1", exact: true }),
@@ -362,7 +348,7 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
       await assertTechnicalBlankRemoval(page);
       await keyboardActivate(
         page,
-        page.getByRole("button", { name: "Импорт / вставка", exact: true }),
+        page.getByRole("button", { name: "Импорт", exact: true }),
       );
       const columns: string[] = peopleSource.columns;
       await keyboardEnter(
@@ -378,21 +364,24 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
       await keyboardActivate(
         page,
         page.getByRole("button", {
-          name: "Перейти к сопоставлению",
+          name: "Проверить таблицу",
           exact: true,
         }),
       );
       await expect(
         page.getByText("Прочитано: 100", { exact: true }),
       ).toBeVisible();
-      await keyboardSelect(
-        page,
-        page.getByRole("combobox", {
-          name: "Документ для импортируемых строк",
-          exact: true,
-        }),
-        "",
+      // Import now keeps optional document settings collapsed and defaults to
+      // no assignment. The saved roster assertion below verifies that fact.
+      await expect(
+        page.locator('select[aria-label="Документ для импортируемых строк"]'),
+      ).toHaveValue("");
+      const employerAlignment = page.getByLabel(
+        "Привести эти строки к компании заявки",
+        { exact: true },
       );
+      if (await employerAlignment.isVisible())
+        await keyboardCheck(page, employerAlignment);
       await keyboardActivate(
         page,
         page.getByRole("button", {
@@ -470,12 +459,19 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
       await page.screenshot({
         path: path.join(evidence, "g1-validation-keyboard-focus.png"),
       });
+      // Enter in the final filled row intentionally appends a new recipient.
+      // Check non-finalizing row navigation without altering this 100-person source.
+      const penultimateName = page.getByLabel("ФИО, строка 99", {
+        exact: true,
+      });
       const lastName = page.getByLabel("ФИО, строка 100", { exact: true });
-      await keyboardFocus(page, lastName);
-      const nameBefore = await lastName.inputValue();
+      await keyboardFocus(page, penultimateName);
+      const nameBefore = await penultimateName.inputValue();
       await page.keyboard.press("Enter");
       keyboardMetrics.enterNoFinalizeChecks++;
-      await expect(lastName).toHaveValue(nameBefore);
+      await expect(penultimateName).toHaveValue(nameBefore);
+      await expect(lastName).toBeFocused();
+      await expect(page.locator(".operator-grid tbody tr")).toHaveCount(100);
       await expect(page.locator(".title-with-status .status")).toHaveText(
         "Черновик",
       );
@@ -606,8 +602,14 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         expect(item.photoAssetId).toBeTruthy();
         expect(item.assignments).toHaveLength(1);
         expect(item.assignments[0].templateId).toBe("pb-card");
-        expect(item.assignments[0].outcome?.status).toBe("UNKNOWN");
-        expect(item.assignments[0].result).toBe("");
+        expect(item.assignments[0].outcome?.status).toBe("PASSED");
+        expect(item.assignments[0].outcome?.source).toBe(
+          DEFAULT_POSITIVE_OUTCOME_SOURCE,
+        );
+        expect(item.assignments[0].fieldOrigins?.outcome).toBe("AUTO");
+        expect(item.assignments[0].result).toBe(
+          courseResultText("pb-card", "PASSED"),
+        );
       }
       await keyboardActivate(
         page,
@@ -649,7 +651,7 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
       );
       await expand(page, page.locator("#request-training"));
       const outcome = primary.locator("details.outcome-entry").filter({
-        has: page.getByText("Фактические результаты обучения", { exact: true }),
+        has: page.getByText("Изменить результаты обучения", { exact: true }),
       });
       await expand(page, outcome);
       // Use the real next Tab stop from the disclosure to the first outcome field.
@@ -680,15 +682,7 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
       await keyboardActivate(
         page,
         outcome.getByRole("button", {
-          name: "Проверить применение результатов",
-          exact: true,
-        }),
-      );
-      await expect(outcome).toContainText("100 участников");
-      await keyboardActivate(
-        page,
-        outcome.getByRole("button", {
-          name: "Подтвердить результаты",
+          name: "Применить результат · 100 человек",
           exact: true,
         }),
       );

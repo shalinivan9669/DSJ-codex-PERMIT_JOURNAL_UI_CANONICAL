@@ -10,6 +10,7 @@ import {
   validateRequest,
 } from "../../apps/api/src/requests";
 import { saveRecipient } from "../../apps/api/src/recipients";
+import { submitApproval } from "../../apps/api/src/approvals";
 import {
   createRenewalNeed,
   createExternalEvidence,
@@ -160,6 +161,13 @@ async function main() {
         expectedRevision: historical.revision,
       });
       assert.deepEqual(validation.issues, []);
+      // Validation no longer submits an approval as a side effect. Explicitly
+      // submit this synthetic historical fixture, then use the real director
+      // HTTP decision below; neither validation nor setup forges an approval.
+      const submission = await submitApproval(c, historical.id, {
+        expectedRevision: historical.revision,
+      });
+      assert.equal(submission.approval.status, "PENDING");
       await approveFinalFixtureRequest(director, historical.id);
       await finalize(
         c,

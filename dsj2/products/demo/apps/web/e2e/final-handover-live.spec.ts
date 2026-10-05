@@ -4,8 +4,9 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { loginRole } from "./operator-role-fixture";
 const evidence = path.resolve(
-  process.env.DEMO_E2E_EVIDENCE ||
-    "../../docs/evidence/final-completion/handover",
+  process.env.DEMO_E2E_EVIDENCE
+    ? path.join(process.env.DEMO_E2E_EVIDENCE, "handover")
+    : "../../docs/evidence/final-completion/handover",
 );
 test.use({ trace: "off" });
 async function login(page: Page, email: string, password: string) {
@@ -77,6 +78,7 @@ test("V05 exact live handover: eight people, two events, unknown result and untr
       commonFields: {
         trainingSubject: `Синтетическая программа ${i + 1}`,
         documentDate: i === 0 ? "2026-09-24" : "",
+        ...(i === 1 ? { fieldOrigins: { documentDate: "CLEARED" } } : {}),
         protocolDate: "2026-09-24",
         trainingStart: "2026-09-23",
         trainingEnd: "2026-09-24",

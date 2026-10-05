@@ -67,28 +67,28 @@ test("real editor warns about mixed alphabets and invisible symbols without rewr
   expect(created.ok(), await created.text()).toBe(true);
   const draft = await created.json();
   await page.goto(`/requests/${draft.id}/edit`);
-  const input = page.getByLabel("ФИО, строка 1", { exact: true });
+  const personCard = page.locator(".person-editor");
+  const editIdentity = async () =>
+    personCard
+      .getByRole("button", { name: "Изменить ФИО и должность", exact: true })
+      .click();
+  await editIdentity();
+  const input = personCard.getByLabel("ФИО", { exact: true });
   await input.fill("Ивaнов Синтетический");
   await expect(
     page
-      .locator(".operator-grid")
+      .locator(".person-identity-fields")
       .getByText(/Проверка источника:/)
       .first(),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Детали получателя 1", exact: true })
-    .click();
-  await page.getByRole("tab", { name: /^Личные данные/ }).click();
   const invisible = "Электрик\u200B";
-  await page
-    .getByLabel("Должность / профессия", { exact: true })
-    .fill(invisible);
+  await personCard.getByLabel("Должность", { exact: true }).fill(invisible);
   await expect(
-    page.locator(".person-fields").getByText(/Проверка источника:.*невидим/),
+    page
+      .locator(".person-identity-fields")
+      .getByText(/Проверка источника:.*невидим/),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Вернуться к списку", exact: true })
-    .click();
+  await personCard.getByRole("button", { name: "Готово", exact: true }).click();
   const response = page.waitForResponse(
     (value) =>
       value.url().endsWith(`/api/print-requests/${draft.id}/validate`) &&
@@ -101,6 +101,7 @@ test("real editor warns about mixed alphabets and invisible symbols without rewr
   expect(validation.valid).toBe(true);
   expect(validation.issues).toEqual([]);
   await page.reload();
+  await editIdentity();
   await expect(input).toHaveValue("Ивaнов Синтетический");
   const persisted = await (
     await page.request.get(`/api/print-requests/${draft.id}`)
@@ -112,15 +113,24 @@ test("real editor warns about mixed alphabets and invisible symbols without rewr
     "Рабочая версия сохранена",
   );
   await page.reload();
+  await editIdentity();
   await expect(input).toHaveValue("John Smith");
   await expect(
     page
-      .locator('.operator-grid [data-field-path="items.0.fullNameRu"]')
+      .locator('.person-editor [data-field-path="items.0.fullNameRu"]')
       .locator("..")
       .getByText(/Проверка источника:/),
   ).toHaveCount(0);
   await expect(
-    page.locator(".operator-grid").getByText(/Проверка источника:.*невидим/),
+    page
+      .locator(".person-identity-fields")
+      .getByText(/Проверка источника:.*невидим/),
+  ).toBeVisible();
+  await personCard.getByRole("button", { name: "Готово", exact: true }).click();
+  await expect(
+    personCard
+      .locator(".person-summary-heading")
+      .getByText(/Проверка источника:.*невидим/),
   ).toBeVisible();
   await fs.writeFile(
     path.join(evidence, "text-quality-result.json"),

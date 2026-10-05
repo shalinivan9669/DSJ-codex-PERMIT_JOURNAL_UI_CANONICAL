@@ -4,6 +4,8 @@ import { randomUUID } from "node:crypto";
 import {
   draftSchema,
   selectAssignmentScope,
+  positiveAssignmentDefaults,
+  today,
 } from "../../packages/contracts/src";
 import { db, json, type Context } from "../../apps/api/src/core";
 import {
@@ -436,9 +438,23 @@ test("external portal excludes waiting scope and working changes; prior issued b
     repeated.items[0].assignments.map((entry) => entry.templateId),
     ["pb-card", "pb-protocol"],
   );
-  assert.ok(
-    repeated.items[0].assignments.every(
-      (entry) => !entry.result && !entry.documentDate,
+  for (const entry of repeated.items[0].assignments) {
+    assert.equal(
+      entry.result,
+      positiveAssignmentDefaults(entry.templateId).result,
+    );
+    assert.equal(entry.outcome?.status, "PASSED");
+    assert.equal(entry.fieldOrigins?.result, "COURSE");
+    assert.equal(entry.documentDate, "");
+    assert.equal(entry.biotKnowledgeResult || "", "");
+    assert.equal(entry.biotProctoringResult || "", "");
+    assert.equal(entry.biotUniqueNumber || "", "");
+  }
+  assert.equal(
+    repeated.commonFields?.documentDate,
+    today(
+      (await db.tenant.findUniqueOrThrow({ where: { id: who.tenantId } }))
+        .timezone,
     ),
   );
   const beforePrivateEdit = await requestDetail(admin, request.id);

@@ -109,6 +109,8 @@ export function EventContext({
   primary = false,
   fieldHints = {},
   preparationOwner,
+  visibleEventIds,
+  existingOnly = false,
 }: {
   draft: Draft;
   centerCommon?: CommonFields;
@@ -122,6 +124,8 @@ export function EventContext({
   primary?: boolean;
   fieldHints?: Record<string, string>;
   preparationOwner?: PreparationOwner;
+  visibleEventIds?: string[];
+  existingOnly?: boolean;
 }) {
   const [expanded, setExpanded] = useState(embedded || primary);
   const sectionRef = useRef<HTMLElement>(null);
@@ -220,7 +224,11 @@ export function EventContext({
         .catch((c) => setProfileError(errorText(c)));
   }, [expanded]);
   const events = draft.events || [];
-  const event = events.find((e) => e.id === activeId) || events[0];
+  const visibleEvents = visibleEventIds
+    ? events.filter((event) => visibleEventIds.includes(event.id))
+    : events;
+  const event =
+    visibleEvents.find((e) => e.id === activeId) || visibleEvents[0];
   const activeEventId = event?.id || "";
   const eventIndex = events.findIndex((row) => row.id === activeEventId);
   const [topics, setTopics] = useState<
@@ -1113,6 +1121,10 @@ export function EventContext({
                     setRequestCommon((old) => ({
                       ...old,
                       [field]: e.target.value,
+                      fieldOrigins: {
+                        ...old.fieldOrigins,
+                        [field]: e.target.value ? "MANUAL" : "CLEARED",
+                      },
                       ...(calculatedDateKeys.includes(
                         field as (typeof calculatedDateKeys)[number],
                       )
@@ -1134,6 +1146,12 @@ export function EventContext({
                   setRequestCommon((old) => {
                     const next = { ...old };
                     delete next[field as keyof typeof next];
+                    if (next.fieldOrigins && field in next.fieldOrigins) {
+                      next.fieldOrigins = { ...next.fieldOrigins };
+                      delete next.fieldOrigins[
+                        field as keyof typeof next.fieldOrigins
+                      ];
+                    }
                     if (next.dateOrigins && field in next.dateOrigins) {
                       next.dateOrigins = { ...next.dateOrigins };
                       delete next.dateOrigins[
@@ -1301,7 +1319,7 @@ export function EventContext({
           )}
           {!primary && requestSettings}
           {!primary && joinSettings}
-          {(!primary || events.length !== 1) && (
+          {(!primary || visibleEvents.length !== 1) && (
             <div className="form-grid">
               <label>
                 {primary ? "Обучение" : "Событие"}
@@ -1323,7 +1341,7 @@ export function EventContext({
                       ? "Сначала назначьте обучение людям"
                       : "Выберите событие"}
                   </option>
-                  {events.map((e) => (
+                  {visibleEvents.map((e) => (
                     <option key={e.id} value={e.id}>
                       {trainingDisplayTitle(e.title)}
                     </option>
@@ -1698,7 +1716,9 @@ export function EventContext({
                         Всем участникам этого обучения
                       </option>
                       <option value="selected">
-                        Только отмеченным в списке людям
+                        {existingOnly && draft.kind === "PERSON"
+                          ? "Только выбранному человеку"
+                          : "Только отмеченным в списке людям"}
                       </option>
                     </select>
                   </label>
@@ -1884,11 +1904,15 @@ export function EventContext({
             <details className="training-advanced-settings">
               <summary>Дополнительные настройки обучения</summary>
               {metadataSettings}
-              {joinSettings}
-              {creationSettings}
-              {assignmentSettings}
-              {moveSettings}
-              {requestSettings}
+              {!existingOnly && (
+                <>
+                  {joinSettings}
+                  {creationSettings}
+                  {assignmentSettings}
+                  {moveSettings}
+                  {requestSettings}
+                </>
+              )}
               {event?.protocolTemplateId === "biot-protocol" && (
                 <p className="fine-print">
                   {biotCategoryDescription(

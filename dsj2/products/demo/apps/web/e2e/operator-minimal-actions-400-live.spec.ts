@@ -103,9 +103,7 @@ test("one actual 400-row Excel upload, common courses and one director decision 
       // Normal save/import flush persists the company, without another required
       // directory-creation confirmation or an API-injected customer.
       actions.push("Ввести неизвестное название компании один раз");
-      await page
-        .getByRole("button", { name: "Импорт / вставка", exact: true })
-        .click();
+      await page.getByRole("button", { name: "Импорт", exact: true }).click();
       const dialog = page.getByRole("dialog", {
         name: "Импорт получателей",
         exact: true,

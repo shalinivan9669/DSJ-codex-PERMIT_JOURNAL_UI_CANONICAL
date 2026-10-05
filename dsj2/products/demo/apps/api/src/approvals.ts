@@ -10,7 +10,11 @@ import {
   type AssignmentIdentity,
 } from "@demo/contracts";
 import { Prisma } from "@demo/database";
-import { personCustomerName, withCustomerIdentity } from "./request-customer";
+import {
+  personCustomerName,
+  proposalDisplayTitle,
+  withCustomerIdentity,
+} from "./request-customer";
 import { replaceableImportScaffoldId } from "./import-scaffold";
 import {
   audit,
@@ -596,10 +600,11 @@ export async function listApprovals(c: Context, query: unknown) {
       needsPreparation: needsPreparation(record),
       createdAt: record.submittedAt,
       submittedAt: record.submittedAt,
-      title:
-        (record.payload as { title?: string }).title ||
+      title: proposalDisplayTitle(
+        record,
         requests.find((request) => request.id === record.requestId)?.title ||
-        "Новая заявка",
+          "Новая заявка",
+      ),
       author: users.find((user) => user.id === record.submittedBy),
       submittedBy: record.submittedBy,
       requestedAction: record.operation,
@@ -777,10 +782,7 @@ export async function approvalDetail(c: Context, id: string) {
     createdAt: proposal.submittedAt,
     request: {
       id: request.id,
-      title:
-        (proposal.operation === "SAVE" &&
-          (proposal.payload as { title?: string }).title) ||
-        request.title,
+      title: proposalDisplayTitle(proposal, request.title),
     },
     referenceLabels: Object.fromEntries([
       ...customers.map((customer) => [customer.id, customer.nameRu]),

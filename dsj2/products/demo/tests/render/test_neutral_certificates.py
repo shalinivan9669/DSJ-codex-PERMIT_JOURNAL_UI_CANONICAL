@@ -3,7 +3,9 @@ from copy import deepcopy
 import hashlib
 from pathlib import Path
 import sys
+import tempfile
 import unittest
+from zipfile import ZipFile
 
 from lxml import etree as E
 
@@ -11,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
 from legacy_reference import reference_sources, render_reference_files, freeze_reference_dates
 from neutral_certificates import repair_certificate_files, W
+from renderer import render_docx
 from test_render import fixture
 
 
@@ -26,6 +29,39 @@ def text(files):
 
 
 class NeutralCertificateTests(unittest.TestCase):
+    def test_active_witness_optional_period_prints_only_saved_endpoints_in_both_languages(self):
+        for start, end in [('', ''), (None, None), ('2028-03-14', ''), ('', '2029-04-17'), ('2028-03-14', '2029-04-17')]:
+            with self.subTest(start=start, end=end), tempfile.TemporaryDirectory(prefix='ps-period-') as directory:
+                snapshot = fixture('ps-witness')
+                snapshot['items'][0]['assignment'].update(documentDate='2030-10-02', protocolDate='2031-11-20',
+                                                          trainingStart=start, trainingEnd=end)
+                original = deepcopy(snapshot)
+                output = Path(directory) / 'witness.docx'
+                render_docx(snapshot, output)
+                with ZipFile(output) as archive:
+                    root = E.fromstring(archive.read('word/document.xml'))
+                paragraphs = [''.join(node.text or '' for node in p.iter(W + 't')) for p in root.iter(W + 'p')]
+                ru = next(p for p in paragraphs if 'обучался(-ась)' in p)
+                kz = next(p for p in paragraphs if ' бастап ' in p and ' дейін оқып,' in p)
+                start_ru, start_kz = ('14 марта 2028 г.', '14 наурыз 2028 ж.') if start else ('', '')
+                end_ru, end_kz = ('17 апреля 2029 г.', '17 сәуір 2029 ж.') if end else ('', '')
+                self.assertEqual(ru, 'в том, что он(-а) обучался(-ась) с ' + start_ru + ' по ' + end_ru)
+                self.assertEqual(kz, start_kz + ' бастап ' + end_kz + ' дейін оқып,')
+                all_text = '\n'.join(paragraphs)
+                for expected in ['2 октября 2030 г.', '2 қазан 2030 ж.', '20 ноября 2031 г.', '20 қараша 2031 ж.']:
+                    self.assertIn(expected, all_text)
+                self.assertNotIn('{{TRAINING_', all_text)
+                self.assertEqual(snapshot, original)
+
+    def test_active_witness_invalid_supplied_period_is_not_silently_replaced(self):
+        for field in ['trainingStart', 'trainingEnd']:
+            with self.subTest(field=field), tempfile.TemporaryDirectory(prefix='ps-invalid-period-') as directory:
+                snapshot = fixture('ps-witness')
+                snapshot['items'][0]['assignment'][field] = '2026-02-30'
+                with self.assertRaises(ValueError):
+                    render_docx(snapshot, Path(directory) / 'witness.docx')
+                self.assertFalse((Path(directory) / 'witness.docx').exists())
+
     def test_itr_preserves_full_course_name_date_chair_and_long_number(self):
         snapshot = fixture('biot-itr-certificate')
         snapshot['issuer'].update(nameRu='Товарищество с ограниченной ответственностью «Синтетический учебный центр промышленной безопасности»',

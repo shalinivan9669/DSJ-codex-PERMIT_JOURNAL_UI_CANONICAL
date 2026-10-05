@@ -2,7 +2,23 @@ import { test, expect } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import assert from "node:assert/strict";
 import { assertTestDatabase } from "../../../tests/integration/test-database";
-import { expandCommon } from "./operator-common-history-helpers";
+import { templateIds } from "@demo/contracts";
+import templateManifest from "../../../assets/templates/manifest.json";
+
+const expectedTemplates = [
+  ...templateManifest.templates,
+  ...templateManifest.groupTemplates,
+  ...templateManifest.specialTemplates,
+]
+  .map((entry) => ({
+    templateId: entry.id,
+    version: String(entry.version),
+    checksum: entry.sha256,
+    ownerKind: "ownerKind" in entry ? entry.ownerKind : "INDIVIDUAL",
+  }))
+  .sort((a, b) =>
+    `${a.templateId}:${a.version}`.localeCompare(`${b.templateId}:${b.version}`),
+  );
 
 test("real local proxy registration, cookies, onboarding version save and first draft", async ({
   page,
@@ -42,7 +58,27 @@ test("real local proxy registration, cookies, onboarding version save and first 
   const initialContext = await contextResponse.json();
   expect(initialContext.user.role).toBe("DIRECTOR");
   expect(initialContext.profile.approved).toBe(false);
-  expect(initialContext.templates).toHaveLength(16);
+  expect(templateManifest.templates.map((entry) => entry.id).sort()).toEqual(
+    [...templateIds].sort(),
+  );
+  expect(
+    initialContext.templates
+      .map((entry: {
+        templateId: string;
+        version: string;
+        checksum: string;
+        contract: { ownerKind?: string };
+      }) => ({
+        templateId: entry.templateId,
+        version: entry.version,
+        checksum: entry.checksum,
+        ownerKind: entry.contract.ownerKind || "INDIVIDUAL",
+      }))
+      .sort(
+        (a: { templateId: string; version: string }, b: { templateId: string; version: string }) =>
+          `${a.templateId}:${a.version}`.localeCompare(`${b.templateId}:${b.version}`),
+      ),
+  ).toEqual(expectedTemplates);
   expect(
     initialContext.templates.every(
       (entry: { approved: boolean }) => !entry.approved,
@@ -78,13 +114,15 @@ test("real local proxy registration, cookies, onboarding version save and first 
   expect(after.profileVersionId).not.toBe(initialContext.profileVersionId);
   expect(after.profile.headName).toBe("Синтетический руководитель E2E");
   expect(after.profile.approved).toBe(false);
+  expect(after.templates).toEqual(initialContext.templates);
   await page.getByRole("link", { name: "Начать черновик заявки" }).click();
-  await page.getByRole("button", { name: "Далее" }).click();
+  await page.getByRole("radio", { name: /^Физическое лицо/ }).check();
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
   await expect(page).toHaveURL(/\/requests\/[0-9a-f-]+\/edit$/);
-  await expandCommon(page.locator("#request-training"));
-  await expect(
-    page.getByRole("button", { name: "БиОТ: добавить всем в заявке (1)" }),
-  ).toBeVisible();
+  const person = page.locator(".person-editor");
+  await expect(person.getByLabel("ФИО", { exact: true })).toBeFocused();
+  await expect(person.getByLabel("ФИО", { exact: true })).toHaveValue("");
+  await expect(person.getByLabel("Должность", { exact: true })).toHaveValue("");
   const requestId = page.url().split("/").at(-2);
   const draft = await (
     await page.request.get(`/api/print-requests/${requestId}`)

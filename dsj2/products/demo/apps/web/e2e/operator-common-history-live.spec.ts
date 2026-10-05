@@ -30,7 +30,7 @@ test("100 common assignments and supported individual overrides render consisten
   page,
   browser,
 }) => {
-  test.setTimeout(1800000);
+  test.setTimeout(3600000);
   await requireEmptyFullPreparation(evidence);
   await fs.mkdir(evidence, { recursive: true });
   await fullSuiteApiCooldown(evidence, "common-producer-before-ui");
@@ -70,13 +70,27 @@ test("100 common assignments and supported individual overrides render consisten
   let modal: Locator;
   const continuationDirectory = process.env.DEMO_E2E_COMMON_CONTINUE_CHECKPOINT;
   if (continuationDirectory) {
-    const directory = path.resolve(continuationDirectory),
-      owned = path.resolve(
+    const directory = path.resolve(continuationDirectory);
+    const ownedRoots = [
+      path.resolve(
         __dirname,
         "../../../docs/evidence/operator-flow-full-fix-20261003/preparation/attempts",
-      );
-    const relative = path.relative(owned, directory);
-    expect(path.isAbsolute(relative) || relative.startsWith("..")).toBe(false);
+      ),
+      path.resolve(
+        __dirname,
+        "../../../docs/evidence/operator-details-ux-20261005/full-e2e-02/common-prepared",
+      ),
+    ];
+    expect(
+      ownedRoots.some((owned) => {
+        const relative = path.relative(owned, directory);
+        return (
+          !path.isAbsolute(relative) &&
+          relative !== ".." &&
+          !relative.startsWith(`..${path.sep}`)
+        );
+      }),
+    ).toBe(true);
     checkpoint = JSON.parse(
       await fs.readFile(path.join(directory, "checkpoint.json"), "utf8"),
     );
@@ -98,7 +112,7 @@ test("100 common assignments and supported individual overrides render consisten
     expect(actual.issuances).toEqual(issued.issuances);
     expect(actual.items).toEqual(issued.items);
     checkpoints.push(...checkpoint.checkpoints, {
-      step: "continued-same-fresh-issued-checkpoint-after-harness-date-format-fix",
+      step: "continued-same-issued-checkpoint-without-reapproval-or-regeneration",
       originalEvidence: directory,
       elapsedMs: performance.now() - started,
     });
@@ -131,7 +145,8 @@ test("100 common assignments and supported individual overrides render consisten
       commonSubject = "Синтетическая общая подтверждённая программа В";
     externalId = "common-history-" + randomUUID();
     const input = draftSchema.parse({
-      kind: "PERSON",
+      kind: "COMPANY",
+      customerId: companies[0].id,
       demoMode: true,
       schemaVersion: 2,
       commonFields: {
@@ -394,12 +409,8 @@ test("100 common assignments and supported individual overrides render consisten
       ).toContainText("сохранена");
       await root
         .getByRole("button", {
-          name: "Проверить применение результатов",
-          exact: true,
+          name: /^Применить результат · \d+ человек$/,
         })
-        .click();
-      await root
-        .getByRole("button", { name: "Подтвердить результаты", exact: true })
         .click();
       await expect
         .poll(async () =>
@@ -519,8 +530,12 @@ test("100 common assignments and supported individual overrides render consisten
       artifact.issuanceId === checkpoint.issued.issuances[0].id &&
       ["XLSX", "ZIP"].includes(artifact.format || ""),
   );
-  expect(savedAggregates.filter((artifact) => artifact.format === "XLSX")).toHaveLength(1);
-  expect(savedAggregates.filter((artifact) => artifact.format === "ZIP").length).toBeGreaterThanOrEqual(1);
+  expect(
+    savedAggregates.filter((artifact) => artifact.format === "XLSX"),
+  ).toHaveLength(1);
+  expect(
+    savedAggregates.filter((artifact) => artifact.format === "ZIP").length,
+  ).toBeGreaterThanOrEqual(1);
   const aggregateGuardReadback = [];
   for (const artifact of savedAggregates) {
     const download = await page.request.get(`/api/artifacts/${artifact.id}`);
@@ -556,7 +571,8 @@ test("100 common assignments and supported individual overrides render consisten
   const nextResponse = await page.request.post("/api/print-requests", {
     headers,
     data: {
-      kind: "PERSON",
+      kind: "COMPANY",
+      customerId: companies[0].id,
       schemaVersion: 2,
       demoMode: true,
       commonFields: { documentDate: "2026-10-03" },

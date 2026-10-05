@@ -19,7 +19,7 @@ for (const count of [10, 100, 150, 250]) {
       id: "timing",
       revision: 0,
       status: "DRAFT",
-      kind: "PERSON",
+      kind: "COMPANY",
       title: `Сопоставимый замер: ${count}`,
       customerId: null,
       demoMode: true,

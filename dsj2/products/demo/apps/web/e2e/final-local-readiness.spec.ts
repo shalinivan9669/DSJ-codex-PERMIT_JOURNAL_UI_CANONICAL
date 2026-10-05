@@ -15,8 +15,9 @@ test("delivered local account opens final build and authenticated readiness with
   expect(email).toMatch(/@example\.test$/);
   expect(password).toBeTruthy();
   const evidence = path.resolve(
-    process.env.DEMO_E2E_EVIDENCE ||
-      "../../docs/evidence/final-completion/local-ready",
+    process.env.DEMO_E2E_EVIDENCE
+      ? path.join(process.env.DEMO_E2E_EVIDENCE, "local-readiness")
+      : "../../docs/evidence/final-completion/local-ready",
   );
   await fs.mkdir(evidence, { recursive: true });
   const pageErrors: string[] = [];

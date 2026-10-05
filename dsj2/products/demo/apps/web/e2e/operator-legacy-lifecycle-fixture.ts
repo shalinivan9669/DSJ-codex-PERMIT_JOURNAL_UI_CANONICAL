@@ -15,7 +15,10 @@ import {
 export async function legacyPrintFixture(
   page: Page,
   browser: Browser,
-  options: Parameters<typeof knownPrintInput>[1] & { count?: number } = {},
+  options: Parameters<typeof knownPrintInput>[1] & {
+    count?: number;
+    renderTimeout?: number;
+  } = {},
 ) {
   const roles = await realApprovalRoles(browser, page);
   await roles.configureSignatories();
@@ -65,7 +68,7 @@ export async function legacyPrintFixture(
         .getByRole("button", { name: "Сформировать документы", exact: true })
         .click();
       await expect.poll(async () => (await read()).status).toBe("FINALIZED");
-      await waitOriginalJobs(page, id);
+      await waitOriginalJobs(page, id, options.renderTimeout);
       await page
         .locator(".files-panel")
         .getByRole("button", { name: "Обновить", exact: true })

@@ -64,7 +64,7 @@ test("UX06/11/21 genuine Chrome 200 percent zoom in a disposable native profile 
         id: "fixture",
         revision: 0,
         status: "DRAFT",
-        kind: "PERSON" as const,
+        kind: "COMPANY" as const,
         title: `СИНТЕТИЧЕСКИЙ zoom ${factor}`,
         customerId: null,
         demoMode: true,
@@ -121,7 +121,7 @@ test("UX06/11/21 genuine Chrome 200 percent zoom in a disposable native profile 
         measured.clientWidth + 1,
       );
       await page
-        .getByLabel("Должность · KZ, строка 10", { exact: true })
+        .getByLabel("Должность / профессия / квалификация · KZ, строка 10", { exact: true })
         .focus();
       const focus = await page.evaluate(() => {
         const element = document.activeElement as HTMLElement;

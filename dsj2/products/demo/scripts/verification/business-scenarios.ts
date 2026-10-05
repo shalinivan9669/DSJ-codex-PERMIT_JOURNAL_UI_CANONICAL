@@ -55,6 +55,8 @@ import {
   itemSchema,
   assignmentSchema,
   protocolTemplateFor,
+  positiveAssignmentDefaults,
+  today,
   type Draft,
   type RequestItemInput,
 } from "../../packages/contracts/src";
@@ -1314,11 +1316,35 @@ export async function runBusinessScenarios(
         const request = await step("requests.inspect-new-repeat", () =>
           requestDetail(c, created.id),
         );
-        assert.equal(request.items[0].assignments[0].result, "");
+        assert.equal(
+          request.items[0].assignments[0].result,
+          positiveAssignmentDefaults(request.items[0].assignments[0].templateId)
+            .result,
+        );
         assert.equal(request.items[0].assignments[0].documentDate, "");
-        assert.ok(
-          !request.items[0].assignments[0].outcome ||
-            request.items[0].assignments[0].outcome?.status === "UNKNOWN",
+        assert.equal(request.items[0].assignments[0].outcome?.status, "PASSED");
+        assert.equal(
+          request.items[0].assignments[0].fieldOrigins?.result,
+          "COURSE",
+        );
+        assert.equal(
+          request.items[0].assignments[0].biotKnowledgeResult || "",
+          "",
+        );
+        assert.equal(
+          request.items[0].assignments[0].biotProctoringResult || "",
+          "",
+        );
+        assert.equal(
+          request.items[0].assignments[0].biotUniqueNumber || "",
+          "",
+        );
+        assert.equal(
+          request.commonFields?.documentDate,
+          today(
+            (await db.tenant.findUniqueOrThrow({ where: { id: c.tenantId } }))
+              .timezone,
+          ),
         );
         fresh.push(request);
       }

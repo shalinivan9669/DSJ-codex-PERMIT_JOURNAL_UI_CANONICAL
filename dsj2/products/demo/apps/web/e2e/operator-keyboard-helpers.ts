@@ -8,7 +8,9 @@ export async function assertTechnicalBlankRemoval(page: Page) {
   expect(requestId).toBeTruthy();
   await expect
     .poll(async () => {
-      const response = await page.request.get(`/api/print-requests/${requestId}`);
+      const response = await page.request.get(
+        `/api/print-requests/${requestId}`,
+      );
       expect(response.status()).toBe(200);
       return (await response.json()).items;
     })
@@ -194,9 +196,7 @@ export async function keyboardSelect(
   await expect(target).toHaveValue(value);
 }
 export async function keyboardReopen(page: Page) {
-  const title = await page
-    .getByLabel("Название заявки", { exact: true })
-    .inputValue();
+  const title = (await page.locator("h1").innerText()).trim();
   await keyboardActivate(
     page,
     page.getByRole("link", { name: "Заявки", exact: true }),
@@ -214,9 +214,7 @@ export async function keyboardReopen(page: Page) {
     await expect(requestLink).toBeVisible();
   }
   await keyboardActivate(page, requestLink);
-  await expect(page.getByLabel("Название заявки", { exact: true })).toHaveValue(
-    title,
-  );
+  await expect(page.locator("h1")).toHaveText(title);
   keyboardMetrics.appReopens++;
 }
 export async function saveKeyboardMetrics(directory: string, status: string) {

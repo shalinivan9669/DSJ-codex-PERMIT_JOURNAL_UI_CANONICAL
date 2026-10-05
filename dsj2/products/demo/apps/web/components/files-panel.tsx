@@ -312,7 +312,7 @@ export function FilesPanel({
     ? "Документы и печать"
     : "Предпросмотр документов";
   if (!jobs.length && !issuances.length && !error)
-    return (
+    return draft.kind === "PERSON" && draft.items.length === 1 ? null : (
       <section id="request-files" className="files-empty">
         <Icon name={allowPrint ? "print" : "search"} />
         <p>

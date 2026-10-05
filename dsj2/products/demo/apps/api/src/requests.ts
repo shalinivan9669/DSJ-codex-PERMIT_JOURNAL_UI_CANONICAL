@@ -3,8 +3,8 @@ import {
   draftSchema,
   patchSchema,
   finalizeSchema,
+  previewSchema,
   validateDraft,
-  validateBusinessRules,
   profileSchema,
   type Draft,
   protocolTemplateFor,
@@ -22,6 +22,7 @@ import {
   isTechnicalBlankRecipient,
   hasEnglishDraftValues,
   type AssignmentIdentity,
+  type PreviewTarget,
 } from "@demo/contracts";
 import { Prisma } from "@demo/database";
 import { ArtifactStore, runRender } from "@demo/printing";
@@ -47,6 +48,7 @@ import { replaceableImportScaffoldId } from "./import-scaffold";
 import {
   companyEmployerId,
   personCustomerName,
+  requestDisplayTitle,
   withCustomerIdentity,
 } from "./request-customer";
 import {
@@ -65,7 +67,10 @@ import {
 } from "./service-rule-applicability";
 import { resetRetakeAttempt, resetRetakeEvent } from "./retake-attempt";
 import { approvalPreviewSamples } from "./approval-preview";
+import { previewScope, previewIssueApplies } from "./preview-scope";
+import { recoverPreviewArtifacts } from "./preview-artifacts";
 import { checkLayoutBatches } from "./layout-preflight";
+import { recipientRestoreBaseline } from "./recipient-restore";
 export function namespace(templateId: string) {
   const family = templateId.split("-")[0].toUpperCase();
   const kind = templateId.endsWith("protocol")
@@ -569,7 +574,10 @@ export async function createRequest(
 }
 export async function patchRequest(c: Context, id: string, input: unknown) {
   assertStaff(c, true);
-  const { expectedRevision, draft } = parse(patchSchema, input);
+  const { expectedRevision, draft, restoreRecipientId } = parse(
+    patchSchema,
+    input,
+  );
   if (
     (await db.tenant.findUniqueOrThrow({ where: { id: c.tenantId } })).demoOnly
   )
@@ -587,7 +595,29 @@ export async function patchRequest(c: Context, id: string, input: unknown) {
       fail(409, "REVISION_CONFLICT", "Заявка изменена другим оператором", {
         revision: record.revision,
       });
-    protectOutcomeMetadata(c, draft, draftSchema.parse(record.draft));
+    const current = draftSchema.parse(record.draft);
+    const baseline = restoreRecipientId
+      ? recipientRestoreBaseline({
+          tenantId: c.tenantId,
+          requestId: id,
+          revision: expectedRevision,
+          rowId: restoreRecipientId,
+          current,
+          incoming: draft,
+          proposal: current.items.some((row) => row.id === restoreRecipientId)
+            ? null
+            : await tx.requestProposal.findFirst({
+                where: {
+                  tenantId: c.tenantId,
+                  requestId: id,
+                  revision: expectedRevision,
+                  operation: "SAVE",
+                  status: "DRAFT",
+                },
+              }),
+        })
+      : current;
+    protectOutcomeMetadata(c, draft, baseline);
     return submitProposal(tx, c, id, draft, expectedRevision);
   });
 }
@@ -818,9 +848,21 @@ export async function listRequests(c: Context, query: Record<string, unknown>) {
           ? customers.find((entry) => entry.id === displayDraft.customerId) ||
             null
           : null;
+      const customerName =
+        displayDraft.kind === "PERSON"
+          ? personCustomerName(displayDraft) || null
+          : displayDraft.organizationSnapshots?.find(
+              (entry) => entry.id === displayDraft.customerId,
+            )?.nameRu ||
+            customer?.nameRu ||
+            null;
+      const displayTitle = requestDisplayTitle(
+        displayDraft.title,
+        customerName,
+      );
       return {
         ...item,
-        title: displayDraft.title,
+        title: displayTitle,
         ...(working
           ? {
               kind: working.kind,
@@ -831,14 +873,7 @@ export async function listRequests(c: Context, query: Record<string, unknown>) {
           : {}),
         archived: !!item.archivedAt,
         customer,
-        customerName:
-          displayDraft.kind === "PERSON"
-            ? personCustomerName(displayDraft) || null
-            : displayDraft.organizationSnapshots?.find(
-                (entry) => entry.id === displayDraft.customerId,
-              )?.nameRu ||
-              customer?.nameRu ||
-              null,
+        customerName,
         lifecycle:
           workflows.find((entry) => entry.requestId === item.id)?.status ||
           (item.status === "FINALIZED" ? "LEGACY_ISSUED" : null),
@@ -980,6 +1015,7 @@ async function validation(
   assignments?: AssignmentIdentity[],
   fullWorkingDraft = false,
   proposalDraft?: Draft,
+  previewTarget?: PreviewTarget,
 ) {
   const record = await workingRequest(c, id, tx);
   if (record.revision !== expectedRevision)
@@ -1001,7 +1037,10 @@ async function validation(
             ),
           }
         : await selectBatch(tx, c, id, workingDraft, assignments);
-  const savedDraft = selectedScope.draft;
+  const sourceDraft = selectedScope.draft;
+  const savedDraft = previewTarget
+    ? previewScope(sourceDraft, previewTarget)
+    : sourceDraft;
   let resolved = resolveDraft(savedDraft);
   let draft = resolved.draft;
   await checkReferences(tx, c, draft);
@@ -1029,6 +1068,15 @@ async function validation(
       })),
     },
     parsedProfile,
+    previewTarget
+      ? {
+          assignmentIds: [
+            previewTarget.kind === "ASSIGNMENT"
+              ? previewTarget.assignmentId
+              : previewTarget.eventId,
+          ],
+        }
+      : {},
   );
   issues.push(...resolved.issues);
   if (hasEnglishDraftValues(draft))
@@ -1096,6 +1144,12 @@ async function validation(
   );
   for (const item of draft.items)
     for (const assignment of item.assignments) {
+      if (
+        previewTarget &&
+        (previewTarget.kind === "GROUP_PROTOCOL" ||
+          assignment.id !== previewTarget.assignmentId)
+      )
+        continue;
       const template = selected.get(assignmentTemplateKey(assignment));
       if (!template || !template.approved)
         issues.push({
@@ -1140,17 +1194,25 @@ async function validation(
       )
     )
       issues.push(
-        ...validateBusinessRules(
+        ...validateDraft(
           { ...draft, items: [] },
           profileSchema.parse(row.profile),
-        ).map((issue) => ({
-          ...issue,
-          path: `events.${event.id}.${issue.path}`,
-        })),
+        )
+          .filter(
+            (issue) =>
+              issue.path === "profile" || issue.path.startsWith("profile."),
+          )
+          .map((issue) => ({
+            ...issue,
+            path: `events.${event.id}.${issue.path}`,
+          })),
       );
     const members =
-      documentPlan(draft).groups.find((group) => group.event.id === event.id)
-        ?.members || [];
+      previewTarget?.kind === "ASSIGNMENT"
+        ? []
+        : documentPlan(draft).groups.find(
+            (group) => group.event.id === event.id,
+          )?.members || [];
     if (!members.length) continue;
     const template = groupSelected.get(
       assignmentTemplateKey(members[0].assignment, event.protocolTemplateId),
@@ -1198,7 +1260,10 @@ async function validation(
         ...validateDraft(
           memberDraft,
           row ? profileSchema.parse(row.profile) : null,
-          { skipBusinessRules: true },
+          {
+            skipBusinessRules: true,
+            ...(previewTarget ? { assignmentIds: [protocol.id] } : {}),
+          },
         ).map((issue) => {
           const addressed = stableValidationIssue(memberDraft, issue);
           const rowIndex = draft.items.findIndex(
@@ -1249,6 +1314,14 @@ async function validation(
     const retainedIssues = issues.filter(
       (issue) => !technicalRows.has(issue.rowId || issue.recipientId || ""),
     );
+    issues.splice(0, issues.length, ...retainedIssues);
+  }
+  if (previewTarget) {
+    const retainedIssues = issues
+      .filter((issue) => previewIssueApplies(draft, previewTarget, issue))
+      .map((issue) =>
+        stableValidationIssue(sourceDraft, stableValidationIssue(draft, issue)),
+      );
     issues.splice(0, issues.length, ...retainedIssues);
   }
   return {
@@ -2351,21 +2424,7 @@ export async function finalize(
   });
 }
 export async function preview(c: Context, id: string, input: unknown) {
-  const data = parse(
-    finalizeSchema
-      .extend({
-        proposalId: z.string().min(1).max(80).optional(),
-        expectedProposalHash: z
-          .string()
-          .regex(/^[a-f0-9]{64}$/)
-          .optional(),
-      })
-      .refine(
-        (value) => !!value.proposalId === !!value.expectedProposalHash,
-        "Укажите редакцию и её контрольную сумму вместе",
-      ),
-    input,
-  );
+  const data = parse(previewSchema, input);
   return transaction(async (tx) => {
     // Serialize enqueueing with edits and archive decisions on this request.
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
@@ -2389,9 +2448,26 @@ export async function preview(c: Context, id: string, input: unknown) {
       : null;
     if (
       data.proposalId &&
-      (!proposal || proposal.proposalHash !== data.expectedProposalHash)
+      (!proposal ||
+        proposal.proposalHash !== data.expectedProposalHash ||
+        (data.target && proposal.revision !== data.expectedRevision))
     )
       fail(409, "APPROVAL_STALE", "Сначала обновите переданную редакцию");
+    if (
+      proposal &&
+      data.target?.kind === "ASSIGNMENT" &&
+      proposal.assignments &&
+      !(proposal.assignments as AssignmentIdentity[]).some(
+        (identity) =>
+          assignmentIdentityKey(identity) ===
+          assignmentIdentityKey(data.target as AssignmentIdentity),
+      )
+    )
+      fail(
+        404,
+        "PREVIEW_TARGET_NOT_FOUND",
+        "Документ не входит в переданную редакцию",
+      );
     const expectedRevision = proposal?.revision ?? data.expectedRevision;
     const v = await validation(
       tx,
@@ -2403,23 +2479,28 @@ export async function preview(c: Context, id: string, input: unknown) {
         : undefined,
       !proposal,
       proposal ? submittedProposalDraft(proposal) : undefined,
+      data.target,
     );
     const previewKey = proposal
       ? `approval-preview:${proposal.id}:${proposal.proposalHash}`
       : `preview:${id}:${expectedRevision}`;
     if (!v.profile || !v.parsedProfile)
       fail(422, "ISSUER_REQUIRED", "Сохраните профиль центра");
-    const previewIssues = v.issues.filter((issue) =>
-      [
-        "BIOT_ECS_REQUIRED",
-        "BIOT_CATEGORY_TEMPLATE",
-        "BIOT_CATEGORY_REQUIRED",
-        "BIOT_UNIQUE_NUMBER_CONFLICT",
-        "BIOT_CREDENTIAL_AMBIGUOUS",
-        "DATE_INVALID",
-        "NEW_ISSUE_LANGUAGE_UNSUPPORTED",
-      ].includes(issue.code),
-    );
+    const previewIssues = data.target
+      ? v.issues
+      : v.issues.filter((issue) =>
+          [
+            "BIOT_ECS_REQUIRED",
+            "BIOT_CATEGORY_TEMPLATE",
+            "BIOT_CATEGORY_REQUIRED",
+            "BIOT_UNIQUE_NUMBER_CONFLICT",
+            "BIOT_CREDENTIAL_AMBIGUOUS",
+            "DATE_INVALID",
+            "DATE_ORDER",
+            "TRAINING_BEFORE_DOCUMENT",
+            "NEW_ISSUE_LANGUAGE_UNSUPPORTED",
+          ].includes(issue.code),
+        );
     if (previewIssues.length)
       fail(
         422,
@@ -2431,14 +2512,21 @@ export async function preview(c: Context, id: string, input: unknown) {
     const organizations = await organizationMap(tx, c, v.draft);
     const employerId = companyEmployerId(v.draft);
     const customer = employerId ? organizations.get(employerId) || null : null;
-    const organizationFingerprint = hash([...organizations.values()]);
     const jobs = [];
-    const samples = proposal ? approvalPreviewSamples(v.draft) : null;
+    const samples =
+      proposal && !data.target ? approvalPreviewSamples(v.draft) : null;
     const sampleKeys = samples
       ? new Set(samples.map(assignmentIdentityKey))
       : null;
     for (const item of v.draft.items)
       for (const assignment of item.assignments) {
+        if (
+          data.target &&
+          (data.target.kind !== "ASSIGNMENT" ||
+            data.target.rowId !== item.id ||
+            data.target.assignmentId !== assignment.id)
+        )
+          continue;
         if (
           sampleKeys &&
           !sampleKeys.has(
@@ -2451,17 +2539,11 @@ export async function preview(c: Context, id: string, input: unknown) {
           continue;
         const template = v.selected.get(assignmentTemplateKey(assignment));
         if (!template) fail(422, "TEMPLATE_REQUIRED", "Шаблон отсутствует");
-        const logicalKey = `${previewKey}:${v.profile.id}:${template.id}:${item.id}:${assignment.id}:${organizationFingerprint}`;
-        const previous = await tx.generationJob.findMany({
-          where: {
-            logicalKey: { startsWith: logicalKey + ":" },
-            tenantId: c.tenantId,
-          },
-        });
-        if (previous.length) {
-          jobs.push(...previous);
-          continue;
-        }
+        const issuer = (assignment.eventId &&
+          v.eventProfiles.get(assignment.eventId)) || {
+          id: v.profile.id,
+          profile: v.parsedProfile,
+        };
         const renderInput = {
           mode: "draft-preview",
           demoMode: true,
@@ -2471,7 +2553,7 @@ export async function preview(c: Context, id: string, input: unknown) {
           templateVersion: template.version,
           templateStorageKey: template.storageKey,
           templateChecksum: template.checksum,
-          issuer: v.parsedProfile,
+          issuer: issuer.profile,
           items: [
             {
               ...item,
@@ -2488,20 +2570,40 @@ export async function preview(c: Context, id: string, input: unknown) {
               ...employerFields(item, customer, organizations),
             },
           ],
-          photos,
+          photos:
+            item.photoAssetId && photos[item.photoAssetId]
+              ? { [item.photoAssetId]: photos[item.photoAssetId] }
+              : {},
         };
-        const snapshot = await tx.renderInputSnapshot.create({
-          data: {
+        const logicalKey = `${previewKey}:${issuer.id}:${template.id}:${item.id}:${assignment.id}:${hash(renderInput)}`;
+        let previous = await tx.generationJob.findMany({
+          where: {
+            logicalKey: { startsWith: logicalKey + ":" },
             tenantId: c.tenantId,
             requestId: id,
-            revision: expectedRevision,
-            templateVersionId: template.id,
-            profileVersionId: v.profile.id,
-            input: json(renderInput),
-            inputHash: hash(renderInput),
           },
         });
-        for (const kind of ["DOCX", "PDF"])
+        if (data.target)
+          previous = await recoverPreviewArtifacts(tx, c, previous);
+        jobs.push(...previous);
+        const missingKinds = ["DOCX", "PDF"].filter(
+          (kind) => !previous.some((job) => job.kind === kind),
+        );
+        if (!missingKinds.length) continue;
+        const snapshot = previous.length
+          ? { id: previous[0].snapshotId }
+          : await tx.renderInputSnapshot.create({
+              data: {
+                tenantId: c.tenantId,
+                requestId: id,
+                revision: expectedRevision,
+                templateVersionId: template.id,
+                profileVersionId: issuer.id,
+                input: json(renderInput),
+                inputHash: hash(renderInput),
+              },
+            });
+        for (const kind of missingKinds)
           jobs.push(
             await tx.generationJob.create({
               data: {
@@ -2515,24 +2617,20 @@ export async function preview(c: Context, id: string, input: unknown) {
           );
       }
     for (const { event, members } of documentPlan(v.draft).groups) {
+      if (
+        data.target &&
+        (data.target.kind !== "GROUP_PROTOCOL" ||
+          data.target.eventId !== event.id)
+      )
+        continue;
       const template = v.groupSelected.get(
         assignmentTemplateKey(members[0].assignment, event.protocolTemplateId),
       );
       if (!template)
         fail(422, "TEMPLATE_REQUIRED", "Групповой шаблон отсутствует");
-      const logicalKey = `${previewKey}:${v.profile.id}:${template.id}:group:${event.id}:${organizationFingerprint}:header-v1`;
-      const existing = await tx.generationJob.findMany({
-        where: {
-          tenantId: c.tenantId,
-          logicalKey: { startsWith: logicalKey + ":" },
-        },
-      });
-      if (existing.length) {
-        jobs.push(...existing);
-        continue;
-      }
       const items = members.map(({ item, assignment }) => ({
         ...item,
+        assignments: undefined,
         ...employerFields(item, customer, organizations),
         assignment: eventProtocolAssignment(
           event,
@@ -2562,18 +2660,36 @@ export async function preview(c: Context, id: string, input: unknown) {
         items,
         groupHeaderWorkplace: groupHeaderWorkplace(template.templateId, items),
       };
-      const snapshot = await tx.renderInputSnapshot.create({
-        data: {
+      const logicalKey = `${previewKey}:${v.eventProfiles.get(event.id)?.id || v.profile.id}:${template.id}:group:${event.id}:${hash(renderInput)}`;
+      let existing = await tx.generationJob.findMany({
+        where: {
           tenantId: c.tenantId,
           requestId: id,
-          revision: expectedRevision,
-          templateVersionId: template.id,
-          profileVersionId: v.eventProfiles.get(event.id)?.id || v.profile.id,
-          input: json(renderInput),
-          inputHash: hash(renderInput),
+          logicalKey: { startsWith: logicalKey + ":" },
         },
       });
-      for (const kind of ["DOCX", "PDF"])
+      if (data.target)
+        existing = await recoverPreviewArtifacts(tx, c, existing);
+      jobs.push(...existing);
+      const missingKinds = ["DOCX", "PDF"].filter(
+        (kind) => !existing.some((job) => job.kind === kind),
+      );
+      if (!missingKinds.length) continue;
+      const snapshot = existing.length
+        ? { id: existing[0].snapshotId }
+        : await tx.renderInputSnapshot.create({
+            data: {
+              tenantId: c.tenantId,
+              requestId: id,
+              revision: expectedRevision,
+              templateVersionId: template.id,
+              profileVersionId:
+                v.eventProfiles.get(event.id)?.id || v.profile.id,
+              input: json(renderInput),
+              inputHash: hash(renderInput),
+            },
+          });
+      for (const kind of missingKinds)
         jobs.push(
           await tx.generationJob.create({
             data: {
@@ -2589,6 +2705,7 @@ export async function preview(c: Context, id: string, input: unknown) {
     await audit(tx, c, "PREVIEW_QUEUED", id, {
       revision: expectedRevision,
       jobs: jobs.length,
+      ...(data.target ? { target: data.target } : {}),
       ...(proposal
         ? { proposalId: proposal.id, proposalHash: proposal.proposalHash }
         : {}),
@@ -2596,6 +2713,7 @@ export async function preview(c: Context, id: string, input: unknown) {
     return {
       jobs,
       revision: expectedRevision,
+      ...(data.target ? { target: data.target } : {}),
       ...(proposal
         ? {
             proposalId: proposal.id,
@@ -2691,6 +2809,16 @@ export async function retake(c: Context, id: string, input: unknown) {
         trainingEnd: "",
         validUntil: "",
         externalBasisNumber: "",
+        // A retake starts a new attempt. Explicit clearing prevents centre
+        // defaults from silently restoring dates or a basis from any attempt.
+        fieldOrigins: {
+          documentDate: "CLEARED",
+          protocolDate: "CLEARED",
+          trainingStart: "CLEARED",
+          trainingEnd: "CLEARED",
+          validUntil: "CLEARED",
+          externalBasisNumber: "CLEARED",
+        },
       },
       profileVersionId: source.profileVersionId,
       events: event ? [event] : [],

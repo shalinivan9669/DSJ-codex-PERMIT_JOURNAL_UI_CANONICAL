@@ -48,8 +48,6 @@ export function RequestOrganizationFields({
   onChange,
   onEdit,
   onFind,
-  onCreate,
-  onCancelNew,
   disabled = false,
   busy = false,
   error,
@@ -59,8 +57,6 @@ export function RequestOrganizationFields({
   onChange: (value: RequestOrganizationSelection) => void;
   onEdit?: (customer: Customer) => void;
   onFind?: () => void;
-  onCreate?: () => void;
-  onCancelNew?: () => void;
   disabled?: boolean;
   busy?: boolean;
   error?: string;
@@ -80,8 +76,6 @@ export function RequestOrganizationFields({
     ? ORGANIZATION_FORMS.find((form) => form.value === selected.legalForm)
         ?.label
     : "Сохранённое название — как введено";
-  const creationIssue =
-    value.mode === "new" ? customerSchema.safeParse(value.names) : null;
   if (selected && !choicesOpen)
     return (
       <div className="request-organization-selected-compact">
@@ -219,12 +213,9 @@ export function RequestOrganizationFields({
             autoFocus={false}
             compactHints
             hideEmptyPreview
+            requestEntry
             showRequiredErrors={touched || !!error}
           />
-          <p className="fine-print">
-            Ввод сохраняется для этой заявки. Валидная компания будет применена
-            при сохранении или проверке данных; можно применить её сейчас.
-          </p>
         </fieldset>
       ) : selected ? (
         <button
@@ -235,33 +226,6 @@ export function RequestOrganizationFields({
           Готово: {selected.nameRu}
         </button>
       ) : null}
-      {value.mode === "new" && onCreate && (
-        <div className="toolbar">
-          <button
-            type="button"
-            className="primary"
-            disabled={disabled || !creationIssue?.success || busy}
-            onClick={() => {
-              setChoicesOpen(false);
-              onCreate();
-            }}
-          >
-            {busy ? "Сохраняем компанию…" : "Использовать эту компанию"}
-          </button>
-          {onCancelNew && (
-            <button
-              type="button"
-              disabled={disabled || busy}
-              onClick={() => {
-                setChoicesOpen(false);
-                onCancelNew();
-              }}
-            >
-              Отмена
-            </button>
-          )}
-        </div>
-      )}
       {value.mode === "existing" && selected && choicesOpen ? (
         <div className="request-organization-selected stack">
           <p>

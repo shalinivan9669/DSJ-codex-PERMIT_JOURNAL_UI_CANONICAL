@@ -10,10 +10,15 @@ import {
 import { draftSchema } from "../../packages/contracts/src";
 import { assertTestDatabase } from "../../tests/integration/test-database";
 
-function inside(parent: string, target: string) {
+function isInside(parent: string, target: string) {
   const child = relative(parent, target);
-  assert.ok(child && !isAbsolute(child));
-  assert.ok(!/^\.\.(?:[\\/]|$)/.test(child));
+  return Boolean(
+    child && !isAbsolute(child) && !/^\.\.(?:[\\/]|$)/.test(child),
+  );
+}
+
+function inside(parent: string, target: string) {
+  assert.ok(isInside(parent, target));
 }
 
 function evidenceDirectory(folder: string) {
@@ -25,7 +30,14 @@ function evidenceDirectory(folder: string) {
   const allowed = configured
     ? resolve(configured)
     : resolve(implementation, "domain");
-  inside(implementation, allowed);
+  const taskRoots = [
+    implementation,
+    resolve("docs/evidence/operator-details-ux-20261005"),
+  ];
+  assert.ok(
+    taskRoots.some((root) => isInside(root, allowed)),
+    "INTERNAL_QA_EVIDENCE_MUST_BELONG_TO_AN_ALLOWED_TASK",
+  );
   const target = resolve(folder);
   inside(allowed, target);
   return target;

@@ -1,5 +1,10 @@
 import { loginIsolated } from "./operator-full-fix-session";
-import { assertTechnicalBlankRemoval, openRecipientExtraTools } from "./operator-keyboard-helpers";
+import {
+  assertTechnicalBlankRemoval,
+  keyboardFocus,
+  keyboardActivate,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -13,11 +18,11 @@ async function login(page: Page) {
   await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
   return loginIsolated(page);
 }
-async function create(page: Page, company = false) {
+async function create(page: Page) {
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
   await page
     .getByRole("radio", {
-      name: company ? /^Организация/ : /^Физическое лицо/,
+      name: /^Организация/,
     })
     .check();
   await page.getByRole("button", { name: "Далее", exact: true }).click();
@@ -41,17 +46,56 @@ test("real UI creates one, then keyboard enters ten without opening cards and pe
   await login(page);
   const start = performance.now();
   const id = await create(page);
+  let companyCreateRequests = 0;
+  page.on("request", (request) => {
+    if (
+      request.method() === "POST" &&
+      new URL(request.url()).pathname === "/api/customers"
+    )
+      companyCreateRequests++;
+  });
   const first = page.getByLabel("ФИО, строка 1", { exact: true });
+  // COMPANY preserves the page entry focus; reach its shared field by keyboard.
+  const companyName = page.getByLabel("Название компании", { exact: true });
+  await keyboardFocus(page, companyName);
+  await expect(companyName).toBeFocused();
+  const companyText = `Синтетическая клавиатурная компания ${id}`;
+  await page.keyboard.insertText(companyText);
+  await expect(companyName).toHaveValue(companyText);
+  await expect(companyName).toBeFocused();
+  await keyboardFocus(page, first);
   await expect(first).toBeFocused();
   await page.keyboard.insertText("Синтетический Андрей Александрович");
-  await save(page);
-  expect((await read(page, id)).items[0].fullNameRu).toBe(
-    "Синтетический Андрей Александрович",
+  // People autosave while the new company name remains a staged local value.
+  // A local company-save indicator alone does not prove a persisted person.
+  await expect
+    .poll(async () => (await read(page, id)).items[0].fullNameRu)
+    .toBe("Синтетический Андрей Александрович");
+  expect((await read(page, id)).customerId).toBeNull();
+  expect(companyCreateRequests).toBe(0);
+  await expect(page.locator(".save-indicator").first()).toHaveText(
+    "Ввод компании сохранён",
   );
   const firstSavedMs = performance.now() - start;
+  // Commit the company through the existing explicit save command, by keyboard.
+  await keyboardActivate(
+    page,
+    page.getByRole("button", { name: "Дополнительные действия", exact: true }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", { name: "Сохранить изменения", exact: true }),
+  );
+  await expect
+    .poll(async () => (await read(page, id)).customerId)
+    .toEqual(expect.any(String));
+  await save(page);
+  const companyId = (await read(page, id)).customerId;
+  expect(companyId).toBeTruthy();
+  expect(companyCreateRequests).toBe(1);
   for (let i = 1; i < 10; i++)
     await page
-      .getByRole("button", { name: "Добавить строку", exact: true })
+      .getByRole("button", { name: "Добавить сотрудника", exact: true })
       .click();
   await first.fill("");
   const entryStart = performance.now();
@@ -77,15 +121,29 @@ test("real UI creates one, then keyboard enters ten without opening cards and pe
       await page.keyboard.press("Enter");
     }
   }
+  await expect
+    .poll(async () =>
+      (await read(page, id)).items.map((item) => [
+        item.fullNameRu,
+        item.positionRu,
+        item.positionKz,
+      ]),
+    )
+    .toEqual(expected);
   await save(page);
   const keyboardSavedMs = performance.now() - entryStart;
   const persisted = await read(page, id);
+  expect(persisted.customerId).toBe(companyId);
+  expect(companyCreateRequests).toBe(1);
   expect(
     persisted.items.map((i) => [i.fullNameRu, i.positionRu, i.positionKz]),
   ).toEqual(expected);
   await page.reload();
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(10);
-  expect((await read(page, id)).items).toEqual(persisted.items);
+  const reloaded = await read(page, id);
+  expect(reloaded.items).toEqual(persisted.items);
+  expect(reloaded.customerId).toBe(companyId);
+  expect(companyCreateRequests).toBe(1);
   await page.screenshot({
     path: path.join(evidence, "ten-keyboard-saved.png"),
     fullPage: true,
@@ -96,6 +154,10 @@ test("real UI creates one, then keyboard enters ten without opening cards and pe
       {
         id,
         firstSavedMs,
+        companyId,
+        companyCreateRequests,
+        companyCommittedByKeyboardSave: true,
+        personAutosavedBeforeCompanyCommit: true,
         keyboardSavedMs,
         entryMouseClicks: 0,
         cardOpenings: 0,
@@ -141,7 +203,7 @@ test("real existing organization and recipient reuse keeps personal data and res
   });
   expect(stored.ok(), await stored.text()).toBe(true);
   const record = await stored.json();
-  const id = await create(page, true);
+  const id = await create(page);
   await page
     .getByRole("button", { name: "Из справочника", exact: true })
     .click();
@@ -211,9 +273,7 @@ test("real CSV import explains duplicates and missing names, explicit exclusions
     .click();
   await assertTechnicalBlankRemoval(page);
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page
     .getByLabel("Табличный файл")
     .setInputFiles(
@@ -222,9 +282,6 @@ test("real CSV import explains duplicates and missing names, explicit exclusions
         "../../../tests/fixtures/operator-complete/people-errors.csv",
       ),
     );
-  await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
-    .click();
   const modal = page.getByRole("dialog");
   await expect(
     modal.getByRole("row").filter({

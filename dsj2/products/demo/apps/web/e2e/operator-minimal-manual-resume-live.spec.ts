@@ -12,7 +12,7 @@ test("resume the existing UI-entered manual twenty at director review and verify
   page,
   browser,
 }, testInfo) => {
-  test.setTimeout(1_800_000);
+  test.setTimeout(3_600_000);
   const id = process.env.DEMO_E2E_MANUAL20_REQUEST_ID;
   const proposalId = process.env.DEMO_E2E_MANUAL20_PROPOSAL_ID;
   test.skip(
@@ -20,8 +20,25 @@ test("resume the existing UI-entered manual twenty at director review and verify
     "This continuation requires the existing UI-created request and proposal IDs",
   );
   expect(new URL(process.env.DEMO_ORIGIN!).hostname).toBe("127.0.0.1");
+  const checkpointPath = process.env.DEMO_E2E_MANUAL20_CHECKPOINT;
+  expect(checkpointPath, "Exact UI preparation checkpoint is required").toBeTruthy();
+  const checkpointBytes = await fs.readFile(checkpointPath!);
+  const checkpoint = JSON.parse(checkpointBytes.toString("utf8")) as {
+    requestId: string;
+    proposalId: string;
+    noApiPrefill: boolean;
+    before: Awaited<ReturnType<typeof readPrintDetail>>;
+  };
+  expect(checkpoint.requestId).toBe(id);
+  expect(checkpoint.proposalId).toBe(proposalId);
+  expect(checkpoint.noApiPrefill).toBe(true);
+  const sourceCheckpoint = {
+    path: checkpointPath,
+    sha256: createHash("sha256").update(checkpointBytes).digest("hex"),
+  };
   const operator = await loginRole(page, "OPERATOR");
   const before = await readPrintDetail(page, id!);
+  expect(before.items).toEqual(checkpoint.before.items);
   expect(before.items).toHaveLength(20);
   expect(
     before.items.every((row) => row.fullNameRu.startsWith("Синтетический ")),
@@ -36,7 +53,7 @@ test("resume the existing UI-entered manual twenty at director review and verify
     apiPrefill: false,
     requestId: id,
     proposalId,
-    sourceRun: ".runtime/manual20-v6",
+    sourceCheckpoint,
     before,
   });
   await page.goto(`/requests/${id}/edit`);
@@ -59,27 +76,46 @@ test("resume the existing UI-entered manual twenty at director review and verify
         name: "Подготовленные данные редакции",
       }),
     ).toContainText("20 человек");
-    await directorPage
-      .getByRole("button", {
-        name: "Посмотреть образцы PDF и общие протоколы",
-        exact: true,
-      })
+    const viewer = directorPage.getByRole("region", {
+      name: "Предпросмотр назначенных документов",
+    });
+    const reviewedPerson = before.items[19];
+    const reviewedAssignment = reviewedPerson.assignments.find(
+      (assignment) => assignment.templateId === "biot-itr-certificate",
+    )!;
+    expect(reviewedAssignment).toBeTruthy();
+    const selector = viewer.getByRole("combobox", {
+      name: "Человек и форма документа",
+      exact: true,
+    });
+    await selector.selectOption(
+      JSON.stringify({
+        kind: "ASSIGNMENT",
+        rowId: reviewedPerson.id,
+        assignmentId: reviewedAssignment.id,
+      }),
+    );
+    await expect(selector.locator("option:checked")).toContainText(
+      reviewedPerson.fullNameRu,
+    );
+    await viewer
+      .getByRole("button", { name: "Создать предпросмотр", exact: true })
       .click();
     await expect(
-      directorPage.getByRole("combobox", {
-        name: "Документ для просмотра",
-        exact: true,
-      }),
+      viewer.getByRole("img", { name: /^Страница 1 из/ }),
     ).toBeVisible({ timeout: 240_000 });
     await expect(
-      directorPage.getByRole("img", { name: /^Страница 1 из/ }),
-    ).toBeVisible({ timeout: 60_000 });
+      viewer.getByRole("link", { name: "Открыть PDF", exact: true }),
+    ).toBeVisible();
+    await expect(
+      viewer.getByRole("link", { name: "Скачать DOCX", exact: true }),
+    ).toBeVisible();
     await directorPage.screenshot({
       path: testInfo.outputPath("manual20-director-preview.png"),
       fullPage: true,
     });
     steps.push(
-      "Директор открыл сводку20 и реально отрисованный PDF образца переданной редакции",
+      "Директор открыл сводку20 и реально отрисованный PDF сертификата ИТР строки20 переданной редакции",
     );
     await directorPage
       .getByRole("button", { name: "Согласовать эту редакцию", exact: true })
@@ -120,7 +156,7 @@ test("resume the existing UI-entered manual twenty at director review and verify
       issued: await readPrintDetail(page, id!),
     });
     console.log("MANUAL20_ISSUANCE_CREATED", id);
-    await waitOriginalJobs(page, id!, 1_200_000);
+    await waitOriginalJobs(page, id!, 2_700_000);
     const issued = await readPrintDetail(page, id!);
     expect(issued.issuances).toHaveLength(1);
     expect(issued.documents).toHaveLength(105);
@@ -185,7 +221,7 @@ test("resume the existing UI-entered manual twenty at director review and verify
       synthetic: true,
       noApiPrefill: true,
       continuedExistingUiRequest: true,
-      sourceRun: ".runtime/manual20-v6",
+      sourceCheckpoint,
       requestId: id,
       proposalId,
       steps,

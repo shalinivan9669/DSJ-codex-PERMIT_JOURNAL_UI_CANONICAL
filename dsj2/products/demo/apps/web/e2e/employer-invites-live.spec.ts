@@ -4,8 +4,9 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { loginRole } from "./operator-role-fixture";
 const evidence = path.resolve(
-  process.env.DEMO_E2E_EVIDENCE ||
-    "../../docs/evidence/final-completion/invites/browser",
+  process.env.DEMO_E2E_EVIDENCE
+    ? path.join(process.env.DEMO_E2E_EVIDENCE, "employer-invites")
+    : "../../docs/evidence/final-completion/invites/browser",
 );
 test.use({ trace: "off" });
 test("live invitation UI: administrator grants selected-person scope, new employer accepts once, existing password and immediate revoke", async ({
@@ -177,9 +178,17 @@ test("live invitation UI: administrator grants selected-person scope, new employ
     ).toBeVisible();
     expect(urls.every((url) => !url.includes(token))).toBe(true);
     expect(referrers.every((value) => !value.includes(token))).toBe(true);
-    const logPaths = [process.env.DEMO_E2E_API_LOG, process.env.DEMO_E2E_API_ERROR_LOG];
-    expect(logPaths.every(Boolean), "Current isolated API stdout/stderr files are required; historical logs cannot prove token handling").toBe(true);
-    const apiLogs = await Promise.all(logPaths.map((file) => fs.readFile(file!, "utf8")));
+    const logPaths = [
+      process.env.DEMO_E2E_API_LOG,
+      process.env.DEMO_E2E_API_ERROR_LOG,
+    ];
+    expect(
+      logPaths.every(Boolean),
+      "Current isolated API stdout/stderr files are required; historical logs cannot prove token handling",
+    ).toBe(true);
+    const apiLogs = await Promise.all(
+      logPaths.map((file) => fs.readFile(file!, "utf8")),
+    );
     expect(apiLogs.every((value) => !value.includes(token))).toBe(true);
     expect(
       (await employerContext.cookies()).find((c) => c.name === "demo_session")

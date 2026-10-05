@@ -1,0 +1,302 @@
+{
+  "schema": "COMPANY_ORIGINAL_VISUAL_INSPECTION_1",
+  "capturedUtc": "2026-10-05T19:48:13.597246+00:00",
+  "status": "PASS",
+  "syntheticOnly": true,
+  "productionTouched": false,
+  "cycle": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-cycle.json",
+  "cycleSha256": "7e293acb40c13d97c94bd3650f53016745c0a5e207ae8837e3134ec32eefb71a",
+  "allSixOriginalHashesMatchBeforeAndAfter": true,
+  "requiredTextAndPageChecksPassed": true,
+  "documents": [
+    {
+      "documentId": "5ce417af-bb24-47ea-9548-756457b447cd",
+      "pageCountsAgree": true
+    },
+    {
+      "documentId": "4473009f-e150-4d67-9771-c8816e9c9473",
+      "pageCountsAgree": true
+    },
+    {
+      "documentId": "69028bc3-f538-4288-bf04-fd498108c3aa",
+      "pageCountsAgree": true
+    }
+  ],
+  "files": [
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-9b399ccb-e587-49be-b2dd-71e18745b86e-ptm-card-4473009f-e150-4d67-9771-c8816e9c9473.docx",
+      "documentId": "4473009f-e150-4d67-9771-c8816e9c9473",
+      "templateId": "ptm-card",
+      "format": "DOCX",
+      "sha256": "2f2fa9ee5c3fd96d2e5a37302bd59170e66ec460ec658326ca836ce67dbb234b",
+      "originalHashMatches": true,
+      "sourceDocxTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 1,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "f8c3822d730d8fb82834cb3ebb4632f194d9be4efbf00a61ede3785c61533822",
+        "textLength": 917,
+        "recipientNamesKzPresent": false,
+        "recipientNamesKzRequiredByTemplate": false,
+        "templateNameFields": [
+          "FULL_NAME_RU"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "embeddedMedia": [
+        {
+          "name": "word/media/generated-photo-0.png",
+          "sha256": "209ac64b5264442224f02984de46617c837971493ff35828e2e466c7bd8a0c7b"
+        }
+      ],
+      "independentDocxRender": true,
+      "renderCopySha256MatchesOriginal": true,
+      "shortWindowsRenderPath": true,
+      "privateLogSha256": "001a43b21f92b04068d29bcf3ca7400c1d9aad79c9c055eba9a1595de56fc26f",
+      "derivedPdfSha256": "4ee00ffdb3fdf2bc1f956c084beb5d1f8f9ae1854c246a0019c37bd2dcb9cd92",
+      "renderedTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 1,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "06af2449bf13752d7039d24c531e5932cce76bb4dc3026dc47dd514a2cf27368",
+        "textLength": 962,
+        "recipientNamesKzPresent": false,
+        "recipientNamesKzRequiredByTemplate": false,
+        "templateNameFields": [
+          "FULL_NAME_RU"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "pages": 1,
+      "pageImages": [
+        {
+          "page": 1,
+          "widthPt": 595.3,
+          "heightPt": 841.89,
+          "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/4473009f-e150-4d67-9771-c8816e9c9473-ptm-card/docx-render/page-1.png",
+          "imageSha256": "736cd37cff8f5cc4ec66ed507e51302d9fd052ec5e2d2a43d8e3be281c2ee2ba"
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-a10c7bd0-2a21-4640-81eb-f9aa937e3cf8-ptm-card-4473009f-e150-4d67-9771-c8816e9c9473.pdf",
+      "documentId": "4473009f-e150-4d67-9771-c8816e9c9473",
+      "templateId": "ptm-card",
+      "format": "PDF",
+      "sha256": "efd8115687af7c2782796c7eee38ea8e05fb1be510d7098739a685a3a82507e0",
+      "originalHashMatches": true,
+      "renderedTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 1,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "06af2449bf13752d7039d24c531e5932cce76bb4dc3026dc47dd514a2cf27368",
+        "textLength": 962,
+        "recipientNamesKzPresent": false,
+        "recipientNamesKzRequiredByTemplate": false,
+        "templateNameFields": [
+          "FULL_NAME_RU"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "pages": 1,
+      "pageImages": [
+        {
+          "page": 1,
+          "widthPt": 595.3,
+          "heightPt": 841.89,
+          "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/4473009f-e150-4d67-9771-c8816e9c9473-ptm-card/original-pdf/page-1.png",
+          "imageSha256": "c8b1d9827ff551112f0d7947310a62a540d98a2dd2161874b29c5e5c5a4a6217"
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-7c78df3e-8bc1-4a9d-9656-2838b351fa2b-ptm-card-5ce417af-bb24-47ea-9548-756457b447cd.docx",
+      "documentId": "5ce417af-bb24-47ea-9548-756457b447cd",
+      "templateId": "ptm-card",
+      "format": "DOCX",
+      "sha256": "e5a9959c80cb8b54214d68cb9ba17d2f528c5d6c186ab75e69d3510595800e39",
+      "originalHashMatches": true,
+      "sourceDocxTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 1,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "23b5f315a57bec1398a1a426cd2c3940d7a3b872c53fc948d70bf7b8d56cbe2a",
+        "textLength": 914,
+        "recipientNamesKzPresent": false,
+        "recipientNamesKzRequiredByTemplate": false,
+        "templateNameFields": [
+          "FULL_NAME_RU"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "embeddedMedia": [
+        {
+          "name": "word/media/generated-photo-0.png",
+          "sha256": "209ac64b5264442224f02984de46617c837971493ff35828e2e466c7bd8a0c7b"
+        }
+      ],
+      "independentDocxRender": true,
+      "renderCopySha256MatchesOriginal": true,
+      "shortWindowsRenderPath": true,
+      "privateLogSha256": "be83acf6fa9e09198d4ef8a7ab699f1d23aa6d83beafcf7f87995532c13a83ee",
+      "derivedPdfSha256": "54ffc2122188e0aebe2a7c20f9dabee154078402ce2d5b7b3c9a753be4e2105b",
+      "renderedTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 1,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "6358814bd89302a86650f490695db1ae1560f5fc20097fe233839ab7ff1ebde9",
+        "textLength": 959,
+        "recipientNamesKzPresent": false,
+        "recipientNamesKzRequiredByTemplate": false,
+        "templateNameFields": [
+          "FULL_NAME_RU"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "pages": 1,
+      "pageImages": [
+        {
+          "page": 1,
+          "widthPt": 595.3,
+          "heightPt": 841.89,
+          "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/5ce417af-bb24-47ea-9548-756457b447cd-ptm-card/docx-render/page-1.png",
+          "imageSha256": "4d0a68a0f0e9f4de43c6fe118f4a85092b0695de08388f9b4074587a9ed8c2eb"
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-0d7da28c-9324-49c9-820d-7f3ec71798df-ptm-card-5ce417af-bb24-47ea-9548-756457b447cd.pdf",
+      "documentId": "5ce417af-bb24-47ea-9548-756457b447cd",
+      "templateId": "ptm-card",
+      "format": "PDF",
+      "sha256": "ff5a95f762aa4e0d1cb19295262e9e1afaba78f1d9426f6b75097a99db1ea905",
+      "originalHashMatches": true,
+      "renderedTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 1,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "6358814bd89302a86650f490695db1ae1560f5fc20097fe233839ab7ff1ebde9",
+        "textLength": 959,
+        "recipientNamesKzPresent": false,
+        "recipientNamesKzRequiredByTemplate": false,
+        "templateNameFields": [
+          "FULL_NAME_RU"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "pages": 1,
+      "pageImages": [
+        {
+          "page": 1,
+          "widthPt": 595.3,
+          "heightPt": 841.89,
+          "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/5ce417af-bb24-47ea-9548-756457b447cd-ptm-card/original-pdf/page-1.png",
+          "imageSha256": "1dd758b507052dfd387b251146804e316b7118b8469a2300dfb13626606f0cde"
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-a2608b62-17d6-435d-a4e8-a937ce8e29d9-ptm-protocol-69028bc3-f538-4288-bf04-fd498108c3aa.docx",
+      "documentId": "69028bc3-f538-4288-bf04-fd498108c3aa",
+      "templateId": "ptm-protocol",
+      "format": "DOCX",
+      "sha256": "47c1820bd845e68a9fb88701bb3b0dda85775a6e664c4afbe11102784ee0ccae",
+      "originalHashMatches": true,
+      "sourceDocxTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 2,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "25428c97c89a5510420752678ed26c9bcba8115a2111ed12ca87a48493765dfb",
+        "textLength": 2746,
+        "templateNameFields": [
+          "FULL_NAME_BOTH"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "embeddedMedia": [],
+      "independentDocxRender": true,
+      "renderCopySha256MatchesOriginal": true,
+      "shortWindowsRenderPath": true,
+      "privateLogSha256": "ca9f0a33000d3239721736b8cee1725c911cef49c89409a3172b1c45fad2c673",
+      "derivedPdfSha256": "9978b1db76ed046f8b93818cfc1c57752272ae6893a245710e0976d9396afc73",
+      "renderedTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 2,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "31e87a42cab7291af4b02813a843c1304b37a47ace88bccbd1f5af660ccf4137",
+        "textLength": 2274,
+        "templateNameFields": [
+          "FULL_NAME_BOTH"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "pages": 1,
+      "pageImages": [
+        {
+          "page": 1,
+          "widthPt": 595.3,
+          "heightPt": 841.89,
+          "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/69028bc3-f538-4288-bf04-fd498108c3aa-ptm-protocol/docx-render/page-1.png",
+          "imageSha256": "df9609543f32b246393e6cd19df9962e9edbe241374ec1dabc2fd421584cae31"
+        }
+      ]
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-a835580a-202f-4d85-bc95-bca5f7c80341-ptm-protocol-69028bc3-f538-4288-bf04-fd498108c3aa.pdf",
+      "documentId": "69028bc3-f538-4288-bf04-fd498108c3aa",
+      "templateId": "ptm-protocol",
+      "format": "PDF",
+      "sha256": "7546b8f4918b70ed8965b5bed98ded0d49e1e026b958eebfcd49c1eb278548a9",
+      "originalHashMatches": true,
+      "renderedTextChecks": {
+        "documentNumberPresent": true,
+        "expectedRecipientCount": 2,
+        "recipientNamesRuPresent": true,
+        "companyNamePresent": true,
+        "textSha256": "31e87a42cab7291af4b02813a843c1304b37a47ace88bccbd1f5af660ccf4137",
+        "textLength": 2274,
+        "templateNameFields": [
+          "FULL_NAME_BOTH"
+        ],
+        "requiredTextChecksPassed": true
+      },
+      "pages": 1,
+      "pageImages": [
+        {
+          "page": 1,
+          "widthPt": 595.3,
+          "heightPt": 841.89,
+          "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/69028bc3-f538-4288-bf04-fd498108c3aa-ptm-protocol/original-pdf/page-1.png",
+          "imageSha256": "d45de577a336b0063d9f52060e31b624a89e1089327223083eb4e1fd855a6ce4"
+        }
+      ]
+    }
+  ],
+  "humanVisualReview": {
+    "status": "PASS",
+    "allPagesViewed": true,
+    "reviewer": "root assistant",
+    "report": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/visual-review.json",
+    "reportSha256": "d96df7419526d9848d624ab88a587ffd7f050541fee4f2395931a194b961465d"
+  },
+  "inspectionCorrection": {
+    "capturedUtc": "2026-10-05T19:50:34.480904+00:00",
+    "reason": "The initial QA helper incorrectly required independent Kazakh full names in PTM cards. The preserved PTM reference form declares FULL_NAME_RU only; absence of KZ full name remains recorded but is not an expected printed field.",
+    "templateManifest": "assets/templates/manifest.json",
+    "templateManifestSha256": "67d08eafe7fcf7048ca8773d53c8dca27cf8d1d8aa291daad89134d290263426",
+    "previousInspectionSha256": "9e0c7b4ecd6ac8934bd6e5d632ba6d28627ff513a20bfa3486abdbf415e7fafb",
+    "originalsOrTemplatesModified": false,
+    "renderRerun": false,
+    "allExistingPageHashesReverified": true,
+    "independentKzNamesRawAndSnapshotEvidence": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-cycle.json",
+    "independentKzNamesRawAndSnapshotVerifiedByBrowserCycle": true
+  }
+}

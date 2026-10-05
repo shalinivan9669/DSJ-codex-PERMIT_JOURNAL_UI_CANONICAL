@@ -245,7 +245,7 @@ export function draftPayload(draft: Draft) {
   } = draft;
   return {
     kind,
-    title: personRequestName(draft) || title,
+    title,
     customerId,
     organizationSnapshots,
     demoMode,
@@ -262,8 +262,19 @@ export function draftPayload(draft: Draft) {
   };
 }
 
-export function personRequestName(draft: Pick<Draft, "kind" | "items">) {
+export function personRequestName(
+  draft: Pick<Draft, "kind" | "items"> & { title?: string },
+) {
   if (draft.kind !== "PERSON") return "";
+  if (
+    draft.title &&
+    ![
+      "Новая заявка",
+      "Новая заявка на человека",
+      "Новая заявка физлица",
+    ].includes(draft.title)
+  )
+    return "";
   return (draft.items[0]?.fullNameRu || draft.items[0]?.fullNameKz || "")
     .trim()
     .slice(0, 255);

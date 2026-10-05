@@ -48,6 +48,17 @@ def date_fields(value):
             'ruCertificate': f'{value.day} {RU_MONTHS[value.month - 1]} {value.year} г.'}
 
 
+def training_date_fields(value, field):
+    """An omitted optional training date leaves its slots blank, without a fallback.
+
+    The draft contract allows a missing or partial period. A supplied invalid
+    date still fails, and neither issue nor commission dates complete the period.
+    """
+    if not text(value):
+        return {key: '' for key in ['year', 'yearShort', 'day', 'monthRu', 'monthKz']}
+    return date_fields(frozen_date(value, field))
+
+
 def bilingual_parts(value, ru=None, kz=None):
     """Use explicit data, never substitute the legacy hard-coded passing grade."""
     pieces = text(value).split('/', 1)
@@ -292,8 +303,8 @@ def build_legacy_payload(snapshot, item):
                        'Выдано_ФИО': text(item.get('issuedTo')) or name,
                        'ФИО_1': '', 'в_том_что_ему_присвоена_квалификация_': position})
     elif tid == 'ps-witness':
-        start = date_fields(frozen_date(assignment.get('trainingStart'), 'trainingStart'))
-        end = date_fields(frozen_date(assignment.get('trainingEnd'), 'trainingEnd'))
+        start = training_date_fields(assignment.get('trainingStart'), 'trainingStart')
+        end = training_date_fields(assignment.get('trainingEnd'), 'trainingEnd')
         issuer = snapshot.get('issuer', {})
         fields.update({'{{KB_NUMBER}}': 'КБ № ' + number,
                        '{{REGISTRATION_NUMBER}}': text(item.get('registrationNumber')),

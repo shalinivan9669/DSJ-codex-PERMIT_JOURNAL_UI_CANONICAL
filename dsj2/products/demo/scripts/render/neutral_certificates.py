@@ -225,11 +225,13 @@ def _results(kz, result):
 
 
 def _witness(root, snapshot, item):
-    from legacy_snapshot_fields import build_legacy_payload, date_fields, frozen_date
+    from legacy_snapshot_fields import build_legacy_payload, date_fields, frozen_date, training_date_fields
     assignment = item['assignment']
     issuer = snapshot['issuer']
     dates = {key: date_fields(frozen_date(assignment.get(key, assignment.get('documentDate')) if key == 'protocolDate' else assignment.get(key), key))
-             for key in ['documentDate', 'protocolDate', 'trainingStart', 'trainingEnd']}
+             for key in ['documentDate', 'protocolDate']}
+    dates.update({key: training_date_fields(assignment.get(key), key)
+                  for key in ['trainingStart', 'trainingEnd']})
     # Reuse the existing outcome authority: FAILED/ABSENT/UNKNOWN must never
     # regain an imported positive label when geometry is rebuilt.
     payload = build_legacy_payload(snapshot, item)
@@ -259,7 +261,7 @@ def _witness(root, snapshot, item):
         name = item.get('fullNameKz') or item.get('fullNameRu', '') if kz else item.get('fullNameRu', '')
         org = issuer.get('nameKz') or issuer.get('nameRu', '') if kz else issuer.get('nameRu', '')
         protocol = item.get('protocolNumber') or item.get('numbers', {}).get('protocol') or assignment.get('externalBasisNumber', '')
-        fmt = lambda key: dates[key]['day'] + ' ' + dates[key]['monthKz' if kz else 'monthRu'] + ' ' + dates[key]['year'] + (' ж.' if kz else ' г.')
+        fmt = lambda key: (dates[key]['day'] + ' ' + dates[key]['monthKz' if kz else 'monthRu'] + ' ' + dates[key]['year'] + (' ж.' if kz else ' г.')) if dates[key]['year'] else ''
         content = [
             ('Кәсіптік білім даярлау туралы\nКУӘЛІК' if kz else 'СВИДЕТЕЛЬСТВО\nо профессиональной подготовке', 12, True, 'center', 6),
             ('КБ № ' + item.get('number', ''), 11, True, 'center', 12),

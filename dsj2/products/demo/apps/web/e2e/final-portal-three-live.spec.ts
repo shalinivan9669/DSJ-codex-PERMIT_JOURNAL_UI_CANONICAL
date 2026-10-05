@@ -5,6 +5,10 @@ import { randomUUID, createHash } from "node:crypto";
 import { inflateRawSync } from "node:zlib";
 import { realApprovalRoles } from "./operator-role-fixture";
 import { fullSuiteApiCooldown } from "./operator-full-suite";
+import {
+  courseResultText,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+} from "@demo/contracts";
 const evidence = path.resolve(
   (process.env.DEMO_E2E_FULL_CHECKPOINTS === "1"
     ? path.join(process.env.DEMO_E2E_EVIDENCE!, "portal-producer")
@@ -497,11 +501,23 @@ test("V07 portal: three own people download issued individual files, two foreign
     expect(repeated.issuances).toHaveLength(0);
     for (const row of repeated.draft.items)
       for (const assignment of row.assignments) {
-        expect(assignment.result).toBe("");
+        // This is a new ordinary assignment created by repeatRequestRoster.
+        // Its current positive default must not inherit the old exam source.
+        expect(assignment.result).toBe(
+          courseResultText(assignment.templateId, "PASSED"),
+        );
         expect(assignment.documentDate).toBe("");
         expect(assignment.trainingStart).toBe("");
         expect(assignment.trainingEnd).toBe("");
-        expect(assignment.outcome?.status || "UNKNOWN").toBe("UNKNOWN");
+        expect(assignment.outcome?.status).toBe("PASSED");
+        expect(assignment.outcome?.source).toBe(
+          DEFAULT_POSITIVE_OUTCOME_SOURCE,
+        );
+        expect(assignment.fieldOrigins?.outcome).toBe("AUTO");
+        expect(assignment.fieldOrigins?.result).toBe("COURSE");
+        expect(assignment.outcome?.source).not.toBe(
+          "Синтетическая подписанная ведомость V07",
+        );
       }
     const unchanged = await get(`/print-requests/${request.id}`);
     expect(JSON.stringify(unchanged.issuances[0].snapshot)).toBe(oldSnapshot);
@@ -546,7 +562,9 @@ test("V07 portal: three own people download issued individual files, two foreign
           repeatedPeople: 3,
           existingRecipientIdsPreserved: true,
           oldSnapshotAndNumbersUnchanged: true,
-          newResultsDatesNumbersEmpty: true,
+          newAssignmentsUseExplicitPositiveDefault: true,
+          historicalAssessmentSourceNotCopied: true,
+          historicalDatesAndNumbersNotCopied: true,
           mobile375: true,
           requestId: request.id,
           orderId: order.id,

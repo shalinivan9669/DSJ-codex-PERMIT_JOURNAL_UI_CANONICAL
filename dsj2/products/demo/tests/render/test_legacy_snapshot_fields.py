@@ -148,6 +148,50 @@ class LegacySnapshotFieldsTests(unittest.TestCase):
         self.assertEqual(decision['fields']['{{ISSUE_DAY}}'], '20')
         self.assertEqual(decision['fields']['{{ISSUE_MONTH_KZ}}'], 'қыркүйек')
 
+    def test_witness_missing_training_period_keeps_blank_ru_kz_slots_and_saved_decision(self):
+        for missing in ['', None]:
+            with self.subTest(missing=missing):
+                snapshot, actual = self.payload('ps-witness', {
+                    'documentDate': '2030-10-02', 'protocolDate': '2031-11-20',
+                    'trainingStart': missing, 'trainingEnd': missing})
+                original = deepcopy(snapshot)
+                for prefix in ['TRAINING_START', 'TRAINING_END']:
+                    for suffix in ['DAY', 'MONTH_RU', 'MONTH_KZ', 'YEAR_SHORT', 'YEAR_FULL']:
+                        self.assertEqual(actual['fields']['{{' + prefix + '_' + suffix + '}}'], '')
+                decision = next(scope for scope in actual['scopedFieldValues'] if scope['scope'] == 'witness-protocol-date')
+                self.assertEqual(decision['fields']['{{ISSUE_DAY}}'], '20')
+                self.assertEqual(decision['fields']['{{TRAINING_END_YEAR_FULL}}'], '2031')
+                # Render the original template too: empty slots must be replaced,
+                # not left as merge tokens or silently filled with another date.
+                rendered = self.rendered_text(snapshot)
+                self.assertNotIn('{{TRAINING_', rendered)
+                self.assertIn('обучался', rendered)
+                self.assertIn('2031', rendered)
+                self.assertEqual(snapshot, original)
+
+    def test_witness_partial_training_period_preserves_only_the_supplied_end_in_both_languages(self):
+        for field, prefix in [('trainingStart', 'TRAINING_START'), ('trainingEnd', 'TRAINING_END')]:
+            with self.subTest(field=field):
+                snapshot, actual = self.payload('ps-witness', {
+                    'documentDate': '2030-10-02', 'protocolDate': '2031-11-20',
+                    'trainingStart': '', 'trainingEnd': '', field: '2028-03-14'})
+                self.assertEqual(actual['fields']['{{' + prefix + '_DAY}}'], '14')
+                self.assertEqual(actual['fields']['{{' + prefix + '_MONTH_RU}}'], 'марта')
+                self.assertEqual(actual['fields']['{{' + prefix + '_MONTH_KZ}}'], 'наурыз')
+                other = 'TRAINING_END' if prefix == 'TRAINING_START' else 'TRAINING_START'
+                self.assertEqual(actual['fields']['{{' + other + '_DAY}}'], '')
+                self.assertEqual(actual['fields']['{{' + other + '_YEAR_FULL}}'], '')
+                rendered = self.rendered_text(snapshot)
+                self.assertIn('марта', rendered)
+                self.assertIn('наурыз', rendered)
+                self.assertNotIn('{{TRAINING_', rendered)
+
+    def test_witness_invalid_nonempty_training_date_still_fails_without_fallback(self):
+        for key in ['trainingStart', 'trainingEnd']:
+            with self.subTest(field=key):
+                with self.assertRaisesRegex(ValueError, 'LEGACY_REFERENCE_DATE_REQUIRED:' + key):
+                    self.payload('ps-witness', {key: '2026-02-30'})
+
     def test_explicit_hours_and_subject_do_not_gain_an_invented_second_course(self):
         _, actual = self.payload('ps-card', {'hours': 74, 'trainingSubject': 'Управление краном / Кранды басқару'})
         self.assertEqual(actual['fields']['M_1_Наименование_дисциплины'], 'Управление краном')

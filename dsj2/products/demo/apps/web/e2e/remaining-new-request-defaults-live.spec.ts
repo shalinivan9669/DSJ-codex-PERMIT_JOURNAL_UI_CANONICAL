@@ -48,36 +48,29 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
     expect(initial.status).toBe("DRAFT");
 
     const name = `Синтетический Обычный Получатель ${randomUUID().slice(0, 8)}`;
-    await page.getByLabel("ФИО, строка 1", { exact: true }).fill(name);
+    await page.getByLabel("ФИО", { exact: true }).fill(name);
+    await page.getByLabel("Должность", { exact: true }).fill("Электромонтёр");
     await page
-      .getByLabel("Должность · RU, строка 1", { exact: true })
-      .fill("Электромонтёр");
+      .locator(".person-editor .person-additional > summary")
+      .first()
+      .click();
     await page
-      .getByLabel("Должность · KZ, строка 1", { exact: true })
+      .getByLabel("Должность · KZ", { exact: true })
       .fill("Электрмонтер");
-    await page
-      .getByRole("button", { name: "Детали получателя 1", exact: true })
-      .click();
-    const personal = page.getByRole("dialog");
-    await personal.getByRole("tab", { name: /^Личные данные/ }).click();
-    await personal.locator(".employer-document-wording > summary").click();
-    await personal
-      .getByLabel("Место работы · RU", { exact: true })
-      .fill("СИНТЕТИЧЕСКОЕ предприятие локальной проверки");
-    await personal
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
-      .click();
+    await page.getByRole("button", { name: "Далее", exact: true }).click();
+    await page.getByRole("button", { name: "Рабочий", exact: true }).click();
+    await page.getByRole("button", { name: "Далее", exact: true }).click();
 
     for (const course of ["БиОТ", "ПТМ", "ПБ"]) {
       await page
         .getByRole("button", {
-          name: `${course}: добавить всем в заявке (1)`,
+          name: course,
           exact: true,
         })
         .click();
       await expect(
         page.getByRole("button", {
-          name: `${course}: снять у этой группы (1)`,
+          name: `${course} ✓`,
           exact: true,
         }),
       ).toHaveAttribute("aria-pressed", "true");
@@ -85,11 +78,21 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
     // A configured centre calendar requires real programme hours. They are
     // entered once through the course UI only when that rule is active.
     for (const course of ["ПТМ", "ПБ"]) {
-      const hours = page.getByLabel(`${course} · Часы программы`, {
-        exact: true,
-      });
-      if (await hours.count()) await hours.fill("16");
+      const hours = page
+        .getByRole("region", { name: `Параметры ${course}`, exact: true })
+        .getByLabel("Часы программы", { exact: true });
+      await expect(hours).toBeVisible();
+      await hours.fill("16");
     }
+    const employer = page.getByRole("region", {
+      name: "Работодатель для документов",
+      exact: true,
+    });
+    await expect(employer).toBeVisible();
+    await employer
+      .getByLabel("Место работы", { exact: true })
+      .fill("СИНТЕТИЧЕСКОЕ предприятие локальной проверки");
+    await page.getByRole("button", { name: "Готово", exact: true }).click();
     await expect
       .poll(async () => {
         const saved = await readDraft(page, id);
@@ -119,9 +122,9 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
         statuses: ["PASSED"],
       });
     await page.reload();
-    await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toHaveValue(
-      name,
-    );
+    await expect(
+      page.locator(".person-editor").getByText(name, { exact: true }),
+    ).toBeVisible();
     const saved = await readDraft(page, id);
     expect(saved.revision).toBeGreaterThan(initial.revision);
     expect(saved.status).toBe("DRAFT");
@@ -155,11 +158,9 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
     );
     expect(biotIndex).toBeGreaterThanOrEqual(0);
     await page
-      .getByRole("button", { name: "Детали получателя 1", exact: true })
-      .click();
-    await page
-      .getByRole("dialog")
-      .getByRole("tab", { name: /^Документы/ })
+      .locator(".person-document-list > li")
+      .nth(biotIndex)
+      .getByRole("button", { name: "Параметры", exact: true })
       .click();
     await expect(
       page
@@ -175,7 +176,7 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
     ).toHaveValue("16");
     await page
       .getByRole("dialog")
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
+      .getByRole("button", { name: "Готово", exact: true })
       .click();
 
     const panel = page.getByRole("region", {

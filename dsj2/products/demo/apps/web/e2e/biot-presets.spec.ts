@@ -19,26 +19,19 @@ for (const category of ["WORKER", "ITR"] as const) {
     await loginIsolated(page);
     await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
     await page.getByRole("button", { name: "Далее", exact: true }).click();
-    await page
-      .getByLabel("ФИО, строка 1", { exact: true })
+    const person = page.locator(".person-editor");
+    await person.getByLabel("ФИО", { exact: true })
       .fill(`Тестовый Получатель Категории ${category}`);
-    await page
-      .getByLabel("Категория сотрудника, строка 1", { exact: true })
-      .selectOption(category);
-    await page
-      .getByRole("button", { name: /^Настройки обучения получателя 1:/ })
-      .click();
-    let modal = page.getByRole("dialog");
-    await modal
-      .getByRole("checkbox", { name: /^Безопасность и охрана труда/ })
-      .check();
-    await modal
-      .getByRole("button", {
-        name: "Добавить обучение и комплект",
-        exact: true,
-      })
-      .click();
-    await expect(modal).toHaveCount(0);
+    await person.getByLabel("Должность", { exact: true }).fill("Электромонтёр");
+    await person.getByRole("button", { name: "Далее", exact: true }).click();
+    await person.getByRole("button", {
+      name: category === "WORKER" ? "Рабочий" : "ИТР", exact: true,
+    }).click();
+    await person.getByRole("button", { name: "Далее", exact: true }).click();
+    await person.getByRole("button", { name: /^БиОТ/ }).click();
+    await person.getByRole("button", { name: "Готово", exact: true }).click();
+    await expect(person.locator('[data-person-stage="summary"]')).toBeVisible();
+    let modal = page.getByRole("dialog", { name: "Параметры документа", exact: true });
     const requestId = /requests\/([^/]+)/.exec(page.url())![1];
     const read = async () =>
       (await (
@@ -48,11 +41,9 @@ for (const category of ["WORKER", "ITR"] as const) {
     const templateId = worker ? "biot-worker-card" : "biot-itr-certificate";
     const categoryValue = worker ? "WORKER" : "OHS_SPECIALIST_SPECIAL";
     const inspect = async () => {
-      await page
-        .getByRole("button", { name: "Детали получателя 1", exact: true })
-        .click();
-      modal = page.getByRole("dialog");
-      await modal.getByRole("tab", { name: /^Документы/ }).click();
+      await person.locator(".person-document-list > li").first()
+        .getByRole("button", { name: "Параметры", exact: true }).click();
+      modal = page.getByRole("dialog", { name: "Параметры документа", exact: true });
       const form = modal.locator(".assignment-list > details").first();
       await expandCommon(form);
       await form.getByRole("tab", { name: "Основное", exact: true }).click();
@@ -60,6 +51,14 @@ for (const category of ["WORKER", "ITR"] as const) {
       return form;
     };
     let form = await inspect();
+    const biotCategory = form.getByLabel("Категория обучения БиОТ", { exact: true });
+    // The ordinary ITR course defaults to the centre programme. Special
+    // competencies are a separate explicit choice, not an automatic default.
+    await expect(biotCategory).toHaveValue(worker ? "WORKER" : "ITR_STANDARD");
+    if (!worker) {
+      await expect(form.getByLabel("Объём программы учебного центра, акад. ч.", { exact: true })).toHaveValue("40");
+      await biotCategory.selectOption(categoryValue);
+    }
     const hoursLabel = worker
       ? "Теоретическое обучение, акад. ч."
       : "Обучение, акад. ч.";
@@ -77,7 +76,7 @@ for (const category of ["WORKER", "ITR"] as const) {
     );
     await form.getByLabel("Дата документа", { exact: true }).fill("2028-02-29");
     const until = form.getByLabel("Действителен до", { exact: true });
-    await expect(until).toHaveAttribute("readonly", "");
+    await expect(until).toBeEditable();
     await expect(until).toHaveValue(worker ? "2029-02-28" : "2031-02-28");
     await expect(form).toContainText(
       worker
@@ -85,7 +84,7 @@ for (const category of ["WORKER", "ITR"] as const) {
         : "Расчётный срок: 3 года для ИТР",
     );
     await expect(form).toContainText(
-      "Ручное исключение срока действующим правилом центра не предусмотрено.",
+      "Введённая вручную или импортированная дата сохраняется",
     );
     await form
       .getByLabel(hoursLabel, { exact: true })
@@ -105,7 +104,7 @@ for (const category of ["WORKER", "ITR"] as const) {
         .fill("16");
     }
     await modal
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
+      .getByRole("button", { name: "Готово", exact: true })
       .click();
     await expect(page.locator(".save-indicator")).toContainText(
       "Рабочая версия сохранена",
@@ -135,7 +134,7 @@ for (const category of ["WORKER", "ITR"] as const) {
       form.getByLabel("Действителен до", { exact: true }),
     ).toHaveValue(worker ? "2029-03-01" : "2031-03-01");
     await modal
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
+      .getByRole("button", { name: "Готово", exact: true })
       .click();
     await expect(page.locator(".save-indicator")).toContainText(
       "Рабочая версия сохранена",
@@ -150,7 +149,7 @@ for (const category of ["WORKER", "ITR"] as const) {
     );
     expect(
       raw.items[0].assignments.every(
-        (assignment) => assignment.outcome?.status === "UNKNOWN",
+        (assignment) => assignment.outcome?.status === "PASSED",
       ),
     ).toBe(true);
     await page.reload();
@@ -176,7 +175,9 @@ for (const category of ["WORKER", "ITR"] as const) {
           requestId,
           syntheticOnly: true,
           currentPolicy: "LIVE_V1",
-          automaticExpiryReadOnly: true,
+          automaticExpiryReadOnly: false,
+          automaticExpiryVerifiedWithoutOverwritingManualFacts: true,
+          specialItrCategoryChosenExplicitly: !worker,
           explicitSamePresetSurvived: samePreset.items[0].assignments,
           rawAfterReload: await read(),
           scope:

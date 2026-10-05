@@ -1,0 +1,37 @@
+{
+  "reports": [
+    {
+      "legalForm": "TOO",
+      "companyId": "2a21ad2b-edce-4eb2-93b4-28ff2061e5a5",
+      "nameRu": "ТОО Тест TOO 1791226342001",
+      "nameKz": "Тест TOO 1791226342001 ЖШС",
+      "ownNameRu": "Тест TOO 1791226342001",
+      "ownNameKz": "",
+      "customerIdAfterReload": "2a21ad2b-edce-4eb2-93b4-28ff2061e5a5"
+    },
+    {
+      "legalForm": "IP",
+      "companyId": "5ea57cb5-166d-495d-a9d5-e2b7316c989d",
+      "nameRu": "ИП Тест IP 1791226342834",
+      "nameKz": "Синтетикалық өзгеше ұйым 1791226342847 ЖК",
+      "ownNameRu": "Тест IP 1791226342834",
+      "ownNameKz": "Синтетикалық өзгеше ұйым 1791226342847",
+      "customerIdAfterReload": "5ea57cb5-166d-495d-a9d5-e2b7316c989d"
+    },
+    {
+      "legalForm": "AO",
+      "companyId": "da953edf-668d-4fa2-ad3e-e63d032b1609",
+      "nameRu": "АО Синтетическая длинная компания данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные 1791226343900",
+      "nameKz": "Синтетическая длинная компания данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные 1791226343900 АҚ",
+      "ownNameRu": "Синтетическая длинная компания данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные данные 1791226343900",
+      "ownNameKz": "",
+      "customerIdAfterReload": "da953edf-668d-4fa2-ad3e-e63d032b1609"
+    }
+  ],
+  "originalCustomerId": "045cdfbf-1908-4683-ae06-31fb26ec48e2",
+  "stagedNavigationPreservedInput": true,
+  "stagedReloadPreservedInput": true,
+  "stagedLogoutPosts": 1,
+  "browserBackPreservedInput": true,
+  "stagedInputDoesNotChangeSavedCustomer": true
+}

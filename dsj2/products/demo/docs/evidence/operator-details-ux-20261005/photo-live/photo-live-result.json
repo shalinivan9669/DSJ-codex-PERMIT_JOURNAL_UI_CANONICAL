@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "origin": "http://127.0.0.1:3155",
+  "browser": "154.0.8037.95",
+  "requestId": "bef1ff35-cef1-4477-b320-5bc84ebfbaf3",
+  "recipientId": "650a617d-6457-4bff-a51f-65e351430d59",
+  "assetId": "a385b783-b4b6-4ee8-8cd8-07491515c0f5",
+  "bytes": 5178909,
+  "sourceSha256": "79b529a5c46547178caa5a5cdd215813902b2730a1e2236abc95e08c884b11d9",
+  "normalizedSha256": "686f08e529e2b7ea8a6b4a22dc706104ae0e9672eccfc0c4fc12fdec753f21b5",
+  "normalizedWidth": 1200,
+  "normalizedHeight": 1600,
+  "originalBytesPreserved": true,
+  "uploadFields": {
+    "crop": {
+      "x": 427,
+      "y": 1296,
+      "width": 2419,
+      "height": 3225
+    },
+    "rotation": 90,
+    "fileBytes": 5178909,
+    "fileType": "image/jpeg"
+  },
+  "normalizedMatchesSubmittedFrame": true,
+  "selectToCropReadyMs": 395,
+  "nativePreparation": [
+    {
+      "started": 1416.199999988079,
+      "elapsedMs": 176.19999998807907,
+      "width": 1600,
+      "height": 1280
+    }
+  ],
+  "saveToAttachedMs": 526,
+  "imageReadMs": 314,
+  "timings": [
+    {
+      "stage": "PATCH draft and photoAssetId",
+      "status": 200,
+      "elapsedMs": 44
+    },
+    {
+      "stage": "POST original photo",
+      "status": 201,
+      "elapsedMs": 357
+    },
+    {
+      "stage": "PATCH draft and photoAssetId",
+      "status": 200,
+      "elapsedMs": 85
+    }
+  ],
+  "persistedAfterReload": true,
+  "realHttp": true,
+  "noIssuance": true,
+  "syntheticOnly": true
+}

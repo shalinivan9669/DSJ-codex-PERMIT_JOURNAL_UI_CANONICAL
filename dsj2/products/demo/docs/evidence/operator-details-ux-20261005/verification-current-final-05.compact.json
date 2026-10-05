@@ -1,0 +1,3108 @@
+{
+  "schema": "DEMO_FINAL05_COMPACT_VERIFICATION_1",
+  "status": "USER_REQUESTED_STOP_LOCAL_ACCEPTANCE",
+  "capturedUtc": "2026-10-05T23:17:29.730059+00:00",
+  "buildId": "UE5EAW-MchsccxxskF32g",
+  "sourceManifest": {
+    "path": "docs/evidence/operator-details-ux-20261005/runtime-source-current-final-05.json",
+    "sha256": "eb5be1d1351ffa93876774a934814f02512256f630039a89454a13a80dfe6789",
+    "matchedFiles": 380
+  },
+  "scope": "Sanitized bounded accounting only. Historical raw reports/logs retained separately; no heavy artifacts or private config included. No API/browser/DB execution by this audit.",
+  "currentSourceChecks": {
+    "build": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "unit": {
+      "domain": 253,
+      "web": 241,
+      "total": 494,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "latestUniqueCoverage": {
+    "actualPassed": 190,
+    "closedByImmutableContinuation": 1,
+    "remainingFailed": 1,
+    "remainingSkipped": 1,
+    "remainingNotRun": 10,
+    "totalOpen": 12,
+    "completedReports": 11
+  },
+  "rawLatestExecutionCounts": {
+    "passed": 190,
+    "failed": 2,
+    "skipped": 1,
+    "not-run": 10
+  },
+  "inventory": {
+    "count": 203,
+    "sha256": "4c57e32637978dcfed0b2a6af351d12b541a500e67b54eccb38f700c0706a420"
+  },
+  "aggregateSha256": "0ee145f74880c1d6c848345d17085b032aa1debf2d626e7bc30a529eb262ae83",
+  "completedReports": [
+    {
+      "name": "remaining-01",
+      "sha256": "f4159e88083e064d3b94f9cfdac72b06d6cdcb37de31d67fe267e8a52a7fe1f3",
+      "stats": {
+        "startTime": "2026-10-05T19:52:36.970Z",
+        "duration": 3282896.932,
+        "expected": 136,
+        "skipped": 4,
+        "unexpected": 47,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "remaining-retry-01",
+      "sha256": "fead41be0120cad32db154878cb8d183ea875b478ccc8684bd2b81dc004c2aaa",
+      "stats": {
+        "startTime": "2026-10-05T20:58:30.039Z",
+        "duration": 3856953.823,
+        "expected": 32,
+        "skipped": 0,
+        "unexpected": 15,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "required-core-04-retry01",
+      "sha256": "acdf749af6b4c2619247c18b12a47b229624d5c829e8ff6e3a5e4489e76b1f21",
+      "stats": {
+        "startTime": "2026-10-05T22:13:04.761Z",
+        "duration": 105881.298,
+        "expected": 19,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "revision-preview-04",
+      "sha256": "d21f0068cb24ef926096546ca0e0370a0c443fbc4052e43ab42ce919cc933c2a",
+      "stats": {
+        "startTime": "2026-10-05T22:17:11.233Z",
+        "duration": 3360.9300000000003,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "cycle-person-04",
+      "sha256": "7be5b17ab048b61b7df5242e9e2ce49106b782aa841aead6b7dc430ef4dd05cd",
+      "stats": {
+        "startTime": "2026-10-05T22:17:43.065Z",
+        "duration": 116629.74399999999,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "cycle-company-04",
+      "sha256": "727ddfdd3331f8f4c176747a1f2420dcca56b105316a3332f94520fcd6428be9",
+      "stats": {
+        "startTime": "2026-10-05T22:19:48.533Z",
+        "duration": 108393.527,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "undo250-04",
+      "sha256": "2cd491e3655f88424d6452ee05d23633339f1971dd465444d3b34782d9b1a93b",
+      "stats": {
+        "startTime": "2026-10-05T22:22:03.321Z",
+        "duration": 35004.577,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "remaining-retry-02",
+      "sha256": "edf0aaf0def2eef6a6eedaadfe1cdcec2d000df7c9f7a5574be5e90267219299",
+      "stats": {
+        "startTime": "2026-10-05T22:23:37.708Z",
+        "duration": 1333412.0219999999,
+        "expected": 9,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "remaining-retry-03",
+      "sha256": "9c95b6d73e009eb60526ca4777fc8abb1b842cd1500b0d3647fa512b1a7baf63",
+      "stats": {
+        "startTime": "2026-10-05T23:02:30.050Z",
+        "duration": 178007.822,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "manual-issued-consumers-01",
+      "sha256": "438c5ecd297eaee440f48a67e1c6907fc423945ef1470e8a7ac79e80e73c09c6",
+      "stats": {
+        "startTime": "2026-10-05T23:06:06.148Z",
+        "duration": 8982.273000000001,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "name": "value-files-01",
+      "sha256": "264e1c0bdb9a702ee525afbe291a57acf1b5522622ca4f7bc76c4b751bd30bcd",
+      "stats": {
+        "startTime": "2026-10-05T23:10:53.425Z",
+        "duration": 15415.330000000002,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "pendingExactCases": [
+    {
+      "file": "operator-domain-acceptance-live.spec.ts",
+      "title": "UX04 actual fourth-row group and individual issues focus exact assignment fields after deletion reorder and filtering; UX08 Next repairs true PERSON COMPANY WORKER ITR causes",
+      "status": "failed"
+    },
+    {
+      "file": "operator-minimal-manual-resume-live.spec.ts",
+      "title": "resume the existing UI-entered manual twenty at director review and verify all eleven original forms",
+      "status": "skipped"
+    },
+    {
+      "file": "final-portal-three-live.spec.ts",
+      "title": "V07 portal: three own people download issued individual files, two foreign people stay denied, repeat reuses clean scoped identities",
+      "status": "not-run"
+    },
+    {
+      "file": "final-portal-390-live.spec.ts",
+      "title": "existing V07 three-person portal at390x844 retains private scopes, friendly immutable labels and visible keyboard focus",
+      "status": "not-run"
+    },
+    {
+      "file": "operator-g1-keyboard-live.spec.ts",
+      "title": "G1 keyboard only: original 100 people and photos, common PB group, real Director approval and 101 issued documents",
+      "status": "not-run"
+    },
+    {
+      "file": "operator-g1-complete.spec.ts",
+      "title": "G1 complete: fresh keyboard preparation has 100 original people and embedded photos, one common PB event and 101 real documents",
+      "status": "not-run"
+    },
+    {
+      "file": "operator-g1-keyboard-resume-live.spec.ts",
+      "title": "G1 keyboard resume: reopen and download the same 101 issued documents, verify every original hash and immutable snapshot with no business write",
+      "status": "not-run"
+    },
+    {
+      "file": "operator-g1-resume-live.spec.ts",
+      "title": "G1 resume: explicitly selected fresh checkpoint retains the original 100 people, 101 documents and every saved original after reload",
+      "status": "not-run"
+    },
+    {
+      "file": "operator-common-history-live.spec.ts",
+      "title": "100 common assignments and supported individual overrides render consistently, real director approval and employer history preserve the issued snapshot",
+      "status": "not-run"
+    },
+    {
+      "file": "final-repeat-basis-live.spec.ts",
+      "title": "V02 actual history repeat uses a current employer and cannot finalize an unknown new result",
+      "status": "not-run"
+    },
+    {
+      "file": "operator-common-resume-live.spec.ts",
+      "title": "resume the fresh 100-recipient checkpoint, read real saved files and preserve employer history without repeating issue or copying prior assignments",
+      "status": "not-run"
+    },
+    {
+      "file": "remaining-print-pack-scale-live.spec.ts",
+      "title": "large saved print pack preserves every original page, photo, number and frozen person after all G1 consumers",
+      "status": "not-run"
+    }
+  ],
+  "company37Continuation": {
+    "freshUiPass": false,
+    "originalFailureRetained": true,
+    "documents": 37,
+    "originalPdfDocx": 74,
+    "zipSources": 75,
+    "closureMapSha256": "ad531e76e1b7c2e2f5a96a6d3a05873009ae23c17b9110d859806ae21c38e6ea"
+  },
+  "historicalEvidence": [
+    {
+      "id": "full-e2e-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-01/results.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "2dddef1559f58fad7a5e2835080d6aa2220c144d8d5aad39af20ee1e9845d5b9",
+      "currentSha256AtCompact": "2dddef1559f58fad7a5e2835080d6aa2220c144d8d5aad39af20ee1e9845d5b9",
+      "layer": "FULL_BROWSER_ATTEMPT",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T18:05:11.684Z",
+          "duration": 373135.776,
+          "expected": 0,
+          "skipped": 190,
+          "unexpected": 3,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "full-e2e-01",
+          "evidenceRef": "full-e2e-01",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T18:05:11.684Z",
+          "durationMs": 373135.776,
+          "expected": 0,
+          "unexpected": 3,
+          "skipped": 190,
+          "flaky": 0,
+          "tests": [
+            {
+              "title": "V07 portal: three own people download issued individual files, two foreign people stay denied, repeat reuses clean scoped identities",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "G1 keyboard only: original 100 people and photos, common PB group, real Director approval and 101 issued documents",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "100 common assignments and supported individual overrides render consistently, real director approval and employer history preserve the issued snapshot",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            }
+          ],
+          "testDetailsScope": "Executed tests only; dependency-skipped count retained above.",
+          "interpretation": "Only this run. Later repairs do not change its recorded result; overlapping tests are never added to a combined total."
+        }
+      ]
+    },
+    {
+      "id": "full-e2e-02",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-02/results.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "01411b80e52e47032fde9e54a80d56ece685fbbbd448f95e2b6d05a5b7aed57e",
+      "currentSha256AtCompact": "01411b80e52e47032fde9e54a80d56ece685fbbbd448f95e2b6d05a5b7aed57e",
+      "layer": "FULL_BROWSER_ATTEMPT",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T18:36:26.063Z",
+          "duration": 692436.5850000001,
+          "expected": 2,
+          "skipped": 190,
+          "unexpected": 2,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "full-e2e-02",
+          "evidenceRef": "full-e2e-02",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T18:36:26.063Z",
+          "durationMs": 692436.5850000001,
+          "expected": 2,
+          "unexpected": 2,
+          "skipped": 190,
+          "flaky": 0,
+          "tests": [
+            {
+              "title": "V07 portal: three own people download issued individual files, two foreign people stay denied, repeat reuses clean scoped identities",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "existing V07 three-person portal at390x844 retains private scopes, friendly immutable labels and visible keyboard focus",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "G1 keyboard only: original 100 people and photos, common PB group, real Director approval and 101 issued documents",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "100 common assignments and supported individual overrides render consistently, real director approval and employer history preserve the issued snapshot",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            }
+          ],
+          "testDetailsScope": "Executed tests only; dependency-skipped count retained above.",
+          "interpretation": "Only this run. Later repairs do not change its recorded result; overlapping tests are never added to a combined total."
+        }
+      ]
+    },
+    {
+      "id": "static-mocks-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/static-fixture-mocks/results.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "7d93f47ee8b02ad91be91514c41fbb554b118c088ba525b16252cd8172211ce0",
+      "currentSha256AtCompact": "7d93f47ee8b02ad91be91514c41fbb554b118c088ba525b16252cd8172211ce0",
+      "layer": "BROWSER_MOCK_API",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T18:51:04.642Z",
+          "duration": 43543.34,
+          "expected": 0,
+          "skipped": 0,
+          "unexpected": 30,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "static-mocks-01",
+          "evidenceRef": "static-mocks-01",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T18:51:04.642Z",
+          "durationMs": 43543.34,
+          "expected": 0,
+          "unexpected": 30,
+          "skipped": 0,
+          "flaky": 0,
+          "tests": [
+            {
+              "title": "new PERSON request uses customer radios and starts without assigned documents",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "new COMPANY request uses customer radios and starts without assigned documents",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "optional worker bundle keeps one shared protocol when a recipient is added",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "row and bulk document choices add only missing forms and retain manual dates",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "validation opens the hidden date section and focuses its required field",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a customer saves with one own name while extra requisites remain optional",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "actual course selection and compact dates show the current kit and preserve independent exceptions after reload",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "standard and saved topic choices are scoped to the active course, require reviewed replacement and preserve personal exceptions after reload",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "mixed courses distinguish the common position from optional PS profession and qualification and preserve linked forms after reload",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "empty Excel range pastes immediately with saved Undo; blank spare deletion skips confirmation while partial deletion keeps it",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "inline KZ translation requires confirmation, handles failure/retry/cancel and rejects stale source or destination",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "staged company reloads without a directory card and naturally applies on validation exactly once",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "stable row identity in director issue links restores the exact field after reordering and narrow screens keep the main flow accessible",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "slow saves serialize latest input without stale values, then survive reload",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "late rejected payload keeps the review marked stale after newer local input",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "browser Back waits for saving before leaving the editor",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "failed Back navigation and cancelled reload preserve input until retry",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "conflicting edit remains local and never overwrites the server version",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "history fallback without Navigation API retains failed input and later leaves after a good save",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "dirty hash traversal keeps input and permits the following guarded Back",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "browser Forward also waits for a pending save and preserves history order",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a final keystroke between successful flush and queued Back is saved too",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "shared employer defaults to empty people and preserves filled employers, payer and manual documents",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "explicit replacement targets selected IDs only and changes both language names without changing the payer",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a failed save retains the shared employer dialog and original recipient data",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "shared employer remains within a 390px viewport while the recipient table scrolls independently",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a newly created employer becomes available without reload and does not replace the payer",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "center schedule renders a compact range, preserves a retroactive document date and reveals a precise invalid override",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a request pinned to the old center profile uses its schedule in the card and request settings",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a new schedule requires entered daily hours and persists the selected calendar version without changing raw dates",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            }
+          ],
+          "testDetailsScope": "All tests in this run.",
+          "interpretation": "Only this run. Later repairs do not change its recorded result; overlapping tests are never added to a combined total."
+        }
+      ]
+    },
+    {
+      "id": "static-mocks-02",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/static-fixture-mocks-02/results.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "c60b7a3bc66f9ea55d3c9084be4943dcd55813cc7ed28d46bafcef10adcbaea1",
+      "currentSha256AtCompact": "c60b7a3bc66f9ea55d3c9084be4943dcd55813cc7ed28d46bafcef10adcbaea1",
+      "layer": "BROWSER_MOCK_API",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T18:52:28.252Z",
+          "duration": 163457.559,
+          "expected": 23,
+          "skipped": 0,
+          "unexpected": 7,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "static-mocks-02",
+          "evidenceRef": "static-mocks-02",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T18:52:28.252Z",
+          "durationMs": 163457.559,
+          "expected": 23,
+          "unexpected": 7,
+          "skipped": 0,
+          "flaky": 0,
+          "tests": [
+            {
+              "title": "new PERSON request uses customer radios and starts without assigned documents",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "new COMPANY request uses customer radios and starts without assigned documents",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "optional worker bundle keeps one shared protocol when a recipient is added",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "row and bulk document choices add only missing forms and retain manual dates",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "validation opens the hidden date section and focuses its required field",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "a customer saves with one own name while extra requisites remain optional",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "actual course selection and compact dates show the current kit and preserve independent exceptions after reload",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "standard and saved topic choices are scoped to the active course, require reviewed replacement and preserve personal exceptions after reload",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "mixed courses distinguish the common position from optional PS profession and qualification and preserve linked forms after reload",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "empty Excel range pastes immediately with saved Undo; blank spare deletion skips confirmation while partial deletion keeps it",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "inline KZ translation requires confirmation, handles failure/retry/cancel and rejects stale source or destination",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "staged company reloads without a directory card and naturally applies on validation exactly once",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "stable row identity in director issue links restores the exact field after reordering and narrow screens keep the main flow accessible",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "slow saves serialize latest input without stale values, then survive reload",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "late rejected payload keeps the review marked stale after newer local input",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "browser Back waits for saving before leaving the editor",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "failed Back navigation and cancelled reload preserve input until retry",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "conflicting edit remains local and never overwrites the server version",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "history fallback without Navigation API retains failed input and later leaves after a good save",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "dirty hash traversal keeps input and permits the following guarded Back",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "browser Forward also waits for a pending save and preserves history order",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "a final keystroke between successful flush and queued Back is saved too",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "shared employer defaults to empty people and preserves filled employers, payer and manual documents",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "explicit replacement targets selected IDs only and changes both language names without changing the payer",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a failed save retains the shared employer dialog and original recipient data",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "shared employer remains within a 390px viewport while the recipient table scrolls independently",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a newly created employer becomes available without reload and does not replace the payer",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "center schedule renders a compact range, preserves a retroactive document date and reveals a precise invalid override",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a request pinned to the old center profile uses its schedule in the card and request settings",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "a new schedule requires entered daily hours and persists the selected calendar version without changing raw dates",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            }
+          ],
+          "testDetailsScope": "All tests in this run.",
+          "interpretation": "Only this run. Later repairs do not change its recorded result; overlapping tests are never added to a combined total."
+        }
+      ]
+    },
+    {
+      "id": "v03-targeted",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/v03-targeted/results.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "91225eca0d0065717e4a634bf4938ad885b2b1e6d8373666d08bc6f4289e385a",
+      "currentSha256AtCompact": "91225eca0d0065717e4a634bf4938ad885b2b1e6d8373666d08bc6f4289e385a",
+      "layer": "BROWSER_REAL_API",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T18:39:46.248Z",
+          "duration": 25651.495,
+          "expected": 0,
+          "skipped": 0,
+          "unexpected": 1,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "v03-targeted",
+          "evidenceRef": "v03-targeted",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T18:39:46.248Z",
+          "durationMs": 25651.495,
+          "expected": 0,
+          "unexpected": 1,
+          "skipped": 0,
+          "flaky": 0,
+          "tests": [
+            {
+              "title": "V03 exact three source people and two services preserve the individual position and resume unknown outcomes; one person takes two complete kits",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            }
+          ],
+          "testDetailsScope": "All tests in this run.",
+          "interpretation": "Only this run. Later repairs do not change its recorded result; overlapping tests are never added to a combined total."
+        }
+      ]
+    },
+    {
+      "id": "person-company-mocks",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/final-person-company-mocks/results.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "c407235bef80264ca6bb01fe819af7b540b60fe84b670375b2d0da9443422577",
+      "currentSha256AtCompact": "c407235bef80264ca6bb01fe819af7b540b60fe84b670375b2d0da9443422577",
+      "layer": "BROWSER_MOCK_API",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T18:01:03.696Z",
+          "duration": 87011.52900000001,
+          "expected": 24,
+          "skipped": 0,
+          "unexpected": 2,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "person-company-mocks",
+          "evidenceRef": "person-company-mocks",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T18:01:03.696Z",
+          "durationMs": 87011.52900000001,
+          "expected": 24,
+          "unexpected": 2,
+          "skipped": 0,
+          "flaky": 0,
+          "tests": [
+            {
+              "title": "ten rows preserve ordinary Tab, Shift+Tab, Enter and IME confirmation",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "return from a card preserves the row, input focus, selection and table scroll",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "error links reveal exact hidden grid columns and nested document fields",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "Kazakh-only recipient retains identity in the card and keyboard tabs",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "narrow and short viewports keep keyboard-focused cells unobscured",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "shared organization previews selected people, preserves exceptions, confirms replacement and supports undo",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "return after appending a stored person targets that new person instead of the previously edited row",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "failed bulk save explains the error inside the dialog and retains the exact reviewed values for retry",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "current preview jobs retain statuses while preparation requires approval of this revision and editing invalidates that approval",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "PERSON: keyboard follows three steps, preserves back/reload, and resumes at the compact card",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "legacy multi PERSON: direct edits keep every identity, independent KZ and linked PS dates",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "PERSON addressed field navigation selects a legacy person and exposes the true personal or document field",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "COMPANY PS period belongs to one course and preserves each personal exception",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "250 recipients: trusted key events to next paint, focus and saved value",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "150 rows: keyboard entry, search selection, explicit card and new-row focus",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "visible-column paste is previewed, filtered paste is blocked, removal can be undone",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "error queue survives editing and shared fields use the same autosave",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "a search result stays available while its name is corrected; readonly documents remain accessible",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "250 rows stay within a scroll region at desktop and narrow widths",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "a new empty person request starts at the name field without scrolling through settings",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "rectangular paste is one undo operation and conflict preserves another operator save",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "event set and confirmed outcomes are separate single undo operations",
+              "status": "unexpected",
+              "resultStatuses": [
+                "failed"
+              ]
+            },
+            {
+              "title": "keyboard edits preserve focus order and event common fields undo as one saved operation",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "operator bulk preview applies only selected PB empty dates and supports revision-safe undo",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "recipient lookup pages beyond first hundred and never reuses historical result or event date",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "mixed customer output selects employer B, binds its profile and requires explicit partial ZIP with server filename",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            }
+          ],
+          "testDetailsScope": "All tests in this run.",
+          "interpretation": "Only this run. Later repairs do not change its recorded result; overlapping tests are never added to a combined total."
+        }
+      ]
+    },
+    {
+      "id": "repaired-two-mocks",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/final-mock-repaired/results.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "bb42f62772639c4c692838c69dbaacff10acfd9a5212b080bfebd07d82ebfbc3",
+      "currentSha256AtCompact": "bb42f62772639c4c692838c69dbaacff10acfd9a5212b080bfebd07d82ebfbc3",
+      "layer": "BROWSER_MOCK_API",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T18:03:10.852Z",
+          "duration": 16227.083,
+          "expected": 2,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "repaired-two-mocks",
+          "evidenceRef": "repaired-two-mocks",
+          "status": "PASS",
+          "startedUtc": "2026-10-05T18:03:10.852Z",
+          "durationMs": 16227.083,
+          "expected": 2,
+          "unexpected": 0,
+          "skipped": 0,
+          "flaky": 0,
+          "tests": [
+            {
+              "title": "250 rows stay within a scroll region at desktop and narrow widths",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            },
+            {
+              "title": "event set and confirmed outcomes are separate single undo operations",
+              "status": "expected",
+              "resultStatuses": [
+                "passed"
+              ]
+            }
+          ],
+          "testDetailsScope": "All tests in this run.",
+          "interpretation": "Only this run. Later repairs do not change its recorded result; overlapping tests are never added to a combined total."
+        }
+      ]
+    },
+    {
+      "id": "business-isolated",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/preview/business-isolated-final.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "9eeae964beb5f4f2d82db60cd7731735f959afa57a28dad27d4bd304c460ae2e",
+      "currentSha256AtCompact": "9eeae964beb5f4f2d82db60cd7731735f959afa57a28dad27d4bd304c460ae2e",
+      "layer": "REAL_POSTGRESQL_AND_RENDER_WORKER",
+      "scope": null,
+      "boundedSummary": {
+        "status": "PASS"
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "lint-release",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/lint-release.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "currentSha256AtCompact": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "Private runtime log. This matrix retains the digest and extracted result; not a public deployment proof.",
+      "validationRuns": [
+        {
+          "id": "lint-release",
+          "evidenceRef": "lint-release",
+          "exitCode": 0,
+          "status": "PASS",
+          "countBlocks": {
+            "tests": [],
+            "pass": [],
+            "fail": [],
+            "skipped": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "typecheck-release",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/typecheck-release.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "fc1b6f3eb4e495908907f23e962983b7dc7da7393da84f68e482954dce7e2b39",
+      "currentSha256AtCompact": "fc1b6f3eb4e495908907f23e962983b7dc7da7393da84f68e482954dce7e2b39",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "Private runtime log. This matrix retains the digest and extracted result; not a public deployment proof.",
+      "validationRuns": [
+        {
+          "id": "typecheck-release",
+          "evidenceRef": "typecheck-release",
+          "exitCode": 0,
+          "status": "PASS",
+          "countBlocks": {
+            "tests": [],
+            "pass": [],
+            "fail": [],
+            "skipped": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit-final",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/unit-final.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "aa5e27fc732e512a29ca29ede37e22cb47469952e66524d109d1d814d4afc730",
+      "currentSha256AtCompact": "aa5e27fc732e512a29ca29ede37e22cb47469952e66524d109d1d814d4afc730",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "Private runtime log. This matrix retains the digest and extracted result; not a public deployment proof.",
+      "validationRuns": [
+        {
+          "id": "unit-final",
+          "evidenceRef": "unit-final",
+          "exitCode": 0,
+          "status": "PASS",
+          "countBlocks": {
+            "tests": [
+              211,
+              233
+            ],
+            "pass": [
+              211,
+              233
+            ],
+            "fail": [
+              0,
+              0
+            ],
+            "skipped": [
+              0,
+              0
+            ]
+          },
+          "tests": 444,
+          "passed": 444,
+          "failed": 0,
+          "skipped": 0,
+          "breakdown": {
+            "domain": 211,
+            "web": 233
+          }
+        }
+      ]
+    },
+    {
+      "id": "integration-final",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/integration-final.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "c4b13c457e798b763e44991fd78fc7a5660242c7b4ba1a674db9295a7d36502d",
+      "currentSha256AtCompact": "c4b13c457e798b763e44991fd78fc7a5660242c7b4ba1a674db9295a7d36502d",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "Private runtime log. This matrix retains the digest and extracted result; not a public deployment proof.",
+      "validationRuns": [
+        {
+          "id": "integration-final",
+          "evidenceRef": "integration-final",
+          "exitCode": 1,
+          "status": "FAILED",
+          "countBlocks": {
+            "tests": [
+              210
+            ],
+            "pass": [
+              209
+            ],
+            "fail": [
+              1
+            ],
+            "skipped": [
+              0
+            ]
+          },
+          "failure": "Prisma transaction expired in business FIXTURE_SETUP: limit 5000 ms, elapsed 8925 ms.",
+          "isolatedRepeat": "business-isolated-final",
+          "interpretation": "The full run remains 209/210 with exit 1. The one failed case passed separately. This is not a fully green rerun of all 210 tests."
+        }
+      ]
+    },
+    {
+      "id": "business-isolated-final",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/business-isolated-final.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "fb753337e3d653af51c13e34b7f05778280ad91364ce6a8bb33eea337ae8dfc4",
+      "currentSha256AtCompact": "fb753337e3d653af51c13e34b7f05778280ad91364ce6a8bb33eea337ae8dfc4",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "Private runtime log. This matrix retains the digest and extracted result; not a public deployment proof.",
+      "validationRuns": [
+        {
+          "id": "business-isolated-final",
+          "evidenceRef": "business-isolated-final",
+          "exitCode": 0,
+          "status": "PASS",
+          "countBlocks": {
+            "tests": [
+              1
+            ],
+            "pass": [
+              1
+            ],
+            "fail": [
+              0
+            ],
+            "skipped": [
+              0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "build-release",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/build-release.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "dbcc43c3fd85ab48dd74efddeba39916a9c95c9216aa0de493af6c1a68f343f6",
+      "currentSha256AtCompact": "dbcc43c3fd85ab48dd74efddeba39916a9c95c9216aa0de493af6c1a68f343f6",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "Private runtime log. This matrix retains the digest and extracted result; not a public deployment proof.",
+      "validationRuns": [
+        {
+          "id": "build-release",
+          "evidenceRef": "build-release",
+          "exitCode": 0,
+          "status": "PASS",
+          "countBlocks": {
+            "tests": [],
+            "pass": [],
+            "fail": [],
+            "skipped": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "web-build-final",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/web-build-final.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "4279c3346a70fe5342c94f6f493ca09bbcec8f7804a13da67f2865bec7d818a7",
+      "currentSha256AtCompact": "4279c3346a70fe5342c94f6f493ca09bbcec8f7804a13da67f2865bec7d818a7",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "Private runtime log. This matrix retains the digest and extracted result; not a public deployment proof.",
+      "validationRuns": [
+        {
+          "id": "web-build-final",
+          "evidenceRef": "web-build-final",
+          "exitCode": 0,
+          "status": "PASS",
+          "countBlocks": {
+            "tests": [],
+            "pass": [],
+            "fail": [],
+            "skipped": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "render-final",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/render-final.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "f3689636c1a49bedc5ead0b5732f08e2e483b971200d00b4d6d56cf1387dc534",
+      "currentSha256AtCompact": "f3689636c1a49bedc5ead0b5732f08e2e483b971200d00b4d6d56cf1387dc534",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "Private runtime log. This matrix retains the digest and extracted result; not a public deployment proof.",
+      "validationRuns": [
+        {
+          "id": "render-final",
+          "evidenceRef": "render-final",
+          "exitCode": null,
+          "status": "PASS",
+          "countBlocks": {
+            "tests": [],
+            "pass": [],
+            "fail": [],
+            "skipped": []
+          },
+          "tests": 138,
+          "durationSeconds": 1593.05,
+          "completedRunnerResult": "OK",
+          "exitCodeFilePresent": false
+        }
+      ]
+    },
+    {
+      "id": "unit-final-source-env",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/unit-final-source-env.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "b1ba1df0fac8eeded860be8d791b50b6c8068812f4b528dcdbe7dcb231cacbd0",
+      "currentSha256AtCompact": "b1ba1df0fac8eeded860be8d791b50b6c8068812f4b528dcdbe7dcb231cacbd0",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": null,
+      "validationRuns": [
+        {
+          "id": "unit-final-source-env",
+          "evidenceRef": "unit-final-source-env",
+          "command": "pnpm test",
+          "status": "PASS",
+          "exitCode": 0,
+          "tests": 446,
+          "pass": 446,
+          "fail": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "interpretation": "Core and web summaries from this single command only; do not add earlier runs."
+        }
+      ]
+    },
+    {
+      "id": "unit-final-source-env-exit",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/unit-final-source-env.exit.txt",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "currentSha256AtCompact": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "layer": "COMMAND_EXIT_CODE",
+      "scope": null,
+      "validationRuns": []
+    },
+    {
+      "id": "lint-final-source",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/lint-final-source.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "currentSha256AtCompact": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": null,
+      "validationRuns": [
+        {
+          "id": "lint-final-source",
+          "evidenceRef": "lint-final-source",
+          "command": "pnpm lint",
+          "exitCode": 0,
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "id": "lint-final-source-exit",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/lint-final-source.exit.txt",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "currentSha256AtCompact": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "layer": "COMMAND_EXIT_CODE",
+      "scope": null,
+      "validationRuns": []
+    },
+    {
+      "id": "lint-current-final-03",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/lint-current-final-03.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "currentSha256AtCompact": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "layer": "EXECUTED_CURRENT_SOURCE_COMMAND_LOG",
+      "scope": "Private log; public packaging should use sanitized compact report with this digest.",
+      "validationRuns": [
+        {
+          "id": "lint-current-final-03",
+          "evidenceRef": "lint-current-final-03",
+          "exitEvidenceRef": "lint-current-final-03-exit",
+          "command": "pnpm lint",
+          "status": "PASS",
+          "exitCode": 0,
+          "buildId": "uypqU8MKNYMwsb1NNghQ6"
+        }
+      ]
+    },
+    {
+      "id": "lint-current-final-03-exit",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/lint-current-final-03.exit.txt",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "currentSha256AtCompact": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "layer": "COMMAND_EXIT_CODE",
+      "scope": null,
+      "validationRuns": []
+    },
+    {
+      "id": "typecheck-current-final-03",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/typecheck-current-final-03.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "97855a5340af7163ced556aa06b811980de65a66f0322b4d19c0299fe6208916",
+      "currentSha256AtCompact": "97855a5340af7163ced556aa06b811980de65a66f0322b4d19c0299fe6208916",
+      "layer": "EXECUTED_CURRENT_SOURCE_COMMAND_LOG",
+      "scope": "Private log; public packaging should use sanitized compact report with this digest.",
+      "validationRuns": [
+        {
+          "id": "typecheck-current-final-03",
+          "evidenceRef": "typecheck-current-final-03",
+          "exitEvidenceRef": "typecheck-current-final-03-exit",
+          "command": "pnpm typecheck",
+          "status": "PASS",
+          "exitCode": 0,
+          "buildId": "uypqU8MKNYMwsb1NNghQ6"
+        }
+      ]
+    },
+    {
+      "id": "typecheck-current-final-03-exit",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/typecheck-current-final-03.exit.txt",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "currentSha256AtCompact": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "layer": "COMMAND_EXIT_CODE",
+      "scope": null,
+      "validationRuns": []
+    },
+    {
+      "id": "unit-current-final-03",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/test-current-final-03.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "44aabfed3ffd316a667acb4a6506a576daedf5d0f1477d5676cadc680540fae7",
+      "currentSha256AtCompact": "44aabfed3ffd316a667acb4a6506a576daedf5d0f1477d5676cadc680540fae7",
+      "layer": "EXECUTED_CURRENT_SOURCE_COMMAND_LOG",
+      "scope": "Private log; public packaging should use sanitized compact report with this digest.",
+      "validationRuns": [
+        {
+          "id": "unit-current-final-03",
+          "evidenceRef": "unit-current-final-03",
+          "exitEvidenceRef": "unit-current-final-03-exit",
+          "command": "pnpm test",
+          "status": "PASS",
+          "exitCode": 0,
+          "buildId": "uypqU8MKNYMwsb1NNghQ6",
+          "domain": 240,
+          "web": 241,
+          "passed": 481,
+          "failed": 0,
+          "skipped": 0,
+          "periodGuardProof": {
+            "combinations": 28,
+            "parentIncludedNodeEntries": 29,
+            "scope": "Actual preview service with in-memory Prisma transaction double. Draft/proposal × target/general; impossible/reversed/explicit schedule reject, optional empty/partial/CLEARED and legacy no-policy remain unchanged. This is not HTTP/browser or real PostgreSQL proof."
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit-current-final-03-exit",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/test-current-final-03.exit.txt",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "currentSha256AtCompact": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "layer": "COMMAND_EXIT_CODE",
+      "scope": null,
+      "validationRuns": []
+    },
+    {
+      "id": "build-current-final-03",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/build-current-final-03.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "2efba606e33dfda36ba794f34d3afb20a8065ccaccc7dd384bfc37af1617845b",
+      "currentSha256AtCompact": "2efba606e33dfda36ba794f34d3afb20a8065ccaccc7dd384bfc37af1617845b",
+      "layer": "EXECUTED_CURRENT_SOURCE_COMMAND_LOG",
+      "scope": "Private log; public packaging should use sanitized compact report with this digest.",
+      "validationRuns": [
+        {
+          "id": "build-current-final-03",
+          "evidenceRef": "build-current-final-03",
+          "exitEvidenceRef": "build-current-final-03-exit",
+          "command": "pnpm build",
+          "status": "PASS",
+          "exitCode": 0,
+          "buildId": "uypqU8MKNYMwsb1NNghQ6"
+        }
+      ]
+    },
+    {
+      "id": "build-current-final-03-exit",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/build-current-final-03.exit.txt",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "currentSha256AtCompact": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "layer": "COMMAND_EXIT_CODE",
+      "scope": null,
+      "validationRuns": []
+    },
+    {
+      "id": "remaining-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-01/results-remaining-01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "f4159e88083e064d3b94f9cfdac72b06d6cdcb37de31d67fe267e8a52a7fe1f3",
+      "currentSha256AtCompact": "f4159e88083e064d3b94f9cfdac72b06d6cdcb37de31d67fe267e8a52a7fe1f3",
+      "layer": "EXECUTED_PLAYWRIGHT_JSON",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T19:52:36.970Z",
+          "duration": 3282896.932,
+          "expected": 136,
+          "skipped": 4,
+          "unexpected": 47,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "remaining-01",
+          "evidenceRef": "remaining-01",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T19:52:36.970Z",
+          "durationMs": 3282896.932,
+          "expected": 136,
+          "unexpected": 47,
+          "skipped": 4,
+          "flaky": 0,
+          "interpretation": "One execution only; no addition to overlapping runs. Failed/skipped attempts retained unchanged."
+        }
+      ]
+    },
+    {
+      "id": "cycle-company-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/results-cycle-company-01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "681128732c8a98659f30bdf33304adadbc4e80e842f806890ca0cbec2a23c79a",
+      "currentSha256AtCompact": "681128732c8a98659f30bdf33304adadbc4e80e842f806890ca0cbec2a23c79a",
+      "layer": "EXECUTED_PLAYWRIGHT_JSON",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T19:43:58.163Z",
+          "duration": 103668.525,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "cycle-company-01",
+          "evidenceRef": "cycle-company-01",
+          "status": "PASS",
+          "startedUtc": "2026-10-05T19:43:58.163Z",
+          "durationMs": 103668.525,
+          "expected": 1,
+          "unexpected": 0,
+          "skipped": 0,
+          "flaky": 0,
+          "interpretation": "One execution only; no addition to overlapping runs. Failed/skipped attempts retained unchanged."
+        }
+      ]
+    },
+    {
+      "id": "cycle-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-01/results-cycle-01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "d250174c6dc857b094b4ea3473b7fed5dabd5b7406939edad014af4eaa3f9d3c",
+      "currentSha256AtCompact": "d250174c6dc857b094b4ea3473b7fed5dabd5b7406939edad014af4eaa3f9d3c",
+      "layer": "EXECUTED_PLAYWRIGHT_JSON",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T19:35:26.545Z",
+          "duration": 138571.161,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 1,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "cycle-01",
+          "evidenceRef": "cycle-01",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T19:35:26.545Z",
+          "durationMs": 138571.161,
+          "expected": 1,
+          "unexpected": 1,
+          "skipped": 0,
+          "flaky": 0,
+          "interpretation": "One execution only; no addition to overlapping runs. Failed/skipped attempts retained unchanged."
+        }
+      ]
+    },
+    {
+      "id": "priority-final-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/priority-final-01/results-priority-final-01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "a4ebf1e119d1287862007e9b50a8fac9e79e91b3d6986fe664f8cd86ab9cd6ee",
+      "currentSha256AtCompact": "a4ebf1e119d1287862007e9b50a8fac9e79e91b3d6986fe664f8cd86ab9cd6ee",
+      "layer": "EXECUTED_PLAYWRIGHT_JSON",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T19:46:12.613Z",
+          "duration": 174630.29,
+          "expected": 7,
+          "skipped": 0,
+          "unexpected": 1,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "priority-final-01",
+          "evidenceRef": "priority-final-01",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T19:46:12.613Z",
+          "durationMs": 174630.29,
+          "expected": 7,
+          "unexpected": 1,
+          "skipped": 0,
+          "flaky": 0,
+          "interpretation": "One execution only; no addition to overlapping runs. Failed/skipped attempts retained unchanged."
+        }
+      ]
+    },
+    {
+      "id": "focused-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/focused-01/results-focused-01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "4f2110bac6c5d669d965fb0a5e541e387f43e2d6d188a21fcfbbdcd5213cb0a5",
+      "currentSha256AtCompact": "4f2110bac6c5d669d965fb0a5e541e387f43e2d6d188a21fcfbbdcd5213cb0a5",
+      "layer": "EXECUTED_PLAYWRIGHT_JSON",
+      "scope": null,
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T19:04:28.325Z",
+          "duration": 13691.782000000001,
+          "expected": 5,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "focused-01",
+          "evidenceRef": "focused-01",
+          "status": "PASS",
+          "startedUtc": "2026-10-05T19:04:28.325Z",
+          "durationMs": 13691.782000000001,
+          "expected": 5,
+          "unexpected": 0,
+          "skipped": 0,
+          "flaky": 0,
+          "interpretation": "One execution only; no addition to overlapping runs. Failed/skipped attempts retained unchanged."
+        }
+      ]
+    },
+    {
+      "id": "fresh-person-cycle-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-01/live-cycle/person-cycle.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "8761eed6e05879cf2ff9fcf7f187bb7c8ca309b0575cf65ff07997b5c2df187f",
+      "currentSha256AtCompact": "8761eed6e05879cf2ff9fcf7f187bb7c8ca309b0575cf65ff07997b5c2df187f",
+      "layer": "REAL_UI_DIRECTOR_ISSUANCE_SIX_ORIGINALS",
+      "scope": "Successful PERSON scenario within cycle-01 run that also contains one failed COMPANY scenario; do not call whole cycle-01 PASS.",
+      "boundedSummary": {
+        "status": "PASS"
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "remaining-retry-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/results-remaining-retry-01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "fead41be0120cad32db154878cb8d183ea875b478ccc8684bd2b81dc004c2aaa",
+      "currentSha256AtCompact": "fead41be0120cad32db154878cb8d183ea875b478ccc8684bd2b81dc004c2aaa",
+      "layer": "EXECUTED_COMPLETED_PLAYWRIGHT_JSON",
+      "scope": "Completed47-case retry on03:32PASS/15FAIL/0skip. Original failures remain failures; no summation with overlapping broad runs.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T20:58:30.039Z",
+          "duration": 3856953.823,
+          "expected": 32,
+          "skipped": 0,
+          "unexpected": 15,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "remaining-retry-01",
+          "evidenceRef": "remaining-retry-01",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T20:58:30.039Z",
+          "durationMs": 3856953.823,
+          "expected": 32,
+          "unexpected": 15,
+          "skipped": 0,
+          "flaky": 0,
+          "tests": 47,
+          "testDetails": [
+            {
+              "file": "biot-issue.spec.ts",
+              "title": "isolated issuer: actual worker and ITR categories generate all four current BIOT forms after a real director decision",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "biot-presets.spec.ts",
+              "title": "WORKER: current category defaults, explicit hours and automatic expiry survive server save and reload",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "biot-presets.spec.ts",
+              "title": "ITR: current category defaults, explicit hours and automatic expiry survive server save and reload",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "center-registration-real.spec.ts",
+              "title": "real local proxy registration, cookies, onboarding version save and first draft",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "commercial.spec.ts",
+              "title": "oldest saved originals survive 55 newer drafts, page three and archive excludes the unsigned official set",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "commercial.spec.ts",
+              "title": "validation errors identify the field, focus the missing date and offline retains unsaved input",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "commercial.spec.ts",
+              "title": "finalize response lost after commit: retry and double activation reuse one issuance and the exact approved final text",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "commercial.spec.ts",
+              "title": "administrator settings and an independent operator conflict preserve both drafts",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "demo.spec.ts",
+              "title": "person: bilingual refresh, final characters, real preview and immutable original files remain linked to a reasoned correction",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "demo.spec.ts",
+              "title": "company: 12 independent bilingual recipients and 18 training choices produce all 37 mandatory current forms",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "demo.spec.ts",
+              "title": "keyboard creates and validates a person, traps focus in the photo dialog, then generates after an actual director decision",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "demo.spec.ts",
+              "title": "failed-download UI supports reasoned reconstruction without renumbering or replacing originals",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "employer-invites-live.spec.ts",
+              "title": "live invitation UI: administrator grants selected-person scope, new employer accepts once, existing password and immediate revoke",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "final-directory-live.spec.ts",
+              "title": "server directory finds the 101st company and person outside the first page and preserves stable links",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "final-handover-live.spec.ts",
+              "title": "V05 exact live handover: eight people, two events, unknown result and untransferred material survive colleague handover",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "final-renewal-onboarding-live.spec.ts",
+              "title": "V06 exact five states: only two confirmed needs create clean linked repeats, closed and unknown states survive reload",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "final-service-workflows-live.spec.ts",
+              "title": "real service UI: evidence, ownership, exact payment, portal changes, clean renewal and unsigned public guard",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "final-sources-live.spec.ts",
+              "title": "live service passport versions preserve issued history, optional obligations and distinct renewal dates/contact history",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "generated-photo.spec.ts",
+              "title": "synthetic photo fixture: actual upload, crop, reload, preview, director decision and exact embedded saved image",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-complete-live.spec.ts",
+              "title": "real UI creates one, then keyboard enters ten without opening cards and persists every field",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-customer-live.spec.ts",
+              "title": "real customer clarification can be scoped, reduced, edited and copied; employer change preserves periods and clean reuse",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-date-causes-full-fix.spec.ts",
+              "title": "UX09 request/event/individual dates preserve inherited, manual, imported and cleared origins through reload and return to common",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-details-acceptance-live.spec.ts",
+              "title": "current PERSON PS: three UI steps, exact period, every form, director target and immutable issue",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-domain-acceptance-live.spec.ts",
+              "title": "UX04 actual fourth-row group and individual issues focus exact assignment fields after deletion reorder and filtering; UX08 Next repairs true PERSON COMPANY WORKER ITR causes",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-domain-acceptance-live.spec.ts",
+              "title": "UX14 independent facts remain separate and changed original context offers an explicit compatible return",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-domain-acceptance-live.spec.ts",
+              "title": "UX15 reset every offered training field from credential protocol and witness displays current common values after reload",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-domain-full-fix-live.spec.ts",
+              "title": "UX-28 conflict copy double activation creates exactly one new request and resumes its save lane",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-domain-full-fix-live.spec.ts",
+              "title": "UX-01 persisted undo detects a changed training context and preserves both current data and removed facts",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-domain-full-fix-live.spec.ts",
+              "title": "UX-14 category correction cycles retain original event ID and confirmation without orphan groups",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-domain-full-fix-live.spec.ts",
+              "title": "UX-15 protocol reset updates both form origins and resolved program after reload",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-domain-full-fix-live.spec.ts",
+              "title": "UX-28 real two-tab conflict stays paused after dismissal and local edits until explicit reload",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-editor-live.spec.ts",
+              "title": "100 real rows preserve imported/manual/cleared common overrides, keyboard ranges, one undo and two actual session saves",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-import-full-fix-live.spec.ts",
+              "title": "UX32 real COMPANY search uses effective RU/KZ employers, exceptions and changed company without mutating raw people",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-minimal-exceptions-live.spec.ts",
+              "title": "saved person and explicit exceptions survive common date, added course and reload through UI",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-minimal-manual-live.spec.ts",
+              "title": "manual 20 people use one group position employer and courses, director reviews effective values and files retain snapshot",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-native-zoom-live.spec.ts",
+              "title": "UX06/11/21 genuine Chrome 200 percent zoom in a disposable native profile retains input, footer, and internal table scroll",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-portal-retake-live.spec.ts",
+              "title": "live failed attempt gets linked clean retake; scoped employer evidence stays unverified",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-preparation-full-fix.spec.ts",
+              "title": "UX13/R4 every supported category and personal form shows forced actual expiry, date change and reload",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-print-lifecycle-live.spec.ts",
+              "title": "real operator validates, previews, explicitly generates, downloads saved print forms and reopens immutable originals while official unsigned delivery remains blocked",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-role-full-fix-live.spec.ts",
+              "title": "real operator preparation, director return/correction/new approval, renderer and immutable bytes retain unsigned official guards",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-table-live.spec.ts",
+              "title": "100 real recipients: keyboard editing, scoped selection, bilingual fields, autosave and reload",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-table-live.spec.ts",
+              "title": "150 real recipients: keyboard editing, scoped selection, bilingual fields, autosave and reload",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-table-live.spec.ts",
+              "title": "250 real recipients: keyboard editing, scoped selection, bilingual fields, autosave and reload",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-v01-live.spec.ts",
+              "title": "V01 one person obtains actual files for one mandatory training kit without company, order or portal",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-value-live.spec.ts",
+              "title": "live operator creates a simple request, grouped event, linked order, obligation and exact service calculation",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "remaining-new-request-defaults-live.spec.ts",
+              "title": "ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10 plus 16 hours through real director approval",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "remaining-operator-batches.spec.ts",
+              "title": "one working request: director approves selected BIOT then later PTM, real originals and combined PDF retain first batch",
+              "project": "remaining",
+              "status": "expected"
+            }
+          ],
+          "buildId": "uypqU8MKNYMwsb1NNghQ6",
+          "interpretation": "Completed historical retry. Later fixes and current04 acceptance are separate."
+        }
+      ]
+    },
+    {
+      "id": "build-current-final-04",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/build-current-final-04.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "073a016b174ae81c16d6103993d4d72701735601d6d30a2e283489fe859821be",
+      "currentSha256AtCompact": "073a016b174ae81c16d6103993d4d72701735601d6d30a2e283489fe859821be",
+      "layer": "EXECUTED_CURRENT_SOURCE_COMMAND_LOG",
+      "scope": "Exact digest from source-checks-current-final-04; private log, public compact report is separate.",
+      "validationRuns": [
+        {
+          "id": "build-current-final-04",
+          "evidenceRef": "build-current-final-04",
+          "status": "PASS",
+          "command": "pnpm build",
+          "exitCode": 0,
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx"
+        }
+      ]
+    },
+    {
+      "id": "lint-current-final-04",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/lint-current-final-04.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "currentSha256AtCompact": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "layer": "EXECUTED_CURRENT_SOURCE_COMMAND_LOG",
+      "scope": "Exact digest from source-checks-current-final-04; private log, public compact report is separate.",
+      "validationRuns": [
+        {
+          "id": "lint-current-final-04",
+          "evidenceRef": "lint-current-final-04",
+          "status": "PASS",
+          "command": "pnpm lint",
+          "exitCode": 0,
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx"
+        }
+      ]
+    },
+    {
+      "id": "typecheck-current-final-04",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/typecheck-current-final-04.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "6039675d5e2f102073411548cc8cb38ab8f94cb21e2f7ba05da4684b1005451f",
+      "currentSha256AtCompact": "6039675d5e2f102073411548cc8cb38ab8f94cb21e2f7ba05da4684b1005451f",
+      "layer": "EXECUTED_CURRENT_SOURCE_COMMAND_LOG",
+      "scope": "Exact digest from source-checks-current-final-04; private log, public compact report is separate.",
+      "validationRuns": [
+        {
+          "id": "typecheck-current-final-04",
+          "evidenceRef": "typecheck-current-final-04",
+          "status": "PASS",
+          "command": "pnpm typecheck",
+          "exitCode": 0,
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx"
+        }
+      ]
+    },
+    {
+      "id": "unit-current-final-04",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/test-current-final-04.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "1b218216af6bb3dc73deaebfaf4f3faae41d463cd4e9d82cab94c69ffa95cc1c",
+      "currentSha256AtCompact": "1b218216af6bb3dc73deaebfaf4f3faae41d463cd4e9d82cab94c69ffa95cc1c",
+      "layer": "EXECUTED_CURRENT_SOURCE_COMMAND_LOG",
+      "scope": "Exact digest from source-checks-current-final-04; private log, public compact report is separate.",
+      "validationRuns": [
+        {
+          "id": "unit-current-final-04",
+          "evidenceRef": "unit-current-final-04",
+          "status": "PASS",
+          "command": "pnpm test",
+          "exitCode": 0,
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+          "domain": 246,
+          "web": 241,
+          "passed": 487,
+          "failed": 0,
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "id": "recipient-restore-integration-04",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/recipient-restore-proposed/integration-runs/2026-10-05T22-10-43-773Z-5718abef/result.private.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "0919d9f678028cbab91358888eac9a597b174f7cd18fd4ebbe7fc3155f12ef53",
+      "currentSha256AtCompact": "0919d9f678028cbab91358888eac9a597b174f7cd18fd4ebbe7fc3155f12ef53",
+      "layer": "REAL_POSTGRESQL_TARGETED_INTEGRATION",
+      "scope": "One actual isolated integration test PASS, new synthetic tenant, all93 source digests unchanged; exact raw restore and server metadata, forgery/mixed/stale/foreign guards, fast existing-row restore and later real result-edit restamp. No browser/render claim.",
+      "boundedSummary": {
+        "status": "PASS"
+      },
+      "validationRuns": [
+        {
+          "id": "recipient-restore-integration-04",
+          "evidenceRef": "recipient-restore-integration-04",
+          "status": "PASS",
+          "command": "tsx --tsconfig tsconfig.base.json --test --test-concurrency=1 tests/integration/recipient-restore.test.ts",
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "exitCode": 0,
+          "startedUtc": "2026-10-05T22:10:43.776Z",
+          "finishedUtc": "2026-10-05T22:10:45.346Z",
+          "database": "demo_test_details_integration",
+          "sourceDigestsMatched": 93,
+          "interpretation": "New targeted current-source PostgreSQL proof. Does not rewrite the prior full integration209/210 result or replace250-row browser acceptance."
+        }
+      ]
+    },
+    {
+      "id": "recipient-restore-integration-plan",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/recipient-restore-proposed/integration-runner-plan.private.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "993993cfa7bba5eac0f135dbeaf8c057114250be7e491a41346e0be7aca9fd84",
+      "currentSha256AtCompact": "993993cfa7bba5eac0f135dbeaf8c057114250be7e491a41346e0be7aca9fd84",
+      "layer": "HASH_PINNED_SINGLE_TEST_PLAN",
+      "scope": "Exact93 source/template/test digests and dedicated database guard; no schema/reset/migration.",
+      "boundedSummary": {
+        "status": "PREPARED_NOT_EXECUTED"
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "inventory-current-final-04",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/discovery-04-retry01/full203-inventory.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "4c57e32637978dcfed0b2a6af351d12b541a500e67b54eccb38f700c0706a420",
+      "currentSha256AtCompact": "4c57e32637978dcfed0b2a6af351d12b541a500e67b54eccb38f700c0706a420",
+      "layer": "ACTUAL_PLAYWRIGHT_DISCOVERY_ONLY",
+      "scope": "Exact203 current test identities discovered; this is inventory, not203 executed or passed tests.",
+      "boundedSummary": {},
+      "validationRuns": []
+    },
+    {
+      "id": "phase04-execution-plan",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/phase04-plan/execution-plan-v02.private.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "d463eb210c01ab2cbf9f04f979979bd78035a4dfc154eb59498aad2650c6f301",
+      "currentSha256AtCompact": "d463eb210c01ab2cbf9f04f979979bd78035a4dfc154eb59498aad2650c6f301",
+      "layer": "PRIVATE_SERIAL_EXECUTION_PLAN_ONLY",
+      "scope": "Family/retry/continuation/dependency phase plan. Prepared/planned is not a PASS; completed original reports stay intact.",
+      "boundedSummary": {
+        "status": "PREPARED_NOT_EXECUTED"
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "required-core-04-startup-failure",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/required-core-04/harness-startup-failure.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "e134ebca9c18f55194017f7b7081ee607cc2b25cac4865ede4276a17e557c19f",
+      "currentSha256AtCompact": "e134ebca9c18f55194017f7b7081ee607cc2b25cac4865ede4276a17e557c19f",
+      "layer": "HARNESS_STARTUP_FAILURE_NOT_ACCEPTANCE_RUN",
+      "scope": "Harness failed before test execution; do not count as a test PASS or add fake business failures.",
+      "boundedSummary": {
+        "status": "HARNESS_STARTUP_FAILED"
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "required-core-04-retry01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/required-core-04-retry01/results-required-core-04-retry01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "acdf749af6b4c2619247c18b12a47b229624d5c829e8ff6e3a5e4489e76b1f21",
+      "currentSha256AtCompact": "acdf749af6b4c2619247c18b12a47b229624d5c829e8ff6e3a5e4489e76b1f21",
+      "layer": "COMPLETED_CURRENT_BUILD_BROWSER_FAMILY_PHASE",
+      "scope": "20cases:19PASS/1FAIL/0skip. Six photo cases including actual POST413 recovery, explicit COMPANY exclusion, nine ordinary/legacy PERSON cases, copy, V06/V10 passed; full Editor revision guard failed before its first PDF and remains pending triage/retry.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:13:04.761Z",
+          "duration": 105881.298,
+          "expected": 19,
+          "skipped": 0,
+          "unexpected": 1,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "required-core-04-retry01",
+          "evidenceRef": "required-core-04-retry01",
+          "status": "FAILED",
+          "startedUtc": "2026-10-05T22:13:04.761Z",
+          "durationMs": 105881.298,
+          "expected": 19,
+          "unexpected": 1,
+          "skipped": 0,
+          "flaky": 0,
+          "tests": 20,
+          "testDetails": [
+            {
+              "file": "conflict-copy.spec.ts",
+              "title": "conflict copy isolates events and safely retries a committed copy after a lost response",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "final-renewal-onboarding-live.spec.ts",
+              "title": "V06 exact five states: only two confirmed needs create clean linked repeats, closed and unknown states survive reload",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "final-renewal-onboarding-live.spec.ts",
+              "title": "V10 fresh supported synthetic center obtains its first actual UI PDF and all mandatory forms without company, finance, portal or dossier dependencies",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-company-import-conflict-live.spec.ts",
+              "title": "COMPANY import can explicitly exclude employer conflicts without alignment and preserves the company and existing personal exceptions",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "PERSON: keyboard follows three steps, preserves back/reload, and resumes at the compact card",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "legacy multi PERSON: direct edits keep every identity, independent KZ and linked PS dates",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "PERSON addressed field navigation selects a legacy person and exposes the true personal or document field",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "COMPANY PS period belongs to one course and preserves each personal exception",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "legacy PERSON GROUP repairs inherited event fields while manual personal dates remain personal",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "two company tabs retain newer input across a late create response, stale retry and reload",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "PERSON course and employer names remain stable while validation descriptions are visible",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "the first linked order attaches the company created by that action's flush",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "COMPANY and legacy multi PERSON keep existing release guidance and eligibility controls",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-person-flow.spec.ts",
+              "title": "authoritative approval refresh closes the full Editor's old preview before reopening at the new revision",
+              "project": "remaining",
+              "status": "unexpected"
+            },
+            {
+              "file": "operator-photo-component.spec.ts",
+              "title": "valid-invalid-valid and same-file reselection never retain a rejected candidate",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-photo-component.spec.ts",
+              "title": "PNG/JPEG limits and 20MP crop movements use only the prepared bitmap and small output canvas",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-photo-component.spec.ts",
+              "title": "429, 503 and network failure recover; failed attachment retries the accepted asset without reupload",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-photo-component.spec.ts",
+              "title": "POST timeout, stop and close invalidate late responses and unlock controls",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-photo-component.spec.ts",
+              "title": "processing timeout and rapid replacement discard late bitmap results",
+              "project": "remaining",
+              "status": "expected"
+            },
+            {
+              "file": "operator-photo-component.spec.ts",
+              "title": "EXIF 6/8, rotations and original crop coordinates match server normalization",
+              "project": "remaining",
+              "status": "expected"
+            }
+          ],
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+          "sourceFreezeEvidence": "required-core-04-completion",
+          "interpretation": "Only nineteen specific scenarios PASS. Retain failed full Editor mock; no all-family or full-suite green claim."
+        }
+      ]
+    },
+    {
+      "id": "required-core-04-completion",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/required-core-04-retry01/completion-summary.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "25836bee4daa8a17ccf02656d12c7c84d8e6a9e5ef1a3d5c76169f1dfeb88f87",
+      "currentSha256AtCompact": "25836bee4daa8a17ccf02656d12c7c84d8e6a9e5ef1a3d5c76169f1dfeb88f87",
+      "layer": "COMPLETED_PHASE_SOURCE_FREEZE_PROOF",
+      "scope": "Recorded89test-source hashes unchanged during this completed phase; source03/04 and test-discovery counts are not merged.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:13:04.761Z",
+          "duration": 105881.298,
+          "expected": 19,
+          "skipped": 0,
+          "unexpected": 1,
+          "flaky": 0
+        },
+        "exitCode": 1,
+        "complete": true
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "revision-preview-04",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/revision-preview-04/results-revision-preview-04.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "d21f0068cb24ef926096546ca0e0370a0c443fbc4052e43ab42ce919cc933c2a",
+      "currentSha256AtCompact": "d21f0068cb24ef926096546ca0e0370a0c443fbc4052e43ab42ce919cc933c2a",
+      "layer": "EXECUTED_CURRENT_FULL_EDITOR_TARGETED_BROWSER",
+      "scope": "Actual authoritative-refresh guard PASS1/1 after test-only GETjobs response-shape correction. Product380source files still unchanged; previous core19/1 report retained.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:17:11.233Z",
+          "duration": 3360.9300000000003,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "revision-preview-04",
+          "evidenceRef": "revision-preview-04",
+          "status": "PASS",
+          "startedUtc": "2026-10-05T22:17:11.233Z",
+          "durationMs": 3360.9300000000003,
+          "expected": 1,
+          "unexpected": 0,
+          "skipped": 0,
+          "flaky": 0,
+          "tests": 1,
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+          "closesSpecificPriorFailure": {
+            "run": "required-core-04-retry01",
+            "file": "operator-person-flow.spec.ts",
+            "title": "authoritative approval refresh closes the full Editor's old preview before reopening at the new revision"
+          },
+          "interpretation": "Specific later repeat passed; preserve earlier core phase FAILED19/1. No addition to overall overlapping suite coverage."
+        }
+      ]
+    },
+    {
+      "id": "revision-preview-04-completion",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/revision-preview-04/completion-summary.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "dab43e93b8c26cee07a266e431b58221835dfb96e18b259fc2c086f87ce8a828",
+      "currentSha256AtCompact": "dab43e93b8c26cee07a266e431b58221835dfb96e18b259fc2c086f87ce8a828",
+      "layer": "COMPLETED_TARGETED_SOURCE_FREEZE_PROOF",
+      "scope": "89test-source files unchanged during targeted execution; only operator-person-flow.spec.ts differs from prior core capture. No app source change is inferred from test correction.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:17:11.233Z",
+          "duration": 3360.9300000000003,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "exitCode": 0,
+        "complete": true
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "cycle-person-04",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/results-cycle-person-04.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "7be5b17ab048b61b7df5242e9e2ce49106b782aa841aead6b7dc430ef4dd05cd",
+      "currentSha256AtCompact": "7be5b17ab048b61b7df5242e9e2ce49106b782aa841aead6b7dc430ef4dd05cd",
+      "layer": "EXECUTED_COMPLETED_PLAYWRIGHT_JSON",
+      "scope": "Completed named04 phase1PASS/0FAIL/0skip oniPAhpRSkuBMrPUIjjOnIx; independent result, not summed with overlapping runs.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:17:43.065Z",
+          "duration": 116629.74399999999,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "cycle-person-04",
+          "evidenceRef": "cycle-person-04",
+          "status": "PASS",
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+          "startedUtc": "2026-10-05T22:17:43.065Z",
+          "durationMs": 116629.74399999999,
+          "tests": 1,
+          "expected": 1,
+          "unexpected": 0,
+          "skipped": 0,
+          "flaky": 0,
+          "completionEvidenceRef": "cycle-person-04-completion",
+          "testDetails": [
+            {
+              "file": "operator-details-acceptance-live.spec.ts",
+              "title": "current PERSON PS: three UI steps, exact period, every form, director target and immutable issue",
+              "project": "remaining",
+              "outcome": "expected",
+              "status": "passed",
+              "durationMs": 115080,
+              "annotations": []
+            }
+          ],
+          "interpretation": "Completed named phase only; does not replace earlier failed history or assert full-suite green."
+        }
+      ]
+    },
+    {
+      "id": "cycle-person-04-completion",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/completion-summary.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "5077dbe53cb33059dd97308ff7211124995d4ac4da588782b5c06054437777c2",
+      "currentSha256AtCompact": "5077dbe53cb33059dd97308ff7211124995d4ac4da588782b5c06054437777c2",
+      "layer": "EXECUTED_SOURCE_FROZEN_COMPLETION",
+      "scope": "Exit0, exact result digest, build04, 89 test files unchanged during execution.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:17:43.065Z",
+          "duration": 116629.74399999999,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "exitCode": 0,
+        "complete": true
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "cycle-person-04-test-sources",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/test-sources-cycle-person-04.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "e0da444bce6b185e18a1116b6837e048b740a69dc29af4bfae47487e8a0084ad",
+      "currentSha256AtCompact": "e0da444bce6b185e18a1116b6837e048b740a69dc29af4bfae47487e8a0084ad",
+      "layer": "CAPTURED_EXECUTED_TEST_SOURCE_HASHES",
+      "scope": "89 captured files independently matched current bytes during this private read-only audit.",
+      "boundedSummary": {},
+      "validationRuns": []
+    },
+    {
+      "id": "cycle-company-04",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/results-cycle-company-04.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "727ddfdd3331f8f4c176747a1f2420dcca56b105316a3332f94520fcd6428be9",
+      "currentSha256AtCompact": "727ddfdd3331f8f4c176747a1f2420dcca56b105316a3332f94520fcd6428be9",
+      "layer": "EXECUTED_COMPLETED_PLAYWRIGHT_JSON",
+      "scope": "Completed named04 phase1PASS/0FAIL/0skip oniPAhpRSkuBMrPUIjjOnIx; independent result, not summed with overlapping runs.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:19:48.533Z",
+          "duration": 108393.527,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "cycle-company-04",
+          "evidenceRef": "cycle-company-04",
+          "status": "PASS",
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+          "startedUtc": "2026-10-05T22:19:48.533Z",
+          "durationMs": 108393.527,
+          "tests": 1,
+          "expected": 1,
+          "unexpected": 0,
+          "skipped": 0,
+          "flaky": 0,
+          "completionEvidenceRef": "cycle-company-04-completion",
+          "testDetails": [
+            {
+              "file": "operator-details-acceptance-live.spec.ts",
+              "title": "current COMPANY PTM: explicit import conflict, shared employer, second person and group previews, immutable issue",
+              "project": "remaining",
+              "outcome": "expected",
+              "status": "passed",
+              "durationMs": 106694,
+              "annotations": []
+            }
+          ],
+          "interpretation": "Completed named phase only; does not replace earlier failed history or assert full-suite green."
+        }
+      ]
+    },
+    {
+      "id": "cycle-company-04-completion",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/completion-summary.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "d03525a0085bef3899e912d2588bfd0ecd966c95f5f8ff3d16243cf2edbf7e82",
+      "currentSha256AtCompact": "d03525a0085bef3899e912d2588bfd0ecd966c95f5f8ff3d16243cf2edbf7e82",
+      "layer": "EXECUTED_SOURCE_FROZEN_COMPLETION",
+      "scope": "Exit0, exact result digest, build04, 89 test files unchanged during execution.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:19:48.533Z",
+          "duration": 108393.527,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "exitCode": 0,
+        "complete": true
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "cycle-company-04-test-sources",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/test-sources-cycle-company-04.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "e0da444bce6b185e18a1116b6837e048b740a69dc29af4bfae47487e8a0084ad",
+      "currentSha256AtCompact": "e0da444bce6b185e18a1116b6837e048b740a69dc29af4bfae47487e8a0084ad",
+      "layer": "CAPTURED_EXECUTED_TEST_SOURCE_HASHES",
+      "scope": "89 captured files independently matched current bytes during this private read-only audit.",
+      "boundedSummary": {},
+      "validationRuns": []
+    },
+    {
+      "id": "undo250-04",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/undo250-04/results-undo250-04.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "2cd491e3655f88424d6452ee05d23633339f1971dd465444d3b34782d9b1a93b",
+      "currentSha256AtCompact": "2cd491e3655f88424d6452ee05d23633339f1971dd465444d3b34782d9b1a93b",
+      "layer": "EXECUTED_COMPLETED_PLAYWRIGHT_JSON",
+      "scope": "Completed named04 phase1PASS/0FAIL/0skip oniPAhpRSkuBMrPUIjjOnIx; independent result, not summed with overlapping runs.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:22:03.321Z",
+          "duration": 35004.577,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "undo250-04",
+          "evidenceRef": "undo250-04",
+          "status": "PASS",
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+          "startedUtc": "2026-10-05T22:22:03.321Z",
+          "durationMs": 35004.577,
+          "tests": 1,
+          "expected": 1,
+          "unexpected": 0,
+          "skipped": 0,
+          "flaky": 0,
+          "completionEvidenceRef": "undo250-04-completion",
+          "testDetails": [
+            {
+              "file": "operator-table-live.spec.ts",
+              "title": "250 real recipients: keyboard editing, scoped selection, bilingual fields, autosave and reload",
+              "project": "remaining",
+              "outcome": "expected",
+              "status": "passed",
+              "durationMs": 33346,
+              "annotations": []
+            }
+          ],
+          "interpretation": "Completed named phase only; does not replace earlier failed history or assert full-suite green."
+        }
+      ]
+    },
+    {
+      "id": "undo250-04-completion",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/undo250-04/completion-summary.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "084d323888c0ac27e316ab8535b9253993f577e595815c742399a02cfd298105",
+      "currentSha256AtCompact": "084d323888c0ac27e316ab8535b9253993f577e595815c742399a02cfd298105",
+      "layer": "EXECUTED_SOURCE_FROZEN_COMPLETION",
+      "scope": "Exit0, exact result digest, build04, 89 test files unchanged during execution.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:22:03.321Z",
+          "duration": 35004.577,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "exitCode": 0,
+        "complete": true
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "undo250-04-test-sources",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/undo250-04/test-sources-undo250-04.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "e0da444bce6b185e18a1116b6837e048b740a69dc29af4bfae47487e8a0084ad",
+      "currentSha256AtCompact": "e0da444bce6b185e18a1116b6837e048b740a69dc29af4bfae47487e8a0084ad",
+      "layer": "CAPTURED_EXECUTED_TEST_SOURCE_HASHES",
+      "scope": "89 captured files independently matched current bytes during this private read-only audit.",
+      "boundedSummary": {},
+      "validationRuns": []
+    },
+    {
+      "id": "undo250-current04-raw-proof",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/undo250-04/live-250-result.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "80fb046e50f9c70938515108364a2e73fc6c002842b439d641be3a0d1e39f5df",
+      "currentSha256AtCompact": "80fb046e50f9c70938515108364a2e73fc6c002842b439d641be3a0d1e39f5df",
+      "layer": "EXECUTED_PERSISTED_DELETE_RESTORE_RAW_EQUALITY",
+      "scope": "250 real synthetic rows; first/middle/last/filtered/single recipient cases, actual deletion PATCH completion and higher server revision required before restore, exact complete item facts/metadata equality and focus/reload checks passed. No timestamp omission.",
+      "boundedSummary": {
+        "status": "PASS"
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "undo250-current04-executed-helper",
+      "sourcePathInformationalOnly": "apps/web/e2e/operator-focus-acceptance-helpers.ts",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "43e31858f9907cfeff9e787239ca538e8a08554d007bffea8e57e0e2c6997e51",
+      "currentSha256AtCompact": "43e31858f9907cfeff9e787239ca538e8a08554d007bffea8e57e0e2c6997e51",
+      "layer": "EXECUTED_SOURCE_HASH_BOUND_ASSERTIONS",
+      "scope": "Exact helper in captured89-file test manifest: waits committed deletion, asserts server absence/revision then full raw restore and reload equality.",
+      "validationRuns": []
+    },
+    {
+      "id": "director-company-title-gap-current04",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/director-company-second-ptm.png",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "61d7cc3ae0c7d0abebb44dd106f6a262f094f19db2509797bfdbec98fd34a891",
+      "currentSha256AtCompact": "61d7cc3ae0c7d0abebb44dd106f6a262f094f19db2509797bfdbec98fd34a891",
+      "layer": "EXECUTED_CURRENT04_SCREENSHOT_WITH_ROOT_REVIEW_FINDING",
+      "scope": "Root observed generic company title in director queue/detail despite company identity; confirmed by actual API source title fallback. This is an OPEN prompt119 gap, not a successful title acceptance.",
+      "validationRuns": []
+    },
+    {
+      "id": "director-title-private-candidate",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/approval-title-proposed/manifest.private.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "1d6f37fd103822e89c4fa0a90a4c5e3b471731a1baa6100fdc022adc0cf45ab8",
+      "currentSha256AtCompact": "1d6f37fd103822e89c4fa0a90a4c5e3b471731a1baa6100fdc022adc0cf45ab8",
+      "layer": "PRIVATE_UNAPPLIED_SOURCE_AND_TEST_CANDIDATE",
+      "scope": "API response-only title fix: source3files, pure7PASS, types/lint/applycheckPASS; new integration NOT_RUN and fresh05/browser NOT_RUN. Stored titles/snapshots untouched.",
+      "boundedSummary": {
+        "status": "PRIVATE_NOT_APPLIED"
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "coverage203-after-retry02-qualified",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/coverage203-after-retry02-qualified.private.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "60b9e8a0da1aeb85d81a3e889d7d8a780236167c3f604ed0247d2c8999e21574",
+      "currentSha256AtCompact": "60b9e8a0da1aeb85d81a3e889d7d8a780236167c3f604ed0247d2c8999e21574",
+      "layer": "PRIVATE_EXACT_UNIQUE_CASE_ACCOUNTING",
+      "scope": "Snapshot of8finishedreports:186PASS+1separateimmutableclosure+16open. Active05retry output excluded; not a full-suite PASS.",
+      "boundedSummary": {
+        "status": "PRIVATE_QUALIFIED_COVERAGE_NOT_FULL_SUITE_PASS",
+        "qualifiedCounts": {
+          "actualPassed": 186,
+          "closedByImmutableContinuation": 1,
+          "remainingFailed": 3,
+          "remainingSkipped": 3,
+          "remainingNotRun": 10,
+          "totalOpen": 16
+        }
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "build-current-final-05",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/build-current-final-05.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "fda0f882b56133e3cf2c6d385f2d5111c7d17962ab249706a8410369ad1a4acd",
+      "currentSha256AtCompact": "fda0f882b56133e3cf2c6d385f2d5111c7d17962ab249706a8410369ad1a4acd",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "pnpm build exit0 on current05",
+      "validationRuns": [
+        {
+          "id": "build-current-final-05",
+          "evidenceRef": "build-current-final-05",
+          "status": "PASS",
+          "command": "pnpm build",
+          "exitCode": 0,
+          "buildId": "UE5EAW-MchsccxxskF32g"
+        }
+      ]
+    },
+    {
+      "id": "lint-current-final-05",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/lint-current-final-05.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "currentSha256AtCompact": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "pnpm lint exit0 on current05",
+      "validationRuns": [
+        {
+          "id": "lint-current-final-05",
+          "evidenceRef": "lint-current-final-05",
+          "status": "PASS",
+          "command": "pnpm lint",
+          "exitCode": 0,
+          "buildId": "UE5EAW-MchsccxxskF32g"
+        }
+      ]
+    },
+    {
+      "id": "typecheck-current-final-05",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/typecheck-current-final-05.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "2d9699a900c4e165f413d29602a4f9a91bc3ea2db9ec8bd01341aa73f44cd4a6",
+      "currentSha256AtCompact": "2d9699a900c4e165f413d29602a4f9a91bc3ea2db9ec8bd01341aa73f44cd4a6",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "pnpm typecheck exit0 on current05",
+      "validationRuns": [
+        {
+          "id": "typecheck-current-final-05",
+          "evidenceRef": "typecheck-current-final-05",
+          "status": "PASS",
+          "command": "pnpm typecheck",
+          "exitCode": 0,
+          "buildId": "UE5EAW-MchsccxxskF32g"
+        }
+      ]
+    },
+    {
+      "id": "unit-current-final-05",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/test-current-final-05.log",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "01d752270dfe6eddf05c0fd7f958368d9077f7b5c2cf6eeadc1a8daa10b4925d",
+      "currentSha256AtCompact": "01d752270dfe6eddf05c0fd7f958368d9077f7b5c2cf6eeadc1a8daa10b4925d",
+      "layer": "EXECUTED_COMMAND_LOG",
+      "scope": "pnpm test exit0 on current05",
+      "validationRuns": [
+        {
+          "id": "unit-current-final-05",
+          "evidenceRef": "unit-current-final-05",
+          "status": "PASS",
+          "command": "pnpm test",
+          "exitCode": 0,
+          "buildId": "UE5EAW-MchsccxxskF32g",
+          "domain": 253,
+          "web": 241,
+          "passed": 494,
+          "failed": 0,
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "id": "root-final04-ui-visual",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/final04-root-ui-review.private.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "18a4d8c85d91ddb3500e5c16553196536feaac66749ebf1298d4ddd6f85fcdfe",
+      "currentSha256AtCompact": "18a4d8c85d91ddb3500e5c16553196536feaac66749ebf1298d4ddd6f85fcdfe",
+      "layer": "ROOT_SCREENSHOT_REVIEW_WITH_HISTORICAL_TITLE_FINDING",
+      "scope": "Root reviewed04screenshots;8selectedcurrent04images retained forproof.04director generic title finding remains historical and separately fixed05.",
+      "boundedSummary": {
+        "status": "REVIEWED_WITH_DIRECTOR_TITLE_DEFECT_PENDING_FIX"
+      },
+      "validationRuns": []
+    },
+    {
+      "id": "director-title-integration-05",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/approval-title-proposed/integration-runs/2026-10-05T22-57-32-648Z-a3b5e1aa/result.private.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "1084b4584794a31f3f18af3d5eb45d5f47ff51d2fb2a1a23f5ff8363b083102e",
+      "currentSha256AtCompact": "1084b4584794a31f3f18af3d5eb45d5f47ff51d2fb2a1a23f5ff8363b083102e",
+      "layer": "DISPOSABLE_POSTGRESQL_INTEGRATION",
+      "scope": "1/1PASS: frozen displayidentity, customtitle, directoryrename, no recordmutation, foreigntenant rejection.",
+      "boundedSummary": {
+        "status": "PASS"
+      },
+      "validationRuns": [
+        {
+          "id": "director-title-integration-05",
+          "evidenceRef": "director-title-integration-05",
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "exitCode": 0,
+          "database": "demo_test_details_integration",
+          "startedUtc": "2026-10-05T22:57:32.652Z",
+          "finishedUtc": "2026-10-05T22:57:34.489Z"
+        }
+      ]
+    },
+    {
+      "id": "remaining-retry-02",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-02/results-remaining-retry-02.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "edf0aaf0def2eef6a6eedaadfe1cdcec2d000df7c9f7a5574be5e90267219299",
+      "currentSha256AtCompact": "edf0aaf0def2eef6a6eedaadfe1cdcec2d000df7c9f7a5574be5e90267219299",
+      "layer": "EXECUTED_SELECTED_BROWSER_RETRY_FAILED",
+      "scope": "Completed12=9PASS3FAIL0skip.Original failures retained; subsequent05output not counted here.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T22:23:37.708Z",
+          "duration": 1333412.0219999999,
+          "expected": 9,
+          "skipped": 0,
+          "unexpected": 3,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "remaining-retry-02",
+          "evidenceRef": "remaining-retry-02",
+          "status": "FAILED",
+          "tests": 12,
+          "passed": 9,
+          "failed": 3,
+          "skipped": 0,
+          "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+          "startedUtc": "2026-10-05T22:23:37.708Z",
+          "durationMs": 1333412.0219999999
+        }
+      ]
+    },
+    {
+      "id": "company37-immutable-closure",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/company37-continuation-01/closure-map.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "ad531e76e1b7c2e2f5a96a6d3a05873009ae23c17b9110d859806ae21c38e6ea",
+      "currentSha256AtCompact": "ad531e76e1b7c2e2f5a96a6d3a05873009ae23c17b9110d859806ae21c38e6ea",
+      "layer": "QUALIFIED_CONTINUATION_NOT_FRESH_PASS",
+      "scope": "Existing37documents/74originalPDFDOCX/75ZIPsources, immutable/rawguards, no forbiddenwrites.OriginalUIFAIL preserved.",
+      "boundedSummary": {},
+      "validationRuns": []
+    },
+    {
+      "id": "company-blur-fix05",
+      "sourcePathInformationalOnly": ".runtime/operator-details-ux-20261005/company-blur-commit-proposed/company-blur-commit.patch",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "19e0cea04279a61fea0051de06726d785a7776b3b349d0d489f573ea86a2dc6e",
+      "currentSha256AtCompact": "19e0cea04279a61fea0051de06726d785a7776b3b349d0d489f573ea86a2dc6e",
+      "layer": "APPLIED_SOURCE_REVIEW_BROWSER_RETRY_PENDING_AT_SNAPSHOT",
+      "scope": "Only rememberContextOperation usesflush(false); sameAutosavelane/undo continues. Explicitbusinesscommands stillflush(true).",
+      "validationRuns": []
+    },
+    {
+      "id": "remaining-retry-03",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-03/results-remaining-retry-03.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "9c95b6d73e009eb60526ca4777fc8abb1b842cd1500b0d3647fa512b1a7baf63",
+      "currentSha256AtCompact": "9c95b6d73e009eb60526ca4777fc8abb1b842cd1500b0d3647fa512b1a7baf63",
+      "layer": "COMPLETED_BROWSER_PHASE",
+      "scope": "Completed phase only; original failed attempts remain recorded.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T23:02:30.050Z",
+          "duration": 178007.822,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 2,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "remaining-retry-03",
+          "evidenceRef": "remaining-retry-03",
+          "status": "FAILED",
+          "passed": 1,
+          "failed": 2,
+          "skipped": 0,
+          "buildId": "UE5EAW-MchsccxxskF32g",
+          "startedUtc": "2026-10-05T23:02:30.050Z",
+          "durationMs": 178007.822
+        }
+      ]
+    },
+    {
+      "id": "manual-issued-consumers-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/manual-issued-consumers-01/results-manual-issued-consumers-01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "438c5ecd297eaee440f48a67e1c6907fc423945ef1470e8a7ac79e80e73c09c6",
+      "currentSha256AtCompact": "438c5ecd297eaee440f48a67e1c6907fc423945ef1470e8a7ac79e80e73c09c6",
+      "layer": "COMPLETED_BROWSER_PHASE",
+      "scope": "Completed phase only; original failed attempts remain recorded.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T23:06:06.148Z",
+          "duration": 8982.273000000001,
+          "expected": 1,
+          "skipped": 0,
+          "unexpected": 1,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "manual-issued-consumers-01",
+          "evidenceRef": "manual-issued-consumers-01",
+          "status": "FAILED",
+          "passed": 1,
+          "failed": 1,
+          "skipped": 0,
+          "buildId": "UE5EAW-MchsccxxskF32g",
+          "startedUtc": "2026-10-05T23:06:06.148Z",
+          "durationMs": 8982.273000000001
+        }
+      ]
+    },
+    {
+      "id": "value-files-01",
+      "sourcePathInformationalOnly": "docs/evidence/operator-details-ux-20261005/full-e2e-03/value-files-01/results-value-files-01.json",
+      "sourceStoredSeparately": true,
+      "sha256AtCapture": "264e1c0bdb9a702ee525afbe291a57acf1b5522622ca4f7bc76c4b751bd30bcd",
+      "currentSha256AtCompact": "264e1c0bdb9a702ee525afbe291a57acf1b5522622ca4f7bc76c4b751bd30bcd",
+      "layer": "COMPLETED_BROWSER_PHASE",
+      "scope": "Completed phase only; original failed attempts remain recorded.",
+      "boundedSummary": {
+        "stats": {
+          "startTime": "2026-10-05T23:10:53.425Z",
+          "duration": 15415.330000000002,
+          "expected": 2,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      "validationRuns": [
+        {
+          "id": "value-files-01",
+          "evidenceRef": "value-files-01",
+          "status": "PASS",
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0,
+          "buildId": "UE5EAW-MchsccxxskF32g",
+          "startedUtc": "2026-10-05T23:10:53.425Z",
+          "durationMs": 15415.330000000002
+        }
+      ]
+    }
+  ],
+  "deployment": "PENDING",
+  "futureRenewals": "DESIGN_ONLY",
+  "limits": [
+    "Not a single continuous green full run.",
+    "Current05 title/blur source fixes do not fabricate newer execution for older unrelated test cases.",
+    "Pure SPECIAL knowledge-cell diagnosis does not prove pending live scenario PASS.",
+    "Active pending continuation excluded.",
+    "User requested stopping broader local testing; pending continuation aborted and not credited."
+  ],
+  "stop": {
+    "status": "USER_REQUESTED_STOP",
+    "reason": "User explicitly stopped broader local checking and requested immediate finalization/push/deploy. Remaining scenarios are not PASS.",
+    "actualPassed": 190,
+    "closedByImmutableContinuation": 1,
+    "openCases": 12,
+    "pendingManualContinuation": "ABORTED_BY_USER_REQUEST_NOT_PASS",
+    "deployment": "PENDING_ROOT_RELEASE_VERIFICATION",
+    "abortedEvidenceSha256": "110469216e1fb227ac881417256f624ac33a2c1727a73f6ae3ce547e8592d665",
+    "abortedEvidenceRetainedPrivately": true
+  },
+  "domainFixtureCorrection": {
+    "applied": true,
+    "liveRetest": false,
+    "candidateSha256": "01473e5db084f32cf065c6a73c1bfdc09dff3c1cb736b44040887f2e3ec703bc",
+    "status": "APPLIED_NOT_RETESTED_USER_STOP"
+  }
+}

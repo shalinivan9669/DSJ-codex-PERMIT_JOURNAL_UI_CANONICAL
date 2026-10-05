@@ -6,8 +6,9 @@ test.use({ trace: "off" });
 
 const product = path.resolve("../..");
 const evidence = path.resolve(
-  process.env.DEMO_E2E_EVIDENCE ||
-    "../../docs/evidence/final-completion/order-parties",
+  process.env.DEMO_E2E_EVIDENCE
+    ? path.join(process.env.DEMO_E2E_EVIDENCE, "order-parties")
+    : "../../docs/evidence/final-completion/order-parties",
 );
 test.beforeAll(() =>
   execFileSync(

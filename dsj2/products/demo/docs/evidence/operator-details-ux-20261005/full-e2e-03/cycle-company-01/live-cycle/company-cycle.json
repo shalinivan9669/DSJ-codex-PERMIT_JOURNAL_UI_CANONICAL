@@ -1,0 +1,150 @@
+{
+  "status": "PASS",
+  "id": "c1fa6c77-3187-43ba-ac10-63c4211420b1",
+  "revision": 6,
+  "customerId": "a13fda7f-e89f-4c8c-b802-cf85ac15e0fd",
+  "companyName": "Синтетическая компания 1791229441437",
+  "proposalId": "04c2657a-442e-49f0-9236-6b1d27b10b5c",
+  "issuanceIds": [
+    "4a9c10ab-1169-48ab-a543-b0cc25ed87ba"
+  ],
+  "recipients": [
+    {
+      "id": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-2",
+      "fullNameRu": "Синтетический Первый Сотрудник",
+      "fullNameKz": "Синтетикалық Бірінші Қызметкер",
+      "sourceRow": 2,
+      "importId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c"
+    },
+    {
+      "id": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-3",
+      "fullNameRu": "Синтетический Второй Сотрудник",
+      "fullNameKz": "Синтетикалық Екінші Қызметкер",
+      "sourceRow": 3,
+      "importId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c"
+    }
+  ],
+  "previewTargets": [
+    {
+      "kind": "ASSIGNMENT",
+      "rowId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-3",
+      "assignmentId": "61bbf1a5-d1c7-41e1-a42c-c24f17045a0e"
+    },
+    {
+      "kind": "GROUP_PROTOCOL",
+      "eventId": "d55972de-5c06-4598-94b5-b459c726573d"
+    }
+  ],
+  "documents": [
+    {
+      "id": "5ce417af-bb24-47ea-9548-756457b447cd",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "4a9c10ab-1169-48ab-a543-b0cc25ed87ba",
+      "requestId": "c1fa6c77-3187-43ba-ac10-63c4211420b1",
+      "rowId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-2",
+      "assignmentId": "a50a2635-7d73-461d-9111-a4bcee01a0c9",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "99d88f51-a289-4744-b7ca-ef1a7c635705",
+      "templateId": "ptm-card",
+      "namespace": "PTM:CARD",
+      "number": "PTM-CARD-00003",
+      "registrationNumber": null,
+      "documentDate": "2026-10-20",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T19:44:57.934Z"
+    },
+    {
+      "id": "4473009f-e150-4d67-9771-c8816e9c9473",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "4a9c10ab-1169-48ab-a543-b0cc25ed87ba",
+      "requestId": "c1fa6c77-3187-43ba-ac10-63c4211420b1",
+      "rowId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-3",
+      "assignmentId": "61bbf1a5-d1c7-41e1-a42c-c24f17045a0e",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "99d88f51-a289-4744-b7ca-ef1a7c635705",
+      "templateId": "ptm-card",
+      "namespace": "PTM:CARD",
+      "number": "PTM-CARD-00004",
+      "registrationNumber": null,
+      "documentDate": "2026-10-20",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T19:44:57.936Z"
+    },
+    {
+      "id": "69028bc3-f538-4288-bf04-fd498108c3aa",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "4a9c10ab-1169-48ab-a543-b0cc25ed87ba",
+      "requestId": "c1fa6c77-3187-43ba-ac10-63c4211420b1",
+      "rowId": null,
+      "assignmentId": null,
+      "ownerKind": "GROUP",
+      "groupEventId": "d55972de-5c06-4598-94b5-b459c726573d",
+      "groupEventRevision": 1,
+      "templateVersionId": "63acb803-dd1a-4925-bfdd-7a9f95207fc0",
+      "templateId": "ptm-protocol",
+      "namespace": "PTM:PROTOCOL",
+      "number": "PTM-PROTOCOL-00003",
+      "registrationNumber": null,
+      "documentDate": "2026-10-18",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T19:44:57.938Z"
+    }
+  ],
+  "files": [
+    {
+      "id": "7c78df3e-8bc1-4a9d-9656-2838b351fa2b",
+      "documentId": "5ce417af-bb24-47ea-9548-756457b447cd",
+      "fileName": "company-7c78df3e-8bc1-4a9d-9656-2838b351fa2b-ptm-card-5ce417af-bb24-47ea-9548-756457b447cd.docx",
+      "format": "DOCX",
+      "sha256": "e5a9959c80cb8b54214d68cb9ba17d2f528c5d6c186ab75e69d3510595800e39"
+    },
+    {
+      "id": "0d7da28c-9324-49c9-820d-7f3ec71798df",
+      "documentId": "5ce417af-bb24-47ea-9548-756457b447cd",
+      "fileName": "company-0d7da28c-9324-49c9-820d-7f3ec71798df-ptm-card-5ce417af-bb24-47ea-9548-756457b447cd.pdf",
+      "format": "PDF",
+      "sha256": "ff5a95f762aa4e0d1cb19295262e9e1afaba78f1d9426f6b75097a99db1ea905"
+    },
+    {
+      "id": "9b399ccb-e587-49be-b2dd-71e18745b86e",
+      "documentId": "4473009f-e150-4d67-9771-c8816e9c9473",
+      "fileName": "company-9b399ccb-e587-49be-b2dd-71e18745b86e-ptm-card-4473009f-e150-4d67-9771-c8816e9c9473.docx",
+      "format": "DOCX",
+      "sha256": "2f2fa9ee5c3fd96d2e5a37302bd59170e66ec460ec658326ca836ce67dbb234b"
+    },
+    {
+      "id": "a10c7bd0-2a21-4640-81eb-f9aa937e3cf8",
+      "documentId": "4473009f-e150-4d67-9771-c8816e9c9473",
+      "fileName": "company-a10c7bd0-2a21-4640-81eb-f9aa937e3cf8-ptm-card-4473009f-e150-4d67-9771-c8816e9c9473.pdf",
+      "format": "PDF",
+      "sha256": "efd8115687af7c2782796c7eee38ea8e05fb1be510d7098739a685a3a82507e0"
+    },
+    {
+      "id": "a2608b62-17d6-435d-a4e8-a937ce8e29d9",
+      "documentId": "69028bc3-f538-4288-bf04-fd498108c3aa",
+      "fileName": "company-a2608b62-17d6-435d-a4e8-a937ce8e29d9-ptm-protocol-69028bc3-f538-4288-bf04-fd498108c3aa.docx",
+      "format": "DOCX",
+      "sha256": "47c1820bd845e68a9fb88701bb3b0dda85775a6e664c4afbe11102784ee0ccae"
+    },
+    {
+      "id": "a835580a-202f-4d85-bc95-bca5f7c80341",
+      "documentId": "69028bc3-f538-4288-bf04-fd498108c3aa",
+      "fileName": "company-a835580a-202f-4d85-bc95-bca5f7c80341-ptm-protocol-69028bc3-f538-4288-bf04-fd498108c3aa.pdf",
+      "format": "PDF",
+      "sha256": "7546b8f4918b70ed8965b5bed98ded0d49e1e026b958eebfcd49c1eb278548a9"
+    }
+  ],
+  "syntheticOnly": true,
+  "managerInputThroughUi": true,
+  "explicitImportEmployerResolutionThroughUi": true,
+  "sharedEmployerSurvivesReload": true,
+  "previewDoesNotIssueOrChangeSource": true,
+  "directorPreviewAndDecisionThroughUi": true,
+  "printedPtmCardNameField": "FULL_NAME_RU (preserved reference form)",
+  "independentKzNamesPreservedInRawAndIssuedSnapshot": true,
+  "mappedRuKzPositionsVerifiedInPreviewAndOriginal": true
+}

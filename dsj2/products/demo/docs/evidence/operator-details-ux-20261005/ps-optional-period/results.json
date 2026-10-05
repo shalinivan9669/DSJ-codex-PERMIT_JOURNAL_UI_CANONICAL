@@ -1,0 +1,20 @@
+[
+  {
+    "case": "empty",
+    "trainingStart": "",
+    "trainingEnd": "",
+    "pageCount": 2,
+    "snapshotUnchanged": true,
+    "docxSha256": "9fe886277ff8d83c1dd3a8cc7e30391dbf4cf4b32984ff2470e6b96f0df509f1",
+    "pdfSha256": "44f576d84a963346f5084081aa867b52e312ff3fb9959f3c8425022e90c85b8a"
+  },
+  {
+    "case": "partial",
+    "trainingStart": "2028-03-14",
+    "trainingEnd": "",
+    "pageCount": 2,
+    "snapshotUnchanged": true,
+    "docxSha256": "b5211c1d71018bbf0bc7d4d119c9cfd08970c0069b3c762320bf30769903ad52",
+    "pdfSha256": "431e9c3024266ed8eb36afa50ff4263649dc077b9686523195d52aaf6f721059"
+  }
+]

@@ -11,6 +11,9 @@ import { quickGridPaste, type GridField } from "@/lib/grid-paste";
 import {
   organizationPreparationKey,
   parseOrganizationPreparation,
+  assertOrganizationPreparationCurrent,
+  writeOrganizationPreparation,
+  OrganizationPreparationConflictError,
   type OrganizationPreparation,
 } from "@/lib/organization-preparation";
 import { BulkPhotoDialog } from "./bulk-photo-dialog";
@@ -23,7 +26,6 @@ import { ApprovalBanner } from "./approvals";
 import { BatchReadyPanel } from "./batch-ready-panel";
 import { SigningPanel } from "./signing-panel";
 import { SharedEmployerDialog } from "./shared-employer-dialog";
-import { RecipientCommonFields } from "./recipient-common-fields";
 import { CourseSharedFields } from "./course-shared-fields";
 import { groupValidationIssues } from "@/lib/validation-groups";
 import { validationErrors } from "@/lib/validation-errors";
@@ -64,12 +66,21 @@ import {
 } from "@/lib/api";
 import { AutosaveLane } from "@/lib/autosave";
 import {
+  prepareConflictCopy,
+  type ConflictCopyAttempt,
+} from "@/lib/conflict-copy";
+import {
   flushPreparations,
   preparationsNeedSave,
 } from "@/lib/use-durable-preparation";
 import { requestActions } from "@/lib/request-actions";
 import { useUnsavedNavigation } from "@/lib/use-unsaved-navigation";
-import { recipientForRequest } from "@/lib/request-bundles";
+import {
+  recipientForRequest,
+  assignTrainingBundle,
+} from "@/lib/request-bundles";
+import { PersonEditor } from "./person-editor";
+import type { PersonStage } from "@/lib/person-flow";
 import {
   draftPayload,
   personRequestName,
@@ -92,6 +103,8 @@ import {
 import { PhotoDialog, RecipientDetails } from "./recipient-details";
 import { ImportDialog } from "./import-dialog";
 import { FilesPanel } from "./files-panel";
+import { DocumentPreview } from "./document-preview";
+import type { PreviewTarget } from "@demo/contracts";
 import { Status } from "./request-list";
 
 export function Editor({ id, context }: { id: string; context: AppContext }) {
@@ -109,6 +122,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [organizationBusy, setOrganizationBusy] = useState(false);
   const [organizationSaved, setOrganizationSaved] = useState(false);
   const organizationPreparation = useRef<OrganizationPreparation | null>(null);
+  const organizationExpectedRaw = useRef<string | null>(null);
+  const [organizationConflict, setOrganizationConflict] = useState(false);
   const organizationSelectionRef = useRef(organizationSelection);
   const organizationStorageReady = useRef(true);
   organizationSelectionRef.current = organizationSelection;
@@ -117,7 +132,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     context.user.id,
     id,
   );
-  const [companyInputCancelled, setCompanyInputCancelled] = useState(false);
   pendingOrganization.current =
     organizationSelection?.mode === "new" &&
     !!(
@@ -127,6 +141,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       organizationSelection.names.nameKz.trim()
     );
   const [selectedId, setSelectedId] = useState("");
+  const [personStage, setPersonStage] = useState<PersonStage>("identity");
   const [checked, setChecked] = useState<string[]>([]);
   const [documentTargets, setDocumentTargets] = useState<string[] | null>(null);
   const [employerTargets, setEmployerTargets] = useState<string[] | null>(null);
@@ -136,6 +151,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [entryView, setEntryView] = useState<"table" | "card">("table");
   const previousEntryView = useRef<"table">("table");
   const [photoRecipientId, setPhotoRecipientId] = useState<string | null>(null);
+  const [targetPreview, setTargetPreview] = useState<{
+    target?: PreviewTarget;
+    revision: number;
+  } | null>(null);
+  useEffect(() => {
+    setTargetPreview((preview) =>
+      preview && preview.revision !== draft?.revision ? null : preview,
+    );
+  }, [draft?.revision]);
   const [reviewStale, setReviewStale] = useState(false);
   const [focusFieldPath, setFocusFieldPath] = useState<string | null>(null);
   const validationRequested = useRef(false);
@@ -228,6 +252,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [saveState, setSaveState] = useState("saved");
   const [conflictPaused, setConflictPaused] = useState(false);
   const copyInFlight = useRef(false);
+  const copyAttempt = useRef<ConflictCopyAttempt | null>(null);
   const moreTools = useRef<HTMLDetailsElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
   const [rowScope, setRowScope] = useState("");
@@ -412,7 +437,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     ) {
       requestAnimationFrame(() => {
         const input = document.querySelector<HTMLInputElement>(
-          '.operator-grid [data-field-path="items.0.fullNameRu"]',
+          '.person-editor [data-field-path="items.0.fullNameRu"]',
         );
         input?.focus();
         input?.scrollIntoView({ block: "center" });
@@ -576,13 +601,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   );
   const initialize = useCallback(
     (value: Draft) => {
+      organizationGeneration.current++;
       pendingOrganization.current = false;
       setOrganizationSelection(null);
       setOrganizationError("");
       try {
-        const staged = parseOrganizationPreparation(
-          localStorage.getItem(organizationKey),
-        );
+        const raw = localStorage.getItem(organizationKey);
+        organizationExpectedRaw.current = raw;
+        const staged = parseOrganizationPreparation(raw);
+        setOrganizationConflict(false);
         organizationPreparation.current = staged;
         if (staged) {
           setOrganizationSelection({ mode: "new", names: staged.names });
@@ -708,6 +735,21 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     };
   }, [id, initialize]);
   useEffect(() => {
+    const changed = (event: StorageEvent) => {
+      if (
+        event.key !== organizationKey ||
+        event.newValue === organizationExpectedRaw.current
+      )
+        return;
+      organizationStorageReady.current = false;
+      setOrganizationSaved(false);
+      setOrganizationConflict(true);
+      setOrganizationError(new OrganizationPreparationConflictError().message);
+    };
+    window.addEventListener("storage", changed);
+    return () => window.removeEventListener("storage", changed);
+  }, [organizationKey]);
+  useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (
         lane.current?.dirty ||
@@ -806,7 +848,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       ...patch,
       businessRuleVersion: "LIVE_V1" as const,
     });
-    next.title = personRequestName(next) || next.title;
     current.current = next;
     setDraft(next);
     lane.current.edit(draftPayload(next));
@@ -854,8 +895,12 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     return lane.current.flush();
   }
   function stageOrganization(value: RequestOrganizationSelection | null) {
-    organizationSelectionRef.current = value;
-    setOrganizationSelection(value);
+    // Retain an unsaved new candidate on screen; switching/clearing must only
+    // take effect after the scoped storage record has been safely changed.
+    if (value?.mode === "new") {
+      organizationSelectionRef.current = value;
+      setOrganizationSelection(value);
+    }
     setOrganizationSaved(false);
     organizationStorageReady.current = false;
     try {
@@ -870,19 +915,57 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               names: value.names,
               operationKey: crypto.randomUUID(),
             };
-        localStorage.setItem(organizationKey, JSON.stringify(record));
+        organizationExpectedRaw.current = writeOrganizationPreparation(
+          localStorage,
+          organizationKey,
+          record,
+          organizationExpectedRaw.current,
+        );
         organizationPreparation.current = record;
         setOrganizationSaved(true);
         organizationStorageReady.current = true;
       } else {
-        localStorage.removeItem(organizationKey);
+        organizationExpectedRaw.current = writeOrganizationPreparation(
+          localStorage,
+          organizationKey,
+          null,
+          organizationExpectedRaw.current,
+        );
         organizationPreparation.current = null;
         organizationStorageReady.current = true;
+        organizationSelectionRef.current = value;
+        setOrganizationSelection(value);
       }
+      setOrganizationConflict(false);
+      return true;
     } catch (caught) {
+      setOrganizationConflict(
+        caught instanceof OrganizationPreparationConflictError,
+      );
       setOrganizationError(
         `Не удалось сохранить ввод компании: ${errorText(caught)}`,
       );
+      return false;
+    }
+  }
+  function reloadOrganizationPreparation() {
+    try {
+      const raw = localStorage.getItem(organizationKey);
+      const record = parseOrganizationPreparation(raw);
+      organizationExpectedRaw.current = raw;
+      organizationPreparation.current = record;
+      const selection = record
+        ? { mode: "new" as const, names: record.names }
+        : null;
+      organizationSelectionRef.current = selection;
+      setOrganizationSelection(selection);
+      organizationGeneration.current++;
+      organizationStorageReady.current = true;
+      setOrganizationSaved(!!record);
+      setOrganizationConflict(false);
+      setOrganizationError("");
+    } catch (caught) {
+      setOrganizationError(errorText(caught));
     }
   }
   async function ensureOrganization() {
@@ -897,6 +980,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     const generation = organizationGeneration.current;
     setOrganizationError("");
     try {
+      assertOrganizationPreparationCurrent(
+        localStorage,
+        organizationKey,
+        organizationExpectedRaw.current,
+      );
       let record = organizationPreparation.current;
       if (
         !record ||
@@ -907,19 +995,30 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           names: value.names,
           operationKey: crypto.randomUUID(),
         };
-        localStorage.setItem(organizationKey, JSON.stringify(record));
+        organizationExpectedRaw.current = writeOrganizationPreparation(
+          localStorage,
+          organizationKey,
+          record,
+          organizationExpectedRaw.current,
+        );
         organizationPreparation.current = record;
       }
+      const operationRaw = organizationExpectedRaw.current;
       const customer =
         record.customer ||
         (await createRequestCustomer(value.names, record.operationKey));
-      record = { ...record, customer };
-      localStorage.setItem(organizationKey, JSON.stringify(record));
-      organizationPreparation.current = record;
       if (!alive.current || generation !== organizationGeneration.current)
         throw new Error(
           "Ввод компании изменился. Проверьте текущую компанию перед продолжением.",
         );
+      record = { ...record, customer };
+      organizationExpectedRaw.current = writeOrganizationPreparation(
+        localStorage,
+        organizationKey,
+        record,
+        operationRaw,
+      );
+      organizationPreparation.current = record;
       setCustomers((previous) => [
         ...previous.filter((row) => row.id !== customer.id),
         customer,
@@ -927,9 +1026,18 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       pendingOrganization.current = false;
       edit({ customerId: customer.id });
       await lane.current?.flush();
-      stageOrganization(null);
+      if (!alive.current || generation !== organizationGeneration.current)
+        throw new Error(
+          "Ввод компании изменился. Проверьте текущую компанию перед продолжением.",
+        );
+      if (!stageOrganization(null))
+        throw new OrganizationPreparationConflictError();
     } catch (caught) {
       pendingOrganization.current = true;
+      if (caught instanceof OrganizationPreparationConflictError) {
+        setOrganizationConflict(true);
+        organizationStorageReady.current = false;
+      }
       setOrganizationError(errorText(caught));
       throw caught;
     } finally {
@@ -1090,7 +1198,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         ...patch,
         businessRuleVersion: "LIVE_V1" as const,
       });
-      next.title = personRequestName(next) || next.title;
       if (
         JSON.stringify(draftPayload(before)) ===
         JSON.stringify(draftPayload(next))
@@ -1117,7 +1224,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     previousEvents: NonNullable<Draft["events"]>,
   ) {
     try {
-      const revision = await flush();
+      const revision = await flush(false);
       if (current.current?.status === "DRAFT")
         setUndo({
           before: {
@@ -1185,6 +1292,30 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       setBusy("");
     }
   }
+  async function openPreview(target?: PreviewTarget) {
+    setBusy("preview-save");
+    setError("");
+    try {
+      const revision = readonly ? draft!.revision : await flush();
+      setTargetPreview({ target, revision });
+    } catch (caught) {
+      setError(errorText(caught));
+    } finally {
+      setBusy("");
+    }
+  }
+  async function openImport() {
+    setBusy("import-save");
+    setError("");
+    try {
+      await flush();
+      setDialog("import");
+    } catch (caught) {
+      setError(errorText(caught));
+    } finally {
+      setBusy("");
+    }
+  }
   async function reload(preserveLocalInput = false) {
     setBusy("reload");
     try {
@@ -1205,15 +1336,16 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     copyInFlight.current = true;
     setBusy("copy");
     try {
+      const attempt = prepareConflictCopy(
+        current.current,
+        lane.current?.currentVersion || 0,
+        copyAttempt.current,
+      );
+      copyAttempt.current = attempt;
       const result = await api<Draft>("/print-requests", {
         method: "POST",
-        headers: {
-          "Idempotency-Key": `ux-copy-${current.current.id}-${current.current.revision}-${lane.current?.currentVersion || 0}`,
-        },
-        body: json({
-          ...draftPayload(current.current),
-          title: `${current.current.title} — копия изменений`,
-        }),
+        headers: { "Idempotency-Key": attempt.key },
+        body: attempt.body,
       });
       lane.current = null;
       pendingOrganization.current = false;
@@ -1247,13 +1379,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       }),
     );
   }
-  async function addOrganization() {
-    try {
-      await ensureOrganization();
-    } catch {
-      /* Error stays next to the company input. */
-    }
-  }
+
   if (!draft)
     return (
       <>
@@ -1274,7 +1400,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     !!draft.archived ||
     !!draft.archivedAt ||
     context.user.role === "VIEWER";
-  const requestEmployer =
+  const sourceEmployer =
     draft.kind === "COMPANY"
       ? (readonly
           ? draft.organizationSnapshots?.find(
@@ -1284,6 +1410,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         customers.find((entry) => entry.id === draft.customerId) ||
         null
       : null;
+  const requestEmployer = sourceEmployer
+    ? {
+        ...sourceEmployer,
+        nameKz: sourceEmployer.nameKz || sourceEmployer.nameRu,
+        bin: sourceEmployer.bin || "",
+        addressRu: sourceEmployer.addressRu || "",
+        addressKz: sourceEmployer.addressKz || "",
+      }
+    : null;
   const employerRecords = new Map(
     [...customers, ...(readonly ? draft.organizationSnapshots || [] : [])].map(
       (entry) => [entry.id, entry],
@@ -1377,10 +1512,29 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   );
   const plan = documentPlan(resolved.draft);
   const documentCount = plan.documentCount;
+  const legacyPersonGroupEventIds =
+    draft.kind === "PERSON"
+      ? [
+          ...new Set(
+            draft.items.flatMap((item) =>
+              item.assignments.flatMap((assignment) =>
+                assignment.protocolMode === "GROUP" && assignment.eventId
+                  ? [assignment.eventId]
+                  : [],
+              ),
+            ),
+          ),
+        ]
+      : [];
   type Issue = Validation["errors"][number];
   function operatorIssue(issue: Issue): Issue {
     issue = addressIssue(issue, draft!.items, draft!.events);
     if (typeof issue === "string") return issue;
+    // Normal PERSON courses use their personal card. Existing GROUP courses
+    // still own shared facts in the event, so an inherited error must repair
+    // that event instead of creating a conflicting personal override.
+    if (draft!.kind === "PERSON" && !legacyPersonGroupEventIds.length)
+      return issue;
     const path = Array.isArray(issue.path)
       ? issue.path.join(".")
       : issue.path || "";
@@ -1390,10 +1544,14 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     const assignment = person?.assignments[Number(match[2])];
     const key = match[3];
     if (!assignment) return issue;
+    if (draft!.kind === "PERSON" && assignment.protocolMode !== "GROUP")
+      return issue;
     const commonKey = commonFieldKeys.find((field) => field === key);
     const individualOrigin = commonKey
       ? assignment.fieldOrigins?.[commonKey]
-      : undefined;
+      : key === "result"
+        ? assignment.fieldOrigins?.result
+        : undefined;
     // Resolved CLEARED/MANUAL provenance can belong to the shared event.
     // Route by the recipient's raw override, as the resolver does, so editing
     // the indicated control repairs the cause without creating an exception.
@@ -1504,6 +1662,58 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       document
         .getElementById("request-readiness")
         ?.scrollIntoView({ block: "center" });
+      return;
+    }
+    const sharedEventMatch = /^events\.(\d+)\./.exec(path);
+    const legacyPersonSharedIssue =
+      legacyPersonGroupEventIds.length > 0 &&
+      (path.startsWith("commonFields.") ||
+        (sharedEventMatch &&
+          legacyPersonGroupEventIds.includes(
+            draft!.events?.[Number(sharedEventMatch[1])]?.id || "",
+          )));
+    if (draft!.kind === "PERSON" && legacyPersonSharedIssue) {
+      const rowId = (issue as AddressedIssue).rowId;
+      if (rowId && draft!.items.some((person) => person.id === rowId))
+        setSelectedId(rowId);
+    }
+    if (draft!.kind === "PERSON" && !legacyPersonSharedIssue) {
+      const rowMatch = /^items\.(\d+)/.exec(path);
+      let personPath = path;
+      if (rowMatch) setSelectedId(draft!.items[Number(rowMatch[1])]?.id || "");
+      const eventMatch = /^events\.(\d+)\.(?:commonFields\.)?(.+)$/.exec(path);
+      if (eventMatch) {
+        const eventId = draft!.events?.[Number(eventMatch[1])]?.id;
+        const rowIndex = draft!.items.findIndex((row) =>
+          row.assignments.some((a) => a.eventId === eventId),
+        );
+        if (rowIndex >= 0) {
+          const row = draft!.items[rowIndex];
+          setSelectedId(row.id);
+          const field = eventMatch[2].replace(/^outcomes(?=\.|$)/, "outcome");
+          personPath = `items.${rowIndex}.assignments.${row.assignments.findIndex((a) => a.eventId === eventId)}.${field}`;
+        }
+      }
+      const commonMatch = /^commonFields\.(.+)$/.exec(path);
+      if (commonMatch) {
+        const rowIndex = Math.max(
+          0,
+          draft!.items.findIndex((row) => row.id === selectedId),
+        );
+        const row = draft!.items[rowIndex];
+        if (row?.assignments.length) {
+          setSelectedId(row.id);
+          personPath = `items.${rowIndex}.assignments.0.${commonMatch[1]}`;
+        }
+      }
+      setFocusFieldPath(personPath);
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() =>
+          window.dispatchEvent(
+            new CustomEvent("demo:focus-field", { detail: personPath }),
+          ),
+        ),
+      );
       return;
     }
     const training = /^events\.(\d+)\.(?:commonFields\.)?(.+)$/.exec(path);
@@ -1646,7 +1856,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     ? organizationBusy
       ? "Сохраняем компанию…"
       : organizationSaved
-        ? "Ввод компании сохранён · ожидает применения"
+        ? "Ввод компании сохранён"
         : "Ввод компании не сохранён"
     : {
         saved: `${draft.approval?.status === "APPROVED" ? "Согласовано" : "Рабочая версия сохранена"} · редакция ${draft.revision}`,
@@ -1682,7 +1892,19 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       </Link>
       <div className="page-heading editor-heading operator-heading">
         <div className="title-with-status">
-          <h1>{personRequestName(draft) || draft.title || "Новая заявка"}</h1>
+          <h1>
+            {personRequestName(draft) ||
+              (draft.kind === "COMPANY" &&
+              ["", "Новая заявка организации"].includes(draft.title || "")
+                ? requestEmployer?.nameRu ||
+                  (organizationSelection?.mode === "new"
+                    ? organizationSelection.names.nameRu
+                    : "") ||
+                  draft.title
+                : draft.title) ||
+              "Новая заявка"}
+          </h1>
+          {draft.demoMode && <small className="muted">Тестовый комплект</small>}
           <Status value={draft.status} />
         </div>
         <div className="operator-heading-actions">
@@ -1757,16 +1979,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   {requestEmployer?.nameKz || requestEmployer?.nameRu || "—"}
                 </p>
               </div>
-            ) : companyInputCancelled && !draft.customerId ? (
-              <div className="toolbar">
-                <span>Компания ещё не выбрана.</span>
-                <button onClick={() => setCompanyInputCancelled(false)}>
-                  Добавить компанию
-                </button>
-                <button onClick={() => setDialog("customerPicker")}>
-                  Выбрать из справочника
-                </button>
-              </div>
             ) : (
               <RequestOrganizationFields
                 customers={customers}
@@ -1781,20 +1993,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 error={organizationError}
                 onChange={(value) => {
                   organizationGeneration.current++;
-                  setCompanyInputCancelled(false);
                   setOrganizationError("");
                   if (value.mode === "existing") {
-                    stageOrganization(value);
-                    edit({ customerId: value.customerId || null });
+                    if (stageOrganization(value))
+                      edit({ customerId: value.customerId || null });
                   } else stageOrganization(value);
-                }}
-                onCreate={() => void addOrganization()}
-                onCancelNew={() => {
-                  organizationGeneration.current++;
-                  pendingOrganization.current = false;
-                  stageOrganization(null);
-                  setOrganizationError("");
-                  setCompanyInputCancelled(!draft.customerId);
                 }}
                 onFind={() => setDialog("customerPicker")}
                 onEdit={(customer) => {
@@ -1803,50 +2006,15 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 }}
               />
             ))}
-          {organizationSelection?.mode === "new" && (
-            <p className="fine-print" role="status">
-              {organizationBusy
-                ? "Сохраняем и применяем компанию…"
-                : organizationSaved
-                  ? "Ввод компании сохранён для продолжения после возврата. При проверке данных компания будет применена."
-                  : "Ввод компании ещё не сохранён."}
-            </p>
+          {organizationConflict && (
+            <button
+              type="button"
+              disabled={organizationBusy}
+              onClick={reloadOrganizationPreparation}
+            >
+              Загрузить сохранённый ввод компании
+            </button>
           )}
-          <details className="operator-request-options">
-            <summary>
-              Название заявки и служебные параметры
-              {draft.demoMode ? " · тестовый комплект" : ""}
-            </summary>
-            <div className="form-grid">
-              <label>
-                Название заявки
-                <input
-                  aria-label="Название заявки"
-                  disabled={readonly || operationBusy}
-                  value={draft.title}
-                  maxLength={255}
-                  onChange={(event) => edit({ title: event.target.value })}
-                />
-              </label>
-              <label className="checkbox">
-                <input
-                  type="checkbox"
-                  disabled={
-                    readonly || operationBusy || context.tenant.demoOnly
-                  }
-                  checked={draft.demoMode}
-                  onChange={(event) => edit({ demoMode: event.target.checked })}
-                />
-                Тестовый комплект
-              </label>
-            </div>
-            {draft.demoMode && (
-              <p className="fine-print">
-                Тестовые документы содержат отметку «ДЕМО — НЕ ЯВЛЯЕТСЯ ВЫДАННЫМ
-                ДОКУМЕНТОМ».
-              </p>
-            )}
-          </details>
         </section>
       )}
       {undo && !readonly && (
@@ -1862,17 +2030,21 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               setBusy("undo");
               setError("");
               try {
-                const result = await api<{ revision: number }>(
-                  `/print-requests/${id}`,
-                  {
-                    method: "PATCH",
-                    body: json({
-                      expectedRevision: undo.revision,
-                      draft: draftPayload(undo.before),
-                    }),
-                  },
+                const result = await api<Draft>(`/print-requests/${id}`, {
+                  method: "PATCH",
+                  body: json({
+                    expectedRevision: undo.revision,
+                    draft: draftPayload(undo.before),
+                    ...(undo.removedId
+                      ? { restoreRecipientId: undo.removedId }
+                      : {}),
+                  }),
+                });
+                initialize(
+                  undo.removedId
+                    ? { ...undo.before, ...result }
+                    : { ...undo.before, revision: result.revision },
                 );
-                initialize({ ...undo.before, revision: result.revision });
                 if (undo.removedId) {
                   setSelectedId(undo.removedId);
                   setEntryView(previousEntryView.current);
@@ -1918,566 +2090,663 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           ))}
         </div>
       )}
-      <section className="panel recipients-panel" id="recipient-workspace">
-        <div className="operator-common-bar">
-          <RequestTrainingChoices
+      {draft.kind === "PERSON" ? (
+        <section className="panel" id="recipient-workspace">
+          <PersonEditor
             draft={draft}
+            resolvedDraft={resolved.draft as Draft}
+            context={context}
+            fieldErrors={fieldErrors}
+            fieldHints={sharedHints}
+            provenance={resolved.provenance}
             disabled={operationBusy}
             readonly={readonly}
-            selectedIds={checked}
-            hiddenSelectedCount={
-              checked.filter(
-                (rowId) => !visibleItems.some((item) => item.id === rowId),
-              ).length
-            }
-            onRemove={requestTrainingRemoval}
-            onChange={(next) =>
+            selectedId={selectedId}
+            focusFieldPath={focusFieldPath}
+            onSelect={setSelectedId}
+            onChangeRecipient={editRecipient}
+            onStageChange={setPersonStage}
+            onChooseTraining={(rowId, direction) => {
+              if (!current.current) return;
+              const next = assignTrainingBundle(
+                current.current,
+                [rowId],
+                direction,
+              );
               edit({
                 items: next.items,
                 events: next.events,
                 trainingDefaults: next.trainingDefaults,
-              })
+              });
+            }}
+            onRemoveTraining={(rowId, direction) =>
+              requestTrainingRemoval(direction, [rowId], false)
+            }
+            onPhoto={setPhotoRecipientId}
+            onPreview={(rowId, assignmentId) =>
+              void openPreview({ kind: "ASSIGNMENT", rowId, assignmentId })
             }
           />
-          <label className="operator-row-common-date">
-            Общая дата документов
-            <input
-              type="date"
-              title="Для документов без индивидуальной даты в строке"
-              data-field-path="commonFields.documentDate"
-              aria-invalid={
-                !!(
-                  fieldErrors["commonFields.documentDate"] ||
-                  sharedHints["commonFields.documentDate"]
-                )
+          {legacyPersonGroupEventIds.length > 0 && (
+            <details className="operator-common-settings" id="request-training">
+              <summary>Общие параметры группового обучения</summary>
+              <label className="operator-row-common-date">
+                Общая дата документов
+                <input
+                  type="date"
+                  data-field-path="commonFields.documentDate"
+                  disabled={readonly || operationBusy}
+                  aria-invalid={
+                    !!(
+                      fieldErrors["commonFields.documentDate"] ||
+                      sharedHints["commonFields.documentDate"]
+                    )
+                  }
+                  value={
+                    draft.commonFields?.documentDate ??
+                    draft.presetFields?.documentDate ??
+                    ""
+                  }
+                  onChange={(event) =>
+                    edit({
+                      schemaVersion: 2,
+                      commonFields: {
+                        ...draft.commonFields,
+                        documentDate: event.target.value,
+                        fieldOrigins: {
+                          ...draft.commonFields?.fieldOrigins,
+                          documentDate: event.target.value
+                            ? "MANUAL"
+                            : "CLEARED",
+                        },
+                      },
+                    })
+                  }
+                />
+                {(fieldErrors["commonFields.documentDate"] ||
+                  sharedHints["commonFields.documentDate"]) && (
+                  <small className="field-error">
+                    {fieldErrors["commonFields.documentDate"] ||
+                      sharedHints["commonFields.documentDate"]}
+                  </small>
+                )}
+              </label>
+              <EventContext
+                primary
+                embedded
+                existingOnly
+                visibleEventIds={legacyPersonGroupEventIds}
+                preparationOwner={{
+                  tenantId: context.tenant.id,
+                  userId: context.user.id,
+                }}
+                fieldHints={sharedHints}
+                draft={draft}
+                centerCommon={centerCommon}
+                selectedIds={[selectedId || draft.items[0]?.id].filter(Boolean)}
+                disabled={readonly || operationBusy}
+                onChange={edit}
+                onApply={applyOperation}
+                onContextCommit={rememberContextOperation}
+                onBusyChange={setContextBusy}
+              />
+            </details>
+          )}
+        </section>
+      ) : (
+        <section className="panel recipients-panel" id="recipient-workspace">
+          <div className="operator-common-bar">
+            <RequestTrainingChoices
+              draft={draft}
+              disabled={operationBusy}
+              readonly={readonly}
+              selectedIds={checked}
+              hiddenSelectedCount={
+                checked.filter(
+                  (rowId) => !visibleItems.some((item) => item.id === rowId),
+                ).length
               }
-              aria-describedby="request-common-date-feedback"
-              disabled={readonly || operationBusy}
-              value={
-                draft.commonFields?.documentDate ??
-                draft.presetFields?.documentDate ??
-                ""
-              }
-              onChange={(event) =>
+              onRemove={requestTrainingRemoval}
+              onChange={(next) =>
                 edit({
-                  schemaVersion: 2,
-                  commonFields: {
-                    ...draft.commonFields,
-                    documentDate: event.target.value,
-                  },
+                  items: next.items,
+                  events: next.events,
+                  trainingDefaults: next.trainingDefaults,
                 })
               }
             />
-            <small
-              id="request-common-date-feedback"
-              className={
-                fieldErrors["commonFields.documentDate"]
-                  ? "field-error"
-                  : "field-hint"
-              }
-            >
-              {fieldErrors["commonFields.documentDate"] ||
-                sharedHints["commonFields.documentDate"] ||
-                "Для документов без собственной даты; отдельная дата обучения и исключения сохраняются."}
-            </small>
-          </label>
-        </div>
-        <CourseSharedFields
-          draft={draft}
-          resolvedEvents={resolved.draft.events}
-          fieldHints={sharedHints}
-          disabled={readonly || operationBusy}
-          onChange={edit}
-        />
-        <details className="operator-common-settings" id="request-training">
-          <summary>
-            <span>Параметры обучения и документов</span>
-            <span className="muted">
-              {missingTrainingFields
-                ? `Осталось заполнить: ${missingTrainingFields}`
-                : draft.events?.length
-                  ? "Общие сведения заполнены"
-                  : "Даты, программа и результаты"}
-            </span>
-          </summary>
-          <div className="operator-training-panel">
-            {!!draft.events?.length && (
-              <>
-                <TrainingOverview
-                  draft={draft}
-                  resolvedEvents={resolved.draft.events}
-                  disabled={readonly || operationBusy}
-                  onChange={edit}
-                  selectedIds={checked}
-                  onRemove={(eventId, ids, all) => {
-                    const event = draft.events?.find(
-                      (entry) => entry.id === eventId,
-                    );
-                    if (event)
-                      requestTrainingRemoval(
-                        trainingDirection(event.protocolTemplateId),
-                        ids,
-                        all,
-                        [eventId],
+            <label className="operator-row-common-date">
+              Общая дата документов
+              <input
+                type="date"
+                title="Для документов без индивидуальной даты в строке"
+                data-field-path="commonFields.documentDate"
+                aria-invalid={
+                  !!(
+                    fieldErrors["commonFields.documentDate"] ||
+                    sharedHints["commonFields.documentDate"]
+                  )
+                }
+                aria-describedby="request-common-date-feedback"
+                disabled={readonly || operationBusy}
+                value={
+                  draft.commonFields?.documentDate ??
+                  draft.presetFields?.documentDate ??
+                  ""
+                }
+                onChange={(event) =>
+                  edit({
+                    schemaVersion: 2,
+                    commonFields: {
+                      ...draft.commonFields,
+                      documentDate: event.target.value,
+                      fieldOrigins: {
+                        ...draft.commonFields?.fieldOrigins,
+                        documentDate: event.target.value ? "MANUAL" : "CLEARED",
+                      },
+                    },
+                  })
+                }
+              />
+              <small
+                id="request-common-date-feedback"
+                className={
+                  fieldErrors["commonFields.documentDate"]
+                    ? "field-error"
+                    : "field-hint"
+                }
+              >
+                {fieldErrors["commonFields.documentDate"] ||
+                  sharedHints["commonFields.documentDate"] ||
+                  "Для документов без собственной даты; отдельная дата обучения и исключения сохраняются."}
+              </small>
+            </label>
+          </div>
+          <CourseSharedFields
+            draft={draft}
+            resolvedEvents={resolved.draft.events}
+            fieldHints={sharedHints}
+            disabled={readonly || operationBusy}
+            onChange={edit}
+          />
+          <details className="operator-common-settings" id="request-training">
+            <summary>
+              <span>Параметры обучения и документов</span>
+              <span className="muted">
+                {missingTrainingFields
+                  ? `Осталось заполнить: ${missingTrainingFields}`
+                  : draft.events?.length
+                    ? "Общие сведения заполнены"
+                    : "Даты, программа и результаты"}
+              </span>
+            </summary>
+            <div className="operator-training-panel">
+              {!!draft.events?.length && (
+                <>
+                  <TrainingOverview
+                    draft={draft}
+                    resolvedEvents={resolved.draft.events}
+                    disabled={readonly || operationBusy}
+                    onChange={edit}
+                    selectedIds={checked}
+                    onRemove={(eventId, ids, all) => {
+                      const event = draft.events?.find(
+                        (entry) => entry.id === eventId,
                       );
-                  }}
-                />
-                <EventContext
-                  preparationOwner={{
-                    tenantId: context.tenant.id,
-                    userId: context.user.id,
-                  }}
-                  primary
-                  embedded
-                  fieldHints={sharedHints}
-                  draft={draft}
-                  centerCommon={centerCommon}
-                  selectedIds={checked}
-                  disabled={readonly || operationBusy}
-                  onChange={edit}
-                  onApply={applyOperation}
-                  onContextCommit={rememberContextOperation}
-                  onBusyChange={setContextBusy}
-                />
-              </>
-            )}
-          </div>
-        </details>
-        <div className="toolbar">
-          <div>
-            <h2>Получатели</h2>
-            {draft.items.length > 1 && (
-              <span className="muted">{draft.items.length} человек</span>
-            )}
-          </div>
-          {!readonly && (
-            <div className="toolbar-actions">
-              <button
-                disabled={operationBusy}
-                onClick={() => setDialog("import")}
-              >
-                <Icon name="upload" />
-                Импорт / вставка
-              </button>
-              {entryView === "table" && (
-                <button
-                  disabled={draft.items.length >= LIMITS.rows || operationBusy}
-                  onClick={addRecipient}
-                  data-add-recipient
-                >
-                  <Icon name="plus" />
-                  Добавить строку
-                </button>
+                      if (event)
+                        requestTrainingRemoval(
+                          trainingDirection(event.protocolTemplateId),
+                          ids,
+                          all,
+                          [eventId],
+                        );
+                    }}
+                  />
+                  <EventContext
+                    preparationOwner={{
+                      tenantId: context.tenant.id,
+                      userId: context.user.id,
+                    }}
+                    primary
+                    embedded
+                    fieldHints={sharedHints}
+                    draft={draft}
+                    centerCommon={centerCommon}
+                    selectedIds={checked}
+                    disabled={readonly || operationBusy}
+                    onChange={edit}
+                    onApply={applyOperation}
+                    onContextCommit={rememberContextOperation}
+                    onBusyChange={setContextBusy}
+                  />
+                </>
               )}
-              <details
-                ref={moreTools}
-                className="recipient-extra-tools"
-                onToggle={(event) => setMoreOpen(event.currentTarget.open)}
-              >
-                <summary aria-expanded={moreOpen}>Ещё</summary>
-                <div
-                  onClickCapture={(event) => {
-                    if (
-                      (event.target as HTMLElement).closest(
-                        "button:not(:disabled)",
-                      ) &&
-                      moreTools.current
-                    )
-                      moreTools.current.open = false;
-                  }}
+            </div>
+          </details>
+          <div className="toolbar">
+            <div>
+              <h2>Сотрудники</h2>
+              {draft.items.length > 1 && (
+                <span className="muted">{draft.items.length} человек</span>
+              )}
+            </div>
+            {!readonly && (
+              <div className="toolbar-actions">
+                <button
+                  disabled={operationBusy}
+                  onClick={() => void openImport()}
                 >
-                  {draft.kind === "PERSON" && (
-                    <button
-                      disabled={operationBusy || !draft.items.length}
-                      onClick={() =>
-                        setEmployerTargets(
-                          checked.length
-                            ? [...checked]
-                            : draft.items.map((item) => item.id),
-                        )
-                      }
-                    >
-                      Указать место работы
-                    </button>
-                  )}
+                  <Icon name="upload" />
+                  Импорт
+                </button>
+                <button
+                  disabled={operationBusy}
+                  onClick={() => void openImport()}
+                >
+                  Вставить список
+                </button>
+                {entryView === "table" && (
                   <button
                     disabled={
-                      operationBusy || draft.items.length >= LIMITS.rows
+                      draft.items.length >= LIMITS.rows || operationBusy
                     }
-                    onClick={() => setDialog("recipientPicker")}
+                    onClick={addRecipient}
+                    data-add-recipient
                   >
-                    Найти человека
+                    <Icon name="plus" />
+                    Добавить сотрудника
                   </button>
-                  <button
-                    disabled={operationBusy || !draft.items.length}
-                    onClick={() => setDialog("photos")}
-                  >
-                    Сопоставить фото
-                  </button>
-                  <button
-                    disabled={!checked.length || operationBusy}
-                    onClick={() => setDialog("bulk")}
-                  >
-                    Изменить данные выбранных ({checked.length})
-                  </button>
-                </div>
-              </details>
-            </div>
-          )}
-        </div>
-        {!readonly && (
-          <RecipientCommonFields
-            items={draft.items}
-            selectedIds={checked}
-            disabled={operationBusy}
-            onApply={(items) => edit({ items })}
-            onEmployer={() =>
-              setEmployerTargets(
-                checked.length
-                  ? [...checked]
-                  : draft.items.map((item) => item.id),
-              )
-            }
-          />
-        )}
-        {!readonly &&
-          entryView === "table" &&
-          draft.items.length > 10 &&
-          (missingNames > 0 || missingDocuments > 0) && (
-            <div className="entry-progress" role="status">
-              <span>Продолжите заполнение:</span>
-              {missingNames > 0 && (
-                <button
-                  className="text-button"
-                  onClick={() => {
-                    setRowSearch("");
-                    setRowScope("unnamed");
-                    setEntryView("table");
-                  }}
-                >
-                  без ФИО — {missingNames}
-                </button>
-              )}
-              {missingDocuments > 0 && (
-                <button
-                  className="text-button"
-                  onClick={() =>
-                    setDocumentTargets(
-                      draft.items
-                        .filter((item) => !item.assignments.length)
-                        .map((item) => item.id),
-                    )
-                  }
-                >
-                  выбрать документы — {missingDocuments}
-                </button>
-              )}
-            </div>
-          )}
-        <details
-          className="operator-list-tools"
-          open={
-            listToolsOpen ??
-            (draft.items.length > 10 ||
-              !!rowSearch ||
-              !!rowScope ||
-              checked.length > 0)
-          }
-          onToggle={(event) => setListToolsOpen(event.currentTarget.open)}
-        >
-          <summary>Поиск и действия со списком</summary>
-          <div className="toolbar selection-toolbar">
-            <label className="search-field recipient-search">
-              Поиск в заявке
-              <input
-                value={rowSearch}
-                onChange={(e) => {
-                  setRowSearch(e.target.value);
-                  setEditingSearchId("");
-                }}
-                placeholder="ФИО, должность, организация или номер"
-              />
-            </label>
-            <span aria-live="polite">
-              Показано: {visibleItems.length}. Выбрано: {checked.length}, из них
-              скрыто фильтрами:{" "}
-              {
-                checked.filter(
-                  (id) => !visibleItems.some((item) => item.id === id),
-                ).length
-              }
-              .
-              {rowScope === "errors" &&
-                reviewStale &&
-                " Замечания последней проверки; перепроверьте после исправлений."}
-            </span>
-            <label>
-              Показать строки
-              <select
-                value={rowScope}
-                onChange={(e) => {
-                  setEditingSearchId("");
-                  setRowScope(e.target.value);
-                }}
-              >
-                <option value="">Все</option>
-                <option value="selected">Выбранные</option>
-                <option value="unnamed">Без ФИО на русском</option>
-                <option value="unassigned">Без документов</option>
-                <option value="errors">С ошибками последней проверки</option>
-                <option value="pb-">Промышленная безопасность</option>
-                <option value="ptm-">Пожарно-технический минимум</option>
-                <option value="biot-">БиОТ</option>
-                <option value="ps-">ПС — обучение по профессии</option>
-                {draft.events?.map((event) => (
-                  <option key={event.id} value={`event:${event.id}`}>
-                    Событие: {trainingDisplayTitle(event.title)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {checked.length > 0 && (
-              <button onClick={() => setChecked([])}>
-                Снять выделение строк
-              </button>
-            )}
-            {(rowSearch || rowScope) && (
-              <button
-                onClick={() => {
-                  setRowSearch("");
-                  setRowScope("");
-                }}
-              >
-                Сбросить фильтры
-              </button>
-            )}
-          </div>
-        </details>
-        <div
-          onScrollCapture={() => {
-            const field = document.activeElement;
-            if (
-              field instanceof HTMLElement &&
-              field.matches("[data-grid-field]") &&
-              field.closest(".operator-grid")
-            )
-              rememberGridField(field);
-          }}
-          onFocusCapture={(event) => {
-            const row = (event.target as HTMLElement).closest(
-              "tr[data-recipient-id]",
-            );
-            if (row && (rowSearch || rowScope))
-              setEditingSearchId(row.getAttribute("data-recipient-id") || "");
-            const field = event.target as HTMLElement;
-            if (field.matches("[data-grid-field]")) {
-              rememberGridField(field);
-              requestAnimationFrame(() => {
-                if (field.isConnected && document.activeElement === field)
-                  rememberGridField(field);
-              });
-            }
-          }}
-          onBlurCapture={(event) => {
-            const row = (event.target as HTMLElement).closest(
-              "tr[data-recipient-id]",
-            );
-            const next = (event.relatedTarget as HTMLElement | null)?.closest(
-              "tr[data-recipient-id]",
-            );
-            if (row && row !== next) setEditingSearchId("");
-          }}
-        >
-          <RecipientGrid
-            issuedAssignments={draft.issuedAssignments}
-            active={entryView === "table"}
-            items={draft.items}
-            visibleItems={visibleItems}
-            resolvedItems={resolved.draft.items}
-            liveRules={draft.businessRuleVersion === "LIVE_V1"}
-            selectedId={selectedId}
-            checked={checked}
-            disabled={operationBusy}
-            readonly={readonly}
-            fieldErrors={fieldErrors}
-            fieldHints={sharedHints}
-            onPhoto={setPhotoRecipientId}
-            onEdit={editRecipient}
-            onSelect={setSelectedId}
-            onOpen={openRecipient}
-            onDocuments={(recipientId) => setDocumentTargets([recipientId])}
-            onChecked={setChecked}
-            onRemove={(rowId) => {
-              const item = current.current?.items.find(
-                (row) => row.id === rowId,
-              );
-              if (item && isTechnicalBlankRecipient(item))
-                void removeRecipient(rowId);
-              else setRemoveId(rowId);
-            }}
-            onPaste={(range) => {
-              if (rowSearch || rowScope) {
-                setError(
-                  "Перед вставкой диапазона сбросьте поиск и фильтры, чтобы видеть все изменяемые строки.",
-                );
-                return;
-              }
-              try {
-                const quick = quickGridPaste(
-                  draft.items,
-                  resolved.draft.items,
-                  range,
-                );
-                if (!quick.eligible) {
-                  setPastedRange({ ...range, reason: quick.reason });
-                  return;
-                }
-                const existing = new Set(
-                  draft.items.map((person) => person.id),
-                );
-                const items = quick.preview.items.map((person) =>
-                  existing.has(person.id)
-                    ? person
-                    : recipientForRequest(draft, person),
-                );
-                void applyOperation({ items }).then((applied) => {
-                  if (applied)
-                    setPasteMessage(
-                      `Вставлено строк: ${quick.preview.appliedRows}. Изменения сохранены; доступна отмена.`,
-                    );
-                  else
-                    setPastedRange({
-                      ...range,
-                      reason:
-                        "Быстрая вставка не сохранена. Диапазон остаётся для проверки и повторного применения.",
-                    });
-                });
-              } catch (caught) {
-                setPastedRange({ ...range, reason: errorText(caught) });
-              }
-            }}
-            onAdd={addRecipient}
-            canAdd={
-              draft.items.length < LIMITS.rows && !operationBusy && !readonly
-            }
-          />
-          {pasteMessage && (
-            <p role="status" className="fine-print">
-              {pasteMessage}
-            </p>
-          )}
-          {!!draft.items.length && !visibleItems.length && (
-            <div className="empty-state" role="status">
-              <h3>Получатели не найдены</h3>
-              <p>Измените запрос или сбросьте фильтры.</p>
-              <button
-                onClick={() => {
-                  setRowSearch("");
-                  setRowScope("");
-                }}
-              >
-                Показать всех получателей
-              </button>
-            </div>
-          )}
-        </div>
-        {entryView === "card" && selected && (
-          <Modal
-            title={`Настройки строки ${draft.items.indexOf(selected) + 1}`}
-            onClose={returnToTable}
-            wide
-          >
-            <aside
-              ref={recipientDetailRef}
-              className="recipient-details"
-              aria-label="Редактор получателя"
-              tabIndex={-1}
-              onFocusCapture={(event) => {
-                const control = event.target as HTMLElement;
-                const footer = control
-                  .closest("dialog")
-                  ?.querySelector(".recipient-details-footer");
-                const head = control
-                  .closest("dialog")
-                  ?.querySelector(".modal-head");
-                const rect = control.getBoundingClientRect();
-                if (
-                  (footer &&
-                    rect.bottom > footer.getBoundingClientRect().top - 8) ||
-                  (head && rect.top < head.getBoundingClientRect().bottom + 8)
-                )
-                  requestAnimationFrame(() =>
-                    control.scrollIntoView({
-                      block: "center",
-                      inline: "nearest",
-                    }),
-                  );
-              }}
-            >
-              {selected ? (
-                <RecipientDetails
-                  issuedAssignmentIds={draft.issuedAssignments
-                    ?.filter((entry) => entry.rowId === selected.id)
-                    .map((entry) => entry.assignmentId)}
-                  recipient={selected}
-                  resolvedRecipient={resolved.draft.items.find(
-                    (item) => item.id === selected.id,
-                  )}
-                  provenance={resolved.provenance}
-                  disabled={readonly || operationBusy}
-                  onChange={editRecipient}
-                  context={context}
-                  rowIndex={draft.items.indexOf(selected)}
-                  focusFieldPath={focusFieldPath}
-                  fieldErrors={fieldErrors}
-                  fieldHints={readiness.fieldHints}
-                  liveRules={draft.businessRuleVersion === "LIVE_V1"}
-                  requestEmployer={
-                    requestEmployer
-                      ? {
-                          id: requestEmployer.id,
-                          nameRu: requestEmployer.nameRu,
-                          nameKz:
-                            requestEmployer.nameKz || requestEmployer.nameRu,
-                        }
-                      : null
-                  }
-                />
-              ) : (
-                <p className="muted">
-                  Выберите получателя, чтобы настроить документы и даты.
-                </p>
-              )}
-            </aside>
-            <div className="modal-actions recipient-details-footer">
-              <div className="recipient-details-save" role="status">
-                <strong>{saveLabel}</strong>
-                <small>
-                  Изменения сохраняются автоматически. Закрытие возвращает к
-                  списку и сохраняет введённое.
-                </small>
-                {saveState === "error" && error && (
-                  <span className="field-error">{error}</span>
                 )}
-                {conflictPaused && (
-                  <button
-                    onClick={() => {
-                      returnToTable();
-                      setDialog("conflict");
+                <details
+                  ref={moreTools}
+                  className="recipient-extra-tools"
+                  onToggle={(event) => setMoreOpen(event.currentTarget.open)}
+                >
+                  <summary aria-expanded={moreOpen}>Ещё</summary>
+                  <div
+                    onClickCapture={(event) => {
+                      if (
+                        (event.target as HTMLElement).closest(
+                          "button:not(:disabled)",
+                        ) &&
+                        moreTools.current
+                      )
+                        moreTools.current.open = false;
                     }}
                   >
-                    Разрешить конфликт
+                    <button
+                      disabled={
+                        operationBusy || draft.items.length >= LIMITS.rows
+                      }
+                      onClick={() => setDialog("recipientPicker")}
+                    >
+                      Найти человека
+                    </button>
+                    <button
+                      disabled={operationBusy || !draft.items.length}
+                      onClick={() => setDialog("photos")}
+                    >
+                      Сопоставить фото
+                    </button>
+                    <button
+                      disabled={!checked.length || operationBusy}
+                      onClick={() => setDialog("bulk")}
+                    >
+                      Изменить данные выбранных ({checked.length})
+                    </button>
+                  </div>
+                </details>
+              </div>
+            )}
+          </div>
+          {!readonly &&
+            entryView === "table" &&
+            draft.items.length > 10 &&
+            (missingNames > 0 || missingDocuments > 0) && (
+              <div className="entry-progress" role="status">
+                <span>Продолжите заполнение:</span>
+                {missingNames > 0 && (
+                  <button
+                    className="text-button"
+                    onClick={() => {
+                      setRowSearch("");
+                      setRowScope("unnamed");
+                      setEntryView("table");
+                    }}
+                  >
+                    без ФИО — {missingNames}
+                  </button>
+                )}
+                {missingDocuments > 0 && (
+                  <button
+                    className="text-button"
+                    onClick={() =>
+                      setDocumentTargets(
+                        draft.items
+                          .filter((item) => !item.assignments.length)
+                          .map((item) => item.id),
+                      )
+                    }
+                  >
+                    выбрать документы — {missingDocuments}
                   </button>
                 )}
               </div>
-              <button className="primary" onClick={returnToTable}>
-                Вернуться к списку
-              </button>
+            )}
+          <details
+            className="operator-list-tools"
+            open={
+              listToolsOpen ??
+              (draft.items.length > 10 ||
+                !!rowSearch ||
+                !!rowScope ||
+                checked.length > 0)
+            }
+            onToggle={(event) => setListToolsOpen(event.currentTarget.open)}
+          >
+            <summary>Поиск и действия со списком</summary>
+            <div className="toolbar selection-toolbar">
+              <label className="search-field recipient-search">
+                Поиск в заявке
+                <input
+                  value={rowSearch}
+                  onChange={(e) => {
+                    setRowSearch(e.target.value);
+                    setEditingSearchId("");
+                  }}
+                  placeholder="ФИО, должность, организация или номер"
+                />
+              </label>
+              <span aria-live="polite">
+                Показано: {visibleItems.length}. Выбрано: {checked.length}, из
+                них скрыто фильтрами:{" "}
+                {
+                  checked.filter(
+                    (id) => !visibleItems.some((item) => item.id === id),
+                  ).length
+                }
+                .
+                {rowScope === "errors" &&
+                  reviewStale &&
+                  " Замечания последней проверки; перепроверьте после исправлений."}
+              </span>
+              <label>
+                Показать строки
+                <select
+                  value={rowScope}
+                  onChange={(e) => {
+                    setEditingSearchId("");
+                    setRowScope(e.target.value);
+                  }}
+                >
+                  <option value="">Все</option>
+                  <option value="selected">Выбранные</option>
+                  <option value="unnamed">Без ФИО на русском</option>
+                  <option value="unassigned">Без документов</option>
+                  <option value="errors">С ошибками последней проверки</option>
+                  <option value="pb-">Промышленная безопасность</option>
+                  <option value="ptm-">Пожарно-технический минимум</option>
+                  <option value="biot-">БиОТ</option>
+                  <option value="ps-">ПС — обучение по профессии</option>
+                  {draft.events?.map((event) => (
+                    <option key={event.id} value={`event:${event.id}`}>
+                      Событие: {trainingDisplayTitle(event.title)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {checked.length > 0 && (
+                <button onClick={() => setChecked([])}>
+                  Снять выделение строк
+                </button>
+              )}
+              {(rowSearch || rowScope) && (
+                <button
+                  onClick={() => {
+                    setRowSearch("");
+                    setRowScope("");
+                  }}
+                >
+                  Сбросить фильтры
+                </button>
+              )}
             </div>
-          </Modal>
-        )}
-      </section>
-      {!readonly && (
+          </details>
+          <div
+            onScrollCapture={() => {
+              const field = document.activeElement;
+              if (
+                field instanceof HTMLElement &&
+                field.matches("[data-grid-field]") &&
+                field.closest(".operator-grid")
+              )
+                rememberGridField(field);
+            }}
+            onFocusCapture={(event) => {
+              const row = (event.target as HTMLElement).closest(
+                "tr[data-recipient-id]",
+              );
+              if (row && (rowSearch || rowScope))
+                setEditingSearchId(row.getAttribute("data-recipient-id") || "");
+              const field = event.target as HTMLElement;
+              if (field.matches("[data-grid-field]")) {
+                rememberGridField(field);
+                requestAnimationFrame(() => {
+                  if (field.isConnected && document.activeElement === field)
+                    rememberGridField(field);
+                });
+              }
+            }}
+            onBlurCapture={(event) => {
+              const row = (event.target as HTMLElement).closest(
+                "tr[data-recipient-id]",
+              );
+              const next = (event.relatedTarget as HTMLElement | null)?.closest(
+                "tr[data-recipient-id]",
+              );
+              if (row && row !== next) setEditingSearchId("");
+            }}
+          >
+            <RecipientGrid
+              issuedAssignments={draft.issuedAssignments}
+              active={entryView === "table"}
+              items={draft.items}
+              requestEmployer={requestEmployer}
+              visibleItems={visibleItems}
+              resolvedItems={resolved.draft.items}
+              liveRules={draft.businessRuleVersion === "LIVE_V1"}
+              selectedId={selectedId}
+              checked={checked}
+              disabled={operationBusy}
+              readonly={readonly}
+              fieldErrors={fieldErrors}
+              fieldHints={sharedHints}
+              onPhoto={setPhotoRecipientId}
+              onEdit={editRecipient}
+              onSelect={setSelectedId}
+              onOpen={openRecipient}
+              onDocuments={(recipientId) => setDocumentTargets([recipientId])}
+              onChecked={setChecked}
+              onRemove={(rowId) => {
+                const item = current.current?.items.find(
+                  (row) => row.id === rowId,
+                );
+                if (item && isTechnicalBlankRecipient(item))
+                  void removeRecipient(rowId);
+                else setRemoveId(rowId);
+              }}
+              onPaste={(range) => {
+                if (rowSearch || rowScope) {
+                  setError(
+                    "Перед вставкой диапазона сбросьте поиск и фильтры, чтобы видеть все изменяемые строки.",
+                  );
+                  return;
+                }
+                try {
+                  const quick = quickGridPaste(
+                    draft.items,
+                    resolved.draft.items,
+                    range,
+                  );
+                  if (!quick.eligible) {
+                    setPastedRange({ ...range, reason: quick.reason });
+                    return;
+                  }
+                  const existing = new Set(
+                    draft.items.map((person) => person.id),
+                  );
+                  const items = quick.preview.items.map((person) =>
+                    existing.has(person.id)
+                      ? person
+                      : recipientForRequest(draft, person),
+                  );
+                  void applyOperation({ items }).then((applied) => {
+                    if (applied)
+                      setPasteMessage(
+                        `Вставлено строк: ${quick.preview.appliedRows}. Изменения сохранены; доступна отмена.`,
+                      );
+                    else
+                      setPastedRange({
+                        ...range,
+                        reason:
+                          "Быстрая вставка не сохранена. Диапазон остаётся для проверки и повторного применения.",
+                      });
+                  });
+                } catch (caught) {
+                  setPastedRange({ ...range, reason: errorText(caught) });
+                }
+              }}
+              onAdd={addRecipient}
+              canAdd={
+                draft.items.length < LIMITS.rows && !operationBusy && !readonly
+              }
+            />
+            {pasteMessage && (
+              <p role="status" className="fine-print">
+                {pasteMessage}
+              </p>
+            )}
+            {!!draft.items.length && !visibleItems.length && (
+              <div className="empty-state" role="status">
+                <h3>Получатели не найдены</h3>
+                <p>Измените запрос или сбросьте фильтры.</p>
+                <button
+                  onClick={() => {
+                    setRowSearch("");
+                    setRowScope("");
+                  }}
+                >
+                  Показать всех получателей
+                </button>
+              </div>
+            )}
+          </div>
+          {entryView === "card" && selected && (
+            <Modal
+              title={`Настройки строки ${draft.items.indexOf(selected) + 1}`}
+              onClose={returnToTable}
+              wide
+            >
+              <aside
+                ref={recipientDetailRef}
+                className="recipient-details"
+                aria-label="Редактор получателя"
+                tabIndex={-1}
+                onFocusCapture={(event) => {
+                  const control = event.target as HTMLElement;
+                  const footer = control
+                    .closest("dialog")
+                    ?.querySelector(".recipient-details-footer");
+                  const head = control
+                    .closest("dialog")
+                    ?.querySelector(".modal-head");
+                  const rect = control.getBoundingClientRect();
+                  if (
+                    (footer &&
+                      rect.bottom > footer.getBoundingClientRect().top - 8) ||
+                    (head && rect.top < head.getBoundingClientRect().bottom + 8)
+                  )
+                    requestAnimationFrame(() =>
+                      control.scrollIntoView({
+                        block: "center",
+                        inline: "nearest",
+                      }),
+                    );
+                }}
+              >
+                {selected ? (
+                  <RecipientDetails
+                    issuedAssignmentIds={draft.issuedAssignments
+                      ?.filter((entry) => entry.rowId === selected.id)
+                      .map((entry) => entry.assignmentId)}
+                    recipient={selected}
+                    onPhoto={setPhotoRecipientId}
+                    onPreview={(rowId, assignmentId) =>
+                      void openPreview({
+                        kind: "ASSIGNMENT",
+                        rowId,
+                        assignmentId,
+                      })
+                    }
+                    resolvedRecipient={resolved.draft.items.find(
+                      (item) => item.id === selected.id,
+                    )}
+                    provenance={resolved.provenance}
+                    disabled={readonly || operationBusy}
+                    onChange={editRecipient}
+                    context={context}
+                    rowIndex={draft.items.indexOf(selected)}
+                    focusFieldPath={focusFieldPath}
+                    fieldErrors={fieldErrors}
+                    fieldHints={readiness.fieldHints}
+                    liveRules={draft.businessRuleVersion === "LIVE_V1"}
+                    requestEmployer={
+                      requestEmployer
+                        ? {
+                            id: requestEmployer.id,
+                            nameRu: requestEmployer.nameRu,
+                            nameKz:
+                              requestEmployer.nameKz || requestEmployer.nameRu,
+                          }
+                        : null
+                    }
+                  />
+                ) : (
+                  <p className="muted">
+                    Выберите получателя, чтобы настроить документы и даты.
+                  </p>
+                )}
+              </aside>
+              <div className="modal-actions recipient-details-footer">
+                <div className="recipient-details-save" role="status">
+                  <strong>{saveLabel}</strong>
+                  <small>
+                    Изменения сохраняются автоматически. Закрытие возвращает к
+                    списку и сохраняет введённое.
+                  </small>
+                  {saveState === "error" && error && (
+                    <span className="field-error">{error}</span>
+                  )}
+                  {conflictPaused && (
+                    <button
+                      onClick={() => {
+                        returnToTable();
+                        setDialog("conflict");
+                      }}
+                    >
+                      Разрешить конфликт
+                    </button>
+                  )}
+                </div>
+                <button className="primary" onClick={returnToTable}>
+                  Вернуться к списку
+                </button>
+              </div>
+            </Modal>
+          )}
+        </section>
+      )}
+      {!readonly && (draft.kind !== "PERSON" || personStage === "summary") && (
         <section
           className="operator-readiness"
           id="request-readiness"
@@ -2519,93 +2788,98 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
         </section>
       )}
-      <section
-        className="operator-completion"
-        aria-label="Подготовка документов"
-      >
-        {!readonly && (
-          <BatchReadyPanel
+      {(draft.kind !== "PERSON" || personStage === "summary" || readonly) && (
+        <section
+          className="operator-completion"
+          aria-label="Подготовка документов"
+        >
+          <button disabled={operationBusy} onClick={() => void openPreview()}>
+            Предпросмотр любого документа
+          </button>
+          {!readonly && (
+            <BatchReadyPanel
+              draft={draft}
+              onSave={flush}
+              onRefresh={async () => {
+                initialize(await api<Draft>(`/print-requests/${id}`));
+                setRefreshFiles((value) => value + 1);
+              }}
+            />
+          )}
+          {unconfirmedResults.trainings > 0 && (
+            <p className="operator-result-reminder">
+              Не подтверждены {unconfirmedResults.trainings} результатов по
+              обучениям у {unconfirmedResults.recipients} получателей.
+              Удостоверения, сертификаты и свидетельства по этим обучениям
+              включаются только после результата «Сдал». Протоколы отражают
+              фактические результаты, включая неподтверждённые; подтверждённые
+              направления того же человека сохраняются. Подтвердите результаты в
+              блоке обучения, если они уже известны.
+            </p>
+          )}
+          <ApprovalBanner
             draft={draft}
-            onSave={flush}
+            role={context.user.role}
+            compact
             onRefresh={async () => {
-              initialize(await api<Draft>(`/print-requests/${id}`));
-              setRefreshFiles((value) => value + 1);
+              if (!readonly) await flush();
+              await reload();
             }}
           />
-        )}
-        {unconfirmedResults.trainings > 0 && (
-          <p className="operator-result-reminder">
-            Не подтверждены {unconfirmedResults.trainings} результатов по
-            обучениям у {unconfirmedResults.recipients} получателей.
-            Удостоверения, сертификаты и свидетельства по этим обучениям
-            включаются только после результата «Сдал». Протоколы отражают
-            фактические результаты, включая неподтверждённые; подтверждённые
-            направления того же человека сохраняются. Подтвердите результаты в
-            блоке обучения, если они уже известны.
-          </p>
-        )}
-        <ApprovalBanner
-          draft={draft}
-          role={context.user.role}
-          compact
-          onRefresh={async () => {
-            if (!readonly) await flush();
-            await reload();
-          }}
-        />
-        <div className="operator-final-actions">
-          {actions.showPrepareSigning ? (
-            <button
-              className="primary"
-              disabled={actions.prepareSigningDisabled || organizationBusy}
-              onClick={() => void command("finalize")}
-            >
-              <Icon name="print" />
-              {busy === "finalize"
-                ? "Готовим документы…"
-                : "Сформировать документы"}
-            </button>
-          ) : actions.showPreview ? (
-            <button
-              className="primary"
-              disabled={operationBusy || !readiness.locallyComplete}
-              onClick={() => void command("preview")}
-            >
-              {busy === "preview"
-                ? "Готовим предпросмотр…"
-                : "Посмотреть документы"}
-            </button>
-          ) : actions.showDocuments ? (
-            <a className="button primary" href="#request-files">
-              Документы и печать
-            </a>
-          ) : null}
-          {actions.showValidate && (
-            <button
-              disabled={operationBusy}
-              onClick={() => void command("validate")}
-            >
-              {busy === "validate" ? "Проверяем…" : "Проверить данные"}
-            </button>
+          <div className="operator-final-actions">
+            {actions.showPrepareSigning ? (
+              <button
+                className="primary"
+                disabled={actions.prepareSigningDisabled || organizationBusy}
+                onClick={() => void command("finalize")}
+              >
+                <Icon name="print" />
+                {busy === "finalize"
+                  ? "Готовим документы…"
+                  : "Сформировать документы"}
+              </button>
+            ) : actions.showPreview ? (
+              <button
+                className="primary"
+                disabled={operationBusy || !readiness.locallyComplete}
+                onClick={() => void command("preview")}
+              >
+                {busy === "preview"
+                  ? "Готовим предпросмотр…"
+                  : "Посмотреть документы"}
+              </button>
+            ) : actions.showDocuments ? (
+              <a className="button primary" href="#request-files">
+                Документы и печать
+              </a>
+            ) : null}
+            {actions.showValidate && (
+              <button
+                disabled={operationBusy}
+                onClick={() => void command("validate")}
+              >
+                {busy === "validate" ? "Проверяем…" : "Проверить данные"}
+              </button>
+            )}
+            {draft.approval && (
+              <Link
+                className="button"
+                href={`/approvals?proposal=${encodeURIComponent(draft.approval.proposalId)}`}
+              >
+                {actions.showDecision
+                  ? "Принять решение"
+                  : "Состояние согласования"}
+              </Link>
+            )}
+          </div>
+          {actions.showPrepareSigning && (
+            <p className="fine-print">
+              При подготовке комплект получит номера. Дальнейшие исправления
+              оформляются отдельно.
+            </p>
           )}
-          {draft.approval && (
-            <Link
-              className="button"
-              href={`/approvals?proposal=${encodeURIComponent(draft.approval.proposalId)}`}
-            >
-              {actions.showDecision
-                ? "Принять решение"
-                : "Состояние согласования"}
-            </Link>
-          )}
-        </div>
-        {actions.showPrepareSigning && (
-          <p className="fine-print">
-            При подготовке комплект получит номера. Дальнейшие исправления
-            оформляются отдельно.
-          </p>
-        )}
-      </section>
+        </section>
+      )}
       {validation && (
         <div ref={errorsRef} tabIndex={-1} className="validation-result">
           <Notice
@@ -2701,20 +2975,22 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           />
         </details>
       )}
-      <FilesPanel
-        requestId={id}
-        draft={draft}
-        refresh={refreshFiles}
-        previewStale={
-          previewRevision !== null &&
-          (previewRevision !== draft.revision || dirty)
-        }
-        readonly={readonly}
-        allowPrint={actions.showDocuments}
-        previewPrintAllowed={actions.canPrintCurrentPreview}
-        canManage={context.user.role !== "VIEWER"}
-        onChanged={() => void reload()}
-      />
+      {(draft.kind !== "PERSON" || personStage === "summary" || readonly) && (
+        <FilesPanel
+          requestId={id}
+          draft={draft}
+          refresh={refreshFiles}
+          previewStale={
+            previewRevision !== null &&
+            (previewRevision !== draft.revision || dirty)
+          }
+          readonly={readonly}
+          allowPrint={actions.showDocuments}
+          previewPrintAllowed={actions.canPrintCurrentPreview}
+          canManage={context.user.role !== "VIEWER"}
+          onChanged={() => void reload()}
+        />
+      )}
       <RequestActivity
         requestId={id}
         role={context.user.role}
@@ -3098,6 +3374,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           requestId={id}
           bundleEvent={draft.events?.length === 1 ? draft.events[0] : undefined}
           existingDraft={draft}
+          company={requestEmployer}
           existingImportIds={draft.items.flatMap((item) =>
             item.importId ? [item.importId] : [],
           )}
@@ -3125,16 +3402,46 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       )}{" "}
       {photoRecipientId && !readonly && (
         <PhotoDialog
+          key={photoRecipientId}
           onClose={() => setPhotoRecipientId(null)}
-          onSaved={(assetId) => {
+          onSaved={async (assetId, { signal }) => {
             const recipient = current.current?.items.find(
               (item) => item.id === photoRecipientId,
             );
-            if (recipient)
-              editRecipient({ ...recipient, photoAssetId: assetId });
-            setPhotoRecipientId(null);
+            if (!recipient || signal.aborted)
+              throw new Error("Получатель изменился. Откройте фото повторно.");
+            const previous = recipient.photoAssetId;
+            editRecipient({ ...recipient, photoAssetId: assetId });
+            try {
+              await flush(false);
+            } catch (caught) {
+              const latest = current.current?.items.find(
+                (item) => item.id === recipient.id,
+              );
+              if (latest?.photoAssetId === assetId)
+                editRecipient({ ...latest, photoAssetId: previous });
+              throw caught;
+            }
           }}
         />
+      )}
+      {targetPreview && targetPreview.revision === draft.revision && (
+        <Modal
+          title="Предпросмотр документа"
+          wide
+          onClose={() => setTargetPreview(null)}
+        >
+          <DocumentPreview
+            requestId={id}
+            draft={draft}
+            source={{ revision: targetPreview.revision }}
+            initialTarget={targetPreview.target}
+            onIssue={(issue) => {
+              setTargetPreview(null);
+              focusIssue(issue);
+            }}
+          />
+        </Modal>
       )}
       {documentTargets && !readonly && (
         <TrainingBundleDialog

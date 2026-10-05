@@ -1,0 +1,91 @@
+{
+  "schema": "TARGET_PINNED_ISSUER_REGRESSION_1",
+  "capturedUtc": "2026-10-05T19:28:22.8902033Z",
+  "synthetic": true,
+  "productionTouched": false,
+  "browserVerified": false,
+  "database": "demo_test_details_regression",
+  "afterBuild": "9YDzL8TUp7IGaNOn-Ij1u",
+  "sourceDigests": [
+    {
+      "path": "apps/api/src/requests.ts",
+      "sha256": "ac09b9e70f1df3a0e1e77be4872e9c604758bac2f255f92f42d84c66bacbecc8"
+    },
+    {
+      "path": "tests/integration/target-preview.test.ts",
+      "sha256": "dbb610a827532221531c980bd00f6f21fcd5ef3653433ebcbf938e22e8b97185"
+    }
+  ],
+  "attempts": [
+    {
+      "phase": "RED",
+      "status": "EXPECTED_FAILURE",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/target-preview.test.ts",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "exitCode": 1,
+      "wallMs": 1487.0017,
+      "reason": "Pinned unapproved issuer incorrectly allowed; expected rejection was absent",
+      "privateLog": ".runtime/operator-details-ux-20261005/pinned-profile-red.log",
+      "privateLogSha256": "e09ea08123aea6f3c6f5c768c53a1d73d34911ad240e7778539712502440b957"
+    },
+    {
+      "phase": "GREEN",
+      "status": "PASS",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/target-preview.test.ts",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "wallMs": 1729.0628,
+      "privateLog": ".runtime/operator-details-ux-20261005/pinned-profile-green.log",
+      "privateLogSha256": "23eb6870edc51d0e39cb7a1ff192a133d73c349d01e00e6aac6059b0020e8061"
+    },
+    {
+      "phase": "AFTER_FINAL_BUILD",
+      "status": "PASS",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/target-preview.test.ts",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "wallMs": 2300.6728,
+      "privateLog": ".runtime/operator-details-ux-20261005/pinned-profile-final.log",
+      "privateLogSha256": "303b455a10ff37f992ba3b4bbe81c7ab89ec6732830cd3386660db72b5796f43"
+    }
+  ],
+  "supportingChecks": [
+    {
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/target-preview.test.ts",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm --filter @demo/api typecheck",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm exec eslint apps/api/src/requests.ts tests/integration/target-preview.test.ts",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check -- apps/api/src/requests.ts tests/integration/target-preview.test.ts",
+      "status": "PASS",
+      "exitCode": 0
+    }
+  ],
+  "assertions": [
+    "Approved global issuer does not hide unapproved selected pinned event issuer",
+    "Approved global issuer does not hide selected pinned event issuer with an unbroken 81-character name",
+    "Errors map to the selected events.<id>.profile path",
+    "Issuer-only validation never adds technical NO_RECIPIENTS errors",
+    "The same invalid pinned profiles in another course do not block the selected form",
+    "Rejected preview creates no jobs or snapshots and preserves request and sequences",
+    "No issuance or issued documents are created"
+  ]
+}

@@ -35,7 +35,7 @@ async function fixture(
     id: requestId,
     revision: 0,
     status: "DRAFT",
-    kind: "PERSON",
+    kind: "COMPANY",
     title: "Синтетическая проверка удобства заявки",
     customerId: null,
     demoMode: true,
@@ -151,7 +151,9 @@ for (const [kind, label] of [
       })
       .click();
     await expect(
-      page.getByLabel("ФИО, строка 1", { exact: true }),
+      page.getByLabel(kind === "PERSON" ? "ФИО" : "ФИО, строка 1", {
+        exact: true,
+      }),
     ).toBeVisible();
     expect(state.created).toHaveLength(1);
     expect(state.created[0].kind).toBe(kind);
@@ -165,7 +167,7 @@ for (const [kind, label] of [
       page.getByRole("button", {
         name: /Настройки обучения получателя 1: Выбрать обучение/,
       }),
-    ).toBeVisible();
+    ).toHaveCount(kind === "COMPANY" ? 1 : 0);
     await expect(
       page.getByLabel("Название компании", { exact: true }),
     ).toHaveCount(kind === "COMPANY" ? 1 : 0);
@@ -188,7 +190,7 @@ test("optional worker bundle keeps one shared protocol when a recipient is added
     .click();
   await expect.poll(() => state.current().trainingDefaults?.length).toBe(1);
   await page
-    .getByRole("button", { name: "Добавить строку", exact: true })
+    .getByRole("button", { name: "Добавить сотрудника", exact: true })
     .click();
   await expect.poll(() => state.current().items.length).toBe(2);
   const draft = state.current();
@@ -201,7 +203,8 @@ test("optional worker bundle keeps one shared protocol when a recipient is added
       templateId: "biot-worker-card",
       protocolMode: "GROUP",
       eventId: draft.events![0].id,
-      outcome: { status: "UNKNOWN" },
+      outcome: { status: "PASSED" },
+      fieldOrigins: { result: "COURSE", outcome: "AUTO" },
     });
   }
   await page
@@ -214,10 +217,7 @@ test("optional worker bundle keeps one shared protocol when a recipient is added
     exact: true,
   });
   await expect(
-    dialog.getByText(
-      "Сейчас назначено 1 из 1 · всем.",
-      { exact: true },
-    ),
+    dialog.getByText("Сейчас назначено 1 из 1 · всем.", { exact: true }),
   ).toBeVisible();
   await expect(
     dialog.getByRole("checkbox", { name: /^Безопасность и охрана труда/ }),
@@ -244,10 +244,7 @@ test("row and bulk document choices add only missing forms and retain manual dat
     exact: true,
   });
   await expect(
-    dialog.getByText(
-      "Сейчас назначено 1 из 1 · всем.",
-      { exact: true },
-    ),
+    dialog.getByText("Сейчас назначено 1 из 1 · всем.", { exact: true }),
   ).toBeVisible();
   await expect(
     dialog.getByRole("checkbox", { name: /^Пожарно-технический минимум/ }),
@@ -341,7 +338,10 @@ test("row and bulk document choices add only missing forms and retain manual dat
     dialog.getByRole("checkbox", { name: /^Промышленная безопасность/ }),
   ).toBeChecked();
   await expect(
-    dialog.getByRole("button", { name: "Добавить обучение и комплект", exact: true }),
+    dialog.getByRole("button", {
+      name: "Добавить обучение и комплект",
+      exact: true,
+    }),
   ).toBeDisabled();
   await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
   await expect(dialog).toHaveCount(0);

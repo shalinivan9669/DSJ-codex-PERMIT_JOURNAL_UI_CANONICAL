@@ -1,5 +1,6 @@
 import { expect, test, type Page, type Locator } from "@playwright/test";
 import fs from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { newAssignment, newRecipient, type Draft } from "../lib/types";
 import { loginIsolated } from "./operator-full-fix-session";
@@ -52,10 +53,11 @@ async function createFixture(
   headers: Record<string, string>,
   count: number,
 ) {
+  const eventId = randomUUID();
   const response = await page.request.post("/api/print-requests", {
     headers,
     data: {
-      kind: "PERSON",
+      kind: "COMPANY",
       title: `Синтетический аудит оператора · ${count} получателей · ${Date.now()}`,
       customerId: null,
       demoMode: true,
@@ -63,7 +65,7 @@ async function createFixture(
       commonFields: { documentDate: "2026-09-29" },
       events: [
         {
-          id: `table-pb-${count}`,
+          id: eventId,
           title: "Синтетическая группа ПБ",
           protocolTemplateId: "pb-protocol",
           protocolMode: "GROUP",
@@ -86,7 +88,7 @@ async function createFixture(
         assignments: [
           {
             ...newAssignment("pb-card"),
-            eventId: `table-pb-${count}`,
+            eventId: eventId,
             protocolMode: "GROUP",
           },
         ],
@@ -97,7 +99,10 @@ async function createFixture(
   const created: Draft = await response.json();
   await page.goto(`/requests/${created.id}/edit`);
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(count);
-  return readDraft(page, created.id);
+  const saved = await readDraft(page, created.id);
+  expect(saved.items).toHaveLength(count);
+  expect(saved.items.every((item) => item.assignments.every((assignment) => assignment.outcome?.status === "PASSED"))).toBe(true);
+  return saved;
 }
 for (const count of [100, 150, 250]) {
   test(`${count} real recipients: keyboard editing, scoped selection, bilingual fields, autosave and reload`, async ({
@@ -245,9 +250,8 @@ for (const count of [100, 150, 250]) {
     });
     await page.reload();
     await expect(page.locator(".operator-grid tbody tr")).toHaveCount(count);
-    await expect(page.locator(".operator-result-reminder")).toContainText(
-      `Не подтверждены ${count} результатов по обучениям у ${count} получателей.`,
-    );
+    await expect(page.locator(".operator-result-reminder")).toHaveCount(0);
+    expect((await readDraft(page, requestId)).items).toEqual(expectedItems);
     await expect(lastName).toHaveValue(expectedItems[count - 1].fullNameRu);
     await expect(lastPosition).toHaveValue(
       expectedItems[count - 1].positionRu!,

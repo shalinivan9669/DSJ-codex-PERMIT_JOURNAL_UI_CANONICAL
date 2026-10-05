@@ -102,6 +102,7 @@ test("isolated issuer: actual worker and ITR categories generate all four curren
               eventId,
               protocolMode: "GROUP",
               templateId: index ? "biot-itr-certificate" : "biot-worker-card",
+              biotCategory: index ? "OHS_SPECIALIST_SPECIAL" : "WORKER",
               result: "Сдал / Тапсырды (ТЕСТ)",
               outcome: {
                 status: "PASSED",
@@ -132,8 +133,83 @@ test("isolated issuer: actual worker and ITR categories generate all four curren
       page.getByText("Данные прошли проверку", { exact: true }),
     ).toBeVisible();
     await page
-      .getByRole("button", { name: "Посмотреть документы", exact: true })
+      .getByRole("button", {
+        name: "Предпросмотр любого документа",
+        exact: true,
+      })
       .click();
+    const previewDialog = page.getByRole("dialog", {
+      name: "Предпросмотр документа",
+      exact: true,
+    });
+    await expect(previewDialog).toBeVisible();
+    const viewer = previewDialog.getByRole("region", {
+      name: "Предпросмотр назначенных документов",
+      exact: true,
+    });
+    await expect(viewer).toBeVisible();
+    const previewDraft = await read();
+    const previewTargets = [
+      ...previewDraft.items.flatMap((person) =>
+        person.assignments.map((assignment) => ({
+          kind: "ASSIGNMENT" as const,
+          rowId: person.id,
+          assignmentId: assignment.id,
+        })),
+      ),
+      ...previewDraft.events!.map((event) => ({
+        kind: "GROUP_PROTOCOL" as const,
+        eventId: event.id,
+      })),
+    ];
+    expect(previewTargets).toHaveLength(4);
+    const renderedPreviews: Array<{
+      target: unknown;
+      pdf: string;
+      docx: string;
+    }> = [];
+    for (const target of previewTargets) {
+      await viewer
+        .getByLabel("Человек и форма документа", { exact: true })
+        .selectOption(JSON.stringify(target));
+      const pendingPreview = page.waitForResponse(
+        (response) =>
+          response.url().endsWith(`/print-requests/${id}/preview`) &&
+          response.request().method() === "POST",
+      );
+      await viewer
+        .getByRole("button", { name: "Создать предпросмотр", exact: true })
+        .click();
+      const response = await pendingPreview;
+      expect(response.ok(), await response.text()).toBe(true);
+      expect(response.request().postDataJSON()).toMatchObject({
+        target,
+        expectedRevision: previewDraft.revision,
+      });
+      await expect(
+        viewer.getByRole("img", { name: /^Страница 1 из/ }),
+      ).toBeVisible({ timeout: 240000 });
+      const pdf = viewer.getByRole("link", {
+        name: "Открыть PDF",
+        exact: true,
+      });
+      const docx = viewer.getByRole("link", {
+        name: "Скачать DOCX",
+        exact: true,
+      });
+      await expect(pdf).toBeVisible();
+      await expect(docx).toBeVisible();
+      renderedPreviews.push({
+        target,
+        pdf: (await pdf.getAttribute("href"))!,
+        docx: (await docx.getAttribute("href"))!,
+      });
+    }
+    expect(new Set(renderedPreviews.map((entry) => entry.pdf)).size).toBe(4);
+    expect(new Set(renderedPreviews.map((entry) => entry.docx)).size).toBe(4);
+    expect((await read()).documents).toHaveLength(0);
+    expect((await read()).issuances).toHaveLength(0);
+    await page.keyboard.press("Escape");
     await expect
       .poll(
         async () =>
@@ -245,6 +321,7 @@ test("isolated issuer: actual worker and ITR categories generate all four curren
           initialFixtureKnownSyntheticFacts: true,
           directorDecisionThroughUi: true,
           currentForms: issued.documents,
+          renderedPreviews,
           artifacts,
           unsignedOfficialDeliveryCode: "ISSUANCE_NOT_COMPLETE",
           ncaSignatureAcceptanceVerified: false,

@@ -1,7 +1,4 @@
-import {
-  legacyPrintFixture,
-  openLegacyPersonal,
-} from "./operator-legacy-lifecycle-fixture";
+import { legacyPrintFixture } from "./operator-legacy-lifecycle-fixture";
 import { newAssignment, type Assignment } from "../lib/types";
 test.use({ trace: "off" });
 import { test, expect } from "@playwright/test";
@@ -13,8 +10,9 @@ import https from "node:https";
 import type { TLSSocket } from "node:tls";
 
 const evidence = path.resolve(
-  process.env.DEMO_E2E_EVIDENCE ||
-    "../../docs/evidence/commercial-acceptance/browser/generated-photo",
+  process.env.DEMO_E2E_EVIDENCE
+    ? path.join(process.env.DEMO_E2E_EVIDENCE, "generated-photo")
+    : "../../docs/evidence/commercial-acceptance/browser/generated-photo",
 );
 const fixture = process.env.DEMO_E2E_PORTRAIT;
 const template = process.env.DEMO_E2E_PHOTO_TEMPLATE || "pb-card";
@@ -134,9 +132,10 @@ test("synthetic photo fixture: actual upload, crop, reload, preview, director de
       draft.items[0].assignments = templates.map((id) => ({
         ...newAssignment(id as Assignment["templateId"]),
         documentDate: "2026-10-03",
-        protocolDate: "2026-10-02",
+        protocolDate: "2026-10-03",
         trainingStart: "2026-10-01",
         trainingEnd: "2026-10-02",
+        ...(!id.startsWith("biot-") ? { hours: "16" } : {}),
         trainingSubject: "Тестовая программа безопасности",
         result: "Сдал / Тапсырды (ТЕСТ)",
         outcome: {
@@ -152,8 +151,10 @@ test("synthetic photo fixture: actual upload, crop, reload, preview, director de
           : {}),
       }));
     });
-    const personal = await openLegacyPersonal(page);
-    await personal.getByRole("button", { name: "Фото", exact: true }).click();
+    await page
+      .locator(".person-editor")
+      .getByRole("button", { name: "Добавить фото", exact: true })
+      .click();
     const photoDialog = page.getByRole("dialog", {
       name: "Фото для печати",
       exact: true,
@@ -170,13 +171,9 @@ test("synthetic photo fixture: actual upload, crop, reload, preview, director de
       .getByRole("button", { name: "Сохранить фото", exact: true })
       .click();
     await expect(photoDialog).toHaveCount(0);
-    await personal
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
-      .click();
     await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
     await page.reload();
-    const readback = await openLegacyPersonal(page);
-    const img = readback.getByRole("img", {
+    const img = page.locator(".person-editor").getByRole("img", {
       name: "Фото получателя",
       exact: true,
     });
@@ -185,9 +182,6 @@ test("synthetic photo fixture: actual upload, crop, reload, preview, director de
     expect(photo.ok()).toBe(true);
     const photoBytes = await photo.body();
     await fs.writeFile(path.join(evidence, "normalized-photo.png"), photoBytes);
-    await readback
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
-      .click();
     await page
       .getByRole("button", { name: "Проверить данные", exact: true })
       .click();
@@ -195,38 +189,47 @@ test("synthetic photo fixture: actual upload, crop, reload, preview, director de
       page.getByText("Данные прошли проверку", { exact: true }),
     ).toBeVisible();
     await page
-      .getByRole("button", { name: "Посмотреть документы", exact: true })
-      .click();
-    await expect
-      .poll(
-        async () =>
-          (await f.read()).artifacts.some(
-            (a) => a.provenance === "PREVIEW" && a.format === "PDF",
-          ),
-        { timeout: 240000 },
-      )
-      .toBe(true);
-    await page
-      .locator(".files-panel")
-      .getByRole("button", { name: "Обновить", exact: true })
-      .click();
-    await page
-      .getByRole("button", { name: "Просмотр PDF", exact: true })
+      .locator(".person-editor")
+      .getByRole("button", { name: /^Предпросмотр:/ })
       .first()
       .click();
-    const previewDialog = page.getByRole("dialog", { name: "Предпросмотр PDF", exact: true });
-    await expect(previewDialog.getByRole("img", { name: /^Страница 1 из/ })).toBeVisible();
+    const previewDialog = page.getByRole("dialog", {
+      name: "Предпросмотр документа",
+      exact: true,
+    });
+    await previewDialog
+      .getByRole("button", { name: "Создать предпросмотр", exact: true })
+      .click();
+    await expect(
+      previewDialog.getByRole("img", { name: /^Страница 1 из/ }),
+    ).toBeVisible({ timeout: 150000 });
     const preview = await page.request.get(
-      (await previewDialog.getByRole("link", { name: "Открыть PDF отдельно", exact: true }).getAttribute("href"))!,
+      (await previewDialog
+        .getByRole("link", { name: "Открыть PDF", exact: true })
+        .getAttribute("href"))!,
     );
     expect(preview.headers()["content-type"]).toContain("application/pdf");
     await fs.writeFile(
       path.join(evidence, "browser-preview.pdf"),
       await preview.body(),
     );
+    const previewWord = await page.request.get(
+      (await previewDialog
+        .getByRole("link", { name: "Скачать DOCX", exact: true })
+        .getAttribute("href"))!,
+    );
+    expect(previewWord.ok()).toBe(true);
+    expect(
+      mediaEntries(await previewWord.body()).some(
+        (media) => sha(media.bytes) === sha(photoBytes),
+      ),
+    ).toBe(true);
+    await fs.writeFile(
+      path.join(evidence, "browser-preview.docx"),
+      await previewWord.body(),
+    );
     await page.screenshot({ path: path.join(evidence, "pdf-preview.png") });
-    await page
-      .getByRole("dialog")
+    await previewDialog
       .getByRole("button", { name: "Закрыть диалог", exact: true })
       .click();
     const snapshot = await f.issue();

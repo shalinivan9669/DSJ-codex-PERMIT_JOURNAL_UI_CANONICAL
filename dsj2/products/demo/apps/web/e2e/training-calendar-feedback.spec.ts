@@ -116,20 +116,44 @@ async function fixture(
 }
 async function open(page: Page) {
   await page.goto(`/requests/${requestId}/edit`);
-  await page
-    .getByRole("button", { name: "Детали получателя 1", exact: true })
-    .click();
+  await openDocument(page);
   await expect(
     page.getByLabel("Дата документа", { exact: true }).first(),
   ).toHaveValue("2026-03-26");
 }
 
+async function openDocument(page: Page) {
+  await page
+    .locator(".person-document-list > li")
+    .filter({
+      has: page.getByRole("button", {
+        name: "Предпросмотр: ПТМ — удостоверение",
+        exact: true,
+      }),
+    })
+    .getByRole("button", { name: "Параметры", exact: true })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Параметры документа", exact: true }),
+  ).toBeVisible();
+}
+
 async function requestSchedule(page: Page) {
-  await page.getByRole("button", { name: "Вернуться к списку", exact: true }).click();
-  await page.getByRole("button", { name: "Дополнительные действия", exact: true }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Общие даты и протоколы", exact: true }).click();
+  await page
+    .getByRole("dialog", { name: "Параметры документа", exact: true })
+    .getByRole("button", { name: "Готово", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Дополнительные действия", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Общие даты и протоколы", exact: true })
+    .click();
   const context = page.getByRole("dialog");
-  await context.getByText("Правило расчёта периода обучения", { exact: true }).click();
+  await context
+    .getByText("Правило расчёта периода обучения", { exact: true })
+    .click();
   return context;
 }
 
@@ -175,12 +199,20 @@ test("center schedule renders a compact range, preserves a retroactive document 
     )
     .toBe("MANUAL");
   await dates.locator("summary").first().click();
-  await page
-    .getByRole("button", { name: "Вернуться к списку", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Готово", exact: true }).click();
   const invalid = resolveDraft(state.current(), { trainingDateRule: schedule });
-  expect(invalid.issues).toEqual(expect.arrayContaining([expect.objectContaining({ code: "TRAINING_BEFORE_DOCUMENT", path: "items.0.assignments.0.trainingEnd", rowId: "person-one" })]));
-  await page.getByRole("button", { name: "Проверить данные", exact: true }).click();
+  expect(invalid.issues).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        code: "TRAINING_BEFORE_DOCUMENT",
+        path: "items.0.assignments.0.trainingEnd",
+        rowId: "person-one",
+      }),
+    ]),
+  );
+  await page
+    .getByRole("button", { name: "Проверить данные", exact: true })
+    .click();
   await page
     .getByRole("button", {
       name: /^ПТМ — удостоверение: Окончание обучения должно быть раньше даты документа/,
@@ -190,9 +222,7 @@ test("center schedule renders a compact range, preserves a retroactive document 
   await expect(end).toHaveAttribute("aria-invalid", "true");
   await expect(end).toHaveValue("2025-01-08");
   await page.reload();
-  await page
-    .getByRole("button", { name: "Детали получателя 1", exact: true })
-    .click();
+  await openDocument(page);
   await expect(
     page.getByLabel("Дата документа", { exact: true }).first(),
   ).toHaveValue("2025-01-08");
@@ -243,20 +273,22 @@ test("a new schedule requires entered daily hours and persists the selected cale
   await expect(review).toBeEnabled();
   expect(state.current().commonFields?.trainingDateRule).toBeUndefined();
   await review.click();
-  await context.getByRole("button", { name: "Применить правило расчёта", exact: true }).click();
-  await context.getByRole("button", { name: "Закрыть диалог", exact: true }).click();
+  await context
+    .getByRole("button", { name: "Применить правило расчёта", exact: true })
+    .click();
+  await context
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
+    .click();
   await expect
     .poll(() => state.current().commonFields?.trainingDateRule?.calendarVersion)
     .toBe(KZ_TRAINING_CALENDAR_VERSION);
   expect(state.current().items[0].assignments[0].trainingStart).toBe("");
-  await page.getByRole("button", { name: "Детали получателя 1", exact: true }).click();
+  await openDocument(page);
   await expect(
     page.locator(".document-date-details summary").first(),
   ).toContainText("19.03.2026 — 20.03.2026");
   await page.reload();
-  await page
-    .getByRole("button", { name: "Детали получателя 1", exact: true })
-    .click();
+  await openDocument(page);
   await expect(
     page.locator(".document-date-details summary").first(),
   ).toContainText("19.03.2026 — 20.03.2026");

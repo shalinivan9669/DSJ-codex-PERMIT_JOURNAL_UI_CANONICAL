@@ -1,5 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
-import { documentPlan, resolveDraft } from "@demo/contracts";
+import {
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+  documentPlan,
+  resolveDraft,
+} from "@demo/contracts";
 import { newRecipient, type Draft } from "../lib/types";
 
 const requestId = "mixed-feedback";
@@ -149,7 +153,7 @@ function assertMixedAssignments(draft: Draft) {
     expect(draft.items[index].assignments).toHaveLength(2);
     expect(draft.items[index].assignments[0]).toMatchObject({
       templateId,
-      biotCategory: index ? "OHS_SPECIALIST_SPECIAL" : "WORKER",
+      biotCategory: index ? "ITR_STANDARD" : "WORKER",
       documentDate: manualDates[index],
       trainingStart: manualStarts[index],
       fieldOrigins: { documentDate: "MANUAL", trainingStart: "MANUAL" },
@@ -195,7 +199,7 @@ test("one company request saves workers and ITR with separate forms, categories 
           exact: true,
         })
         .first(),
-    ).toHaveValue(index ? "OHS_SPECIALIST_SPECIAL" : "WORKER");
+    ).toHaveValue(index ? "ITR_STANDARD" : "WORKER");
     await page
       .getByRole("button", { name: "Вернуться к списку", exact: true })
       .click();
@@ -211,6 +215,9 @@ test("a mixed request joins existing documents to separate compatible group prot
   await selectDocumentsAndDates(page, current);
   const assignmentIds = current().items.map(
     (person) => person.assignments[0].id,
+  );
+  const outcomes = current().items.map((person) =>
+    structuredClone(person.assignments[0].outcome),
   );
   const eventIds = current().events!.map((event) => event.id);
   await page.locator("#request-training > summary").click();
@@ -275,8 +282,13 @@ test("a mixed request joins existing documents to separate compatible group prot
       id: assignmentIds[index],
       protocolMode: "GROUP",
       eventId: draft.events![index].id,
-      outcome: { status: "UNKNOWN" },
+      outcome: {
+        status: "PASSED",
+        source: DEFAULT_POSITIVE_OUTCOME_SOURCE,
+      },
+      fieldOrigins: { outcome: "AUTO" },
     });
+    expect(person.assignments[0].outcome).toEqual(outcomes[index]);
   }
   const plan = documentPlan(resolveDraft(draft).draft);
   expect(plan.groups).toHaveLength(2);

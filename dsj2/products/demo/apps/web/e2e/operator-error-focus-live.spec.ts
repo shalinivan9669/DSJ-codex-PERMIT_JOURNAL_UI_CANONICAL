@@ -30,7 +30,7 @@ test("fresh 100-row draft shows validation heading at keyboard focus and opens e
     eventId = randomUUID(),
     started = performance.now();
   const input = draftSchema.parse({
-    kind: "PERSON",
+    kind: "COMPANY",
     demoMode: true,
     schemaVersion: 2,
     commonFields: { documentDate: "2026-10-03" },

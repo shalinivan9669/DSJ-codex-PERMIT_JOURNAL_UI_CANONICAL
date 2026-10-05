@@ -10,7 +10,7 @@ async function workspace(page: Page, count = 150) {
     id: "operator-table",
     revision: 0,
     status: "DRAFT",
-    kind: "PERSON",
+    kind: "COMPANY",
     title: "Проверка ввода списка",
     customerId: null,
     demoMode: true,
@@ -151,7 +151,7 @@ test("150 rows: keyboard entry, search selection, explicit card and new-row focu
     .click();
   await expect(first).toHaveValue("Иванов Иван");
   await page
-    .getByRole("button", { name: "Добавить строку", exact: true })
+    .getByRole("button", { name: "Добавить сотрудника", exact: true })
     .click();
   await expect(
     page.getByLabel("ФИО, строка 151", { exact: true }),
@@ -279,7 +279,7 @@ test("a search result stays available while its name is corrected; readonly docu
     page.getByRole("complementary", { name: "Редактор получателя" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Добавить строку", exact: true }),
+    page.getByRole("button", { name: "Добавить сотрудника", exact: true }),
   ).toHaveCount(0);
 });
 
@@ -289,8 +289,8 @@ test("250 rows stay within a scroll region at desktop and narrow widths", async 
   await workspace(page, 250);
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(250);
   await expect(
-    page.getByRole("button", { name: "Добавить строку", exact: true }),
-  ).toBeDisabled();
+    page.getByRole("button", { name: "Добавить сотрудника", exact: true }),
+  ).toBeEnabled();
   await page.locator(".operator-grid").scrollIntoViewIfNeeded();
   await page.screenshot({ path: testInfo.outputPath("table-desktop.png") });
   const width = await page.evaluate(() => ({
@@ -307,15 +307,22 @@ test("250 rows stay within a scroll region at desktop and narrow widths", async 
   await expect(
     page.getByLabel("ФИО, строка 250", { exact: true }),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Добавить сотрудника", exact: true })
+    .click();
+  await expect(
+    page.getByLabel("ФИО, строка 251", { exact: true }),
+  ).toBeFocused();
 });
 
-test("a new empty request starts at the name field without scrolling through settings", async ({
+test("a new empty person request starts at the name field without scrolling through settings", async ({
   page,
 }) => {
   const current = await workspace(page, 1);
+  current().kind = "PERSON";
   current().items[0].fullNameRu = "";
   await page.reload();
-  const name = page.getByLabel("ФИО, строка 1", { exact: true });
+  const name = page.getByLabel("ФИО", { exact: true });
   await expect(name).toBeFocused();
   const rect = await name.boundingBox();
   expect(rect!.y).toBeGreaterThanOrEqual(0);

@@ -1,4 +1,3 @@
-import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -18,22 +17,6 @@ async function save(page: Page) {
   await expect(page.locator(".save-indicator")).toContainText(
     "Рабочая версия сохранена",
   );
-}
-async function addTraining(page: Page, row: number, name: RegExp) {
-  await page
-    .getByRole("button", {
-      name: new RegExp(`^Настройки обучения получателя ${row}:`),
-    })
-    .click();
-  const modal = page.getByRole("dialog", {
-    name: "Назначить обучение",
-    exact: true,
-  });
-  await modal.getByRole("checkbox", { name }).check();
-  await modal
-    .getByRole("button", { name: "Добавить обучение и комплект", exact: true })
-    .click();
-  await expect(modal).toHaveCount(0);
 }
 async function extraSettings(page: Page) {
   await page
@@ -65,36 +48,48 @@ test("V03 exact three source people and two services preserve the individual pos
   await fs.mkdir(evidence, { recursive: true });
   await loginIsolated(page);
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
+  await page.getByRole("radio", { name: /^Физическое лицо/ }).check();
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
   await page
-    .getByLabel("ФИО, строка 1", { exact: true })
+    .getByLabel("ФИО", { exact: true })
     .fill("Один Синтетический Человек");
+  await page.getByLabel("Должность", { exact: true }).fill("Рабочий");
+  await expandCommon(
+    page.locator(".person-editor details.person-additional").first(),
+  );
   await page
-    .getByRole("button", { name: "Детали получателя 1", exact: true })
-    .click();
-  let modal = page.getByRole("dialog");
-  await modal.getByRole("tab", { name: "Личные данные", exact: true }).click();
-  await expandCommon(modal.locator("details.person-fields-wide").first());
-  await modal
+    .locator(".person-editor")
     .locator('[data-field-path="items.0.fullNameKz"]')
     .fill("Бір Синтетикалық Адам");
-  await modal.getByRole("tab", { name: /^Документы/ }).click();
-  const first = modal.locator(".assignment-list > details").first();
-  await expandCommon(first);
-  await first
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
+  await page.getByRole("button", { name: "Рабочий", exact: true }).click();
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
+  await page.getByRole("button", { name: "БиОТ", exact: true }).click();
+  await page
+    .getByRole("region", { name: "Параметры БиОТ", exact: true })
+    .getByRole("button", { name: "Параметры", exact: true })
+    .first()
+    .click();
+  const modal = page.getByRole("dialog", {
+    name: "Параметры документа",
+    exact: true,
+  });
+  await modal
     .getByRole("tab", { name: "Обучение и результат", exact: true })
     .click();
-  await first
+  await modal
     .getByLabel("Подтверждённый результат / оценка", { exact: true })
     .fill("Подтверждён только первый результат");
-  await modal
-    .getByRole("button", { name: "Вернуться к списку", exact: true })
-    .click();
-  await addTraining(page, 1, /^Промышленная безопасность/);
-  const singleCommon = await commonSettings(page);
+  await modal.getByRole("button", { name: "Готово", exact: true }).click();
+  await page.getByRole("button", { name: "ПБ", exact: true }).click();
+  await page.getByRole("button", { name: "Готово", exact: true }).click();
+  const singleCommon = await extraSettings(page);
   await singleCommon
     .getByLabel("Программа / тема для заявки", { exact: true })
     .fill("Общий источник для двух обучений");
+  await singleCommon
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
+    .click();
   await save(page);
   const singleId = /requests\/([^/]+)/.exec(page.url())![1];
   await page.reload();
@@ -102,6 +97,8 @@ test("V03 exact three source people and two services preserve the individual pos
     await page.request.get(`/api/print-requests/${singleId}/resolved`)
   ).json();
   expect(single.draft.items).toHaveLength(1);
+  expect(single.draft.kind).toBe("PERSON");
+  expect(single.draft.items[0].fullNameKz).toBe("Бір Синтетикалық Адам");
   expect(single.draft.items[0].assignments).toHaveLength(4);
   expect(
     single.draft.items[0].assignments.every(
@@ -119,13 +116,14 @@ test("V03 exact three source people and two services preserve the individual pos
     "Подтверждён только первый результат",
     "Подтверждён только первый результат",
   ]);
-  expect(
-    single.draft.items[0].assignments
-      .filter((assignment: { templateId: string }) =>
-        assignment.templateId.startsWith("pb-"),
-      )
-      .every((assignment: { result: string }) => assignment.result === ""),
-  ).toBe(true);
+  for (const assignment of single.draft.items[0].assignments.filter(
+    (entry: { templateId: string }) => entry.templateId.startsWith("pb-"),
+  )) {
+    expect(assignment.result).not.toBe("Подтверждён только первый результат");
+    expect(assignment.result).not.toBe("");
+    expect(assignment.outcome.status).toBe("PASSED");
+    expect(assignment.fieldOrigins.result).toBe("COURSE");
+  }
 
   const source = JSON.parse(
     await fs.readFile(
@@ -144,10 +142,47 @@ test("V03 exact three source people and two services preserve the individual pos
   expect(people).toHaveLength(3);
   expect(scenario.sharedProgramCount).toBe(2);
   await page.goto("/requests/new");
+  // The bulk-import scenario is a company request; the first scenario above
+  // remains a true individual flow with no company or repeated identity.
+  await page.getByRole("radio", { name: /^Организация/ }).check();
   await page.getByRole("button", { name: "Далее", exact: true }).click();
   await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
+    .getByRole("combobox", { name: "Форма компании", exact: true })
+    .selectOption("NONE");
+  await page
+    .getByLabel("Название компании", { exact: true })
+    .fill(people[0].workplaceRu);
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
+  await page
+    .getByRole("dialog", { name: "Импорт получателей", exact: true })
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
     .click();
+  await expandCommon(
+    page.locator(".request-organization-selected-compact details"),
+  );
+  await page
+    .getByRole("button", {
+      name: "Изменить общую карточку организации",
+      exact: true,
+    })
+    .click();
+  const company = page.getByRole("dialog", {
+    name: "Реквизиты организации",
+    exact: true,
+  });
+  await expandCommon(company.locator("details.organization-extra-name"));
+  await company
+    .getByRole("checkbox", {
+      name: "Собственное наименование на казахском отличается",
+      exact: true,
+    })
+    .check();
+  await company
+    .getByLabel("Собственное наименование · KZ", { exact: true })
+    .fill(people[0].workplaceKz);
+  await company.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(company).toHaveCount(0);
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   const columns = [
     "externalPersonKey",
     "personnelNumber",
@@ -171,8 +206,9 @@ test("V03 exact three source people and two services preserve the individual pos
       ].join("\n"),
     );
   await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
     .click();
+  await expandCommon(page.locator("details.import-document-options"));
   await page
     .getByRole("combobox", {
       name: "Документ для импортируемых строк",
@@ -213,6 +249,23 @@ test("V03 exact three source people and two services preserve the individual pos
         exact: true,
       })
       .click();
+    await expandCommon(
+      panel.locator(
+        'details.outcome-entry:has(> summary[data-training-field="outcomes"])',
+      ),
+    );
+    await panel
+      .getByLabel("Известный результат", { exact: true })
+      .selectOption("UNKNOWN");
+    await panel
+      .getByLabel("Источник подтверждения", { exact: true })
+      .fill(`V03 ${direction}: результат явно ещё не подтверждён`);
+    await panel
+      .getByRole("button", {
+        name: "Применить результат · 3 человек",
+        exact: true,
+      })
+      .click();
   }
   await panel
     .getByRole("button", { name: "Закрыть диалог", exact: true })
@@ -226,16 +279,8 @@ test("V03 exact three source people and two services preserve the individual pos
   ])
     await common.getByLabel(label, { exact: true }).fill(value);
   await page
-    .getByRole("button", { name: "Детали получателя 3", exact: true })
-    .click();
-  modal = page.getByRole("dialog");
-  await modal.getByRole("tab", { name: "Личные данные", exact: true }).click();
-  await modal
-    .getByLabel("Должность / профессия", { exact: true })
+    .getByLabel("Должность · RU, строка 3", { exact: true })
     .fill(scenario.individualOverride.value);
-  await modal
-    .getByRole("button", { name: "Вернуться к списку", exact: true })
-    .click();
   await save(page);
   const requestId = /requests\/([^/]+)/.exec(page.url())![1];
   const read = async (suffix = "") =>
@@ -260,6 +305,7 @@ test("V03 exact three source people and two services preserve the individual pos
   const persisted = await read(),
     resolved = await read("/resolved");
   expect(persisted.items).toHaveLength(3);
+  expect(persisted.kind).toBe("COMPANY");
   expect(
     persisted.items.map((item: { externalId: string }) => item.externalId),
   ).toEqual(scenario.personKeys);
@@ -286,16 +332,38 @@ test("V03 exact three source people and two services preserve the individual pos
     ).toBe("Общая программа ptm");
     expect(
       item.assignments.every(
-        (assignment: { outcome: { status: string } }) =>
-          assignment.outcome.status === "UNKNOWN",
+        (assignment: {
+          outcome: {
+            status: string;
+            source: string;
+            confirmedBy?: string;
+            confirmedAt?: string;
+          };
+          fieldOrigins: { outcome?: string };
+        }) =>
+          assignment.outcome.status === "UNKNOWN" &&
+          assignment.outcome.source === "" &&
+          !assignment.outcome.confirmedBy &&
+          !assignment.outcome.confirmedAt &&
+          assignment.fieldOrigins.outcome === "MANUAL",
       ),
     ).toBe(true);
   }
+  const validationResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/print-requests/${requestId}/validate`) &&
+      response.request().method() === "POST",
+  );
   await page
     .getByRole("button", { name: "Проверить данные", exact: true })
     .click();
+  const validation = await (await validationResponse).json();
+  expect(validation.valid).toBe(false);
+  expect([
+    ...new Set(validation.issues.map((issue: { code: string }) => issue.code)),
+  ]).toEqual(["OUTCOME_UNCONFIRMED"]);
   await expect(
-    page.getByText("Данные прошли проверку", { exact: true }),
+    page.getByText("Исправьте данные перед оформлением", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByText(
@@ -312,12 +380,8 @@ test("V03 exact three source people and two services preserve the individual pos
   await expect(
     page.getByLabel("Известный результат", { exact: true }),
   ).toHaveValue("UNKNOWN");
-  await page
-    .getByRole("button", { name: "Детали получателя 3", exact: true })
-    .click();
-  await page.getByRole("tab", { name: "Личные данные", exact: true }).click();
   await expect(
-    page.getByLabel("Должность / профессия", { exact: true }),
+    page.getByLabel("Должность · RU, строка 3", { exact: true }),
   ).toHaveValue(scenario.individualOverride.value);
   expect((await read()).documents).toHaveLength(0);
   await page.screenshot({
@@ -339,6 +403,7 @@ test("V03 exact three source people and two services preserve the individual pos
         commonChangeAppliedToAllThree: true,
         otherProgramPreserved: true,
         reloadRetainsUnknownAndWorkRemaining: true,
+        validationBlocksOnlyUnknownOutcomes: true,
         noIssuance: true,
         singlePersonTwoKitsNoRepeatedIdentity: true,
         singlePersonResultNotCopiedToOtherTraining: true,

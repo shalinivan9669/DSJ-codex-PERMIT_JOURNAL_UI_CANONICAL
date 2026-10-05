@@ -1,0 +1,12 @@
+{
+  "requestId": "727e0a9b-7571-4fe7-9d38-90d9036ef522",
+  "returnedIds": [
+    "ed28de04-b9ab-48a7-acd1-8a7e23f1525a",
+    "ed28de04-b9ab-48a7-acd1-8a7e23f1525a"
+  ],
+  "oneStableOperationKey": true,
+  "serverCommitThenConnectionReset": true,
+  "stagedInputSurvivedReload": true,
+  "directoryMatches": 1,
+  "customerAttachedAfterRetry": true
+}

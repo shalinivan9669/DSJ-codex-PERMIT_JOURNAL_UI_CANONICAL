@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, type KeyboardEvent } from "react";
 import { Icon } from "@demo/ui";
 import type { GridField } from "@/lib/grid-paste";
 import type { Recipient } from "@/lib/types";
+import type { RequestEmployer } from "@/lib/recipient-employer-exception";
 import { recipientRowDate } from "@/lib/recipient-row-date";
 import { RecipientGridRow, type GridRowActions } from "./recipient-grid-row";
 import "./recipient-grid.css";
@@ -38,6 +39,7 @@ export type RecipientGridProps = {
   canAdd: boolean;
   active?: boolean;
   issuedAssignments?: readonly { rowId: string; assignmentId: string }[];
+  requestEmployer?: RequestEmployer | null;
 };
 
 const columns: readonly (readonly [GridField, string])[] = [
@@ -72,6 +74,7 @@ export function RecipientGrid({
   canAdd,
   active = true,
   issuedAssignments = [],
+  requestEmployer,
 }: RecipientGridProps) {
   const root = useRef<HTMLDivElement>(null);
   const inputs = useRef(
@@ -304,6 +307,7 @@ export function RecipientGrid({
                 <RecipientGridRow
                   key={item.id}
                   item={item}
+                  requestEmployer={requestEmployer}
                   issuedAssignmentIds={issuedAssignments
                     .filter((entry) => entry.rowId === item.id)
                     .map((entry) => entry.assignmentId)}

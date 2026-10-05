@@ -1,0 +1,115 @@
+{
+  "status": "PASS",
+  "id": "82cf78e8-8034-4336-88b8-f072c7a804ad",
+  "revision": 3,
+  "proposalId": "109b87d7-a3ae-4622-ac62-4b72613a61fb",
+  "issuanceIds": [
+    "abb00167-c80f-4dd4-97e2-c02918be60a5"
+  ],
+  "documents": [
+    {
+      "id": "d77d366b-c3f1-4269-81fb-e8eb418d6cb5",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "abb00167-c80f-4dd4-97e2-c02918be60a5",
+      "requestId": "82cf78e8-8034-4336-88b8-f072c7a804ad",
+      "rowId": "66ba49c2-cf4d-432a-b850-36cc1ccf60fc",
+      "assignmentId": "8b15e893-41c6-4c67-8402-6202a1a7fdab",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "0b9175dc-b6f3-45c4-b741-224aef1f4238",
+      "templateId": "ps-card",
+      "namespace": "PS:CARD",
+      "number": "PS-CARD-00025",
+      "registrationNumber": null,
+      "documentDate": "2026-10-20",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T22:18:55.519Z"
+    },
+    {
+      "id": "69f9de1f-2f84-485d-bb88-eb8ce26431d4",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "abb00167-c80f-4dd4-97e2-c02918be60a5",
+      "requestId": "82cf78e8-8034-4336-88b8-f072c7a804ad",
+      "rowId": "66ba49c2-cf4d-432a-b850-36cc1ccf60fc",
+      "assignmentId": "8b15e893-41c6-4c67-8402-6202a1a7fdab-ps-witness",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "629540c1-bc61-4901-87d5-e4dc58f2a924",
+      "templateId": "ps-witness",
+      "namespace": "PS:WITNESS",
+      "number": "PS-WITNESS-00025",
+      "registrationNumber": "PS-REGISTRATION-00025",
+      "documentDate": "2026-10-20",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T22:18:55.522Z"
+    },
+    {
+      "id": "627b926f-7ca6-4dc5-a02e-00d4c9161066",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "abb00167-c80f-4dd4-97e2-c02918be60a5",
+      "requestId": "82cf78e8-8034-4336-88b8-f072c7a804ad",
+      "rowId": "66ba49c2-cf4d-432a-b850-36cc1ccf60fc",
+      "assignmentId": "8b15e893-41c6-4c67-8402-6202a1a7fdab-ps-protocol",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "21c8f72b-8b66-4b65-955a-6832d06359b0",
+      "templateId": "ps-protocol",
+      "namespace": "PS:PROTOCOL",
+      "number": "PS-PROTOCOL-00006",
+      "registrationNumber": null,
+      "documentDate": "2026-10-18",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T22:18:55.524Z"
+    }
+  ],
+  "files": [
+    {
+      "id": "c783ac1c-3b94-45f2-b9b0-2e577a2d9617",
+      "fileName": "c783ac1c-3b94-45f2-b9b0-2e577a2d9617-ps-card-d77d366b-c3f1-4269-81fb-e8eb418d6cb5.docx",
+      "format": "DOCX",
+      "sha256": "5036c64e8820ca58f90b40719c56cf9edc8e09589e362df30bf3aee6bc68e7f1"
+    },
+    {
+      "id": "a74e8b3d-2184-4592-9d65-0e2580735b3e",
+      "fileName": "a74e8b3d-2184-4592-9d65-0e2580735b3e-ps-card-d77d366b-c3f1-4269-81fb-e8eb418d6cb5.pdf",
+      "format": "PDF",
+      "sha256": "b9904e91acff90be7f0417e42d8c9a154fa0101006ae58ccd1cbb0a48f4fa15e"
+    },
+    {
+      "id": "0e001840-c351-4fcb-9636-e07728f41f49",
+      "fileName": "0e001840-c351-4fcb-9636-e07728f41f49-ps-witness-69f9de1f-2f84-485d-bb88-eb8ce26431d4.docx",
+      "format": "DOCX",
+      "sha256": "8d80a782700329e4cf7face5bb161a9852cb1214fce78c5cc3d382a3aa71beb0"
+    },
+    {
+      "id": "4194ff54-53c7-4955-82ac-e0b091b022b0",
+      "fileName": "4194ff54-53c7-4955-82ac-e0b091b022b0-ps-witness-69f9de1f-2f84-485d-bb88-eb8ce26431d4.pdf",
+      "format": "PDF",
+      "sha256": "3f032b1de53366d2919b3f51f54c7cf7dba75122ea4ae02eb9d461fb9d5ca6f1"
+    },
+    {
+      "id": "327a8e17-7399-42dc-bada-86cbd3a33e85",
+      "fileName": "327a8e17-7399-42dc-bada-86cbd3a33e85-ps-protocol-627b926f-7ca6-4dc5-a02e-00d4c9161066.docx",
+      "format": "DOCX",
+      "sha256": "ab4dca40a8cfe022f76ea1adaf5ad023358cee1db4a0e63dc8143cfa2460e117"
+    },
+    {
+      "id": "6dca2f4f-dc59-4863-a5db-fafd8b32c43d",
+      "fileName": "6dca2f4f-dc59-4863-a5db-fafd8b32c43d-ps-protocol-627b926f-7ca6-4dc5-a02e-00d4c9161066.pdf",
+      "format": "PDF",
+      "sha256": "0c637e883aafb52032151dee1b2430b6ee73d7197a296ae10aaab523438f49c1"
+    }
+  ],
+  "syntheticOnly": true,
+  "managerInputThroughUi": true,
+  "directorPreviewAndDecisionThroughUi": true,
+  "period": [
+    "2026-09-01",
+    "2026-09-30"
+  ],
+  "protocolDate": "2026-10-18",
+  "documentDate": "2026-10-20"
+}

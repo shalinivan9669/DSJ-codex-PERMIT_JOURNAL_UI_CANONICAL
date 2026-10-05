@@ -305,6 +305,9 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
           id: randomUUID(),
           templateId: i === 0 ? "ps-witness" : "biot-protocol",
           biotCategory: i === 0 ? undefined : "WORKER",
+          ...(i === 0
+            ? { validUntil: "", validityMode: "UNLIMITED" as const }
+            : {}),
         });
       const d = await createApprovedRequest(ca, draft);
       assert.deepEqual(
@@ -353,8 +356,20 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
           templateId: "pb-protocol",
           education: "Высшее техническое образование",
         },
-        { ...base, id: "ps-protocol", templateId: "ps-protocol" },
-        { ...base, id: "ps-card", templateId: "ps-card" },
+        {
+          ...base,
+          id: "ps-protocol",
+          templateId: "ps-protocol",
+          validUntil: "",
+          validityMode: "UNLIMITED",
+        },
+        {
+          ...base,
+          id: "ps-card",
+          templateId: "ps-card",
+          validUntil: "",
+          validityMode: "UNLIMITED",
+        },
       ];
       const request = await createApprovedRequest(ca, draft);
       await finalize(
@@ -392,7 +407,13 @@ test("real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuanc
       );
       assert.notEqual(ps.protocolNumber, ps.credentialNumber);
       draft.items[0].assignments = [
-        { ...base, id: "ps-only", templateId: "ps-protocol" },
+        {
+          ...base,
+          id: "ps-only",
+          templateId: "ps-protocol",
+          validUntil: "",
+          validityMode: "UNLIMITED",
+        },
       ];
       const standalone = await createApprovedRequest(ca, draft);
       await finalize(

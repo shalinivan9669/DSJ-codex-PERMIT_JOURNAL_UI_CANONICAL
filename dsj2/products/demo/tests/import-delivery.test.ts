@@ -132,6 +132,83 @@ test("blank retention and field mask never copy list assignments or assessment r
   );
 });
 
+test("explicit company inheritance clears only selected employer overrides while retaining unrelated blanks and strong matching", () => {
+  const existing = itemSchema.parse({
+    id: "existing-company",
+    personnelNumber: "42",
+    employerId: "historical-company",
+    workplaceRu: "Историческая компания",
+    workplaceKz: "Ескі ұйым",
+    workplaceEn: "Historic Company",
+    employerBin: "123456789012",
+    employerAddressRu: "Старый адрес",
+    employerAddressKz: "Ескі мекенжай",
+    employerAddressEn: "Old address",
+    fullNameRu: "Сохранённое имя",
+    positionRu: "Мастер",
+    assignments: [
+      assignmentSchema.parse({
+        id: "saved-fact",
+        templateId: "pb-card",
+        result: "Факт",
+        trainingStart: "2026-09-01",
+      }),
+    ],
+  });
+  const untouched = itemSchema.parse({
+    ...existing,
+    id: "untouched",
+    personnelNumber: "43",
+  });
+  const incoming = itemSchema.parse({
+    ...existing,
+    id: "source",
+    sourceRow: 2,
+    fullNameRu: "",
+    positionRu: "",
+  });
+  const original = structuredClone(existing);
+  const result = compareImportedRows(
+    [existing, untouched],
+    [incoming, { ...untouched, id: "source-two", sourceRow: 3 }],
+    {
+      blankMode: "RETAIN",
+      fieldMask: ["fullNameRu", "positionRu"],
+      customerId: "request-company",
+      inheritEmployerSourceRows: [2],
+    },
+  );
+  assert.equal(result.rows[0].matchedKey, "personnelNumber");
+  assert.equal(result.rows[0].targetId, existing.id);
+  assert.deepEqual(
+    result.rows[0].changes.map(({ field, newValue }) => [field, newValue]),
+    [
+      "employerId",
+      "workplaceRu",
+      "workplaceKz",
+      "workplaceEn",
+      "employerBin",
+      "employerAddressRu",
+      "employerAddressKz",
+      "employerAddressEn",
+    ].map((field) => [field, ""]),
+  );
+  assert.equal(result.rows[1].category, "unchanged");
+  assert.deepEqual(existing, original);
+  const added = compareImportedRows([], [incoming], {
+    inheritEmployerSourceRows: [2],
+  }).rows[0];
+  assert.equal(added.item!.employerId, "");
+  assert.equal(added.item!.workplaceRu, "");
+  assert.equal(added.item!.assignments[0].result, "Факт");
+  assert.equal(
+    compareImportedRows([existing], [incoming], {
+      fieldMask: ["fullNameRu", "positionRu"],
+    }).rows[0].category,
+    "unchanged",
+  );
+});
+
 test("reconciliation exposes explicit employee category and supplied English corrections without overwriting assessment facts", () => {
   const existing = itemSchema.parse({
     id: "existing",

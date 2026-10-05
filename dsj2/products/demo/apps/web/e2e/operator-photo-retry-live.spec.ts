@@ -38,15 +38,13 @@ test("real photo throttle can be cancelled and resumed without reuploading accep
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
+  await createRequestWithWorkerDocument(page, "COMPANY");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
   await assertTechnicalBlankRemoval(page);
   await expect(page.getByRole("dialog")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   const keys = Array.from(
     { length: 31 },
     (_, index) => `PHOTO-RETRY-${Date.now()}-${index}`,
@@ -62,7 +60,7 @@ test("real photo throttle can be cancelled and resumed without reuploading accep
       ].join("\n"),
     );
   await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Добавить 31 строк в черновик", exact: true })

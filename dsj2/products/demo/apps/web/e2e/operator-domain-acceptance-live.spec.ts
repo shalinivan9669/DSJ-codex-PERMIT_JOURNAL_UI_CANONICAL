@@ -19,7 +19,7 @@ const originKeys = ["documentDate", "trainingStart", "trainingEnd", "protocolDat
 function input(count = 3, directions: TrainingDirection[] = ["BIOT", "PB"], individual = false) {
   return draftSchema.parse({
     title: `СИНТЕТИЧЕСКАЯ полная domain приёмка ${Date.now()}`,
-    kind: "PERSON", demoMode: true, schemaVersion: 2, commonFields: dates,
+    kind: "COMPANY", demoMode: true, schemaVersion: 2, commonFields: dates,
     events: directions.map((direction) => ({
       id: `accept-${direction}`, title: `Синтетическое обучение ${direction}`,
       protocolTemplateId: mandatoryTemplates(direction, "WORKER").at(-1),
@@ -39,9 +39,26 @@ function input(count = 3, directions: TrainingDirection[] = ["BIOT", "PB"], indi
     })),
   });
 }
-async function create(page: Page, headers: Record<string, string>, value: unknown) {
+async function create(page: Page, headers: Record<string, string>, value: unknown, bindCompany = true) {
+  const submitted = draftSchema.parse(value);
+  // Event ownership spans requests. Each new fixture uses fresh event IDs;
+  // references within that fixture retain their exact correspondence.
+  const eventIds = new Map((submitted.events || []).map((event) => [event.id, randomUUID()]));
+  for (const event of submitted.events || []) {
+    event.id = eventIds.get(event.id)!;
+    if (event.rootEventId) event.rootEventId = eventIds.get(event.rootEventId) || event.rootEventId;
+  }
+  for (const person of submitted.items)
+    for (const assignment of person.assignments)
+      if (assignment.eventId) assignment.eventId = eventIds.get(assignment.eventId) || assignment.eventId;
+  if (bindCompany && submitted.kind === "COMPANY" && !submitted.customerId) {
+    noteExplicitDomainApiRequest(page, "POST", "/api/customers");
+    const response = await page.request.post("/api/customers", { headers, data: { legalForm: "NONE", ownNameRu: `Синтетическая domain компания ${randomUUID()}` } });
+    expect(response.ok(), await response.text()).toBe(true);
+    submitted.customerId = (await response.json()).id;
+  }
   noteExplicitDomainApiRequest(page, "POST", "/api/print-requests");
-  const response = await page.request.post("/api/print-requests", { headers, data: value });
+  const response = await page.request.post("/api/print-requests", { headers, data: submitted });
   expect(response.ok(), await response.text()).toBe(true);
   return await response.json() as Draft;
 }
@@ -77,19 +94,46 @@ async function listTools(page: Page) {
 async function closeDetails(page: Page) {
   const modal = page.getByRole("dialog", { name: /^Настройки строки/ });
   if (await modal.count()) await modal.getByRole("button", { name: "Вернуться к списку", exact: true }).click();
+  const personDocument = page.getByRole("dialog", { name: "Параметры документа", exact: true });
+  if (await personDocument.count()) await personDocument.getByRole("button", { name: "Готово", exact: true }).click();
 }
 async function immutableReference(page: Page) {
-  const value = JSON.parse(await fs.readFile(path.resolve(priorDomainEvidenceRoot, "v6-positive/role-lifecycle-readback.json"), "utf8"));
-  const draft = await read(page, value.requestId);
+  const currentSource = process.env.DEMO_E2E_DOMAIN_IMMUTABLE_SOURCE;
+  const value = JSON.parse(await fs.readFile(
+    currentSource ? path.resolve(currentSource) : path.resolve(priorDomainEvidenceRoot, "v6-positive/role-lifecycle-readback.json"),
+    "utf8",
+  ));
+  if (currentSource) expect(value.status).toBe("PASS");
+  const requestId = value.requestId || value.id;
+  const expectedFiles = value.artifactHashes || value.files;
+  expect(requestId).toBeTruthy();
+  expect(expectedFiles.length).toBeGreaterThan(0);
+  const draft = await read(page, requestId) as Awaited<ReturnType<typeof read>> & {
+    artifacts: { id: string; provenance: string; format?: string }[];
+  };
+  expect(draft.status).toBe("FINALIZED");
+  if (currentSource) {
+    const originals = (draft.artifacts || []).filter((artifact) =>
+      artifact.provenance === "ORIGINAL" && ["PDF", "DOCX"].includes(artifact.format || ""),
+    );
+    expect(originals.map((artifact) => artifact.id).sort()).toEqual(
+      expectedFiles.map((artifact: { id: string }) => artifact.id).sort(),
+    );
+    expect(draft.documents).toHaveLength(value.documents.length);
+    expect((draft.documents as { id: string }[]).map((document) => document.id).sort()).toEqual(
+      value.documents.map((document: { id: string }) => document.id).sort(),
+    );
+    expect(draft.issuances?.map((issuance) => issuance.id).sort()).toEqual([...value.issuanceIds].sort());
+  }
   const files = [];
-  for (const artifact of value.artifactHashes) {
+  for (const artifact of expectedFiles) {
     const response = await page.request.get(`/api/artifacts/${artifact.id}`);
     expect(response.ok()).toBe(true);
     const sha256 = createHash("sha256").update(await response.body()).digest("hex");
     expect(sha256).toBe(artifact.sha256);
     files.push({ id: artifact.id, sha256 });
   }
-  return { requestId: value.requestId, documents: draft.documents, issuances: draft.issuances, files };
+  return { requestId, documents: draft.documents, issuances: draft.issuances, files };
 }
 
 type DomainApiCall = { method: string; path: string };
@@ -251,14 +295,15 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
         assignment.id = randomUUID();
         assignment.eventId = event.id;
         assignment.templateId = mandatoryTemplates("BIOT", category)[0];
-        assignment.biotKnowledgeResult = "Синтетическая проверка знаний подтверждена";
+        assignment.biotCategory = event.commonFields.biotCategory;
+        assignment.biotKnowledgeResult = "Сдал";
         assignment.biotProctoringResult = "Синтетический прокторинг подтверждён";
       }
     }
     const customerResponse = kind === "COMPANY" ? await page.request.post("/api/customers", { headers, data: { legalForm: "TOO", ownNameRu: `Синтетический UX08 ${category} ${Date.now()}`, ownNameKz: "Синтетикалық UX08", bin: "", addressRu: "", addressKz: "" } }) : undefined;
     if (customerResponse) expect(customerResponse.ok(), await customerResponse.text()).toBe(true);
     const customer = customerResponse ? await customerResponse.json() as Customer : null;
-    let draft = await create(page, headers, fixture);
+    let draft = await create(page, headers, fixture, false);
     const stages: unknown[] = [];
     function currentReadiness(value: Draft) {
       const resolved = resolveDraft({ ...value, items: value.items.map((person) => resolveRecipientText(effectiveRecipientEmployer(person, value.customerId ? customer : null))) }, context.profile?.commonFields);
@@ -300,7 +345,14 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
       const modal = page.getByRole("dialog", { name: `Настройки строки ${row}`, exact: true });
       const fieldPath = await control.getAttribute("data-field-path");
       const wasDrawer = !!await modal.count();
-      if (wasDrawer) {
+      if (kind === "PERSON") {
+        await expect(control).toBeFocused();
+        await expect(control).toBeInViewport();
+        const person = page.locator(".person-editor");
+        await person.getByRole("button", { name: "Готово", exact: true }).click();
+        await expect(person.locator('[data-person-stage="summary"]')).toBeVisible();
+        await expect(page.getByLabel("Человек в заявке", { exact: true })).toHaveValue(draft.items[row - 1].id);
+      } else if (wasDrawer) {
         await expect(modal).toBeVisible();
         await closeDetails(page);
         await expect(page.getByRole("button", { name: `Детали получателя ${row}`, exact: true })).toBeFocused();
@@ -308,7 +360,7 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
         await expect(control).toBeFocused();
         await expect(control).toBeInViewport();
       }
-      await checkpoint(`return-row-${row}-${fieldPath}`, { row, fieldPath, layer: wasDrawer ? "drawer returned to row opener" : "inline field stayed focused", actualPredictableReturn: true });
+      await checkpoint(`return-row-${row}-${fieldPath}`, { row, fieldPath, layer: kind === "PERSON" ? "person returned to summary with the same stable identity" : wasDrawer ? "drawer returned to row opener" : "inline field stayed focused", actualPredictableReturn: true });
     }
     await page.goto(`/requests/${draft.id}/edit`);
     if (kind === "COMPANY") {
@@ -333,6 +385,7 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
     await expect(page.locator(".operator-readiness")).toContainText("Основные поля заполнены");
 
     draft.events![0].commonFields.trainingSubject = "";
+    draft.events![0].commonFields.fieldOrigins = { ...draft.events![0].commonFields.fieldOrigins, trainingSubject: "CLEARED" };
     draft = await patch(page, headers, draft);
     await page.reload();
     await next("SUBJECT_REQUIRED", "items.0.assignments.0.trainingSubject", "events.0.commonFields.trainingSubject", /Укажите программу/);
@@ -374,9 +427,8 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
       const remaining = page.locator(".operator-readiness details");
       await remaining.locator(":scope > summary").click();
       for (let index = 0; index < 3; index++) await expect(remaining.getByRole("button").filter({ hasText: new RegExp(`Строка ${index + 1}, Синтетический Участник ${index + 1}.*наименование предприятия`) })).toHaveCount(1);
-      await listTools(page);
-      await page.getByLabel("Поиск в заявке", { exact: true }).fill("Участник 2");
-      await expect(page.locator(`tr[data-recipient-id="${draft.items[0].id}"]`)).toHaveCount(0);
+      await page.getByLabel("Человек в заявке", { exact: true }).selectOption(draft.items[1].id);
+      await expect(page.locator(".operator-grid")).toHaveCount(0);
       for (let index = 0; index < 3; index++) {
         const before = await read(page, draft.id);
         const control = await next("BIOT_FIELD_REQUIRED", `items.${index}.workplaceRu`, `items.${index}.workplaceRu`, new RegExp(`Строка ${index + 1}.*наименование предприятия`));
@@ -401,9 +453,14 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
       draft.items[2][field] = "";
       draft = await patch(page, headers, draft);
       await page.reload();
-      await listTools(page);
-      await page.getByLabel("Поиск в заявке", { exact: true }).fill("Участник 1");
-      await expect(page.locator(`tr[data-recipient-id="${draft.items[2].id}"]`)).toHaveCount(0);
+      if (kind === "PERSON") {
+        await page.getByLabel("Человек в заявке", { exact: true }).selectOption(draft.items[0].id);
+        await expect(page.locator(".operator-grid")).toHaveCount(0);
+      } else {
+        await listTools(page);
+        await page.getByLabel("Поиск в заявке", { exact: true }).fill("Участник 1");
+        await expect(page.locator(`tr[data-recipient-id="${draft.items[2].id}"]`)).toHaveCount(0);
+      }
       const before = await read(page, draft.id);
       const control = await next(field === "employerBin" ? "BIOT_BIN_REQUIRED" : "BIOT_FIELD_REQUIRED", `items.2.${field}`, `items.2.${field}`, /Строка 3/);
       const value = field === "employerBin" ? "123456789012" : "Восстановленный синтетический адрес";
@@ -415,10 +472,10 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
       await returnAfterCorrection(control, 3);
       expect(currentReadiness(draft).issues).toEqual([]);
     }
-    // Empty EVENT documentDate is an explicit cleared value. The contract has
-    // no documentDate key in calculated dateOrigins; preserve its true EVENT
-    // ownership and the participants' separate INHERITED assignment origins.
+    // A technical blank inherits earlier values. Explicitly clear the EVENT
+    // date through fieldOrigins, keeping all participants INHERITED.
     draft.events![0].commonFields.documentDate = "";
+    draft.events![0].commonFields.fieldOrigins = { ...draft.events![0].commonFields.fieldOrigins, documentDate: "CLEARED" };
     draft = await patch(page, headers, draft);
     await page.reload();
     const beforeEventDate = await read(page, draft.id);
@@ -434,7 +491,9 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
     await checkpoint("event-document-date-repair", { rawEventBefore: beforeEventDate.events![0], rawEventAfter: draft.events![0], authoritativeValidation: eventDateValidation, allRawMembersAndOriginsUnchanged: true });
 
     draft.commonFields!.documentDate = "";
+    draft.commonFields!.fieldOrigins = { ...draft.commonFields!.fieldOrigins, documentDate: "CLEARED" };
     delete draft.events![0].commonFields.documentDate;
+    delete draft.events![0].commonFields.fieldOrigins?.documentDate;
     draft = await patch(page, headers, draft);
     await page.reload();
     const beforeDate = await read(page, draft.id);
@@ -449,28 +508,39 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
     expect((await read(page, draft.id)).items).toEqual(beforeDate.items);
     async function applyKnownResult(targetIndex: number, source: string) {
       const before = await read(page, draft.id);
-      await listTools(page);
-      await page.getByLabel("Поиск в заявке", { exact: true }).fill("");
-      for (let index = 0; index < draft.items.length; index++) await page.getByLabel(`Выбрать строку ${index + 1}`, { exact: true }).setChecked(index === targetIndex);
+      if (kind === "PERSON") {
+        await page.getByLabel("Человек в заявке", { exact: true }).selectOption(draft.items[targetIndex].id);
+        await expect(page.locator(".operator-grid")).toHaveCount(0);
+      } else {
+        await listTools(page);
+        await page.getByLabel("Поиск в заявке", { exact: true }).fill("");
+        for (let index = 0; index < draft.items.length; index++) await page.getByLabel(`Выбрать строку ${index + 1}`, { exact: true }).setChecked(index === targetIndex);
+      }
       const preparation = page.locator(".training-primary-context .outcome-entry").filter({ has: page.locator('[data-field-path="events.0.outcomes"]') });
       await preparation.getByLabel("Кому подтвердить результат", { exact: true }).selectOption("selected");
       await preparation.getByLabel("Известный результат", { exact: true }).selectOption("PASSED");
       await preparation.getByLabel("Источник подтверждения", { exact: true }).fill(source);
-      const review = preparation.getByRole("button", { name: "Проверить применение результатов", exact: true });
-      await expect(review).toBeEnabled();
+      const apply = preparation.getByRole("button", { name: "Применить результат · 1 человек", exact: true });
+      await expect(apply).toBeEnabled();
+      await expect(preparation).toContainText("Результат будет применён к людям: 1.");
       expect((await read(page, draft.id)).items).toEqual(before.items);
-      await review.click();
-      await expect(preparation).toContainText("Будет заменён результат у 1 участников");
-      expect((await read(page, draft.id)).items).toEqual(before.items);
-      await savedChange(page, draft.id, () => preparation.getByRole("button", { name: "Подтвердить результаты", exact: true }).click());
+      await savedChange(page, draft.id, () => apply.click());
       draft = await read(page, draft.id);
       for (let index = 0; index < draft.items.length; index++) if (index !== targetIndex) expect(draft.items[index]).toEqual(before.items[index]);
       for (const [index, assignment] of draft.items[targetIndex].assignments.entries()) {
         expect(assignment.outcome).toMatchObject({ status: "PASSED", source, confirmedBy: context.user.id });
         expect(assignment.outcome?.confirmedAt).toBeTruthy();
-        expect(assignment.result).toBe("Сдал");
-        const { result: _oldResult, outcome: _oldOutcome, ...oldFacts } = before.items[targetIndex].assignments[index];
-        const { result: _newResult, outcome: _newOutcome, ...newFacts } = assignment;
+        const prior = before.items[targetIndex].assignments[index];
+        expect(assignment.result).toBe(prior.result || "Өтті/прошел");
+        expect(assignment.resultKz).toBe(prior.resultKz || "Өтті");
+        expect(assignment.fieldOrigins).toEqual({
+          ...prior.fieldOrigins,
+          result: prior.result ? prior.fieldOrigins?.result || "MANUAL" : "COURSE",
+          resultKz: prior.resultKz ? prior.fieldOrigins?.resultKz || "MANUAL" : "COURSE",
+          outcome: "MANUAL",
+        });
+        const { result: _oldResult, resultKz: _oldResultKz, outcome: _oldOutcome, fieldOrigins: _oldOrigins, ...oldFacts } = prior;
+        const { result: _newResult, resultKz: _newResultKz, outcome: _newOutcome, fieldOrigins: _newOrigins, ...newFacts } = assignment;
         expect(newFacts).toEqual(oldFacts);
       }
       expect(currentReadiness(draft).issues).toEqual([]);
@@ -479,10 +549,73 @@ async function readinessAcceptance(page: Page, headers: Record<string, string>) 
       expect((await read(page, draft.id)).items).toEqual(draft.items);
     }
     draft.items[1].assignments[0].result = "";
+    draft.items[1].assignments[0].resultKz = "";
+    draft.items[1].assignments[0].fieldOrigins = {
+      ...draft.items[1].assignments[0].fieldOrigins,
+      result: "CLEARED",
+      resultKz: "CLEARED",
+    };
     draft = await patch(page, headers, draft);
     await page.reload();
-    await next("RESULT_REQUIRED", "items.1.assignments.0.result", "events.0.outcomes", /подтверждённый результат/);
-    await applyKnownResult(1, `СИНТЕТИЧЕСКАЯ проверенная ведомость UX08 ${kind}/${category}/результат`);
+    const beforeClearedResult = await read(page, draft.id);
+    const resultField = await next("RESULT_REQUIRED", "items.1.assignments.0.result", "items.1.assignments.0.result", /подтверждённый результат/);
+    const manualResult = `СИНТЕТИЧЕСКАЯ подтверждённая оценка UX08 ${kind}/${category}`;
+    const manualResultKz = `СИНТЕТИКАЛЫҚ расталған баға UX08 ${kind}/${category}`;
+    const resultConfirmationStartedAt = Date.now();
+    await savedChange(page, draft.id, () => resultField.fill(manualResult));
+    const afterRuResult = await read(page, draft.id);
+    const resultConfirmationFinishedAt = Date.now();
+    const priorOutcome = beforeClearedResult.items[1].assignments[0].outcome!;
+    const confirmedOutcome = afterRuResult.items[1].assignments[0].outcome!;
+    // Editing the confirmed RU result is an authenticated new confirmation.
+    // The server stamps this action; a KZ text-only edit must preserve that stamp.
+    expect(confirmedOutcome).toEqual({
+      ...priorOutcome,
+      confirmedBy: context.user.id,
+      confirmedAt: confirmedOutcome.confirmedAt,
+    });
+    const confirmationTime = Date.parse(confirmedOutcome.confirmedAt!);
+    expect(Number.isFinite(confirmationTime)).toBe(true);
+    expect(confirmationTime).toBeGreaterThan(Date.parse(priorOutcome.confirmedAt!));
+    expect(confirmationTime).toBeGreaterThanOrEqual(resultConfirmationStartedAt);
+    expect(confirmationTime).toBeLessThanOrEqual(resultConfirmationFinishedAt);
+    const expectedRuResultItems = structuredClone(beforeClearedResult.items);
+    expectedRuResultItems[1].assignments[0] = {
+      ...expectedRuResultItems[1].assignments[0],
+      result: manualResult,
+      outcome: confirmedOutcome,
+      fieldOrigins: { ...expectedRuResultItems[1].assignments[0].fieldOrigins, result: "MANUAL" },
+    };
+    expect(afterRuResult.items).toEqual(expectedRuResultItems);
+    expect(afterRuResult.events).toEqual(beforeClearedResult.events);
+    expect(afterRuResult.items[1].assignments[0].resultKz).toBe("");
+    expect(afterRuResult.items[1].assignments[0].fieldOrigins?.resultKz).toBe("CLEARED");
+    const resultKzField = page.locator('[data-field-path="items.1.assignments.0.resultKz"]').filter({ visible: true }).first();
+    await savedChange(page, draft.id, () => resultKzField.fill(manualResultKz));
+    draft = await read(page, draft.id);
+    const expectedResultItems = structuredClone(expectedRuResultItems);
+    expectedResultItems[1].assignments[0] = {
+      ...expectedResultItems[1].assignments[0],
+      result: manualResult,
+      resultKz: manualResultKz,
+      fieldOrigins: { ...expectedResultItems[1].assignments[0].fieldOrigins, result: "MANUAL", resultKz: "MANUAL" },
+    };
+    expect(draft.items).toEqual(expectedResultItems);
+    expect(draft.events).toEqual(beforeClearedResult.events);
+    expect(currentReadiness(draft).issues).toEqual([]);
+    const resultValidationResponse = await page.request.post(`/api/print-requests/${draft.id}/validate`, { headers, data: { expectedRevision: draft.revision } });
+    expect(resultValidationResponse.ok(), await resultValidationResponse.text()).toBe(true);
+    const resultValidation = await resultValidationResponse.json();
+    expect(resultValidation.valid).toBe(true);
+    expect(resultValidation.issues.filter((issue: { code: string }) => issue.code === "RESULT_REQUIRED")).toEqual([]);
+    await checkpoint("explicit-cleared-result-repair", { before: beforeClearedResult, after: draft, authoritativeValidation: resultValidation, actualResultFieldFocusedAndEdited: true, ruAndKzEnteredSeparately: true, allOtherRawFactsPreserved: true, authenticatedResultConfirmation: { before: priorOutcome, afterRu: confirmedOutcome, afterKz: draft.items[1].assignments[0].outcome, startedAt: resultConfirmationStartedAt, finishedAt: resultConfirmationFinishedAt } });
+    await closeDetails(page);
+    await page.reload();
+    const reloadedResult = await read(page, draft.id);
+    expect(reloadedResult.items).toEqual(expectedResultItems);
+    expect(reloadedResult.events).toEqual(beforeClearedResult.events);
+    expect(currentReadiness(reloadedResult).issues).toEqual([]);
+    await expect(page.locator(".operator-readiness")).toContainText("Основные поля заполнены");
     draft.items[2].assignments[0].outcome!.source = "";
     draft = await patch(page, headers, draft);
     await page.reload();
@@ -538,7 +671,7 @@ test("UX01 exact hidden multi-person removal preserves MANUAL IMPORTED CLEARED f
   expect(removalResponse.ok(), await removalResponse.text()).toBe(true);
   const removalScope = removalResponse.request().postDataJSON();
   expect(removalScope.direction).toBe("BIOT");
-  expect([...removalScope.eventIds].sort()).toEqual(["accept-BIOT", "accept-BIOT-ITR"]);
+  expect([...removalScope.eventIds].sort()).toEqual([created.items[0].assignments[0].eventId, created.items[9].assignments[0].eventId].sort());
   expect([...removalScope.recipientIds].sort()).toEqual(["accept-person-1", "accept-person-10"]);
   await expect(confirmation).toHaveCount(0);
   await saved(page);
@@ -574,7 +707,8 @@ test("UX01 exact hidden multi-person removal preserves MANUAL IMPORTED CLEARED f
   await expect(emptyChoice).toHaveCount(0);
   const mistaken = await read(page, blank.id);
   expect(mistaken.items[0].assignments).not.toHaveLength(0);
-  expect(mistaken.items[0].assignments[0].outcome?.status).toBe("UNKNOWN");
+  expect(mistaken.items[0].assignments[0].outcome?.status).toBe("PASSED");
+  expect(mistaken.items[0].assignments[0].fieldOrigins?.outcome).toBe("AUTO");
   await page.getByRole("button", { name: "БиОТ: снять у этой группы (1)", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "Снять обучение у этой группы?", exact: true })).toHaveCount(0);
   await expect.poll(async () => (await read(page, blank.id)).items[0].assignments.length).toBe(0);
@@ -721,7 +855,7 @@ test("UX14 independent facts remain separate and changed original context offers
     await other.goto(`/requests/${created.id}/edit`);
     const otherSettings = other.locator("details.operator-common-settings");
     if (!await otherSettings.evaluate((element) => (element as HTMLDetailsElement).open)) await otherSettings.locator(":scope > summary").click();
-    await other.getByLabel("Обучение для общих данных и результатов", { exact: true }).selectOption("accept-BIOT");
+    await other.getByLabel("Обучение для общих данных и результатов", { exact: true }).selectOption(created.events![0].id);
     const commonProgram = other.locator('.training-primary-context [data-field-path="events.0.commonFields.trainingSubject"]');
     await expect(commonProgram).toHaveValue(derived.events![0].commonFields.trainingSubject!);
     await savedChange(other, created.id, async () => { await commonProgram.fill("Новая программа другой вкладки"); await commonProgram.press("Tab"); });
@@ -729,6 +863,7 @@ test("UX14 independent facts remain separate and changed original context offers
     expect(afterSecondTab.revision).toBeGreaterThan(derived.revision);
     const expectedEvents = structuredClone(derived.events);
     expectedEvents![0].commonFields.trainingSubject = "Новая программа другой вкладки";
+    expectedEvents![0].commonFields.fieldOrigins = { ...expectedEvents![0].commonFields.fieldOrigins, trainingSubject: "MANUAL" };
     expectedEvents![0].revision = (derived.events![0].revision || 0) + 1;
     expect(afterSecondTab.events).toEqual(expectedEvents);
     expect(afterSecondTab.items).toEqual(derived.items);
@@ -768,9 +903,9 @@ test("UX14 independent facts remain separate and changed original context offers
   const compatible = await read(page, created.id);
   expect(compatible.items[0].employeeCategory).toBe("ITR");
   expect(compatible.items[0].assignments[0]).toEqual(oldFact);
-  expect(compatible.events!.find((event) => event.id === "accept-independent-same-title")).toEqual(created.events!.find((event) => event.id === "accept-independent-same-title"));
-  expect(compatible.events!.find((event) => event.id === "accept-independent-empty-fact")).toEqual(created.events!.find((event) => event.id === "accept-independent-empty-fact"));
-  expect(compatible.events!.find((event) => event.id === "accept-BIOT")!.commonFields.trainingSubject).toBe("Новая программа другой вкладки");
+  expect(compatible.events!.find((event) => event.id === created.events![1].id)).toEqual(created.events![1]);
+  expect(compatible.events!.find((event) => event.id === created.events![2].id)).toEqual(created.events![2]);
+  expect(compatible.events!.find((event) => event.id === created.events![0].id)!.commonFields.trainingSubject).toBe("Новая программа другой вкладки");
   await page.reload();
   expect((await read(page, created.id)).items[0].assignments[0]).toEqual(oldFact);
   await record(page, "ux14-compatible-facts", { requestId: created.id, compatible });
@@ -813,6 +948,21 @@ test("UX15 reset every offered training field from credential protocol and witne
   const identities = created.items[0].assignments.map((assignment) => ({ id: assignment.id, templateId: assignment.templateId, outcome: assignment.outcome }));
   const proofs = [];
   const pacing: unknown[] = [];
+  // Existing UI and template policy omit EN controls. Preserve those legacy
+  // facts while exercising every reset the current RU/KZ form actually offers.
+  const hiddenLanguageKeys = extraKeys.filter((key) => key.endsWith("En"));
+  const hiddenLanguageFacts = (draft: Draft) => draft.items[0].assignments.map((assignment) => ({
+    id: assignment.id,
+    fields: Object.fromEntries(hiddenLanguageKeys.map((key) => [key, {
+      value: assignment[key], origin: assignment.fieldOrigins?.[key],
+    }])),
+  }));
+  const assessmentFacts = (draft: Draft) => draft.items[0].assignments.map((assignment) => ({
+    id: assignment.id, outcome: assignment.outcome,
+    fields: Object.fromEntries((["result", "resultKz", "resultEn"] as const).map((key) => [key, {
+      value: assignment[key], origin: assignment.fieldOrigins?.[key],
+    }])),
+  }));
   async function pauseResetBurst(stage: string) {
     await closeDetails(page);
     const before = await read(page, created.id);
@@ -842,6 +992,9 @@ test("UX15 reset every offered training field from credential protocol and witne
       }
     }
     await patch(page, headers, current);
+    const beforeResets = await read(page, created.id);
+    const hiddenBeforeResets = hiddenLanguageFacts(beforeResets);
+    const assessmentsBeforeResets = assessmentFacts(beforeResets);
     await page.goto(`/requests/${created.id}/edit`);
     async function openResetForm() {
       await page.getByRole("button", { name: "Детали получателя 1", exact: true }).click();
@@ -853,8 +1006,18 @@ test("UX15 reset every offered training field from credential protocol and witne
       return selectedForm;
     }
     let form = await openResetForm();
+    if (selectedTemplate === "biot-protocol") {
+      const resultSource = form.locator(".field-provenance dl > div").filter({ has: page.locator("dt", { hasText: /^result$/ }) });
+      await expect(resultSource).toContainText("Введено вручную");
+      await expect(resultSource.getByRole("button", { name: "Вернуть общее значение", exact: true })).toHaveCount(0);
+      const resultInput = await showField(form, "result");
+      expect(resultInput, "The individual assessment remains directly editable").toBeDefined();
+      await expect(resultInput!).toBeEnabled();
+      await expect(resultInput!).toHaveValue(selected.result || "");
+      await form.getByRole("tab", { name: "Настройки", exact: true }).click();
+    }
     const labels: Record<string, string> = { documentDate: "Дата документа", trainingStart: "Начало обучения", trainingEnd: "Окончание обучения", protocolDate: "Дата протокола", trainingSubject: "Программа", trainingSubjectEn: "Программа · EN", hours: "Часы", productionHours: "Производственные часы", reason: "Причина", reasonEn: "Причина · EN", education: "Образование", educationEn: "Образование · EN", biotIndustryRu: "biotIndustryRu", biotIndustryKz: "biotIndustryKz", biotIndustryEn: "biotIndustryEn", biotCategory: "Категория", biotCheckType: "Вид проверки" };
-    const resetKeys = [...originKeys, ...extraKeys, ...(selectedTemplate.startsWith("biot-") ? ["biotCategory", "biotCheckType"] as const : [])];
+    const resetKeys = [...originKeys, ...extraKeys, ...(selectedTemplate.startsWith("biot-") ? ["biotCategory", "biotCheckType"] as const : [])].filter((key) => !key.endsWith("En"));
     for (const [resetIndex, key] of resetKeys.entries()) {
       // The fixed midpoint bounds the fast UI burst even when individual
       // saves generate several refresh requests. The measured budget also
@@ -867,7 +1030,7 @@ test("UX15 reset every offered training field from credential protocol and witne
       const reset = row.getByRole("button", { name: "Вернуть общее значение", exact: true });
       // Resetting protocolDate also resets its displayed documentDate; the
       // latter control therefore ceases to offer a second redundant reset.
-      if (!await reset.count()) { expect(selectedTemplate.endsWith("-protocol") && key === "protocolDate").toBe(true); continue; }
+      if (!await reset.count()) { expect(selectedTemplate.endsWith("-protocol") && key === "protocolDate", `Missing offered reset: ${selectedTemplate}.${key}`).toBe(true); continue; }
       await savedChange(page, created.id, () => reset.click());
       expect((await read(page, created.id)).items[0].assignments.find((assignment) => assignment.id === selected.id)!.fieldOrigins?.[selectedTemplate.endsWith("-protocol") && key === "documentDate" ? "protocolDate" : key]).toBe("INHERITED");
     }
@@ -885,6 +1048,8 @@ test("UX15 reset every offered training field from credential protocol and witne
     await closeDetails(page);
     await saved(page);
     current = await read(page, created.id);
+    expect(hiddenLanguageFacts(current)).toEqual(hiddenBeforeResets);
+    expect(assessmentFacts(current)).toEqual(assessmentsBeforeResets);
     expect(current.items[0].assignments.filter((assignment) => assignment.eventId !== selected.eventId)).toEqual(independentDirection);
     const event = current.events!.find((entry) => entry.id === selected.eventId)!;
     event.commonFields.trainingSubject = `Новая общая программа после reset ${selectedTemplate}`;
@@ -907,7 +1072,8 @@ test("UX15 reset every offered training field from credential protocol and witne
       expect(effective.trainingSubject).toBe(event.commonFields.trainingSubject);
       expect(linked.outcome).toEqual(identities.find((entry) => entry.id === linked.id)!.outcome);
     }
-    proofs.push({ selectedTemplate, selectedId: selected.id, assignments: current.items[0].assignments, displays });
+    expect(assessmentFacts(current)).toEqual(assessmentsBeforeResets);
+    proofs.push({ selectedTemplate, selectedId: selected.id, assignments: current.items[0].assignments, displays, hiddenLanguageFactsPreserved: hiddenBeforeResets, individualAssessmentFactsPreserved: assessmentsBeforeResets });
     await closeDetails(page);
   }
   expect(current.items[0].assignments.map((assignment) => ({ id: assignment.id, templateId: assignment.templateId, outcome: assignment.outcome }))).toEqual(identities);

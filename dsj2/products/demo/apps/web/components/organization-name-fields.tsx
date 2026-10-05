@@ -16,6 +16,7 @@ export function OrganizationNameFields({
   showRequiredErrors = false,
   compactHints = false,
   hideEmptyPreview = false,
+  requestEntry = false,
 }: {
   value: OrganizationNames;
   onChange: (value: OrganizationNames) => void;
@@ -25,6 +26,7 @@ export function OrganizationNameFields({
   showRequiredErrors?: boolean;
   compactHints?: boolean;
   hideEmptyPreview?: boolean;
+  requestEntry?: boolean;
 }) {
   const id = useId();
   const [differentKz, setDifferentKz] = useState(!!value.ownNameKz);
@@ -62,7 +64,7 @@ export function OrganizationNameFields({
         {labels?.legalForm || "Форма организации"}
         <select
           value={value.legalForm || ""}
-          aria-describedby={`${id}-hint`}
+          aria-describedby={requestEntry ? undefined : `${id}-hint`}
           onChange={(event) => {
             const legalForm = (event.target.value ||
               null) as OrganizationForm | null;
@@ -105,13 +107,15 @@ export function OrganizationNameFields({
           ))}
         </select>
       </label>
-      <p className="fine-print" id={`${id}-hint`}>
-        {compactHints
-          ? value.legalForm === "NONE"
-            ? "Название сохранится как введено."
-            : "Введите название без ТОО, ИП, АО. Кавычки сохраняются."
-          : "Название вводится один раз. Меняется только обозначение формы: ТОО / ЖШС, ИП / ЖК, АО / АҚ."}
-      </p>
+      {!requestEntry && (
+        <p className="fine-print" id={`${id}-hint`}>
+          {compactHints
+            ? value.legalForm === "NONE"
+              ? "Название сохранится как введено."
+              : "Введите название без ТОО, ИП, АО. Кавычки сохраняются."
+            : "Название вводится один раз. Меняется только обозначение формы: ТОО / ЖШС, ИП / ЖК, АО / АҚ."}
+        </p>
+      )}
       {value.legalForm ? (
         <>
           <label>
@@ -135,38 +139,41 @@ export function OrganizationNameFields({
               </small>
             )}
           </label>
-          <details
-            open={differentKz || undefined}
-            className="organization-extra-name"
-          >
-            <summary>Другое наименование на казахском</summary>
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={differentKz}
-                onChange={(event) => {
-                  setDifferentKz(event.target.checked);
-                  if (!event.target.checked) update(value.ownNameRu || "", "");
-                }}
-              />
-              Собственное наименование на казахском отличается
-            </label>
-            {differentKz && (
-              <label>
-                Собственное наименование · KZ
+          {!requestEntry && (
+            <details
+              open={differentKz || undefined}
+              className="organization-extra-name"
+            >
+              <summary>Другое наименование на казахском</summary>
+              <label className="checkbox-label">
                 <input
-                  required
-                  maxLength={500}
-                  value={value.ownNameKz || ""}
-                  aria-invalid={!!names?.issue}
-                  aria-describedby={names?.issue ? `${id}-error` : undefined}
-                  onChange={(event) =>
-                    update(value.ownNameRu || "", event.target.value)
-                  }
+                  type="checkbox"
+                  checked={differentKz}
+                  onChange={(event) => {
+                    setDifferentKz(event.target.checked);
+                    if (!event.target.checked)
+                      update(value.ownNameRu || "", "");
+                  }}
                 />
+                Собственное наименование на казахском отличается
               </label>
-            )}
-          </details>
+              {differentKz && (
+                <label>
+                  Собственное наименование · KZ
+                  <input
+                    required
+                    maxLength={500}
+                    value={value.ownNameKz || ""}
+                    aria-invalid={!!names?.issue}
+                    aria-describedby={names?.issue ? `${id}-error` : undefined}
+                    onChange={(event) =>
+                      update(value.ownNameRu || "", event.target.value)
+                    }
+                  />
+                </label>
+              )}
+            </details>
+          )}
           {nameError && (
             <p className="field-error" id={`${id}-error`} role="alert">
               {nameError}

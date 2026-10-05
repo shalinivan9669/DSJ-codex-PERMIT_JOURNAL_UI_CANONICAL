@@ -164,10 +164,8 @@ test("BIOT category and linked credential issuance in isolated PostgreSQL", asyn
         assert.equal(assignment.productionHours, "16");
         assert.equal(
           assignment.validUntil,
-          assignment.templateId.endsWith("-protocol")
-            ? "2027-09-21"
-            : "2027-09-22",
-          "LIVE expiry derives from the actual date of each issued form",
+          "2027-09-22",
+          "An explicitly supplied validity date remains factual across linked forms",
         );
       }
     },

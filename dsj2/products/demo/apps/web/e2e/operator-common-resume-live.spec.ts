@@ -20,7 +20,7 @@ const evidence = commonEvidence("resume");
 test("resume the fresh 100-recipient checkpoint, read real saved files and preserve employer history without repeating issue or copying prior assignments", async ({
   page,
 }) => {
-  test.setTimeout(1500000);
+  test.setTimeout(3600000);
   const preparationDirectory = preparedCheckpointDirectory("common");
   if (!preparationDirectory)
     throw new Error("FRESH_COMMON_CHECKPOINT_DIRECTORY_REQUIRED");

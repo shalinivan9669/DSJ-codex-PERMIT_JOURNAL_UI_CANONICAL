@@ -1,0 +1,15 @@
+{
+  "database": "demo_test_details_regression",
+  "productionTouched": false,
+  "checks": [
+    "valid target ignores invalid unrelated person, reference and form; stale revision and foreign tenant/identity rejected",
+    "missing file and same-size SHA256 corruption requeue preview only, preserve immutable artifact rows; intact file reused; repaired pair retains DOCX dependency snapshot",
+    "stable identity/date issue paths, idempotent target, existing FAILED retry and missing paired job repair",
+    "immutable proposal after live edit; sample/target/group job reuse; non-sample recipient accessible; full group; proposal allowlist/hash/revision; no issuance/numbers/draft mutation",
+    "generic PERSON display title uses person while stored/historical titles remain unchanged",
+    "generic COMPANY display title uses company without rewriting stored title",
+    "selected pinned issuer ISSUER_NOT_APPROVED blocks without jobs/snapshots/numbers/draft writes; unrelated course issuer remains outside target scope",
+    "selected pinned issuer PRINT_UNBROKEN_VALUE blocks without jobs/snapshots/numbers/draft writes; unrelated course issuer remains outside target scope"
+  ],
+  "status": "PASS"
+}

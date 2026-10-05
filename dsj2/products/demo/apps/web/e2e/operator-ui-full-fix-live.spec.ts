@@ -2,7 +2,11 @@ import { expect, test, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { draftPayload, newRecipient, type Draft } from "../lib/types";
-import { documentPlan, trainingDirection } from "@demo/contracts";
+import {
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+  documentPlan,
+  trainingDirection,
+} from "@demo/contracts";
 import { assignTrainingBundle } from "../lib/request-bundles";
 import {
   keyboardFocus,
@@ -33,7 +37,7 @@ async function create(
   const response = await page.request.post("/api/print-requests", {
     headers,
     data: {
-      kind: "PERSON",
+      kind: "COMPANY",
       title: `СИНТЕТИЧЕСКАЯ UX UI ${Date.now()}`,
       customerId: null,
       demoMode: true,
@@ -380,7 +384,9 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
   await chooser(1).click();
   await expect(trainingDialog).toContainText("Сейчас назначено 1 из 1 · всем.");
   await expect(
-    trainingDialog.getByRole("checkbox", { name: /^Безопасность и охрана труда/ }),
+    trainingDialog.getByRole("checkbox", {
+      name: /^Безопасность и охрана труда/,
+    }),
   ).toBeChecked();
   await expect(
     trainingDialog.getByRole("button", { name: "Снять БиОТ · 1", exact: true }),
@@ -527,7 +533,7 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
   ).not.toBeChecked();
 
   await page
-    .getByRole("button", { name: "Добавить строку", exact: true })
+    .getByRole("button", { name: "Добавить сотрудника", exact: true })
     .click();
   const newWorker = await committed(
     draft.id,
@@ -586,7 +592,7 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
     .getByRole("button", { name: "Снять выделение строк", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Добавить строку", exact: true })
+    .getByRole("button", { name: "Добавить сотрудника", exact: true })
     .click();
   const afterSingleRemoval = await committed(
     draft.id,
@@ -598,6 +604,12 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
   await page
     .getByRole("button", {
       name: "БиОТ: снять у этой группы (11)",
+      exact: true,
+    })
+    .click();
+  await removal
+    .getByRole("button", {
+      name: "Снять обучение у 11 получателей",
       exact: true,
     })
     .click();
@@ -613,7 +625,7 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
     allRemoved.trainingDefaults?.some((entry) => entry.direction === "BIOT"),
   ).toBe(false);
   await page
-    .getByRole("button", { name: "Добавить строку", exact: true })
+    .getByRole("button", { name: "Добавить сотрудника", exact: true })
     .click();
   const afterAllRemoval = await committed(
     draft.id,
@@ -641,7 +653,7 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
     allPtm.trainingDefaults?.some((entry) => entry.direction === "PTM"),
   ).toBe(true);
   await page
-    .getByRole("button", { name: "Добавить строку", exact: true })
+    .getByRole("button", { name: "Добавить сотрудника", exact: true })
     .click();
   const afterCommonPtm = await committed(
     draft.id,
@@ -654,9 +666,7 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
 
   // The import preview explicitly opts out even when a common default exists.
   await openRecipientExtraTools(page);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   const importing = page.getByRole("dialog");
   await importing
     .getByLabel("Или вставьте таблицу с заголовками", { exact: true })
@@ -664,8 +674,15 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
       "ФИО RU\tКатегория сотрудника\nСинтетический Импорт Рабочий\tWORKER\nСинтетический Импорт ИТР\tITR",
     );
   await importing
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
     .click();
+  await importing.locator(".import-document-options > summary").click();
+  await importing
+    .getByRole("checkbox", {
+      name: "Применить общие курсы заявки к новым людям",
+      exact: true,
+    })
+    .uncheck();
   await expect(
     importing.getByRole("combobox", {
       name: "Документ для импортируемых строк",
@@ -840,7 +857,7 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
     );
     expect(
       fresh.assignments.every(
-        (entry) => entry.outcome?.status === "UNKNOWN" && !entry.result,
+        (entry) => entry.outcome?.status === "PASSED" && !!entry.result,
       ),
     ).toBe(true);
     expect(current.items.slice(0, -1)).toEqual(previous.items);
@@ -896,7 +913,7 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
       id: "fixture",
       revision: 0,
       status: "DRAFT",
-      kind: "PERSON",
+      kind: "COMPANY",
       title: `СИНТЕТИЧЕСКИЕ счётчики ${count} ${knownPb} ${Date.now()}`,
       customerId: null,
       demoMode: true,
@@ -917,6 +934,20 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
         direction,
         "INDIVIDUAL",
       );
+    // This counter fixture deliberately represents unconfirmed historical
+    // training. Ordinary new assignments now default to PASSED.
+    for (const item of data.items)
+      for (const assignment of item.assignments) {
+        assignment.outcome = { status: "UNKNOWN", source: "" };
+        assignment.result = "";
+        assignment.resultKz = "";
+        assignment.fieldOrigins = {
+          ...assignment.fieldOrigins,
+          outcome: "MANUAL",
+          result: "CLEARED",
+          resultKz: "CLEARED",
+        };
+      }
     if (knownPb)
       for (const item of data.items)
         for (const assignment of item.assignments)
@@ -927,6 +958,10 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
                 "СИНТЕТИЧЕСКАЯ известная ведомость для проверки единиц; не реальное обучение",
             };
             assignment.result = "Сдал";
+            assignment.fieldOrigins = {
+              ...assignment.fieldOrigins,
+              result: "MANUAL",
+            };
           }
     const created = await create(page, headers, count, draftPayload(data));
     await page.goto(`/requests/${created.id}/edit`);
@@ -1015,10 +1050,56 @@ test("UX02/05/12/16 explicit common training, hidden selections, next recipients
   const five = await numericFixture(5);
   await showListTools();
   await addFromChooser(5, "ПС — обучение по профессии");
-  const withPs = await committed(
+  const withNewPs = await committed(
     five.id,
     (current) => directionAssignments(current, 4, "PS").length === 3,
   );
+  for (const assignment of directionAssignments(withNewPs, 4, "PS"))
+    expect(assignment).toMatchObject({
+      outcome: {
+        status: "PASSED",
+        source: DEFAULT_POSITIVE_OUTCOME_SOURCE,
+      },
+      fieldOrigins: { outcome: "AUTO" },
+    });
+  await expect(page.locator(".operator-result-reminder")).toContainText(
+    "Не подтверждены 10 результатов по обучениям у 5 получателей.",
+  );
+  // Explicitly clear this new PS course to verify that its three companion
+  // forms contribute one pending course while the ten old facts stay intact.
+  const pendingPs = structuredClone(withNewPs);
+  for (const assignment of directionAssignments(pendingPs, 4, "PS")) {
+    assignment.outcome = { status: "UNKNOWN", source: "" };
+    assignment.result = "";
+    assignment.resultKz = "";
+    assignment.fieldOrigins = {
+      ...assignment.fieldOrigins,
+      outcome: "MANUAL",
+      result: "CLEARED",
+      resultKz: "CLEARED",
+    };
+  }
+  const pendingResponse = await page.request.patch(
+    `/api/print-requests/${five.id}`,
+    {
+      headers,
+      data: {
+        expectedRevision: withNewPs.revision,
+        draft: draftPayload(pendingPs),
+      },
+    },
+  );
+  expect(pendingResponse.ok(), await pendingResponse.text()).toBe(true);
+  await page.reload();
+  const withPs = await read(page, five.id);
+  expect(withPs.items.slice(0, 4)).toEqual(withNewPs.items.slice(0, 4));
+  expect(
+    withPs.items[4].assignments.filter(
+      (entry) => trainingDirection(entry.templateId) !== "PS",
+    ),
+  ).toEqual(five.items[4].assignments);
+  for (const assignment of directionAssignments(withPs, 4, "PS"))
+    expect(assignment.outcome).toEqual({ status: "UNKNOWN", source: "" });
   await expect(page.locator(".operator-result-reminder")).toContainText(
     "Не подтверждены 11 результатов по обучениям у 5 получателей.",
   );
@@ -1056,8 +1137,25 @@ test("UX03/06/08/18/20 primary geometry remains stable through hints and checked
   page,
 }) => {
   test.setTimeout(300000);
-  const headers = await login(page),
-    draft = await create(page, headers);
+  const headers = await login(page);
+  const companyResponse = await page.request.post("/api/customers", {
+    headers,
+    data: {
+      legalForm: "TOO",
+      ownNameRu: `Синтетическая геометрия ${Date.now()}`,
+    },
+  });
+  expect(companyResponse.ok(), await companyResponse.text()).toBe(true);
+  const draft = await create(page, headers, 3, {
+    customerId: (await companyResponse.json()).id,
+    // A genuine partial recipient requires a name after validation; an
+    // untouched technical empty row is intentionally excluded by the API.
+    items: Array.from({ length: 3 }, (_, index) => ({
+      ...newRecipient(),
+      positionRu: index === 2 ? "Синтетическая должность без ФИО" : "",
+      assignments: [],
+    })),
+  });
   await page.goto(`/requests/${draft.id}/edit`);
   const baseline = await geometry(page);
   const input = page.getByLabel("ФИО, строка 1", { exact: true });
@@ -1084,7 +1182,7 @@ test("UX03/06/08/18/20 primary geometry remains stable through hints and checked
   await expect(opener).toHaveAttribute("aria-expanded", "true");
   await page.keyboard.press("Tab");
   await expect(
-    menu.getByRole("button", { name: "Указать место работы", exact: true }),
+    menu.getByRole("button", { name: "Найти человека", exact: true }),
   ).toBeFocused();
   await page.keyboard.press("Shift+Tab");
   await expect(opener).toBeFocused();
@@ -1094,6 +1192,7 @@ test("UX03/06/08/18/20 primary geometry remains stable through hints and checked
   await expect(menu).not.toHaveAttribute("open", "");
   await expect(input).toBeFocused();
   await opener.press("Enter");
+  await expect(opener).toHaveAttribute("aria-expanded", "true");
   await menu
     .getByRole("button", { name: "Сопоставить фото", exact: true })
     .press("Tab");
@@ -1668,9 +1767,7 @@ test("UX17/18/19/21 shared length policy retains 501 input and resumes saving af
 
   const beforeImportLength = await read(page, draft.id);
   await openRecipientExtraTools(page);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   const importing = page.getByRole("dialog", {
     name: "Импорт получателей",
     exact: true,
@@ -1681,7 +1778,7 @@ test("UX17/18/19/21 shared length policy retains 501 input and resumes saving af
       `ФИО RU\tДолжность RU\nСинтетический Импорт Пятьсот\t${text(500)}\nСинтетический Исправляемый Импорт\t${text(501)}`,
     );
   await importing
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
     .click();
   const mappedPosition = importing.getByLabel(
     "Исправленное значение, исходная строка 3, Должность RU",
@@ -1767,69 +1864,158 @@ test("UX17/18/19/21 shared length policy retains 501 input and resumes saving af
   });
 });
 
-test("UX10/23 selected company compact summary, cancel first entry and late creation response never selects cancelled input", async ({
+test("UX10/23 staged company survives reload and delayed repeated explicit action creates only the current company once", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   const headers = await login(page),
     draft = await create(page, headers, 1, { kind: "COMPANY" });
   await page.goto(`/requests/${draft.id}/edit`);
-  await page
-    .getByLabel("Название компании", { exact: true })
-    .fill("Синтетическая отменённая компания");
-  await expect(page.locator(".save-indicator")).toContainText(
-    "Название компании ещё не сохранено",
-  );
+  // Company input is now staged locally. Only an explicit document action
+  // creates it, and its operation key protects repeated clicks and retries.
   let posts = 0;
+  const postedNames: string[] = [];
   await page.route("**/api/customers", async (route) => {
     if (route.request().method() !== "POST") return route.continue();
     posts++;
+    postedNames.push(route.request().postDataJSON().ownNameRu);
     const response = await route.fetch();
     await new Promise((resolve) => setTimeout(resolve, 1300));
     await route.fulfill({ response });
   });
-  await page
-    .getByRole("button", { name: "Использовать эту компанию", exact: true })
-    .dblclick();
-  await page.getByRole("button", { name: "Отмена", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "Добавить компанию", exact: true }),
-  ).toBeVisible();
-  await expect.poll(() => posts).toBe(1);
-  await expect(page.locator(".save-indicator")).not.toContainText("Сохраняем");
-  await new Promise((resolve) => setTimeout(resolve, 1700));
+  const companyName = page.getByLabel("Название компании", { exact: true });
+  await companyName.fill("Синтетическая заменённая до сохранения компания");
+  await expect(page.locator(".save-indicator")).toContainText(
+    "Ввод компании сохранён",
+  );
+  await page.reload();
+  await expect(companyName).toHaveValue(
+    "Синтетическая заменённая до сохранения компания",
+  );
+  expect(posts).toBe(0);
   expect((await read(page, draft.id)).customerId).toBeNull();
-  await page.unroute("**/api/customers");
-  await page
-    .getByRole("button", { name: "Добавить компанию", exact: true })
-    .click();
-  await page
-    .getByLabel("Название компании", { exact: true })
-    .fill("Синтетическая выбранная компания");
-  await page
-    .getByRole("button", { name: "Использовать эту компанию", exact: true })
+  await companyName.fill("Синтетическая выбранная компания");
+  const previewAction = page.getByRole("button", {
+    name: "Предпросмотр любого документа",
+    exact: true,
+  });
+  await previewAction.dblclick();
+  await expect.poll(() => posts).toBe(1);
+  const preview = page.getByRole("dialog", {
+    name: "Предпросмотр документа",
+    exact: true,
+  });
+  await expect(preview).toBeVisible();
+  await preview
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
     .click();
   await saved(page);
+  expect(postedNames).toEqual(["Синтетическая выбранная компания"]);
   await expect(
     page.locator(".request-organization-selected-compact"),
   ).toContainText("Синтетическая выбранная компания");
+  const selected = await read(page, draft.id);
+  expect(selected.customerId).toBeTruthy();
+  await page.reload();
+  await expect(
+    page.locator(".request-organization-selected-compact"),
+  ).toContainText("Синтетическая выбранная компания");
+  expect((await read(page, draft.id)).customerId).toBe(selected.customerId);
+  expect(posts).toBe(1);
+  await page.unroute("**/api/customers");
   await expect(
     page.getByRole("button", {
       name: "Использовать эту компанию",
       exact: true,
     }),
   ).toHaveCount(0);
-  const firstInput = page.getByLabel("ФИО, строка 1", { exact: true });
-  const firstInputBounds = await firstInput.boundingBox();
+  const firstInputBounds = await page
+    .getByLabel("ФИО, строка 1", { exact: true })
+    .boundingBox();
   expect(firstInputBounds).not.toBeNull();
   expect(firstInputBounds!.y).toBeGreaterThanOrEqual(0);
   expect(firstInputBounds!.y + firstInputBounds!.height).toBeLessThanOrEqual(
     900,
   );
-  await evidence(page, "company-compact-cancel", {
+  await evidence(page, "company-compact-staged-idempotent", {
     posts,
+    postedNames,
     firstInputBounds,
+    stagedReloadPreserved: true,
+    creationBeforeExplicitAction: false,
+    delayedResponseRepeatedActionCreatesOnce: true,
     request: await read(page, draft.id),
+  });
+});
+
+test("UX10/23 lost company response after commit survives reload and retries the same operation without a duplicate", async ({
+  page,
+}) => {
+  const headers = await login(page);
+  const draft = await create(page, headers, 1, { kind: "COMPANY" });
+  const ownNameRu = `Синтетическая потеря ответа ${Date.now()}`;
+  const returnedIds: string[] = [];
+  const operationKeys: string[] = [];
+  await page.goto(`/requests/${draft.id}/edit`);
+  await page.getByLabel("Название компании", { exact: true }).fill(ownNameRu);
+  await page.route("**/api/customers", async (route) => {
+    if (route.request().method() !== "POST") return route.continue();
+    operationKeys.push(route.request().headers()["idempotency-key"]);
+    const response = await route.fetch();
+    expect(response.ok()).toBe(true);
+    returnedIds.push((await response.json()).id);
+    if (returnedIds.length === 1) return route.abort("connectionreset");
+    await route.fulfill({ response });
+  });
+  const action = page.getByRole("button", {
+    name: "Предпросмотр любого документа",
+    exact: true,
+  });
+  await action.click();
+  await expect.poll(() => returnedIds.length).toBe(1);
+  await expect(
+    page
+      .getByRole("region", { name: "Заказчик заявки", exact: true })
+      .getByRole("alert"),
+  ).toBeVisible();
+  expect((await read(page, draft.id)).customerId).toBeNull();
+  await page.reload();
+  await expect(
+    page.getByLabel("Название компании", { exact: true }),
+  ).toHaveValue(ownNameRu);
+  await action.click();
+  const preview = page.getByRole("dialog", {
+    name: "Предпросмотр документа",
+    exact: true,
+  });
+  await expect(preview).toBeVisible();
+  await preview
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
+    .click();
+  await saved(page);
+  expect(returnedIds).toHaveLength(2);
+  expect(returnedIds[1]).toBe(returnedIds[0]);
+  expect(operationKeys[0]).toBeTruthy();
+  expect(operationKeys[1]).toBe(operationKeys[0]);
+  expect((await read(page, draft.id)).customerId).toBe(returnedIds[0]);
+  const directory = await page.request.get(
+    `/api/customers?search=${encodeURIComponent(ownNameRu)}`,
+  );
+  expect(directory.ok()).toBe(true);
+  expect(
+    (await directory.json()).items.filter(
+      (entry: { ownNameRu: string }) => entry.ownNameRu === ownNameRu,
+    ),
+  ).toHaveLength(1);
+  await page.unroute("**/api/customers");
+  await evidence(page, "company-lost-response-idempotent", {
+    requestId: draft.id,
+    returnedIds,
+    oneStableOperationKey: true,
+    serverCommitThenConnectionReset: true,
+    stagedInputSurvivedReload: true,
+    directoryMatches: 1,
+    customerAttachedAfterRetry: true,
   });
 });
 
@@ -2003,11 +2189,13 @@ test("UX22 deletion and restoration focus an existing row; query and fragment na
   }
 
   const single = await create(page, headers, 1, {
-    items: [{
-      ...newRecipient(),
-      assignments: [],
-      fullNameRu: "Синтетический защищённый единственный получатель",
-    }],
+    items: [
+      {
+        ...newRecipient(),
+        assignments: [],
+        fullNameRu: "Синтетический защищённый единственный получатель",
+      },
+    ],
   });
   await page.goto(`/requests/${single.id}/edit`);
   await page
@@ -2114,7 +2302,9 @@ test("UX06/07/11/21 ten long bilingual rows, photo crop/error/retry and every re
       await modal
         .getByRole("button", { name: "Сохранить фото", exact: true })
         .click();
-      await expect(modal).toContainText("Синтетический отказ загрузки");
+      await expect(modal).toContainText(
+        "Сервис фотографий временно недоступен. Повторите сохранение позже.",
+      );
       expect((await read(page, draft.id)).items[0].photoAssetId).toBeFalsy();
       await modal
         .getByRole("button", { name: "Сохранить фото", exact: true })
@@ -2273,13 +2463,22 @@ test("UX06/07/11/21 ten long bilingual rows, photo crop/error/retry and every re
   );
   // Four directions require nine individual mandatory forms. Test actual
   // first/last forms, not only the last input of the initially open first form.
+  const formCompanyResponse = await page.request.post("/api/customers", {
+    headers,
+    data: {
+      legalForm: "TOO",
+      ownNameRu: `Синтетические четыре направления ${Date.now()}`,
+    },
+  });
+  expect(formCompanyResponse.ok(), await formCompanyResponse.text()).toBe(true);
+  const formCompany = await formCompanyResponse.json();
   let formDraft: Draft = {
     id: "fixture",
     revision: 0,
     status: "DRAFT",
-    kind: "PERSON",
+    kind: "COMPANY",
     title: `СИНТЕТИЧЕСКИЕ длинные детали ${Date.now()}`,
-    customerId: null,
+    customerId: formCompany.id,
     schemaVersion: 2,
     demoMode: true,
     commonFields: { documentDate: "2026-10-03" },
@@ -2288,6 +2487,7 @@ test("UX06/07/11/21 ten long bilingual rows, photo crop/error/retry and every re
         ...newRecipient(),
         fullNameRu:
           "Синтетический Получатель длинных деталей и четырёх направлений",
+        positionRu: "Сварщик",
         assignments: [],
       },
     ],
@@ -2299,6 +2499,16 @@ test("UX06/07/11/21 ten long bilingual rows, photo crop/error/retry and every re
       direction,
       "INDIVIDUAL",
     );
+  // Deliberately leave a BIOT fact unfilled to exercise the localized issue
+  // title. Successful defaults no longer create an unconfirmed-outcome issue.
+  for (const event of formDraft.events || [])
+    if (event.title.startsWith("BIOT")) {
+      event.commonFields.trainingSubject = "";
+      event.commonFields.fieldOrigins = {
+        ...event.commonFields.fieldOrigins,
+        trainingSubject: "CLEARED",
+      };
+    }
   await fullSuitePageApiCooldown(page, evidenceRoot, "before-nine-form-drawer");
   const formCreated = await create(page, headers, 1, draftPayload(formDraft));
   expect(formCreated.items[0].assignments).toHaveLength(9);
@@ -2616,19 +2826,17 @@ test("UX10/23 company replacement, directory choice, pending input navigation, f
     .getByRole("button", { name: "Новая компания", exact: true })
     .click();
   const companyName = page.getByLabel("Название компании", { exact: true });
-  await companyName.fill("Синтетический неприменённый ввод");
+  await companyName.fill("Синтетический сохранённый ввод");
+  await expect(page.locator(".save-indicator")).toContainText(
+    "Ввод компании сохранён",
+  );
   await page.getByRole("link", { name: "← Все заявки", exact: true }).click();
-  await expect(page).toHaveURL(new RegExp(`/requests/${draft.id}/edit$`));
-  await expect(companyName).toHaveValue("Синтетический неприменённый ввод");
+  await expect(page).toHaveURL(/\/requests$/);
+  await page.goBack();
+  await expect(companyName).toHaveValue("Синтетический сохранённый ввод");
   expect((await read(page, draft.id)).customerId).toBe(existing.id);
-  const reloadDialog = page.waitForEvent("dialog");
-  await page.evaluate(() => {
-    setTimeout(() => location.reload(), 0);
-  });
-  const leave = await reloadDialog;
-  expect(leave.type()).toBe("beforeunload");
-  await leave.dismiss();
-  await expect(companyName).toHaveValue("Синтетический неприменённый ввод");
+  await page.reload();
+  await expect(companyName).toHaveValue("Синтетический сохранённый ввод");
   let logoutPosts = 0;
   page.on("request", (request) => {
     if (
@@ -2639,33 +2847,15 @@ test("UX10/23 company replacement, directory choice, pending input navigation, f
   });
   await page.getByRole("button", { name: "Выйти", exact: true }).click();
   await expect(
-    page.getByText(
-      "Добавьте организацию в заявку или отмените её ввод перед выходом.",
-      { exact: true },
-    ),
+    page.getByRole("heading", { name: "Войти в DEMO", exact: true }),
   ).toBeVisible();
-  expect(logoutPosts).toBe(0);
-  await expect(companyName).toHaveValue("Синтетический неприменённый ввод");
-  const backDialog = page.waitForEvent("dialog");
-  await page.evaluate(() => history.back());
-  const backLeave = await backDialog;
-  expect(backLeave.type()).toBe("beforeunload");
-  await backLeave.dismiss();
-  await expect(page).toHaveURL(new RegExp(`/requests/${draft.id}/edit$`));
-  await expect(companyName).toHaveValue("Синтетический неприменённый ввод");
+  expect(logoutPosts).toBe(1);
+  await login(page);
+  await page.goto(`/requests/${draft.id}/edit`);
+  await expect(companyName).toHaveValue("Синтетический сохранённый ввод");
   expect((await read(page, draft.id)).customerId).toBe(existing.id);
-  await page.getByRole("button", { name: "Отмена", exact: true }).click();
-  await expect(
-    page.getByText(
-      "Добавьте организацию в заявку или отмените её ввод перед выходом.",
-      { exact: true },
-    ),
-  ).toHaveCount(0);
-  await expect(
-    page.locator(".request-organization-selected-compact"),
-  ).toContainText(existing.nameRu);
   await page
-    .getByRole("button", { name: "Сменить компанию", exact: true })
+    .getByRole("button", { name: "Из справочника", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Найти в справочнике", exact: true })
@@ -2685,9 +2875,9 @@ test("UX10/23 company replacement, directory choice, pending input navigation, f
   await expect(picker).toHaveCount(0);
   await saved(page);
   expect((await read(page, draft.id)).customerId).toBe(existing.id);
-  await page
-    .getByRole("button", { name: `Готово: ${existing.nameRu}`, exact: true })
-    .click();
+  await expect(
+    page.locator(".request-organization-selected-compact"),
+  ).toContainText(existing.nameRu);
   const reports = [];
   for (const [index, legalForm] of ["TOO", "IP", "AO"].entries()) {
     await page
@@ -2706,18 +2896,6 @@ test("UX10/23 company replacement, directory choice, pending input navigation, f
     await companyName.fill(ownNameRu);
     const ownNameKz =
       index === 1 ? `Синтетикалық өзгеше ұйым ${Date.now()}` : "";
-    if (ownNameKz) {
-      await page.locator(".organization-extra-name > summary").click();
-      await page
-        .getByLabel("Собственное наименование на казахском отличается", {
-          exact: true,
-        })
-        .check();
-      await page
-        .getByLabel("Собственное наименование · KZ", { exact: true })
-        .fill(ownNameKz);
-      await expect(companyName).toHaveValue(ownNameRu);
-    }
     if (index === 0) {
       let failed = false;
       await page.route("**/api/customers", async (route) => {
@@ -2731,21 +2909,65 @@ test("UX10/23 company replacement, directory choice, pending input navigation, f
         return route.continue();
       });
       await page
-        .getByRole("button", { name: "Использовать эту компанию", exact: true })
+        .getByRole("button", {
+          name: "Предпросмотр любого документа",
+          exact: true,
+        })
         .click();
       await expect(
-        page.getByText("СИНТЕТИЧЕСКИЙ отказ создания до записи", {
-          exact: true,
-        }),
+        page
+          .getByRole("region", { name: "Заказчик заявки", exact: true })
+          .getByText("СИНТЕТИЧЕСКИЙ отказ создания до записи", {
+            exact: true,
+          }),
       ).toBeVisible();
       await expect(companyName).toHaveValue(ownNameRu);
       expect((await read(page, draft.id)).customerId).toBe(existing.id);
       await page.unroute("**/api/customers");
     }
     await page
-      .getByRole("button", { name: "Использовать эту компанию", exact: true })
+      .getByRole("button", {
+        name: "Предпросмотр любого документа",
+        exact: true,
+      })
+      .click();
+    const preview = page.getByRole("dialog", {
+      name: "Предпросмотр документа",
+      exact: true,
+    });
+    await expect(preview).toBeVisible();
+    await preview
+      .getByRole("button", { name: "Закрыть диалог", exact: true })
       .click();
     await saved(page);
+    await page.reload();
+    // Optional distinct KZ names remain editable in the shared directory card.
+    if (ownNameKz) {
+      const compact = page.locator(".request-organization-selected-compact");
+      await compact.locator("details > summary").click();
+      await compact
+        .getByRole("button", {
+          name: "Изменить общую карточку организации",
+          exact: true,
+        })
+        .click();
+      const editCompany = page.getByRole("dialog");
+      await editCompany
+        .getByText("Другое наименование на казахском", { exact: true })
+        .click();
+      await editCompany
+        .getByLabel("Собственное наименование на казахском отличается", {
+          exact: true,
+        })
+        .check();
+      await editCompany
+        .getByLabel("Собственное наименование · KZ", { exact: true })
+        .fill(ownNameKz);
+      await editCompany
+        .getByRole("button", { name: "Сохранить", exact: true })
+        .click();
+      await expect(editCompany).toHaveCount(0);
+    }
     const current = await read(page, draft.id);
     const company = await (
       await page.request.get(`/api/customers/${current.customerId}`)
@@ -2798,10 +3020,10 @@ test("UX10/23 company replacement, directory choice, pending input navigation, f
   await evidence(page, "company-replacement-directory-failure", {
     reports,
     originalCustomerId: existing.id,
-    pendingNavigationBlocked: true,
-    cancelledReloadPreservedInput: true,
-    pendingLogoutPosts: logoutPosts,
-    browserBackBlockedWithoutLosingInput: true,
-    cancelledSelectionPreserved: true,
+    stagedNavigationPreservedInput: true,
+    stagedReloadPreservedInput: true,
+    stagedLogoutPosts: logoutPosts,
+    browserBackPreservedInput: true,
+    stagedInputDoesNotChangeSavedCustomer: true,
   });
 });

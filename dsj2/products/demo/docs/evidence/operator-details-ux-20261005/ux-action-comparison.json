@@ -1,0 +1,98 @@
+{
+  "baselineCommit": "0c91fafcb2ebffd415b2be42ca4c7166005eb93c",
+  "current": "uncommitted working tree in ot-center-business-value",
+  "method": "Baseline reconstructed by reading exact HEAD sources; current routes inspected in source and exercised by mocked Playwright operator-person-flow (4/4 PASS on build i-Z4wWSwFuZxvT2ZwWjZ-). Counts distinguish data entry from navigation/control actions. No baseline browser build was started and no user timing study was performed.",
+  "scope": "Only the named controlled scenarios; photo and PDF acceptance evidence is tracked separately by parent agents.",
+  "scenarios": [
+    {
+      "name": "Create one PERSON with FIO, position, WORKER category and one PS direction, starting from the new-request form; exclude optional KZ, dates, photo and director flow",
+      "baseline": {
+        "dataEntryOperations": 2,
+        "repeatedDataEntryOperations": 0,
+        "navigationAndChoiceActions": 2,
+        "actions": [
+          "Create request via Next",
+          "choose PS in request training actions"
+        ]
+      },
+      "current": {
+        "dataEntryOperations": 2,
+        "repeatedDataEntryOperations": 0,
+        "navigationAndChoiceActions": 5,
+        "actions": [
+          "Create request via Next",
+          "identity Next",
+          "category Next with existing WORKER default",
+          "choose PS",
+          "Done to compact card"
+        ]
+      },
+      "interpretation": "Progressive disclosure adds three explicit transitions. The benefit verified here is one main action per stage, absence of the mass table and direct resumption from saved data; this does not prove fewer total clicks."
+    },
+    {
+      "name": "Edit both PS period endpoints on an already filled PERSON whose first course is PS",
+      "baseline": {
+        "serviceNavigationBeforeFields": 2,
+        "actions": [
+          "Open recipient details from row",
+          "expand Period of training, protocol and validity"
+        ],
+        "dateEntryOperations": 2
+      },
+      "current": {
+        "serviceNavigationBeforeFields": 1,
+        "actions": [
+          "Change courses from compact card"
+        ],
+        "dateEntryOperations": 2
+      },
+      "interpretation": "The period is visible inside the course without an additional dates accordion. Both versions already share linked form edits, so no invented reduction in repeated date entry is claimed."
+    },
+    {
+      "name": "COMPANY with N ordinary special-ITR recipients whose employer comes from the request company",
+      "baseline": {
+        "repeatedEmployerControlsInRows": "2*N for BIN and RU address, plus workplace only when missing or explicitly overridden",
+        "requiredRepeatedCompanyNameEntry": 0
+      },
+      "current": {
+        "repeatedEmployerControlsInRows": 0,
+        "requiredRepeatedCompanyNameEntry": 0,
+        "exceptionHandling": "A preserved explicit employer exception has one compact notice and one addressed edit action."
+      },
+      "interpretation": "The common company was already an inheritance source. The current change removes repeated row controls; it does not claim the old workflow required entering the company N times."
+    },
+    {
+      "name": "COMPANY shared PS period for multiple people, measured after course assignment",
+      "baseline": {
+        "visiblePeriodPairsInCourseSharedFields": 0,
+        "individualDetailsPeriodPairs": "one per PS document when expanded"
+      },
+      "current": {
+        "visiblePeriodPairsInCourseSharedFields": 1,
+        "companySharedDateEntryOperations": 2,
+        "individualSavedOverrides": "preserved"
+      },
+      "interpretation": "Mock browser regression changes the common period and proves previously manual individual periods remain unchanged."
+    }
+  ],
+  "baselineSources": [
+    "apps/web/components/request-list.tsx NewRequest",
+    "apps/web/components/editor.tsx unconditional RecipientGrid and CourseSharedFields",
+    "apps/web/components/recipient-grid-row.tsx employerFields and needsEmployerDetails",
+    "apps/web/components/recipient-details.tsx documents default tab and document-date-details",
+    "apps/web/components/course-shared-fields.tsx PS fields without trainingStart/trainingEnd"
+  ],
+  "currentSources": [
+    "apps/web/components/person-editor.tsx",
+    "apps/web/components/training-period-fields.tsx",
+    "apps/web/components/recipient-grid-row.tsx",
+    "apps/web/components/course-shared-fields.tsx",
+    "apps/web/e2e/operator-person-flow.spec.ts"
+  ],
+  "browserEvidence": ".runtime/operator-details-ux-20261005/person-mocks-edge/results.json",
+  "limits": [
+    "Not a timing, conversion or human usability study.",
+    "The full E2E run and final-build browser acceptance are reported separately; this comparison is not their replacement.",
+    "Counts apply only to the explicitly described starting state and do not include optional details or approval."
+  ]
+}

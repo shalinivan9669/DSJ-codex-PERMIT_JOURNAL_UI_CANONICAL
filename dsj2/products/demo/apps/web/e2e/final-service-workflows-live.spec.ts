@@ -5,6 +5,8 @@ import { createHash, randomUUID } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { approveFinalFixture, openFinalPanel } from "./final-approval-fixture";
 import { unsignedPublicState } from "./final-unsigned-public-qa";
+import { positiveAssignmentDefaults } from "@demo/contracts";
+import { waitOriginalJobs } from "./operator-role-fixture";
 test.use({ trace: "off" });
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
@@ -45,7 +47,7 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
   context,
   browser,
 }) => {
-  test.setTimeout(300000);
+  test.setTimeout(900000);
   await fs.mkdir(evidence, { recursive: true });
   const auth = JSON.parse(
     await fs.readFile(
@@ -483,10 +485,13 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
   const repeat = await get(`/print-requests/${repeatId}`);
   expect(repeat.items[0].recipientId).toBe(person.id);
   expect(repeat.items[0].positionRu).toBe("Старший инженер");
-  expect(repeat.items[0].assignments[0].outcome?.status ?? "UNKNOWN").toBe(
-    "UNKNOWN",
-  );
-  expect(repeat.items[0].assignments[0].result).toBe("");
+  const repeatedAssignment = repeat.items[0].assignments[0];
+  const ordinaryDefaults = positiveAssignmentDefaults(repeatedAssignment.templateId);
+  expect(repeatedAssignment.outcome).toMatchObject(ordinaryDefaults.outcome!);
+  expect(repeatedAssignment.result).toBe(ordinaryDefaults.result);
+  expect(repeatedAssignment.resultKz).toBe(ordinaryDefaults.resultKz);
+  expect(repeatedAssignment.fieldOrigins.outcome).toBe("AUTO");
+  expect(repeatedAssignment.fieldOrigins.result).toBe("COURSE");
   expect(repeat.items[0].assignments[0].documentDate).toBe("");
   expect(repeat.items[0].assignments[0].trainingStart).toBe("");
   expect(
@@ -512,6 +517,9 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
   expect((await publicationResponse.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
   await expect(publicLink).toHaveCount(0);
   await expect(page.locator(".files-panel")).toContainText("Комплект ожидает электронных подписей");
+  // The shared serial renderer can still be processing the prior fixture. Wait
+  // for every original with explicit FAILED diagnostics before asserting signing.
+  await waitOriginalJobs(page, request.id, 600000);
   await expect.poll(async () => (await get(`/print-requests/${request.id}/signing`)).status,
     { timeout: 120000, intervals: [1500, 2500, 5000] }).toBe("AWAITING_SIGNATURE");
   const unsignedState = unsignedPublicState(auth.tenantId, request.id);

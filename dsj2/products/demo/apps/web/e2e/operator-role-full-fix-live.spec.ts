@@ -121,6 +121,7 @@ test("real operator preparation, director return/correction/new approval, render
             trainingStart: "2026-10-01",
             trainingEnd: "2026-10-02",
             trainingSubject: "Тестовая программа ПБ",
+            hours: "16",
           },
         },
       ],
@@ -167,7 +168,7 @@ test("real operator preparation, director return/correction/new approval, render
       .fill(factualSource);
     await expect(
       training.getByRole("button", {
-        name: "Проверить применение результатов",
+        name: "Применить результат · 2 человек",
         exact: true,
       }),
     ).toBeEnabled();
@@ -184,12 +185,9 @@ test("real operator preparation, director return/correction/new approval, render
     });
     await training
       .getByRole("button", {
-        name: "Проверить применение результатов",
+        name: "Применить результат · 2 человек",
         exact: true,
       })
-      .click();
-    await training
-      .getByRole("button", { name: "Подтвердить результаты", exact: true })
       .click();
     await expect
       .poll(async () =>
@@ -197,6 +195,8 @@ test("real operator preparation, director return/correction/new approval, render
           item.assignments.every(
             (assignment) =>
               assignment.outcome?.status === "PASSED" &&
+              assignment.outcome.source === factualSource &&
+              !!assignment.outcome.confirmedAt &&
               assignment.outcome.confirmedBy === operator.session.user.id,
           ),
         ),
@@ -240,7 +240,17 @@ test("real operator preparation, director return/correction/new approval, render
     await expect
       .poll(async () => (await read(page, id)).items[0].positionRu)
       .toBe("Мастер");
-    expect((await read(page, id)).approval?.status).toBe("DRAFT");
+    const correctedDraft = await read(page, id);
+    expect(correctedDraft.status).toBe("DRAFT");
+    expect(correctedDraft.revision).toBeGreaterThan(applied.revision);
+    expect(correctedDraft.documents).toHaveLength(0);
+    // Autosave keeps the last director decision visible until explicit resubmission.
+    expect(correctedDraft.approval).toMatchObject({
+      status: "REJECTED",
+      proposalId: rejectedProposal.proposalId,
+      proposalHash: rejectedProposal.proposalHash,
+    });
+    await expect(page.getByText(reason, { exact: false })).toBeVisible();
     await page
       .getByLabel(/Все подтверждённые ещё не оформленные курсы/)
       .check();
@@ -252,6 +262,12 @@ test("real operator preparation, director return/correction/new approval, render
       .toBe("PENDING");
     const corrected = await read(page, id);
     expect(corrected.approval?.status).toBe("PENDING");
+    expect(corrected.approval?.proposalId).not.toBe(
+      rejectedProposal.proposalId,
+    );
+    expect(corrected.approval?.proposalHash).not.toBe(
+      rejectedProposal.proposalHash,
+    );
     expect(corrected.revision).toBeGreaterThan(applied.revision);
     const stale = await directorPage.request.post(
       `/api/approvals/${rejectedProposal.proposalId}/decision`,

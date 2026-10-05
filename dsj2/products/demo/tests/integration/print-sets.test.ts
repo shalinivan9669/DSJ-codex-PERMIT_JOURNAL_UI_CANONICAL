@@ -380,9 +380,13 @@ test("print sets use saved batch originals, preserve prior files, deny foreign a
       text.includes(item.fullNameRu),
       "converted DOCX retains both names",
     );
+  // PDF text extraction inserts a line break after the number's hyphen when
+  // the unchanged source card wraps it (for example PTM-\nCARD-00001).
+  // Preserve every number character, ignoring only this layout whitespace.
+  const numberText = inspection.text.replace(/-\s+/g, "-");
   for (const document of documents)
     assert.ok(
-      text.includes(document.number),
+      numberText.includes(document.number),
       "converted DOCX retains saved numbers",
     );
   for (const file of cards)

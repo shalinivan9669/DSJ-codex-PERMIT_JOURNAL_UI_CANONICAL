@@ -39,11 +39,11 @@ function draft(kind: "PERSON" | "COMPANY" = "PERSON") {
   });
 }
 
-test("person customer and title use the supplied name, preserving translations and legacy references", () => {
+test("person customer uses the supplied name without rewriting stored title, translations or legacy references", () => {
   const input = draft();
   input.items[0].fullNameKz = "Синтетикалық Тестов";
   const result = withCustomerIdentity(input);
-  assert.equal(result.title, input.items[0].fullNameRu);
+  assert.equal(result.title, input.title);
   assert.equal(personCustomerName(result), input.items[0].fullNameRu);
   assert.equal(result.items[0].fullNameKz, "Синтетикалық Тестов");
   assert.equal(result.customerId, company.id);
@@ -58,9 +58,10 @@ test("blank person names remain blank and explicitly supplied KZ names are reuse
   assert.equal(withCustomerIdentity(input).title, "Новая заявка");
   assert.equal(personCustomerName(input), "");
   input.items[0].fullNameKz = "  Синтетикалық Тестов  ";
-  assert.equal(withCustomerIdentity(input).title, "Синтетикалық Тестов");
+  assert.equal(personCustomerName(input), "Синтетикалық Тестов");
+  assert.equal(withCustomerIdentity(input).title, "Новая заявка");
   input.items[0].fullNameKz = "А".repeat(300);
-  assert.equal(withCustomerIdentity(input).title.length, 255);
+  assert.equal(withCustomerIdentity(input).title, "Новая заявка");
   assert.equal(personCustomerName(input).length, 300);
   assert.doesNotThrow(() => draftSchema.parse(withCustomerIdentity(input)));
 });
@@ -219,8 +220,8 @@ test("autosave persists the person title and working data without submitting dir
   } as unknown as Prisma.TransactionClient;
   const result = await submitProposal(tx, context, record.id, input, 0);
   const payload = (proposed as unknown as { payload: typeof input }).payload;
-  assert.equal(payload.title, input.items[0].fullNameRu);
-  assert.equal(result.title, input.items[0].fullNameRu);
+  assert.equal(payload.title, input.title);
+  assert.equal(result.title, input.title);
   assert.equal(result.customerName, input.items[0].fullNameRu);
   assert.deepEqual(payload.organizationSnapshots, [company]);
   assert.deepEqual(record.draft, payload);

@@ -1,13 +1,9 @@
-import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect } from "@playwright/test";
 import path from "node:path";
 import fs from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { realApprovalRoles } from "./operator-role-fixture";
-import {
-  commonSettings,
-  expandCommon,
-} from "./operator-common-history-helpers";
+import { expandCommon } from "./operator-common-history-helpers";
 import type { Draft, Artifact, Job } from "../lib/types";
 
 test.use({ trace: "off" });
@@ -27,40 +23,59 @@ test("V01 one person obtains actual files for one mandatory training kit without
   try {
     await roles.configureSignatories();
     await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-    await createRequestWithWorkerDocument(page, "PERSON");
     await page
-      .getByLabel("ФИО, строка 1", { exact: true })
+      .getByRole("radio", { name: "Физическое лицо", exact: true })
+      .check();
+    await page.getByRole("button", { name: "Далее", exact: true }).click();
+    await page
+      .getByLabel("ФИО", { exact: true })
       .fill("Тестовый Получатель Одиночного Выпуска");
+    await page.getByLabel("Должность", { exact: true }).fill("Инженер");
+    await expandCommon(
+      page.locator(".person-editor details.person-additional").first(),
+    );
     await page
-      .getByLabel("Должность · RU, строка 1", { exact: true })
-      .fill("Инженер");
-    await page
-      .getByRole("button", { name: "Детали получателя 1", exact: true })
-      .click();
-    const modal = page.getByRole("dialog");
-    await modal
-      .getByRole("tab", { name: "Личные данные", exact: true })
-      .click();
-    await expandCommon(modal.locator("details.employer-document-wording"));
-    await modal
-      .getByLabel("Место работы · RU", { exact: true })
-      .fill("Тестовое предприятие");
-    await expandCommon(modal.locator("details.person-fields-wide").first());
-    await modal
+      .locator(".person-editor")
       .locator('[data-field-path="items.0.fullNameKz"]')
       .fill("Синтетикалық Ә Ғ Қ Ң Ө Ұ Ү Һ І");
-    await modal
-      .getByRole("button", { name: "Вернуться к списку", exact: true })
+    await page.getByRole("button", { name: "Далее", exact: true }).click();
+    await page.getByRole("button", { name: "Рабочий", exact: true }).click();
+    await page.getByRole("button", { name: "Далее", exact: true }).click();
+    await page.getByRole("button", { name: "БиОТ", exact: true }).click();
+    const course = page.getByRole("region", {
+      name: "Параметры БиОТ",
+      exact: true,
+    });
+    await course
+      .getByLabel("Дата документа", { exact: true })
+      .fill("2026-09-24");
+    await course
+      .getByLabel("Дата протокола", { exact: true })
+      .fill("2026-09-23");
+    await page
+      .getByLabel("Место работы", { exact: true })
+      .fill("Тестовое предприятие");
+    await course
+      .getByRole("button", { name: "Параметры", exact: true })
+      .first()
       .click();
-    const training = await commonSettings(page);
-    for (const [label, value] of [
-      ["Дата документа для заявки", "2026-09-24"],
-      ["Начало обучения для заявки", "2026-09-20"],
-      ["Окончание обучения для заявки", "2026-09-23"],
-      ["Дата проверки / протокола для заявки", "2026-09-23"],
-      ["Программа / тема для заявки", "Тестовая программа БиОТ"],
-    ])
-      await training.getByLabel(label, { exact: true }).fill(value);
+    const modal = page.getByRole("dialog", {
+      name: "Параметры документа",
+      exact: true,
+    });
+    await expandCommon(modal.locator("details.document-date-details"));
+    await modal
+      .locator('[data-field-path="items.0.assignments.0.trainingStart"]')
+      .fill("2026-09-20");
+    await modal
+      .locator('[data-field-path="items.0.assignments.0.trainingEnd"]')
+      .fill("2026-09-23");
+    await modal.getByRole("tab", { name: /^Обучение и результат/ }).click();
+    await modal
+      .locator('[data-field-path="items.0.assignments.0.trainingSubject"]')
+      .fill("Тестовая программа БиОТ");
+    await modal.getByRole("button", { name: "Готово", exact: true }).click();
+    await page.getByRole("button", { name: "Готово", exact: true }).click();
     const requestId = /requests\/([^/]+)/.exec(page.url())![1];
     const read = async () =>
       (await (
@@ -73,49 +88,17 @@ test("V01 one person obtains actual files for one mandatory training kit without
       /Рабочая версия сохранена/,
     );
     await page.reload();
-    const unknown = await read();
-    expect(unknown.items).toHaveLength(1);
-    expect(unknown.items[0].assignments).toHaveLength(2);
+    const saved = await read();
+    expect(saved.items).toHaveLength(1);
+    expect(saved.items[0].assignments).toHaveLength(2);
     expect(
-      unknown.items[0].assignments.every(
-        (assignment) => assignment.outcome?.status === "UNKNOWN",
+      saved.items[0].assignments.every(
+        (assignment) => assignment.outcome?.status === "PASSED",
       ),
     ).toBe(true);
-    expect(unknown.documents).toHaveLength(0);
-    expect(unknown.customerId).toBeNull();
-    const currentTraining = page.locator("#request-training");
-    await expandCommon(currentTraining);
-    const outcome = currentTraining.locator(
-      'details.outcome-entry:has(> summary[data-training-field="outcomes"])',
-    );
-    await expandCommon(outcome);
-    await outcome
-      .getByLabel("Известный результат", { exact: true })
-      .selectOption("PASSED");
-    await outcome
-      .getByLabel("Источник подтверждения", { exact: true })
-      .fill("СИНТЕТИЧЕСКАЯ ведомость одиночного выпуска; не реальное обучение");
-    expect(
-      (await read()).items[0].assignments.every(
-        (assignment) => assignment.outcome?.status === "UNKNOWN",
-      ),
-    ).toBe(true);
-    await outcome
-      .getByRole("button", {
-        name: "Проверить применение результатов",
-        exact: true,
-      })
-      .click();
-    await outcome
-      .getByRole("button", { name: "Подтвердить результаты", exact: true })
-      .click();
-    await expect
-      .poll(async () =>
-        (await read()).items[0].assignments.every(
-          (assignment) => assignment.outcome?.status === "PASSED",
-        ),
-      )
-      .toBe(true);
+    expect(saved.documents).toHaveLength(0);
+    expect(saved.customerId).toBeNull();
+    expect(saved.items[0].fullNameKz).toBe("Синтетикалық Ә Ғ Қ Ң Ө Ұ Ү Һ І");
     await page
       .getByRole("button", { name: "Проверить данные", exact: true })
       .click();

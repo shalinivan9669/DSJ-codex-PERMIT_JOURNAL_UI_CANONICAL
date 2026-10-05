@@ -43,7 +43,8 @@ test("real operator validates, previews, explicitly generates, downloads saved p
               templateId: "pb-card",
               protocolMode: "INDIVIDUAL",
               documentDate: "2026-10-03",
-              protocolDate: "2026-10-02",
+              protocolDate: "2026-10-03",
+              hours: "16",
               trainingStart: "2026-10-01",
               trainingEnd: "2026-10-02",
               trainingSubject: "Синтетическая программа",
@@ -75,9 +76,11 @@ test("real operator validates, previews, explicitly generates, downloads saved p
   );
   expect(before.documents).toHaveLength(0);
   await page.goto(`/requests/${requestId}/edit`);
-  await expect(page.locator(".operator-grid tbody tr")).toHaveCount(
-    before.items.length,
-  );
+  await expect(
+    page
+      .locator(".person-editor")
+      .getByRole("heading", { name: before.items[0].fullNameRu, exact: true }),
+  ).toBeVisible();
   await page
     .getByRole("button", { name: "Проверить данные", exact: true })
     .click();
@@ -89,8 +92,20 @@ test("real operator validates, previews, explicitly generates, downloads saved p
     fullPage: true,
   });
   await page
-    .getByRole("button", { name: "Посмотреть документы", exact: true })
+    .locator(".person-editor")
+    .getByRole("button", { name: /^Предпросмотр:/ })
+    .first()
     .click();
+  const documentPreview = page.getByRole("dialog", {
+    name: "Предпросмотр документа",
+    exact: true,
+  });
+  await documentPreview
+    .getByRole("button", { name: "Создать предпросмотр", exact: true })
+    .click();
+  await expect(
+    documentPreview.getByRole("img", { name: /^Страница 1 из/ }),
+  ).toBeVisible({ timeout: 150000 });
   await expect
     .poll(
       async () =>
@@ -101,6 +116,9 @@ test("real operator validates, previews, explicitly generates, downloads saved p
       { timeout: 240000, intervals: [1000, 2500] },
     )
     .toBe(true);
+  await documentPreview
+    .getByRole("button", { name: "Закрыть диалог", exact: true })
+    .click();
   await roles.approve(requestId);
   await page.reload();
   const finalize = page.getByRole("button", {
@@ -222,9 +240,11 @@ test("real operator validates, previews, explicitly generates, downloads saved p
     fullPage: true,
   });
   await page.reload();
-  await expect(page.locator(".operator-grid tbody tr")).toHaveCount(
-    before.items.length,
-  );
+  await expect(
+    page
+      .locator(".person-editor")
+      .getByRole("heading", { name: before.items[0].fullNameRu, exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Получатель", exact: true }),
   ).toHaveCount(0);

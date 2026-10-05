@@ -270,9 +270,10 @@ export function knownPrintInput(
         templateId,
         protocolMode: "INDIVIDUAL",
         documentDate: "2026-10-03",
-        protocolDate: "2026-10-02",
+        protocolDate: "2026-10-03",
         trainingStart: "2026-10-01",
         trainingEnd: "2026-10-02",
+        hours: "16",
         trainingSubject: `Синтетическая программа ${templateId} ${index + 1}`,
         result: "Сдал / Тапсырды (ТЕСТ)",
         outcome: {

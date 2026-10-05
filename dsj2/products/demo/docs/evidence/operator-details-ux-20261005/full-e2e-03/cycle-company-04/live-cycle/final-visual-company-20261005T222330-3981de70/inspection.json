@@ -1,0 +1,223 @@
+{
+  "schema": "FINAL04_CYCLE_VISUAL_INSPECTION_1",
+  "status": "RENDERED_AWAITING_ROOT_VISUAL_REVIEW",
+  "startedUtc": "2026-10-05T22:48:56.173610+00:00",
+  "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+  "kind": "COMPANY",
+  "requestId": "98aa88c4-e329-4893-b063-19af36e38765",
+  "issuanceIds": [
+    "220fc91a-785e-4f07-ac86-733bc7728222"
+  ],
+  "sourceCycle": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-cycle.json",
+    "sha256": "637174544fcd927f4cfd36c128aa4ce1d014107151b96ba6ba8c131ce0e577b0",
+    "bytes": 6113
+  },
+  "phaseRuntime": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/runtime-cycle-company-04.json",
+    "sha256": "43571611d8f14710ddaddc08ca7a83d601cbe5592ac9cc61ffb98d7d9a1f97a7",
+    "bytes": 1313
+  },
+  "phaseResults": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/results-cycle-company-04.json",
+    "sha256": "727ddfdd3331f8f4c176747a1f2420dcca56b105316a3332f94520fcd6428be9",
+    "bytes": 9224
+  },
+  "phaseTestSourceManifest": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/test-sources-cycle-company-04.json",
+    "sha256": "e0da444bce6b185e18a1116b6837e048b740a69dc29af4bfae47487e8a0084ad",
+    "bytes": 12573
+  },
+  "reviewedPlanSha256": "c7e4664a7e3dc4f1fa222529af2d112b1d34f56ebcc54a807853ad3e62a0d17e",
+  "helperSha256": "63bd01acc33df6846bc9fe6b94e21a1762c497420e401d754be46202ed9a793b",
+  "originals": [
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-1b642650-97d6-455e-8eff-5cda227939b5-ptm-card-ce20ff78-512f-4077-8b43-810adb48ada6.docx",
+      "sha256": "a3aa0ef0b9a440c5efc8afacdc70e228ae8115d9c44cd05565d812f81440dd83",
+      "bytes": 20786,
+      "format": "DOCX",
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "templateId": "ptm-card",
+      "documentXmlSha256": "29c56d3a811e9de310f4b92036fd0d1686e36cfd0f2e396907447e85257b43c0",
+      "mediaCount": 1
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-244cdb8e-e837-4576-88e8-ba901f15fd5f-ptm-card-ce20ff78-512f-4077-8b43-810adb48ada6.pdf",
+      "sha256": "ee4131755cbe7bf0671b2539cfe9fb95445efa18eeedfc039d34ec98796c93fd",
+      "bytes": 77687,
+      "format": "PDF",
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "templateId": "ptm-card",
+      "pdfInspection": {
+        "pages": 1,
+        "textSha256": "830a4fc34b9c2dd3f3f5dd755db0a035a3e604a003aa86dfe567d4598be63a80",
+        "numberPresent": true
+      }
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-c0d2ee56-1e65-4199-9422-794ef0ff34cf-ptm-card-cc1bb0b2-c86f-40e5-bca8-01e688f63483.docx",
+      "sha256": "779cb964ad3019bc1142e744e1007f658c413282aeaa0c343516b1a48aa1ee5b",
+      "bytes": 20799,
+      "format": "DOCX",
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "templateId": "ptm-card",
+      "documentXmlSha256": "0d6237358219d798dbeaa3319dcc9b51b2fa1c4735d651c61c064f7ce2c248ed",
+      "mediaCount": 1
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-51ab4096-a669-4400-adbf-a90577023b3d-ptm-card-cc1bb0b2-c86f-40e5-bca8-01e688f63483.pdf",
+      "sha256": "5696b20b703415bd32e04b4534893fcb05e067439d9352e233d9d68ab68fd73b",
+      "bytes": 77890,
+      "format": "PDF",
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "templateId": "ptm-card",
+      "pdfInspection": {
+        "pages": 1,
+        "textSha256": "29ecc8c0c29cea1a5b4fe232368943551f23af1678f21cab18ef2c5027c1e4fa",
+        "numberPresent": true
+      }
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-a608619a-23e8-4556-8353-60f9cbe46f97-ptm-protocol-4a6ce713-c4d7-45e2-8716-d3c1f0d16845.docx",
+      "sha256": "d3cbf6b0ad97f255c7c10690748ccc60beef8f4fa9b7a2262c55ad91418e5d09",
+      "bytes": 7049796,
+      "format": "DOCX",
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "templateId": "ptm-protocol",
+      "documentXmlSha256": "a1bcacbbad9660c9fe31a50e3d4e23ab122b11ba963846235ec486c63cc53bba",
+      "mediaCount": 0
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/company-bc00eb6a-8129-4f6b-8d57-84ff569a4077-ptm-protocol-4a6ce713-c4d7-45e2-8716-d3c1f0d16845.pdf",
+      "sha256": "b16b6194d2d7352b149dae74bd2047ce89c3f266fbb1cac9a023aad2fa96e7b4",
+      "bytes": 130207,
+      "format": "PDF",
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "templateId": "ptm-protocol",
+      "pdfInspection": {
+        "pages": 1,
+        "textSha256": "ac910806ec185c46c7da65372db9b48cf842c597f1c6c9a9ce706e6479f5b9c1",
+        "numberPresent": true
+      }
+    }
+  ],
+  "documents": [
+    {
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "templateId": "ptm-card",
+      "number": "PTM-CARD-00033",
+      "pdf": {
+        "pages": 1,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/pdf-ce20ff78-512f-4077-8b43-810adb48ada6/page-1.png",
+            "sha256": "40c321a13b80c42edc0b2c11396c7c072730c3c0fbde80f49d508182cb65e159",
+            "bytes": 62603
+          }
+        ],
+        "originalSha256": "ee4131755cbe7bf0671b2539cfe9fb95445efa18eeedfc039d34ec98796c93fd"
+      },
+      "docx": {
+        "pages": 1,
+        "textSha256": "830a4fc34b9c2dd3f3f5dd755db0a035a3e604a003aa86dfe567d4598be63a80",
+        "numberPresent": true,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/docx-ce20ff78-512f-4077-8b43-810adb48ada6/page-1.png",
+            "sha256": "bb0170011cdaf1b7342c37757d88bc8d5348d6cb706af19c0fff88bbb073cbb6",
+            "bytes": 108893
+          }
+        ],
+        "originalSha256": "a3aa0ef0b9a440c5efc8afacdc70e228ae8115d9c44cd05565d812f81440dd83",
+        "independentDocxRender": true,
+        "privateCopyShaMatchesOriginal": true,
+        "privateDerivedPdfSha256": "25ba1479511e65b3b7e35b2ebb34486ff9cb18881c03611c3dbe1945ab90a2a2",
+        "privateRendererLogSha256": "0cf4dd07d0ee1d3523bff385dd6a3f56d86a496354cb2576129c784466b838a5"
+      },
+      "pageCountsAgree": true
+    },
+    {
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "templateId": "ptm-card",
+      "number": "PTM-CARD-00034",
+      "pdf": {
+        "pages": 1,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/pdf-cc1bb0b2-c86f-40e5-bca8-01e688f63483/page-1.png",
+            "sha256": "85d48490d39a37268dac2289d0cc7cea7146caf420339cc99300e4f171df98c2",
+            "bytes": 63024
+          }
+        ],
+        "originalSha256": "5696b20b703415bd32e04b4534893fcb05e067439d9352e233d9d68ab68fd73b"
+      },
+      "docx": {
+        "pages": 1,
+        "textSha256": "29ecc8c0c29cea1a5b4fe232368943551f23af1678f21cab18ef2c5027c1e4fa",
+        "numberPresent": true,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/docx-cc1bb0b2-c86f-40e5-bca8-01e688f63483/page-1.png",
+            "sha256": "f7dd47f9fa68c146432011e9bb4e1ad53d7855db6d6d9592113ad0cc1414e1ea",
+            "bytes": 109272
+          }
+        ],
+        "originalSha256": "779cb964ad3019bc1142e744e1007f658c413282aeaa0c343516b1a48aa1ee5b",
+        "independentDocxRender": true,
+        "privateCopyShaMatchesOriginal": true,
+        "privateDerivedPdfSha256": "945264c0050c889e9ac528f33786bd75fdb253e44baa484370b4047eb3a670c6",
+        "privateRendererLogSha256": "70de5a6a2e500ea5c1fea596633dce1a20dfe8dc83a9d0875f778424e5b4009e"
+      },
+      "pageCountsAgree": true
+    },
+    {
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "templateId": "ptm-protocol",
+      "number": "TEST-PTM-00012",
+      "pdf": {
+        "pages": 1,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/pdf-4a6ce713-c4d7-45e2-8716-d3c1f0d16845/page-1.png",
+            "sha256": "4c3e4f71a21088ebd5e3350a6959f65c34574edd69678da662396c61b030646c",
+            "bytes": 169992
+          }
+        ],
+        "originalSha256": "b16b6194d2d7352b149dae74bd2047ce89c3f266fbb1cac9a023aad2fa96e7b4"
+      },
+      "docx": {
+        "pages": 1,
+        "textSha256": "ac910806ec185c46c7da65372db9b48cf842c597f1c6c9a9ce706e6479f5b9c1",
+        "numberPresent": true,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-04/live-cycle/final-visual-company-20261005T222330-3981de70/docx-4a6ce713-c4d7-45e2-8716-d3c1f0d16845/page-1.png",
+            "sha256": "192e43d59a1b50161be78767fb6239f8ad8bb0906a8aad16f89f1a366b663e41",
+            "bytes": 272122
+          }
+        ],
+        "originalSha256": "d3cbf6b0ad97f255c7c10690748ccc60beef8f4fa9b7a2262c55ad91418e5d09",
+        "independentDocxRender": true,
+        "privateCopyShaMatchesOriginal": true,
+        "privateDerivedPdfSha256": "f3f7cbaa3de50ceceab7072939d556009c682f91a16fb8f06916945f582ade65",
+        "privateRendererLogSha256": "3ee8c6ad9202964e56a950cc17eb35cec1f4fca132ed17d324bce49e3117b743"
+      },
+      "pageCountsAgree": true
+    }
+  ],
+  "humanVisualReview": {
+    "status": "PENDING_ROOT_ALL_PAGES",
+    "allPagesViewed": false
+  },
+  "originalsUnchanged": true,
+  "productionTouched": false,
+  "totalPdfPages": 3,
+  "totalDocxPages": 3,
+  "finishedUtc": "2026-10-05T22:49:30.183477+00:00"
+}

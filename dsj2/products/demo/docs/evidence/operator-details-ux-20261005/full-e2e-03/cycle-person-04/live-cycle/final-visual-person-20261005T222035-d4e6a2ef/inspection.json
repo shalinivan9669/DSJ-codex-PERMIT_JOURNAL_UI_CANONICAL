@@ -1,0 +1,247 @@
+{
+  "schema": "FINAL04_CYCLE_VISUAL_INSPECTION_1",
+  "status": "RENDERED_AWAITING_ROOT_VISUAL_REVIEW",
+  "startedUtc": "2026-10-05T22:48:15.654743+00:00",
+  "buildId": "iPAhpRSkuBMrPUIjjOnIx",
+  "kind": "PERSON",
+  "requestId": "82cf78e8-8034-4336-88b8-f072c7a804ad",
+  "issuanceIds": [
+    "abb00167-c80f-4dd4-97e2-c02918be60a5"
+  ],
+  "sourceCycle": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/person-cycle.json",
+    "sha256": "f875be10484108ce694e608594ba57db1082cb9bfac61be4751f13545917e822",
+    "bytes": 4517
+  },
+  "phaseRuntime": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/runtime-cycle-person-04.json",
+    "sha256": "4dbd37b5779a33e92b0898ca24b819e331512811fadbdd741760d547398f2ce6",
+    "bytes": 1310
+  },
+  "phaseResults": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/results-cycle-person-04.json",
+    "sha256": "7be5b17ab048b61b7df5242e9e2ce49106b782aa841aead6b7dc430ef4dd05cd",
+    "bytes": 9198
+  },
+  "phaseTestSourceManifest": {
+    "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/test-sources-cycle-person-04.json",
+    "sha256": "e0da444bce6b185e18a1116b6837e048b740a69dc29af4bfae47487e8a0084ad",
+    "bytes": 12573
+  },
+  "reviewedPlanSha256": "40e092ea5c99e751b2f3c2ad2ef4d6f37b2c13443a872bebcbedd33b8261195f",
+  "helperSha256": "63bd01acc33df6846bc9fe6b94e21a1762c497420e401d754be46202ed9a793b",
+  "originals": [
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/c783ac1c-3b94-45f2-b9b0-2e577a2d9617-ps-card-d77d366b-c3f1-4269-81fb-e8eb418d6cb5.docx",
+      "sha256": "5036c64e8820ca58f90b40719c56cf9edc8e09589e362df30bf3aee6bc68e7f1",
+      "bytes": 24540,
+      "format": "DOCX",
+      "documentId": "d77d366b-c3f1-4269-81fb-e8eb418d6cb5",
+      "templateId": "ps-card",
+      "documentXmlSha256": "e51af468f7f70069642b4b817568638ce53ffb227e16236d481cddebebd5e7d4",
+      "mediaCount": 1
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/a74e8b3d-2184-4592-9d65-0e2580735b3e-ps-card-d77d366b-c3f1-4269-81fb-e8eb418d6cb5.pdf",
+      "sha256": "b9904e91acff90be7f0417e42d8c9a154fa0101006ae58ccd1cbb0a48f4fa15e",
+      "bytes": 134371,
+      "format": "PDF",
+      "documentId": "d77d366b-c3f1-4269-81fb-e8eb418d6cb5",
+      "templateId": "ps-card",
+      "pdfInspection": {
+        "pages": 2,
+        "textSha256": "5771e4e75cd477e66e163a479d47d451b15e4289a4b286ed51fb45321ceea7a3",
+        "numberPresent": true
+      }
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/0e001840-c351-4fcb-9636-e07728f41f49-ps-witness-69f9de1f-2f84-485d-bb88-eb8ce26431d4.docx",
+      "sha256": "8d80a782700329e4cf7face5bb161a9852cb1214fce78c5cc3d382a3aa71beb0",
+      "bytes": 14752,
+      "format": "DOCX",
+      "documentId": "69f9de1f-2f84-485d-bb88-eb8ce26431d4",
+      "templateId": "ps-witness",
+      "documentXmlSha256": "e907214b8326fa382764f309242178b684debe621f3b708a9f115cf350ca0956",
+      "mediaCount": 0
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/4194ff54-53c7-4955-82ac-e0b091b022b0-ps-witness-69f9de1f-2f84-485d-bb88-eb8ce26431d4.pdf",
+      "sha256": "3f032b1de53366d2919b3f51f54c7cf7dba75122ea4ae02eb9d461fb9d5ca6f1",
+      "bytes": 112224,
+      "format": "PDF",
+      "documentId": "69f9de1f-2f84-485d-bb88-eb8ce26431d4",
+      "templateId": "ps-witness",
+      "pdfInspection": {
+        "pages": 2,
+        "textSha256": "cb94f0ee9a2de39115ab8ae4c0876b3c940f1c4d3d4410ec35ee9f09f5ef8c91",
+        "numberPresent": true
+      }
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/327a8e17-7399-42dc-bada-86cbd3a33e85-ps-protocol-627b926f-7ca6-4dc5-a02e-00d4c9161066.docx",
+      "sha256": "ab4dca40a8cfe022f76ea1adaf5ad023358cee1db4a0e63dc8143cfa2460e117",
+      "bytes": 20183,
+      "format": "DOCX",
+      "documentId": "627b926f-7ca6-4dc5-a02e-00d4c9161066",
+      "templateId": "ps-protocol",
+      "documentXmlSha256": "a582d3c8db679bf7227c8439bd05fb51226df0101c957c6ccb2de5021119cfdb",
+      "mediaCount": 0
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/6dca2f4f-dc59-4863-a5db-fafd8b32c43d-ps-protocol-627b926f-7ca6-4dc5-a02e-00d4c9161066.pdf",
+      "sha256": "0c637e883aafb52032151dee1b2430b6ee73d7197a296ae10aaab523438f49c1",
+      "bytes": 104489,
+      "format": "PDF",
+      "documentId": "627b926f-7ca6-4dc5-a02e-00d4c9161066",
+      "templateId": "ps-protocol",
+      "pdfInspection": {
+        "pages": 1,
+        "textSha256": "6d7227a38713d5a1ed93d9e4ded89cc618fd8fba82527430a749594ebc8c7f0a",
+        "numberPresent": true
+      }
+    }
+  ],
+  "documents": [
+    {
+      "documentId": "d77d366b-c3f1-4269-81fb-e8eb418d6cb5",
+      "templateId": "ps-card",
+      "number": "PS-CARD-00025",
+      "pdf": {
+        "pages": 2,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/pdf-d77d366b-c3f1-4269-81fb-e8eb418d6cb5/page-1.png",
+            "sha256": "82adef0cf6c5a27e7f7ec052b7a402514486ee77437bcdd8f0c13d57f9a6f5b3",
+            "bytes": 160276
+          },
+          {
+            "page": 2,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/pdf-d77d366b-c3f1-4269-81fb-e8eb418d6cb5/page-2.png",
+            "sha256": "58268c8ba41256a8547245d489f8d4b48a93e3e82b3e0469159e49376a2218bb",
+            "bytes": 169911
+          }
+        ],
+        "originalSha256": "b9904e91acff90be7f0417e42d8c9a154fa0101006ae58ccd1cbb0a48f4fa15e"
+      },
+      "docx": {
+        "pages": 2,
+        "textSha256": "5771e4e75cd477e66e163a479d47d451b15e4289a4b286ed51fb45321ceea7a3",
+        "numberPresent": true,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/docx-d77d366b-c3f1-4269-81fb-e8eb418d6cb5/page-1.png",
+            "sha256": "c6dcd427f7400834b4439e04fff06674fdf90c9b352d2bbe9ccb09959eb6a21a",
+            "bytes": 220379
+          },
+          {
+            "page": 2,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/docx-d77d366b-c3f1-4269-81fb-e8eb418d6cb5/page-2.png",
+            "sha256": "bbc42fdcc4b1849e855d33364746ba54d252b5c41bff3701ab609f35aece7e4b",
+            "bytes": 251392
+          }
+        ],
+        "originalSha256": "5036c64e8820ca58f90b40719c56cf9edc8e09589e362df30bf3aee6bc68e7f1",
+        "independentDocxRender": true,
+        "privateCopyShaMatchesOriginal": true,
+        "privateDerivedPdfSha256": "923f07ae6650fac2ab4be7f5ba1975af6ded3831edb38d1b975c02e6857a8da9",
+        "privateRendererLogSha256": "b533ab2472e85c4faf3bac7ad3b1bed8fee291e9ce7b23868ca1810624ab996f"
+      },
+      "pageCountsAgree": true
+    },
+    {
+      "documentId": "69f9de1f-2f84-485d-bb88-eb8ce26431d4",
+      "templateId": "ps-witness",
+      "number": "PS-WITNESS-00025",
+      "pdf": {
+        "pages": 2,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/pdf-69f9de1f-2f84-485d-bb88-eb8ce26431d4/page-1.png",
+            "sha256": "54f077b5cd9e6cd9ab9566d05c46a124f89694cf7fa46d72c27fe48c5dcf4827",
+            "bytes": 14890
+          },
+          {
+            "page": 2,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/pdf-69f9de1f-2f84-485d-bb88-eb8ce26431d4/page-2.png",
+            "sha256": "9d658589905e7885cff26b59cfd57d572aa1b3f39e30bda40b1efb03c0708b7c",
+            "bytes": 130800
+          }
+        ],
+        "originalSha256": "3f032b1de53366d2919b3f51f54c7cf7dba75122ea4ae02eb9d461fb9d5ca6f1"
+      },
+      "docx": {
+        "pages": 2,
+        "textSha256": "cb94f0ee9a2de39115ab8ae4c0876b3c940f1c4d3d4410ec35ee9f09f5ef8c91",
+        "numberPresent": true,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/docx-69f9de1f-2f84-485d-bb88-eb8ce26431d4/page-1.png",
+            "sha256": "7c2ac9f18fc8c4ce6bcab64f2e9f1a6591b50b7fdc72683818e8c806df0d01b4",
+            "bytes": 22479
+          },
+          {
+            "page": 2,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/docx-69f9de1f-2f84-485d-bb88-eb8ce26431d4/page-2.png",
+            "sha256": "6c542cf5a9313d5912e903c0785cd102391dfe933db490d0449488fefe4f720b",
+            "bytes": 218337
+          }
+        ],
+        "originalSha256": "8d80a782700329e4cf7face5bb161a9852cb1214fce78c5cc3d382a3aa71beb0",
+        "independentDocxRender": true,
+        "privateCopyShaMatchesOriginal": true,
+        "privateDerivedPdfSha256": "da407d88fc406829188d1b2e9d3ecc20caf932140fe9c3ef902b1b8ac1d9eaa3",
+        "privateRendererLogSha256": "59193a8753ed40450b016d88a7437424ff15c11da44d1e6397521c5789f0b5fb"
+      },
+      "pageCountsAgree": true
+    },
+    {
+      "documentId": "627b926f-7ca6-4dc5-a02e-00d4c9161066",
+      "templateId": "ps-protocol",
+      "number": "PS-PROTOCOL-00006",
+      "pdf": {
+        "pages": 1,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/pdf-627b926f-7ca6-4dc5-a02e-00d4c9161066/page-1.png",
+            "sha256": "cf5c77e3e142643395588d79c9ed4f8ded7269a329e9af5186842902ed8bb3a6",
+            "bytes": 82048
+          }
+        ],
+        "originalSha256": "0c637e883aafb52032151dee1b2430b6ee73d7197a296ae10aaab523438f49c1"
+      },
+      "docx": {
+        "pages": 1,
+        "textSha256": "6d7227a38713d5a1ed93d9e4ded89cc618fd8fba82527430a749594ebc8c7f0a",
+        "numberPresent": true,
+        "pageImages": [
+          {
+            "page": 1,
+            "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-person-04/live-cycle/final-visual-person-20261005T222035-d4e6a2ef/docx-627b926f-7ca6-4dc5-a02e-00d4c9161066/page-1.png",
+            "sha256": "eefabc443a8904e1c9f6993b818da30891f66247725fa13a3c085e017e0ab6c1",
+            "bytes": 133877
+          }
+        ],
+        "originalSha256": "ab4dca40a8cfe022f76ea1adaf5ad023358cee1db4a0e63dc8143cfa2460e117",
+        "independentDocxRender": true,
+        "privateCopyShaMatchesOriginal": true,
+        "privateDerivedPdfSha256": "4eccfcf6681b802ad253692a1db22fe4152aaaa6d04402f4e868314c42d67412",
+        "privateRendererLogSha256": "1d558e37bb04e70b883c4f9f83fd3920166b3ba1ad92727df3eb4e3f3ac2ec23"
+      },
+      "pageCountsAgree": true
+    }
+  ],
+  "humanVisualReview": {
+    "status": "PENDING_ROOT_ALL_PAGES",
+    "allPagesViewed": false
+  },
+  "originalsUnchanged": true,
+  "productionTouched": false,
+  "totalPdfPages": 5,
+  "totalDocxPages": 5,
+  "finishedUtc": "2026-10-05T22:48:49.563301+00:00"
+}

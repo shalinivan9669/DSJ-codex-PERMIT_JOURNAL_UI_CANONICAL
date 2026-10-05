@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "scope": "Three original PS documents from the synthetic PERSON issuance, not all possible production inputs",
+  "requestId": "dbc8fed5-2986-48a1-8163-f1b793075e81",
+  "issuanceId": "0109836d-c26c-4122-9839-756a1cf1b7cf",
+  "pdfMethod": "Downloaded original PDF bytes, SHA checked against API, rendered with PyMuPDF 1.27.2.3 and every page visually inspected",
+  "docxMethod": "Downloaded original DOCX bytes, SHA checked against API, opened by LibreOffice through bundled render_docx.py, all resulting pages visually inspected",
+  "nativeWordAdditionalEvidence": "Earlier PS witness preview opened read-only in Microsoft Word; live/word-ps-witness-page2.png. This does not claim that all issued files were opened in Word.",
+  "reviewedPages": {
+    "originalPdf": 5,
+    "independentDocxRender": 5,
+    "psCard": 2,
+    "psWitness": 2,
+    "psProtocol": 1
+  },
+  "observed": [
+    "The PS witness has its intended front cover and bilingual inner page.",
+    "The witness prints 1 September 2026 through 30 September 2026 in Russian and Kazakh.",
+    "The commission decision/protocol date is 18 October 2026, while issue date is 20 October 2026.",
+    "The witness registration, protocol and card numbers match the issued document metadata.",
+    "The synthetic blue photo is present in the PS card photo frame.",
+    "No clipped text, overlapping text or missing Kazakh glyphs were observed on these pages.",
+    "The red DEMO marking is retained; these synthetic samples are not valid issued credentials."
+  ],
+  "limitations": [
+    "No physical printing acceptance.",
+    "No legal approval or valid digital signature is claimed.",
+    "The PS card contains its existing static reverse-side wording; this task does not reapprove that wording as legal policy."
+  ]
+}

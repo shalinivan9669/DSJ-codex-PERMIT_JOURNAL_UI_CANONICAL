@@ -292,25 +292,75 @@ export async function verifyG1Files(
   expect(frozenCard.fields).not.toContain("FULL_NAME_BOTH");
   const { people, sourceEvent, resultsSource } = await g1Sources();
   const source = `${resultsSource.rows[0].evidenceKey}; ${resultsSource.rows[0].confirmedBy}; ${resultsSource.rows[0].confirmedAt}`;
-  let jobs: unknown[] = [];
+  type RenderJob = {
+    id: string;
+    issuanceId?: string;
+    status: string;
+    artifactId?: string;
+    errorCode?: string;
+  };
+  let jobs: RenderJob[] = [];
+  let rateLimitedUntil = 0;
+  let previousProgress = "";
+  await fs.mkdir(evidence, { recursive: true });
+  const diagnosticPath = path.join(evidence, "jobs-poll-diagnostic.jsonl");
   await expect
     .poll(
       async () => {
+        if (performance.now() < rateLimitedUntil) return false;
         const response = await page.request.get(
           `/api/jobs?requestId=${checkpoint.requestId}`,
         );
-        expect(response.ok()).toBe(true);
-        const entries = (await response.json()).items;
-        jobs = entries;
-        const issued = entries.filter(
-          (job: { issuanceId?: string }) => job.issuanceId,
+        if (!response.ok()) {
+          const error = await response.json().catch(() => ({}));
+          const code = typeof error.code === "string" ? error.code : null;
+          await fs.appendFile(
+            diagnosticPath,
+            JSON.stringify({
+              capturedUtc: new Date().toISOString(),
+              status: response.status(),
+              code,
+            }) + "\n",
+          );
+          if (response.status() === 429) {
+            // Respect the unchanged one-minute API window inside the existing
+            // deadline. All other HTTP errors remain immediate failures.
+            rateLimitedUntil = performance.now() + 60_000;
+            return false;
+          }
+          throw new Error(
+            `G1_JOBS_HTTP_${response.status()}:${code || "UNSPECIFIED"}`,
+          );
+        }
+        jobs = (await response.json()).items;
+        const issued = jobs.filter((job) => job.issuanceId);
+        const progress = Object.fromEntries(
+          [...new Set(issued.map((job) => job.status))].map((status) => [
+            status,
+            issued.filter((job) => job.status === status).length,
+          ]),
         );
+        const failed = issued
+          .filter((job) => job.status === "FAILED")
+          .map((job) => ({ id: job.id, errorCode: job.errorCode }));
+        const signature = JSON.stringify(progress);
+        if (signature !== previousProgress) {
+          previousProgress = signature;
+          await fs.appendFile(
+            diagnosticPath,
+            JSON.stringify({
+              capturedUtc: new Date().toISOString(),
+              status: response.status(),
+              progress,
+              failed,
+            }) + "\n",
+          );
+        }
+        if (failed.length)
+          throw new Error(`G1_RENDER_FAILED:${JSON.stringify(failed)}`);
         return (
           issued.length === 204 &&
-          issued.every(
-            (job: { status: string; artifactId?: string }) =>
-              job.status === "SUCCEEDED" && !!job.artifactId,
-          )
+          issued.every((job) => job.status === "SUCCEEDED" && !!job.artifactId)
         );
       },
       { timeout: 3600000, intervals: [2500, 5000] },

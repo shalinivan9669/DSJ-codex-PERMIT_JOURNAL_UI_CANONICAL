@@ -1,5 +1,8 @@
 import { loginIsolated } from "./operator-full-fix-session";
-import { assertTechnicalBlankRemoval, openRecipientExtraTools } from "./operator-keyboard-helpers";
+import {
+  assertTechnicalBlankRemoval,
+  openRecipientExtraTools,
+} from "./operator-keyboard-helpers";
 import type { Customer } from "../lib/types";
 import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
@@ -94,21 +97,25 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   }
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createEmpty(page, "PERSON");
+  // This is a collection draft spanning two employers for scoped history.
+  // Leave its common company unbound until the explicit customer workflow below.
+  await createEmpty(page, "COMPANY");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
   await assertTechnicalBlankRemoval(page);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page
     .getByLabel("Или вставьте таблицу с заголовками")
     .fill(
       `externalId\tpersonnelNumber\temployerId\tФИО RU\tФИО KZ\nA-${stamp}\t000001\t${companies[0].id}\tСинтетический Однофамилец\tӘ Ғ Қ Ң Ө Ұ Ү Һ І\nB-${stamp}\t000002\t${companies[1].id}\tСинтетический Однофамилец\tJohn Smith`,
     );
   await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .locator(".import-document-options > summary")
     .click();
   await page
     .getByRole("combobox", {
@@ -231,7 +238,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   await page.getByRole("tab", { name: "Личные данные", exact: true }).click();
   await employerDetails(page);
   await page
-    .getByLabel("Должность / профессия", { exact: true })
+    .getByLabel("Должность", { exact: true })
     .fill("Должность компании A");
   await page
     .getByLabel("Период работы / основание актуальности", { exact: true })
@@ -271,7 +278,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
     page.getByLabel("Место работы · RU", { exact: true }),
   ).toHaveValue(companies[1].nameRu);
   await page
-    .getByLabel("Должность / профессия", { exact: true })
+    .getByLabel("Должность", { exact: true })
     .fill("Должность компании B");
   await page
     .getByLabel("Период работы / основание актуальности", { exact: true })
@@ -313,7 +320,7 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
     .click();
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createEmpty(page, "PERSON");
+  await createEmpty(page, "COMPANY");
   await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
@@ -382,11 +389,12 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
     has: page.getByText(companies[0].nameRu, { exact: true }),
   });
   await expect(companyRow).toHaveCount(1);
-  const companyPatchResponse = page.waitForResponse((response) =>
-    response.request().method() === "PATCH" &&
-    new URL(response.url()).pathname ===
-      `/api/print-requests/${companyRequestId}` &&
-    response.request().postDataJSON()?.draft?.customerId === companies[0].id,
+  const companyPatchResponse = page.waitForResponse(
+    (response) =>
+      response.request().method() === "PATCH" &&
+      new URL(response.url()).pathname ===
+        `/api/print-requests/${companyRequestId}` &&
+      response.request().postDataJSON()?.draft?.customerId === companies[0].id,
   );
   await companyRow
     .getByRole("button", { name: "Выбрать", exact: true })
@@ -462,21 +470,19 @@ test("real customer clarification can be scoped, reduced, edited and copied; emp
   const sameName = `Совпадающее ФИО ${stamp}`;
   await page.goto("/requests");
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createEmpty(page, "PERSON");
+  await createEmpty(page, "COMPANY");
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
   await assertTechnicalBlankRemoval(page);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   await page
     .getByLabel("Или вставьте таблицу с заголовками")
     .fill(
       `externalId\tpersonnelNumber\temployerId\tfullNameRu\nSCOPED-A-${stamp}\t000101\t${companies[0].id}\t${sameName}\nSCOPED-B-${stamp}\t000101\t${companies[1].id}\t${sameName}`,
     );
   await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
     .click();
   await page
     .getByRole("button", { name: "Добавить 2 строк в черновик", exact: true })

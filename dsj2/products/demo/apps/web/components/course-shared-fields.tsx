@@ -10,6 +10,7 @@ import {
   trainingDisplayTitle,
 } from "@/lib/training-display";
 import type { Draft } from "@/lib/types";
+import { TrainingPeriodFields } from "./training-period-fields";
 
 const itrFields = [
   ["biotIndustryRu", "Отрасль · RU"],
@@ -101,15 +102,19 @@ export function CourseSharedFields({
           return (
             <details
               key={event.id}
-              open={isItr || showHours || showProductionHours || undefined}
+              open={
+                isItr || isPs || showHours || showProductionHours || undefined
+              }
             >
               <summary>
                 {trainingDisplayTitle(event.title)} ·{" "}
-                {isItr
-                  ? "сведения проверки"
-                  : showHours || showProductionHours
-                    ? "длительность программы"
-                    : "другая профессия или квалификация"}{" "}
+                {isPs
+                  ? "параметры курса"
+                  : isItr
+                    ? "сведения проверки"
+                    : showHours || showProductionHours
+                      ? "длительность программы"
+                      : "другая профессия или квалификация"}{" "}
                 · {members.length} человек
               </summary>
               <fieldset disabled={disabled}>
@@ -117,6 +122,34 @@ export function CourseSharedFields({
                   {trainingDisplayTitle(event.title)} · общие сведения для{" "}
                   {members.length} человек
                 </legend>
+                {isPs && (
+                  <TrainingPeriodFields
+                    values={effective}
+                    fieldPath={`events.${index}.commonFields`}
+                    fieldHints={fieldHints}
+                    origins={event.commonFields.fieldOrigins}
+                    disabled={disabled}
+                    onChange={(key, value) =>
+                      onChange({
+                        events: draft.events!.map((candidate) =>
+                          candidate.id === event.id
+                            ? {
+                                ...candidate,
+                                commonFields: {
+                                  ...candidate.commonFields,
+                                  [key]: value,
+                                  fieldOrigins: {
+                                    ...candidate.commonFields.fieldOrigins,
+                                    [key]: value ? "MANUAL" : "CLEARED",
+                                  },
+                                },
+                              }
+                            : candidate,
+                        ),
+                      })
+                    }
+                  />
+                )}
                 {(showHours || showProductionHours) && (
                   <p className="fine-print">
                     Укажите фактическую длительность этой программы один раз для

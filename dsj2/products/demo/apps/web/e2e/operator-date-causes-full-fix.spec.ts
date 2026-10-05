@@ -59,7 +59,7 @@ async function create(
   const biot = randomUUID(),
     ptm = randomUUID();
   const source = draftSchema.parse({
-    kind: "PERSON",
+    kind: "COMPANY",
     schemaVersion: 2,
     demoMode: true,
     commonFields: { documentDate: "2026-10-06" },
@@ -484,6 +484,7 @@ test("UX09 request/event/individual dates preserve inherited, manual, imported a
     fixture = await create(page, headers, { origins: true }),
     initial = await read(page, fixture.id);
   const snapshots: unknown[] = [];
+  let sharedDateEntered = false;
   async function check(value: string, origin: string, rawOrigin: string) {
     await expect
       .poll(
@@ -499,6 +500,13 @@ test("UX09 request/event/individual dates preserve inherited, manual, imported a
       current.provenance[`${raw.items[0].id}:${assignment.id}`].documentDate,
     ).toBe(origin);
     expect(assignment.fieldOrigins?.documentDate).toBe(rawOrigin);
+    if (sharedDateEntered) {
+      // The resolved origin describes the explicit source value. The raw
+      // assignment still proves whether this person inherits that event.
+      const event = raw.events!.find((item) => item.id === fixture.biot)!;
+      expect(event.commonFields.documentDate).toBe("2026-10-07");
+      expect(event.commonFields.fieldOrigins?.documentDate).toBe("MANUAL");
+    }
     expect(raw.items[1].assignments[0].documentDate).toBe("2026-10-09");
     expect(raw.items[1].assignments[0].fieldOrigins?.documentDate).toBe(
       "IMPORTED",
@@ -518,7 +526,8 @@ test("UX09 request/event/individual dates preserve inherited, manual, imported a
   await root
     .locator('[data-field-path="events.0.commonFields.documentDate"]')
     .fill("2026-10-07");
-  await check("2026-10-07", "EVENT", "INHERITED");
+  sharedDateEntered = true;
+  await check("2026-10-07", "MANUAL", "INHERITED");
   await page
     .getByRole("button", { name: "Детали получателя 1", exact: true })
     .click();
@@ -568,12 +577,12 @@ test("UX09 request/event/individual dates preserve inherited, manual, imported a
   await dateOrigin
     .getByRole("button", { name: "Вернуть общее значение", exact: true })
     .click();
-  await check("2026-10-07", "EVENT", "INHERITED");
+  await check("2026-10-07", "MANUAL", "INHERITED");
   await modal
     .getByRole("button", { name: "Вернуться к списку", exact: true })
     .click();
   await page.reload();
-  await check("2026-10-07", "EVENT", "INHERITED");
+  await check("2026-10-07", "MANUAL", "INHERITED");
   await page.screenshot({
     path: path.join(evidence, "UX09-return-common-reload.png"),
     fullPage: true,
@@ -607,6 +616,11 @@ test("UX09 common empty date exposes its actual cause and malformed calendar dra
     "commonFields.documentDate",
   );
   await expect(common).toHaveAttribute("aria-invalid", "true");
+  const cleared = await read(page, fixture.id);
+  expect(cleared.commonFields?.fieldOrigins?.documentDate).toBe("CLEARED");
+  expect(cleared.items).toEqual(initial.items);
+  await page.reload();
+  await expect(common).toHaveValue("");
   await expect(page.locator("#request-common-date-feedback")).toContainText(
     /дат/,
   );
@@ -620,6 +634,15 @@ test("UX09 common empty date exposes its actual cause and malformed calendar dra
     .toBe(false);
   const valid = await read(page, fixture.id),
     invalid = structuredClone(draftPayload(valid));
+  expect(valid.commonFields?.fieldOrigins?.documentDate).toBe("MANUAL");
+  expect(valid.items).toEqual(initial.items);
+  await page.reload();
+  await expect(common).toHaveValue("2026-10-06");
+  expect(
+    (await resolved(page, fixture.id)).issues.some(
+      (issue) => issue.code === "DATE_INVALID",
+    ),
+  ).toBe(false);
   invalid.commonFields!.documentDate = "2026-02-30";
   const patch = await page.request.patch(`/api/print-requests/${fixture.id}`, {
     headers,

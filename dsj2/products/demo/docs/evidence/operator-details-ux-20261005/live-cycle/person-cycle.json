@@ -1,0 +1,132 @@
+{
+  "status": "PASS",
+  "id": "dbc8fed5-2986-48a1-8163-f1b793075e81",
+  "revision": 3,
+  "proposalId": "2ee88735-b488-4b5b-9124-cc4f77cc4863",
+  "issuanceIds": [
+    "0109836d-c26c-4122-9839-756a1cf1b7cf"
+  ],
+  "documents": [
+    {
+      "id": "10fd01b8-43e7-4ab7-961c-617a362b8ecf",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "0109836d-c26c-4122-9839-756a1cf1b7cf",
+      "requestId": "dbc8fed5-2986-48a1-8163-f1b793075e81",
+      "rowId": "a9a80aa0-f185-4fec-9af7-d164af807256",
+      "assignmentId": "f51af1e1-66ad-4608-bf28-261d13cf9261-ps-protocol",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "21c8f72b-8b66-4b65-955a-6832d06359b0",
+      "templateId": "ps-protocol",
+      "namespace": "PS:PROTOCOL",
+      "number": "PS-PROTOCOL-00001",
+      "registrationNumber": null,
+      "documentDate": "2026-10-18",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T18:03:45.196Z"
+    },
+    {
+      "id": "5ac6a302-05b5-43bd-bad5-a5451f06906e",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "0109836d-c26c-4122-9839-756a1cf1b7cf",
+      "requestId": "dbc8fed5-2986-48a1-8163-f1b793075e81",
+      "rowId": "a9a80aa0-f185-4fec-9af7-d164af807256",
+      "assignmentId": "f51af1e1-66ad-4608-bf28-261d13cf9261-ps-witness",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "629540c1-bc61-4901-87d5-e4dc58f2a924",
+      "templateId": "ps-witness",
+      "namespace": "PS:WITNESS",
+      "number": "PS-WITNESS-00001",
+      "registrationNumber": "PS-REGISTRATION-00001",
+      "documentDate": "2026-10-20",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T18:03:45.190Z"
+    },
+    {
+      "id": "7523a146-d1f1-4e6b-af50-f1791599cbdc",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "0109836d-c26c-4122-9839-756a1cf1b7cf",
+      "requestId": "dbc8fed5-2986-48a1-8163-f1b793075e81",
+      "rowId": "a9a80aa0-f185-4fec-9af7-d164af807256",
+      "assignmentId": "f51af1e1-66ad-4608-bf28-261d13cf9261",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "0b9175dc-b6f3-45c4-b741-224aef1f4238",
+      "templateId": "ps-card",
+      "namespace": "PS:CARD",
+      "number": "PS-CARD-00001",
+      "registrationNumber": null,
+      "documentDate": "2026-10-20",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T18:03:45.178Z"
+    }
+  ],
+  "files": [
+    {
+      "id": "03c3590e-18ce-4fe6-b0c1-279bc6a2529d",
+      "fileName": "03c3590e-18ce-4fe6-b0c1-279bc6a2529d-ps-protocol-10fd01b8-43e7-4ab7-961c-617a362b8ecf.pdf",
+      "format": "PDF",
+      "sha256": "aabafc1402685819bdc9763ccf073b291988016327822230de158047b80bcb35"
+    },
+    {
+      "id": "3c57ca2b-c44c-4e92-8527-e33ed0ebaa4a",
+      "fileName": "3c57ca2b-c44c-4e92-8527-e33ed0ebaa4a-ps-card-7523a146-d1f1-4e6b-af50-f1791599cbdc.docx",
+      "format": "DOCX",
+      "sha256": "ddf42fdee6d2dd57ca10f1c550806eae9c290c168daae3b52ca176fac9d084b5"
+    },
+    {
+      "id": "45651766-099a-41d4-861d-39e858a2d143",
+      "fileName": "45651766-099a-41d4-861d-39e858a2d143-ps-card-7523a146-d1f1-4e6b-af50-f1791599cbdc.pdf",
+      "format": "PDF",
+      "sha256": "f76959a7e6b8ee29abbd49ef548bdc8555f4b4fb0ffca6bb3f219e5e76bb055d"
+    },
+    {
+      "id": "4a6885bd-5a76-4855-a01f-fefa92531d55",
+      "fileName": "4a6885bd-5a76-4855-a01f-fefa92531d55-ps-witness-5ac6a302-05b5-43bd-bad5-a5451f06906e.docx",
+      "format": "DOCX",
+      "sha256": "4b722fb46be979c398f2531bb453688c4a136acb4f170c8272627eb7e9e2ecf1"
+    },
+    {
+      "id": "78bc238f-4b7f-4a71-ba36-d788c5200901",
+      "fileName": "78bc238f-4b7f-4a71-ba36-d788c5200901-ps-witness-5ac6a302-05b5-43bd-bad5-a5451f06906e.pdf",
+      "format": "PDF",
+      "sha256": "c924bcf8ce1cb06087a027aefd1879f4e560d74770461f404cd3be148b5517d7"
+    },
+    {
+      "id": "9ebdb5a5-da31-4e20-8517-f2a36c7535c4",
+      "fileName": "9ebdb5a5-da31-4e20-8517-f2a36c7535c4-ps-protocol-10fd01b8-43e7-4ab7-961c-617a362b8ecf.docx",
+      "format": "DOCX",
+      "sha256": "12b49b0334c2382d06ac1b7af8b0b0ab6ad9d05ecb15c0ea947168ddbbb7a8c2"
+    }
+  ],
+  "syntheticOnly": true,
+  "managerInputThroughUi": true,
+  "directorPreviewAndDecisionThroughUi": true,
+  "period": [
+    "2026-09-01",
+    "2026-09-30"
+  ],
+  "protocolDate": "2026-10-18",
+  "documentDate": "2026-10-20",
+  "reconstruction": {
+    "reconstructed": true,
+    "capturedUtc": "2026-10-05T19:42:47.018581+00:00",
+    "reason": "A later synthetic PERSON test wrote to the same historical manifest path. Its new manifest and six originals are preserved separately.",
+    "notOriginalManifestByteRecovery": true,
+    "databaseReadOnlyTransaction": true,
+    "immutableIssuanceVerified": true,
+    "allSixOriginalFileHashesVerified": true,
+    "allTenPreviouslyReviewedPageHashesUnchanged": true,
+    "uiAssertionsProvenance": "Retained from the previously read historical cycle manifest and prior acceptance evidence; UI was not re-executed during this reconstruction.",
+    "inspection": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/issued-inspection.json",
+    "inspectionSha256": "1c7fe025e499d03037053fac0e148c241f4a4ba08ce7ddeeecbe83b31cb8d915",
+    "visualReview": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/visual-review.json",
+    "visualReviewSha256": "295575ed3b319130bcd18c5f87e04b177f5624079c3aac3168cdf72cececcfb4",
+    "preservedNewCycle": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-01/live-cycle/person-cycle.json",
+    "preservedNewCycleSha256": "8761eed6e05879cf2ff9fcf7f187bb7c8ca309b0575cf65ff07997b5c2df187f"
+  }
+}

@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { randomUUID } from "node:crypto";
 import { draftSchema } from "@demo/contracts";
 import { draftPayload, type Draft } from "../lib/types";
 
@@ -10,16 +11,17 @@ import { fullSuitePageApiCooldown } from "./operator-full-suite";
 test.use({ trace: "off" });
 
 function fixture(individual = false) {
+  const eventId = randomUUID();
   return draftSchema.parse({
-    kind: "PERSON",
+    kind: "COMPANY",
     title: `СИНТЕТИЧЕСКИЙ UX integrity ${Date.now()}`,
     demoMode: true,
     schemaVersion: 2,
     commonFields: { documentDate: "2026-10-03" },
-    trainingDefaults: [{ direction: "BIOT", eventIds: ["ux-biот-event"] }],
+    trainingDefaults: [{ direction: "BIOT", eventIds: [eventId] }],
     events: [
       {
-        id: "ux-biот-event",
+        id: eventId,
         title: "Синтетическая группа БиОТ",
         protocolTemplateId: "biot-protocol",
         protocolMode: individual ? "INDIVIDUAL" : "GROUP",
@@ -46,7 +48,7 @@ function fixture(individual = false) {
         {
           id: `ux-biot-${number}`,
           templateId: "biot-worker-card",
-          eventId: "ux-biот-event",
+          eventId,
           protocolMode: individual ? "INDIVIDUAL" : "GROUP",
           documentDate: "2026-10-04",
           fieldOrigins: {
@@ -124,7 +126,11 @@ async function removeFirst(page: Page) {
 test("UX-01/02 scoped UI remove/reload/restore preserves IDs, dates, confirmations and an unrelated saved edit", async ({
   page,
 }, testInfo) => {
-  await fullSuitePageApiCooldown(page, testInfo.outputDir, "before-domain-remove-restore");
+  await fullSuitePageApiCooldown(
+    page,
+    testInfo.outputDir,
+    "before-domain-remove-restore",
+  );
   const headers = await login(page);
   const created = await create(page, headers);
   const before = created.items[0].assignments[0];
@@ -230,20 +236,68 @@ test("UX-28 conflict copy double activation creates exactly one new request and 
     expect(copied.items[0].positionRu).toBe(
       "Локальная должность B для новой копии",
     );
-    const withoutConfirmationTime = (item: Draft["items"][number]) => ({
+    const sourceEvents = sourceBefore.events || [];
+    const copiedEvents = copied.events || [];
+    expect(copiedEvents).toHaveLength(sourceEvents.length);
+    expect(new Set(copiedEvents.map((event) => event.id)).size).toBe(
+      copiedEvents.length,
+    );
+    expect(
+      copiedEvents.every(
+        (event) => !sourceEvents.some((source) => source.id === event.id),
+      ),
+    ).toBe(true);
+    const sourceEventByCopyId = new Map(
+      copiedEvents.map((event, index) => [event.id, sourceEvents[index].id]),
+    );
+    const originalEventId = (id: string | undefined) => {
+      if (!id) return id;
+      expect(sourceEventByCopyId.has(id)).toBe(true);
+      return sourceEventByCopyId.get(id)!;
+    };
+    expect(
+      copiedEvents.map((event) => ({
+        ...event,
+        id: originalEventId(event.id),
+        ...(event.rootEventId
+          ? { rootEventId: originalEventId(event.rootEventId) }
+          : {}),
+      })),
+    ).toEqual(sourceEvents);
+    expect(
+      copied.trainingDefaults?.map((entry) => ({
+        ...entry,
+        eventIds: entry.eventIds.map((id) => originalEventId(id)),
+      })),
+    ).toEqual(sourceBefore.trainingDefaults);
+    const withoutConfirmationTime = (
+      item: Draft["items"][number],
+      fromCopy = false,
+    ) => ({
       ...item,
       assignments: item.assignments.map((assignment) => ({
         ...assignment,
+        ...(fromCopy && assignment.eventId
+          ? { eventId: originalEventId(assignment.eventId) }
+          : {}),
         outcome: assignment.outcome && {
           ...assignment.outcome,
           confirmedAt: undefined,
         },
       })),
     });
-    // A new request receives its own authenticated confirmation time. Raw
-    // facts, form IDs, source and field origins are copied unchanged.
-    expect(withoutConfirmationTime(copied.items[1])).toEqual(
-      withoutConfirmationTime(sourceBefore.items[1]),
+    // The copied request owns fresh event IDs and receives its own authenticated
+    // confirmation time. Normalize only those identities for exact fact comparison.
+    expect(
+      copied.items.map((item) => withoutConfirmationTime(item, true)),
+    ).toEqual(
+      sourceBefore.items.map((item, index) =>
+        withoutConfirmationTime(
+          index === 0
+            ? { ...item, positionRu: "Локальная должность B для новой копии" }
+            : item,
+        ),
+      ),
     );
     expect(creates).toHaveLength(1);
     expect(creates[0].key).toMatch(/^ux-copy-/);
@@ -254,6 +308,8 @@ test("UX-28 conflict copy double activation creates exactly one new request and 
     const sourceAfter = await read(page, created.id);
     expect(sourceAfter.revision).toBe(sourceBefore.revision);
     expect(sourceAfter.items).toEqual(sourceBefore.items);
+    expect(sourceAfter.events).toEqual(sourceBefore.events);
+    expect(sourceAfter.trainingDefaults).toEqual(sourceBefore.trainingDefaults);
     await second
       .getByLabel("Должность · RU, строка 2", { exact: true })
       .fill("Сохранённая правка новой копии");

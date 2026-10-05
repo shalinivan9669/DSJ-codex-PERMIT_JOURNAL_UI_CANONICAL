@@ -53,6 +53,7 @@ test("one working request: director approves selected BIOT then later PTM, real 
           protocolTemplateId: "ptm-protocol",
           protocolMode: "GROUP",
           commonFields: {
+            hours: "16",
             trainingStart: "2026-10-01",
             trainingEnd: "2026-10-03",
             documentDate: "2026-10-05",

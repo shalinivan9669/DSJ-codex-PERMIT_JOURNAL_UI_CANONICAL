@@ -12,6 +12,10 @@ import { isSpecialBiotCategory } from "@demo/contracts";
 import type { GridField } from "@/lib/grid-paste";
 import type { Recipient } from "@/lib/types";
 import {
+  hasRecipientEmployerException,
+  type RequestEmployer,
+} from "@/lib/recipient-employer-exception";
+import {
   assignedDocumentTemplates,
   documentChoices,
 } from "@/lib/document-selection";
@@ -48,6 +52,7 @@ export type GridRowActions = Pick<
 };
 type Props = {
   item: Recipient;
+  requestEmployer?: RequestEmployer | null;
   issuedAssignmentIds: readonly string[];
   resolvedItem: Recipient;
   index: number;
@@ -116,6 +121,7 @@ function feedbackKey(props: Props, values: Record<string, string>) {
 export const RecipientGridRow = memo(
   function RecipientGridRow({
     item,
+    requestEmployer,
     issuedAssignmentIds,
     resolvedItem,
     index,
@@ -164,6 +170,8 @@ export const RecipientGridRow = memo(
     const itr = resolvedItem.assignments.some((assignment) =>
       isSpecialBiotCategory(assignment.biotCategory),
     );
+    const employerException =
+      !!requestEmployer && hasRecipientEmployerException(item, requestEmployer);
     const visibleEmployerFields = employerFields.filter(
       ([field]) =>
         field !== "workplaceRu" ||
@@ -650,7 +658,28 @@ export const RecipientGridRow = memo(
             </td>
           </tr>
         )}
-        {itr && (
+        {requestEmployer && employerException && (
+          <tr
+            data-recipient-id={item.id}
+            className={`recipient-grid-supplement ${rowClass}`}
+          >
+            <td colSpan={columns.length + 3 + (showPhotoColumn ? 1 : 0)}>
+              <span className="fine-print">
+                Сохранено исключение по работодателю:{" "}
+                {item.workplaceRu || item.workplaceKz || "отдельные реквизиты"}
+                .{" "}
+              </span>
+              <button
+                type="button"
+                className="text-button"
+                onClick={() => actions.current.onOpen(item.id)}
+              >
+                Открыть дополнительные данные
+              </button>
+            </td>
+          </tr>
+        )}
+        {itr && !requestEmployer && (
           <tr
             data-recipient-id={item.id}
             className={`recipient-grid-supplement ${rowClass}`}
@@ -702,6 +731,7 @@ export const RecipientGridRow = memo(
   },
   (before, after) =>
     before.item === after.item &&
+    before.requestEmployer === after.requestEmployer &&
     before.issuedAssignmentIds.join("\u0000") ===
       after.issuedAssignmentIds.join("\u0000") &&
     before.index === after.index &&

@@ -1,12 +1,14 @@
-import { createRequestWithWorkerDocument } from "./operator-keyboard-helpers";
 import { test, expect, type Page } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { approveFinalFixture } from "./final-approval-fixture";
-import { setLegacyKz } from "./operator-legacy-lifecycle-fixture";
 import { draftPayload, type Draft } from "../lib/types";
+import {
+  courseResultText,
+  DEFAULT_POSITIVE_OUTCOME_SOURCE,
+} from "@demo/contracts";
 
 const product = path.resolve(__dirname, "../../..");
 const evidence = path.resolve(
@@ -94,7 +96,10 @@ test("V06 exact five states: only two confirmed needs create clean linked repeat
   const auth = await login(page, "V06");
   const old = await get(page, `/print-requests/${auth.historyId}`);
   const oldSnapshot = old.issuances[0].snapshot;
-  const oldNumbers = old.documents.map((d: { number: string }) => d.number);
+  const documentIdentity = (documents: { id: string; number: string }[]) =>
+    documents.map(({ id, number }) => ({ id, number }))
+      .sort((a, b) => a.id.localeCompare(b.id));
+  const oldDocumentIdentity = documentIdentity(old.documents);
   const baseline = fixture("state", "V06");
   const steps: Record<string, unknown>[] = [];
   const record = async (action: string, proof: Record<string, unknown>) => {
@@ -234,11 +239,13 @@ test("V06 exact five states: only two confirmed needs create clean linked repeat
     expect(fresh.documents).toHaveLength(0);
     expect(fresh.issuances).toHaveLength(0);
     for (const a of fresh.items[0].assignments) {
-      expect(a.result).toBe("");
+      expect(a.result).toBe(courseResultText(a.templateId, "PASSED"));
       expect(a.documentDate).toBe("");
       expect(a.trainingStart).toBe("");
       expect(a.trainingEnd).toBe("");
-      expect(a.outcome?.status || "UNKNOWN").toBe("UNKNOWN");
+      expect(a.outcome?.status).toBe("PASSED");
+      expect(a.outcome?.source).toBe(DEFAULT_POSITIVE_OUTCOME_SOURCE);
+      expect(a.fieldOrigins?.outcome).toBe("AUTO");
     }
     const repeats = await Promise.all(
       [0, 1].map(() =>
@@ -295,9 +302,8 @@ test("V06 exact five states: only two confirmed needs create clean linked repeat
   expect(final.orders).toBe(0);
   const preserved = await get(page, `/print-requests/${auth.historyId}`);
   expect(preserved.issuances[0].snapshot).toEqual(oldSnapshot);
-  expect(preserved.documents.map((d: { number: string }) => d.number)).toEqual(
-    oldNumbers,
-  );
+  // Relation ordering is unspecified; preserve every document ID and its number.
+  expect(documentIdentity(preserved.documents)).toEqual(oldDocumentIdentity);
   await page.screenshot({
     path: path.join(evidence, "v06-closed-repeat-history.png"),
     fullPage: true,
@@ -352,11 +358,26 @@ test("V10 fresh supported synthetic center obtains its first actual UI PDF and a
     ),
   ).toBe(true);
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await createRequestWithWorkerDocument(page, "PERSON");
   await page
-    .getByLabel("ФИО, строка 1", { exact: true })
-    .fill("Тестов Иван Первый");
-  await setLegacyKz(page, "Сынақ Әли Қасымұлы");
+    .getByRole("radio", { name: "Физическое лицо", exact: true })
+    .check();
+  await page.getByRole("button", { name: "Далее", exact: true }).click();
+  const person = page.locator(".person-editor");
+  await person.getByLabel("ФИО", { exact: true }).fill("Тестов Иван Первый");
+  await person
+    .getByLabel("Должность", { exact: true })
+    .fill("Синтетический инженер");
+  await person
+    .getByText("Дополнительные персональные данные", { exact: true })
+    .click();
+  await person
+    .locator('[data-field-path="items.0.fullNameKz"]')
+    .fill("Сынақ Әли Қасымұлы");
+  await person.getByRole("button", { name: "Далее", exact: true }).click();
+  await person.getByRole("button", { name: "Рабочий", exact: true }).click();
+  await person.getByRole("button", { name: "Далее", exact: true }).click();
+  await person.getByRole("button", { name: "БиОТ", exact: true }).click();
+  await person.getByRole("button", { name: "Готово", exact: true }).click();
   await page
     .getByRole("button", { name: "Проверить данные", exact: true })
     .click();
@@ -370,7 +391,11 @@ test("V10 fresh supported synthetic center obtains its first actual UI PDF and a
   current.items[0].workplaceRu = "Тест Альфа";
   expect(
     current.items.every((row) =>
-      row.assignments.every((a) => a.outcome?.status === "UNKNOWN"),
+      row.assignments.every(
+        (a) =>
+          a.outcome?.status === "PASSED" &&
+          a.outcome.source === DEFAULT_POSITIVE_OUTCOME_SOURCE,
+      ),
     ),
   ).toBe(true);
   for (const event of current.events || [])
@@ -393,36 +418,18 @@ test("V10 fresh supported synthetic center obtains its first actual UI PDF and a
   });
   expect(patch.ok(), await patch.text()).toBe(true);
   await page.reload();
-  const disclosure = page.locator("#request-training");
-  await disclosure.locator(":scope > summary").click();
-  const training = page.locator(".training-primary-context");
-  await training
-    .getByLabel("Известный результат", { exact: true })
-    .selectOption("PASSED");
-  await training
-    .getByLabel("Источник подтверждения", { exact: true })
-    .fill("СИНТЕТИЧЕСКАЯ известная ведомость V10; не реальное обучение");
-  await training
-    .getByRole("button", {
-      name: "Проверить применение результатов",
-      exact: true,
-    })
-    .click();
-  await training
-    .getByRole("button", { name: "Подтвердить результаты", exact: true })
-    .click();
   await expect
     .poll(async () =>
       (await get(page, `/print-requests/${requestId}`)).items.every(
         (row: {
           assignments: Array<{
-            outcome: { status: string; confirmedBy: string };
+            outcome: { status: string; source: string };
           }>;
         }) =>
           row.assignments.every(
             (a) =>
               a.outcome.status === "PASSED" &&
-              a.outcome.confirmedBy === session.user.id,
+              a.outcome.source === DEFAULT_POSITIVE_OUTCOME_SOURCE,
           ),
       ),
     )
@@ -518,7 +525,7 @@ test("V10 fresh supported synthetic center obtains its first actual UI PDF and a
         render,
         activeHumanMs: null,
         limitation:
-          "First actual saved PDF and mandatory companion generated in a disposable supported center after explicit synthetic outcome and real director UI decision. NCA signature and production/legal approval are not supplied.",
+          "First actual saved PDF and mandatory companion generated in a disposable supported center with the configured positive default for new assignments and a real director UI decision. NCA signature and production/legal approval are not supplied.",
       },
       null,
       2,

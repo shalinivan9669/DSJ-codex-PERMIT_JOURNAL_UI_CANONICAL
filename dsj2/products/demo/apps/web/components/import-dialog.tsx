@@ -29,6 +29,11 @@ import {
   type SavedImportMapping,
 } from "@/lib/imports";
 import { templateLabels, type Assignment, type Draft } from "@/lib/types";
+import {
+  importEmployerConflict,
+  inheritImportEmployer,
+  type ImportCompany,
+} from "@/lib/import-employer";
 import { biotCategoryDescription } from "@/lib/validity-display";
 type Reconciliation = {
   retainedTotal: number;
@@ -47,6 +52,7 @@ type Reconciliation = {
 export function ImportDialog({
   requestId,
   existingDraft,
+  company,
   existingImportIds: _existingImportIds,
   bundleEvent,
   flush,
@@ -55,6 +61,7 @@ export function ImportDialog({
 }: {
   requestId: string;
   existingDraft: Draft;
+  company?: ImportCompany | null;
   existingImportIds: string[];
   bundleEvent?: TrainingEventInput;
   flush: () => Promise<number>;
@@ -78,6 +85,7 @@ export function ImportDialog({
     Record<number, Record<number, string>>
   >({});
   const [excluded, setExcluded] = useState<number[]>([]);
+  const [alignEmployer, setAlignEmployer] = useState(false);
   const bundle = Object.values(requestBundles).find(
     (choice) => choice.protocol === bundleEvent?.protocolTemplateId,
   );
@@ -116,6 +124,7 @@ export function ImportDialog({
     templateId,
     biotCategory,
     blankMode,
+    alignEmployer,
     corrections,
     revisionMode,
     useRequestTraining,
@@ -153,6 +162,29 @@ export function ImportDialog({
         ]),
       ),
     [workingPreview, mapping, templateId, biotCategory],
+  );
+  const employerConflicts = (workingPreview?.rows || []).filter((row) => {
+    const item = rowChecks.get(row.sourceRow)?.item;
+    return (
+      existingDraft.kind === "COMPANY" &&
+      item &&
+      importEmployerConflict(item, company)
+    );
+  });
+  const employerSignature = JSON.stringify([
+    company?.id,
+    company?.nameRu,
+    company?.nameKz,
+    company?.bin,
+    employerConflicts.map((row) => [row.sourceRow, row.values]),
+  ]);
+  useEffect(() => {
+    setAlignEmployer(false);
+  }, [employerSignature]);
+  const unresolvedEmployerRows = employerConflicts.filter(
+    (row) =>
+      !excluded.includes(row.sourceRow) &&
+      (revisionMode || !alreadyAdded.has(row.sourceRow)),
   );
   useEffect(() => {
     let active = true;
@@ -257,6 +289,10 @@ export function ImportDialog({
     setError("");
     try {
       const expectedRevision = await flush();
+      if (unresolvedEmployerRows.length && !alignEmployer)
+        throw new Error(
+          `Другой работодатель в строках ${unresolvedEmployerRows.map((row) => row.sourceRow).join(", ")}. Выберите компанию заявки или исключите строки.`,
+        );
       const rows = workingPreview.rows
         .filter(
           (row) =>
@@ -292,13 +328,20 @@ export function ImportDialog({
                 ? joinEventAssignment(assignment, bundleEvent.id)
                 : assignment,
             );
-          return mapped;
+          return !revisionMode &&
+            alignEmployer &&
+            importEmployerConflict(mapped, company)
+            ? inheritImportEmployer(mapped)
+            : mapped;
         });
       if (revisionMode) {
         const input = {
           expectedRevision,
           importId: preview.importId,
           rows,
+          inheritEmployerSourceRows: alignEmployer
+            ? unresolvedEmployerRows.map((row) => row.sourceRow)
+            : [],
           fieldMask: mapping.filter((field) =>
             [
               "employeeCategory",
@@ -316,7 +359,6 @@ export function ImportDialog({
               "employerAddressKz",
               "personnelNumber",
               "externalId",
-              "employerId",
             ].includes(field),
           ),
           blankMode,
@@ -869,6 +911,48 @@ export function ImportDialog({
               учитываться в лимите.
             </p>
           )}
+          {!!unresolvedEmployerRows.length && (
+            <Notice>
+              <strong>
+                Работодатель отличается от компании заявки: {company?.nameRu}.
+              </strong>
+              <ul>
+                {unresolvedEmployerRows.map((row) => (
+                  <li key={row.sourceRow}>
+                    Строка {row.sourceRow}:{" "}
+                    {rowChecks.get(row.sourceRow)?.item?.fullNameRu ||
+                      "Без ФИО"}
+                    {" · "}
+                    {rowChecks.get(row.sourceRow)?.item?.workplaceRu ||
+                      rowChecks.get(row.sourceRow)?.item?.employerBin ||
+                      "Другие реквизиты"}
+                  </li>
+                ))}
+              </ul>
+              <label className="checkbox">
+                <input
+                  type="checkbox"
+                  checked={alignEmployer}
+                  onChange={(event) => setAlignEmployer(event.target.checked)}
+                  disabled={busy}
+                />
+                Привести эти строки к компании заявки
+              </label>
+              <button
+                disabled={busy}
+                onClick={() =>
+                  setExcluded((old) => [
+                    ...new Set([
+                      ...old,
+                      ...unresolvedEmployerRows.map((row) => row.sourceRow),
+                    ]),
+                  ])
+                }
+              >
+                Исключить конфликтующие строки
+              </button>
+            </Notice>
+          )}
           {alreadyAdded.size > 0 && !revisionMode && (
             <Notice kind="info">
               Уже добавленные исходные строки сохранены без изменений. Можно
@@ -1181,6 +1265,7 @@ export function ImportDialog({
                 busy ||
                 !selected.length ||
                 !!invalidSelected.length ||
+                (!!unresolvedEmployerRows.length && !alignEmployer) ||
                 total > LIMITS.rows ||
                 duplicateMapping ||
                 !mappedFields.length ||

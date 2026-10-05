@@ -1,0 +1,109 @@
+{
+  "capturedUtc": "2026-10-05T21:22:47.425576+00:00",
+  "sourceCycle": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/person-cycle.json",
+  "sourceCycleSha256": "a29410cc344854042adacc40332eef37b81f158d6feee87eac3b6bf9fc9c4307",
+  "buildId": "uypqU8MKNYMwsb1NNghQ6",
+  "requestId": "e9663fb7-6627-4a41-8f01-955ebeb5f3c0",
+  "issuanceIds": [
+    "5e0b0f58-ecd2-4d29-949b-4be570d8b9a3"
+  ],
+  "originalHashesVerified": true,
+  "files": [
+    {
+      "id": "c4de4560-5403-44f2-824d-2d7cfdaadadc",
+      "fileName": "c4de4560-5403-44f2-824d-2d7cfdaadadc-ps-card-df2bdc5e-b202-46dc-8100-cd0a26ebbdbb.docx",
+      "format": "DOCX",
+      "sha256": "7aedf60c9c37e12fbeab2d401bfc3e3d213e18610498f85574a25e5925398893",
+      "templateId": "ps-card",
+      "number": "PS-CARD-00004",
+      "xmlSha256": "9351fad303d949bf4f291a5cf4016b24ba18e31275a9ea6c45ed16794a9c716a",
+      "media": [
+        {
+          "path": "word/media/generated-photo-0.png",
+          "sha256": "209ac64b5264442224f02984de46617c837971493ff35828e2e466c7bd8a0c7b"
+        }
+      ],
+      "independentVisualOpen": "PENDING"
+    },
+    {
+      "id": "fc3a933e-ad9e-4205-838a-385ccc6cad41",
+      "fileName": "fc3a933e-ad9e-4205-838a-385ccc6cad41-ps-card-df2bdc5e-b202-46dc-8100-cd0a26ebbdbb.pdf",
+      "format": "PDF",
+      "sha256": "399fde0eade876e59c24d73e57ba365c64e97c4b5dc244d2b659c215b8aa5bd4",
+      "templateId": "ps-card",
+      "number": "PS-CARD-00004",
+      "textSha256": "1f3ea799d2db8022bd35f86fb7a7b66fbcfe1889096fc8f0045bde3dcd0697b6",
+      "pages": 2,
+      "pageImages": [
+        {
+          "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-card-pdf-page-1.png",
+          "sha256": "870a7c492634bc0911cdd109fb2574ee91ee942258ac671a20d80aab81db9d26"
+        },
+        {
+          "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-card-pdf-page-2.png",
+          "sha256": "ea8056560340c4a6fe8bdc63ba9b6c00135836266215bc1ce69ffdac9fbf650a"
+        }
+      ]
+    },
+    {
+      "id": "52c43f33-558a-489a-bc12-63d086a0b262",
+      "fileName": "52c43f33-558a-489a-bc12-63d086a0b262-ps-witness-5fbf3ad0-9bbf-43bd-bbe3-d083e558f4be.docx",
+      "format": "DOCX",
+      "sha256": "b1c02a0f3713e59b31c589b9813a301e3b8823718ea42b319169c814186620ea",
+      "templateId": "ps-witness",
+      "number": "PS-WITNESS-00004",
+      "xmlSha256": "068bfab96d13861c3ca02fa0d6a5c3c35bed56bdd5421109265fdb8f2a492fb0",
+      "media": [],
+      "independentVisualOpen": "PENDING"
+    },
+    {
+      "id": "0192f5b5-a56c-40c8-bd40-a59cf821b18f",
+      "fileName": "0192f5b5-a56c-40c8-bd40-a59cf821b18f-ps-witness-5fbf3ad0-9bbf-43bd-bbe3-d083e558f4be.pdf",
+      "format": "PDF",
+      "sha256": "2a926d82e782f83024a5691f7cdd966ee752e626d0a03e3024f5a7c7d6ee141c",
+      "templateId": "ps-witness",
+      "number": "PS-WITNESS-00004",
+      "textSha256": "83b6ae3ed921f49ddc9ced2ff261c573754d2bde848b369163f9739fda900238",
+      "pages": 2,
+      "pageImages": [
+        {
+          "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-witness-pdf-page-1.png",
+          "sha256": "76f3903b8c5d39ae4141cbf4fca7e47cb498380b58ade3999272c91588996ed9"
+        },
+        {
+          "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-witness-pdf-page-2.png",
+          "sha256": "58d2e793632dc2e6a37f0b261248313f3ddac0ebd8572cdba80463886c6680ac"
+        }
+      ]
+    },
+    {
+      "id": "95d653c2-af71-4ba8-a218-f3246a5b19b1",
+      "fileName": "95d653c2-af71-4ba8-a218-f3246a5b19b1-ps-protocol-a23889cf-6ac4-4b09-9b38-2c9cc37ee16c.docx",
+      "format": "DOCX",
+      "sha256": "3af4189c0cf2b2d354745b6d811656ac17131cadc0ef8f119229c68f90605b61",
+      "templateId": "ps-protocol",
+      "number": "PS-PROTOCOL-00004",
+      "xmlSha256": "c802a15687a9e084515ecfd48912940370c9b4d39a9c88a1b8581f9fcd5c1d78",
+      "media": [],
+      "independentVisualOpen": "PENDING"
+    },
+    {
+      "id": "9ccba14a-9522-4073-b1e3-f030c88f48d3",
+      "fileName": "9ccba14a-9522-4073-b1e3-f030c88f48d3-ps-protocol-a23889cf-6ac4-4b09-9b38-2c9cc37ee16c.pdf",
+      "format": "PDF",
+      "sha256": "60b7a2888d70e8632127ae27265fc70ecd93edcea94f30b911fa9447db5dbea3",
+      "templateId": "ps-protocol",
+      "number": "PS-PROTOCOL-00004",
+      "textSha256": "e2f134c0e7d967f3275b0c19603e74476b6554701fa4acdfb88e0be67cdef7c9",
+      "pages": 1,
+      "pageImages": [
+        {
+          "path": "docs/evidence/operator-details-ux-20261005/full-e2e-03/remaining-retry-01/live-cycle/current-person-visual/ps-protocol-pdf-page-1.png",
+          "sha256": "ecd926d52348e99649d8cd4124f0d6f39dda9440bcbb6687e81c2fe89ac4bee8"
+        }
+      ]
+    }
+  ],
+  "pdfVisualReview": "PENDING_ROOT_VIEW",
+  "independentDocxVisualReview": "PENDING"
+}

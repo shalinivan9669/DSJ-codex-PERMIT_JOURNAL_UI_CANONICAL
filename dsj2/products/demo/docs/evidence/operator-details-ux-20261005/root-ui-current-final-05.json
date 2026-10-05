@@ -1,0 +1,93 @@
+{
+  "schema": "ROOT_CURRENT05_VISUAL_REVIEW_1",
+  "status": "PASS_ROOT_REVIEWED_CURRENT05_UI",
+  "recordedUtc": "2026-10-05T23:08:13.616949+00:00",
+  "buildId": "UE5EAW-MchsccxxskF32g",
+  "syntheticDataOnly": true,
+  "source": {
+    "path": "docs/evidence/operator-details-ux-20261005/runtime-source-current-final-05.json",
+    "sha256": "eb5be1d1351ffa93876774a934814f02512256f630039a89454a13a80dfe6789",
+    "filesChecked": 380,
+    "sourceDrift": 0
+  },
+  "review": {
+    "reviewer": "root agent",
+    "method": "Root personally viewed the current05 application through CUA and saved these six original JPG captures. This record binds that explicit visual verdict to the captured file hashes; person_ui compiled the evidence without claiming a separate visual review.",
+    "noVisibleCredentials": true,
+    "companyAndPersonApprovalNamesCorrect": true,
+    "mainActionsNotClipped": true,
+    "scope": "Existing synthetic COMPANY/PERSON approvals, COMPANY employee table and mobile document selector. This is bounded visual and keyboard acceptance, not a general human usability study."
+  },
+  "geometry": [
+    {
+      "viewportWidth": 768,
+      "documentClientWidth": 753,
+      "documentScrollWidth": 753,
+      "employeeTableWidth": 1220,
+      "tableScrollContainerWidth": 666,
+      "tableOverflowX": "auto",
+      "outerHorizontalOverflow": false
+    },
+    {
+      "viewportWidth": 390,
+      "documentClientWidth": 375,
+      "documentScrollWidth": 375,
+      "employeeTableWidth": 1220,
+      "tableScrollContainerWidth": 296,
+      "tableOverflowX": "auto",
+      "outerHorizontalOverflow": false
+    }
+  ],
+  "verifiedBehaviors": {
+    "employeeTableHorizontalScrollIntentional": true,
+    "tableRightScrollShowsKazakhFieldsAndDetails": true,
+    "keyboardTabFocusesPrintWithPreviewControlVisibleAt390": true,
+    "documentSelectorCreateAndCloseFitAt390": true
+  },
+  "readOnlyBoundary": {
+    "createPreviewPostPerformed": false,
+    "dataEditsPerformed": false,
+    "issuancePerformed": false,
+    "viewportResetAfterReview": true
+  },
+  "images": [
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/browser-current-final-05/company-approval-title.jpg",
+      "sha256": "c0358ed12507dc91c9836a4435820004a3d185b17be931c457dbeb0d32a5bbff",
+      "bytes": 102295
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/browser-current-final-05/person-and-company-approval-titles.jpg",
+      "sha256": "a9ed294b101920d246758288b8a395e1589ab46938a37590dfb0927c5daf351e",
+      "bytes": 92518
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/browser-current-final-05/company-768-employees.jpg",
+      "sha256": "e35520aed942b88e1165c627577ad1b569a1484ce99bcd867e2f8af827a567c3",
+      "bytes": 54861
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/browser-current-final-05/company-768-employees-right.jpg",
+      "sha256": "a3ea53dbf1e505e4624c1bb6b060eb02f629a218a38b9a8e6ea53423109cac49",
+      "bytes": 48294
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/browser-current-final-05/company-390-keyboard-actions.jpg",
+      "sha256": "b2288e2011d3b4d46f0e0c03d6c431005585ee80d98c793136482ea6855d160d",
+      "bytes": 34129
+    },
+    {
+      "path": "docs/evidence/operator-details-ux-20261005/browser-current-final-05/company-390-document-selector.jpg",
+      "sha256": "b559ed3c4b2736fb69fcb9b5b0bcf085770ddd20a1e025a42ec9d1d8368e55b7",
+      "bytes": 21022
+    }
+  ],
+  "relatedPreservationProof": {
+    "path": "docs/evidence/operator-details-ux-20261005/director-title-after05-preservation.json",
+    "sha256": "a8b412653613b6ce45e4ef3648f6024dd5ebf27c1b49b4374bfef69fd080f8df"
+  },
+  "limits": [
+    "No new preview was generated during these six captures. Existing PDF/DOCX byte preservation is recorded in the separately referenced after05 proof.",
+    "Only these six explicitly reviewed JPG images are approved for publication; other captures in the folder are outside this review."
+  ]
+}

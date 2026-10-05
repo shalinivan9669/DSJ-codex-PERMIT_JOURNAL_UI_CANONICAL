@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "reviewedUtc": "2026-10-05T19:50:51.868214+00:00",
+  "reviewer": "root assistant, each of six images actually displayed by view_image after generation",
+  "requestId": "c1fa6c77-3187-43ba-ac10-63c4211420b1",
+  "buildId": "TWko2e-px8ie_96DA2zlp",
+  "allPagesViewed": true,
+  "pdfPages": 3,
+  "docxPages": 3,
+  "originalFilesEdited": false,
+  "pages": [
+    {
+      "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/4473009f-e150-4d67-9771-c8816e9c9473-ptm-card/original-pdf/page-1.png",
+      "sha256": "c8b1d9827ff551112f0d7947310a62a540d98a2dd2161874b29c5e5c5a4a6217",
+      "reviewed": true,
+      "format": "PDF",
+      "page": 1,
+      "observations": "Second recipient: Синтетический Второй Сотрудник, PTM-CARD-00004, Сварщик / Дәнекерлеуші, photo, protocol 18.10.2026, validity 20.10.2027.",
+      "clipping": false,
+      "overlap": false,
+      "missingKazakhGlyphs": false,
+      "testWatermarkVisible": true
+    },
+    {
+      "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/4473009f-e150-4d67-9771-c8816e9c9473-ptm-card/docx-render/page-1.png",
+      "sha256": "736cd37cff8f5cc4ec66ed507e51302d9fd052ec5e2d2a43d8e3be281c2ee2ba",
+      "reviewed": true,
+      "format": "DOCX independently opened via LibreOffice",
+      "page": 1,
+      "observations": "Second recipient: Синтетический Второй Сотрудник, PTM-CARD-00004, Сварщик / Дәнекерлеуші, photo, protocol 18.10.2026, validity 20.10.2027.",
+      "clipping": false,
+      "overlap": false,
+      "missingKazakhGlyphs": false,
+      "testWatermarkVisible": true
+    },
+    {
+      "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/5ce417af-bb24-47ea-9548-756457b447cd-ptm-card/original-pdf/page-1.png",
+      "sha256": "1dd758b507052dfd387b251146804e316b7118b8469a2300dfb13626606f0cde",
+      "reviewed": true,
+      "format": "PDF",
+      "page": 1,
+      "observations": "First recipient: Синтетический Первый Сотрудник, PTM-CARD-00003, Электрик / Электрші, photo, protocol 18.10.2026, validity 20.10.2027.",
+      "clipping": false,
+      "overlap": false,
+      "missingKazakhGlyphs": false,
+      "testWatermarkVisible": true
+    },
+    {
+      "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/5ce417af-bb24-47ea-9548-756457b447cd-ptm-card/docx-render/page-1.png",
+      "sha256": "4d0a68a0f0e9f4de43c6fe118f4a85092b0695de08388f9b4074587a9ed8c2eb",
+      "reviewed": true,
+      "format": "DOCX independently opened via LibreOffice",
+      "page": 1,
+      "observations": "First recipient: Синтетический Первый Сотрудник, PTM-CARD-00003, Электрик / Электрші, photo, protocol 18.10.2026, validity 20.10.2027.",
+      "clipping": false,
+      "overlap": false,
+      "missingKazakhGlyphs": false,
+      "testWatermarkVisible": true
+    },
+    {
+      "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/69028bc3-f538-4288-bf04-fd498108c3aa-ptm-protocol/original-pdf/page-1.png",
+      "sha256": "d45de577a336b0063d9f52060e31b624a89e1089327223083eb4e1fd855a6ce4",
+      "reviewed": true,
+      "format": "PDF",
+      "page": 1,
+      "observations": "PTM-PROTOCOL-00003: both recipient rows, separate RU/KZ positions, shared company, actual PASSED assessments, commission and signatures, test watermark.",
+      "clipping": false,
+      "overlap": false,
+      "missingKazakhGlyphs": false,
+      "testWatermarkVisible": true
+    },
+    {
+      "image": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-company-01/live-cycle/company-issued-visual-02/69028bc3-f538-4288-bf04-fd498108c3aa-ptm-protocol/docx-render/page-1.png",
+      "sha256": "df9609543f32b246393e6cd19df9962e9edbe241374ec1dabc2fd421584cae31",
+      "reviewed": true,
+      "format": "DOCX independently opened via LibreOffice",
+      "page": 1,
+      "observations": "PTM-PROTOCOL-00003: both recipient rows, separate RU/KZ positions, shared company, actual PASSED assessments, commission and signatures, test watermark.",
+      "clipping": false,
+      "overlap": false,
+      "missingKazakhGlyphs": false,
+      "testWatermarkVisible": true
+    }
+  ],
+  "scope": "Only these synthetic saved originals. This is a content and visual layout review, not pixel identity across formats, physical printing, or legal approval. PTM templates print fullNameRu; independent fullNameKz remains preserved in source and immutable snapshot."
+}

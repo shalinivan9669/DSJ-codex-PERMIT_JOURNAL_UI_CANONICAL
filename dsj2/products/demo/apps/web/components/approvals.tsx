@@ -266,6 +266,15 @@ export function ApprovalBanner({
   ]);
   const reason = rejectionReason(draft, returnedProposal);
   if (!approval && draft.status !== "DRAFT") return null;
+  if (
+    compact &&
+    draft.kind === "PERSON" &&
+    draft.items.length === 1 &&
+    draft.status === "DRAFT" &&
+    !approval &&
+    !error
+  )
+    return null;
   return (
     <section className="approval-banner" aria-label="Согласование заявки">
       <div className="approval-summary">
@@ -689,6 +698,7 @@ export function Approvals({ context }: { context: AppContext }) {
               )}
               {detail.requestedAction === "SAVE" &&
                 detail.review &&
+                detail.draft &&
                 !detail.needsPreparation && (
                   <ApprovalPreview
                     key={`preview:${detail.id}`}
@@ -696,6 +706,7 @@ export function Approvals({ context }: { context: AppContext }) {
                     proposalId={detail.id}
                     proposalHash={detail.proposalHash}
                     revision={detail.requestRevision}
+                    draft={detail.draft}
                   />
                 )}
               {!detail.review && detail.assignments && (

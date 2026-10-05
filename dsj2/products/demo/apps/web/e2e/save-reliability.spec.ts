@@ -92,7 +92,7 @@ async function workspace(page: Page) {
       exact: true,
     })
     .click();
-  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("ФИО", { exact: true })).toBeVisible();
   return {
     saves,
     getDraft: () => draft,
@@ -118,7 +118,7 @@ test("slow saves serialize latest input without stale values, then survive reloa
     if (index === 1) await first.promise;
     return false;
   });
-  const name = page.getByLabel("ФИО, строка 1", { exact: true });
+  const name = page.getByLabel("ФИО", { exact: true });
   await name.fill("Первая редакция");
   await expect.poll(() => model.saves.length).toBe(1);
   await name.fill("Последняя редакция Ә Ғ Қ Ң Ө Ұ Ү Һ І");
@@ -159,7 +159,7 @@ test("late rejected payload keeps the review marked stale after newer local inpu
     });
     return true;
   });
-  const name = page.getByLabel("ФИО, строка 1", { exact: true });
+  const name = page.getByLabel("ФИО", { exact: true });
   await name.fill("Прежняя ошибка");
   await expect.poll(() => model.saves.length).toBe(1);
   await name.fill("Исправленное Имя");
@@ -179,12 +179,10 @@ test("browser Back waits for saving before leaving the editor", async ({
     await saved.promise;
     return false;
   });
-  await page
-    .getByLabel("ФИО, строка 1", { exact: true })
-    .fill("Сохранить до возврата");
+  await page.getByLabel("ФИО", { exact: true }).fill("Сохранить до возврата");
   await page.evaluate(() => history.back());
   await expect.poll(() => model.saves.length).toBe(1);
-  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toHaveValue(
+  await expect(page.getByLabel("ФИО", { exact: true })).toHaveValue(
     "Сохранить до возврата",
   );
   // Repeated Back while the first save is pending must not replay two traversals.
@@ -202,7 +200,7 @@ test("browser Back waits for saving before leaving the editor", async ({
       exact: true,
     })
     .click();
-  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toHaveValue(
+  await expect(page.getByLabel("ФИО", { exact: true })).toHaveValue(
     "Сохранить до возврата",
   );
 });
@@ -215,7 +213,7 @@ test("failed Back navigation and cancelled reload preserve input until retry", a
     await route.abort("failed");
     return true;
   });
-  const name = page.getByLabel("ФИО, строка 1", { exact: true });
+  const name = page.getByLabel("ФИО", { exact: true });
   await name.fill("Остаться при ошибке связи");
   await page.evaluate(() => history.back());
   await expect(page.locator(".save-indicator")).toContainText("Не сохранено");
@@ -246,7 +244,7 @@ test("conflicting edit remains local and never overwrites the server version", a
   const model = await workspace(page);
   model.foreignEdit();
   await page
-    .getByLabel("ФИО, строка 1", { exact: true })
+    .getByLabel("ФИО", { exact: true })
     .fill("Локальный ввод при конфликте");
   await expect(
     page.getByRole("dialog", {
@@ -257,7 +255,7 @@ test("conflicting edit remains local and never overwrites the server version", a
   expect(model.getDraft().items[0].fullNameRu).toBe("Исходный Получатель");
   expect(model.getDraft().title).toBe("Изменено в другом окне");
   await page.keyboard.press("Escape");
-  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toHaveValue(
+  await expect(page.getByLabel("ФИО", { exact: true })).toHaveValue(
     "Локальный ввод при конфликте",
   );
   await expect(page.locator(".save-indicator")).toContainText(
@@ -276,7 +274,7 @@ test("history fallback without Navigation API retains failed input and later lea
     await route.abort("failed");
     return true;
   });
-  const name = page.getByLabel("ФИО, строка 1", { exact: true });
+  const name = page.getByLabel("ФИО", { exact: true });
   await name.fill("Сохранение в прежнем браузере");
   await page.evaluate(() => history.back());
   await expect(page.locator(".save-indicator")).toContainText("Не сохранено");
@@ -299,12 +297,10 @@ test("dirty hash traversal keeps input and permits the following guarded Back", 
   await page.evaluate(() => {
     location.hash = "recipient-workspace";
   });
-  await page
-    .getByLabel("ФИО, строка 1", { exact: true })
-    .fill("Возврат после якоря");
+  await page.getByLabel("ФИО", { exact: true }).fill("Возврат после якоря");
   await page.evaluate(() => history.back());
   await expect(page).toHaveURL(/\/requests\/save-reliability$/);
-  await expect(page.getByLabel("ФИО, строка 1", { exact: true })).toHaveValue(
+  await expect(page.getByLabel("ФИО", { exact: true })).toHaveValue(
     "Возврат после якоря",
   );
   await page.evaluate(() => history.back());
@@ -323,7 +319,7 @@ test("browser Forward also waits for a pending save and preserves history order"
     page.getByRole("heading", { name: "Работа центра", exact: true }),
   ).toBeVisible();
   await page.goBack();
-  const name = page.getByLabel("ФИО, строка 1", { exact: true });
+  const name = page.getByLabel("ФИО", { exact: true });
   await expect(name).toBeVisible();
   const saved = deferred();
   model.setPatch(async () => {
@@ -360,7 +356,7 @@ test("a final keystroke between successful flush and queued Back is saved too", 
       } else original(delta);
     };
   });
-  const name = page.getByLabel("ФИО, строка 1", { exact: true });
+  const name = page.getByLabel("ФИО", { exact: true });
   await name.fill("Сначала сохранённое значение");
   await page.evaluate(() => history.back());
   await expect.poll(() => model.saves.length).toBe(1);

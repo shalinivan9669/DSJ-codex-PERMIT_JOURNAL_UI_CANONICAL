@@ -121,7 +121,7 @@ test("server directory finds the 101st company and person outside the first page
   await expect(details).toBeVisible();
   await details.getByRole("tab", { name: "Личные данные", exact: true }).click();
   await expect(details.getByLabel("ФИО", { exact: true })).toHaveValue(auth.person.data.fullNameRu);
-  await expect(details.getByLabel("Должность / профессия", { exact: true })).toHaveValue("");
+  await expect(details.getByLabel("Должность", { exact: true })).toHaveValue("");
   await details.getByRole("button", { name: "Вернуться к списку", exact: true }).click();
   await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   const id = /\/requests\/([^/]+)/.exec(new URL(page.url()).pathname)![1];

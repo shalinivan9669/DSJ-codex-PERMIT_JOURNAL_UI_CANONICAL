@@ -1,0 +1,150 @@
+{
+  "status": "PASS",
+  "id": "98aa88c4-e329-4893-b063-19af36e38765",
+  "revision": 6,
+  "customerId": "4aad7aed-2581-464f-a8aa-61eb945f8e62",
+  "companyName": "Синтетическая компания 1791238791298",
+  "proposalId": "b126b8f4-1f79-4e9e-8710-ba0cd65a80b3",
+  "issuanceIds": [
+    "220fc91a-785e-4f07-ac86-733bc7728222"
+  ],
+  "recipients": [
+    {
+      "id": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-2",
+      "fullNameRu": "Синтетический Первый Сотрудник",
+      "fullNameKz": "Синтетикалық Бірінші Қызметкер",
+      "sourceRow": 2,
+      "importId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c"
+    },
+    {
+      "id": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-3",
+      "fullNameRu": "Синтетический Второй Сотрудник",
+      "fullNameKz": "Синтетикалық Екінші Қызметкер",
+      "sourceRow": 3,
+      "importId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c"
+    }
+  ],
+  "previewTargets": [
+    {
+      "kind": "ASSIGNMENT",
+      "rowId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-3",
+      "assignmentId": "65731665-bf6c-414c-a599-12599d374c1e"
+    },
+    {
+      "kind": "GROUP_PROTOCOL",
+      "eventId": "fcd50b47-8755-4d7a-9a4a-099469a9507a"
+    }
+  ],
+  "documents": [
+    {
+      "id": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "220fc91a-785e-4f07-ac86-733bc7728222",
+      "requestId": "98aa88c4-e329-4893-b063-19af36e38765",
+      "rowId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-2",
+      "assignmentId": "ed2875ad-9bbd-49ee-a2d3-a0000b31cd55",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "99d88f51-a289-4744-b7ca-ef1a7c635705",
+      "templateId": "ptm-card",
+      "namespace": "PTM:CARD",
+      "number": "PTM-CARD-00033",
+      "registrationNumber": null,
+      "documentDate": "2026-10-20",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T22:20:50.451Z"
+    },
+    {
+      "id": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "220fc91a-785e-4f07-ac86-733bc7728222",
+      "requestId": "98aa88c4-e329-4893-b063-19af36e38765",
+      "rowId": "c9dd85f7-3a49-4814-aa03-0aa820c3dc9c-3",
+      "assignmentId": "65731665-bf6c-414c-a599-12599d374c1e",
+      "ownerKind": "INDIVIDUAL",
+      "groupEventId": null,
+      "groupEventRevision": null,
+      "templateVersionId": "99d88f51-a289-4744-b7ca-ef1a7c635705",
+      "templateId": "ptm-card",
+      "namespace": "PTM:CARD",
+      "number": "PTM-CARD-00034",
+      "registrationNumber": null,
+      "documentDate": "2026-10-20",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T22:20:50.456Z"
+    },
+    {
+      "id": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+      "issuanceId": "220fc91a-785e-4f07-ac86-733bc7728222",
+      "requestId": "98aa88c4-e329-4893-b063-19af36e38765",
+      "rowId": null,
+      "assignmentId": null,
+      "ownerKind": "GROUP",
+      "groupEventId": "fcd50b47-8755-4d7a-9a4a-099469a9507a",
+      "groupEventRevision": 1,
+      "templateVersionId": "63acb803-dd1a-4925-bfdd-7a9f95207fc0",
+      "templateId": "ptm-protocol",
+      "namespace": "PTM:PROTOCOL",
+      "number": "TEST-PTM-00012",
+      "registrationNumber": null,
+      "documentDate": "2026-10-18",
+      "replacesDocumentId": null,
+      "createdAt": "2026-10-05T22:20:50.459Z"
+    }
+  ],
+  "files": [
+    {
+      "id": "1b642650-97d6-455e-8eff-5cda227939b5",
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "fileName": "company-1b642650-97d6-455e-8eff-5cda227939b5-ptm-card-ce20ff78-512f-4077-8b43-810adb48ada6.docx",
+      "format": "DOCX",
+      "sha256": "a3aa0ef0b9a440c5efc8afacdc70e228ae8115d9c44cd05565d812f81440dd83"
+    },
+    {
+      "id": "244cdb8e-e837-4576-88e8-ba901f15fd5f",
+      "documentId": "ce20ff78-512f-4077-8b43-810adb48ada6",
+      "fileName": "company-244cdb8e-e837-4576-88e8-ba901f15fd5f-ptm-card-ce20ff78-512f-4077-8b43-810adb48ada6.pdf",
+      "format": "PDF",
+      "sha256": "ee4131755cbe7bf0671b2539cfe9fb95445efa18eeedfc039d34ec98796c93fd"
+    },
+    {
+      "id": "c0d2ee56-1e65-4199-9422-794ef0ff34cf",
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "fileName": "company-c0d2ee56-1e65-4199-9422-794ef0ff34cf-ptm-card-cc1bb0b2-c86f-40e5-bca8-01e688f63483.docx",
+      "format": "DOCX",
+      "sha256": "779cb964ad3019bc1142e744e1007f658c413282aeaa0c343516b1a48aa1ee5b"
+    },
+    {
+      "id": "51ab4096-a669-4400-adbf-a90577023b3d",
+      "documentId": "cc1bb0b2-c86f-40e5-bca8-01e688f63483",
+      "fileName": "company-51ab4096-a669-4400-adbf-a90577023b3d-ptm-card-cc1bb0b2-c86f-40e5-bca8-01e688f63483.pdf",
+      "format": "PDF",
+      "sha256": "5696b20b703415bd32e04b4534893fcb05e067439d9352e233d9d68ab68fd73b"
+    },
+    {
+      "id": "a608619a-23e8-4556-8353-60f9cbe46f97",
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "fileName": "company-a608619a-23e8-4556-8353-60f9cbe46f97-ptm-protocol-4a6ce713-c4d7-45e2-8716-d3c1f0d16845.docx",
+      "format": "DOCX",
+      "sha256": "d3cbf6b0ad97f255c7c10690748ccc60beef8f4fa9b7a2262c55ad91418e5d09"
+    },
+    {
+      "id": "bc00eb6a-8129-4f6b-8d57-84ff569a4077",
+      "documentId": "4a6ce713-c4d7-45e2-8716-d3c1f0d16845",
+      "fileName": "company-bc00eb6a-8129-4f6b-8d57-84ff569a4077-ptm-protocol-4a6ce713-c4d7-45e2-8716-d3c1f0d16845.pdf",
+      "format": "PDF",
+      "sha256": "b16b6194d2d7352b149dae74bd2047ce89c3f266fbb1cac9a023aad2fa96e7b4"
+    }
+  ],
+  "syntheticOnly": true,
+  "managerInputThroughUi": true,
+  "explicitImportEmployerResolutionThroughUi": true,
+  "sharedEmployerSurvivesReload": true,
+  "previewDoesNotIssueOrChangeSource": true,
+  "directorPreviewAndDecisionThroughUi": true,
+  "printedPtmCardNameField": "FULL_NAME_RU (preserved reference form)",
+  "independentKzNamesPreservedInRawAndIssuedSnapshot": true,
+  "mappedRuKzPositionsVerifiedInPreviewAndOriginal": true
+}

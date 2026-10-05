@@ -383,6 +383,7 @@ export const patchSchema = z
   .object({
     expectedRevision: z.number().int().nonnegative(),
     draft: draftSchema,
+    restoreRecipientId: z.string().min(1).max(80).optional(),
   })
   .strict();
 export const assignmentSelectionSchema = z
@@ -413,6 +414,38 @@ export const finalizeSchema = z
     assignments: assignmentSelectionSchema.optional(),
   })
   .strict();
+export const previewTargetSchema = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("ASSIGNMENT"),
+      rowId: z.string().min(1).max(80),
+      assignmentId: z.string().min(1).max(80),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("GROUP_PROTOCOL"),
+      eventId: z.string().min(1).max(80),
+    })
+    .strict(),
+]);
+export type PreviewTarget = z.infer<typeof previewTargetSchema>;
+export const previewSchema = z
+  .object({
+    expectedRevision: z.number().int().nonnegative(),
+    assignments: assignmentSelectionSchema.optional(),
+    proposalId: z.string().min(1).max(80).optional(),
+    expectedProposalHash: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/)
+      .optional(),
+    target: previewTargetSchema.optional(),
+  })
+  .strict()
+  .refine(
+    (value) => !!value.proposalId === !!value.expectedProposalHash,
+    "Укажите редакцию и её контрольную сумму вместе",
+  );
 export * from "./batch-scope";
 export * from "./organization";
 export const profileSchema = z
@@ -567,7 +600,7 @@ export function stableValidationIssue(
 export function validateDraft(
   draft: Draft,
   profile: IssuerProfile | null,
-  options: { skipBusinessRules?: boolean } = {},
+  options: { skipBusinessRules?: boolean; assignmentIds?: string[] } = {},
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = options.skipBusinessRules
     ? []
@@ -640,6 +673,13 @@ export function validateDraft(
         item.id,
       );
     for (const [a, assignment] of item.assignments.entries()) {
+      // Keep sibling forms available for dependency checks without validating
+      // fields that are not printed by the requested preview form.
+      if (
+        options.assignmentIds &&
+        !options.assignmentIds.includes(assignment.id)
+      )
+        continue;
       const path = `items.${n}.assignments.${a}`;
       for (const key of [
         "trainingSubject",

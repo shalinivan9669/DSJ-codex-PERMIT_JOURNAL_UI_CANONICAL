@@ -1,0 +1,138 @@
+{
+  "status": "PASS",
+  "network": "isolated fault-injection component harness; server normalization algorithm exercised through Sharp",
+  "comparisons": [
+    {
+      "orientation": 1,
+      "rotation": 0,
+      "meanChannelDifference": 0.17515277777777777,
+      "crop": {
+        "x": 58,
+        "y": 207,
+        "width": 387,
+        "height": 516
+      }
+    },
+    {
+      "orientation": 1,
+      "rotation": 90,
+      "meanChannelDifference": 0.4219361111111111,
+      "crop": {
+        "x": 138,
+        "y": 156,
+        "width": 290,
+        "height": 386
+      }
+    },
+    {
+      "orientation": 1,
+      "rotation": 180,
+      "meanChannelDifference": 0.16113055555555555,
+      "crop": {
+        "x": 58,
+        "y": 207,
+        "width": 387,
+        "height": 516
+      }
+    },
+    {
+      "orientation": 1,
+      "rotation": 270,
+      "meanChannelDifference": 0.41876944444444447,
+      "crop": {
+        "x": 138,
+        "y": 156,
+        "width": 290,
+        "height": 386
+      }
+    },
+    {
+      "orientation": 6,
+      "rotation": 0,
+      "meanChannelDifference": 0.47880555555555554,
+      "crop": {
+        "x": 138,
+        "y": 156,
+        "width": 290,
+        "height": 386
+      }
+    },
+    {
+      "orientation": 6,
+      "rotation": 90,
+      "meanChannelDifference": 0.10994444444444444,
+      "crop": {
+        "x": 58,
+        "y": 207,
+        "width": 387,
+        "height": 516
+      }
+    },
+    {
+      "orientation": 6,
+      "rotation": 180,
+      "meanChannelDifference": 0.4859777777777778,
+      "crop": {
+        "x": 138,
+        "y": 156,
+        "width": 290,
+        "height": 386
+      }
+    },
+    {
+      "orientation": 6,
+      "rotation": 270,
+      "meanChannelDifference": 0.11793055555555555,
+      "crop": {
+        "x": 58,
+        "y": 207,
+        "width": 387,
+        "height": 516
+      }
+    },
+    {
+      "orientation": 8,
+      "rotation": 0,
+      "meanChannelDifference": 0.4859777777777778,
+      "crop": {
+        "x": 138,
+        "y": 156,
+        "width": 290,
+        "height": 386
+      }
+    },
+    {
+      "orientation": 8,
+      "rotation": 90,
+      "meanChannelDifference": 0.11793055555555555,
+      "crop": {
+        "x": 58,
+        "y": 207,
+        "width": 387,
+        "height": 516
+      }
+    },
+    {
+      "orientation": 8,
+      "rotation": 180,
+      "meanChannelDifference": 0.47880555555555554,
+      "crop": {
+        "x": 138,
+        "y": 156,
+        "width": 290,
+        "height": 386
+      }
+    },
+    {
+      "orientation": 8,
+      "rotation": 270,
+      "meanChannelDifference": 0.10994444444444444,
+      "crop": {
+        "x": 58,
+        "y": 207,
+        "width": 387,
+        "height": 516
+      }
+    }
+  ]
+}

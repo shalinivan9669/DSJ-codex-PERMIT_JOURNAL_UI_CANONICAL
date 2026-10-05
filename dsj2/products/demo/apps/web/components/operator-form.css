@@ -38,9 +38,16 @@
 .recipient-details-footer > div {
   flex: 1 1 260px;
 }
-.recipient-details-save { display: grid; gap: 4px; }
-.operator-form .modal:has(.recipient-details-footer) { scroll-padding-block: 80px 130px; }
-.recipient-details :is(input, select, textarea, button, summary) { scroll-margin-block: 80px 130px; }
+.recipient-details-save {
+  display: grid;
+  gap: 4px;
+}
+.operator-form .modal:has(.recipient-details-footer) {
+  scroll-padding-block: 80px 130px;
+}
+.recipient-details :is(input, select, textarea, button, summary) {
+  scroll-margin-block: 80px 130px;
+}
 .recipient-details-footer p {
   margin: 4px 0 0;
 }
@@ -81,18 +88,30 @@
   margin: 0 0 20px;
 }
 .operator-heading .title-with-status {
+  min-width: 0;
   flex-wrap: wrap;
   gap: 10px;
 }
 .operator-heading h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: clamp(24px, 2.4vw, 30px);
   line-height: 1.25;
   margin: 0;
 }
 .operator-heading-actions {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  max-width: 100%;
   justify-items: end;
   gap: 4px;
+}
+.operator-form .operator-heading-actions > * {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .operator-heading-actions > button {
   font-size: 12px;

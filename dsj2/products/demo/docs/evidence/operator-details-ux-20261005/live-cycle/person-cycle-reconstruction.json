@@ -1,0 +1,102 @@
+{
+  "schema": "HISTORICAL_PERSON_MANIFEST_RECONSTRUCTION_1",
+  "capturedUtc": "2026-10-06T00:42:47.018581+05:00",
+  "status": "CONSISTENT_RECONSTRUCTED_METADATA",
+  "requestId": "dbc8fed5-2986-48a1-8163-f1b793075e81",
+  "originalManifestBytesRecovered": false,
+  "newManifestSha256": "9c3eeb2f054bab3132b5f543cfb48f9e44af7bdb61e6b98267b4b1ddb2c33c0e",
+  "readOnlyDatabaseSourceSha256": "4a78afcb6f3c1fe6cd1a7f513b8f6f515f177a5617a144342375582d861d696a",
+  "databaseMutated": false,
+  "evidenceDeleted": false,
+  "originalFiles": [
+    {
+      "file": "03c3590e-18ce-4fe6-b0c1-279bc6a2529d-ps-protocol-10fd01b8-43e7-4ab7-961c-617a362b8ecf.pdf",
+      "sha256": "aabafc1402685819bdc9763ccf073b291988016327822230de158047b80bcb35",
+      "unchanged": true
+    },
+    {
+      "file": "3c57ca2b-c44c-4e92-8527-e33ed0ebaa4a-ps-card-7523a146-d1f1-4e6b-af50-f1791599cbdc.docx",
+      "sha256": "ddf42fdee6d2dd57ca10f1c550806eae9c290c168daae3b52ca176fac9d084b5",
+      "unchanged": true
+    },
+    {
+      "file": "45651766-099a-41d4-861d-39e858a2d143-ps-card-7523a146-d1f1-4e6b-af50-f1791599cbdc.pdf",
+      "sha256": "f76959a7e6b8ee29abbd49ef548bdc8555f4b4fb0ffca6bb3f219e5e76bb055d",
+      "unchanged": true
+    },
+    {
+      "file": "4a6885bd-5a76-4855-a01f-fefa92531d55-ps-witness-5ac6a302-05b5-43bd-bad5-a5451f06906e.docx",
+      "sha256": "4b722fb46be979c398f2531bb453688c4a136acb4f170c8272627eb7e9e2ecf1",
+      "unchanged": true
+    },
+    {
+      "file": "78bc238f-4b7f-4a71-ba36-d788c5200901-ps-witness-5ac6a302-05b5-43bd-bad5-a5451f06906e.pdf",
+      "sha256": "c924bcf8ce1cb06087a027aefd1879f4e560d74770461f404cd3be148b5517d7",
+      "unchanged": true
+    },
+    {
+      "file": "9ebdb5a5-da31-4e20-8517-f2a36c7535c4-ps-protocol-10fd01b8-43e7-4ab7-961c-617a362b8ecf.docx",
+      "sha256": "12b49b0334c2382d06ac1b7af8b0b0ab6ad9d05ecb15c0ea947168ddbbb7a8c2",
+      "unchanged": true
+    }
+  ],
+  "reviewedPages": [
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-card-docx/page-1.png",
+      "sha256": "eafbaa0216d3444c9b4c69343a2ed3e85cf97ef64a6ceec4287c87b320f65272",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-card-docx/page-2.png",
+      "sha256": "887bef6bf710302d442f1946b4b5f260949b618a38a307e3c0e188b3aaa2727b",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-card-pdf-page-1.png",
+      "sha256": "4553926930b1bb0791732e51e62e385ba22720e05c4c8162d943b9c54f7c2e24",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-card-pdf-page-2.png",
+      "sha256": "edca4d88a63ee537213ee7980502acf0b0749d807eedffeef54947fa84e87dc0",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-protocol-docx/page-1.png",
+      "sha256": "72bba8642732603d50d732d500e0d0fa717900e232bb2d8d76d2469c46c648dc",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-protocol-pdf-page-1.png",
+      "sha256": "8559df0dfe71e924ce1e07f9b1b23726d2986538db25e67c2f22a3ae4243f1c6",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-witness-docx/page-1.png",
+      "sha256": "01869decad7b6907ad71a956edabd0c86498ad209295787b302f088ced0aac32",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-witness-docx/page-2.png",
+      "sha256": "31182b75e4a8626202e99baadec9de4720e42ef0aa479a852b86af5c617c1ea6",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-witness-pdf-page-1.png",
+      "sha256": "54f077b5cd9e6cd9ab9566d05c46a124f89694cf7fa46d72c27fe48c5dcf4827",
+      "unchanged": true
+    },
+    {
+      "file": "docs/evidence/operator-details-ux-20261005/live-cycle/issued-visual/ps-witness-pdf-page-2.png",
+      "sha256": "dcd1e2daad9bb02280021c5efed2c57ee5c7fcd25fbf5bf30dfff0b1650562f3",
+      "unchanged": true
+    }
+  ],
+  "laterCycle": {
+    "requestId": "0fb200a6-cecf-452b-b222-1a019316b96c",
+    "manifest": "docs/evidence/operator-details-ux-20261005/full-e2e-03/cycle-01/live-cycle/person-cycle.json",
+    "manifestSha256": "8761eed6e05879cf2ff9fcf7f187bb7c8ca309b0575cf65ff07997b5c2df187f",
+    "allSixOriginalHashesMatch": true
+  },
+  "screenshots": "All selected screenshot hashes still match the previously recorded pixel-review hashes at this reconstruction check; all ten old document review pages were separately verified unchanged."
+}

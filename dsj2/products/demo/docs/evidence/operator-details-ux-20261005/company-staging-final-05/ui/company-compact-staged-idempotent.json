@@ -1,0 +1,159 @@
+{
+  "posts": 1,
+  "postedNames": [
+    "Синтетическая выбранная компания"
+  ],
+  "firstInputBounds": {
+    "x": 350,
+    "y": 700,
+    "width": 352.75,
+    "height": 40
+  },
+  "stagedReloadPreserved": true,
+  "creationBeforeExplicitAction": false,
+  "delayedResponseRepeatedActionCreatesOnce": true,
+  "request": {
+    "id": "ea4491f2-c730-4a03-b726-40fab69e6c18",
+    "tenantId": "d8184082-4ec4-4852-a3eb-4eb7f1572259",
+    "kind": "COMPANY",
+    "title": "СИНТЕТИЧЕСКАЯ UX UI 1791226334331",
+    "customerId": "6a5758e7-4d3e-40db-a148-65f7786e9c23",
+    "demoMode": true,
+    "status": "DRAFT",
+    "revision": 2,
+    "draft": {
+      "kind": "COMPANY",
+      "items": [
+        {
+          "id": "642074ca-6ec5-4e44-b5e4-7f91def44cc1",
+          "fullNameKz": "",
+          "fullNameRu": "",
+          "positionKz": "",
+          "positionRu": "",
+          "assignments": [],
+          "workplaceKz": "",
+          "workplaceRu": "",
+          "photoAssetId": null,
+          "employeeCategory": "WORKER"
+        }
+      ],
+      "title": "СИНТЕТИЧЕСКАЯ UX UI 1791226334331",
+      "events": [],
+      "demoMode": true,
+      "customerId": "6a5758e7-4d3e-40db-a148-65f7786e9c23",
+      "commonFields": {
+        "documentDate": "2026-10-03"
+      },
+      "schemaVersion": 2,
+      "languagePolicy": "RU_KZ",
+      "englishAppendix": false,
+      "profileVersionId": "f78de6c1-0560-4b82-be6e-66bccd222988",
+      "businessRuleVersion": "LIVE_V1",
+      "organizationSnapshots": [
+        {
+          "id": "6a5758e7-4d3e-40db-a148-65f7786e9c23",
+          "bin": "",
+          "nameKz": "Синтетическая выбранная компания ЖШС",
+          "nameRu": "ТОО Синтетическая выбранная компания",
+          "addressKz": "",
+          "addressRu": ""
+        }
+      ]
+    },
+    "itemCount": 1,
+    "searchText": "СИНТЕТИЧЕСКАЯ UX UI 1791226334331      ",
+    "createdBy": "9bc13fd3-96b9-4332-a7dc-1bfe092504eb",
+    "createdAt": "2026-10-05T18:52:14.345Z",
+    "updatedAt": "2026-10-05T18:52:16.265Z",
+    "correctsIssuanceId": null,
+    "correctionReason": null,
+    "legacySourceId": null,
+    "workingRevision": 2,
+    "approvalPolicy": true,
+    "approvedProposalId": null,
+    "archivedAt": null,
+    "approvedDraft": {
+      "kind": "COMPANY",
+      "items": [
+        {
+          "id": "642074ca-6ec5-4e44-b5e4-7f91def44cc1",
+          "fullNameKz": "",
+          "fullNameRu": "",
+          "positionKz": "",
+          "positionRu": "",
+          "assignments": [],
+          "workplaceKz": "",
+          "workplaceRu": "",
+          "photoAssetId": null,
+          "employeeCategory": "WORKER"
+        }
+      ],
+      "title": "СИНТЕТИЧЕСКАЯ UX UI 1791226334331",
+      "events": [],
+      "demoMode": true,
+      "customerId": "6a5758e7-4d3e-40db-a148-65f7786e9c23",
+      "commonFields": {
+        "documentDate": "2026-10-03"
+      },
+      "schemaVersion": 2,
+      "languagePolicy": "RU_KZ",
+      "englishAppendix": false,
+      "profileVersionId": "f78de6c1-0560-4b82-be6e-66bccd222988",
+      "businessRuleVersion": "LIVE_V1",
+      "organizationSnapshots": [
+        {
+          "id": "6a5758e7-4d3e-40db-a148-65f7786e9c23",
+          "bin": "",
+          "nameKz": "Синтетическая выбранная компания ЖШС",
+          "nameRu": "ТОО Синтетическая выбранная компания",
+          "addressKz": "",
+          "addressRu": ""
+        }
+      ]
+    },
+    "approvedRevision": 0,
+    "archived": false,
+    "approval": null,
+    "organizationSnapshots": [
+      {
+        "id": "6a5758e7-4d3e-40db-a148-65f7786e9c23",
+        "nameRu": "ТОО Синтетическая выбранная компания",
+        "nameKz": "Синтетическая выбранная компания ЖШС",
+        "bin": "",
+        "addressRu": "",
+        "addressKz": ""
+      }
+    ],
+    "businessRuleVersion": "LIVE_V1",
+    "englishAppendix": false,
+    "languagePolicy": "RU_KZ",
+    "schemaVersion": 2,
+    "profileVersionId": "f78de6c1-0560-4b82-be6e-66bccd222988",
+    "commonFields": {
+      "documentDate": "2026-10-03"
+    },
+    "events": [],
+    "items": [
+      {
+        "id": "642074ca-6ec5-4e44-b5e4-7f91def44cc1",
+        "employeeCategory": "WORKER",
+        "fullNameRu": "",
+        "fullNameKz": "",
+        "positionRu": "",
+        "positionKz": "",
+        "workplaceRu": "",
+        "workplaceKz": "",
+        "photoAssetId": null,
+        "assignments": []
+      }
+    ],
+    "importScaffoldId": "642074ca-6ec5-4e44-b5e4-7f91def44cc1",
+    "lifecycle": null,
+    "issuances": [],
+    "documents": [],
+    "issuedAssignments": [],
+    "jobs": [],
+    "artifacts": [],
+    "issuanceEvents": []
+  }
+}

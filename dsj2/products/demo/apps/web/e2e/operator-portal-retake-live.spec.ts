@@ -92,8 +92,8 @@ test("live failed attempt gets linked clean retake; scoped employer evidence sta
         protocolTemplateId: "pb-protocol",
         serviceRuleVersionId: rule.id,
         commonFields: {
-          documentDate: "2026-09-24",
-          protocolDate: "2026-09-24",
+          documentDate: "2026-09-25",
+          protocolDate: "2026-09-25",
           trainingStart: "2026-09-23",
           trainingEnd: "2026-09-24",
           trainingSubject: "Синтетическая программа",

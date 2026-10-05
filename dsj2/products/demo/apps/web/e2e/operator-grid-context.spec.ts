@@ -10,7 +10,7 @@ async function workspace(page: Page, count = 150) {
     id: "grid-context",
     revision: 0,
     status: "DRAFT",
-    kind: "PERSON",
+    kind: "COMPANY",
     title: "Контекст оператора: смешанный список",
     customerId: null,
     demoMode: true,
@@ -576,6 +576,26 @@ test("current preview jobs retain statuses while preparation requires approval o
   page,
 }) => {
   const current = await workspace(page, 1);
+  // This scenario tests approval, so the COMPANY fixture needs its required customer.
+  current().customerId = "synthetic-preview-company";
+  await page.route("**/api/customers?**", (route) =>
+    route.fulfill({
+      json: {
+        items: [
+          {
+            id: "synthetic-preview-company",
+            nameRu: "Синтетическое предприятие",
+            nameKz: "Синтетикалық кәсіпорын",
+            bin: "123456789012",
+            addressRu: "Синтетический адрес",
+            addressKz: "Тест",
+            archived: false,
+          },
+        ],
+        total: 1,
+      },
+    }),
+  );
   current().items[0].fullNameRu = "Синтетический макет";
   current().items[0].assignments = current().items[0].assignments.map(
     (assignment) => ({

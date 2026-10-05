@@ -116,15 +116,13 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   await fs.mkdir(evidence, { recursive: true });
   await login(page);
   await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
-  await page.getByRole("radio", { name: /^Физическое лицо/ }).check();
+  await page.getByRole("radio", { name: /^Организация/ }).check();
   await page.getByRole("button", { name: "Далее", exact: true }).click();
   await page
     .getByRole("button", { name: "Удалить получателя 1", exact: true })
     .click();
   await assertTechnicalBlankRemoval(page);
-  await page
-    .getByRole("button", { name: "Импорт / вставка", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Импорт", exact: true }).click();
   const source = JSON.parse(
     await fs.readFile(
       path.join(product, "tests/fixtures/operator-value/100_people.json"),
@@ -156,7 +154,11 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
       ].join("\n"),
     );
   await page
-    .getByRole("button", { name: "Перейти к сопоставлению", exact: true })
+    .getByRole("button", { name: "Проверить таблицу", exact: true })
+    .click();
+  await page
+    .getByRole("dialog")
+    .locator(".import-document-options > summary")
     .click();
   await page
     .getByRole("combobox", {
@@ -229,7 +231,40 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   ).toBe(true);
   expect(initial.items[1].assignments[0].fieldOrigins.hours).toBe("IMPORTED");
   expect(initial.items[1].assignments[0].hours).toBe("16");
-  const details = await training(page, 1);
+  // A mapped empty spreadsheet cell is an explicit CLEARED fact. Restore
+  // only row 4 to inheritance; all other imported blanks must stay cleared.
+  expect(initial.items.filter((_: unknown, index: number) => index !== 1).every(
+    (item: { assignments: { hours: string; fieldOrigins: { hours: string } }[] }) =>
+      item.assignments[0].hours === "" && item.assignments[0].fieldOrigins.hours === "CLEARED",
+  )).toBe(true);
+  const details = page.locator(".assignment-list > details").first();
+  async function restoreHours(row: number, expected: string) {
+    await page
+      .getByRole("button", {
+        name: `Детали получателя ${row}`,
+        exact: true,
+      })
+      .click();
+    await details.getByRole("tab", { name: /^Настройки/ }).click();
+    const provenance = details.locator(".field-provenance").filter({
+      has: page.getByText("Источники общих значений", { exact: true }),
+    });
+    if ((await provenance.getAttribute("open")) === null)
+      await provenance.locator("summary").click();
+    const hours = provenance
+      .locator("dl > div")
+      .filter({ has: page.locator("dt", { hasText: /^Часы$/ }) });
+    await hours
+      .getByRole("button", { name: "Вернуть общее значение", exact: true })
+      .click();
+    await details.getByRole("tab", { name: /^Основное/ }).click();
+    await expect(
+      details.getByLabel("Объём обучения, часов", { exact: true }),
+    ).toHaveValue(expected);
+    await close(page);
+  }
+  await restoreHours(4, "8");
+  await training(page, 1);
   await details.getByLabel("Объём обучения, часов", { exact: true }).fill("12");
   await close(page);
   await training(page, 3);
@@ -264,40 +299,25 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
         item.assignments[0].trainingSubject === "Общая программа 2",
     ),
   ).toBe(true);
-  for (const row of [1, 2, 3]) {
-    await page
-      .getByRole("button", {
-        name: `Детали получателя ${row}`,
-        exact: true,
-      })
-      .click();
-    await details.getByRole("tab", { name: /^Настройки/ }).click();
-    const provenance = details.locator(".field-provenance").filter({
-      has: page.getByText("Источники общих значений", { exact: true }),
-    });
-    if ((await provenance.getAttribute("open")) === null)
-      await provenance.locator("summary").click();
-    const hours = provenance
-      .locator("dl > div")
-      .filter({ has: page.locator("dt", { hasText: /^Часы$/ }) });
-    await hours
-      .getByRole("button", { name: "Вернуть общее значение", exact: true })
-      .click();
-    await details.getByRole("tab", { name: /^Основное/ }).click();
-    await expect(
-      details.getByLabel("Объём обучения, часов", { exact: true }),
-    ).toHaveValue("24");
-    await close(page);
-  }
+  for (const row of [1, 2, 3]) await restoreHours(row, "24");
   await save(page);
   await page.reload();
   const restored = await read("/resolved");
   expect(
-    restored.draft.items.every(
+    restored.draft.items.slice(0, 4).every(
       (item: { assignments: { hours: string }[] }) =>
         item.assignments[0].hours === "24",
     ),
   ).toBe(true);
+  expect(restored.draft.items.slice(4).every(
+    (item: { assignments: { hours: string }[] }) => item.assignments[0].hours === "",
+  )).toBe(true);
+  const restoredRaw = await read();
+  expect(restoredRaw.items.slice(4).map(
+    (item: { assignments: unknown[] }) => item.assignments,
+  )).toEqual(initial.items.slice(4).map(
+    (item: { assignments: unknown[] }) => item.assignments,
+  ));
   const ru = page.getByLabel("ФИО, строка 100", { exact: true });
   const position = page.getByLabel("Должность · RU, строка 100", {
     exact: true,
@@ -307,10 +327,17 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   await expect(position).toBeFocused();
   await page.keyboard.press("Shift+Tab");
   await expect(ru).toBeFocused();
+  // Enter on the final populated name deliberately adds a row. Exercise the
+  // existing 99-to-100 navigation here while keeping this fixture at 100 people.
+  await page.keyboard.press("Shift+Enter");
+  await expect(page.getByLabel("ФИО, строка 99", { exact: true })).toBeFocused();
   await page.keyboard.press("Enter");
+  await expect(ru).toBeFocused();
+  await expect(page.locator(".operator-grid tbody tr")).toHaveCount(100);
   await expect(page.getByRole("dialog")).toHaveCount(0);
   expect((await read()).status).toBe("DRAFT");
   const beforePaste = await read();
+  expect(beforePaste.items).toHaveLength(100);
   await paste(
     page,
     99,
@@ -430,7 +457,8 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   for (const item of subset.items.slice(0, 2)) {
     expect(item.assignments[1].templateId).toBe("ptm-card");
     expect(item.assignments[1].eventId).toBe(secondEventId);
-    expect(item.assignments[1].outcome.status).toBe("UNKNOWN");
+    expect(item.assignments[1].outcome.status).toBe("PASSED");
+    expect(item.assignments[1].fieldOrigins.result).toBe("COURSE");
   }
   await events(page);
   await eventPanel
@@ -491,12 +519,9 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
     .fill("Синтетическая старая ведомость перед переносом");
   await eventPanel
     .getByRole("button", {
-      name: "Проверить применение результатов",
+      name: "Применить результат · 2 человек",
       exact: true,
     })
-    .click();
-  await eventPanel
-    .getByRole("button", { name: "Подтвердить результаты", exact: true })
     .click();
   await save(page);
   const priorMove = await read();
