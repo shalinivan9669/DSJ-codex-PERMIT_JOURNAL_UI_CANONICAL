@@ -1,0 +1,115 @@
+{
+  "schema": "DEMO_OPERATOR_DETAILS_RELEASE_1",
+  "status": "PASS_DEPLOYMENT_AND_SCOPED_PRESERVATION",
+  "recordedUtc": "2026-10-05T23:30:50.289209+00:00",
+  "applicationCommitSha": "060311b67f429a72e12b6958d9558b4486978909",
+  "applicationSourceArchiveSha256": "79185a277f98b8e4555018c485d13bd2e4704b1efca8b61ed8584498eafcbf3e",
+  "applicationSourceFileCount": 515,
+  "documentationFollowupOnly": true,
+  "canonicalUrl": "https://dsj-demo-rows-20261002.vercel.app",
+  "railway": {
+    "projectId": "250bb4a5-6462-4933-b1a7-8f61e2e7f507",
+    "environmentId": "fc776e13-94fd-45ff-b14c-06b91a2b1380",
+    "serviceId": "f9c22605-78ca-41ee-a483-52aa54036fba",
+    "deploymentId": "e3a4e107-191b-4ccd-ab4c-a0932f77be36",
+    "status": "SUCCESS",
+    "imageDigest": "sha256:697416b27e650fd9edc4dfecc11692f0b9112477d6fd1d75df9d4fe66712ca85",
+    "domains": [
+      "demo-backend-production-2d4c.up.railway.app"
+    ]
+  },
+  "vercel": {
+    "projectId": "prj_JMxxnkngWKGZRePXdvbn6jOCnk2V",
+    "accountId": "team_omsifNnhVJe540dSiQvWq7H1",
+    "rootDirectory": "apps/web",
+    "alias": "dsj-demo-rows-20261002.vercel.app",
+    "deploymentId": "dpl_AkpviCRPBRZeV4ZgQATVHzKTT646",
+    "readyState": "READY",
+    "url": "dsj-demo-rows-20261002-qrbmxkvpb-shalinivan9669s-projects.vercel.app",
+    "commitSha": "060311b67f429a72e12b6958d9558b4486978909",
+    "branch": "codex/operator-flow-refinement-20261003"
+  },
+  "providerPreservation": {
+    "pass": true,
+    "beforeBaselineSha256": "2895e6abe08537d853781133dfeb72e4807c7c56e50c3f8cc982b0f1693ca8d7",
+    "scope": "Existing service, project, environment, volume IDs/mounts and configuration fingerprints compared; values omitted."
+  },
+  "readiness": {
+    "status": "PASS",
+    "businessDataMutated": false,
+    "roles": [
+      {
+        "actualRole": "OPERATOR",
+        "pass": true,
+        "visibleRequestCount": 9,
+        "adminReadinessDenied": true
+      },
+      {
+        "actualRole": "DIRECTOR",
+        "pass": true,
+        "visibleRequestCount": 9
+      }
+    ],
+    "healthHttp200": true
+  },
+  "businessPreservation": {
+    "status": "PASS",
+    "beforeSha256": "86115fb317a8cd36dcc087be0d8fbd296bb98c64c7d3d909ed968411075e1009",
+    "counts": {
+      "requests": 9,
+      "recipients": 10,
+      "documents": 2,
+      "issuances": 1,
+      "proposals": 30,
+      "originalArtifacts": 6,
+      "originalBytesVerified": 4,
+      "protectedOriginals": 2
+    },
+    "differences": 0,
+    "additionCount": 0,
+    "scope": "Every previously captured API-visible identity and its captured fields. Additional records are reported, not treated as loss. Protected originals retain their download-boundary metadata; bytes were not read."
+  },
+  "browser": {
+    "status": "PASS_ROOT_REVIEWED",
+    "allListedScreensViewedByRoot": true,
+    "businessDataMutated": false,
+    "scope": "Root personally viewed the authenticated OPERATOR request list after canonical deployed page reload: page loaded, requests heading,9requests and new display names visible. Read-only UI observation; no new request, preview, approval, issue or customer edit. It is not a fresh director UI or full deployed E2E cycle.",
+    "images": []
+  },
+  "proofDigests": {
+    "provider": {
+      "sha256": "23b4726c4c20c459974e00f740da932d23320cd3f60379d861dd79a2fcc90d62",
+      "privateSourceRetained": true
+    },
+    "readiness": {
+      "sha256": "b16915239dc01c91e9d641364e76a236347ce15dfd9f232287b00bf32989d85e",
+      "privateSourceRetained": true
+    },
+    "preservation": {
+      "sha256": "d26fab8645137a6b525e6f492affb1b14c5259b8aaaec42121318970ab6d5df2",
+      "privateSourceRetained": true
+    },
+    "browser": {
+      "sha256": "29fd95011b77ba05e9862bc0373fb82780e6772d5c06f95e6112797989f9d9d1",
+      "privateSourceRetained": true
+    },
+    "archive": {
+      "sha256": "be0e52dfe0e102c60d194efe6fdf451a26bcd6cef5b4c32f3d168911000aee47",
+      "privateSourceRetained": true
+    }
+  },
+  "extendedLocalAcceptance": {
+    "status": "USER_REQUESTED_STOP",
+    "actualPass": 190,
+    "separateImmutableClosure": 1,
+    "openCases": 12,
+    "pendingContinuation": "ABORTED_NOT_PASS",
+    "notOneContinuousGreenFullRun": true
+  },
+  "limits": [
+    "Deployment PASS does not close the12 stopped local browser scenarios.",
+    "Protected unsigned originals retain their verified boundary; byte access is not fabricated.",
+    "No new business issue or production test data created for release verification.",
+    "Physical printing/legal approval and future reminder implementation are not claimed."
+  ]
+}

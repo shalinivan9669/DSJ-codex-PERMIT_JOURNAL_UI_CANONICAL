@@ -1,7 +1,7 @@
 {
   "schema": "operator-details-acceptance-v1",
   "capturedUtc": "2026-10-05T23:17:29.730059+00:00",
-  "status": "USER_REQUESTED_STOP",
+  "status": "DEPLOYED_LOCAL_SCOPE_VERIFIED_EXTENDED_CHECKS_STOPPED_BY_USER",
   "finalAcceptanceComplete": false,
   "language": "ru",
   "task": "Simple PERSON/COMPANY UI, PS period, resilient photo, addressed previews; renewal design only",
@@ -994,15 +994,16 @@
     {
       "id": "REGRESSION-09",
       "requirement": "Весь результат опубликован только после разрешённого push и проверенных Railway/Vercel релизов с сохранностью данных.",
-      "status": "NOT_RUN",
-      "evidenceRefs": [],
-      "verifiedScope": "User separately authorized push/deploy after checks; read-only release preparation completed outside this matrix. No mutation/release success is asserted.",
-      "remaining": "Root must commit/review exact SHA, push verified branch, deploy exact archived SHA to explicit provider IDs, verify live build/health and existing data/artifact preservation. Old production health200 is not this release.",
+      "status": "PASS",
+      "evidenceRefs": [
+        "release-final"
+      ],
+      "verifiedScope": "Точный application commit060311b опубликован: RailwaySUCCESS/VercelREADY, canonical alias/source identity, readiness обеих ролей, BEFORE/AFTER data/volume/original preservation и bounded root browser review подтверждены.12 остановленных локальных сценариев не помечены PASS.",
       "promptSections": [
         2,
         15
       ],
-      "authorizationProvenance": "Separate later user authorization recorded by root; original333-line prompt scoped local work. Deployment evidence still NOT_RUN."
+      "authorizationProvenance": "Separate later user authorization for push/deploy; release executed and verified independently from the explicit stop of extended local checks."
     },
     {
       "id": "REGRESSION-10",
@@ -2248,6 +2249,14 @@
       "existsAtCapture": true,
       "layer": "EXACT_COMPLETED_PHASE_ACCOUNTING",
       "scope": "190actualPASS+1immutableclosure+12open; historical attempts and rawSHA retained separately."
+    },
+    "release-final": {
+      "path": "docs/evidence/operator-details-ux-20261005/release-final.json",
+      "sha256AtCapture": "bd9607082e6b843913c2f41e663362a24bda8dfe78500e442cc7228575037f66",
+      "existsAtCapture": true,
+      "candidateAvailable": false,
+      "layer": "DEPLOYMENT_PROVIDER_READINESS_PRESERVATION_ROOT_UI",
+      "scope": "Exact060311b application deployment; preserves explicit user stop and12 open extended tests."
     }
   },
   "validationRuns": [
@@ -4400,8 +4409,7 @@
     "excludedRawPrivateReferencesCompacted": 74
   },
   "remainingReleaseGates": [
-    "USER_REQUESTED_STOP:12 browser cases remain open; pending continuation aborted, no further broad checks started.",
-    "Deployment pending root exact-source release and BEFORE/AFTER preservation verification; update REGRESSION-09 only after actual proof."
+    "Deployment completed on exact application SHA.12 extended local scenarios remain explicitly stopped by user; no hidden resumption or fabricated PASS."
   ],
   "nonClaims": [
     "No exact reproduction of the user’s unavailable original hanging photo or old missing-preview document.",
@@ -4424,7 +4432,7 @@
     "titleImmutablePreservationExecuted": true,
     "currentBrowserPartialOutputNotUsedForPASS": true,
     "snapshotOpenBrowserCases": 12,
-    "deployment": "PENDING",
+    "deployment": "PASS_SEPARATE_FROM_STOPPED_EXTENDED_CHECKS",
     "current05RootUIReviewed": true,
     "current05BlurLivePass": true
   },
@@ -4482,6 +4490,12 @@
     "closedByImmutableContinuation": 1,
     "openCases": 12,
     "pendingManualContinuation": "ABORTED_BY_USER_REQUEST_NOT_PASS",
-    "deployment": "PENDING_ROOT_RELEASE_VERIFICATION"
+    "deployment": "PASS_SEPARATE_FROM_STOPPED_EXTENDED_CHECKS"
+  },
+  "deployment": {
+    "status": "PASS",
+    "applicationCommitSha": "060311b67f429a72e12b6958d9558b4486978909",
+    "evidenceRef": "release-final",
+    "documentationFollowupDoesNotChangeApplicationSource": true
   }
 }

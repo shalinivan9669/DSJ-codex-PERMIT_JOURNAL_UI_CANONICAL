@@ -366,3 +366,10 @@ Root лично просмотрел все16 страниц шести синт
 Отслеживание корочек и напоминания выполнены только как [спецификация](../handoffs/operator-details-ux-20261005/RENEWALS_SPEC_RU.md) и [исполнительный промт](../handoffs/operator-details-ux-20261005/RENEWALS_IMPLEMENTATION_PROMPT_RU.md). Планировщик, рассылки и новый интерфейс напоминаний не внедрены.
 
 Публикация этой области ожидает проверки root; локально зафиксирован **NOT_RUN**. Разрешённые пользователем push/Railway/Vercel будут записаны отдельно после оставшейся приёмки, свежих BEFORE baseline и AFTER проверки source/data/volume/originals. Физическая печать и юридическое утверждение форм не заявляются.
+
+
+## 06.10.2026 — публикация деталей DEMO
+
+Опубликован application commit `060311b67f429a72e12b6958d9558b4486978909`: Railway `e3a4e107-191b-4ccd-ab4c-a0932f77be36` SUCCESS, Vercel `dpl_AkpviCRPBRZeV4ZgQATVHzKTT646` READY на прежнем адресе. Проверены точный source/archive, readiness OPERATOR/DIRECTOR, сохранность прежних данных, volume/config fingerprints и оригинальных файлов, ограниченный read-only браузерный путь. [Санитизированное подтверждение публикации](operator-details-ux-20261005/release-final.json).
+
+Расширенная локальная приёмка по-прежнему **USER_REQUESTED_STOP**:190 actualPASS,1 отдельное immutable closure,12 открытых сценариев; pending/manual прерван без PASS. Публикация не переименовывает эти проверки в успешные. Этот follow-up изменяет только документацию; application SHA сохраняется. Напоминания остаются исключительно спецификацией и промтом.
