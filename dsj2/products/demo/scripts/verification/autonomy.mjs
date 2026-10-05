@@ -85,7 +85,11 @@ const templateRoot = path.join(root, "assets", "templates");
 const manifest = JSON.parse(
   await fs.readFile(path.join(templateRoot, "manifest.json"), "utf8"),
 );
-const templates = [...manifest.templates, ...(manifest.groupTemplates || [])];
+const templates = [
+  ...manifest.templates,
+  ...(manifest.groupTemplates || []),
+  ...(manifest.specialTemplates || []),
+];
 const selected = new Set(templates.map((template) => template.file));
 for (const template of templates) {
   const file = String(template.file);
