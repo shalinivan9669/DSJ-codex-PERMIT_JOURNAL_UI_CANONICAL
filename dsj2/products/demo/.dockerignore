@@ -86,3 +86,22 @@ assets/templates/ps-witness.v13.docx
 assets/templates/ptm-card.v16.docx
 assets/templates/ptm-protocol.group-v3.docx
 assets/templates/ptm-protocol.v11.docx
+
+# Previous releases remain in Git and immutable tenant storage.
+# NEUTRAL_FORMS_V1 ships only the newly selected manifest versions.
+assets/templates/biot-itr-certificate.v18.docx
+assets/templates/biot-itr-protocol.group-v5.docx
+assets/templates/biot-itr-protocol.v5.docx
+assets/templates/biot-protocol.group-v5.docx
+assets/templates/biot-protocol.v14.docx
+assets/templates/biot-worker-card.v20.docx
+assets/templates/pb-card.v17.docx
+assets/templates/pb-protocol.group-v4.docx
+assets/templates/pb-protocol.v12.docx
+assets/templates/ps-card.v18.docx
+assets/templates/ps-protocol.group-v4.docx
+assets/templates/ps-protocol.v12.docx
+assets/templates/ps-witness.v14.docx
+assets/templates/ptm-card.v17.docx
+assets/templates/ptm-protocol.group-v4.docx
+assets/templates/ptm-protocol.v12.docx
