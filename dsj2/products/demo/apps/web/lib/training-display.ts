@@ -13,13 +13,9 @@ export function trainingDirectionLabel(direction: TrainingDirection) {
 
 /** Display only the exact generated legacy titles; preserve custom names and all saved values. */
 export function trainingDisplayTitle(title: string) {
+  if (/^BIOT(?: — (?:Рабочие|ИТР))*$/.test(title))
+    return "БиОТ" + title.slice(4);
   switch (title) {
-    case "BIOT":
-      return "БиОТ";
-    case "BIOT — Рабочие":
-      return "БиОТ — Рабочие";
-    case "BIOT — ИТР":
-      return "БиОТ — ИТР";
     case "PTM":
       return "ПТМ";
     case "PB":

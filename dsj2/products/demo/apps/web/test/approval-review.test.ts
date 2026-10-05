@@ -6,6 +6,50 @@ import {
   positiveAssignmentDefaults,
 } from "@demo/contracts";
 import { approvalReviewSummary } from "../lib/approval-review";
+import { trainingDisplayTitle } from "../lib/training-display";
+
+test("director display translates accumulated generated BIOT titles without changing saved or custom names", () => {
+  const draft = draftSchema.parse({
+    kind: "PERSON",
+    events: [
+      {
+        id: "legacy-course",
+        title: "BIOT — Рабочие — ИТР",
+        protocolTemplateId: "biot-itr-protocol",
+        commonFields: {},
+      },
+    ],
+    items: [
+      {
+        id: "person",
+        assignments: [
+          {
+            id: "certificate",
+            templateId: "biot-itr-certificate",
+            eventId: "legacy-course",
+          },
+        ],
+      },
+    ],
+  });
+  const before = JSON.stringify(draft);
+  const summary = approvalReviewSummary({ draft, provenance: {}, issues: [] });
+  assert.equal(
+    trainingDisplayTitle(summary.courses[0].title),
+    "БиОТ — Рабочие — ИТР",
+  );
+  assert.equal(JSON.stringify(draft), before);
+  for (const suffix of ["", " — Рабочие", " — ИТР", " — ИТР — Рабочие — ИТР"])
+    assert.equal(trainingDisplayTitle("BIOT" + suffix), "БиОТ" + suffix);
+  for (const title of [
+    "BIOT — Авторская программа",
+    "BIOT — Рабочие — подрядчик",
+    "Курс BIOT — ИТР",
+    "БиОТ — ИТР",
+    "Проверка — Рабочие — ИТР",
+  ])
+    assert.equal(trainingDisplayTitle(title), title);
+});
 
 test("common manually entered hours and one shared employer are not personal exceptions", () => {
   const submitted = draftSchema.parse({
