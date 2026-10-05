@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "releaseSha": "cd42cf04fa66c5807015afbd9561510bb69e3cad",
+  "cases": [
+    {
+      "case": "biot-itr-certificate-special-14-1",
+      "pass": true,
+      "pages": 1,
+      "printedValuesChecked": 8,
+      "sourceTemplateSha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+      "docxSha256": "bf668244b43dc3ec615063274d3d3c476869601cb71ba14a43b820c3c9cc747e",
+      "pdfSha256": "229b88ad3804524b6797158f12c9e13750d722ff2d96df905587129e2ecf7250",
+      "registeredTemplate": {
+        "id": "8423ce76-4c04-4b42-8272-f4373032e996",
+        "templateId": "biot-itr-certificate",
+        "version": "special-14-1",
+        "checksum": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+        "approved": true
+      },
+      "members": 1,
+      "outsidePage": []
+    },
+    {
+      "case": "biot-itr-protocol-special-1-1",
+      "pass": true,
+      "pages": 1,
+      "printedValuesChecked": 13,
+      "sourceTemplateSha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+      "docxSha256": "31bd5623b88c7cc163893626c372d19deaf837de22371ad2ae708936392f9a36",
+      "pdfSha256": "aa988977a319849fe8ec35fc25d4970e3a8d965e86a35138d8e9b92f41ae43aa",
+      "registeredTemplate": {
+        "id": "85576530-602c-4c07-90ef-69193a62bfe3",
+        "templateId": "biot-itr-protocol",
+        "version": "special-1-1",
+        "checksum": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+        "approved": true
+      },
+      "members": 1,
+      "outsidePage": []
+    },
+    {
+      "case": "biot-itr-protocol-special-1-group-1",
+      "pass": true,
+      "pages": 1,
+      "printedValuesChecked": 21,
+      "sourceTemplateSha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+      "docxSha256": "228aa22904d26b837b5ec741fd541aeac40b22cf03676f9400e96a951a208c29",
+      "pdfSha256": "c63aa1b3158b23bed56e83c8b71dc0fd28971b3e8f6c062387f84217fb70d5bb",
+      "registeredTemplate": {
+        "id": "ea88fb86-3b96-493d-b13a-79a20c9d82e8",
+        "templateId": "biot-itr-protocol",
+        "version": "special-1-group-1",
+        "checksum": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+        "approved": true
+      },
+      "members": 2,
+      "outsidePage": []
+    }
+  ],
+  "pages": [
+    "linux-special/biot-itr-certificate-special-14-1-page-1.png",
+    "linux-special/biot-itr-protocol-special-1-1-page-1.png",
+    "linux-special/biot-itr-protocol-special-1-group-1-page-1.png"
+  ],
+  "caseCount": 3,
+  "registryReadOnly": true,
+  "businessWrites": false,
+  "durableArtifactWrites": false,
+  "scope": "Actual deployed Linux runRender with synthetic temporary snapshots; no production issuance, number allocation, signature, upload or saved artifact.",
+  "visualReviewCompleted": true,
+  "visualReviewReport": "linux-special-visual-review.json"
+}

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "date": "2026-10-05",
   "language": "ru",
-  "status": "IMPLEMENTED_LOCAL_ACCEPTANCE_PASS_DEPLOYMENT_PENDING",
+  "status": "IMPLEMENTED_VERIFIED_PUBLISHED",
   "scope": "Упрощение подготовки менеджером и решения директора в автономном products/demo: источники полей, ordinary ИТР и явный SPECIAL, готовая редакция, новые документы RU/KZ.",
   "baseline": {
     "branch": "codex/operator-flow-refinement-20261003",
     "sourceCommit": "6ffa7fed74d7641d206d770ce92c1deaabdc66e8",
-    "currentApplicationCommit": null,
-    "currentApplicationCommitNote": "На момент этой записи изменения ещё не опубликованы; SHA завершённого релиза фиксируется отдельно.",
+    "currentApplicationCommit": "6c45462099074a64c206391a20354ad197b67e46",
+    "currentApplicationCommitNote": "Последний frontend commit; backend остаётся на явно указанном backendDeployedCommit. Разница — только два web-файла отображения исторического заголовка и regression-теста.",
     "historicalProposal": {
       "submittedAt": "2026-10-02T15:34:39.008Z",
       "revision": 6,
@@ -26,7 +26,9 @@
       "classification": "Старая неполная PENDING-редакция, созданная до явной передачи с проверкой готовности.",
       "source": ".runtime/autofill-research-20261005/research-summary.json и live-review-sanitized.json",
       "preservation": "Исторический payload и UNKNOWN не переписаны. Наличие 21 замечания не означает 21 независимый ввод; это замечания по документам и общим источникам."
-    }
+    },
+    "backendDeployedCommit": "cd42cf04fa66c5807015afbd9561510bb69e3cad",
+    "frontendDeployedCommit": "6c45462099074a64c206391a20354ad197b67e46"
   },
   "acceptance": [
     {
@@ -171,6 +173,18 @@
         "browser-workflow-readback.json",
         "manual20-artifact-text-readback.json"
       ]
+    },
+    {
+      "id": "AF-13",
+      "requirement": "Публикация на существующем адресе и безопасное чтение рабочих данных",
+      "result": "PASS_PUBLISHED",
+      "implemented": "Vercel READY на 6c454620 и Railway SUCCESS на cd42cf04; canonical alias подтверждён, backend health HTTP 200. Все 325 runtime-файлов совпали. Применены 23 миграции, сохранены 48 прежних proposal, 32 старые версии и 58 файлов; добавлены только 3 SPECIAL-регистрации и 3 файла, новые версии утверждены. Настоящий Linux renderer: SPECIAL 3/3 на временных синтетических данных. После финальной публикации обе роли вошли через браузер: 0 готовых и 2 требующих подготовки; production-заявки не изменялись. Временный SSH отозван, task key удалён.",
+      "evidence": [
+        "production-release.json",
+        "cloud-browser-readback.json",
+        "linux-special-readback.json",
+        "linux-special-visual-review.json"
+      ]
     }
   ],
   "oldIssueResolution": [
@@ -313,48 +327,74 @@
   },
   "verification": {
     "unitCoverage": {
-      "uniqueCasesCovered": 425,
-      "singleUninterruptedGreenPnpmTest": false,
+      "uniqueCasesCovered": 426,
+      "singleUninterruptedGreenPnpmTest": true,
+      "command": "pnpm test",
+      "exitCode": 0,
       "domainFull": {
-        "command": "pnpm test",
         "total": 206,
-        "passed": 204,
-        "failed": 2,
-        "skipped": 0,
-        "log": ".runtime/autofill-cycle-20261005/final-test.log"
-      },
-      "domainCorrection": {
-        "suite": "tests/operator-shared-validity.test.ts",
-        "passed": 8,
+        "passed": 206,
         "failed": 0,
-        "log": ".runtime/autofill-cycle-20261005/final-test-domain-correction.log"
+        "skipped": 0
       },
       "webFull": {
-        "command": "pnpm --filter @demo/web test",
-        "total": 218,
-        "passed": 217,
-        "failed": 1,
-        "skipped": 0,
-        "log": ".runtime/autofill-cycle-20261005/final-test-web.log"
+        "total": 220,
+        "passed": 220,
+        "failed": 0,
+        "skipped": 0
       },
-      "webCorrection": {
-        "suite": "apps/web/test/training-assignment-edit.test.ts",
+      "python": ".runtime/venv/Scripts/python.exe через DEMO_PYTHON",
+      "evidence": "final-unit-verification.json",
+      "log": ".runtime/autofill-cycle-20261005/final-unit-configured.log",
+      "logSha256": "7e72f00cb48da970f9a62d7bfaa4070f3d4159d2ce096cf0f4ca6c1bdfe316d6",
+      "previousEnvironmentAttempt": {
+        "log": ".runtime/autofill-cycle-20261005/final-unit-full.log",
+        "logSha256": "f3f10afeb4fb4be3c1e88b32c55d4254d3d63dff0a545a6347e9ee956c14aead",
+        "domainPassed": 184,
+        "domainFailed": 22,
+        "webStarted": false,
+        "error": "PDF_VALIDATOR_UNAVAILABLE",
+        "cause": "Не был задан DEMO_PYTHON; выбран системный Python без нужного PDF-validator.",
+        "correction": "Повторена та же pnpm test с закреплённым DEMO_PYTHON. Между этими двумя запусками код не менялся."
+      },
+      "earlierRuns": {
+        "domainFull": {
+          "command": "pnpm test",
+          "total": 206,
+          "passed": 204,
+          "failed": 2,
+          "skipped": 0,
+          "log": ".runtime/autofill-cycle-20261005/final-test.log"
+        },
+        "domainCorrection": {
+          "suite": "tests/operator-shared-validity.test.ts",
+          "passed": 8,
+          "failed": 0,
+          "log": ".runtime/autofill-cycle-20261005/final-test-domain-correction.log"
+        },
+        "webFull": {
+          "command": "pnpm --filter @demo/web test",
+          "total": 218,
+          "passed": 217,
+          "failed": 1,
+          "skipped": 0,
+          "log": ".runtime/autofill-cycle-20261005/final-test-web.log"
+        },
+        "webCorrection": {
+          "suite": "apps/web/test/training-assignment-edit.test.ts",
+          "passed": 4,
+          "failed": 0,
+          "log": ".runtime/autofill-cycle-20261005/final-test-web-correction.log"
+        },
+        "note": "Ранние три устаревших EN-ожидания исправлены; targeted suites проходили. Они сохранены как история, окончательный результат 426/426 подтверждён новым полным запуском. Дополнительные helper/title regression включены в финальные 220 web-кейсов и повторно не суммируются."
+      },
+      "finalDisplayRegression": {
+        "suite": "apps/web/test/approval-review.test.ts",
         "passed": 4,
         "failed": 0,
-        "log": ".runtime/autofill-cycle-20261005/final-test-web-correction.log"
-      },
-      "correctionReason": "Три устаревших ожидания сохраняли английские поля после нового прямого требования полностью убрать EN. Исправлены только эти ожидания и повторены целиком соответствующие suites. Domain full остановил цепочку pnpm test перед web; web запущен отдельно. Число 424 — объединение 206 domain и 218 web, без повторного счёта targeted suites. После этих прогонов добавлен один новый helper regression; suite approval-issues целиком 3/3 PASS. Итог 425 разных покрытых кейсов — 424 из базовых full suites плюс один новый, а не непрерывный full run.",
-      "python": "Закреплённый .runtime/venv/Scripts/python.exe через DEMO_PYTHON",
-      "baseFullSuitesUniqueCases": 424,
-      "newFinalHelperRegressionCases": 1,
-      "additionalHelperRun": {
-        "suite": "apps/web/test/approval-issues.test.ts",
-        "passed": 3,
-        "failed": 0,
-        "newCases": 1,
-        "applicationSourceChanged": false,
-        "evidence": "approval-verification.json",
-        "description": "Два человека с общими knowledge/proctoring по двум формам дают одну общую ошибку; персональные MANUAL/CLEARED третьего человека остаются персональными."
+        "newUniqueTests": 1,
+        "scopedEslint": "PASS",
+        "change": "Только отображение исторического generated-заголовка BIOT; сохранённый title/custom names/snapshot не изменяются."
       }
     },
     "focusedRuns": [
@@ -417,7 +457,17 @@
         ".runtime/autofill-cycle-20261005/build-final.log",
         ".runtime/autofill-cycle-20261005/build-web-final.log"
       ],
-      "finalWebBuildId": "gVC7Zgp2WckAGi0Tyx9zV"
+      "finalWebBuildId": "gVC7Zgp2WckAGi0Tyx9zV",
+      "finalFrontendBuild": {
+        "status": "PASS",
+        "sourceCommit": "6c45462099074a64c206391a20354ad197b67e46",
+        "nextBuildAndTypecheck": true,
+        "vercelBuildSeconds": 50,
+        "log": ".runtime/autofill-cycle-20261005/vercel-frontend-final.log",
+        "logSha256": "a1c522d270885035a323446004ea6852717e63ad1af752878100144bc052430b",
+        "deploymentId": "dpl_4M2EYaSHpjinLTgJD9C3s1PDPwy3"
+      },
+      "localBuildIdScope": "gVC7Zgp2WckAGi0Tyx9zV — основная локальная приёмка до последней правки отображения исторического заголовка; финальныйfrontend заново собран и проверен Vercel."
     },
     "browser": {
       "status": "PASS_LOCAL_WITH_RECORDED_TIMEOUT_AND_SAME_REQUEST_RESUME",
@@ -462,6 +512,16 @@
         "jobsSucceeded": 212,
         "downloadedExamples": 22,
         "evidence": "browser-workflow-readback.json"
+      },
+      "productionReadOnly": {
+        "status": "PASS",
+        "frontendSha": "6c45462099074a64c206391a20354ad197b67e46",
+        "backendSha": "cd42cf04fa66c5807015afbd9561510bb69e3cad",
+        "readyPending": 0,
+        "needsPreparation": 2,
+        "productionRequestWrites": 0,
+        "evidence": "cloud-browser-readback.json",
+        "screenshot": "cloud-director-preparation.png"
       }
     },
     "fullIntegrationRerunClaimed": false,
@@ -478,30 +538,59 @@
       "tsconfigGitBlob": "2d0a55b16b0d7947d261a306ced8ac36a932c0f9",
       "exactBaselinePatchHashesMatch": true,
       "evidence": ".runtime/autofill-cycle-20261005/config-baseline-restored.json"
+    },
+    "productionPreservation": {
+      "oldProposals": 48,
+      "oldTemplateVersions": 32,
+      "oldFiles": 58,
+      "newTemplateFilesOnly": 3,
+      "historicalMatches": true,
+      "evidence": "production-release.json"
     }
   },
   "release": {
-    "status": "DEPLOYMENT_PENDING",
+    "status": "PUBLISHED_VERIFIED",
+    "origin": "https://dsj-demo-rows-20261002.vercel.app",
+    "backendApplicationCommit": "cd42cf04fa66c5807015afbd9561510bb69e3cad",
+    "frontendApplicationCommit": "6c45462099074a64c206391a20354ad197b67e46",
+    "frontendOnlyDelta": [
+      "dsj2/products/demo/apps/web/lib/training-display.ts",
+      "dsj2/products/demo/apps/web/test/approval-review.test.ts"
+    ],
+    "vercelDeploymentId": "dpl_4M2EYaSHpjinLTgJD9C3s1PDPwy3",
+    "vercelStatus": "READY",
+    "railwayDeploymentId": "4d373112-1a76-4ada-aaa4-50185b03ce2b",
+    "railwayStatus": "SUCCESS",
+    "backendSourceFilesVerified": 325,
     "backup": {
-      "status": "PASS_ARCHIVE_READBACK",
-      "filesChecked": 58,
+      "status": "PASS",
+      "databaseDumpBytes": 285774,
+      "databaseDumpSha256": "2094d9af32f80519ac96c5eae0d7ed7712b7a169fbd8fc18188d8b96484ad75d",
+      "storageFiles": 58,
+      "storageArchiveBytes": 84432645,
+      "storageArchiveSha256": "c069fc7c9b6a14994f9c3510408523129bdeb24ac649da2f13298b48a8b18e2e",
       "archiveDigestsRechecked": true,
       "everyTarMemberBytesAndSha256Matched": true,
-      "databaseDumpHeaderAndTocChecked": true,
-      "fullRestorePerformed": false,
-      "evidence": ".runtime/autofill-cycle-20261005/backup-local-verification.json"
+      "dumpCustomFormatHeader": true,
+      "coreDataTablesInLocalToc": true,
+      "fullRestorePerformed": false
     },
-    "productionMigrationVerified": false,
-    "deploymentVerified": false,
-    "productionSmokeVerified": false
+    "productionMigrationVerified": true,
+    "deploymentVerified": true,
+    "productionSmokeVerified": true,
+    "productionSmokeScope": "Authenticated HTTP и настоящий браузер обеих ролей, чтение существующих данных без новых production-заявок/согласований/выдач.",
+    "temporaryAccessRevoked": true,
+    "taskLocalKeyRemoved": true,
+    "evidence": "production-release.json"
   },
   "limitations": [
-    "Локальная приёмка завершена с явно записанными исходным timeout и успешным read-only resume той же заявки. Публикация этой записью не заявляется; её фактические migration/deploy/smoke результаты добавляются отдельно.",
+    "Публикация подтверждена на явно указанной паре frontend/backend SHA. Production-проверка была read-only; новые полные бизнес-сценарии и выпуски проверялись локально на синтетических данных. Две исторические PENDING по-прежнему требуют явной подготовки.",
     "Все новые проверочные люди/организации/результаты синтетические. Длительности 16 часов и график 8 часов/KZ_FIVE_DAY — данные проверки, а не универсальное правило учебного центра.",
     "Старые 21 замечание не скрываются массовым присвоением PASSED или вымышленными БИН, оценками, прокторингом и квалификацией.",
     "Проверка DOCX/PDF этой задачи не является новым Microsoft Word-прогоном, физической печатью, юридическим утверждением или действительной НУЦ-подписью.",
     "Время автоматизированного браузерного сценария не доказывает скорость живого менеджера. Замерены смысловые вводы и повторения только для указанных сценариев.",
-    "Первоначально локальная очередь работала одним worker; для завершения 105 документов добавлены 3 worker. Успешный resume доказывает конечные файлы и данные; исходный лимит ожидания полного E2E-run не считается пройденным."
+    "Первоначально локальная очередь работала одним worker; для завершения 105 документов добавлены 3 worker. Успешный resume доказывает конечные файлы и данные; исходный лимит ожидания полного E2E-run не считается пройденным.",
+    "Непосредственно предыдущий финальный unit-run без DEMO_PYTHON завершился 22 PDF_VALIDATOR_UNAVAILABLE; после установки закреплённого Python та же pnpm test прошла 426/426. Код между этими двумя запусками не менялся; отрицательный лог сохранён."
   ],
   "evidencePathBase": "Имена файлов без каталога относятся к docs/evidence/autofill-cycle-20261005; остальные пути — к корню автономного products/demo. Runtime evidence остаётся локальным; приватные prompt/config и полный raw payload не публикуются."
 }

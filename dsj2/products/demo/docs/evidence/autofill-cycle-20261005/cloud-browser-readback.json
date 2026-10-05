@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-05T09:57:52.7736730Z",
+  "releaseSha": "6c45462099074a64c206391a20354ad197b67e46",
+  "origin": "https://dsj-demo-rows-20261002.vercel.app",
+  "browser": "Chrome through CUA",
+  "operator": {
+    "requestsCount": 6,
+    "freshReload": "PASS",
+    "login": "PASS",
+    "requiresPreparationCount": 2,
+    "loginAfterFinalDeployment": true
+  },
+  "director": {
+    "requiresPreparationCount": 2,
+    "courseSummaryRows": 4,
+    "approveButtonAbsentForUnprepared": true,
+    "issueDetailsCollapsed": true,
+    "preparationButtonVisible": true,
+    "defaultQueueReadyCount": 0,
+    "login": "PASS",
+    "redRepeatedIssueWallAbsent": true,
+    "legacyGeneratedTitleRussian": "БиОТ — Рабочие — ИТР",
+    "frontendReloadAfterFinalDeployment": true
+  },
+  "productionRequestWrites": 0,
+  "screenshot": "cloud-director-preparation.png",
+  "historicalPreservationEvidence": "final-attestation.json",
+  "scope": "Read-only browser acceptance of published build; full mutation/issue scenarios were performed with synthetic local data",
+  "backendSha": "cd42cf04fa66c5807015afbd9561510bb69e3cad"
+}

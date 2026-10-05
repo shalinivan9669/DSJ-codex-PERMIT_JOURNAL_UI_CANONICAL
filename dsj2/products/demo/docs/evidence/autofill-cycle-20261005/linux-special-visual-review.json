@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "releaseSha": "cd42cf04fa66c5807015afbd9561510bb69e3cad",
+  "reviewedAt": "2026-10-05T09:42:51.755805+00:00",
+  "method": "All three downloaded Linux PDF page PNGs viewed at original resolution",
+  "cases": 3,
+  "pagesReviewed": 3,
+  "findings": [
+    "Certificate: RU/KZ columns, industry, 40 hours, names, dates, unique number and head name fit their intended areas.",
+    "Individual protocol: employer BIN and both address languages, names, knowledge 90 / 100, proctoring and linked certificate number are readable inside the correct cells.",
+    "Group protocol: two distinct people, employer BINs, addresses and linked numbers remain in ordered separate rows; complete commission follows the roster.",
+    "No visible clipping, overlapping text, blank pages or missing Kazakh glyphs in these three synthetic cases."
+  ],
+  "pageImages": [
+    {
+      "file": "linux-special/biot-itr-certificate-special-14-1-page-1.png",
+      "sha256": "0a7ec9082e300209a7a42f2f4024936e71ac5c733030ffc0dd9c947e5d87c393"
+    },
+    {
+      "file": "linux-special/biot-itr-protocol-special-1-1-page-1.png",
+      "sha256": "f1d5b790c5ef9d0a7ea1cdfd963580a9f63a8e8146aeba167ce492eda3dd3c6b"
+    },
+    {
+      "file": "linux-special/biot-itr-protocol-special-1-group-1-page-1.png",
+      "sha256": "44433b3153cb3b663cbb3c724288608c984f81687e3ff8a9a84da5668d6bd680"
+    }
+  ],
+  "businessWrites": false,
+  "durableArtifactWrites": false,
+  "scope": "Visual verification of actual deployed Linux render on temporary synthetic inputs; no production issuance or physical-print claim."
+}

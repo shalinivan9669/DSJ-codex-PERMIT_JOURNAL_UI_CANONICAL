@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "frontendSourceCommit": "6c45462099074a64c206391a20354ad197b67e46",
+  "command": "pnpm test",
+  "exitCode": 0,
+  "singleUninterruptedSequentialRun": true,
+  "configuredPython": ".runtime/venv/Scripts/python.exe через DEMO_PYTHON",
+  "domain": {
+    "total": 206,
+    "passed": 206,
+    "failed": 0,
+    "skipped": 0
+  },
+  "web": {
+    "total": 220,
+    "passed": 220,
+    "failed": 0,
+    "skipped": 0
+  },
+  "total": 426,
+  "log": ".runtime/autofill-cycle-20261005/final-unit-configured.log",
+  "logSha256": "7e72f00cb48da970f9a62d7bfaa4070f3d4159d2ce096cf0f4ca6c1bdfe316d6",
+  "previousEnvironmentAttempt": {
+    "log": ".runtime/autofill-cycle-20261005/final-unit-full.log",
+    "logSha256": "f3f10afeb4fb4be3c1e88b32c55d4254d3d63dff0a545a6347e9ee956c14aead",
+    "domainPassed": 184,
+    "domainFailed": 22,
+    "webStarted": false,
+    "error": "PDF_VALIDATOR_UNAVAILABLE",
+    "cause": "Не был задан DEMO_PYTHON; выбран системный Python без нужного PDF-validator.",
+    "correction": "Повторена та же pnpm test с закреплённым DEMO_PYTHON. Между этими двумя запусками код не менялся."
+  },
+  "earlierPartialAndTargetedRunsRetained": true,
+  "frontendDisplayRegression": {
+    "suite": "apps/web/test/approval-review.test.ts",
+    "passed": 4,
+    "failed": 0,
+    "newUniqueTests": 1,
+    "scopedEslint": "PASS",
+    "change": "Только отображение исторического generated-заголовка BIOT; сохранённый title/custom names/snapshot не изменяются."
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_PUBLISHED_READ_ONLY_PRODUCTION_ACCEPTANCE",
+  "verifiedAt": "2026-10-05T09:57:52.7736730Z",
+  "branch": "codex/operator-flow-refinement-20261003",
+  "origin": "https://dsj-demo-rows-20261002.vercel.app",
+  "deployment": {
+    "at": "2026-10-05T09:56:07.912Z",
+    "vercel": {
+      "id": "dpl_4M2EYaSHpjinLTgJD9C3s1PDPwy3",
+      "status": "READY",
+      "url": "dsj-demo-rows-20261002-cngnkvsvx-shalinivan9669s-projects.vercel.app",
+      "canonicalAlias": "dsj-demo-rows-20261002.vercel.app",
+      "aliasDeploymentId": "dpl_4M2EYaSHpjinLTgJD9C3s1PDPwy3"
+    },
+    "railway": {
+      "id": "4d373112-1a76-4ada-aaa4-50185b03ce2b",
+      "status": "SUCCESS",
+      "releaseSha": "cd42cf04fa66c5807015afbd9561510bb69e3cad",
+      "imageDigest": "sha256:020ae8e18d5fca744791cd2bc284f8bb349110948806980f6f21ec0832f60585"
+    },
+    "backendHealthStatus": 200,
+    "frontendOnlyDelta": [
+      "dsj2/products/demo/apps/web/lib/training-display.ts",
+      "dsj2/products/demo/apps/web/test/approval-review.test.ts"
+    ],
+    "backendSourceUnchanged": true
+  },
+  "shipping": {
+    "gitArchiveFiles": 501,
+    "gitArchiveBytes": 39853324,
+    "gitArchiveSha256": "dc76f0a062446cdc756fd17404fb7e943829c2856a12a286931902a0b5872fa2",
+    "allGitBlobBytesPreserved": true,
+    "runtimeSourceFilesChecked": 325,
+    "expectedSourceSha256": "a8c5f8c52e75984182f77bfb8f604bfb3d19b1a9248cd0d71c074cec351dc3fe",
+    "actualSourceSha256": "a8c5f8c52e75984182f77bfb8f604bfb3d19b1a9248cd0d71c074cec351dc3fe",
+    "allMatched": true,
+    "differences": [],
+    "runtimeSourceScope": "Railway backend cd42cf04fa66c5807015afbd9561510bb69e3cad",
+    "frontendSourceArchive": {
+      "sha": "6c45462099074a64c206391a20354ad197b67e46",
+      "files": 501,
+      "bytes": 39853237,
+      "sha256": "2ed5f13b8aebb51d8345d5ae4cee382adc8a0bd551f80039baeb9c0aed5e4cbc",
+      "allGitBlobBytesPreserved": true
+    }
+  },
+  "runtime": {
+    "apiProcessObserved": true,
+    "workerProcessObserved": true,
+    "heartbeatSeenAt": "2026-10-05T09:43:22.439",
+    "heartbeatAgeSecondsAtAttestation": 1.677042,
+    "attestationAt": "2026-10-05T09:43:24.118Z",
+    "renderer": "demo-ooxml-12/libreoffice-26.2.6.3"
+  },
+  "migration": {
+    "status": "PASS",
+    "mode": "PRISMA_MIGRATE_DEPLOY",
+    "at": "2026-10-05T09:32:07.930Z",
+    "name": "202610050030_approval_resolved_snapshot",
+    "sha256": "d73e7fd978f0f45b3f2a0e96343e3567a43cf3d131a1e4f51250d83f8cd5e516",
+    "previousCount": 22,
+    "currentCount": 23,
+    "nullableColumnVerified": true,
+    "oldProposals": 48,
+    "oldResolvedSnapshotsRemainNull": true,
+    "differences": []
+  },
+  "preservation": {
+    "oldProposalCount": 48,
+    "oldTemplateVersions": 32,
+    "oldStorageFiles": 58,
+    "allHistoricalRowsAndFilesMatched": true,
+    "preservedHistoricalRowCounts": {
+      "Artifact": 22,
+      "CustomerExportProfile": 0,
+      "CustomerOrganization": 2,
+      "DocumentCorrectionRequest": 0,
+      "DocumentSignature": 0,
+      "DossierRecord": 0,
+      "EmployerInvite": 0,
+      "EmployerMembership": 0,
+      "ExternalEvidence": 0,
+      "FinancialDocument": 0,
+      "GroupDocumentMember": 0,
+      "ImportBatch": 0,
+      "ImportMapping": 0,
+      "Issuance": 1,
+      "IssuanceAssignment": 2,
+      "IssuanceEvent": 0,
+      "IssuanceWorkflow": 1,
+      "IssuedDocument": 2,
+      "IssuerProfileVersion": 2,
+      "LegacyMapping": 0,
+      "NumberReservation": 2,
+      "NumberSequence": 11,
+      "OrderMilestone": 0,
+      "PaymentEvent": 0,
+      "PhotoAsset": 2,
+      "PortalProposal": 0,
+      "PrintRequest": 6,
+      "ProposalDecision": 1,
+      "PublicDocumentVerification": 0,
+      "Recipient": 0,
+      "RecipientEmployment": 0,
+      "RenderInputSnapshot": 11,
+      "RenewalContact": 0,
+      "RenewalNeed": 0,
+      "RequestItem": 4,
+      "RequestProposal": 48,
+      "ServiceOrder": 0,
+      "ServiceOrderRequest": 0,
+      "ServiceRuleVersion": 0,
+      "SignatoryBinding": 0,
+      "SigningSession": 0,
+      "TemplateVersion": 32,
+      "Tenant": 1,
+      "TrainingEvent": 7,
+      "User": 2,
+      "ValueAttachment": 0
+    },
+    "newRowsByTable": {
+      "TemplateVersion": 3
+    },
+    "newStorageFiles": 3,
+    "newFilesAreOnlyTemplateSources": true,
+    "activeGenerationJobsAtAttestation": 0,
+    "newProductionRequestsOrIssuances": 0,
+    "differences": []
+  },
+  "specialTemplateApproval": {
+    "mode": "APPLIED",
+    "actorRole": "DIRECTOR",
+    "templates": [
+      {
+        "id": "8423ce76-4c04-4b42-8272-f4373032e996",
+        "templateId": "biot-itr-certificate",
+        "version": "special-14-1",
+        "checksum": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+        "approved": true,
+        "program": "SPECIAL",
+        "formRevision": "BIOT_SPECIAL_PAPER_V1",
+        "ownerKind": "INDIVIDUAL"
+      },
+      {
+        "id": "85576530-602c-4c07-90ef-69193a62bfe3",
+        "templateId": "biot-itr-protocol",
+        "version": "special-1-1",
+        "checksum": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+        "approved": true,
+        "program": "SPECIAL",
+        "formRevision": "BIOT_SPECIAL_PAPER_V1",
+        "ownerKind": "INDIVIDUAL"
+      },
+      {
+        "id": "ea88fb86-3b96-493d-b13a-79a20c9d82e8",
+        "templateId": "biot-itr-protocol",
+        "version": "special-1-group-1",
+        "checksum": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+        "approved": true,
+        "program": "SPECIAL",
+        "formRevision": "BIOT_SPECIAL_PAPER_V1",
+        "ownerKind": "GROUP"
+      }
+    ],
+    "otherVersionsUnchanged": true,
+    "requestOrIssuanceApprovalPerformed": false
+  },
+  "readOnlyHttpSmoke": {
+    "at": "2026-10-05T09:42:35.390Z",
+    "requestsMutated": false,
+    "roles": [
+      {
+        "role": "OPERATOR",
+        "requestsStatus": 200
+      },
+      {
+        "role": "DIRECTOR",
+        "requestsStatus": 200
+      }
+    ],
+    "queue": {
+      "readyPending": 0,
+      "needsPreparation": 2
+    },
+    "historicalPending": [
+      {
+        "status": "PENDING",
+        "revision": 6,
+        "needsPreparation": true,
+        "snapshotPresent": false,
+        "internalIssueCount": 22
+      },
+      {
+        "status": "PENDING",
+        "revision": 5,
+        "needsPreparation": true,
+        "snapshotPresent": false,
+        "internalIssueCount": 3
+      }
+    ]
+  },
+  "readOnlyBrowserSmoke": {
+    "status": "PASS",
+    "checkedAt": "2026-10-05T09:57:52.7736730Z",
+    "releaseSha": "6c45462099074a64c206391a20354ad197b67e46",
+    "origin": "https://dsj-demo-rows-20261002.vercel.app",
+    "browser": "Chrome through CUA",
+    "operator": {
+      "requestsCount": 6,
+      "freshReload": "PASS",
+      "login": "PASS",
+      "requiresPreparationCount": 2,
+      "loginAfterFinalDeployment": true
+    },
+    "director": {
+      "requiresPreparationCount": 2,
+      "courseSummaryRows": 4,
+      "approveButtonAbsentForUnprepared": true,
+      "issueDetailsCollapsed": true,
+      "preparationButtonVisible": true,
+      "defaultQueueReadyCount": 0,
+      "login": "PASS",
+      "redRepeatedIssueWallAbsent": true,
+      "legacyGeneratedTitleRussian": "БиОТ — Рабочие — ИТР",
+      "frontendReloadAfterFinalDeployment": true
+    },
+    "productionRequestWrites": 0,
+    "screenshot": "cloud-director-preparation.png",
+    "historicalPreservationEvidence": "final-attestation.json",
+    "scope": "Read-only browser acceptance of published build; full mutation/issue scenarios were performed with synthetic local data",
+    "backendSha": "cd42cf04fa66c5807015afbd9561510bb69e3cad"
+  },
+  "deployedLinuxSpecialRender": {
+    "status": "PASS",
+    "caseCount": 3,
+    "pagesReviewed": 3,
+    "businessWrites": false,
+    "durableArtifactWrites": false,
+    "productionIssuancePerformed": false,
+    "readback": "linux-special-readback.json",
+    "visualReview": "linux-special-visual-review.json"
+  },
+  "backup": {
+    "status": "PASS",
+    "databaseDumpBytes": 285774,
+    "databaseDumpSha256": "2094d9af32f80519ac96c5eae0d7ed7712b7a169fbd8fc18188d8b96484ad75d",
+    "storageFiles": 58,
+    "storageArchiveBytes": 84432645,
+    "storageArchiveSha256": "c069fc7c9b6a14994f9c3510408523129bdeb24ac649da2f13298b48a8b18e2e",
+    "archiveDigestsRechecked": true,
+    "everyTarMemberBytesAndSha256Matched": true,
+    "dumpCustomFormatHeader": true,
+    "coreDataTablesInLocalToc": true,
+    "fullRestorePerformed": false
+  },
+  "temporaryAccess": {
+    "status": "REVOKED",
+    "verifiedAt": "2026-10-05T09:48:00.2887188Z",
+    "railwayRemoveExitCode": 0,
+    "railwayReadback": "No SSH keys registered with Railway.",
+    "localTaskKeyRemoved": true
+  },
+  "boundaries": [
+    "Frontend и backend опубликованы на двух явно указанных SHA; разница — только web helper отображения старого generated-заголовка и его тест. Последующая фиксация evidence не меняет application bytes.",
+    "Production smoke — чтение существующих данных; полный ввод/согласование/выпуск проверялся локально на синтетических данных.",
+    "Linux SPECIAL проверен настоящим deployed renderer на временных синтетических snapshots без бизнес-записей, номеров, подписей или сохранённых артефактов.",
+    "Две прежние PENDING требуют явной подготовки; их payload и UNKNOWN не переписаны и не объявлены готовыми.",
+    "Резервный архив проверен; полный restore, физическая печать, новая Word-проверка и действительная НУЦ-подпись не выполнялись."
+  ],
+  "backendReleaseSha": "cd42cf04fa66c5807015afbd9561510bb69e3cad",
+  "frontendReleaseSha": "6c45462099074a64c206391a20354ad197b67e46",
+  "frontendBuild": {
+    "status": "PASS",
+    "sourceCommit": "6c45462099074a64c206391a20354ad197b67e46",
+    "nextBuildAndTypecheck": true,
+    "vercelBuildSeconds": 50,
+    "log": ".runtime/autofill-cycle-20261005/vercel-frontend-final.log",
+    "logSha256": "a1c522d270885035a323446004ea6852717e63ad1af752878100144bc052430b"
+  }
+}
