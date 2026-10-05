@@ -25,7 +25,7 @@ import { provision } from "../../scripts/setup";
 const sha256 = (bytes: Buffer) =>
   createHash("sha256").update(bytes).digest("hex");
 
-test("neutral upgrade appends 16 unapproved versions and preserves historical records, renderer and authenticated downloads", async () => {
+test("neutral and explicit special upgrade appends 19 unapproved versions and preserves historical records, renderer and authenticated downloads", async () => {
   assertTestDatabase();
   assert.ok(process.env.DEMO_ARTIFACT_ROOT, "Use an isolated artifact store");
   const previousPort = process.env.PORT;
@@ -296,20 +296,21 @@ test("neutral upgrade appends 16 unapproved versions and preserves historical re
       where: { tenantId },
       orderBy: { id: "asc" },
     });
-    assert.equal(afterRows.length, 32);
+    assert.equal(afterRows.length, 35);
     const oldIds = new Set(oldRows.map((row) => row.id));
     assert.deepEqual(
       afterRows.filter((row) => oldIds.has(row.id)),
       oldRows,
     );
     const appended = afterRows.filter((row) => !oldIds.has(row.id));
-    assert.equal(appended.length, 16);
+    assert.equal(appended.length, 19);
     assert.ok(
       appended.every(
         (row) =>
           !row.approved &&
-          (row.contract as Record<string, unknown>).renderPolicy ===
-            "NEUTRAL_FORMS_V1",
+          ((row.contract as Record<string, unknown>).renderPolicy ===
+            "NEUTRAL_FORMS_V1" ||
+            (row.contract as Record<string, unknown>).program === "SPECIAL"),
       ),
     );
     for (const row of oldRows) {
@@ -321,11 +322,17 @@ test("neutral upgrade appends 16 unapproved versions and preserves historical re
     const current = (await templateManifest()) as Awaited<
       ReturnType<typeof templateManifest>
     > & { groupTemplates: Record<string, unknown>[] };
-    for (const template of [...current.templates, ...current.groupTemplates]) {
+    for (const template of [
+      ...current.templates,
+      ...current.groupTemplates,
+      ...(current.specialTemplates || []),
+    ]) {
       const latest = afterRows
         .filter(
           (row) =>
             row.templateId === template.id &&
+            (row.contract as Record<string, unknown>).program ===
+              template.program &&
             ((row.contract as Record<string, unknown>).ownerKind ===
               "GROUP") ===
               (template.ownerKind === "GROUP"),
@@ -369,8 +376,10 @@ test("neutral upgrade appends 16 unapproved versions and preserves historical re
       name: data.ownNameRu,
       sample: false,
     });
-    assert.equal(await db.templateVersion.count({ where: { tenantId } }), 32);
-    const evidence = join(PRODUCT_ROOT, "docs/evidence/neutral-forms-20261005");
+    assert.equal(await db.templateVersion.count({ where: { tenantId } }), 35);
+    const evidence =
+      process.env.DEMO_REGISTRATION_EVIDENCE_ROOT ||
+      join(PRODUCT_ROOT, "docs/evidence/autofill-cycle-20261005");
     await mkdir(evidence, { recursive: true });
     await writeFile(
       join(evidence, "registration-history-upgrade.json"),
@@ -381,7 +390,7 @@ test("neutral upgrade appends 16 unapproved versions and preserves historical re
           tenantId,
           artifactId: artifact.id,
           oldTemplateCount: 16,
-          appendedTemplateCount: 16,
+          appendedTemplateCount: 19,
           newApprovedCount: 0,
           oldRowsAndStoredTemplateBytesUnchanged: true,
           historicalSnapshotAndArtifactUnchanged: true,

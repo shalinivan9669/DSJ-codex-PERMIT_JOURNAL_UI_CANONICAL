@@ -202,7 +202,7 @@ test("structured server row-limit issue becomes operator text rather than a Reac
   );
 });
 
-test("a mixed worker/ITR import chooses each person's BiOT form and retains explicit English fields", () => {
+test("a mixed worker/ITR import chooses each person's BiOT form and ignores removed English columns", () => {
   const preview: ImportPreview = {
     importId: "mixed-live-import",
     columns: [
@@ -225,11 +225,11 @@ test("a mixed worker/ITR import chooses each person's BiOT form and retains expl
     "employeeCategory",
     "fullNameRu",
     "fullNameKz",
-    "fullNameEn",
-    "positionEn",
-    "workplaceEn",
-    "trainingSubjectEn",
-    "resultEn",
+    "",
+    "",
+    "",
+    "",
+    "",
   ]);
   const worker = mapImportRow(
     preview,
@@ -275,17 +275,17 @@ test("a mixed worker/ITR import chooses each person's BiOT form and retains expl
   assert.equal(itr.employeeCategory, "ITR");
   assert.equal(worker.assignments[0].templateId, "biot-worker-card");
   assert.equal(itr.assignments[0].templateId, "biot-itr-certificate");
-  assert.equal(itr.assignments[0].biotCategory, "OHS_SPECIALIST_SPECIAL");
+  assert.equal(itr.assignments[0].biotCategory, "ITR_STANDARD");
   assert.equal(itr.personnelNumber, "00002");
-  assert.equal(itr.fullNameEn, "Test Two");
-  assert.equal(itr.positionEn, "Engineer");
-  assert.equal(itr.workplaceEn, "Synthetic company");
-  assert.equal(itr.assignments[0].trainingSubjectEn, "Safety course");
-  assert.equal(itr.assignments[0].fieldOrigins?.trainingSubjectEn, "IMPORTED");
-  assert.equal(itr.assignments[0].resultEn, "Passed");
+  assert.equal(itr.fullNameEn, undefined);
+  assert.equal(itr.positionEn, undefined);
+  assert.equal(itr.workplaceEn, undefined);
+  assert.equal(itr.assignments[0].trainingSubjectEn, undefined);
+  assert.equal(itr.assignments[0].fieldOrigins?.trainingSubjectEn, undefined);
+  assert.equal(itr.assignments[0].resultEn, undefined);
 });
 
-test("reviewed English employer and BiOT source fields remain on the right imported objects", () => {
+test("removed English employer and BiOT columns cannot be imported through old mappings", () => {
   const columns = [
     "Подразделение EN",
     "Юридический адрес работодателя EN",
@@ -295,14 +295,7 @@ test("reviewed English employer and BiOT source fields remain on the right impor
     "Примечание к протоколу БиОТ EN",
   ];
   const mapping = inferMapping(columns);
-  assert.deepEqual(mapping, [
-    "departmentEn",
-    "employerAddressEn",
-    "biotIndustryEn",
-    "biotKnowledgeResultEn",
-    "biotProctoringResultEn",
-    "biotNotesEn",
-  ]);
+  assert.deepEqual(mapping, Array(6).fill(""));
   const item = mapImportRow(
     { importId: "english-source", columns, rows: [], total: 1 },
     {
@@ -319,13 +312,17 @@ test("reviewed English employer and BiOT source fields remain on the right impor
     mapping,
     "biot-itr-certificate",
   );
-  assert.equal(item.departmentEn, "Division");
-  assert.equal(item.employerAddressEn, "Test address");
-  assert.equal(item.assignments[0].biotIndustryEn, "Industry");
-  assert.equal(item.assignments[0].biotKnowledgeResultEn, "Passed");
-  assert.equal(item.assignments[0].biotProctoringResultEn, "Confirmed");
-  assert.equal(item.assignments[0].biotNotesEn, "Note");
-  assert.equal(item.assignments[0].fieldOrigins?.biotIndustryEn, "IMPORTED");
+  assert.equal(item.departmentEn, undefined);
+  assert.equal(item.employerAddressEn, undefined);
+  assert.equal(item.assignments[0].biotIndustryEn, undefined);
+  assert.equal(item.assignments[0].biotKnowledgeResultEn, undefined);
+  assert.equal(item.assignments[0].biotProctoringResultEn, undefined);
+  assert.equal(item.assignments[0].biotNotesEn, undefined);
+  assert.equal(item.assignments[0].fieldOrigins?.biotIndustryEn, undefined);
+  assert.deepEqual(
+    inferMapping(["fullNameEn", "positionEn", "ФИО английский"]),
+    ["", "", ""],
+  );
 });
 
 test("invalid employee categories and contradictions with imported BiOT category require correction", () => {
@@ -408,4 +405,65 @@ test("formula-looking text is preserved as data and ambiguous duplicate mapping 
   );
   assert.equal(value.fullNameRu, "=1+1");
   assert.equal(value.positionKz, "Қызмет");
+});
+
+test("unmapped placeholders retain positive defaults while explicit empty mapped facts stay cleared", () => {
+  const preview: ImportPreview = {
+    importId: "origin-boundary",
+    columns: ["ФИО", "Результат", "Дата", "Программа KZ"],
+    rows: [],
+    total: 1,
+  };
+  const row = {
+    sourceRow: 2,
+    values: ["Синтетический Получатель", "", "", "Өз бағдарламасы"],
+  };
+  const missing = mapImportRow(preview, row, ["fullNameRu"], "pb-card")
+    .assignments[0];
+  const placeholder = mapImportRow(
+    preview,
+    row,
+    ["fullNameRu", "", "", "trainingSubjectKz"],
+    "pb-card",
+  ).assignments[0];
+  const cleared = mapImportRow(
+    preview,
+    row,
+    ["fullNameRu", "result", "documentDate", "trainingSubjectKz"],
+    "pb-card",
+  ).assignments[0];
+  assert.equal(missing.outcome?.status, "PASSED");
+  assert.equal(placeholder.outcome?.status, "PASSED");
+  assert.equal(placeholder.trainingSubjectKz, "Өз бағдарламасы");
+  assert.equal(placeholder.fieldOrigins?.trainingSubjectKz, "IMPORTED");
+  assert.equal(cleared.outcome?.status, "UNKNOWN");
+  assert.equal(cleared.fieldOrigins?.result, "CLEARED");
+  assert.equal(cleared.fieldOrigins?.documentDate, "CLEARED");
+});
+
+test("imported waiting and explicit enum outcomes never inherit a positive default", () => {
+  const preview: ImportPreview = {
+    importId: "status-boundary",
+    columns: [],
+    rows: [],
+    total: 1,
+  };
+  for (const [value, status] of [
+    ["Ожидает сдачи", "UNKNOWN"],
+    ["UNKNOWN", "UNKNOWN"],
+    ["FAILED", "FAILED"],
+    ["ABSENT", "ABSENT"],
+    ["Не сдал", "FAILED"],
+    ["Не явился", "ABSENT"],
+  ]) {
+    const a = mapImportRow(
+      preview,
+      { sourceRow: 2, values: [value, "Өз нәтижесі"] },
+      ["result", "resultKz"],
+      "ps-card",
+    ).assignments[0];
+    assert.equal(a.outcome?.status, status, value);
+    assert.equal(a.resultKz, "Өз нәтижесі");
+    assert.equal(a.fieldOrigins?.resultKz, "IMPORTED");
+  }
 });

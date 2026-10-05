@@ -201,7 +201,7 @@ test("unprotected expiry recalculates at leap, month and year boundaries, and a 
   }
 });
 
-test("factual ITR text is entered once for a course, and individual multilingual facts and clears remain distinct", () => {
+test("factual ITR text is entered once, individual facts and clears stay distinct, and new English fields are discarded", () => {
   const input = source(
     {
       biotKnowledgeResult: "Сдал",
@@ -235,7 +235,7 @@ test("factual ITR text is entered once for a course, and individual multilingual
   );
   const exception = result.draft.items[1].assignments[0];
   assert.equal(exception.biotKnowledgeResult, "92 из 100");
-  assert.equal(exception.biotKnowledgeResultEn, "92 of 100");
+  assert.equal(exception.biotKnowledgeResultEn, undefined);
   assert.equal(exception.biotProctoringResult, "");
   const projected = eventProtocolAssignment(
     result.draft.events![0],
@@ -294,7 +294,7 @@ test("a shared assessment does not supply positive facts to failed absent or pen
       "biotProctoringResult",
       "biotProctoringResultEn",
     ] as const)
-      assert.equal(result[key], "");
+      assert.equal(result[key], key.endsWith("En") ? undefined : "");
     Object.assign(input.items[0].assignments[0], {
       biotKnowledgeResult: "30 из 100",
       fieldOrigins: { biotKnowledgeResult: "IMPORTED" },

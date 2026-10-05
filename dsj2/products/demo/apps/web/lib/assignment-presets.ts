@@ -2,11 +2,44 @@ import {
   BIOT_CATEGORIES,
   biotValidUntil,
   commonFieldKeys,
+  isProtectedField,
   withCourseProgram,
   type Assignment,
   type BiotCategory,
   type CalculatedDateKey,
+  type CommonFields,
 } from "@demo/contracts";
+
+/** An explicit course selection refreshes only unprotected preset hours. */
+export function updateCommonBiotCategory(
+  fields: CommonFields,
+  category: BiotCategory,
+): CommonFields {
+  const previous = fields.biotCategory
+    ? BIOT_CATEGORIES[fields.biotCategory]
+    : undefined;
+  const preset = BIOT_CATEGORIES[category];
+  const next: CommonFields = {
+    ...fields,
+    biotCategory: category,
+    fieldOrigins: { ...fields.fieldOrigins, biotCategory: "MANUAL" },
+  };
+  for (const [key, previousValue, nextValue] of [
+    ["hours", previous?.defaultHours, preset.defaultHours],
+    [
+      "productionHours",
+      previous?.defaultProductionHours,
+      preset.defaultProductionHours,
+    ],
+  ] as const) {
+    if (isProtectedField(fields.fieldOrigins?.[key])) continue;
+    if (!fields[key]?.trim() || fields[key] === String(previousValue)) {
+      next[key] = nextValue ? String(nextValue) : "";
+      next.fieldOrigins![key] = "AUTO";
+    }
+  }
+  return next;
+}
 
 export function restoreAssignmentDate(
   assignment: Assignment,
@@ -45,7 +78,7 @@ export function defaultBiotCategory(
     templateId === "biot-itr-certificate" ||
     templateId === "biot-itr-protocol"
   )
-    return "OHS_SPECIALIST_SPECIAL";
+    return "ITR_STANDARD";
   if (templateId === "biot-worker-card" || templateId === "biot-protocol")
     return "WORKER";
   return undefined;
@@ -129,6 +162,7 @@ export function updateAssignment(
   if (
     categoryChanged &&
     !Object.hasOwn(patch, "hours") &&
+    !isProtectedField(assignment.fieldOrigins?.hours) &&
     !manuallyEdited.has("hours") &&
     (!assignment.hours ||
       (previousPreset &&
@@ -139,6 +173,7 @@ export function updateAssignment(
   if (
     categoryChanged &&
     !Object.hasOwn(patch, "productionHours") &&
+    !isProtectedField(assignment.fieldOrigins?.productionHours) &&
     !manuallyEdited.has("productionHours") &&
     (!assignment.productionHours ||
       (previousPreset?.defaultProductionHours &&
@@ -152,6 +187,7 @@ export function updateAssignment(
   if (
     (categoryChanged || Object.hasOwn(patch, "documentDate")) &&
     !Object.hasOwn(patch, "validUntil") &&
+    !isProtectedField(assignment.fieldOrigins?.validUntil) &&
     !manuallyEdited.has("validUntil")
   ) {
     const previousUntil = assignment.biotCategory

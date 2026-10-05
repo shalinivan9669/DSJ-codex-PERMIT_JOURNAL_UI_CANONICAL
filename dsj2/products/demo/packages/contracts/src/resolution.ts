@@ -8,11 +8,15 @@ import type {
 import { protocolTemplateFor, stableValidationIssue } from "./index";
 import { isBlankText } from "./blank-text";
 import {
+  normalizeNewDraftLanguages,
+  withoutEnglishProvenance,
+} from "./document-languages";
+import {
   courseProgramDefaults,
-  courseProgramKeys,
   courseResultText,
   isProtectedField,
   nonPassedResultKz,
+  positiveResultKz,
   factualAssessmentText,
 } from "./course-defaults";
 import { applyBusinessValidity, employeeCategoryFor } from "./business-rules";
@@ -98,23 +102,18 @@ function commonContext(
       fields.trainingDateRule = layer.trainingDateRule;
     for (const key of commonFieldKeys) {
       const declaredOrigin = layer.fieldOrigins?.[key];
-      const programField = courseProgramKeys.some(
-        (programKey) => programKey === key,
-      );
-      if (programField && layer[key] === "" && !declaredOrigin) continue;
+      const dateOrigin =
+        layer.dateOrigins?.[
+          key as keyof NonNullable<CommonFields["dateOrigins"]>
+        ];
+      // A technical blank is no instruction to erase an earlier source. This
+      // applies equally to programs, dates, hours and shared profession data.
+      // Explicit clears and requests to recalculate a date remain meaningful.
       if (
-        individualCommonFields.has(key) &&
         isBlankText(layer[key]) &&
-        !declaredOrigin
-      )
-        continue;
-      // Empty profile/request/event placeholders are not an instruction to
-      // erase the category's training hours. Explicit source/clear metadata
-      // still takes precedence over the built-in assignment values.
-      if (
-        (key === "hours" || key === "productionHours") &&
-        isBlankText(layer[key]) &&
-        !isProtectedField(declaredOrigin)
+        !isProtectedField(declaredOrigin) &&
+        !isProtectedField(dateOrigin) &&
+        dateOrigin !== "AUTO"
       )
         continue;
       // Previously resolved automatic text must never outrank a newly selected
@@ -122,13 +121,15 @@ function commonContext(
       if (declaredOrigin === "COURSE" && origins[key]) continue;
       if (
         layer[key] === undefined &&
-        layer.dateOrigins?.[
-          key as keyof NonNullable<CommonFields["dateOrigins"]>
-        ] !== "AUTO"
+        declaredOrigin !== "CLEARED" &&
+        dateOrigin !== "CLEARED" &&
+        dateOrigin !== "AUTO"
       )
         continue;
       (fields as Record<string, unknown>)[key] =
-        declaredOrigin === "CLEARED" ? "" : layer[key];
+        declaredOrigin === "CLEARED" || dateOrigin === "CLEARED"
+          ? ""
+          : layer[key];
       origins[key] =
         layer.dateOrigins?.[
           key as keyof NonNullable<CommonFields["dateOrigins"]>
@@ -211,6 +212,12 @@ export function resolveRecipientText<T extends RequestItemInput>(item: T): T {
 
 /** Resolves once on the server. Result/number can never be inherited. */
 export function resolveDraft(input: Draft, center: CommonFields = {}) {
+  if (input.frozenResolution)
+    return {
+      draft: structuredClone(input.frozenResolution.draft),
+      provenance: structuredClone(input.frozenResolution.provenance),
+      issues: [] as ValidationIssue[],
+    };
   const draft: Draft = structuredClone(input);
   draft.items = draft.items.map(resolveRecipientText);
   const provenance: Record<string, Record<string, FieldSource>> = {};
@@ -434,21 +441,53 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
           assignment.resultKz,
           assignment.fieldOrigins?.resultKz,
         );
-        assignment.result =
-          actualResult ||
-          courseResultText(assignment.templateId, assignment.outcome.status);
-        assignment.resultKz =
-          actualResultKz || nonPassedResultKz(assignment.outcome.status);
-        assignment.resultEn = "";
-        origins.result = actualResult ? "MANUAL" : "COURSE";
-      } else if (
-        assignment.outcome?.status === "PASSED" &&
-        (!assignment.result.trim() ||
-          assignment.fieldOrigins?.result === "COURSE") &&
-        !isProtectedField(assignment.fieldOrigins?.result)
-      ) {
-        assignment.result = courseResultText(assignment.templateId, "PASSED");
-        origins.result = "COURSE";
+        for (const [key, actual, fallback] of [
+          [
+            "result",
+            actualResult,
+            courseResultText(assignment.templateId, assignment.outcome.status),
+          ],
+          [
+            "resultKz",
+            actualResultKz,
+            nonPassedResultKz(assignment.outcome.status),
+          ],
+        ] as const) {
+          const origin = assignment.fieldOrigins?.[key];
+          if (
+            origin === "CLEARED" ||
+            (isProtectedField(origin) && isBlankText(assignment[key]))
+          ) {
+            assignment[key] = "";
+            origins[key] = origin as FieldSource;
+          } else {
+            assignment[key] = actual || fallback;
+            origins[key] = actual
+              ? origin === "IMPORTED"
+                ? "IMPORTED"
+                : "MANUAL"
+              : "COURSE";
+          }
+        }
+        if (!isProtectedField(assignment.fieldOrigins?.resultEn))
+          assignment.resultEn = "";
+      } else if (assignment.outcome?.status === "PASSED") {
+        for (const [key, value] of [
+          ["result", courseResultText(assignment.templateId, "PASSED")],
+          ["resultKz", positiveResultKz(assignment.templateId)],
+        ] as const) {
+          const origin = assignment.fieldOrigins?.[key];
+          if (
+            (!assignment[key]?.trim() || origin === "COURSE") &&
+            !isProtectedField(origin)
+          ) {
+            assignment[key] = value;
+            origins[key] = "COURSE";
+          } else if (isProtectedField(origin)) {
+            if (origin === "CLEARED") assignment[key] = "";
+            origins[key] = origin as FieldSource;
+          }
+        }
       }
       if (draft.businessRuleVersion === "LIVE_V1") {
         // A simple kit has one issue date until a separate protocol date or
@@ -500,8 +539,14 @@ export function resolveDraft(input: Draft, center: CommonFields = {}) {
     event.commonFields = context.fields;
   }
   return {
-    draft,
-    provenance,
+    draft:
+      draft.languagePolicy === "RU_KZ"
+        ? normalizeNewDraftLanguages(draft)
+        : draft,
+    provenance:
+      draft.languagePolicy === "RU_KZ"
+        ? withoutEnglishProvenance(provenance)
+        : provenance,
     issues: issues.map((issue) => stableValidationIssue(draft, issue)),
   };
 }

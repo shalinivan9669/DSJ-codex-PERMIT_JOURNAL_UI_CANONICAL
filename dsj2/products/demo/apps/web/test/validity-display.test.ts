@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BIOT_CATEGORIES, biotCategoryIds } from "@demo/contracts";
+import {
+  BIOT_CATEGORIES,
+  biotCategoryIds,
+  mandatoryTemplates,
+} from "@demo/contracts";
 import {
   biotCategoryDescription,
   liveValidityDescription,
@@ -14,7 +18,25 @@ test("R4 all available categories and primary/companion/group forms expose the a
     "CLEARED",
   ] as const) {
     const rows = measuredValidityRows(origin);
-    assert.equal(rows.length, 60);
+    const expectedCount =
+      2 *
+      (biotCategoryIds.reduce(
+        (sum, category) =>
+          sum +
+          mandatoryTemplates("BIOT", BIOT_CATEGORIES[category].form).length,
+        0,
+      ) +
+        (["PB", "PTM", "PS"] as const).reduce(
+          (sum, direction) =>
+            sum +
+            (["WORKER", "ITR"] as const).reduce(
+              (count, category) =>
+                count + mandatoryTemplates(direction, category).length,
+              0,
+            ),
+          0,
+        ));
+    assert.equal(rows.length, expectedCount);
     for (const row of rows) {
       assert.equal(
         row.displayedUntil,

@@ -302,11 +302,7 @@ export function ImportDialog({
           fieldMask: mapping.filter((field) =>
             [
               "employeeCategory",
-              "fullNameEn",
-              "positionEn",
-              "workplaceEn",
-              "departmentEn",
-              "employerAddressEn",
+
               "fullNameRu",
               "fullNameKz",
               "positionRu",

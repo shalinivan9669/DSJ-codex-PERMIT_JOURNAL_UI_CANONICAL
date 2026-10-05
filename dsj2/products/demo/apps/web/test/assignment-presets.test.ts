@@ -17,7 +17,7 @@ test("worker and ITR use distinct theory/production presets and calendar expiry"
   assert.equal(worker.productionHours, "16");
   assert.equal(worker.validUntil, "2029-02-28");
   const itr = updateAssignment(worker, { templateId: "biot-itr-certificate" });
-  assert.equal(itr.biotCategory, "OHS_SPECIALIST_SPECIAL");
+  assert.equal(itr.biotCategory, "ITR_STANDARD");
   assert.equal(itr.hours, "40");
   assert.equal(itr.productionHours, "");
   assert.equal(itr.validUntil, "2031-02-28");
@@ -35,11 +35,8 @@ test("worker and ITR use distinct theory/production presets and calendar expiry"
     false,
   );
   assert.deepEqual(biotCategoriesForTemplate("biot-protocol"), ["WORKER"]);
-  assert.equal(biotCategoriesForTemplate("biot-itr-protocol").length, 7);
-  assert.equal(
-    newAssignment("biot-itr-protocol").biotCategory,
-    "OHS_SPECIALIST_SPECIAL",
-  );
+  assert.equal(biotCategoriesForTemplate("biot-itr-protocol").length, 8);
+  assert.equal(newAssignment("biot-itr-protocol").biotCategory, "ITR_STANDARD");
   assert.equal(worker.biotCheckType, "PERIODIC");
   const itrProtocol = newAssignment("biot-itr-protocol");
   assert.equal(itrProtocol.biotCheckType, "PERIODIC");

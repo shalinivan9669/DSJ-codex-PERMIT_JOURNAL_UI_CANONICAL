@@ -9,7 +9,7 @@ import {
   approvalScopeValue,
   type AssignmentIdentity,
 } from "@demo/contracts";
-import type { Prisma } from "@demo/database";
+import { Prisma } from "@demo/database";
 import { personCustomerName, withCustomerIdentity } from "./request-customer";
 import { replaceableImportScaffoldId } from "./import-scaffold";
 import {
@@ -25,6 +25,30 @@ import {
 } from "./core";
 
 export type Change = { path: string; before: unknown; after: unknown };
+export function submittedProposalDraft(proposal: {
+  payload: unknown;
+  resolvedSnapshot?: unknown;
+}): Draft {
+  return parse(draftSchema, {
+    ...parse(draftSchema, proposal.payload),
+    frozenResolution: proposal.resolvedSnapshot || undefined,
+  });
+}
+export function needsPreparation(proposal: {
+  operation: string;
+  status: string;
+  scopeHash?: string | null;
+  assignments?: unknown;
+  resolvedSnapshot?: unknown;
+}) {
+  return (
+    proposal.operation === "SAVE" &&
+    proposal.status === "PENDING" &&
+    (!proposal.scopeHash ||
+      !Array.isArray(proposal.assignments) ||
+      !proposal.resolvedSnapshot)
+  );
+}
 export function proposalDiff(
   before: unknown,
   after: unknown,
@@ -127,6 +151,7 @@ export async function workingRequest(
           submittedAt: proposal.submittedAt,
           assignments: proposal.assignments as AssignmentIdentity[] | null,
           scopeHash: proposal.scopeHash,
+          needsPreparation: needsPreparation(proposal),
         }
       : null,
   };
@@ -171,7 +196,11 @@ export async function submitProposal(
     operation === "SAVE"
       ? withCustomerIdentity(
           applyBusinessRules(
-            parse(draftSchema, { ...input, businessRuleVersion: "LIVE_V1" }),
+            parse(draftSchema, {
+              ...input,
+              frozenResolution: undefined,
+              businessRuleVersion: "LIVE_V1",
+            }),
           ),
         )
       : parse(draftSchema, record.draft);
@@ -331,7 +360,11 @@ export async function createProposedContainer(
 ) {
   assertStaff(c, true);
   const draft = applyBusinessRules(
-    parse(draftSchema, { ...input, businessRuleVersion: "LIVE_V1" }),
+    parse(draftSchema, {
+      ...input,
+      frozenResolution: undefined,
+      businessRuleVersion: "LIVE_V1",
+    }),
   );
   const record = await tx.printRequest.create({
     data: {
@@ -389,7 +422,7 @@ export async function submitApproval(c: Context, id: string, input: unknown) {
       parse(draftSchema, record.draft),
       data.assignments,
     );
-    await assertApprovalDataComplete(
+    const frozenResolution = await assertApprovalDataComplete(
       tx,
       c,
       id,
@@ -412,7 +445,7 @@ export async function submitApproval(c: Context, id: string, input: unknown) {
       },
       orderBy: { revision: "desc" },
     });
-    if (prior)
+    if (prior?.resolvedSnapshot)
       return {
         requestId: id,
         revision: record.revision,
@@ -449,6 +482,7 @@ export async function submitApproval(c: Context, id: string, input: unknown) {
       operation: "SAVE",
       scopeHash,
       assignments: selected.assignments,
+      frozenResolutionHash: hash(frozenResolution),
     });
     const fields = {
       status: "PENDING",
@@ -456,6 +490,7 @@ export async function submitApproval(c: Context, id: string, input: unknown) {
       scopeHash,
       proposalHash,
       payload: json(parse(draftSchema, record.draft)),
+      resolvedSnapshot: json(frozenResolution),
       submittedBy: c.userId,
       submittedAt: new Date(),
     };
@@ -504,15 +539,33 @@ export async function listApprovals(c: Context, query: unknown) {
   const q = parse(
     z.object({
       status: z
-        .enum(["PENDING", "APPROVED", "REJECTED", "SUPERSEDED"])
+        .enum([
+          "PENDING",
+          "NEEDS_PREPARATION",
+          "APPROVED",
+          "REJECTED",
+          "SUPERSEDED",
+        ])
         .optional(),
       page: z.coerce.number().int().min(1).default(1),
     }),
     query,
   );
-  const where = {
+  const legacy: Prisma.RequestProposalWhereInput = {
+    operation: "SAVE",
+    status: "PENDING",
+    OR: [{ scopeHash: null }, { resolvedSnapshot: { equals: Prisma.AnyNull } }],
+  };
+  const where: Prisma.RequestProposalWhereInput = {
     tenantId: c.tenantId,
-    ...(q.status ? { status: q.status } : { status: { not: "DRAFT" } }),
+    ...(q.status === "NEEDS_PREPARATION"
+      ? legacy
+      : q.status
+        ? {
+            status: q.status,
+            ...(q.status === "PENDING" ? { NOT: legacy } : {}),
+          }
+        : { status: { not: "DRAFT" } }),
   };
   const [records, total] = await Promise.all([
     db.requestProposal.findMany({
@@ -540,6 +593,7 @@ export async function listApprovals(c: Context, query: unknown) {
       id: record.id,
       requestId: record.requestId,
       status: record.status,
+      needsPreparation: needsPreparation(record),
       createdAt: record.submittedAt,
       submittedAt: record.submittedAt,
       title:
@@ -555,7 +609,58 @@ export async function listApprovals(c: Context, query: unknown) {
       requestRevision: record.revision,
     })),
     total,
+    needsPreparationCount: await db.requestProposal.count({
+      where: { tenantId: c.tenantId, ...legacy },
+    }),
   };
+}
+/** Explicitly continue an old autosaved proposal without rewriting its payload. */
+export async function prepareLegacyProposal(
+  c: Context,
+  id: string,
+  input: unknown,
+) {
+  assertStaff(c, true);
+  const data = parse(
+    z
+      .object({
+        expectedRevision: z.number().int().nonnegative(),
+        expectedProposalHash: z.string().regex(/^[a-f0-9]{64}$/),
+      })
+      .strict(),
+    input,
+  );
+  return transaction(async (tx) => {
+    const proposal = await tx.requestProposal.findFirst({
+      where: { tenantId: c.tenantId, id },
+    });
+    if (!proposal) fail(404, "NOT_FOUND", "Редакция не найдена");
+    await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${proposal.requestId} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    const currentProposal = await tx.requestProposal.findFirstOrThrow({
+      where: { id, tenantId: c.tenantId },
+    });
+    const working = await workingRequest(c, proposal.requestId, tx);
+    if (
+      !needsPreparation(currentProposal) ||
+      currentProposal.proposalHash !== data.expectedProposalHash ||
+      working.revision !== data.expectedRevision ||
+      working.approval?.proposalId !== id
+    )
+      fail(409, "APPROVAL_STALE", "Редакция уже изменена. Обновите заявку");
+    const saved = await submitProposal(
+      tx,
+      c,
+      proposal.requestId,
+      parse(draftSchema, working.draft),
+      working.revision,
+    );
+    await audit(tx, c, "LEGACY_DRAFT_PREPARED", proposal.requestId, {
+      sourceProposalId: id,
+      sourceProposalHash: proposal.proposalHash,
+      revision: saved.revision,
+    });
+    return { requestId: proposal.requestId, revision: saved.revision };
+  });
 }
 export async function approvalDetail(c: Context, id: string) {
   assertStaff(c);
@@ -644,7 +749,12 @@ export async function approvalDetail(c: Context, id: string) {
       review = await proposalDataReview(
         c,
         proposal.requestId,
-        scopedDraft || parse(draftSchema, proposal.payload),
+        scopeAssignments
+          ? selectAssignmentScope(
+              submittedProposalDraft(proposal),
+              scopeAssignments,
+            ).draft
+          : submittedProposalDraft(proposal),
       );
     } catch {
       // A historical missing reference must not hide the immutable revision or
@@ -659,7 +769,8 @@ export async function approvalDetail(c: Context, id: string) {
     requestedAction: proposal.operation,
     review,
     reviewUnavailable,
-    currentRevision: request.revision,
+    needsPreparation: needsPreparation(proposal),
+    currentRevision: (await workingRequest(c, proposal.requestId)).revision,
     draft:
       proposal.operation === "SAVE" ? scopedDraft || proposal.payload : null,
     requestRevision: proposal.revision,
@@ -743,6 +854,12 @@ export async function decideProposal(c: Context, id: string, input: unknown) {
         "Редакция уже изменилась или решение принято. Проверьте актуальное сравнение",
       );
     if (data.decision === "APPROVE" && proposal.operation === "SAVE") {
+      if (needsPreparation(proposal))
+        fail(
+          409,
+          "LEGACY_PREPARATION_REQUIRED",
+          "Подготовьте актуальный черновик и передайте готовый состав директору",
+        );
       const { assertApprovalDataComplete } = await import("./requests");
       await assertApprovalDataComplete(
         tx,
@@ -750,7 +867,7 @@ export async function decideProposal(c: Context, id: string, input: unknown) {
         record.id,
         proposal.scopeHash ? record.revision : proposal.revision,
         proposal.assignments as AssignmentIdentity[] | undefined,
-        parse(draftSchema, proposal.payload),
+        submittedProposalDraft(proposal),
       );
     }
     await tx.proposalDecision.create({
@@ -882,6 +999,12 @@ export async function requireApproved(
       409,
       "DIRECTOR_APPROVAL_REQUIRED",
       "Выбранный состав и его актуальные данные должны быть согласованы директором до оформления",
+    );
+  if (!latest.resolvedSnapshot)
+    fail(
+      409,
+      "DIRECTOR_APPROVAL_REQUIRED",
+      "У прежней редакции не зафиксированы итоговые значения. Нажмите «Передать директору» для нового согласования подготовленного состава",
     );
   return latest;
 }

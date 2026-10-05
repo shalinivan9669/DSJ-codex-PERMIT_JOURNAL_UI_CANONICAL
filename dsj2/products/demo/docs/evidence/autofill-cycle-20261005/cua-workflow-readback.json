@@ -1,0 +1,185 @@
+{
+  "status": "PASS_LOCAL_REAL_CUA_FLOW",
+  "at": "2026-10-05T09:17:51.463Z",
+  "synthetic": true,
+  "requestId": "cda64e71-37f8-438c-ab7e-baac2fbeb79d",
+  "proposalId": "7f732d7e-7b19-4581-bfdc-b417fcae5cc3",
+  "revision": 6,
+  "people": 1,
+  "courses": 2,
+  "numberedDocuments": 5,
+  "entry": "Настоящий браузер CUA: одна организация и один человек; выбор ИТР и ПС; однократный ввод 8 часов ПС; без заполнения draft через API.",
+  "flow": [
+    "создание",
+    "автоданные",
+    "autosave и reload",
+    "явная передача",
+    "сводка директора без замечаний",
+    "одно согласование",
+    "явный выпуск",
+    "authenticated скачивание DOCX/PDF",
+    "открытие фактических файлов"
+  ],
+  "ordinaryItrWithoutSpecialRequisites": true,
+  "languagePolicy": "RU_KZ",
+  "englishAppendix": false,
+  "englishFieldsAbsent": true,
+  "renderJobs": {
+    "succeeded": 22,
+    "preview": 10,
+    "final": 12,
+    "failed": 0
+  },
+  "files": [
+    {
+      "path": "biot-itr-certificate.docx",
+      "sha256": "b8c91f2ac26215922a2ac7ceff64976211d2ea34beb493b9d8c96f71426a2b46",
+      "bytes": 17894,
+      "documentId": "959fee4e-7a04-4b03-8f0a-6b62df261d39",
+      "number": "BIOT-CERTIFICATE-00001"
+    },
+    {
+      "path": "biot-itr-protocol.docx",
+      "sha256": "1f3808a58ebfc1c283fba108800526082107dc38af1e398f3dc364433b114afe",
+      "bytes": 25417,
+      "documentId": "91b01967-7f58-4075-9214-76d0a27c85a2",
+      "number": "BIOT-PROTOCOL-00001"
+    },
+    {
+      "path": "ps-witness.docx",
+      "sha256": "0feccc129f69a83c69e823a0b6a67ffa8a98429fcbccc07538f6d5db9ef46629",
+      "bytes": 14743,
+      "documentId": "40ecd987-2d2f-43b0-9cc7-a77bba0bd165",
+      "number": "PS-WITNESS-00001"
+    },
+    {
+      "path": "ps-protocol.docx",
+      "sha256": "2bf59763398d96cdadb0ba2e46512e3991a5064df19a13153580f93350f1c5c7",
+      "bytes": 20163,
+      "documentId": "612c6b07-9653-4898-b288-77a1f467e9b2",
+      "number": "PS-PROTOCOL-00001"
+    },
+    {
+      "path": "ps-card.docx",
+      "sha256": "b4b28bcffd49a65aa6984f5b8a13d12e1bfe4752f9d56114a1e48fbc86efecc7",
+      "bytes": 23729,
+      "documentId": "94b7d9fe-5d2f-4f32-921a-edd3db7ae071",
+      "number": "PS-CARD-00001"
+    },
+    {
+      "path": "biot-itr-protocol.pdf",
+      "sha256": "ddb037d4c327e4d00b46033d82cb8b0464344d4017884f30471cbccc8acb508e",
+      "bytes": 122269,
+      "documentId": "91b01967-7f58-4075-9214-76d0a27c85a2",
+      "number": "BIOT-PROTOCOL-00001"
+    },
+    {
+      "path": "ps-witness.pdf",
+      "sha256": "341943ff20ce21f40542cef86736383af8e8a923880fa40fa9b7e6af30f46d9c",
+      "bytes": 110153,
+      "documentId": "40ecd987-2d2f-43b0-9cc7-a77bba0bd165",
+      "number": "PS-WITNESS-00001"
+    },
+    {
+      "path": "ps-protocol.pdf",
+      "sha256": "3fac888bb216ac700240d5d5efeef05a03c18880992eed5933e4a579cda62e32",
+      "bytes": 100411,
+      "documentId": "612c6b07-9653-4898-b288-77a1f467e9b2",
+      "number": "PS-PROTOCOL-00001"
+    },
+    {
+      "path": "biot-itr-certificate.pdf",
+      "sha256": "42ebfaf51e188660ccf686ddfe2540e2c78f01faed09a5536354f15e386951d4",
+      "bytes": 53957,
+      "documentId": "959fee4e-7a04-4b03-8f0a-6b62df261d39",
+      "number": "BIOT-CERTIFICATE-00001"
+    },
+    {
+      "path": "ps-card.pdf",
+      "sha256": "1c7c17d15e23cad6db5adcaf6bb57d71125a52de4e5989b16c7c2ca7f3fd61c3",
+      "bytes": 135824,
+      "documentId": "94b7d9fe-5d2f-4f32-921a-edd3db7ae071",
+      "number": "PS-CARD-00001"
+    }
+  ],
+  "allDownloadedFileBytesAndSha256Rechecked": true,
+  "textReadback": {
+    "status": "PASS",
+    "cases": [
+      {
+        "template": "biot-itr-certificate",
+        "pages": 1,
+        "assertions": {
+          "personInDocx": true,
+          "personInPdf": true,
+          "noEnglishAppendix": true,
+          "noUnresolvedPlaceholders": true,
+          "numberInDocx": true
+        }
+      },
+      {
+        "template": "biot-itr-protocol",
+        "pages": 1,
+        "assertions": {
+          "personInDocx": true,
+          "personInPdf": true,
+          "noEnglishAppendix": true,
+          "noUnresolvedPlaceholders": true,
+          "numberInDocx": true
+        }
+      },
+      {
+        "template": "ps-card",
+        "pages": 2,
+        "assertions": {
+          "personInDocx": true,
+          "personInPdf": true,
+          "noEnglishAppendix": true,
+          "noUnresolvedPlaceholders": true,
+          "numberInDocx": true,
+          "professionDocx": true,
+          "professionPdf": true
+        }
+      },
+      {
+        "template": "ps-protocol",
+        "pages": 1,
+        "assertions": {
+          "personInDocx": true,
+          "personInPdf": true,
+          "noEnglishAppendix": true,
+          "noUnresolvedPlaceholders": true,
+          "numberInDocx": true,
+          "professionDocx": true,
+          "professionPdf": true
+        }
+      },
+      {
+        "template": "ps-witness",
+        "pages": 2,
+        "assertions": {
+          "personInDocx": true,
+          "personInPdf": true,
+          "noEnglishAppendix": true,
+          "noUnresolvedPlaceholders": true,
+          "numberInDocx": true,
+          "professionDocx": true,
+          "professionPdf": true
+        }
+      }
+    ],
+    "source": "actual issued artifacts from real UI synthetic request; authenticated download checksums matched"
+  },
+  "visuallyReviewedActualPdfPages": {
+    "biot-itr-certificate": 1,
+    "ps-card": 2
+  },
+  "screenshots": [
+    "director-approved.png",
+    "cua-itr-certificate.png",
+    "cua-ps-card.png"
+  ],
+  "physicalPrinting": false,
+  "realNcaSigningClaimed": false,
+  "originalSigningExportGatePreserved": true
+}

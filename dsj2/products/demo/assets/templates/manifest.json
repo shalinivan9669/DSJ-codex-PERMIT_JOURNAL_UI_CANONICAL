@@ -939,5 +939,159 @@
       "groupContractVersion": 1,
       "groupRenderer": "neutral_forms.py:source-row-clone-v1"
     }
+  ],
+  "specialTemplates": [
+    {
+      "id": "biot-itr-certificate",
+      "file": "biot-itr-certificate.v14.docx",
+      "sha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+      "fields": [
+        "BIOT_INDUSTRY_KZ",
+        "BIOT_INDUSTRY_RU",
+        "CITY_KZ",
+        "CITY_RU",
+        "DOCUMENT_DATE",
+        "FULL_NAME_KZ",
+        "FULL_NAME_RU",
+        "HOURS",
+        "ISSUER_HEAD_NAME",
+        "ISSUER_KZ",
+        "ISSUER_RU",
+        "NUMBER",
+        "RESULT",
+        "VALID_DATE"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+        }
+      ],
+      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+      "version": "special-14-1",
+      "program": "SPECIAL",
+      "formRevision": "BIOT_SPECIAL_PAPER_V1",
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "reusesImmutableVersion": 14
+    },
+    {
+      "id": "biot-itr-protocol",
+      "file": "biot-itr-protocol.v1.docx",
+      "sha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+      "fields": [
+        "APPROVAL_BASIS",
+        "BIOT_CATEGORY_KZ",
+        "BIOT_CATEGORY_RU",
+        "BIOT_CHECK_TYPE_KZ",
+        "BIOT_CHECK_TYPE_RU",
+        "BIOT_KNOWLEDGE_RESULT",
+        "BIOT_NOTES",
+        "BIOT_PROCTORING_RESULT",
+        "BIOT_UNIQUE_NUMBER",
+        "CHAIR_NAME",
+        "CHAIR_POSITION",
+        "EMPLOYER_BIN",
+        "EMPLOYER_NAME_ADDRESS_BOTH",
+        "FULL_NAME_BOTH",
+        "HOURS",
+        "ISSUER_BIN",
+        "ISSUER_KZ",
+        "ISSUER_RU",
+        "MEMBER_1_NAME",
+        "MEMBER_1_POSITION",
+        "MEMBER_2_NAME",
+        "MEMBER_2_POSITION",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+        }
+      ],
+      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+      "version": "special-1-1",
+      "program": "SPECIAL",
+      "formRevision": "BIOT_SPECIAL_PAPER_V1",
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "reusesImmutableVersion": 1
+    },
+    {
+      "id": "biot-itr-protocol",
+      "file": "biot-itr-protocol.v1.docx",
+      "sha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+      "fields": [
+        "APPROVAL_BASIS",
+        "BIOT_CATEGORY_KZ",
+        "BIOT_CATEGORY_RU",
+        "BIOT_CHECK_TYPE_KZ",
+        "BIOT_CHECK_TYPE_RU",
+        "BIOT_KNOWLEDGE_RESULT",
+        "BIOT_NOTES",
+        "BIOT_PROCTORING_RESULT",
+        "BIOT_UNIQUE_NUMBER",
+        "CHAIR_NAME",
+        "CHAIR_POSITION",
+        "EMPLOYER_BIN",
+        "EMPLOYER_NAME_ADDRESS_BOTH",
+        "FULL_NAME_BOTH",
+        "HOURS",
+        "ISSUER_BIN",
+        "ISSUER_KZ",
+        "ISSUER_RU",
+        "MEMBER_1_NAME",
+        "MEMBER_1_POSITION",
+        "MEMBER_2_NAME",
+        "MEMBER_2_POSITION",
+        "POSITION_BOTH",
+        "PROTOCOL_DATE",
+        "PROTOCOL_NUMBER",
+        "RESULT"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906"
+        }
+      ],
+      "sourceSha256": "864c4ceac4ceb06e3bb385f229491da2ab2366e91c032424807991dbfed07c3d",
+      "version": "special-1-group-1",
+      "program": "SPECIAL",
+      "formRevision": "BIOT_SPECIAL_PAPER_V1",
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "reusesImmutableVersion": 1,
+      "ownerKind": "GROUP",
+      "groupContractVersion": 1
+    }
   ]
 }

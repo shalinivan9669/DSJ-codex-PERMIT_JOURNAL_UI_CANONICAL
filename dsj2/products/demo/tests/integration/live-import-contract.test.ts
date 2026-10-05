@@ -13,7 +13,7 @@ import {
   type ImportPreview,
 } from "../../apps/web/lib/imports";
 
-test("real XLSX export/import retains per-person category and English fields through the LIVE_V1 draft contract", async () => {
+test("real XLSX import retains per-person category and RU/KZ while English columns stay outside new drafts", async () => {
   const columns = [
     { field: "personnelNumber", title: "Табельный номер" },
     { field: "employeeCategory", title: "Категория сотрудника" },
@@ -126,11 +126,10 @@ test("real XLSX export/import retains per-person category and English fields thr
   ).draft;
   assert.equal(draft.items[0].personnelNumber, "00001");
   assert.equal(draft.items[1].personnelNumber, "00002");
-  assert.equal(draft.items[1].employerAddressEn, "Test address, 2");
-  assert.equal(
-    draft.items[1].assignments[0].biotProctoringResultEn,
-    "Confirmed",
-  );
+  assert.equal(draft.languagePolicy, "RU_KZ");
+  assert.equal(draft.englishAppendix, false);
+  assert.equal(draft.items[1].employerAddressEn, undefined);
+  assert.equal(draft.items[1].assignments[0].biotProctoringResultEn, undefined);
   assert.equal(draft.items[0].assignments[0].templateId, "biot-worker-card");
   assert.equal(
     draft.items[1].assignments[0].templateId,

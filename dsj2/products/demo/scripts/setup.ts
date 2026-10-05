@@ -41,6 +41,7 @@ export async function provision(input: {
   const manifest = await templateManifest();
   for (const template of [
     ...manifest.templates,
+    ...(manifest.specialTemplates || []),
     ...((
       manifest as typeof manifest & {
         groupTemplates?: typeof manifest.templates;

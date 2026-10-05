@@ -22,6 +22,7 @@ export type Draft = DraftInput & {
   importScaffoldId?: string | null;
   approval?: {
     proposalId: string;
+    needsPreparation?: boolean;
     status: "DRAFT" | "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
     baseRevision: number;
     proposalHash: string;
@@ -233,6 +234,7 @@ export function draftPayload(draft: Draft) {
     demoMode,
     businessRuleVersion,
     englishAppendix,
+    languagePolicy,
     items,
     schemaVersion,
     profileVersionId,
@@ -249,6 +251,7 @@ export function draftPayload(draft: Draft) {
     demoMode,
     businessRuleVersion,
     englishAppendix,
+    languagePolicy,
     items,
     schemaVersion,
     profileVersionId,

@@ -197,6 +197,32 @@ export function selectAssignmentScope(
     ),
     trainingDefaults: undefined,
   };
+  if (draft.frozenResolution) {
+    const frozenAssignments = items.flatMap((item) =>
+      item.assignments.map((assignment) => ({
+        rowId: item.id,
+        assignmentId: assignment.id,
+      })),
+    );
+    const frozen = selectAssignmentScope(
+      draft.frozenResolution.draft,
+      frozenAssignments,
+    ).draft;
+    const frozenKeys = new Set(
+      frozenAssignments.map(
+        (assignment) => `${assignment.rowId}:${assignment.assignmentId}`,
+      ),
+    );
+    scope.frozenResolution = {
+      ...draft.frozenResolution,
+      draft: frozen,
+      provenance: Object.fromEntries(
+        Object.entries(draft.frozenResolution.provenance).filter(([key]) =>
+          frozenKeys.has(key),
+        ),
+      ),
+    };
+  }
   const assignments = items
     .flatMap((item) =>
       item.assignments.map((assignment) => ({

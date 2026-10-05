@@ -248,7 +248,10 @@ function groupedItrDraft(): Draft {
       revision: 0,
       protocolMode: "GROUP",
       protocolTemplateId: "biot-itr-protocol",
-      commonFields: { biotCheckType: "PERIODIC" },
+      commonFields: {
+        biotCheckType: "PERIODIC",
+        biotCategory: "OHS_SPECIALIST_SPECIAL",
+      },
     },
   ];
   // An unrelated first row and assignment expose accidental local index reuse.
@@ -267,6 +270,7 @@ function groupedItrDraft(): Draft {
       },
       {
         ...newAssignment("biot-itr-certificate"),
+        biotCategory: "OHS_SPECIALIST_SPECIAL",
         eventId: "itr-training",
         protocolMode: "GROUP",
         trainingSubject: "Специальные компетенции",

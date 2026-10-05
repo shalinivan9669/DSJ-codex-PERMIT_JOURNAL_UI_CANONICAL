@@ -330,6 +330,13 @@ export class DemoController {
   ) {
     return approvals.decideProposal(ctx(req, true), id, body);
   }
+  @Post("approvals/:id/prepare") prepareApproval(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return approvals.prepareLegacyProposal(ctx(req, true), id, body);
+  }
   @Get("print-requests/:id/approval") requestApproval(
     @Req() req: DemoRequest,
     @Param("id") id: string,

@@ -28,7 +28,11 @@ export async function prepareRegistrationTemplates(): Promise<
     ReturnType<typeof templateManifest>
   > & { groupTemplates?: Array<Record<string, unknown>> };
   const groups = manifest.groupTemplates || [];
-  const templates = [...manifest.templates, ...groups];
+  const templates = [
+    ...manifest.templates,
+    ...groups,
+    ...(manifest.specialTemplates || []),
+  ];
   const individualIds = manifest.templates.map((template) => template.id);
   const protocolIds = templateIds.filter((id) => id.endsWith("-protocol"));
   if (

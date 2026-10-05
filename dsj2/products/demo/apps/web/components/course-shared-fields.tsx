@@ -1,6 +1,7 @@
 "use client";
 import {
   trainingDirection,
+  isSpecialBiotCategory,
   type CommonFields,
   type TrainingEventInput,
 } from "@demo/contracts";
@@ -21,11 +22,6 @@ const psFields = [
   ["professionKz", "Обучаемая профессия · KZ"],
   ["psQualificationRu", "Присвоенная квалификация · RU"],
   ["psQualificationKz", "Присвоенная квалификация · KZ"],
-] as const;
-const itrEnglishFields = [
-  ["biotIndustryEn", "Отрасль · EN"],
-  ["biotKnowledgeResultEn", "Результат проверки знаний · EN"],
-  ["biotProctoringResultEn", "Результат прокторинга · EN"],
 ] as const;
 
 /** Facts shared by the course are entered once; raw participant exceptions win. */
@@ -60,7 +56,9 @@ export function CourseSharedFields({
         !!fieldHints[`events.${index}.commonFields.productionHours`]);
     return showHours ||
       showProductionHours ||
-      ["biot-itr-protocol", "ps-protocol"].includes(event.protocolTemplateId)
+      event.protocolTemplateId === "ps-protocol" ||
+      (event.protocolTemplateId === "biot-itr-protocol" &&
+        isSpecialBiotCategory(effective.biotCategory))
       ? [{ event, index, direction, effective, showHours, showProductionHours }]
       : [];
   });
@@ -79,7 +77,9 @@ export function CourseSharedFields({
           showHours,
           showProductionHours,
         }) => {
-          const isItr = event.protocolTemplateId === "biot-itr-protocol";
+          const isItr =
+            event.protocolTemplateId === "biot-itr-protocol" &&
+            isSpecialBiotCategory(effective.biotCategory);
           const isPs = event.protocolTemplateId === "ps-protocol";
           const fields = [
             ...(showHours ? [["hours", "Часы программы"] as const] : []),
@@ -91,14 +91,7 @@ export function CourseSharedFields({
                   ] as const,
                 ]
               : []),
-            ...(isItr
-              ? [
-                  ...itrFields,
-                  ...(draft.englishAppendix ? itrEnglishFields : []),
-                ]
-              : isPs
-                ? psFields
-                : []),
+            ...(isItr ? [...itrFields] : isPs ? psFields : []),
           ];
           const members = draft.items.filter((item) =>
             item.assignments.some(

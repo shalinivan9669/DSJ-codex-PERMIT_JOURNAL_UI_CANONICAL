@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
+  isSpecialBiotCategory,
   resolveDraft,
   resolveCommonDates,
   calculatedDateKeys,
@@ -46,6 +47,7 @@ import {
 } from "@/lib/preparation-storage";
 import { biotCategoryDescription } from "@/lib/validity-display";
 import { validCalendarCandidate } from "@/lib/calendar-preparation";
+import { updateCommonBiotCategory } from "@/lib/assignment-presets";
 
 const directions = [
   {
@@ -68,7 +70,7 @@ const directions = [
   },
   {
     key: "biot-itr",
-    label: "БиОТ специальных компетенций ИТР",
+    label: "БиОТ ИТР",
     card: "biot-itr-certificate",
     protocol: "biot-itr-protocol",
   },
@@ -152,8 +154,7 @@ export function EventContext({
   }
   const [direction, setDirection] = useState("pb");
   const [activeId, setActiveId] = useState(draft.events?.[0]?.id || "");
-  const [review, setReview] = useState(false);
-  const [reviewSignature, setReviewSignature] = useState("");
+
   const [replaceEmpty, setReplaceEmpty] = useState(false);
   const [joinExisting, setJoinExisting] = useState(false);
   const [joinError, setJoinError] = useState("");
@@ -290,7 +291,6 @@ export function EventContext({
   } = preparation.value;
   const updatePreparation = (patch: Partial<OutcomePreparation>) => {
     preparation.setValue({ ...preparation.value, ...patch });
-    setReview(false);
   };
   const [removedPreparations, setRemovedPreparations] = useState<
     PreparationRecord<unknown>[]
@@ -403,21 +403,6 @@ export function EventContext({
   const hasUnconfirmedResults = outcomeStatistics.some(
     (entry) => entry.status === "UNKNOWN" && entry.count > 0,
   );
-  const outcomeSignature = JSON.stringify([
-    activeEventId,
-    outcomeRecipients.map((item) => item.id),
-    outcome,
-    source,
-    knowledge,
-    proctoring,
-    eventPreparationContext(
-      draft,
-      event,
-      outcomeRecipients.map((item) => item.id),
-    ),
-  ]);
-  const reviewed =
-    review && reviewSignature === outcomeSignature && !preparation.stale;
   const outcomeLengthErrors = {
     source: source.length > 500,
     knowledge: knowledge.length > 500,
@@ -430,7 +415,7 @@ export function EventContext({
       ).detail;
       if (!target?.eventId || !target.field) return;
       if (target.eventId !== activeEventId && !flushPreparations()) return;
-      if (target.eventId !== activeEventId) setReview(false);
+
       setActiveId(target.eventId);
       setExpanded(true);
       setFocusTarget(target);
@@ -500,7 +485,7 @@ export function EventContext({
   function changeEventCommon(patch: Partial<CommonFields>) {
     if (!event) return;
     const next = { ...event.commonFields, ...patch };
-    for (const key of courseProgramKeys)
+    for (const key of commonFieldKeys)
       if (Object.hasOwn(patch, key))
         next.fieldOrigins = {
           ...next.fieldOrigins,
@@ -679,7 +664,7 @@ export function EventContext({
     if (choice.key === "biot-itr")
       next.commonFields = {
         ...next.commonFields,
-        biotCategory: "OHS_SPECIALIST_SPECIAL",
+        biotCategory: "ITR_STANDARD",
         biotCheckType: "PERIODIC",
         hours: "40",
       };
@@ -1331,7 +1316,6 @@ export function EventContext({
                   onChange={(e) => {
                     if (!flushPreparations()) return;
                     setActiveId(e.target.value);
-                    setReview(false);
                   }}
                 >
                   <option value="">
@@ -1444,20 +1428,25 @@ export function EventContext({
               {!primary && eventDateSettings}
               {event.protocolTemplateId.startsWith("biot-") && (
                 <div className="form-grid">
-                  {!primary && (
+                  {
                     <label>
-                      Категория БиОТ события
+                      Программа БиОТ
                       <select
                         data-training-field="biotCategory"
                         data-field-path={`events.${eventIndex}.commonFields.biotCategory`}
                         disabled={disabled}
-                        value={event.commonFields.biotCategory || "WORKER"}
+                        value={
+                          event.commonFields.biotCategory ||
+                          (event.protocolTemplateId === "biot-itr-protocol"
+                            ? "ITR_STANDARD"
+                            : "WORKER")
+                        }
                         onChange={(e) =>
                           updateEvent({
-                            commonFields: {
-                              ...event.commonFields,
-                              biotCategory: e.target.value as BiotCategory,
-                            },
+                            commonFields: updateCommonBiotCategory(
+                              event.commonFields,
+                              e.target.value as BiotCategory,
+                            ),
                           })
                         }
                       >
@@ -1466,14 +1455,18 @@ export function EventContext({
                             {BIOT_CATEGORIES.WORKER.label}
                           </option>
                         ) : (
-                          <option value="OHS_SPECIALIST_SPECIAL">
-                            {BIOT_CATEGORIES.OHS_SPECIALIST_SPECIAL.label}
-                          </option>
+                          Object.entries(BIOT_CATEGORIES)
+                            .filter(([, category]) => category.form === "ITR")
+                            .map(([key, category]) => (
+                              <option key={key} value={key}>
+                                {category.label}
+                              </option>
+                            ))
                         )}
                       </select>
                       {fieldHint("biotCategory")}
                     </label>
-                  )}
+                  }
                   <label>
                     {primary ? "Вид проверки" : "Вид проверки БиОТ события"}
                     <select
@@ -1482,13 +1475,10 @@ export function EventContext({
                       disabled={disabled}
                       value={event.commonFields.biotCheckType || ""}
                       onChange={(e) =>
-                        updateEvent({
-                          commonFields: {
-                            ...event.commonFields,
-                            biotCheckType: e.target.value as
-                              | "PERIODIC"
-                              | "REPEAT",
-                          },
+                        changeEventCommon({
+                          biotCheckType: e.target.value as
+                            | "PERIODIC"
+                            | "REPEAT",
                         })
                       }
                     >
@@ -1509,52 +1499,43 @@ export function EventContext({
                         disabled={disabled}
                         value={event.commonFields.productionHours || ""}
                         onChange={(e) =>
-                          updateEvent({
-                            commonFields: {
-                              ...event.commonFields,
-                              productionHours: e.target.value,
-                            },
-                          })
+                          changeEventCommon({ productionHours: e.target.value })
                         }
                       />
                       {fieldHint("productionHours")}
                     </label>
                   )}
-                  {event.protocolTemplateId === "biot-itr-protocol" && (
-                    <>
-                      {(
-                        [
+                  {event.protocolTemplateId === "biot-itr-protocol" &&
+                    isSpecialBiotCategory(displayedCommon.biotCategory) && (
+                      <>
+                        {(
                           [
-                            "biotIndustryRu",
-                            "Отрасль специальных компетенций события · RU",
-                          ],
-                          [
-                            "biotIndustryKz",
-                            "Отрасль специальных компетенций события · KZ",
-                          ],
-                        ] as const
-                      ).map(([field, label]) => (
-                        <label key={field}>
-                          {primary ? label.replace(" события", "") : label}
-                          <input
-                            data-training-field={field}
-                            data-field-path={`events.${eventIndex}.commonFields.${field}`}
-                            disabled={disabled}
-                            value={event.commonFields[field] || ""}
-                            onChange={(e) =>
-                              updateEvent({
-                                commonFields: {
-                                  ...event.commonFields,
-                                  [field]: e.target.value,
-                                },
-                              })
-                            }
-                          />
-                          {fieldHint(field)}
-                        </label>
-                      ))}
-                    </>
-                  )}
+                            [
+                              "biotIndustryRu",
+                              "Отрасль специальных компетенций события · RU",
+                            ],
+                            [
+                              "biotIndustryKz",
+                              "Отрасль специальных компетенций события · KZ",
+                            ],
+                          ] as const
+                        ).map(([field, label]) => (
+                          <label key={field}>
+                            {primary ? label.replace(" события", "") : label}
+                            <input
+                              data-training-field={field}
+                              data-field-path={`events.${eventIndex}.commonFields.${field}`}
+                              disabled={disabled}
+                              value={event.commonFields[field] || ""}
+                              onChange={(e) =>
+                                changeEventCommon({ [field]: e.target.value })
+                              }
+                            />
+                            {fieldHint(field)}
+                          </label>
+                        ))}
+                      </>
+                    )}
                   <label>
                     {primary
                       ? "Срок действия документов"
@@ -1624,8 +1605,8 @@ export function EventContext({
                     }
                     . Удостоверения этих участников не включаются в комплект.
                     {primary
-                      ? " Укажите ниже проверенный результат и его источник."
-                      : " Для их оформления откройте «Подтвердить фактические результаты события» и укажите проверенный результат с источником."}
+                      ? " Укажите ниже результат сразу для выбранных людей."
+                      : " Выберите результат в блоке обучения и примените к нужным людям."}
                   </Notice>
                 )}
               {!primary && moveSettings}
@@ -1694,7 +1675,6 @@ export function EventContext({
                       disabled={disabled}
                       onClick={() => {
                         preparation.acceptContext();
-                        setReview(false);
                       }}
                     >
                       Подготовить применение к текущим данным
@@ -1758,7 +1738,7 @@ export function EventContext({
                     </select>
                   </label>
                   <label>
-                    Источник подтверждения
+                    Источник подтверждения (необязательно)
                     <input
                       aria-label="Источник подтверждения"
                       data-training-field="source"
@@ -1783,107 +1763,94 @@ export function EventContext({
                     >
                       {outcomeLengthErrors.source
                         ? `Не больше 500 символов; сейчас ${source.length}. Сократите источник для применения.`
-                        : "Источник сохраняется только в подготовке до явного подтверждения результатов."}
+                        : "Можно указать ведомость. Без неё сохраняется факт явного выбора результата оператором."}
                     </small>
                   </label>
                 </div>
-                {event.protocolTemplateId === "biot-itr-protocol" && (
-                  <div className="form-grid">
-                    <label>
-                      Фактический результат проверки знаний
-                      <input
-                        data-training-field="biotKnowledgeResult"
-                        data-field-path={`events.${eventIndex}.outcomes.biotKnowledgeResult`}
-                        disabled={disabled}
-                        value={knowledge}
-                        aria-invalid={
-                          outcomeLengthErrors.knowledge || undefined
-                        }
-                        aria-describedby={
-                          outcomeLengthErrors.knowledge
-                            ? `preparation-${event.id}-knowledge-feedback`
-                            : undefined
-                        }
-                        onChange={(e) => {
-                          updatePreparation({ knowledge: e.target.value });
-                        }}
-                        placeholder="Только подтверждённые сведения ведомости"
-                      />
-                      {fieldHint("biotKnowledgeResult", "outcomes")}
-                      {outcomeLengthErrors.knowledge && (
-                        <small
-                          id={`preparation-${event.id}-knowledge-feedback`}
-                          className="field-error"
-                        >
-                          Не больше 500 символов; сейчас {knowledge.length}.
-                          Сократите текст для применения.
+                {event.protocolTemplateId === "biot-itr-protocol" &&
+                  isSpecialBiotCategory(displayedCommon.biotCategory) && (
+                    <div className="form-grid">
+                      <label>
+                        Фактический результат проверки знаний
+                        <input
+                          data-training-field="biotKnowledgeResult"
+                          data-field-path={`events.${eventIndex}.outcomes.biotKnowledgeResult`}
+                          disabled={disabled}
+                          value={knowledge}
+                          aria-invalid={
+                            outcomeLengthErrors.knowledge || undefined
+                          }
+                          aria-describedby={
+                            outcomeLengthErrors.knowledge
+                              ? `preparation-${event.id}-knowledge-feedback`
+                              : undefined
+                          }
+                          onChange={(e) => {
+                            updatePreparation({ knowledge: e.target.value });
+                          }}
+                          placeholder="Только подтверждённые сведения ведомости"
+                        />
+                        {fieldHint("biotKnowledgeResult", "outcomes")}
+                        {outcomeLengthErrors.knowledge && (
+                          <small
+                            id={`preparation-${event.id}-knowledge-feedback`}
+                            className="field-error"
+                          >
+                            Не больше 500 символов; сейчас {knowledge.length}.
+                            Сократите текст для применения.
+                          </small>
+                        )}
+                        <small>
+                          Заполненное значение применяется к указанным выше
+                          людям. Пустое поле сохраняет их индивидуальные
+                          результаты.
                         </small>
-                      )}
-                      <small>
-                        Заполненное значение применяется к указанным выше людям.
-                        Пустое поле сохраняет их индивидуальные результаты.
-                      </small>
-                    </label>
-                    <label>
-                      Фактический результат прокторинга
-                      <input
-                        data-training-field="biotProctoringResult"
-                        data-field-path={`events.${eventIndex}.outcomes.biotProctoringResult`}
-                        disabled={disabled}
-                        value={proctoring}
-                        aria-invalid={
-                          outcomeLengthErrors.proctoring || undefined
-                        }
-                        aria-describedby={
-                          outcomeLengthErrors.proctoring
-                            ? `preparation-${event.id}-proctoring-feedback`
-                            : undefined
-                        }
-                        onChange={(e) => {
-                          updatePreparation({ proctoring: e.target.value });
-                        }}
-                      />
-                      {fieldHint("biotProctoringResult", "outcomes")}
-                      {outcomeLengthErrors.proctoring && (
-                        <small
-                          id={`preparation-${event.id}-proctoring-feedback`}
-                          className="field-error"
-                        >
-                          Не больше 500 символов; сейчас {proctoring.length}.
-                          Сократите текст для применения.
+                      </label>
+                      <label>
+                        Фактический результат прокторинга
+                        <input
+                          data-training-field="biotProctoringResult"
+                          data-field-path={`events.${eventIndex}.outcomes.biotProctoringResult`}
+                          disabled={disabled}
+                          value={proctoring}
+                          aria-invalid={
+                            outcomeLengthErrors.proctoring || undefined
+                          }
+                          aria-describedby={
+                            outcomeLengthErrors.proctoring
+                              ? `preparation-${event.id}-proctoring-feedback`
+                              : undefined
+                          }
+                          onChange={(e) => {
+                            updatePreparation({ proctoring: e.target.value });
+                          }}
+                        />
+                        {fieldHint("biotProctoringResult", "outcomes")}
+                        {outcomeLengthErrors.proctoring && (
+                          <small
+                            id={`preparation-${event.id}-proctoring-feedback`}
+                            className="field-error"
+                          >
+                            Не больше 500 символов; сейчас {proctoring.length}.
+                            Сократите текст для применения.
+                          </small>
+                        )}
+                        <small>
+                          Оставьте пустым, чтобы сохранить индивидуальные
+                          результаты.
                         </small>
-                      )}
-                      <small>
-                        Оставьте пустым, чтобы сохранить индивидуальные
-                        результаты.
-                      </small>
-                    </label>
-                  </div>
-                )}
-                {reviewed && (
-                  <Notice kind="info">
-                    Будет заменён результат у {selectedParticipantCount}{" "}
-                    участников {primary ? "обучения" : "события"} «
-                    {trainingDisplayTitle(event.title)}
-                    ». Основание: {source}. Это действие не регистрирует
-                    документы.
-                  </Notice>
-                )}
+                      </label>
+                    </div>
+                  )}
                 <button
                   disabled={
                     disabled ||
                     !selectedParticipantCount ||
-                    (outcome !== "UNKNOWN" && !source.trim()) ||
                     preparation.stale ||
                     preparation.status !== "saved" ||
                     Object.values(outcomeLengthErrors).some(Boolean)
                   }
                   onClick={() => {
-                    if (!reviewed) {
-                      setReviewSignature(outcomeSignature);
-                      setReview(true);
-                      return;
-                    }
                     void apply({
                       items: applyEventOutcomes(
                         draft,
@@ -1894,13 +1861,9 @@ export function EventContext({
                     }).then((saved) => {
                       if (saved) preparation.discard();
                     });
-                    setReview(false);
                   }}
                 >
-                  {" "}
-                  {reviewed
-                    ? "Подтвердить результаты"
-                    : "Проверить применение результатов"}
+                  Применить результат · {selectedParticipantCount} человек
                 </button>
                 {(preparation.record || preparation.status === "error") && (
                   <button
@@ -1909,7 +1872,6 @@ export function EventContext({
                     disabled={disabled}
                     onClick={() => {
                       preparation.discard();
-                      setReview(false);
                     }}
                   >
                     Отменить только подготовку результата

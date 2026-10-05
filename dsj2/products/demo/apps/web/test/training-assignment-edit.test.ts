@@ -40,7 +40,7 @@ test("editing a companion keeps common values after normalization and leaves oth
     (entry) => entry.eventId === "ps" && !entry.templateId.endsWith("protocol"),
   )) {
     assert.equal(assignment.trainingSubject, "Дизайнер");
-    assert.equal(assignment.trainingSubjectEn, "Designer");
+    assert.equal(assignment.trainingSubjectEn, undefined);
     assert.equal(assignment.documentDate, "2026-10-01");
   }
   assert.equal(

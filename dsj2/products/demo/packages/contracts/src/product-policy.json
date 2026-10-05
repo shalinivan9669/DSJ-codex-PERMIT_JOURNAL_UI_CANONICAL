@@ -39,6 +39,11 @@
       "path": "/approvals/:id/decision"
     },
     {
+      "method": "POST",
+      "surface": "api",
+      "path": "/approvals/:id/prepare"
+    },
+    {
       "method": "GET",
       "surface": "api",
       "path": "/print-requests/:id/approval"

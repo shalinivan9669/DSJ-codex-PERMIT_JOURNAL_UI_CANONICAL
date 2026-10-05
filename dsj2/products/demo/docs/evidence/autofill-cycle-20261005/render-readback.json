@@ -1,0 +1,390 @@
+{
+  "forms": 16,
+  "pages": 20,
+  "results": [
+    {
+      "templateId": "biot-worker-card",
+      "group": false,
+      "version": 21,
+      "sourceSha256": "e10043bd9b87dfc490a106c6cf4e9ab7689233f946a45d6031bb67818233dfc7",
+      "docxSha256": "1b880f2dd9f07f4f83ed2d2e19d87bc3ceb4511e4f5a654380d4a55182e5e4c6",
+      "pdfSha256": "84549769fe9ef3f19c31175012e9ef848a05e85a9723d280e3156b7ef1ae9c31",
+      "pages": [
+        {
+          "page": 1,
+          "image": "biot-worker-card-page-1.png",
+          "sha256": "ebc9f4e077ae8abff385890949dd690b63da50d288e9a801c23bc8e8352bbd6c"
+        },
+        {
+          "page": 2,
+          "image": "biot-worker-card-page-2.png",
+          "sha256": "2376887930c6d92d08e8e26f59a935d3571a2ed2e90e6b5f43c1c26e4be80d3f"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "Әділбек Өмірсерік Қанатұлы",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ТЕСТ-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "biot-itr-certificate",
+      "group": false,
+      "version": 19,
+      "sourceSha256": "53f3d85f16223baeafbee8ac5de8e4d4babc64be8a72d4535c80ead88db52e81",
+      "docxSha256": "8833fcda94ee844998f831e0eeb88dbe4e5d3d26263f674d4befcee51f882aed",
+      "pdfSha256": "444e51df267eb10e15b9314fbd2a78277e94891edc13baf7687c67460147e738",
+      "pages": [
+        {
+          "page": 1,
+          "image": "biot-itr-certificate-page-1.png",
+          "sha256": "d6539b4d34066d3764ef43fe9a804d0a62ac55fc5b4d5a18d07277fc579c4912"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "Безопасность и охрана труда",
+        "Еңбек қауіпсіздігі және еңбекті қорғау",
+        "ТЕСТ-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": true
+    },
+    {
+      "templateId": "biot-protocol",
+      "group": false,
+      "version": 15,
+      "sourceSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "docxSha256": "e395fa2e1dccc6b9039fa274ccf54c3207094a0f51206c19ee58be01fbea8cdd",
+      "pdfSha256": "197b9e097d67d183ad3ae7646c95fb88549cf75987ffcaff11cdd9704e7e33ce",
+      "pages": [
+        {
+          "page": 1,
+          "image": "biot-protocol-page-1.png",
+          "sha256": "def1d409dd74f21af15c006352a4f628f37423f8f4ccb78db872ffa7bbd134b2"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "ptm-card",
+      "group": false,
+      "version": 18,
+      "sourceSha256": "5c79ada917fcca2ce83f0693853ba6ec76446f7c14892115101f1e6e10189881",
+      "docxSha256": "6f7ed361a309a4213fa52cd7a1d6e80c5b793f229bc63fe2adf594415b4a1721",
+      "pdfSha256": "621c80b764e20f5468eb9cc3a3217b368e3876fe158a9d0ffee6af52790a7433",
+      "pages": [
+        {
+          "page": 1,
+          "image": "ptm-card-page-1.png",
+          "sha256": "294267125f355a89cc7f2ebc0846b51ee8cc99eb1e0bec9112f1f4ba855e01bb"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ТЕСТ-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "ptm-protocol",
+      "group": false,
+      "version": 13,
+      "sourceSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "docxSha256": "57f7a541bafb02eb60da5616957d2c360be8cb96bf17be560c6a452bc07e7993",
+      "pdfSha256": "c0c8f3cfe0e937292770c44f7264ea7ccf431a775c7c8ea3fbb5c4ccde8fe229",
+      "pages": [
+        {
+          "page": 1,
+          "image": "ptm-protocol-page-1.png",
+          "sha256": "0442d50e251d3ecf0b08e4a5b561ff9e58327f0158ac1eedba349f6e25ba10d1"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "pb-card",
+      "group": false,
+      "version": 18,
+      "sourceSha256": "edd414481ae70bc82a170494cf668d9963db007b3946bd2f9e2f766ce2589ab6",
+      "docxSha256": "6f39c1c8992ae7f23e93d478d21715071f5dbcdcf278a22e7cd757e0188830b0",
+      "pdfSha256": "57d5c7ce5c080fb347287abfeb0fe660aeb5d644064665559a55e7712edab006",
+      "pages": [
+        {
+          "page": 1,
+          "image": "pb-card-page-1.png",
+          "sha256": "33a7ae124b26be3d3a48340988a135a2f1274874e3b1b40d427dab089c60e70a"
+        },
+        {
+          "page": 2,
+          "image": "pb-card-page-2.png",
+          "sha256": "29d74d91cf86614faab6f375d43a06788ac7b3674056fa18cc5d5e6ff17c07ad"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ТЕСТ-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "pb-protocol",
+      "group": false,
+      "version": 13,
+      "sourceSha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "docxSha256": "2e36cf4f863fba5506592778131c34c86712db1e4f1a0d837fd9590bf1033ddc",
+      "pdfSha256": "98192d4b55ba11087ad8f41e792be8a2606077fe42349f3a0ab381f6d55a726d",
+      "pages": [
+        {
+          "page": 1,
+          "image": "pb-protocol-page-1.png",
+          "sha256": "a9053e51442b20b3c948f2a73f0f1b1a91c3510e42a9055b459da06dfa2ca7f8"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "ps-card",
+      "group": false,
+      "version": 19,
+      "sourceSha256": "78f97e1c1fe91f6229ba40581d6f6c2fb21df6a107d490b71e93d93695faadd1",
+      "docxSha256": "48e6eac36381ebe964bc91da38cc013c9b1f469488a7862333bdda8e91c1483b",
+      "pdfSha256": "9f1da6e9207f6f55e90f5e122cf339de06bb0f1b12a0540a8e730a850e6a3f7b",
+      "pages": [
+        {
+          "page": 1,
+          "image": "ps-card-page-1.png",
+          "sha256": "64bdd37927ed6457ada92843a9341ebe5eff2c552b18addb99a1d19dabf31c2d"
+        },
+        {
+          "page": 2,
+          "image": "ps-card-page-2.png",
+          "sha256": "c33bddcf4cc0e03b5983a12240455ef7401aeecb3c92b5dd296b6c22c11019fe"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "Машинист",
+        "Общепроф. курс",
+        "Жалпы кәсіби курс",
+        "Спец. Курс",
+        "арнайы курс",
+        "ТЕСТ-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "ps-protocol",
+      "group": false,
+      "version": 13,
+      "sourceSha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "docxSha256": "761c9dfcd00c1eca89842117f830565f1794490aeb668e7c84c65ba09a68e224",
+      "pdfSha256": "dfee006c91e59f4f7d83e700f4e4962e161381c842dbfb74aded7f5971011e68",
+      "pages": [
+        {
+          "page": 1,
+          "image": "ps-protocol-page-1.png",
+          "sha256": "9912f08ff38c790d7ae6e289d4876cf5e73888ee02748e15a78f4bdb4ae20f8b"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "Машинист",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "ps-witness",
+      "group": false,
+      "version": 15,
+      "sourceSha256": "4d6827fd5963c16894758da82f6a46cd7fcdccc490254be638ccbfecb39bda35",
+      "docxSha256": "264e3bd5fae83d4a1e1c308179df31276553fa13f5a1c5c9565643e5436aafe0",
+      "pdfSha256": "d6ade01d6e7a2960cf3ee776e035456d3275d36fa05433be369d7600243d4f43",
+      "pages": [
+        {
+          "page": 1,
+          "image": "ps-witness-page-1.png",
+          "sha256": "8b72475511fd226395e4d3633dbcc18c64d1f6aad32b1a4eb6cb0e25a774c204"
+        },
+        {
+          "page": 2,
+          "image": "ps-witness-page-2.png",
+          "sha256": "0beed89966d9b3b0c313a8c396bf124853e8373cb638bea57363ba512f14d011"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "Әділбек Өмірсерік Қанатұлы",
+        "Машинист",
+        "ТЕСТ-00001",
+        "00123",
+        "14 сентября 2026",
+        "19 сентября 2026",
+        "14 қыркүйек 2026",
+        "19 қыркүйек 2026"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "biot-itr-protocol",
+      "group": false,
+      "version": 6,
+      "sourceSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "docxSha256": "e395fa2e1dccc6b9039fa274ccf54c3207094a0f51206c19ee58be01fbea8cdd",
+      "pdfSha256": "feb2f42a2d3822228ced031c577f91708ee8f933965401012d0edda304770998",
+      "pages": [
+        {
+          "page": 1,
+          "image": "biot-itr-protocol-page-1.png",
+          "sha256": "def1d409dd74f21af15c006352a4f628f37423f8f4ccb78db872ffa7bbd134b2"
+        }
+      ],
+      "verifiedValues": [
+        "Тестов Иван Петрович",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": true
+    },
+    {
+      "templateId": "biot-protocol",
+      "group": true,
+      "version": "15-group-1",
+      "sourceSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "docxSha256": "b0611628d814b323192e28c420dfcc25433e352e04348e83d0c336a44a235615",
+      "pdfSha256": "c00e4974d43f83bd83bd397fedd7ba93b505006883c1d3023835ac3c0e64ac35",
+      "pages": [
+        {
+          "page": 1,
+          "image": "biot-protocol-group-page-1.png",
+          "sha256": "0033a40b2722325af3279351dc818c17e19944691fa94d0ca83d8a0a8125589b"
+        }
+      ],
+      "verifiedValues": [
+        "Синтетический Слушатель 001",
+        "Синтетический Слушатель 002",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "ptm-protocol",
+      "group": true,
+      "version": "13-group-1",
+      "sourceSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "docxSha256": "3c35d2aa262cbdce30cd21f291c9662166cc76ac9b6f0a06706fa37efba92f8a",
+      "pdfSha256": "15e4e83a557dc94bc7ed1d5dbb16be1275c69444675aa34e06120738eb282c9d",
+      "pages": [
+        {
+          "page": 1,
+          "image": "ptm-protocol-group-page-1.png",
+          "sha256": "624063c79e30323b59ecf11b392b4afebe3b2a6310f4a287cf0deb66715119e4"
+        }
+      ],
+      "verifiedValues": [
+        "Синтетический Слушатель 001",
+        "Синтетический Слушатель 002",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "pb-protocol",
+      "group": true,
+      "version": "13-group-1",
+      "sourceSha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "docxSha256": "cebb8701d5a5ed7727fc7d0e0b417b92c9027a76f8bc90cdea8bcfcd285fe53b",
+      "pdfSha256": "4f1da52b68ef8d84daecf40f907933b9e488eaf999e4b439a86fd5be0d4766ad",
+      "pages": [
+        {
+          "page": 1,
+          "image": "pb-protocol-group-page-1.png",
+          "sha256": "ea5c5e50d3b55514bbfe2c56b8d7c7da5518600b4b3a24d16055e0ed244d7303"
+        }
+      ],
+      "verifiedValues": [
+        "Синтетический Слушатель 001",
+        "Синтетический Слушатель 002",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "ps-protocol",
+      "group": true,
+      "version": "13-group-1",
+      "sourceSha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "docxSha256": "6b20a6bbce834323c6949832f54bb9057f2c1fd60de8ca1dc24b44a4c57b1e25",
+      "pdfSha256": "25482c47f1716c318284d486746981d06f8d14b85a485c0455d906cf8a681823",
+      "pages": [
+        {
+          "page": 1,
+          "image": "ps-protocol-group-page-1.png",
+          "sha256": "47b41647d7eff9fe9feec18795b1b82c46866d8f080134c30382450370238411"
+        }
+      ],
+      "verifiedValues": [
+        "Синтетический Слушатель 001",
+        "Синтетический Слушатель 002",
+        "Машинист",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": false
+    },
+    {
+      "templateId": "biot-itr-protocol",
+      "group": true,
+      "version": "6-group-1",
+      "sourceSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "docxSha256": "b0611628d814b323192e28c420dfcc25433e352e04348e83d0c336a44a235615",
+      "pdfSha256": "bd99360f7e4b03736e08347b9316efe64c508295828866bbe41de036fb861c42",
+      "pages": [
+        {
+          "page": 1,
+          "image": "biot-itr-protocol-group-page-1.png",
+          "sha256": "0033a40b2722325af3279351dc818c17e19944691fa94d0ca83d8a0a8125589b"
+        }
+      ],
+      "verifiedValues": [
+        "Синтетический Слушатель 001",
+        "Синтетический Слушатель 002",
+        "ТОО «Тестовый заказчик»",
+        "«Сынақ тапсырыс беруші» ЖШС",
+        "ПР-00001"
+      ],
+      "ordinaryItrWithoutSpecialData": true
+    }
+  ]
+}

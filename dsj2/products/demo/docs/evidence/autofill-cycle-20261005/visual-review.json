@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "ordinaryForms": 16,
+  "ordinaryPagesReviewed": 20,
+  "specialForms": 3,
+  "specialPagesReviewed": 3,
+  "method": "Every generated page PNG inspected at original resolution after actual DOCX-to-PDF conversion, plus actual text readback",
+  "ordinarySourceDocxModified": false,
+  "specialSourceDocxModified": false,
+  "checks": [
+    "No visible clipping or overlapping text in these synthetic cases",
+    "No missing Kazakh glyphs",
+    "Neutral logo and stamp placeholders remain in ordinary forms",
+    "Special protocol contains actual employer BIN/address and knowledge/proctoring values",
+    "Ordinary ITR renders without special data",
+    "Snapshot inputs remain unchanged"
+  ],
+  "physicalPrintingVerified": false,
+  "microsoftWordVerified": false,
+  "legalApprovalClaimed": false,
+  "ordinaryPages": [
+    "biot-worker-card-page-1.png",
+    "biot-worker-card-page-2.png",
+    "biot-itr-certificate-page-1.png",
+    "biot-protocol-page-1.png",
+    "ptm-card-page-1.png",
+    "ptm-protocol-page-1.png",
+    "pb-card-page-1.png",
+    "pb-card-page-2.png",
+    "pb-protocol-page-1.png",
+    "ps-card-page-1.png",
+    "ps-card-page-2.png",
+    "ps-protocol-page-1.png",
+    "ps-witness-page-1.png",
+    "ps-witness-page-2.png",
+    "biot-itr-protocol-page-1.png",
+    "biot-protocol-group-page-1.png",
+    "ptm-protocol-group-page-1.png",
+    "pb-protocol-group-page-1.png",
+    "ps-protocol-group-page-1.png",
+    "biot-itr-protocol-group-page-1.png"
+  ],
+  "specialPages": [
+    "biot-itr-certificate-page-1.png",
+    "biot-itr-protocol-page-1.png",
+    "biot-itr-protocol-group-page-1.png"
+  ]
+}

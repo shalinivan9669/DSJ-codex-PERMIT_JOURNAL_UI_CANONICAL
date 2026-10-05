@@ -319,6 +319,8 @@ export async function templateManifest(): Promise<{
   version: number;
   rendererVersion: string;
   templates: Array<Record<string, unknown>>;
+  groupTemplates?: Array<Record<string, unknown>>;
+  specialTemplates?: Array<Record<string, unknown>>;
 }> {
   return JSON.parse(
     await readFile(

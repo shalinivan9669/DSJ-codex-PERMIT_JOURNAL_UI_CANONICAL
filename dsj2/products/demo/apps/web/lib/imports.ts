@@ -87,46 +87,52 @@ export const importFields: [string, string][] = [
   ["employeeCategory", "Категория сотрудника"],
   ["fullNameRu", "ФИО RU"],
   ["fullNameKz", "ФИО KZ"],
-  ["fullNameEn", "ФИО EN"],
+
   ["positionRu", "Должность RU"],
   ["positionKz", "Должность KZ"],
-  ["positionEn", "Должность EN"],
+
   ["workplaceRu", "Место работы RU"],
   ["workplaceKz", "Место работы KZ"],
-  ["workplaceEn", "Место работы EN"],
+
   ["departmentRu", "Подразделение RU"],
   ["departmentKz", "Подразделение KZ"],
-  ["departmentEn", "Подразделение EN"],
+
   ["employerBin", "БИН работодателя"],
   ["employerAddressRu", "Юридический адрес работодателя RU"],
   ["employerAddressKz", "Юридический адрес работодателя KZ"],
-  ["employerAddressEn", "Юридический адрес работодателя EN"],
+
   ["documentDate", "Дата документа"],
   ["trainingStart", "Начало обучения"],
   ["trainingEnd", "Окончание обучения"],
   ["protocolDate", "Дата протокола"],
   ["trainingSubject", "Программа / тема"],
-  ["trainingSubjectEn", "Программа / тема EN"],
+  ["trainingSubjectKz", "Программа / тема KZ"],
+
   ["result", "Результат / оценка"],
-  ["resultEn", "Результат / оценка EN"],
+  ["resultKz", "Результат / оценка KZ"],
+  ["professionRu", "Обучаемая профессия RU"],
+  ["professionKz", "Обучаемая профессия KZ"],
+  ["psQualificationRu", "Присвоенная квалификация RU"],
+  ["psQualificationKz", "Присвоенная квалификация KZ"],
+
   ["hours", "Часы"],
   ["productionHours", "Производственное обучение, часов"],
   ["biotCategory", "Категория обучения БиОТ"],
   ["biotIndustryRu", "Отрасль специальных компетенций RU"],
   ["biotIndustryKz", "Отрасль специальных компетенций KZ"],
-  ["biotIndustryEn", "Отрасль специальных компетенций EN"],
+
   ["biotCheckType", "Вид проверки знаний БиОТ"],
   ["biotKnowledgeResult", "Фактический результат проверки знаний"],
-  ["biotKnowledgeResultEn", "Фактический результат проверки знаний EN"],
+
   ["biotProctoringResult", "Фактический результат прокторинга"],
-  ["biotProctoringResultEn", "Фактический результат прокторинга EN"],
+
   ["biotUniqueNumber", "Уникальный номер сертификата БиОТ"],
   ["biotNotes", "Примечание к протоколу БиОТ"],
-  ["biotNotesEn", "Примечание к протоколу БиОТ EN"],
+
   ["reason", "Причина проверки знаний"],
-  ["reasonEn", "Причина проверки знаний EN"],
+
   ["education", "Образование"],
-  ["educationEn", "Образование EN"],
+
   ["validUntil", "Действителен до"],
   ["externalBasisNumber", "Внешний номер основания"],
 ];
@@ -192,6 +198,7 @@ export function inferMapping(columns: string[]): string[] {
       .toLowerCase()
       .replace(/[_\s·—-]+/g, " ")
       .trim();
+    if (/\ben\b|english|англ|^[a-z].*en$/.test(lower)) return "";
     const match = importFields.find(
       ([field, title]) =>
         field.toLowerCase() === lower || title.toLowerCase() === lower,
@@ -210,13 +217,13 @@ export function inferMapping(columns: string[]): string[] {
       match?.[0] ||
       (/фио|full.?name|аты.?жөні|ф\.и\.о/.test(lower)
         ? /\ben\b|eng|англ/.test(lower)
-          ? "fullNameEn"
+          ? ""
           : /kz|каз|қаз|аты/.test(lower)
             ? "fullNameKz"
             : "fullNameRu"
         : /должност|position|лауазым/.test(lower)
           ? /\ben\b|eng|англ/.test(lower)
-            ? "positionEn"
+            ? ""
             : /kz|каз|лауазым/.test(lower)
               ? "positionKz"
               : "positionRu"
@@ -249,20 +256,19 @@ const recipientImportFields = [
   "employerId",
   "fullNameRu",
   "fullNameKz",
-  "fullNameEn",
+
   "positionRu",
   "positionKz",
-  "positionEn",
+
   "workplaceRu",
   "workplaceKz",
-  "workplaceEn",
+
   "departmentRu",
   "departmentKz",
-  "departmentEn",
+
   "employerBin",
   "employerAddressRu",
   "employerAddressKz",
-  "employerAddressEn",
 ];
 
 export function initialImportTemplate(
@@ -278,6 +284,11 @@ export function initialImportTemplate(
  * free text remain independent imported assessments. */
 function importedNonPassedStatus(value: string) {
   const known: Record<string, "UNKNOWN" | "FAILED" | "ABSENT"> = {
+    unknown: "UNKNOWN",
+    failed: "FAILED",
+    absent: "ABSENT",
+    ожидаетсдачи: "UNKNOWN",
+    ожидание: "UNKNOWN",
     неподтверждено: "UNKNOWN",
     расталмаған: "UNKNOWN",
     несдал: "FAILED",
@@ -421,13 +432,14 @@ export function mapImportRow(
   assignment.fieldOrigins = {
     ...assignment.fieldOrigins,
     ...Object.fromEntries(
-      commonFieldKeys
-        .filter(
-          (field) =>
-            mapping.includes(field) &&
-            row.values[mapping.indexOf(field)]?.trim(),
-        )
-        .map((field) => [field, "IMPORTED" as const]),
+      [...commonFieldKeys, "resultKz"]
+        .filter((field) => mapping.includes(field))
+        .map((field) => [
+          field,
+          isBlankText(String(row.values[mapping.indexOf(field)] ?? ""))
+            ? ("CLEARED" as const)
+            : ("IMPORTED" as const),
+        ]),
     ),
   };
   const resultColumn = mapping.indexOf("result");
@@ -443,12 +455,15 @@ export function mapImportRow(
         status,
         source: `Импортированный результат, строка ${row.sourceRow}`,
       };
-      assignment.resultKz = nonPassedResultKz(status);
+      if (!mapping.includes("resultKz"))
+        assignment.resultKz = nonPassedResultKz(status);
       assignment.fieldOrigins = {
         ...assignment.fieldOrigins,
         outcome: "IMPORTED",
         result: clearedResult ? "CLEARED" : "IMPORTED",
-        resultKz: "COURSE",
+        ...(!mapping.includes("resultKz")
+          ? { resultKz: "COURSE" as const }
+          : {}),
       };
     }
   }

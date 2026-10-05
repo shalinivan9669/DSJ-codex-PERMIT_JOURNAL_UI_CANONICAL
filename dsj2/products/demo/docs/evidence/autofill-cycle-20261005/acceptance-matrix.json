@@ -1,0 +1,507 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-05",
+  "language": "ru",
+  "status": "IMPLEMENTED_LOCAL_ACCEPTANCE_PASS_DEPLOYMENT_PENDING",
+  "scope": "Упрощение подготовки менеджером и решения директора в автономном products/demo: источники полей, ordinary ИТР и явный SPECIAL, готовая редакция, новые документы RU/KZ.",
+  "baseline": {
+    "branch": "codex/operator-flow-refinement-20261003",
+    "sourceCommit": "6ffa7fed74d7641d206d770ce92c1deaabdc66e8",
+    "currentApplicationCommit": null,
+    "currentApplicationCommitNote": "На момент этой записи изменения ещё не опубликованы; SHA завершённого релиза фиксируется отдельно.",
+    "historicalProposal": {
+      "submittedAt": "2026-10-02T15:34:39.008Z",
+      "revision": 6,
+      "people": 1,
+      "assignments": 9,
+      "courses": 4,
+      "issues": 21,
+      "issueCounts": {
+        "NAME_REQUIRED": 1,
+        "BIOT_FIELD_REQUIRED": 7,
+        "BIOT_BIN_REQUIRED": 1,
+        "PS_PROFESSION_REQUIRED": 3,
+        "OUTCOME_UNCONFIRMED": 9
+      },
+      "classification": "Старая неполная PENDING-редакция, созданная до явной передачи с проверкой готовности.",
+      "source": ".runtime/autofill-research-20261005/research-summary.json и live-review-sanitized.json",
+      "preservation": "Исторический payload и UNKNOWN не переписаны. Наличие 21 замечания не означает 21 независимый ввод; это замечания по документам и общим источникам."
+    }
+  },
+  "acceptance": [
+    {
+      "id": "AF-01",
+      "requirement": "Обычный ИТР не включает специальные компетенции автоматически",
+      "result": "PASS_LOCAL_CODE_UNIT_API_RENDER_CUA",
+      "implemented": "Новый обычный ИТР получает ITR_STANDARD. БИН/адрес работодателя, отрасль, knowledge/proctoring не требуются для ordinary-форм, которые этих полей не печатают. Общий и индивидуальный выбор используют эффективную категорию.",
+      "evidence": [
+        "tests/itr-program-contract.test.ts",
+        "apps/web/test/assignment-presets.test.ts",
+        "render-readback.json",
+        "field-matrix.md",
+        "cua-workflow-readback.json"
+      ]
+    },
+    {
+      "id": "AF-02",
+      "requirement": "SPECIAL остаётся реальным отдельным договорённым контрактом",
+      "result": "PASS_LOCAL_API_RENDER",
+      "implemented": "Явный SPECIAL проверяет реальные специальные поля и выбирает версии special-14-1, special-1-1, special-1-group-1. Ordinary и SPECIAL выбираются отдельно; прямой API не может обойти проверку. ECS не выдаётся DEMO.",
+      "evidence": [
+        "special-render-readback.json",
+        "field-matrix.md",
+        "registration-history-upgrade.json",
+        "tests/template-selection.test.ts"
+      ]
+    },
+    {
+      "id": "AF-03",
+      "requirement": "Общие данные вводятся один раз, индивидуальные факты сохраняются",
+      "result": "PASS_LOCAL_UNIT",
+      "implemented": "COURSE → CENTER → PRESET → REQUEST → EVENT → индивидуальное исключение. MANUAL, IMPORTED и CLEARED защищены. Техническая пустая строка не затирает источник; явная очистка остаётся очисткой. Общая категория обновляет только автоматические зависимые значения.",
+      "evidence": [
+        "tests/itr-program-contract.test.ts",
+        "tests/operator-shared-validity.test.ts",
+        "apps/web/test/assignment-presets.test.ts",
+        "field-matrix.md"
+      ]
+    },
+    {
+      "id": "AF-04",
+      "requirement": "Новые обычные назначения имеют положительный исход без отдельного подтверждения каждого документа",
+      "result": "PASS_LOCAL_UNIT",
+      "implemented": "Новые обычные назначения получают PASSED и соответствующий курсу словесный результат RU/KZ. Добавляемая связанная форма наследует существующий фактический исход события. UNKNOWN/FAILED/ABSENT, ручной результат и импорт не превращаются в новый PASSED. Противоречащие явные исходы требуют исправления.",
+      "evidence": [
+        "tests/business-rules.test.ts",
+        "tests/itr-program-contract.test.ts",
+        "apps/web/test/event-outcomes.test.ts"
+      ]
+    },
+    {
+      "id": "AF-05",
+      "requirement": "Программы, даты, сроки, ПС и работодатель не требуют дублирования",
+      "result": "PASS_LOCAL_UNIT_RENDER",
+      "implemented": "Программы и две дисциплины ПС берутся из курса. ПС использует явную квалификацию/профессию либо должность. Даты рассчитываются по сохранённому графику центра; неизвестный график не придумывается. Рабочий +1 год, ИТР +3 года, ПС бессрочно; ручные исключения сохраняются. Работодатель и центр остаются разными источниками.",
+      "evidence": [
+        "tests/operator-shared-validity.test.ts",
+        "render-readback.json",
+        "field-matrix.md"
+      ]
+    },
+    {
+      "id": "AF-06",
+      "requirement": "Autosave не отправляет неполную заявку директору; передача — одно явное действие",
+      "result": "PASS_LOCAL_INTEGRATION_BROWSER_400_CUA",
+      "implemented": "Autosave сохраняет рабочий draft. Команда передачи завершает сохранение, проверяет выбранный состав и создаёт PENDING только для готовой редакции. У директора сводка людей/обучений/источников и одно решение для согласуемого состава.",
+      "evidence": [
+        "approval-verification.json",
+        "apps/web/e2e/operator-minimal-actions-400-live.spec.ts",
+        ".runtime/autofill-cycle-20261005/browser-final-three/test-results/operator-minimal-actions-4-2a25e-e-the-whole-company-request/excel-400-readback.json",
+        "cua-workflow-readback.json"
+      ]
+    },
+    {
+      "id": "AF-07",
+      "requirement": "Старые PENDING безопасно отличимы от готовых редакций",
+      "result": "PASS_LOCAL_INTEGRATION_CUA_LEGACY",
+      "implemented": "Чтение очереди не меняет историю. Scoped и unscoped старые редакции классифицируются; подготовка создаёт рабочую редакцию с защитой конкуренции. Старые неизвестные факты остаются исключениями, затем нужна явная повторная передача.",
+      "evidence": [
+        "approval-verification.json",
+        "tests/integration/approval-autofill.test.ts",
+        "legacy-ui-readback.json",
+        "legacy-needs-preparation.png",
+        "legacy-retransferred-director.png"
+      ]
+    },
+    {
+      "id": "AF-08",
+      "requirement": "Директор согласует те же значения, которые получает выпуск",
+      "result": "PASS_LOCAL_INTEGRATION",
+      "implemented": "На передаче фиксируются эффективный draft и provenance в отдельном resolvedSnapshot. Preview, решение и finalize используют зафиксированные данные и точный состав. Клиентский frozenResolution очищается. PostgreSQL запрещает последующую подмену; старый payload не переписывается.",
+      "evidence": [
+        "approval-verification.json",
+        "packages/database/prisma/migrations/202610050030_approval_resolved_snapshot/migration.sql",
+        "tests/integration/approval-autofill.test.ts",
+        "tests/integration/issuance-batches.test.ts"
+      ]
+    },
+    {
+      "id": "AF-09",
+      "requirement": "Новый цикл полностью RU/KZ без английских полей или приложения",
+      "result": "PASS_LOCAL_UNIT_INTEGRATION_CUA_ISSUANCE",
+      "implemented": "EN убран из рабочего интерфейса/импорта/новой нормализации. Новый snapshot имеет englishAppendix=false и не содержит *En. Исторические payload и артефакты читаются как прежде. Выпуск старого согласованного EN требует новой RU/KZ-редакции; согласованный состав не меняется скрытно.",
+      "evidence": [
+        "tests/document-languages.test.ts",
+        "approval-verification.json",
+        ".runtime/autofill-cycle-20261005/import-ru-kz.log",
+        "apps/web/e2e/operator-minimal-manual-live.spec.ts",
+        "cua-workflow-readback.json"
+      ]
+    },
+    {
+      "id": "AF-10",
+      "requirement": "Печатаемые поля соответствуют фактическим формам",
+      "result": "PASS_LOCAL_DOCX_PDF_READBACK",
+      "implemented": "Проверены 16 ordinary-форм/20 страниц и 3 SPECIAL-формы/3 страницы: данные DOCX, фактическая конвертация PDF, текст и все PNG. В этих синтетических вариантах обрезка/пересечения и потеря KZ-глифов не обнаружены.",
+      "evidence": [
+        "render-readback.json",
+        "special-render-readback.json",
+        "visual-review.json",
+        "field-matrix.md"
+      ]
+    },
+    {
+      "id": "AF-11",
+      "requirement": "История и исходные bytes сохраняются",
+      "result": "PASS_LOCAL_SYNTHETIC_REGISTRY",
+      "implemented": "Существующие 16 регистраций не изменены; 19 ссылок новых ordinary/SPECIAL зарегистрированы append-only и изначально не утверждены. Исторические snapshot, artifact и authenticated HTTP SHA неизменны; воспроизведение старого renderer побайтно совпало. Повторная регистрация не дублирует версии.",
+      "evidence": [
+        "registration-history-upgrade.json"
+      ]
+    },
+    {
+      "id": "AF-12",
+      "requirement": "Свежий полный локальный пользовательский цикл",
+      "result": "PASS_LOCAL_WITH_RECORDED_TIMEOUT_AND_SAME_REQUEST_RESUME",
+      "implemented": "Excel400 и ordinary новая заявка прошли импорт/ввод → передачу → одно решение директора. Настоящий CUA-цикл ИТР+ПС дал 5 документов/10 проверенных файлов. CUA повторная подготовка старой PENDING сохранила payload SHA и 9 UNKNOWN, новая редакция 9 назначений/4 курса получила 0 замечаний. Ручной UI20 создал 105 документов; исходный 3E2E-run 2PASS/1ORIGINAL_RENDER_TIMEOUT сохранён. Завершён read-only resume той же заявки: 212/212 jobs SUCCEEDED, 22 DOCX/PDF-образца со сверенными SHA и текстом. Отдельный UI исключений PASS. Публикация учитывается отдельно в release.",
+      "evidence": [
+        ".runtime/autofill-cycle-20261005/browser-final-three.log",
+        "cua-workflow-readback.json",
+        "legacy-ui-readback.json",
+        "browser-workflow-readback.json",
+        "manual20-artifact-text-readback.json"
+      ]
+    }
+  ],
+  "oldIssueResolution": [
+    {
+      "code": "NAME_REQUIRED",
+      "before": 1,
+      "afterRule": "Реальное ФИО остаётся обязательным. Пустое имя не заменяется примером; человек исправляется в строке."
+    },
+    {
+      "code": "BIOT_FIELD_REQUIRED",
+      "before": 7,
+      "afterRule": "Общий источник показывается один раз. Реальные должность/работодатель остаются обязательными; отрасль и специальные результаты требуются только в явном SPECIAL, где они печатаются."
+    },
+    {
+      "code": "BIOT_BIN_REQUIRED",
+      "before": 1,
+      "afterRule": "Для ordinary ИТР требования нет. В SPECIAL берётся БИН конкретного работодателя, а не центра; неизвестный БИН не создаётся автоматически."
+    },
+    {
+      "code": "PS_PROFESSION_REQUIRED",
+      "before": 3,
+      "afterRule": "Один источник профессии/должности для комплекта ПС; квалификация отдельно только при отличии. Три документа не означают три одинаковых ввода."
+    },
+    {
+      "code": "OUTCOME_UNCONFIRMED",
+      "before": 9,
+      "afterRule": "Старые UNKNOWN сохранены. Новые обычные курсы имеют PASSED автоматически; явное исключение исправляется для состава курса одним действием, а не отдельно для каждого документа."
+    }
+  ],
+  "actionCounts": {
+    "method": "Считаются смысловые действия и вводимые поля; это не время работы человека и не общий счёт всех кликов. До и после с разными исходными данными не выдаются за строго одинаковый эксперимент.",
+    "beforeMeasuredWalkthrough20": {
+      "evidence": "../operator-walkthrough-20-20261005/walkthrough.json",
+      "people": 20,
+      "dataFields": 27,
+      "breakdown": {
+        "names": 20,
+        "sharedPositionRu": 1,
+        "courseDurations": 3,
+        "specialFactsForcedForOrdinaryItr": 3
+      },
+      "directorySearchFields": 1,
+      "selectionDecisions": 7,
+      "directorDecisions": 1,
+      "issued": false
+    },
+    "afterComparableBehavior": [
+      {
+        "action": "Специальные факты у ordinary ИТР",
+        "before": 3,
+        "after": 0,
+        "unit": "поля",
+        "basis": "Ранее измеренный walkthrough и текущие unit/API/render проверки; свежий UI20 дополнительно проверяет отсутствие этих полей."
+      },
+      {
+        "action": "Повторный ввод одной профессии для трёх ПС-документов",
+        "beforeIssueLines": 3,
+        "afterSources": 1,
+        "basis": "Старые 3 замечания не считаются 3 измеренными кликами; новое поведение использует один источник на комплект."
+      },
+      {
+        "action": "Подтверждение обычного нового положительного исхода",
+        "beforeHistoricalUnknownIssueLines": 9,
+        "afterAdditionalConfirmations": 0,
+        "basis": "Сравнение правил, не замена исторических UNKNOWN: старые 9 исключений сами по себе не исчезают."
+      },
+      {
+        "action": "Передача готового состава",
+        "afterCommands": 1,
+        "basis": "В одной явной команде завершаются autosave, подготовка и проверка; свежий Excel400 подтверждён браузером."
+      },
+      {
+        "action": "Решение директора по готовой редакции",
+        "before": 1,
+        "after": 1,
+        "unit": "решение",
+        "basis": "Сохранена одна явная граница решения; улучшена подготовка и сводка данных."
+      }
+    ],
+    "afterMeasuredExcel400": {
+      "result": "PASS",
+      "people": 400,
+      "requests": 1,
+      "realWorkbookUploads": 1,
+      "importConfirmations": 1,
+      "commonCourseSelections": 3,
+      "unknownCompanyNamesEntered": 1,
+      "unknownCourseDurationsEntered": 2,
+      "transferCommands": 1,
+      "directorDecisions": 1,
+      "repeatedCommonInputs": 0,
+      "perPersonDialogs": 0,
+      "manualFileSplits": 0,
+      "elapsedMs": 36960,
+      "elapsedIsAutomationNotHumanTiming": true,
+      "documentsActuallyRendered": 0,
+      "evidence": ".runtime/autofill-cycle-20261005/browser-final-three/test-results/operator-minimal-actions-4-2a25e-e-the-whole-company-request/excel-400-readback.json"
+    },
+    "afterMeasuredManual20": {
+      "result": "PASS_SAME_REQUEST_RESUME",
+      "people": 20,
+      "dataFields": 26,
+      "breakdown": {
+        "names": 20,
+        "sharedPositionRuKz": 2,
+        "newCompanyName": 1,
+        "courseDurations": 3,
+        "specialFactsForcedForOrdinaryItr": 0
+      },
+      "ordinaryPassedAdditionalConfirmations": 0,
+      "courseSelectionsForWholeGroup": 4,
+      "transferCommands": 1,
+      "directorDecisions": 1,
+      "explicitIssuanceCommands": 1,
+      "numberedDocuments": 105,
+      "jobsSucceeded": 212,
+      "downloadedExamples": 22,
+      "initialRunFailure": "ORIGINAL_RENDER_TIMEOUT",
+      "sameRequestResumed": true,
+      "noDuplicateCreationOrIssuance": true,
+      "comparisonWithBefore": "Ранее 27 полей: 20 ФИО + 1 должность RU + 3 длительности + 3 SPECIAL-факта. Теперь 26: 20 ФИО + 2 должности RU/KZ + 1 новый работодатель + 3 длительности. Убраны 3 SPECIAL-ввода; добавлены 2 ввода из-за расширенного состава проверки. Это не замер одинакового сценария или скорости человека.",
+      "evidence": "browser-workflow-readback.json"
+    },
+    "afterMeasuredCua": {
+      "result": "PASS",
+      "people": 1,
+      "courses": 2,
+      "companyEntries": 1,
+      "personEntries": 1,
+      "manualPsHoursEntries": 1,
+      "ordinaryItrSpecialFactEntries": 0,
+      "transferCommands": 1,
+      "directorDecisions": 1,
+      "explicitIssuanceCommands": 1,
+      "numberedDocuments": 5,
+      "downloadedFiles": 10,
+      "scopeNote": "Counts смысловых действий по наблюдению CUA; общий счёт нажатий/всех полей не измерялся.",
+      "evidence": "cua-workflow-readback.json"
+    }
+  },
+  "verification": {
+    "unitCoverage": {
+      "uniqueCasesCovered": 425,
+      "singleUninterruptedGreenPnpmTest": false,
+      "domainFull": {
+        "command": "pnpm test",
+        "total": 206,
+        "passed": 204,
+        "failed": 2,
+        "skipped": 0,
+        "log": ".runtime/autofill-cycle-20261005/final-test.log"
+      },
+      "domainCorrection": {
+        "suite": "tests/operator-shared-validity.test.ts",
+        "passed": 8,
+        "failed": 0,
+        "log": ".runtime/autofill-cycle-20261005/final-test-domain-correction.log"
+      },
+      "webFull": {
+        "command": "pnpm --filter @demo/web test",
+        "total": 218,
+        "passed": 217,
+        "failed": 1,
+        "skipped": 0,
+        "log": ".runtime/autofill-cycle-20261005/final-test-web.log"
+      },
+      "webCorrection": {
+        "suite": "apps/web/test/training-assignment-edit.test.ts",
+        "passed": 4,
+        "failed": 0,
+        "log": ".runtime/autofill-cycle-20261005/final-test-web-correction.log"
+      },
+      "correctionReason": "Три устаревших ожидания сохраняли английские поля после нового прямого требования полностью убрать EN. Исправлены только эти ожидания и повторены целиком соответствующие suites. Domain full остановил цепочку pnpm test перед web; web запущен отдельно. Число 424 — объединение 206 domain и 218 web, без повторного счёта targeted suites. После этих прогонов добавлен один новый helper regression; suite approval-issues целиком 3/3 PASS. Итог 425 разных покрытых кейсов — 424 из базовых full suites плюс один новый, а не непрерывный full run.",
+      "python": "Закреплённый .runtime/venv/Scripts/python.exe через DEMO_PYTHON",
+      "baseFullSuitesUniqueCases": 424,
+      "newFinalHelperRegressionCases": 1,
+      "additionalHelperRun": {
+        "suite": "apps/web/test/approval-issues.test.ts",
+        "passed": 3,
+        "failed": 0,
+        "newCases": 1,
+        "applicationSourceChanged": false,
+        "evidence": "approval-verification.json",
+        "description": "Два человека с общими knowledge/proctoring по двум формам дают одну общую ошибку; персональные MANUAL/CLEARED третьего человека остаются персональными."
+      }
+    },
+    "focusedRuns": [
+      {
+        "suite": "approval-autofill + approval-data-readiness",
+        "passed": 9,
+        "failed": 0,
+        "phase": "После финальных правил EN и legacy frozen-value guard",
+        "evidence": "approval-verification.json"
+      },
+      {
+        "suite": "issuance-batches",
+        "passed": 6,
+        "failed": 0,
+        "phase": "После исправления точного состава выдаваемых назначений",
+        "evidence": "approval-verification.json"
+      },
+      {
+        "suite": "director-approval",
+        "passed": 7,
+        "failed": 0,
+        "phase": "Ранее, до последующих правил EN и legacy freeze; реальные DOCX/PDF и CMS-проверки",
+        "evidence": "approval-verification.json"
+      },
+      {
+        "suite": "registration + neutral-template-upgrade",
+        "passed": 10,
+        "failed": 0,
+        "evidence": ".runtime/autofill-cycle-20261005/registration-integration.log"
+      },
+      {
+        "suite": "Импорт RU/KZ",
+        "passed": 14,
+        "failed": 0,
+        "evidence": ".runtime/autofill-cycle-20261005/import-ru-kz.log"
+      },
+      {
+        "suite": "tests.render.test_special_program_forms",
+        "passed": 1,
+        "failed": 0,
+        "renderedForms": 3,
+        "evidence": "special-render-readback.json"
+      }
+    ],
+    "lint": {
+      "status": "PASS",
+      "command": "pnpm lint",
+      "log": ".runtime/autofill-cycle-20261005/final-lint.log"
+    },
+    "types": {
+      "status": "PASS",
+      "command": "pnpm -r typecheck",
+      "prismaRegeneratedDuringThisCheck": false,
+      "log": ".runtime/autofill-cycle-20261005/final-typecheck.log"
+    },
+    "build": {
+      "status": "PASS",
+      "command": "pnpm build + финальный pnpm --filter @demo/web build",
+      "logs": [
+        ".runtime/autofill-cycle-20261005/build-final.log",
+        ".runtime/autofill-cycle-20261005/build-web-final.log"
+      ],
+      "finalWebBuildId": "gVC7Zgp2WckAGi0Tyx9zV"
+    },
+    "browser": {
+      "status": "PASS_LOCAL_WITH_RECORDED_TIMEOUT_AND_SAME_REQUEST_RESUME",
+      "freshThreeCaseRun": {
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0,
+        "singleUninterruptedPass": false,
+        "failure": "ORIGINAL_RENDER_TIMEOUT после FINALIZED 105 документов; исходный 2PASS/1FAIL сохранён, files проверены через отдельный read-only resume той же заявки"
+      },
+      "log": ".runtime/autofill-cycle-20261005/browser-final-three.log",
+      "realCuaFlow": {
+        "status": "PASS",
+        "people": 1,
+        "courses": 2,
+        "numberedDocuments": 5,
+        "downloadedFiles": 10,
+        "succeededJobs": 22,
+        "evidence": "cua-workflow-readback.json"
+      },
+      "exceptions": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "evidence": "browser-workflow-readback.json"
+      },
+      "legacyCua": {
+        "status": "PASS",
+        "oldPayloadSha256Unchanged": true,
+        "oldUnknownPreserved": 9,
+        "newScopeCount": 9,
+        "newCourses": 4,
+        "reviewIssues": 0,
+        "evidence": "legacy-ui-readback.json"
+      },
+      "sameRequestResume": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "people": 20,
+        "numberedDocuments": 105,
+        "jobsSucceeded": 212,
+        "downloadedExamples": 22,
+        "evidence": "browser-workflow-readback.json"
+      }
+    },
+    "fullIntegrationRerunClaimed": false,
+    "fullRendererSuiteRerunClaimed": false,
+    "fullHistoricalE2eRerunClaimed": false
+  },
+  "preservation": {
+    "sourceTemplateDocxModified": false,
+    "historicalBusinessDataBulkRewritten": false,
+    "legacyEnglishReadAndReplaySupported": true,
+    "foreignDirtyAcceptanceModifiedByThisTask": false,
+    "foreignWebConfigsRestoredAfterFinalBuild": {
+      "nextEnvGitBlob": "d84fed98ff255b14311e709b7cd9a28f6ce00605",
+      "tsconfigGitBlob": "2d0a55b16b0d7947d261a306ced8ac36a932c0f9",
+      "exactBaselinePatchHashesMatch": true,
+      "evidence": ".runtime/autofill-cycle-20261005/config-baseline-restored.json"
+    }
+  },
+  "release": {
+    "status": "DEPLOYMENT_PENDING",
+    "backup": {
+      "status": "PASS_ARCHIVE_READBACK",
+      "filesChecked": 58,
+      "archiveDigestsRechecked": true,
+      "everyTarMemberBytesAndSha256Matched": true,
+      "databaseDumpHeaderAndTocChecked": true,
+      "fullRestorePerformed": false,
+      "evidence": ".runtime/autofill-cycle-20261005/backup-local-verification.json"
+    },
+    "productionMigrationVerified": false,
+    "deploymentVerified": false,
+    "productionSmokeVerified": false
+  },
+  "limitations": [
+    "Локальная приёмка завершена с явно записанными исходным timeout и успешным read-only resume той же заявки. Публикация этой записью не заявляется; её фактические migration/deploy/smoke результаты добавляются отдельно.",
+    "Все новые проверочные люди/организации/результаты синтетические. Длительности 16 часов и график 8 часов/KZ_FIVE_DAY — данные проверки, а не универсальное правило учебного центра.",
+    "Старые 21 замечание не скрываются массовым присвоением PASSED или вымышленными БИН, оценками, прокторингом и квалификацией.",
+    "Проверка DOCX/PDF этой задачи не является новым Microsoft Word-прогоном, физической печатью, юридическим утверждением или действительной НУЦ-подписью.",
+    "Время автоматизированного браузерного сценария не доказывает скорость живого менеджера. Замерены смысловые вводы и повторения только для указанных сценариев.",
+    "Первоначально локальная очередь работала одним worker; для завершения 105 документов добавлены 3 worker. Успешный resume доказывает конечные файлы и данные; исходный лимит ожидания полного E2E-run не считается пройденным."
+  ],
+  "evidencePathBase": "Имена файлов без каталога относятся к docs/evidence/autofill-cycle-20261005; остальные пути — к корню автономного products/demo. Runtime evidence остаётся локальным; приватные prompt/config и полный raw payload не публикуются."
+}

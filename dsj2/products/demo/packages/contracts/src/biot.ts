@@ -1,9 +1,11 @@
-/** Official rules, edition 30.05.2026, clauses 5, 12, 27 and 28.
+/** Explicit general/special categories use the previously recorded rule presets,
+ * edition 30.05.2026, clauses 5, 12, 27 and 28.
  * https://zan.gov.kz/api/documents/225864/rus/download/pdf
  * Presets describe training; they do not issue an external ECS certificate.
  */
 export const biotCategoryIds = [
   "WORKER",
+  "ITR_STANDARD",
   "MANAGER_GENERAL",
   "OHS_HEAD_GENERAL",
   "OHS_SPECIALIST_SPECIAL",
@@ -21,7 +23,7 @@ type BiotPreset = {
   defaultProductionHours?: number;
   validityYears: 1 | 3 | null;
   form: "WORKER" | "ITR";
-  program: "GENERAL" | "SPECIAL" | null;
+  program: "STANDARD" | "GENERAL" | "SPECIAL" | null;
   hoursLabel: string;
   requiresExternalCertificate: boolean;
   hint: string;
@@ -41,6 +43,19 @@ export const BIOT_CATEGORIES: Record<BiotCategory, BiotPreset> = {
     hoursLabel: "Теоретическое обучение, акад. ч.",
     requiresExternalCertificate: false,
     hint: "Теория — не менее 10 академических часов; производственное обучение — не менее 16 часов. Очередная проверка — не реже одного раза в год.",
+  },
+  ITR_STANDARD: {
+    label: "ИТР — программа учебного центра",
+    // Retain the existing centre's 40-hour default, without declaring a new
+    // statutory minimum for an ordinary local training document.
+    minimumHours: 1,
+    defaultHours: 40,
+    validityYears: 3,
+    form: "ITR",
+    program: "STANDARD",
+    hoursLabel: "Объём программы учебного центра, акад. ч.",
+    requiresExternalCertificate: false,
+    hint: "Обычная программа БиОТ для ИТР: сертификат и протокол учебного центра. Объём берётся из программы; специальные компетенции выбираются отдельно.",
   },
   MANAGER_GENERAL: {
     label: "Первый руководитель / уполномоченное лицо — общие компетенции",
@@ -121,6 +136,10 @@ export const BIOT_CATEGORIES: Record<BiotCategory, BiotPreset> = {
     hint: "Не менее 40 академических часов один раз в течение срока полномочий; фиксированный срок в годах не назначается.",
   },
 };
+
+export function isSpecialBiotCategory(category?: BiotCategory): boolean {
+  return !!category && BIOT_CATEGORIES[category].program === "SPECIAL";
+}
 
 /** Calendar anniversary, without timezone conversion or invented council term. */
 export function biotValidUntil(

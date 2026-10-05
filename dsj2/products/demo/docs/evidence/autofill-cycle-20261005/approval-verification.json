@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "verifiedAtUtc": "2026-10-05T09:02:56.1869081Z",
+  "database": "demo_test_autofill_approval_20261005",
+  "endpoint": "127.0.0.1:16439",
+  "migrations": 23,
+  "migration": "202610050030_approval_resolved_snapshot",
+  "result": "PASS",
+  "checks": [
+    {
+      "suite": "approval-autofill.test.ts + approval-data-readiness.test.ts",
+      "passed": 9,
+      "failed": 0,
+      "covers": [
+        "legacy scoped and unscoped classification without GET mutations",
+        "9 assignments in 4 courses preparation and retransmission",
+        "concurrent preparation permits one writer",
+        "immutable raw payload retained",
+        "effective values frozen through director decision and render input snapshots",
+        "direct snapshot edit rejected by PostgreSQL",
+        "client frozenResolution removed from writes",
+        "new English values removed; historical English generation blocked",
+        "historical approved proposal without frozen values requires new explicit submission",
+        "scoped historical PENDING without resolvedSnapshot classified and prepared explicitly"
+      ]
+    },
+    {
+      "suite": "issuance-batches.test.ts after exact approval assignment selection correction",
+      "passed": 6,
+      "failed": 0,
+      "covers": [
+        "1",
+        "3",
+        "2+1+2",
+        "1+1+1+1",
+        "selected fact changes and tenant/revision guards"
+      ]
+    },
+    {
+      "suite": "director-approval.test.ts",
+      "passed": 7,
+      "failed": 0,
+      "covers": [
+        "concurrent autosave",
+        "imports and archive history",
+        "real DOCX/PDF generated",
+        "CMS rejection and unsigned export guard"
+      ]
+    },
+    {
+      "suite": "approval UI helpers + readiness",
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "suite": "apps/web/test/approval-issues.test.ts final regression (test-only)",
+      "passed": 3,
+      "failed": 0,
+      "newUniqueTests": 1,
+      "applicationSourceChanged": false,
+      "covers": [
+        "knowledge/proctoring one shared entry per event; explicit person overrides remain separate"
+      ]
+    }
+  ],
+  "lint": "PASS touched approval files",
+  "apiTypecheck": "PASS",
+  "webTypecheck": "PASS",
+  "productionMutations": "NONE",
+  "browserAcceptance": "ROOT AGENT",
+  "limitation": "Director full suite completed before later English policy and historical frozen-value requirement; targeted newer integration passed after these changes."
+}

@@ -3,6 +3,7 @@ import {
   courseResultText,
   isProtectedField,
   nonPassedResultKz,
+  positiveResultKz,
   factualAssessmentText,
 } from "@demo/contracts";
 
@@ -12,6 +13,48 @@ export type EventOutcomeInput = {
   knowledge?: string;
   proctoring?: string;
 };
+
+function outcomeWording(assignment: Assignment, input: EventOutcomeInput) {
+  const next = {
+    result: assignment.result,
+    resultKz: assignment.resultKz,
+    resultEn: assignment.resultEn,
+    fieldOrigins: { ...assignment.fieldOrigins },
+  };
+  for (const [key, fallback] of [
+    ["result", courseResultText(assignment.templateId, input.status)],
+    [
+      "resultKz",
+      input.status === "PASSED"
+        ? positiveResultKz(assignment.templateId)
+        : nonPassedResultKz(input.status),
+    ],
+  ] as const) {
+    const origin = assignment.fieldOrigins?.[key];
+    if (
+      origin === "CLEARED" ||
+      (isProtectedField(origin) && !assignment[key]?.trim())
+    ) {
+      next[key] = "";
+      continue;
+    }
+    const preserve =
+      input.status === "PASSED"
+        ? assignment[key]?.trim() && (isProtectedField(origin) || !origin)
+        : factualAssessmentText(assignment[key], origin);
+    if (preserve) next.fieldOrigins[key] = origin || "MANUAL";
+    else {
+      next[key] = fallback;
+      next.fieldOrigins[key] = "COURSE";
+    }
+  }
+  if (
+    input.status !== "PASSED" &&
+    !isProtectedField(assignment.fieldOrigins?.resultEn)
+  )
+    next.resultEn = "";
+  return next;
+}
 
 /** An omitted selection explicitly means every participant of this event. */
 export function eventOutcomeRecipients(
@@ -35,78 +78,51 @@ export function applyEventOutcomes(
   input: EventOutcomeInput,
 ) {
   const event = draft.events?.find((row) => row.id === eventId);
-  if (!event || (input.status !== "UNKNOWN" && !input.source.trim()))
-    throw new Error(
-      "Выберите известный результат и укажите источник подтверждения.",
-    );
+  if (!event) throw new Error("Обучение не найдено. Обновите заявку.");
+  const source =
+    input.source.trim() || "Результат указан оператором для выбранного состава";
   const selected = new Set(recipientIds);
   return draft.items.map((item) =>
     !selected.has(item.id)
       ? item
       : {
           ...item,
-          assignments: item.assignments.map((assignment) =>
-            assignment.eventId !== eventId
-              ? assignment
-              : {
-                  ...assignment,
-                  ...(event.protocolTemplateId === "biot-itr-protocol"
-                    ? {
-                        ...(input.knowledge?.trim()
-                          ? { biotKnowledgeResult: input.knowledge.trim() }
-                          : {}),
-                        ...(input.proctoring?.trim()
-                          ? { biotProctoringResult: input.proctoring.trim() }
-                          : {}),
-                      }
-                    : {}),
-                  result:
-                    input.status === "PASSED" &&
-                    assignment.result.trim() &&
-                    (isProtectedField(assignment.fieldOrigins?.result) ||
-                      !assignment.fieldOrigins?.result)
-                      ? assignment.result
-                      : input.status !== "PASSED" &&
-                          factualAssessmentText(
-                            assignment.result,
-                            assignment.fieldOrigins?.result,
-                          )
-                        ? assignment.result
-                        : courseResultText(assignment.templateId, input.status),
-                  ...(input.status !== "PASSED"
-                    ? {
-                        resultKz:
-                          factualAssessmentText(
-                            assignment.resultKz,
-                            assignment.fieldOrigins?.resultKz,
-                          ) || nonPassedResultKz(input.status),
-                        resultEn: "",
-                      }
-                    : {}),
-                  fieldOrigins: {
-                    ...assignment.fieldOrigins,
-                        outcome: "MANUAL" as const,
-                    result:
-                      input.status === "PASSED" &&
-                      assignment.result.trim() &&
-                      (isProtectedField(assignment.fieldOrigins?.result) ||
-                        !assignment.fieldOrigins?.result)
-                        ? assignment.fieldOrigins?.result || "MANUAL"
-                        : input.status !== "PASSED" &&
-                            factualAssessmentText(
-                              assignment.result,
-                              assignment.fieldOrigins?.result,
-                            )
-                          ? assignment.fieldOrigins?.result || "MANUAL"
-                          : "COURSE",
-                  },
-                  outcome: {
-                    status: input.status,
-                    source:
-                      input.status === "UNKNOWN" ? "" : input.source.trim(),
-                  },
-                },
-          ),
+          assignments: item.assignments.map((assignment) => {
+            if (assignment.eventId !== eventId) return assignment;
+            const wording = outcomeWording(assignment, input);
+            return {
+              ...assignment,
+              ...wording,
+              ...(event.protocolTemplateId === "biot-itr-protocol"
+                ? {
+                    ...(input.knowledge?.trim()
+                      ? { biotKnowledgeResult: input.knowledge.trim() }
+                      : {}),
+                    ...(input.proctoring?.trim()
+                      ? { biotProctoringResult: input.proctoring.trim() }
+                      : {}),
+                  }
+                : {}),
+              fieldOrigins: {
+                ...wording.fieldOrigins,
+                outcome: "MANUAL" as const,
+                ...(event.protocolTemplateId === "biot-itr-protocol"
+                  ? {
+                      ...(input.knowledge?.trim()
+                        ? { biotKnowledgeResult: "MANUAL" as const }
+                        : {}),
+                      ...(input.proctoring?.trim()
+                        ? { biotProctoringResult: "MANUAL" as const }
+                        : {}),
+                    }
+                  : {}),
+              },
+              outcome: {
+                status: input.status,
+                source: input.status === "UNKNOWN" ? "" : source,
+              },
+            };
+          }),
         },
   );
 }

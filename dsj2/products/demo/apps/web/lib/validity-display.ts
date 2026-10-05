@@ -26,6 +26,7 @@ export function biotCategoryDescription(
   liveRules: boolean,
 ) {
   const preset = BIOT_CATEGORIES[category];
+  if (category === "ITR_STANDARD") return preset.hint;
   if (!liveRules) return preset.hint;
   const hours = `Объём программы: не менее ${preset.minimumHours} академических часов${preset.minimumProductionHours ? ` и ${preset.minimumProductionHours} производственных часов` : ""}.`;
   const ecs = preset.requiresExternalCertificate

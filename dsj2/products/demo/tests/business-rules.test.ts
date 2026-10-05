@@ -202,8 +202,9 @@ test("direct API input cannot drop required forms or fake an indefinite expiry",
   );
 });
 
-test("English appendix requires supplied English personal fields and program, preserving KZ/RU base", () => {
+test("historical English appendix JSON remains readable with its original factual validation", () => {
   const input = applyBusinessRules(draft("ITR", "ptm-card"));
+  delete input.languagePolicy;
   input.englishAppendix = true;
   assert.ok(
     validateBusinessRules(resolveDraft(input).draft).some(
@@ -226,8 +227,9 @@ test("English appendix requires supplied English personal fields and program, pr
   assert.deepEqual(validateBusinessRules(resolveDraft(saved).draft), []);
 });
 
-test("English appendix rejects omitted factual translations and round-trips reviewed source fields", () => {
+test("historical English appendix preserves reviewed source fields without enabling English for new drafts", () => {
   const input = applyBusinessRules(draft("ITR", "biot-itr-certificate"));
+  delete input.languagePolicy;
   input.englishAppendix = true;
   Object.assign(input.items[0], {
     fullNameEn: "Test Person",

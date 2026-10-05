@@ -1,0 +1,118 @@
+{
+  "status": "PASS",
+  "requestId": "9793bcaa-f87d-465f-a40a-38f24043d1dc",
+  "files": 22,
+  "checks": [
+    {
+      "file": "ptm-card.DOCX",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "biot-worker-card.DOCX",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "biot-worker-card.PDF",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ptm-card.PDF",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "pb-card.PDF",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ps-witness.DOCX",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "pb-card.DOCX",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ps-card.DOCX",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ps-card.PDF",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ps-witness.PDF",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "biot-itr-protocol.DOCX",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "biot-itr-protocol.PDF",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ps-protocol.DOCX",
+      "verifiedRecipientNames": 20,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "biot-itr-certificate.DOCX",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "biot-itr-certificate.PDF",
+      "verifiedRecipientNames": 1,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "biot-protocol.DOCX",
+      "verifiedRecipientNames": 19,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ptm-protocol.DOCX",
+      "verifiedRecipientNames": 20,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "pb-protocol.DOCX",
+      "verifiedRecipientNames": 20,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "biot-protocol.PDF",
+      "verifiedRecipientNames": 19,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ptm-protocol.PDF",
+      "verifiedRecipientNames": 20,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "ps-protocol.PDF",
+      "verifiedRecipientNames": 20,
+      "bytesMatchApiSha256": true
+    },
+    {
+      "file": "pb-protocol.PDF",
+      "verifiedRecipientNames": 20,
+      "bytesMatchApiSha256": true
+    }
+  ],
+  "note": "Actual downloaded immutable artifacts: expected recipients in all 22 DOCX/PDF; group membership checked for every relevant participant; API hashes already asserted in Playwright."
+}

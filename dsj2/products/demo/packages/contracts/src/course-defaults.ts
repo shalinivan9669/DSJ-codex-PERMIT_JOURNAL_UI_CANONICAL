@@ -58,6 +58,12 @@ export function nonPassedResultKz(status: "UNKNOWN" | "FAILED" | "ABSENT") {
   ];
 }
 
+export function positiveResultKz(templateId: string): string {
+  return templateId.startsWith("biot-") || templateId.startsWith("ptm-")
+    ? "Өтті"
+    : "Тапсырды";
+}
+
 export const DEFAULT_POSITIVE_OUTCOME_SOURCE =
   "Стандартный положительный результат при создании назначения";
 
@@ -66,10 +72,7 @@ export const DEFAULT_POSITIVE_OUTCOME_SOURCE =
 export function positiveAssignmentDefaults(templateId: string) {
   return {
     result: courseResultText(templateId, "PASSED"),
-    resultKz:
-      templateId.startsWith("biot-") || templateId.startsWith("ptm-")
-        ? "Өтті"
-        : "Тапсырды",
+    resultKz: positiveResultKz(templateId),
     outcome: {
       status: "PASSED" as const,
       source: DEFAULT_POSITIVE_OUTCOME_SOURCE,

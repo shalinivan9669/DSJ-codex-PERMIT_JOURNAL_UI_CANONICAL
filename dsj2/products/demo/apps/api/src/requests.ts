@@ -20,6 +20,7 @@ import {
   approvalScopeValue,
   assignmentIdentityKey,
   isTechnicalBlankRecipient,
+  hasEnglishDraftValues,
   type AssignmentIdentity,
 } from "@demo/contracts";
 import { Prisma } from "@demo/database";
@@ -38,6 +39,10 @@ import {
 import { artifactAvailability } from "./storage";
 import { duplicateIssuanceWarnings } from "./duplicate-issuance";
 import { groupHeaderWorkplace } from "./group-workplace";
+import {
+  assignmentTemplateKey,
+  registeredTemplateKey,
+} from "./template-selection";
 import { replaceableImportScaffoldId } from "./import-scaffold";
 import {
   companyEmployerId,
@@ -50,6 +55,8 @@ import {
   requireApproved,
   submitProposal,
   workingRequest,
+  submittedProposalDraft,
+  needsPreparation,
 } from "./approvals";
 import { prepareSigningPolicy, signingState } from "./signing";
 import {
@@ -839,6 +846,7 @@ export async function listRequests(c: Context, query: Record<string, unknown>) {
           ? {
               proposalId: proposal.id,
               status: proposal.status,
+              needsPreparation: needsPreparation(proposal),
               proposalHash: proposal.proposalHash,
               baseRevision: proposal.baseRevision,
               submittedBy: proposal.submittedBy,
@@ -1023,6 +1031,14 @@ async function validation(
     parsedProfile,
   );
   issues.push(...resolved.issues);
+  if (hasEnglishDraftValues(draft))
+    issues.push({
+      code: "NEW_ISSUE_LANGUAGE_UNSUPPORTED",
+      path: "languagePolicy",
+      field: "languagePolicy",
+      message:
+        "Сохраните актуальную редакцию на русском и казахском языках и передайте её директору повторно",
+    });
   if (draft.businessRuleVersion === "LIVE_V1")
     for (const [row, item] of draft.items.entries())
       for (const [column, assignment] of item.assignments.entries()) {
@@ -1076,11 +1092,11 @@ async function validation(
         (t) => (t.contract as Record<string, unknown>).ownerKind !== "GROUP",
       )
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-      .map((t) => [t.templateId, t]),
+      .map((t) => [registeredTemplateKey(t), t]),
   );
   for (const item of draft.items)
     for (const assignment of item.assignments) {
-      const template = selected.get(assignment.templateId);
+      const template = selected.get(assignmentTemplateKey(assignment));
       if (!template || !template.approved)
         issues.push({
           code: "TEMPLATE_NOT_APPROVED",
@@ -1095,7 +1111,7 @@ async function validation(
         (t) => (t.contract as Record<string, unknown>).ownerKind === "GROUP",
       )
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-      .map((t) => [t.templateId, t]),
+      .map((t) => [registeredTemplateKey(t), t]),
   );
   const eventProfiles = new Map<
     string,
@@ -1136,7 +1152,9 @@ async function validation(
       documentPlan(draft).groups.find((group) => group.event.id === event.id)
         ?.members || [];
     if (!members.length) continue;
-    const template = groupSelected.get(event.protocolTemplateId);
+    const template = groupSelected.get(
+      assignmentTemplateKey(members[0].assignment, event.protocolTemplateId),
+    );
     if (!template?.approved)
       issues.push({
         code: "TEMPLATE_NOT_APPROVED",
@@ -1294,6 +1312,29 @@ export async function assertApprovalDataComplete(
       "Сначала заполните обязательные данные заявки и повторите проверку",
       checked.issues,
     );
+  return {
+    version: 1 as const,
+    resolvedAt: new Date().toISOString(),
+    draft: {
+      ...checked.draft,
+      profileVersionId: checked.profile?.id,
+      organizationSnapshots: [...checked.organizations.values()].map(
+        (organization) => ({
+          id: organization.id,
+          nameRu: organization.nameRu,
+          nameKz: organization.nameKz,
+          bin: organization.bin,
+          addressRu: organization.addressRu,
+          addressKz: organization.addressKz,
+        }),
+      ),
+      items: checked.draft.items.map((item) => ({
+        ...item,
+        ...employerFields(item, checked.customer, checked.organizations),
+      })),
+    },
+    provenance: checked.provenance,
+  };
 }
 
 /** Read-only view of the submitted payload through the same print-data resolver. */
@@ -1355,7 +1396,7 @@ async function prepareLayout(
         const column = item.assignments.findIndex(
           (entry) => entry.id === assignment.id,
         );
-        const template = v.selected.get(assignment.templateId)!;
+        const template = v.selected.get(assignmentTemplateKey(assignment))!;
         const linkedProtocol =
           assignment.protocolMode === "GROUP" ||
           item.assignments.some(
@@ -1422,7 +1463,9 @@ async function prepareLayout(
       }),
   );
   for (const { event, members } of documentPlan(v.draft).groups) {
-    const template = v.groupSelected.get(event.protocolTemplateId)!;
+    const template = v.groupSelected.get(
+      assignmentTemplateKey(members[0].assignment, event.protocolTemplateId),
+    )!;
     const rows = members.map(({ item, assignment }) => ({
       ...item,
       ...employerFields(item, customer, organizations),
@@ -1705,8 +1748,16 @@ export async function finalize(
       OR: [{ scopeHash: requestedScopeHash }, { scopeHash: null }],
     },
   });
-  if (before.status === "DRAFT" && !matchingIssuance)
-    await requireApproved(c, id, data.expectedRevision, db, data.assignments);
+  const checkedApproval =
+    before.status === "DRAFT" && !matchingIssuance
+      ? await requireApproved(
+          c,
+          id,
+          data.expectedRevision,
+          db,
+          data.assignments,
+        )
+      : null;
   let layoutFingerprint: string | undefined;
   if (before.status === "DRAFT" && !matchingIssuance) {
     const checked = await validation(
@@ -1714,7 +1765,10 @@ export async function finalize(
       c,
       id,
       data.expectedRevision,
-      data.assignments,
+      (checkedApproval?.assignments as AssignmentIdentity[] | null) ||
+        data.assignments,
+      false,
+      checkedApproval ? submittedProposalDraft(checkedApproval) : undefined,
     );
     if (!checked.issues.length)
       layoutFingerprint = await checkLayout(c, checked);
@@ -1813,7 +1867,10 @@ export async function finalize(
       c,
       id,
       data.expectedRevision,
-      data.assignments,
+      (approvedProposal.assignments as AssignmentIdentity[] | null) ||
+        data.assignments,
+      false,
+      submittedProposalDraft(approvedProposal),
     );
     if (v.issues.length || !v.profile || !v.parsedProfile)
       fail(
@@ -1917,7 +1974,7 @@ export async function finalize(
     }> = [];
     for (const { item, assignment } of documentPlan(v.draft).individuals) {
       const documentId = randomUUID();
-      const template = v.selected.get(assignment.templateId)!;
+      const template = v.selected.get(assignmentTemplateKey(assignment))!;
       const number = await reserve(
         tx,
         c,
@@ -1969,7 +2026,9 @@ export async function finalize(
     for (const group of documentPlan(v.draft).groups) {
       const { event, members } = group;
       const documentId = randomUUID();
-      const template = v.groupSelected.get(event.protocolTemplateId)!;
+      const template = v.groupSelected.get(
+        assignmentTemplateKey(members[0].assignment, event.protocolTemplateId),
+      )!;
       const number = await reserve(
         tx,
         c,
@@ -2343,7 +2402,7 @@ export async function preview(c: Context, id: string, input: unknown) {
         ? (proposal.assignments as AssignmentIdentity[])
         : undefined,
       !proposal,
-      proposal ? parse(draftSchema, proposal.payload) : undefined,
+      proposal ? submittedProposalDraft(proposal) : undefined,
     );
     const previewKey = proposal
       ? `approval-preview:${proposal.id}:${proposal.proposalHash}`
@@ -2358,6 +2417,7 @@ export async function preview(c: Context, id: string, input: unknown) {
         "BIOT_UNIQUE_NUMBER_CONFLICT",
         "BIOT_CREDENTIAL_AMBIGUOUS",
         "DATE_INVALID",
+        "NEW_ISSUE_LANGUAGE_UNSUPPORTED",
       ].includes(issue.code),
     );
     if (previewIssues.length)
@@ -2389,7 +2449,7 @@ export async function preview(c: Context, id: string, input: unknown) {
           )
         )
           continue;
-        const template = v.selected.get(assignment.templateId);
+        const template = v.selected.get(assignmentTemplateKey(assignment));
         if (!template) fail(422, "TEMPLATE_REQUIRED", "Шаблон отсутствует");
         const logicalKey = `${previewKey}:${v.profile.id}:${template.id}:${item.id}:${assignment.id}:${organizationFingerprint}`;
         const previous = await tx.generationJob.findMany({
@@ -2455,7 +2515,9 @@ export async function preview(c: Context, id: string, input: unknown) {
           );
       }
     for (const { event, members } of documentPlan(v.draft).groups) {
-      const template = v.groupSelected.get(event.protocolTemplateId);
+      const template = v.groupSelected.get(
+        assignmentTemplateKey(members[0].assignment, event.protocolTemplateId),
+      );
       if (!template)
         fail(422, "TEMPLATE_REQUIRED", "Групповой шаблон отсутствует");
       const logicalKey = `${previewKey}:${v.profile.id}:${template.id}:group:${event.id}:${organizationFingerprint}:header-v1`;

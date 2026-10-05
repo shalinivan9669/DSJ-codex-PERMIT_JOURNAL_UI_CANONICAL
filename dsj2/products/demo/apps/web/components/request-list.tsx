@@ -25,6 +25,7 @@ export const statusNames: Record<string, string> = {
   READY: "Готово",
   QUEUED: "В очереди",
   PENDING: "На согласовании",
+  NEEDS_PREPARATION: "Требует подготовки",
   APPROVED: "Согласовано",
   REJECTED: "На доработке",
   SUPERSEDED: "Заменено новой редакцией",
@@ -67,7 +68,7 @@ type RequestSummary = {
   createdAt?: string;
   archived?: boolean;
   lifecycle?: string | null;
-  approval?: { status: string } | null;
+  approval?: { status: string; needsPreparation?: boolean } | null;
   customer?: Customer;
   customerName?: string | null;
 };
@@ -241,7 +242,10 @@ export function RequestList({
                     <Status
                       value={
                         row.lifecycle ||
-                        (row.status === "DRAFT" && row.approval?.status) ||
+                        (row.status === "DRAFT" &&
+                          (row.approval?.needsPreparation
+                            ? "NEEDS_PREPARATION"
+                            : row.approval?.status)) ||
                         row.status
                       }
                     />

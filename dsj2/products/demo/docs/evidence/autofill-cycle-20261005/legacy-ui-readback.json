@@ -1,0 +1,22 @@
+{
+  "synthetic": true,
+  "readOnly": true,
+  "at": "2026-10-05T09:25:21.257Z",
+  "requestId": "57e00b3b-f84e-4385-8f6f-694f9b5c086a",
+  "oldProposalId": "277b85bd-6a3e-4f49-86a3-2145b58cb2d0",
+  "oldStatus": "SUPERSEDED",
+  "oldPayloadSha256": "fc39eb16e52e9e24ec3dc92d443bfc882f0c541bb305ee6614b7c3e40a191bbb",
+  "oldPayloadUnchanged": true,
+  "oldResolvedSnapshot": null,
+  "oldUnknownCount": 9,
+  "newProposalId": "1256ff0c-8ec3-49af-9bfc-5f325534924d",
+  "newRevision": 13,
+  "newStatus": "PENDING",
+  "newScopeCount": 9,
+  "snapshotEvents": 4,
+  "snapshotPresent": true,
+  "needsPreparation": false,
+  "workingRevision": 13,
+  "reviewIssueCount": 0,
+  "reviewUnavailable": false
+}

@@ -50,7 +50,7 @@ export function ApprovalReviewPanel({
             <tr>
               <th>Обучение и состав</th>
               <th>Даты и часы</th>
-              <th>Результат и источник</th>
+              <th>Результат</th>
             </tr>
           </thead>
           <tbody>
@@ -78,7 +78,10 @@ export function ApprovalReviewPanel({
                 <td>
                   {values(course.results)}
                   <br />
-                  <small>{values(course.sources)}</small>
+                  <details>
+                    <summary>Источники значений</summary>
+                    {values(course.sources)}
+                  </details>
                   {course.exceptions.size > 0 && (
                     <p>
                       Индивидуальные значения: {course.exceptions.size} человек

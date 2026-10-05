@@ -82,6 +82,14 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
         }),
       ).toHaveAttribute("aria-pressed", "true");
     }
+    // A configured centre calendar requires real programme hours. They are
+    // entered once through the course UI only when that rule is active.
+    for (const course of ["ПТМ", "ПБ"]) {
+      const hours = page.getByLabel(`${course} · Часы программы`, {
+        exact: true,
+      });
+      if (await hours.count()) await hours.fill("16");
+    }
     await expect
       .poll(async () => {
         const saved = await readDraft(page, id);
@@ -186,7 +194,8 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
     const validated = page.waitForResponse(
       (response) =>
         response.request().method() === "POST" &&
-        response.url().endsWith(`/print-requests/${id}/validate`),
+        response.url().endsWith(`/print-requests/${id}/approval/submit`),
+      { timeout: 210000 },
     );
     await panel
       .getByRole("button", {
@@ -195,10 +204,12 @@ test("ordinary new request keeps positive BIOT PTM PB defaults and saved BIOT 10
       })
       .click();
     const validationResponse = await validated;
-    expect(validationResponse.ok()).toBe(true);
+    expect(validationResponse.ok(), await validationResponse.text()).toBe(true);
     const validation = await validationResponse.json();
-    expect(validation.valid, JSON.stringify(validation.issues)).toBe(true);
-    expect(validation.issues).toEqual([]);
+    expect(validation.approval.status).toBe("PENDING");
+    expect(validation.approval.assignments).toHaveLength(
+      saved.items.reduce((total, row) => total + row.assignments.length, 0),
+    );
     await expect
       .poll(async () => (await readDraft(page, id)).approval?.status)
       .toBe("PENDING");

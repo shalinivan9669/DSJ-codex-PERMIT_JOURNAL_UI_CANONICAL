@@ -31,18 +31,17 @@ export function Settings({
   const [tab, setTab] = useState(
     canManageCenter(context.user.role) ? "profile" : "account",
   );
-  const tabs =
-    canManageCenter(context.user.role)
-      ? [
-          ["profile", "Учебный центр"],
-          ["templates", "Формы"],
-          ["numbering", "Нумерация"],
-          ["users", "Пользователи"],
-          ["signatories", "Подписанты ЭЦП"],
-          ["export", "Полная выгрузка"],
-          ["account", "Мой пароль"],
-        ]
-      : [["account", "Мой пароль"]];
+  const tabs = canManageCenter(context.user.role)
+    ? [
+        ["profile", "Учебный центр"],
+        ["templates", "Формы"],
+        ["numbering", "Нумерация"],
+        ["users", "Пользователи"],
+        ["signatories", "Подписанты ЭЦП"],
+        ["export", "Полная выгрузка"],
+        ["account", "Мой пароль"],
+      ]
+    : [["account", "Мой пароль"]];
   return (
     <>
       <div className="page-heading">
@@ -194,12 +193,10 @@ export function ProfileForm({
         {[
           ["bin", "БИН учебного центра"],
           ["headName", "ФИО руководителя учебного центра"],
-          ["headNameEn", "ФИО руководителя латиницей · EN"],
+
           ["cityRu", "Город · RU"],
           ["cityKz", "Город · KZ"],
-          ["nameEn", "Название учебного центра · EN"],
-          ["cityEn", "Город · EN"],
-          ["addressEn", "Адрес · EN"],
+
           ["addressRu", "Адрес · RU"],
           ["addressKz", "Адрес · KZ"],
         ].map(([key, label]) => (
@@ -246,13 +243,7 @@ export function ProfileForm({
             : "Добавить председателя"}
         </button>
       </div>
-      <label>
-        Основание утверждения / полномочий · EN
-        <textarea
-          value={value.approvalBasisEn || ""}
-          onChange={(event) => change({ approvalBasisEn: event.target.value })}
-        />
-      </label>
+
       {value.commission.length === 0 && (
         <p className="muted">
           Состав комиссии не указан. Внесите фактические утверждённые данные.
@@ -310,38 +301,6 @@ export function ProfileForm({
             >
               Удалить
             </button>
-          </div>
-          <div className="form-grid english-fields">
-            <label>
-              ФИО латиницей · EN
-              <input
-                value={person.nameEn || ""}
-                onChange={(event) =>
-                  change({
-                    commission: value.commission.map((row, i) =>
-                      i === index
-                        ? { ...row, nameEn: event.target.value }
-                        : row,
-                    ),
-                  })
-                }
-              />
-            </label>
-            <label>
-              Роль / должность · EN
-              <input
-                value={person.positionEn || ""}
-                onChange={(event) =>
-                  change({
-                    commission: value.commission.map((row, i) =>
-                      i === index
-                        ? { ...row, positionEn: event.target.value }
-                        : row,
-                    ),
-                  })
-                }
-              />
-            </label>
           </div>
         </div>
       ))}
@@ -502,6 +461,8 @@ export function Templates({ initial }: { initial: Template[] }) {
                     template.title ||
                     template.name ||
                     template.id}
+                {template.contract?.program === "SPECIAL" &&
+                  " — специальные компетенции"}
               </h3>
               <p>
                 Версия {template.version || "1"} ·{" "}
@@ -512,11 +473,19 @@ export function Templates({ initial }: { initial: Template[] }) {
                 ).join(", ")}
               </p>
               {template.description && <p>{template.description}</p>}
-              {typeof (
-                template.contract?.regulatoryReview as
-                  | { notice?: unknown }
-                  | undefined
-              )?.notice === "string" ? (
+              {template.contract?.program === "SPECIAL" ? (
+                <Notice kind="info">
+                  Этот вариант выбирается только для программы специальных
+                  компетенций. Сертификат содержит отрасль, а протокол — БИН и
+                  адрес работодателя, фактические результаты проверки знаний и
+                  прокторинга. Применимость формы подтверждает ответственный
+                  сотрудник центра.
+                </Notice>
+              ) : typeof (
+                  template.contract?.regulatoryReview as
+                    | { notice?: unknown }
+                    | undefined
+                )?.notice === "string" ? (
                 <Notice kind="info">
                   {String(
                     (template.contract?.regulatoryReview as { notice: string })
@@ -527,8 +496,8 @@ export function Templates({ initial }: { initial: Template[] }) {
                 <Notice kind="info">
                   Исторические макеты БиОТ не подтверждены редакцией правил с
                   12.07.2026. Текущая форма протокола рабочих профессий содержит
-                  7 колонок. Отметка директора не исправляет несовпадение
-                  формы; требуется актуальный макет, проверенный уполномоченным
+                  7 колонок. Отметка директора не исправляет несовпадение формы;
+                  требуется актуальный макет, проверенный уполномоченным
                   сотрудником для соответствующей категории получателей.{" "}
                   <a
                     href="https://old.adilet.zan.kz/rus/docs/V1500012665"

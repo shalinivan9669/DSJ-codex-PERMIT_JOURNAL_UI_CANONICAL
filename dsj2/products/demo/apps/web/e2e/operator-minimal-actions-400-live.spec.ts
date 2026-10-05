@@ -161,10 +161,14 @@ test("one actual 400-row Excel upload, common courses and one director decision 
       ).toHaveAttribute("aria-pressed", "true");
       actions.push(`Назначить ${course} один раз всему составу`);
     }
+    const coursesWithRequiredHours: string[] = [];
     for (const course of resumedId ? [] : ["ПТМ", "ПБ"]) {
-      await page
-        .getByLabel(`${course} · Часы программы`, { exact: true })
-        .fill("16");
+      const hours = page.getByLabel(`${course} · Часы программы`, {
+        exact: true,
+      });
+      if (!(await hours.count())) continue;
+      await hours.fill("16");
+      coursesWithRequiredHours.push(course === "ПТМ" ? "PTM" : "PB");
       actions.push(
         `Ввести синтетические 16 часов для ${course} один раз всему составу: фактические часы неизвестны и не выводятся из названия курса`,
       );
@@ -173,7 +177,7 @@ test("one actual 400-row Excel upload, common courses and one director decision 
       .poll(async () => {
         const saved = await readDraft(page, id);
         return (
-          ["PTM", "PB"].every((direction) =>
+          coursesWithRequiredHours.every((direction) =>
             saved.events?.some(
               (event) =>
                 trainingDirection(event.protocolTemplateId) === direction &&
@@ -241,7 +245,7 @@ test("one actual 400-row Excel upload, common courses and one director decision 
     const validated = page.waitForResponse(
       (response) =>
         response.request().method() === "POST" &&
-        response.url().endsWith(`/print-requests/${id}/validate`),
+        response.url().endsWith(`/print-requests/${id}/approval/submit`),
       { timeout: 220_000 },
     );
     const validationStarted = Date.now();
@@ -253,8 +257,13 @@ test("one actual 400-row Excel upload, common courses and one director decision 
     const validationElapsedMs = Date.now() - validationStarted;
     expect(validationResponse.ok(), await validationResponse.text()).toBe(true);
     const validation = await validationResponse.json();
-    expect(validation.valid, JSON.stringify(validation.issues)).toBe(true);
-    expect(validation.documentCount).toBe(1203);
+    expect(validation.approval.status).toBe("PENDING");
+    expect(validation.approval.assignments).toHaveLength(
+      saved.items.reduce((total, row) => total + row.assignments.length, 0),
+    );
+    await expect(
+      page.getByRole("region", { name: "Проверка заполнения", exact: true }),
+    ).toContainText("1203 документов");
     await expect
       .poll(async () => (await readDraft(page, id)).approval?.status, {
         timeout: 210_000,

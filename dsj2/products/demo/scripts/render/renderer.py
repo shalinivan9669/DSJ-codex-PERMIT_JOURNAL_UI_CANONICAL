@@ -576,6 +576,7 @@ def render_one(snapshot,item,template):
 def resolve_template(snapshot):
     manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
     pool=manifest.get('groupTemplates',[]) if snapshot.get('groupEvent') else manifest['templates']
+    pool=[*pool,*[t for t in manifest.get('specialTemplates',[]) if (t.get('ownerKind')=='GROUP')==bool(snapshot.get('groupEvent'))]]
     template=next((t for t in pool if t['id']==snapshot['templateId'] and (snapshot.get('templateStorageKey') or str(t['version'])==str(snapshot.get('templateVersion',1)))),None)
     if not template: raise ValueError('TEMPLATE_VERSION_UNKNOWN')
     if snapshot.get('templateStorageKey'):
@@ -726,7 +727,7 @@ def runtime_health(out):
     for package,version in [('Pillow','12.3.0'),('lxml','6.1.1'),('openpyxl','3.1.5'),('defusedxml','0.7.1'),('qrcode','8.2')]:
         if importlib.metadata.version(package)!=version:raise ValueError('PYTHON_DEPENDENCY_VERSION_MISMATCH')
     manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf8'))
-    for t in [*manifest['templates'],*manifest.get('groupTemplates',[])]:
+    for t in [*manifest['templates'],*manifest.get('groupTemplates',[]),*manifest.get('specialTemplates',[])]:
         if hashlib.sha256((ROOT/'assets/templates'/t['file']).read_bytes()).hexdigest()!=t['sha256']:raise ValueError('TEMPLATE_HASH_MISMATCH')
     fonts=json.loads((ROOT/'assets/fonts/manifest.json').read_text(encoding='utf8'))
     for filename,checksum in fonts['files'].items():

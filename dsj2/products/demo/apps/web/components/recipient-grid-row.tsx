@@ -8,6 +8,7 @@ import {
   type RefObject,
 } from "react";
 import { Icon } from "@demo/ui";
+import { isSpecialBiotCategory } from "@demo/contracts";
 import type { GridField } from "@/lib/grid-paste";
 import type { Recipient } from "@/lib/types";
 import {
@@ -160,7 +161,9 @@ export const RecipientGridRow = memo(
               ?.shortLabel || template,
         )
         .join(", ") || "Выбрать обучение";
-    const itr = templates.includes("biot-itr-protocol");
+    const itr = resolvedItem.assignments.some((assignment) =>
+      isSpecialBiotCategory(assignment.biotCategory),
+    );
     const visibleEmployerFields = employerFields.filter(
       ([field]) =>
         field !== "workplaceRu" ||

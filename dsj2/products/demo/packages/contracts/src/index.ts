@@ -12,6 +12,7 @@ export * from "./date-calculation";
 export * from "./registration";
 export * from "./business-rules";
 export * from "./course-defaults";
+export * from "./document-languages";
 export * from "./roles";
 export * from "./import-scaffold";
 export const LIMITS = {
@@ -283,7 +284,7 @@ export const organizationSnapshotSchema = z
   })
   .strict();
 export type OrganizationSnapshot = z.infer<typeof organizationSnapshotSchema>;
-export const draftSchema = z
+const unfrozenDraftSchema = z
   .object({
     kind: z.enum(["PERSON", "COMPANY"]),
     title: z.string().max(255).default(""),
@@ -295,6 +296,7 @@ export const draftSchema = z
     demoMode: z.boolean().default(false),
     businessRuleVersion: z.literal("LIVE_V1").optional(),
     englishAppendix: z.boolean().optional(),
+    languagePolicy: z.literal("RU_KZ").optional(),
     schemaVersion: z.literal(2).optional(),
     profileVersionId: z.string().max(80).optional(),
     presetFields: commonFieldsSchema.optional(),
@@ -349,6 +351,34 @@ export const draftSchema = z
         });
     }
   });
+export const draftSchema = unfrozenDraftSchema.safeExtend({
+  frozenResolution: z
+    .object({
+      version: z.literal(1),
+      resolvedAt: z.string(),
+      draft: unfrozenDraftSchema,
+      provenance: z.record(
+        z.string(),
+        z.record(
+          z.string(),
+          z.enum([
+            "COURSE",
+            "CENTER",
+            "PRESET",
+            "REQUEST",
+            "EVENT",
+            "MANUAL",
+            "IMPORTED",
+            "AUTO",
+            "CLEARED",
+          ]),
+        ),
+      ),
+    })
+    .strict()
+    .optional(),
+});
+
 export const patchSchema = z
   .object({
     expectedRevision: z.number().int().nonnegative(),
@@ -928,7 +958,7 @@ export const TEMPLATE_LABELS: Record<(typeof templateIds)[number], string> = {
   "biot-worker-card": "БиОТ — удостоверение рабочего",
   "biot-itr-certificate": "БиОТ — сертификат ИТР",
   "biot-protocol": "БиОТ — индивидуальный протокол",
-  "biot-itr-protocol": "БиОТ — протокол специальных компетенций ИТР",
+  "biot-itr-protocol": "БиОТ — протокол ИТР",
   "ptm-card": "ПТМ — удостоверение",
   "ptm-protocol": "ПТМ — индивидуальный протокол",
   "pb-card": "ПБ — удостоверение",

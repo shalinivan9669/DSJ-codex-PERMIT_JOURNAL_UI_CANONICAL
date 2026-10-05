@@ -659,6 +659,7 @@ model RequestProposal {
   baseRevision Int
   operation String @default("SAVE")
   payload Json
+  resolvedSnapshot Json?
   before Json
   diff Json
   proposalHash String

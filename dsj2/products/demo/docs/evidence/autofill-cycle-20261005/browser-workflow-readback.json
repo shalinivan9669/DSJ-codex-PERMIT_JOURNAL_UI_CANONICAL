@@ -1,0 +1,338 @@
+{
+  "status": "PASS_LOCAL_WITH_RECORDED_TIMEOUT_AND_SAME_REQUEST_RESUME",
+  "buildId": "gVC7Zgp2WckAGi0Tyx9zV",
+  "freshThreeCaseRun": {
+    "passed": 2,
+    "failed": 1,
+    "skipped": 0,
+    "singleUninterruptedPass": false,
+    "failure": "Ручной UI20 достиг FINALIZED с 105 документами; ORIGINAL_RENDER_TIMEOUT на продолжающей работать очереди. Тестовый лимит ожидания исчерпан до завершения файлов; исходный отрицательный результат сохранён.",
+    "log": ".runtime/autofill-cycle-20261005/browser-final-three.log"
+  },
+  "excel400": {
+    "status": "PASS",
+    "requestId": "b61d5a51-91c1-47af-8cec-279e536b7a4f",
+    "people": 400,
+    "elapsedMs": 36960,
+    "unifiedSubmissionElapsedMs": 4019,
+    "actions": [
+      "Выбрать организацию и создать одну заявку",
+      "Ввести неизвестное название компании один раз",
+      "Выбрать настоящий XLSX с 400 людьми; автоматическое чтение и сопоставление",
+      "Подтвердить весь состав одним действием",
+      "Назначить БиОТ один раз всему составу",
+      "Назначить ПТМ один раз всему составу",
+      "Назначить ПБ один раз всему составу",
+      "Ввести синтетические 16 часов для ПТМ один раз всему составу: фактические часы неизвестны и не выводятся из названия курса",
+      "Ввести синтетические 16 часов для ПБ один раз всему составу: фактические часы неизвестны и не выводятся из названия курса",
+      "Проверить готовый состав и передать директору одной командой",
+      "Директор: открыть готовую редакцию, просмотреть, согласовать одной командой"
+    ],
+    "workflowStages": 11,
+    "directorDecisions": 1,
+    "perPersonDialogs": 0,
+    "repeatedCommonInputs": 0,
+    "manualFileSplits": 0,
+    "filesActuallyRendered": 0
+  },
+  "ordinaryNewRequest": {
+    "status": "PASS",
+    "requestId": "cad18c3b-d266-48cd-9702-ec5c6129951f",
+    "synthetic": true,
+    "createdThroughUi": true,
+    "submittedThroughUi": true,
+    "approvedThroughUi": true,
+    "approvalStatus": "APPROVED",
+    "savedRevision": 2,
+    "approvedRevision": 2,
+    "savedCommonFields": {
+      "hours": "10",
+      "productionHours": "16",
+      "biotCategory": "WORKER",
+      "biotCheckType": "PERIODIC"
+    },
+    "defaults": [
+      {
+        "id": "f780f353-bb9b-4514-aa83-b1dd27ae9973",
+        "templateId": "biot-worker-card",
+        "result": "Өтті/прошел",
+        "resultKz": "Өтті",
+        "outcome": {
+          "status": "PASSED",
+          "source": "Стандартный положительный результат при создании назначения",
+          "confirmedBy": "944fdbb5-91cf-4190-99e6-0bb48f664052",
+          "confirmedAt": "2026-10-05T09:22:59.362Z"
+        }
+      },
+      {
+        "id": "f780f353-bb9b-4514-aa83-b1dd27ae9973-biot-protocol",
+        "templateId": "biot-protocol",
+        "result": "Өтті/прошел",
+        "resultKz": "Өтті",
+        "outcome": {
+          "status": "PASSED",
+          "source": "Стандартный положительный результат при создании назначения",
+          "confirmedBy": "944fdbb5-91cf-4190-99e6-0bb48f664052",
+          "confirmedAt": "2026-10-05T09:22:59.362Z"
+        }
+      },
+      {
+        "id": "bd759c69-8a4b-4394-b340-e7476854aa77",
+        "templateId": "ptm-card",
+        "result": "Прошел/ Өтті",
+        "resultKz": "Өтті",
+        "outcome": {
+          "status": "PASSED",
+          "source": "Стандартный положительный результат при создании назначения",
+          "confirmedBy": "944fdbb5-91cf-4190-99e6-0bb48f664052",
+          "confirmedAt": "2026-10-05T09:22:59.362Z"
+        }
+      },
+      {
+        "id": "bd759c69-8a4b-4394-b340-e7476854aa77-ptm-protocol",
+        "templateId": "ptm-protocol",
+        "result": "Прошел/ Өтті",
+        "resultKz": "Өтті",
+        "outcome": {
+          "status": "PASSED",
+          "source": "Стандартный положительный результат при создании назначения",
+          "confirmedBy": "944fdbb5-91cf-4190-99e6-0bb48f664052",
+          "confirmedAt": "2026-10-05T09:22:59.362Z"
+        }
+      },
+      {
+        "id": "5e84f24f-a7ff-4398-bc22-d02ae6b61248",
+        "templateId": "pb-card",
+        "result": "Тапсырды/сдал",
+        "resultKz": "Тапсырды",
+        "outcome": {
+          "status": "PASSED",
+          "source": "Стандартный положительный результат при создании назначения",
+          "confirmedBy": "944fdbb5-91cf-4190-99e6-0bb48f664052",
+          "confirmedAt": "2026-10-05T09:22:59.362Z"
+        }
+      },
+      {
+        "id": "5e84f24f-a7ff-4398-bc22-d02ae6b61248-pb-protocol",
+        "templateId": "pb-protocol",
+        "result": "Тапсырды/сдал",
+        "resultKz": "Тапсырды",
+        "outcome": {
+          "status": "PASSED",
+          "source": "Стандартный положительный результат при создании назначения",
+          "confirmedBy": "944fdbb5-91cf-4190-99e6-0bb48f664052",
+          "confirmedAt": "2026-10-05T09:22:59.362Z"
+        }
+      }
+    ],
+    "playwrightSeconds": 6.1
+  },
+  "exceptions": {
+    "status": "PASS",
+    "playwrightSeconds": 6.7,
+    "readback": {
+      "requestId": "63fa7bd2-e24d-48b3-856b-f7711880312f",
+      "sourceRecipientId": "975c0631-93e0-44b8-8cb2-a33eb5264dea",
+      "elapsedMs": 5918,
+      "inputViaUiOnly": true,
+      "profileChanged": false,
+      "status": "DRAFT",
+      "approval": null,
+      "preservedPartialRow": true,
+      "technicalBlankExcludedFromIssuanceScope": true,
+      "sourceRecordUnchanged": true,
+      "outcomes": {
+        "BIOT": "UNKNOWN",
+        "PTM": "FAILED",
+        "PB": "ABSENT"
+      },
+      "manualValidity": "2030-12-31",
+      "validityOrigin": "MANUAL",
+      "hours": "",
+      "hoursOrigin": "CLEARED",
+      "commonDate": "2026-10-15"
+    }
+  },
+  "manual20": {
+    "status": "PASS_SAME_REQUEST_RESUME",
+    "requestId": "9793bcaa-f87d-465f-a40a-38f24043d1dc",
+    "people": 20,
+    "courses": 5,
+    "numberedDocuments": 105,
+    "originalJobs": {
+      "total": 212,
+      "succeeded": 212,
+      "failed": 0,
+      "byKind": {
+        "DOCX": 105,
+        "PDF": 105,
+        "XLSX": 1,
+        "ZIP": 1
+      }
+    },
+    "noApiPrefill": true,
+    "resumedAfterRenderTimeout": true,
+    "sameRequestNoDuplicateCreationOrIssuance": true,
+    "resumePlaywrightSeconds": 35.5,
+    "resumeRunnerSeconds": 38.8,
+    "localWorkersInitially": 1,
+    "localWorkersWhileCompleting": 4,
+    "snapshotLanguagePolicy": "RU_KZ",
+    "snapshotEnglishAppendix": false,
+    "snapshotOnlyRuKzAndOrdinaryItrVerified": true,
+    "savedDatesAndProtocolDateVerified": true,
+    "downloadedExamples": [
+      {
+        "formAndFormat": "ptm-card.DOCX",
+        "file": "example-ptm-card.docx",
+        "bytes": 19875,
+        "sha256": "5f203446e72cd9f45a112fecf11ecd0ba5d203cb426b317a4f5b9a2a3de87acc"
+      },
+      {
+        "formAndFormat": "biot-worker-card.DOCX",
+        "file": "example-biot-worker-card.docx",
+        "bytes": 18611,
+        "sha256": "b48c67d4c44412b2bbbf93fddec7d78e2fbba424abd1940d1aaf4371a0948cb4"
+      },
+      {
+        "formAndFormat": "biot-worker-card.PDF",
+        "file": "example-biot-worker-card.pdf",
+        "bytes": 103018,
+        "sha256": "5f45e913500b03b5bcb3c5a5ad5db2c09a6ba273f6c839c94c823324023cd53f"
+      },
+      {
+        "formAndFormat": "ptm-card.PDF",
+        "file": "example-ptm-card.pdf",
+        "bytes": 74565,
+        "sha256": "838806efe6c929b3b5052f40b2d22aa4cddd5fb18b160ca61785a271964bca43"
+      },
+      {
+        "formAndFormat": "pb-card.PDF",
+        "file": "example-pb-card.pdf",
+        "bytes": 115106,
+        "sha256": "d7509fd13aa99395ea9da456f161f8d14a0cfdedfaf0f73ab6ce2efe39338c4d"
+      },
+      {
+        "formAndFormat": "ps-witness.DOCX",
+        "file": "example-ps-witness.docx",
+        "bytes": 14758,
+        "sha256": "16940ed8089400f706412ae895d70e9d2c78d0223f83a90b792b9dbecd01cc02"
+      },
+      {
+        "formAndFormat": "pb-card.DOCX",
+        "file": "example-pb-card.docx",
+        "bytes": 21483,
+        "sha256": "62c75810cb52bd689ee4f78109e1b88f32f85c9f651f2376b37072529a6c0c84"
+      },
+      {
+        "formAndFormat": "ps-card.DOCX",
+        "file": "example-ps-card.docx",
+        "bytes": 23726,
+        "sha256": "a0de10324aecf7f342cbc659e0fa2a8c90d0cf56e1de66db1e23538743ffe49e"
+      },
+      {
+        "formAndFormat": "ps-card.PDF",
+        "file": "example-ps-card.pdf",
+        "bytes": 134898,
+        "sha256": "bd3aa074ca8825d5d5e0b1ae7bd80511ba2aeb582bfff051453ba265a3696342"
+      },
+      {
+        "formAndFormat": "ps-witness.PDF",
+        "file": "example-ps-witness.pdf",
+        "bytes": 111390,
+        "sha256": "d7041ab3cd4fd6c4bcb61e98ab742f455d47eebef8cc3eb18a93903d9f8f37b7"
+      },
+      {
+        "formAndFormat": "biot-itr-protocol.DOCX",
+        "file": "example-biot-itr-protocol.docx",
+        "bytes": 25382,
+        "sha256": "c61fc69677b2904e466d022bdbb63c17309d49cdcb7351e116398f531a19c160"
+      },
+      {
+        "formAndFormat": "biot-itr-protocol.PDF",
+        "file": "example-biot-itr-protocol.pdf",
+        "bytes": 119470,
+        "sha256": "21e8dcd7d30db71cc9aab2538282f3fbcd58503b6606380660ef9f6f2a60b719"
+      },
+      {
+        "formAndFormat": "ps-protocol.DOCX",
+        "file": "example-ps-protocol.docx",
+        "bytes": 23164,
+        "sha256": "37e1635b922e096cebf2e444176a1a6c2c9b1c20ce65b558fd332c25d132cd43"
+      },
+      {
+        "formAndFormat": "biot-itr-certificate.DOCX",
+        "file": "example-biot-itr-certificate.docx",
+        "bytes": 17887,
+        "sha256": "cc68d498184bef546f2207a0e67a4ce6ae7c949d92a73aacb421e4cee0b9ae05"
+      },
+      {
+        "formAndFormat": "biot-itr-certificate.PDF",
+        "file": "example-biot-itr-certificate.pdf",
+        "bytes": 56243,
+        "sha256": "1aa0ddf869188d0613bd599306fbec772b22d05336f851ad151e55f401c6eef0"
+      },
+      {
+        "formAndFormat": "biot-protocol.DOCX",
+        "file": "example-biot-protocol.docx",
+        "bytes": 29917,
+        "sha256": "b2617061798128ce3dce80678c59ffd5d72a410ec493953cdde8c37d4fc6c642"
+      },
+      {
+        "formAndFormat": "ptm-protocol.DOCX",
+        "file": "example-ptm-protocol.docx",
+        "bytes": 7053806,
+        "sha256": "56615184bc062b3a29ef718e129c33e00639effc139d5c071f3359cc72ad1ea2"
+      },
+      {
+        "formAndFormat": "pb-protocol.DOCX",
+        "file": "example-pb-protocol.docx",
+        "bytes": 7567074,
+        "sha256": "dc32e2101b9ac7f6e8c70b3e0ae45ae690776b370d655fa9f894522eefd4d8d7"
+      },
+      {
+        "formAndFormat": "biot-protocol.PDF",
+        "file": "example-biot-protocol.pdf",
+        "bytes": 183017,
+        "sha256": "3002666db469346c980e250c95813420b5e6a944daaa9c566b8b4c30e19e39d2"
+      },
+      {
+        "formAndFormat": "ptm-protocol.PDF",
+        "file": "example-ptm-protocol.pdf",
+        "bytes": 195224,
+        "sha256": "44a442fb7bd0e2a90aae52d637a647dddb00cd55b18b950617c39a4ec36ba0d9"
+      },
+      {
+        "formAndFormat": "ps-protocol.PDF",
+        "file": "example-ps-protocol.pdf",
+        "bytes": 164589,
+        "sha256": "f9f4451975c30457ac2418b2431a23a9b6cd6edf9720448113b73e34974a4142"
+      },
+      {
+        "formAndFormat": "pb-protocol.PDF",
+        "file": "example-pb-protocol.pdf",
+        "bytes": 167298,
+        "sha256": "069197e87014de1251113d150f5b4d87c7fd5046641db7db9cba91bb88575eb9"
+      }
+    ],
+    "downloadedExamplesHashesCheckedAgainstLiveApiByPassingResumeTest": true,
+    "textReadback": "manual20-artifact-text-readback.json",
+    "inputCounts": {
+      "dataFieldStrings": 26,
+      "names": 20,
+      "sharedPositionRuKz": 2,
+      "newCompanyName": 1,
+      "courseDurations": 3,
+      "additionalSpecialFactsForOrdinaryItr": 0,
+      "additionalPassedConfirmations": 0,
+      "coursesAssignedToWholeGroup": 4,
+      "individualItrCategoryExceptions": 1,
+      "explicitTransferCommands": 1,
+      "directorDecisions": 1,
+      "explicitIssuanceCommands": 1
+    },
+    "inputCountBasis": "Операции исходного UI-сценария до ожидания файлов; настройки синтетического графика центра до заявки считаются отдельно. Это вводимые строки и смысловые действия, а не все клики.",
+    "sourceReadback": ".runtime/autofill-cycle-20261005/browser-manual20-resume/test-results/operator-minimal-manual-li-310b6-s-and-files-retain-snapshot/manual20-readback.json",
+    "log": ".runtime/autofill-cycle-20261005/browser-manual20-resume.log"
+  }
+}

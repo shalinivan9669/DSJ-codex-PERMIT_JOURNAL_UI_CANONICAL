@@ -6,6 +6,7 @@ import {
   eventOutcomeRecipients,
 } from "../lib/event-outcomes";
 import type { Draft } from "../lib/types";
+import { draftSchema, resolveDraft } from "@demo/contracts";
 
 function sample() {
   const events: Draft["events"] = [
@@ -85,16 +86,25 @@ test("confirmation affects the reviewed event and people without clearing indivi
   assert.deepEqual(draft, before, "reviewed input remains unchanged");
 });
 
-test("missing sources for known results and missing events cannot become confirmed outcomes", () => {
+test("a deliberate group outcome records the operator action without invented exam evidence", () => {
   const draft = sample();
-  for (const [eventId, status, source] of [
-    ["itr", "PASSED", "   "],
-    ["missing", "PASSED", "Assessment"],
-  ] as const) {
-    assert.throws(() =>
-      applyEventOutcomes(draft, eventId, ["person-0"], { status, source }),
-    );
-  }
+  const result = applyEventOutcomes(draft, "itr", ["person-0"], {
+    status: "PASSED",
+    source: "",
+  });
+  assert.equal(result[0].assignments[0].outcome?.status, "PASSED");
+  assert.equal(
+    result[0].assignments[0].outcome?.source,
+    "Результат указан оператором для выбранного состава",
+  );
+  assert.equal(result[0].assignments[0].fieldOrigins?.outcome, "MANUAL");
+  assert.deepEqual(result.slice(1), draft.items.slice(1));
+  assert.throws(() =>
+    applyEventOutcomes(draft, "missing", ["person-0"], {
+      status: "PASSED",
+      source: "",
+    }),
+  );
 });
 
 test("explicit waiting removes automatic positive words and confirmation metadata only for the selected course and people", () => {
@@ -136,6 +146,95 @@ test("explicit factual fields replace only the reviewed ITR participants", () =>
     assert.equal(item.assignments[0].result, "Не сдал");
     assert.equal(item.assignments[0].biotKnowledgeResult, "30/100");
     assert.equal(item.assignments[0].biotProctoringResult, "Verified");
+    assert.equal(
+      item.assignments[0].fieldOrigins?.biotKnowledgeResult,
+      "MANUAL",
+    );
+    assert.equal(
+      item.assignments[0].fieldOrigins?.biotProctoringResult,
+      "MANUAL",
+    );
   }
   assert.deepEqual(items[2], draft.items[2]);
+});
+
+test("one explicit outcome updates automatic RU/KZ words across companion forms before reload", () => {
+  let draft = sample();
+  draft.items[0].assignments.push({
+    ...newAssignment("biot-itr-protocol"),
+    eventId: "itr",
+  });
+  for (const status of ["FAILED", "ABSENT", "UNKNOWN", "PASSED"] as const) {
+    draft = {
+      ...draft,
+      items: applyEventOutcomes(draft, "itr", ["person-0"], {
+        status,
+        source: "",
+      }),
+    };
+    const expectedRu = {
+      PASSED: "Өтті/прошел",
+      FAILED: "Не сдал",
+      ABSENT: "Не явился",
+      UNKNOWN: "Не подтверждено",
+    }[status];
+    const expectedKz = {
+      PASSED: "Өтті",
+      FAILED: "Тапсырмады",
+      ABSENT: "Келмеді",
+      UNKNOWN: "Расталмаған",
+    }[status];
+    for (const assignment of draft.items[0].assignments.filter(
+      (a) => a.eventId === "itr",
+    )) {
+      assert.equal(assignment.result, expectedRu);
+      assert.equal(assignment.resultKz, expectedKz);
+      assert.equal(assignment.fieldOrigins?.resultKz, "COURSE");
+    }
+  }
+});
+
+test("group outcome leaves explicit wording and clears intact and persists entered assessment provenance", () => {
+  for (const origin of ["MANUAL", "IMPORTED", "CLEARED"] as const) {
+    const draft = sample();
+    const assignment = draft.items[0].assignments[0];
+    Object.assign(assignment, {
+      result: origin === "CLEARED" ? "" : "Проверенный результат",
+      resultKz: origin === "CLEARED" ? "" : "Тексерілген нәтиже",
+      resultEn: origin === "CLEARED" ? "" : "Verified assessment",
+      fieldOrigins: { result: origin, resultKz: origin, resultEn: origin },
+    });
+    for (const status of ["PASSED", "UNKNOWN", "FAILED", "ABSENT"] as const) {
+      const items = applyEventOutcomes(draft, "itr", ["person-0"], {
+        status,
+        source: "",
+        knowledge: "42 балла",
+        proctoring: "Фактическая проверка",
+      });
+      const actual = items[0].assignments[0];
+      for (const key of ["result", "resultKz", "resultEn"] as const) {
+        assert.equal(actual[key], assignment[key]);
+        assert.equal(actual.fieldOrigins?.[key], origin);
+      }
+      const resolved = resolveDraft(
+        draftSchema.parse({ kind: "PERSON", ...draft, items }),
+        {
+          biotKnowledgeResult: "Общий результат",
+          biotProctoringResult: "Общая проверка",
+        },
+      );
+      assert.equal(
+        resolved.draft.items[0].assignments[0].biotKnowledgeResult,
+        "42 балла",
+      );
+      assert.equal(
+        resolved.draft.items[0].assignments[0].biotProctoringResult,
+        "Фактическая проверка",
+      );
+      assert.equal(
+        Object.values(resolved.provenance)[0].biotKnowledgeResult,
+        "MANUAL",
+      );
+    }
+  }
 });

@@ -296,6 +296,7 @@ export async function readPrintDetail(page: Page, id: string) {
       rowId: string | null;
     }>;
     artifacts: Artifact[];
+    jobs: Job[];
     issuances: Array<{ id: string; snapshot: { draft: Draft } }>;
   };
 }

@@ -116,7 +116,7 @@ function fixture(complete: boolean) {
   return { tx, record, proposal, writes: () => writes };
 }
 
-test("director cannot approve missing confirmed results/programs or promote any part of the proposal", async (t) => {
+test("director cannot approve an old unscoped autosave or promote any part of the proposal", async (t) => {
   const f = fixture(false);
   const transactional = db as unknown as {
     $transaction: (
@@ -146,30 +146,8 @@ test("director cannot approve missing confirmed results/programs or promote any 
           details: { code: string; path: string }[];
         };
       };
-      assert.equal(response.getStatus(), 422);
-      assert.equal(response.getResponse().code, "APPROVAL_DATA_INCOMPLETE");
-      const errors = response.getResponse().details;
-      assert.ok(
-        errors.some(
-          (issue) =>
-            issue.code === "RESULT_REQUIRED" &&
-            issue.path === "items.0.assignments.0.result",
-        ),
-      );
-      assert.ok(
-        errors.some(
-          (issue) =>
-            issue.code === "SUBJECT_REQUIRED" &&
-            issue.path === "items.1.assignments.0.trainingSubject",
-        ),
-      );
-      assert.ok(
-        errors.some(
-          (issue) =>
-            issue.code === "RESULT_REQUIRED" &&
-            issue.path === "items.1.assignments.1.result",
-        ),
-      );
+      assert.equal(response.getStatus(), 409);
+      assert.equal(response.getResponse().code, "LEGACY_PREPARATION_REQUIRED");
       return true;
     },
   );

@@ -2,6 +2,8 @@
 import { isDirectorRole } from "@demo/contracts";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { approvalIssueGroups } from "@/lib/approval-issues";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
@@ -11,7 +13,6 @@ import { templateLabels, documentTitle } from "@/lib/types";
 import { validationErrors } from "@/lib/validation-errors";
 import { rejectionReason } from "@/lib/rejection-reason";
 import { approvedScopeIssued } from "@/lib/request-actions";
-import { addressIssue, type AddressedIssue } from "@/lib/validation-address";
 import type { ApprovalReview } from "@/lib/approval-review";
 import { ApprovalReviewPanel } from "./approval-review";
 import { approvalRefreshRequired } from "@/lib/approval-refresh";
@@ -37,6 +38,7 @@ type Proposal = {
   review?: ApprovalReview | null;
   reviewUnavailable?: boolean;
   currentRevision?: number;
+  needsPreparation?: boolean;
 };
 const labels: Record<string, string> = {
   title: "Название заявки",
@@ -53,13 +55,10 @@ const labels: Record<string, string> = {
   events: "Обучения",
   fullNameRu: "ФИО RU",
   fullNameKz: "ФИО KZ",
-  fullNameEn: "ФИО EN",
   positionRu: "Должность RU",
   positionKz: "Должность KZ",
-  positionEn: "Должность EN",
   workplaceRu: "Место работы RU",
   workplaceKz: "Место работы KZ",
-  workplaceEn: "Место работы EN",
   employeeCategory: "Категория сотрудника",
   documentDate: "Дата выдачи",
   protocolDate: "Дата протокола",
@@ -67,13 +66,11 @@ const labels: Record<string, string> = {
   trainingEnd: "Окончание обучения",
   validUntil: "Действует до",
   trainingSubject: "Программа обучения",
-  trainingSubjectEn: "Программа EN",
   hours: "Часы обучения",
   productionHours: "Производственные часы",
   protocolMode: "Режим протокола",
   templateId: "Документ",
   protocolTemplateId: "Форма протокола",
-  englishAppendix: "Английская страница",
   commonFields: "Общие данные",
   result: "Результат",
   status: "Статус",
@@ -84,22 +81,17 @@ const labels: Record<string, string> = {
   photoAssetId: "Фотография",
   outcome: "Результат обучения",
   personnelNumber: "Табельный номер",
-  resultEn: "Результат EN",
   resultKz: "Результат KZ",
   professionRu: "Профессия RU",
   professionKz: "Профессия KZ",
   psQualificationRu: "Присвоенная квалификация RU",
   psQualificationKz: "Присвоенная квалификация KZ",
-  reasonEn: "Основание EN",
   education: "Образование",
-  educationEn: "Образование EN",
   departmentRu: "Подразделение RU",
   departmentKz: "Подразделение KZ",
-  departmentEn: "Подразделение EN",
   employerBin: "БИН работодателя",
   employerAddressRu: "Адрес работодателя RU",
   employerAddressKz: "Адрес работодателя KZ",
-  employerAddressEn: "Адрес работодателя EN",
   employerId: "Запись работодателя",
   externalBasisNumber: "Номер внешнего основания",
   source: "Подтверждающий источник",
@@ -108,14 +100,10 @@ const labels: Record<string, string> = {
   biotCheckType: "Вид проверки БиОТ",
   biotIndustryRu: "Отрасль RU",
   biotIndustryKz: "Отрасль KZ",
-  biotIndustryEn: "Отрасль EN",
   biotKnowledgeResult: "Результат проверки знаний",
-  biotKnowledgeResultEn: "Результат проверки знаний EN",
   biotProctoringResult: "Результат прокторинга",
-  biotProctoringResultEn: "Результат прокторинга EN",
   biotUniqueNumber: "Уникальный номер",
   biotNotes: "Примечания БиОТ",
-  biotNotesEn: "Примечания БиОТ EN",
   profileOverrideId: "Профиль комиссии",
   commonFieldOverrides: "Особые значения обучения",
   trainingDateRule: "Расчёт периода обучения",
@@ -145,6 +133,8 @@ function readable(
     return Object.entries(value)
       .filter(
         ([key]) =>
+          !key.endsWith("En") &&
+          key !== "englishAppendix" &&
           ![
             "id",
             "fieldOrigins",
@@ -197,6 +187,7 @@ export function ApprovalBanner({
   );
   const [returnError, setReturnError] = useState("");
   const approval = draft.approval;
+  const needsPreparation = approval?.needsPreparation;
   const refreshDraft = useRef(onRefresh);
   const currentDraft = useRef(draft);
   useEffect(() => {
@@ -279,15 +270,19 @@ export function ApprovalBanner({
     <section className="approval-banner" aria-label="Согласование заявки">
       <div className="approval-summary">
         <strong>
-          {approval?.status === "APPROVED"
-            ? "Редакция согласована директором"
-            : approval?.status === "REJECTED"
-              ? "Директор вернул редакцию на доработку"
-              : approval?.status === "PENDING"
-                ? "Выбранный состав передан директору"
-                : "Рабочий черновик сохраняется"}
+          {needsPreparation
+            ? "Старая редакция требует подготовки"
+            : approval?.status === "APPROVED"
+              ? "Редакция согласована директором"
+              : approval?.status === "REJECTED"
+                ? "Директор вернул редакцию на доработку"
+                : approval?.status === "PENDING"
+                  ? "Выбранный состав передан директору"
+                  : "Рабочий черновик сохраняется"}
         </strong>
-        {approval && <Status value={approval.status} />}
+        {approval && (
+          <Status value={needsPreparation ? "DRAFT" : approval.status} />
+        )}
       </div>
       {approval?.status === "REJECTED" &&
         (reason ? (
@@ -307,15 +302,17 @@ export function ApprovalBanner({
           <p role="status">Загружаем замечание директора…</p>
         ))}
       <p>
-        {approval?.status === "APPROVED"
-          ? draft.status === "FINALIZED"
-            ? "Документы подготовлены и доступны для печати."
-            : approvedScopeIssued(draft)
-              ? "Согласованная партия уже оформлена; документы доступны для печати. Для следующего выпуска подтвердите и передайте новый состав выше."
-              : "Можно оформить согласованный состав. Следующие люди и курсы продолжат работу в этой заявке. Изменение согласованных данных потребует нового решения."
-          : approval?.status === "PENDING"
-            ? "Директор рассматривает выбранных людей и курсы. Остальные назначения остаются рабочим черновиком."
-            : "Ввод сохраняется автоматически. Готовый состав передаётся директору отдельной командой после проверки."}
+        {needsPreparation
+          ? "У сохранённой редакции ещё не зафиксированы итоговые значения. Подготовьте актуальный черновик, проверьте людей и передайте готовый состав."
+          : approval?.status === "APPROVED"
+            ? draft.status === "FINALIZED"
+              ? "Документы подготовлены и доступны для печати."
+              : approvedScopeIssued(draft)
+                ? "Согласованная партия уже оформлена; документы доступны для печати. Для следующего выпуска подтвердите и передайте новый состав выше."
+                : "Можно оформить согласованный состав. Следующие люди и курсы продолжат работу в этой заявке. Изменение согласованных данных потребует нового решения."
+            : approval?.status === "PENDING"
+              ? "Директор рассматривает выбранных людей и курсы. Остальные назначения остаются рабочим черновиком."
+              : "Ввод сохраняется автоматически. Готовый состав передаётся директору отдельной командой после проверки."}
       </p>
       {!compact && (
         <div className="action-buttons">
@@ -353,7 +350,10 @@ export function ApprovalBanner({
 }
 
 export function Approvals({ context }: { context: AppContext }) {
-  const [rows, setRows] = useState<Page<Proposal>>({ items: [], total: 0 });
+  const router = useRouter();
+  const [rows, setRows] = useState<
+    Page<Proposal> & { needsPreparationCount?: number }
+  >({ items: [], total: 0 });
   const [status, setStatus] = useState("PENDING");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState("");
@@ -376,7 +376,9 @@ export function Approvals({ context }: { context: AppContext }) {
     let active = true;
     setBusy("list");
     setError("");
-    void api<Page<Proposal>>(`/approvals?status=${status}&page=${page}`)
+    void api<Page<Proposal> & { needsPreparationCount?: number }>(
+      `/approvals?status=${status}&page=${page}`,
+    )
       .then((result) => {
         if (!active) return;
         setRows(result);
@@ -419,7 +421,10 @@ export function Approvals({ context }: { context: AppContext }) {
               result.requestedAction === "SAVE"
             ) {
               setDataIssues(result.review?.issues || []);
-              if (result.reviewUnavailable || result.review?.issues.length)
+              if (
+                !result.needsPreparation &&
+                (result.reviewUnavailable || result.review?.issues.length)
+              )
                 setError(
                   "Переданная редакция требует исправления. Верните её менеджеру, проверьте актуальный черновик и передайте подготовленный состав повторно.",
                 );
@@ -467,8 +472,29 @@ export function Approvals({ context }: { context: AppContext }) {
       setBusy("");
     }
   }
+  async function prepare() {
+    if (!detail) return;
+    setBusy("prepare");
+    setError("");
+    try {
+      await api(`/approvals/${detail.id}/prepare`, {
+        method: "POST",
+        body: json({
+          expectedRevision: detail.currentRevision,
+          expectedProposalHash: detail.proposalHash,
+        }),
+      });
+      router.push(`/requests/${detail.requestId}/edit?check=1`);
+    } catch (caught) {
+      setError(errorText(caught));
+    } finally {
+      setBusy("");
+    }
+  }
+  const issueGroups = approvalIssueGroups(dataIssues, detail?.draft);
   const changes = (detail?.diff || []).filter(
     (change) =>
+      !/(?:^|\.)(?:[a-zA-Z]+En|englishAppendix)(?:\.|$)/.test(change.path) &&
       !/(?:^|\.)(?:id|fieldOrigins|dateOrigins|schemaVersion|businessRuleVersion|revision)(?:\.|$)/.test(
         change.path,
       ),
@@ -491,72 +517,47 @@ export function Approvals({ context }: { context: AppContext }) {
           Обновить
         </button>
       </div>
-      {error && (
-        <Notice>
-          {error}
-          {!!dataIssues.length && detail && (
-            <>
+      {error && <Notice>{error}</Notice>}
+      {!!dataIssues.length && detail && (
+        <details className="panel" open={!detail.needsPreparation}>
+          <summary>
+            Что требуется уточнить:{" "}
+            {issueGroups.reduce(
+              (count, group) => count + group.entries.length,
+              0,
+            )}
+          </summary>
+          {issueGroups.map((group) => (
+            <section key={group.key}>
+              <h3>{group.title}</h3>
               <ul>
-                {dataIssues.map((issue, index) => (
-                  <li key={index}>
-                    {typeof issue === "string"
-                      ? issue
-                      : (() => {
-                          const addressed = addressIssue(
-                            issue,
-                            detail.draft?.items || [],
-                            detail.draft?.events || [],
-                          ) as AddressedIssue;
-                          const row = detail.draft?.items.find(
-                            (item) =>
-                              item.id ===
-                              (addressed.rowId ||
-                                addressed.recipientId ||
-                                addressed.itemId),
-                          );
-                          const assignment = row?.assignments.find(
-                            (item) => item.id === addressed.assignmentId,
-                          );
-                          const query = new URLSearchParams({
-                            check: "1",
-                            issuePath: String(addressed.path || ""),
-                            issueField: addressed.field || "",
-                            issueRow: row?.id || "",
-                            issueAssignment: assignment?.id || "",
-                            issueEvent: addressed.eventId || "",
-                          });
-                          return (
-                            <Link
-                              href={`/requests/${detail.requestId}/edit?${query}`}
-                            >
-                              {row?.fullNameRu ? `${row.fullNameRu} · ` : ""}
-                              {assignment
-                                ? `${documentTitle(assignment.templateId)} · `
-                                : ""}
-                              {fieldLabel(
-                                String(
-                                  (assignment && addressed.field) ||
-                                    addressed.path ||
-                                    addressed.field ||
-                                    "",
-                                ),
-                              )}
-                              : {issue.message}. Исправить поле
-                            </Link>
-                          );
-                        })()}
-                  </li>
-                ))}
+                {group.entries.map(({ key, issue }) => {
+                  if (typeof issue === "string")
+                    return <li key={key}>{issue}</li>;
+                  const query = new URLSearchParams({
+                    check: "1",
+                    issuePath: String(issue.path || ""),
+                    issueField: issue.field || "",
+                    issueRow:
+                      issue.rowId || issue.recipientId || issue.itemId || "",
+                    issueAssignment: issue.assignmentId || "",
+                    issueEvent: issue.eventId || "",
+                  });
+                  return (
+                    <li key={key}>
+                      <Link
+                        href={`/requests/${detail.requestId}/edit?${query}`}
+                      >
+                        {fieldLabel(issue.field || String(issue.path || ""))}:{" "}
+                        {issue.message}. Исправить
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
-              <Link
-                className="button"
-                href={`/requests/${detail.requestId}/edit?check=1`}
-              >
-                Исправить данные заявки
-              </Link>
-            </>
-          )}
-        </Notice>
+            </section>
+          ))}
+        </details>
       )}
       {message && <Notice kind="success">{message}</Notice>}
       <div className="toolbar">
@@ -571,6 +572,9 @@ export function Approvals({ context }: { context: AppContext }) {
             }}
           >
             <option value="PENDING">Ожидают решения</option>
+            <option value="NEEDS_PREPARATION">
+              Требуют подготовки ({rows.needsPreparationCount || 0})
+            </option>
             <option value="APPROVED">Согласованы</option>
             <option value="REJECTED">Возвращены</option>
             {isDirectorRole(context.user.role) && (
@@ -580,6 +584,21 @@ export function Approvals({ context }: { context: AppContext }) {
         </label>
         <span role="status">Версий: {rows.total}</span>
       </div>
+      {!!rows.needsPreparationCount && status !== "NEEDS_PREPARATION" && (
+        <Notice kind="info">
+          Прежние незавершённые редакции: {rows.needsPreparationCount}. Их можно
+          подготовить и передать заново.
+          <button
+            onClick={() => {
+              setStatus("NEEDS_PREPARATION");
+              setPage(1);
+              setSelected("");
+            }}
+          >
+            Открыть требующие подготовки
+          </button>
+        </Notice>
+      )}
       <div className="approval-layout">
         <section aria-label="Предложенные редакции">
           <ul className="approval-list">
@@ -597,7 +616,7 @@ export function Approvals({ context }: { context: AppContext }) {
                     {row.author?.displayName || "Сотрудник центра"} ·{" "}
                     {dateTime(row.submittedAt)} · редакция {row.requestRevision}
                   </small>
-                  <Status value={row.status} />
+                  <Status value={row.needsPreparation ? "DRAFT" : row.status} />
                 </button>
               </li>
             ))}
@@ -633,8 +652,34 @@ export function Approvals({ context }: { context: AppContext }) {
               <h2>{detail.request?.title || detail.title || "Новая заявка"}</h2>
               <p>
                 {detail.author?.displayName} · редакция {detail.requestRevision}{" "}
-                · <Status value={detail.status} />
+                ·{" "}
+                <Status
+                  value={detail.needsPreparation ? "DRAFT" : detail.status}
+                />
               </p>
+              {detail.needsPreparation && (
+                <Notice kind="info">
+                  <strong>Предыдущая редакция: требуется подготовка</strong>
+                  <p>
+                    У этой редакции ещё не зафиксированы итоговые значения.
+                    Исходная история останется доступна. В актуальном черновике
+                    программы и общие значения подставятся автоматически;
+                    фактические результаты и индивидуальные исключения
+                    сохранятся.
+                  </p>
+                  {context.user.role !== "VIEWER" && (
+                    <button
+                      className="primary"
+                      disabled={!!busy}
+                      onClick={() => void prepare()}
+                    >
+                      {busy === "prepare"
+                        ? "Подготавливаем…"
+                        : "Подготовить актуальный черновик"}
+                    </button>
+                  )}
+                </Notice>
+              )}
               {detail.review && (
                 <ApprovalReviewPanel
                   key={detail.id}
@@ -642,15 +687,17 @@ export function Approvals({ context }: { context: AppContext }) {
                   submitted={detail.draft}
                 />
               )}
-              {detail.requestedAction === "SAVE" && detail.review && (
-                <ApprovalPreview
-                  key={`preview:${detail.id}`}
-                  requestId={detail.requestId}
-                  proposalId={detail.id}
-                  proposalHash={detail.proposalHash}
-                  revision={detail.requestRevision}
-                />
-              )}
+              {detail.requestedAction === "SAVE" &&
+                detail.review &&
+                !detail.needsPreparation && (
+                  <ApprovalPreview
+                    key={`preview:${detail.id}`}
+                    requestId={detail.requestId}
+                    proposalId={detail.id}
+                    proposalHash={detail.proposalHash}
+                    revision={detail.requestRevision}
+                  />
+                )}
               {!detail.review && detail.assignments && (
                 <details>
                   <summary>
@@ -678,7 +725,8 @@ export function Approvals({ context }: { context: AppContext }) {
               <Link className="button" href={`/requests/${detail.requestId}`}>
                 Открыть рабочую заявку и файлы
               </Link>
-              {detail.status === "PENDING" &&
+              {!detail.needsPreparation &&
+                detail.status === "PENDING" &&
                 detail.requestedAction === "SAVE" &&
                 (detail.reviewUnavailable ||
                   !!detail.review?.issues.length) && (
@@ -776,43 +824,45 @@ export function Approvals({ context }: { context: AppContext }) {
                   {dateTime(detail.decision.createdAt)}
                 </Notice>
               )}
-              {director && detail.status === "PENDING" && (
-                <div className="approval-decision">
-                  <label>
-                    Комментарий к решению
-                    <textarea
-                      value={reason}
-                      maxLength={2000}
-                      onChange={(event) => setReason(event.target.value)}
-                      placeholder="Для возврата укажите, что нужно исправить"
-                    />
-                  </label>
-                  <div className="action-buttons">
-                    <button
-                      className="primary"
-                      disabled={
-                        !!busy ||
-                        (detail.requestedAction === "SAVE" &&
-                          (detail.reviewUnavailable ||
-                            !!detail.review?.issues.length))
-                      }
-                      onClick={() => void decide("APPROVE")}
-                    >
-                      {busy === "APPROVE"
-                        ? "Согласовываем…"
-                        : "Согласовать эту редакцию"}
-                    </button>
-                    <button
-                      disabled={!!busy || !reason.trim()}
-                      onClick={() => void decide("REJECT")}
-                    >
-                      {busy === "REJECT"
-                        ? "Возвращаем…"
-                        : "Вернуть на доработку"}
-                    </button>
+              {director &&
+                detail.status === "PENDING" &&
+                !detail.needsPreparation && (
+                  <div className="approval-decision">
+                    <label>
+                      Комментарий к решению
+                      <textarea
+                        value={reason}
+                        maxLength={2000}
+                        onChange={(event) => setReason(event.target.value)}
+                        placeholder="Для возврата укажите, что нужно исправить"
+                      />
+                    </label>
+                    <div className="action-buttons">
+                      <button
+                        className="primary"
+                        disabled={
+                          !!busy ||
+                          (detail.requestedAction === "SAVE" &&
+                            (detail.reviewUnavailable ||
+                              !!detail.review?.issues.length))
+                        }
+                        onClick={() => void decide("APPROVE")}
+                      >
+                        {busy === "APPROVE"
+                          ? "Согласовываем…"
+                          : "Согласовать эту редакцию"}
+                      </button>
+                      <button
+                        disabled={!!busy || !reason.trim()}
+                        onClick={() => void decide("REJECT")}
+                      >
+                        {busy === "REJECT"
+                          ? "Возвращаем…"
+                          : "Вернуть на доработку"}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </>
           ) : (
             <p>

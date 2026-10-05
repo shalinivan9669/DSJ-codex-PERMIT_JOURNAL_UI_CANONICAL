@@ -27,7 +27,7 @@ export const requestBundles = {
     label: "ИТР",
     card: "biot-itr-certificate",
     protocol: "biot-itr-protocol",
-    description: "Сертификат ИТР и общий протокол специальных компетенций",
+    description: "Сертификат ИТР и общий протокол ИТР",
   },
 } as const;
 export type RequestBundle = keyof typeof requestBundles;

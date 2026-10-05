@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page, type TestInfo } from "@playwright/test";
 import { randomUUID, createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import { templateIds } from "@demo/contracts";
@@ -15,6 +15,26 @@ test("manual 20 people use one group position employer and courses, director rev
   test.setTimeout(900000);
   expect(new URL(process.env.DEMO_ORIGIN!).hostname).toBe("127.0.0.1");
   const operator = await loginRole(page, "OPERATOR");
+  const resumedId = process.env.DEMO_E2E_MANUAL_REQUEST_ID;
+  if (resumedId) {
+    expect(resumedId).toMatch(/^[a-f0-9-]{36}$/);
+    await page.goto(`/requests/${resumedId}/edit`);
+    const existing = await readPrintDetail(page, resumedId);
+    expect(existing.items).toHaveLength(20);
+    expect(existing.issuances).toHaveLength(1);
+    expect(existing.documents).toHaveLength(105);
+    await waitOriginalJobs(page, resumedId, 600000);
+    await verifyManualIssuance(
+      page,
+      resumedId,
+      existing,
+      [
+        "Продолжение той же ручной заявки после ORIGINAL_RENDER_TIMEOUT: ввод/передача/согласование/выпуск уже выполнены предыдущим UI-прогоном; новая заявка и повторный выпуск не создаются",
+      ],
+      testInfo,
+    );
+    return;
+  }
   const suffix = randomUUID().slice(0, 8);
   const steps: string[] = [];
   // Configure the synthetic centre once through its actual settings UI. This
@@ -32,42 +52,64 @@ test("manual 20 people use one group position employer and courses, director rev
     await schedule
       .getByText("Правило расчёта периода обучения", { exact: true })
       .click();
-    await schedule.getByLabel("Часов в учебном дне", { exact: true }).fill("8");
-    await schedule
-      .getByLabel("Какие часы учитывать", { exact: true })
-      .selectOption("THEORY");
-    await schedule
-      .getByLabel("Учебные дни", { exact: true })
-      .selectOption("KZ_FIVE_DAY");
-    await schedule
-      .getByLabel("Связь с датой документа", { exact: true })
-      .selectOption("DOCUMENT_AFTER_TRAINING");
-    await schedule
-      .getByLabel("Расчёт даты протокола", { exact: true })
-      .selectOption("DOCUMENT_DATE");
-    await schedule
-      .getByLabel("Источник графика", { exact: true })
-      .fill(`СИНТЕТИЧЕСКИЙ график локальной проверки ${suffix}`);
-    await schedule
-      .getByRole("button", {
-        name: "Проверить применение графика",
-        exact: true,
-      })
-      .click();
-    await schedule
-      .getByRole("button", { name: "Применить правило расчёта", exact: true })
-      .click();
-    const savedProfile = setup.waitForResponse(
-      (response) =>
-        response.request().method() === "POST" &&
-        response.url().endsWith("/settings/profile"),
-    );
-    await setup
-      .getByRole("button", { name: "Сохранить новую версию", exact: true })
-      .click();
-    expect((await savedProfile).ok()).toBe(true);
+    const configuredSchedule =
+      (await schedule
+        .getByLabel("Часов в учебном дне", { exact: true })
+        .inputValue()) === "8" &&
+      (await schedule
+        .getByLabel("Какие часы учитывать", { exact: true })
+        .inputValue()) === "THEORY" &&
+      (await schedule
+        .getByLabel("Учебные дни", { exact: true })
+        .inputValue()) === "KZ_FIVE_DAY" &&
+      (await schedule
+        .getByLabel("Связь с датой документа", { exact: true })
+        .inputValue()) === "DOCUMENT_AFTER_TRAINING" &&
+      (await schedule
+        .getByLabel("Расчёт даты протокола", { exact: true })
+        .inputValue()) === "DOCUMENT_DATE";
+    if (!configuredSchedule) {
+      await schedule
+        .getByLabel("Часов в учебном дне", { exact: true })
+        .fill("8");
+      await schedule
+        .getByLabel("Какие часы учитывать", { exact: true })
+        .selectOption("THEORY");
+      await schedule
+        .getByLabel("Учебные дни", { exact: true })
+        .selectOption("KZ_FIVE_DAY");
+      await schedule
+        .getByLabel("Связь с датой документа", { exact: true })
+        .selectOption("DOCUMENT_AFTER_TRAINING");
+      await schedule
+        .getByLabel("Расчёт даты протокола", { exact: true })
+        .selectOption("DOCUMENT_DATE");
+      await schedule
+        .getByLabel("Источник графика", { exact: true })
+        .fill(`СИНТЕТИЧЕСКИЙ график локальной проверки ${suffix}`);
+      await schedule
+        .getByRole("button", {
+          name: "Проверить применение графика",
+          exact: true,
+        })
+        .click();
+      await schedule
+        .getByRole("button", { name: "Применить правило расчёта", exact: true })
+        .click();
+      const savedProfile = setup.waitForResponse(
+        (response) =>
+          response.request().method() === "POST" &&
+          response.url().endsWith("/settings/profile"),
+      );
+      await setup
+        .getByRole("button", { name: "Сохранить новую версию", exact: true })
+        .click();
+      expect((await savedProfile).ok()).toBe(true);
+    }
     steps.push(
-      "Синтетический график центра сохранён через настройки один раз до новых заявок, без ввода графиков людей",
+      configuredSchedule
+        ? "Через UI проверен ранее сохранённый график центра; повторное сохранение профиля не требуется"
+        : "Синтетический график центра сохранён через настройки один раз до новых заявок, без ввода графиков людей",
     );
   } finally {
     await setupContext.close();
@@ -125,14 +167,6 @@ test("manual 20 people use one group position employer and courses, director rev
   await company
     .getByRole("textbox", { name: /^Собственное наименование/ })
     .fill(`Синтетический работодатель ${suffix}`);
-  await company.locator(".customer-extra-fields > summary").click();
-  await company.getByLabel("БИН", { exact: true }).fill("123456789012");
-  await company
-    .getByLabel("Адрес на русском", { exact: true })
-    .fill("СИНТЕТИЧЕСКИЙ адрес, Алматы");
-  await company
-    .getByLabel("Адрес на казахском", { exact: true })
-    .fill("СИНТЕТИЧЕСКИЙ адрес, Алматы");
   await company.getByRole("button", { name: "Сохранить", exact: true }).click();
   await page
     .getByRole("dialog")
@@ -140,7 +174,7 @@ test("manual 20 people use one group position employer and courses, director rev
     .click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   steps.push(
-    "Новый работодатель с БИН/адресом введён один раз и применён ко всем",
+    "Новый работодатель введён один раз и применён ко всем; неизвестные БИН/адрес не выдумываются и ordinary ИТР не блокируют",
   );
   for (const course of ["БиОТ", "ПТМ", "ПБ", "ПС"])
     await page
@@ -156,20 +190,23 @@ test("manual 20 people use one group position employer and courses, director rev
   steps.push(
     "Синтетическая длительность ПТМ/ПБ/ПС задана один раз на курс: по 16 часов; для БиОТ использованы defaults категории",
   );
-  await page
-    .getByRole("textbox", { name: /^Отрасль · RU/ })
-    .fill("СИНТЕТИЧЕСКАЯ отрасль проверки");
-  await page
-    .getByLabel("Отрасль · KZ", { exact: true })
-    .fill("СИНТЕТИЧЕСКАЯ отрасль проверки");
-  await page
-    .getByRole("textbox", { name: /^Результат проверки знаний/ })
-    .fill("СИНТЕТИЧЕСКАЯ проверка знаний: сдал");
-  await page
-    .getByRole("textbox", { name: /^Результат прокторинга/ })
-    .fill("СИНТЕТИЧЕСКАЯ проверка прокторинга завершена");
+  await expect(
+    page.getByRole("textbox", { name: /^Отрасль · RU/ }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("textbox", { name: /^Результат проверки знаний/ }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("textbox", { name: /^Результат прокторинга/ }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByLabel("БИН предприятия, строка 20", { exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByLabel("Адрес предприятия · RU, строка 20", { exact: true }),
+  ).toHaveCount(0);
   steps.push(
-    "Четыре выбора курса для всей группы; фактические сведения ИТР введены один раз рядом с курсом",
+    "Четыре выбора курса для всей группы; обычный ИТР получает ITR_STANDARD без специальных сведений и повторного подтверждения сдачи",
   );
   await expect
     .poll(async () => {
@@ -177,9 +214,9 @@ test("manual 20 people use one group position employer and courses, director rev
       return (
         saved.items.length === 20 &&
         saved.events?.length === 5 &&
-        saved.events.some((event) =>
-          event.commonFields.biotProctoringResult?.includes("СИНТЕТИЧЕСКАЯ"),
-        )
+        saved.items[19].assignments
+          .filter((assignment) => assignment.templateId.startsWith("biot-"))
+          .every((assignment) => assignment.biotCategory === "ITR_STANDARD")
       );
     })
     .toBe(true);
@@ -203,15 +240,19 @@ test("manual 20 people use one group position employer and courses, director rev
   const validationPromise = page.waitForResponse(
     (response) =>
       response.request().method() === "POST" &&
-      response.url().endsWith(`/print-requests/${id}/validate`),
+      response.url().endsWith(`/print-requests/${id}/approval/submit`),
     { timeout: 210000 },
   );
   await ready
     .getByRole("button", { name: /Проверить и передать директору/ })
     .click();
   const validationResponse = await validationPromise;
+  expect(validationResponse.ok(), await validationResponse.text()).toBe(true);
   const validation = await validationResponse.json();
-  expect(validation.valid, JSON.stringify(validation)).toBe(true);
+  expect(validation.approval.status).toBe("PENDING");
+  expect(validation.approval.assignments).toHaveLength(
+    saved.items.reduce((total, row) => total + row.assignments.length, 0),
+  );
   await expect
     .poll(async () => (await readPrintDetail(page, id)).approval?.status, {
       timeout: 210000,
@@ -268,74 +309,109 @@ test("manual 20 people use one group position employer and courses, director rev
     });
     await expect(finalize).toBeEnabled({ timeout: 20000 });
     await finalize.click();
-    await waitOriginalJobs(page, id, 600000);
-    const issued = await readPrintDetail(page, id);
-    expect(
-      [...new Set(issued.documents.map((entry) => entry.templateId))].sort(),
-    ).toEqual([...templateIds].sort());
-    expect(issued.issuances).toHaveLength(1);
-    const snapshot = issued.issuances[0].snapshot.draft;
-    expect(snapshot.items).toHaveLength(20);
-    for (const row of snapshot.items)
-      for (const assignment of row.assignments) {
-        expect(assignment.trainingStart).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-        expect(assignment.trainingEnd).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-        expect(assignment.protocolDate).toBe(assignment.documentDate);
-      }
-    expect(snapshot.items.map((row) => row.fullNameRu)).toEqual(
-      saved.items.map((row) => row.fullNameRu),
-    );
-    const artifacts = issued.artifacts.filter((artifact) =>
-      ["PDF", "DOCX"].includes(artifact.format || ""),
-    );
-    expect(artifacts.some((artifact) => artifact.format === "PDF")).toBe(true);
-    expect(artifacts.some((artifact) => artifact.format === "DOCX")).toBe(true);
-    // Download one example of every active form and format for independent text/visual review.
-    const examples = new Map<string, (typeof artifacts)[number]>();
-    for (const artifact of artifacts) {
-      const document = issued.documents.find(
-        (entry) => entry.id === artifact.documentId,
-      );
-      if (
-        document &&
-        !examples.has(`${document.templateId}.${artifact.format}`)
-      )
-        examples.set(`${document.templateId}.${artifact.format}`, artifact);
-    }
-    const paths: Record<string, string> = {};
-    for (const [key, artifact] of examples) {
-      const response = await page.request.get(`/api/artifacts/${artifact.id}`);
-      expect(response.ok()).toBe(true);
-      const bytes = await response.body();
-      expect(createHash("sha256").update(bytes).digest("hex")).toBe(
-        artifact.sha256,
-      );
-      paths[key] = testInfo.outputPath(`example-${key.toLowerCase()}`);
-      await fs.writeFile(paths[key], bytes);
-    }
-    await page.screenshot({
-      path: testInfo.outputPath("manual20-files.png"),
-      fullPage: true,
-    });
     await fs.writeFile(
-      testInfo.outputPath("manual20-readback.json"),
-      JSON.stringify(
-        {
-          synthetic: true,
-          noApiPrefill: true,
-          requestId: id,
-          steps,
-          saved,
-          submitted,
-          snapshot,
-          documents: issued.documents,
-          examples: paths,
-        },
-        null,
-        2,
-      ),
+      testInfo.outputPath("manual20-before-render-wait.json"),
+      JSON.stringify({ requestId: id, steps, saved, submitted }, null, 2),
     );
+    await waitOriginalJobs(page, id, 600000);
+    await verifyManualIssuance(page, id, saved, steps, testInfo, submitted);
   } finally {
     await directorContext.close();
   }
 });
+
+async function verifyManualIssuance(
+  page: Page,
+  id: string,
+  saved: Awaited<ReturnType<typeof readPrintDetail>>,
+  steps: string[],
+  testInfo: TestInfo,
+  submitted?: Awaited<ReturnType<typeof readPrintDetail>>,
+) {
+  const issued = await readPrintDetail(page, id);
+  expect(
+    [...new Set(issued.documents.map((entry) => entry.templateId))].sort(),
+  ).toEqual([...templateIds].sort());
+  expect(issued.issuances).toHaveLength(1);
+  const snapshot = issued.issuances[0].snapshot.draft;
+  expect(snapshot.items).toHaveLength(20);
+  expect(snapshot.englishAppendix).toBe(false);
+  for (const row of snapshot.items) {
+    expect(Object.keys(row).filter((key) => key.endsWith("En"))).toEqual([]);
+    for (const assignment of row.assignments)
+      expect(
+        Object.keys(assignment).filter((key) => key.endsWith("En")),
+      ).toEqual([]);
+  }
+  for (const assignment of snapshot.items[19].assignments.filter((entry) =>
+    entry.templateId.startsWith("biot-"),
+  )) {
+    expect(assignment.biotCategory).toBe("ITR_STANDARD");
+    expect(assignment.biotIndustryRu || "").toBe("");
+    expect(assignment.biotKnowledgeResult || "").toBe("");
+    expect(assignment.biotProctoringResult || "").toBe("");
+  }
+  for (const row of snapshot.items)
+    for (const assignment of row.assignments) {
+      expect(assignment.trainingStart).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(assignment.trainingEnd).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(assignment.protocolDate).toBe(assignment.documentDate);
+    }
+  expect(snapshot.items.map((row) => row.fullNameRu)).toEqual(
+    saved.items.map((row) => row.fullNameRu),
+  );
+  const artifacts = issued.artifacts.filter((artifact) =>
+    ["PDF", "DOCX"].includes(artifact.format || ""),
+  );
+  expect(artifacts.some((artifact) => artifact.format === "PDF")).toBe(true);
+  expect(artifacts.some((artifact) => artifact.format === "DOCX")).toBe(true);
+  // Download each of the 11 template IDs in both formats. This flow uses
+  // five group protocols; the separate render matrix also covers their
+  // individual variants, for all 16 ordinary forms.
+  const examples = new Map<string, (typeof artifacts)[number]>();
+  for (const artifact of artifacts) {
+    const document = issued.documents.find(
+      (entry) => entry.id === artifact.documentId,
+    );
+    if (document && !examples.has(`${document.templateId}.${artifact.format}`))
+      examples.set(`${document.templateId}.${artifact.format}`, artifact);
+  }
+  expect([...examples.keys()].sort()).toEqual(
+    templateIds.flatMap((id) => [`${id}.DOCX`, `${id}.PDF`]).sort(),
+  );
+  const paths: Record<string, string> = {};
+  for (const [key, artifact] of examples) {
+    const response = await page.request.get(`/api/artifacts/${artifact.id}`);
+    expect(response.ok()).toBe(true);
+    const bytes = await response.body();
+    expect(createHash("sha256").update(bytes).digest("hex")).toBe(
+      artifact.sha256,
+    );
+    paths[key] = testInfo.outputPath(`example-${key.toLowerCase()}`);
+    await fs.writeFile(paths[key], bytes);
+  }
+  await page.screenshot({
+    path: testInfo.outputPath("manual20-files.png"),
+    fullPage: true,
+  });
+  await fs.writeFile(
+    testInfo.outputPath("manual20-readback.json"),
+    JSON.stringify(
+      {
+        synthetic: true,
+        noApiPrefill: true,
+        resumedAfterRenderTimeout: !submitted,
+        requestId: id,
+        steps,
+        saved,
+        submitted,
+        snapshot,
+        documents: issued.documents,
+        originalJobs: issued.jobs.filter((job) => job.issuanceId),
+        examples: paths,
+      },
+      null,
+      2,
+    ),
+  );
+}

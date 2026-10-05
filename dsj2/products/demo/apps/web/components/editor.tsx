@@ -2041,32 +2041,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 />
               </>
             )}
-            <details
-              className="operator-request-options"
-              open={draft.englishAppendix || undefined}
-            >
-              <summary>
-                Дополнительный язык документов
-                {draft.englishAppendix ? " · английский включён" : ""}
-              </summary>
-              <label className="english-appendix-toggle">
-                <input
-                  type="checkbox"
-                  checked={!!draft.englishAppendix}
-                  disabled={readonly || operationBusy}
-                  onChange={(event) =>
-                    edit({ englishAppendix: event.target.checked })
-                  }
-                />
-                <span>
-                  <strong>Добавить английскую страницу</strong>
-                  <small>
-                    Основные формы — казахско-русские. Английская страница
-                    добавляется с тем же номером.
-                  </small>
-                </span>
-              </label>
-            </details>
           </div>
         </details>
         <div className="toolbar">
@@ -2458,7 +2432,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   fieldErrors={fieldErrors}
                   fieldHints={readiness.fieldHints}
                   liveRules={draft.businessRuleVersion === "LIVE_V1"}
-                  englishAppendix={draft.englishAppendix}
                   requestEmployer={
                     requestEmployer
                       ? {

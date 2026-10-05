@@ -76,6 +76,7 @@ test("BIOT rules distinguish worker theory/practice and all general/special trai
     }),
     [
       ["WORKER", 10, 16, 1],
+      ["ITR_STANDARD", 1, null, 3],
       ["MANAGER_GENERAL", 16, null, 3],
       ["OHS_HEAD_GENERAL", 40, null, 3],
       ["OHS_SPECIALIST_SPECIAL", 40, null, 3],

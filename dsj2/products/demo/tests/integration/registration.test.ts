@@ -119,7 +119,14 @@ test("public self-registration isolates a complete unapproved center atomically"
         const templates = await db.templateVersion.findMany({
           where: { tenantId: tenant.id },
         });
-        assert.equal(templates.length, 16);
+        assert.equal(templates.length, 19);
+        assert.equal(
+          templates.filter(
+            (row) =>
+              (row.contract as Record<string, unknown>).program === "SPECIAL",
+          ).length,
+          3,
+        );
         assert.ok(
           templates.every(
             (row) =>

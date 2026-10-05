@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
 import {
   BIOT_CATEGORIES,
+  isSpecialBiotCategory,
   LIMITS,
   calculatedDateKeys,
   isBlankText,
@@ -127,7 +128,6 @@ export function RecipientDetails({
   resolvedRecipient,
   provenance,
   liveRules = false,
-  englishAppendix = false,
   requestEmployer,
   focusFieldPath,
   issuedAssignmentIds = [],
@@ -142,7 +142,6 @@ export function RecipientDetails({
   resolvedRecipient?: Recipient;
   provenance?: Record<string, Record<string, string>>;
   liveRules?: boolean;
-  englishAppendix?: boolean;
   requestEmployer?: { id: string; nameRu: string; nameKz: string } | null;
   focusFieldPath?: string | null;
   issuedAssignmentIds?: readonly string[];
@@ -377,54 +376,7 @@ export function RecipientDetails({
         </select>
         {personError("employeeCategory")}
       </label>
-      {englishAppendix && (
-        <div className="english-fields">
-          <p className="muted">
-            Английская страница добавится к казахско-русскому документу.
-            Проверьте перевод; ФИО укажите по документам сотрудника.
-          </p>
-          {(
-            [
-              ["fullNameEn", "ФИО латиницей · EN"],
-              ["positionEn", "Должность · EN"],
-              ["workplaceEn", "Место работы · EN"],
-              ["employerAddressEn", "Адрес работодателя · EN"],
-              ["departmentEn", "Подразделение · EN"],
-            ] as const
-          )
-            .filter(
-              ([key]) =>
-                (key !== "employerAddressEn" && key !== "departmentEn") ||
-                (key === "departmentEn"
-                  ? !!(recipient.departmentRu || recipient.departmentKz)
-                  : !!(
-                      recipient.employerAddressRu || recipient.employerAddressKz
-                    )),
-            )
-            .map(([key, label]) => (
-              <label key={key}>
-                {label}
-                <input
-                  disabled={disabled}
-                  value={recipient[key] || ""}
-                  {...personField(key)}
-                  onChange={(event) =>
-                    onChange({ ...recipient, [key]: event.target.value })
-                  }
-                />
-                {personError(key)}
-              </label>
-            ))}
-          <TranslationSuggestion
-            source={recipient.positionRu}
-            currentText={recipient.positionEn || ""}
-            field="positionRu"
-            target="en"
-            disabled={disabled}
-            onApply={(text) => onChange({ ...recipient, positionEn: text })}
-          />
-        </div>
-      )}
+
       <div className="tabs" role="tablist" aria-label="Данные получателя">
         <button
           type="button"
@@ -1117,53 +1069,19 @@ export function RecipientDetails({
                       {fieldError(index, "biotCheckType")}
                     </label>
                   )}
-                  {assignment.biotCategory &&
-                    BIOT_CATEGORIES[assignment.biotCategory].program ===
-                      "SPECIAL" && (
-                      <div className="form-grid compact">
-                        {[
-                          [
-                            "biotIndustryRu",
-                            "Отрасль специальных компетенций · RU",
-                          ],
-                          [
-                            "biotIndustryKz",
-                            "Отрасль специальных компетенций · KZ",
-                          ],
-                        ].map(([key, label]) => (
-                          <label key={key}>
-                            {label}
-                            <input
-                              {...field(index, key)}
-                              disabled={documentDisabled}
-                              value={String(
-                                assignment[key as keyof Assignment] || "",
-                              )}
-                              onChange={(event) =>
-                                changeAssignment(assignment.id, {
-                                  [key]: event.target.value,
-                                })
-                              }
-                            />
-                            {fieldError(index, key)}
-                          </label>
-                        ))}
-                      </div>
-                    )}
-                  {assignment.templateId === "biot-itr-protocol" && (
-                    <>
+                  {isSpecialBiotCategory(
+                    (resolvedRecipient?.assignments[index] || assignment)
+                      .biotCategory,
+                  ) && (
+                    <div className="form-grid compact">
                       {[
                         [
-                          "biotKnowledgeResult",
-                          "Фактический результат проверки знаний",
+                          "biotIndustryRu",
+                          "Отрасль специальных компетенций · RU",
                         ],
                         [
-                          "biotProctoringResult",
-                          "Фактический результат прокторинга",
-                        ],
-                        [
-                          "biotUniqueNumber",
-                          "Уникальный номер сертификата БиОТ",
+                          "biotIndustryKz",
+                          "Отрасль специальных компетенций · KZ",
                         ],
                       ].map(([key, label]) => (
                         <label key={key}>
@@ -1172,7 +1090,8 @@ export function RecipientDetails({
                             {...field(index, key)}
                             disabled={documentDisabled}
                             value={String(
-                              assignment[key as keyof Assignment] || "",
+                              (resolvedRecipient?.assignments[index] ||
+                                assignment)[key as keyof Assignment] || "",
                             )}
                             onChange={(event) =>
                               changeAssignment(assignment.id, {
@@ -1181,17 +1100,57 @@ export function RecipientDetails({
                             }
                           />
                           {fieldError(index, key)}
-                          {key === "biotUniqueNumber" && (
-                            <small>
-                              Если сертификат оформляется этому получателю в том
-                              же комплекте, поле можно оставить пустым. Номер
-                              протокола не заменяет номер сертификата.
-                            </small>
-                          )}
                         </label>
                       ))}
-                    </>
+                    </div>
                   )}
+                  {assignment.templateId === "biot-itr-protocol" &&
+                    isSpecialBiotCategory(
+                      (resolvedRecipient?.assignments[index] || assignment)
+                        .biotCategory,
+                    ) && (
+                      <>
+                        {[
+                          [
+                            "biotKnowledgeResult",
+                            "Фактический результат проверки знаний",
+                          ],
+                          [
+                            "biotProctoringResult",
+                            "Фактический результат прокторинга",
+                          ],
+                          [
+                            "biotUniqueNumber",
+                            "Уникальный номер сертификата БиОТ",
+                          ],
+                        ].map(([key, label]) => (
+                          <label key={key}>
+                            {label}
+                            <input
+                              {...field(index, key)}
+                              disabled={documentDisabled}
+                              value={String(
+                                (resolvedRecipient?.assignments[index] ||
+                                  assignment)[key as keyof Assignment] || "",
+                              )}
+                              onChange={(event) =>
+                                changeAssignment(assignment.id, {
+                                  [key]: event.target.value,
+                                })
+                              }
+                            />
+                            {fieldError(index, key)}
+                            {key === "biotUniqueNumber" && (
+                              <small>
+                                Если сертификат оформляется этому получателю в
+                                том же комплекте, поле можно оставить пустым.
+                                Номер протокола не заменяет номер сертификата.
+                              </small>
+                            )}
+                          </label>
+                        ))}
+                      </>
+                    )}
                   {["biot-protocol", "biot-itr-protocol"].includes(
                     assignment.templateId,
                   ) && (
@@ -1454,90 +1413,7 @@ export function RecipientDetails({
                       </p>
                     </div>
                   )}
-                  {englishAppendix && (
-                    <div className="english-fields assignment-field-wide">
-                      <p className="muted">
-                        Текст для дополнительной английской страницы
-                      </p>
-                      {(
-                        [
-                          ["trainingSubjectEn", "Программа · EN"],
-                          ["resultEn", "Результат · EN"],
-                          ["reasonEn", "Причина проверки · EN"],
-                          ["educationEn", "Образование · EN"],
-                          ["biotIndustryEn", "Отрасль БиОТ · EN"],
-                          [
-                            "biotKnowledgeResultEn",
-                            "Результат проверки знаний · EN",
-                          ],
-                          [
-                            "biotProctoringResultEn",
-                            "Результат прокторинга · EN",
-                          ],
-                          ["biotNotesEn", "Примечания БиОТ · EN"],
-                        ] as const
-                      )
-                        .filter(([key]) => {
-                          const source =
-                            resolvedRecipient?.assignments[index] || assignment;
-                          const bases: Record<string, boolean> = {
-                            reasonEn: !!source.reason,
-                            educationEn: !!source.education,
-                            biotIndustryEn: !!(
-                              source.biotIndustryRu || source.biotIndustryKz
-                            ),
-                            biotKnowledgeResultEn: !!source.biotKnowledgeResult,
-                            biotProctoringResultEn:
-                              !!source.biotProctoringResult,
-                            biotNotesEn: !!source.biotNotes,
-                          };
-                          return bases[key] ?? true;
-                        })
-                        .map(([key, label]) => (
-                          <label key={key}>
-                            {label}
-                            <input
-                              disabled={documentDisabled}
-                              value={
-                                (resolvedRecipient?.assignments[index] ||
-                                  assignment)[key] || ""
-                              }
-                              {...field(index, key)}
-                              onChange={(event) =>
-                                changeAssignment(assignment.id, {
-                                  [key]: event.target.value,
-                                })
-                              }
-                            />
-                            {fieldError(index, key)}
-                            {key === "trainingSubjectEn" && (
-                              <TranslationSuggestion
-                                source={
-                                  (
-                                    resolvedRecipient?.assignments[index] ||
-                                    assignment
-                                  ).trainingSubject
-                                }
-                                field="trainingSubject"
-                                currentText={
-                                  (
-                                    resolvedRecipient?.assignments[index] ||
-                                    assignment
-                                  ).trainingSubjectEn || ""
-                                }
-                                target="en"
-                                disabled={documentDisabled}
-                                onApply={(text) =>
-                                  changeAssignment(assignment.id, {
-                                    trainingSubjectEn: text,
-                                  })
-                                }
-                              />
-                            )}
-                          </label>
-                        ))}
-                    </div>
-                  )}
+
                   {(assignment.templateId === "ptm-protocol" ||
                     !isBlankText(assignment.reason || "") ||
                     !isBlankText(
@@ -1657,68 +1533,70 @@ export function RecipientDetails({
                         {Object.entries(
                           provenance?.[`${recipient.id}:${assignment.id}`] ||
                             {},
-                        ).map(([key, origin]) => (
-                          <div key={key}>
-                            <dt>
-                              {(
-                                {
-                                  documentDate: "Дата документа",
-                                  trainingStart: "Начало обучения",
-                                  trainingEnd: "Окончание обучения",
-                                  protocolDate: "Дата протокола",
-                                  trainingSubject: "Программа",
-                                  trainingSubjectEn: "Программа · EN",
-                                  hours: "Часы",
-                                  validUntil: "Действителен до",
-                                  reason: "Причина",
-                                  reasonEn: "Причина · EN",
-                                  education: "Образование",
-                                  educationEn: "Образование · EN",
-                                  externalBasisNumber:
-                                    "Внешний номер основания",
-                                  biotCategory: "Категория",
-                                  productionHours: "Производственные часы",
-                                  biotCheckType: "Вид проверки",
-                                } as Record<string, string>
-                              )[key] || key}
-                            </dt>
-                            <dd>
-                              {(
-                                {
-                                  EVENT: "Из события",
-                                  REQUEST: "Из заявки",
-                                  PRESET: "Из набора",
-                                  COURSE: "Программа курса",
-                                  CENTER: "Из настроек центра",
-                                  MANUAL: "Введено вручную",
-                                  IMPORTED: "Импортировано",
-                                  CLEARED: "Очищено вручную",
-                                  AUTO: "Автоматический расчёт",
-                                } as Record<string, string>
-                              )[origin] || origin}
-                              {["MANUAL", "IMPORTED", "CLEARED"].includes(
-                                origin,
-                              ) && (
-                                <button
-                                  className="text-button"
-                                  disabled={documentDisabled}
-                                  onClick={() =>
-                                    onChange(
-                                      restoreTrainingAssignmentField(
-                                        recipient,
-                                        assignment.id,
-                                        key,
-                                        liveRules,
-                                      ),
-                                    )
-                                  }
-                                >
-                                  Вернуть общее значение
-                                </button>
-                              )}
-                            </dd>
-                          </div>
-                        ))}
+                        )
+                          .filter(([key]) => !key.endsWith("En"))
+                          .map(([key, origin]) => (
+                            <div key={key}>
+                              <dt>
+                                {(
+                                  {
+                                    documentDate: "Дата документа",
+                                    trainingStart: "Начало обучения",
+                                    trainingEnd: "Окончание обучения",
+                                    protocolDate: "Дата протокола",
+                                    trainingSubject: "Программа",
+
+                                    hours: "Часы",
+                                    validUntil: "Действителен до",
+                                    reason: "Причина",
+
+                                    education: "Образование",
+
+                                    externalBasisNumber:
+                                      "Внешний номер основания",
+                                    biotCategory: "Категория",
+                                    productionHours: "Производственные часы",
+                                    biotCheckType: "Вид проверки",
+                                  } as Record<string, string>
+                                )[key] || key}
+                              </dt>
+                              <dd>
+                                {(
+                                  {
+                                    EVENT: "Из события",
+                                    REQUEST: "Из заявки",
+                                    PRESET: "Из набора",
+                                    COURSE: "Программа курса",
+                                    CENTER: "Из настроек центра",
+                                    MANUAL: "Введено вручную",
+                                    IMPORTED: "Импортировано",
+                                    CLEARED: "Очищено вручную",
+                                    AUTO: "Автоматический расчёт",
+                                  } as Record<string, string>
+                                )[origin] || origin}
+                                {["MANUAL", "IMPORTED", "CLEARED"].includes(
+                                  origin,
+                                ) && (
+                                  <button
+                                    className="text-button"
+                                    disabled={documentDisabled}
+                                    onClick={() =>
+                                      onChange(
+                                        restoreTrainingAssignmentField(
+                                          recipient,
+                                          assignment.id,
+                                          key,
+                                          liveRules,
+                                        ),
+                                      )
+                                    }
+                                  >
+                                    Вернуть общее значение
+                                  </button>
+                                )}
+                              </dd>
+                            </div>
+                          ))}
                       </dl>
                     </details>
                   )}

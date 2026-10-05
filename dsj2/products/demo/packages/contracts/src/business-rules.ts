@@ -1,7 +1,9 @@
 import { BIOT_CATEGORIES, calendarAnniversary } from "./biot";
+import { normalizeNewDraftLanguages } from "./document-languages";
 import {
   courseProgramKeys,
   isProtectedField,
+  hasAutomaticPositiveOutcome,
   withCourseProgram,
 } from "./course-defaults";
 import type {
@@ -166,7 +168,7 @@ function rootForEvent(events: TrainingEventInput[], event: TrainingEventInput) {
 
 /** Apply only to editable/proposed drafts. Never invoke on issued snapshots. */
 export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
-  const draft = structuredClone(input);
+  const draft = normalizeNewDraftLanguages(input);
   draft.businessRuleVersion = BUSINESS_RULE_VERSION;
   draft.englishAppendix ??= false;
   draft.events ||= [];
@@ -244,17 +246,21 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
             ? BIOT_CATEGORIES[event.commonFields.biotCategory]
             : undefined;
           event.commonFields.biotCategory =
-            category === "ITR" ? "OHS_SPECIALIST_SPECIAL" : "WORKER";
+            category === "ITR" ? "ITR_STANDARD" : "WORKER";
           const preset = BIOT_CATEGORIES[event.commonFields.biotCategory];
           if (
-            !event.commonFields.hours ||
-            event.commonFields.hours === String(previousPreset?.defaultHours)
+            !isProtectedField(event.commonFields.fieldOrigins?.hours) &&
+            (!event.commonFields.hours ||
+              event.commonFields.hours === String(previousPreset?.defaultHours))
           )
             event.commonFields.hours = String(preset.defaultHours);
           if (
-            !event.commonFields.productionHours ||
-            event.commonFields.productionHours ===
-              String(previousPreset?.defaultProductionHours)
+            !isProtectedField(
+              event.commonFields.fieldOrigins?.productionHours,
+            ) &&
+            (!event.commonFields.productionHours ||
+              event.commonFields.productionHours ===
+                String(previousPreset?.defaultProductionHours))
           )
             event.commonFields.productionHours = preset.defaultProductionHours
               ? String(preset.defaultProductionHours)
@@ -266,8 +272,50 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
       const mode =
         event?.protocolMode ||
         (original.protocolMode === "GROUP" ? "GROUP" : "INDIVIDUAL");
+      // Completing an existing kit is not a new successful attempt. A newly
+      // created positive credential inherits the course's already saved fact
+      // from its protocol/witness, including an explicit pending outcome.
+      const retainedOutcome =
+        !original.outcome || hasAutomaticPositiveOutcome(original)
+          ? entries.find(
+              (entry) =>
+                entry !== original &&
+                entry.outcome &&
+                !hasAutomaticPositiveOutcome(entry),
+            )
+          : undefined;
+      const conflictingOutcomes =
+        new Set(
+          entries
+            .filter(
+              (entry) => entry.outcome && !hasAutomaticPositiveOutcome(entry),
+            )
+            .map((entry) => entry.outcome!.status),
+        ).size > 1;
       const primary = withCourseProgram({
         ...original,
+        ...(retainedOutcome
+          ? {
+              outcome: structuredClone(retainedOutcome.outcome),
+              result: retainedOutcome.result,
+              resultKz: retainedOutcome.resultKz,
+              resultEn: retainedOutcome.resultEn,
+              fieldOrigins: {
+                ...original.fieldOrigins,
+                ...Object.fromEntries(
+                  (["outcome", "result", "resultKz", "resultEn"] as const).map(
+                    (key) => [
+                      key,
+                      retainedOutcome.fieldOrigins?.[key] ||
+                        (key === "outcome" || retainedOutcome[key]
+                          ? "MANUAL"
+                          : "COURSE"),
+                    ],
+                  ),
+                ),
+              },
+            }
+          : {}),
         id:
           original.templateId !== templates[0] &&
           templates.includes(original.templateId)
@@ -285,17 +333,18 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
         const previousPreset = primary.biotCategory
           ? BIOT_CATEGORIES[primary.biotCategory]
           : undefined;
-        primary.biotCategory =
-          category === "ITR" ? "OHS_SPECIALIST_SPECIAL" : "WORKER";
+        primary.biotCategory = category === "ITR" ? "ITR_STANDARD" : "WORKER";
         const preset = BIOT_CATEGORIES[primary.biotCategory];
         if (
           !primary.biotManualFields?.includes("hours") &&
+          !isProtectedField(primary.fieldOrigins?.hours) &&
           (!primary.hours ||
             primary.hours === String(previousPreset?.defaultHours))
         )
           primary.hours = String(preset.defaultHours);
         if (
           !primary.biotManualFields?.includes("productionHours") &&
+          !isProtectedField(primary.fieldOrigins?.productionHours) &&
           (!primary.productionHours ||
             primary.productionHours ===
               String(previousPreset?.defaultProductionHours))
@@ -307,7 +356,15 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
       }
       for (const templateId of templates) {
         const isProtocol = templateId.endsWith("-protocol");
-        if (isProtocol && mode === "GROUP") continue;
+        if (isProtocol && mode === "GROUP") {
+          // Keep a conflicting factual protocol visible until one explicit
+          // course-outcome action reconciles the saved forms.
+          const conflictingProtocol =
+            conflictingOutcomes &&
+            entries.find((entry) => entry.templateId.endsWith("-protocol"));
+          if (conflictingProtocol) normalized.push(conflictingProtocol);
+          continue;
+        }
         const old =
           entries.find((a) => a.templateId === templateId) ||
           (isProtocol
@@ -334,20 +391,28 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
             "resultEn",
             "outcome",
           ] as const) {
+            if (
+              conflictingOutcomes &&
+              old &&
+              ["outcome", "result", "resultKz", "resultEn"].includes(key)
+            )
+              continue;
             (assignment as unknown as Record<string, unknown>)[key] =
               primary[key];
           }
           assignment.fieldOrigins = {
             ...assignment.fieldOrigins,
-            ...Object.fromEntries(
-              ["result", "resultKz", "resultEn"].map((key) => [
-                key,
-                primary.fieldOrigins?.[key] ||
-                  (primary[key as "result" | "resultKz" | "resultEn"]
-                    ? "MANUAL"
-                    : "COURSE"),
-              ]),
-            ),
+            ...(!conflictingOutcomes || !old
+              ? Object.fromEntries(
+                  ["result", "resultKz", "resultEn"].map((key) => [
+                    key,
+                    primary.fieldOrigins?.[key] ||
+                      (primary[key as "result" | "resultKz" | "resultEn"]
+                        ? "MANUAL"
+                        : "COURSE"),
+                  ]),
+                )
+              : {}),
             ...Object.fromEntries(
               courseProgramKeys.map((key) => [
                 key,
@@ -452,7 +517,7 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
     }
   }
   if (modeChanged) return applyBusinessRules(draft);
-  return draft;
+  return normalizeNewDraftLanguages(draft);
 }
 
 export function validateBusinessRules(
@@ -512,6 +577,20 @@ export function validateBusinessRules(
           ? a.eventId === assignment.eventId
           : !a.eventId && trainingDirection(a.templateId) === direction,
       );
+      if (
+        assignment === sameTraining[0] &&
+        new Set(
+          sameTraining
+            .filter((entry) => entry.outcome)
+            .map((entry) => entry.outcome!.status),
+        ).size > 1
+      )
+        add(
+          "TRAINING_OUTCOME_CONFLICT",
+          `${path}.outcome`,
+          "В формах одного обучения сохранены разные результаты. Укажите действительный результат один раз для этого человека и курса.",
+          item.id,
+        );
       if (!templates.includes(assignment.templateId))
         add(
           "EMPLOYEE_TEMPLATE_MISMATCH",
