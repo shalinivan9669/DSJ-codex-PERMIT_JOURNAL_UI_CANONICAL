@@ -1,0 +1,517 @@
+{
+  "date": "2026-10-05",
+  "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+  "branch": "codex/operator-flow-refinement-20261003",
+  "head": "a9c9ef2015d8e6c9f9c34f2fb897332f00329430",
+  "policy": "NEUTRAL_FORMS_V1",
+  "renderer": "demo-ooxml-12/libreoffice-26.2.6.3",
+  "matrix": [
+    {
+      "templateId": "biot-worker-card",
+      "kind": "individual",
+      "version": 21,
+      "file": "biot-worker-card.v21.docx",
+      "templateSha256": "e10043bd9b87dfc490a106c6cf4e9ab7689233f946a45d6031bb67818233dfc7",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "biot-worker-card-normal",
+        "biot-worker-card-long"
+      ],
+      "wordPages": 4,
+      "applicationPages": 4,
+      "scaleCases": []
+    },
+    {
+      "templateId": "biot-itr-certificate",
+      "kind": "individual",
+      "version": 19,
+      "file": "biot-itr-certificate.v19.docx",
+      "templateSha256": "53f3d85f16223baeafbee8ac5de8e4d4babc64be8a72d4535c80ead88db52e81",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "biot-itr-certificate-normal",
+        "biot-itr-certificate-long"
+      ],
+      "wordPages": 2,
+      "applicationPages": 2,
+      "scaleCases": []
+    },
+    {
+      "templateId": "biot-protocol",
+      "kind": "individual",
+      "version": 15,
+      "file": "biot-protocol.v15.docx",
+      "templateSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "biot-protocol-normal",
+        "biot-protocol-long"
+      ],
+      "wordPages": 2,
+      "applicationPages": 2,
+      "scaleCases": []
+    },
+    {
+      "templateId": "ptm-card",
+      "kind": "individual",
+      "version": 18,
+      "file": "ptm-card.v18.docx",
+      "templateSha256": "5c79ada917fcca2ce83f0693853ba6ec76446f7c14892115101f1e6e10189881",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "ptm-card-normal",
+        "ptm-card-long",
+        "ptm-card-photo"
+      ],
+      "wordPages": 3,
+      "applicationPages": 3,
+      "scaleCases": []
+    },
+    {
+      "templateId": "ptm-protocol",
+      "kind": "individual",
+      "version": 13,
+      "file": "ptm-protocol.v13.docx",
+      "templateSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "ptm-protocol-normal",
+        "ptm-protocol-long"
+      ],
+      "wordPages": 2,
+      "applicationPages": 2,
+      "scaleCases": []
+    },
+    {
+      "templateId": "pb-card",
+      "kind": "individual",
+      "version": 18,
+      "file": "pb-card.v18.docx",
+      "templateSha256": "edd414481ae70bc82a170494cf668d9963db007b3946bd2f9e2f766ce2589ab6",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "pb-card-normal",
+        "pb-card-long",
+        "pb-card-photo"
+      ],
+      "wordPages": 6,
+      "applicationPages": 6,
+      "scaleCases": []
+    },
+    {
+      "templateId": "pb-protocol",
+      "kind": "individual",
+      "version": 13,
+      "file": "pb-protocol.v13.docx",
+      "templateSha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "pb-protocol-normal",
+        "pb-protocol-long"
+      ],
+      "wordPages": 2,
+      "applicationPages": 2,
+      "scaleCases": []
+    },
+    {
+      "templateId": "ps-card",
+      "kind": "individual",
+      "version": 19,
+      "file": "ps-card.v19.docx",
+      "templateSha256": "78f97e1c1fe91f6229ba40581d6f6c2fb21df6a107d490b71e93d93695faadd1",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "ps-card-normal",
+        "ps-card-long",
+        "ps-card-photo"
+      ],
+      "wordPages": 6,
+      "applicationPages": 6,
+      "scaleCases": []
+    },
+    {
+      "templateId": "ps-protocol",
+      "kind": "individual",
+      "version": 13,
+      "file": "ps-protocol.v13.docx",
+      "templateSha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "ps-protocol-normal",
+        "ps-protocol-long"
+      ],
+      "wordPages": 2,
+      "applicationPages": 2,
+      "scaleCases": []
+    },
+    {
+      "templateId": "ps-witness",
+      "kind": "individual",
+      "version": 15,
+      "file": "ps-witness.v15.docx",
+      "templateSha256": "4d6827fd5963c16894758da82f6a46cd7fcdccc490254be638ccbfecb39bda35",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "ps-witness-normal",
+        "ps-witness-long"
+      ],
+      "wordPages": 4,
+      "applicationPages": 4,
+      "scaleCases": []
+    },
+    {
+      "templateId": "biot-itr-protocol",
+      "kind": "individual",
+      "version": 6,
+      "file": "biot-itr-protocol.v6.docx",
+      "templateSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "biot-itr-protocol-normal",
+        "biot-itr-protocol-long"
+      ],
+      "wordPages": 2,
+      "applicationPages": 2,
+      "scaleCases": []
+    },
+    {
+      "templateId": "biot-protocol",
+      "kind": "group",
+      "version": "15-group-1",
+      "file": "biot-protocol.group-v6.docx",
+      "templateSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "biot-protocol-group25"
+      ],
+      "wordPages": 3,
+      "applicationPages": 3,
+      "scaleCases": [
+        1,
+        2,
+        25,
+        100,
+        250,
+        400
+      ]
+    },
+    {
+      "templateId": "ptm-protocol",
+      "kind": "group",
+      "version": "13-group-1",
+      "file": "ptm-protocol.group-v5.docx",
+      "templateSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "ptm-protocol-group25"
+      ],
+      "wordPages": 3,
+      "applicationPages": 3,
+      "scaleCases": [
+        1,
+        2,
+        25,
+        100,
+        250,
+        400
+      ]
+    },
+    {
+      "templateId": "pb-protocol",
+      "kind": "group",
+      "version": "13-group-1",
+      "file": "pb-protocol.group-v5.docx",
+      "templateSha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "pb-protocol-group25"
+      ],
+      "wordPages": 2,
+      "applicationPages": 2,
+      "scaleCases": [
+        1,
+        2,
+        25,
+        100,
+        250,
+        400
+      ]
+    },
+    {
+      "templateId": "ps-protocol",
+      "kind": "group",
+      "version": "13-group-1",
+      "file": "ps-protocol.group-v5.docx",
+      "templateSha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "ps-protocol-group25"
+      ],
+      "wordPages": 2,
+      "applicationPages": 2,
+      "scaleCases": [
+        1,
+        2,
+        25,
+        100,
+        250,
+        400
+      ]
+    },
+    {
+      "templateId": "biot-itr-protocol",
+      "kind": "group",
+      "version": "6-group-1",
+      "file": "biot-itr-protocol.group-v6.docx",
+      "templateSha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "status": "PASS_LOCAL_WORD_AND_APPLICATION_PDF",
+      "cases": [
+        "biot-itr-protocol-group25"
+      ],
+      "wordPages": 3,
+      "applicationPages": 3,
+      "scaleCases": [
+        1,
+        2,
+        25,
+        100,
+        250,
+        400
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "DOC-01",
+      "causeRu": "Логотип был графикой в ZIP; замена строк его не удаляла.",
+      "fixRu": "Новые пакеты очищены от исходной графики; нейтральный редактируемый блок ЛОГОТИП.",
+      "verificationRu": "Все16 новых шаблонов +30 итоговых DOCX: XML/атрибуты/связи/media/известные SHA; Word и PDF.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-02",
+      "causeRu": "Печати и подписи свидетельства были отдельными перекрывающими рисунками.",
+      "fixRu": "Рисунки удалены; отдельная нейтральная рамка МЕСТО ДЛЯ ПЕЧАТИ и строки подписи.",
+      "verificationRu": "Обе страницы и языковые половины normal/long, длинная регистрация; Word и PDF.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-03",
+      "causeRu": "Неиспользуемая картинка чужой организации оставалась в media.",
+      "fixRu": "Удалены все исходные media, свойства, миниатюры, вложения и лишние связи новых пакетов.",
+      "verificationRu": "Поиск известных хешей во всех ZIPparts; отрицательный тест с внедрённой скрытой графикой.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-04",
+      "causeRu": "Фиксированные узкие блоки ИТР и большой межбуквенный интервал обрезали строки.",
+      "fixRu": "Согласованы размеры/шрифты/интервалы заголовка, имени, курса, дат и издателя; контроль переполнения.",
+      "verificationRu": "Обычные, длинные и стрессовые значения; полный текст и визуальный просмотр Word/PDF.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-05",
+      "causeRu": "Плавающие поля ПБ пересекались с фото и соседними строками.",
+      "fixRu": "Потоковые таблицы, отдельная колонка фото, полные даты и переносы полей.",
+      "verificationRu": "Normal/long/photo, обе страницы, отдельный пакет с разными фото двух получателей.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-06",
+      "causeRu": "Повторная полоса ПС имела ширину за пределами листа.",
+      "fixRu": "Ширина полосы согласована с карточкой; сохранены RU/KZ издатель и работодатель.",
+      "verificationRu": "Все6 страниц normal/long/photo в обоих конвертерах; полный работодатель и дисциплины.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-07",
+      "causeRu": "Две копии БиОТ использовали разную геометрию и плавающие блоки.",
+      "fixRu": "Одинаковые таблицы двух копий, согласованные ширины и переносы.",
+      "verificationRu": "Сравнение структуры копий, normal/long, обе страницы Word/PDF, overflow preflight.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-08",
+      "causeRu": "Неверные tblHeader, разрывы строк и автоматическая нумерация таблиц.",
+      "fixRu": "Только настоящие заголовки повторяются; cantSplit; явные1..N; контроль высоты строки.",
+      "verificationRu": "Все5 форм ×1/2/25/100/250/400; каждый участник/результат/порядок, заголовки на всех страницах.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-09",
+      "causeRu": "Плавающий/разрываемый блок комиссии отделялся от таблицы; Writer сливал соседние таблицы.",
+      "fixRu": "Комиссия в одном блоке со связью с последними участниками; у ПБ в замыкающей строке таблицы. Удалены только исходные дубли правовых форм.",
+      "verificationRu": "Все30 масштабных случаев в Word и PDF: целая комиссия и участники на последнем листе; пустых хвостов нет.",
+      "status": "FIXED_VERIFIED"
+    },
+    {
+      "id": "DOC-10",
+      "causeRu": "Разные движки по-разному обрабатывали исходные блоки, высоты и привязки.",
+      "fixRu": "Новая отдельная политика NEUTRAL_FORMS_V1 с нормализованной геометрией и проверкой переполнения.",
+      "verificationRu": "Те же30 DOCX отдельно Word16.0.17932 и renderer.convert_pdf/LibreOffice26.2.6.3; все страницы основного комплекта просмотрены.",
+      "status": "FIXED_VERIFIED"
+    }
+  ],
+  "mainCases": 30,
+  "mainWordPages": 48,
+  "mainApplicationPages": 48,
+  "allMainPagesVisuallyReviewed": true,
+  "scaleCases": 30,
+  "scaleApplicationPages": 285,
+  "scaleWordPages": 286,
+  "renderTests": {
+    "status": "PASS",
+    "tests": 125,
+    "seconds": 1686.457
+  },
+  "finalCodeFocusedChecks": {
+    "status": "PASS",
+    "cases": 14,
+    "protocolModuleFinalPbChecks": 7,
+    "batchRegressionChecks": 2,
+    "sameBatchDocxWordAndApplicationPages": 2,
+    "note": "After the full-suite imports, final namespace/PB-footer corrections were covered by focused reruns. The three new employer tests explicitly distinguish the marked commission footer from participant rows; all value/count assertions remain."
+  },
+  "unitTests": {
+    "root": 189,
+    "web": 211,
+    "status": "PASS"
+  },
+  "focusedIntegrationTests": {
+    "existingArtifactHistoryRegistration": 11,
+    "newAdditiveTemplateUpgrade": 1,
+    "status": "PASS"
+  },
+  "lint": "PASS",
+  "typecheck": "PASS",
+  "build": "PASS",
+  "physicalPrint": "NOT_PERFORMED",
+  "productionChanged": false,
+  "fullIntegrationOrE2ESuiteClaimed": false,
+  "minorObservations": [
+    "PTM long: перенос внутри длинного слова должности без дефиса, все символы сохранены.",
+    "В Word у заглушки ЛОГОТИП ПТМ левая линия контура не видна; текст и поля полны; в PDF приложения контур полный."
+  ],
+  "historicalEvidence": {
+    "status": "PASS",
+    "baselineFiles": 448,
+    "byteIdenticalFiles": 445,
+    "changed": [
+      "assets/templates/manifest.json",
+      "docs/evidence/progress.md",
+      "scripts/render/renderer.py"
+    ],
+    "oldTemplateFiles": 87,
+    "originalAuditAndSavedArtifactFiles": 319,
+    "originalAuditAndSavedArtifactsUnchanged": true,
+    "preexistingUserFilesPreserved": true,
+    "registrationEvidence": "registration-history-upgrade.json"
+  },
+  "comparisons": [
+    {
+      "case": "biot-itr-certificate-normal",
+      "page": 1,
+      "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\biot-itr-certificate-normal.png",
+      "sourcePdfs": [
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\biot-itr-certificate-normal.word.pdf",
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-certificate-normal.word.pdf"
+      ],
+      "sourceSha256": [
+        "d398707e0f26b0848c9a07f45e3f66741c1dc4891f4b8583296a9c8e4bea9fa9",
+        "00e226c123f91abb5a08e064ba2a5f885d47d0c15daa2e99b4f736c1e37a8594"
+      ],
+      "sameSnapshotExceptTemplateVersion": true,
+      "noteRu": "Те же данные."
+    },
+    {
+      "case": "biot-worker-card-long",
+      "page": 1,
+      "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\biot-worker-card-long.png",
+      "sourcePdfs": [
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\biot-worker-card-long.word.pdf",
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-worker-card-long.word.pdf"
+      ],
+      "sourceSha256": [
+        "945ab80d53f3bf176b0b1a11203141b84cceac64eafaec163f9fa1d7dedff7f7",
+        "d438c76c7b578a19e74581c2a0c109af17aee1718c46bac3ab0c69ad56ceb4af"
+      ],
+      "sameSnapshotExceptTemplateVersion": false,
+      "noteRu": "Те же длинные ФИО/должность/работодатель; после исправления дополнительно удлинены номера и RU/KZ курс."
+    },
+    {
+      "case": "pb-card-long",
+      "page": 1,
+      "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\pb-card-long.png",
+      "sourcePdfs": [
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\pb-card-long.word.pdf",
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-card-long.word.pdf"
+      ],
+      "sourceSha256": [
+        "d9135e6ec85dfdbab88ffb1259193475bc9c24c549c0c5ef0b8428aea6569002",
+        "9427c36efab522c711d47ec8fd15dd3076f26b4c991da09c5400218679f05416"
+      ],
+      "sameSnapshotExceptTemplateVersion": false,
+      "noteRu": "Те же длинные ФИО/должность/работодатель; после исправления дополнительно удлинены номера и RU/KZ курс."
+    },
+    {
+      "case": "ps-card-normal",
+      "page": 1,
+      "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\ps-card-normal.png",
+      "sourcePdfs": [
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\ps-card-normal.word.pdf",
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-normal.word.pdf"
+      ],
+      "sourceSha256": [
+        "cc7c8754c4b208714886d784f57815b047e9933ab9eb9d8c8efcadfdff2bb729",
+        "a8e7e16dd7bb4eb95b89c5859d6f4aa6754f44d9b14a975f98baa8b3b14c7cdd"
+      ],
+      "sameSnapshotExceptTemplateVersion": true,
+      "noteRu": "Те же данные."
+    },
+    {
+      "case": "ps-witness-normal",
+      "page": 2,
+      "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\ps-witness-normal.png",
+      "sourcePdfs": [
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\ps-witness-normal.word.pdf",
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-witness-normal.word.pdf"
+      ],
+      "sourceSha256": [
+        "93a56eda7bf61a66122441ac60adbc61e0112f3be73ebb311d172ad1c558d364",
+        "c58b7512515c9008838506f6c555881a0376391a734c4f5cdda743666cca4f85"
+      ],
+      "sameSnapshotExceptTemplateVersion": true,
+      "noteRu": "Те же данные."
+    },
+    {
+      "case": "biot-protocol-group25",
+      "page": 2,
+      "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\biot-protocol-group25.png",
+      "sourcePdfs": [
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\biot-protocol-group25.word.pdf",
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-protocol-group25.word.pdf"
+      ],
+      "sourceSha256": [
+        "e8f468241da7555139277da7fc8b6bc56c15f51b77c3ff71ff7e05647692dfd6",
+        "1bfb36613654646e093a8f002b6887c80e6710c819fb57441899ba98b72e494c"
+      ],
+      "sameSnapshotExceptTemplateVersion": true,
+      "noteRu": "Те же данные."
+    },
+    {
+      "case": "pb-protocol-group25",
+      "page": 2,
+      "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\pb-protocol-group25.png",
+      "sourcePdfs": [
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\pb-protocol-group25.word.pdf",
+        "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-group25.word.pdf"
+      ],
+      "sourceSha256": [
+        "b7080b74f137065c1ed7ded2aa03596365b2e700fd9dde46e64d389dd8457dfe",
+        "e484f965cefae0fd3e4c187f3a1acdaa334102d569d0060b6b497bfccf1a737e"
+      ],
+      "sameSnapshotExceptTemplateVersion": true,
+      "noteRu": "Те же данные."
+    }
+  ]
+}

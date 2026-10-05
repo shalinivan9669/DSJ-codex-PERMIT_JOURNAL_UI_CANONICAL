@@ -1,0 +1,135 @@
+{
+  "caseCount": 11,
+  "pageCount": 19,
+  "status": "PASS_CARDS_LIBREOFFICE",
+  "forms": [
+    "biot-worker-card",
+    "pb-card",
+    "ps-card",
+    "ptm-card"
+  ],
+  "checkedCases": [
+    "normal",
+    "long",
+    "photo for three supported forms"
+  ],
+  "review": "All 19 page PNGs inspected. Full names/course/employers stay inside panels; worker copies are identical; photograph uses its own 3:4 frame; PB issue/protocol/expiry dates are complete; bilingual issuer bands fit; all original panel sides/page counts retained. Latest BIOT reverse-side writable labels were re-rendered and inspected. Root Word suite owns separate Word verification.",
+  "tests": {
+    "test_neutral_cards": 7,
+    "test_neutral_identity_audit": 2,
+    "result": "PASS"
+  },
+  "skillRender": ".runtime/neutral-cards/skill-render/page-1.png and page-2.png generated with documents/render_docx.py and inspected",
+  "records": [
+    {
+      "docx": ".runtime/neutral-cards/final2/biot-worker-card-long.docx",
+      "docxSha256": "8f120eb8e9c2fa8fe3af3035552fd76ad44d942f528e801aab76042edd64524d",
+      "pdf": ".runtime/neutral-cards/final2/biot-worker-card-long.pdf",
+      "pdfSha256": "92a5451e32ebbee671a251e78de73a1e2120d422a6b4d8784445279de119f794",
+      "pages": 2,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/biot-worker-card-normal.docx",
+      "docxSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "pdf": ".runtime/neutral-cards/final2/biot-worker-card-normal.pdf",
+      "pdfSha256": "61e33092ecac2954742a1cb1fca8f6c014c988f635b7214b7ad5984f109db7d2",
+      "pages": 2,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/pb-card-long.docx",
+      "docxSha256": "9addf884f3c936d1e2c543e0132376449bae0f62e0a6527a64fca8086d91b96d",
+      "pdf": ".runtime/neutral-cards/final2/pb-card-long.pdf",
+      "pdfSha256": "8c9fef69341568528efa6571447a0d914e2d2b05753602a93216a53fd85e7c1e",
+      "pages": 2,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/pb-card-normal.docx",
+      "docxSha256": "4cac948210c1e15bc722ce92866f9caa5cd42f76b817b6f86b942595ccbbbbac",
+      "pdf": ".runtime/neutral-cards/final2/pb-card-normal.pdf",
+      "pdfSha256": "236f274dcf98c671a27f6651a52ef1335ea6b7c8ec96ac44ab0ed938ccbf023b",
+      "pages": 2,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/pb-card-photo.docx",
+      "docxSha256": "228c08ea6499c2921b94ea13473cae72d136be19dfa9de0120cf48abd802d3de",
+      "pdf": ".runtime/neutral-cards/final2/pb-card-photo.pdf",
+      "pdfSha256": "f47cb81b41c66b16c55b5e3f8298c156dd38cbd958c006039684ab319e245397",
+      "pages": 2,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/ps-card-long.docx",
+      "docxSha256": "ba7ac915463791a52a4dbb259aba5c05dbd7c662a24cd39b2e6ffb3d9c212709",
+      "pdf": ".runtime/neutral-cards/final2/ps-card-long.pdf",
+      "pdfSha256": "67081ffef58accfd4c68762d8174ca0e86f83e06cbca30d9dc505e985c87ab17",
+      "pages": 2,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/ps-card-normal.docx",
+      "docxSha256": "1f3f4da2f4cbddc07e7c1c7456b4496303116d119561fa1c271ab02fad347e78",
+      "pdf": ".runtime/neutral-cards/final2/ps-card-normal.pdf",
+      "pdfSha256": "d4defd8c8c910c02100da91b0ca92ab2da9e5c17c4a309a6b7c399851a4113e6",
+      "pages": 2,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/ps-card-photo.docx",
+      "docxSha256": "5e899ce29b57763c3ad5f7d334a5280e1eb9777a9b4efaeda1a7072be2bc32ef",
+      "pdf": ".runtime/neutral-cards/final2/ps-card-photo.pdf",
+      "pdfSha256": "d90c7040f82e74d9063b77c5bdb6044ecf1b2c19ff3982460a5a69f1c0359c32",
+      "pages": 2,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/ptm-card-long.docx",
+      "docxSha256": "398736fb13c3ce3d73bc172a130d34ec89c24666d003a281e692851518c3d554",
+      "pdf": ".runtime/neutral-cards/final2/ptm-card-long.pdf",
+      "pdfSha256": "953da3acfe09832488301611e150e80600bfbe0833e6350453e3f191d49d5825",
+      "pages": 1,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/ptm-card-normal.docx",
+      "docxSha256": "17b4bac6fb12fdae2ec2feb1e1e78f872cef8db7396a97f33832e878c1b26ae7",
+      "pdf": ".runtime/neutral-cards/final2/ptm-card-normal.pdf",
+      "pdfSha256": "bc15e83834bd38da4883a1917ac8c4c9ee16cd741695173a77dbb4f81cbd5918",
+      "pages": 1,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    },
+    {
+      "docx": ".runtime/neutral-cards/final2/ptm-card-photo.docx",
+      "docxSha256": "3dd2e1400f0ac44f5d53d03280b29d25d9d921d7989a8375f1befa643bb641c2",
+      "pdf": ".runtime/neutral-cards/final2/ptm-card-photo.pdf",
+      "pdfSha256": "3d5d876b6adb0e31c84edbd290058507f05725261d01bf8062d1475e0e49edec",
+      "pages": 1,
+      "outOfPageTextBoxes": 0,
+      "visualReview": "PASS",
+      "converter": "renderer.convert_pdf / LibreOffice 26.2.6.3"
+    }
+  ]
+}

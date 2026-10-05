@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "pb-protocol-normal",
+      "files": {
+        ".docx": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-normal.docx",
+          "sha256": "7134ba1c29380a1780ddca9493559a146c67b574fd1810077d9108f1e10d3c76"
+        },
+        ".pdf": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-normal.pdf",
+          "sha256": "b743ba57a406b86433cba1e3f11e36a3b913f3fe749696f82edf5738e23aa758"
+        },
+        ".word.pdf": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-normal.word.pdf",
+          "sha256": "faaf6f5fdc8d138bbe971858a523725f6f856e5f7dd830eab302a6337e09849b"
+        }
+      },
+      "review": "Whole pages reviewed in both engines. Complete long names, position, employer where the source has a slot, results, number/date and commission; no page overflow or identity graphics. PB re-reviewed after atomic footer by group_layout final-pb-review.json."
+    },
+    {
+      "case": "pb-protocol-long",
+      "files": {
+        ".docx": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-long.docx",
+          "sha256": "945b6bcb82f163e5ae6557cfda73ed776dcea68a42e41f269fcb77fc6d386899"
+        },
+        ".pdf": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-long.pdf",
+          "sha256": "ce9351fcaab8334ced39ea5b8a5baf9403736b9cd144a6685123e08811807bb9"
+        },
+        ".word.pdf": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-long.word.pdf",
+          "sha256": "3d4877e6324e1390f4dc67ccb3c44d652e4ab53434532752a1fbeff8ee13ac84"
+        }
+      },
+      "review": "Whole pages reviewed in both engines. Complete long names, position, employer where the source has a slot, results, number/date and commission; no page overflow or identity graphics. PB re-reviewed after atomic footer by group_layout final-pb-review.json."
+    },
+    {
+      "case": "ps-protocol-normal",
+      "files": {
+        ".docx": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-normal.docx",
+          "sha256": "2333a6813a756207669325fce55f0fd25e01fb297f0ff836e19c68430ce16588"
+        },
+        ".pdf": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-normal.pdf",
+          "sha256": "d283635dad014015e4a9acefc65cf4708c941dff338a21a5f35af6b54f9eee08"
+        },
+        ".word.pdf": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-normal.word.pdf",
+          "sha256": "f8de32447bc31073009cd5b87032c54704e3d1517edcb0605216e28e54a1d309"
+        }
+      },
+      "review": "Whole pages reviewed in both engines. Complete long names, position, employer where the source has a slot, results, number/date and commission; no page overflow or identity graphics. PB re-reviewed after atomic footer by group_layout final-pb-review.json."
+    },
+    {
+      "case": "ps-protocol-long",
+      "files": {
+        ".docx": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-long.docx",
+          "sha256": "3a2dfa5f072f5033cf4efba0934228259741d781f31b9ffa6887f9a0395388a1"
+        },
+        ".pdf": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-long.pdf",
+          "sha256": "f59bedba8e819a6ab30ff1153a2e6ca4374f48c6522eb48b0f1a153116afab11"
+        },
+        ".word.pdf": {
+          "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-long.word.pdf",
+          "sha256": "8764c0fbdf4a894504f44564635839bf553da9e9743fc10f6c1eaf89204394af"
+        }
+      },
+      "review": "Whole pages reviewed in both engines. Complete long names, position, employer where the source has a slot, results, number/date and commission; no page overflow or identity graphics. PB re-reviewed after atomic footer by group_layout final-pb-review.json."
+    }
+  ],
+  "wordPages": 4,
+  "applicationPages": 4,
+  "rootReviewImages": [
+    "application-root-protocols.png",
+    "word-root-protocols.png"
+  ],
+  "pbFinalOverride": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-protocols\\final-pb-review.json"
+}

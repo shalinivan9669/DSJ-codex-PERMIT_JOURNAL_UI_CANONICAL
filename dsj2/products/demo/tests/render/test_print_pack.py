@@ -102,7 +102,9 @@ class PrintPackTests(unittest.TestCase):
         for index, page in enumerate(pages):
             text = page.extract_text()
             self.assertIn('Синтетический Получатель %d' % index, text)
-            self.assertIn('ПТМ-TEST-%d' % index, text)
+            # Neutral cards wrap the full title/number at the source hyphen.
+            # PDF extraction inserts a newline there; it is not lost data.
+            self.assertIn('ПТМ-TEST-%d' % index, ''.join(text.split()))
             self.assertNotIn('Получатель %d' % (1 - index), text)
         self.assertEqual([hashlib.sha256((self.root / source['storageKey']).read_bytes()).hexdigest() for source in sources], before)
     def test_source_byte_budget_before_merge(self):

@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "branch": "codex/operator-flow-refinement-20261003",
+  "head": "a9c9ef2015d8e6c9f9c34f2fb897332f00329430",
+  "baselineFiles": 448,
+  "baselineByteIdentical": 445,
+  "allowedBaselineChanges": [
+    "assets/templates/manifest.json",
+    "docs/evidence/progress.md",
+    "scripts/render/renderer.py"
+  ],
+  "originalProgressPrefixPreserved": true,
+  "unrelatedUserChangesPreserved": [
+    "apps/web/next-env.d.ts",
+    "apps/web/tsconfig.json",
+    "docs/evidence/operator-minimal-actions-20261004/acceptance-matrix.json"
+  ],
+  "allCurrentTemplateAndRendererHashesMatch": true,
+  "archives": [
+    {
+      "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\DEMO-neutral-control-kit-20261005.zip",
+      "sha256": "f04138b2c4a20e1a3d113ad791761406fc36fc23d229f6c9a6d6b805d79a3f90",
+      "bytes": 47852018,
+      "verifiedEntries": 121,
+      "status": "PASS"
+    },
+    {
+      "path": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\DEMO-neutral-group-scale-20261005.zip",
+      "sha256": "1d305f9ad737ff22a9f86d608045a347394e75f9c145aec6c91abf53003ba7ec",
+      "bytes": 95852131,
+      "verifiedEntries": 120,
+      "status": "PASS"
+    }
+  ],
+  "scope": "products/demo only"
+}

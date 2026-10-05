@@ -1,0 +1,514 @@
+{
+  "scope": "products/demo only",
+  "preexistingUnrelatedUserChangesPreserved": [
+    "apps/web/next-env.d.ts",
+    "apps/web/tsconfig.json",
+    "docs/evidence/operator-minimal-actions-20261004/acceptance-matrix.json"
+  ],
+  "files": [
+    {
+      "path": ".gitignore",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.gitignore",
+      "kind": "modified",
+      "sha256": "1a7880d3a4276524df8ecde6345b056c6141f58011d7dd5c22e2660b7582446e",
+      "note": null
+    },
+    {
+      "path": "assets/templates/biot-itr-certificate.v19.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-itr-certificate.v19.docx",
+      "kind": "new",
+      "sha256": "53f3d85f16223baeafbee8ac5de8e4d4babc64be8a72d4535c80ead88db52e81",
+      "note": null
+    },
+    {
+      "path": "assets/templates/biot-itr-protocol.group-v6.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-itr-protocol.group-v6.docx",
+      "kind": "new",
+      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "note": null
+    },
+    {
+      "path": "assets/templates/biot-itr-protocol.v6.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-itr-protocol.v6.docx",
+      "kind": "new",
+      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "note": null
+    },
+    {
+      "path": "assets/templates/biot-protocol.group-v6.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-protocol.group-v6.docx",
+      "kind": "new",
+      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "note": null
+    },
+    {
+      "path": "assets/templates/biot-protocol.v15.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-protocol.v15.docx",
+      "kind": "new",
+      "sha256": "d24d35cec2af861e0c8647556f10efcd1e104f62a473afc835302aaa64d59237",
+      "note": null
+    },
+    {
+      "path": "assets/templates/biot-worker-card.v21.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\biot-worker-card.v21.docx",
+      "kind": "new",
+      "sha256": "e10043bd9b87dfc490a106c6cf4e9ab7689233f946a45d6031bb67818233dfc7",
+      "note": null
+    },
+    {
+      "path": "assets/templates/manifest.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\manifest.json",
+      "kind": "modified",
+      "sha256": "a20a35bf5ab006d803632803caa4f92884bcbb761bc868d0b98bd1d446a11517",
+      "note": null
+    },
+    {
+      "path": "assets/templates/pb-card.v18.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\pb-card.v18.docx",
+      "kind": "new",
+      "sha256": "edd414481ae70bc82a170494cf668d9963db007b3946bd2f9e2f766ce2589ab6",
+      "note": null
+    },
+    {
+      "path": "assets/templates/pb-protocol.group-v5.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\pb-protocol.group-v5.docx",
+      "kind": "new",
+      "sha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "note": null
+    },
+    {
+      "path": "assets/templates/pb-protocol.v13.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\pb-protocol.v13.docx",
+      "kind": "new",
+      "sha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503",
+      "note": null
+    },
+    {
+      "path": "assets/templates/ps-card.v19.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ps-card.v19.docx",
+      "kind": "new",
+      "sha256": "78f97e1c1fe91f6229ba40581d6f6c2fb21df6a107d490b71e93d93695faadd1",
+      "note": null
+    },
+    {
+      "path": "assets/templates/ps-protocol.group-v5.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ps-protocol.group-v5.docx",
+      "kind": "new",
+      "sha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "note": null
+    },
+    {
+      "path": "assets/templates/ps-protocol.v13.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ps-protocol.v13.docx",
+      "kind": "new",
+      "sha256": "e6ab2f6b791fb1d1e77aa434cfceee306116eeed722c17cc21f3ce71095ce892",
+      "note": null
+    },
+    {
+      "path": "assets/templates/ps-witness.v15.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ps-witness.v15.docx",
+      "kind": "new",
+      "sha256": "4d6827fd5963c16894758da82f6a46cd7fcdccc490254be638ccbfecb39bda35",
+      "note": null
+    },
+    {
+      "path": "assets/templates/ptm-card.v18.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ptm-card.v18.docx",
+      "kind": "new",
+      "sha256": "5c79ada917fcca2ce83f0693853ba6ec76446f7c14892115101f1e6e10189881",
+      "note": null
+    },
+    {
+      "path": "assets/templates/ptm-protocol.group-v5.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ptm-protocol.group-v5.docx",
+      "kind": "new",
+      "sha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "note": null
+    },
+    {
+      "path": "assets/templates/ptm-protocol.v13.docx",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\assets\\templates\\ptm-protocol.v13.docx",
+      "kind": "new",
+      "sha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/acceptance-matrix.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\acceptance-matrix.json",
+      "kind": "new",
+      "sha256": "417939c031f5dc33401247a690a7ee30e8655a9f8110e8427385b98589163f0d",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/accepted-source-hashes.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\accepted-source-hashes.json",
+      "kind": "new",
+      "sha256": "ca16bdee106703282af32270a59e4e3dff9bf20917c90f583c89382b05f480d9",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/batch-bookmarks-verification.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\batch-bookmarks-verification.json",
+      "kind": "new",
+      "sha256": "cb730e9e1d171c15fabf72d1262b0506bf364185a2deb9d673bbefd97b17bfd1",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/before-after.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\before-after.json",
+      "kind": "new",
+      "sha256": "c28ac3d3576d4ca928f72c9c7a402c225cdd26a9a56e61324aaf129bf8df7dad",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/cards-final-word-review.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\cards-final-word-review.json",
+      "kind": "new",
+      "sha256": "5bb97eee3739bced114e87dadde1363a2bfd44720da26af044763983ab95f960",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/cards-independent-package-audit.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\cards-independent-package-audit.json",
+      "kind": "new",
+      "sha256": "9a9fb92ec8483050c84199470fdb9909a631afa8a1958f480156e3d5f6abd23d",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/cards-layout-review.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\cards-layout-review.json",
+      "kind": "new",
+      "sha256": "56091e56cece4562a43adfc1b03fbc53d8e5acfdb0f6092d04794ddc5bdeec3e",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/case-inventory.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\case-inventory.json",
+      "kind": "new",
+      "sha256": "49c39a0bf23f5d9709c5b6079fb4bee40554423258ae447e3e685f3d305c9e84",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/changed-files.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\changed-files.json",
+      "kind": "new",
+      "sha256": null,
+      "note": "Self inventory; hash omitted."
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/control-kit.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\control-kit.json",
+      "kind": "new",
+      "sha256": "900c7d1283555c3137940ebc2d3bd585daae9834ce36b87c69b2d61ec0f48aa6",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/final-certificate-protocol-review.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\final-certificate-protocol-review.json",
+      "kind": "new",
+      "sha256": "e364421688b5cace4c51c216cf36261f1f1f111f49a3626c01b480f972cc56f2",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/final-integrity.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\final-integrity.json",
+      "kind": "new",
+      "sha256": "6f17243e631f49f3700955953d7d1f00e222a261f01f5d46e8f31170d1f7ef3a",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/final-other-protocol-review.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\final-other-protocol-review.json",
+      "kind": "new",
+      "sha256": "ec971b1c1cf0dcc85ffb56f426129d43b25131e3c3eb5671f96af9f23b51b905",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/group-scale-application.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\group-scale-application.json",
+      "kind": "new",
+      "sha256": "7a61941cd196d4d2b7dfb025d3cb4e910c1a8930a93eaa3e9ad666033751f9b5",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/group-scale-kit.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\group-scale-kit.json",
+      "kind": "new",
+      "sha256": "acf20e2748e2c9b37034ced1d360df3bb9c8110d1e12eca80d9bcae5f8f68762",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/group-scale-word.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\group-scale-word.json",
+      "kind": "new",
+      "sha256": "46b37e500d3991124a9ee4012a96915034171f243b0ba821e3aae3d5cfabb6ce",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/group-source-verification.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\group-source-verification.json",
+      "kind": "new",
+      "sha256": "b62b2237d1b29807f435ecf3ea4577b2a671cf8ce4818d9ee2a7b7d647cbde15",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/manifest-before.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\manifest-before.json",
+      "kind": "new",
+      "sha256": "6f37790fbcb077aaa59173d4a9576b58c8986d5bc0160f753530bc36e441e453",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/new-versions.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\new-versions.json",
+      "kind": "new",
+      "sha256": "c7ba16265e83ec2f6001ef78e2342c3832ab95bf1cadc8b9ef4b54dabed62d80",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/preservation-after.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\preservation-after.json",
+      "kind": "new",
+      "sha256": "3a2d98a53965004e552234e450cf3f08ab156bc47270cf48f29e33643c72954a",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/preservation-before.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\preservation-before.json",
+      "kind": "new",
+      "sha256": "5455c520c2deab325fefc629169df8175900903950eb09727c8b8d80d76f3094",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/progress-preservation.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\progress-preservation.json",
+      "kind": "new",
+      "sha256": "12b4d20689db1459d45a9e85dbf7277023dde4d3004efbb62e23ff79cbd4fd24",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/registration-history-upgrade.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\registration-history-upgrade.json",
+      "kind": "new",
+      "sha256": "6afc5d45ba35e64918c159526680b9e65015d78e333b097ddd9e5466a8f6483e",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/REPORT_RU.md",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\REPORT_RU.md",
+      "kind": "new",
+      "sha256": "689dc2ee14ce97fc6a1accbb439919201616fb6f605f2b5c02a77e9bf702cfc1",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/neutral-forms-20261005/template-fixtures.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\neutral-forms-20261005\\template-fixtures.json",
+      "kind": "new",
+      "sha256": "1d8e43224f5b572a6d07d7d756914af35c5f4b07c2a5a651124c4f15a67f6ca4",
+      "note": null
+    },
+    {
+      "path": "docs/evidence/progress.md",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\progress.md",
+      "kind": "modified",
+      "sha256": "e1b846dcdad61cd8b25972e7d69d9594de0206ca068208f2c3d8b91f2567a611",
+      "note": null
+    },
+    {
+      "path": "scripts/render/neutral_cards.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\render\\neutral_cards.py",
+      "kind": "new",
+      "sha256": "12fc1f65c495e1d005d79d50d44f3296edad243d565177aafac2cfc349496cdf",
+      "note": null
+    },
+    {
+      "path": "scripts/render/neutral_certificates.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\render\\neutral_certificates.py",
+      "kind": "new",
+      "sha256": "1c531d1344b05e30020a2e9868e993de4b3ef0ebdfbfa206f2dbc42804a8db9d",
+      "note": null
+    },
+    {
+      "path": "scripts/render/neutral_forms.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\render\\neutral_forms.py",
+      "kind": "new",
+      "sha256": "3217bd53d5970696d560f5c1140a0e8e336fe98cbd50bb2c08252d93b44d2aed",
+      "note": null
+    },
+    {
+      "path": "scripts/render/neutral_forms_sources.json",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\render\\neutral_forms_sources.json",
+      "kind": "new",
+      "sha256": "c7ba16265e83ec2f6001ef78e2342c3832ab95bf1cadc8b9ef4b54dabed62d80",
+      "note": null
+    },
+    {
+      "path": "scripts/render/neutral_identity.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\render\\neutral_identity.py",
+      "kind": "new",
+      "sha256": "91486c224282abe767a745ffe5634f4012721b8ad6db0ffd742f72900f9d46ec",
+      "note": null
+    },
+    {
+      "path": "scripts/render/neutral_protocols.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\render\\neutral_protocols.py",
+      "kind": "new",
+      "sha256": "03f8b81d85c29f5f20e1a74db50bbd3876dfe95b8527c1d8b5718ef1986c3096",
+      "note": null
+    },
+    {
+      "path": "scripts/render/renderer.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\render\\renderer.py",
+      "kind": "modified",
+      "sha256": "a0f169d79e2b1f6fbe311dba9cdb901783590df384ed2faf02626b58f4d7d42a",
+      "note": null
+    },
+    {
+      "path": "scripts/render/upgrade_neutral_forms.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\render\\upgrade_neutral_forms.py",
+      "kind": "new",
+      "sha256": "61e59f4514268efa7569d55cd1eac1abaee8eb8f837eab734d04423c6df7c001",
+      "note": null
+    },
+    {
+      "path": "scripts/verification/accept_neutral_forms.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\accept_neutral_forms.py",
+      "kind": "new",
+      "sha256": "014d0d0492f9ea74c36883aae04da717cc472d0837e309b807f6eee6e200c877",
+      "note": null
+    },
+    {
+      "path": "scripts/verification/neutral_identity_baseline.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\neutral_identity_baseline.py",
+      "kind": "new",
+      "sha256": "3b984b100949ff1050b8cfba33c1f11771d93a34f207fd6a65e046105558b747",
+      "note": null
+    },
+    {
+      "path": "scripts/verification/package_neutral_evidence.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\package_neutral_evidence.py",
+      "kind": "new",
+      "sha256": "36bfd65ac59170670267ec74b262084d25e073dc62d8cd49e649eb2214a70d93",
+      "note": null
+    },
+    {
+      "path": "scripts/verification/verify_neutral_forms.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\verify_neutral_forms.py",
+      "kind": "new",
+      "sha256": "8832e5a295090566153fa0bf6e63834fc00852515eda9b41673577dd765da17b",
+      "note": null
+    },
+    {
+      "path": "scripts/verification/word-neutral-forms.ps1",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\word-neutral-forms.ps1",
+      "kind": "new",
+      "sha256": "01968c590a00bef0f9ea8b228872a46a0d4fdb83fbd04983f292d3b145e792fc",
+      "note": null
+    },
+    {
+      "path": "tests/integration/neutral-template-upgrade.test.ts",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\integration\\neutral-template-upgrade.test.ts",
+      "kind": "new",
+      "sha256": "c4a6a8748f14596685a7c71ac860e55ba0ffd306940509fc36113798e9ed2b6f",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_batch.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_batch.py",
+      "kind": "new",
+      "sha256": "d2fb2cfac7321f192b3893bbe63d648ef9c120836d64f6cc1972f56f4752dacf",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_cards.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_cards.py",
+      "kind": "new",
+      "sha256": "f796128ad15e334441ee6332574820fc0e66afd8cbd8f6a5fb8e93002d9ca656",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_certificates.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_certificates.py",
+      "kind": "new",
+      "sha256": "c9d0441aaef1e1fb97abcba7f2b79a947a6539023b11e951b9660b20073ef7d2",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_identity_audit.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_identity_audit.py",
+      "kind": "new",
+      "sha256": "f6a5b4c294453f0fca667266cbb5b647ed1386dd62cfcfa0abdc67442c4393eb",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_optional_fields.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_optional_fields.py",
+      "kind": "new",
+      "sha256": "41dbd86b2acab9a63faca48d633ea5e9b2a17f4989ef7fc10304b702d1418deb",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_preflight.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_preflight.py",
+      "kind": "new",
+      "sha256": "2fd30339ece72afa5742ad72de91008951163ebfe9b2f7dea97a74270818e302",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_protocol_batch_bookmarks.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_protocol_batch_bookmarks.py",
+      "kind": "new",
+      "sha256": "1c83c3d72ec0b77292662070e130f7e58bd53d124089a59e5f636ac416664c55",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_protocol_values.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_protocol_values.py",
+      "kind": "new",
+      "sha256": "58ea425724e3a39557981c3d6c66ce26ca624066c6f18a814cc64709619e68b3",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_protocols.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_protocols.py",
+      "kind": "new",
+      "sha256": "beab078d5bcc1d7cdfefd148da2659f276083d51126eb00d132e077bdb6f0cd6",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_slots.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_slots.py",
+      "kind": "new",
+      "sha256": "12852b3c3db2f458e3d249d0ccd08f84fdd78b36dfb9907006a04bda11481e65",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_neutral_upgrade.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_neutral_upgrade.py",
+      "kind": "new",
+      "sha256": "17c5c71211ea13e8e6604a143f24b6679d221baa572f901c875b9c9c1a1e48e4",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_original_forms.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_original_forms.py",
+      "kind": "modified",
+      "sha256": "0abf127c594ff3e8df3661ef94f7cd873d353f29b11b268f720796028ffd9122",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_print_pack.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_print_pack.py",
+      "kind": "modified",
+      "sha256": "ea70b248dd28ac4bb3f522c02ad45a47e49a4f6b93ff39e43c6c09591cf5121c",
+      "note": null
+    },
+    {
+      "path": "tests/render/test_render.py",
+      "absolutePath": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\tests\\render\\test_render.py",
+      "kind": "modified",
+      "sha256": "5b47ad8a138e78f725f0c8319819a3224e95842c5df83fc9ca896919cf9e3e70",
+      "note": null
+    }
+  ]
+}

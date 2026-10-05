@@ -213,7 +213,10 @@ class RenderTests(unittest.TestCase):
             with ZipFile(output) as archive:tree=E.fromstring(archive.read('word/document.xml'))
             if tid in ['biot-protocol','ptm-protocol']:
                 policy=next(template for template in MANIFEST['templates'] if template['id']==tid).get('restoration',{}).get('layoutPolicy')
-                self.assertEqual(text(tree).count(snap['issuer']['approvalBasis']),2 if policy=='LEGACY_REFERENCE_90D5' else 1)
+                # Both versioned source-form policies retain the separate
+                # Russian and Kazakh approval-basis slots of the same form.
+                source_form_policy = policy in ['LEGACY_REFERENCE_90D5', 'NEUTRAL_FORMS_V1']
+                self.assertEqual(text(tree).count(snap['issuer']['approvalBasis']), 2 if source_form_policy else 1)
                 table=next(tree.iter(W+'tbl'));cells=table.findall(W+'tr')[2 if tid=='biot-protocol' else 1].findall(W+'tc');self.assertEqual(text(cells[-1]).strip(),'')
             if tid=='ps-protocol':
                 table=next(tree.iter(W+'tbl'));cell=table.findall(W+'tr')[1].findall(W+'tc')[-1];self.assertEqual(text(cell),'КР-98765')

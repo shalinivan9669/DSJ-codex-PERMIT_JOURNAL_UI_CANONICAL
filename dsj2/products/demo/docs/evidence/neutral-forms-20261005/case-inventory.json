@@ -1,0 +1,1178 @@
+[
+  {
+    "case": "biot-worker-card-normal",
+    "templateId": "biot-worker-card",
+    "kind": "individual",
+    "version": 21,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-worker-card-normal.docx",
+    "docxSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 21,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-worker-card-normal.pdf",
+    "applicationPdfSha256": "a23b58056be17a95cf9394161ffcfc45430b40fdddefa6211b8d922ec55532d4",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "a23b58056be17a95cf9394161ffcfc45430b40fdddefa6211b8d922ec55532d4",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "08b22484e44ae8bbd569b7221c3e5b54c9574bd32129712f45ab3cc91dc504a1",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-worker-card-long",
+    "templateId": "biot-worker-card",
+    "kind": "individual",
+    "version": 21,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-worker-card-long.docx",
+    "docxSha256": "0875d2c6c204a2604aee910929ff5da8cb28665e1e72b23d269f79e72807ef6a",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 21,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-worker-card-long.pdf",
+    "applicationPdfSha256": "e031488f5eed575e4d5d2948878371c3ede4ce0c93b08fd18c3313412944bfc9",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "e031488f5eed575e4d5d2948878371c3ede4ce0c93b08fd18c3313412944bfc9",
+        "snapshotPrintedValuesChecked": 20,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "d438c76c7b578a19e74581c2a0c109af17aee1718c46bac3ab0c69ad56ceb4af",
+        "snapshotPrintedValuesChecked": 20,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-itr-certificate-normal",
+    "templateId": "biot-itr-certificate",
+    "kind": "individual",
+    "version": 19,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-certificate-normal.docx",
+    "docxSha256": "eab50df2dcea937c62a234dcf5013ec1759cf1298af4a4a4de77850dd3568f2a",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 19,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-certificate-normal.pdf",
+    "applicationPdfSha256": "2e64d67fc21886b41035ba46a00789b67e3c53e6f8fe08e3518997b226ee31b5",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "2e64d67fc21886b41035ba46a00789b67e3c53e6f8fe08e3518997b226ee31b5",
+        "snapshotPrintedValuesChecked": 7,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "00e226c123f91abb5a08e064ba2a5f885d47d0c15daa2e99b4f736c1e37a8594",
+        "snapshotPrintedValuesChecked": 7,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-itr-certificate-long",
+    "templateId": "biot-itr-certificate",
+    "kind": "individual",
+    "version": 19,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-certificate-long.docx",
+    "docxSha256": "446d2c6a8a9603edf73c4181ef6408d9ec83c4d6fd4e406131741d388994891d",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 19,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-certificate-long.pdf",
+    "applicationPdfSha256": "1338bfabb742a848d5e76dbb656488e1e8dff98b6252d34a03c20b04cf536e83",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "1338bfabb742a848d5e76dbb656488e1e8dff98b6252d34a03c20b04cf536e83",
+        "snapshotPrintedValuesChecked": 9,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "62407925d204b8027b1eb6d9545e04aa103ebe5b55f78f1c6aac04472707a1e9",
+        "snapshotPrintedValuesChecked": 9,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-protocol-normal",
+    "templateId": "biot-protocol",
+    "kind": "individual",
+    "version": 15,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-protocol-normal.docx",
+    "docxSha256": "bfe561aa978e1f7f6ad14e2af79c6849f3197f31b5f2455ed9b4a2d66216778f",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 15,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-protocol-normal.pdf",
+    "applicationPdfSha256": "52bcbabc6eadbdf259acaf4d9138a3c881a629532dc02b4a859d66521f1c0c7f",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "52bcbabc6eadbdf259acaf4d9138a3c881a629532dc02b4a859d66521f1c0c7f",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "6b0fffaf5d69f9071c4d0ee64576c392555fe4eac34f1980f79b41d32c2b7fea",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-protocol-long",
+    "templateId": "biot-protocol",
+    "kind": "individual",
+    "version": 15,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-protocol-long.docx",
+    "docxSha256": "e92b1c3ba5d754a13e9c11c66cc34516486927b8750df3572661c6994ac8da02",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 15,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-protocol-long.pdf",
+    "applicationPdfSha256": "dd9df640cb55406bc45935f218143a2e1e639c6b36aabc796d01276daf66d4a1",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "dd9df640cb55406bc45935f218143a2e1e639c6b36aabc796d01276daf66d4a1",
+        "snapshotPrintedValuesChecked": 18,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "8d56eb4c9a52076ff55ff6a68ae54e9e237a383a9033dec21b181c2569c7ce74",
+        "snapshotPrintedValuesChecked": 18,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ptm-card-normal",
+    "templateId": "ptm-card",
+    "kind": "individual",
+    "version": 18,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-card-normal.docx",
+    "docxSha256": "17b4bac6fb12fdae2ec2feb1e1e78f872cef8db7396a97f33832e878c1b26ae7",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 18,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-card-normal.pdf",
+    "applicationPdfSha256": "1b3195f57510dcf4a2e0fca543301e7aeafb22c050069f827e1edd5356499cfc",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "1b3195f57510dcf4a2e0fca543301e7aeafb22c050069f827e1edd5356499cfc",
+        "snapshotPrintedValuesChecked": 10,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "08e5a68f7f4ba635e6ae45b9ee312aa059d08a231ea8e4523d3e3fe4927cfcff",
+        "snapshotPrintedValuesChecked": 10,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ptm-card-long",
+    "templateId": "ptm-card",
+    "kind": "individual",
+    "version": 18,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-card-long.docx",
+    "docxSha256": "6ed5ad17cf33670bd9efeb3b402522ea79638df488db80fe03b85058f88b34e7",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 18,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-card-long.pdf",
+    "applicationPdfSha256": "a528a6ca4f555fa47d7593825b209a4e382ac7aaac6f842b313fe4b64e586d22",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "a528a6ca4f555fa47d7593825b209a4e382ac7aaac6f842b313fe4b64e586d22",
+        "snapshotPrintedValuesChecked": 14,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "0831e4a85e9ba17277babbe71f7e5f19f29260b2f10805cc7c1541309c5669b5",
+        "snapshotPrintedValuesChecked": 14,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ptm-card-photo",
+    "templateId": "ptm-card",
+    "kind": "individual",
+    "version": 18,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-card-photo.docx",
+    "docxSha256": "f4aa7f1504153e267fe8bddfd53a7794c2c133600b581dabd71ce54e18edd950",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 18,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {
+      "word/media/generated-photo-0.png": "f8d5218e13a0020b2bb20c12b9c8f266449b5fa0e2d9199a0f38622dbeba2284"
+    },
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-card-photo.pdf",
+    "applicationPdfSha256": "3b9085d73771328b0ba1dd70096d12742ac3467b7f9e72cff29b0edd9378566b",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "3b9085d73771328b0ba1dd70096d12742ac3467b7f9e72cff29b0edd9378566b",
+        "snapshotPrintedValuesChecked": 10,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "559ac33fb2fc54254115a43fec5445a9d769722783a1756a90e87079ecbe6503",
+        "snapshotPrintedValuesChecked": 10,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ptm-protocol-normal",
+    "templateId": "ptm-protocol",
+    "kind": "individual",
+    "version": 13,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-protocol-normal.docx",
+    "docxSha256": "53cbff43bd0b175956f5cf64cf5d046f9fd95882d84488a90f1cb38e6b29e67c",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 13,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-protocol-normal.pdf",
+    "applicationPdfSha256": "bbdcdf8d25156f67680a087bafcd80596c8fdde7fa8ba63eda478d4a119ed5e8",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "bbdcdf8d25156f67680a087bafcd80596c8fdde7fa8ba63eda478d4a119ed5e8",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "d1ac2205058c7b5bbb9745385f73876606c24297088cd0ba7cc8926a62360794",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ptm-protocol-long",
+    "templateId": "ptm-protocol",
+    "kind": "individual",
+    "version": 13,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-protocol-long.docx",
+    "docxSha256": "2c3e0866c78fd8ab4abac835b0fdcd8cfb20655d77871715e119175ce7ba4da3",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 13,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-protocol-long.pdf",
+    "applicationPdfSha256": "0ece06f712b5f7feaf8a60889ef066d06bfdc21504b701f07b694f9e0e416fcb",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "0ece06f712b5f7feaf8a60889ef066d06bfdc21504b701f07b694f9e0e416fcb",
+        "snapshotPrintedValuesChecked": 17,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "1b13fd623b3f9449512a62d34722f570003298046b14535fa2152b54d3d4f7ce",
+        "snapshotPrintedValuesChecked": 17,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "pb-card-normal",
+    "templateId": "pb-card",
+    "kind": "individual",
+    "version": 18,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-card-normal.docx",
+    "docxSha256": "4cac948210c1e15bc722ce92866f9caa5cd42f76b817b6f86b942595ccbbbbac",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 18,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-card-normal.pdf",
+    "applicationPdfSha256": "f5796a571c44e2034ee8d85e418f6a14a54b9c10aa46928255c11929bc8b716f",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "f5796a571c44e2034ee8d85e418f6a14a54b9c10aa46928255c11929bc8b716f",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "9041f695c8a10eb9e6fe1d3ea2c785c1ea4257a6a4cf2668c3da717c3aee54d7",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "pb-card-long",
+    "templateId": "pb-card",
+    "kind": "individual",
+    "version": 18,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-card-long.docx",
+    "docxSha256": "791fb0e27f41e6c8bb74ed51df77986b32882d3bba66bcf8a4770ada6666dc3b",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 18,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-card-long.pdf",
+    "applicationPdfSha256": "7ddf6abf20ddfe2aa119d8811d7c1007ecba927fea8db685c10491f7b0ec86ba",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "7ddf6abf20ddfe2aa119d8811d7c1007ecba927fea8db685c10491f7b0ec86ba",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "9427c36efab522c711d47ec8fd15dd3076f26b4c991da09c5400218679f05416",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "pb-card-photo",
+    "templateId": "pb-card",
+    "kind": "individual",
+    "version": 18,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-card-photo.docx",
+    "docxSha256": "228c08ea6499c2921b94ea13473cae72d136be19dfa9de0120cf48abd802d3de",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 18,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {
+      "word/media/generated-photo-0.png": "f8d5218e13a0020b2bb20c12b9c8f266449b5fa0e2d9199a0f38622dbeba2284"
+    },
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-card-photo.pdf",
+    "applicationPdfSha256": "a15018b5a364d7092c70d0cca793da272032f67601fbbbd4de3919ba77feacbd",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "a15018b5a364d7092c70d0cca793da272032f67601fbbbd4de3919ba77feacbd",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "ad6618b2f7671c236b5fd537f6235e9a22ea7316817c08dc1666354a22df6d02",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "pb-protocol-normal",
+    "templateId": "pb-protocol",
+    "kind": "individual",
+    "version": 13,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-normal.docx",
+    "docxSha256": "7134ba1c29380a1780ddca9493559a146c67b574fd1810077d9108f1e10d3c76",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 13,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-normal.pdf",
+    "applicationPdfSha256": "b743ba57a406b86433cba1e3f11e36a3b913f3fe749696f82edf5738e23aa758",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "b743ba57a406b86433cba1e3f11e36a3b913f3fe749696f82edf5738e23aa758",
+        "snapshotPrintedValuesChecked": 13,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "faaf6f5fdc8d138bbe971858a523725f6f856e5f7dd830eab302a6337e09849b",
+        "snapshotPrintedValuesChecked": 13,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "pb-protocol-long",
+    "templateId": "pb-protocol",
+    "kind": "individual",
+    "version": 13,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-long.docx",
+    "docxSha256": "945b6bcb82f163e5ae6557cfda73ed776dcea68a42e41f269fcb77fc6d386899",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 13,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-long.pdf",
+    "applicationPdfSha256": "ce9351fcaab8334ced39ea5b8a5baf9403736b9cd144a6685123e08811807bb9",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "ce9351fcaab8334ced39ea5b8a5baf9403736b9cd144a6685123e08811807bb9",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "3d4877e6324e1390f4dc67ccb3c44d652e4ab53434532752a1fbeff8ee13ac84",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ps-card-normal",
+    "templateId": "ps-card",
+    "kind": "individual",
+    "version": 19,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-normal.docx",
+    "docxSha256": "155826a48ba9264f5eb611eabec78f7a22a68d9b986b1b4ae464f9c267dcc9a8",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 19,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-normal.pdf",
+    "applicationPdfSha256": "e495cf220b21cfcf583f0bef5e9c905b3be7db5a60e3e3fde1c287da1b4d4844",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "e495cf220b21cfcf583f0bef5e9c905b3be7db5a60e3e3fde1c287da1b4d4844",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "a8e7e16dd7bb4eb95b89c5859d6f4aa6754f44d9b14a975f98baa8b3b14c7cdd",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ps-card-long",
+    "templateId": "ps-card",
+    "kind": "individual",
+    "version": 19,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-long.docx",
+    "docxSha256": "a7acf972b7422c3bb2c09c1dc9615c5772000f204f17a507e31ea9af7f0a4f85",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 19,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-long.pdf",
+    "applicationPdfSha256": "4f6312ab81d0bb84dfdf58f3285d745ffffbee9d269537a7d5c444f80e8cb905",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "4f6312ab81d0bb84dfdf58f3285d745ffffbee9d269537a7d5c444f80e8cb905",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "e8670ff338ae91c30fb48406279c05f2036ea1b6cd4f5616535c67cfa7e047a0",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ps-card-photo",
+    "templateId": "ps-card",
+    "kind": "individual",
+    "version": 19,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-photo.docx",
+    "docxSha256": "297911659aa4c499f7434c4dc053e0c7dceb46e26ad9a616a80588fa83463bfc",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 19,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {
+      "word/media/generated-photo-0.png": "f8d5218e13a0020b2bb20c12b9c8f266449b5fa0e2d9199a0f38622dbeba2284"
+    },
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-photo.pdf",
+    "applicationPdfSha256": "b63c2557d4d86f8ca0614415b1ece687876f139293b1d8239f4fd2cca9aa2153",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "b63c2557d4d86f8ca0614415b1ece687876f139293b1d8239f4fd2cca9aa2153",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "ce3207c15d9041e79819bfb4c7a8ef623eab90739835979d9d60bb4f015b067a",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ps-protocol-normal",
+    "templateId": "ps-protocol",
+    "kind": "individual",
+    "version": 13,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-normal.docx",
+    "docxSha256": "2333a6813a756207669325fce55f0fd25e01fb297f0ff836e19c68430ce16588",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 13,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-normal.pdf",
+    "applicationPdfSha256": "d283635dad014015e4a9acefc65cf4708c941dff338a21a5f35af6b54f9eee08",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "d283635dad014015e4a9acefc65cf4708c941dff338a21a5f35af6b54f9eee08",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "f8de32447bc31073009cd5b87032c54704e3d1517edcb0605216e28e54a1d309",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ps-protocol-long",
+    "templateId": "ps-protocol",
+    "kind": "individual",
+    "version": 13,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-long.docx",
+    "docxSha256": "3a2dfa5f072f5033cf4efba0934228259741d781f31b9ffa6887f9a0395388a1",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 13,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-long.pdf",
+    "applicationPdfSha256": "f59bedba8e819a6ab30ff1153a2e6ca4374f48c6522eb48b0f1a153116afab11",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "f59bedba8e819a6ab30ff1153a2e6ca4374f48c6522eb48b0f1a153116afab11",
+        "snapshotPrintedValuesChecked": 12,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "8764c0fbdf4a894504f44564635839bf553da9e9743fc10f6c1eaf89204394af",
+        "snapshotPrintedValuesChecked": 12,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ps-witness-normal",
+    "templateId": "ps-witness",
+    "kind": "individual",
+    "version": 15,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-witness-normal.docx",
+    "docxSha256": "ef7a0c9abec16cdbf3bcc179a8861a4afa12a47b7b6d949900a65cb8032cbef2",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 15,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-witness-normal.pdf",
+    "applicationPdfSha256": "a62cf68dc704314d3e9ad32040181df034154b55f7fbebde2a14956c780e85c3",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "a62cf68dc704314d3e9ad32040181df034154b55f7fbebde2a14956c780e85c3",
+        "snapshotPrintedValuesChecked": 8,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "c58b7512515c9008838506f6c555881a0376391a734c4f5cdda743666cca4f85",
+        "snapshotPrintedValuesChecked": 8,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ps-witness-long",
+    "templateId": "ps-witness",
+    "kind": "individual",
+    "version": 15,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-witness-long.docx",
+    "docxSha256": "3356ee7bfe530c7fa43d5ff121add39ffd600c66345e93cb381f192e429d4493",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 15,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-witness-long.pdf",
+    "applicationPdfSha256": "244a63baaf173b1799420d244b1f74461ebb907c97f87a9e996c63cd0fccab2a",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "244a63baaf173b1799420d244b1f74461ebb907c97f87a9e996c63cd0fccab2a",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "25019d35d2a5bd58d1b024fd696c263408a6690ee2def285670ea47a76befe19",
+        "snapshotPrintedValuesChecked": 11,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-itr-protocol-normal",
+    "templateId": "biot-itr-protocol",
+    "kind": "individual",
+    "version": 6,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-protocol-normal.docx",
+    "docxSha256": "bfe561aa978e1f7f6ad14e2af79c6849f3197f31b5f2455ed9b4a2d66216778f",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 6,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-protocol-normal.pdf",
+    "applicationPdfSha256": "36ae56a375703b9602f622a83b06a6a7cfb2c394ee6179be1d62ad0b48259fa7",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "36ae56a375703b9602f622a83b06a6a7cfb2c394ee6179be1d62ad0b48259fa7",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "f21e260966c20c375109fe4fa5cb075d65aebfe3bcf4c61a1e1f2baa401dc600",
+        "snapshotPrintedValuesChecked": 15,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-itr-protocol-long",
+    "templateId": "biot-itr-protocol",
+    "kind": "individual",
+    "version": 6,
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-protocol-long.docx",
+    "docxSha256": "e92b1c3ba5d754a13e9c11c66cc34516486927b8750df3572661c6994ac8da02",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": 6,
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 1,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-protocol-long.pdf",
+    "applicationPdfSha256": "14facaa125a17366eab7c5af4102d1c4ee43b3312a39556706e423f05e8d6343",
+    "pdfChecks": {
+      "application": {
+        "pages": 1,
+        "sha256": "14facaa125a17366eab7c5af4102d1c4ee43b3312a39556706e423f05e8d6343",
+        "snapshotPrintedValuesChecked": 18,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 1,
+        "sha256": "a5d4617882ca3409c84537cb9f414ceabba5bf0e7025ec160710004000747998",
+        "snapshotPrintedValuesChecked": 18,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-protocol-group25",
+    "templateId": "biot-protocol",
+    "kind": "group",
+    "version": "15-group-1",
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-protocol-group25.docx",
+    "docxSha256": "614b157f14ff5a6b443948d9364b28eee95f03130132e2ee77baa153055420d6",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": "15-group-1",
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 25,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-protocol-group25.pdf",
+    "applicationPdfSha256": "03e7df3dd05131170ec3765af7329048d171484539e7ec19a947521fc230c5bc",
+    "pdfChecks": {
+      "application": {
+        "pages": 3,
+        "sha256": "03e7df3dd05131170ec3765af7329048d171484539e7ec19a947521fc230c5bc",
+        "snapshotPrintedValuesChecked": 158,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 3,
+        "sha256": "1bfb36613654646e093a8f002b6887c80e6710c819fb57441899ba98b72e494c",
+        "snapshotPrintedValuesChecked": 158,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ptm-protocol-group25",
+    "templateId": "ptm-protocol",
+    "kind": "group",
+    "version": "13-group-1",
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-protocol-group25.docx",
+    "docxSha256": "862b5a10ec5edc622ef3fef88c9d4b107cdb6532688768c4227243c0de400536",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": "13-group-1",
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 25,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ptm-protocol-group25.pdf",
+    "applicationPdfSha256": "2f71a92b081a9b7ed01c1409ab2c125d94c32c6016cfacd13fbf90e27a5e91ef",
+    "pdfChecks": {
+      "application": {
+        "pages": 3,
+        "sha256": "2f71a92b081a9b7ed01c1409ab2c125d94c32c6016cfacd13fbf90e27a5e91ef",
+        "snapshotPrintedValuesChecked": 156,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 3,
+        "sha256": "76dca88fa5d08ad05f237f8b081dfc892f79a7793a69004f5e7599295eefd7ea",
+        "snapshotPrintedValuesChecked": 156,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "pb-protocol-group25",
+    "templateId": "pb-protocol",
+    "kind": "group",
+    "version": "13-group-1",
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-group25.docx",
+    "docxSha256": "064c35f259f39216d11042edba54c0fbb7f3e14c323b8c9051f8a0877db70258",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": "13-group-1",
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 25,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-group25.pdf",
+    "applicationPdfSha256": "712b57c8c3eb67e9b9168f2d646e0bff24a8b4e26bbb619f550dfddbf1446f1e",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "712b57c8c3eb67e9b9168f2d646e0bff24a8b4e26bbb619f550dfddbf1446f1e",
+        "snapshotPrintedValuesChecked": 130,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "e484f965cefae0fd3e4c187f3a1acdaa334102d569d0060b6b497bfccf1a737e",
+        "snapshotPrintedValuesChecked": 130,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "ps-protocol-group25",
+    "templateId": "ps-protocol",
+    "kind": "group",
+    "version": "13-group-1",
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-group25.docx",
+    "docxSha256": "3adf4716ecb2e0a8511a3d52fc38cafd76932049e7ac38b75fdfdeb271ea5cc7",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": "13-group-1",
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 25,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-protocol-group25.pdf",
+    "applicationPdfSha256": "56daa1cebb66b2b1cec6b183f74f186864930761be37787b85f36a3238110bcf",
+    "pdfChecks": {
+      "application": {
+        "pages": 2,
+        "sha256": "56daa1cebb66b2b1cec6b183f74f186864930761be37787b85f36a3238110bcf",
+        "snapshotPrintedValuesChecked": 56,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 2,
+        "sha256": "02ac9b4e15352bf5df6b806ee518e898d45142a84285920bc9eca87420316a80",
+        "snapshotPrintedValuesChecked": 56,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  },
+  {
+    "case": "biot-itr-protocol-group25",
+    "templateId": "biot-itr-protocol",
+    "kind": "group",
+    "version": "6-group-1",
+    "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-protocol-group25.docx",
+    "docxSha256": "614b157f14ff5a6b443948d9364b28eee95f03130132e2ee77baa153055420d6",
+    "render": {
+      "format": "DOCX",
+      "templateVersion": "6-group-1",
+      "rendererVersion": "demo-ooxml-12/libreoffice-26.2.6.3",
+      "renderPolicy": "NEUTRAL_FORMS_V1"
+    },
+    "oldImages": [],
+    "oldText": [],
+    "unfilled": [],
+    "media": {},
+    "recipients": 25,
+    "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-protocol-group25.pdf",
+    "applicationPdfSha256": "055ab762f4ec1e4867296a32baa16c30f83da134987ccc6c511f0442b5bc7839",
+    "pdfChecks": {
+      "application": {
+        "pages": 3,
+        "sha256": "055ab762f4ec1e4867296a32baa16c30f83da134987ccc6c511f0442b5bc7839",
+        "snapshotPrintedValuesChecked": 158,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      },
+      "word": {
+        "pages": 3,
+        "sha256": "caef8096a85ad099c004db2f33f4b9050822f8f8d36208dbdfee4f5ab662af9f",
+        "snapshotPrintedValuesChecked": 158,
+        "missingPrintedValues": [],
+        "outsidePage": []
+      }
+    },
+    "forbiddenPackageParts": [],
+    "currentSourceReproductionByteIdentical": true
+  }
+]

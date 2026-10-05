@@ -62,6 +62,7 @@ venv/
 # audit helpers stay on disk. Reusable test sources belong in tests/ or scripts/.
 # Source templates, fonts, licenses and test fixtures are not covered here.
 /docs/evidence/*
+!/docs/evidence/neutral-forms-20261005/
 !/docs/evidence/progress.md
 !/docs/evidence/commercial-acceptance/
 /docs/evidence/commercial-acceptance/*

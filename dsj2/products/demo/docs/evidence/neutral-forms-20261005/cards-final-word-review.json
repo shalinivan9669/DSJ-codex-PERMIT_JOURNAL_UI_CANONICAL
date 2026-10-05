@@ -1,0 +1,451 @@
+{
+  "status": "PASS_FINAL_CARDS_WORD_AND_PS_APPLICATION_RECHECK",
+  "reviewDate": "2026-10-05",
+  "neutralCardsSha256": "12fc1f65c495e1d005d79d50d44f3296edad243d565177aafac2cfc349496cdf",
+  "wordVersion": "16.0",
+  "wordBuild": "16.0.17932",
+  "applicationConverter": "LibreOffice 26.2.6.3 via renderer.convert_pdf",
+  "wordCaseCount": 11,
+  "wordPageCount": 19,
+  "psApplicationCaseCount": 3,
+  "psApplicationPageCount": 6,
+  "scope": "All 19 final card Word page images reviewed; unchanged eight non-PS cases matched their earlier reviewed PDF hashes. Only PS normal/long/photo regenerated after preserving employer RU/KZ and their six Word plus six application PDF pages inspected again.",
+  "review": "PASS: readable field values and long bilingual course text, complete PB dates, issuer bands RU/KZ, identical BIOT duplicate geometry, preserved panels/sides, photo frame and repeat-check/rules pages. PS employer RU/KZ now appears in the original second-pair band on page 1, including long employer; no collision or clipping in either renderer.",
+  "checks": [
+    "All 11 final DOCX packages: no old identity text/attributes/media, metadata directories, dangling/external relationships, or missing content types",
+    "All 11 final DOCX packages: no unresolved neutral markers",
+    "PS normal/long/photo employer RU and KZ retained in application and Word PDF text",
+    "Word PDF extraction maps Kazakh ә to Latin ə in some glyphs; text comparison normalizes only this visually identical mapping",
+    "No out-of-page Word text boxes across all 19 pages"
+  ],
+  "tests": {
+    "neutralCards": {
+      "tests": 8,
+      "status": "PASS"
+    },
+    "neutralOptionalFields": {
+      "tests": 1,
+      "individualFormSubcases": 11,
+      "status": "PASS"
+    },
+    "savedPtmPack": {
+      "tests": 1,
+      "status": "PASS",
+      "change": "Whitespace-normalized full number assertion tolerates line wrapping; page/order/source hash assertions unchanged"
+    }
+  },
+  "records": [
+    {
+      "case": "biot-worker-card-normal",
+      "docx": ".runtime/neutral-forms-final-20261005/biot-worker-card-normal.docx",
+      "docxSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/biot-worker-card-normal.word.pdf",
+      "wordPdfSha256": "08b22484e44ae8bbd569b7221c3e5b54c9574bd32129712f45ab3cc91dc504a1",
+      "wordPages": 2,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/biot-worker-card-normal.word-1.png",
+        ".runtime/neutral-cards/word-final/biot-worker-card-normal.word-2.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "25f23ffd235094439c67eeb4d3603ff6a6de0095d5436081b5d551d52547df00",
+        "sourceSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+        "rerenderSha256": [
+          "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+          "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+          "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "biot-worker-card-long",
+      "docx": ".runtime/neutral-forms-final-20261005/biot-worker-card-long.docx",
+      "docxSha256": "0875d2c6c204a2604aee910929ff5da8cb28665e1e72b23d269f79e72807ef6a",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/biot-worker-card-long.word.pdf",
+      "wordPdfSha256": "d438c76c7b578a19e74581c2a0c109af17aee1718c46bac3ab0c69ad56ceb4af",
+      "wordPages": 2,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/biot-worker-card-long.word-1.png",
+        ".runtime/neutral-cards/word-final/biot-worker-card-long.word-2.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "081000de0ad18498f2dbd203cd7194c04ed6e22fd12ebfdf5bc269783eb592ea",
+        "sourceSha256": "0875d2c6c204a2604aee910929ff5da8cb28665e1e72b23d269f79e72807ef6a",
+        "rerenderSha256": [
+          "0875d2c6c204a2604aee910929ff5da8cb28665e1e72b23d269f79e72807ef6a",
+          "0875d2c6c204a2604aee910929ff5da8cb28665e1e72b23d269f79e72807ef6a",
+          "0875d2c6c204a2604aee910929ff5da8cb28665e1e72b23d269f79e72807ef6a"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "pb-card-normal",
+      "docx": ".runtime/neutral-forms-final-20261005/pb-card-normal.docx",
+      "docxSha256": "4cac948210c1e15bc722ce92866f9caa5cd42f76b817b6f86b942595ccbbbbac",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/pb-card-normal.word.pdf",
+      "wordPdfSha256": "9041f695c8a10eb9e6fe1d3ea2c785c1ea4257a6a4cf2668c3da717c3aee54d7",
+      "wordPages": 2,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/pb-card-normal.word-1.png",
+        ".runtime/neutral-cards/word-final/pb-card-normal.word-2.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "3fcc046cf84087071c7a711818562b421d633ff92babc88631de25c4e47a6761",
+        "sourceSha256": "4cac948210c1e15bc722ce92866f9caa5cd42f76b817b6f86b942595ccbbbbac",
+        "rerenderSha256": [
+          "4cac948210c1e15bc722ce92866f9caa5cd42f76b817b6f86b942595ccbbbbac",
+          "4cac948210c1e15bc722ce92866f9caa5cd42f76b817b6f86b942595ccbbbbac",
+          "4cac948210c1e15bc722ce92866f9caa5cd42f76b817b6f86b942595ccbbbbac"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "pb-card-long",
+      "docx": ".runtime/neutral-forms-final-20261005/pb-card-long.docx",
+      "docxSha256": "791fb0e27f41e6c8bb74ed51df77986b32882d3bba66bcf8a4770ada6666dc3b",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/pb-card-long.word.pdf",
+      "wordPdfSha256": "9427c36efab522c711d47ec8fd15dd3076f26b4c991da09c5400218679f05416",
+      "wordPages": 2,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/pb-card-long.word-1.png",
+        ".runtime/neutral-cards/word-final/pb-card-long.word-2.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "76a2bdd57bb4f8f3fb62d4ea8a6da755e9fd9cc910722a02a258d451aaed2900",
+        "sourceSha256": "791fb0e27f41e6c8bb74ed51df77986b32882d3bba66bcf8a4770ada6666dc3b",
+        "rerenderSha256": [
+          "791fb0e27f41e6c8bb74ed51df77986b32882d3bba66bcf8a4770ada6666dc3b",
+          "791fb0e27f41e6c8bb74ed51df77986b32882d3bba66bcf8a4770ada6666dc3b",
+          "791fb0e27f41e6c8bb74ed51df77986b32882d3bba66bcf8a4770ada6666dc3b"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "pb-card-photo",
+      "docx": ".runtime/neutral-forms-final-20261005/pb-card-photo.docx",
+      "docxSha256": "228c08ea6499c2921b94ea13473cae72d136be19dfa9de0120cf48abd802d3de",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/pb-card-photo.word.pdf",
+      "wordPdfSha256": "ad6618b2f7671c236b5fd537f6235e9a22ea7316817c08dc1666354a22df6d02",
+      "wordPages": 2,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/pb-card-photo.word-1.png",
+        ".runtime/neutral-cards/word-final/pb-card-photo.word-2.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "d43e28bea0e72eddf1b5f59bc966edd3409a214633a54149b6be54059290b24d",
+        "sourceSha256": "228c08ea6499c2921b94ea13473cae72d136be19dfa9de0120cf48abd802d3de",
+        "rerenderSha256": [
+          "228c08ea6499c2921b94ea13473cae72d136be19dfa9de0120cf48abd802d3de",
+          "228c08ea6499c2921b94ea13473cae72d136be19dfa9de0120cf48abd802d3de",
+          "228c08ea6499c2921b94ea13473cae72d136be19dfa9de0120cf48abd802d3de"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "ps-card-normal",
+      "docx": ".runtime/neutral-forms-final-20261005/ps-card-normal.docx",
+      "docxSha256": "155826a48ba9264f5eb611eabec78f7a22a68d9b986b1b4ae464f9c267dcc9a8",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/ps-card-normal.word.pdf",
+      "wordPdfSha256": "a8e7e16dd7bb4eb95b89c5859d6f4aa6754f44d9b14a975f98baa8b3b14c7cdd",
+      "wordPages": 2,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ps-card-normal.word-1.png",
+        ".runtime/neutral-cards/word-final/ps-card-normal.word-2.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "79624119c0b19b168e6e3eb15a590f6dd385c83fddc5533b50a1ac0d2b95e7e8",
+        "sourceSha256": "155826a48ba9264f5eb611eabec78f7a22a68d9b986b1b4ae464f9c267dcc9a8",
+        "rerenderSha256": [
+          "155826a48ba9264f5eb611eabec78f7a22a68d9b986b1b4ae464f9c267dcc9a8",
+          "155826a48ba9264f5eb611eabec78f7a22a68d9b986b1b4ae464f9c267dcc9a8",
+          "155826a48ba9264f5eb611eabec78f7a22a68d9b986b1b4ae464f9c267dcc9a8"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "ps-card-long",
+      "docx": ".runtime/neutral-forms-final-20261005/ps-card-long.docx",
+      "docxSha256": "a7acf972b7422c3bb2c09c1dc9615c5772000f204f17a507e31ea9af7f0a4f85",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/ps-card-long.word.pdf",
+      "wordPdfSha256": "e8670ff338ae91c30fb48406279c05f2036ea1b6cd4f5616535c67cfa7e047a0",
+      "wordPages": 2,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ps-card-long.word-1.png",
+        ".runtime/neutral-cards/word-final/ps-card-long.word-2.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "243ab879df7c344c3c5944adf74dbdb495c25f96e311dbd90caf014dd74828a5",
+        "sourceSha256": "a7acf972b7422c3bb2c09c1dc9615c5772000f204f17a507e31ea9af7f0a4f85",
+        "rerenderSha256": [
+          "a7acf972b7422c3bb2c09c1dc9615c5772000f204f17a507e31ea9af7f0a4f85",
+          "a7acf972b7422c3bb2c09c1dc9615c5772000f204f17a507e31ea9af7f0a4f85",
+          "a7acf972b7422c3bb2c09c1dc9615c5772000f204f17a507e31ea9af7f0a4f85"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "ps-card-photo",
+      "docx": ".runtime/neutral-forms-final-20261005/ps-card-photo.docx",
+      "docxSha256": "297911659aa4c499f7434c4dc053e0c7dceb46e26ad9a616a80588fa83463bfc",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/ps-card-photo.word.pdf",
+      "wordPdfSha256": "ce3207c15d9041e79819bfb4c7a8ef623eab90739835979d9d60bb4f015b067a",
+      "wordPages": 2,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ps-card-photo.word-1.png",
+        ".runtime/neutral-cards/word-final/ps-card-photo.word-2.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "ff3ca0840dab4b9c18cc08f2fb57046ca08891c485db8a7894196c23f333bfb8",
+        "sourceSha256": "297911659aa4c499f7434c4dc053e0c7dceb46e26ad9a616a80588fa83463bfc",
+        "rerenderSha256": [
+          "297911659aa4c499f7434c4dc053e0c7dceb46e26ad9a616a80588fa83463bfc",
+          "297911659aa4c499f7434c4dc053e0c7dceb46e26ad9a616a80588fa83463bfc",
+          "297911659aa4c499f7434c4dc053e0c7dceb46e26ad9a616a80588fa83463bfc"
+        ],
+        "byteIdentical": true
+      },
+      "postNamespaceWordExport": {
+        "status": "PASS",
+        "pages": 2,
+        "wordVersion": "16.0",
+        "wordBuild": "16.0.17932",
+        "rasterIdenticalToReviewedPages": 2,
+        "finalAudit": {
+          "case": "ps-card-photo",
+          "docx": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-photo.docx",
+          "docxSha256": "297911659aa4c499f7434c4dc053e0c7dceb46e26ad9a616a80588fa83463bfc",
+          "media": {
+            "word/media/generated-photo-0.png": "f8d5218e13a0020b2bb20c12b9c8f266449b5fa0e2d9199a0f38622dbeba2284"
+          },
+          "oldImages": [],
+          "oldText": [],
+          "unfilled": [],
+          "forbiddenPackageParts": [],
+          "applicationPdf": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-photo.pdf",
+          "applicationPdfSha256": "b63c2557d4d86f8ca0614415b1ece687876f139293b1d8239f4fd2cca9aa2153",
+          "pdfChecks": {
+            "application": {
+              "pages": 2,
+              "sha256": "b63c2557d4d86f8ca0614415b1ece687876f139293b1d8239f4fd2cca9aa2153",
+              "snapshotPrintedValuesChecked": 11,
+              "missingPrintedValues": [],
+              "outsidePage": []
+            },
+            "word": {
+              "pages": 2,
+              "sha256": "ce3207c15d9041e79819bfb4c7a8ef623eab90739835979d9d60bb4f015b067a",
+              "snapshotPrintedValuesChecked": 11,
+              "missingPrintedValues": [],
+              "outsidePage": []
+            }
+          },
+          "currentSourceReproductionByteIdentical": true
+        }
+      }
+    },
+    {
+      "case": "ptm-card-normal",
+      "docx": ".runtime/neutral-forms-final-20261005/ptm-card-normal.docx",
+      "docxSha256": "17b4bac6fb12fdae2ec2feb1e1e78f872cef8db7396a97f33832e878c1b26ae7",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/ptm-card-normal.word.pdf",
+      "wordPdfSha256": "08e5a68f7f4ba635e6ae45b9ee312aa059d08a231ea8e4523d3e3fe4927cfcff",
+      "wordPages": 1,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ptm-card-normal.word-1.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "68eb61f84d2d2e636a4ca3194ba0677fa22d7c0e215ca81df9105f5b351ba5ab",
+        "sourceSha256": "17b4bac6fb12fdae2ec2feb1e1e78f872cef8db7396a97f33832e878c1b26ae7",
+        "rerenderSha256": [
+          "17b4bac6fb12fdae2ec2feb1e1e78f872cef8db7396a97f33832e878c1b26ae7",
+          "17b4bac6fb12fdae2ec2feb1e1e78f872cef8db7396a97f33832e878c1b26ae7",
+          "17b4bac6fb12fdae2ec2feb1e1e78f872cef8db7396a97f33832e878c1b26ae7"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "ptm-card-long",
+      "docx": ".runtime/neutral-forms-final-20261005/ptm-card-long.docx",
+      "docxSha256": "6ed5ad17cf33670bd9efeb3b402522ea79638df488db80fe03b85058f88b34e7",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/ptm-card-long.word.pdf",
+      "wordPdfSha256": "0831e4a85e9ba17277babbe71f7e5f19f29260b2f10805cc7c1541309c5669b5",
+      "wordPages": 1,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ptm-card-long.word-1.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "08a0aea109a42049e0fe2f28ccee1b9beb5f5f02a96f77cceb9d875e4cdda40a",
+        "sourceSha256": "6ed5ad17cf33670bd9efeb3b402522ea79638df488db80fe03b85058f88b34e7",
+        "rerenderSha256": [
+          "6ed5ad17cf33670bd9efeb3b402522ea79638df488db80fe03b85058f88b34e7",
+          "6ed5ad17cf33670bd9efeb3b402522ea79638df488db80fe03b85058f88b34e7",
+          "6ed5ad17cf33670bd9efeb3b402522ea79638df488db80fe03b85058f88b34e7"
+        ],
+        "byteIdentical": true
+      }
+    },
+    {
+      "case": "ptm-card-photo",
+      "docx": ".runtime/neutral-forms-final-20261005/ptm-card-photo.docx",
+      "docxSha256": "f4aa7f1504153e267fe8bddfd53a7794c2c133600b581dabd71ce54e18edd950",
+      "wordPdf": ".runtime/neutral-forms-final-20261005/ptm-card-photo.word.pdf",
+      "wordPdfSha256": "559ac33fb2fc54254115a43fec5445a9d769722783a1756a90e87079ecbe6503",
+      "wordPages": 1,
+      "outOfPageTextBoxes": 0,
+      "wordVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ptm-card-photo.word-1.png"
+      ],
+      "sourceReproduction": {
+        "status": "PASS",
+        "repetitions": 3,
+        "snapshotSha256": "16fcf68cd1d40fb338554dfd9549e582ad7f24bd9235384f21d537d2c6f31a21",
+        "sourceSha256": "f4aa7f1504153e267fe8bddfd53a7794c2c133600b581dabd71ce54e18edd950",
+        "rerenderSha256": [
+          "f4aa7f1504153e267fe8bddfd53a7794c2c133600b581dabd71ce54e18edd950",
+          "f4aa7f1504153e267fe8bddfd53a7794c2c133600b581dabd71ce54e18edd950",
+          "f4aa7f1504153e267fe8bddfd53a7794c2c133600b581dabd71ce54e18edd950"
+        ],
+        "byteIdentical": true
+      }
+    }
+  ],
+  "psApplicationRecheck": [
+    {
+      "case": "ps-card-normal",
+      "applicationPdf": ".runtime/neutral-forms-final-20261005/ps-card-normal.pdf",
+      "applicationPdfSha256": "e495cf220b21cfcf583f0bef5e9c905b3be7db5a60e3e3fde1c287da1b4d4844",
+      "applicationPages": 2,
+      "applicationVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ps-card-normal.application-1.png",
+        ".runtime/neutral-cards/word-final/ps-card-normal.application-2.png"
+      ]
+    },
+    {
+      "case": "ps-card-long",
+      "applicationPdf": ".runtime/neutral-forms-final-20261005/ps-card-long.pdf",
+      "applicationPdfSha256": "4f6312ab81d0bb84dfdf58f3285d745ffffbee9d269537a7d5c444f80e8cb905",
+      "applicationPages": 2,
+      "applicationVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ps-card-long.application-1.png",
+        ".runtime/neutral-cards/word-final/ps-card-long.application-2.png"
+      ]
+    },
+    {
+      "case": "ps-card-photo",
+      "applicationPdf": ".runtime/neutral-forms-final-20261005/ps-card-photo.pdf",
+      "applicationPdfSha256": "b63c2557d4d86f8ca0614415b1ece687876f139293b1d8239f4fd2cca9aa2153",
+      "applicationPages": 2,
+      "applicationVisualReview": "PASS",
+      "pageImages": [
+        ".runtime/neutral-cards/word-final/ps-card-photo.application-1.png",
+        ".runtime/neutral-cards/word-final/ps-card-photo.application-2.png"
+      ]
+    }
+  ],
+  "acceptanceScriptReview": {
+    "script": "scripts/verification/accept_neutral_forms.py",
+    "scriptSha256": "014d0d0492f9ea74c36883aae04da717cc472d0837e309b807f6eee6e200c877",
+    "status": "PASS_33_SEQUENTIAL_AUDITS",
+    "cycles": 3,
+    "casesPerCycle": 11,
+    "sourceRerenderByteIdentical": 33,
+    "missingPrintedValues": 0,
+    "outOfPageWords": 0,
+    "namespaceRegression": "PASS: PS photo bytes independent of preexisting ElementTree namespace registry; registry restored on success and synthetic renderer exception",
+    "falseNegativeCorrected": "Word schwa glyph extraction mapped narrowly from Latin Ə/ə to Cyrillic Ә/ә",
+    "coverageBoundary": "Printed snapshot values are selected from DOCX text, so this validates DOCX-to-PDF survival. Required source slot presence, formatted dates, photo association, and values shorter than eight compact characters remain covered by dedicated renderer tests and visual review, not inferred independently by this script."
+  },
+  "namespaceCorrection": {
+    "status": "PASS_SOURCE_APPLICATION_AND_WORD_RASTER",
+    "wordReexportPending": false,
+    "sourceDiff": {
+      "changedParts": [
+        "word/document.xml"
+      ],
+      "documentQNameStructureIdentical": true,
+      "oldDocxSha256": "b60567273e65f0446694b0305b2dafc1703c5d10befe6c092b3462cec00a9682",
+      "newDocxSha256": "297911659aa4c499f7434c4dc053e0c7dceb46e26ad9a616a80588fa83463bfc"
+    },
+    "applicationRasterIdenticalToReviewedPages": 2,
+    "fixedRendererSha256": "24d83771e6e2fa982753f18e5bb8464790444a8d2154faf1c7978471eaa0aaaa",
+    "fixedTestSha256": "f796128ad15e334441ee6332574820fc0e66afd8cbd8f6a5fb8e93002d9ca656",
+    "wordRasterIdenticalToReviewedPages": 2,
+    "wordPdfSha256": "ce3207c15d9041e79819bfb4c7a8ef623eab90739835979d9d60bb4f015b067a"
+  },
+  "finalSnapshotPhotoBytes": [
+    {
+      "case": "pb-card-photo",
+      "status": "PASS",
+      "frozenPhotoSha256": "f8d5218e13a0020b2bb20c12b9c8f266449b5fa0e2d9199a0f38622dbeba2284",
+      "packageMedia": [
+        "word/media/generated-photo-0.png"
+      ]
+    },
+    {
+      "case": "ps-card-photo",
+      "status": "PASS",
+      "frozenPhotoSha256": "f8d5218e13a0020b2bb20c12b9c8f266449b5fa0e2d9199a0f38622dbeba2284",
+      "packageMedia": [
+        "word/media/generated-photo-0.png"
+      ]
+    },
+    {
+      "case": "ptm-card-photo",
+      "status": "PASS",
+      "frozenPhotoSha256": "f8d5218e13a0020b2bb20c12b9c8f266449b5fa0e2d9199a0f38622dbeba2284",
+      "packageMedia": [
+        "word/media/generated-photo-0.png"
+      ]
+    }
+  ]
+}

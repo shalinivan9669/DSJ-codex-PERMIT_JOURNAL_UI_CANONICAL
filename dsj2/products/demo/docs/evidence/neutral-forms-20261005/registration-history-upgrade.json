@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "syntheticOnly": true,
+  "tenantId": "fcbf3e06-176d-4077-bd40-63c200c59f14",
+  "artifactId": "0ebd670d-7529-47e2-8d60-4713d6227c5e",
+  "oldTemplateCount": 16,
+  "appendedTemplateCount": 16,
+  "newApprovedCount": 0,
+  "oldRowsAndStoredTemplateBytesUnchanged": true,
+  "historicalSnapshotAndArtifactUnchanged": true,
+  "authenticatedHttpBeforeAfterSha256": "ee6bb70041b26de8ee56603acdac997e504fe89d7dedee4b27af4da9bfe6c737",
+  "historicalRendererPolicy": "LEGACY_REFERENCE_90D5",
+  "historicalReproductionByteIdentical": true,
+  "currentSelectionRejectsUnapprovedVersion": true,
+  "provisioningRepeatDoesNotDuplicate": true,
+  "realIssuanceApprovalOrSignatureClaim": false
+}

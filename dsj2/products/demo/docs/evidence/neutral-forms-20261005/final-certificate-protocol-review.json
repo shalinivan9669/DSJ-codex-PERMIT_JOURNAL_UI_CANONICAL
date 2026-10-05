@@ -1,0 +1,4043 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-10-05T05:54:12.569894+00:00",
+  "reviewer": "independent certificate_layout subagent",
+  "status": "PASS_WITH_RECORDED_MINOR_LAYOUT_OBSERVATIONS",
+  "scope": {
+    "caseCount": 10,
+    "docxCount": 10,
+    "pdfCount": 20,
+    "pagesVisuallyInspected": 24,
+    "forms": [
+      "biot-itr-certificate",
+      "ps-witness",
+      "biot-protocol",
+      "biot-itr-protocol",
+      "ptm-protocol"
+    ],
+    "variants": [
+      "normal",
+      "long"
+    ],
+    "engines": [
+      "application LibreOffice",
+      "Microsoft Word"
+    ],
+    "excluded": [
+      "cards",
+      "PB/PS individual protocols",
+      "group protocols",
+      "stress/batch fixtures"
+    ]
+  },
+  "methods": [
+    "Fresh PNG rasterization from each actual final PDF using PyMuPDF, whole-page 1.3x and detail 2x (144 dpi).",
+    "Read-only Microsoft Word export, Documents.Open ReadOnly true; six protocol DOCX regenerated from unchanged saved snapshots after neutral protocol source freeze.",
+    "PDF extracted text compared with form-aware expected saved snapshot values. Whitespace normalized; hyphen line wraps and intra-word cell wraps separately recorded.",
+    "DOCX/PDF/snapshot/PNG SHA-256 bind each finding to exact reviewed bytes. Existing overall inventory left unchanged."
+  ],
+  "resolvedFindings": [
+    {
+      "finding": "Source-owned ТОО prefix / ЖШС suffix duplicated saved legal employer text in BIOT protocols.",
+      "resolution": "Fresh final BIOT/ITR PDFs show each actual RU/KZ employer exactly in header and roster, without extra source legal-form words."
+    },
+    {
+      "finding": "PTM previously retained RU employer only and source ЖШС suffix.",
+      "resolution": "Fresh final PTM PDFs include complete distinct RU and KZ employer values in header and roster."
+    }
+  ],
+  "minorLayoutObservations": [
+    {
+      "case": "ptm-protocol-long",
+      "engines": [
+        "application",
+        "word"
+      ],
+      "observation": "Narrow retained position column wraps Russian производственного between производственно and го without a printed hyphen. All characters are visible; field verification uses whitespace-free comparison for this one wrapped value."
+    },
+    {
+      "cases": [
+        "ptm-protocol-normal",
+        "ptm-protocol-long"
+      ],
+      "engine": "word",
+      "observation": "Neutral ЛОГОТИП text is complete, with top/right/bottom frame strokes visible; left stroke is not visible in Word export. Application PDF displays all four strokes. No factual field is affected."
+    }
+  ],
+  "limits": [
+    "This is technical local rendering acceptance of the listed synthetic fixtures, not legal approval, production registration or a signed issuance.",
+    "Only fields represented by each retained source form are asserted: ITR certificate has one RU name and chair, bilingual selected course and RU issue date; PS witness uses bilingual profession/qualification, not a standalone course-name field; protocols use static source subject captions rather than the selected-course string.",
+    "Protocol source exposes issuer.nameRu, not a separate issuer.nameKz field; protocol body name is fullNameRu. Neither absent source field is represented as a passed PDF check.",
+    "Rendering cannot prove physical printer behavior. Font/engine line-break differences remain, recorded where material."
+  ],
+  "supportingWordExport": {
+    "path": ".runtime/final-certificate-protocol-review/word-regenerated-protocols.json",
+    "sha256": "cf893aae881dfc4f489b771d3c8abe8ec65d74aad26d7350bac162ba68885488",
+    "bytes": 3771
+  },
+  "currentImplementation": {
+    "neutral_forms.py": {
+      "path": "scripts/render/neutral_forms.py",
+      "sha256": "24d83771e6e2fa982753f18e5bb8464790444a8d2154faf1c7978471eaa0aaaa",
+      "bytes": 11397
+    },
+    "neutral_protocols.py": {
+      "path": "scripts/render/neutral_protocols.py",
+      "sha256": "5cf1776fdd461efb7fb4c37bfa93739a79a372b2980d1c7a3b7843a4a6812542",
+      "bytes": 14632
+    },
+    "neutral_certificates.py": {
+      "path": "scripts/render/neutral_certificates.py",
+      "sha256": "1c531d1344b05e30020a2e9868e993de4b3ef0ebdfbfa206f2dbc42804a8db9d",
+      "bytes": 19332
+    }
+  },
+  "currentCodeReadback": {
+    "evidence": {
+      "path": ".runtime/final-certificate-protocol-review/current-code-compare/comparison.json",
+      "sha256": "1c898f98b393c64fe6ecd7c30ac6553c295a861a3c8c4404d014978c63d5d4a1",
+      "bytes": 2487
+    },
+    "caseCount": 10,
+    "allDocxBytesIdentical": true,
+    "note": "After root added new-policy namespace isolation, all ten saved snapshots were rerendered with current code into a private folder; each DOCX SHA-256 equals the exact reviewed principal DOCX. No geometric or value change."
+  },
+  "regressionTest": {
+    "path": "tests/render/test_neutral_protocol_values.py",
+    "executed": true,
+    "testsPassed": 3,
+    "coverage": "4 individual / 4 group employer contracts, 3 group header overrides; actual duplicate legal words inside user value preserved. PB source has employer only in header."
+  },
+  "cases": [
+    {
+      "case": "biot-itr-certificate-normal",
+      "templateId": "biot-itr-certificate",
+      "templateVersion": 19,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-itr-certificate-normal.snapshot.json",
+        "sha256": "8a14e402c412682ac10826499ed310a10e89ce7365167c277fa86435e15f1d80",
+        "bytes": 2809
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-itr-certificate-normal.docx",
+        "sha256": "eab50df2dcea937c62a234dcf5013ec1759cf1298af4a4a4de77850dd3568f2a",
+        "bytes": 18011
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/biot-itr-certificate-normal.pdf",
+          "sha256": "2e64d67fc21886b41035ba46a00789b67e3c53e6f8fe08e3518997b226ee31b5",
+          "bytes": 50740,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005103147+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                841.8897705078125,
+                595.303955078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-normal.application-1.png",
+                "sha256": "be22763bec4d7ba3899f12c46fab41fdabaf6181f879ffb61475c6824a6fae47",
+                "bytes": 60834
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-normal.application-header-144dpi.png",
+              "sha256": "96f2371c456a0beffc46ceddfa4cd40a6605db50667e2a8a69192916a4e0a4b2",
+              "bytes": 49747
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-normal.application-bottom-144dpi.png",
+              "sha256": "a953e0dea9205006c3f45ced999fdcd0634ba3083e36fb1bb5a5207fe55a80db",
+              "bytes": 30441
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-normal.application-detail.png",
+              "sha256": "dad67574afc40318fddd02a9f370007c67ecce7d95004525a8f3291eccdaa51a",
+              "bytes": 39942
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.nameKz",
+              "expected": "«Үлгі» оқу орталығы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityRu",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.number",
+              "expected": "ТЕСТ-00001",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingSubjectRu",
+              "expected": "Безопасность труда",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingSubjectKz",
+              "expected": "Еңбек қауіпсіздігі",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateRu",
+              "expected": "22 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/biot-itr-certificate-normal.word.pdf",
+          "sha256": "00e226c123f91abb5a08e064ba2a5f885d47d0c15daa2e99b4f736c1e37a8594",
+          "bytes": 61023,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005103152+05'00'",
+            "modDate": "D:20261005103152+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                842.0399780273438,
+                594.9600219726562
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-normal.word-1.png",
+                "sha256": "da45e0797892e893a706b48eea0b5b9ffcbba8512ee1aa1260b5fee8b0ca24e2",
+                "bytes": 60803
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-normal.word-header-144dpi.png",
+              "sha256": "2bf472f6439c2be1c17aa95f74ae24adeb7e2aa3feb74ba9d860a69f32c92249",
+              "bytes": 49044
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-normal.word-bottom-144dpi.png",
+              "sha256": "259b0ce6a38fb0f51ff47821bdca60be5f8e28537337222d029aecffbf754767",
+              "bytes": 30830
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-normal.word-detail.png",
+              "sha256": "4d19b4c8eb602b6da8e00096b8960a81ce44711fba571acee3285c13d17d138c",
+              "bytes": 41273
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.nameKz",
+              "expected": "«Үлгі» оқу орталығы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityRu",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.number",
+              "expected": "ТЕСТ-00001",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingSubjectRu",
+              "expected": "Безопасность труда",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingSubjectKz",
+              "expected": "Еңбек қауіпсіздігі",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateRu",
+              "expected": "22 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "biot-itr-certificate-long",
+      "templateId": "biot-itr-certificate",
+      "templateVersion": 19,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-itr-certificate-long.snapshot.json",
+        "sha256": "129a879b62b06a3cdc21cac737b0b5fbcaeb828c6e090c9a787ca127f60d48bb",
+        "bytes": 3414
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-itr-certificate-long.docx",
+        "sha256": "446d2c6a8a9603edf73c4181ef6408d9ec83c4d6fd4e406131741d388994891d",
+        "bytes": 18102
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/biot-itr-certificate-long.pdf",
+          "sha256": "1338bfabb742a848d5e76dbb656488e1e8dff98b6252d34a03c20b04cf536e83",
+          "bytes": 53773,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005103147+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                841.8897705078125,
+                595.303955078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-long.application-1.png",
+                "sha256": "c4666d839975d3aaa96261426418050a4f10c2ad4e960415fd737a68f4f60e4c",
+                "bytes": 70424
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-long.application-header-144dpi.png",
+              "sha256": "c046de9b04eedc48d9049d43ef83d9d88c296476b3813584c7ea53564a33d7cf",
+              "bytes": 54744
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-long.application-bottom-144dpi.png",
+              "sha256": "82f9ba0add2cc1708c95ae0db56020164b412ad5bb03852efaa392cb5dcb3a8b",
+              "bytes": 31699
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-long.application-detail.png",
+              "sha256": "9856ba8fec46e204055c3d1f788765cefbb27cb577e19d71b17fbd486f657a82",
+              "bytes": 49258
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.nameKz",
+              "expected": "«Үлгі» оқу орталығы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityRu",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.number",
+              "expected": "ДОК-2026-ОТ-000000012345",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingSubjectRu",
+              "expected": "Безопасность и охрана труда на производстве",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingSubjectKz",
+              "expected": "Өндірістегі еңбек қауіпсіздігі және еңбекті қорғау",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateRu",
+              "expected": "22 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/biot-itr-certificate-long.word.pdf",
+          "sha256": "62407925d204b8027b1eb6d9545e04aa103ebe5b55f78f1c6aac04472707a1e9",
+          "bytes": 66471,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005103151+05'00'",
+            "modDate": "D:20261005103151+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                842.0399780273438,
+                594.9600219726562
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-long.word-1.png",
+                "sha256": "79761df792443651105eb057cbb5360c00e8d69621845ceae14874762fe2227e",
+                "bytes": 71271
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-long.word-header-144dpi.png",
+              "sha256": "c30d8209175b494a975ebd6203cfe12330082eb129c3c00e9067b5f684d82db9",
+              "bytes": 54407
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-long.word-bottom-144dpi.png",
+              "sha256": "45e4b77ba69207a1b3533217b9072d267002431fecf764c52a0533e85d010e4d",
+              "bytes": 32326
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-certificate-long.word-detail.png",
+              "sha256": "9efc9fa1117dbe02fa1a0c614ae451550e0d05a0131be57126b821b5c9b267c7",
+              "bytes": 51249
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.nameKz",
+              "expected": "«Үлгі» оқу орталығы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityRu",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.number",
+              "expected": "ДОК-2026-ОТ-000000012345",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingSubjectRu",
+              "expected": "Безопасность и охрана труда на производстве",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingSubjectKz",
+              "expected": "Өндірістегі еңбек қауіпсіздігі және еңбекті қорғау",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateRu",
+              "expected": "22 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "ps-witness-normal",
+      "templateId": "ps-witness",
+      "templateVersion": 15,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/ps-witness-normal.snapshot.json",
+        "sha256": "2d0eeb9e2bbb776075f15b2fa4d63e8e341608bef5134376b9cbcbf7a99d24c8",
+        "bytes": 2070
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/ps-witness-normal.docx",
+        "sha256": "ef7a0c9abec16cdbf3bcc179a8861a4afa12a47b7b6d949900a65cb8032cbef2",
+        "bytes": 14966
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/ps-witness-normal.pdf",
+          "sha256": "a62cf68dc704314d3e9ad32040181df034154b55f7fbebde2a14956c780e85c3",
+          "bytes": 110592,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005103447+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 2,
+          "expectedPageCount": 2,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ps-witness-normal.application-1.png",
+                "sha256": "b96228c721f9c16484446361c8f299c617cd2436622e4cd9c559491ff216a6c0",
+                "bytes": 12356
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            },
+            {
+              "page": 2,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ps-witness-normal.application-2.png",
+                "sha256": "07fa1fb01794a3e78897cc488539bf2b9a57ef5f3f30c44d91e8e1e26599229f",
+                "bytes": 97639
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/ps-witness-normal.application-inside-144dpi.png",
+              "sha256": "a59f9c4c0975dfab0cce677d6ffc0e5a67cca2a538bce4d81a011c9c710dd10c",
+              "bytes": 162945
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/ps-witness-normal.application-detail.png",
+              "sha256": "0c5a6e3b4ec62f824cc9c2ad3bd79ac2e4cc371e6ac06d2304afaba5bc66f794",
+              "bytes": 13519
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.nameKz",
+              "expected": "«Үлгі» оқу орталығы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityRu",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityKz",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.headName",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameKz",
+              "expected": "Әділбек Өмірсерік Қанатұлы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.number",
+              "expected": "ТЕСТ-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.registrationNumber",
+              "expected": "00123",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.resultRu",
+              "expected": "ТЕСТ: хорошо",
+              "minimumOccurrences": 3,
+              "foundOccurrences": 3,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.resultKz",
+              "expected": "жақсы",
+              "minimumOccurrences": 3,
+              "foundOccurrences": 3,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateRu",
+              "expected": "22 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateKz",
+              "expected": "22 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "20 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "20 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingStartRu",
+              "expected": "14 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingStartKz",
+              "expected": "14 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingEndRu",
+              "expected": "19 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingEndKz",
+              "expected": "19 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/ps-witness-normal.word.pdf",
+          "sha256": "c58b7512515c9008838506f6c555881a0376391a734c4f5cdda743666cca4f85",
+          "bytes": 188503,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005103210+05'00'",
+            "modDate": "D:20261005103210+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 2,
+          "expectedPageCount": 2,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.5599975585938,
+                842.0399780273438
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ps-witness-normal.word-1.png",
+                "sha256": "7fa980fa9f6f3478e3fa89e53fbe17f6721722041e3a0fd8e3d5ce351958d655",
+                "bytes": 12304
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            },
+            {
+              "page": 2,
+              "sizePoints": [
+                595.5599975585938,
+                842.0399780273438
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ps-witness-normal.word-2.png",
+                "sha256": "4c9746a0753268c6467a5e5a633515b5a29b918b2a67f6a9a160ad23e92df786",
+                "bytes": 97004
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/ps-witness-normal.word-inside-144dpi.png",
+              "sha256": "b269e093132c864b5edb48da21097df3f88a19c31b3502e734a30530ebee7121",
+              "bytes": 163816
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/ps-witness-normal.word-detail.png",
+              "sha256": "2bc2ea7104a0e4c5950d97d0261768bdbc4668497d2c4c4e445327c52089bb4c",
+              "bytes": 13352
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.nameKz",
+              "expected": "«Үлгі» оқу орталығы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityRu",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityKz",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.headName",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameKz",
+              "expected": "Әділбек Өмірсерік Қанатұлы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.number",
+              "expected": "ТЕСТ-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.registrationNumber",
+              "expected": "00123",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.resultRu",
+              "expected": "ТЕСТ: хорошо",
+              "minimumOccurrences": 3,
+              "foundOccurrences": 3,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.resultKz",
+              "expected": "жақсы",
+              "minimumOccurrences": 3,
+              "foundOccurrences": 3,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateRu",
+              "expected": "22 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateKz",
+              "expected": "22 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "20 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "20 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingStartRu",
+              "expected": "14 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingStartKz",
+              "expected": "14 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingEndRu",
+              "expected": "19 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingEndKz",
+              "expected": "19 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "ps-witness-long",
+      "templateId": "ps-witness",
+      "templateVersion": 15,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/ps-witness-long.snapshot.json",
+        "sha256": "c9bb5ddb630cec1a93a916e736efc17f6baef2d1186bccf38e88f43c76568a20",
+        "bytes": 2675
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/ps-witness-long.docx",
+        "sha256": "3356ee7bfe530c7fa43d5ff121add39ffd600c66345e93cb381f192e429d4493",
+        "bytes": 15070
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/ps-witness-long.pdf",
+          "sha256": "244a63baaf173b1799420d244b1f74461ebb907c97f87a9e996c63cd0fccab2a",
+          "bytes": 113780,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005103503+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 2,
+          "expectedPageCount": 2,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ps-witness-long.application-1.png",
+                "sha256": "b96228c721f9c16484446361c8f299c617cd2436622e4cd9c559491ff216a6c0",
+                "bytes": 12356
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            },
+            {
+              "page": 2,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ps-witness-long.application-2.png",
+                "sha256": "a858fbb2be8fe49d0c1b672c9d3f2faa0abd776e3028086f5cf90c59cf659ed2",
+                "bytes": 113040
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/ps-witness-long.application-inside-144dpi.png",
+              "sha256": "f7c8c91f1d73e520a6fb5ea09e03861b8d6f752143313141f43477cde642a496",
+              "bytes": 192940
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/ps-witness-long.application-detail.png",
+              "sha256": "aedf48991cd979286e894af903ed08e336e1b90510c8986f80784106384a8d2c",
+              "bytes": 20171
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.nameKz",
+              "expected": "«Үлгі» оқу орталығы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityRu",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityKz",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.headName",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameKz",
+              "expected": "Әділбек Өмірсерік Қанатұлы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.number",
+              "expected": "ДОК-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace_and_hyphen_line_wrap",
+              "pass": true
+            },
+            {
+              "field": "item.registrationNumber",
+              "expected": "РЕГ-2026-0000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Ведущий инженер производственного участка",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Өндірістік учаскенің жетекші инженері",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.resultRu",
+              "expected": "ТЕСТ: хорошо",
+              "minimumOccurrences": 3,
+              "foundOccurrences": 3,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.resultKz",
+              "expected": "жақсы",
+              "minimumOccurrences": 3,
+              "foundOccurrences": 3,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateRu",
+              "expected": "22 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateKz",
+              "expected": "22 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "20 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "20 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingStartRu",
+              "expected": "14 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingStartKz",
+              "expected": "14 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingEndRu",
+              "expected": "19 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingEndKz",
+              "expected": "19 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/ps-witness-long.word.pdf",
+          "sha256": "25019d35d2a5bd58d1b024fd696c263408a6690ee2def285670ea47a76befe19",
+          "bytes": 193074,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005103209+05'00'",
+            "modDate": "D:20261005103209+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 2,
+          "expectedPageCount": 2,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.5599975585938,
+                842.0399780273438
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ps-witness-long.word-1.png",
+                "sha256": "7fa980fa9f6f3478e3fa89e53fbe17f6721722041e3a0fd8e3d5ce351958d655",
+                "bytes": 12304
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            },
+            {
+              "page": 2,
+              "sizePoints": [
+                595.5599975585938,
+                842.0399780273438
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ps-witness-long.word-2.png",
+                "sha256": "9c05be530127ab8c39943ba4187b8906ae09bc82dfd8a77d3af367a8e95f7bd7",
+                "bytes": 112520
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/ps-witness-long.word-inside-144dpi.png",
+              "sha256": "8a6311cef5f1d5984b7664b350470d4601a94a08f4f326913fd4ed78894cd4c5",
+              "bytes": 194525
+            },
+            {
+              "path": ".runtime/final-certificate-protocol-review/ps-witness-long.word-detail.png",
+              "sha256": "093c508f22cb844aa0d99e49c71a4089268d02c57180c4377b38ec9a0a5a02f6",
+              "bytes": 20636
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.nameKz",
+              "expected": "«Үлгі» оқу орталығы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityRu",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.cityKz",
+              "expected": "Астана",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.headName",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameKz",
+              "expected": "Әділбек Өмірсерік Қанатұлы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.number",
+              "expected": "ДОК-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace_and_hyphen_line_wrap",
+              "pass": true
+            },
+            {
+              "field": "item.registrationNumber",
+              "expected": "РЕГ-2026-0000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Ведущий инженер производственного участка",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Өндірістік учаскенің жетекші инженері",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.resultRu",
+              "expected": "ТЕСТ: хорошо",
+              "minimumOccurrences": 3,
+              "foundOccurrences": 3,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.resultKz",
+              "expected": "жақсы",
+              "minimumOccurrences": 3,
+              "foundOccurrences": 3,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateRu",
+              "expected": "22 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.documentDateKz",
+              "expected": "22 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "20 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "20 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingStartRu",
+              "expected": "14 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingStartKz",
+              "expected": "14 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingEndRu",
+              "expected": "19 сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.trainingEndKz",
+              "expected": "19 қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "biot-protocol-normal",
+      "templateId": "biot-protocol",
+      "templateVersion": 15,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-protocol-normal.snapshot.json",
+        "sha256": "fd5c50664fefa68f9da2e16dc34d6adaa34d8bf5daf9fa2a2e35528e0a984241",
+        "bytes": 2779
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-protocol-normal.docx",
+        "sha256": "bfe561aa978e1f7f6ad14e2af79c6849f3197f31b5f2455ed9b4a2d66216778f",
+        "bytes": 25842
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/biot-protocol-normal.pdf",
+          "sha256": "52bcbabc6eadbdf259acaf4d9138a3c881a629532dc02b4a859d66521f1c0c7f",
+          "bytes": 118841,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005104610+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-protocol-normal.application-1.png",
+                "sha256": "64ae05e69bade90087108dac1afdd2ca6ee3111b10ba1f3af9bfa92d879bf9b5",
+                "bytes": 129461
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-protocol-normal.application-page-1-detail-144dpi.png",
+              "sha256": "b5f3c9f5b803d3af0567b6bbb12b60b4c36ebc494886df88cbb1968c55c69a18",
+              "bytes": 228871
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовый заказчик»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ тапсырыс беруші» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/biot-protocol-normal.word.pdf",
+          "sha256": "6b0fffaf5d69f9071c4d0ee64576c392555fe4eac34f1980f79b41d32c2b7fea",
+          "bytes": 190874,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005104841+05'00'",
+            "modDate": "D:20261005104841+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.3200073242188,
+                841.9199829101562
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-protocol-normal.word-1.png",
+                "sha256": "9b26f5a5b51f131d92b574fe40a018d192153c4dc8c961b411044c6028da9b7c",
+                "bytes": 129125
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-protocol-normal.word-page-1-detail-144dpi.png",
+              "sha256": "d285c3facb48b940408c5a07e1e80df948f934fe2afb8fec919b1bb9d6f49d74",
+              "bytes": 227658
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовый заказчик»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ тапсырыс беруші» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "biot-protocol-long",
+      "templateId": "biot-protocol",
+      "templateVersion": 15,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-protocol-long.snapshot.json",
+        "sha256": "d78004c9278af61f47a3fd553637b2ed73ab2bf59b3e801d9b59ff2731ba3971",
+        "bytes": 3384
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-protocol-long.docx",
+        "sha256": "e92b1c3ba5d754a13e9c11c66cc34516486927b8750df3572661c6994ac8da02",
+        "bytes": 25966
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/biot-protocol-long.pdf",
+          "sha256": "dd9df640cb55406bc45935f218143a2e1e639c6b36aabc796d01276daf66d4a1",
+          "bytes": 121628,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005104631+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-protocol-long.application-1.png",
+                "sha256": "ab700c35aeb49e849a0b1023feb50e247779cfd2d017049f1a403ec6ceb6e720",
+                "bytes": 138681
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-protocol-long.application-page-1-detail-144dpi.png",
+              "sha256": "6dafde5bb31095f150a5c700e1b802e8e54d279524fd7eee9b2583cd323b6dbf",
+              "bytes": 245263
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Ведущий инженер производственного участка",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Өндірістік учаскенің жетекші инженері",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовое промышленное предприятие»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ өнеркәсіптік кәсіпорны» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/biot-protocol-long.word.pdf",
+          "sha256": "8d56eb4c9a52076ff55ff6a68ae54e9e237a383a9033dec21b181c2569c7ce74",
+          "bytes": 194801,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005104841+05'00'",
+            "modDate": "D:20261005104841+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.3200073242188,
+                841.9199829101562
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-protocol-long.word-1.png",
+                "sha256": "1d7c3256166a0dad5dafd0b5df4bcd050407b3e689e98e2c1cfde3f0adcef9e5",
+                "bytes": 138156
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-protocol-long.word-page-1-detail-144dpi.png",
+              "sha256": "33e2034fcd24970846f63ec54cee0cc20216c67adf23183210d34feecb202f88",
+              "bytes": 243707
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Ведущий инженер производственного участка",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Өндірістік учаскенің жетекші инженері",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовое промышленное предприятие»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ өнеркәсіптік кәсіпорны» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "biot-itr-protocol-normal",
+      "templateId": "biot-itr-protocol",
+      "templateVersion": 6,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-itr-protocol-normal.snapshot.json",
+        "sha256": "10b3115d8530d52bf86c5ceca1cc44e60e8101bde63a0793a22da32bc1fe8c23",
+        "bytes": 2802
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-itr-protocol-normal.docx",
+        "sha256": "bfe561aa978e1f7f6ad14e2af79c6849f3197f31b5f2455ed9b4a2d66216778f",
+        "bytes": 25842
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/biot-itr-protocol-normal.pdf",
+          "sha256": "36ae56a375703b9602f622a83b06a6a7cfb2c394ee6179be1d62ad0b48259fa7",
+          "bytes": 118841,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005104649+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-itr-protocol-normal.application-1.png",
+                "sha256": "64ae05e69bade90087108dac1afdd2ca6ee3111b10ba1f3af9bfa92d879bf9b5",
+                "bytes": 129461
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-protocol-normal.application-page-1-detail-144dpi.png",
+              "sha256": "b5f3c9f5b803d3af0567b6bbb12b60b4c36ebc494886df88cbb1968c55c69a18",
+              "bytes": 228871
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовый заказчик»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ тапсырыс беруші» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/biot-itr-protocol-normal.word.pdf",
+          "sha256": "f21e260966c20c375109fe4fa5cb075d65aebfe3bcf4c61a1e1f2baa401dc600",
+          "bytes": 190874,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005104839+05'00'",
+            "modDate": "D:20261005104839+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.3200073242188,
+                841.9199829101562
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-itr-protocol-normal.word-1.png",
+                "sha256": "9b26f5a5b51f131d92b574fe40a018d192153c4dc8c961b411044c6028da9b7c",
+                "bytes": 129125
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-protocol-normal.word-page-1-detail-144dpi.png",
+              "sha256": "d285c3facb48b940408c5a07e1e80df948f934fe2afb8fec919b1bb9d6f49d74",
+              "bytes": 227658
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовый заказчик»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ тапсырыс беруші» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "biot-itr-protocol-long",
+      "templateId": "biot-itr-protocol",
+      "templateVersion": 6,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-itr-protocol-long.snapshot.json",
+        "sha256": "42b8202a552b1836c81b5b5bbdd2a7d09d62c9b5481dbac95ec294227d1afdae",
+        "bytes": 3407
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/biot-itr-protocol-long.docx",
+        "sha256": "e92b1c3ba5d754a13e9c11c66cc34516486927b8750df3572661c6994ac8da02",
+        "bytes": 25966
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/biot-itr-protocol-long.pdf",
+          "sha256": "14facaa125a17366eab7c5af4102d1c4ee43b3312a39556706e423f05e8d6343",
+          "bytes": 121628,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005104707+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-itr-protocol-long.application-1.png",
+                "sha256": "ab700c35aeb49e849a0b1023feb50e247779cfd2d017049f1a403ec6ceb6e720",
+                "bytes": 138681
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-protocol-long.application-page-1-detail-144dpi.png",
+              "sha256": "6dafde5bb31095f150a5c700e1b802e8e54d279524fd7eee9b2583cd323b6dbf",
+              "bytes": 245263
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Ведущий инженер производственного участка",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Өндірістік учаскенің жетекші инженері",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовое промышленное предприятие»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ өнеркәсіптік кәсіпорны» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/biot-itr-protocol-long.word.pdf",
+          "sha256": "a5d4617882ca3409c84537cb9f414ceabba5bf0e7025ec160710004000747998",
+          "bytes": 194801,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005104839+05'00'",
+            "modDate": "D:20261005104839+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.3200073242188,
+                841.9199829101562
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/biot-itr-protocol-long.word-1.png",
+                "sha256": "1d7c3256166a0dad5dafd0b5df4bcd050407b3e689e98e2c1cfde3f0adcef9e5",
+                "bytes": 138156
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/biot-itr-protocol-long.word-page-1-detail-144dpi.png",
+              "sha256": "33e2034fcd24970846f63ec54cee0cc20216c67adf23183210d34feecb202f88",
+              "bytes": 243707
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Ведущий инженер производственного участка",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Өндірістік учаскенің жетекші инженері",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовое промышленное предприятие»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ өнеркәсіптік кәсіпорны» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "ptm-protocol-normal",
+      "templateId": "ptm-protocol",
+      "templateVersion": 13,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/ptm-protocol-normal.snapshot.json",
+        "sha256": "ded45840531d39c7f84e1d828088b1c73611911b4a051dbca3b1d614a368cbb3",
+        "bytes": 2074
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/ptm-protocol-normal.docx",
+        "sha256": "53cbff43bd0b175956f5cf64cf5d046f9fd95882d84488a90f1cb38e6b29e67c",
+        "bytes": 6911187
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/ptm-protocol-normal.pdf",
+          "sha256": "bbdcdf8d25156f67680a087bafcd80596c8fdde7fa8ba63eda478d4a119ed5e8",
+          "bytes": 122395,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005104727+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ptm-protocol-normal.application-1.png",
+                "sha256": "7bc92129c237808ec63cb7ff5ecc4c64fdef9a19a152c0f93c5a3589edc40117",
+                "bytes": 111565
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/ptm-protocol-normal.application-page-1-detail-144dpi.png",
+              "sha256": "b0da4fb9ff6a4dd390d1fffae99393f1a2c6b4792bbce18c0c8894d162432852",
+              "bytes": 204854
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовый заказчик»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ тапсырыс беруші» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/ptm-protocol-normal.word.pdf",
+          "sha256": "d1ac2205058c7b5bbb9745385f73876606c24297088cd0ba7cc8926a62360794",
+          "bytes": 192128,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005104847+05'00'",
+            "modDate": "D:20261005104847+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.3200073242188,
+                841.9199829101562
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ptm-protocol-normal.word-1.png",
+                "sha256": "df20f7e36265db4ab2670b8caa21edad0dfd5fbdb68ff2c2c0c9f8511d600207",
+                "bytes": 111821
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/ptm-protocol-normal.word-page-1-detail-144dpi.png",
+              "sha256": "6547d0aec484aacd2534829c896a5c10868b467ea2e02bf537b939da1ead1693",
+              "bytes": 205521
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов Иван Петрович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-00001",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Инженер",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовый заказчик»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ тапсырыс беруші» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case": "ptm-protocol-long",
+      "templateId": "ptm-protocol",
+      "templateVersion": 13,
+      "snapshot": {
+        "path": ".runtime/neutral-forms-final-20261005/ptm-protocol-long.snapshot.json",
+        "sha256": "1caae333ec45d9819593e0690af7e5cd100e87b7c223185e5bc998506e341b51",
+        "bytes": 2679
+      },
+      "docx": {
+        "path": ".runtime/neutral-forms-final-20261005/ptm-protocol-long.docx",
+        "sha256": "2c3e0866c78fd8ab4abac835b0fdcd8cfb20655d77871715e119175ce7ba4da3",
+        "bytes": 6911322
+      },
+      "outputs": [
+        {
+          "engine": "application",
+          "path": ".runtime/neutral-forms-final-20261005/ptm-protocol-long.pdf",
+          "sha256": "0ece06f712b5f7feaf8a60889ef066d06bfdc21504b701f07b694f9e0e416fcb",
+          "bytes": 124484,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Writer",
+            "producer": "LibreOffice 26.2.6.3 (X86_64)",
+            "creationDate": "D:20261005104749+05'00'",
+            "modDate": "",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.303955078125,
+                841.8897705078125
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ptm-protocol-long.application-1.png",
+                "sha256": "2d299344a25f8743cd5bb37fd20d1399c4d9f1a6b97b44ff1249d2dda3e9ae45",
+                "bytes": 121071
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/ptm-protocol-long.application-page-1-detail-144dpi.png",
+              "sha256": "f76428f2211b9a876ad53b34f912f72486a82bd33560e2e1e7941c0063fcd984",
+              "bytes": 223452
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Ведущий инженер производственного участка",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "all_whitespace_removed_with_visual_confirmation",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Өндірістік учаскенің жетекші инженері",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовое промышленное предприятие»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ өнеркәсіптік кәсіпорны» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        },
+        {
+          "engine": "word",
+          "path": ".runtime/neutral-forms-final-20261005/ptm-protocol-long.word.pdf",
+          "sha256": "1b13fd623b3f9449512a62d34722f570003298046b14535fa2152b54d3d4f7ce",
+          "bytes": 196411,
+          "pdfMetadata": {
+            "format": "PDF 1.7",
+            "title": "",
+            "author": "",
+            "subject": "",
+            "keywords": "",
+            "creator": "Microsoft® Word 2024",
+            "producer": "Microsoft® Word 2024",
+            "creationDate": "D:20261005104846+05'00'",
+            "modDate": "D:20261005104846+05'00'",
+            "trapped": "",
+            "encryption": null
+          },
+          "pageCount": 1,
+          "expectedPageCount": 1,
+          "pages": [
+            {
+              "page": 1,
+              "sizePoints": [
+                595.3200073242188,
+                841.9199829101562
+              ],
+              "wholePagePng": {
+                "path": ".runtime/final-certificate-protocol-review/ptm-protocol-long.word-1.png",
+                "sha256": "ead284aaf4da12d4d7d6b02ae1508c3a2287245d83c0ce8c89065477bd2c49ce",
+                "bytes": 120933
+              },
+              "wholePageVisuallyInspected": true,
+              "outOfPageWords": []
+            }
+          ],
+          "detailPngsInspectedAtOriginalPixels": [
+            {
+              "path": ".runtime/final-certificate-protocol-review/ptm-protocol-long.word-page-1-detail-144dpi.png",
+              "sha256": "e8ac1cf7c22ff6ca34364364779035e9e20be4f03ffc19459dcc751248f012db",
+              "bytes": 223719
+            }
+          ],
+          "fields": [
+            {
+              "field": "issuer.nameRu",
+              "expected": "Учебный центр «Образец»",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 4,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.fullNameRu",
+              "expected": "Тестов-Примеров Александр Константинович",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.addressRu",
+              "expected": "ТЕСТ: Тестовая улица, 12",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.bin",
+              "expected": "990140000000",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.approvalBasis",
+              "expected": "ТЕСТ: приказ комиссии № 7 от 10.09.2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.protocolNumber",
+              "expected": "ПР-2026-ОТ-000000012345",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.positionRu",
+              "expected": "Ведущий инженер производственного участка",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "all_whitespace_removed_with_visual_confirmation",
+              "pass": true
+            },
+            {
+              "field": "item.positionKz",
+              "expected": "Өндірістік учаскенің жетекші инженері",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceRu",
+              "expected": "ТОО «Тестовое промышленное предприятие»",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "item.workplaceKz",
+              "expected": "«Сынақ өнеркәсіптік кәсіпорны» ЖШС",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.0.name",
+              "expected": "Тестова А. Б.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.1.name",
+              "expected": "Үлгі Ә. Ө.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "issuer.commission.2.name",
+              "expected": "Примеров В. Г.",
+              "minimumOccurrences": 2,
+              "foundOccurrences": 2,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.result",
+              "expected": "ТЕСТ: хорошо / жақсы",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.reason",
+              "expected": "ТЕСТ: первичное обучение",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateRu",
+              "expected": "«20» сентября 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            },
+            {
+              "field": "assignment.protocolDateKz",
+              "expected": "«20» қыркүйек 2026",
+              "minimumOccurrences": 1,
+              "foundOccurrences": 1,
+              "matchMode": "normalized_whitespace",
+              "pass": true
+            }
+          ],
+          "allExpectedFieldsPresent": true,
+          "duplicateSourceLegalWrappers": false,
+          "unresolvedNeutralMarkers": false,
+          "visualInspection": "All pages and listed 144 dpi detail regions inspected. No cropped names, courses, dates, numbers, registration, issuer or commission; no text overlaps; see recorded minor observations.",
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

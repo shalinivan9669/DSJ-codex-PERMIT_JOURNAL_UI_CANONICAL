@@ -1,0 +1,107 @@
+[
+  {
+    "case": "biot-itr-certificate-normal",
+    "page": 1,
+    "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\biot-itr-certificate-normal.png",
+    "sourcePdfs": [
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\biot-itr-certificate-normal.word.pdf",
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-itr-certificate-normal.word.pdf"
+    ],
+    "sourceSha256": [
+      "d398707e0f26b0848c9a07f45e3f66741c1dc4891f4b8583296a9c8e4bea9fa9",
+      "00e226c123f91abb5a08e064ba2a5f885d47d0c15daa2e99b4f736c1e37a8594"
+    ],
+    "sameSnapshotExceptTemplateVersion": true,
+    "noteRu": "Те же данные."
+  },
+  {
+    "case": "biot-worker-card-long",
+    "page": 1,
+    "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\biot-worker-card-long.png",
+    "sourcePdfs": [
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\biot-worker-card-long.word.pdf",
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-worker-card-long.word.pdf"
+    ],
+    "sourceSha256": [
+      "945ab80d53f3bf176b0b1a11203141b84cceac64eafaec163f9fa1d7dedff7f7",
+      "d438c76c7b578a19e74581c2a0c109af17aee1718c46bac3ab0c69ad56ceb4af"
+    ],
+    "sameSnapshotExceptTemplateVersion": false,
+    "noteRu": "Те же длинные ФИО/должность/работодатель; после исправления дополнительно удлинены номера и RU/KZ курс."
+  },
+  {
+    "case": "pb-card-long",
+    "page": 1,
+    "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\pb-card-long.png",
+    "sourcePdfs": [
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\pb-card-long.word.pdf",
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-card-long.word.pdf"
+    ],
+    "sourceSha256": [
+      "d9135e6ec85dfdbab88ffb1259193475bc9c24c549c0c5ef0b8428aea6569002",
+      "9427c36efab522c711d47ec8fd15dd3076f26b4c991da09c5400218679f05416"
+    ],
+    "sameSnapshotExceptTemplateVersion": false,
+    "noteRu": "Те же длинные ФИО/должность/работодатель; после исправления дополнительно удлинены номера и RU/KZ курс."
+  },
+  {
+    "case": "ps-card-normal",
+    "page": 1,
+    "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\ps-card-normal.png",
+    "sourcePdfs": [
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\ps-card-normal.word.pdf",
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-card-normal.word.pdf"
+    ],
+    "sourceSha256": [
+      "cc7c8754c4b208714886d784f57815b047e9933ab9eb9d8c8efcadfdff2bb729",
+      "a8e7e16dd7bb4eb95b89c5859d6f4aa6754f44d9b14a975f98baa8b3b14c7cdd"
+    ],
+    "sameSnapshotExceptTemplateVersion": true,
+    "noteRu": "Те же данные."
+  },
+  {
+    "case": "ps-witness-normal",
+    "page": 2,
+    "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\ps-witness-normal.png",
+    "sourcePdfs": [
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\ps-witness-normal.word.pdf",
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\ps-witness-normal.word.pdf"
+    ],
+    "sourceSha256": [
+      "93a56eda7bf61a66122441ac60adbc61e0112f3be73ebb311d172ad1c558d364",
+      "c58b7512515c9008838506f6c555881a0376391a734c4f5cdda743666cca4f85"
+    ],
+    "sameSnapshotExceptTemplateVersion": true,
+    "noteRu": "Те же данные."
+  },
+  {
+    "case": "biot-protocol-group25",
+    "page": 2,
+    "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\biot-protocol-group25.png",
+    "sourcePdfs": [
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\biot-protocol-group25.word.pdf",
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\biot-protocol-group25.word.pdf"
+    ],
+    "sourceSha256": [
+      "e8f468241da7555139277da7fc8b6bc56c15f51b77c3ff71ff7e05647692dfd6",
+      "1bfb36613654646e093a8f002b6887c80e6710c819fb57441899ba98b72e494c"
+    ],
+    "sameSnapshotExceptTemplateVersion": true,
+    "noteRu": "Те же данные."
+  },
+  {
+    "case": "pb-protocol-group25",
+    "page": 2,
+    "image": "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\before-after\\pb-protocol-group25.png",
+    "sourcePdfs": [
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\document-audit-20261005\\pb-protocol-group25.word.pdf",
+      "C:\\Users\\Admin\\.codex\\worktrees\\ot-center-business-value\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\neutral-forms-final-20261005\\pb-protocol-group25.word.pdf"
+    ],
+    "sourceSha256": [
+      "b7080b74f137065c1ed7ded2aa03596365b2e700fd9dde46e64d389dd8457dfe",
+      "e484f965cefae0fd3e4c187f3a1acdaa334102d569d0060b6b497bfccf1a737e"
+    ],
+    "sameSnapshotExceptTemplateVersion": true,
+    "noteRu": "Те же данные."
+  }
+]

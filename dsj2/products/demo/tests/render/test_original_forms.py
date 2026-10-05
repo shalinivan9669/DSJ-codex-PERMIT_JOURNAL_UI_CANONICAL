@@ -16,9 +16,22 @@ from english_appendix import append_english_pages, validate_english
 from renderer import render_docx, render_one, COLUMNS
 from sanitize_templates import deterministic_zip
 from restore_original_forms import prepare_original, SOURCES, METADATA_PART
+from legacy_reference import reference_sources
 from test_render import fixture
 from test_group_protocol import group_fixture
 W='{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+
+
+def reference_case(template_id):
+    """Keep historical geometry assertions on the immutable reference policy.
+
+    The active manifest may advance to layouts with repaired flowing tables;
+    tests below deliberately prove that the old floating boxes still replay.
+    """
+    record=next(t for t in reference_sources()['templates'] if t['id']==template_id)
+    snapshot=fixture(template_id)
+    snapshot['templateVersion']=record['version']
+    return snapshot,ROOT/'assets/templates'/record['file']
 
 
 def english_fixture(template_id,count=1):
@@ -96,12 +109,11 @@ class OriginalFormTests(unittest.TestCase):
             self.assertIn(key,COLUMNS)
 
     def test_original_card_protocol_and_expiry_dates_are_independent_of_issue(self):
-        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
         for tid in ['ptm-card','pb-card','ps-card','biot-worker-card']:
             with self.subTest(template=tid):
-                snapshot=fixture(tid);snapshot['items'][0]['assignment'].update(documentDate='2026-10-01',protocolDate='2026-09-30',validUntil='2029-12-15')
-                template=next(t for t in manifest['templates'] if t['id']==tid)
-                files=render_one(snapshot,snapshot['items'][0],ROOT/'assets/templates'/template['file'])
+                snapshot,source=reference_case(tid)
+                snapshot['items'][0]['assignment'].update(documentDate='2026-10-01',protocolDate='2026-09-30',validUntil='2029-12-15')
+                files=render_one(snapshot,snapshot['items'][0],source)
                 root=E.fromstring(files['word/document.xml'])
                 protocol_blocks=[b for b in root.iter(W+'txbxContent') if 'ПР-00001' in ''.join(b.itertext())]
                 self.assertTrue(protocol_blocks)
@@ -148,11 +160,8 @@ class OriginalFormTests(unittest.TestCase):
                             self.assertEqual(1,line.count(printed))
 
     def test_worker_both_front_copies_keep_the_supplied_kazakh_position(self):
-        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
-        template=next(t for t in manifest['templates'] if t['id']=='biot-worker-card')
-        source=ROOT/'assets/templates'/template['file']
+        snapshot,source=reference_case('biot-worker-card')
         checksum=hashlib.sha256(source.read_bytes()).hexdigest()
-        snapshot=fixture('biot-worker-card')
         snapshot['items'][0].update(positionRu='Синтетический монтажник',positionKz='Синтетикалық құрастырушы')
         files=render_one(snapshot,snapshot['items'][0],source)
         root=E.fromstring(files['word/document.xml'])
@@ -168,12 +177,9 @@ class OriginalFormTests(unittest.TestCase):
         self.assertEqual(checksum,hashlib.sha256(source.read_bytes()).hexdigest())
 
     def test_ps_witness_keeps_issue_training_and_bilingual_decision_dates_independent(self):
-        manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
-        template=next(t for t in manifest['templates'] if t['id']=='ps-witness')
-        source=ROOT/'assets/templates'/template['file']
+        snapshot,source=reference_case('ps-witness')
         checksum=hashlib.sha256(source.read_bytes()).hexdigest()
         with ZipFile(source) as archive:original=E.fromstring(archive.read('word/document.xml'))
-        snapshot=fixture('ps-witness')
         snapshot['items'][0]['assignment'].update(documentDate='2026-10-02',protocolDate='2026-09-30',trainingStart='2026-09-14',trainingEnd='2026-09-19')
         files=render_one(snapshot,snapshot['items'][0],source)
         rendered=E.fromstring(files['word/document.xml'])

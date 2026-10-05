@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "baselineFiles": 448,
+  "byteIdenticalFiles": 445,
+  "changed": [
+    "assets/templates/manifest.json",
+    "docs/evidence/progress.md",
+    "scripts/render/renderer.py"
+  ],
+  "oldTemplateFiles": 87,
+  "originalAuditAndSavedArtifactFiles": 319,
+  "originalAuditAndSavedArtifactsUnchanged": true,
+  "preexistingUserFilesPreserved": true,
+  "registrationEvidence": "registration-history-upgrade.json"
+}

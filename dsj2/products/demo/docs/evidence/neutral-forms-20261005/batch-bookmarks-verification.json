@@ -1,0 +1,94 @@
+{
+  "before": [
+    {
+      "id": "0",
+      "name": "_Hlk94176335"
+    },
+    {
+      "id": "1",
+      "name": "_NeutralProtocolCommission"
+    },
+    {
+      "id": "0",
+      "name": "_Hlk94176335"
+    },
+    {
+      "id": "1",
+      "name": "_NeutralProtocolCommission"
+    }
+  ],
+  "after": [
+    {
+      "id": "0",
+      "name": "_Hlk94176335"
+    },
+    {
+      "id": "1",
+      "name": "_NeutralProtocolCommission"
+    },
+    {
+      "id": "2",
+      "name": "_Hlk94176335_b2_1"
+    },
+    {
+      "id": "3",
+      "name": "_NeutralProtocolCommission_b2_1"
+    }
+  ],
+  "docxSha256": "5e601ad20208916ddc4b0fad1a779fcde7afae3fe570f1b791358edfaeda4be4",
+  "singleAndGroupByteChecks": [
+    {
+      "case": "pb-protocol-normal",
+      "sameBytes": true
+    },
+    {
+      "case": "pb-protocol-group25",
+      "sameBytes": true
+    }
+  ],
+  "word": {
+    "pages": 2,
+    "pdfSha256": "680257787ce6eaed1efe498e82e2f96fe54bb838dc9a839519431fb8361fcee7",
+    "allNamesExactlyOnce": true,
+    "perPageNames": [
+      [
+        "Тестов Иван Петрович"
+      ],
+      [
+        "Примеров Сергей Викторович"
+      ]
+    ],
+    "noOutsidePageWords": true
+  },
+  "sourceSha256": "3217bd53d5970696d560f5c1140a0e8e336fe98cbd50bb2c08252d93b44d2aed",
+  "application": {
+    "pages": 2,
+    "pdfSha256": "a3f223c0762ec583c9b862bb20077a3222045f1b19a653e01b0ed1a8067efe8f",
+    "sourceSha256": "5e601ad20208916ddc4b0fad1a779fcde7afae3fe570f1b791358edfaeda4be4",
+    "sameDocxAsWord": true,
+    "sourceUnchanged": true,
+    "allNamesExactlyOnce": true,
+    "perPageNames": [
+      [
+        "Тестов Иван Петрович"
+      ],
+      [
+        "Примеров Сергей Викторович"
+      ]
+    ],
+    "wholeCommissionOnEachPage": true,
+    "noOutsidePageWords": true,
+    "visualReview": {
+      "pages": [
+        1,
+        2
+      ],
+      "status": "PASS",
+      "images": [
+        "application-page-1.png",
+        "application-page-2.png"
+      ],
+      "findings": "Both recipients occupy separate pages in order; roster, complete commission and page boundaries inspected with no clipping or overlap."
+    }
+  }
+}

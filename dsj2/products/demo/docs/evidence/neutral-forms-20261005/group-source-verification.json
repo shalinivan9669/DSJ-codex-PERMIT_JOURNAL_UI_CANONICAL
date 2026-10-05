@@ -1,0 +1,86 @@
+{
+  "status": "PASS_FINAL_SOURCE_AND_BOTH_PDF_ENGINES",
+  "sources": {
+    "scripts/render/neutral_protocols.py": "03f8b81d85c29f5f20e1a74db50bbd3876dfe95b8527c1d8b5718ef1986c3096",
+    "scripts/render/neutral_forms.py": "3217bd53d5970696d560f5c1140a0e8e336fe98cbd50bb2c08252d93b44d2aed",
+    "scripts/render/neutral_forms_sources.json": "c7ba16265e83ec2f6001ef78e2342c3832ab95bf1cadc8b9ef4b54dabed62d80",
+    "assets/templates/manifest.json": "4d7e16064be71d71181a7adf9bc8461a7c85e2e107844491f751b488e33be495",
+    "tests/render/test_neutral_protocols.py": "beab078d5bcc1d7cdfefd148da2659f276083d51126eb00d132e077bdb6f0cd6",
+    "tests/render/test_original_forms.py": "0abf127c594ff3e8df3661ef94f7cd873d353f29b11b268f720796028ffd9122",
+    "tests/render/test_neutral_protocol_batch_bookmarks.py": "1c83c3d72ec0b77292662070e130f7e58bd53d124089a59e5f636ac416664c55"
+  },
+  "tests": [
+    {
+      "test": "test_neutral_protocols.py",
+      "tests": 6,
+      "seconds": 419.722,
+      "scope": "all five forms and all six sizes before the final PB-only atomic row",
+      "result": "PASS"
+    },
+    {
+      "test": "test_neutral_protocols.py",
+      "tests": 7,
+      "seconds": 94.864,
+      "scope": "final PB-only six-size matrix and all other module tests",
+      "result": "PASS"
+    },
+    {
+      "test": "test_original_forms.py",
+      "tests": 10,
+      "seconds": 44.289,
+      "scope": "historical assertions pinned to original sources",
+      "result": "PASS"
+    },
+    {
+      "test": "test_neutral_protocol_batch_bookmarks.py",
+      "tests": 1,
+      "seconds": 3.762,
+      "scope": "two PB individual protocols have unique paired IDs/names and both recipients",
+      "result": "PASS"
+    },
+    {
+      "test": "test_neutral_batch.py",
+      "tests": 1,
+      "seconds": 30.762,
+      "scope": "ITR certificate2-page batch and PS witness4-page batch actual application PDFs",
+      "result": "PASS"
+    }
+  ],
+  "scalePdf": {
+    "casesPerEngine": 30,
+    "membersPerEngine": 3890,
+    "applicationPages": 285,
+    "wordPages": 286,
+    "commissionOnlyPages": 0,
+    "allParticipantNamesOnceInOrder": true,
+    "allFactualResultsPreservedOnSamePage": true,
+    "allPSCredentialNumbersPreserved": true,
+    "allContinuationHeadersPresent": true,
+    "noOutsidePageWords": true,
+    "allCommissionBlocksAtomic": true,
+    "visualReviewPerEngine": "all 23 pages for counts 1/2/25 plus last 2 pages of every 100/250/400 case: 53 pages. PB application pages re-reviewed after its final atomic-row fix."
+  },
+  "principalProtocolReview": {
+    "groupCases": 5,
+    "pagesPerEngine": 13,
+    "allPagesVisuallyReviewed": true,
+    "pbNormalLongBothEnginesPages": 4,
+    "pbFinalReview": "final-pb-review.json"
+  },
+  "limitations": "All pages were programmatically audited. Visual inspection of scale cases uses the explicit page sample above; this is not a claim of manual reading of every large-roster page.",
+  "batchOnlyFollowUp": {
+    "function": "combine_neutral_files",
+    "sourceChangesDoNotRunForSingleOrGroup": true,
+    "pbSingleAndGroupRegeneratedBytesIdentical": true,
+    "pbBatchWordOpenCount": 1,
+    "pbBatchWordPages": 2,
+    "evidence": "bookmark-batch/bookmark-batch-verification.json",
+    "existingPrincipalAndScaleArtifactsRewritten": false,
+    "pbBatchApplicationSameDocxVerified": true,
+    "pbBatchApplicationPages": 2,
+    "pbBatchApplicationVisualPages": [
+      1,
+      2
+    ]
+  }
+}
