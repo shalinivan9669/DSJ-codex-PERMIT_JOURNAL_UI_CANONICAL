@@ -13,6 +13,8 @@ const config: NextConfig = {
         outputFileTracingRoot: path.resolve(__dirname, "../.."),
       }),
   poweredByHeader: false,
+  // Browser acceptance helpers use a separate database toolchain and are not app source.
+  typescript: { tsconfigPath: "tsconfig.build.json" },
   transpilePackages: ["@demo/contracts", "@demo/ui"],
   experimental: {
     cpus: 2,
