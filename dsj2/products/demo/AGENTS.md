@@ -10,7 +10,7 @@ Keep `docs/evidence/progress.md` and the acceptance matrix current with measured
 
 ## Operator convenience for the LMS extension
 
-The user's direct clarification on 2026-10-14 makes preservation of the current DEMO operator experience a required acceptance condition. Read `docs/handoffs/2026-10-14-lms-sanitary/UX_OPERATOR_CONTRACT_RU.txt` before designing or implementing the planned LMS extension, alongside its stage prompt. This records requirements; it does not claim the LMS is already implemented or re-enable frozen legacy modules.
+The user's direct clarification on 2026-10-14 makes preservation of the current DEMO operator experience a required acceptance condition. The user confirmed on 2026-10-15 that the scope is section 75 MVP plus the sanitary workflow, prepared for one continuous implementation run. Read `docs/handoffs/2026-10-15-lms-one-run/UX_OPERATOR_CONTRACT_RU.txt` before designing or implementing the planned LMS extension, alongside `PROMPT_IMPLEMENT_LMS_ONE_RUN_RU.txt` in that folder. The earlier three-chat sequence is superseded by internal phases of the same run. This records requirements; it does not claim the LMS is already implemented or re-enable frozen legacy modules.
 
 Reuse the current visual language, compact lists, bulk actions, keyboard workflow, autosave and shared values with explicit exceptions. Never ask users to re-enter already known data. Show one clear primary action and at most one competing secondary action in the current task context; two prominent buttons are not proof of a two-action workflow. Target at most two actions for the specified prepared routine scenarios, with all prerequisites and first-entry costs reported honestly.
 

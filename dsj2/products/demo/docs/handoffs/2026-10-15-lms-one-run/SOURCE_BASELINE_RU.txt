@@ -1,0 +1,72 @@
+ИСХОДНАЯ БАЗА ДЛЯ ОДНОГО ПОЛНОГО ЗАПУСКА LMS MVP
+Проверено 15.10.2026, Asia/Qyzylorda. Read-only аудит исходников и ограниченная проверка среды; тесты, приложение, миграции и внешние сервисы не запускались. Этот файл не является доказательством готовой LMS.
+
+1. ТОЧНЫЙ CHECKOUT И СОСТОЯНИЕ
+
+Git root: C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL
+Корень автономного продукта и рабочий каталог команд: C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo
+Текущая ветка: codex/lms-sanitary-integration-20261014
+Проверенный HEAD до подготовки пакета одного запуска: 0560d7bdedcd52cf4fb84d51ce4f6ce06df5348a
+База продуктового кода: f8a9a663a5fb26454917f84ed8bb8ca62d503e1b из codex/operator-flow-refinement-20261003. Проверка merge-base --is-ancestor завершилась с кодом 0.
+Последующие commits: 39d023c — первоначальный пакет LMS; 0560d7b — обязательный UX оператора. Между f8a9a66 и проверенным HEAD изменены только product AGENTS и docs/handoffs/2026-10-14-lms-sanitary. Diff apps/packages/scripts/pnpm-lock.yaml пуст. При начале аудита текущий checkout был чистым.
+
+Следовательно, курсы, зачисления, прогресс, LMS-попытки и санитарная доставка пока не реализованы. Не принимать текст промптов, наличие TrainingEvent или старых PASS за реализацию. При исполнении использовать актуальный HEAD с пакетом одного запуска, проверить его происхождение, не откатываться на указанные commits.
+
+Соседний checkout C:\Users\Admin\.codex\worktrees\ot-center-business-value\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL остаётся на f8a9a663a5fb26454917f84ed8bb8ca62d503e1b и имеет чужие изменения: dsj2/products/demo/apps/web/next-env.d.ts; dsj2/products/demo/apps/web/tsconfig.json; dsj2/products/demo/docs/evidence/operator-minimal-actions-20261004/acceptance-matrix.json. Не копировать их молча, не исправлять, не reset/clean/stash и не останавливать процессы соседней установки. Также зарегистрирован detached worktree diff-deployed-source на 90d5b5e72dba0ac38c89f42fa37925a0b3468561; он не база задачи.
+
+2. ДЕЙСТВУЮЩИЕ ИНСТРУКЦИИ И ГРАНИЦА
+
+Прочитаны dsj2/AGENTS.md, dsj2/.mempalace/index.json, dsj2/docs/audit/DEMO_FROZEN_SCOPE.md и products/demo/AGENTS.md. Внутри продукта иных AGENTS.md не найдено. Product AGENTS уже требует сохранения операторского UX, UX01–UX10, отсутствие повторного ввода и честный подсчёт действий. Его ссылки на прежние три этапа не отменяют более новое прямое поручение выполнить весь согласованный MVP одним запуском; содержательные требования UX сохраняются.
+
+Активен автономный products/demo. Новая реализация допускается только здесь: 25 пунктов MVP раздела 75, санитарный локальный процесс/адаптерный контракт и необходимые auth/schema/policy/PII изменения. Legacy DSJ training/testing/signing/journals/workers, большая root Prisma-схема и applied migrations остаются frozen; @dsj/* и импорты за пределы продукта запрещены. Не использовать root dev/seed. Развёртывание, реальные внешние отправки, подписи и production-миграции не следуют из локальной реализации.
+
+3. КАНОНИЧЕСКИЕ ТОЧКИ РАСШИРЕНИЯ
+
+Все пути ниже относительны к указанному абсолютному корню автономного продукта.
+
+- package.json, pnpm-workspace.yaml, pnpm-lock.yaml: собственный workspace. Стек: Next 15.5.25, React 19.3.0, Nest 11.2.5, Prisma 6.19.3, PostgreSQL, Python/LibreOffice. packageManager pnpm@11.27.1; engines Node >=22.16 <25; deployment/CI закрепляют Node 24.16.0. Смена стека для задачи не требуется.
+- packages/database/prisma/schema.prisma и migrations/: Tenant/User/Session, Recipient/CustomerOrganization/RecipientEmployment, PrintRequest/TrainingEvent, immutable Issuance/IssuedDocument/RenderInputSnapshot/Artifact, NumberSequence/NumberReservation, IdempotencyOperation, GenerationJob, approvals/signatures/verification. Course/CourseVersion/Enrollment/LessonProgress/ExamAttempt/VerifiedExamResult и санитарной outbox нет. TrainingEvent — группа печатной заявки; ExternalEvidence — документальное основание, не государственная доставка. Новые миграции аддитивны; старые не переписывать.
+- apps/api/src/core.ts: ctx(req, write, admin) запрещает write только VIEWER/EMPLOYER. Новая LEARNER/TEACHER без явной матрицы разрешений потенциально пройдёт старые write endpoints. До добавления ролей закрыть этот путь, запретить unknown roles, проверить старые и новые API/files/settings/jobs/approvals. SQL CHECK user_role находится в migrations/202610010016_director_approval/migration.sql; Prisma role — String, одного обновления TypeScript недостаточно.
+- apps/api/src/auth.ts: cookie sessions, sessionVersion, CSRF/origin, tenant из session; отдельный EMPLOYER_SCOPE. apps/api/src/main.ts и apps/web/middleware.ts используют packages/contracts/src/product-policy.json и policy.ts для deny-by-default маршрутов. Новые страницы/API требуют явной регистрации; скрытие меню не проверка доступа.
+- apps/api/src/requests.ts: reserve/finalize, транзакционная нумерация, идемпотентность и immutable выдача. apps/api/src/approvals.ts, signing.ts, delivery-approval.ts, public-verification.ts, files.ts, storage.ts — границы переиспользования документов. Signing-конфигурация требует реального verifier/connector; наличие исходников не подтверждает подключение. Не строить второй движок нумерации/печати и не объявлять PDF+QR электронным оригиналом.
+- packages/contracts/src/course-defaults.ts: positiveAssignmentDefaults() создаёт PASSED/AUTO для удобства обычной печати. Сохранить это поведение; оно не является результатом LMS-экзамена, официальным внешним результатом или основанием санитарной отправки. packages/contracts/src/kz-training-calendar.ts покрывает 2025–2026, вне покрытия возвращает null; не угадывать календарь 2027.
+- apps/render-worker/src/queue.ts: PostgreSQL SKIP LOCKED, lease/fencing/heartbeat, rendering DOCX/PDF/XLSX/ZIP. Санитарную доставку строить отдельной outbox и worker, не выдавать её за GenerationJob. Не подключать legacy apps/worker или Redis.
+- apps/web/components/recipient-grid.tsx, recipient-grid-row.tsx, request-training-choices.tsx, batch-ready-panel.tsx, saved-print-set.tsx, bulk-dialog.tsx; apps/web/lib/: изучить перед UI. Сохранить компактные таблицы, общие значения/исключения, autosave, keyboard, пакетные действия и текущие печатные сценарии.
+
+Предлагаемые новые границы: apps/api/src/lms/, packages/contracts/src/lms/, apps/web/app/lms/ и learn/, document bridge к текущему DEMO, apps/api/src/regulatory-results/, apps/integration-worker/. Конкретные имена уточняются после чтения исходников, без дублирования моделей и сервисов. RegulatoryProfileVersion связывает маршрут оценки/выдачи с версией курса; учебный тест, допустимый экзамен центра и внешний результат различаются сервером.
+
+4. ПРОВЕРКИ: КОМАНДЫ И ПРЕДУСЛОВИЯ
+
+Команды выполнять из корня продукта, не из wrapper/dsj2. Перед исполнением проверить pwd, branch, полный HEAD, status, происхождение runtime и свободные порты. Установка при необходимости: corepack enable; corepack prepare pnpm@11.27.1 --activate; pnpm install --frozen-lockfile. Это последовательность отдельных команд, не поручение выполнить их во время подготовки пакета.
+
+Обязательные проверки реализации:
+pnpm lint
+pnpm format:check
+pnpm typecheck
+pnpm test
+pnpm test:integration
+pnpm test:render
+pnpm test:e2e
+pnpm build
+node scripts/verification/autonomy.mjs
+git diff --check
+
+pnpm verify объединяет lint/typecheck/test/integration/render/e2e/build; format:check, autonomy и diff --check в него не входят. build/typecheck вызывают db:generate; build API/worker — tsc --noEmit, web — next build. Успешный build не заменяет runtime/UI/DB/render/UX-приёмку. Package security scan pnpm audit --prod --audit-level high и container/backup gates из .github/workflows/demo-release.yml фиксировать отдельно; локальные команды не равны всему CI.
+
+DATABASE_URL обязан указывать на заранее проверенную одноразовую PostgreSQL БД с фактическим именем demo_test* (tests/integration/test-database.ts). pnpm db:deploy вызывает prisma migrate deploy; применять только к этой БД. db push и legacy seed запрещены. Для интеграционных тестов и браузера нужны разные БД/storage: часть integration suites явно отвергает browser/first_live_ui в имени. Нагрузочные задания integration не должны попасть в очередь browser worker.
+
+Для браузера нужен собственный запущенный web/API/render-worker и синтетический tenant. Playwright config НЕ содержит webServer: test:e2e ничего не поднимает. pnpm dev запускает все три процесса с defaults 3100/4100; эти порты не считать гарантированно свободными. Если нужны иные порты, согласовать web command, API PORT, DEMO_ORIGIN, DEMO_API_ORIGIN и test baseURL. pnpm run setup требует явно заданных DEMO_ADMIN_EMAIL/DEMO_ADMIN_PASSWORD/DEMO_TENANT_NAME; DEMO_SAMPLE_DATA=1 включает только синтетический центр. Не путать pnpm run setup с встроенной pnpm setup. CLI не загружает .env автоматически.
+
+Полный текущий e2e-набор содержит producer/consumer checkpoints. Для режима с зависимостями: DEMO_E2E_FULL_CHECKPOINTS=1, новый валидный DEMO_E2E_FULL_RUN_ID и отдельный пустой DEMO_E2E_EVIDENCE; см. apps/web/playwright.config.ts и e2e/operator-full-suite.ts. Не подставлять старые prepared checkpoints. Role fixtures требуют DEMO_E2E_ISOLATED_TENANT=1 и собственные credentials для ADMIN/OPERATOR/DIRECTOR; не читать/переносить чужие private session caches. Текущий harness учитывает API rate limit и имеет реальные паузы; не отключать защиту ради зелёного результата. Часть старых helper-наблюдений упоминает порт 4134 — сверять выбранный стенд, не объявлять все fixtures переносимыми без проверки.
+
+Render требует реального Python, пакетов scripts/verification/requirements.txt (включает render/requirements.txt), LibreOffice 26.2.6.3 и шрифтов assets/fonts/manifest.json. DEMO_PYTHON/DEMO_SOFFICE задавать явными проверенными путями; rendererVersion demo-ooxml-12/libreoffice-26.2.6.3. Нужны установленный Playwright Chromium и средства тестовых криптографических сценариев по соответствующим fixtures. Mock не заменяет render/e2e. В Windows db:generate может конфликтовать с Prisma DLL работающих собственных API/worker; next build — с собственным web на том же .next. Управлять только процессами своей тестовой установки.
+
+5. ФАКТИЧЕСКИЕ ОГРАНИЧЕНИЯ СРЕДЫ НА МОМЕНТ АУДИТА
+
+- В текущем shell не заданы DATABASE_URL, DEMO_ORIGIN, DEMO_API_ORIGIN, DEMO_ARTIFACT_ROOT, DEMO_PYTHON, DEMO_SOFFICE, DEMO_E2E_FULL_CHECKPOINTS, DEMO_E2E_FULL_RUN_ID, DEMO_E2E_EVIDENCE, DEMO_E2E_ISOLATED_TENANT. Значения секретов не читались. Это не доказывает отсутствия отдельной настроенной установки; готовность текущего тестового процесса не подтверждена.
+- node из C:\Program Files\nodejs\node.exe сообщил v24.16.0. python в PATH — C:\Python314\python.exe, Python 3.14.6; shipping/CI закрепляют Python 3.12.14. Совместимость PATH Python с точными пакетами/renderer не проверена, молча использовать его нельзя.
+- pnpm/corepack и Docker executable найдены в PATH; версия активного pnpm и доступность Docker engine не проверялись. psql, pg_dump и soffice в PATH не найдены; это не доказывает отсутствие установленных бинарников вне PATH.
+- Product node_modules/.pnpm и каталог кеша ms-playwright существуют. Это не доказывает актуальность lockfile install, успешную Prisma generation или наличие нужного браузерного бинарника. Соединение с БД, миграции, шрифты, конвертер и health/readiness не проверялись.
+- Внешний санитарный провайдер/API, доступ к ЕЦС/МИС/госсервису контроля доступа и реальные подписи в этой подготовке не проверялись и не подключались. Результат реализации без них может подтвердить только локальный путь, контрактные сценарии и честные статусы ожидания; не внешнее принятие/ЛМК.
+
+Практический порядок одного исполнения: проверить базу → подготовить изолированную среду → зафиксировать общие schema/contracts/permissions → параллельно реализовать независимые модули → интегрировать → выполнить L/E/S и UX01–UX10 в одном чате, исправляя дефекты до готовности → сохранить проверяемые code/evidence commits и итог. Не требовать старых STAGE_1/2/3 как уже выполненных prerequisites; это части одной работы. Измерять весь путь и повторный ввод, не только число крупных кнопок. Не запускать отдельные пользовательские чаты и не останавливаться на очередном плане. Внешние ограничения учитывать отдельно от доступной локальной реализации.

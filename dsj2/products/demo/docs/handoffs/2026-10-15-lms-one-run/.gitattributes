@@ -1,0 +1,6 @@
+*.txt text eol=lf
+*.tsv text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+*.docx -text
+.gitattributes text eol=lf

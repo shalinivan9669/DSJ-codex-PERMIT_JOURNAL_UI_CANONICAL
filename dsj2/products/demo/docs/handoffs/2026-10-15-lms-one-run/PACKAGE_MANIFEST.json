@@ -1,0 +1,107 @@
+{
+  "schema": "lms-one-run-handoff/v1",
+  "prepared_on": "2026-10-15",
+  "legal_evidence_checked_on": "2026-10-14",
+  "purpose": "implementation assignment, not implemented application",
+  "scope": "25 items of section 75 plus sanitary workflow and operator UX",
+  "repository": "https://github.com/shalinivan9669/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL.git",
+  "branch": "codex/lms-sanitary-integration-20261014",
+  "source_product_base": "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b",
+  "verified_head_before_packaging": "0560d7bdedcd52cf4fb84d51ce4f6ce06df5348a",
+  "source_docx_sha256": "DCDAE9575CE3FE7E9C3A0E585C637EDE8A830745FFF86F5509AF87D074F10B22",
+  "entrypoint": "PROMPT_IMPLEMENT_LMS_ONE_RUN_RU.txt",
+  "coverage_rows": 52,
+  "acceptance_criteria": 44,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 112,
+      "sha256": "13A389600F398C33134D3229F070B77BBCBAAD8A48093601D58DFA55D219608A"
+    },
+    {
+      "path": "00_START_HERE_RU.txt",
+      "bytes": 10299,
+      "sha256": "6473D367AA983B92DE8F842EB833021DF839BFC601A9F274E6B5B145F97401FF"
+    },
+    {
+      "path": "ACCEPTANCE_AND_VERIFICATION_RU.txt",
+      "bytes": 65259,
+      "sha256": "EAA750311224C4764CC4DA025BB52BEEFAEF41038C2267654A56663D19F35E58"
+    },
+    {
+      "path": "EVIDENCE_INDEX_RU.txt",
+      "bytes": 11847,
+      "sha256": "1B48F9FAE77C257853F8D0AC54D63DB1230E03228B6F5B7E1919046434307792"
+    },
+    {
+      "path": "EXTERNAL_INPUTS_AND_RELEASE_GATES_RU.txt",
+      "bytes": 35468,
+      "sha256": "D7204569EC1DD7FF82FECEFBC8B6E3CC1CD2E445D595B6A82017FA247A0D7E43"
+    },
+    {
+      "path": "IMPLEMENTATION_DETAILS_RU.txt",
+      "bytes": 38479,
+      "sha256": "AA7D5FCDF7983857EF62121961703CB105CFE3254EBD371A9780BCBBA38B66CB"
+    },
+    {
+      "path": "LAUNCH_PROMPT_RU.txt",
+      "bytes": 1405,
+      "sha256": "9AD875B8571E275792AE28EC4312370B2B1C80DE89D3425E1B956672E748304E"
+    },
+    {
+      "path": "LEGAL_AND_PROVIDER_RU.txt",
+      "bytes": 38162,
+      "sha256": "FC90CC4369A4B1669491146A9BC108920AAE3BAFB6ED674ADF402C9C33FF9A3D"
+    },
+    {
+      "path": "MODEL_AND_RUN_NOTES_RU.txt",
+      "bytes": 4364,
+      "sha256": "07019763E684B7A4C6A384BD31210CF6BE9DA23612EC554D3C89BAD1671890F1"
+    },
+    {
+      "path": "MVP_COVERAGE.tsv",
+      "bytes": 32719,
+      "sha256": "C47991EF4DB0F2D286EB3E4A24515A2EE6A6354ABBDE9768F62931D9F6BC7528"
+    },
+    {
+      "path": "PACKAGE_QA_RU.txt",
+      "bytes": 6281,
+      "sha256": "403B696D6DCCEF38634143B363550E3A1DD4EE55D7F0E3B93C6BB15B41D50612"
+    },
+    {
+      "path": "PROMPT_IMPLEMENT_LMS_ONE_RUN_RU.txt",
+      "bytes": 29226,
+      "sha256": "36FC7AE8F0A4121C2E67B64E1EE6C2350280F2C0166709997961714B9F9E1A67"
+    },
+    {
+      "path": "SOURCE_BASELINE_RU.txt",
+      "bytes": 17718,
+      "sha256": "6C19305A794BE16156B19E28C7724B96E364F70632187414AEB8B56AFF70C8F5"
+    },
+    {
+      "path": "SOURCE_EXTRACT.txt",
+      "bytes": 51618,
+      "sha256": "9CA126AB2B42B7F8AB41AEEB8B9DC2DF07EF6783E93E73EE251D36D1FB5F70B5"
+    },
+    {
+      "path": "SOURCE_LMS_REQUIREMENTS.docx",
+      "bytes": 33840,
+      "sha256": "DCDAE9575CE3FE7E9C3A0E585C637EDE8A830745FFF86F5509AF87D074F10B22"
+    },
+    {
+      "path": "TZ_LMS_MVP_RU.txt",
+      "bytes": 57061,
+      "sha256": "19FB463D91DC1142574F2190DE0D193F119719284C3EDC8288256886F275B2F3"
+    },
+    {
+      "path": "UX_OPERATOR_CONTRACT_RU.txt",
+      "bytes": 28698,
+      "sha256": "59D920E071AB49F87C87ED225914627B4CB85F21454E7A8CC246F969DDFFF02C"
+    },
+    {
+      "path": "verify_package.py",
+      "bytes": 5572,
+      "sha256": "DE596AFFE292E7E06AAE7ADC3AE147216F0928C19EE2A783324CE2F78A8441C1"
+    }
+  ]
+}
