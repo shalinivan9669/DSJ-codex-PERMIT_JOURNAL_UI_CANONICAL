@@ -16,6 +16,7 @@ import { progressInputSchema, publicContent } from "./validation";
 import { creditPlayback, type WatchedInterval } from "./engine";
 import { effectiveResult, progressPercent } from "./enrollments";
 import { attemptView } from "./exams";
+import { examReadiness } from "./readiness";
 
 export async function enrollmentDetail(c: Context, id: string) {
   const enrollment = await scopedEnrollment(c, id);
@@ -103,6 +104,7 @@ export async function enrollmentDetail(c: Context, id: string) {
     },
     progress,
     progressPercent: progressPercent(content, progress),
+    examReadiness: examReadiness(content, progress),
     attempts: await Promise.all(attempts.map((a) => attemptView(c, a))),
     results: currentResults,
     documents: documents.map((document) => {

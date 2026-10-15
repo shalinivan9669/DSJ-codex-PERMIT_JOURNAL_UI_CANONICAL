@@ -4,6 +4,7 @@ import {
   regulatoryProfileSchema,
   type CourseContent,
   type RegulatoryProfile,
+  type LmsQuestion,
 } from "@demo/contracts/src/lms";
 import { fail } from "../core";
 
@@ -25,6 +26,11 @@ export const enrollInputSchema = z
     recipientIds: z.array(z.string().min(1).max(100)).min(1).max(10000),
     customerId: z.string().max(100).nullable().optional(),
     groupName: z.string().max(300).default(""),
+    operationId: z.string().uuid().optional(),
+    groupId: z.string().max(100).optional(),
+    sourceRequestId: z.string().max(100).nullable().optional(),
+    sourceOrderId: z.string().max(100).nullable().optional(),
+    dueAt: z.string().datetime().optional(),
   })
   .strict();
 export const progressInputSchema = z
@@ -51,6 +57,24 @@ export const pagingSchema = z
     search: z.string().max(300).default(""),
     status: z.string().max(50).optional(),
     courseVersionId: z.string().max(100).optional(),
+    customerId: z.string().max(100).optional(),
+    courseId: z.string().max(100).optional(),
+    groupId: z.string().max(100).optional(),
+    groupKey: z.string().max(300).optional(),
+    sourceRequestId: z.string().max(100).optional(),
+    sourceOrderId: z.string().max(100).optional(),
+    dueFrom: z.string().datetime().optional(),
+    dueTo: z.string().datetime().optional(),
+    view: z
+      .enum([
+        "ALL",
+        "EXPIRING",
+        "INCOMPLETE",
+        "NEEDS_REVIEW",
+        "WAITING_DOCUMENTS",
+      ])
+      .default("ALL"),
+    expiringDays: z.coerce.number().int().min(1).max(365).default(14),
   })
   .strict();
 
@@ -74,6 +98,14 @@ export function assertPublishable(
       "Добавьте уроки с уникальными идентификаторами",
     );
   const seen = new Set<string>();
+  for (const module of content.modules)
+    if (!module.titleRu.trim() || !module.titleKz.trim())
+      fail(
+        400,
+        "MODULE_TITLE_REQUIRED",
+        `Укажите название модуля «${module.titleRu || module.id}» на двух языках`,
+        { moduleId: module.id },
+      );
   for (const lesson of lessons) {
     if (!lesson.titleRu.trim() || !lesson.titleKz.trim())
       fail(
@@ -81,11 +113,15 @@ export function assertPublishable(
         "LESSON_TITLE_REQUIRED",
         "Укажите название каждого урока на двух языках",
       );
-    if (lesson.prerequisiteLessonIds.some((id) => !seen.has(id)))
+    const invalidDependency = lesson.prerequisiteLessonIds.find(
+      (id) => !seen.has(id),
+    );
+    if (invalidDependency)
       fail(
         400,
         "PREREQUISITE_INVALID",
-        "Предыдущий урок должен находиться перед текущим",
+        `Урок «${lesson.titleRu}»: зависимость «${lessons.find((item) => item.id === invalidDependency)?.titleRu || invalidDependency}» должна находиться раньше`,
+        { lessonId: lesson.id, prerequisiteLessonId: invalidDependency },
       );
     if (
       lesson.kind === "TEXT" &&
@@ -113,26 +149,7 @@ export function assertPublishable(
       "QUESTION_IDS_INVALID",
       "У вопросов должны быть уникальные идентификаторы",
     );
-  for (const question of questions) {
-    const options = question.options.map((o) => o.id);
-    if (
-      !question.promptRu.trim() ||
-      !question.promptKz.trim() ||
-      new Set(options).size !== options.length ||
-      question.correctOptionIds.some((id) => !options.includes(id)) ||
-      (!question.multiple && question.correctOptionIds.length !== 1) ||
-      new Set(question.correctOptionIds).size !==
-        question.correctOptionIds.length ||
-      question.options.some(
-        (option) => !option.textRu.trim() || !option.textKz.trim(),
-      )
-    )
-      fail(
-        400,
-        "QUESTION_INVALID",
-        "Проверьте вопрос, переводы и правильные ответы",
-      );
-  }
+  for (const question of questions) assertQuestionPublishable(question);
   if (
     profile.sanitary &&
     (content.exam.thresholdPercent !== 80 || content.exam.comparison !== "GT")
@@ -167,6 +184,30 @@ export function assertPublishable(
     if (profile.commissionKind !== "NONE" && !profile.commission.length)
       fail(400, "COMMISSION_REQUIRED", "Укажите состав комиссии");
   }
+}
+
+export function assertQuestionPublishable(question: LmsQuestion) {
+  const options = question.options.map((option) => option.id);
+  if (
+    !question.promptRu.trim() ||
+    !question.promptKz.trim() ||
+    options.length < 2 ||
+    new Set(options).size !== options.length ||
+    !question.correctOptionIds.length ||
+    question.correctOptionIds.some((id) => !options.includes(id)) ||
+    (!question.multiple && question.correctOptionIds.length !== 1) ||
+    new Set(question.correctOptionIds).size !==
+      question.correctOptionIds.length ||
+    question.options.some(
+      (option) => !option.textRu.trim() || !option.textKz.trim(),
+    )
+  )
+    fail(
+      400,
+      "QUESTION_INVALID",
+      `Вопрос «${question.promptRu || question.id}»: проверьте переводы, минимум два варианта и правильные ответы`,
+      { questionId: question.id },
+    );
 }
 
 export function publicContent(content: CourseContent): Omit<

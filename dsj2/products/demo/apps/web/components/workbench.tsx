@@ -10,6 +10,7 @@ import { ValueLibrary } from "./value-library";
 import { OrderCoordination, type Proposal } from "./order-coordination";
 import { OrderEvidence } from "./order-evidence";
 import { EvidenceMatrix } from "./evidence-matrix";
+import { OrderTraining } from "./lms/order-training";
 
 type Milestone = {
   id: string;
@@ -153,7 +154,18 @@ export function Workbench({ context }: { context: AppContext }) {
           setOrders(a.items);
           setRenewals(b.items);
           setError("");
-          setSelectedId((old) => old || a.items[0]?.id || "");
+          const requested = new URLSearchParams(window.location.search).get(
+            "orderId",
+          );
+          setSelectedId((old) => old || requested || a.items[0]?.id || "");
+          if (requested && !a.items.some((row) => row.id === requested))
+            void api<Order>(`/orders/${encodeURIComponent(requested)}`)
+              .then((row) => {
+                if (active) setOrders((current) => [row, ...current]);
+              })
+              .catch((caught) => {
+                if (active) setError(errorText(caught));
+              });
         }
       })
       .catch((caught) => {
@@ -526,6 +538,12 @@ export function Workbench({ context }: { context: AppContext }) {
                     Добавить обязательство
                   </button>
                 </details>
+              )}
+              {context.user.role !== "VIEWER" && (
+                <OrderTraining
+                  key={`training-${selected.id}`}
+                  orderId={selected.id}
+                />
               )}
               <OrderFinance
                 key={`finance-${selected.id}`}

@@ -5,6 +5,8 @@ import { db, parse, transaction, audit, fail, type Context } from "../core";
 import { assertLmsStaff, scopedEnrollment } from "./scope";
 import { savePrivateUpload } from "./materials";
 import { finalizeLmsResult } from "./result-finalization";
+import { unlink } from "node:fs/promises";
+import { lmsStore } from "./materials";
 
 const externalSchema = z
   .object({
@@ -127,6 +129,9 @@ export async function addExternalEvidence(
         : {}),
     });
     return saved;
+  }).catch(async (error: unknown) => {
+    await unlink(lmsStore.path(stored.storageKey)).catch(() => {});
+    throw error;
   });
   return externalView(evidence, policy.timezone);
 }

@@ -11,6 +11,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY apps/render-worker/package.json apps/render-worker/package.json
+COPY apps/integration-worker/package.json apps/integration-worker/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
 COPY packages/database/package.json packages/database/package.json
 COPY packages/printing/package.json packages/printing/package.json
@@ -62,7 +63,10 @@ CMD ["pnpm", "--filter", "@demo/api", "start"]
 FROM runtime AS worker
 CMD ["pnpm", "--filter", "@demo/render-worker", "start"]
 
-# Railway's volume belongs to one service. Keep both processes beside the same
+FROM runtime AS integration-worker
+CMD ["pnpm", "--filter", "@demo/integration-worker", "start"]
+
+# Railway's volume belongs to one service. Keep all writers beside the same
 # private filesystem; existing compose services keep their explicit targets.
 FROM runtime AS railway
 USER root

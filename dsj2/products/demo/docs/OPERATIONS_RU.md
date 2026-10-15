@@ -12,6 +12,7 @@
 
 - `DEMO_DB_PASSWORD`: случайный URL-safe пароль БД, например 32 случайных байта в hex;
 - `DEMO_ORIGIN`: ровно HTTPS origin без завершающего `/`;
+- `DEMO_PROXY_KEY`: общий случайный ключ ingress/Next/API из 32+ URL-safe символов (например 32 случайных байта в hex); хранить как секрет, не помещать в logs;
 - только для первоначальной команды setup: `DEMO_ADMIN_EMAIL`, `DEMO_ADMIN_PASSWORD` (12+ символов), `DEMO_TENANT_NAME`.
 
 ```sh
@@ -20,12 +21,22 @@ docker compose -f deployment/compose.yaml build --pull
 docker compose -f deployment/compose.yaml up -d db
 docker compose -f deployment/compose.yaml run --rm migrate
 docker compose -f deployment/compose.yaml run --rm setup
-docker compose -f deployment/compose.yaml up -d api worker web ingress
+docker compose -f deployment/compose.yaml up -d api worker integration web ingress
 ```
 
 `setup` в package manager запускается как `pnpm run setup`: `pnpm setup` является встроенной командой pnpm. Настройте реквизиты, комиссию и подтвердите подходящие формы в интерфейсе. Без этого нельзя оформлять действующие документы. `DEMO_SAMPLE_DATA=1` относится только к явно синтетической локальной среде, в production его не задают.
 
-`GET /api/health` сообщает liveness, `GET /api/ready` проверяется авторизованным администратором; readiness включает БД, актуальный worker heartbeat и доступность файлов. Отсутствие worker не является готовностью только потому, что HTTP отвечает.
+`GET /api/health` сообщает liveness, `GET /api/ready` проверяется авторизованным администратором; readiness включает БД, отдельные heartbeat render-worker и integration-worker, установленные шаблоны и доступность файлов. Integration получает собственную версию heartbeat `integration-local-v1`, пишет sanitized lastError и stoppedAt при штатной остановке. Ответ/ошибка readiness включает время и возраст heartbeat, причину деградации, количество и возраст ожидающих санитарных outbox-заданий, число NEEDS_REVIEW. Отсутствующий/остановленный integration или heartbeat старше 30 секунд даёт 503 независимо от здоровья renderer. Оператору не требуется открывать эту эксплуатационную проверку. `NOT_CONNECTED` означает выключенного внешнего провайдера: локальная подготовка журнала, списка и документов продолжает работать.
+
+В Compose и Railway запускаются три обязательных процесса: API, render-worker и integration-worker. Compose перезапускает каждый отдельный service; Railway supervisor завершает весь service при выходе любого обязательного child (включая code0), передаёт SIGTERM всем собственным process groups и ждёт до 45 секунд перед SIGKILL. Integration обрабатывает один tick одновременно, до 20 preparation jobs за tick (`DEMO_INTEGRATION_BATCH`, допустимо 1–100); renderer имеет concurrency2 (допустимо 1–4). Внешняя отправка при этом не включается.
+
+Для выбранного Compose-профиля PostgreSQL max_connections=100. Prisma pool API ограничен 10, render4, integration2: всего 16 соединений приложения, один экземпляр каждого сервиса; оставшиеся 84 включают PostgreSQL reserved connections, административные/backup connections и запас. Next не имеет своего DB pool. Railway supervisor задаёт те же URL connection_limit=10/4/2 и pool_timeout=10; перед применением к выбранному managed PostgreSQL отдельно сверить его фактический лимит. Эти числа ограничивают ресурсы, но не доказывают production capacity. Не добавляйте replicas без пересчёта суммы.
+
+Ingress допускает только существующую allowlist страниц, включая /lms, /lms/groups/:id, /learn, /lms/sanitary, и передаёт API автономному серверу с его точной product-policy. Только POST material upload получает body513MiB (файл512MiB плюс multipart), external-evidence21MiB (файл20MiB); остальные маршруты сохраняют12MiB. Для крупных routes request buffering выключен. API резервирует до двух concurrent uploads и суммарно1GiB temp budget до начала multipart parsing; оставляет минимум64MiB свободного места, учитывает оставшиеся временные файлы и очищает отказ/разрыв. `DEMO_UPLOAD_CONCURRENCY` допускает1–4, `DEMO_UPLOAD_TEMP_MIB`1–4096; суммарный бюджет должен вмещать максимум хотя бы одного нужного файла.
+
+NGINX entrypoint подставляет только DEMO_PROXY_KEY во временную конфигурацию, оставляя исходник readonly; ingress/TLS заменяют client/proxy headers. API доверяет X-Demo-Client-IP только при совпадении секрета и точного IP доверенного proxy. Next также проверяет ключ и не переносит произвольный X-Forwarded-For. В шаблоне изолированная сеть172.30.15.0/24: API.3, Next.4, ingress.5, TLS.6; API доверяет только.4/.5/.6. Если сеть пересекается с сетью хоста, измените subnet, четыре адреса и DEMO_TRUSTED_PROXY_IPS согласованно до запуска. Локальный запуск без этих настроек не доверяет forwarded headers. TLS service обращается прямо к тем же api/web upstream, чтобы не терять client IP на втором proxy.
+
+Private Range остаётся авторизованным. API кеширует только успешно проверенную identity объекта (realpath, device/inode, размер, nanosecond mtime/ctime/birthtime) вместе с ожидаемым SHA256, максимум256 записей на5минут. Изменение/замена/несовпадение ожидаемого hash или истечение доверия требует полной повторной проверки; несовпадение отказывает503. У функции openPrivateStream есть forceIntegrity для адресной полной проверки; штатные backup/verify также хешируют все private files. Хранилище должно оставаться приватным и immutable для приложения; кеш не предназначен для файловой системы, позволяющей внешнему писателю подделывать file identity.
 
 ## HTTPS с предоставленным сертификатом
 
@@ -33,7 +44,7 @@ docker compose -f deployment/compose.yaml up -d api worker web ingress
 
 ```sh
 docker compose -f deployment/compose.yaml -f deployment/compose.tls.yaml config --quiet
-docker compose -f deployment/compose.yaml -f deployment/compose.tls.yaml up -d api worker web ingress tls
+docker compose -f deployment/compose.yaml -f deployment/compose.tls.yaml up -d api worker integration web ingress tls
 ```
 
 Порт остаётся привязан к loopback. Публикация домена, внешний маршрут и сертификат рабочего центра требуют отдельной настройки целевого хоста. Однодневный локальный CA из изолированного acceptance-стенда предназначен только для испытания; он не установлен в системное хранилище доверия и не является производственным сертификатом.
@@ -44,10 +55,10 @@ docker compose -f deployment/compose.yaml -f deployment/compose.tls.yaml up -d a
 
 Согласованная копия включает PostgreSQL custom dump, весь приватный `DEMO_ARTIFACT_ROOT` (документы, фото, версии шаблонов), поставочные шаблоны и шрифты, counts и SHA256 содержимого всех public tables, SHA256 каждого файла. Manifest v2 сверяет содержимое БД до/после копии и после restore, поэтому изменение строки с прежним count тоже обнаруживается. Пароли и служебные секреты не выводятся в argv/log и не включаются в manifest; их резервируют отдельно в шифрованном secret manager. Каталог backup содержит персональные данные и должен быть закрыт ACL/правами и зашифрован на носителе.
 
-Перед копированием остановите web/API и дождитесь остановки worker. Это небольшое плановое окно без записи. Установите `DEMO_MAINTENANCE=1` только после остановки: переменная подтверждает организационное действие, сама сервисы не останавливает.
+Перед копированием остановите ingress/web/API, render-worker и integration-worker и дождитесь фактического завершения всех writers, включая отдельные локальные или supervised экземпляры. Проверьте `docker compose ... ps --status running` (этих services быть не должно), а в PostgreSQL pg_stat_activity — отсутствие соединений application_name demo-api/demo-render/demo-integration и иных writers выбранной БД. Для локального профиля сверяйте сохранённые owner/PID, не останавливайте соседние процессы. Это небольшое плановое окно без записи. Установите `DEMO_MAINTENANCE=1` только после проверки: переменная подтверждает организационное действие, сама сервисы не останавливает. Остановленный heartbeat — диагностический признак, не доказательство отсутствия всех writers.
 
 ```sh
-docker compose -f deployment/compose.yaml stop ingress web api worker
+docker compose -f deployment/compose.yaml stop ingress web api worker integration
 # Пример запуска на хосте с PostgreSQL client той же/новее major-версии:
 export DATABASE_URL='postgresql://.../demo'
 export DEMO_ARTIFACT_ROOT='/private/demo/artifacts'
@@ -66,7 +77,7 @@ node deployment/backup.mjs restore /encrypted-backups/demo-20260922
 node deployment/backup.mjs verify /encrypted-backups/demo-20260922
 ```
 
-Скрипт откажется от restore в непустую БД/хранилище, проверит dump hash до записи и сравнит counts и SHA256 содержимого всех таблиц и hashes файлов/шрифтов/шаблонов после восстановления. Две независимые среды не должны одновременно выполнять worker над одной БД. Перед открытием восстановленной среды отзовите старые сессии и установите новые секреты по административной процедуре.
+Скрипт откажется от restore в непустую БД/хранилище, проверит dump hash до записи и сравнит counts и SHA256 содержимого всех таблиц и hashes файлов/шрифтов/шаблонов после восстановления. Оба workers остаются остановленными до успешного verify. Новые LMS/group/batch/heartbeat данные включаются общим inventory public tables; материалы, evidence и bundle parts — общим inventory всего DEMO_ARTIFACT_ROOT. Две независимые среды не должны одновременно выполнять workers над одной БД. Перед открытием восстановленной среды отзовите старые сессии и установите новые секреты по административной процедуре.
 
 Проверенный локальный restore и пригодность выбранного рабочего backup storage — разные результаты. Повторяйте restore drill после изменения schema/renderer и регулярно сохраняйте отчёт, а не только успешный код pg_dump.
 

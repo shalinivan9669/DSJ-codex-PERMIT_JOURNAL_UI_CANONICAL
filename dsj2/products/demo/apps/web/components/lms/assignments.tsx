@@ -1,10 +1,17 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
+import Link from "next/link";
 import { api, json } from "@/lib/api";
 import type { Customer, Recipient } from "@/lib/types";
 import { lms, type Course, type LearnerSummary } from "@/lib/lms-api";
-import { LmsHeading, PageControls, lmsError, type Translate } from "./common";
+import {
+  LmsHeading,
+  PageControls,
+  lmsError,
+  LmsErrorDiagnostic,
+  type Translate,
+} from "./common";
 
 export function Assignments({
   t,
@@ -23,7 +30,7 @@ export function Assignments({
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1),
     [total, setTotal] = useState(0);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<unknown>("");
   const [busy, setBusy] = useState(true);
   const [result, setResult] = useState<Awaited<
     ReturnType<typeof lms.assign>
@@ -31,8 +38,15 @@ export function Assignments({
   const [refresh, setRefresh] = useState(0);
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [repairing, setRepairing] = useState("");
+  const [origin, setOrigin] = useState<{
+    sourceRequestId?: string | null;
+    sourceOrderId?: string | null;
+    groupId?: string;
+    dueAt?: string;
+  }>({});
+  const [groupName, setGroupName] = useState("");
   const initializedVersion = useRef("");
-  const initializedRecipients = useRef(new Set<string>());
+  const restoredSelection = useRef("");
   useEffect(() => {
     let alive = true;
     setCustomer(null);
@@ -52,28 +66,51 @@ export function Assignments({
     let alive = true;
     const query = new URLSearchParams(window.location.search);
     const requestId = query.get("requestId") || "";
+    const orderId = query.get("orderId") || "";
+    const groupId = query.get("groupId") || "";
     void lms
-      .assignmentContext(requestId, page, search)
+      .assignmentContext(requestId, page, search, orderId, groupId)
       .then((data) => {
         if (!alive) return;
         setRecipients(data.recipients);
         setTotal(data.total);
         setCourses(data.courses);
         setCustomerId(data.customerId);
-        const selectionScope = `${scope}:${requestId}`;
-        if (requestId && !search) {
-          const unseen = data.recipients.filter(
-            (row) =>
-              !initializedRecipients.current.has(`${selectionScope}:${row.id}`),
-          );
-          unseen.forEach((row) =>
-            initializedRecipients.current.add(`${selectionScope}:${row.id}`),
-          );
-          setSelected(
-            (current) => new Set([...current, ...unseen.map((r) => r.id)]),
-          );
+        setOrigin({
+          sourceRequestId: data.sourceRequestId,
+          sourceOrderId: data.sourceOrderId,
+          ...(data.group
+            ? { groupId: data.group.id, dueAt: data.group.dueAt }
+            : {}),
+        });
+        if (data.group) setGroupName(data.group.name);
+        const selectionScope = `${scope}:${requestId}:${orderId}:${groupId}`;
+        if (restoredSelection.current !== selectionScope) {
+          restoredSelection.current = selectionScope;
+          try {
+            const saved = sessionStorage.getItem(
+              `demo:lms:selection:${selectionScope}`,
+            );
+            if (saved) {
+              setSelected(new Set(JSON.parse(saved)));
+            } else if (requestId && !groupId) {
+              setSelected(
+                new Set(
+                  data.contextRecipientIds || data.recipients.map((r) => r.id),
+                ),
+              );
+            }
+          } catch {
+            if (requestId && !groupId)
+              setSelected(
+                new Set(
+                  data.contextRecipientIds || data.recipients.map((r) => r.id),
+                ),
+              );
+          }
         }
-        let preferred = query.get("versionId") || "";
+        let preferred =
+          data.group?.courseVersionId || query.get("versionId") || "";
         try {
           preferred ||= localStorage.getItem(`demo:lms:course:${scope}`) || "";
         } catch {
@@ -96,7 +133,7 @@ export function Assignments({
         setError("");
       })
       .catch((caught) => {
-        if (alive) setError(lmsError(caught, t));
+        if (alive) setError(caught);
       })
       .finally(() => {
         if (alive) setBusy(false);
@@ -106,8 +143,19 @@ export function Assignments({
     };
   }, [scope, refresh, page, search]);
   const visible = recipients;
+  useEffect(() => {
+    if (restoredSelection.current)
+      try {
+        sessionStorage.setItem(
+          `demo:lms:selection:${restoredSelection.current}`,
+          JSON.stringify([...selected]),
+        );
+      } catch {
+        /* Optional local recovery; durable operation remains server-side. */
+      }
+  }, [selected]);
   const errors = new Map(
-    result?.errors.map((row) => [row.recipientId, row.message]) || [],
+    result?.errors.map((row) => [row.recipientId, lmsError(row, t)]) || [],
   );
   async function repairEmployment(row: LearnerSummary) {
     if (!canRepair || !customer || !customerId || repairing) return;
@@ -148,7 +196,7 @@ export function Assignments({
         ),
       );
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
     } finally {
       setRepairing("");
     }
@@ -166,12 +214,38 @@ export function Assignments({
     setBusy(true);
     setError("");
     try {
-      const report = await lms.assign(versionId, [...selected], customerId);
-      setResult(report);
-      if (report.errors.length)
-        setSelected(new Set(report.errors.map((e) => e.recipientId)));
+      const ids = [...selected];
+      const fingerprint = JSON.stringify([
+        versionId,
+        [...ids].sort(),
+        customerId,
+        origin,
+      ]);
+      const key = `demo:lms:assignment:${scope}`;
+      let operationId = crypto.randomUUID();
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(key) || "null");
+        if (saved?.fingerprint === fingerprint) operationId = saved.operationId;
+        sessionStorage.setItem(
+          key,
+          JSON.stringify({ fingerprint, operationId }),
+        );
+      } catch {
+        /* The server still retains every completed row. */
+      }
+      let report;
+      do {
+        report = await lms.assign(versionId, ids, customerId, groupName, {
+          ...origin,
+          operationId,
+        });
+        setResult(report);
+      } while (report.state === "PENDING");
+      if (report.state === "COMPLETED")
+        setSelected(new Set(report.failedRecipientIds));
+      if (report.pauseError) setError(report.pauseError);
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
     } finally {
       setBusy(false);
     }
@@ -179,9 +253,10 @@ export function Assignments({
   return (
     <>
       <LmsHeading title={t("Назначить обучение", "Оқуды тағайындау")} />
-      {error && (
+      {!!error && (
         <Notice>
-          {error}
+          {lmsError(error, t)}
+          <LmsErrorDiagnostic error={error} t={t} />
           <button onClick={() => setRefresh((v) => v + 1)}>
             {t("Повторить", "Қайталау")}
           </button>
@@ -193,7 +268,7 @@ export function Assignments({
             {t("Программа", "Бағдарлама")}
             <select
               value={versionId}
-              disabled={busy}
+              disabled={busy || !!origin.groupId}
               onChange={(e) => {
                 setVersionId(e.target.value);
                 setResult(null);
@@ -217,6 +292,9 @@ export function Assignments({
                       <option key={version.id} value={version.id}>
                         {t(version.content.titleRu, version.content.titleKz)} ·{" "}
                         {version.version}
+                        {course.assignmentPaused
+                          ? ` · ${t("Назначения приостановлены", "Тағайындаулар тоқтатылған")}`
+                          : ""}
                       </option>,
                     ]
                   : [];
@@ -234,12 +312,33 @@ export function Assignments({
           </button>
         </div>
         {result && (
-          <Notice kind={result.errors.length ? "error" : "success"}>
+          <Notice kind={result.errorCount ? "error" : "success"}>
             {t("Назначено", "Тағайындалды")}: {result.created}.{" "}
             {result.duplicates > 0 &&
               `${t("Уже назначено", "Бұрын тағайындалған")}: ${result.duplicates}. `}
-            {result.errors.length > 0 &&
-              `${t("Нужна проверка строк", "Тексерілетін жолдар")}: ${result.errors.length}.`}
+            {result.errorCount > 0 &&
+              `${t("Нужна проверка строк", "Тексерілетін жолдар")}: ${result.errorCount}.`}
+            {!!result.conflicts && (
+              <p>
+                {t(
+                  "Ранее назначено в другом контексте, происхождение сохранено",
+                  "Басқа контексте бұрын тағайындалған, бастапқы деректер сақталды",
+                )}
+                : {result.conflicts}
+              </p>
+            )}
+            {result.state === "PENDING" && (
+              <p>
+                {t("Обработано", "Өңделді")}: {result.cursor}/{result.total}
+              </p>
+            )}
+            {result.groupId && (
+              <p>
+                <Link href={`/lms/groups/${result.groupId}`}>
+                  {t("Открыть группу", "Топты ашу")}
+                </Link>
+              </p>
+            )}
           </Notice>
         )}
         <div className="lms-toolbar">

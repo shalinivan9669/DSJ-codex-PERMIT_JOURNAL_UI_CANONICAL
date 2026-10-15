@@ -29,6 +29,22 @@ export const regulatoryProfileSchema = z
           title: z.string().min(1).max(1000),
           url: z.string().max(2000),
           revision: label,
+          number: z.string().max(300).optional(),
+          date: z.string().date().nullable().optional(),
+          authority: z.string().max(1000).optional(),
+          article: z.string().max(300).optional(),
+          paragraph: z.string().max(300).optional(),
+          subparagraph: z.string().max(300).optional(),
+          effectiveOn: z.string().date().nullable().optional(),
+          status: z
+            .enum([
+              "CURRENT",
+              "CHANGES_EXPECTED",
+              "CHANGED",
+              "REPEALED",
+              "REVIEW_REQUIRED",
+            ])
+            .optional(),
         }),
       )
       .max(50)
@@ -84,6 +100,13 @@ export const lmsQuestionSchema = z
     category: label,
     promptRu: label,
     promptKz: label,
+    topic: z.string().max(1000).optional(),
+    explanationRu: z.string().max(10000).optional(),
+    explanationKz: z.string().max(10000).optional(),
+    difficulty: z.enum(["UNKNOWN", "EASY", "MEDIUM", "HARD"]).optional(),
+    source: z.string().max(2000).optional(),
+    libraryQuestionId: z.string().max(100).nullable().optional(),
+    libraryRevisionId: z.string().max(100).nullable().optional(),
     options: z
       .array(
         z.object({
@@ -92,9 +115,8 @@ export const lmsQuestionSchema = z
           textKz: label,
         }),
       )
-      .min(2)
       .max(20),
-    correctOptionIds: z.array(z.string().min(1).max(100)).min(1).max(20),
+    correctOptionIds: z.array(z.string().min(1).max(100)).max(20),
     multiple: z.boolean().default(false),
   })
   .strict();

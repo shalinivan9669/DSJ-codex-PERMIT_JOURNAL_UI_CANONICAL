@@ -3,7 +3,16 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Notice } from "@demo/ui";
 import { api, downloadExport, json } from "@/lib/api";
-import { lms, type Enrollment, type Learning, type Paged } from "@/lib/lms-api";
+import { type Enrollment, type Learning, type Paged } from "@/lib/lms-api";
+import {
+  resultsApi,
+  resultQuery,
+  initialResultFilters,
+  type ResultFilters,
+  type ResultEnrollment,
+  type FilterOption,
+  type BundleState,
+} from "@/lib/results-api";
 import type { AppContext } from "@/lib/types";
 import { ExternalEvidence } from "./external-evidence";
 import { LmsDocument } from "./documents";
@@ -12,6 +21,7 @@ import {
   PageControls,
   Status,
   lmsError,
+  LmsErrorDiagnostic,
   type Translate,
 } from "./common";
 
@@ -24,14 +34,31 @@ type Prepared = {
     status: string;
     artifacts: { id: string; kind: string }[];
   }[];
-  errors: { resultId: string; message: string }[];
+  errors: {
+    resultId: string;
+    code: string;
+    params?: Record<string, unknown>;
+    message: string;
+    correlationId?: string;
+  }[];
 };
 export function Results({ t, context }: { t: Translate; context: AppContext }) {
-  const [data, setData] = useState<Paged<Enrollment>>({ items: [], total: 0 });
+  const [data, setData] = useState<Paged<ResultEnrollment>>({
+    items: [],
+    total: 0,
+  });
+  const [filters, setFilters] = useState<ResultFilters>(initialResultFilters);
+  const [filtersReady, setFiltersReady] = useState(false);
+  const [options, setOptions] = useState<{
+    customers: FilterOption[];
+    courses: FilterOption[];
+    groups: FilterOption[];
+  }>({ customers: [], courses: [], groups: [] });
+  const [bundle, setBundle] = useState<BundleState | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(1),
     [refresh, setRefresh] = useState(0);
-  const [error, setError] = useState(""),
+  const [error, setError] = useState<unknown>(null),
     [busy, setBusy] = useState(false);
   const [prepared, setPrepared] = useState<Prepared | null>(null);
   const [active, setActive] = useState<Enrollment | null>(null);
@@ -40,9 +67,96 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
   const initializedPages = useRef(new Map<number, Set<string>>());
   const pageSelections = useRef(new Map<number, Set<string>>());
   const staff = context.user.role !== "EMPLOYER";
+  const filterKey = `demo:lms:results:${context.tenant.id}:${context.user.id}`;
+  function filter<K extends keyof ResultFilters>(
+    key: K,
+    value: ResultFilters[K],
+  ) {
+    setFilters((current) => ({ ...current, [key]: value }));
+    setPage(1);
+  }
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem(filterKey) || "{}",
+      ) as Partial<ResultFilters>;
+      const query = new URLSearchParams(window.location.search);
+      setFilters({
+        ...initialResultFilters,
+        ...saved,
+        ...Object.fromEntries(
+          ["groupId", "sourceOrderId", "sourceRequestId"].flatMap((key) =>
+            query.get(key) ? [[key, query.get(key)!]] : [],
+          ),
+        ),
+      });
+    } catch {
+      /* Optional preferences. */
+    }
+    setFiltersReady(true);
+    void resultsApi
+      .filters()
+      .then(setOptions)
+      .catch((caught) => setError(caught));
+  }, [filterKey]);
+  useEffect(() => {
+    if (filtersReady)
+      try {
+        localStorage.setItem(filterKey, JSON.stringify(filters));
+      } catch {
+        /* Optional preferences. */
+      }
+  }, [filters, filtersReady, filterKey]);
+  useEffect(() => {
+    if (bundle?.status !== "PREPARING") return;
+    let alive = true;
+    const timer = setTimeout(() => {
+      void resultsApi
+        .bundleStatus(bundle.id)
+        .then((value) => {
+          if (alive) setBundle(value);
+        })
+        .catch((caught) => {
+          if (alive) {
+            setError(caught);
+          }
+        });
+    }, 2000);
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
+  }, [bundle]);
+  const bundleKey = `demo:lms:bundle:${context.tenant.id}:${context.user.id}`;
+  useEffect(() => {
+    try {
+      const id = sessionStorage.getItem(bundleKey);
+      if (id) void resultsApi.bundleStatus(id).then(setBundle).catch(setError);
+    } catch {
+      /* Optional recovery. */
+    }
+  }, [bundleKey]);
+  useEffect(() => {
+    if (bundle)
+      try {
+        sessionStorage.setItem(bundleKey, bundle.id);
+      } catch {
+        /* Optional recovery. */
+      }
+  }, [bundle, bundleKey]);
   const preparedKey = `demo:lms:prepared:${context.tenant.id}:${context.user.id}`;
   useEffect(() => {
-    if (!staff) return;
+    if (prepared)
+      try {
+        sessionStorage.setItem(
+          preparedKey,
+          JSON.stringify(prepared.items.map((item) => item.id)),
+        );
+      } catch {
+        /* Optional recovery. */
+      }
+  }, [prepared, preparedKey]);
+  useEffect(() => {
     let alive = true;
     try {
       const ids = JSON.parse(
@@ -76,7 +190,7 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
               }));
           })
           .catch((caught) => {
-            if (alive) setError(lmsError(caught, t));
+            if (alive) setError(caught);
           });
       }
     } catch {
@@ -100,7 +214,8 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
     if (
       !prepared?.items.some(
         (item) =>
-          !item.artifacts.some((artifact) => artifact.kind === format) &&
+          (!item.artifacts.some((artifact) => artifact.kind === format) ||
+            item.status !== "ISSUED") &&
           !["VOIDED", "SUPERSEDED", "REJECTED"].includes(item.status),
       )
     )
@@ -124,7 +239,7 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
               );
           })
           .catch((caught) => {
-            if (alive) setError(lmsError(caught, t));
+            if (alive) setError(caught);
           });
       },
       prepared.items.some((item) => item.status === "AWAITING_APPROVAL")
@@ -137,55 +252,78 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
     };
   }, [prepared, format]);
   useEffect(() => {
+    if (!filtersReady) return;
     let alive = true;
     setBusy(true);
-    void lms
-      .enrollments(false, page)
-      .then((value) => {
-        if (alive) {
-          setData(value);
-          setActive((current) =>
-            current
-              ? value.items.find((item) => item.id === current.id) || current
-              : null,
-          );
-          const firstLoad = !initializedPages.current.has(page);
-          const previousIds =
-            initializedPages.current.get(page) || new Set<string>();
-          const currentIds = new Set(
-            value.items.flatMap((item) =>
-              item.result ? [item.result.id] : [],
-            ),
-          );
-          initializedPages.current.set(page, currentIds);
-          setSelected((current) => {
-            const next = new Set(current);
-            previousIds.forEach((id) => {
-              if (!currentIds.has(id)) next.delete(id);
-            });
-            for (const enrollment of value.items) {
-              const result = enrollment.result;
-              if (!result) continue;
-              if (!(result.documentEligible ?? result.eligible))
-                next.delete(result.id);
-              else if (firstLoad && !enrollment.documents?.length)
-                next.add(result.id);
+    const timer = setTimeout(
+      () => {
+        void resultsApi
+          .list(page, filters)
+          .then((value) => {
+            if (alive) {
+              setData(value);
+              setActive((current) =>
+                current
+                  ? value.items.find((item) => item.id === current.id) ||
+                    current
+                  : null,
+              );
+              const firstLoad = !initializedPages.current.has(page);
+              const previousIds =
+                initializedPages.current.get(page) || new Set<string>();
+              const currentIds = new Set(
+                value.items.flatMap((item) =>
+                  item.result ? [item.result.id] : [],
+                ),
+              );
+              initializedPages.current.set(page, currentIds);
+              setSelected((current) => {
+                const next = new Set(current);
+                previousIds.forEach((id) => {
+                  if (!currentIds.has(id)) next.delete(id);
+                });
+                for (const enrollment of value.items) {
+                  const result = enrollment.result;
+                  if (!result) continue;
+                  if (!(result.documentEligible ?? result.eligible))
+                    next.delete(result.id);
+                  else if (firstLoad && !enrollment.documents?.length)
+                    next.add(result.id);
+                }
+                return next;
+              });
+              setError("");
             }
-            return next;
+          })
+          .catch((caught) => {
+            if (alive) setError(caught);
+          })
+          .finally(() => {
+            if (alive) setBusy(false);
           });
-          setError("");
-        }
-      })
-      .catch((caught) => {
-        if (alive) setError(lmsError(caught, t));
-      })
-      .finally(() => {
-        if (alive) setBusy(false);
-      });
+      },
+      filters.search ? 250 : 0,
+    );
     return () => {
       alive = false;
+      clearTimeout(timer);
     };
-  }, [page, refresh]);
+  }, [page, refresh, filters, filtersReady]);
+  const selectedReady =
+    selected.size > 0 &&
+    [...selected].every((resultId) => {
+      const documents = data.items.find(
+        (item) => item.result?.id === resultId,
+      )?.documents;
+      return (
+        !!documents?.length &&
+        documents.every(
+          (document) =>
+            document.status === "ISSUED" &&
+            document.artifacts.some((artifact) => artifact.kind === format),
+        )
+      );
+    });
   async function prepare() {
     if (busy || !selected.size) return;
     setBusy(true);
@@ -230,21 +368,36 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
       } catch {
         /* Optional recovery context. */
       }
+      if (
+        !value.errors.length &&
+        value.items.length &&
+        value.items.every(
+          (item) =>
+            item.status === "ISSUED" &&
+            item.artifacts.some((artifact) => artifact.kind === format),
+        )
+      ) {
+        setBundle(
+          await resultsApi.bundle(
+            value.items.map((item) => item.id),
+            format,
+          ),
+        );
+      }
       setRefresh((v) => v + 1);
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
     } finally {
       setBusy(false);
     }
   }
-  const rowErrors = new Map(
-    prepared?.errors.map((e) => [e.resultId, e.message]) || [],
-  );
+  const rowErrors = new Map(prepared?.errors.map((e) => [e.resultId, e]) || []);
   const downloadable =
     !!prepared?.items.length &&
     prepared.items.every(
       (item) =>
         !["VOIDED", "SUPERSEDED", "REJECTED"].includes(item.status) &&
+        item.status === "ISSUED" &&
         item.artifacts.some((artifact) => artifact.kind === format),
     );
   async function download() {
@@ -252,13 +405,13 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
     setDownloading(true);
     setError("");
     try {
-      await downloadExport(
-        "/lms/documents/bundle",
-        { documentIds: prepared.items.map((item) => item.id), format },
-        "LMS-documents.zip",
+      const value = await resultsApi.bundle(
+        prepared.items.map((item) => item.id),
+        format,
       );
+      setBundle(value);
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
     } finally {
       setDownloading(false);
     }
@@ -274,22 +427,270 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
           >
             {busy
               ? t("Подождите…", "Күтіңіз…")
-              : `${t("Подготовить документы", "Құжаттарды дайындау")} · ${selected.size}`}
+              : `${selectedReady ? t("Получить готовый комплект", "Дайын жинақты алу") : t("Подготовить документы", "Құжаттарды дайындау")} · ${selected.size}`}
           </button>
         )}
       </LmsHeading>
-      {error && (
+      {!!error && (
         <Notice>
-          {error}
+          {lmsError(error, t)}
+          <LmsErrorDiagnostic error={error} t={t} />
           <button onClick={() => setRefresh((v) => v + 1)}>
             {t("Повторить", "Қайталау")}
           </button>
         </Notice>
       )}
+      <section className="panel lms-panel">
+        <div className="lms-toolbar">
+          <label>
+            {t("Найти слушателя", "Тыңдаушыны табу")}
+            <input
+              type="search"
+              value={filters.search}
+              onChange={(e) => filter("search", e.target.value)}
+            />
+          </label>
+          <label>
+            {t("Вид списка", "Тізім көрінісі")}
+            <select
+              value={filters.view}
+              onChange={(e) => filter("view", e.target.value)}
+            >
+              {[
+                ["ALL", t("Все назначения", "Барлық тағайындаулар")],
+                [
+                  "EXPIRING",
+                  t("Истекает доступ", "Қолжетімділік мерзімі аяқталады"),
+                ],
+                ["INCOMPLETE", t("Не завершено", "Аяқталмаған")],
+                ["NEEDS_REVIEW", t("Нужна проверка", "Тексеру қажет")],
+                [
+                  "WAITING_DOCUMENTS",
+                  t("Ожидаются документы", "Құжаттар күтілуде"),
+                ],
+              ].map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+          {filters.view === "EXPIRING" && (
+            <label>
+              {t("В ближайшие дни", "Алдағы күндер")}
+              <input
+                type="number"
+                min={1}
+                max={365}
+                value={filters.expiringDays}
+                onChange={(e) =>
+                  filter(
+                    "expiringDays",
+                    Math.min(365, Math.max(1, Number(e.target.value))),
+                  )
+                }
+              />
+            </label>
+          )}
+          <details>
+            <summary>{t("Фильтры и отчёт", "Сүзгілер мен есеп")}</summary>
+            <div className="lms-actions">
+              {(
+                [
+                  ["customerId", "customers", t("Организация", "Ұйым")],
+                  [
+                    "courseVersionId",
+                    "courses",
+                    t("Курс и версия", "Курс және нұсқа"),
+                  ],
+                  ["groupId", "groups", t("Группа", "Топ")],
+                ] as const
+              ).map(([key, kind, label]) => (
+                <label key={key}>
+                  {label}
+                  <select
+                    value={filters[key]}
+                    onChange={(e) => filter(key, e.target.value)}
+                  >
+                    <option value="">{t("Все", "Барлығы")}</option>
+                    {options[kind].map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {t(option.labelRu, option.labelKz || option.labelRu)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+              <label>
+                {t("Состояние", "Күйі")}
+                <select
+                  value={filters.status}
+                  onChange={(e) => filter("status", e.target.value)}
+                >
+                  <option value="">{t("Все", "Барлығы")}</option>
+                  {[
+                    "ACTIVE",
+                    "COMPLETED",
+                    "PASSED",
+                    "FAILED",
+                    "VOIDED",
+                    "SUPERSEDED",
+                  ].map((value) => (
+                    <option key={value} value={value}>
+                      {
+                        (
+                          {
+                            ACTIVE: t("Обучается", "Оқып жатыр"),
+                            COMPLETED: t("Завершено", "Аяқталды"),
+                            PASSED: t("Сдано", "Өтті"),
+                            FAILED: t("Не сдано", "Өтпеді"),
+                            VOIDED: t("Аннулирован", "Күші жойылған"),
+                            SUPERSEDED: t("Заменено", "Ауыстырылған"),
+                          } as Record<string, string>
+                        )[value]
+                      }
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                {t("Доступ истекает с", "Қолжетімділік аяқталуы, бастап")}
+                <input
+                  type="date"
+                  value={filters.dueFrom.slice(0, 10)}
+                  onChange={(e) =>
+                    filter(
+                      "dueFrom",
+                      e.target.value ? `${e.target.value}T00:00:00.000Z` : "",
+                    )
+                  }
+                />
+              </label>
+              <label>
+                {t("По", "Дейін")}
+                <input
+                  type="date"
+                  value={filters.dueTo.slice(0, 10)}
+                  onChange={(e) =>
+                    filter(
+                      "dueTo",
+                      e.target.value ? `${e.target.value}T23:59:59.999Z` : "",
+                    )
+                  }
+                />
+              </label>
+              <button
+                onClick={() => {
+                  setFilters(initialResultFilters);
+                  setPage(1);
+                }}
+              >
+                {t("Сбросить фильтры", "Сүзгілерді тазалау")}
+              </button>
+              <label>
+                {t("Отчёт", "Есеп")}
+                <select
+                  defaultValue=""
+                  disabled={downloading}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    e.target.value = "";
+                    if (value) {
+                      setDownloading(true);
+                      void downloadExport(
+                        "/lms/results/export",
+                        {
+                          filters: resultQuery(filters),
+                          format: value,
+                          language: t("ru", "kz"),
+                        },
+                        `LMS-results.${value.toLowerCase()}`,
+                      )
+                        .catch((caught) => {
+                          setError(caught);
+                        })
+                        .finally(() => setDownloading(false));
+                    }
+                  }}
+                >
+                  <option value="">{t("Скачать…", "Жүктеу…")}</option>
+                  <option value="CSV">CSV</option>
+                  <option value="XLSX">XLSX</option>
+                </select>
+              </label>
+            </div>
+          </details>
+          {filters.groupId && (
+            <button
+              disabled={downloading}
+              onClick={() => {
+                setDownloading(true);
+                void resultsApi
+                  .bundle([], format, filters.groupId)
+                  .then(setBundle)
+                  .catch((caught) => {
+                    setError(caught);
+                  })
+                  .finally(() => setDownloading(false));
+              }}
+            >
+              {t("Готовые документы группы", "Топтың дайын құжаттары")}
+            </button>
+          )}
+        </div>
+        <p className="lms-list-meta">
+          {t("Найдено", "Табылды")}: {data.total}
+        </p>
+      </section>
+      {bundle && (
+        <section className="panel lms-panel" aria-live="polite">
+          <h2>{t("Комплект документов", "Құжаттар жинағы")}</h2>
+          <Status value={bundle.status} t={t} />
+          {bundle.error && (
+            <div role="alert">
+              {lmsError(bundle.error, t)}
+              <LmsErrorDiagnostic error={bundle.error} t={t} />
+            </div>
+          )}
+          <div className="lms-actions">
+            {bundle.parts.map((part) => (
+              <a
+                className={part.index === 0 ? "button primary" : "button"}
+                key={part.index}
+                href={`/api/lms/documents/bundles/${bundle.id}/parts/${part.index}`}
+                download
+              >
+                {t("Скачать часть", "Бөлікті жүктеу")} {part.index + 1} /{" "}
+                {bundle.partCount}
+              </a>
+            ))}
+            {bundle.directFiles.map((file) => (
+              <a
+                className="button"
+                key={file.id}
+                href={`/api/lms/artifacts/${file.id}`}
+                download
+              >
+                {file.fileName}
+              </a>
+            ))}
+          </div>
+          {!!bundle.directFiles.length && (
+            <p>
+              {t(
+                "Крупные файлы доступны отдельно в исходном качестве.",
+                "Үлкен файлдар бастапқы сапада бөлек қолжетімді.",
+              )}
+            </p>
+          )}
+        </section>
+      )}
       {!!prepared?.items.length && (
-        <section className="panel lms-panel">
+        <details className="panel lms-panel" open={!bundle}>
+          <summary>
+            {t("Формат и исходные документы", "Пішім және бастапқы құжаттар")}
+          </summary>
           <div className="lms-toolbar">
-            <h2>{t("Комплект документов", "Құжаттар жинағы")}</h2>
             <div className="lms-actions">
               <label>
                 {t("Формат", "Пішім")}
@@ -317,7 +718,7 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                 disabled={!downloadable || downloading}
                 onClick={() => void download()}
               >
-                {t("Скачать комплект", "Жинақты жүктеу")}
+                {t("Получить комплект", "Жинақты алу")}
               </button>
             </div>
           </div>
@@ -330,13 +731,15 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
               <li key={item.requestId}>
                 <Status value={item.legalForm} t={t} />
                 <Status value={item.status} t={t} />
-                <Link className="button" href={`/requests/${item.requestId}`}>
-                  {t("Посмотреть комплект", "Жинақты қарау")}
-                </Link>
+                {staff && (
+                  <Link className="button" href={`/requests/${item.requestId}`}>
+                    {t("Посмотреть комплект", "Жинақты қарау")}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
-        </section>
+        </details>
       )}
       <section className="panel lms-panel" aria-busy={busy}>
         <div
@@ -362,27 +765,61 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                   <tr key={enrollment.id}>
                     <td>
                       <div className="lms-inline-label">
-                        {staff &&
-                          (result?.documentEligible ?? result?.eligible) && (
-                            <input
-                              type="checkbox"
-                              aria-label={t(
-                                enrollment.recipient?.data.fullNameRu || "",
-                                enrollment.recipient?.data.fullNameKz ||
-                                  enrollment.recipient?.data.fullNameRu ||
-                                  "",
-                              )}
-                              checked={selected.has(result.id)}
-                              onChange={(event) =>
-                                setSelected((current) => {
-                                  const next = new Set(current);
-                                  if (event.target.checked) next.add(result.id);
-                                  else next.delete(result.id);
-                                  return next;
-                                })
+                        {(result?.documentEligible ?? result?.eligible) && (
+                          <input
+                            type="checkbox"
+                            aria-label={t(
+                              enrollment.recipient?.data.fullNameRu || "",
+                              enrollment.recipient?.data.fullNameKz ||
+                                enrollment.recipient?.data.fullNameRu ||
+                                "",
+                            )}
+                            checked={
+                              staff
+                                ? selected.has(result.id)
+                                : !!enrollment.documents?.some((document) =>
+                                    prepared?.items.some(
+                                      (item) => item.id === document.id,
+                                    ),
+                                  )
+                            }
+                            onChange={(event) => {
+                              if (!staff) {
+                                const checked = event.target.checked;
+                                const documents = (
+                                  enrollment.documents || []
+                                ).filter(
+                                  (document) => document.status === "ISSUED",
+                                );
+                                setPrepared((current) => ({
+                                  items: checked
+                                    ? [
+                                        ...new Map(
+                                          [
+                                            ...(current?.items || []),
+                                            ...documents,
+                                          ].map((item) => [item.id, item]),
+                                        ).values(),
+                                      ]
+                                    : (current?.items || []).filter(
+                                        (item) =>
+                                          !documents.some(
+                                            (d) => d.id === item.id,
+                                          ),
+                                      ),
+                                  errors: current?.errors || [],
+                                }));
+                                return;
                               }
-                            />
-                          )}
+                              setSelected((current) => {
+                                const next = new Set(current);
+                                if (event.target.checked) next.add(result.id);
+                                else next.delete(result.id);
+                                return next;
+                              });
+                            }}
+                          />
+                        )}
                         <button
                           className="text-button"
                           onClick={() => setActive(enrollment)}
@@ -395,6 +832,17 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                           )}
                         </button>
                       </div>
+                      <div className="lms-list-meta">
+                        {t(
+                          enrollment.customer?.nameRu || "",
+                          enrollment.customer?.nameKz ||
+                            enrollment.customer?.nameRu ||
+                            "",
+                        )}
+                        {enrollment.group?.name || enrollment.groupKey
+                          ? ` · ${enrollment.group?.name || enrollment.groupKey}`
+                          : ""}
+                      </div>
                     </td>
                     <td>
                       {t(
@@ -402,7 +850,19 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                         enrollment.courseVersion?.content.titleKz || "",
                       )}
                     </td>
-                    <td>{enrollment.progressPercent || 0}%</td>
+                    <td>
+                      {enrollment.progressPercent || 0}%
+                      <div
+                        className="lms-list-meta"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        {enrollment.dueAt
+                          ? new Date(enrollment.dueAt).toLocaleDateString(
+                              t("ru-KZ", "kk-KZ"),
+                            )
+                          : ""}
+                      </div>
+                    </td>
                     <td>
                       {result ? (
                         <>
@@ -429,9 +889,13 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                             </p>
                           )}
                           {rowErrors.get(result.id) && (
-                            <p className="lms-error" role="alert">
-                              {rowErrors.get(result.id)}
-                            </p>
+                            <div className="lms-error" role="alert">
+                              {lmsError(rowErrors.get(result.id), t)}
+                              <LmsErrorDiagnostic
+                                error={rowErrors.get(result.id)}
+                                t={t}
+                              />
+                            </div>
                           )}
                         </>
                       ) : (
@@ -525,7 +989,7 @@ function EnrollmentDetails({
   onChanged: () => void;
 }) {
   const [data, setData] = useState<Learning | null>(null),
-    [error, setError] = useState("");
+    [error, setError] = useState<unknown>(null);
   const [reason, setReason] = useState(""),
     [action, setAction] = useState("correct"),
     [busy, setBusy] = useState(false),
@@ -539,7 +1003,7 @@ function EnrollmentDetails({
         if (alive) setData(value);
       })
       .catch((caught) => {
-        if (alive) setError(lmsError(caught, t));
+        if (alive) setError(caught);
       });
     return () => {
       alive = false;
@@ -558,14 +1022,14 @@ function EnrollmentDetails({
       setDone(true);
       onChanged();
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
     } finally {
       setBusy(false);
     }
   }
   return (
     <>
-      {error && <Notice>{error}</Notice>}
+      {!!error && <Notice>{lmsError(error, t)}</Notice>}
       {staff && data?.profile.assessmentKind === "EXTERNAL_AUTHORIZED" && (
         <ExternalEvidence
           enrollmentId={enrollment.id}
@@ -603,7 +1067,7 @@ function EnrollmentDetails({
                 setExtended(true);
                 onChanged();
               } catch (caught) {
-                setError(lmsError(caught, t));
+                setError(caught);
               } finally {
                 setBusy(false);
               }
@@ -693,7 +1157,7 @@ function InviteAccess({
 }) {
   const [email, setEmail] = useState(""),
     [url, setUrl] = useState(""),
-    [error, setError] = useState(""),
+    [error, setError] = useState<unknown>(null),
     [busy, setBusy] = useState(false);
   async function invite(event: FormEvent) {
     event.preventDefault();
@@ -713,7 +1177,7 @@ function InviteAccess({
       );
       setUrl(new URL(value.url, window.location.origin).toString());
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
     } finally {
       setBusy(false);
     }
@@ -722,7 +1186,7 @@ function InviteAccess({
   return (
     <details>
       <summary>{t("Доступ к обучению", "Оқуға қолжетімділік")}</summary>
-      {error && <Notice>{error}</Notice>}
+      {!!error && <Notice>{lmsError(error, t)}</Notice>}
       {url ? (
         <>
           <label>
@@ -738,7 +1202,7 @@ function InviteAccess({
             onClick={() =>
               void navigator.clipboard
                 .writeText(url)
-                .catch((caught) => setError(lmsError(caught, t)))
+                .catch((caught) => setError(caught))
             }
           >
             {t("Скопировать", "Көшіру")}

@@ -16,6 +16,7 @@ import {
   type Context,
 } from "./core";
 const scrypt = promisify(scryptCallback);
+import { trustedClientIp } from "./proxy-policy";
 export async function passwordHash(password: string): Promise<string> {
   const salt = randomBytes(24).toString("hex");
   const derived = (await scrypt(password, salt, 64)) as Buffer;
@@ -76,7 +77,7 @@ export async function authenticate(
   next: NextFunction,
 ) {
   try {
-    rateLimit(`api:${req.ip}`, 600);
+    rateLimit("api:global", 50000);
     originCheck(req);
     const publicVerification =
       (req.method === "GET" &&
@@ -101,15 +102,21 @@ export async function authenticate(
       req.path === "/health" ||
       publicVerification
     ) {
+      rateLimit(`unauth:${trustedClientIp(req) || "unknown"}`, 600);
       next();
       return;
     }
     const token = cookies(req).demo_session;
-    if (!token || !/^[a-f0-9]{64}$/.test(token))
+    if (!token || !/^[a-f0-9]{64}$/.test(token)) {
+      rateLimit(`unauth:${trustedClientIp(req) || "unknown"}`, 600);
       fail(401, "SESSION_REQUIRED", "Войдите в DEMO");
+    }
+    rateLimit(`session:${hash(token)}`, 600);
     const s = await db.session.findUnique({ where: { id: hash(token) } });
-    if (!s || s.expiresAt.getTime() < Date.now())
+    if (!s || s.expiresAt.getTime() < Date.now()) {
+      rateLimit(`unauth:${trustedClientIp(req) || "unknown"}`, 600);
       fail(401, "SESSION_EXPIRED", "Сессия завершена. Войдите снова");
+    }
     const [user, tenant] = await Promise.all([
       db.user.findFirst({ where: { id: s.userId, tenantId: s.tenantId } }),
       db.tenant.findUnique({ where: { id: s.tenantId } }),
@@ -120,6 +127,8 @@ export async function authenticate(
       user.sessionVersion !== s.sessionVersion
     )
       fail(401, "SESSION_REVOKED", "Сессия отозвана");
+    rateLimit(`user:${s.tenantId}:${user.id}`, 1200);
+    rateLimit(`tenant:${s.tenantId}`, 20000);
     if (req.path.startsWith("/lms/") || req.path.startsWith("/learn/")) {
       const { assertLmsDeploymentAllowed } =
         await import("./lms/deployment-gate");
@@ -139,6 +148,8 @@ export async function authenticate(
       sessionId: s.id,
       csrfHash: s.csrfHash,
       correlationId: req.correlationId,
+      trustedIp: trustedClientIp(req),
+      source: "browser",
     };
     if (
       req.method === "POST" &&
@@ -179,7 +190,7 @@ export function sessionCookies(
   ]);
 }
 export async function login(req: DemoRequest, res: Response, input: unknown) {
-  rateLimit(`login:${req.ip}`, 10, 60_000);
+  rateLimit(`login:${trustedClientIp(req) || "unknown"}`, 10, 60_000);
   const data = parse(
     z
       .object({ email: z.email().max(255), password: z.string().max(256) })
@@ -224,6 +235,8 @@ export async function login(req: DemoRequest, res: Response, input: unknown) {
       sessionId: id,
       csrfHash: hash(csrf),
       correlationId: req.correlationId,
+      trustedIp: trustedClientIp(req),
+      source: "browser",
     },
     "AUTH_LOGIN",
     user.id,

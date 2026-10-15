@@ -5,7 +5,8 @@ services:
   tls:
     image: demo-ingress:2.0.0
     user: "101:101"
-    entrypoint: [nginx, -g, "daemon off;"]
+    entrypoint: [/bin/sh, /usr/local/bin/demo-nginx]
+    environment: { DEMO_PROXY_KEY: "${DEMO_PROXY_KEY:?Set proxy key}" }
     ports: ["127.0.0.1:${DEMO_TLS_PORT:-8443}:8443"]
     volumes:
       - ./nginx-tls.conf:/etc/nginx/nginx.conf:ro
@@ -17,4 +18,4 @@ services:
     depends_on: { ingress: { condition: service_started } }
     restart: unless-stopped
     mem_limit: 128m
-    networks: [private]
+    networks: { private: { ipv4_address: 172.30.15.6 } }

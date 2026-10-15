@@ -15,9 +15,9 @@ docker image inspect demo-api:2.0.0 demo-web:2.0.0 --format '{{json .RepoTags}} 
 "${compose[@]}" up -d db
 "${compose[@]}" run --rm migrate
 "${compose[@]}" run --rm -e DEMO_SAMPLE_DATA=1 setup
-"${compose[@]}" up -d api worker web ingress
+"${compose[@]}" up -d api worker integration web ingress
 "${compose[@]}" ps
-for service in api worker web ingress db; do
+for service in api worker integration web ingress db; do
   identifier=$("${compose[@]}" ps -q "$service")
   docker inspect --format '{{.Name}} user={{.Config.User}} readonly={{.HostConfig.ReadonlyRootfs}} ports={{json .NetworkSettings.Ports}}' "$identifier"
 done

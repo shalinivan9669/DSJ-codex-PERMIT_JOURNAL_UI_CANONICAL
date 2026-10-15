@@ -12,6 +12,17 @@ export const lmsStore = new ArtifactStore();
 export const lmsUploadDirectory = join(lmsStore.root, "lms-upload-tmp");
 export const lmsMaterialMaxBytes = 512 * 1024 * 1024;
 
+// Only successful full checks are cached. Identity includes inode and nanosecond
+// change times: size alone cannot detect an in-place edit or object replacement.
+const integrityCache = new Map<
+  string,
+  { identity: string; sha256: string; checkedAt: number }
+>();
+const integrityCacheTtl = 5 * 60_000;
+export function invalidateMaterialIntegrity(storageKey: string) {
+  integrityCache.delete(storageKey);
+}
+
 export async function uploadDestination() {
   await mkdir(lmsUploadDirectory, { recursive: true, mode: 0o700 });
   return lmsUploadDirectory;
@@ -116,9 +127,14 @@ export async function uploadMaterial(
   )
     fail(404, "NOT_FOUND", "Курс не найден");
   const stored = await savePrivateUpload(file);
-  const material = await db.lmsMaterial.create({
-    data: { tenantId: c.tenantId, courseId, ...stored, createdBy: c.userId },
-  });
+  const material = await db.lmsMaterial
+    .create({
+      data: { tenantId: c.tenantId, courseId, ...stored, createdBy: c.userId },
+    })
+    .catch(async (error: unknown) => {
+      await unlink(lmsStore.path(stored.storageKey)).catch(() => {});
+      throw error;
+    });
   await audit(db, c, "LMS_MATERIAL_UPLOADED", material.id, {
     courseId,
     size: material.size,
@@ -183,6 +199,7 @@ export async function authorizedMaterial(c: Context, id: string) {
 export async function openPrivateStream(
   record: { storageKey: string; sha256: string; size?: number },
   rangeHeader?: string,
+  forceIntegrity = false,
 ) {
   let handle: Awaited<ReturnType<typeof open>> | undefined;
   try {
@@ -191,20 +208,46 @@ export async function openPrivateStream(
     const path = relative(root, actual);
     if (path.startsWith("..") || isAbsolute(path)) throw new Error("PATH");
     handle = await open(actual, "r");
-    const stat = await handle.stat();
-    if (record.size !== undefined && stat.size !== record.size)
+    const stat = await handle.stat({ bigint: true });
+    if (!stat.isFile()) throw new Error("NOT_FILE");
+    const size = Number(stat.size);
+    if (record.size !== undefined && size !== record.size)
       throw new Error("SIZE");
-    const hash = createHash("sha256");
-    for await (const chunk of handle.createReadStream({
-      autoClose: false,
-      start: 0,
-    }))
-      hash.update(chunk);
-    if (hash.digest("hex") !== record.sha256) throw new Error("HASH");
-    const range = parseByteRange(rangeHeader, stat.size);
+    const identity = (value: typeof stat) =>
+      `${actual}:${value.dev}:${value.ino}:${value.size}:${value.mtimeNs}:${value.ctimeNs}:${value.birthtimeNs}`;
+    const version = identity(stat);
+    const cached = integrityCache.get(record.storageKey);
+    if (
+      forceIntegrity ||
+      !cached ||
+      cached.identity !== version ||
+      cached.sha256 !== record.sha256 ||
+      Date.now() - cached.checkedAt > integrityCacheTtl
+    ) {
+      integrityCache.delete(record.storageKey);
+      const hash = createHash("sha256");
+      for await (const chunk of handle.createReadStream({
+        autoClose: false,
+        start: 0,
+      }))
+        hash.update(chunk);
+      if (
+        hash.digest("hex") !== record.sha256 ||
+        identity(await handle.stat({ bigint: true })) !== version
+      )
+        throw new Error("HASH_OR_IDENTITY");
+      if (integrityCache.size >= 256)
+        integrityCache.delete(integrityCache.keys().next().value!);
+      integrityCache.set(record.storageKey, {
+        identity: version,
+        sha256: record.sha256,
+        checkedAt: Date.now(),
+      });
+    }
+    const range = parseByteRange(rangeHeader, size);
     if (!range) {
       await handle.close();
-      return { invalid: true as const, size: stat.size };
+      return { invalid: true as const, size };
     }
     const stream = handle.createReadStream({
       autoClose: true,
@@ -212,9 +255,10 @@ export async function openPrivateStream(
       end: range.end,
     });
     handle = undefined;
-    return { invalid: false as const, stream, size: stat.size, ...range };
+    return { invalid: false as const, stream, size, ...range };
   } catch {
-    await handle?.close();
+    integrityCache.delete(record.storageKey);
+    await handle?.close().catch(() => {});
     fail(503, "MATERIAL_UNAVAILABLE", "Материал временно недоступен");
   }
 }

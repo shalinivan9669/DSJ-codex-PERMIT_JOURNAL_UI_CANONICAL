@@ -2,7 +2,10 @@ import type { Prisma } from "@demo/database";
 import {
   courseContentSchema,
   regulatoryProfileSchema,
+  type CourseContent,
+  type RegulatoryProfile,
 } from "@demo/contracts/src/lms";
+import { z } from "@demo/contracts";
 import {
   db,
   parse,
@@ -22,6 +25,27 @@ import {
   assertPublishable,
   courseOutline,
 } from "./validation";
+import { normalizeCourseQuestions } from "./questions";
+import { questionSemanticHash } from "./question-semantics";
+
+type CourseListRow = {
+  id: string;
+  titleRu: string;
+  titleKz: string;
+  assignmentPaused: boolean;
+  assignmentPauseReason: string | null;
+  latestVersion: {
+    id: string;
+    version: number;
+    status: string;
+    content: Pick<
+      CourseContent,
+      "titleRu" | "titleKz" | "category" | "hours" | "accessDays"
+    >;
+    profile: Pick<RegulatoryProfile, "status" | "assessmentKind" | "legalForm">;
+  };
+  currentReview: { status: string; note: string; updatedAt: string } | null;
+};
 
 export async function versionView(
   c: Context,
@@ -39,39 +63,31 @@ export async function versionView(
   };
 }
 export async function listCourses(c: Context, query: unknown) {
-  const { page, pageSize, search } = parse(pagingSchema, query);
-  const where: Prisma.CourseWhereInput = {
-    tenantId: c.tenantId,
-    archived: false,
-    ...(search
-      ? {
-          OR: [
-            { titleRu: { contains: search, mode: "insensitive" } },
-            { titleKz: { contains: search, mode: "insensitive" } },
-          ],
-        }
-      : {}),
-  };
-  const courses = await db.course.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-  });
-  const items = [];
-  for (const course of courses) {
-    const latest = await db.courseVersion.findFirst({
-      where: {
-        tenantId: c.tenantId,
-        courseId: course.id,
-        ...(!isLmsStaff(c) ? { status: "PUBLISHED" } : {}),
-      },
-      orderBy: { version: "desc" },
-    });
-    if (latest)
-      items.push({ ...course, latestVersion: await versionView(c, latest) });
-  }
-  return { items, total: await db.course.count({ where }), page, pageSize };
+  const { page, pageSize, search, status } = parse(pagingSchema, query);
+  const staff = isLmsStaff(c) && status !== "PUBLISHED";
+  const [items, counts] = await Promise.all([
+    db.$queryRaw<CourseListRow[]>`
+      SELECT c.id, c."titleRu", c."titleKz", c."assignmentPaused", c."assignmentPauseReason",
+        jsonb_build_object('id', v.id, 'version', v.version, 'status', v.status,
+          'content', jsonb_build_object('titleRu', v.content->>'titleRu', 'titleKz', v.content->>'titleKz',
+            'category', v.content->>'category', 'hours', v.content->'hours', 'accessDays', v.content->'accessDays'),
+          'profile', jsonb_build_object('status', p.status, 'assessmentKind', p.definition->>'assessmentKind', 'legalForm', p.definition->>'legalForm')) AS "latestVersion",
+        CASE WHEN r.id IS NULL THEN NULL ELSE jsonb_build_object('status', r.status, 'note', r.note, 'updatedAt', r."updatedAt") END AS "currentReview"
+      FROM "Course" c
+      JOIN LATERAL (SELECT id, version, status, content, "regulatoryProfileVersionId" FROM "CourseVersion"
+        WHERE "tenantId"=${c.tenantId} AND "courseId"=c.id AND (${staff} OR status='PUBLISHED')
+        ORDER BY version DESC LIMIT 1) v ON true
+      JOIN "RegulatoryProfileVersion" p ON p.id=v."regulatoryProfileVersionId" AND p."tenantId"=${c.tenantId}
+      LEFT JOIN "RegulatoryReview" r ON r."courseId"=c.id AND r."tenantId"=${c.tenantId}
+      WHERE c."tenantId"=${c.tenantId} AND c.archived=false AND
+        (${search}='' OR POSITION(lower(${search}) IN lower(c."titleRu"))>0 OR POSITION(lower(${search}) IN lower(c."titleKz"))>0)
+      ORDER BY c."createdAt" DESC, c.id ASC LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}`,
+    db.$queryRaw<Array<{ total: bigint }>>`
+      SELECT count(*) AS total FROM "Course" c WHERE c."tenantId"=${c.tenantId} AND c.archived=false
+      AND (${search}='' OR POSITION(lower(${search}) IN lower(c."titleRu"))>0 OR POSITION(lower(${search}) IN lower(c."titleKz"))>0)
+      AND EXISTS (SELECT 1 FROM "CourseVersion" v WHERE v."tenantId"=${c.tenantId} AND v."courseId"=c.id AND (${staff} OR v.status='PUBLISHED'))`,
+  ]);
+  return { items, total: Number(counts[0]?.total || 0), page, pageSize };
 }
 export async function getCourse(c: Context, id: string) {
   const course = await db.course.findFirst({
@@ -88,7 +104,12 @@ export async function getCourse(c: Context, id: string) {
   });
   if (!versions.length) fail(404, "NOT_FOUND", "Курс не найден");
   return {
-    course,
+    course: {
+      ...course,
+      currentReview: await db.regulatoryReview.findFirst({
+        where: { tenantId: c.tenantId, courseId: id },
+      }),
+    },
     versions: await Promise.all(versions.map((v) => versionView(c, v))),
   };
 }
@@ -114,12 +135,18 @@ export async function createCourse(c: Context, input: unknown) {
         snapshotHash: hash(data.profile),
       },
     });
+    const content = await normalizeCourseQuestions(
+      tx,
+      c,
+      course.id,
+      data.content,
+    );
     const version = await tx.courseVersion.create({
       data: {
         tenantId: c.tenantId,
         courseId: course.id,
         version: 1,
-        content: json(data.content),
+        content: json(content),
         regulatoryProfileVersionId: profile.id,
         createdBy: c.userId,
       },
@@ -145,6 +172,16 @@ export async function updateVersion(c: Context, id: string, input: unknown) {
         "REVISION_CONFLICT",
         "Курс изменён в другой вкладке. Обновите данные",
       );
+    const content = await normalizeCourseQuestions(
+      tx,
+      c,
+      version.courseId,
+      data.content,
+      courseContentSchema.parse(version.content),
+    );
+    const oldProfile = await tx.regulatoryProfileVersion.findFirstOrThrow({
+      where: { id: version.regulatoryProfileVersionId, tenantId: c.tenantId },
+    });
     await tx.regulatoryProfileVersion.update({
       where: { id: version.regulatoryProfileVersionId },
       data: {
@@ -157,14 +194,111 @@ export async function updateVersion(c: Context, id: string, input: unknown) {
     });
     const saved = await tx.courseVersion.update({
       where: { id },
-      data: { revision: { increment: 1 }, content: json(data.content) },
+      data: { revision: { increment: 1 }, content: json(content) },
     });
     await tx.course.update({
       where: { id: version.courseId },
       data: { titleRu: data.content.titleRu, titleKz: data.content.titleKz },
     });
-    await audit(tx, c, "LMS_COURSE_SAVED", id, { revision: saved.revision });
+    await audit(tx, c, "LMS_COURSE_SAVED", id, {
+      before: {
+        revision: version.revision,
+        contentHash: hash(version.content),
+        profileHash: oldProfile.snapshotHash,
+      },
+      after: {
+        revision: saved.revision,
+        contentHash: hash(content),
+        profileHash: hash(data.profile),
+      },
+    });
     return versionView(c, saved, tx);
+  });
+}
+
+const pauseInput = z
+  .object({
+    paused: z.boolean(),
+    reason: z.string().trim().max(1000).default(""),
+  })
+  .strict();
+export async function setCoursePause(c: Context, id: string, input: unknown) {
+  assertLmsStaff(c);
+  const value = parse(pauseInput, input);
+  return transaction(async (tx) => {
+    await tx.$executeRaw`SELECT id FROM "Course" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    const previous = await tx.course.findFirst({
+      where: { id, tenantId: c.tenantId, archived: false },
+    });
+    if (!previous) fail(404, "NOT_FOUND", "Курс не найден");
+    const course = await tx.course.update({
+      where: { id },
+      data: {
+        assignmentPaused: value.paused,
+        assignmentPauseReason: value.reason,
+      },
+    });
+    await audit(
+      tx,
+      c,
+      value.paused ? "LMS_COURSE_PAUSED" : "LMS_COURSE_RESUMED",
+      id,
+      {
+        before: {
+          paused: previous.assignmentPaused,
+          reason: previous.assignmentPauseReason,
+        },
+        after: value,
+      },
+    );
+    return course;
+  });
+}
+const reviewInput = z
+  .object({
+    status: z.enum([
+      "CURRENT",
+      "CHANGES_EXPECTED",
+      "CHANGED",
+      "REPEALED",
+      "REVIEW_REQUIRED",
+    ]),
+    note: z.string().trim().max(2000).default(""),
+  })
+  .strict();
+export async function setRegulatoryReview(
+  c: Context,
+  id: string,
+  input: unknown,
+) {
+  assertLmsStaff(c);
+  const value = parse(reviewInput, input);
+  return transaction(async (tx) => {
+    await tx.$executeRaw`SELECT id FROM "Course" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    if (
+      !(await tx.course.findFirst({
+        where: { id, tenantId: c.tenantId, archived: false },
+      }))
+    )
+      fail(404, "NOT_FOUND", "Курс не найден");
+    const before = await tx.regulatoryReview.findFirst({
+      where: { tenantId: c.tenantId, courseId: id },
+    });
+    const review = await tx.regulatoryReview.upsert({
+      where: { tenantId_courseId: { tenantId: c.tenantId, courseId: id } },
+      create: {
+        tenantId: c.tenantId,
+        courseId: id,
+        ...value,
+        updatedBy: c.userId,
+      },
+      update: { ...value, updatedBy: c.userId },
+    });
+    await audit(tx, c, "LMS_REGULATORY_REVIEWED", id, {
+      before: before ? { status: before.status, note: before.note } : null,
+      after: value,
+    });
+    return review;
   });
 }
 export async function cloneVersion(c: Context, courseId: string) {
@@ -223,9 +357,50 @@ export async function publishVersion(c: Context, id: string, input: unknown) {
     const profile = await tx.regulatoryProfileVersion.findFirstOrThrow({
       where: { tenantId: c.tenantId, id: version.regulatoryProfileVersionId },
     });
-    const content = courseContentSchema.parse(version.content);
+    const content = await normalizeCourseQuestions(
+      tx,
+      c,
+      version.courseId,
+      courseContentSchema.parse(version.content),
+      courseContentSchema.parse(version.content),
+      true,
+    );
     const definition = regulatoryProfileSchema.parse(profile.definition);
     assertPublishable(content, definition);
+    const prior = await tx.courseVersion.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        courseId: version.courseId,
+        status: "PUBLISHED",
+      },
+      orderBy: { version: "desc" },
+    });
+    const previousQuestions = prior
+      ? courseContentSchema.parse(prior.content).exam.questions
+      : [];
+    for (const question of content.exam.questions) {
+      const previous = previousQuestions.find(
+        (item) => item.id === question.id,
+      );
+      if (
+        !previous ||
+        questionSemanticHash(previous) !== questionSemanticHash(question)
+      )
+        await audit(tx, c, "LMS_COURSE_QUESTION_REVISED", id, {
+          questionId: question.id,
+          before: previous
+            ? {
+                version: previous.version,
+                semanticHash: questionSemanticHash(previous),
+              }
+            : null,
+          after: {
+            version: question.version,
+            semanticHash: questionSemanticHash(question),
+          },
+          libraryRevisionId: question.libraryRevisionId || null,
+        });
+    }
     for (const lesson of content.modules.flatMap((m) => m.lessons))
       if (lesson.materialId) {
         const material = await tx.lmsMaterial.findFirst({
@@ -251,6 +426,7 @@ export async function publishVersion(c: Context, id: string, input: unknown) {
       where: { id },
       data: {
         status: "PUBLISHED",
+        content: json(content),
         publishedAt: new Date(),
         snapshotHash: hash({ content, profile: definition }),
       },

@@ -58,6 +58,8 @@ model Course {
   titleRu String
   titleKz String @default("")
   archived Boolean @default(false)
+  assignmentPaused Boolean @default(false)
+  assignmentPauseReason String?
   createdBy String
   createdAt DateTime @default(now())
   @@unique([tenantId,id])
@@ -93,6 +95,7 @@ model CourseVersion {
   @@unique([tenantId,courseId,version])
   @@unique([tenantId,id])
   @@index([tenantId,status,createdAt])
+  @@index([tenantId,courseId,version])
 }
 model LmsMaterial {
   id String @id @default(uuid())
@@ -116,6 +119,10 @@ model Enrollment {
   learnerUserId String?
   customerId String?
   groupKey String @default("")
+  groupId String?
+  sourceRequestId String?
+  sourceOrderId String?
+  dueAtOverride Boolean @default(false)
   status String @default("ACTIVE")
   dueAt DateTime
   assignedBy String
@@ -125,6 +132,96 @@ model Enrollment {
   @@unique([tenantId,id])
   @@index([tenantId,learnerUserId,status])
   @@index([tenantId,customerId,status])
+  @@index([tenantId,assignedAt,id])
+  @@index([tenantId,groupId,assignedAt,id])
+  @@index([tenantId,sourceOrderId,assignedAt,id])
+  @@index([tenantId,sourceRequestId])
+  @@index([tenantId,dueAt,id])
+}
+model LmsGroup {
+  id String @id @default(uuid())
+  tenantId String
+  name String
+  courseVersionId String
+  customerId String?
+  sourceRequestId String?
+  sourceOrderId String?
+  dueAt DateTime
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@index([tenantId,createdAt,id])
+}
+model LmsGroupMember {
+  id String @id @default(uuid())
+  tenantId String
+  groupId String
+  enrollmentId String
+  joinedAt DateTime @default(now())
+  excludedAt DateTime?
+  excludedBy String?
+  @@unique([tenantId,groupId,enrollmentId])
+  @@index([tenantId,groupId,excludedAt])
+}
+model LmsAssignmentOperation {
+  id String @id
+  tenantId String
+  actorId String
+  inputHash String
+  input Json
+  groupId String?
+  cursor Int @default(0)
+  state String @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+}
+model LmsAssignmentRow {
+  id String @id @default(uuid())
+  tenantId String
+  operationId String
+  recipientId String
+  enrollmentId String?
+  outcome String
+  errorCode String?
+  @@unique([tenantId,operationId,recipientId])
+}
+model QuestionBank {
+  searchText String @default("")
+  id String @id @default(uuid())
+  tenantId String
+  category String @default("")
+  topic String @default("")
+  originCourseId String?
+  originQuestionId String?
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@index([tenantId,category,topic])
+}
+model QuestionRevision {
+  id String @id @default(uuid())
+  tenantId String
+  questionBankId String
+  version Int
+  definition Json
+  semanticHash String
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,questionBankId,version])
+}
+model RegulatoryReview {
+  id String @id @default(uuid())
+  tenantId String
+  courseId String
+  status String
+  note String @default("")
+  updatedBy String
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,courseId])
 }
 model LessonProgress {
   id String @id @default(uuid())
@@ -232,6 +329,7 @@ model LmsDocumentLink {
   status String @default("PREPARED")
   originalReference String?
   createdAt DateTime @default(now())
+  @@index([tenantId,resultId])
   @@unique([tenantId,resultId,documentType])
   @@index([tenantId,requestId])
 }
@@ -735,6 +833,8 @@ model AuditEvent {
   @@index([tenantId,createdAt])
 }
 model WorkerHeartbeat {
+  lastError String?
+  stoppedAt DateTime?
   id String @id
   seenAt DateTime @default(now())
   version String

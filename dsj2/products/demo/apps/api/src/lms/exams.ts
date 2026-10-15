@@ -19,7 +19,8 @@ import {
 import { learnerEnrollment, scopedEnrollment } from "./scope";
 import { answersInputSchema } from "./validation";
 import { gradeAnswers, shuffled, validatedAnswers } from "./engine";
-import { effectiveResult, progressPercent } from "./enrollments";
+import { effectiveResult } from "./enrollments";
+import { examReadiness } from "./readiness";
 import { finalizeLmsResult } from "./result-finalization";
 
 type ExamSnapshot = {
@@ -68,10 +69,12 @@ export async function attemptView(
     ordinal: attempt.ordinal,
     assessmentKind: attempt.assessmentKind,
     answers: attempt.answers,
-    questions: snapshot.questions.map(({ correctOptionIds, ...q }) => ({
-      ...q,
-      ...(reveal ? { correctOptionIds } : {}),
-    })),
+    questions: snapshot.questions.map(
+      ({ correctOptionIds, explanationRu, explanationKz, ...q }) => ({
+        ...q,
+        ...(reveal ? { correctOptionIds, explanationRu, explanationKz } : {}),
+      }),
+    ),
     result: result ? effectiveResult(result, events) : null,
   };
 }
@@ -174,7 +177,7 @@ export async function startAttempt(c: Context, enrollmentId: string) {
     const progress = await tx.lessonProgress.findMany({
       where: { tenantId: c.tenantId, enrollmentId },
     });
-    if (progressPercent(content, progress) !== 100)
+    if (!examReadiness(content, progress).ready)
       fail(409, "LESSONS_REQUIRED", "Завершите обязательные уроки");
     const active = await tx.examAttempt.findFirst({
       where: { tenantId: c.tenantId, enrollmentId, state: "IN_PROGRESS" },

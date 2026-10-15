@@ -309,7 +309,7 @@ export function LearnerCourse({ id, t }: { id: string; t: Translate }) {
                 className="primary lms-primary"
                 disabled={
                   busy ||
-                  data.progressPercent !== 100 ||
+                  !data.examReadiness?.ready ||
                   data.attempts.length >= data.content.exam.maxAttempts
                 }
                 onClick={() => void start()}
@@ -323,12 +323,14 @@ export function LearnerCourse({ id, t }: { id: string; t: Translate }) {
                       : t("Начать экзамен", "Емтиханды бастау")}
               </button>
             )}
-            {data.progressPercent !== 100 && (
+            {!data.examReadiness?.ready && (
               <p className="lms-save-state">
                 {t(
                   "Сначала завершите обязательные уроки.",
                   "Алдымен міндетті сабақтарды аяқтаңыз.",
                 )}
+                {data.examReadiness &&
+                  ` ${data.examReadiness.completedCount}/${data.examReadiness.requiredCount}`}
               </p>
             )}
             {data.attempts.length >= data.content.exam.maxAttempts &&

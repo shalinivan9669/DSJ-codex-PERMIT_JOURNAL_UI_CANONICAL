@@ -17,7 +17,7 @@ import {
   z,
   type Draft,
 } from "@demo/contracts";
-import { buildZip, BUNDLE_PART_BYTES } from "@demo/printing";
+import { Prisma } from "@demo/database";
 import {
   audit,
   db,
@@ -46,12 +46,21 @@ import {
   documentRecipient,
   lmsTemplateTypes,
 } from "./document-metadata";
+import { assertLmsStaff, lmsContext, scopedEnrollment } from "./scope";
+
+import { documentViews } from "./document-views";
 import {
-  assertLmsStaff,
-  enrollmentFilter,
-  lmsContext,
-  scopedEnrollment,
-} from "./scope";
+  enrollmentJoins,
+  enrollmentPredicate,
+  parseEnrollmentQuery,
+} from "./enrollment-query";
+import { exportResults } from "./results-export";
+import { resultFilterOptions } from "./enrollment-list";
+import {
+  prepareDocumentBundle,
+  documentBundleStatus,
+  documentBundlePart,
+} from "./document-bundles";
 
 export async function prepareResultDocuments(c: Context, input: unknown) {
   assertLmsStaff(c);
@@ -65,7 +74,13 @@ export async function prepareResultDocuments(c: Context, input: unknown) {
     input,
   );
   const items: Array<Awaited<ReturnType<typeof documentView>>> = [];
-  const errors: { resultId: string; message: string }[] = [];
+  const errors: {
+    resultId: string;
+    code: string;
+    params: Record<string, unknown>;
+    message: string;
+    correlationId: string;
+  }[] = [];
   for (const resultId of [...new Set(resultIds)]) {
     try {
       const links = await transaction(async (tx) => {
@@ -185,6 +200,7 @@ export async function prepareResultDocuments(c: Context, input: unknown) {
       const e = error as {
         getResponse?: () => {
           code?: string;
+          params?: Record<string, unknown>;
           message?: string;
           details?: Array<{ code?: string }>;
         };
@@ -199,6 +215,11 @@ export async function prepareResultDocuments(c: Context, input: unknown) {
         );
       errors.push({
         resultId,
+        code: unapprovedForms
+          ? "TEMPLATE_NOT_APPROVED"
+          : response?.code || "DOCUMENT_PREPARATION_FAILED",
+        params: response?.params || {},
+        correlationId: c.correlationId,
         message: unapprovedForms
           ? "Подтвердите формы документов в настройках центра"
           : response?.message ||
@@ -369,73 +390,11 @@ export async function documentView(c: Context, id: string) {
     where: { id: link.resultId, tenantId: c.tenantId },
   });
   await scopedEnrollment(c, result.enrollmentId);
-  const event = await db.lmsResultEvent.findFirst({
-    where: {
-      tenantId: c.tenantId,
-      resultId: result.id,
-      kind: { in: ["VOIDED", "SUPERSEDED"] },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-  const templateId = Object.entries(lmsTemplateTypes).find(
-    ([, value]) => value === link.documentType,
-  )![0];
-  const document = link.issuanceId
-    ? await db.issuedDocument.findFirst({
-        where: {
-          tenantId: c.tenantId,
-          issuanceId: link.issuanceId,
-          templateId,
-          rowId: result.recipientId,
-          assignmentId: `${result.id}-${link.documentType}`,
-        },
-      })
-    : null;
-  const artifacts = document
-    ? await db.artifact.findMany({
-        where: {
-          tenantId: c.tenantId,
-          documentId: document.id,
-          format: { in: ["PDF", "DOCX"] },
-        },
-        orderBy: { createdAt: "desc" },
-      })
-    : [];
-  const workflow = link.issuanceId
-    ? await db.issuanceWorkflow.findFirst({
-        where: { tenantId: c.tenantId, issuanceId: link.issuanceId },
-      })
-    : null;
-  const proposal = !link.issuanceId
-    ? await db.requestProposal.findFirst({
-        where: { tenantId: c.tenantId, requestId: link.requestId },
-        orderBy: { revision: "desc" },
-      })
-    : null;
-  const status =
-    event?.kind ||
-    workflow?.status ||
-    (proposal?.status === "REJECTED"
-      ? "REJECTED"
-      : proposal?.status === "APPROVED"
-        ? "PREPARING"
-        : "AWAITING_APPROVAL");
-  return {
-    link: { ...link, number: document?.number || null },
-    status,
-    reason: event?.reason || null,
-    artifacts: artifacts
-      .filter(
-        (artifact, index, all) =>
-          all.findIndex((other) => other.format === artifact.format) === index,
-      )
-      .map(({ id, format, fileName, mimeType }) => ({
-        id,
-        kind: format,
-        fileName,
-        mimeType,
-      })),
-  };
+  const view = (await documentViews(c, [result.id])).find(
+    (item) => item.id === id,
+  )!;
+  const { artifacts, status, reason, ...projected } = view;
+  return { link: projected, artifacts, status, reason };
 }
 
 export async function changeResult(
@@ -609,64 +568,64 @@ export async function artifactAccess(c: Context, id: string) {
 
 @Controller()
 export class LmsDocumentsController {
+  @Get("lms/results/filters") filters(@Req() req: DemoRequest) {
+    return resultFilterOptions(lmsContext(req));
+  }
   @Get("lms/results") async results(
     @Req() req: DemoRequest,
     @Query() query: Record<string, unknown>,
   ) {
-    const c = requireCapability(req, "lms:manage");
-    const q = parse(
-      z.object({
-        page: z.coerce.number().int().min(1).default(1),
-        pageSize: z.coerce.number().int().min(1).max(250).default(30),
-      }),
-      query,
-    );
-    const enrollmentIds = (
-      await db.enrollment.findMany({
-        where: await enrollmentFilter(c),
-        select: { id: true },
-      })
-    ).map((e) => e.id);
-    const where = { tenantId: c.tenantId, enrollmentId: { in: enrollmentIds } };
-    const [results, total] = await Promise.all([
-      db.verifiedExamResult.findMany({
-        where,
-        skip: (q.page - 1) * q.pageSize,
-        take: q.pageSize,
-        orderBy: { confirmedAt: "desc" },
-      }),
-      db.verifiedExamResult.count({ where }),
+    const c = lmsContext(req);
+    const q = parseEnrollmentQuery(query);
+    const where = enrollmentPredicate(c, q);
+    const [results, count] = await Promise.all([
+      db.$queryRaw<
+        Array<{
+          id: string;
+          enrollmentId: string;
+          verdict: string;
+          eligible: boolean;
+          assessmentKind: string;
+          examAt: Date | null;
+          score: number | null;
+          maximum: number | null;
+          confirmedAt: Date;
+        }>
+      >(
+        Prisma.sql`SELECT latest.id,latest."enrollmentId",latest.verdict,latest.eligible,latest."assessmentKind",latest."examAt",latest.score,latest.maximum,latest."confirmedAt" ${enrollmentJoins} WHERE ${where} AND latest.id IS NOT NULL ORDER BY latest."confirmedAt" DESC,latest.id DESC LIMIT ${q.pageSize} OFFSET ${(q.page - 1) * q.pageSize}`,
+      ),
+      db.$queryRaw<Array<{ total: bigint }>>(
+        Prisma.sql`SELECT count(*) AS total ${enrollmentJoins} WHERE ${where} AND latest.id IS NOT NULL`,
+      ),
     ]);
-    const items = await Promise.all(
-      results.map(async (result) => {
-        const event = await db.lmsResultEvent.findFirst({
-          where: {
-            tenantId: c.tenantId,
-            resultId: result.id,
-            kind: { in: ["VOIDED", "SUPERSEDED"] },
-          },
-          orderBy: { createdAt: "desc" },
-        });
-        const links = await db.lmsDocumentLink.findMany({
-          where: { tenantId: c.tenantId, resultId: result.id },
-        });
-        return {
-          ...effectiveResult(result, event ? [event] : []),
-          documents: await Promise.all(
-            links.map(async (link) => {
-              const view = await documentView(c, link.id);
-              return {
-                ...view.link,
-                status: view.status,
-                reason: view.reason,
-                artifacts: view.artifacts,
-              };
-            }),
-          ),
-        };
+    const ids = results.map((r) => r.id);
+    const [events, documents] = await Promise.all([
+      db.lmsResultEvent.findMany({
+        where: {
+          tenantId: c.tenantId,
+          resultId: { in: ids },
+          kind: { in: ["VOIDED", "SUPERSEDED"] },
+        },
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       }),
-    );
-    return { items, total, ...q };
+      documentViews(c, ids),
+    ]);
+    return {
+      items: results.map((result) => ({
+        ...effectiveResult(result, events),
+        documents: documents.filter((d) => d.resultId === result.id),
+      })),
+      total: Number(count[0].total),
+      page: q.page,
+      pageSize: q.pageSize,
+    };
+  }
+  @Post("lms/results/export") export(
+    @Req() req: DemoRequest,
+    @Body() body: unknown,
+    @Res() res: Response,
+  ) {
+    return exportResults(lmsContext(req), body, res);
   }
   @Post("lms/results/documents") prepare(
     @Req() req: DemoRequest,
@@ -723,58 +682,39 @@ export class LmsDocumentsController {
     stream.pipe(res);
     await audit(db, c, "LMS_DOCUMENT_DOWNLOADED", id);
   }
-  @Post(["lms/documents/bundle", "learn/documents/bundle"]) async bundle(
+  @Post(["lms/documents/bundle", "learn/documents/bundle"]) bundle(
     @Req() req: DemoRequest,
     @Body() body: unknown,
+  ) {
+    return prepareDocumentBundle(lmsContext(req), body);
+  }
+  @Get(["lms/documents/bundles/:id", "learn/documents/bundles/:id"])
+  bundleStatus(@Req() req: DemoRequest, @Param("id") id: string) {
+    return documentBundleStatus(lmsContext(req), id);
+  }
+  @Get([
+    "lms/documents/bundles/:id/parts/:part",
+    "learn/documents/bundles/:id/parts/:part",
+  ])
+  async bundlePart(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Param("part") part: string,
     @Res() res: Response,
   ) {
     const c = lmsContext(req);
-    const data = parse(
-      z
-        .object({
-          documentIds: z.array(z.string().uuid()).min(1).max(750),
-          format: z.enum(["PDF", "DOCX"]).default("PDF"),
-        })
-        .strict(),
-      body,
+    const index = parse(z.coerce.number().int().min(0).max(750), part);
+    const artifactId = await documentBundlePart(c, id, index);
+    const { artifact, stream } = await openArtifact(c, artifactId);
+    res.setHeader("Content-Type", artifact.mimeType);
+    res.setHeader("Content-Length", artifact.size);
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename*=UTF-8''${encodeURIComponent(artifact.fileName)}`,
     );
-    const files = [];
-    for (const id of [...new Set(data.documentIds)]) {
-      const view = await documentView(c, id);
-      if (["VOIDED", "SUPERSEDED"].includes(view.status))
-        fail(409, "RESULT_INELIGIBLE", "Выберите действующие документы");
-      const selected = view.artifacts.find((a) => a.kind === data.format);
-      if (!selected)
-        fail(
-          409,
-          "DOCUMENT_NOT_READY",
-          "Дождитесь формирования всех выбранных файлов",
-        );
-      files.push(await artifactAccess(c, selected.id));
-    }
-    if (files.reduce((sum, file) => sum + file.size, 0) > BUNDLE_PART_BYTES)
-      fail(413, "BUNDLE_LIMIT", "Выберите меньшую часть комплекта");
-    const rendered = await buildZip(
-      files,
-      `lms-${randomUUID()}`,
-      files.length,
-      [],
-      {
-        includeInventory: true,
-        coverText:
-          "Подготовленные документы центра. Подписи и правовая форма указаны в каждом файле; этот архив не подтверждает получение ЭЛМК.",
-      },
-    );
-    res
-      .type("application/zip")
-      .setHeader(
-        "Content-Disposition",
-        "attachment; filename=LMS-documents.zip",
-      );
-    res.send(rendered.buffer);
-    await audit(db, c, "LMS_DOCUMENT_BUNDLE_DOWNLOADED", "LMS_BUNDLE", {
-      documentIds: data.documentIds,
-      format: data.format,
-    });
+    res.once("close", () => stream.destroy());
+    stream.once("error", () => res.destroy());
+    stream.pipe(res);
+    await audit(db, c, "LMS_DOCUMENT_BUNDLE_DOWNLOADED", id, { part: index });
   }
 }

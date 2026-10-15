@@ -14,53 +14,41 @@ import {
   type CanActivate,
   type ExecutionContext,
 } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { diskStorage } from "multer";
-import { randomUUID } from "node:crypto";
 import { unlink } from "node:fs/promises";
 import type { Response } from "express";
-import type { DemoRequest } from "../core";
-import { assertLmsStaff, lmsContext } from "./scope";
+import { db, fail, type DemoRequest } from "../core";
+import { assertLmsStaff, lmsContext, scopedEnrollment } from "./scope";
 import * as courses from "./courses";
 import * as enrollments from "./enrollments";
 import * as learning from "./learning";
 import * as exams from "./exams";
 import * as external from "./external";
 import {
-  uploadDestination,
   lmsMaterialMaxBytes,
   uploadMaterial,
   authorizedMaterial,
   openPrivateStream,
 } from "./materials";
+import { privateUpload } from "./uploads";
 
 class LmsStaffUploadGuard implements CanActivate {
-  canActivate(context: ExecutionContext) {
-    assertLmsStaff(
-      lmsContext(context.switchToHttp().getRequest<DemoRequest>()),
-    );
+  async canActivate(context: ExecutionContext) {
+    const req = context.switchToHttp().getRequest<DemoRequest>();
+    const c = lmsContext(req);
+    assertLmsStaff(c);
+    const id = String(req.params.id);
+    if (req.path.endsWith("/materials")) {
+      if (
+        !(await db.course.findFirst({
+          where: { id, tenantId: c.tenantId },
+          select: { id: true },
+        }))
+      )
+        fail(404, "NOT_FOUND", "Курс не найден");
+    } else await scopedEnrollment(c, id);
     return true;
   }
 }
-const privateUpload = (maximum: number) =>
-  FileInterceptor("file", {
-    storage: diskStorage({
-      destination: (_req, _file, callback) => {
-        void uploadDestination().then(
-          (path) => callback(null, path),
-          (error: Error) => callback(error, ""),
-        );
-      },
-      filename: (_req, _file, callback) =>
-        callback(null, randomUUID() + ".upload"),
-    }),
-    limits: {
-      fileSize: maximum,
-      files: 1,
-      fields: 12,
-      fieldSize: 10000,
-    },
-  });
 const upload = privateUpload(lmsMaterialMaxBytes);
 const evidenceUpload = privateUpload(20 * 1024 * 1024);
 async function streamFile(

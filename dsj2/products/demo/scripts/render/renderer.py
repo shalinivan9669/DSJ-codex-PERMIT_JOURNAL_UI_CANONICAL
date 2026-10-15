@@ -755,6 +755,9 @@ COLUMNS=['requestId','status','revision','createdAt','id','recipientId','externa
 COLUMNS += ['employeeCategory','fullNameEn','positionEn','workplaceEn','employerAddressEn','departmentEn','trainingSubjectEn','resultEn','reasonEn','educationEn','biotIndustryEn','biotKnowledgeResultEn','biotProctoringResultEn','biotNotesEn']
 
 def export_registry(payload,out):
+    if payload.get('itemsFile'):
+        from lms_export import export_lms_rows
+        return export_lms_rows(payload,out)
     columns=payload.get('columns') or [{'field':key,'title':key} for key in COLUMNS]
     if not 1<=len(columns)<=100: raise ValueError('EXPORT_COLUMNS_LIMIT')
     wb=Workbook(); ws=wb.active; ws.title='Реестр'; ws.append([column['title'] for column in columns])

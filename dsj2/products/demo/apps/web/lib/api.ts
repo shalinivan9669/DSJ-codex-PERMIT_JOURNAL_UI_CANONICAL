@@ -186,12 +186,28 @@ export async function downloadExport(
       window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
     const raw = await response.text();
     let message = "Не удалось получить файл.";
+    let details:
+      | {
+          message?: string;
+          correlationId?: string;
+          code?: string;
+          params?: unknown;
+        }
+      | undefined;
     try {
-      message = (JSON.parse(raw) as { message?: string }).message || message;
+      details = JSON.parse(raw) as typeof details;
+      message = details?.message || message;
     } catch {
       /* A non-JSON upstream failure has no safe operator details. */
     }
-    throw new ApiError(response.status, message);
+    throw new ApiError(
+      response.status,
+      message,
+      details,
+      details?.correlationId ||
+        response.headers.get("x-correlation-id") ||
+        undefined,
+    );
   }
   const blob = await response.blob();
   const url = URL.createObjectURL(blob);

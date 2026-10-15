@@ -84,7 +84,7 @@ function groupAlive(child) {
   }
 }
 
-/** Exit the whole service if either required process exits, including exit 0. */
+/** Exit the whole service if any required process exits, including exit 0. */
 export async function supervise(commands, { graceMs = 45_000 } = {}) {
   const children = [];
   let stopping = false;
@@ -104,7 +104,7 @@ export async function supervise(commands, { graceMs = 45_000 } = {}) {
     for (const command of commands) {
       const child = spawn(command.command, command.args, {
         cwd: command.cwd || root,
-        env: process.env,
+        env: { ...process.env, ...command.env },
         stdio: "inherit",
         detached: process.platform !== "win32",
       });
@@ -153,18 +153,34 @@ async function main() {
     });
   }
   const tsx = resolve(root, "node_modules/tsx/dist/cli.mjs");
+  const database = (role, limit) => {
+    const url = new URL(process.env.DATABASE_URL);
+    url.searchParams.set("connection_limit", String(limit));
+    url.searchParams.set("pool_timeout", "10");
+    url.searchParams.set("application_name", `demo-${role}`);
+    return { DATABASE_URL: url.href };
+  };
   return supervise([
     {
       name: "api",
       command: process.execPath,
       args: [tsx, "src/main.ts"],
       cwd: resolve(root, "apps/api"),
+      env: database("api", 10),
     },
     {
       name: "worker",
       command: process.execPath,
       args: [tsx, "src/main.ts"],
       cwd: resolve(root, "apps/render-worker"),
+      env: database("render", 4),
+    },
+    {
+      name: "integration-worker",
+      command: process.execPath,
+      args: [tsx, "src/main.ts"],
+      cwd: resolve(root, "apps/integration-worker"),
+      env: database("integration", 2),
     },
   ]);
 }

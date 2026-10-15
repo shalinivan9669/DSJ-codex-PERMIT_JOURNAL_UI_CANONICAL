@@ -6,6 +6,7 @@ import { db } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
 import { RENDERER_VERSION } from "../../packages/printing/src";
 import { assertTestDatabase } from "./test-database";
+import { INTEGRATION_WORKER_VERSION } from "../../apps/api/src/integration-health";
 
 test("readiness verifies the latest installed template, including multi-digit version labels", async () => {
   assertTestDatabase();
@@ -23,6 +24,13 @@ test("readiness verifies the latest installed template, including multi-digit ve
   try {
     await db.workerHeartbeat.create({
       data: { id: owner, version: RENDERER_VERSION, seenAt: new Date() },
+    });
+    await db.workerHeartbeat.create({
+      data: {
+        id: owner + ":integration",
+        version: INTEGRATION_WORKER_VERSION,
+        seenAt: new Date(),
+      },
     });
     const origin = await app.getUrl();
     const login = await fetch(`${origin}/auth/login`, {
@@ -81,7 +89,9 @@ test("readiness verifies the latest installed template, including multi-digit ve
     assert.equal(missingLatest.status, 503);
     assert.equal((await missingLatest.json()).code, "STORAGE_NOT_READY");
   } finally {
-    await db.workerHeartbeat.deleteMany({ where: { id: owner } });
+    await db.workerHeartbeat.deleteMany({
+      where: { id: { in: [owner, owner + ":integration"] } },
+    });
     await app.close();
     await db.$disconnect();
   }

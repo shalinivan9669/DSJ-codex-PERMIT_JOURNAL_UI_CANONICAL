@@ -193,7 +193,7 @@ try {
   if (mode === "backup") {
     if (process.env.DEMO_MAINTENANCE !== "1")
       throw new Error(
-        "Stop web/API/worker first, then set DEMO_MAINTENANCE=1 to acknowledge a consistent offline backup.",
+        "Stop web/API/render-worker/integration-worker and verify no writers remain, then set DEMO_MAINTENANCE=1 to acknowledge a consistent offline backup.",
       );
     await fs.mkdir(backupRoot, { recursive: false, mode: 0o700 });
     const databaseCounts = await counts();

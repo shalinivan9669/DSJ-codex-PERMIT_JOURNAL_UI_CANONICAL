@@ -2,15 +2,14 @@ import type { Prisma } from "@demo/database";
 import { z } from "@demo/contracts";
 import { courseContentSchema } from "@demo/contracts/src/lms";
 import { db, parse, transaction, audit, fail, type Context } from "../core";
-import { enrollInputSchema, pagingSchema, courseOutline } from "./validation";
 import {
   assertLmsStaff,
   employerMemberships,
-  enrollmentFilter,
   isLmsStaff,
   scopedEnrollment,
 } from "./scope";
 import { listCourses } from "./courses";
+import { assignmentOrigin, assertAccessDate } from "./assignment-operations";
 
 export async function assignmentContext(c: Context, input: unknown) {
   if (!isLmsStaff(c) && c.role !== "EMPLOYER")
@@ -19,6 +18,8 @@ export async function assignmentContext(c: Context, input: unknown) {
     z
       .object({
         requestId: z.string().max(100).optional(),
+        orderId: z.string().max(100).optional(),
+        groupId: z.string().max(100).optional(),
         search: z.string().max(300).optional(),
         page: z.coerce.number().int().min(1).default(1),
       })
@@ -27,19 +28,28 @@ export async function assignmentContext(c: Context, input: unknown) {
   );
   let recipientIds: string[] | undefined;
   let customerId: string | null = null;
+  const group = query.groupId
+    ? await db.lmsGroup.findFirst({
+        where: { id: query.groupId, tenantId: c.tenantId },
+      })
+    : null;
+  if (query.groupId) {
+    assertLmsStaff(c);
+    if (!group) fail(404, "NOT_FOUND", "Группа не найдена");
+    query.requestId = group.sourceRequestId || undefined;
+    query.orderId = group.sourceOrderId || undefined;
+    customerId = group.customerId;
+  }
+  const origin = await assignmentOrigin(c, {
+    sourceRequestId: query.requestId,
+    sourceOrderId: query.orderId,
+  });
   if (query.requestId) {
     assertLmsStaff(c);
-    const request = await db.printRequest.findFirst({
-      where: { id: query.requestId, tenantId: c.tenantId },
-    });
-    if (!request) fail(404, "NOT_FOUND", "Заявка не найдена");
-    customerId = request.customerId;
-    const draft = request.draft as {
-      items?: { recipientId?: string; id?: string }[];
-    };
-    recipientIds = (draft.items || [])
-      .map((row) => row.recipientId || "")
-      .filter(Boolean);
+    customerId = origin.customerId;
+    recipientIds = [...(origin.recipientIds || [])].filter(
+      (id): id is string => !!id,
+    );
   }
   if (c.role === "EMPLOYER") {
     const memberships = await employerMemberships(c, true);
@@ -99,144 +109,26 @@ export async function assignmentContext(c: Context, input: unknown) {
       ),
     ],
   }));
-  const courses = (await listCourses(c, { pageSize: 250 })).items;
-  const published = [];
-  for (const course of courses) {
-    const latestVersion = await db.courseVersion.findFirst({
-      where: { tenantId: c.tenantId, courseId: course.id, status: "PUBLISHED" },
-      orderBy: { version: "desc" },
-    });
-    if (latestVersion)
-      published.push({
-        ...course,
-        latestVersion: {
-          ...latestVersion,
-          content: courseOutline(
-            courseContentSchema.parse(latestVersion.content),
-          ),
-        },
-      });
-  }
+  const courses = (await listCourses(c, { pageSize: 250, status: "PUBLISHED" }))
+    .items;
+  const published = courses.filter(
+    (course) => course.latestVersion?.status === "PUBLISHED",
+  );
   return {
     recipients: items,
     courses: published,
     customerId,
+    sourceRequestId: query.requestId || null,
+    sourceOrderId: query.orderId || null,
+    group,
+    contextRecipientIds: query.requestId ? recipientIds : undefined,
     page: query.page,
     pageSize: 250,
     total: await db.recipient.count({ where }),
   };
 }
 
-export async function assignEnrollments(c: Context, input: unknown) {
-  if (!isLmsStaff(c) && c.role !== "EMPLOYER")
-    fail(403, "ROLE_DENIED", "Недостаточно прав");
-  const data = parse(enrollInputSchema, input);
-  const version = await db.courseVersion.findFirst({
-    where: {
-      id: data.courseVersionId,
-      tenantId: c.tenantId,
-      status: "PUBLISHED",
-    },
-  });
-  if (!version) fail(404, "NOT_FOUND", "Опубликованная программа не найдена");
-  const content = courseContentSchema.parse(version.content);
-  const uniqueIds = [...new Set(data.recipientIds)];
-  const recipients = await db.recipient.findMany({
-    where: { tenantId: c.tenantId, id: { in: uniqueIds }, archived: false },
-  });
-  const employment = await db.recipientEmployment.findMany({
-    where: { tenantId: c.tenantId, recipientId: { in: uniqueIds } },
-  });
-  const profiles = await db.learnerProfile.findMany({
-    where: { tenantId: c.tenantId, recipientId: { in: uniqueIds } },
-  });
-  if (
-    data.customerId &&
-    !(await db.customerOrganization.findFirst({
-      where: { id: data.customerId, tenantId: c.tenantId, archived: false },
-    }))
-  )
-    fail(404, "NOT_FOUND", "Организация не найдена");
-  return transaction(async (tx) => {
-    if (c.role === "EMPLOYER")
-      await tx.$executeRaw`SELECT id FROM "EmployerMembership" WHERE "tenantId"=${c.tenantId} AND "userId"=${c.userId} ORDER BY id FOR UPDATE`;
-    const memberships =
-      c.role === "EMPLOYER" ? await employerMemberships(c, true, tx) : [];
-    const items = [];
-    const errors: { recipientId: string; code: string; message: string }[] = [];
-    let created = 0,
-      duplicates = data.recipientIds.length - uniqueIds.length;
-    for (const recipientId of uniqueIds) {
-      const recipient = recipients.find((r) => r.id === recipientId);
-      const customers = employment
-        .filter((e) => e.recipientId === recipientId)
-        .map((e) => e.employerId);
-      const customerId =
-        data.customerId || (customers.length === 1 ? customers[0] : null);
-      if (
-        !recipient ||
-        (c.role === "EMPLOYER" &&
-          !memberships.some(
-            (m) =>
-              m.customerId === customerId &&
-              customers.includes(m.customerId) &&
-              (!(m.recipientIds as string[]).length ||
-                (m.recipientIds as string[]).includes(recipientId)),
-          ))
-      ) {
-        errors.push({
-          recipientId,
-          code: "RECIPIENT_UNAVAILABLE",
-          message: "Сотрудник недоступен для назначения",
-        });
-        continue;
-      }
-      if (customerId && !customers.includes(customerId)) {
-        errors.push({
-          recipientId,
-          code: "EMPLOYMENT_REQUIRED",
-          message: "Проверьте связь сотрудника с организацией",
-        });
-        continue;
-      }
-      const existing = await tx.enrollment.findUnique({
-        where: {
-          tenantId_courseVersionId_recipientId: {
-            tenantId: c.tenantId,
-            courseVersionId: version.id,
-            recipientId,
-          },
-        },
-      });
-      if (existing) {
-        duplicates++;
-        items.push(existing);
-        continue;
-      }
-      const enrollment = await tx.enrollment.create({
-        data: {
-          tenantId: c.tenantId,
-          courseVersionId: version.id,
-          recipientId,
-          learnerUserId: profiles.find((p) => p.recipientId === recipientId)
-            ?.userId,
-          customerId,
-          groupKey: data.groupName,
-          dueAt: new Date(Date.now() + content.accessDays * 86400000),
-          assignedBy: c.userId,
-        },
-      });
-      items.push(enrollment);
-      created++;
-    }
-    await audit(tx, c, "LMS_BULK_ASSIGNED", version.id, {
-      created,
-      duplicates,
-      errors: errors.map((e) => ({ recipientId: e.recipientId, code: e.code })),
-    });
-    return { items, created, duplicates, errors };
-  });
-}
+export { runAssignmentChunk as assignEnrollments } from "./assignment-operations";
 
 export function progressPercent(
   content: ReturnType<typeof courseContentSchema.parse>,
@@ -281,96 +173,7 @@ export function effectiveResult<
   };
 }
 
-export async function listEnrollments(c: Context, query: unknown) {
-  const data = parse(pagingSchema, query);
-  const where: Prisma.EnrollmentWhereInput = {
-    ...(await enrollmentFilter(c)),
-    ...(data.courseVersionId ? { courseVersionId: data.courseVersionId } : {}),
-    ...(data.status ? { status: data.status } : {}),
-  };
-  const enrollments = await db.enrollment.findMany({
-    where,
-    orderBy: { assignedAt: "desc" },
-    skip: (data.page - 1) * data.pageSize,
-    take: data.pageSize,
-  });
-  const ids = enrollments.map((e) => e.id);
-  const [versions, recipients, progress, results] = await Promise.all([
-    db.courseVersion.findMany({
-      where: {
-        tenantId: c.tenantId,
-        id: { in: enrollments.map((e) => e.courseVersionId) },
-      },
-    }),
-    db.recipient.findMany({
-      where: {
-        tenantId: c.tenantId,
-        id: { in: enrollments.map((e) => e.recipientId) },
-      },
-    }),
-    db.lessonProgress.findMany({
-      where: { tenantId: c.tenantId, enrollmentId: { in: ids } },
-    }),
-    db.verifiedExamResult.findMany({
-      where: { tenantId: c.tenantId, enrollmentId: { in: ids } },
-      orderBy: { revision: "desc" },
-    }),
-  ]);
-  const documents = await db.lmsDocumentLink.findMany({
-    where: { tenantId: c.tenantId, resultId: { in: results.map((r) => r.id) } },
-  });
-  const events = await db.lmsResultEvent.findMany({
-    where: {
-      tenantId: c.tenantId,
-      resultId: { in: results.map((r) => r.id) },
-      kind: { in: ["VOIDED", "SUPERSEDED"] },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-  return {
-    items: enrollments.map((e) => {
-      const version = versions.find((v) => v.id === e.courseVersionId)!;
-      const content = courseContentSchema.parse(version.content);
-      const historical = results.find((r) => r.enrollmentId === e.id);
-      const result = historical
-        ? effectiveResult(historical, events)
-        : undefined;
-      return {
-        ...e,
-        recipient: recipients.find((r) => r.id === e.recipientId),
-        courseVersion: { ...version, content: courseOutline(content) },
-        progressPercent: progressPercent(
-          content,
-          progress.filter((p) => p.enrollmentId === e.id),
-        ),
-        result: result
-          ? {
-              id: result.id,
-              verdict: result.verdict,
-              assessmentKind: result.assessmentKind,
-              eligible: result.eligible,
-              documentEligible: result.documentEligible,
-              reviewReasons: result.reviewReasons,
-              score: result.score,
-              maximum: result.maximum,
-              state: result.state,
-            }
-          : null,
-        documents: documents
-          .filter((d) => d.resultId === result?.id)
-          .map((document) => ({
-            ...document,
-            ...(["VOIDED", "SUPERSEDED"].includes(result?.state || "")
-              ? { status: result!.state }
-              : {}),
-          })),
-      };
-    }),
-    total: await db.enrollment.count({ where }),
-    page: data.page,
-    pageSize: data.pageSize,
-  };
-}
+export { listEnrollmentPage as listEnrollments } from "./enrollment-list";
 
 export async function extendEnrollment(c: Context, id: string, input: unknown) {
   assertLmsStaff(c);
@@ -378,13 +181,17 @@ export async function extendEnrollment(c: Context, id: string, input: unknown) {
     z.object({ dueAt: z.string().datetime() }).strict(),
     input,
   );
-  await scopedEnrollment(c, id);
+  const before = await scopedEnrollment(c, id);
+  assertAccessDate(new Date(data.dueAt));
   return transaction(async (tx) => {
     const enrollment = await tx.enrollment.update({
       where: { id },
-      data: { dueAt: new Date(data.dueAt) },
+      data: { dueAt: new Date(data.dueAt), dueAtOverride: true },
     });
-    await audit(tx, c, "LMS_ACCESS_EXTENDED", id, { dueAt: data.dueAt });
+    await audit(tx, c, "LMS_ACCESS_EXTENDED", id, {
+      before: { dueAt: before.dueAt },
+      after: { dueAt: data.dueAt },
+    });
     return enrollment;
   });
 }

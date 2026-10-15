@@ -8,6 +8,7 @@ import {
 } from "@demo/contracts";
 import { audit, fail, hash, json, type Context } from "../core";
 import { gradeAnswers, type ScoredQuestion } from "./engine";
+import { examReadiness } from "./readiness";
 
 export function routeEligible(
   profile: RegulatoryProfile,
@@ -241,26 +242,15 @@ export async function finalizeLmsResult(
       process.env.DEMO_LMS_TEST_RUNTIME === "1" &&
       process.env.NODE_ENV !== "production",
   );
-  const completed = new Set(
-    (
-      await tx.lessonProgress.findMany({
-        where: {
-          tenantId: c.tenantId,
-          enrollmentId: enrollment.id,
-          completedAt: { not: null },
-        },
-        select: { lessonId: true },
-      })
-    ).map((row) => row.lessonId),
-  );
-  if (
-    content.modules.some((module) =>
-      module.lessons.some(
-        (lesson) => lesson.required && !completed.has(lesson.id),
-      ),
-    )
-  )
-    eligible = false;
+  const completed = await tx.lessonProgress.findMany({
+    where: {
+      tenantId: c.tenantId,
+      enrollmentId: enrollment.id,
+      completedAt: { not: null },
+    },
+    select: { lessonId: true, completedAt: true },
+  });
+  if (!examReadiness(content, completed).ready) eligible = false;
   if (
     profile.sanitary &&
     input.assessmentKind === "CENTER_EXAM" &&

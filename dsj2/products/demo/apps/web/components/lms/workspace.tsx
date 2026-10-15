@@ -7,6 +7,7 @@ import { LearnerCourse, MyCourses } from "./learn";
 import { LanguageSwitch, LmsTabs, useLanguage } from "./common";
 import { Results } from "./results";
 import { Sanitary } from "./sanitary";
+import { TrainingGroup } from "./group";
 import "./lms.css";
 
 export function LmsWorkspace({
@@ -24,6 +25,7 @@ export function LmsWorkspace({
   const canEdit = ["ADMIN", "DIRECTOR", "OPERATOR"].includes(context.user.role);
   const course = /^\/lms\/courses\/([^/]+)$/.exec(pathname);
   const enrollment = /^\/learn\/([^/]+)$/.exec(pathname);
+  const group = /^\/lms\/groups\/([^/]+)$/.exec(pathname);
   return (
     <div className="lms-workspace" lang={language === "kz" ? "kk" : "ru"}>
       <div className="lms-toolbar">
@@ -36,6 +38,8 @@ export function LmsWorkspace({
         ) : (
           <MyCourses t={t} />
         )
+      ) : group ? (
+        <TrainingGroup key={group[1]} id={group[1]} t={t} canEdit={canEdit} />
       ) : course && canEdit ? (
         <CourseEditor key={course[1]} id={course[1]} t={t} />
       ) : pathname === "/lms/assign" ? (

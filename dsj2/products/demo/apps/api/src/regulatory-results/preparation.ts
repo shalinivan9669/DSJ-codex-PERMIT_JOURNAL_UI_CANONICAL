@@ -42,11 +42,12 @@ export async function prepareClaimedEvent(
     });
     const c: Context = {
       tenantId: event.tenantId,
-      userId: resultRecord.createdBy,
+      userId: "service:integration-worker",
       role: "SYSTEM",
       sessionId: "",
       csrfHash: "",
       correlationId: event.id,
+      source: "integration-worker",
     };
     if (
       !resultRecord.eligible ||

@@ -1,8 +1,23 @@
 import { type NextRequest } from "next/server";
 import { allowedRoute } from "@demo/contracts/src/policy";
 import { LIMITS } from "@demo/contracts";
+import { isIP } from "node:net";
+import { timingSafeEqual, randomUUID } from "node:crypto";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+function transportError(status: number, code: string, message: string) {
+  const correlationId = randomUUID();
+  return Response.json(
+    { code, params: {}, message, correlationId },
+    {
+      status,
+      headers: {
+        "Cache-Control": "no-store",
+        "X-Correlation-ID": correlationId,
+      },
+    },
+  );
+}
 
 /** A narrow DEMO transport. Its destination is deployment configuration, never client input. */
 async function proxy(request: NextRequest) {
@@ -21,11 +36,24 @@ async function proxy(request: NextRequest) {
     !["GET", "HEAD"].includes(request.method) &&
     request.headers.get("origin") !== origin
   )
-    return Response.json(
-      { message: "Источник запроса не разрешён." },
-      { status: 403 },
+    return transportError(
+      403,
+      "ORIGIN_REJECTED",
+      "Источник запроса не разрешён.",
     );
   const headers = new Headers();
+  const proxyKey = process.env.DEMO_PROXY_KEY || "";
+  const receivedKey = request.headers.get("x-demo-proxy-key") || "";
+  const clientIp = request.headers.get("x-demo-client-ip") || "";
+  if (proxyKey.length >= 32) {
+    headers.set("x-demo-proxy-key", proxyKey);
+    if (
+      Buffer.byteLength(proxyKey) === Buffer.byteLength(receivedKey) &&
+      timingSafeEqual(Buffer.from(proxyKey), Buffer.from(receivedKey)) &&
+      isIP(clientIp)
+    )
+      headers.set("x-demo-client-ip", clientIp);
+  }
   for (const name of [
     "cookie",
     "content-type",
@@ -56,9 +84,10 @@ async function proxy(request: NextRequest) {
         ? Math.max(LIMITS.photoBytes, LIMITS.importBytes) + 64 * 1024
         : LIMITS.jsonBytes);
     if (Number(request.headers.get("content-length") || 0) > limit)
-      return Response.json(
-        { message: "Превышен допустимый размер загрузки." },
-        { status: 413 },
+      return transportError(
+        413,
+        "UPLOAD_TOO_LARGE",
+        "Превышен допустимый размер загрузки.",
       );
     if (lmsUploadLimit && request.body) {
       let size = 0;
@@ -86,9 +115,10 @@ async function proxy(request: NextRequest) {
           size += value.byteLength;
           if (size > limit) {
             await reader.cancel();
-            return Response.json(
-              { message: "Превышен допустимый размер загрузки." },
-              { status: 413 },
+            return transportError(
+              413,
+              "UPLOAD_TOO_LARGE",
+              "Превышен допустимый размер загрузки.",
             );
           }
           chunks.push(value);
@@ -163,16 +193,15 @@ async function proxy(request: NextRequest) {
     });
   } catch {
     if (uploadLimitExceeded)
-      return Response.json(
-        { message: "Превышен допустимый размер загрузки." },
-        { status: 413 },
+      return transportError(
+        413,
+        "UPLOAD_TOO_LARGE",
+        "Превышен допустимый размер загрузки.",
       );
-    return Response.json(
-      {
-        message:
-          "Сервис DEMO временно недоступен. Ваши данные остаются на странице.",
-      },
-      { status: 503, headers: { "Cache-Control": "no-store" } },
+    return transportError(
+      503,
+      "SERVICE_ERROR",
+      "Сервис DEMO временно недоступен. Ваши данные остаются на странице.",
     );
   }
 }

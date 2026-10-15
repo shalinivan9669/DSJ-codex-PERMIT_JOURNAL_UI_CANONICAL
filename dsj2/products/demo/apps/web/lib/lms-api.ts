@@ -2,6 +2,7 @@ import type {
   CourseContent,
   LmsLesson,
   RegulatoryProfile,
+  LmsQuestion,
 } from "@demo/contracts/src/lms";
 import { api, json } from "./api";
 
@@ -19,8 +20,17 @@ export type Course = {
   id: string;
   titleRu?: string;
   titleKz?: string;
-  latestVersion?: CourseVersion;
+  latestVersion?: Pick<CourseVersion, "id" | "version" | "status"> & {
+    content: Pick<
+      CourseContent,
+      "titleRu" | "titleKz" | "category" | "hours" | "accessDays"
+    >;
+    profile: Pick<RegulatoryProfile, "status" | "assessmentKind" | "legalForm">;
+  };
   versions?: CourseVersion[];
+  assignmentPaused?: boolean;
+  assignmentPauseReason?: string;
+  currentReview?: { status: string; note: string; updatedAt: string } | null;
 };
 export type CourseDetails = { course: Course; versions: CourseVersion[] };
 export type Paged<T> = {
@@ -74,6 +84,11 @@ export type Enrollment = {
     legalForm: string;
     status: string;
   }[];
+  groupId?: string | null;
+  groupKey?: string;
+  sourceRequestId?: string | null;
+  sourceOrderId?: string | null;
+  dueAtOverride?: boolean;
 };
 export type PublicQuestion = Omit<
   CourseContent["exam"]["questions"][number],
@@ -93,6 +108,13 @@ export type Attempt = {
   result?: ExamResult | null;
 };
 export type Learning = Enrollment & {
+  examReadiness: {
+    ready: boolean;
+    requiredCount: number;
+    completedCount: number;
+    missingLessonIds: string[];
+    reasonCode: string | null;
+  };
   content: Omit<CourseContent, "modules"> & {
     modules: Array<
       Omit<CourseContent["modules"][number], "lessons"> & {
@@ -111,6 +133,17 @@ export type Learning = Enrollment & {
     artifactId?: string;
     fileName?: string;
   }[];
+};
+export type LibraryRevision = {
+  id: string;
+  version: number;
+  question: LmsQuestion;
+};
+export type LibraryQuestion = {
+  id: string;
+  category: string;
+  topic: string;
+  latestRevision: LibraryRevision;
 };
 export type ExamResult = {
   id: string;
@@ -195,7 +228,13 @@ export const lms = {
       { method: "POST", body },
     );
   },
-  assignmentContext: (requestId = "", page = 1, search = "") =>
+  assignmentContext: (
+    requestId = "",
+    page = 1,
+    search = "",
+    orderId = "",
+    groupId = "",
+  ) =>
     api<{
       recipients: LearnerSummary[];
       courses: Course[];
@@ -203,23 +242,61 @@ export const lms = {
       total: number;
       page: number;
       pageSize: number;
+      sourceRequestId?: string | null;
+      sourceOrderId?: string | null;
+      contextRecipientIds?: string[];
+      group?: {
+        id: string;
+        name: string;
+        courseVersionId: string;
+        dueAt: string;
+        customerId: string | null;
+        sourceRequestId: string | null;
+        sourceOrderId: string | null;
+      };
     }>(
-      `/lms/assignment-context?page=${page}&search=${encodeURIComponent(search)}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ""}`,
+      `/lms/assignment-context?page=${page}&search=${encodeURIComponent(search)}${requestId ? `&requestId=${encodeURIComponent(requestId)}` : ""}${orderId ? `&orderId=${encodeURIComponent(orderId)}` : ""}${groupId ? `&groupId=${encodeURIComponent(groupId)}` : ""}`,
     ),
   assign: (
     courseVersionId: string,
     recipientIds: string[],
     customerId?: string,
     groupName?: string,
+    context?: {
+      operationId: string;
+      sourceRequestId?: string | null;
+      sourceOrderId?: string | null;
+      groupId?: string;
+      dueAt?: string;
+    },
   ) =>
     api<{
       created: number;
       duplicates: number;
       errors: { recipientId: string; code: string; message: string }[];
       items: Enrollment[];
+      errorCount: number;
+      failedRecipientIds: string[];
+      operationId: string;
+      groupId: string | null;
+      state: "PENDING" | "PAUSED" | "COMPLETED";
+      cursor: number;
+      total: number;
+      conflicts: number;
+      pauseError?: {
+        code: string;
+        params: Record<string, unknown>;
+        message: string;
+      } | null;
     }>("/lms/enrollments", {
       method: "POST",
-      body: json({ courseVersionId, recipientIds, customerId, groupName }),
+      body: json({
+        courseVersionId,
+        recipientIds,
+        customerId,
+        groupName,
+        ...context,
+      }),
     }),
   enrollments: (learner = false, page = 1) =>
     api<Paged<Enrollment>>(

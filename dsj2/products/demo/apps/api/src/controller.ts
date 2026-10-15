@@ -48,6 +48,7 @@ import { openArtifact } from "./storage";
 import { RENDERER_VERSION } from "@demo/printing";
 import { randomUUID } from "node:crypto";
 import { mkdir, open, unlink } from "node:fs/promises";
+import { integrationHealth } from "./integration-health";
 function sendFile(
   res: Response,
   result: {
@@ -74,8 +75,9 @@ export class DemoController {
     return { status: "ok", product: "DEMO", version: "2.0.0" };
   }
   @Get("ready") async ready(@Req() req: DemoRequest) {
-    ctx(req, false, true);
+    const c = ctx(req, false, true);
     await db.$queryRaw`SELECT 1`;
+    const integration = await integrationHealth(c.tenantId);
     const beat = await db.workerHeartbeat.findFirst({
       where: { version: RENDERER_VERSION },
       orderBy: { seenAt: "desc" },
@@ -94,7 +96,15 @@ export class DemoController {
       Date.now() - beat.seenAt.getTime() > 90_000 ||
       templates.length !== templateIds.length
     )
-      fail(503, "NOT_READY", "Проверьте worker и установку шаблонов");
+      fail(503, "NOT_READY", "Проверьте worker и установку шаблонов", {
+        rendererSeenAt: beat?.seenAt || null,
+        templates: templates.length,
+        integration,
+      });
+    if (integration.status !== "ok")
+      fail(503, "INTEGRATION_NOT_READY", "Проверьте integration-worker", {
+        integration,
+      });
     const probePath = files.store.path(`health-${randomUUID()}`);
     try {
       await Promise.all(
@@ -129,6 +139,7 @@ export class DemoController {
       templates: templates.length,
       rendererVersion: beat.version,
       storage: "ok",
+      integration,
     };
   }
   @Post("auth/register") register(

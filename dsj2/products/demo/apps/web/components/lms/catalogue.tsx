@@ -128,15 +128,6 @@ export function Catalogue({
                   </div>
                   <details>
                     <summary>{t("Условия обучения", "Оқу шарттары")}</summary>
-                    {version.content.descriptionRu && (
-                      <p>
-                        {t(
-                          version.content.descriptionRu,
-                          version.content.descriptionKz ||
-                            version.content.descriptionRu,
-                        )}
-                      </p>
-                    )}
                     <p>
                       {t("Доступ", "Қолжетімділік")}:{" "}
                       {version.content.accessDays} {t("дней", "күн")} ·{" "}
@@ -144,8 +135,30 @@ export function Catalogue({
                       <Status value={version.profile.status} t={t} />
                     </p>
                   </details>
+                  {course.assignmentPaused && (
+                    <p>
+                      {t(
+                        "Новые назначения приостановлены",
+                        "Жаңа тағайындаулар тоқтатылған",
+                      )}
+                      {course.assignmentPauseReason
+                        ? `: ${course.assignmentPauseReason}`
+                        : ""}
+                    </p>
+                  )}
+                  {course.currentReview &&
+                    course.currentReview.status !== "CURRENT" && (
+                      <p>
+                        <Link href={`/lms/courses/${course.id}`}>
+                          {t(
+                            "Нужно актуализировать основание",
+                            "Негізді өзектендіру қажет",
+                          )}
+                        </Link>
+                      </p>
+                    )}
                 </div>
-                {version.status === "PUBLISHED" && (
+                {version.status === "PUBLISHED" && !course.assignmentPaused && (
                   <Link
                     className="button"
                     href={`/lms/assign?versionId=${version.id}`}

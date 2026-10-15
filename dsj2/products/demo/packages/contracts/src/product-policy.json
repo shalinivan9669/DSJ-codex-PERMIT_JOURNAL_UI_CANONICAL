@@ -1217,6 +1217,101 @@
       "method": "GET",
       "surface": "api",
       "path": "/lms/sanitary/evidence/:id/file"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/lms/groups/:id"
+    },
+    {
+      "method": "PUT",
+      "surface": "api",
+      "path": "/lms/groups/:id"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/lms/groups/:id/members"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/lms/groups/:id/members/:enrollmentId/exclude"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/lms/orders/:id"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/lms/courses/:id/pause"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/lms/courses/:id/regulatory-review"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/lms/questions"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/lms/questions"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/lms/questions/:id/revisions"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/lms/questions/:id/revisions"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/lms/results/filters"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/lms/results/export"
+    },
+    {
+      "method": "GET",
+      "surface": "web",
+      "path": "/lms/groups/:id"
+    },
+    {
+      "method": "HEAD",
+      "surface": "web",
+      "path": "/lms/groups/:id"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/lms/documents/bundles/:id"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/lms/documents/bundles/:id/parts/:part"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/learn/documents/bundles/:id"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/learn/documents/bundles/:id/parts/:part"
     }
   ],
   "legacyRoutes": [

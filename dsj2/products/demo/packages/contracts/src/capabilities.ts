@@ -52,12 +52,20 @@ export function roleRouteAllowed(role: string, path: string): boolean {
     );
   if (role === "EMPLOYER")
     return (
-      path === "/portal" ||
-      path.startsWith("/portal/") ||
-      ["/lms/courses", "/lms/enrollments", "/lms/assignment-context"].includes(
+      /^\/lms\/documents\/bundles\/[A-Za-z0-9_-]+(?:\/parts\/[0-9]+)?$/.test(
         path,
       ) ||
-      /^\/lms\/(courses|enrollments|documents|artifacts)\/[A-Za-z0-9_-]+$/.test(
+      path === "/portal" ||
+      path.startsWith("/portal/") ||
+      [
+        "/lms/courses",
+        "/lms/enrollments",
+        "/lms/assignment-context",
+        "/lms/results/export",
+        "/lms/results/filters",
+        "/lms/documents/bundle",
+      ].includes(path) ||
+      /^\/lms\/(courses|enrollments|groups|documents|artifacts)\/[A-Za-z0-9_-]+$/.test(
         path,
       )
     );

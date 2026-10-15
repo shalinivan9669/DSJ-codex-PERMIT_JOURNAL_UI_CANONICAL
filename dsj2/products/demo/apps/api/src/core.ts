@@ -11,6 +11,8 @@ export type Context = {
   sessionId: string;
   csrfHash: string;
   correlationId: string;
+  trustedIp?: string;
+  source?: string;
 };
 export type DemoRequest = Request & {
   context?: Context;
@@ -22,7 +24,18 @@ export function fail(
   message: string,
   details?: unknown,
 ): never {
-  throw new HttpException({ code, message, details }, status);
+  throw new HttpException(
+    {
+      code,
+      params:
+        details && !Array.isArray(details) && typeof details === "object"
+          ? details
+          : {},
+      message,
+      details,
+    },
+    status,
+  );
 }
 export function ctx(req: DemoRequest, write = false, admin = false): Context {
   return requireCapability(
@@ -138,7 +151,14 @@ export async function audit(
       actorId: c.userId,
       action,
       entityId,
-      metadata: json(metadata),
+      metadata: json({
+        ...metadata,
+        source: Object.prototype.hasOwnProperty.call(metadata, "source")
+          ? metadata.source
+          : c.source || "api",
+        requestSource: c.source || "api",
+        ...(c.trustedIp ? { trustedIp: c.trustedIp } : {}),
+      }),
       correlationId: c.correlationId || randomUUID(),
     },
   });

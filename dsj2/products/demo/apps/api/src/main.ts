@@ -14,6 +14,8 @@ import { EmployerInviteController } from "./employer-invite-controller";
 import { PrintSetsController } from "./print-sets-controller";
 import { TrainingTopicsController } from "./training-topics-controller";
 import { authenticate } from "./auth";
+import { LmsScalingController } from "./lms/scaling-controller";
+import { LmsQuestionsController } from "./lms/questions-controller";
 import { LmsController } from "./lms/controller";
 import { LearnerIdentityController } from "./lms/identity";
 import { RegulatoryResultsController } from "./regulatory-results/controller";
@@ -29,6 +31,8 @@ import { db, type DemoRequest } from "./core";
     PrintSetsController,
     TrainingTopicsController,
     LmsController,
+    LmsScalingController,
+    LmsQuestionsController,
     LearnerIdentityController,
     RegulatoryResultsController,
     LmsDocumentsController,
