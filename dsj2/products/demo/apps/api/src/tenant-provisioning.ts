@@ -4,6 +4,7 @@ import { join } from "node:path";
 import type { Response } from "express";
 import {
   customerSchema,
+  allTemplateIds,
   profileSchema,
   registrationSchema,
   templateIds,
@@ -12,6 +13,7 @@ import {
 import { ArtifactStore, PRODUCT_ROOT, templateManifest } from "@demo/printing";
 import { db, audit, fail, hash, json, parse, type DemoRequest } from "./core";
 import { passwordHash, rateLimit, sessionCookies } from "./auth";
+import { namespace } from "./requests";
 
 export type PreparedRegistrationTemplate = {
   templateId: string;
@@ -33,11 +35,16 @@ export async function prepareRegistrationTemplates(): Promise<
     ...groups,
     ...(manifest.specialTemplates || []),
   ];
-  const individualIds = manifest.templates.map((template) => template.id);
+  const individualIds = templates
+    .filter(
+      (template) =>
+        template.ownerKind !== "GROUP" && template.program !== "SPECIAL",
+    )
+    .map((template) => template.id);
   const protocolIds = templateIds.filter((id) => id.endsWith("-protocol"));
   if (
-    individualIds.length !== templateIds.length ||
-    templateIds.some((id) => !individualIds.includes(id)) ||
+    individualIds.length !== allTemplateIds.length ||
+    allTemplateIds.some((id) => !individualIds.includes(id)) ||
     groups.length !== protocolIds.length ||
     protocolIds.some(
       (id) =>
@@ -143,12 +150,7 @@ export async function provisionRegisteredCenter(
           },
         });
       const namespaces = [
-        ...new Set(
-          templateIds.map(
-            (id) =>
-              `${id.split("-")[0].toUpperCase()}:${id.endsWith("protocol") ? "PROTOCOL" : id.endsWith("witness") ? "WITNESS" : id.endsWith("certificate") ? "CERTIFICATE" : "CARD"}`,
-          ),
-        ),
+        ...new Set(allTemplateIds.map(namespace)),
         "PS:REGISTRATION",
       ];
       for (const namespace of namespaces)

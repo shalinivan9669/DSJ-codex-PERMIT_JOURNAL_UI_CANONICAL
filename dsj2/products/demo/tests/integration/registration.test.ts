@@ -5,6 +5,7 @@ import { assertTestDatabase } from "./test-database";
 import { bootstrap } from "../../apps/api/src/main";
 import { db } from "../../apps/api/src/core";
 import { passwordHash, passwordMatches } from "../../apps/api/src/auth";
+import { templateManifest } from "../../packages/printing/src";
 import {
   prepareRegistrationTemplates,
   provisionRegisteredCenter,
@@ -119,7 +120,43 @@ test("public self-registration isolates a complete unapproved center atomically"
         const templates = await db.templateVersion.findMany({
           where: { tenantId: tenant.id },
         });
-        assert.equal(templates.length, 19);
+        const manifest = await templateManifest();
+        const currentTemplates = [
+          ...manifest.templates,
+          ...(manifest.groupTemplates || []),
+          ...(manifest.specialTemplates || []),
+        ];
+        assert.equal(currentTemplates.length, 22);
+        assert.equal(templates.length, currentTemplates.length);
+        assert.deepEqual(
+          templates
+            .map((row) => `${row.templateId}:${row.version}:${row.checksum}`)
+            .sort(),
+          currentTemplates
+            .map((row) => `${row.id}:${row.version}:${row.sha256}`)
+            .sort(),
+        );
+        assert.equal(
+          templates.filter((row) => row.templateId.startsWith("lms-")).length,
+          3,
+        );
+        assert.equal(
+          templates.filter(
+            (row) =>
+              !row.templateId.startsWith("lms-") &&
+              (row.contract as Record<string, unknown>).program !== "SPECIAL" &&
+              (row.contract as Record<string, unknown>).ownerKind !== "GROUP",
+          ).length,
+          11,
+        );
+        assert.equal(
+          templates.filter(
+            (row) =>
+              (row.contract as Record<string, unknown>).ownerKind === "GROUP" &&
+              (row.contract as Record<string, unknown>).program !== "SPECIAL",
+          ).length,
+          5,
+        );
         assert.equal(
           templates.filter(
             (row) =>
@@ -133,10 +170,29 @@ test("public self-registration isolates a complete unapproved center atomically"
               !row.approved && row.storageKey && row.checksum.length === 64,
           ),
         );
-        assert.equal(
-          await db.numberSequence.count({ where: { tenantId: tenant.id } }),
-          11,
+        const sequences = await db.numberSequence.findMany({
+          where: { tenantId: tenant.id },
+        });
+        assert.deepEqual(
+          sequences.map((row) => row.namespace).sort(),
+          [
+            "BIOT:CARD",
+            "BIOT:CERTIFICATE",
+            "BIOT:PROTOCOL",
+            "PTM:CARD",
+            "PTM:PROTOCOL",
+            "PB:CARD",
+            "PB:PROTOCOL",
+            "PS:CARD",
+            "PS:PROTOCOL",
+            "PS:WITNESS",
+            "PS:REGISTRATION",
+            "LMS:PROTOCOL",
+            "LMS:CERTIFICATE",
+            "LMS:CARD",
+          ].sort(),
         );
+        assert.ok(sequences.every((row) => row.value === 0));
         assert.equal(
           await db.session.count({
             where: { tenantId: tenant.id, userId: first.user.id },

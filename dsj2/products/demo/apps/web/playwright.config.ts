@@ -22,6 +22,14 @@ const g1Consumers = [
 const portalProducer = /final-portal-three-live\.spec\.ts$/;
 const portalConsumer = /final-portal-390-live\.spec\.ts$/;
 const printPackScale = /remaining-print-pack-scale-live\.spec\.ts$/;
+const manualProducer = /operator-minimal-manual-live\.spec\.ts$/;
+const manualResume = /operator-minimal-manual-resume-live\.spec\.ts$/;
+const manualConsumers = [
+  /operator-minimal-manual-files-live\.spec\.ts$/,
+  /operator-minimal-review-layout-live\.spec\.ts$/,
+];
+const domainProducer = /operator-role-full-fix-live\.spec\.ts$/;
+const domainConsumer = /operator-domain-acceptance-live\.spec\.ts$/;
 if (fullRun) {
   if (!process.env.DEMO_E2E_EVIDENCE)
     throw new Error("FULL_SUITE_EVIDENCE_DIRECTORY_REQUIRED");
@@ -31,6 +39,14 @@ if (fullRun) {
     "common-prepared",
   );
   process.env.DEMO_E2E_REPEAT_SOURCE = process.env.DEMO_E2E_COMMON_PREPARED_DIR;
+  process.env.DEMO_E2E_PORTAL_FRESH_SOURCE = path.join(
+    evidence,
+    "portal-fresh.json",
+  );
+  process.env.DEMO_E2E_DOMAIN_IMMUTABLE_SOURCE = path.join(
+    evidence,
+    "role-lifecycle-readback.json",
+  );
 }
 if (certificatePin && !/^[A-Za-z0-9+/]{43}=$/.test(certificatePin)) {
   throw new Error("DEMO_E2E_CERT_SPKI must be a SHA-256 SPKI base64 digest");
@@ -61,6 +77,23 @@ export default defineConfig({
           testMatch: portalConsumer,
           dependencies: ["portal-producer"],
         },
+        { name: "manual-producer", testMatch: manualProducer },
+        {
+          name: "manual-resume",
+          testMatch: manualResume,
+          dependencies: ["manual-producer"],
+        },
+        {
+          name: "manual-consumers",
+          testMatch: manualConsumers,
+          dependencies: ["manual-resume"],
+        },
+        { name: "domain-producer", testMatch: domainProducer },
+        {
+          name: "domain-consumer",
+          testMatch: domainConsumer,
+          dependencies: ["domain-producer"],
+        },
         {
           name: "remaining",
           testIgnore: [
@@ -71,6 +104,11 @@ export default defineConfig({
             portalProducer,
             portalConsumer,
             printPackScale,
+            manualProducer,
+            manualResume,
+            ...manualConsumers,
+            domainProducer,
+            domainConsumer,
           ],
           dependencies: ["common-producer", "g1-producer", "portal-producer"],
         },
@@ -82,6 +120,8 @@ export default defineConfig({
             "g1-consumers",
             "portal-consumer",
             "remaining",
+            "manual-consumers",
+            "domain-consumer",
           ],
         },
       ]
@@ -90,6 +130,7 @@ export default defineConfig({
   expect: { timeout: 15000 },
   reporter: [
     ["list"],
+    ["./e2e/acceptance-failure-reporter.ts"],
     ["json", { outputFile: path.join(evidence, "results.json") }],
   ],
   outputDir: path.join(evidence, "test-results"),

@@ -84,6 +84,21 @@ importers:
         specifier: 2.2.0
         version: 2.2.0
 
+  apps/integration-worker:
+    dependencies:
+      '@demo/api':
+        specifier: workspace:*
+        version: link:../api
+      '@demo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@demo/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      tsx:
+        specifier: 4.23.15
+        version: 4.23.15
+
   apps/render-worker:
     dependencies:
       '@demo/contracts':

@@ -338,6 +338,9 @@ def validated_fields(snapshot,item):
 
 
 def render_one(snapshot,item,template):
+    from lms_templates import identify_lms,render_lms_one
+    if identify_lms(template,snapshot.get('templateId')):
+        return render_lms_one(snapshot,item,template)
     fields=validated_fields(snapshot,item)
     from neutral_forms import identify_neutral,render_neutral_one
     if identify_neutral(template,snapshot['templateId']):
@@ -618,6 +621,12 @@ def preflight(payload,out):
     Path(out).write_text(json.dumps(result),encoding='utf8');return result
 
 def render_docx(snapshot,out):
+    from lms_templates import TEMPLATES,render_lms_document
+    if snapshot.get('templateId') in TEMPLATES:
+        template,path=resolve_template(snapshot)
+        result=render_lms_document(snapshot,out,path)
+        result['rendererVersion']=RENDERER_VERSION
+        return result
     from english_appendix import append_english_pages, validate_english
     validate_english(snapshot)
     template,path=resolve_template(snapshot)
@@ -892,6 +901,9 @@ def main():
         # hit the bounded metadata channel for legitimate large spreadsheets.
         result={'count':imported['count'],'canApply':imported['canApply']}
     elif command=='xlsx': result=export_registry(payload,out)
+    elif command=='regulatory-list':
+        from regulatory_list import render_regulatory_list
+        result=render_regulatory_list(payload,out,convert_pdf)
     elif command=='control-sheet':
         from control_sheet import control_sheet
         result=control_sheet(payload,out,convert_pdf)

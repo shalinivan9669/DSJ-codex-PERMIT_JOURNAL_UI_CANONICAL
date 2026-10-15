@@ -2,14 +2,25 @@
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
+import { LanguageSwitch, useLanguage } from "./lms/common";
+import "./lms/lms.css";
 type Verification = {
   issuer: { nameRu: string; nameKz: string };
   document: { type: string; number: string; date: string };
   status: string;
   replacement: { type: string; number: string; date: string } | null;
   limitation: string;
+  learningDocument?: {
+    legalForm: string;
+    assessmentKind: string;
+    sourceIssuer: string;
+    resultRevision: number;
+    originalReference: string | null;
+    sourceVerification: string;
+  };
 };
 export function PublicVerification({ token }: { token: string }) {
+  const { language, setLanguage, t } = useLanguage("public-verification");
   const [record, setRecord] = useState<Verification | null>(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -33,46 +44,139 @@ export function PublicVerification({ token }: { token: string }) {
     };
   }, [token]);
   return (
-    <main className="workspace public-verification">
+    <main
+      className="workspace public-verification lms-workspace"
+      lang={language === "kz" ? "kk" : "ru"}
+    >
       <section className="panel workbench-detail">
-        <h1>Проверка записи эмитента</h1>
-        {error && <Notice>{error}</Notice>}
+        <LanguageSwitch language={language} onChange={setLanguage} />
+        <h1>
+          {t(
+            "Проверка записи эмитента",
+            "Құжат берген ұйымның жазбасын тексеру",
+          )}
+        </h1>
+        {error && (
+          <Notice>
+            {t(
+              error,
+              "Жазба қолжетімсіз. Сілтемені тексеріңіз немесе құжат берген ұйымға хабарласыңыз.",
+            )}
+          </Notice>
+        )}
         {record ? (
           <>
             <h2>{record.issuer.nameRu}</h2>
             <p>{record.issuer.nameKz}</p>
             <dl>
-              <dt>Номер документа</dt>
+              <dt>{t("Номер документа", "Құжат нөмірі")}</dt>
               <dd>{record.document.number}</dd>
-              <dt>Дата</dt>
+              <dt>{t("Дата", "Күні")}</dt>
               <dd>{record.document.date}</dd>
-              <dt>Состояние записи</dt>
+              {record.learningDocument && (
+                <>
+                  <dt>{t("Форма документа", "Құжат нысаны")}</dt>
+                  <dd>
+                    {{
+                      "lms-protocol": t("Протокол", "Хаттама"),
+                      "lms-certificate": t("Сертификат", "Сертификат"),
+                      "lms-credential": t("Удостоверение", "Куәлік"),
+                    }[record.document.type] || t("Документ", "Құжат")}
+                  </dd>
+                  <dt>{t("Вид документа", "Құжат түрі")}</dt>
+                  <dd>
+                    {(
+                      {
+                        PAPER_ORIGINAL: t(
+                          "Бумажный оригинал",
+                          "Қағаз түпнұсқа",
+                        ),
+                        ELECTRONIC_ORIGINAL: t(
+                          "Электронный оригинал",
+                          "Электрондық түпнұсқа",
+                        ),
+                        COPY_OF_ORIGINAL: t(
+                          "Копия оригинала",
+                          "Түпнұсқаның көшірмесі",
+                        ),
+                        INFORMATION_CARD: t(
+                          "Информационная карточка",
+                          "Ақпараттық карточка",
+                        ),
+                      } as Record<string, string>
+                    )[record.learningDocument.legalForm] ||
+                      t("Требует уточнения", "Нақтылау қажет")}
+                  </dd>
+                  <dt>{t("Источник результата", "Нәтиже көзі")}</dt>
+                  <dd>
+                    {record.learningDocument.assessmentKind ===
+                    "EXTERNAL_AUTHORIZED"
+                      ? t(
+                          "Проверенное внешнее основание",
+                          "Тексерілген сыртқы негіз",
+                        )
+                      : t(
+                          "Экзамен учебного центра",
+                          "Оқу орталығының емтиханы",
+                        )}{" "}
+                    · {record.learningDocument.sourceIssuer}
+                  </dd>
+                  {record.learningDocument.originalReference && (
+                    <>
+                      <dt>{t("Оригинал", "Түпнұсқа")}</dt>
+                      <dd>{record.learningDocument.originalReference}</dd>
+                    </>
+                  )}
+                </>
+              )}
+              <dt>{t("Состояние записи", "Жазба күйі")}</dt>
               <dd>
                 {(
                   {
-                    ACTIVE_RECORD: "Действующая запись",
-                    REPLACED: "Заменена исправленным документом",
-                    REVOKED: "Отозвана",
+                    ACTIVE_RECORD: t(
+                      "Действующая запись",
+                      "Қолданыстағы жазба",
+                    ),
+                    REPLACED: t(
+                      "Заменена исправленным документом",
+                      "Түзетілген құжатпен ауыстырылған",
+                    ),
+                    REVOKED: t("Отозвана", "Күші жойылған"),
                   } as Record<string, string>
                 )[record.status] || record.status}
               </dd>
             </dl>
             {record.replacement && (
               <p>
-                Заменяющий документ: № {record.replacement.number},{" "}
-                {record.replacement.date}.
+                {t("Заменяющий документ", "Орнына берілген құжат")}: №{" "}
+                {record.replacement.number}, {record.replacement.date}.
               </p>
             )}
-            <p>{record.limitation}</p>
+            <p>
+              {t(
+                record.limitation,
+                "Осы орталықтың тізіліміндегі жазба тексеріледі. Бет құжаттың кез келген көшірмесінің өзгермегенін растамайды және қолтаңбаны тексеруді алмастырмайды.",
+              )}
+            </p>
             <p className="fine-print">
-              Проверка записи не является электронной подписью и не подтверждает
-              неизменность стороннего файла.
+              {t(
+                "Проверка записи не является электронной подписью и не подтверждает неизменность стороннего файла.",
+                "Жазбаны тексеру электрондық қолтаңба болып саналмайды және бөгде файлдың өзгермегенін растамайды.",
+              )}
             </p>
             <details>
-              <summary>Сообщить об ошибке в документе</summary>
+              <summary>
+                {t(
+                  "Сообщить об ошибке в документе",
+                  "Құжаттағы қате туралы хабарлау",
+                )}
+              </summary>
               {sent ? (
                 <Notice kind="success">
-                  Обращение принято для проверки эмитентом.
+                  {t(
+                    "Обращение принято для проверки эмитентом.",
+                    "Өтініш құжат берген ұйымның тексеруіне қабылданды.",
+                  )}
                 </Notice>
               ) : (
                 <form
@@ -99,7 +203,7 @@ export function PublicVerification({ token }: { token: string }) {
                   }}
                 >
                   <label>
-                    Что требуется проверить
+                    {t("Что требуется проверить", "Нені тексеру қажет")}
                     <textarea
                       required
                       maxLength={2000}
@@ -108,7 +212,10 @@ export function PublicVerification({ token }: { token: string }) {
                     />
                   </label>
                   <label>
-                    Как связаться для уточнения (необязательно)
+                    {t(
+                      "Как связаться для уточнения (необязательно)",
+                      "Нақтылау үшін байланыс (міндетті емес)",
+                    )}
                     <input
                       value={contact}
                       maxLength={500}
@@ -116,7 +223,10 @@ export function PublicVerification({ token }: { token: string }) {
                     />
                   </label>
                   <button disabled={busy || !message.trim()}>
-                    Передать обращение эмитенту
+                    {t(
+                      "Передать обращение эмитенту",
+                      "Өтінішті құжат берген ұйымға жіберу",
+                    )}
                   </button>
                 </form>
               )}

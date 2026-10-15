@@ -259,9 +259,12 @@ test("current COMPANY PTM: explicit import conflict, shared employer, second per
   await fs.mkdir(evidence, { recursive: true });
   const roles = await realApprovalRoles(browser, page);
   const companyName = `Синтетическая компания ${Date.now()}`;
-  const manifest = JSON.parse(await fs.readFile(
-    path.resolve(__dirname, "../../../assets/templates/manifest.json"), "utf8",
-  ));
+  const manifest = JSON.parse(
+    await fs.readFile(
+      path.resolve(__dirname, "../../../assets/templates/manifest.json"),
+      "utf8",
+    ),
+  );
   const cardFields: string[] = manifest.templates.find(
     (template: { id: string }) => template.id === "ptm-card",
   ).fields;
@@ -271,7 +274,9 @@ test("current COMPANY PTM: explicit import conflict, shared employer, second per
   expect(cardFields).toContain("FULL_NAME_RU");
   expect(cardFields).not.toContain("FULL_NAME_KZ");
   expect(cardFields).not.toContain("FULL_NAME_BOTH");
-  expect(cardFields).toEqual(expect.arrayContaining(["POSITION_RU", "POSITION_KZ"]));
+  expect(cardFields).toEqual(
+    expect.arrayContaining(["POSITION_RU", "POSITION_KZ"]),
+  );
   const people = [
     {
       ru: "Синтетический Первый Сотрудник",
@@ -558,10 +563,15 @@ test("current COMPANY PTM: explicit import conflict, shared employer, second per
     ).toBeNull();
     expect(issued.customerId).toBe(before.customerId);
     expect(issued.items).toEqual(before.items);
-    const identity = (items: typeof before.items) => items.map((item) => ({
-      id: item.id, fullNameRu: item.fullNameRu, fullNameKz: item.fullNameKz,
-    }));
-    expect(identity(issued.issuances[0].snapshot.draft.items)).toEqual(identity(before.items));
+    const identity = (items: typeof before.items) =>
+      items.map((item) => ({
+        id: item.id,
+        fullNameRu: item.fullNameRu,
+        fullNameKz: item.fullNameKz,
+      }));
+    expect(identity(issued.issuances[0].snapshot.draft.items)).toEqual(
+      identity(before.items),
+    );
     const files = [];
     for (const artifact of issued.artifacts.filter(
       (item) =>

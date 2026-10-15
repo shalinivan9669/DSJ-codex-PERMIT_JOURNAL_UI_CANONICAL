@@ -101,7 +101,13 @@ async function createFixture(
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(count);
   const saved = await readDraft(page, created.id);
   expect(saved.items).toHaveLength(count);
-  expect(saved.items.every((item) => item.assignments.every((assignment) => assignment.outcome?.status === "PASSED"))).toBe(true);
+  expect(
+    saved.items.every((item) =>
+      item.assignments.every(
+        (assignment) => assignment.outcome?.status === "PASSED",
+      ),
+    ),
+  ).toBe(true);
   return saved;
 }
 for (const count of [100, 150, 250]) {

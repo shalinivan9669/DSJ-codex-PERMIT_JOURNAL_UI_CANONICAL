@@ -1654,25 +1654,29 @@ export function RecipientDetails({
                                     AUTO: "Автоматический расчёт",
                                   } as Record<string, string>
                                 )[origin] || origin}
-                                {commonFieldKeys.some((commonKey) => commonKey === key) &&
-                                  ["MANUAL", "IMPORTED", "CLEARED"].includes(origin) && (
-                                  <button
-                                    className="text-button"
-                                    disabled={documentDisabled}
-                                    onClick={() =>
-                                      onChange(
-                                        restoreTrainingAssignmentField(
-                                          recipient,
-                                          assignment.id,
-                                          key,
-                                          liveRules,
-                                        ),
-                                      )
-                                    }
-                                  >
-                                    Вернуть общее значение
-                                  </button>
-                                )}
+                                {commonFieldKeys.some(
+                                  (commonKey) => commonKey === key,
+                                ) &&
+                                  ["MANUAL", "IMPORTED", "CLEARED"].includes(
+                                    origin,
+                                  ) && (
+                                    <button
+                                      className="text-button"
+                                      disabled={documentDisabled}
+                                      onClick={() =>
+                                        onChange(
+                                          restoreTrainingAssignmentField(
+                                            recipient,
+                                            assignment.id,
+                                            key,
+                                            liveRules,
+                                          ),
+                                        )
+                                      }
+                                    >
+                                      Вернуть общее значение
+                                    </button>
+                                  )}
                               </dd>
                             </div>
                           ))}

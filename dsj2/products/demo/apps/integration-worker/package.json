@@ -1,0 +1,17 @@
+{
+  "name": "@demo/integration-worker",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx --tsconfig ../../tsconfig.base.json src/main.ts",
+    "start": "tsx --tsconfig ../../tsconfig.base.json src/main.ts",
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@demo/database": "workspace:*",
+    "@demo/contracts": "workspace:*",
+    "@demo/api": "workspace:*",
+    "tsx": "4.23.15"
+  }
+}

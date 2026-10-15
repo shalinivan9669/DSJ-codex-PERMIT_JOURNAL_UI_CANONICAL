@@ -109,8 +109,8 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
         commonFields: {
           documentDate: "2026-09-24",
           protocolDate: "2026-09-24",
-          trainingStart: "2026-09-23",
-          trainingEnd: "2026-09-24",
+          trainingStart: "2026-09-22",
+          trainingEnd: "2026-09-23",
           trainingSubject: "Синтетическая программа",
         },
       },
@@ -140,9 +140,9 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
   // The real director decision materialises the exact event before order-bound
   // evidence can truthfully point at it; no approval or event is fabricated.
   await approveFinalFixture(browser, page, auth, request.id);
-  const approvedEvent = (await get(`/print-requests/${request.id}`)).events.find(
-    (event: { id: string }) => event.id === eventId,
-  );
+  const approvedEvent = (
+    await get(`/print-requests/${request.id}`)
+  ).events.find((event: { id: string }) => event.id === eventId);
   expect(approvedEvent?.id).toBe(eventId);
   const order = await post("/orders", {
     title: `Проверка полного исполнения ${suffix}`,
@@ -486,7 +486,9 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
   expect(repeat.items[0].recipientId).toBe(person.id);
   expect(repeat.items[0].positionRu).toBe("Старший инженер");
   const repeatedAssignment = repeat.items[0].assignments[0];
-  const ordinaryDefaults = positiveAssignmentDefaults(repeatedAssignment.templateId);
+  const ordinaryDefaults = positiveAssignmentDefaults(
+    repeatedAssignment.templateId,
+  );
   expect(repeatedAssignment.outcome).toMatchObject(ordinaryDefaults.outcome!);
   expect(repeatedAssignment.result).toBe(ordinaryDefaults.result);
   expect(repeatedAssignment.resultKz).toBe(ordinaryDefaults.resultKz);
@@ -502,13 +504,18 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
     fullPage: true,
   });
   await page.goto(`/requests/${request.id}`);
-  await expect(page.getByText("Ссылка и QR для проверки записи", { exact: true })).toHaveCount(0);
+  await expect(
+    page.getByText("Ссылка и QR для проверки записи", { exact: true }),
+  ).toHaveCount(0);
   // Current UI hides publication while signatures are pending. A real scoped
   // HTTP attempt must also fail, so bypassing the hidden control cannot publish.
-  const publicationResponse = await page.request.post("/api/verification-links", {
-    headers,
-    data: { documentId: frozen.documents[0].id, publicationConfirmed: true },
-  });
+  const publicationResponse = await page.request.post(
+    "/api/verification-links",
+    {
+      headers,
+      data: { documentId: frozen.documents[0].id, publicationConfirmed: true },
+    },
+  );
   const publicLink = page.getByRole("link", {
     name: "Открыть публичную проверку",
     exact: true,
@@ -516,15 +523,27 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
   expect(publicationResponse.status()).toBe(409);
   expect((await publicationResponse.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
   await expect(publicLink).toHaveCount(0);
-  await expect(page.locator(".files-panel")).toContainText("Комплект ожидает электронных подписей");
+  await expect(page.locator(".files-panel")).toContainText(
+    "Комплект ожидает электронных подписей",
+  );
   // The shared serial renderer can still be processing the prior fixture. Wait
   // for every original with explicit FAILED diagnostics before asserting signing.
   await waitOriginalJobs(page, request.id, 600000);
-  await expect.poll(async () => (await get(`/print-requests/${request.id}/signing`)).status,
-    { timeout: 120000, intervals: [1500, 2500, 5000] }).toBe("AWAITING_SIGNATURE");
+  await expect
+    .poll(
+      async () => (await get(`/print-requests/${request.id}/signing`)).status,
+      { timeout: 120000, intervals: [1500, 2500, 5000] },
+    )
+    .toBe("AWAITING_SIGNATURE");
   const unsignedState = unsignedPublicState(auth.tenantId, request.id);
-  await fs.writeFile(path.join(evidence, "unsigned-public-state.json"), JSON.stringify(unsignedState, null, 2));
-  await page.screenshot({ path: path.join(evidence, "unsigned-public-record-blocked.png"), fullPage: true });
+  await fs.writeFile(
+    path.join(evidence, "unsigned-public-state.json"),
+    JSON.stringify(unsignedState, null, 2),
+  );
+  await page.screenshot({
+    path: path.join(evidence, "unsigned-public-record-blocked.png"),
+    fullPage: true,
+  });
   await page.goto("/workbench");
   await page.getByRole("button", { name: order.title, exact: true }).click();
   await page
@@ -557,7 +576,11 @@ test("real service UI: evidence, ownership, exact payment, portal changes, clean
         realBrowser: true,
         mockedResponses: false,
         officialSignedPublicScope: "BLOCKED_MISSING_GENUINE_NCA_CONFIGURATION",
-        publicPublicationDenied: { status: 409, code: "ISSUANCE_NOT_COMPLETE", createdLink: false },
+        publicPublicationDenied: {
+          status: 409,
+          code: "ISSUANCE_NOT_COMPLETE",
+          createdLink: false,
+        },
         legalApproval: false,
         checks: [
           "ownership and date persisted",
@@ -636,6 +659,9 @@ test("one shared group serves two customer orders and an existing order accepts 
   );
   async function fixture(title: string, mixed: boolean, day: string) {
     const event = randomUUID();
+    const trainingDay = new Date(Date.parse(`${day}T00:00:00Z`) - 86_400_000)
+      .toISOString()
+      .slice(0, 10);
     return post("/print-requests", {
       schemaVersion: 2,
       kind: "COMPANY",
@@ -650,8 +676,8 @@ test("one shared group serves two customer orders and an existing order accepts 
           commonFields: {
             documentDate: day,
             protocolDate: day,
-            trainingStart: day,
-            trainingEnd: day,
+            trainingStart: trainingDay,
+            trainingEnd: trainingDay,
             trainingSubject: "Синтетическое событие",
           },
         },

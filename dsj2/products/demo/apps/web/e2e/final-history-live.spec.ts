@@ -13,6 +13,65 @@ const evidence = path.resolve(
     path.join(product, "docs/evidence/final-completion/history"),
 );
 const sha = (bytes: Buffer) => createHash("sha256").update(bytes).digest("hex");
+const historyTemplateId = "pb-card";
+type HistoryDocument = {
+  id: string;
+  templateId: string;
+  rowId: string;
+  assignmentId: string;
+  number: string;
+};
+type HistoryArtifact = {
+  id: string;
+  documentId: string | null;
+  format: string;
+  provenance: string;
+  sha256: string;
+  fileName: string;
+};
+function primaryHistoryDocument(record: {
+  items: { id: string; assignments: { id: string; templateId: string }[] }[];
+  documents: HistoryDocument[];
+}) {
+  expect(record.items).toHaveLength(1);
+  const row = record.items[0];
+  const assignments = row.assignments.filter(
+    (assignment) => assignment.templateId === historyTemplateId,
+  );
+  expect(assignments).toHaveLength(1);
+  const documents = record.documents.filter(
+    (document) =>
+      document.templateId === historyTemplateId &&
+      document.rowId === row.id &&
+      document.assignmentId === assignments[0].id,
+  );
+  expect(documents).toHaveLength(1);
+  return documents[0];
+}
+function originalHistoryPdf(
+  record: { artifacts: HistoryArtifact[] },
+  document: HistoryDocument,
+) {
+  const artifacts = record.artifacts.filter(
+    (artifact) =>
+      artifact.documentId === document.id &&
+      artifact.format === "PDF" &&
+      artifact.provenance === "ORIGINAL",
+  );
+  expect(artifacts).toHaveLength(1);
+  return artifacts[0];
+}
+function documentIdentities(documents: HistoryDocument[]) {
+  return documents
+    .map(({ id, templateId, rowId, assignmentId, number }) => ({
+      id,
+      templateId,
+      rowId,
+      assignmentId,
+      number,
+    }))
+    .sort((a, b) => a.id.localeCompare(b.id));
+}
 function fixture(mode: string, id?: string) {
   const output = execFileSync(
     process.execPath,
@@ -120,18 +179,25 @@ test("real history UI preserves original files across search, damaged copy, reco
   ).toBeVisible();
   await page.goto(`/requests/${auth.originalId}`);
   const original = await issue();
-  const pdf = original.artifacts.find(
-    (a: { format: string }) => a.format === "PDF",
-  );
+  const originalDocument = primaryHistoryDocument(original);
+  const originalIdentities = documentIdentities(original.documents);
+  const pdf = originalHistoryPdf(original, originalDocument);
   const originalSnapshot = original.issuances[0].snapshot;
-  const originalNumber = original.documents[0].number;
+  const originalNumber = originalDocument.number;
   expect(await savedDownload(pdf.id, "original.pdf")).toBe(pdf.sha256);
   const baseline = fixture("state");
-  expect(original.documents.map((document: { templateId: string }) => document.templateId).sort()).toEqual(["pb-card", "pb-protocol"]);
+  expect(
+    original.documents
+      .map((document: { templateId: string }) => document.templateId)
+      .sort(),
+  ).toEqual(["pb-card", "pb-protocol"]);
   expect(baseline.reservations).toBe(2);
   await record("original-issued-through-ui", {
     requestId: original.id,
     number: originalNumber,
+    templateId: historyTemplateId,
+    documentId: originalDocument.id,
+    originalDocumentIdentities: originalIdentities,
     sha256: pdf.sha256,
     baseline,
   });
@@ -304,8 +370,10 @@ test("real history UI preserves original files across search, damaged copy, reco
     await page.reload();
     const reconstructed = await get(`/print-requests/${original.id}`);
     const replacement = reconstructed.artifacts.find(
-      (a: { format: string; provenance: string }) =>
-        a.format === "PDF" && a.provenance === "RECONSTRUCTED",
+      (a: HistoryArtifact) =>
+        a.documentId === originalDocument.id &&
+        a.format === "PDF" &&
+        a.provenance === "RECONSTRUCTED",
     );
     expect(replacement).toBeTruthy();
     expect(replacement.id).not.toBe(pdf.id);
@@ -313,7 +381,13 @@ test("real history UI preserves original files across search, damaged copy, reco
       reconstructed.artifacts.find((a: { id: string }) => a.id === pdf.id)
         .sha256,
     ).toBe(pdf.sha256);
-    expect(reconstructed.documents[0].number).toBe(originalNumber);
+    const reconstructedDocument = reconstructed.documents.find(
+      (document: HistoryDocument) => document.id === originalDocument.id,
+    );
+    expect(reconstructedDocument.number).toBe(originalNumber);
+    expect(documentIdentities(reconstructed.documents)).toEqual(
+      originalIdentities,
+    );
     expect(reconstructed.issuances[0].snapshot).toEqual(originalSnapshot);
     expect(fixture("state").reservations).toBe(baseline.reservations);
     expect(await savedDownload(replacement.id, "reconstructed.pdf")).toBe(
@@ -363,9 +437,7 @@ test("real history UI preserves original files across search, damaged copy, reco
   await fields
     .getByLabel("Внешний номер основания", { exact: true })
     .fill("SYNTHETIC-NEW-ACTUAL-EVENT-2026-10");
-  await detail
-    .getByRole("button", { name: "Готово", exact: true })
-    .click();
+  await detail.getByRole("button", { name: "Готово", exact: true }).click();
   await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   await page
     .getByRole("button", { name: "Проверить данные", exact: true })
@@ -377,34 +449,61 @@ test("real history UI preserves original files across search, damaged copy, reco
     page.getByRole("link", { name: /Открыть прежний документ/ }),
   ).toHaveCount(0);
   const next = await issue();
-  expect(next.documents[0].number).not.toBe(originalNumber);
-  const nextPdf = next.artifacts.find(
-    (a: { format: string }) => a.format === "PDF",
-  );
+  const nextDocument = primaryHistoryDocument(next);
+  expect(nextDocument.number).not.toBe(originalNumber);
+  const nextPdf = originalHistoryPdf(next, nextDocument);
   expect(await savedDownload(nextPdf.id, "new-actual-event.pdf")).toBe(
     nextPdf.sha256,
   );
   await record("new-actual-event-issued-without-false-duplicate", {
     requestId: next.id,
-    number: next.documents[0].number,
+    number: nextDocument.number,
+    templateId: historyTemplateId,
+    documentId: nextDocument.id,
     actualBasisDate: "2026-10-01",
     sha256: nextPdf.sha256,
   });
 
   await page.goto(`/requests/${original.id}`);
-  await expect(page.getByText("Ссылка и QR для проверки записи", { exact: true })).toHaveCount(0);
-  const publicationSession = await (await page.request.get("/api/auth/session")).json();
-  const publicationResponse = await page.request.post("/api/verification-links", {
-    headers: { origin: process.env.DEMO_ORIGIN!, "x-csrf-token": publicationSession.csrfToken },
-    data: { documentId: original.documents[0].id, publicationConfirmed: true },
-  });
+  await expect(
+    page.getByText("Ссылка и QR для проверки записи", { exact: true }),
+  ).toHaveCount(0);
+  const publicationSession = await (
+    await page.request.get("/api/auth/session")
+  ).json();
+  const publicationResponse = await page.request.post(
+    "/api/verification-links",
+    {
+      headers: {
+        origin: process.env.DEMO_ORIGIN!,
+        "x-csrf-token": publicationSession.csrfToken,
+      },
+      data: {
+        documentId: originalDocument.id,
+        publicationConfirmed: true,
+      },
+    },
+  );
   expect(publicationResponse.status()).toBe(409);
   expect((await publicationResponse.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
-  await expect(page.locator(".files-panel")).toContainText("Комплект ожидает электронных подписей");
-  await expect(page.getByRole("link", { name: "Открыть публичную проверку", exact: true })).toHaveCount(0);
-  expect((await get(`/print-requests/${original.id}/signing`)).status).toBe("AWAITING_SIGNATURE");
+  await expect(page.locator(".files-panel")).toContainText(
+    "Комплект ожидает электронных подписей",
+  );
+  await expect(
+    page.getByRole("link", { name: "Открыть публичную проверку", exact: true }),
+  ).toHaveCount(0);
+  expect((await get(`/print-requests/${original.id}/signing`)).status).toBe(
+    "AWAITING_SIGNATURE",
+  );
   const unsignedState = unsignedPublicState(auth.tenantId, original.id);
-  await record("unsigned-public-record-refused-before-any-publication", { status: 409, code: "ISSUANCE_NOT_COMPLETE", signingStatus: "AWAITING_SIGNATURE", publicUiControlHidden: true, createdPublicLink: false, actualReadOnlyState: unsignedState });
+  await record("unsigned-public-record-refused-before-any-publication", {
+    status: 409,
+    code: "ISSUANCE_NOT_COMPLETE",
+    signingStatus: "AWAITING_SIGNATURE",
+    publicUiControlHidden: true,
+    createdPublicLink: false,
+    actualReadOnlyState: unsignedState,
+  });
   await page
     .getByRole("button", { name: "Создать исправление", exact: true })
     .click();
@@ -425,13 +524,13 @@ test("real history UI preserves original files across search, damaged copy, reco
     .click();
   await expect(page).toHaveURL(/\/requests\/[^/]+\/edit$/);
   const personal = page.locator(".person-editor");
-  await personal.getByRole("button", { name: "Изменить ФИО и должность", exact: true }).click();
+  await personal
+    .getByRole("button", { name: "Изменить ФИО и должность", exact: true })
+    .click();
   await personal
     .getByLabel("Должность", { exact: true })
     .fill("Старший инженер");
-  await personal
-    .getByRole("button", { name: "Готово", exact: true })
-    .click();
+  await personal.getByRole("button", { name: "Готово", exact: true }).click();
   await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   const corrected = await issue();
   expect(corrected.issuances[0].correctsIssuanceId).toBe(
@@ -439,11 +538,10 @@ test("real history UI preserves original files across search, damaged copy, reco
   );
   expect(corrected.issuances[0].correctsRequestId).toBe(original.id);
   expect(corrected.issuances[0].correctionReason).toBe(correctionReason);
-  expect(corrected.documents[0].number).not.toBe(originalNumber);
+  const correctedDocument = primaryHistoryDocument(corrected);
+  expect(correctedDocument.number).not.toBe(originalNumber);
   expect(corrected.items[0].positionRu).toBe("Старший инженер");
-  const correctedPdf = corrected.artifacts.find(
-    (a: { format: string }) => a.format === "PDF",
-  );
+  const correctedPdf = originalHistoryPdf(corrected, correctedDocument);
   expect(await savedDownload(correctedPdf.id, "corrected.pdf")).toBe(
     correctedPdf.sha256,
   );
@@ -465,14 +563,18 @@ test("real history UI preserves original files across search, damaged copy, reco
   await page
     .getByRole("link", { name: "Открыть исходный выпуск", exact: true })
     .click();
-  await expect(page).toHaveURL(new RegExp(`/requests/${original.id}(?:/edit)?$`));
+  await expect(page).toHaveURL(
+    new RegExp(`/requests/${original.id}(?:/edit)?$`),
+  );
   await expect(page.locator(".issuance-details")).toContainText(
     "Ожидает подписи",
   );
   // REPLACED and its reverse link are legal completion effects, emitted only
   // after genuine mandatory signatures. The unsigned correction must preserve
   // the original state while keeping its explicit new-to-source relation.
-  await expect(page.locator(".issuance-details")).not.toContainText("Выпуск заменён");
+  await expect(page.locator(".issuance-details")).not.toContainText(
+    "Выпуск заменён",
+  );
   await expect(
     page.getByRole("link", {
       name: "Открыть исправленный выпуск",
@@ -484,32 +586,51 @@ test("real history UI preserves original files across search, damaged copy, reco
   );
   const reread = await get(`/print-requests/${original.id}`);
   expect(reread.issuances[0].snapshot).toEqual(originalSnapshot);
-  expect(reread.documents[0].number).toBe(originalNumber);
+  const rereadDocument = reread.documents.find(
+    (document: HistoryDocument) => document.id === originalDocument.id,
+  );
+  expect(rereadDocument.number).toBe(originalNumber);
+  expect(documentIdentities(reread.documents)).toEqual(originalIdentities);
   expect(Array.isArray(reread.issuanceEvents)).toBe(true);
-  expect(reread.issuanceEvents.some((event: { kind: string; issuanceId: string }) => event.issuanceId === original.issuances[0].id && event.kind === "REPLACED")).toBe(false);
+  expect(
+    reread.issuanceEvents.some(
+      (event: { kind: string; issuanceId: string }) =>
+        event.issuanceId === original.issuances[0].id &&
+        event.kind === "REPLACED",
+    ),
+  ).toBe(false);
   const originalUnsigned = unsignedPublicState(auth.tenantId, original.id);
-  expect((await get(`/print-requests/${corrected.id}/signing`)).status).toBe("AWAITING_SIGNATURE");
+  expect((await get(`/print-requests/${corrected.id}/signing`)).status).toBe(
+    "AWAITING_SIGNATURE",
+  );
   const correctedUnsigned = unsignedPublicState(auth.tenantId, corrected.id);
   await page.screenshot({
     path: path.join(evidence, "linked-correction-history.png"),
     fullPage: true,
   });
-  await record("unsigned-correction-source-link-and-immutable-original-with-no-premature-replacement", {
-    originalRequestId: original.id,
-    correctionRequestId: corrected.id,
-    originalNumber,
-    newNumber: corrected.documents[0].number,
-    originalSha256: pdf.sha256,
-    correctedSha256: correctedPdf.sha256,
-    originalSnapshotUnchanged: true,
-    correctionFieldsReentered: 1,
-    reasonRequired: true,
-    publicReplacedRecordVerified: false,
-    originalUnsigned,
-    correctedUnsigned,
-    signedReverseReplacementLinkVerified: false,
-    reason: "The real product requires mandatory signatures before publication; no genuine local NCA configuration has been supplied",
-  });
+  await record(
+    "unsigned-correction-source-link-and-immutable-original-with-no-premature-replacement",
+    {
+      originalRequestId: original.id,
+      correctionRequestId: corrected.id,
+      originalNumber,
+      newNumber: correctedDocument.number,
+      templateId: historyTemplateId,
+      originalDocumentId: originalDocument.id,
+      correctedDocumentId: correctedDocument.id,
+      originalSha256: pdf.sha256,
+      correctedSha256: correctedPdf.sha256,
+      originalSnapshotUnchanged: true,
+      correctionFieldsReentered: 1,
+      reasonRequired: true,
+      publicReplacedRecordVerified: false,
+      originalUnsigned,
+      correctedUnsigned,
+      signedReverseReplacementLinkVerified: false,
+      reason:
+        "The real product requires mandatory signatures before publication; no genuine local NCA configuration has been supplied",
+    },
+  );
   await fs.writeFile(
     path.join(evidence, "history-checkpoint.json"),
     JSON.stringify({ status: "PASS", tenantId: auth.tenantId, steps }, null, 2),
@@ -523,7 +644,13 @@ test("real history UI preserves original files across search, damaged copy, reco
         tenantId: auth.tenantId,
         browser: browser.version(),
         wallMs: Date.now() - started,
-        legacyAcceptanceReferences: ["AT064", "AT065", "AT067", "AT177", "AT178"],
+        legacyAcceptanceReferences: [
+          "AT064",
+          "AT065",
+          "AT067",
+          "AT177",
+          "AT178",
+        ],
         officialSignedPublicSubscope: {
           status: "BLOCKED_MISSING_GENUINE_NCA_CONFIGURATION",
           originalPositivePublicReplacementClaim: false,
@@ -550,7 +677,8 @@ test("real history UI preserves original files across search, damaged copy, reco
               correctionFieldsEdited: 1,
               externalManualActions: 0,
             },
-            remaining: "Positive official signed public replacement requires genuine NCA configuration; no signature/provider/workflow bypass",
+            remaining:
+              "Positive official signed public replacement requires genuine NCA configuration; no signature/provider/workflow bypass",
           },
         ],
         steps,

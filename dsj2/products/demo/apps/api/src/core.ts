@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { HttpException } from "@nestjs/common";
 import { PrismaClient, Prisma } from "@demo/database";
-import { z, canManageCenter } from "@demo/contracts";
+import { z, hasCapability, type Capability } from "@demo/contracts";
 import type { Request } from "express";
 export const db = new PrismaClient({ log: [] });
 export type Context = {
@@ -25,12 +25,18 @@ export function fail(
   throw new HttpException({ code, message, details }, status);
 }
 export function ctx(req: DemoRequest, write = false, admin = false): Context {
+  return requireCapability(
+    req,
+    admin ? "center:manage" : write ? "printing:write" : "printing:read",
+  );
+}
+export function requireCapability(
+  req: DemoRequest,
+  capability: Capability,
+): Context {
   const c = req.context;
   if (!c) fail(401, "SESSION_REQUIRED", "Войдите в DEMO");
-  if (
-    (admin && !canManageCenter(c.role)) ||
-    (write && (c.role === "VIEWER" || c.role === "EMPLOYER"))
-  )
+  if (!hasCapability(c.role, capability))
     fail(403, "ROLE_DENIED", "Недостаточно прав");
   return c;
 }

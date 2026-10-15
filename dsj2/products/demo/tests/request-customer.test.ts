@@ -10,6 +10,7 @@ import {
   withCustomerIdentity,
 } from "../apps/api/src/request-customer";
 import { employerFields, organizationMap } from "../apps/api/src/requests";
+import { effectiveRecipientEmployer } from "../apps/web/lib/recipient-employer";
 
 const context: Context = {
   tenantId: "synthetic-center",
@@ -229,4 +230,123 @@ test("autosave persists the person title and working data without submitting dir
   assert.equal(requestUpdate.revision, 1);
   assert.equal(proposed!.status, "DRAFT");
   assert.equal(result.approval, null);
+});
+
+test("an explicitly linked employer with no directory BIN supplies names while preserving local requisites", () => {
+  for (const bin of [null, "", "   "]) {
+    const employer = { ...company, bin, addressRu: "", addressKz: "" };
+    const organizations = new Map([[employer.id, employer]]);
+    const input = {
+      ...draft("COMPANY").items[0],
+      employerId: employer.id,
+      workplaceRu: "",
+      workplaceKz: "",
+      employerBin: "123456789012",
+      employerAddressRu: "Синтетический адрес филиала",
+      employerAddressKz: "Синтетикалық филиал мекенжайы",
+    };
+    const before = structuredClone(input);
+    assert.deepEqual(employerFields(input, employer, organizations), {
+      workplaceRu: company.nameRu,
+      workplaceKz: company.nameKz,
+      employerBin: input.employerBin,
+      employerAddressRu: input.employerAddressRu,
+      employerAddressKz: input.employerAddressKz,
+    });
+    assert.deepEqual(input, before);
+    assert.equal(employer.bin, bin);
+  }
+});
+
+test("server and editor agree on linked empty-BIN identities and reject unknown or conflicting identities", () => {
+  const emptyCompany = { ...company, bin: "", addressRu: "", addressKz: "" };
+  const row = {
+    ...draft("COMPANY").items[0],
+    workplaceRu: "",
+    workplaceKz: "",
+    employerBin: "123456789012",
+    employerAddressRu: "Синтетический адрес филиала",
+    employerAddressKz: "Синтетикалық филиал мекенжайы",
+  };
+  const cases = [
+    {
+      name: "explicit ID with empty directory BIN",
+      item: { ...row, employerId: company.id },
+      employer: emptyCompany,
+      expectedName: company.nameRu,
+    },
+    {
+      name: "unlinked partial BIN",
+      item: row,
+      employer: emptyCompany,
+      expectedName: "",
+    },
+    {
+      name: "unlinked partial address",
+      item: { ...row, employerBin: "" },
+      employer: emptyCompany,
+      expectedName: "",
+    },
+    {
+      name: "unknown explicit ID",
+      item: { ...row, employerId: "foreign-company" },
+      employer: emptyCompany,
+      expectedName: "",
+    },
+    {
+      name: "both BINs conflict despite explicit ID",
+      item: { ...row, employerId: company.id },
+      employer: company,
+      expectedName: "",
+    },
+    {
+      name: "same nonempty BIN and explicit ID",
+      item: { ...row, employerId: company.id, employerBin: company.bin },
+      employer: company,
+      expectedName: company.nameRu,
+    },
+    {
+      name: "manual wording with known ID",
+      item: {
+        ...row,
+        employerId: company.id,
+        workplaceRu: "Сохранённое локальное имя",
+        workplaceKz: "Сақталған жергілікті атау",
+      },
+      employer: emptyCompany,
+      expectedName: "Сохранённое локальное имя",
+    },
+  ];
+  for (const entry of cases) {
+    const server = employerFields(
+      entry.item,
+      entry.employer,
+      new Map([[entry.employer.id, entry.employer]]),
+    );
+    const editor = effectiveRecipientEmployer(entry.item, entry.employer);
+    assert.equal(server.workplaceRu, entry.expectedName, entry.name);
+    for (const key of [
+      "workplaceRu",
+      "workplaceKz",
+      "employerBin",
+      "employerAddressRu",
+      "employerAddressKz",
+    ] as const)
+      assert.equal(server[key], editor[key], `${entry.name}: ${key}`);
+  }
+});
+
+test("a missing organization cannot supply names even when an explicit identity is present", () => {
+  const item = {
+    ...draft("COMPANY").items[0],
+    employerId: company.id,
+    employerBin: "123456789012",
+    workplaceRu: "",
+    workplaceKz: "",
+  };
+  const result = employerFields(item, null, new Map());
+  assert.equal(result.workplaceRu, "");
+  assert.equal(result.workplaceKz, "");
+  assert.equal(result.employerBin, item.employerBin);
+  assert.equal(result.employerAddressRu, "");
 });

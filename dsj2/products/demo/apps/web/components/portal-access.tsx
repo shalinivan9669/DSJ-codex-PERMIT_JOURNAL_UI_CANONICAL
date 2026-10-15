@@ -203,6 +203,7 @@ export function PortalAccess() {
                             PROPOSE: "Предложения",
                             APPROVE_DATA: "Согласование",
                             DOWNLOAD: "Скачивание",
+                            ASSIGN_TRAINING: "Назначение обучения",
                           }) as Record<string, string>
                         )[p] || p,
                     )
@@ -359,6 +360,7 @@ export function PortalAccess() {
           ["PROPOSE", "Предложения изменений"],
           ["APPROVE_DATA", "Подтверждение списка"],
           ["DOWNLOAD", "Скачивание файлов"],
+          ["ASSIGN_TRAINING", "Назначение обучения"],
         ].map(([key, title]) => (
           <label className="checkbox" key={key}>
             <input

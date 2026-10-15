@@ -1,13 +1,29 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import { loginRole } from "./operator-role-fixture";
+import {
+  fullManualCheckpoint,
+  fullSuiteRunId,
+  requireFullCheckpointIdentity,
+} from "./operator-full-suite";
 
 test("approved manual twenty stays readable with accurate common-field exception summary", async ({
   page,
 }, testInfo) => {
-  const proposalId = process.env.DEMO_REVIEW_PROPOSAL_ID;
+  let proposalId = process.env.DEMO_REVIEW_PROPOSAL_ID;
+  if (fullSuiteRunId()) {
+    const checkpoint = JSON.parse(
+      await fs.readFile(fullManualCheckpoint("finalized")!, "utf8"),
+    );
+    requireFullCheckpointIdentity(checkpoint);
+    proposalId = checkpoint.proposalId;
+    expect(
+      proposalId,
+      "Full-suite finalized checkpoint must identify its proposal",
+    ).toMatch(/^[a-f0-9-]{36}$/);
+  }
   test.skip(
-    !proposalId,
+    !fullSuiteRunId() && !proposalId,
     "Requires the existing synthetic manual-twenty proposal ID",
   );
   expect(new URL(process.env.DEMO_ORIGIN!).hostname).toBe("127.0.0.1");

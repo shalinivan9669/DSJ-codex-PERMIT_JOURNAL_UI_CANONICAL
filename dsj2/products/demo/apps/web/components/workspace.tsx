@@ -27,11 +27,17 @@ import { SessionDialog } from "./session-dialog";
 import { Register } from "./register";
 import { CenterOnboarding } from "./center-onboarding";
 import { Approvals } from "./approvals";
+import { LmsWorkspace } from "./lms/workspace";
+import { LearnerIdentity } from "./lms/identity";
+import { useLanguage } from "./lms/common";
 
 export function Workspace() {
   const pathname = usePathname();
   const router = useRouter();
   const [context, setContext] = useState<AppContext | null>(null);
+  const { t: lmsText } = useLanguage(
+    context ? `${context.tenant.id}:${context.user.id}` : "anonymous",
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [unauthorized, setUnauthorized] = useState(false);
@@ -88,11 +94,16 @@ export function Workspace() {
       setUnauthorized(true);
       router.replace("/login");
     } catch (caught) {
-      if (!(caught instanceof NavigationBlockedError)) setError(errorText(caught));
+      if (!(caught instanceof NavigationBlockedError))
+        setError(errorText(caught));
     }
   }
   if (pathname.startsWith("/verify/"))
     return <PublicVerification token={pathname.slice("/verify/".length)} />;
+  if (
+    ["/learn/register", "/learn/invite", "/learn/recovery"].includes(pathname)
+  )
+    return <LearnerIdentity path={pathname} onAuthenticated={load} />;
   if (loading)
     return (
       <main className="initial-state" aria-busy="true">
@@ -114,52 +125,71 @@ export function Workspace() {
         <button onClick={() => void load()}>Повторить подключение</button>
       </main>
     );
-  const section = pathname.startsWith("/approvals")
-    ? "approvals"
-    : pathname.startsWith("/workbench")
-      ? "workbench"
-      : pathname.startsWith("/customers")
-        ? "customers"
-        : pathname.startsWith("/history")
-          ? "history"
-          : pathname.startsWith("/settings")
-            ? "settings"
-            : "requests";
+  const section =
+    pathname.startsWith("/lms") || pathname.startsWith("/learn")
+      ? "lms"
+      : pathname.startsWith("/approvals")
+        ? "approvals"
+        : pathname.startsWith("/workbench")
+          ? "workbench"
+          : pathname.startsWith("/customers")
+            ? "customers"
+            : pathname.startsWith("/history")
+              ? "history"
+              : pathname.startsWith("/settings")
+                ? "settings"
+                : "requests";
   const requestMatch = /^\/requests\/([^/]+)(?:\/edit)?$/.exec(pathname);
+  const tr =
+    section === "lms" || context.user.role === "LEARNER"
+      ? lmsText
+      : (ru: string, _kz: string) => ru;
   return (
     <>
       <a className="skip-link" href="#main">
-        Перейти к содержимому
+        {tr("Перейти к содержимому", "Мазмұнға өту")}
       </a>
       <header className="app-header">
         <Link
-          href="/requests"
+          href={workspaceStartPath(context.user.role)}
           className="brand-link"
-          aria-label="DEMO — заявки"
+          aria-label="DEMO"
         >
           <Brand />
         </Link>
-        <nav aria-label="Основная навигация">
-          {(context.user.role === "EMPLOYER"
-            ? [["portal", "Мои заказы"]]
-            : [
-                ["requests", "Заявки"],
-                [
-                  "approvals",
-                  isDirectorRole(context.user.role)
-                    ? "Кабинет директора"
-                    : "Согласование",
-                ],
-                ["workbench", "Работа центра"],
-                ["customers", "Заказчики"],
-                ["history", "Архив"],
-                ["settings", "Настройки"],
-              ]
+        <nav aria-label={tr("Основная навигация", "Негізгі навигация")}>
+          {(context.user.role === "LEARNER"
+            ? [["learn", tr("Моё обучение", "Менің оқуым")]]
+            : context.user.role === "EMPLOYER"
+              ? [
+                  ["portal", tr("Мои заказы", "Менің тапсырыстарым")],
+                  ["lms", tr("Обучение", "Оқыту")],
+                ]
+              : [
+                  ["requests", tr("Заявки", "Өтінімдер")],
+                  [
+                    "approvals",
+                    isDirectorRole(context.user.role)
+                      ? tr("Кабинет директора", "Директор кабинеті")
+                      : tr("Согласование", "Келісу"),
+                  ],
+                  ["workbench", tr("Работа центра", "Орталық жұмысы")],
+                  ...(context.user.role === "VIEWER"
+                    ? []
+                    : [["lms", tr("Обучение", "Оқыту")]]),
+                  ["customers", tr("Заказчики", "Тапсырыс берушілер")],
+                  ["history", tr("Архив", "Мұрағат")],
+                  ["settings", tr("Настройки", "Параметрлер")],
+                ]
           ).map(([path, label]) => (
             <Link
               key={path}
               href={`/${path}`}
-              aria-current={section === path ? "page" : undefined}
+              aria-current={
+                section === path || (section === "lms" && path === "learn")
+                  ? "page"
+                  : undefined
+              }
             >
               {label}
             </Link>
@@ -171,7 +201,7 @@ export function Workspace() {
             <small>{context.tenant.name}</small>
           </span>
           <button className="text-button" onClick={() => void logout()}>
-            Выйти
+            {tr("Выйти", "Шығу")}
           </button>
         </div>
       </header>
@@ -179,12 +209,18 @@ export function Workspace() {
         {error && <Notice>{error}</Notice>}
         {sessionExpired && (
           <Notice>
-            Сессия завершена. Введённые данные остаются на странице. Войдите
-            снова и повторите последнее действие.
-            <button onClick={() => setSessionDialog(true)}>Войти снова</button>
+            {tr(
+              "Сессия завершена. Введённые данные остаются на странице. Войдите снова и повторите последнее действие.",
+              "Сессия аяқталды. Енгізілген деректер бетте сақталады. Қайта кіріп, соңғы әрекетті қайталаңыз.",
+            )}
+            <button onClick={() => setSessionDialog(true)}>
+              {tr("Войти снова", "Қайта кіру")}
+            </button>
           </Notice>
         )}
-        {context.user.role === "EMPLOYER" ? (
+        {section === "lms" || context.user.role === "LEARNER" ? (
+          <LmsWorkspace context={context} pathname={pathname} />
+        ) : context.user.role === "EMPLOYER" ? (
           <EmployerPortal />
         ) : pathname === "/portal" ? (
           <EmployerPortal />
@@ -222,8 +258,15 @@ export function Workspace() {
         />
       )}
       <footer className="site-footer">
-        <span>DEMO · Подготовка и печать документов</span>
-        <span>Часовой пояс центра: {context.tenant.timezone}</span>
+        <span>
+          {section === "lms" || context.user.role === "LEARNER"
+            ? tr("DEMO · Обучение и документы", "DEMO · Оқыту және құжаттар")
+            : "DEMO · Подготовка и печать документов"}
+        </span>
+        <span>
+          {tr("Часовой пояс центра", "Орталықтың уақыт белдеуі")}:{" "}
+          {context.tenant.timezone}
+        </span>
       </footer>
     </>
   );
@@ -313,6 +356,9 @@ function Login({ onLogin }: { onLogin: () => Promise<void> }) {
           </p>
           <p>
             <Link href="/register">Зарегистрировать учебный центр</Link>
+          </p>
+          <p>
+            <Link href="/learn/register">Зарегистрироваться на обучение</Link>
           </p>
         </form>
       </section>

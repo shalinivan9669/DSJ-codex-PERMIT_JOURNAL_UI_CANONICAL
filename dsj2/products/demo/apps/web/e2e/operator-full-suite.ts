@@ -4,6 +4,27 @@ import { expect, type Page } from "@playwright/test";
 
 type Family = "g1" | "common";
 
+export function fullManualCheckpoint(phase: "pending" | "finalized") {
+  if (!fullSuiteRunId()) return;
+  if (!process.env.DEMO_E2E_EVIDENCE)
+    throw new Error("FULL_SUITE_EVIDENCE_DIRECTORY_REQUIRED");
+  return path.resolve(process.env.DEMO_E2E_EVIDENCE, `manual20-${phase}.json`);
+}
+
+export async function writeFullManualCheckpoint(
+  phase: "pending" | "finalized",
+  value: Record<string, unknown>,
+) {
+  const destination = fullManualCheckpoint(phase);
+  if (!destination) return;
+  await fs.mkdir(path.dirname(destination), { recursive: true });
+  await fs.writeFile(
+    destination,
+    JSON.stringify({ ...value, suiteRunId: fullSuiteRunId(), phase }, null, 2),
+    { flag: "wx" },
+  );
+}
+
 /** Full-suite checkpoints belong to this run; targeted verification stays explicit. */
 export function fullSuiteRunId(): string | undefined {
   if (process.env.DEMO_E2E_FULL_CHECKPOINTS !== "1") return;

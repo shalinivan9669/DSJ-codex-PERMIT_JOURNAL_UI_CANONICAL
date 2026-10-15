@@ -18,7 +18,7 @@ import {
 } from "./core";
 import { passwordSchema, passwordHash } from "./auth";
 export async function context(c: Context, csrfToken: string) {
-  if (c.role === "EMPLOYER") {
+  if (c.role === "EMPLOYER" || c.role === "LEARNER") {
     const user = await db.user.findFirstOrThrow({
       where: { id: c.userId, tenantId: c.tenantId },
       select: { id: true, email: true, displayName: true, role: true },
@@ -264,6 +264,20 @@ export async function saveUser(c: Context, input: unknown, id?: string) {
       c,
       id ? "USER_UPDATED_SESSIONS_REVOKED" : "USER_CREATED",
       user.id,
+      {
+        previous: currentTarget
+          ? {
+              role: currentTarget.role,
+              active: currentTarget.active,
+              sessionVersion: currentTarget.sessionVersion,
+            }
+          : null,
+        current: {
+          role: user.role,
+          active: user.active,
+          sessionVersion: user.sessionVersion,
+        },
+      },
     );
     return {
       id: user.id,

@@ -85,19 +85,38 @@ export async function collectOrphanObjects(
           where: { status: "RUNNING", leaseUntil: { gt: new Date() } },
         });
         if (options.apply && running) throw new Error("GC_ACTIVE_LEASES");
-        const [artifacts, photos, templates, snapshots, attachments] =
-          await Promise.all([
-            tx.artifact.findMany({ select: { storageKey: true } }),
-            tx.photoAsset.findMany({
-              select: { storageKey: true, originalStorageKey: true },
-            }),
-            tx.templateVersion.findMany({ select: { storageKey: true } }),
-            tx.renderInputSnapshot.findMany({ select: { input: true } }),
-            tx.valueAttachment.findMany({ select: { storageKey: true } }),
-          ]);
+        const [
+          artifacts,
+          photos,
+          templates,
+          snapshots,
+          attachments,
+          materials,
+          externalEvidence,
+          regulatoryEvidence,
+        ] = await Promise.all([
+          tx.artifact.findMany({ select: { storageKey: true } }),
+          tx.photoAsset.findMany({
+            select: { storageKey: true, originalStorageKey: true },
+          }),
+          tx.templateVersion.findMany({ select: { storageKey: true } }),
+          tx.renderInputSnapshot.findMany({ select: { input: true } }),
+          tx.valueAttachment.findMany({ select: { storageKey: true } }),
+          tx.lmsMaterial.findMany({ select: { storageKey: true } }),
+          tx.lmsExternalEvidence.findMany({ select: { storageKey: true } }),
+          tx.regulatoryManualEvidence.findMany({
+            where: { storageKey: { not: null } },
+            select: { storageKey: true },
+          }),
+        ]);
         const referenced = new Set([
           ...artifacts.map((a) => a.storageKey),
           ...attachments.map((a) => a.storageKey),
+          ...materials.map((a) => a.storageKey),
+          ...externalEvidence.map((a) => a.storageKey),
+          ...regulatoryEvidence.flatMap((a) =>
+            a.storageKey ? [a.storageKey] : [],
+          ),
           ...templates.map((t) => t.storageKey),
           ...photos.flatMap((p) => [p.storageKey, p.originalStorageKey]),
         ]);

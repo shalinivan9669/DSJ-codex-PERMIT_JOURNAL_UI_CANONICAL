@@ -1092,6 +1092,141 @@
       "reusesImmutableVersion": 1,
       "ownerKind": "GROUP",
       "groupContractVersion": 1
+    },
+    {
+      "id": "lms-protocol",
+      "version": 1,
+      "file": "lms-protocol.v1.docx",
+      "sha256": "95a356d5643f757552d424c0b9820f8513fb04ca2676c8fafff8ddc01596b2ca",
+      "fields": [
+        "ASSESSMENT",
+        "COURSE",
+        "DOCUMENT_DATE",
+        "EMPLOYER",
+        "EXAM_DATE",
+        "HOURS",
+        "ISSUER",
+        "LEARNER",
+        "LEGAL_FORM",
+        "LEGAL_MEANING",
+        "NUMBER",
+        "POSITION",
+        "RESULT",
+        "SOURCE",
+        "SYNTHETIC",
+        "TRACE"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "16838"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "ownerKind": "INDIVIDUAL",
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "renderPolicy": "LMS_CENTER_FORMS_V1",
+      "formRevision": "LMS_CENTER_FORMS_V1",
+      "verificationStatus": "ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE"
+    },
+    {
+      "id": "lms-certificate",
+      "version": 1,
+      "file": "lms-certificate.v1.docx",
+      "sha256": "bef8b699f63c11b6946e63af6242e7f5f36359246ab7634722ba299cc7dee1cf",
+      "fields": [
+        "ASSESSMENT",
+        "COURSE",
+        "DOCUMENT_DATE",
+        "EMPLOYER",
+        "EXAM_DATE",
+        "HOURS",
+        "ISSUER",
+        "LEARNER",
+        "LEGAL_FORM",
+        "LEGAL_MEANING",
+        "NUMBER",
+        "POSITION",
+        "RESULT",
+        "SOURCE",
+        "SYNTHETIC",
+        "TRACE"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "ownerKind": "INDIVIDUAL",
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "renderPolicy": "LMS_CENTER_FORMS_V1",
+      "formRevision": "LMS_CENTER_FORMS_V1",
+      "verificationStatus": "ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE"
+    },
+    {
+      "id": "lms-credential",
+      "version": 1,
+      "file": "lms-credential.v1.docx",
+      "sha256": "86f45fd52dbe976c446f9cacb03727d262706b19d34b1e8604d6431015f6c479",
+      "fields": [
+        "ASSESSMENT",
+        "COURSE",
+        "DOCUMENT_DATE",
+        "EXAM_DATE",
+        "HOURS",
+        "ISSUER",
+        "LEARNER",
+        "LEGAL_FORM",
+        "LEGAL_MEANING",
+        "NUMBER",
+        "RESULT",
+        "SOURCE",
+        "SYNTHETIC",
+        "TRACE"
+      ],
+      "sections": [
+        {
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "11906",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "8391",
+          "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+        }
+      ],
+      "languages": [
+        "ru",
+        "kk"
+      ],
+      "photo": false,
+      "exports": [
+        "DOCX",
+        "PDF"
+      ],
+      "ownerKind": "INDIVIDUAL",
+      "protocolSemantics": null,
+      "legalApproval": "REQUIRED_BY_ISSUER",
+      "renderPolicy": "LMS_CENTER_FORMS_V1",
+      "formRevision": "LMS_CENTER_FORMS_V1",
+      "verificationStatus": "ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE"
     }
   ]
 }

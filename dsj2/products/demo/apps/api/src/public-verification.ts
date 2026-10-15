@@ -37,8 +37,15 @@ export async function createVerificationLink(c: Context, input: unknown) {
     select: { id: true, issuanceId: true },
   });
   if (!target) fail(404, "NOT_FOUND", "Выданный документ не найден");
-  const workflow = await db.issuanceWorkflow.findFirst({ where: { tenantId: c.tenantId, issuanceId: target.issuanceId } });
-  if (workflow && workflow.status !== "ISSUED") fail(409, "ISSUANCE_NOT_COMPLETE", "Публичная проверка доступна после полного выпуска и обязательных подписей");
+  const workflow = await db.issuanceWorkflow.findFirst({
+    where: { tenantId: c.tenantId, issuanceId: target.issuanceId },
+  });
+  if (workflow && workflow.status !== "ISSUED")
+    fail(
+      409,
+      "ISSUANCE_NOT_COMPLETE",
+      "Публичная проверка доступна после полного выпуска и обязательных подписей",
+    );
   const token = randomBytes(32).toString("hex");
   const path = `/verify/${token}`;
   const origin = process.env.DEMO_ORIGIN;
@@ -140,7 +147,57 @@ export async function publicVerificationRecord(token: string) {
     }),
   ]);
   const issuer = profile.profile as { nameRu?: string; nameKz?: string };
+  const lmsType =
+    document.templateId === "lms-protocol"
+      ? "PROTOCOL"
+      : document.templateId === "lms-certificate"
+        ? "CERTIFICATE"
+        : document.templateId === "lms-credential"
+          ? "CREDENTIAL"
+          : "NONE";
+  const recipientResults =
+    document.templateId.startsWith("lms-") && document.rowId
+      ? await db.verifiedExamResult.findMany({
+          where: { tenantId: link.tenantId, recipientId: document.rowId },
+          select: { id: true },
+        })
+      : [];
+  const lmsLink = await db.lmsDocumentLink.findFirst({
+    where: {
+      tenantId: link.tenantId,
+      resultId: {
+        in: recipientResults
+          .filter(
+            (result) => document.assignmentId === `${result.id}-${lmsType}`,
+          )
+          .map((result) => result.id),
+      },
+      issuanceId: issuance.id,
+      documentType: lmsType,
+    },
+  });
+  const lmsResult = lmsLink
+    ? await db.verifiedExamResult.findFirst({
+        where: { tenantId: link.tenantId, id: lmsLink.resultId },
+      })
+    : null;
+  const lmsSnapshot = lmsResult?.snapshot as
+    | { profile?: { issuer?: string }; source?: { verification?: string } }
+    | undefined;
   return {
+    ...(lmsLink && lmsResult
+      ? {
+          learningDocument: {
+            legalForm: lmsLink.legalForm,
+            assessmentKind: lmsResult.assessmentKind,
+            sourceIssuer: lmsSnapshot?.profile?.issuer || "",
+            resultRevision: lmsResult.revision,
+            originalReference: lmsLink.originalReference,
+            sourceVerification:
+              lmsSnapshot?.source?.verification || "CENTER_RECORDED",
+          },
+        }
+      : {}),
     issuer: {
       nameRu: issuer.nameRu || "Учебный центр",
       nameKz: issuer.nameKz || "",

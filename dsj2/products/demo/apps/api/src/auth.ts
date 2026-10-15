@@ -5,7 +5,7 @@ import {
 } from "node:crypto";
 import { promisify } from "node:util";
 import type { Response, NextFunction } from "express";
-import { z } from "@demo/contracts";
+import { z, roleRouteAllowed, knownRole } from "@demo/contracts";
 import {
   db,
   fail,
@@ -85,6 +85,13 @@ export async function authenticate(
         /^\/verification\/[a-f0-9]{64}\/corrections$/.test(req.path));
     if (
       req.path === "/auth/login" ||
+      (req.method === "POST" &&
+        [
+          "/learn/register",
+          "/learn/invite/inspect",
+          "/learn/invite/exchange",
+          "/learn/recovery/exchange",
+        ].includes(req.path)) ||
       (req.method === "POST" && req.path === "/auth/register") ||
       (req.method === "POST" &&
         [
@@ -113,19 +120,13 @@ export async function authenticate(
       user.sessionVersion !== s.sessionVersion
     )
       fail(401, "SESSION_REVOKED", "Сессия отозвана");
-    if (
-      user.role === "EMPLOYER" &&
-      !["/auth/session", "/auth/logout", "/auth/password", "/context"].includes(
-        req.path,
-      ) &&
-      req.path !== "/portal" &&
-      !req.path.startsWith("/portal/")
-    )
-      fail(
-        403,
-        "EMPLOYER_SCOPE",
-        "Кабинет доступен только в пределах работодателя",
-      );
+    if (req.path.startsWith("/lms/") || req.path.startsWith("/learn/")) {
+      const { assertLmsDeploymentAllowed } =
+        await import("./lms/deployment-gate");
+      await assertLmsDeploymentAllowed(tenant);
+    }
+    if (!roleRouteAllowed(user.role, req.path))
+      fail(403, "ROLE_SCOPE", "Недостаточно прав для этой операции");
     if (!["GET", "HEAD", "OPTIONS"].includes(req.method)) {
       const csrf = req.headers["x-csrf-token"];
       if (typeof csrf !== "string" || hash(csrf) !== s.csrfHash)
@@ -198,7 +199,7 @@ export async function login(req: DemoRequest, res: Response, input: unknown) {
   const tenant = user
     ? await db.tenant.findUnique({ where: { id: user.tenantId } })
     : null;
-  if (!valid || !user?.active || !tenant?.active)
+  if (!valid || !user?.active || !tenant?.active || !knownRole(user.role))
     fail(401, "LOGIN_FAILED", "Неверный логин или пароль");
   const token = randomBytes(32).toString("hex");
   const csrf = randomBytes(32).toString("hex");

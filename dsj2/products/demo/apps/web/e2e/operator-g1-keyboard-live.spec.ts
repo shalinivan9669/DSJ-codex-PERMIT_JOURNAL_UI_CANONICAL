@@ -335,6 +335,13 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         page.getByRole("button", { name: "Далее", exact: true }),
       );
       title = people[0].workplaceRu;
+      const companySetupStartedAt = Date.now();
+      const companyInputsBefore = { ...keyboardMetrics };
+      await keyboardSelect(
+        page,
+        page.getByRole("combobox", { name: "Форма компании", exact: true }),
+        "NONE",
+      );
       await keyboardEnter(
         page,
         page.getByLabel("Название компании", { exact: true }),
@@ -346,6 +353,93 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         page.getByRole("button", { name: "Удалить получателя 1", exact: true }),
       );
       await assertTechnicalBlankRemoval(page);
+      await keyboardActivate(
+        page,
+        page.getByRole("button", { name: "Импорт", exact: true }),
+      );
+      await keyboardActivate(
+        page,
+        page
+          .getByRole("dialog", { name: "Импорт получателей", exact: true })
+          .getByRole("button", { name: "Закрыть диалог", exact: true }),
+      );
+      await expand(
+        page,
+        page.locator(".request-organization-selected-compact details"),
+      );
+      await keyboardActivate(
+        page,
+        page.getByRole("button", {
+          name: "Изменить общую карточку организации",
+          exact: true,
+        }),
+      );
+      const company = page.getByRole("dialog", {
+        name: "Реквизиты организации",
+        exact: true,
+      });
+      await expand(page, company.locator("details.organization-extra-name"));
+      await keyboardCheck(
+        page,
+        company.getByRole("checkbox", {
+          name: "Собственное наименование на казахском отличается",
+          exact: true,
+        }),
+      );
+      await keyboardEnter(
+        page,
+        company.getByLabel("Собственное наименование · KZ", { exact: true }),
+        people[0].workplaceKz,
+      );
+      await keyboardActivate(
+        page,
+        company.getByRole("button", { name: "Сохранить", exact: true }),
+      );
+      await expect(company).toHaveCount(0);
+      const companyRequestId = /requests\/([^/]+)/.exec(page.url())![1];
+      const companyRequest = await readCommon(page, companyRequestId);
+      expect(companyRequest.customerId).toBeTruthy();
+      // The setup above uses only the real keyboard-operated UI. This GET
+      // verifies its persisted result and cannot prefill or change anything.
+      const companyResponse = await page.request.get(
+        `/api/customers/${companyRequest.customerId}`,
+      );
+      expect(companyResponse.ok(), await companyResponse.text()).toBe(true);
+      const savedCompany = (await companyResponse.json()) as {
+        id: string;
+        legalForm: string;
+        nameRu: string;
+        nameKz: string;
+      };
+      expect(savedCompany.id).toBe(companyRequest.customerId);
+      expect(savedCompany.legalForm).toBe("NONE");
+      expect(savedCompany.nameRu).toBe(people[0].workplaceRu);
+      expect(savedCompany.nameKz).toBe(people[0].workplaceKz);
+      const companySetup = {
+        synthetic: true,
+        noApiPrefill: true,
+        requestId: companyRequestId,
+        customerId: savedCompany.id,
+        legalForm: savedCompany.legalForm,
+        nameRu: savedCompany.nameRu,
+        nameKz: savedCompany.nameKz,
+        elapsedMs: Date.now() - companySetupStartedAt,
+        actualSteps: [
+          "Select NONE and enter the original RU company name by keyboard",
+          "Remove the technical blank recipient and open/close Import to persist the staged company",
+          "Open the existing common company card and its separate KZ name disclosure by keyboard",
+          "Choose a distinct KZ name, enter the original source value, and save by keyboard",
+          "Read the bound saved customer and assert exact original RU/KZ names",
+        ],
+        keyboardMetrics: Object.fromEntries(
+          (
+            Object.keys(keyboardMetrics) as Array<keyof typeof keyboardMetrics>
+          ).map((key) => [
+            key,
+            keyboardMetrics[key] - companyInputsBefore[key],
+          ]),
+        ),
+      };
       await keyboardActivate(
         page,
         page.getByRole("button", { name: "Импорт", exact: true }),
@@ -380,8 +474,21 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         "Привести эти строки к компании заявки",
         { exact: true },
       );
-      if (await employerAlignment.isVisible())
-        await keyboardCheck(page, employerAlignment);
+      await expect(employerAlignment).toHaveCount(0);
+      await fs.writeFile(
+        path.join(evidence, "g1-company-input-setup.json"),
+        JSON.stringify(
+          {
+            ...companySetup,
+            status: "UI_COMPANY_PRECONDITION_VERIFIED",
+            sourceRosterRows: people.length,
+            alignmentControlCount: await employerAlignment.count(),
+            alignmentApplied: false,
+          },
+          null,
+          2,
+        ),
+      );
       await keyboardActivate(
         page,
         page.getByRole("button", {
@@ -587,6 +694,138 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         sourceEvent.protocolDate,
       );
       await saved(page);
+      // The original PB-G1 source ends on the document date. Scope its
+      // explicit synthetic schedule to this event, preserving the center's
+      // strict default and every manually entered source date.
+      const scheduleStarted = Date.now();
+      const scheduleMetricsBefore = { ...keyboardMetrics };
+      const scheduleMouseClicksBefore = mouseClicks;
+      const beforeSchedule = await readCommon(page, requestId);
+      const profileResponseBefore = await page.request.get(
+        "/api/settings/profile",
+      );
+      expect(profileResponseBefore.ok()).toBe(true);
+      const profileBeforeSchedule = await profileResponseBefore.json();
+      const scheduleEventBefore = beforeSchedule.events![0];
+      expect(scheduleEventBefore).toBeDefined();
+      const sourceDates = Object.fromEntries(
+        ["trainingStart", "trainingEnd", "documentDate", "protocolDate"].map(
+          (field) => [field, sourceEvent[field]],
+        ),
+      );
+      expect(scheduleEventBefore.commonFields).toMatchObject(sourceDates);
+      const scheduleSource =
+        "СИНТЕТИЧЕСКИЙ PB-G1: дата документа совпадает с последним днём обучения; tests/fixtures/operator-value/training_events.json";
+      const schedule = dates.locator("details.field-provenance").filter({
+        has: page.getByText("Правило расчёта периода обучения", {
+          exact: true,
+        }),
+      });
+      await expand(page, schedule);
+      await keyboardSelect(
+        page,
+        schedule.getByLabel("Связь с датой документа", { exact: true }),
+        "DOCUMENT_IS_END",
+      );
+      await keyboardEnter(
+        page,
+        schedule.getByLabel("Источник графика", { exact: true }),
+        scheduleSource,
+      );
+      await keyboardActivate(
+        page,
+        schedule.getByRole("button", {
+          name: "Проверить применение графика",
+          exact: true,
+        }),
+      );
+      await keyboardActivate(
+        page,
+        schedule.getByRole("button", {
+          name: "Применить правило расчёта",
+          exact: true,
+        }),
+      );
+      await saved(page);
+      const afterSchedule = await readCommon(page, requestId);
+      const scheduleEventAfter = afterSchedule.events!.find(
+        (event) => event.id === scheduleEventBefore.id,
+      );
+      expect(scheduleEventAfter?.commonFields.trainingDateRule).toMatchObject({
+        anchor: "DOCUMENT_IS_END",
+        source: scheduleSource,
+      });
+      expect(scheduleEventAfter?.commonFields).toMatchObject(sourceDates);
+      expect(afterSchedule.items).toEqual(beforeSchedule.items);
+      expect(afterSchedule.commonFields).toEqual(beforeSchedule.commonFields);
+      expect(afterSchedule.profileVersionId).toBe(
+        beforeSchedule.profileVersionId,
+      );
+      expect(
+        afterSchedule.events?.filter(
+          (event) => event.id !== scheduleEventBefore.id,
+        ),
+      ).toEqual(
+        beforeSchedule.events?.filter(
+          (event) => event.id !== scheduleEventBefore.id,
+        ),
+      );
+      const profileResponseAfter = await page.request.get(
+        "/api/settings/profile",
+      );
+      expect(profileResponseAfter.ok()).toBe(true);
+      const profileAfterSchedule = await profileResponseAfter.json();
+      expect(profileAfterSchedule).toEqual(profileBeforeSchedule);
+      await fs.writeFile(
+        path.join(evidence, "g1-event-schedule-setup.json"),
+        JSON.stringify(
+          {
+            status: "EVENT_ONLY_SYNTHETIC_SCHEDULE_VERIFIED",
+            suiteRunId: fullSuiteRunId(),
+            requestId,
+            eventId: scheduleEventBefore.id,
+            phase: "FIRST_ENTRY_PRECONDITION",
+            role: "MANAGER",
+            source: "tests/fixtures/operator-value/training_events.json#PB-G1",
+            before: {
+              eventRule:
+                scheduleEventBefore.commonFields.trainingDateRule || null,
+              profileVersionId: beforeSchedule.profileVersionId,
+              centerRule:
+                profileBeforeSchedule.commonFields?.trainingDateRule || null,
+            },
+            after: {
+              eventRule: scheduleEventAfter?.commonFields.trainingDateRule,
+              sourceDates,
+              centerProfileUnchanged: true,
+              requestCommonFieldsUnchanged: true,
+              sourceRowsAndPhotosUnchanged: true,
+            },
+            elapsedMs: Date.now() - scheduleStarted,
+            actualMouseClicks: mouseClicks - scheduleMouseClicksBefore,
+            actualSteps: [
+              "Open the event schedule with the keyboard",
+              "Choose document date equals the last training day and enter the explicit synthetic source",
+              "Review and apply only this event's schedule with the keyboard",
+              "Read back the event, original dates, all people/photos and unchanged center profile",
+            ],
+            keyboardMetrics: Object.fromEntries(
+              (
+                Object.keys(keyboardMetrics) as Array<
+                  keyof typeof keyboardMetrics
+                >
+              ).map((key) => [
+                key,
+                keyboardMetrics[key] - scheduleMetricsBefore[key],
+              ]),
+            ),
+            scope:
+              "Synthetic event schedule only; this does not approve real training, an exam, or a legal result",
+          },
+          null,
+          2,
+        ),
+      );
       const before = await readCommon(page, requestId);
       expect(before.items).toHaveLength(100);
       expect(before.documents).toHaveLength(0);
@@ -880,10 +1119,24 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
       page,
       page.getByLabel(/Все подтверждённые ещё не оформленные курсы/),
     );
-    await keyboardActivate(
-      page,
-      page.getByRole("button", { name: /Проверить и передать директору/ }),
-    );
+    const submitButton = page.getByRole("button", {
+      name: /Проверить и передать директору/,
+    });
+    await keyboardFocus(page, submitButton);
+    const [submitResponse] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.request().method() === "POST" &&
+          new URL(response.url()).pathname ===
+            `/api/print-requests/${requestId}/approval/submit`,
+        { timeout: 240000 },
+      ),
+      keyboardActivate(page, submitButton),
+    ]);
+    expect(submitResponse.status()).toBe(201);
+    const submitReadback = await submitResponse.json();
+    expect(submitReadback.requestId).toBe(requestId);
+    expect(submitReadback.approval?.status).toBe("PENDING");
     await expect
       .poll(async () => (await readCommon(page, requestId)).approval?.status)
       .toBe("PENDING");
@@ -922,13 +1175,26 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
         }),
         "СИНТЕТИЧЕСКИЙ G1: исходные 100 человек, общий PB протокол, проверены фото и фактическая редакция",
       );
-      await keyboardActivate(
-        directorPage,
-        directorPage.getByRole("button", {
-          name: "Согласовать эту редакцию",
-          exact: true,
-        }),
-      );
+      const approveButton = directorPage.getByRole("button", {
+        name: "Согласовать эту редакцию",
+        exact: true,
+      });
+      await keyboardFocus(directorPage, approveButton);
+      const [decisionResponse] = await Promise.all([
+        directorPage.waitForResponse(
+          (response) =>
+            response.request().method() === "POST" &&
+            new URL(response.url()).pathname ===
+              `/api/approvals/${applied.approval!.proposalId}/decision`,
+          { timeout: 240000 },
+        ),
+        keyboardActivate(directorPage, approveButton),
+      ]);
+      expect(decisionResponse.status()).toBe(201);
+      const decisionReadback = await decisionResponse.json();
+      expect(decisionReadback.requestId).toBe(requestId);
+      expect(decisionReadback.proposalId).toBe(applied.approval!.proposalId);
+      expect(decisionReadback.status).toBe("APPROVED");
       await expect
         .poll(async () => (await readCommon(page, requestId)).approval?.status)
         .toBe("APPROVED");
@@ -965,10 +1231,25 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
       fullPage: true,
     });
     renderStarted = Date.now();
-    await keyboardActivate(
-      page,
-      page.getByRole("button", { name: "Сформировать документы", exact: true }),
-    );
+    const finalizeButton = page.getByRole("button", {
+      name: "Сформировать документы",
+      exact: true,
+    });
+    await keyboardFocus(page, finalizeButton);
+    const [finalizeResponse] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.request().method() === "POST" &&
+          new URL(response.url()).pathname ===
+            `/api/print-requests/${requestId}/finalize`,
+        { timeout: 240000 },
+      ),
+      keyboardActivate(page, finalizeButton),
+    ]);
+    expect(finalizeResponse.status()).toBe(201);
+    const finalizeReadback = await finalizeResponse.json();
+    expect(finalizeReadback.requestId).toBe(requestId);
+    expect(finalizeReadback.documentIds).toHaveLength(101);
     await expect
       .poll(async () => (await readCommon(page, requestId)).status)
       .toBe("FINALIZED");
@@ -1005,18 +1286,19 @@ test("G1 keyboard only: original 100 people and photos, common PB group, real Di
     "Готово 204 из 204",
     { timeout: 180000 },
   );
-  const ready = page.waitForEvent("download");
-  await keyboardActivate(
-    page,
-    page
-      .locator(".files-panel article")
-      .filter({
-        has: page.locator(".file-type").getByText("PDF", { exact: true }),
-      })
-      .first()
-      .getByRole("link", { name: "Скачать", exact: true }),
-  );
-  await (await ready).saveAs(path.join(evidence, "keyboard-download.pdf"));
+  const downloadLink = page
+    .locator(".files-panel article")
+    .filter({
+      has: page.locator(".file-type").getByText("PDF", { exact: true }),
+    })
+    .first()
+    .getByRole("link", { name: "Скачать", exact: true });
+  await keyboardFocus(page, downloadLink);
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    keyboardActivate(page, downloadLink),
+  ]);
+  await download.saveAs(path.join(evidence, "keyboard-download.pdf"));
   keyboardMetrics.artifactDownloads++;
   await keyboardReopen(page);
   expect((await readCommon(page, requestId)).items).toEqual(checkpoint.items);

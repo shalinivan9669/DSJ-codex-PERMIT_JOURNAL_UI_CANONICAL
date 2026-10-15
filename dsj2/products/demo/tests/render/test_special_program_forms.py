@@ -23,7 +23,11 @@ class SpecialProgramForms(unittest.TestCase):
         output = EVIDENCE_ROOT / 'special-program'
         output.mkdir(parents=True, exist_ok=True)
         report = []
-        for record in MANIFEST['specialTemplates']:
+        # This fixture describes the existing SPECIAL ITR paper contract.
+        # LMS_CENTER_FORMS_V1 has its own snapshot and render acceptance suite.
+        records = [record for record in MANIFEST['specialTemplates'] if record.get('program') == 'SPECIAL']
+        self.assertEqual(len(records), 3, 'all existing SPECIAL ITR contracts must remain covered')
+        for record in records:
             group = record.get('ownerKind') == 'GROUP'
             snapshot = group_fixture(record['id'], 2) if group else fixture(record['id'])
             snapshot['templateVersion'] = record['version']

@@ -12,6 +12,7 @@ export function roleLabel(role: string): string {
       OPERATOR: "Менеджер",
       VIEWER: "Просмотр",
       EMPLOYER: "Представитель заказчика",
+      LEARNER: "Слушатель",
     }[role] || role
   );
 }

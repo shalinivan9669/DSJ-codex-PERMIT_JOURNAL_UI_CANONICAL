@@ -244,6 +244,13 @@ test("registered API controller method/path map equals deny-by-default policy", 
     await import("../apps/api/src/print-sets-controller");
   const { TrainingTopicsController } =
     await import("../apps/api/src/training-topics-controller");
+  const { LmsController } = await import("../apps/api/src/lms/controller");
+  const { LearnerIdentityController } =
+    await import("../apps/api/src/lms/identity");
+  const { LmsDocumentsController } =
+    await import("../apps/api/src/lms/document-bridge");
+  const { RegulatoryResultsController } =
+    await import("../apps/api/src/regulatory-results/controller");
   const routes = [
     DemoController,
     OperatorValueController,
@@ -252,6 +259,10 @@ test("registered API controller method/path map equals deny-by-default policy", 
     EmployerInviteController,
     PrintSetsController,
     TrainingTopicsController,
+    LmsController,
+    LearnerIdentityController,
+    LmsDocumentsController,
+    RegulatoryResultsController,
   ]
     .flatMap((controller) =>
       Object.getOwnPropertyNames(controller.prototype)
@@ -261,14 +272,18 @@ test("registered API controller method/path map equals deny-by-default policy", 
           const path = Reflect.getMetadata("path", fn);
           const prefix = Reflect.getMetadata("path", controller);
           const method = Reflect.getMetadata("method", fn);
-          return typeof path === "string" && method !== undefined
-            ? [
-                `${methods[method]} /${[prefix, path]
-                  .filter((value) => typeof value === "string" && value !== "/")
-                  .map((value) => value.replace(/^\/+|\/+$/g, ""))
-                  .filter(Boolean)
-                  .join("/")}`,
-              ]
+          return (typeof path === "string" || Array.isArray(path)) &&
+            method !== undefined
+            ? (Array.isArray(path) ? path : [path]).map(
+                (routePath: string) =>
+                  `${methods[method]} /${[prefix, routePath]
+                    .filter(
+                      (value) => typeof value === "string" && value !== "/",
+                    )
+                    .map((value) => value.replace(/^\/+|\/+$/g, ""))
+                    .filter(Boolean)
+                    .join("/")}`,
+              )
             : [];
         }),
     )

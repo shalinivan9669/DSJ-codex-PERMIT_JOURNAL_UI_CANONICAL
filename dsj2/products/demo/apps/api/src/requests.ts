@@ -71,6 +71,7 @@ import { previewScope, previewIssueApplies } from "./preview-scope";
 import { recoverPreviewArtifacts } from "./preview-artifacts";
 import { checkLayoutBatches } from "./layout-preflight";
 import { recipientRestoreBaseline } from "./recipient-restore";
+import { validateLmsReferences } from "./lms/document-metadata";
 export function namespace(templateId: string) {
   const family = templateId.split("-")[0].toUpperCase();
   const kind = templateId.endsWith("protocol")
@@ -171,7 +172,11 @@ export function employerFields(
     ),
   );
   const bin = normalized(item.employerBin);
-  const matchingBin = !bin || bin === normalized(candidate?.bin);
+  const candidateBin = normalized(candidate?.bin);
+  const knownLinkedEmployer =
+    !!item.employerId && candidate?.id === item.employerId;
+  const matchingBin =
+    !bin || bin === candidateBin || (knownLinkedEmployer && !candidateBin);
   const matchingNames =
     !!item.employerId ||
     (localEmployer
@@ -221,7 +226,9 @@ export async function checkReferences(
   tx: Prisma.TransactionClient,
   c: Context,
   draft: Draft,
+  requestId?: string,
 ) {
+  await validateLmsReferences(tx, c, draft, requestId);
   if (
     draft.customerId &&
     !(await tx.customerOrganization.findFirst({
@@ -1043,7 +1050,7 @@ async function validation(
     : sourceDraft;
   let resolved = resolveDraft(savedDraft);
   let draft = resolved.draft;
-  await checkReferences(tx, c, draft);
+  await checkReferences(tx, c, draft, id);
   const profile = await tx.issuerProfileVersion.findFirst({
     where: {
       tenantId: c.tenantId,

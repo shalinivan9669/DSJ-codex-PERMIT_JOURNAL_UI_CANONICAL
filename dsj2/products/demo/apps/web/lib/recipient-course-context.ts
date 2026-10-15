@@ -1,5 +1,5 @@
 import { trainingDirection } from "@demo/contracts";
-import type { Recipient } from "./types";
+import { documentTitle, type Recipient } from "./types";
 import { trainingDirectionLabel } from "./training-display";
 
 /** The same input is printed as a position, profession or awarded qualification. */
@@ -40,7 +40,7 @@ export function recipientCourses(item: Recipient, resolved: Recipient = item) {
         key,
         label: direction
           ? trainingDirectionLabel(direction)
-          : assignment.templateId,
+          : documentTitle(assignment.templateId),
         assignment,
         assignmentIndex,
         protocolOnly,

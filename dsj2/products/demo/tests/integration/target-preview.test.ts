@@ -555,7 +555,9 @@ test("target preview isolates document fields, retains proposal/group source, re
         },
       );
       assert.equal(
-        await db.generationJob.count({ where: { requestId: pinnedRequest.id } }),
+        await db.generationJob.count({
+          where: { requestId: pinnedRequest.id },
+        }),
         0,
       );
       assert.equal(
@@ -610,7 +612,8 @@ test("target preview isolates document fields, retains proposal/group source, re
     evidence.status = "PASS";
   } finally {
     const directory = resolve(
-      "docs/evidence/operator-details-ux-20261005/preview",
+      process.env.DEMO_TARGET_PREVIEW_EVIDENCE ||
+        `docs/evidence/target-preview-runs/${Date.now()}`,
     );
     await mkdir(directory, { recursive: true });
     await writeFile(

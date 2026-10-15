@@ -8,6 +8,9 @@ storage/
 **/test-results/
 **/next-env.d.ts
 **/generated/
-docs/evidence/
+# Historical reports and handoff inputs retain their original bytes.
+docs/
+# Vendored legal notices are not project source.
+licenses/
 assets/
 pnpm-lock.yaml

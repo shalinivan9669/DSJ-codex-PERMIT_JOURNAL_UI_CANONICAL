@@ -267,7 +267,9 @@ test("validation errors identify the field, focus the missing date and offline r
     .first()
     .click();
   // Addressed focus is scheduled after the validation panel opens.
-  await expect(page.getByLabel("Дата выдачи, строка 1", { exact: true })).toBeFocused();
+  await expect(
+    page.getByLabel("Дата выдачи, строка 1", { exact: true }),
+  ).toBeFocused();
   if (await page.getByRole("dialog").isVisible())
     await page
       .getByRole("dialog")
@@ -451,9 +453,27 @@ test("finalize response lost after commit: retry and double activation reuse one
     await cancel
       .getByLabel("Причина", { exact: true })
       .fill("СИНТЕТИЧЕСКАЯ проверка аннулирования через директора");
-    await cancel
-      .getByRole("button", { name: "Зафиксировать отмену", exact: true })
-      .click();
+    const [cancelResponse] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          new URL(response.url()).pathname ===
+            `/api/print-requests/${f.id}/cancel` &&
+          response.request().method() === "POST",
+      ),
+      cancel
+        .getByRole("button", { name: "Зафиксировать отмену", exact: true })
+        .click(),
+    ]);
+    expect(cancelResponse.status()).toBe(201);
+    const cancelSubmission = await cancelResponse.json();
+    expect(cancelSubmission).toMatchObject({
+      id: f.id,
+      status: "FINALIZED",
+      approval: { status: "PENDING" },
+    });
+    expect(cancelSubmission.approval.proposalId).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    );
     expect((await f.read()).status).toBe("FINALIZED");
     await f.roles.approve(f.id);
     await page.reload();
@@ -522,8 +542,8 @@ test("administrator settings and an independent operator conflict preserve both 
       ).size,
     ).toBe(
       templateManifest.templates.length +
-      templateManifest.groupTemplates.length +
-      templateManifest.specialTemplates.length,
+        templateManifest.groupTemplates.length +
+        templateManifest.specialTemplates.length,
     );
     await admin.getByRole("button", { name: "Нумерация", exact: true }).click();
     await admin

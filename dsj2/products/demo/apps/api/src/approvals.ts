@@ -904,7 +904,7 @@ export async function decideProposal(c: Context, id: string, input: unknown) {
         const draft = parse(draftSchema, proposal.payload);
         const { checkReferences, persistItems, searchable } =
           await import("./requests");
-        await checkReferences(tx, c, draft);
+        await checkReferences(tx, c, draft, record.id);
         await tx.printRequest.update({
           where: { id: record.id },
           data: {

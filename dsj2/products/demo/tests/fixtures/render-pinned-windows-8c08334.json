@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "independentOriginalCommit": "8825dfa65f6c2a9b38bd39ee44463d3a0f6b102e",
+  "runtime": {
+    "platform": "win32",
+    "python": "3.12.14",
+    "implementation": "CPython",
+    "pillow": "12.3.0",
+    "freetype": "2.14.3",
+    "lxml": "6.1.1",
+    "libxml": "2.11.9",
+    "zlib": "1.3.2",
+    "pillowZlib": "1.3.1.zlib-ng",
+    "pillowZlibNg": "2.3.3",
+    "raqm": false
+  },
+  "provenance": "Generated only from git archive 8c0833407675d8d31c786f37a55572357d7b9805 with its existing fixture/group_fixture, independently reproduced from git archive 8825dfa65f6c2a9b38bd39ee44463d3a0f6b102e. Original Linux goldens remain unchanged. See docs/evidence/lms-one-run-20261015/agent-a/RENDER_BASELINE_DIAGNOSTIC.json.",
+  "forms": [
+    {
+      "template": "biot-worker-card",
+      "version": "18",
+      "filename": "biot-worker-card.v18.docx",
+      "sourceSha256": "366a5604a12015a56cde602943b8dab54bf4bdc6231272fc66dd0828d366a91c",
+      "outputSha256": "0f146e6f123a46509add4b337a539d9ff190cd56d17d44fb79865316b4299ea0"
+    },
+    {
+      "template": "biot-itr-certificate",
+      "version": "16",
+      "filename": "biot-itr-certificate.v16.docx",
+      "sourceSha256": "20b2f85c0ad615a720c6b304db7dff9185838b3b50457eeefca6d3605294ab1f",
+      "outputSha256": "e862ff9905d2c321637762108b1e1bf2a04f130b761066cd707c4bd7269d52b2"
+    },
+    {
+      "template": "biot-protocol",
+      "version": "12",
+      "filename": "biot-protocol.v12.docx",
+      "sourceSha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+      "outputSha256": "88194e93acd20464e706fcbdc8dd0cab636a4e7cefc3a5329ef50a9812eb55cf"
+    },
+    {
+      "template": "ptm-card",
+      "version": "15",
+      "filename": "ptm-card.v15.docx",
+      "sourceSha256": "db147f3e14f08b3190cd525e97caf74767ebecce9639716a2f95fdfea99f989d",
+      "outputSha256": "a8e409c1e41cf116b8c980d5cb357287fbdfc5aa8b443b9b894a5b0fff659837"
+    },
+    {
+      "template": "ptm-protocol",
+      "version": "10",
+      "filename": "ptm-protocol.v10.docx",
+      "sourceSha256": "519d4dd4eeb6789eb2425839d0357879b076241a98c549116524a96a3be5622a",
+      "outputSha256": "1e9cc736a8f2112bea51b8f1c06b5f504f2005e7e6412b1a9b87612ecc7632a9"
+    },
+    {
+      "template": "pb-card",
+      "version": "15",
+      "filename": "pb-card.v15.docx",
+      "sourceSha256": "b6b4ff4cc3457eca168c3ea78938f4f90f37c752c6c4954ea29acbdafed9bb20",
+      "outputSha256": "c2a2fd68cb6f12091acd1f49ad8795e277a1dc57ccd82ecb6242e84a44308fe5"
+    },
+    {
+      "template": "pb-protocol",
+      "version": "10",
+      "filename": "pb-protocol.v10.docx",
+      "sourceSha256": "e7bc3573923bfe039c8196e7df2effeb0eb940fef43db9531d32ea50e8ff9f91",
+      "outputSha256": "aba99042fc215036cecf994f87cf38f21e7086c7ff3d9f0bd3d1f33ef885a241"
+    },
+    {
+      "template": "ps-card",
+      "version": "16",
+      "filename": "ps-card.v16.docx",
+      "sourceSha256": "61b772c29425b7c6ae6f66e21d576736cc06244c524e15ff3a9559371e582198",
+      "outputSha256": "9087b4f7b91a07a9554ce7f95bdf85e07e437be7a63294272b97379a642f9680"
+    },
+    {
+      "template": "ps-protocol",
+      "version": "10",
+      "filename": "ps-protocol.v10.docx",
+      "sourceSha256": "7e47a469436057e2f099114c75c51ae350da555a747e39a0bd3fde3b7f3a0175",
+      "outputSha256": "9d1b2510a1c282afefe2da98e46c14f65330eb1852d80a6b0b0f417cea9da6a2"
+    },
+    {
+      "template": "ps-witness",
+      "version": "12",
+      "filename": "ps-witness.v12.docx",
+      "sourceSha256": "26a0ff059d5488e08af8cb2de0d780dad01146d771e7b04e0abe12353c5c9bfa",
+      "outputSha256": "1114aa3e3ec17c657aa4b8c993e564d9d9f10d8434e461edfcd545a017810c67"
+    },
+    {
+      "template": "biot-itr-protocol",
+      "version": "3",
+      "filename": "biot-itr-protocol.v3.docx",
+      "sourceSha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+      "outputSha256": "88194e93acd20464e706fcbdc8dd0cab636a4e7cefc3a5329ef50a9812eb55cf"
+    },
+    {
+      "template": "biot-protocol",
+      "version": "12-group-1",
+      "filename": "biot-protocol.group-v3.docx",
+      "sourceSha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+      "outputSha256": "f299e7d31e1d73bae6811261c9fefd6ff530241711be4ca9764802a616bb8883"
+    },
+    {
+      "template": "ptm-protocol",
+      "version": "10-group-1",
+      "filename": "ptm-protocol.group-v2.docx",
+      "sourceSha256": "519d4dd4eeb6789eb2425839d0357879b076241a98c549116524a96a3be5622a",
+      "outputSha256": "2fce5c28407e7c89da0db1fc686c8b9e80161e9a0ad4b093dbc749787e1f699b"
+    },
+    {
+      "template": "pb-protocol",
+      "version": "10-group-1",
+      "filename": "pb-protocol.group-v2.docx",
+      "sourceSha256": "e7bc3573923bfe039c8196e7df2effeb0eb940fef43db9531d32ea50e8ff9f91",
+      "outputSha256": "bced52e05199dbe723bc8619e7b7164fb5ba1826b24728c022356280cc15e950"
+    },
+    {
+      "template": "ps-protocol",
+      "version": "10-group-1",
+      "filename": "ps-protocol.group-v2.docx",
+      "sourceSha256": "7e47a469436057e2f099114c75c51ae350da555a747e39a0bd3fde3b7f3a0175",
+      "outputSha256": "3bd7bd0821ec897a9480b7f5529a287f5e7976066b94820d80e5596889a8e5fa"
+    },
+    {
+      "template": "biot-itr-protocol",
+      "version": "3-group-1",
+      "filename": "biot-itr-protocol.group-v3.docx",
+      "sourceSha256": "8c0c68b5d6f3a66ce16a179b67422f3fe188c7050ed850ccb8fed12948e29c0f",
+      "outputSha256": "f299e7d31e1d73bae6811261c9fefd6ff530241711be4ca9764802a616bb8883"
+    }
+  ]
+}

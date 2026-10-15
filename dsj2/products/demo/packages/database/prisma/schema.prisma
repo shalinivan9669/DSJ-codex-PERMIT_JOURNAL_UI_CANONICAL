@@ -14,6 +14,370 @@ model Tenant {
   demoOnly Boolean @default(false)
   createdAt DateTime @default(now())
 }
+
+// Autonomous LMS. Composite foreign keys and immutability triggers live in the additive migration.
+model LearnerProfile {
+  id String @id @default(uuid())
+  tenantId String
+  userId String
+  recipientId String
+  consentVersion String
+  consentAt DateTime
+  createdAt DateTime @default(now())
+  @@unique([tenantId,userId])
+  @@unique([tenantId,recipientId])
+  @@unique([tenantId,id])
+}
+model LearnerInvite {
+  id String @id @default(uuid())
+  tenantId String
+  recipientId String
+  customerId String?
+  tokenHash String @unique
+  email String
+  expiresAt DateTime
+  usedAt DateTime?
+  revokedAt DateTime?
+  createdBy String
+  createdAt DateTime @default(now())
+  @@index([tenantId,recipientId])
+}
+model LearnerRecovery {
+  id String @id @default(uuid())
+  tenantId String
+  userId String
+  tokenHash String @unique
+  expiresAt DateTime
+  usedAt DateTime?
+  createdBy String
+  createdAt DateTime @default(now())
+}
+model Course {
+  id String @id @default(uuid())
+  tenantId String
+  titleRu String
+  titleKz String @default("")
+  archived Boolean @default(false)
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,archived,createdAt])
+}
+model RegulatoryProfileVersion {
+  id String @id @default(uuid())
+  tenantId String
+  courseId String
+  version Int
+  status String @default("NEEDS_LEGAL_REVIEW")
+  definition Json
+  snapshotHash String
+  reviewedBy String?
+  reviewedAt DateTime?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,courseId,version])
+  @@unique([tenantId,id])
+}
+model CourseVersion {
+  id String @id @default(uuid())
+  tenantId String
+  courseId String
+  version Int
+  status String @default("DRAFT")
+  revision Int @default(0)
+  content Json
+  regulatoryProfileVersionId String
+  snapshotHash String?
+  publishedAt DateTime?
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,courseId,version])
+  @@unique([tenantId,id])
+  @@index([tenantId,status,createdAt])
+}
+model LmsMaterial {
+  id String @id @default(uuid())
+  tenantId String
+  courseId String
+  storageKey String
+  sha256 String
+  size Int
+  mimeType String
+  originalName String
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,courseId])
+}
+model Enrollment {
+  id String @id @default(uuid())
+  tenantId String
+  courseVersionId String
+  recipientId String
+  learnerUserId String?
+  customerId String?
+  groupKey String @default("")
+  status String @default("ACTIVE")
+  dueAt DateTime
+  assignedBy String
+  assignedAt DateTime @default(now())
+  completedAt DateTime?
+  @@unique([tenantId,courseVersionId,recipientId])
+  @@unique([tenantId,id])
+  @@index([tenantId,learnerUserId,status])
+  @@index([tenantId,customerId,status])
+}
+model LessonProgress {
+  id String @id @default(uuid())
+  tenantId String
+  enrollmentId String
+  lessonId String
+  sequence Int @default(0)
+  positionSeconds Float @default(0)
+  intervals Json @default("[]")
+  lastSeenAt DateTime?
+  acknowledgedAt DateTime?
+  completedAt DateTime?
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,enrollmentId,lessonId])
+}
+model ExamAttempt {
+  id String @id @default(uuid())
+  tenantId String
+  enrollmentId String
+  courseVersionId String
+  regulatoryProfileVersionId String
+  assessmentKind String
+  ordinal Int
+  state String @default("IN_PROGRESS")
+  activeKey String? @unique
+  snapshot Json
+  answers Json @default("{}")
+  sequence Int @default(0)
+  startedAt DateTime @default(now())
+  deadlineAt DateTime
+  finishedAt DateTime?
+  score Int?
+  maximum Int?
+  verdict String?
+  @@unique([tenantId,enrollmentId,ordinal])
+  @@unique([tenantId,id])
+  @@index([state,deadlineAt])
+}
+model LmsExternalEvidence {
+  id String @id @default(uuid())
+  tenantId String
+  enrollmentId String
+  issuer String
+  sourceSystem String
+  documentNumber String
+  documentDate String
+  examAt DateTime?
+  storageKey String
+  sha256 String
+  mimeType String
+  originalName String
+  status String @default("UNVERIFIED")
+  reviewedBy String?
+  reviewedAt DateTime?
+  reviewMethod String?
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,enrollmentId])
+}
+model VerifiedExamResult {
+  id String @id @default(uuid())
+  tenantId String
+  enrollmentId String
+  revision Int @default(1)
+  supersedesResultId String?
+  attemptId String?
+  externalEvidenceId String?
+  assessmentKind String
+  regulatoryProfileVersionId String
+  courseVersionId String
+  recipientId String
+  verdict String
+  score Int?
+  maximum Int?
+  eligible Boolean @default(false)
+  examAt DateTime?
+  confirmedAt DateTime @default(now())
+  snapshot Json
+  snapshotHash String
+  createdBy String
+  @@unique([tenantId,enrollmentId,revision])
+  @@unique([tenantId,id])
+  @@index([tenantId,eligible,confirmedAt])
+}
+model LmsResultEvent {
+  id String @id @default(uuid())
+  tenantId String
+  resultId String
+  kind String
+  reason String
+  actorId String
+  correlationId String
+  createdAt DateTime @default(now())
+  @@index([tenantId,resultId])
+}
+model LmsDocumentLink {
+  id String @id @default(uuid())
+  tenantId String
+  resultId String
+  documentType String
+  legalForm String
+  requestId String
+  issuanceId String?
+  status String @default("PREPARED")
+  originalReference String?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,resultId,documentType])
+  @@index([tenantId,requestId])
+}
+model CalendarVersion {
+  id String @id @default(uuid())
+  tenantId String
+  name String
+  version Int
+  timezone String
+  coverageFrom String
+  coverageUntil String
+  definition Json
+  approvedBy String
+  approvedAt DateTime @default(now())
+  @@unique([tenantId,name,version])
+  @@unique([tenantId,id])
+}
+model RegulatoryOutbox {
+  id String @id @default(uuid())
+  tenantId String
+  resultId String
+  kind String @default("PREPARE")
+  status String @default("PENDING")
+  leaseToken Int @default(0)
+  lockedUntil DateTime?
+  availableAt DateTime @default(now())
+  attempts Int @default(0)
+  createdAt DateTime @default(now())
+  processedAt DateTime?
+  @@unique([tenantId,resultId,kind])
+  @@index([status,availableAt,lockedUntil])
+}
+model SanitaryJournalEntry {
+  id String @id @default(uuid())
+  tenantId String
+  resultId String
+  enrollmentId String
+  snapshot Json
+  snapshotHash String
+  signatureState String @default("AWAITING_SIGNATURE")
+  createdAt DateTime @default(now())
+  @@unique([tenantId,resultId])
+  @@unique([tenantId,id])
+}
+model RegulatoryBatch {
+  id String @id @default(uuid())
+  tenantId String
+  regulatoryProfileVersionId String
+  calendarVersionId String?
+  destination String
+  state String
+  snapshot Json
+  snapshotHash String
+  preparedAt DateTime @default(now())
+  dueAt DateTime?
+  dueDate String?
+  slaBasis String @default("INTERNAL_SLA")
+  @@unique([tenantId,id])
+  @@index([tenantId,state,dueAt])
+}
+model RegulatoryBatchItem {
+  id String @id @default(uuid())
+  tenantId String
+  batchId String
+  resultId String
+  resultRevision Int
+  journalEntryId String
+  snapshot Json
+  snapshotHash String
+  @@unique([tenantId,resultId])
+  @@unique([tenantId,id])
+  @@index([tenantId,batchId])
+}
+model IntegrationConnection {
+  id String @id @default(uuid())
+  tenantId String
+  destination String
+  state String @default("NOT_CONNECTED")
+  contractVersion String?
+  capabilities Json @default("{}")
+  dataAccessPolicy Json @default("{}")
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,destination])
+}
+model IntegrationDelivery {
+  id String @id @default(uuid())
+  tenantId String
+  batchItemId String
+  destination String
+  resultId String
+  resultRevision Int
+  idempotencyKey String @unique
+  payload Json
+  payloadHash String
+  contractVersion String @default("internal-v1")
+  state String @default("READY")
+  lmkState String @default("NOT_CONFIRMED")
+  externalId String?
+  correlationId String @unique
+  leaseToken Int @default(0)
+  lockedUntil DateTime?
+  availableAt DateTime @default(now())
+  attempts Int @default(0)
+  lastError String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,destination,resultId,resultRevision])
+  @@unique([tenantId,id])
+  @@index([state,availableAt,lockedUntil])
+}
+model DeliveryAttempt {
+  id String @id @default(uuid())
+  tenantId String
+  deliveryId String
+  leaseToken Int
+  operation String
+  outcome String
+  transportStatus Int?
+  createdAt DateTime @default(now())
+  @@index([tenantId,deliveryId])
+}
+model IntegrationReceipt {
+  id String @id @default(uuid())
+  tenantId String
+  deliveryId String
+  receiptId String
+  payloadHash String
+  outcome String
+  externalId String
+  evidence Json
+  createdAt DateTime @default(now())
+  @@unique([tenantId,deliveryId,receiptId])
+}
+model RegulatoryManualEvidence {
+  id String @id @default(uuid())
+  tenantId String
+  deliveryId String
+  actorId String
+  source String
+  reference String
+  category String @default("OPERATOR_ATTESTED")
+  storageKey String?
+  sha256 String?
+  createdAt DateTime @default(now())
+  @@index([tenantId,deliveryId])
+}
 model User {
   id String @id @default(uuid())
   tenantId String

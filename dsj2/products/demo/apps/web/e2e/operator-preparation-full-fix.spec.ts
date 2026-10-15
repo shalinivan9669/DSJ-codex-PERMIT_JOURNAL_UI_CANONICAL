@@ -3,7 +3,10 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { loginIsolated } from "./operator-full-fix-session";
-import { fullSuiteApiCooldown, fullSuitePageApiCooldown } from "./operator-full-suite";
+import {
+  fullSuiteApiCooldown,
+  fullSuitePageApiCooldown,
+} from "./operator-full-suite";
 import {
   applyBusinessRules,
   draftSchema,
@@ -145,7 +148,10 @@ async function create(
 }
 async function read(page: Page, id: string): Promise<Draft> {
   const response = await page.request.get(`/api/print-requests/${id}`);
-  expect(response.ok(), `REQUEST_READ_FAILED status=${response.status()} request=${id} body=${await response.text()}`).toBe(true);
+  expect(
+    response.ok(),
+    `REQUEST_READ_FAILED status=${response.status()} request=${id} body=${await response.text()}`,
+  ).toBe(true);
   return response.json();
 }
 async function expand(details: Locator) {
@@ -732,7 +738,11 @@ test("UX13/R4 every supported category and personal form shows forced actual exp
     // Fifteen categories generate real editor/save/read traffic. Give the
     // unchanged full-suite API window an idle boundary every three categories.
     if (specIndex > 0 && specIndex % 3 === 0)
-      await fullSuitePageApiCooldown(page, evidence, `remaining-expiry-batch-${specIndex}`);
+      await fullSuitePageApiCooldown(
+        page,
+        evidence,
+        `remaining-expiry-batch-${specIndex}`,
+      );
     const item = {
       ...newRecipient(),
       fullNameRu:
@@ -829,22 +839,54 @@ test("UX13/R4 every supported category and personal form shows forced actual exp
     // the issue date and verify the exception remains manual after saving/reload.
     if (spec.direction !== "PS") {
       const manualUntil = "2031-11-12";
-      const primaryBefore = saved.items[0].assignments.find((a) => a.id === primary.id)!;
-      await primaryFields.getByLabel("Действителен до", { exact: true }).fill(manualUntil);
-      await expect.poll(async () => {
-        const value = (await read(page, created.id)).items[0].assignments.find((a) => a.id === primary.id)!;
-        return { value: value.validUntil, origin: value.fieldOrigins?.validUntil };
-      }).toEqual({ value: manualUntil, origin: "MANUAL" });
-      await primaryFields.getByLabel("Дата документа", { exact: true }).fill("2026-10-10");
-      await expect.poll(async () => (await read(page, created.id)).items[0].assignments.find((a) => a.id === primary.id)?.documentDate).toBe("2026-10-10");
+      const primaryBefore = saved.items[0].assignments.find(
+        (a) => a.id === primary.id,
+      )!;
+      await primaryFields
+        .getByLabel("Действителен до", { exact: true })
+        .fill(manualUntil);
+      await expect
+        .poll(async () => {
+          const value = (
+            await read(page, created.id)
+          ).items[0].assignments.find((a) => a.id === primary.id)!;
+          return {
+            value: value.validUntil,
+            origin: value.fieldOrigins?.validUntil,
+          };
+        })
+        .toEqual({ value: manualUntil, origin: "MANUAL" });
+      await primaryFields
+        .getByLabel("Дата документа", { exact: true })
+        .fill("2026-10-10");
+      await expect
+        .poll(
+          async () =>
+            (await read(page, created.id)).items[0].assignments.find(
+              (a) => a.id === primary.id,
+            )?.documentDate,
+        )
+        .toBe("2026-10-10");
       saved = await read(page, created.id);
-      const manual = saved.items[0].assignments.find((a) => a.id === primary.id)!;
+      const manual = saved.items[0].assignments.find(
+        (a) => a.id === primary.id,
+      )!;
       expect(manual.validUntil).toBe(manualUntil);
       expect(manual.fieldOrigins?.validUntil).toBe("MANUAL");
       expect(manual.outcome).toEqual(primaryBefore.outcome);
       expect(manual.templateId).toBe(primaryBefore.templateId);
-      await expect(primaryFields.getByLabel("Действителен до", { exact: true })).toHaveValue(manualUntil);
-      observations.push({ requestId: created.id, ...spec, templateId: manual.templateId, issueDate: manual.documentDate, displayed: manualUntil, savedUntil: manual.validUntil, savedOrigin: manual.fieldOrigins?.validUntil });
+      await expect(
+        primaryFields.getByLabel("Действителен до", { exact: true }),
+      ).toHaveValue(manualUntil);
+      observations.push({
+        requestId: created.id,
+        ...spec,
+        templateId: manual.templateId,
+        issueDate: manual.documentDate,
+        displayed: manualUntil,
+        savedUntil: manual.validUntil,
+        savedOrigin: manual.fieldOrigins?.validUntil,
+      });
     }
     if (
       spec.biot === "INSPECTOR_SPECIAL" ||

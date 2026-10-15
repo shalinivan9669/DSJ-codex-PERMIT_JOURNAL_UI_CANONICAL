@@ -223,7 +223,10 @@ test("a mixed request joins existing documents to separate compatible group prot
   await page.locator("#request-training > summary").click();
   for (const [index, title] of ["БиОТ · рабочие", "БиОТ · ИТР"].entries()) {
     const protocol = page.getByRole("combobox", {
-      name: new RegExp(`^Протокол:.*(?:${index ? "ITR|ИТР" : "WORKER|рабоч"})`, "i"),
+      name: new RegExp(
+        `^Протокол:.*(?:${index ? "ITR|ИТР" : "WORKER|рабоч"})`,
+        "i",
+      ),
     });
     // Mode changes are explicit on the existing event; they preserve assignment IDs and manual dates.
     await protocol.selectOption("GROUP");

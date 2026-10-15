@@ -19,6 +19,7 @@ export function userRoleUpdate(existingRole: Role | undefined, selected: Role) {
 }
 
 export function workspaceStartPath(role: Role, registering = false): string {
+  if (role === "LEARNER") return "/learn";
   if (role === "EMPLOYER") return "/portal";
   if (registering) return isDirectorRole(role) ? "/onboarding" : "/requests";
   return isDirectorRole(role) ? "/approvals" : "/requests";

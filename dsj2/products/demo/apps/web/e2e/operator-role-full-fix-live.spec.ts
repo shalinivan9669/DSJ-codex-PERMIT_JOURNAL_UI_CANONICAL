@@ -5,7 +5,10 @@ import path from "node:path";
 import { draftSchema } from "@demo/contracts";
 import type { Draft, Artifact, Job } from "../lib/types";
 import { loginRole, write } from "./operator-role-fixture";
-import { fullSuitePageApiCooldown } from "./operator-full-suite";
+import {
+  fullSuitePageApiCooldown,
+  fullSuiteRunId,
+} from "./operator-full-suite";
 
 test.use({ trace: "off" });
 type Detail = Draft & {
@@ -421,6 +424,8 @@ test("real operator preparation, director return/correction/new approval, render
       fullPage: true,
     });
     const report = {
+      status: "PASS",
+      suiteRunId: fullSuiteRunId(),
       capturedAt: new Date().toISOString(),
       requestId: id,
       roles: ["ADMIN", "OPERATOR", "DIRECTOR"],
@@ -434,6 +439,7 @@ test("real operator preparation, director return/correction/new approval, render
       previewNumbersUnchanged: true,
       documentCount: issued.documents.length,
       documents: issued.documents,
+      issuanceIds: issued.issuances?.map((issuance) => issuance.id) || [],
       artifactHashes: hashes,
       hashesUnchangedAfterDirectoryEdit: true,
       signingStatus: signing.status,
@@ -449,6 +455,7 @@ test("real operator preparation, director return/correction/new approval, render
     await fs.writeFile(
       path.join(destination, "role-lifecycle-readback.json"),
       JSON.stringify(report, null, 2),
+      { flag: fullSuiteRunId() ? "wx" : "w" },
     );
   } finally {
     await directorContext.close();

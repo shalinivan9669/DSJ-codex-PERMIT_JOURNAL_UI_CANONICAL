@@ -8,9 +8,17 @@ export const employerInviteSchema = z
       .transform((v) => v.toLowerCase()),
     displayName: z.string().trim().min(1).max(255),
     permissions: z
-      .array(z.enum(["READ", "PROPOSE", "APPROVE_DATA", "DOWNLOAD"]))
+      .array(
+        z.enum([
+          "READ",
+          "PROPOSE",
+          "APPROVE_DATA",
+          "DOWNLOAD",
+          "ASSIGN_TRAINING",
+        ]),
+      )
       .min(1)
-      .max(4)
+      .max(5)
       .refine((p) => p.includes("READ")),
     recipientIds: z.array(z.string().uuid()).max(1000).default([]),
     expiresAt: z.iso.datetime(),

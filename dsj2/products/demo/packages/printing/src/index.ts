@@ -46,7 +46,8 @@ export type RenderCommand =
   | "merge-docx"
   | "health"
   | "preflight"
-  | "control-sheet";
+  | "control-sheet"
+  | "regulatory-list";
 export const MIME: Record<string, string> = {
   DOCX: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   PDF: "application/pdf",
@@ -204,7 +205,7 @@ export async function runRender(
       ? "png"
       : command === "import"
         ? "json"
-        : command === "control-sheet"
+        : command === "control-sheet" || command === "regulatory-list"
           ? "pdf"
           : command;
   const output = join(work, "output." + extension);

@@ -9,7 +9,9 @@ import { assertTestDatabase } from "./test-database";
 
 test(
   "daily business scenarios persist real history, output, obligations, renewal and scoped evidence",
-  { timeout: 600_000 },
+  // The real eighteen-document render path needs room on local Windows hosts;
+  // all persisted assertions below still run, without resuming a prior fixture.
+  { timeout: 1_200_000 },
   async () => {
     assertTestDatabase();
     assert.notEqual(

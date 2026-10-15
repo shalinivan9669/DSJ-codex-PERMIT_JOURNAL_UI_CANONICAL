@@ -233,10 +233,17 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   expect(initial.items[1].assignments[0].hours).toBe("16");
   // A mapped empty spreadsheet cell is an explicit CLEARED fact. Restore
   // only row 4 to inheritance; all other imported blanks must stay cleared.
-  expect(initial.items.filter((_: unknown, index: number) => index !== 1).every(
-    (item: { assignments: { hours: string; fieldOrigins: { hours: string } }[] }) =>
-      item.assignments[0].hours === "" && item.assignments[0].fieldOrigins.hours === "CLEARED",
-  )).toBe(true);
+  expect(
+    initial.items
+      .filter((_: unknown, index: number) => index !== 1)
+      .every(
+        (item: {
+          assignments: { hours: string; fieldOrigins: { hours: string } }[];
+        }) =>
+          item.assignments[0].hours === "" &&
+          item.assignments[0].fieldOrigins.hours === "CLEARED",
+      ),
+  ).toBe(true);
   const details = page.locator(".assignment-list > details").first();
   async function restoreHours(row: number, expected: string) {
     await page
@@ -304,20 +311,31 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   await page.reload();
   const restored = await read("/resolved");
   expect(
-    restored.draft.items.slice(0, 4).every(
-      (item: { assignments: { hours: string }[] }) =>
-        item.assignments[0].hours === "24",
-    ),
+    restored.draft.items
+      .slice(0, 4)
+      .every(
+        (item: { assignments: { hours: string }[] }) =>
+          item.assignments[0].hours === "24",
+      ),
   ).toBe(true);
-  expect(restored.draft.items.slice(4).every(
-    (item: { assignments: { hours: string }[] }) => item.assignments[0].hours === "",
-  )).toBe(true);
+  expect(
+    restored.draft.items
+      .slice(4)
+      .every(
+        (item: { assignments: { hours: string }[] }) =>
+          item.assignments[0].hours === "",
+      ),
+  ).toBe(true);
   const restoredRaw = await read();
-  expect(restoredRaw.items.slice(4).map(
-    (item: { assignments: unknown[] }) => item.assignments,
-  )).toEqual(initial.items.slice(4).map(
-    (item: { assignments: unknown[] }) => item.assignments,
-  ));
+  expect(
+    restoredRaw.items
+      .slice(4)
+      .map((item: { assignments: unknown[] }) => item.assignments),
+  ).toEqual(
+    initial.items
+      .slice(4)
+      .map((item: { assignments: unknown[] }) => item.assignments),
+  );
   const ru = page.getByLabel("ФИО, строка 100", { exact: true });
   const position = page.getByLabel("Должность · RU, строка 100", {
     exact: true,
@@ -330,7 +348,9 @@ test("100 real rows preserve imported/manual/cleared common overrides, keyboard 
   // Enter on the final populated name deliberately adds a row. Exercise the
   // existing 99-to-100 navigation here while keeping this fixture at 100 people.
   await page.keyboard.press("Shift+Enter");
-  await expect(page.getByLabel("ФИО, строка 99", { exact: true })).toBeFocused();
+  await expect(
+    page.getByLabel("ФИО, строка 99", { exact: true }),
+  ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(ru).toBeFocused();
   await expect(page.locator(".operator-grid tbody tr")).toHaveCount(100);

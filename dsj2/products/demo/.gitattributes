@@ -2,3 +2,7 @@
 scripts/render/generate_biot_card.py text eol=lf
 scripts/render/generate_biot_mail_merge_bundle.py text eol=lf
 scripts/render/generate_ps_witness_certificate.py text eol=lf
+# PDF cross-reference offsets require exact binary bytes on Windows too.
+*.pdf binary
+# Preserve exact acceptance evidence bytes and their recorded SHA-256.
+docs/evidence/lms-one-run-20261015/** -text

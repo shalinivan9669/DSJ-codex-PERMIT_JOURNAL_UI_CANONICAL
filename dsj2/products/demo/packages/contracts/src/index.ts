@@ -14,6 +14,8 @@ export * from "./business-rules";
 export * from "./course-defaults";
 export * from "./document-languages";
 export * from "./roles";
+export * from "./capabilities";
+export * from "./lms";
 export * from "./import-scaffold";
 export const LIMITS = {
   // Resource guards for a single in-memory request, not course/group policy.
@@ -39,12 +41,19 @@ export const templateIds = [
   "ps-protocol",
   "ps-witness",
 ] as const;
+export const lmsTemplateIds = [
+  "lms-protocol",
+  "lms-certificate",
+  "lms-credential",
+] as const;
+export const allTemplateIds = [...templateIds, ...lmsTemplateIds] as const;
 export const roleSchema = z.enum([
   "ADMIN",
   "DIRECTOR",
   "OPERATOR",
   "VIEWER",
   "EMPLOYER",
+  "LEARNER",
 ]);
 export type Role = z.infer<typeof roleSchema>;
 const text = z
@@ -150,9 +159,42 @@ export type CommonFields = z.infer<typeof commonFieldsSchema>;
 export type TrainingEventInput = z.infer<typeof trainingEventSchema>;
 export const assignmentSchema = z
   .object({
+    lms: z
+      .object({
+        resultId: z.string().uuid(),
+        resultRevision: z.number().int().positive(),
+        profileVersionId: z.string().uuid(),
+        assessmentKind: z.enum(["CENTER_EXAM", "EXTERNAL_AUTHORIZED"]),
+        legalForm: z.enum([
+          "PAPER_ORIGINAL",
+          "ELECTRONIC_ORIGINAL",
+          "COPY_OF_ORIGINAL",
+          "INFORMATION_CARD",
+        ]),
+        eligible: z.literal(true),
+        course: z.object({
+          titleRu: z.string(),
+          titleKz: z.string(),
+          hours: z.number(),
+        }),
+        issuer: z.string(),
+        examiner: z.string(),
+        examAt: z.string().nullable(),
+        examDate: z.string().date().nullable(),
+        verdict: z.literal("PASSED"),
+        score: z.number().nullable(),
+        maximum: z.number().nullable(),
+        source: z.record(z.string(), z.unknown()),
+        requiredSignatures: z.array(z.string()),
+        signatureState: z.literal("PREPARED"),
+        synthetic: z.boolean(),
+        originalReference: z.string().nullable(),
+      })
+      .strict()
+      .optional(),
     trainingDateRule: trainingDateRuleSchema.nullable().optional(),
     id: z.string().min(1).max(80),
-    templateId: z.enum(templateIds),
+    templateId: z.enum(allTemplateIds),
     documentDate: date,
     trainingStart: date,
     trainingEnd: date,
@@ -681,6 +723,23 @@ export function validateDraft(
       )
         continue;
       const path = `items.${n}.assignments.${a}`;
+      if (assignment.templateId.startsWith("lms-")) {
+        if (!assignment.lms?.eligible || assignment.lms.verdict !== "PASSED")
+          add(
+            "LMS_VERIFIED_RESULT_REQUIRED",
+            `${path}.lms`,
+            "Требуется подтверждённый результат обучения",
+            item.id,
+          );
+        if (!validDate(assignment.documentDate))
+          add(
+            "DATE_INVALID",
+            `${path}.documentDate`,
+            "Введите действительную календарную дату",
+            item.id,
+          );
+        continue;
+      }
       for (const key of [
         "trainingSubject",
         "trainingSubjectKz",
@@ -994,16 +1053,20 @@ export function validateDraft(
     );
   return issues.map((issue) => stableValidationIssue(draft, issue));
 }
-export const TEMPLATE_LABELS: Record<(typeof templateIds)[number], string> = {
-  "biot-worker-card": "БиОТ — удостоверение рабочего",
-  "biot-itr-certificate": "БиОТ — сертификат ИТР",
-  "biot-protocol": "БиОТ — индивидуальный протокол",
-  "biot-itr-protocol": "БиОТ — протокол ИТР",
-  "ptm-card": "ПТМ — удостоверение",
-  "ptm-protocol": "ПТМ — индивидуальный протокол",
-  "pb-card": "ПБ — удостоверение",
-  "pb-protocol": "ПБ — индивидуальный протокол",
-  "ps-card": "ПС — удостоверение",
-  "ps-protocol": "ПС — индивидуальный протокол",
-  "ps-witness": "ПС — свидетельство",
-};
+export const TEMPLATE_LABELS: Record<(typeof allTemplateIds)[number], string> =
+  {
+    "lms-protocol": "Обучение — протокол результата",
+    "lms-certificate": "Обучение — сертификат центра",
+    "lms-credential": "Обучение — удостоверение центра",
+    "biot-worker-card": "БиОТ — удостоверение рабочего",
+    "biot-itr-certificate": "БиОТ — сертификат ИТР",
+    "biot-protocol": "БиОТ — индивидуальный протокол",
+    "biot-itr-protocol": "БиОТ — протокол ИТР",
+    "ptm-card": "ПТМ — удостоверение",
+    "ptm-protocol": "ПТМ — индивидуальный протокол",
+    "pb-card": "ПБ — удостоверение",
+    "pb-protocol": "ПБ — индивидуальный протокол",
+    "ps-card": "ПС — удостоверение",
+    "ps-protocol": "ПС — индивидуальный протокол",
+    "ps-witness": "ПС — свидетельство",
+  };

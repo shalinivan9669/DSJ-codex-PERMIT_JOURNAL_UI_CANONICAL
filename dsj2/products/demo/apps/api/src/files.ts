@@ -1,4 +1,5 @@
 import sharp, { type Metadata } from "sharp";
+import type {} from "multer";
 import { extname } from "node:path";
 import {
   ArtifactStore,

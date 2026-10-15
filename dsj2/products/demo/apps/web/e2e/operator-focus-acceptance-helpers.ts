@@ -112,9 +112,16 @@ export async function removeRestoreFocus(
   }
   const beforeRemoval = await read(page, requestId);
   const removalCommitted = page.waitForResponse((response) => {
-    if (response.request().method() !== "PATCH" || !response.url().endsWith("/api/print-requests/" + requestId)) return false;
+    if (
+      response.request().method() !== "PATCH" ||
+      !response.url().endsWith("/api/print-requests/" + requestId)
+    )
+      return false;
     const payload = response.request().postDataJSON();
-    return Array.isArray(payload?.draft?.items) && !payload.draft.items.some((item: { id: string }) => item.id === target.id);
+    return (
+      Array.isArray(payload?.draft?.items) &&
+      !payload.draft.items.some((item: { id: string }) => item.id === target.id)
+    );
   });
   await keyboardActivate(
     page,
@@ -130,7 +137,9 @@ export async function removeRestoreFocus(
   const persistedRemoval = await read(page, requestId);
   expect(persistedRemoval.revision).toBe(committedRemoval.revision);
   expect(persistedRemoval.revision).toBeGreaterThan(beforeRemoval.revision);
-  expect(persistedRemoval.items.some((item) => item.id === target.id)).toBe(false);
+  expect(persistedRemoval.items.some((item) => item.id === target.id)).toBe(
+    false,
+  );
   await expect(dialog).toHaveCount(0);
   const neighbor = afterItems[Math.min(index, afterItems.length - 1)];
   const expectedFocus = neighbor

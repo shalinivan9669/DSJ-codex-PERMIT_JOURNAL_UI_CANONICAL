@@ -80,8 +80,8 @@ test("V05 exact live handover: eight people, two events, unknown result and untr
         documentDate: i === 0 ? "2026-09-24" : "",
         ...(i === 1 ? { fieldOrigins: { documentDate: "CLEARED" } } : {}),
         protocolDate: "2026-09-24",
-        trainingStart: "2026-09-23",
-        trainingEnd: "2026-09-24",
+        trainingStart: "2026-09-22",
+        trainingEnd: "2026-09-23",
       },
     })),
     items: people.map((person, i) => ({

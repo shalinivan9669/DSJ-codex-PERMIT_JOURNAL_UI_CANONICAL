@@ -14,8 +14,16 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Response } from "express";
-import { z, LIMITS, templateIds } from "@demo/contracts";
-import { db, ctx, fail, parse, audit, type DemoRequest } from "./core";
+import { z, LIMITS, templateIds, allTemplateIds } from "@demo/contracts";
+import {
+  db,
+  ctx,
+  requireCapability,
+  fail,
+  parse,
+  audit,
+  type DemoRequest,
+} from "./core";
 import { login, logout, changePassword, cookies } from "./auth";
 import { registerCenter } from "./tenant-provisioning";
 import {
@@ -141,20 +149,26 @@ export class DemoController {
     @Req() req: DemoRequest,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return logout(ctx(req), res);
+    return logout(requireCapability(req, "session"), res);
   }
   @Post("auth/password") password(
     @Req() req: DemoRequest,
     @Body() body: unknown,
   ) {
     // Changing one's own credential is available to every authenticated role.
-    return changePassword(ctx(req), body);
+    return changePassword(requireCapability(req, "session"), body);
   }
   @Get("auth/session") session(@Req() req: DemoRequest) {
-    return context(ctx(req), cookies(req).demo_csrf || "");
+    return context(
+      requireCapability(req, "session"),
+      cookies(req).demo_csrf || "",
+    );
   }
   @Get("context") context(@Req() req: DemoRequest) {
-    return context(ctx(req), cookies(req).demo_csrf || "");
+    return context(
+      requireCapability(req, "session"),
+      cookies(req).demo_csrf || "",
+    );
   }
   @Get("customers") async customers(
     @Req() req: DemoRequest,
@@ -380,6 +394,13 @@ export class DemoController {
     @Body() body: unknown,
   ) {
     return signing.completeSigning(ctx(req, true), id, body);
+  }
+  @Post("print-requests/:id/paper-signatures") paperSignatures(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return signing.attestPaperSignatures(ctx(req, true, true), id, body);
   }
   @Get("settings/signatories") signatories(@Req() req: DemoRequest) {
     return signing.listSignatories(ctx(req));
@@ -752,8 +773,8 @@ export class DemoController {
     if (!template) fail(404, "NOT_FOUND", "Шаблон не найден");
     if (data.approved) {
       if (
-        !templateIds.includes(
-          template.templateId as (typeof templateIds)[number],
+        !allTemplateIds.includes(
+          template.templateId as (typeof allTemplateIds)[number],
         )
       )
         fail(

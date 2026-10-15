@@ -3,6 +3,10 @@ import { randomUUID, createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import { templateIds } from "@demo/contracts";
 import {
+  fullSuiteRunId,
+  writeFullManualCheckpoint,
+} from "./operator-full-suite";
+import {
   loginRole,
   readPrintDetail,
   waitOriginalJobs,
@@ -282,6 +286,17 @@ test("manual 20 people use one group position employer and courses, director rev
     "Одна передача директору сохраняет и проверяет все 20 человек; отдельные Сохранить/Проверить/выбор всех не нужны",
   );
   const submitted = await readPrintDetail(page, id);
+  if (fullSuiteRunId()) {
+    await writeFullManualCheckpoint("pending", {
+      requestId: id,
+      proposalId: submitted.approval!.proposalId,
+      noApiPrefill: true,
+      before: submitted,
+      saved,
+      steps,
+    });
+    return;
+  }
   const directorContext = await browser.newContext({
     baseURL: process.env.DEMO_ORIGIN,
   });

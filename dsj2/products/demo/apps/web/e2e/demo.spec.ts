@@ -950,9 +950,15 @@ test("keyboard creates and validates a person, traps focus in the photo dialog, 
     // Optional personal photo stays in the identity details; reach it by keyboard.
     await keyboardActivate(
       page,
-      person.getByRole("button", { name: "Изменить ФИО и должность", exact: true }),
+      person.getByRole("button", {
+        name: "Изменить ФИО и должность",
+        exact: true,
+      }),
     );
-    await keyboardActivate(page, person.locator(".person-additional > summary"));
+    await keyboardActivate(
+      page,
+      person.locator(".person-additional > summary"),
+    );
     await keyboardActivate(
       page,
       person.getByRole("button", { name: "Добавить фото", exact: true }),
@@ -984,7 +990,8 @@ test("keyboard creates and validates a person, traps focus in the photo dialog, 
     await page.keyboard.press("Enter");
     await expect(details).toHaveCount(0);
     await keyboardActivate(
-      page, person.getByRole("button", { name: "Готово", exact: true }),
+      page,
+      person.getByRole("button", { name: "Готово", exact: true }),
     );
     await expect(person.locator('[data-person-stage="summary"]')).toBeVisible();
     await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);

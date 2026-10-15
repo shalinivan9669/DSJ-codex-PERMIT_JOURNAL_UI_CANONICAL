@@ -1887,9 +1887,17 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   );
   return (
     <div className="operator-form">
-      <Link className="back-link" href="/requests">
-        ← Все заявки
-      </Link>
+      <div style={{ display: "flex", flexWrap: "wrap", columnGap: 20 }}>
+        <Link className="back-link" href="/requests">
+          ← Все заявки
+        </Link>
+        {draft.items.some((item) => item.recipientId) &&
+          ["ADMIN", "DIRECTOR", "OPERATOR"].includes(context.user.role) && (
+            <Link className="back-link" href={`/lms/assign?requestId=${id}`}>
+              Назначить обучение участникам
+            </Link>
+          )}
+      </div>
       <div className="page-heading editor-heading operator-heading">
         <div className="title-with-status">
           <h1>

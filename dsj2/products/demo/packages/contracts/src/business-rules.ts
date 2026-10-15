@@ -177,13 +177,16 @@ export function applyBusinessRules<T extends Draft>(input: T): T & Draft {
     item.employeeCategory = category;
     const training = new Map<string, Assignment[]>();
     for (const assignment of item.assignments) {
+      if (assignment.templateId.startsWith("lms-")) continue;
       const direction = trainingDirection(assignment.templateId);
       const key = assignment.eventId || direction;
       const entries = training.get(key) || [];
       entries.push(assignment);
       training.set(key, entries);
     }
-    const normalized: Assignment[] = [];
+    const normalized: Assignment[] = item.assignments.filter((assignment) =>
+      assignment.templateId.startsWith("lms-"),
+    );
     for (const entries of training.values()) {
       const original =
         entries.find(
@@ -538,6 +541,7 @@ export function validateBusinessRules(
         item.id,
       );
     for (const [column, assignment] of item.assignments.entries()) {
+      if (assignment.templateId.startsWith("lms-")) continue;
       const path = `${itemPath}.assignments.${column}`;
       const direction = trainingDirection(assignment.templateId);
       const event = draft.events?.find(

@@ -3,6 +3,11 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import { templateIds } from "@demo/contracts";
 import {
+  fullManualCheckpoint,
+  fullSuiteRunId,
+  requireFullCheckpointIdentity,
+} from "./operator-full-suite";
+import {
   loginRole,
   readPrintDetail,
   waitOriginalJobs,
@@ -12,21 +17,29 @@ test("read the existing manual twenty issuance and download every original form 
   page,
 }, testInfo) => {
   test.setTimeout(1_800_000);
-  const id = process.env.DEMO_E2E_MANUAL20_REQUEST_ID;
-  const checkpointPath = process.env.DEMO_E2E_MANUAL20_CHECKPOINT;
+  let id = process.env.DEMO_E2E_MANUAL20_REQUEST_ID;
+  const checkpointPath =
+    fullManualCheckpoint("finalized") ||
+    process.env.DEMO_E2E_MANUAL20_CHECKPOINT;
   test.skip(
-    !id || !checkpointPath,
+    !fullSuiteRunId() && (!id || !checkpointPath),
     "Requires the existing issuance checkpoint",
   );
   expect(new URL(process.env.DEMO_ORIGIN!).hostname).toBe("127.0.0.1");
   await loginRole(page, "OPERATOR");
   const checkpointBytes = await fs.readFile(checkpointPath!);
-  const checkpointSha256 = createHash("sha256").update(checkpointBytes).digest("hex");
+  const checkpointSha256 = createHash("sha256")
+    .update(checkpointBytes)
+    .digest("hex");
   const checkpoint = JSON.parse(checkpointBytes.toString("utf8")) as {
+    suiteRunId?: string;
+    requestId?: string;
     sourceEvidence?: string;
     steps: string[];
     issued: Awaited<ReturnType<typeof readPrintDetail>>;
   };
+  requireFullCheckpointIdentity(checkpoint);
+  if (fullSuiteRunId()) id = checkpoint.requestId;
   const before = await readPrintDetail(page, id!);
   expect(before.id).toBe(checkpoint.issued.id);
   expect(before.issuances).toHaveLength(1);
@@ -54,9 +67,16 @@ test("read the existing manual twenty issuance and download every original form 
   const artifacts = issued.artifacts.filter(
     (artifact) =>
       artifact.issuanceId === issued.issuances[0].id &&
+      artifact.provenance === "ORIGINAL" &&
       ["PDF", "DOCX"].includes(artifact.format || ""),
   );
   expect(artifacts).toHaveLength(210);
+  expect(
+    artifacts.filter((artifact) => artifact.format === "PDF"),
+  ).toHaveLength(105);
+  expect(
+    artifacts.filter((artifact) => artifact.format === "DOCX"),
+  ).toHaveLength(105);
   const examples = new Map<string, (typeof artifacts)[number]>();
   for (const artifact of artifacts) {
     const document = issued.documents.find(
@@ -66,6 +86,9 @@ test("read the existing manual twenty issuance and download every original form 
       examples.set(`${document.templateId}.${artifact.format}`, artifact);
   }
   expect(examples.size).toBe(22);
+  expect([...examples.keys()].sort()).toEqual(
+    templateIds.flatMap((id) => [`${id}.DOCX`, `${id}.PDF`]).sort(),
+  );
   const paths: Record<string, string> = {};
   const selected: Record<string, unknown> = {};
   for (const [key, artifact] of examples) {
@@ -92,15 +115,25 @@ test("read the existing manual twenty issuance and download every original form 
     expect(current?.format).toBe(artifact.format);
     expect(current?.issuanceId).toBe(artifact.issuanceId);
     const response = await page.request.get(`/api/artifacts/${artifact.id}`);
-    if (["ZIP", "XLSX"].includes(artifact.format || "") && artifact.issuanceId) {
+    if (
+      ["ZIP", "XLSX"].includes(artifact.format || "") &&
+      artifact.issuanceId
+    ) {
       // These original bundles remain unsigned. Their unchanged metadata must
       // not grant official download access before the signature workflow.
       expect(response.status()).toBe(409);
       expect((await response.json()).code).toBe("ISSUANCE_NOT_COMPLETE");
-      blockedBundles.push({ id: artifact.id, format: artifact.format, sha256: artifact.sha256 });
+      blockedBundles.push({
+        id: artifact.id,
+        format: artifact.format,
+        sha256: artifact.sha256,
+      });
       continue;
     }
-    expect(response.ok(), `artifact ${artifact.id}: HTTP ${response.status()}`).toBe(true);
+    expect(
+      response.ok(),
+      `artifact ${artifact.id}: HTTP ${response.status()}`,
+    ).toBe(true);
     expect(
       createHash("sha256")
         .update(await response.body())
@@ -114,8 +147,13 @@ test("read the existing manual twenty issuance and download every original form 
     });
   }
   expect(priorArtifacts).toHaveLength(212);
-  expect(blockedBundles.map((artifact) => artifact.format).sort()).toEqual(["XLSX", "ZIP"]);
-  expect(priorArtifacts.length + blockedBundles.length).toBe(checkpoint.issued.artifacts.length);
+  expect(blockedBundles.map((artifact) => artifact.format).sort()).toEqual([
+    "XLSX",
+    "ZIP",
+  ]);
+  expect(priorArtifacts.length + blockedBundles.length).toBe(
+    checkpoint.issued.artifacts.length,
+  );
   await page.screenshot({
     path: testInfo.outputPath("manual20-original-files.png"),
     fullPage: true,

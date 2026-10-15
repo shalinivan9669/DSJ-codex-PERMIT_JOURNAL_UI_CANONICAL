@@ -124,6 +124,8 @@ for (const count of [10, 100, 150, 250]) {
     await expect(page.locator(".save-indicator")).toContainText(
       "Рабочая версия сохранена",
     );
+    const editedField = await row.elementHandle();
+    expect(editedField).not.toBeNull();
     await page
       .getByRole("button", { name: "Сбросить фильтры", exact: true })
       .click();
@@ -131,6 +133,11 @@ for (const count of [10, 100, 150, 250]) {
       name: `Детали получателя ${middle}`,
       exact: true,
     });
+    await expect(page.locator(".operator-grid tbody tr")).toHaveCount(count);
+    const editedFieldStillConnected = await editedField!.evaluate(
+      (element) => element.isConnected,
+    );
+    const returnTarget = editedFieldStillConnected ? row : opener;
     started = performance.now();
     await opener.click();
     await expect(page.getByRole("dialog")).toBeVisible();
@@ -138,8 +145,12 @@ for (const count of [10, 100, 150, 250]) {
       .getByRole("button", { name: "Вернуться к списку", exact: true })
       .click();
     await expect(row).toBeVisible();
+    // Freeze the expected return target before opening the card: a connected
+    // edited field, or the clicked row opener after filtering remounted it.
+    if (process.env.DEMO_COMPARE_EXPECT_FIXED === "1")
+      await expect(returnTarget).toBeFocused();
     timings.cardRoundtripMs = performance.now() - started;
-    const restoredFocus = await opener.evaluate(
+    const restoredFocus = await returnTarget.evaluate(
       (element) => document.activeElement === element,
     );
     if (process.env.DEMO_COMPARE_EXPECT_FIXED === "1")
@@ -165,6 +176,10 @@ for (const count of [10, 100, 150, 250]) {
           timings,
           focusLossOnRename: 0,
           focusLossAfterCard: restoredFocus ? 0 : 1,
+          focusRestoreTarget: editedFieldStillConnected
+            ? "last-edited-field"
+            : "row-details-opener",
+          editedFieldStillConnectedBeforeCard: editedFieldStillConnected,
           dataEqualAfterReload: true,
           humanTiming: false,
           readyValidatedRequestTiming: null,

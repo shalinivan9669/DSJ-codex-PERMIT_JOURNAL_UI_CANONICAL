@@ -97,7 +97,8 @@ test("V06 exact five states: only two confirmed needs create clean linked repeat
   const old = await get(page, `/print-requests/${auth.historyId}`);
   const oldSnapshot = old.issuances[0].snapshot;
   const documentIdentity = (documents: { id: string; number: string }[]) =>
-    documents.map(({ id, number }) => ({ id, number }))
+    documents
+      .map(({ id, number }) => ({ id, number }))
       .sort((a, b) => a.id.localeCompare(b.id));
   const oldDocumentIdentity = documentIdentity(old.documents);
   const baseline = fixture("state", "V06");

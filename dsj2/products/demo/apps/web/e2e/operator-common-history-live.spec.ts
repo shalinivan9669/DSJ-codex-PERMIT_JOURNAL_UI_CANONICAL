@@ -442,9 +442,23 @@ test("100 common assignments and supported individual overrides render consisten
     await page
       .getByLabel(/Все подтверждённые ещё не оформленные курсы/)
       .check();
-    await page
-      .getByRole("button", { name: /Проверить и передать директору/ })
-      .click();
+    const [submittedResponse] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.request().method() === "POST" &&
+          new URL(response.url()).pathname ===
+            `/api/print-requests/${requestId}/approval/submit`,
+        { timeout: 180000 },
+      ),
+      page
+        .getByRole("button", { name: /Проверить и передать директору/ })
+        .click(),
+    ]);
+    expect(submittedResponse.status()).toBe(201);
+    expect(await submittedResponse.json()).toMatchObject({
+      requestId,
+      approval: { status: "PENDING" },
+    });
     await expect
       .poll(async () => (await readCommon(page, requestId)).approval?.status)
       .toBe("PENDING");
@@ -461,9 +475,27 @@ test("100 common assignments and supported individual overrides render consisten
         .fill(
           "СИНТЕТИЧЕСКОЕ согласование 100 назначений и двух индивидуальных исключений",
         );
-      await directorPage
-        .getByRole("button", { name: "Согласовать эту редакцию", exact: true })
-        .click();
+      const [decisionResponse] = await Promise.all([
+        directorPage.waitForResponse(
+          (response) =>
+            response.request().method() === "POST" &&
+            new URL(response.url()).pathname ===
+              `/api/approvals/${applied.approval!.proposalId}/decision`,
+          { timeout: 180000 },
+        ),
+        directorPage
+          .getByRole("button", {
+            name: "Согласовать эту редакцию",
+            exact: true,
+          })
+          .click(),
+      ]);
+      expect(decisionResponse.status()).toBe(201);
+      expect(await decisionResponse.json()).toMatchObject({
+        requestId,
+        proposalId: applied.approval!.proposalId,
+        status: "APPROVED",
+      });
       await expect
         .poll(async () => (await readCommon(page, requestId)).approval?.status)
         .toBe("APPROVED");
@@ -475,9 +507,23 @@ test("100 common assignments and supported individual overrides render consisten
       await directorContext.close();
     }
     await page.reload();
-    await page
-      .getByRole("button", { name: "Сформировать документы", exact: true })
-      .click();
+    const [finalizedResponse] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          response.request().method() === "POST" &&
+          new URL(response.url()).pathname ===
+            `/api/print-requests/${requestId}/finalize`,
+        { timeout: 180000 },
+      ),
+      page
+        .getByRole("button", { name: "Сформировать документы", exact: true })
+        .click(),
+    ]);
+    expect(finalizedResponse.status()).toBe(201);
+    expect(await finalizedResponse.json()).toMatchObject({
+      requestId,
+      requestStatus: "FINALIZED",
+    });
     await expect
       .poll(async () => (await readCommon(page, requestId)).status)
       .toBe("FINALIZED");

@@ -66,6 +66,11 @@
     {
       "method": "POST",
       "surface": "api",
+      "path": "/print-requests/:id/paper-signatures"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
       "path": "/signing/:id/complete"
     },
     {
@@ -852,6 +857,366 @@
       "method": "GET",
       "path": "/training-topics",
       "surface": "api"
+    },
+    {
+      "path": "/lms/courses",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/courses",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/courses/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/courses/:id/versions",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/course-versions/:id",
+      "surface": "api",
+      "method": "PUT"
+    },
+    {
+      "path": "/lms/course-versions/:id/publish",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/courses/:id/materials",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/materials/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/assignment-context",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/enrollments",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/enrollments",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/enrollments/:id/extend",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/enrollments/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/enrollments",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/enrollments/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/enrollments/:id/lessons/:lessonId/progress",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/learn/enrollments/:id/attempts",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/learn/attempts/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/attempts/:id/answers",
+      "surface": "api",
+      "method": "PUT"
+    },
+    {
+      "path": "/learn/attempts/:id/submit",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/enrollments/:id/external-evidence",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/enrollments/:id/external-evidence",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/external-evidence/:id/review",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/external-evidence/:id/file",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/external-evidence/:id/date",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/learn/register",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/learn/invite/inspect",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/learn/invite/exchange",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/learn/recovery/exchange",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/invites",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/recovery",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/learn/profile",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/lms",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/lms/courses/:id",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/courses/:id",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/lms/assign",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/assign",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/lms/results",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/results",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/lms/sanitary",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/sanitary",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/learn",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/learn",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/learn/:id",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/:id",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/learn/register",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/register",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/learn/invite",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/invite",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/learn/recovery",
+      "surface": "web",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/recovery",
+      "surface": "web",
+      "method": "HEAD"
+    },
+    {
+      "path": "/lms/sanitary",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/sanitary/calendars",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/sanitary/calendars",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/sanitary/settings",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/sanitary/settings",
+      "surface": "api",
+      "method": "PUT"
+    },
+    {
+      "path": "/lms/sanitary/subjects",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/sanitary/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/sanitary/:id/export",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/sanitary/deliveries/:id/evidence",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/results",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/results/documents",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/results/:id/revoke",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/lms/results/:id/correct",
+      "surface": "api",
+      "method": "POST"
+    },
+    {
+      "path": "/learn/documents/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/documents/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/learn/artifacts/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "path": "/lms/artifacts/:id",
+      "surface": "api",
+      "method": "GET"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/lms/documents/bundle"
+    },
+    {
+      "method": "POST",
+      "surface": "api",
+      "path": "/learn/documents/bundle"
+    },
+    {
+      "method": "GET",
+      "surface": "api",
+      "path": "/lms/sanitary/evidence/:id/file"
     }
   ],
   "legacyRoutes": [

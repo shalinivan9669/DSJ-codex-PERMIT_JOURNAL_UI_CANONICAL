@@ -10,7 +10,7 @@ import {
 import { Icon } from "@demo/ui";
 import { isSpecialBiotCategory } from "@demo/contracts";
 import type { GridField } from "@/lib/grid-paste";
-import type { Recipient } from "@/lib/types";
+import { documentTitle, type Recipient } from "@/lib/types";
 import {
   hasRecipientEmployerException,
   type RequestEmployer,
@@ -164,7 +164,7 @@ export const RecipientGridRow = memo(
         .map(
           (template) =>
             documentChoices.find((choice) => choice.templateId === template)
-              ?.shortLabel || template,
+              ?.shortLabel || documentTitle(template),
         )
         .join(", ") || "Выбрать обучение";
     const itr = resolvedItem.assignments.some((assignment) =>

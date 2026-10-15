@@ -11,11 +11,14 @@ export async function finalApprovalActors(admin: Context) {
   const tenant = await db.tenant.findUniqueOrThrow({
     where: { id: admin.tenantId },
   });
-  if (!tenant.demoOnly)
-    throw new Error("ISOLATED_MANAGEMENT_REQUIRED");
-  const provisionedActor = await db.user.findFirstOrThrow({ where: { id: admin.userId, tenantId: admin.tenantId } });
-  if (!provisionedActor.email.endsWith("@example.test")) throw new Error("SYNTHETIC_ADMIN_ACTOR_REQUIRED");
-  if (!["ADMIN", "DIRECTOR"].includes(provisionedActor.role)) throw new Error("PROVISIONED_FIXTURE_ACTOR_REQUIRED");
+  if (!tenant.demoOnly) throw new Error("ISOLATED_MANAGEMENT_REQUIRED");
+  const provisionedActor = await db.user.findFirstOrThrow({
+    where: { id: admin.userId, tenantId: admin.tenantId },
+  });
+  if (!provisionedActor.email.endsWith("@example.test"))
+    throw new Error("SYNTHETIC_ADMIN_ACTOR_REQUIRED");
+  if (!["ADMIN", "DIRECTOR"].includes(provisionedActor.role))
+    throw new Error("PROVISIONED_FIXTURE_ACTOR_REQUIRED");
   admin = { ...admin, role: provisionedActor.role };
   const version = await db.issuerProfileVersion.findFirstOrThrow({
     where: { tenantId: admin.tenantId },
@@ -105,9 +108,14 @@ export async function approveFinalFixtureRequest(
       .map((value) => value.split(";")[0])
       .join("; "),
   };
-  const sessionResponse = await fetch(`${origin}/api/auth/session`, { headers });
+  const sessionResponse = await fetch(`${origin}/api/auth/session`, {
+    headers,
+  });
   assert.ok(sessionResponse.ok, await sessionResponse.clone().text());
-  const authenticated = await sessionResponse.json() as { tenant: { id: string; demoOnly: boolean }; user: { role: string } };
+  const authenticated = (await sessionResponse.json()) as {
+    tenant: { id: string; demoOnly: boolean };
+    user: { role: string };
+  };
   assert.equal(authenticated.tenant.id, director.tenantId);
   assert.equal(authenticated.tenant.demoOnly, true);
   assert.equal(authenticated.user.role, "DIRECTOR");

@@ -43,7 +43,10 @@ test("server directory finds the 101st company and person outside the first page
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => {
     pageErrors.push(error.stack || error.message);
-    void fs.writeFile(path.join(evidence, "page-errors.json"), JSON.stringify(pageErrors, null, 2));
+    void fs.writeFile(
+      path.join(evidence, "page-errors.json"),
+      JSON.stringify(pageErrors, null, 2),
+    );
   });
   page.on("request", (request) => {
     const url = new URL(request.url());
@@ -59,14 +62,18 @@ test("server directory finds the 101st company and person outside the first page
   await expect(
     page.getByRole("heading", { name: "Заявки на печать" }),
   ).toBeVisible();
-  const sourceResponse = await page.request.get(`/api/recipients/${auth.person.id}`);
+  const sourceResponse = await page.request.get(
+    `/api/recipients/${auth.person.id}`,
+  );
   expect(sourceResponse.ok()).toBe(true);
   const sourceBefore = await sourceResponse.json();
   expect(sourceBefore.data).toEqual(auth.person.data);
   expect(sourceBefore.data).not.toHaveProperty("positionRu");
   await page.goto("/requests/new");
   await createRequestWithWorkerDocument(page, "COMPANY");
-  await page.getByRole("button", { name: "Из справочника", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Из справочника", exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Найти в справочнике", exact: true })
     .click();
@@ -91,8 +98,9 @@ test("server directory finds the 101st company and person outside the first page
     .filter({ hasText: auth.customer.nameRu })
     .getByRole("button", { name: "Выбрать", exact: true })
     .click();
-  await expect(page.locator(".request-organization-selected-compact"))
-    .toContainText(auth.customer.nameRu);
+  await expect(
+    page.locator(".request-organization-selected-compact"),
+  ).toContainText(auth.customer.nameRu);
   await openRecipientExtraTools(page);
   await page
     .getByRole("button", { name: "Найти человека", exact: true })
@@ -117,17 +125,29 @@ test("server directory finds the 101st company and person outside the first page
     .filter({ hasText: auth.person.data.fullNameRu })
     .getByRole("button", { name: "Выбрать", exact: true })
     .click();
-  const details = page.getByRole("dialog", { name: "Настройки строки 1", exact: true });
+  const details = page.getByRole("dialog", {
+    name: "Настройки строки 1",
+    exact: true,
+  });
   await expect(details).toBeVisible();
-  await details.getByRole("tab", { name: "Личные данные", exact: true }).click();
-  await expect(details.getByLabel("ФИО", { exact: true })).toHaveValue(auth.person.data.fullNameRu);
-  await expect(details.getByLabel("Должность", { exact: true })).toHaveValue("");
-  await details.getByRole("button", { name: "Вернуться к списку", exact: true }).click();
+  await details
+    .getByRole("tab", { name: "Личные данные", exact: true })
+    .click();
+  await expect(details.getByLabel("ФИО", { exact: true })).toHaveValue(
+    auth.person.data.fullNameRu,
+  );
+  await expect(details.getByLabel("Должность", { exact: true })).toHaveValue(
+    "",
+  );
+  await details
+    .getByRole("button", { name: "Вернуться к списку", exact: true })
+    .click();
   await expect(page.locator(".save-indicator")).toContainText(/сохранена/i);
   const id = /\/requests\/([^/]+)/.exec(new URL(page.url()).pathname)![1];
   await page.reload();
-  await expect(page.locator(".request-organization-selected-compact"))
-    .toContainText(auth.customer.nameRu);
+  await expect(
+    page.locator(".request-organization-selected-compact"),
+  ).toContainText(auth.customer.nameRu);
   const response = await page.request.get(`/api/print-requests/${id}`);
   expect(response.ok()).toBe(true);
   const request = await response.json();
@@ -151,7 +171,9 @@ test("server directory finds the 101st company and person outside the first page
   ).toBe(true);
   expect(queries.some((q) => q.includes("page=6"))).toBe(true);
   expect(queries.some((q) => q.includes("search=000101"))).toBe(true);
-  const sourceAfter = await (await page.request.get(`/api/recipients/${auth.person.id}`)).json();
+  const sourceAfter = await (
+    await page.request.get(`/api/recipients/${auth.person.id}`)
+  ).json();
   expect(sourceAfter.data).toEqual(sourceBefore.data);
   expect(sourceAfter.updatedAt).toBe(sourceBefore.updatedAt);
   expect(pageErrors).toEqual([]);
@@ -173,7 +195,13 @@ test("server directory finds the 101st company and person outside the first page
         queries,
         pageErrors,
         storedSourceUnchanged: true,
-        reusedPersonalDefaults: { positionRu: person.positionRu, positionKz: person.positionKz, workplaceKz: person.workplaceKz, photoAssetId: person.photoAssetId, assignmentCount: person.assignments.length },
+        reusedPersonalDefaults: {
+          positionRu: person.positionRu,
+          positionKz: person.positionKz,
+          workplaceKz: person.workplaceKz,
+          photoAssetId: person.photoAssetId,
+          assignmentCount: person.assignments.length,
+        },
         checks: [
           "101st company absent first page and selected sixth page",
           "101st person absent first page and server searched by zero-prefixed personnel number",

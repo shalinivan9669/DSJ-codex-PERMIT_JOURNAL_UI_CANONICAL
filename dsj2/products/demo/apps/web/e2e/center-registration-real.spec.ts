@@ -17,7 +17,9 @@ const expectedTemplates = [
     ownerKind: "ownerKind" in entry ? entry.ownerKind : "INDIVIDUAL",
   }))
   .sort((a, b) =>
-    `${a.templateId}:${a.version}`.localeCompare(`${b.templateId}:${b.version}`),
+    `${a.templateId}:${a.version}`.localeCompare(
+      `${b.templateId}:${b.version}`,
+    ),
   );
 
 test("real local proxy registration, cookies, onboarding version save and first draft", async ({
@@ -63,20 +65,27 @@ test("real local proxy registration, cookies, onboarding version save and first 
   );
   expect(
     initialContext.templates
-      .map((entry: {
-        templateId: string;
-        version: string;
-        checksum: string;
-        contract: { ownerKind?: string };
-      }) => ({
-        templateId: entry.templateId,
-        version: entry.version,
-        checksum: entry.checksum,
-        ownerKind: entry.contract.ownerKind || "INDIVIDUAL",
-      }))
+      .map(
+        (entry: {
+          templateId: string;
+          version: string;
+          checksum: string;
+          contract: { ownerKind?: string };
+        }) => ({
+          templateId: entry.templateId,
+          version: entry.version,
+          checksum: entry.checksum,
+          ownerKind: entry.contract.ownerKind || "INDIVIDUAL",
+        }),
+      )
       .sort(
-        (a: { templateId: string; version: string }, b: { templateId: string; version: string }) =>
-          `${a.templateId}:${a.version}`.localeCompare(`${b.templateId}:${b.version}`),
+        (
+          a: { templateId: string; version: string },
+          b: { templateId: string; version: string },
+        ) =>
+          `${a.templateId}:${a.version}`.localeCompare(
+            `${b.templateId}:${b.version}`,
+          ),
       ),
   ).toEqual(expectedTemplates);
   expect(

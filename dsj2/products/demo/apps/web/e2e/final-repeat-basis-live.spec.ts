@@ -219,8 +219,8 @@ test("V02 actual history repeat uses a current employer and cannot finalize an u
     .getByRole("dialog")
     .getByRole("button", { name: "Выбрать", exact: true })
     .click();
-  await page
-    .getByLabel("Должность / профессия", { exact: true })
+  await personal
+    .getByLabel("Должность", { exact: true })
     .fill(current.data.positionRu);
   await page
     .getByLabel("Период работы / основание актуальности", { exact: true })

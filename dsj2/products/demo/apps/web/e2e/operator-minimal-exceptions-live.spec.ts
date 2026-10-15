@@ -135,15 +135,21 @@ test("saved person and explicit exceptions survive common date, added course and
     .poll(async () => {
       const saved = await readPrintDetail(page, id);
       const assignments = saved.items[1]?.assignments || [];
-      return [...new Set(assignments.map((assignment) =>
-        trainingDirection(assignment.templateId),
-      ))].sort();
+      return [
+        ...new Set(
+          assignments.map((assignment) =>
+            trainingDirection(assignment.templateId),
+          ),
+        ),
+      ].sort();
     })
     .toEqual(["BIOT", "PB", "PTM"]);
   const before = await readPrintDetail(page, id);
   const reused = before.items[1];
   expect(reused.recipientId).toBe(source!.id);
-  expect(reused.employeeCategory).toBe(source!.data.employeeCategory || "WORKER");
+  expect(reused.employeeCategory).toBe(
+    source!.data.employeeCategory || "WORKER",
+  );
   for (const direction of ["BIOT", "PTM", "PB"] as const) {
     const assignments = reused.assignments.filter(
       (assignment) => trainingDirection(assignment.templateId) === direction,
@@ -152,12 +158,18 @@ test("saved person and explicit exceptions survive common date, added course and
       (assignment) => !assignment.templateId.endsWith("-protocol"),
     )!;
     expect(primary).toBeTruthy();
-    const mode = before.events?.find((event) => event.id === primary.eventId)
-      ?.protocolMode || primary.protocolMode;
-    const expected = mandatoryTemplates(direction, employeeCategoryFor(reused))
-      .filter((templateId) => mode !== "GROUP" || !templateId.endsWith("-protocol"));
-    expect(assignments.map((assignment) => assignment.templateId).sort())
-      .toEqual([...expected].sort());
+    const mode =
+      before.events?.find((event) => event.id === primary.eventId)
+        ?.protocolMode || primary.protocolMode;
+    const expected = mandatoryTemplates(
+      direction,
+      employeeCategoryFor(reused),
+    ).filter(
+      (templateId) => mode !== "GROUP" || !templateId.endsWith("-protocol"),
+    );
+    expect(
+      assignments.map((assignment) => assignment.templateId).sort(),
+    ).toEqual([...expected].sort());
   }
   expect(
     reused.assignments.every(

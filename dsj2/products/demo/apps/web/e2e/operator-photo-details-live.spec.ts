@@ -6,6 +6,7 @@ import { createRequire } from "node:module";
 import { loginIsolated } from "./operator-full-fix-session";
 import { PrismaClient } from "../../../packages/database/src";
 import { ArtifactStore } from "../../../packages/printing/src";
+import { LIMITS } from "../../../packages/contracts/src";
 
 const product = path.resolve(__dirname, "../../..");
 const sharp = createRequire(path.join(product, "apps/api/package.json"))(
@@ -29,6 +30,21 @@ test("real PERSON large-photo upload persists the original request identity and 
   if (!fixture) throw new Error("EXPLICIT_SYNTHETIC_LARGE_PHOTO_REQUIRED");
   await fs.mkdir(evidence, { recursive: true });
   const bytes = await fs.readFile(fixture);
+  expect(
+    bytes.length,
+    "Positive large-photo fixture must exceed 1 MiB",
+  ).toBeGreaterThan(1024 * 1024);
+  expect(
+    bytes.length,
+    "Positive large-photo fixture must respect the existing 5 MiB limit",
+  ).toBeLessThanOrEqual(LIMITS.photoBytes);
+  const sourceMetadata = await sharp(bytes).metadata();
+  expect(sourceMetadata.format).toBe("jpeg");
+  expect(sourceMetadata.width).toBe(3000);
+  expect(sourceMetadata.height).toBe(4000);
+  expect(sourceMetadata.width * sourceMetadata.height).toBeLessThanOrEqual(
+    LIMITS.imagePixels,
+  );
   const sha = (value: Buffer) =>
     createHash("sha256").update(value).digest("hex");
   const requestStarts = new Map<string, number>();

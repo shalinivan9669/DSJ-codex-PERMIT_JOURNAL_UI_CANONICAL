@@ -6,6 +6,13 @@ import { inflateRawSync } from "node:zlib";
 import type { Draft, Artifact, Job, Customer } from "../lib/types";
 import { fullSuiteEvidence, fullSuiteRunId } from "./operator-full-suite";
 
+// Independent exact wording from the pre-LMS frozen protocol policy.
+// Do not derive this test oracle from production courseResultText.
+const passedProtocolText: Record<string, string> = {
+  "biot-protocol": "Өтті/прошел",
+  "ptm-protocol": "Прошел/ Өтті",
+};
+
 export const commonEvidence = (role: "producer" | "resume") =>
   path.resolve(
     fullSuiteEvidence("common", role) ||
@@ -373,13 +380,15 @@ export async function verifyCommonFiles(
         checkpoint.expected[2].assignments.find(
           (entry) => entry.templateId === "biot-worker-card",
         )!.trainingSubject;
+      const expectedProtocolResult = passedProtocolText[document.templateId];
       if (!document.templateId.endsWith("-protocol"))
         expect(text).toContain(expectedSubject);
       else {
         // The preserved BIOT/PTM protocol templates do not map SUBJECT.
         for (const date of protocolDates(document.documentDate))
           expect(text).toContain(date);
-        expect(text).toContain("Сдал");
+        expect(expectedProtocolResult).toBeDefined();
+        expect(text).toContain(expectedProtocolResult);
       }
       expect(text).toContain(document.number);
       if (row) expect(text).toContain(row.fullNameRu);
@@ -391,6 +400,7 @@ export async function verifyCommonFiles(
         rowId: document.rowId,
         templateId: document.templateId,
         expectedSubject,
+        expectedProtocolResult,
         subjectMappedInSavedTemplate:
           !document.templateId.endsWith("-protocol"),
         mappedProtocolDate: document.templateId.endsWith("-protocol")

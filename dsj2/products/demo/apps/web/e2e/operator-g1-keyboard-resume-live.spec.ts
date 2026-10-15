@@ -13,6 +13,7 @@ import {
 import {
   keyboardActivate,
   keyboardEnter,
+  keyboardFocus,
   keyboardMetrics,
   keyboardReopen,
   saveKeyboardMetrics,
@@ -66,22 +67,28 @@ test("G1 keyboard resume: reopen and download the same 101 issued documents, ver
   );
   await keyboardActivate(
     page,
-    page.getByRole("link", { name: checkpoint.title, exact: true }),
+    page
+      .getByRole("link", { name: checkpoint.title, exact: true })
+      .and(page.locator(`a[href="/requests/${checkpoint.requestId}"]`)),
   );
   await expect(page.locator(".files-panel")).toContainText("Готово 204 из 204");
-  const ready = page.waitForEvent("download");
-  await keyboardActivate(
-    page,
-    page
-      .locator(".files-panel article")
-      .filter({
-        has: page.locator(".file-type").getByText("PDF", { exact: true }),
-      })
-      .first()
-      .getByRole("link", { name: "Скачать", exact: true }),
+  expect(new URL(page.url()).pathname).toBe(
+    `/requests/${checkpoint.requestId}`,
   );
+  const downloadLink = page
+    .locator(".files-panel article")
+    .filter({
+      has: page.locator(".file-type").getByText("PDF", { exact: true }),
+    })
+    .first()
+    .getByRole("link", { name: "Скачать", exact: true });
+  await keyboardFocus(page, downloadLink);
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    keyboardActivate(page, downloadLink),
+  ]);
   await fs.mkdir(evidence, { recursive: true });
-  await (await ready).saveAs(path.join(evidence, "keyboard-download.pdf"));
+  await download.saveAs(path.join(evidence, "keyboard-download.pdf"));
   keyboardMetrics.artifactDownloads++;
   const { issued, files } = await verifyG1Files(page, checkpoint, evidence);
   await keyboardReopen(page);
@@ -126,5 +133,8 @@ test("G1 keyboard resume: reopen and download the same 101 issued documents, ver
       2,
     ),
   );
-  await fullSuiteApiCooldown(evidence, "g1-keyboard-resume-after-file-readback");
+  await fullSuiteApiCooldown(
+    evidence,
+    "g1-keyboard-resume-after-file-readback",
+  );
 });

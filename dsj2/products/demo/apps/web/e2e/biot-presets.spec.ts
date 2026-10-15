@@ -20,18 +20,25 @@ for (const category of ["WORKER", "ITR"] as const) {
     await page.getByRole("link", { name: "Новая заявка", exact: true }).click();
     await page.getByRole("button", { name: "Далее", exact: true }).click();
     const person = page.locator(".person-editor");
-    await person.getByLabel("ФИО", { exact: true })
+    await person
+      .getByLabel("ФИО", { exact: true })
       .fill(`Тестовый Получатель Категории ${category}`);
     await person.getByLabel("Должность", { exact: true }).fill("Электромонтёр");
     await person.getByRole("button", { name: "Далее", exact: true }).click();
-    await person.getByRole("button", {
-      name: category === "WORKER" ? "Рабочий" : "ИТР", exact: true,
-    }).click();
+    await person
+      .getByRole("button", {
+        name: category === "WORKER" ? "Рабочий" : "ИТР",
+        exact: true,
+      })
+      .click();
     await person.getByRole("button", { name: "Далее", exact: true }).click();
     await person.getByRole("button", { name: /^БиОТ/ }).click();
     await person.getByRole("button", { name: "Готово", exact: true }).click();
     await expect(person.locator('[data-person-stage="summary"]')).toBeVisible();
-    let modal = page.getByRole("dialog", { name: "Параметры документа", exact: true });
+    let modal = page.getByRole("dialog", {
+      name: "Параметры документа",
+      exact: true,
+    });
     const requestId = /requests\/([^/]+)/.exec(page.url())![1];
     const read = async () =>
       (await (
@@ -41,9 +48,15 @@ for (const category of ["WORKER", "ITR"] as const) {
     const templateId = worker ? "biot-worker-card" : "biot-itr-certificate";
     const categoryValue = worker ? "WORKER" : "OHS_SPECIALIST_SPECIAL";
     const inspect = async () => {
-      await person.locator(".person-document-list > li").first()
-        .getByRole("button", { name: "Параметры", exact: true }).click();
-      modal = page.getByRole("dialog", { name: "Параметры документа", exact: true });
+      await person
+        .locator(".person-document-list > li")
+        .first()
+        .getByRole("button", { name: "Параметры", exact: true })
+        .click();
+      modal = page.getByRole("dialog", {
+        name: "Параметры документа",
+        exact: true,
+      });
       const form = modal.locator(".assignment-list > details").first();
       await expandCommon(form);
       await form.getByRole("tab", { name: "Основное", exact: true }).click();
@@ -51,12 +64,18 @@ for (const category of ["WORKER", "ITR"] as const) {
       return form;
     };
     let form = await inspect();
-    const biotCategory = form.getByLabel("Категория обучения БиОТ", { exact: true });
+    const biotCategory = form.getByLabel("Категория обучения БиОТ", {
+      exact: true,
+    });
     // The ordinary ITR course defaults to the centre programme. Special
     // competencies are a separate explicit choice, not an automatic default.
     await expect(biotCategory).toHaveValue(worker ? "WORKER" : "ITR_STANDARD");
     if (!worker) {
-      await expect(form.getByLabel("Объём программы учебного центра, акад. ч.", { exact: true })).toHaveValue("40");
+      await expect(
+        form.getByLabel("Объём программы учебного центра, акад. ч.", {
+          exact: true,
+        }),
+      ).toHaveValue("40");
       await biotCategory.selectOption(categoryValue);
     }
     const hoursLabel = worker
@@ -103,9 +122,7 @@ for (const category of ["WORKER", "ITR"] as const) {
         .getByLabel("Производственное обучение, часов", { exact: true })
         .fill("16");
     }
-    await modal
-      .getByRole("button", { name: "Готово", exact: true })
-      .click();
+    await modal.getByRole("button", { name: "Готово", exact: true }).click();
     await expect(page.locator(".save-indicator")).toContainText(
       "Рабочая версия сохранена",
     );
@@ -133,9 +150,7 @@ for (const category of ["WORKER", "ITR"] as const) {
     await expect(
       form.getByLabel("Действителен до", { exact: true }),
     ).toHaveValue(worker ? "2029-03-01" : "2031-03-01");
-    await modal
-      .getByRole("button", { name: "Готово", exact: true })
-      .click();
+    await modal.getByRole("button", { name: "Готово", exact: true }).click();
     await expect(page.locator(".save-indicator")).toContainText(
       "Рабочая версия сохранена",
     );

@@ -3,6 +3,12 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import { templateIds } from "@demo/contracts";
 import {
+  fullManualCheckpoint,
+  fullSuiteRunId,
+  requireFullCheckpointIdentity,
+  writeFullManualCheckpoint,
+} from "./operator-full-suite";
+import {
   loginRole,
   readPrintDetail,
   waitOriginalJobs,
@@ -13,22 +19,32 @@ test("resume the existing UI-entered manual twenty at director review and verify
   browser,
 }, testInfo) => {
   test.setTimeout(3_600_000);
-  const id = process.env.DEMO_E2E_MANUAL20_REQUEST_ID;
-  const proposalId = process.env.DEMO_E2E_MANUAL20_PROPOSAL_ID;
+  const checkpointPath =
+    fullManualCheckpoint("pending") || process.env.DEMO_E2E_MANUAL20_CHECKPOINT;
+  let id = process.env.DEMO_E2E_MANUAL20_REQUEST_ID;
+  let proposalId = process.env.DEMO_E2E_MANUAL20_PROPOSAL_ID;
   test.skip(
-    !id || !proposalId,
+    !fullSuiteRunId() && (!id || !proposalId),
     "This continuation requires the existing UI-created request and proposal IDs",
   );
   expect(new URL(process.env.DEMO_ORIGIN!).hostname).toBe("127.0.0.1");
-  const checkpointPath = process.env.DEMO_E2E_MANUAL20_CHECKPOINT;
-  expect(checkpointPath, "Exact UI preparation checkpoint is required").toBeTruthy();
+  expect(
+    checkpointPath,
+    "Exact UI preparation checkpoint is required",
+  ).toBeTruthy();
   const checkpointBytes = await fs.readFile(checkpointPath!);
   const checkpoint = JSON.parse(checkpointBytes.toString("utf8")) as {
+    suiteRunId?: string;
     requestId: string;
     proposalId: string;
     noApiPrefill: boolean;
     before: Awaited<ReturnType<typeof readPrintDetail>>;
   };
+  requireFullCheckpointIdentity(checkpoint);
+  if (fullSuiteRunId()) {
+    id = checkpoint.requestId;
+    proposalId = checkpoint.proposalId;
+  }
   expect(checkpoint.requestId).toBe(id);
   expect(checkpoint.proposalId).toBe(proposalId);
   expect(checkpoint.noApiPrefill).toBe(true);
@@ -165,6 +181,29 @@ test("resume the existing UI-entered manual twenty at director review and verify
     ).toEqual([...templateIds].sort());
     const snapshot = issued.issuances[0].snapshot.draft;
     expect(snapshot.items).toHaveLength(20);
+    expect(snapshot.englishAppendix).toBe(false);
+    expect(snapshot.kind).toBe("COMPANY");
+    expect(snapshot.customerId).toBe(before.customerId);
+    expect(
+      snapshot.items.map((row) => ({ ru: row.positionRu, kz: row.positionKz })),
+    ).toEqual(
+      before.items.map((row) => ({ ru: row.positionRu, kz: row.positionKz })),
+    );
+    for (const row of snapshot.items) {
+      expect(Object.keys(row).filter((key) => key.endsWith("En"))).toEqual([]);
+      for (const assignment of row.assignments)
+        expect(
+          Object.keys(assignment).filter((key) => key.endsWith("En")),
+        ).toEqual([]);
+    }
+    for (const assignment of snapshot.items[19].assignments.filter((entry) =>
+      entry.templateId.startsWith("biot-"),
+    )) {
+      expect(assignment.biotCategory).toBe("ITR_STANDARD");
+      expect(assignment.biotIndustryRu || "").toBe("");
+      expect(assignment.biotKnowledgeResult || "").toBe("");
+      expect(assignment.biotProctoringResult || "").toBe("");
+    }
     expect(snapshot.items.map((row) => row.fullNameRu)).toEqual(
       before.items.map((row) => row.fullNameRu),
     );
@@ -177,9 +216,16 @@ test("resume the existing UI-entered manual twenty at director review and verify
     const artifacts = issued.artifacts.filter(
       (artifact) =>
         artifact.issuanceId === issued.issuances[0].id &&
+        artifact.provenance === "ORIGINAL" &&
         ["PDF", "DOCX"].includes(artifact.format || ""),
     );
     expect(artifacts).toHaveLength(210);
+    expect(
+      artifacts.filter((artifact) => artifact.format === "PDF"),
+    ).toHaveLength(105);
+    expect(
+      artifacts.filter((artifact) => artifact.format === "DOCX"),
+    ).toHaveLength(105);
     const examples = new Map<string, (typeof artifacts)[number]>();
     for (const artifact of artifacts) {
       const document = issued.documents.find(
@@ -192,6 +238,9 @@ test("resume the existing UI-entered manual twenty at director review and verify
         examples.set(`${document.templateId}.${artifact.format}`, artifact);
     }
     expect(examples.size).toBe(22);
+    expect([...examples.keys()].sort()).toEqual(
+      templateIds.flatMap((id) => [`${id}.DOCX`, `${id}.PDF`]).sort(),
+    );
     const paths: Record<string, string> = {};
     const selected: Record<string, unknown> = {};
     for (const [key, artifact] of examples) {
@@ -230,6 +279,14 @@ test("resume the existing UI-entered manual twenty at director review and verify
       documents: issued.documents,
       selectedExamples: selected,
       examples: paths,
+    });
+    await writeFullManualCheckpoint("finalized", {
+      requestId: id,
+      proposalId,
+      noApiPrefill: true,
+      sourceCheckpoint,
+      issued,
+      steps,
     });
     console.log("MANUAL20_ALL_FORMS_DOWNLOADED", id, paths);
   } finally {

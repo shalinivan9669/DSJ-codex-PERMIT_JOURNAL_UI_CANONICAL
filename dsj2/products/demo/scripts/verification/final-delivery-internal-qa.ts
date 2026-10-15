@@ -33,6 +33,7 @@ function evidenceDirectory(folder: string) {
   const taskRoots = [
     implementation,
     resolve("docs/evidence/operator-details-ux-20261005"),
+    resolve("docs/evidence/lms-one-run-20261015"),
   ];
   assert.ok(
     taskRoots.some((root) => isInside(root, allowed)),

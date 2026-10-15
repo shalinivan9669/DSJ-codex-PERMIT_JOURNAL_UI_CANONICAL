@@ -135,8 +135,8 @@ test("V07 portal: three own people download issued individual files, two foreign
           commonFields: {
             documentDate: "2026-09-24",
             protocolDate: "2026-09-24",
-            trainingStart: "2026-09-23",
-            trainingEnd: "2026-09-24",
+            trainingStart: "2026-09-22",
+            trainingEnd: "2026-09-23",
             trainingSubject: "Синтетическая промышленная безопасность",
             hours: "16",
           },

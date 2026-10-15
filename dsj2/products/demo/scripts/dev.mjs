@@ -1,14 +1,15 @@
 import { spawn } from "node:child_process";
-const processes = ["api", "web", "render-worker"].map((name) =>
-  spawn(
-    process.platform === "win32" ? "pnpm.cmd" : "pnpm",
-    ["--filter", `@demo/${name}`, "dev"],
-    {
-      stdio: "inherit",
-      shell: process.platform === "win32",
-      windowsHide: true,
-    },
-  ),
+const processes = ["api", "web", "render-worker", "integration-worker"].map(
+  (name) =>
+    spawn(
+      process.platform === "win32" ? "pnpm.cmd" : "pnpm",
+      ["--filter", `@demo/${name}`, "dev"],
+      {
+        stdio: "inherit",
+        shell: process.platform === "win32",
+        windowsHide: true,
+      },
+    ),
 );
 let closing = false;
 function stop() {

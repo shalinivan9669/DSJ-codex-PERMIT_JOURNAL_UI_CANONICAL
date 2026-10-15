@@ -27,8 +27,15 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
   });
   const base = await app.getUrl();
   const password = "Portal-Evidence-HTTP-Secret!";
-  const seed = await provision({ email: `${randomUUID()}@example.test`, password, name: "Синтетический центр портала", sample: true });
-  const tenant = await db.tenant.findUniqueOrThrow({ where: { id: seed.tenantId } });
+  const seed = await provision({
+    email: `${randomUUID()}@example.test`,
+    password,
+    name: "Синтетический центр портала",
+    sample: true,
+  });
+  const tenant = await db.tenant.findUniqueOrThrow({
+    where: { id: seed.tenantId },
+  });
   const foreignTenant = await db.tenant.create({
     data: { name: "Чужой центр" },
   });
@@ -117,7 +124,15 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
         title: "Общий состав",
         protocolTemplateId: "biot-protocol",
         serviceRuleVersionId: rule.id,
-        commonFields: { documentDate: "2026-09-24", protocolDate: "2026-09-24", trainingStart: "2026-09-20", trainingEnd: "2026-09-24", trainingSubject: "Синтетическая программа", hours: "24", productionHours: "16" },
+        commonFields: {
+          documentDate: "2026-09-24",
+          protocolDate: "2026-09-24",
+          trainingStart: "2026-09-20",
+          trainingEnd: "2026-09-24",
+          trainingSubject: "Синтетическая программа",
+          hours: "24",
+          productionHours: "16",
+        },
       },
     ],
     items: people.map((person, index) =>
@@ -134,7 +149,10 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
             biotCategory: "WORKER",
             eventId,
             protocolMode: "GROUP",
-            outcome: { status: "PASSED", source: "Явно заданный синтетический результат" },
+            outcome: {
+              status: "PASSED",
+              source: "Явно заданный синтетический результат",
+            },
             result: "Сдал",
           }),
         ],
@@ -582,7 +600,10 @@ test("HTTP employer evidence and matrix scope: stable recipient, tenant, permiss
           status: "FAILED",
           source: "Синтетический сохранённый результат",
         };
-        const previousProfile = await db.issuerProfileVersion.findFirstOrThrow({ where: { tenantId: tenant.id }, orderBy: { version: "desc" } });
+        const previousProfile = await db.issuerProfileVersion.findFirstOrThrow({
+          where: { tenantId: tenant.id },
+          orderBy: { version: "desc" },
+        });
         const ownProfile = await db.issuerProfileVersion.create({
           data: {
             tenantId: tenant.id,

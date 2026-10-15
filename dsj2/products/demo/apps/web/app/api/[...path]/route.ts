@@ -33,42 +33,72 @@ async function proxy(request: NextRequest) {
     "origin",
     "idempotency-key",
     "accept",
+    "range",
   ]) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
   }
-  let body: Uint8Array | undefined;
+  const lmsUploadLimit =
+    request.method === "POST" &&
+    headers.get("content-type")?.startsWith("multipart/form-data")
+      ? /^\/lms\/courses\/[^/]+\/materials$/.test(path)
+        ? 512 * 1024 * 1024 + 64 * 1024
+        : /^\/lms\/enrollments\/[^/]+\/external-evidence$/.test(path)
+          ? 20 * 1024 * 1024 + 64 * 1024
+          : null
+      : null;
+  let body: Uint8Array | ReadableStream<Uint8Array> | undefined;
+  let uploadLimitExceeded = false;
   if (!["GET", "HEAD"].includes(request.method)) {
-    const limit = headers.get("content-type")?.startsWith("multipart/form-data")
-      ? Math.max(LIMITS.photoBytes, LIMITS.importBytes) + 64 * 1024
-      : LIMITS.jsonBytes;
+    const limit =
+      lmsUploadLimit ||
+      (headers.get("content-type")?.startsWith("multipart/form-data")
+        ? Math.max(LIMITS.photoBytes, LIMITS.importBytes) + 64 * 1024
+        : LIMITS.jsonBytes);
     if (Number(request.headers.get("content-length") || 0) > limit)
       return Response.json(
         { message: "Превышен допустимый размер загрузки." },
         { status: 413 },
       );
-    const reader = request.body?.getReader();
-    const chunks: Uint8Array[] = [];
-    let size = 0;
-    if (reader)
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        size += value.byteLength;
-        if (size > limit) {
-          await reader.cancel();
-          return Response.json(
-            { message: "Превышен допустимый размер загрузки." },
-            { status: 413 },
-          );
+    if (lmsUploadLimit && request.body) {
+      let size = 0;
+      // Stream private materials to the disk-backed API upload handler while
+      // bounding untrusted/chunked requests too. Never retain a video in RAM.
+      body = request.body.pipeThrough(
+        new TransformStream<Uint8Array, Uint8Array>({
+          transform(chunk, controller) {
+            size += chunk.byteLength;
+            if (size > limit) {
+              uploadLimitExceeded = true;
+              controller.error(new Error("UPLOAD_LIMIT"));
+            } else controller.enqueue(chunk);
+          },
+        }),
+      );
+    } else {
+      const reader = request.body?.getReader();
+      const chunks: Uint8Array[] = [];
+      let size = 0;
+      if (reader)
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          size += value.byteLength;
+          if (size > limit) {
+            await reader.cancel();
+            return Response.json(
+              { message: "Превышен допустимый размер загрузки." },
+              { status: 413 },
+            );
+          }
+          chunks.push(value);
         }
-        chunks.push(value);
+      body = new Uint8Array(size);
+      let offset = 0;
+      for (const chunk of chunks) {
+        body.set(chunk, offset);
+        offset += chunk.byteLength;
       }
-    body = new Uint8Array(size);
-    let offset = 0;
-    for (const chunk of chunks) {
-      body.set(chunk, offset);
-      offset += chunk.byteLength;
     }
   }
   try {
@@ -84,21 +114,28 @@ async function proxy(request: NextRequest) {
       base.pathname !== "/"
     )
       throw new Error("INVALID_API_ORIGIN");
-    const response = await fetch(new URL(path + request.nextUrl.search, base), {
+    const requestOptions: RequestInit & { duplex?: "half" } = {
       method: request.method,
       headers,
       body: body as BodyInit | undefined,
+      ...(lmsUploadLimit ? { duplex: "half" as const } : {}),
       cache: "no-store",
       redirect: "manual",
       // Layout checks cover every selected document in bounded renderer batches.
       // Keep the local transport aligned with the external rewrite timeout.
       signal: AbortSignal.timeout(
-        request.method === "POST" &&
-          /^\/print-requests\/[^/]+\/(?:validate|finalize)$/.test(path)
-          ? 210000
-          : 60000,
+        lmsUploadLimit
+          ? 600000
+          : request.method === "POST" &&
+              /^\/print-requests\/[^/]+\/(?:validate|finalize)$/.test(path)
+            ? 210000
+            : 60000,
       ),
-    });
+    };
+    const response = await fetch(
+      new URL(path + request.nextUrl.search, base),
+      requestOptions,
+    );
     const output = new Headers({
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
@@ -107,6 +144,10 @@ async function proxy(request: NextRequest) {
       "content-type",
       "content-disposition",
       "content-length",
+      "accept-ranges",
+      "content-range",
+      "cache-control",
+      "content-security-policy",
       "etag",
       "x-correlation-id",
       "retry-after",
@@ -121,6 +162,11 @@ async function proxy(request: NextRequest) {
       headers: output,
     });
   } catch {
+    if (uploadLimitExceeded)
+      return Response.json(
+        { message: "Превышен допустимый размер загрузки." },
+        { status: 413 },
+      );
     return Response.json(
       {
         message:

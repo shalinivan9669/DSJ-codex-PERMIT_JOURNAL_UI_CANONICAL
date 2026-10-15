@@ -209,9 +209,17 @@ export const membershipSchema = z
     customerId: id,
     userId: id,
     permissions: z
-      .array(z.enum(["READ", "PROPOSE", "APPROVE_DATA", "DOWNLOAD"]))
+      .array(
+        z.enum([
+          "READ",
+          "PROPOSE",
+          "APPROVE_DATA",
+          "DOWNLOAD",
+          "ASSIGN_TRAINING",
+        ]),
+      )
       .min(1)
-      .max(4),
+      .max(5),
     recipientIds: z.array(id).max(1000).default([]),
     expiresAt: z.iso.datetime().nullable().default(null),
   })

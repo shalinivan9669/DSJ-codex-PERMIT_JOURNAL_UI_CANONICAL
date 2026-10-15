@@ -331,7 +331,11 @@ test("arbitrary immutable batches in one request: explicit scope review, reload,
           draft: edit,
         });
         const keys = [{ rowId: "row-0", assignmentId: "ptm" }];
-        await approve(request.id, saved.revision, count === 1 ? undefined : keys);
+        await approve(
+          request.id,
+          saved.revision,
+          count === 1 ? undefined : keys,
+        );
         // An unselected waiting person's edit must not invalidate the reviewed course.
         const unaffected = draftSchema.parse(
           (await requestDetail(c, request.id)).draft,

@@ -45,6 +45,21 @@ const config: NextConfig = {
         source: "/api/auth/employer-invite/:path*",
         headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
       },
+      ...[
+        "/learn/invite",
+        "/learn/recovery",
+        "/verify/:path*",
+        "/api/learn/invite/:path*",
+        "/api/learn/recovery/:path*",
+        "/api/verification/:path*",
+      ].map((source) => ({
+        source,
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "no-store" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      })),
     ];
   },
 };

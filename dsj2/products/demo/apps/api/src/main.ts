@@ -14,6 +14,10 @@ import { EmployerInviteController } from "./employer-invite-controller";
 import { PrintSetsController } from "./print-sets-controller";
 import { TrainingTopicsController } from "./training-topics-controller";
 import { authenticate } from "./auth";
+import { LmsController } from "./lms/controller";
+import { LearnerIdentityController } from "./lms/identity";
+import { RegulatoryResultsController } from "./regulatory-results/controller";
+import { LmsDocumentsController } from "./lms/document-bridge";
 import { db, type DemoRequest } from "./core";
 @Module({
   controllers: [
@@ -24,6 +28,10 @@ import { db, type DemoRequest } from "./core";
     EmployerInviteController,
     PrintSetsController,
     TrainingTopicsController,
+    LmsController,
+    LearnerIdentityController,
+    RegulatoryResultsController,
+    LmsDocumentsController,
   ],
 })
 class DemoModule {}
@@ -39,7 +47,11 @@ export async function bootstrap() {
     res.setHeader("X-Correlation-ID", req.correlationId);
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Cache-Control", "no-store");
-    if (req.path.startsWith("/auth/employer-invite/")) {
+    if (
+      ["/auth/employer-invite/", "/learn/invite/", "/learn/recovery/"].some(
+        (prefix) => req.path.startsWith(prefix),
+      )
+    ) {
       res.setHeader("Referrer-Policy", "no-referrer");
       res.setHeader("X-Robots-Tag", "noindex, nofollow");
     }

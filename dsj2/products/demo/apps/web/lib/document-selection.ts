@@ -3,6 +3,7 @@ import { newAssignment, type Assignment, type Recipient } from "./types";
 
 export type DocumentTemplateId = Assignment["templateId"];
 export const MAX_RECIPIENT_DOCUMENTS = LIMITS.documents;
+const ordinaryTemplateIds: ReadonlySet<string> = new Set(templateIds);
 
 export const documentChoices: readonly {
   templateId: DocumentTemplateId;
@@ -69,7 +70,7 @@ export function assignedDocumentTemplates(recipient: Recipient) {
   for (const assignment of recipient.assignments) {
     if (assignment.protocolMode !== "GROUP" || !assignment.eventId) continue;
     const protocol = protocolTemplateFor(assignment.templateId);
-    if (templateIds.includes(protocol as DocumentTemplateId))
+    if (ordinaryTemplateIds.has(protocol))
       assigned.add(protocol as DocumentTemplateId);
   }
   return assigned;

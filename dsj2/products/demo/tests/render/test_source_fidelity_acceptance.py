@@ -7,14 +7,16 @@ These check complete saved output, including VML/DrawingML and header media.
 import hashlib
 import json
 import os
+import platform
 from pathlib import Path
 import sys
 import tempfile
 import unittest
+import zlib
 from unittest.mock import patch
 from copy import deepcopy
 from lxml import etree as E
-from PIL import Image
+from PIL import Image, __version__ as pillow_version, features
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'scripts/render'))
@@ -56,6 +58,25 @@ PINNED_V1 = [
 
 class SourceFidelityAcceptanceTests(unittest.TestCase):
     def test_all_16_pinned_v1_outputs_keep_the_pre_change_bytes(self):
+        # Keep the original historical hashes above. Native Windows ZIP headers
+        # and Pillow BASIC shaping differ from Linux ZIP/RAQM builds. These
+        # Windows references come only from the independently archived pre-LMS
+        # commit, also reproduced from the original 8825dfa source, not from
+        # the current renderer. Unknown Windows runtimes must fail explicitly.
+        reference = json.loads((ROOT / 'tests/fixtures/render-pinned-windows-8c08334.json').read_text(encoding='utf8'))
+        self.assertEqual(reference['baselineCommit'], '8c0833407675d8d31c786f37a55572357d7b9805')
+        self.assertEqual(reference['independentOriginalCommit'], '8825dfa65f6c2a9b38bd39ee44463d3a0f6b102e')
+        pinned = {(row['template'], row['version'], row['filename']): row for row in reference['forms']}
+        self.assertEqual(set(pinned), {(tid, version, filename) for tid, version, filename, _, _ in PINNED_V1})
+        if sys.platform == 'win32':
+            runtime = dict(platform=sys.platform, python=platform.python_version(), implementation=platform.python_implementation(),
+                           pillow=pillow_version, freetype=features.version_module('freetype2'),
+                           lxml='.'.join(map(str, E.LXML_VERSION[:3])), libxml='.'.join(map(str, E.LIBXML_VERSION)),
+                           zlib=zlib.ZLIB_RUNTIME_VERSION, pillowZlib=features.version_codec('zlib'),
+                           pillowZlibNg=features.version_feature('zlib_ng'), raqm=features.check_feature('raqm'))
+            self.assertEqual(runtime, reference['runtime'], 'Unverified Windows render runtime: reproduce the immutable baseline before approving a new reference')
+        else:
+            self.assertEqual(sys.platform, 'linux', 'No approved pinned-output reference for this platform')
         with tempfile.TemporaryDirectory(prefix='demo-pinned-layout-') as temp:
             store = Path(temp)
             with patch.dict(os.environ, {'DEMO_ARTIFACT_ROOT': str(store)}):
@@ -63,6 +84,11 @@ class SourceFidelityAcceptanceTests(unittest.TestCase):
                     with self.subTest(template=tid, group=group, version=version):
                         source = ROOT / 'assets/templates' / filename
                         content = source.read_bytes()
+                        approved = pinned[(tid, version, filename)]
+                        self.assertEqual(hashlib.sha256(content).hexdigest(), approved['sourceSha256'],
+                                         'Historical source template bytes must not change')
+                        if sys.platform == 'win32':
+                            expected = approved['outputSha256']
                         (store / filename).write_bytes(content)
                         snapshot = group_fixture(tid, 3) if group else fixture(tid)
                         snapshot.update(templateVersion=version,

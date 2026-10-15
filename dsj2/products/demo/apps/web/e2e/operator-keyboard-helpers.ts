@@ -196,6 +196,11 @@ export async function keyboardSelect(
   await expect(target).toHaveValue(value);
 }
 export async function keyboardReopen(page: Page) {
+  const requestMatch = /^\/requests\/([^/]+)(?:\/edit)?$/.exec(
+    new URL(page.url()).pathname,
+  );
+  expect(requestMatch).not.toBeNull();
+  const requestPath = `/requests/${requestMatch![1]}`;
   const title = (await page.locator("h1").innerText()).trim();
   await keyboardActivate(
     page,
@@ -204,7 +209,9 @@ export async function keyboardReopen(page: Page) {
   await expect(
     page.getByRole("heading", { name: "Заявки на печать", exact: true }),
   ).toBeVisible();
-  const requestLink = page.getByRole("link", { name: title, exact: true });
+  const requestLink = page
+    .getByRole("link", { name: title, exact: true })
+    .and(page.locator(`a[href="${requestPath}"]`));
   if (!(await requestLink.isVisible())) {
     await keyboardEnter(
       page,
@@ -215,6 +222,7 @@ export async function keyboardReopen(page: Page) {
   }
   await keyboardActivate(page, requestLink);
   await expect(page.locator("h1")).toHaveText(title);
+  expect(new URL(page.url()).pathname).toBe(requestPath);
   keyboardMetrics.appReopens++;
 }
 export async function saveKeyboardMetrics(directory: string, status: string) {
