@@ -12,6 +12,7 @@
     "@demo/database": "workspace:*",
     "@demo/contracts": "workspace:*",
     "@demo/api": "workspace:*",
+    "reflect-metadata": "0.2.2",
     "tsx": "4.23.15"
   }
 }

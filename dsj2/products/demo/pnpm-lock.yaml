@@ -95,6 +95,9 @@ importers:
       '@demo/database':
         specifier: workspace:*
         version: link:../../packages/database
+      reflect-metadata:
+        specifier: 0.2.2
+        version: 0.2.2
       tsx:
         specifier: 4.23.15
         version: 4.23.15
