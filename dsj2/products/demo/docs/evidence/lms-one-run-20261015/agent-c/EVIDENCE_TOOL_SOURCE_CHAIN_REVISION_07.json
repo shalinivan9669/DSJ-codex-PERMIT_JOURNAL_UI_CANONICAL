@@ -1,0 +1,26 @@
+{
+  "status": "APPLIED_REVIEWED_CHAIN_VALIDATOR_AFTER_RECORDED_CORRECTIVE_FAILURE",
+  "recordedAt": "2026-10-15T12:51:27.023160+00:00",
+  "sourceDelta": {
+    "path": "scripts/verification/lms_browser_acceptance.py",
+    "beforeSha256": "35bcc07161f26da9f30fdf39f2766aff306e8d993a7bc4c6f8dbbc64f56aeeb0",
+    "afterSha256": "27bae628c4323d845dde29526f0d130d134a035dc8309e8c9ae8f034e9adc5ce"
+  },
+  "earlierToolRevision": {
+    "path": "agent-c/EVIDENCE_TOOL_SOURCE_REVISION_07.json",
+    "sha256": "8eed81ce7ab060b1faaefcdd292bc143350873ccb2fa3d8519a4440a9577ba43"
+  },
+  "review": {
+    "path": "agent-b/BROWSER_CHAIN_GUARD_REVIEW_07.json",
+    "sha256": "0fc4e4bae98a7edf9d9aba9e246a0383f373770c884589b685276f2f9d277509"
+  },
+  "guardTests": {
+    "path": "agent-c/affected-recheck-20261015-01/BROWSER_ACCEPTANCE_CHAIN_GUARD_TESTS.json",
+    "sha256": "f54ec4b2b147bd5ae68d3c7660a1256f62964bf1bb55bef321f724574e05e056"
+  },
+  "browserAcceptance": {
+    "path": "agent-c/affected-recheck-20261015-01/BROWSER_ACCEPTANCE.json",
+    "sha256": "bb34a324599665a4437c1dbe8878fe154063c0cade287da373826fd831482b49"
+  },
+  "scope": "Only the shared reporting validator adds a finite reviewed timing correction chain. Original full and intermediate raw failures remain unchanged; five passing affected cases are retained, four timing cases and one dependency case have actual successful commands. All runtime/product hashes remain unchanged."
+}

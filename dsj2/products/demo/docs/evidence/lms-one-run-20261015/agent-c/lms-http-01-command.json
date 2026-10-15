@@ -1,0 +1,8 @@
+{
+  "log": "lms-http-01.log",
+  "finishedAt": "2026-10-14T21:02:23.7837097Z",
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-http.test.ts",
+  "exitCode": 0,
+  "startedAt": "2026-10-14T21:02:12.8694312Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo"
+}

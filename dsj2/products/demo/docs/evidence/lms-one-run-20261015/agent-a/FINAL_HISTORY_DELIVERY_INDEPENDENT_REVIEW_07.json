@@ -1,0 +1,64 @@
+{
+  "status": "PASS_SOURCE_REVIEW_NOT_EXECUTION",
+  "checkedAt": "2026-10-15T11:44:29.205709+00:00",
+  "testHarnessOnly": true,
+  "productSourcesChanged": false,
+  "sourceApplied": false,
+  "originalAssertionIntentPreserved": true,
+  "sourceDeltas": [
+    {
+      "path": "scripts/verification/final-delivery-internal-qa.ts",
+      "beforeSha256": "5ea408296635a2126e16e96a2e7a3a615dec5d7d3557750b162c5364d52e0d0a",
+      "candidateSha256": "4f418672cf33887159b9cc6b0924387a6988d09478637b94697cc349d58d0a12",
+      "candidateProvenancePath": ".runtime/final-history-identity-repair/final-delivery-internal-qa.ts.pending"
+    },
+    {
+      "path": "apps/web/e2e/final-history-live.spec.ts",
+      "beforeSha256": "f1aa81f2f314ebad11a15704934d8477074cf61babffd4304541ae01cf1ba4af",
+      "candidateSha256": "62961cef8c70a9030411a8476c7c8eb9e823e5ef459521685b83e5fb12d7f619",
+      "candidateProvenancePath": ".runtime/final-history-identity-repair/final-history-live.spec.ts.pending"
+    }
+  ],
+  "history": {
+    "primaryTemplate": "pb-card",
+    "fixtureSource": "scripts/verification/final-history-fixture.ts",
+    "fixtureSourceSha256": "3627111b93492fd8cc550d672826a55adf319085aaf0650772f1df4c762f31c1",
+    "fixturePrimaryAssignmentLine": 71,
+    "assertions": {
+      "before": 74,
+      "after": 80,
+      "exactOriginalMatcherASTRetained": 70,
+      "sameOperatorsOnBoundDocumentInsteadOfUnorderedIndex": 4,
+      "newUniquenessAndWholeKitIdentityAssertions": 6
+    },
+    "binding": "One exact primary assignment in one known row; one matching template/row/assignment document; one ORIGINAL PDF of that document; reconstructed and reread comparisons target original ID. Both kit document IDs/templateIds/rowIds/assignmentIds/numbers also remain exactly equal after ordering only for comparison.",
+    "preserved": "Actual UI issue, search, duplicate warning, damaged-copy record, controlled missing file and finally restoration, reconstruction download/hash, new event, correction, original snapshot/bytes, unsigned409/signature guard and all existing timeouts remain."
+  },
+  "delivery": {
+    "change": "Append only the exact current task evidence root to two existing allowed task roots.",
+    "preserved": [
+      "Explicit evidence directory required",
+      "Allowed run directory remains strict descendant of an approved root",
+      "Target remains strict descendant of configured evidence directory",
+      "No absolute relative child or parent traversal accepted",
+      "Disposable test database guard",
+      "demoOnly tenant and exact synthetic tenant-name guard",
+      "UUID and tenant-scoped request/issuance/user lookup",
+      "Original unsigned export409 checks and no signing/workflow bypass"
+    ]
+  },
+  "readback": {
+    "provenancePath": ".runtime/final-history-identity-repair/readback.json",
+    "sha256": "815eb8e2910fe3223cd0d84baed27c6c16a34eb90232fb448f7b9d83de2f7ae4",
+    "actualFacts": "One synthetic finalized request still has both PB protocol/card documents with original IDs/numbers; eight saved generation jobs SUCCEEDED; zero signatures. This is a readback of the failed history attempt, not successful completion."
+  },
+  "requiredActualRecheck": [
+    "final-delivery-three-live.spec.ts whole affected testcase",
+    "final-history-live.spec.ts whole affected testcase"
+  ],
+  "limitations": [
+    "Private candidates reviewed; no actual source apply or corrected browser execution by this review.",
+    "Full07 remains RUNNING with recorded failures and is not declared PASS.",
+    "No product query ordering or immutable data was changed."
+  ]
+}

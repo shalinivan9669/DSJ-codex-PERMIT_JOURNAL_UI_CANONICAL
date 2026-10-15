@@ -1,0 +1,78 @@
+{
+  "scope": "14 self-contained LMS tests with independent synthetic fixtures; no legacy producer checkpoints consumed. Full-checkpoint identity guards remain enabled. Does not replace required full pnpm test:e2e.",
+  "runtime": "../full-e2e-20261015-03/runtime-start.json",
+  "session": 10641,
+  "start": "2026-10-15T00:36:40.4993147Z",
+  "webBuildId": "sK53x-nSugI6ZzvRuNyOQ",
+  "status": "FAIL",
+  "source": [
+    {
+      "path": "apps/web/e2e/acceptance-failure-reporter.ts",
+      "sha256": "6e50d6439b459dd12d7daa593c44e361f54a30517d60c46edb672faf5b3c3b49"
+    },
+    {
+      "path": "apps/web/e2e/lms-action-measurement.ts",
+      "sha256": "eae407ce0fbbb3a4704c760089cc68732a91a7e16e125df06143dfd5523dbc57"
+    },
+    {
+      "path": "apps/web/e2e/lms-assignment-batches-live.spec.ts",
+      "sha256": "8c74c13ee2824835a2e84a076dd05599b3438c4f4704116f9ded47ac48316359"
+    },
+    {
+      "path": "apps/web/e2e/lms-conflict-live.spec.ts",
+      "sha256": "6d3d8fc46295f045d5f8d34264b5eceb1d17aa0525b0da03ce8302a41f082e6f"
+    },
+    {
+      "path": "apps/web/e2e/lms-demo-baseline.spec.ts",
+      "sha256": "1ea65c6e57c3e7410e66afb73dff2d16fd37dbbff9119405764b7960c0a2e686"
+    },
+    {
+      "path": "apps/web/e2e/lms-first-entry-live.spec.ts",
+      "sha256": "399147f6ae3be7f48ea444e6556638445e7dbc1bf995279d11ae2c5ff0d94fbc"
+    },
+    {
+      "path": "apps/web/e2e/lms-first-flow-live.spec.ts",
+      "sha256": "a1fbb40f8cc1cfe5c8efdc08eae18aa3a795c7bbe515900fcbcb5bc8ba8229d9"
+    },
+    {
+      "path": "apps/web/e2e/lms-geometry-live.spec.ts",
+      "sha256": "a48ff119765f6556f130ffcd32d88fdad634f65997c0c2cecc81ad1326b51e5c"
+    },
+    {
+      "path": "apps/web/e2e/lms-learning-live.spec.ts",
+      "sha256": "da2b37e43d9e53af6be737e293201ed0f4f8807bccc382cecbe0c9c196941ff1"
+    },
+    {
+      "path": "apps/web/e2e/lms-negative-states-live.spec.ts",
+      "sha256": "8d6e5fca4d92447c96fd6c7c5778c25ba0b4f615bd229a908bbd5e601989851c"
+    },
+    {
+      "path": "apps/web/e2e/lms-operator-live.spec.ts",
+      "sha256": "e6671837fab63705c264148093e460122efec87eb1820808af7c8230c60a4f65"
+    },
+    {
+      "path": "apps/web/e2e/lms-paper-signature-live.spec.ts",
+      "sha256": "1bc0fc7538ca356bb24af203a1bff57ef34be75e1d8f0745b2d67671d0bcd49e"
+    },
+    {
+      "path": "apps/web/e2e/lms-selection-regression-live.spec.ts",
+      "sha256": "9c6f7d9f3012085409acd91c2cb069d2a1e813827c86ffe0b5f9cac41930508e"
+    },
+    {
+      "path": "apps/web/e2e/lms-video-live.spec.ts",
+      "sha256": "a824eb036ed557f64a2e070af4d4df448ea7c9727feca42667a4aed38beb9c2b"
+    },
+    {
+      "path": "apps/web/e2e/operator-role-fixture.ts",
+      "sha256": "6007768165f609c5c857207b6f24ccb503284d79af086c788690708bea476ff9"
+    }
+  ],
+  "command": "pnpm --filter @demo/web exec playwright test e2e/lms- --project=remaining --no-deps",
+  "exitCode": 1,
+  "totals": {
+    "skipped": 0,
+    "passed": 11,
+    "failed": 3
+  },
+  "endedAt": "2026-10-15T00:42:37.0014776Z"
+}

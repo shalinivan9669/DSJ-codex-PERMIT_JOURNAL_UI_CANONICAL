@@ -1,0 +1,49 @@
+{
+  "status": "PASS_SOURCE_REVIEW_NOT_BROWSER_ACCEPTANCE",
+  "checkedAt": "2026-10-15T12:33:51.623099+00:00",
+  "reviewedPrivateCandidates": [
+    {
+      "provenancePath": ".runtime/lms-one-run/lms_browser_acceptance.candidate.py",
+      "sha256": "35bcc07161f26da9f30fdf39f2766aff306e8d993a7bc4c6f8dbbc64f56aeeb0"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/lms-final-criteria-candidate.composite-candidate.py",
+      "sha256": "7045fd2c6b41b9bd171a12441eddb1415de7fe30a6138104d367b44e89a309ed"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/lms-ux-draft.composite-candidate.py",
+      "sha256": "34e5814dd1cb5292123a0a3df8490f5b5ff690b8a041dfeb815a7254776dd739"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/run-affected-recheck.ps1",
+      "sha256": "68fc31c3a5a306cb10f58671322ddd3f6b4afe8de21d8d68a5150092c07ddbbe"
+    }
+  ],
+  "exactHarnessReview": {
+    "path": "agent-a/AFFECTED_HARNESS_EXACT_DELTA_FINAL_REVIEW_07.json",
+    "sha256": "b9122e19d5922ea2d9158d032bb0e33444aa0d570204b956864cec900659051a"
+  },
+  "guardFindingsClosed": [
+    "Exact219 discovery identities remain bound. Raw full07 212PASS/6FAIL/1dependencySKIP/0flaky EXIT1 is retained.",
+    "Exactly seven reviewed harness file deltas are reversed to original177 hashes; all293 runtime files and build remain bound.",
+    "Only the six actual failed identities plus the three formerly-passing cases sharing the changed timing harness are rechecked: nine exact cases. Commercial is selected at its original line375, with its unchanged full title independently guarded.",
+    "The original-hash-bound Playwright DAG proves the one named print-pack-scale skip; unknown skips remain rejected. Completion requires the actual one-case dependency command after successful corrections.",
+    "Repeat basis uses a byte-identical original07 common producer result in the corrective evidence directory, with explicit source run/request/SHA and the exact safe common binding. No new producer is run.",
+    "Dependency completion uses byte-identical original07 G1 checkpoint and result, exact run/request/SHA and101original hashes from actual completed verification. Raw checkpoints stay private.",
+    "Exact command strings, sourceManifest links, nine passed one-attempt identities, samebuild/source, ordered clocks, and zero corrective skip/flaky/errors are required.",
+    "Criteria and UX adapters are byte-identical to the earlier reviewed generic adapters. Privacy requires deterministic exact browserAcceptance/envelope plus every requiredEvidence hash.",
+    "Raw matchingMandatoryFullSuitePassed remainsfalse; logical coverage is209retained+9rechecked+1dependency. No former failure or skip is rewritten."
+  ],
+  "syntheticGuardEvidence": {
+    "path": "agent-c/affected-recheck-20261015-01/BROWSER_ACCEPTANCE_GUARD_FINAL_TESTS.json",
+    "sha256": "eb45317489b5161abfad19e96e9d45dee7284eb74c5c00fb1f84faefc0f6196a",
+    "reportedPassed": 36,
+    "scope": "Synthetic checks executed by Agent C; Agent A read their complete names/outcomes and independently reviewed current guard/wrapper code. This is not actual browser acceptance."
+  },
+  "publicationPrivacy": "Only completed reports and explicit safe PHOTO_INPUT_BOUNDARY/common/dependency binding summaries may be selected after exact scan. Raw fixture image, private common/G1 checkpoints, credentials and browser traces remain excluded.",
+  "limitations": [
+    "Corrective9 and dependency1 must actually pass before coverageVerified or publication acceptance.",
+    "This is source review only; raw full07 FAIL remains immutable.",
+    "No overall acceptance or executed browser correction is claimed."
+  ]
+}

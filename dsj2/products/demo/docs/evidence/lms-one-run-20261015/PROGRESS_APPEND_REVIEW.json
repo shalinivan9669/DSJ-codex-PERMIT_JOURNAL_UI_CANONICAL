@@ -1,0 +1,11 @@
+{
+  "status": "APPENDED_WITH_HISTORY_BYTES_PRESERVED",
+  "checkedAt": "2026-10-15T13:02:48.582873+00:00",
+  "path": "docs/evidence/progress.md",
+  "implementationCommit": "db5806f54147d8592bdf3b32cde9b6e76b9ad1bb",
+  "priorBytes": 110167,
+  "priorSha256": "ef27176b079829717b3a13feef2bcd7384abb84ec6c269a1c4fece097a0394bd",
+  "appendedEntry": "PROGRESS_ENTRY_RU.txt",
+  "appendedSha256": "c2bfbe61579bd70d8a504109cf6ce9d1b483459db87c0fad703472ad84bb029d",
+  "finalSha256": "bfd693044a6877ca9f80dc61af1c10b8948f35f5d1fa82c8ad9dc099fc7ca5c8"
+}

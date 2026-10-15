@@ -1,0 +1,12 @@
+{
+  "command": "node scripts/verification/autonomy.mjs",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-14T23:04:58.7508802Z",
+  "logPath": "command-autonomy-02.log",
+  "environment": {
+    "scope": "products/demo only"
+  },
+  "finishedAt": "2026-10-14T23:05:00.1008136Z",
+  "exitCode": 0,
+  "logSha256": "9ad5dff60be7a97a017bb18c3421dc9f3583d23b11ec12b50061d7e0d86d1ae4"
+}

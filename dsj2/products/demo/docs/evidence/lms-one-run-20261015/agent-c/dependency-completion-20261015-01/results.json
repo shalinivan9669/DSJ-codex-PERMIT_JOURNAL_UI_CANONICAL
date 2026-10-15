@@ -1,0 +1,331 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\playwright.config.ts",
+    "rootDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-producer",
+        "name": "common-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-history-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-consumers",
+        "name": "common-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-producer",
+        "name": "g1-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-keyboard-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-consumers",
+        "name": "g1-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-producer",
+        "name": "portal-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-three-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-consumer",
+        "name": "portal-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-390-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-producer",
+        "name": "manual-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-resume",
+        "name": "manual-resume",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-consumers",
+        "name": "manual-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-producer",
+        "name": "domain-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-role-full-fix-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-consumer",
+        "name": "domain-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "remaining",
+        "name": "remaining",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [
+          "/operator-common-history-live\\.spec\\.ts$/",
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-live\\.spec\\.ts$/",
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/",
+          "/final-portal-three-live\\.spec\\.ts$/",
+          "/final-portal-390-live\\.spec\\.ts$/",
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/",
+          "/operator-role-full-fix-live\\.spec\\.ts$/",
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "print-pack-scale",
+        "name": "print-pack-scale",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\acceptance-failure-reporter.ts",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\dependency-completion-20261015-01\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "remaining-print-pack-scale-live.spec.ts",
+      "file": "remaining-print-pack-scale-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "large saved print pack preserves every original page, photo, number and frozen person after all G1 consumers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 900000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "print-pack-scale",
+              "projectName": "print-pack-scale",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 92571,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:46:04.764Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a4623252cfe04cd456f1-5776bafdb102eb1d2168",
+          "file": "remaining-print-pack-scale-live.spec.ts",
+          "line": 11,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-15T12:46:03.057Z",
+    "duration": 94719.553,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

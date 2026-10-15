@@ -1,0 +1,70 @@
+{
+  "runId": "lms-one-run-20261015",
+  "checkedAt": "2026-10-15T13:01:49.329384+00:00",
+  "providerConnection": "NOT_CONNECTED",
+  "networkSubmissionPerformed": false,
+  "productionDeploymentPerformed": false,
+  "realPersonalDataUsed": false,
+  "gates": [
+    {
+      "id": "LOCAL_ACCEPTED",
+      "status": "PASS",
+      "owner": "Local implementation coordinator",
+      "scope": "Accepted local synthetic LMS and sanitary workflow only; no provider, production or LMK acceptance.",
+      "prerequisites": [
+        "44 local criteria and 49 local requirement rows passed",
+        "All mandatory commands executed with their actual outcomes preserved; functional, UX, file, security, concurrency, restore and load evidence accepted, and exact browser coverage verified including any separately recorded affected-case correction",
+        "Accepted evidence is bound to the delivered implementation commit"
+      ],
+      "evidencePaths": [
+        "ACCEPTANCE_RESULTS.json",
+        "MVP_COVERAGE_FINAL.tsv",
+        "COMMANDS.json",
+        "UX_ACTIONS.json",
+        "RUN_MANIFEST.json"
+      ]
+    },
+    {
+      "id": "PROVIDER_SANDBOX_ACCEPTED",
+      "status": "BLOCKED_EXTERNAL_INPUTS",
+      "owner": "Provider and project owner",
+      "missing": [
+        "Named provider and official versioned contract",
+        "Granted sandbox credentials and authorization",
+        "Approved data access and receiving authority",
+        "Explicit sandbox operation permission"
+      ],
+      "packet": "PROVIDER_CONNECTION_PACKET_RU.txt"
+    },
+    {
+      "id": "PRODUCTION_ACCEPTED",
+      "status": "BLOCKED_EXTERNAL_INPUTS",
+      "owner": "Data operator, operations, legal reviewer and project owner",
+      "missing": [
+        "Approved real regulatory routes and content",
+        "Required real signatures and authorities",
+        "All personal-data storage copies and processors confirmed in Kazakhstan",
+        "Retention/deletion/access policies and evidence",
+        "Separate production authorization"
+      ],
+      "packet": "PERSONAL_DATA_DEPLOYMENT_GATES_RU.txt"
+    },
+    {
+      "id": "LMK_MARK_CONFIRMED",
+      "status": "BLOCKED_EXTERNAL_INPUTS",
+      "owner": "Authorized medical receiving party",
+      "missing": [
+        "Official verification mechanism for the exact LMK mark",
+        "Correlated confirmed external result",
+        "Authorized access to supporting evidence"
+      ],
+      "packet": "PROVIDER_CONNECTION_PACKET_RU.txt"
+    }
+  ],
+  "localTestBoundary": "Local synthetic adapter receipts, HTTP responses, exports and operator attestations do not establish any of these external outcomes.",
+  "implementationCommit": "db5806f54147d8592bdf3b32cde9b6e76b9ad1bb",
+  "reviewedSource": {
+    "path": "EXTERNAL_GATES_REVIEWED.json",
+    "sha256": "6da4b3539fbaf734c0c1d8ded94ca1f36133190b49332fd3c868dbb133855807"
+  }
+}

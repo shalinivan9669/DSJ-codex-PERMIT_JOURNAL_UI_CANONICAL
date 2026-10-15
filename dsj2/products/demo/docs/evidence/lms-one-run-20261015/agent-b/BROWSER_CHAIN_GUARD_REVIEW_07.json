@@ -1,0 +1,130 @@
+{
+  "status": "PASS_SOURCE_REVIEW_AND_READ_ONLY_EVIDENCE_RECONCILIATION",
+  "reviewedAt": "2026-10-15T12:50:23.766827+00:00",
+  "reviewer": "agent-b",
+  "candidatePath": ".runtime/lms-one-run/lms_browser_acceptance.chain-candidate.py",
+  "candidateSha256": "27bae628c4323d845dde29526f0d130d134a035dc8309e8c9ae8f034e9adc5ce",
+  "canonicalAcceptanceCreated": false,
+  "browserOrProductStartedByReviewer": false,
+  "rawRecords": [
+    {
+      "runId": "full-e2e-20261015-07",
+      "commandSha256": "5ca9f083399813d82d96c06d0df3de68386f53e5cfe13a4c24b9e4658afae6fe",
+      "resultsSha256": "974634a310cfdcef078442da1d9c817fbb7cf99dd8830b2a6055dc6d28eed1f1",
+      "exitCode": 1,
+      "status": "FAIL",
+      "stats": {
+        "startTime": "2026-10-15T09:55:48.355Z",
+        "duration": 8544478.834,
+        "expected": 212,
+        "skipped": 1,
+        "unexpected": 6,
+        "flaky": 0
+      },
+      "caseCount": 219,
+      "testSourceUnchanged": true,
+      "runtimeSourceUnchanged": true
+    },
+    {
+      "runId": "affected-recheck-20261015-01",
+      "commandSha256": "54e2e316b68a8eca6bade702b4bbf77ff54754bdbe05e0b6ea4df057b21fb1f9",
+      "resultsSha256": "271bdefe1edcda5355cb20d5374b12580fbb5afaaf5d77dcfffe70780211460e",
+      "exitCode": 1,
+      "status": "FAIL",
+      "stats": {
+        "startTime": "2026-10-15T12:33:22.712Z",
+        "duration": 396040.893,
+        "expected": 6,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      },
+      "caseCount": 9,
+      "testSourceUnchanged": true,
+      "runtimeSourceUnchanged": true
+    },
+    {
+      "runId": "timing-final-recheck-20261015-01",
+      "commandSha256": "ecfb0c8bd3568f29392a2f1a8bea4a64fb1b3708069c0e384f70bafd3c264de1",
+      "resultsSha256": "0d48337193f63aba4454f6a1fab066b0ca76a4cb021e6e3d26adc29584358ead",
+      "exitCode": 0,
+      "status": "PASS",
+      "stats": {
+        "startTime": "2026-10-15T12:44:03.338Z",
+        "duration": 19660.456,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "caseCount": 4,
+      "testSourceUnchanged": true,
+      "runtimeSourceUnchanged": true
+    },
+    {
+      "runId": "dependency-completion-20261015-01",
+      "commandSha256": "8cd69af29dcf8f7f965ff4b9bd8acecbd32b7398e2a86ca0d516aa787ed1e322",
+      "resultsSha256": "f88c8cb04aaf0bf5b67a63e64274918fcee89edefd60d020db4c5c3da3609fab",
+      "exitCode": 0,
+      "status": "PASS",
+      "stats": {
+        "startTime": "2026-10-15T12:46:03.057Z",
+        "duration": 94719.553,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "caseCount": 1,
+      "testSourceUnchanged": true,
+      "runtimeSourceUnchanged": true
+    }
+  ],
+  "effectiveDistinctCoverage": {
+    "retainedFull": 209,
+    "firstCorrectiveNonTiming": 5,
+    "finalTiming": 4,
+    "completedDependency": 1,
+    "totalUnique": 219
+  },
+  "sourceChain": {
+    "originalManifestFiles": 177,
+    "firstReviewedChangedFiles": 7,
+    "finalAdditionalChangedFiles": [
+      "apps/web/e2e/operator-timing.spec.ts"
+    ],
+    "currentFilesMatchFinalManifest": true,
+    "reverseProofReview": "Final timing bytes reconstruct intermediate hash; first seven delta reversals reconstruct original full07 hashes. No arbitrary source fallback."
+  },
+  "findingClosed": {
+    "previous": "Envelope allowed zero skipped dependencies, which could accept a different213/6/0 raw run.",
+    "final": "Exact len(skipped)==1 combines with exact6failure andstats checks to require212/6/1; dependency completion is mandatory."
+  },
+  "checkedGuards": [
+    "Raw full FAIL/exit1 retained",
+    "First corrective FAIL/exit1 retained",
+    "Exact actual case IDs plus project/title/file preserved",
+    "All four timing cases rerun including preceding250PASS",
+    "Dependency exact case/run/checkpoint and chronological order",
+    "No retries, flaky, unknown or extra skip accepted",
+    "Exact seven-file intermediate plus one timing-file final source chain",
+    "Current runtime/product hashes and build remain bound",
+    "Current177 delivered source hashes match",
+    "No general last-success override"
+  ],
+  "syntheticGuardChecks": {
+    "owner": "agent-c",
+    "executedByReviewer": false,
+    "readReport": ".runtime/lms-one-run/browser-guard-chain-tests.json",
+    "reportSha256": "63f90dfbe5ba8817d8d587ae7255eba35e435c7896a9071b3a856c07e76bc62b",
+    "actualReportedPassCount": 42,
+    "meaning": "Synthetic validator checks, not browser acceptance"
+  },
+  "limits": "This independent review does not rewrite raw commands or create canonical PASS. Root/C must invoke the reviewed final validator/envelope and finalize its outputs.",
+  "evidencePaths": [
+    "agent-c/full-e2e-20261015-07/command.json",
+    "agent-c/affected-recheck-20261015-01/command.json",
+    "agent-c/timing-final-recheck-20261015-01/command.json",
+    "agent-c/dependency-completion-20261015-01/command.json"
+  ]
+}

@@ -1,0 +1,12 @@
+▶ OPS02/L02: confirmed subject accounting and unknown-role denial are enforced through real HTTP
+  ✔ counts use confirmed links only, cannot be redirected to another tenant, and have no people directory (157.9409ms)
+  ✔ unknown role cannot log in or reuse a valid stored session on new or legacy surfaces (11921.6392ms)
+✔ OPS02/L02: confirmed subject accounting and unknown-role denial are enforced through real HTTP (12607.881ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14727.9868

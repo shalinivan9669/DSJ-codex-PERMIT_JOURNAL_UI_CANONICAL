@@ -1,0 +1,14 @@
+{
+  "exitCode": 0,
+  "logPath": "command-build-05.log",
+  "finishedAt": "2026-10-15T09:39:21.4247800Z",
+  "webBuildId": "9daYzb73gsxr8g-J7toW7",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-15T09:36:19.2971282Z",
+  "command": "pnpm build",
+  "environment": {
+    "setup": "lms-test-env.ps1 integration",
+    "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+    "CI": "true"
+  }
+}

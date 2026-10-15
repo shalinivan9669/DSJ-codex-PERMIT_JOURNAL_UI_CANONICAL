@@ -1,0 +1,24 @@
+{
+  "result": "PASS",
+  "checkedAt": "2026-10-14T21:48:32.529Z",
+  "fixtureVersion": "lms-one-run-synthetic-v1",
+  "source": "Actual browser, real API, same attempt opened in two authenticated tabs, no mocked requests",
+  "expected": "Stale answer gets409 and cannot replace newer answer; explicit read saved answer restores authoritative value; reload/relogin keep it; keyboardEnter does not finalize",
+  "actual": "Verified all assertions",
+  "viewport": 360,
+  "keyboard": [
+    "focus",
+    "Space",
+    "Enter",
+    "Tab",
+    "Escape"
+  ],
+  "dialogs": 0,
+  "duplicateFinalizations": 0,
+  "clientClockOffsetsMilliseconds": [
+    86400000,
+    -86400000
+  ],
+  "serverDeadlineUnchanged": "2026-10-14T22:18:15.860Z",
+  "displayedCountdownUnaffected": true
+}

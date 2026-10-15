@@ -1,0 +1,83 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-15T01:09:29.875Z",
+  "fixtureVersion": "lms-existing-center-template-upgrade-v1",
+  "tenantId": "619ca915-ac20-4f24-8e91-b5d63966475c",
+  "upgrade": {
+    "dryRunPending": 3,
+    "concurrentCreated": [
+      3,
+      0
+    ],
+    "newForms": [
+      {
+        "id": "3b5adac8-f463-4fa2-8008-3556ea5ac67e",
+        "templateId": "lms-certificate",
+        "checksum": "bef8b699f63c11b6946e63af6242e7f5f36359246ab7634722ba299cc7dee1cf",
+        "approved": false
+      },
+      {
+        "id": "c611e76d-9b67-405e-b385-98157ff5c8cf",
+        "templateId": "lms-credential",
+        "checksum": "86f45fd52dbe976c446f9cacb03727d262706b19d34b1e8604d6431015f6c479",
+        "approved": false
+      },
+      {
+        "id": "01a651c3-bf9b-4d7b-80a9-fe432d8bb98f",
+        "templateId": "lms-protocol",
+        "checksum": "95a356d5643f757552d424c0b9820f8513fb04ca2676c8fafff8ddc01596b2ca",
+        "approved": false
+      }
+    ],
+    "oldTemplateHash": "edd414481ae70bc82a170494cf668d9963db007b3946bd2f9e2f766ce2589ab6",
+    "oldRequestUnchanged": true,
+    "oldNumberingUnchanged": true
+  },
+  "approval": {
+    "directorAccepted": 3,
+    "learnerDenied": 3,
+    "foreignDenied": 3,
+    "approvalEvents": [
+      {
+        "templateId": "lms-certificate",
+        "eventId": "5b2cfa08-9823-4738-b1e4-e6590fc8d0b2",
+        "actorId": "85e68dfb-3a6d-4ba9-9c76-9aeef24ad8a7",
+        "correlationId": "5d126998-4f23-4315-b039-f57318155d9d"
+      },
+      {
+        "templateId": "lms-credential",
+        "eventId": "d1d341fa-3644-4f73-a930-b9314d9ed4a5",
+        "actorId": "85e68dfb-3a6d-4ba9-9c76-9aeef24ad8a7",
+        "correlationId": "5ab5f8b7-e2a1-40f7-88ce-f4ad4f2195f1"
+      },
+      {
+        "templateId": "lms-protocol",
+        "eventId": "7f25d22b-21b8-4fcc-863c-d04d33171d8b",
+        "actorId": "85e68dfb-3a6d-4ba9-9c76-9aeef24ad8a7",
+        "correlationId": "74a50387-0930-4c96-890d-c87e00b1aa88"
+      }
+    ],
+    "repeatedUpgradePreservesApprovals": true
+  },
+  "negativeApprovals": [
+    {
+      "templateId": "historical-unsupported-01db1dcd-9c37-494f-9442-b7081a32497b",
+      "status": 422,
+      "code": "TEMPLATE_UNSUPPORTED",
+      "approved": false
+    },
+    {
+      "templateId": "lms-protocol",
+      "status": 422,
+      "code": "TEMPLATE_UNAVAILABLE",
+      "approved": false
+    },
+    {
+      "templateId": "lms-certificate",
+      "status": 422,
+      "code": "TEMPLATE_UNAVAILABLE",
+      "approved": false
+    }
+  ],
+  "boundary": "Actual isolated PostgreSQL and Nest HTTP; no template approval bypass, renderer, production tenant or external service."
+}

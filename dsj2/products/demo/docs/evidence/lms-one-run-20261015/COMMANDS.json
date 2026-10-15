@@ -1,0 +1,1522 @@
+{
+  "runId": "lms-one-run-20261015",
+  "implementationCommit": "db5806f54147d8592bdf3b32cde9b6e76b9ad1bb",
+  "commands": [
+    {
+      "command": "node scripts/verification/autonomy.mjs",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:35:22.588459+00:00",
+      "finishedAt": "2026-10-14T21:35:31.554529+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-autonomy.log",
+      "logSha256": "f9efc57026680960e068a3aad8151878b6f43204298e50537dfd9266c0492cd2",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm build",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:06:16.565432+00:00",
+      "finishedAt": "2026-10-14T22:07:49.749606+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-build-final.log",
+      "logSha256": "063a612b9eb8272ca0eed5a64e04d0d4f1c47d6295b259dd9098d91236263067",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:32:48.192057+00:00",
+      "finishedAt": "2026-10-14T22:32:48.332115+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-diff-02.log",
+      "logSha256": "bd3dc604e5e657c40fe9904da2fae5dfb9e6a6f3f072c827bc593c2ac86db781",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 1,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:44:48.947753+00:00",
+      "finishedAt": "2026-10-14T21:45:26.375506+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-format-01.log",
+      "logSha256": "23b0bf3d72da0821db45c9a65d182c9c20cc49bca9b65a368385d6b4859bf91c",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 1,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:46:01.814861+00:00",
+      "finishedAt": "2026-10-14T21:46:33.529754+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-format-02.log",
+      "logSha256": "09b192fb18893a6ba82cb765abf317c7835e1b204b09bf1c497969099398488b",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 1,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:49:30.901936+00:00",
+      "finishedAt": "2026-10-14T21:50:27.008155+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-format-03.log",
+      "logSha256": "3bdbd145b44f71fbb67715d2fb15985924452ca31d392a9fc816fe7565ed7afe",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 1,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:23:01.269172+00:00",
+      "finishedAt": "2026-10-14T22:23:54.215255+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-format-05.log",
+      "logSha256": "79261eb978f5b23aee9bfd8d163773ba40914e299f649f70d8a6959875ff4836",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:49:10.101065+00:00",
+      "finishedAt": "2026-10-14T22:49:35.815926+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-format-06.log",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:03:59.307220+00:00",
+      "finishedAt": "2026-10-14T22:04:17.372607+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-format-final.log",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm test:integration",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 1,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:25:01.941516+00:00",
+      "finishedAt": "2026-10-14T22:02:17.613547+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-integration-01.log",
+      "logSha256": "c8d8e6d6b3a0dcd5b869a8b546f2e0d79fc22dec88eaf14e4ac872d125e17d97",
+      "reportedCounts": [
+        "tests 267",
+        "pass 260",
+        "fail 6",
+        "cancelled 1",
+        "skipped 0",
+        "duration_ms 2232431.0329"
+      ],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm test:integration",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:08:54.002279+00:00",
+      "finishedAt": "2026-10-14T22:54:21.854758+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-integration-02.log",
+      "logSha256": "77c24e34a9d0ad5c1381ef17962cff6bbc10920544a59baa295805c2a1ad571f",
+      "reportedCounts": [
+        "tests 280",
+        "pass 280",
+        "fail 0",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 2726945.3043"
+      ],
+      "finalRequiredRun": true,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:21:37.505497+00:00",
+      "finishedAt": "2026-10-14T21:21:39.449497+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-lint.log",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:08:10.107679+00:00",
+      "finishedAt": "2026-10-14T22:08:13.081999+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-lint-02.log",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:23:01.154284+00:00",
+      "finishedAt": "2026-10-14T22:23:02.366299+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-lint-03.log",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:49:10.052660+00:00",
+      "finishedAt": "2026-10-14T22:49:10.998322+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-lint-04.log",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 1,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:03:59.303220+00:00",
+      "finishedAt": "2026-10-14T22:04:13.370413+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-lint-final.log",
+      "logSha256": "77be16558c9f11eb4b5284a92e6e4cdba7919d14fd989b3ad74e7edfbaf47402",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm test",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 1,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:21:26.759150+00:00",
+      "finishedAt": "2026-10-14T21:21:57.363152+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-test.log",
+      "logSha256": "e3246fe837d54b4a824edd59cb01634827385b5aba1cd1418f38facedefc4ed3",
+      "reportedCounts": [
+        "tests 262",
+        "pass 259",
+        "fail 3",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 29611.4008"
+      ],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm test",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 1,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:34:40.087075+00:00",
+      "finishedAt": "2026-10-14T21:34:58.679744+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-test-02.log",
+      "logSha256": "029881c1df12b81204ed3675f436b219856419f6cfcffd90b3c599a8f57a70c5",
+      "reportedCounts": [
+        "tests 263",
+        "pass 241",
+        "fail 22",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 16055.1539"
+      ],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm test",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T21:35:12.072035+00:00",
+      "finishedAt": "2026-10-14T21:36:01.885076+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-test-03.log",
+      "logSha256": "7e2e6ccc5968e7b7c8701655aff12693e3299b32ec5035eb8c8c2a72e69edbf3",
+      "reportedCounts": [
+        "tests 263",
+        "pass 263",
+        "fail 0",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 30975.4979",
+        "tests 241",
+        "pass 241",
+        "fail 0",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 15252.9102"
+      ],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm test",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:07:58.199278+00:00",
+      "finishedAt": "2026-10-14T22:08:46.894342+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-test-04.log",
+      "logSha256": "4a4e3c89e8c6618dd3b9d5cacd44ea30373d96a03398573a75aa00ba537f9b39",
+      "reportedCounts": [
+        "tests 263",
+        "pass 263",
+        "fail 0",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 31429.2749",
+        "tests 241",
+        "pass 241",
+        "fail 0",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 13959.7629"
+      ],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm test",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:23:01.158618+00:00",
+      "finishedAt": "2026-10-14T22:23:49.113480+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-test-05.log",
+      "logSha256": "b2370eb75da6cb8c206ae45854d26cd2fadf393d6f474600092e07b7cbdded5e",
+      "reportedCounts": [
+        "tests 263",
+        "pass 263",
+        "fail 0",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 34841.5404",
+        "tests 241",
+        "pass 241",
+        "fail 0",
+        "cancelled 0",
+        "skipped 0",
+        "duration_ms 9935.8935"
+      ],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm typecheck",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 2,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:04:33.902088+00:00",
+      "finishedAt": "2026-10-14T22:04:53.594373+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-typecheck-final.log",
+      "logSha256": "19ae89fcde154adb15d2ac36fbbd163423c68389ef86cdf2ecf3da09a4f16255",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm typecheck",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:05:11.235573+00:00",
+      "finishedAt": "2026-10-14T22:05:35.278315+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-typecheck-02.log",
+      "logSha256": "73b88ff4fa07c58c798335fa2ea3b7704da962098c2a2a43dc2434a5b20536c7",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm --filter @demo/web build",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:16:31.775868+00:00",
+      "finishedAt": "2026-10-14T22:18:02.994245+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-web-build-02.log",
+      "logSha256": "4bb8324eeed140b0e78326f6f2597ba743dcffd0ac5cf09e43cfa30fb33f093a",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm --filter @demo/web build",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:29:31.029687+00:00",
+      "finishedAt": "2026-10-14T22:30:39.484135+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-web-build-03.log",
+      "logSha256": "c40ddf8b394f1298c357103a562c49e0cec1b72dda8496530c442a7b684d4252",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm --filter @demo/web build",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-14T22:41:24.677420+00:00",
+      "finishedAt": "2026-10-14T22:43:15.283826+00:00",
+      "timestampBasis": "Retrospective filesystem timestamps of this unique output capture: first log creation and last log write. Exact process spawn/exit instants were not separately instrumented for this earlier run. Test-runner duration is preserved when available.",
+      "logPath": "command-web-build-04.log",
+      "logSha256": "938debb8dcbac52d89b1da80f686b8ea305bc5cf25c1835f993cdd953e246f8d",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm --filter @demo/web typecheck",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-15T08:47:35.4260013Z",
+      "finishedAt": "2026-10-15T08:47:44.9730276Z",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logPath": "command-web-typecheck-02.log",
+      "logSha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm --filter @demo/web typecheck",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "exitCodeEvidence": "Observed command tool return and retained command/test log; preceding failed attempts remain listed",
+      "startedAt": "2026-10-15T08:54:50.9491451Z",
+      "finishedAt": "2026-10-15T08:54:56.1019294Z",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logPath": "command-web-typecheck-03.log",
+      "logSha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "reportedCounts": [],
+      "finalRequiredRun": false,
+      "environment": {
+        "CI": "true",
+        "scope": "local synthetic product only; database/env recorded in runtime manifests; no real-provider access"
+      }
+    },
+    {
+      "command": "pnpm typecheck",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "environment": {
+        "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+        "DATABASE_URL": "local disposable demo_test_lms_integration_20261015 at 127.0.0.1:55449",
+        "CI": "true"
+      },
+      "startedAt": "2026-10-14T22:59:12.7340834Z",
+      "logPath": "command-typecheck-03.log",
+      "reason": "Final integrated source including bounded document scheduling and worker startup fix",
+      "finishedAt": "2026-10-14T23:00:29.8809456Z",
+      "exitCode": 0,
+      "logSha256": "1425ad56edc2bb8c3af2118e2cde4b0798a4a6a29362c2d15c1c1e0fcaeadebb",
+      "finalRequiredRun": false,
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE"
+    },
+    {
+      "command": "pnpm build",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "environment": {
+        "DATABASE_URL": "local disposable demo_test_lms_integration_20261015 at 127.0.0.1:55449",
+        "CI": "true",
+        "DEMO_NEXT_DIST_DIR": ".next-lms-final"
+      },
+      "startedAt": "2026-10-14T23:00:51.6991070Z",
+      "logPath": "command-build-02.log",
+      "reason": "Final integrated source including worker startup and visible spacing between request navigation links; owned runtime stopped",
+      "finishedAt": "2026-10-14T23:04:34.6913716Z",
+      "exitCode": 0,
+      "logSha256": "a095d1cde56f953536a2d72214368bba1466e400372ad0499f5617692a89847d",
+      "webBuildId": "sK53x-nSugI6ZzvRuNyOQ",
+      "finalRequiredRun": false,
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE"
+    },
+    {
+      "command": "node scripts/verification/autonomy.mjs",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-14T23:04:58.7508802Z",
+      "logPath": "command-autonomy-02.log",
+      "environment": {
+        "scope": "products/demo only"
+      },
+      "finishedAt": "2026-10-14T23:05:00.1008136Z",
+      "exitCode": 0,
+      "logSha256": "9ad5dff60be7a97a017bb18c3421dc9f3583d23b11ec12b50061d7e0d86d1ae4",
+      "finalRequiredRun": false,
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE"
+    },
+    {
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-concurrency=1 tests/integration/lms-documents.test.ts tests/integration/lms-document-scheduling.test.ts",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:45:53.7191911Z",
+      "finishedAt": "2026-10-15T00:48:00.1996046Z",
+      "exitCode": 0,
+      "logPath": "root-document-projection-01.log",
+      "environment": {
+        "databaseHost": "127.0.0.1:55449",
+        "setup": "lms-test-env.ps1 integration",
+        "database": "demo_test_lms_integration_20261015"
+      },
+      "recordPath": "root-document-projection-01.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "4bdfda85bd02a9926365fe0ba5763c0d85cba885ed5c70f6cf63ef7656507caa",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm typecheck",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:49:08.1595206Z",
+      "finishedAt": "2026-10-15T00:49:52.4606656Z",
+      "exitCode": 0,
+      "logPath": "command-typecheck-04.log",
+      "environment": {
+        "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+        "CI": "true",
+        "setup": "lms-test-env.ps1 integration"
+      },
+      "recordPath": "command-typecheck-04.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "7ceac6deff4cf799fa3c989d3cac0d6a41a048970e641769cf8123c6cd3206e6",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm build",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:50:16.9939700Z",
+      "finishedAt": "2026-10-15T00:51:36.9560301Z",
+      "exitCode": 0,
+      "logPath": "command-build-03.log",
+      "environment": {
+        "setup": "lms-test-env.ps1 integration",
+        "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+        "CI": "true"
+      },
+      "recordPath": "command-build-03.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "dac16f4bd0a09bc8553df4e9aa074f1c8591a285315688c8e61ba7064268a604",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:50:00.4467863Z",
+      "finishedAt": "2026-10-15T00:50:17.9897934Z",
+      "exitCode": 0,
+      "logPath": "command-lint-05.log",
+      "environment": {
+        "CI": "true"
+      },
+      "recordPath": "command-lint-05.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:52:14.7568377Z",
+      "finishedAt": "2026-10-15T00:52:33.1950767Z",
+      "exitCode": 0,
+      "logPath": "command-format-07.log",
+      "environment": {
+        "CI": "true"
+      },
+      "recordPath": "command-format-07.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "node scripts/verification/autonomy.mjs",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:52:14.7568262Z",
+      "finishedAt": "2026-10-15T00:52:15.1933653Z",
+      "exitCode": 0,
+      "logPath": "command-autonomy-03.log",
+      "environment": {
+        "scope": "products/demo only"
+      },
+      "recordPath": "command-autonomy-03.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "270eb8343c8f31c6576ff7a63bf2c8f4e5bc8789fedef5adf06c35e9762ea516",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:52:14.7815425Z",
+      "finishedAt": "2026-10-15T00:52:15.0073982Z",
+      "exitCode": 0,
+      "logPath": "command-diff-03.log",
+      "environment": {
+        "scope": "repository working diff"
+      },
+      "recordPath": "command-diff-03.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "bd3dc604e5e657c40fe9904da2fae5dfb9e6a6f3f072c827bc593c2ac86db781",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm test",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:52:50.2337110Z",
+      "finishedAt": "2026-10-15T00:53:06.0498363Z",
+      "exitCode": 1,
+      "logPath": "command-test-06.log",
+      "environment": {
+        "CI": "true"
+      },
+      "reason": "Current product changed: shared immutable document recipient projection; verify unit imports and existing contract/signing behavior after targeted document regression",
+      "diagnosis": {
+        "checkedAtUtc": "2026-10-15T00:54:54.996332+00:00",
+        "failure": "CI-only invocation omitted the documented DEMO_PYTHON setup, so PDF validator used system Python.",
+        "readOnlyProbe": "python -I -c \"import sys; print(sys.executable); import pypdf; print(pypdf.__version__)\"",
+        "probeExitCode": 1,
+        "actualExecutable": "C:/Python314/python.exe",
+        "actualException": "ModuleNotFoundError: No module named 'pypdf'",
+        "repair": "No product or assertion change. Repeat with lms-test-env.ps1 integration and its isolated Python runtime.",
+        "replacementRun": "command-test-07.json"
+      },
+      "recordPath": "command-test-06.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "2e294d0118794580522c4996191bfd7ba9dc4793f01e9aa777c098f2f116400a",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm test",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T00:54:34.8972365Z",
+      "finishedAt": "2026-10-15T00:55:37.3197495Z",
+      "exitCode": 0,
+      "logPath": "command-test-07.log",
+      "environment": {
+        "setup": "lms-test-env.ps1 integration",
+        "CI": "true",
+        "DEMO_PYTHON": "isolated .runtime/lms-one-run/python/Scripts/python.exe"
+      },
+      "reason": "Repeat unit06 with the documented isolated Python validator runtime; prior CI-only shell omitted DEMO_PYTHON, all failures retained",
+      "recordPath": "command-test-07.json",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "logSha256": "6e69f6641a4f818682cdbd69972658fded0e555f1cded4c17fae51e2345e5d56",
+      "finalRequiredRun": false
+    },
+    {
+      "exitCode": 0,
+      "startedAt": "2026-10-15T01:13:23.5409093Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logPath": "command-autonomy-04.log",
+      "finishedAt": "2026-10-15T01:13:24.0615082Z",
+      "command": "node scripts/verification/autonomy.mjs",
+      "logSha256": "7536fb2f8a1b9e95a282eae28a42116e6bce8fcef16a360ea905eebb1d52db75",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "logPath": "command-build-04.log",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "environment": {
+        "CI": "true",
+        "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+        "setup": "lms-test-env.ps1 integration"
+      },
+      "finishedAt": "2026-10-15T01:11:54.2653552Z",
+      "startedAt": "2026-10-15T01:10:57.1200763Z",
+      "exitCode": 0,
+      "command": "pnpm build",
+      "logSha256": "494e1c03f5e3265993d2aa3793a3960b452d437d427a6077ce05978eb5c6293a",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "git diff --check",
+      "startedAt": "2026-10-15T01:13:23.5678555Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finishedAt": "2026-10-15T01:13:23.7999736Z",
+      "exitCode": 0,
+      "logPath": "command-diff-04.log",
+      "logSha256": "bd3dc604e5e657c40fe9904da2fae5dfb9e6a6f3f072c827bc593c2ac86db781",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "exitCode": 0,
+      "command": "pnpm format:check",
+      "finishedAt": "2026-10-15T01:13:55.3676404Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logPath": "command-format-08.log",
+      "startedAt": "2026-10-15T01:13:23.5348679Z",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "exitCode": 1,
+      "logPath": "command-lint-06.log",
+      "finishedAt": "2026-10-15T01:13:42.817173Z",
+      "startedAt": "2026-10-15T01:13:23.5421265Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm lint",
+      "logSha256": "9d022fb00552efb146a759721b91595886357b60dfe111063ec78d37ed98f8d2",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false,
+      "diagnosis": "Only temporary evidence snapshot.cjs failed no-undef/no-require-import rules. Exact helper bytes retained as snapshot.cjs.txt; no product lint exclusions or rule weakening."
+    },
+    {
+      "logPath": "command-typecheck-05.log",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finishedAt": "2026-10-15T01:10:38.3180223Z",
+      "startedAt": "2026-10-15T01:09:54.0395794Z",
+      "environment": {
+        "setup": "lms-test-env.ps1 integration",
+        "CI": "true"
+      },
+      "exitCode": 0,
+      "command": "pnpm typecheck",
+      "logSha256": "ab526ff500d502913d9dfaf4e254a4af3a17ada2bd24160c6b1db60281dcf567",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "exitCode": 0,
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-name-pattern=\"single-language frozen identity\" tests/integration/lms-documents.test.ts",
+      "environment": {
+        "database": "demo_test_lms_integration_20261015",
+        "setup": "lms-test-env.ps1 integration"
+      },
+      "logPath": "root-document-approval-message-01.log",
+      "startedAt": "2026-10-15T01:03:29.2916394Z",
+      "finishedAt": "2026-10-15T01:03:33.2975242Z",
+      "logSha256": "925aec8bb48fe320a51f7e7341fcaa41177eb21bafd9dd89811e9290a0f2d521",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "exitCode": 0,
+      "finishedAt": "2026-10-15T01:16:18.1581722Z",
+      "command": "pnpm format:check",
+      "logPath": "command-format-09.log",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T01:15:53.5442068Z",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finishedAt": "2026-10-15T01:16:12.4971976Z",
+      "exitCode": 0,
+      "startedAt": "2026-10-15T01:15:53.5352716Z",
+      "logPath": "command-lint-07.log",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "environment": {
+        "CI": "true",
+        "evidenceRoot": "agent-a/final-render-02",
+        "setup": "lms-test-env.ps1 integration"
+      },
+      "actualExitEvidence": "agent-a/COMMANDS_A.json runs record id=render-full-final-02 and actual exec session2642 completion",
+      "exitCode": 0,
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm test:render",
+      "reportedCounts": {
+        "errors": 0,
+        "durationSeconds": 1884.922,
+        "pass": 144,
+        "fail": 0,
+        "skip": 0,
+        "tests": 144
+      },
+      "startedAt": "2026-10-15T00:37:38.8878332Z",
+      "logPath": "agent-a/render-full-final-02.log",
+      "finishedAt": "2026-10-15T01:09:09.5225616Z",
+      "logSha256": "3863633e7c627fcccc9daf352a7c136d349c5c53d43f03ffbe6ec6d98730d5df",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": true
+    },
+    {
+      "startedAt": "2026-10-15T01:13:40.3944818Z",
+      "command": "pnpm test",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "finishedAt": "2026-10-15T01:14:08.4050449Z",
+      "logPath": "command-test-08.log",
+      "environment": {
+        "CI": "true",
+        "DEMO_PYTHON": "local pinned Python 3.12.14",
+        "setup": "lms-test-env.ps1 integration"
+      },
+      "logSha256": "63042794d8f93d59d0d3a96efdc780bf0ece140a9cd976f42fc14fa36dc65681",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm format:check",
+      "startedAt": "2026-10-15T01:33:23.6246710Z",
+      "exitCode": 0,
+      "logPath": "command-format-10.log",
+      "finishedAt": "2026-10-15T01:33:43.0041486Z",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "exitCode": 0,
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logPath": "command-lint-08.log",
+      "startedAt": "2026-10-15T01:33:23.6753662Z",
+      "finishedAt": "2026-10-15T01:33:39.8210086Z",
+      "command": "pnpm lint",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logPath": "command-diff-05.log",
+      "finishedAt": "2026-10-15T01:35:52.0213835Z",
+      "command": "git diff --check",
+      "exitCode": 0,
+      "startedAt": "2026-10-15T01:35:51.8005977Z",
+      "logSha256": "bd3dc604e5e657c40fe9904da2fae5dfb9e6a6f3f072c827bc593c2ac86db781",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "finishedAt": "2026-10-15T02:31:37.8254747Z",
+      "command": "git diff --check",
+      "logPath": "command-diff-06.log",
+      "startedAt": "2026-10-15T02:31:37.5502943Z",
+      "exitCode": 0,
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logSha256": "4297c24fe95edfd30f6e42486ee53a2e9fd29e04341d1ed6c282bff08d38c7f5",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "finishedAt": "2026-10-15T02:31:11.9068080Z",
+      "logPath": "command-format-11.log",
+      "startedAt": "2026-10-15T02:30:49.7133576Z",
+      "command": "pnpm format:check",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T02:30:49.7240499Z",
+      "finishedAt": "2026-10-15T02:31:07.7348614Z",
+      "exitCode": 0,
+      "logPath": "command-lint-09.log",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "startedAt": "2026-10-15T02:30:49.7525594Z",
+      "finishedAt": "2026-10-15T02:30:59.1386699Z",
+      "logPath": "command-web-typecheck-01.log",
+      "exitCode": 0,
+      "command": "pnpm --filter @demo/web typecheck",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logSha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "logPath": "command-diff-07.log",
+      "command": "git diff --check",
+      "startedAt": "2026-10-15T08:47:35.4329403Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finishedAt": "2026-10-15T08:47:38.9571159Z",
+      "exitCode": 0,
+      "logSha256": "4297c24fe95edfd30f6e42486ee53a2e9fd29e04341d1ed6c282bff08d38c7f5",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "startedAt": "2026-10-15T08:47:35.4168304Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-15T08:47:57.0849032Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logPath": "command-format-12.log",
+      "command": "pnpm format:check",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "logPath": "command-lint-10.log",
+      "finishedAt": "2026-10-15T08:47:53.9013736Z",
+      "command": "pnpm lint",
+      "startedAt": "2026-10-15T08:47:35.4244419Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "logPath": "command-diff-08.log",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finishedAt": "2026-10-15T08:54:51.1750282Z",
+      "startedAt": "2026-10-15T08:54:50.9364447Z",
+      "command": "git diff --check",
+      "exitCode": 0,
+      "logSha256": "4297c24fe95edfd30f6e42486ee53a2e9fd29e04341d1ed6c282bff08d38c7f5",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "logPath": "command-format-13.log",
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "startedAt": "2026-10-15T08:54:50.9100548Z",
+      "finishedAt": "2026-10-15T08:55:06.3432599Z",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finishedAt": "2026-10-15T08:55:03.4192817Z",
+      "exitCode": 0,
+      "logPath": "command-lint-11.log",
+      "startedAt": "2026-10-15T08:54:50.8675668Z",
+      "command": "pnpm lint",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "startedAt": "2026-10-15T09:01:22.9361869Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "exitCode": 0,
+      "logPath": "command-diff-09.log",
+      "finishedAt": "2026-10-15T09:01:23.1697502Z",
+      "command": "git diff --check",
+      "logSha256": "4297c24fe95edfd30f6e42486ee53a2e9fd29e04341d1ed6c282bff08d38c7f5",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T09:01:22.9028406Z",
+      "exitCode": 0,
+      "finishedAt": "2026-10-15T09:01:38.6869330Z",
+      "command": "pnpm format:check",
+      "logPath": "command-format-14.log",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "finishedAt": "2026-10-15T09:01:36.0494645Z",
+      "startedAt": "2026-10-15T09:01:22.9171362Z",
+      "logPath": "command-lint-12.log",
+      "exitCode": 0,
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "logPath": "command-web-typecheck-04.log",
+      "finishedAt": "2026-10-15T09:01:28.2727363Z",
+      "startedAt": "2026-10-15T09:01:22.9713636Z",
+      "exitCode": 0,
+      "command": "pnpm --filter @demo/web typecheck",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logSha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "logPath": "command-diff-10.log",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T09:08:14.5076560Z",
+      "finishedAt": "2026-10-15T09:08:14.7665827Z",
+      "logSha256": "1dc5c111b52129111a1469dc75d0d2c6508d421fd1b5dfc7ab316fa000db6ae0",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "exitCode": 0,
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T09:08:14.4827921Z",
+      "logPath": "command-format-15.log",
+      "command": "pnpm format:check",
+      "finishedAt": "2026-10-15T09:08:29.8060201Z",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm lint",
+      "exitCode": 0,
+      "logPath": "command-lint-13.log",
+      "finishedAt": "2026-10-15T09:08:27.1682886Z",
+      "startedAt": "2026-10-15T09:08:14.3935804Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm --filter @demo/web typecheck",
+      "logPath": "command-web-typecheck-05.log",
+      "exitCode": 0,
+      "finishedAt": "2026-10-15T09:08:19.2133081Z",
+      "startedAt": "2026-10-15T09:08:14.4729035Z",
+      "logSha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finishedAt": "2026-10-15T09:29:50.0227125Z",
+      "startedAt": "2026-10-15T09:29:49.3555347Z",
+      "command": "node scripts/verification/autonomy.mjs",
+      "logPath": "command-autonomy-05.log",
+      "exitCode": 0,
+      "logSha256": "839413b2dd2d808c5efe96adfb6ad3cff83bb4b55ff961ef094aa6c1a07677cd",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finishedAt": "2026-10-15T09:29:50.2471600Z",
+      "startedAt": "2026-10-15T09:29:50.0677477Z",
+      "command": "git diff --check",
+      "logPath": "command-diff-11.log",
+      "exitCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "startedAt": "2026-10-15T09:19:36.7932510Z",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/request-customer.test.ts",
+      "exitCode": 0,
+      "logPath": "command-employer-green-01.log",
+      "finishedAt": "2026-10-15T09:19:38.7590453Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "purpose": "GREEN after independently reviewed explicit employer identity correction; running browser API process remains on prior build04 until controlled restart",
+      "logSha256": "6eaf4e255da42f0db5dfc214d74684f4c7fc06dc87939f753b1e5f46ba5fb7d1",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "logPath": "command-employer-red-01.log",
+      "exitCode": 1,
+      "startedAt": "2026-10-15T09:19:12.2631131Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "purpose": "Regression RED run with new boundary assertions against the original server predicate; a failing positive-known-identity case is expected and is not acceptance",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/request-customer.test.ts",
+      "finishedAt": "2026-10-15T09:19:14.5003850Z",
+      "logSha256": "ba6d9771d7a4ecfb9c51dbb874b37426943d9311bb34d3c2739bb11335f07bd3",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "finishedAt": "2026-10-15T09:29:17.6006003Z",
+      "exitCode": 0,
+      "command": "pnpm format:check",
+      "startedAt": "2026-10-15T09:28:57.7143566Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logPath": "command-format-16.log",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "finishedAt": "2026-10-15T09:28:57.6696182Z",
+      "exitCode": 0,
+      "command": "pnpm lint",
+      "startedAt": "2026-10-15T09:28:20.1500964Z",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "logPath": "command-lint-14.log",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "environment": {
+        "setup": "lms-test-env.ps1 integration",
+        "CI": "true",
+        "DEMO_PYTHON": "local pinned Python 3.12.14"
+      },
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T09:27:02.1831630Z",
+      "logPath": "command-test-09.log",
+      "exitCode": 0,
+      "finishedAt": "2026-10-15T09:28:11.1730067Z",
+      "command": "pnpm test",
+      "logSha256": "2e29705a630beddeace427c72966fc65f28961af5ba61b2982c4c86f0a6ee102",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": true
+    },
+    {
+      "exitCode": 0,
+      "logPath": "command-build-05.log",
+      "finishedAt": "2026-10-15T09:39:21.4247800Z",
+      "webBuildId": "9daYzb73gsxr8g-J7toW7",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T09:36:19.2971282Z",
+      "command": "pnpm build",
+      "environment": {
+        "setup": "lms-test-env.ps1 integration",
+        "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+        "CI": "true"
+      },
+      "logSha256": "daefc94c022e50ee44ae50de1d6038a6d0f9a34c0853beb79a3a38dfd91f50a7",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": true
+    },
+    {
+      "finishedAt": "2026-10-15T09:35:23.6229253Z",
+      "environment": {
+        "setup": "lms-test-env.ps1 integration",
+        "CI": "true"
+      },
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T09:34:38.6255714Z",
+      "exitCode": 0,
+      "command": "pnpm typecheck",
+      "logPath": "command-typecheck-06.log",
+      "logSha256": "04f6091f19a018f8362ef456eefccd37f5cd3ecb525adeeed92b80433c140652",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": true
+    },
+    {
+      "exitCode": 0,
+      "command": "pnpm format:check",
+      "finishedAt": "2026-10-15T09:43:52.8631642Z",
+      "logPath": "command-format-17.log",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T09:41:45.4903099Z",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "exitCode": 0,
+      "command": "pnpm lint",
+      "finishedAt": "2026-10-15T09:41:45.4134024Z",
+      "logPath": "command-lint-15.log",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T09:40:52.6529705Z",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T10:22:16.3472159Z",
+      "finishedAt": "2026-10-15T10:22:16.4964698Z",
+      "command": "git diff --check",
+      "logPath": "command-diff-12.log",
+      "exitCode": 0,
+      "logSha256": "0b6a9f65aee4277227f9ab934a705c2da3119d6c06ab911262b9b9215f225c3e",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "node scripts/verification/autonomy.mjs",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T12:32:33.3338689Z",
+      "finishedAt": "2026-10-15T12:32:33.9330421Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "logPath": "command-autonomy-final-harness-01.log",
+      "logSha256": "839413b2dd2d808c5efe96adfb6ad3cff83bb4b55ff961ef094aa6c1a07677cd",
+      "scope": "Current final source after reviewed isolated browser fixture/helper and evidence-tool corrections; no product/runtime changes",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": true
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T12:32:33.3119479Z",
+      "finishedAt": "2026-10-15T12:32:33.6126294Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "logPath": "command-diff-final-harness-01.log",
+      "logSha256": "0b6a9f65aee4277227f9ab934a705c2da3119d6c06ab911262b9b9215f225c3e",
+      "scope": "Current final source after reviewed isolated browser fixture/helper and evidence-tool corrections; no product/runtime changes",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "pnpm format:check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T12:32:33.1538592Z",
+      "finishedAt": "2026-10-15T12:32:51.6534760Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "logPath": "command-format-final-harness-01.log",
+      "logSha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "scope": "Current final source after reviewed isolated browser fixture/helper and evidence-tool corrections; no product/runtime changes",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": true
+    },
+    {
+      "command": "pnpm lint",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T12:32:33.2771745Z",
+      "finishedAt": "2026-10-15T12:33:03.1578210Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "logPath": "command-lint-final-harness-01.log",
+      "logSha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "scope": "Current final source after reviewed isolated browser fixture/helper and evidence-tool corrections; no product/runtime changes",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": true
+    },
+    {
+      "command": "pnpm --filter @demo/web exec tsc --noEmit",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T12:32:33.2919699Z",
+      "finishedAt": "2026-10-15T12:32:40.9569508Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "logPath": "command-typecheck-final-harness-01.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scope": "Current final source after reviewed isolated browser fixture/helper and evidence-tool corrections; no product/runtime changes",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T13:01:12.806772+00:00",
+      "finishedAt": "2026-10-15T13:01:12.857673+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "logPath": "command-diff-source-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scope": "Final217sourcefiles including newly-added files; exact EOF-only normalization and final reviewed acceptance helper applied",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": true
+    },
+    {
+      "command": "git diff --cached --check",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "startedAt": "2026-10-15T13:01:12.711219+00:00",
+      "finishedAt": "2026-10-15T13:01:12.805773+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "logPath": "command-diff-staged-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scope": "Final217sourcefiles including newly-added files; exact EOF-only normalization and final reviewed acceptance helper applied",
+      "timestampBasis": "UTC wall-clock timestamps captured around the exact process invocation; exit code captured from LASTEXITCODE",
+      "finalRequiredRun": false
+    },
+    {
+      "runId": "full-e2e-20261015-07",
+      "command": "pnpm test:e2e",
+      "status": "FAIL",
+      "startedAt": "2026-10-15T09:55:45.5919923Z",
+      "expectedTests": 219,
+      "expectedFiles": 93,
+      "sourceManifest": "test-source.json",
+      "evidenceGeneratorSourceManifest": "evidence-generator-source.json",
+      "discoveryManifest": "agent-c/full-e2e-discovery-20261015-07/discovery.json",
+      "runtime": "runtime-start.json",
+      "buildId": "9daYzb73gsxr8g-J7toW7",
+      "integrationWorker": "Standalone OFF; first-flow owns and restarts its shipping child",
+      "priorFailuresPreserved": true,
+      "exitCode": 1,
+      "endedAt": "2026-10-15T12:18:13.2367101Z",
+      "testSourceUnchanged": true,
+      "changedtestSourcePaths": [],
+      "runtimeSourceUnchanged": true,
+      "changedruntimeSourcePaths": [],
+      "evidenceGeneratorSourceUnchanged": true,
+      "changedevidenceGeneratorSourcePaths": [],
+      "stats": {
+        "startTime": "2026-10-15T09:55:48.355Z",
+        "duration": 8544478.834,
+        "expected": 212,
+        "skipped": 1,
+        "unexpected": 6,
+        "flaky": 0
+      },
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finalRequiredRun": true,
+      "finishedAt": "2026-10-15T12:18:13.2367101Z",
+      "logPath": "agent-c/full-e2e-20261015-07/command.log",
+      "logSha256": "c7c1af903b19d58b60a6a9494ddc315f066407f88c323dc6e34f08cc6a7ddc3f",
+      "commandEvidencePath": "agent-c/full-e2e-20261015-07/command.json",
+      "commandEvidenceSha256": "5ca9f083399813d82d96c06d0df3de68386f53e5cfe13a4c24b9e4658afae6fe",
+      "browserAcceptanceMode": "FULL_RUN_PLUS_AFFECTED_RECHECK",
+      "browserCoverageVerified": true,
+      "resolvedBy": [
+        {
+          "path": "agent-c/affected-recheck-20261015-01/command.json",
+          "sha256": "54e2e316b68a8eca6bade702b4bbf77ff54754bdbe05e0b6ea4df057b21fb1f9"
+        },
+        {
+          "path": "agent-c/timing-final-recheck-20261015-01/command.json",
+          "sha256": "ecfb0c8bd3568f29392a2f1a8bea4a64fb1b3708069c0e384f70bafd3c264de1"
+        },
+        {
+          "path": "agent-c/dependency-completion-20261015-01/command.json",
+          "sha256": "8cd69af29dcf8f7f965ff4b9bd8acecbd32b7398e2a86ca0d516aa787ed1e322"
+        }
+      ],
+      "timestampBasis": "UTC wall-clock times and exit code captured around the actual process"
+    },
+    {
+      "runId": "affected-recheck-20261015-01",
+      "fullRunId": "full-e2e-20261015-07",
+      "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=remaining --project=common-consumers --no-deps e2e/operator-photo-details-live.spec.ts e2e/final-delivery-three-live.spec.ts e2e/final-history-live.spec.ts e2e/operator-timing.spec.ts e2e/commercial.spec.ts:375 e2e/final-repeat-basis-live.spec.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "startedAt": "2026-10-15T12:33:18.6519872Z",
+      "buildId": "9daYzb73gsxr8g-J7toW7",
+      "sourceManifest": "agent-c/affected-recheck-20261015-01/test-source.json",
+      "runtimeSource": "agent-c/full-e2e-20261015-07/runtime-source.json",
+      "checkpointRunId": "full-e2e-20261015-07",
+      "finishedAt": "2026-10-15T12:39:58.9081686Z",
+      "stats": {
+        "startTime": "2026-10-15T12:33:22.712Z",
+        "duration": 396040.893,
+        "expected": 6,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      },
+      "testSourceUnchanged": true,
+      "runtimeSourceUnchanged": true,
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finalRequiredRun": false,
+      "commandEvidencePath": "agent-c/affected-recheck-20261015-01/command.json",
+      "commandEvidenceSha256": "54e2e316b68a8eca6bade702b4bbf77ff54754bdbe05e0b6ea4df057b21fb1f9",
+      "logPath": "agent-c/affected-recheck-20261015-01/command.log",
+      "logSha256": "530b6b07bdcf991e312ff90f0995bde7748c9ba649b07fcad96c2ad1e8585fb4",
+      "browserAffectedRecheck": true
+    },
+    {
+      "runId": "timing-final-recheck-20261015-01",
+      "fullRunId": "full-e2e-20261015-07",
+      "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=remaining --no-deps e2e/operator-timing.spec.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-10-15T12:44:01.4194391Z",
+      "buildId": "9daYzb73gsxr8g-J7toW7",
+      "sourceManifest": "agent-c/timing-final-recheck-20261015-01/test-source.json",
+      "runtimeSource": "agent-c/full-e2e-20261015-07/runtime-source.json",
+      "finishedAt": "2026-10-15T12:44:23.0635015Z",
+      "stats": {
+        "startTime": "2026-10-15T12:44:03.338Z",
+        "duration": 19660.456,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "testSourceUnchanged": true,
+      "runtimeSourceUnchanged": true,
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finalRequiredRun": false,
+      "commandEvidencePath": "agent-c/timing-final-recheck-20261015-01/command.json",
+      "commandEvidenceSha256": "ecfb0c8bd3568f29392a2f1a8bea4a64fb1b3708069c0e384f70bafd3c264de1",
+      "logPath": "agent-c/timing-final-recheck-20261015-01/command.log",
+      "logSha256": "423b6aef9a12f6a03bb0f588f5698f49138f8442df0bd6d34c9735c84f87830a",
+      "browserAffectedRecheck": true
+    },
+    {
+      "runId": "dependency-completion-20261015-01",
+      "fullRunId": "full-e2e-20261015-07",
+      "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=print-pack-scale --no-deps e2e/remaining-print-pack-scale-live.spec.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-10-15T12:46:01.1733675Z",
+      "buildId": "9daYzb73gsxr8g-J7toW7",
+      "sourceManifest": "agent-c/timing-final-recheck-20261015-01/test-source.json",
+      "runtimeSource": "agent-c/full-e2e-20261015-07/runtime-source.json",
+      "checkpointRunId": "full-e2e-20261015-07",
+      "finishedAt": "2026-10-15T12:47:37.8390163Z",
+      "stats": {
+        "startTime": "2026-10-15T12:46:03.057Z",
+        "duration": 94719.553,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "testSourceUnchanged": true,
+      "runtimeSourceUnchanged": true,
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "finalRequiredRun": false,
+      "commandEvidencePath": "agent-c/dependency-completion-20261015-01/command.json",
+      "commandEvidenceSha256": "8cd69af29dcf8f7f965ff4b9bd8acecbd32b7398e2a86ca0d516aa787ed1e322",
+      "logPath": "agent-c/dependency-completion-20261015-01/command.log",
+      "logSha256": "a9ffa549aebc8b2b08944b605632afcac833927da774719d661f02e0cdc5d983",
+      "browserAffectedRecheck": true
+    }
+  ]
+}

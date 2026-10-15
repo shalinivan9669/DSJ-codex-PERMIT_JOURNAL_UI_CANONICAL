@@ -1,0 +1,51 @@
+{
+  "status": "PASS_INDEPENDENT_CANDIDATE_SOURCE_REVIEW_ONLY",
+  "reviewedAtUtc": "2026-10-15T09:01:18.668800+00:00",
+  "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+  "sourceAtReviewSha256": "7d43a5942e379fc637d925472d750bb94faf474bb43e4e8df551fdd6baf1319f",
+  "candidateSha256": "6d62b630387512c460aafa4e683ba2cc6127d8b627fabcc5da5d3f7f11b35af8",
+  "exactChange": "Only after a known synthetic COMPANY customer is created, bind each fixture recipient employerId to that exact customer.id before request creation; assert every returned recipient preserves that identity. Six added lines; no removed lines.",
+  "astPreservation": {
+    "assertionsBefore": 228,
+    "assertionsAfter": 229,
+    "removedAssertions": [],
+    "addedAssertions": [
+      "expect(draft.items.every((person) => person.employerId === customer.id)).toBe(true)"
+    ],
+    "parseErrors": 0,
+    "countingMethod": "TypeScript AST matcher calls including expect.poll; all previous assertion calls preserved as exact normalized multiset."
+  },
+  "preconditionsAndGuards": [
+    "PERSON has no created customer and is unchanged.",
+    "Request customerId stays null until the original actual UI customer selection; the CUSTOMER_REQUIRED Next scenario remains.",
+    "Customer BIN and address stay empty; local recipient BIN/address stay exactly their existing synthetic values.",
+    "Clearing row names can now inherit the explicitly known company identity, without guessing from an address or unrelated BIN.",
+    "Later ITR deletion of row BIN/address still exposes missing required fields because customer BIN/address remain empty.",
+    "No validation, identity matching or product behavior is relaxed; no source dates, names, assignment outcomes or downstream assertions are removed."
+  ],
+  "productSourceProof": {
+    "path": "apps/web/lib/recipient-employer.ts",
+    "sha256": "7f01e5b5c5f08ed395d3cc3bbedc2c89554ba5f0326421857c3bd4887d4c4126",
+    "baselineCommit": "8c08334",
+    "baselineBlobSha256": "702c45d8f59a44350d418e32a72816d9210b13df8268097c48f9e4523ea71207",
+    "lfNormalizedBytesEqual": true
+  },
+  "actualFailureReadback": {
+    "path": "agent-c/domain-grade-20261015-02/COMPANY_EMPLOYER_READBACK.json",
+    "sha256": "1f3cb02940672be0f2589f2923596282118b1648c08ea8d765b596eb3c6bc559",
+    "actualIssues": 3,
+    "hypotheticalProjectedIssues": 0,
+    "attribution": "Agent C read actual saved database state and evaluated the identity-only alternative in memory. Agent A read the complete report and independently reviewed unchanged production identity rules and candidate AST.",
+    "hypotheticalDoesNotProveBrowserPass": true
+  },
+  "boundaries": {
+    "candidateAppliedByThisReview": false,
+    "productChanged": false,
+    "databaseChanged": false,
+    "browserExecuted": false,
+    "overallAcceptance": false
+  },
+  "evidencePaths": [
+    "agent-c/domain-grade-20261015-02/COMPANY_EMPLOYER_READBACK.json"
+  ]
+}

@@ -1,0 +1,21 @@
+▶ S01-S10: real persisted sanitary preparation, fencing, receipt semantics and safe disconnected mode
+  ✔ atomic outbox survives closed UI and expired worker lease without duplicates (526.5816ms)
+  ✔ calendar handles Friday, holiday chain, working Saturday, local midnight and unknown coverage (2.1666ms)
+  ✔ connection and data-access gates deny every missing prerequisite; adapter fails closed outside test runtime (379.3601ms)
+  ✔ HTTP 200 does not equal accepted; stale fencing and callbacks cannot overwrite confirmed receipt (438.6009ms)
+  ✔ crash after send becomes UNKNOWN; unsafe blind resubmit is blocked (301.4066ms)
+  ✔ timeout is reconciled with lookup and bounded throttling avoids immediate retry (295.0417ms)
+  ✔ throttle retries are delayed and bounded; two delivery workers claim only once (523.5104ms)
+  ✔ S06 three pending results seal one immutable batch; partial receipts never accept the whole batch (1066.9962ms)
+  ✔ S08 correction is immutable, idempotent under race, uses provider correction and fences late receipts (1035.4293ms)
+  ✔ S08 unsupported correction and voided source never become automatic resubmissions (925.101ms)
+  ✔ real CSV/XLSX/PDF internal exports preserve rows, neutralize formulas and retain honest meaning (34168.2929ms)
+✔ S01-S10: real persisted sanitary preparation, fencing, receipt semantics and safe disconnected mode (39667.0646ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41156.2264

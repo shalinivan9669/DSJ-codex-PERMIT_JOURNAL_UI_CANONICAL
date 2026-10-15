@@ -1,0 +1,23 @@
+{
+  "runId": "affected-recheck-20261015-01",
+  "fullRunId": "full-e2e-20261015-07",
+  "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=remaining --project=common-consumers --no-deps e2e/operator-photo-details-live.spec.ts e2e/final-delivery-three-live.spec.ts e2e/final-history-live.spec.ts e2e/operator-timing.spec.ts e2e/commercial.spec.ts:375 e2e/final-repeat-basis-live.spec.ts",
+  "status": "FAIL",
+  "exitCode": 1,
+  "startedAt": "2026-10-15T12:33:18.6519872Z",
+  "buildId": "9daYzb73gsxr8g-J7toW7",
+  "sourceManifest": "agent-c/affected-recheck-20261015-01/test-source.json",
+  "runtimeSource": "agent-c/full-e2e-20261015-07/runtime-source.json",
+  "checkpointRunId": "full-e2e-20261015-07",
+  "finishedAt": "2026-10-15T12:39:58.9081686Z",
+  "stats": {
+    "startTime": "2026-10-15T12:33:22.712Z",
+    "duration": 396040.893,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  },
+  "testSourceUnchanged": true,
+  "runtimeSourceUnchanged": true
+}

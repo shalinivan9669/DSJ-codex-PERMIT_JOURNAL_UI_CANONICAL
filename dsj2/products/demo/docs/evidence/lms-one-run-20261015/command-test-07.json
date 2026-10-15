@@ -1,0 +1,14 @@
+{
+  "command": "pnpm test",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-15T00:54:34.8972365Z",
+  "finishedAt": "2026-10-15T00:55:37.3197495Z",
+  "exitCode": 0,
+  "logPath": "command-test-07.log",
+  "environment": {
+    "setup": "lms-test-env.ps1 integration",
+    "CI": "true",
+    "DEMO_PYTHON": "isolated .runtime/lms-one-run/python/Scripts/python.exe"
+  },
+  "reason": "Repeat unit06 with the documented isolated Python validator runtime; prior CI-only shell omitted DEMO_PYTHON, all failures retained"
+}

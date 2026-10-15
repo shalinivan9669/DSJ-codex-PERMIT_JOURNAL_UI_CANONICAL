@@ -1,0 +1,71 @@
+✔ person customer uses the supplied name without rewriting stored title, translations or legacy references (5.6684ms)
+✔ blank person names remain blank and explicitly supplied KZ names are reused without invention (11.7757ms)
+✔ one pinned company supplies all empty employee rows and preserves explicit exceptions (2.0464ms)
+✔ manual employer identity never receives unrelated company BIN or address (0.6561ms)
+✔ autosave persists the person title and working data without submitting director review (19.6117ms)
+✖ an explicitly linked employer with no directory BIN supplies names while preserving local requisites (3.3916ms)
+✖ server and editor agree on linked empty-BIN identities and reject unknown or conflicting identities (0.8548ms)
+✔ a missing organization cannot supply names even when an explicit identity is present (0.2191ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 6
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1170.1715
+
+✖ failing tests:
+
+test at tests\request-customer.test.ts:2:10843
+✖ an explicitly linked employer with no directory BIN supplies names while preserving local requisites (3.3916ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      employerAddressKz: 'Синтетикалық филиал мекенжайы',
+      employerAddressRu: 'Синтетический адрес филиала',
+      employerBin: '123456789012',
+  +   workplaceKz: '',
+  +   workplaceRu: ''
+  -   workplaceKz: 'Синтетикалық компания ЖШС',
+  -   workplaceRu: 'ТОО Синтетическая компания'
+    }
+  
+      at TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\request-customer.test.ts:249:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { workplaceRu: '', workplaceKz: '', employerBin: '123456789012', employerAddressRu: 'Синтетический адрес филиала', employerAddressKz: 'Синтетикалық филиал мекенжайы' },
+    expected: { workplaceRu: 'ТОО Синтетическая компания', workplaceKz: 'Синтетикалық компания ЖШС', employerBin: '123456789012', employerAddressRu: 'Синтетический адрес филиала', employerAddressKz: 'Синтетикалық филиал мекенжайы' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\request-customer.test.ts:2:12005
+✖ server and editor agree on linked empty-BIN identities and reject unknown or conflicting identities (0.8548ms)
+  AssertionError [ERR_ASSERTION]: explicit ID with empty directory BIN
+  + actual - expected
+  
+  + ''
+  - 'ТОО Синтетическая компания'
+  
+      at TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\request-customer.test.ts:327:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1306:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)
+      at Test.postRun (node:internal/test_runner/test:1447:19)
+      at Test.run (node:internal/test_runner/test:1372:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'ТОО Синтетическая компания',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

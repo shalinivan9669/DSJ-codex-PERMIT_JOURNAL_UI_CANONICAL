@@ -1,0 +1,15 @@
+▶ L01 L02 L03: actual Nest HTTP learner identity, one-time invitation, CSRF, scope and old-surface denial
+  ✔ registration rejects authority injection, false consent and foreign-person claim (284.9245ms)
+  ✔ new learner role cannot read or mutate old printing/admin/files/jobs/approvals (79.0907ms)
+  ✔ invite has verified tenant/person scope and exactly one concurrent consumer (793.3929ms)
+  ✔ logout and session version revocation invalidate real persisted cookies (116.891ms)
+✔ L01 L02 L03: actual Nest HTTP learner identity, one-time invitation, CSRF, scope and old-surface denial (1925.0889ms)
+✔ S11: 100 simultaneously active synthetic learners read and autosave through real authenticated HTTP (3817.6868ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9413.3883

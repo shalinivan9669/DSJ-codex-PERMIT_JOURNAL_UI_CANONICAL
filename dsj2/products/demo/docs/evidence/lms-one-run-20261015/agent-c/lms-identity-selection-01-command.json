@@ -1,0 +1,14 @@
+{
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "resultPath": "docs/evidence/lms-one-run-20261015/agent-c/lms-identity-selection-01.log",
+  "command": "pnpm exec tsx --tsconfig apps/api/tsconfig.json --test tests/integration/lms-identity-selection.test.ts",
+  "exitCode": 0,
+  "end": "2026-10-14T22:15:54.3850869Z",
+  "envNames": [
+    "CI",
+    "DATABASE_URL",
+    "DEMO_LMS_TEST_RUNTIME",
+    "DEMO_ARTIFACT_ROOT"
+  ],
+  "start": "2026-10-14T22:15:01.1893975Z"
+}

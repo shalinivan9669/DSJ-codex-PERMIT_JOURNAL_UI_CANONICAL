@@ -1,0 +1,13 @@
+{
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-concurrency=1 tests/integration/lms-documents.test.ts tests/integration/lms-document-scheduling.test.ts",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-15T00:45:53.7191911Z",
+  "finishedAt": "2026-10-15T00:48:00.1996046Z",
+  "exitCode": 0,
+  "logPath": "root-document-projection-01.log",
+  "environment": {
+    "databaseHost": "127.0.0.1:55449",
+    "setup": "lms-test-env.ps1 integration",
+    "database": "demo_test_lms_integration_20261015"
+  }
+}

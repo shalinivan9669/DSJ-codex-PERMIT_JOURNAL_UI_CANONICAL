@@ -1,0 +1,44 @@
+{
+  "reviewedAt": "2026-10-15T00:54:18.539396+00:00",
+  "status": "PASS_OBSERVED",
+  "criterion": "L06 actual browser reload and logout/login resume",
+  "report": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\lms-video-live\\PLAYBACK_ACCEPTANCE.json",
+  "reportSha256": "d238000157d1929e66b5efe4814be9f08f87a62fcdd2cb6c677754df70ab9391",
+  "runnerReport": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\results.json",
+  "runnerReportSha256": "e33e19138732ea98a3fb7088f0b0c6378e8d7903aa4b04ce7451cbb06e84b7f8",
+  "specs": [
+    {
+      "title": "L07 real private video plays, pauses, resumes after reload and cannot complete by seeking",
+      "file": "lms-video-live.spec.ts",
+      "ok": true,
+      "tests": [
+        {
+          "status": "expected",
+          "results": [
+            "passed"
+          ]
+        }
+      ]
+    }
+  ],
+  "facts": {
+    "pausedPosition": 6.015415,
+    "resumedAt": 6.015415,
+    "reloggedAt": 6.015415,
+    "serverIntervals": [
+      [
+        0.000286,
+        12
+      ]
+    ],
+    "completedAt": "2026-10-15T00:42:35.420Z"
+  },
+  "limits": "Enclosing critical14 run has11passed3failed; this evidence establishes only the video testcase PASS. This run observed no Range response; Range transport evidence remains separate API/proxy acceptance. Browser uses native HTMLMediaElement play/pause without media/network/progress mocks.",
+  "descriptionCorrection": {
+    "recordedAt": "2026-10-15T00:55:19.593892+00:00",
+    "sourcePath": "apps/web/e2e/lms-video-live.spec.ts",
+    "currentSourceSha256": "a4eeab3ca1c9c840fabe5a019b522afd34802ed9634aa508fe31ee77ff665d5b",
+    "change": "Only preparedFixture description corrected from authentication entered once to actual initial login and repeated login after logout. Functional assertions and measurements unchanged. Earlier runner/report files retained exactly.",
+    "validation": "Prettier write actualexit0; future full browser run executes current wording."
+  }
+}

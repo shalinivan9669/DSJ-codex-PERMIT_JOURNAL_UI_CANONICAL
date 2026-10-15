@@ -1,0 +1,25 @@
+{
+  "checkedAtUtc": "2026-10-15T12:51:06.8128752Z",
+  "status": "AVAILABLE_WITH_INTEGRATION_WORKER_STOPPED",
+  "origin": "http://127.0.0.1:3159",
+  "apiOrigin": "http://127.0.0.1:4159",
+  "webLoginHttp": 200,
+  "apiAnonymousSessionHttp": 401,
+  "buildId": "9daYzb73gsxr8g-J7toW7",
+  "webProcessAlive": true,
+  "apiProcessAlive": true,
+  "renderProcessAlive": true,
+  "integrationWorkerProcesses": [],
+  "integrationWorker": "STOPPED",
+  "restartAttempt": {
+    "status": "NOT_STARTED_POLICY_BLOCK",
+    "reason": "Automatic approval review rejected the local integration-worker restart: blocked by policy; no further explanation",
+    "command": "pnpm --filter @demo/integration-worker start",
+    "exitCode": null,
+    "retryOrWorkaround": false
+  },
+  "acceptanceScope": "Actual local functionality and worker recovery already verified; this report describes the process state left running after browser acceptance, not another functional test",
+  "externalProvider": "NOT_CONNECTED",
+  "realPersonalDataUsed": false,
+  "persistentPowerSettingsChanged": false
+}

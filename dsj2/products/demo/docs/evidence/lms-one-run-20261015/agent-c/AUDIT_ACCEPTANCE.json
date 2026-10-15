@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-14T22:29:35.447Z",
+  "fixtureVersion": "lms-one-run-synthetic-v1",
+  "tenantId": "b88a2a52-5ef7-417f-b8a1-87436fbbaff9",
+  "events": [
+    {
+      "action": "LMS_REGISTERED",
+      "actor": "fbcb8fe1-b31d-4028-850a-250789cb8781",
+      "entityId": "fbcb8fe1-b31d-4028-850a-250789cb8781",
+      "correlationId": "20fb0725-e835-45eb-bec0-5ad20fe5242d"
+    },
+    {
+      "action": "LMS_COURSE_CREATED",
+      "actor": "d1c9b641-cf11-4784-9db9-9d02c23d6d92",
+      "entityId": "0bca5ca3-9f8f-480a-a40b-93caf1f06c01",
+      "correlationId": "1d82a8d0-4814-43ee-8e96-891a6637cedd"
+    },
+    {
+      "action": "LMS_COURSE_SAVED",
+      "actor": "d1c9b641-cf11-4784-9db9-9d02c23d6d92",
+      "entityId": "0b286839-20fb-49b5-9eb8-1c5c62509de5",
+      "correlationId": "cc3c9391-22c3-45c2-8ccc-e3f3e40ae545"
+    },
+    {
+      "action": "LMS_VERSION_PUBLISHED",
+      "actor": "d1c9b641-cf11-4784-9db9-9d02c23d6d92",
+      "entityId": "0b286839-20fb-49b5-9eb8-1c5c62509de5",
+      "correlationId": "46e135e9-ecf1-4a2b-8196-0d424de7f25f"
+    },
+    {
+      "action": "LMS_BULK_ASSIGNED",
+      "actor": "d1c9b641-cf11-4784-9db9-9d02c23d6d92",
+      "entityId": "0b286839-20fb-49b5-9eb8-1c5c62509de5",
+      "correlationId": "48f844fb-bf1e-40c9-9dda-2b8759d6f32d"
+    },
+    {
+      "action": "LMS_ACCESS_EXTENDED",
+      "actor": "d1c9b641-cf11-4784-9db9-9d02c23d6d92",
+      "entityId": "1bccc4c6-eea6-4f2b-aee1-ed1c77414c6d",
+      "correlationId": "fdfd29b6-06e2-49f2-8ac6-3584b9cdfe76"
+    },
+    {
+      "action": "USER_CREATED",
+      "actor": "d1c9b641-cf11-4784-9db9-9d02c23d6d92",
+      "entityId": "63826015-3180-44b6-a0d9-a1065c29bc51",
+      "correlationId": "a850d965-3a55-45d5-850a-659626259004"
+    },
+    {
+      "action": "USER_UPDATED_SESSIONS_REVOKED",
+      "actor": "d1c9b641-cf11-4784-9db9-9d02c23d6d92",
+      "entityId": "63826015-3180-44b6-a0d9-a1065c29bc51",
+      "correlationId": "3a284174-c383-4347-b3ed-319bb86f8b61"
+    }
+  ],
+  "databaseReconnect": true,
+  "actualApiRestart": true,
+  "auditImmutable": true,
+  "sensitiveAuditFieldsAbsent": true
+}

@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-10-15T09:09:22.543Z",
+  "status": "ACTUAL_HTTP_DIAGNOSTIC_NOT_ACCEPTANCE",
+  "requestId": "3559f851-4d2f-4e3a-913a-e4e10a15dc1a",
+  "revision": 9,
+  "httpStatus": 201,
+  "elapsedMilliseconds": 23.742500000000064,
+  "body": {
+    "valid": false,
+    "issues": [
+      {
+        "code": "BIOT_FIELD_REQUIRED",
+        "path": "items.0.workplaceRu",
+        "message": "Укажите наименование предприятия",
+        "rowId": "30599a4b-81b5-43b0-ab9c-547e16ff586f",
+        "recipientId": "30599a4b-81b5-43b0-ab9c-547e16ff586f",
+        "field": "workplaceRu",
+        "eventId": "460f2475-9b7f-468b-b95c-ebfdbccbbe92"
+      },
+      {
+        "code": "BIOT_FIELD_REQUIRED",
+        "path": "items.1.workplaceRu",
+        "message": "Укажите наименование предприятия",
+        "rowId": "f067bc6f-0b83-4b53-8de8-6a3e6396385f",
+        "recipientId": "f067bc6f-0b83-4b53-8de8-6a3e6396385f",
+        "field": "workplaceRu",
+        "eventId": "460f2475-9b7f-468b-b95c-ebfdbccbbe92"
+      },
+      {
+        "code": "BIOT_FIELD_REQUIRED",
+        "path": "items.2.workplaceRu",
+        "message": "Укажите наименование предприятия",
+        "rowId": "f5169de9-c1e9-4f6c-a5ad-e898aba9beb2",
+        "recipientId": "f5169de9-c1e9-4f6c-a5ad-e898aba9beb2",
+        "field": "workplaceRu",
+        "eventId": "460f2475-9b7f-468b-b95c-ebfdbccbbe92"
+      }
+    ],
+    "revision": 9,
+    "recipientCount": 3,
+    "documentCount": 4,
+    "protocolCount": 1,
+    "warnings": [],
+    "assignments": [
+      {
+        "rowId": "30599a4b-81b5-43b0-ab9c-547e16ff586f",
+        "assignmentId": "4d4d0bd4-72e2-401b-a4cb-cf53ef4a7513"
+      },
+      {
+        "rowId": "f067bc6f-0b83-4b53-8de8-6a3e6396385f",
+        "assignmentId": "eb610314-7d5f-44d4-be2a-73c777965586"
+      },
+      {
+        "rowId": "f5169de9-c1e9-4f6c-a5ad-e898aba9beb2",
+        "assignmentId": "4ef3912e-5fb3-4345-893c-cf264fc098fb"
+      }
+    ]
+  },
+  "noDraftMutation": true,
+  "credentialsCookiesTokensNotRecorded": true
+}

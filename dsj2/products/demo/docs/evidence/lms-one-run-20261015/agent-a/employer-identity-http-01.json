@@ -1,0 +1,55 @@
+{
+  "logPath": "agent-a/employer-identity-http-01.log",
+  "startedAt": "2026-10-15T09:33:31.0974452Z",
+  "database": "loopback disposable demo_test_lms_integration_20261015",
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/employer-identity-http.test.ts",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "sourceFiles": [
+    {
+      "path": "apps/api/src/requests.ts",
+      "sha256": "a02dd878a01dbad2f2b12bd311a15c9adfe27bcb250b60c55511ce9b44ed4a84"
+    },
+    {
+      "path": "tests/request-customer.test.ts",
+      "sha256": "631e39963b68c9d1c82c9773a57d56a1013df437a2a8f024007f3f2c53dd06b5"
+    },
+    {
+      "path": "tests/integration/employer-identity-http.test.ts",
+      "sha256": "e4e1794ebcca7af61eee9e249536a193d570cd49dcf2995189f7bff8333289e7"
+    }
+  ],
+  "sourceCaptureBasis": "Exact source hashes captured immediately before command and immediately after exit",
+  "sourceFilesBefore": [
+    {
+      "path": "apps/api/src/requests.ts",
+      "sha256": "a02dd878a01dbad2f2b12bd311a15c9adfe27bcb250b60c55511ce9b44ed4a84"
+    },
+    {
+      "path": "tests/request-customer.test.ts",
+      "sha256": "631e39963b68c9d1c82c9773a57d56a1013df437a2a8f024007f3f2c53dd06b5"
+    },
+    {
+      "path": "tests/integration/employer-identity-http.test.ts",
+      "sha256": "e4e1794ebcca7af61eee9e249536a193d570cd49dcf2995189f7bff8333289e7"
+    }
+  ],
+  "elapsedMilliseconds": 7761.2197,
+  "logSha256": "2682390bdbbfe21cf4a52620480ed8338c68eab08af39ec39b16f88f590f2c4f",
+  "runtime": {
+    "python": "Python 3.12.14",
+    "node": "v24.16.0"
+  },
+  "environmentNames": [
+    "CI",
+    "DATABASE_URL",
+    "DEMO_ARTIFACT_ROOT",
+    "DEMO_PYTHON",
+    "DEMO_SOFFICE",
+    "DEMO_ORIGIN",
+    "DEMO_LMS_TEST_RUNTIME"
+  ],
+  "status": "PASS",
+  "exitCode": 0,
+  "finishedAt": "2026-10-15T09:33:38.8660084Z",
+  "sourceUnchanged": true
+}

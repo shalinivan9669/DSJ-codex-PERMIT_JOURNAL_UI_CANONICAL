@@ -1,0 +1,8 @@
+{
+  "exitCode": 0,
+  "startedAt": "2026-10-15T01:13:23.5409093Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "logPath": "command-autonomy-04.log",
+  "finishedAt": "2026-10-15T01:13:24.0615082Z",
+  "command": "node scripts/verification/autonomy.mjs"
+}

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "sourceCommit": "90d5b5e72dba0ac38c89f42fa37925a0b3468561",
+  "forms": [
+    {
+      "templateId": "biot-worker-card",
+      "pages": 2,
+      "sameGeometryAtPointPrecision": 0.0001
+    },
+    {
+      "templateId": "biot-itr-certificate",
+      "pages": 1,
+      "sameGeometryAtPointPrecision": 0.0001
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "envNames": [
+    "CI",
+    "DATABASE_URL",
+    "DEMO_ORIGIN",
+    "DEMO_API_ORIGIN",
+    "DEMO_NEXT_DIST_DIR"
+  ],
+  "command": "pnpm db:deploy then pnpm build",
+  "archiveSha256": "4D1AE93537DF142928C55E3816AF352475F9A49783C56F35851D8B464CEA5577",
+  "end": "2026-10-14T21:29:45.3344180Z",
+  "exitCode": 0,
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\baseline-8c08334\\dsj2\\products\\demo",
+  "database": "127.0.0.1:55449/demo_test_lms_baseline_20261015",
+  "sourceRevision": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "start": "2026-10-14T21:26:34.9816586Z"
+}

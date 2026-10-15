@@ -1,0 +1,166 @@
+{
+  "preparationMetrics": {
+    "scenario": "В: automatic internal sanitary preparation",
+    "role": "SYSTEM",
+    "phase": "automatic preparation",
+    "goal": "Prepare exactly one internal sanitary list item from the confirmed exam result without a triggering operator action",
+    "startState": "A real confirmed exam result and its transactional outbox record exist",
+    "preconditions": "The shipping integration worker is running against the isolated synthetic database. UI closure and worker restart are independently recorded below; no pending state is fabricated.",
+    "actualSteps": [],
+    "counts": {
+      "clicks": 0,
+      "keyboardActions": 0,
+      "filledFields": 0,
+      "repeatedFields": 0,
+      "decisions": 0,
+      "navigation": 0,
+      "dialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0
+    },
+    "elapsedMilliseconds": 2041,
+    "timingBoundary": "Persisted server timestamps: outbox creation to actual processing completion. Authentication, UI inspection and restart instrumentation are separate recorded costs, not included in this automatic-processing duration.",
+    "result": {
+      "outboxId": "a1b4eb76-4462-4028-a552-2fa7849375cf",
+      "status": "DONE",
+      "journalCount": 1,
+      "itemCount": 1,
+      "deliveryCount": 1
+    }
+  },
+  "allUiClosedAt": "2026-10-15T01:15:48.177Z",
+  "workerLifecycle": [
+    {
+      "event": "STARTED",
+      "pid": 43708,
+      "ordinal": 1,
+      "at": "2026-10-15T01:15:44.196Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "entrypoint": "apps/integration-worker/src/main.ts",
+      "shell": false
+    },
+    {
+      "event": "STOPPED",
+      "pid": 43708,
+      "ordinal": 1,
+      "at": "2026-10-15T01:15:48.198Z",
+      "reason": "All learner and director UI contexts closed after confirmed result",
+      "code": null,
+      "signal": "SIGTERM"
+    },
+    {
+      "event": "STARTED",
+      "pid": 36596,
+      "ordinal": 2,
+      "at": "2026-10-15T01:15:48.210Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "entrypoint": "apps/integration-worker/src/main.ts",
+      "shell": false
+    }
+  ],
+  "beforeRestart": {
+    "checkedAt": "2026-10-15T01:15:47.980Z",
+    "result": {
+      "id": "f1f29699-ae20-4e65-a02b-15516a9ed815",
+      "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+      "enrollmentId": "5db7f41c-6c19-4f40-bde9-4a971d62e33c",
+      "snapshotHash": "cebbdec3793608293a48a813873ba4f481cb457582b194ef3896f4359034c9e3"
+    },
+    "outbox": [
+      {
+        "id": "a1b4eb76-4462-4028-a552-2fa7849375cf",
+        "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+        "resultId": "f1f29699-ae20-4e65-a02b-15516a9ed815",
+        "kind": "PREPARE",
+        "status": "PENDING",
+        "leaseToken": 0,
+        "lockedUntil": null,
+        "availableAt": "2026-10-15T01:15:47.572Z",
+        "attempts": 0,
+        "createdAt": "2026-10-15T01:15:47.572Z",
+        "processedAt": null
+      }
+    ],
+    "journal": [],
+    "items": [],
+    "deliveries": []
+  },
+  "afterRestart": {
+    "checkedAt": "2026-10-15T01:15:50.474Z",
+    "result": {
+      "id": "f1f29699-ae20-4e65-a02b-15516a9ed815",
+      "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+      "enrollmentId": "5db7f41c-6c19-4f40-bde9-4a971d62e33c",
+      "snapshotHash": "cebbdec3793608293a48a813873ba4f481cb457582b194ef3896f4359034c9e3"
+    },
+    "outbox": [
+      {
+        "id": "a1b4eb76-4462-4028-a552-2fa7849375cf",
+        "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+        "resultId": "f1f29699-ae20-4e65-a02b-15516a9ed815",
+        "kind": "PREPARE",
+        "status": "DONE",
+        "leaseToken": 1,
+        "lockedUntil": null,
+        "availableAt": "2026-10-15T01:15:47.572Z",
+        "attempts": 1,
+        "createdAt": "2026-10-15T01:15:47.572Z",
+        "processedAt": "2026-10-15T01:15:49.613Z"
+      }
+    ],
+    "journal": [
+      {
+        "id": "abebd3bc-7b20-4744-9ac1-0b8fe2949bb5",
+        "resultId": "f1f29699-ae20-4e65-a02b-15516a9ed815",
+        "snapshotHash": "834030b3dbdb998e460bfa4a6f0cdd30286a4dc8be2ea588d1c48b51a17402c0",
+        "signatureState": "AWAITING_SIGNATURE"
+      }
+    ],
+    "items": [
+      {
+        "id": "b9ac1c9c-6e45-413e-ad1b-478229cd7c52",
+        "batchId": "c7d04aa6-9086-4710-b7da-fd4703f6ae65",
+        "resultId": "f1f29699-ae20-4e65-a02b-15516a9ed815",
+        "journalEntryId": "abebd3bc-7b20-4744-9ac1-0b8fe2949bb5",
+        "snapshotHash": "834030b3dbdb998e460bfa4a6f0cdd30286a4dc8be2ea588d1c48b51a17402c0"
+      }
+    ],
+    "deliveries": [
+      {
+        "id": "f4bb54ce-9a00-40f9-b0f2-7a36ee64855b",
+        "resultId": "f1f29699-ae20-4e65-a02b-15516a9ed815",
+        "batchItemId": "b9ac1c9c-6e45-413e-ad1b-478229cd7c52",
+        "state": "READY",
+        "lmkState": "NOT_CONFIRMED",
+        "payloadHash": "834030b3dbdb998e460bfa4a6f0cdd30286a4dc8be2ea588d1c48b51a17402c0"
+      }
+    ]
+  },
+  "triggerOperatorActions": 0,
+  "login": {
+    "clicks": 1,
+    "filledFields": 2,
+    "repeatedFields": 2,
+    "authenticationRepeatedFields": 2,
+    "businessRepeatedFields": 0,
+    "navigation": 2,
+    "keyboardActions": 0,
+    "dialogs": 0,
+    "confirmations": 0,
+    "manualRefresh": 0,
+    "elapsedMilliseconds": 751.5622000000003
+  },
+  "inspection": {
+    "clicks": 1,
+    "filledFields": 0,
+    "repeatedFields": 0,
+    "decisions": 1,
+    "navigation": 1,
+    "keyboardActions": 0,
+    "dialogs": 0,
+    "confirmations": 0,
+    "manualRefresh": 0,
+    "elapsedMilliseconds": 359.336299999999
+  },
+  "interpretation": "All UI contexts closed; only the test-owned shipping worker PID was stopped and a different PID started. The same confirmed result and outbox persisted, and exactly one journal/item/delivery is present after restart. beforeRestart records whether processing had already completed; no pending state is fabricated. Authentication and inspection are separate from the zero-action automatic trigger."
+}

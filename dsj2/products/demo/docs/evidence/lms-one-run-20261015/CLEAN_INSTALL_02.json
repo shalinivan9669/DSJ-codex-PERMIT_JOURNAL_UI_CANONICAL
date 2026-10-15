@@ -1,0 +1,127 @@
+{
+  "environment": {
+    "CI": "true"
+  },
+  "repeatedBecause": "Integration-worker package dev/start script now explicitly selects base tsconfig",
+  "exitCode": 0,
+  "command": "pnpm install --frozen-lockfile",
+  "scope": "Fresh dependency installation, exact twelve final workspace manifests/config/lockfiles; no data or environment copied",
+  "files": [
+    {
+      "path": "package.json",
+      "sha256": "56a567f9ec3a68ed78e0ef30ce9e610e9dd41656c228b5364f50086ed261421e"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "58c24a4f354ba61184abb5eec66582ebce15fbe680e2340b5b46a5416137e1bd"
+    },
+    {
+      "path": "pnpm-workspace.yaml",
+      "sha256": "3cef070b4792fb64a990cbc1bf9765587f1e7268e29faefbcb12a12801560c9d"
+    },
+    {
+      "path": ".npmrc",
+      "sha256": "92643850b1330daed638ee12f17cbaff14c919b8fa3f07858a9812460b7923a8"
+    },
+    {
+      "path": "apps\\api\\package.json",
+      "sha256": "ece0a6c695c11d1e19f9b71e1f575ab477ca1f14f68f9f300af640ad6e871772"
+    },
+    {
+      "path": "apps\\integration-worker\\package.json",
+      "sha256": "c9e90d4a4c598d9a5742474908636c65d553be52dd77b60725c3264e4cac903f"
+    },
+    {
+      "path": "apps\\render-worker\\package.json",
+      "sha256": "ec395035caaca31c422c31f42c844d83c1c433fe1dcdf2906b4652086dc7d2b4"
+    },
+    {
+      "path": "apps\\web\\package.json",
+      "sha256": "317412e69051acea98cdaf56ddacdfcf52f164362245fe156d97fe280d74f414"
+    },
+    {
+      "path": "packages\\contracts\\package.json",
+      "sha256": "4ea3c132328538db4830a7a02ce9f19b70071780a6284449b11710ce4b62a446"
+    },
+    {
+      "path": "packages\\database\\package.json",
+      "sha256": "bb208c97e3ef1d5bec7a2ddcab385230e4120e96ace77d7ce8706aeb08899709"
+    },
+    {
+      "path": "packages\\printing\\package.json",
+      "sha256": "c2bb479a3841f9794abb6c12857bbf6e0a17be66d436fc3df0ac3880aa660d7d"
+    },
+    {
+      "path": "packages\\ui\\package.json",
+      "sha256": "4ca7459ff118754d826379a68ccfd0a562f4b06746bf48d23ba0b971cf128a07"
+    }
+  ],
+  "sourceWorkspaceWasNotReinstalled": true,
+  "logPath": "command-clean-frozen-install-02.log",
+  "finishedAt": "2026-10-14T22:57:24.1554195Z",
+  "startedAt": "2026-10-14T22:56:53.0948646Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\clean-dependency-install-20261015-02",
+  "noPriorNodeModules": true,
+  "postInstallManifestIntegrity": [
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "package.json"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "pnpm-lock.yaml"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "pnpm-workspace.yaml"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": ".npmrc"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "apps\\api\\package.json"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "apps\\integration-worker\\package.json"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "apps\\render-worker\\package.json"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "apps\\web\\package.json"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "packages\\contracts\\package.json"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "packages\\database\\package.json"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "packages\\printing\\package.json"
+    },
+    {
+      "copiedFileUnchanged": true,
+      "sourceUnchanged": true,
+      "path": "packages\\ui\\package.json"
+    }
+  ]
+}

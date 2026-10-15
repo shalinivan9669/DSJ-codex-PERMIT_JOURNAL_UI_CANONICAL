@@ -1,0 +1,14 @@
+{
+  "path": "lms-first-flow-live/minimal-public-record.png",
+  "status": "PASS",
+  "method": "Direct visual inspection of saved actual browser screenshot",
+  "sha256": "b9501b772f624db6eedac54fab7c52f99f12c972dab9dff81f42bab39c363bfa",
+  "limits": "This captured view is not a substitute for all responsive/legal-form matrix evidence.",
+  "checkedAt": "2026-10-15T01:17:16.4223428Z",
+  "observed": [
+    "Readable document form, legal form, number and source",
+    "Information-card meaning is distinct from an electronic signature",
+    "Public page contains no learner name or private source link",
+    "No clipped text or overlapping controls in captured 1366x768 viewport"
+  ]
+}

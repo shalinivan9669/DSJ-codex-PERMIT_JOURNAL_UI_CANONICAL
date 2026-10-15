@@ -1,0 +1,85 @@
+{
+  "status": "PASS_INDEPENDENT_SOURCE_REVIEW_ONLY",
+  "reviewedAtUtc": "2026-10-15T08:58:22.865344+00:00",
+  "scope": "Authorized exact response synchronization and explicit existing operation budgets; no product behavior change or actual browser PASS claimed.",
+  "g1": {
+    "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+    "previousReviewedSha256": "e9b98810170346fc7966b29ae654a7eb2f55ab0f32b672421861d6bc30c0422a",
+    "currentSha256": "15447171423f69dd9b2b4b9f6a7ec6bac83a1de5f532591d0f521009e899fc64",
+    "exactDiff": {
+      "addedLines": 3,
+      "removedLines": 0,
+      "addedStatement": "{ timeout: 240000 },",
+      "boundaries": [
+        "own request approval submit",
+        "own proposal director decision",
+        "own request finalize"
+      ]
+    },
+    "allPriorAssertionsAndPollsUnchanged": true,
+    "overallTestTimeoutUnchanged": true,
+    "operationBudgetBasis": "Existing validate and resolved response waits already use240000 milliseconds."
+  },
+  "common": {
+    "status": "PASS_SOURCE_REVIEW_ONLY",
+    "path": "apps/web/e2e/operator-common-history-live.spec.ts",
+    "beforeSha256": "1f1b4826f3f60eb472a3a58479929670f63f23c8f9ce723bbd05410a5213aced",
+    "afterSha256": "d4b9fa3f903aab95cce2d37bcac03d41a016a98da6085e18f4db2a8f6d0fed83",
+    "beforeProvenance": "Current Git HEAD blob normalized to exact Windows working-tree CRLF; SHA equals captured full06 before source hash.",
+    "assertionsBefore": 52,
+    "assertionsAfter": 58,
+    "removedAssertions": [],
+    "addedAssertions": [
+      "expect(submittedResponse.status()).toBe(201)",
+      "expect(await submittedResponse.json()).toMatchObject({\n    requestId,\n    approval: { status: \"PENDING\" },\n})",
+      "expect(decisionResponse.status()).toBe(201)",
+      "expect(await decisionResponse.json()).toMatchObject({\n    requestId,\n    proposalId: applied.approval!.proposalId,\n    status: \"APPROVED\",\n})",
+      "expect(finalizedResponse.status()).toBe(201)",
+      "expect(await finalizedResponse.json()).toMatchObject({\n    requestId,\n    requestStatus: \"FINALIZED\",\n})"
+    ],
+    "parseErrors": 0,
+    "overallTestTimeoutUnchanged": true
+  },
+  "commonSemantics": [
+    "Registers exact POST pathname and method before the existing UI click for all three own operations.",
+    "Asserts response201 plus own request/proposal and expected status; previous downstream polls, documents105 and all other acceptance assertions remain.",
+    "Uses180000 milliseconds for operation response waits, matching the existing common UI validation wait.",
+    "Original overall3600000 milliseconds and default expect/poll15000 milliseconds remain."
+  ],
+  "installedRuntimeProof": {
+    "version": "Playwright1.58.2",
+    "behavior": "Test config actionTimeout20000 becomes default context timeout; page.waitForResponse delegates options.timeout to _waitForEvent, which resolves timeoutSettings.timeout(options). Explicit per-operation options take precedence.",
+    "sources": [
+      {
+        "path": "apps/web/playwright.config.ts",
+        "sha256": "7dfae24e2be8d4ebc872f3b586bc9a38b5cff1f1697744ec86359ff3d6b7c8ba"
+      },
+      {
+        "path": "node_modules/.pnpm/playwright@1.58.2/node_modules/playwright/lib/index.js",
+        "sha256": "674b6f22b0a2be1dc726ce98026f1cb7bbb2fa1848a2577b02d09ea0c3b6d177"
+      },
+      {
+        "path": "node_modules/.pnpm/playwright-core@1.58.2/node_modules/playwright-core/lib/client/page.js",
+        "sha256": "409b11561b319e8dfb4d1ec3f8b126fb32ab19e894fae529edbeae57c056ae84"
+      },
+      {
+        "path": "node_modules/.pnpm/playwright-core@1.58.2/node_modules/playwright-core/lib/client/timeoutSettings.js",
+        "sha256": "3049c9c53cb5c4f84d0fd00d237c2f78ddb70b8ac60908790b8ef28eb0b14ef0"
+      },
+      {
+        "path": "apps/api/src/approvals.ts",
+        "sha256": "fb93400ac6d6045e3153099194b4ce34e2457ba7d5cae9b03d40c3dbe975341c"
+      },
+      {
+        "path": "apps/api/src/requests.ts",
+        "sha256": "85fb0711ce87ed66887c64702aa8bf5afeb3bdc782da4684be88a0830ee019b6"
+      }
+    ]
+  },
+  "actualExecution": "NOT_RUN by this source review; subsequent browser command must execute current bytes.",
+  "overallAcceptance": false,
+  "evidencePaths": [
+    "agent-a/G1_NETWORK_BOUNDARY_REVIEW.json",
+    "agent-a/COMMON_SUBMIT_SYNCHRONIZATION_REVIEW.json"
+  ]
+}

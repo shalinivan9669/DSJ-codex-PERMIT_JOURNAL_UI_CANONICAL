@@ -1,0 +1,23 @@
+{
+  "runId": "dependency-completion-20261015-01",
+  "fullRunId": "full-e2e-20261015-07",
+  "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=print-pack-scale --no-deps e2e/remaining-print-pack-scale-live.spec.ts",
+  "status": "PASS",
+  "exitCode": 0,
+  "startedAt": "2026-10-15T12:46:01.1733675Z",
+  "buildId": "9daYzb73gsxr8g-J7toW7",
+  "sourceManifest": "agent-c/timing-final-recheck-20261015-01/test-source.json",
+  "runtimeSource": "agent-c/full-e2e-20261015-07/runtime-source.json",
+  "checkpointRunId": "full-e2e-20261015-07",
+  "finishedAt": "2026-10-15T12:47:37.8390163Z",
+  "stats": {
+    "startTime": "2026-10-15T12:46:03.057Z",
+    "duration": 94719.553,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "testSourceUnchanged": true,
+  "runtimeSourceUnchanged": true
+}

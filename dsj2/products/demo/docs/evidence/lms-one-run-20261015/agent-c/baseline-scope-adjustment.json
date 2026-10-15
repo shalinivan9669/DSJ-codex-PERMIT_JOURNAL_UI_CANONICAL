@@ -1,0 +1,19 @@
+{
+  "subcase": "Original fresh browser baseline before LMS implementation",
+  "status": "NOT_RUN",
+  "excludedByUserInstruction": true,
+  "instruction": "Продолжить без исходного браузерного замера",
+  "instructionReportedByCoordinator": true,
+  "documentGeneratedAtUtc": "2026-10-15T01:10:29.580868+00:00",
+  "userInstructionTimestampUtc": null,
+  "timestampMeaning": "This is report-generation time, not the time of the user's message. Agent C received the exact quote from the coordinator; original message timestamp is not supplied in this evidence.",
+  "actualRetainedEvidence": [
+    "agent-c/baseline-build-command.json",
+    "agent-c/baseline-build.log",
+    "agent-c/baseline-db-deploy.log"
+  ],
+  "archivedBaseCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "archiveSha256": "4D1AE93537DF142928C55E3816AF352475F9A49783C56F35851D8B464CEA5577",
+  "ordinaryDraftProbeCaveat": "agent-c/baseline was current development code with LMS navigation already integrated; it is not a preimplementation browser measurement.",
+  "noBeforeAfterTimeSavingClaim": true
+}

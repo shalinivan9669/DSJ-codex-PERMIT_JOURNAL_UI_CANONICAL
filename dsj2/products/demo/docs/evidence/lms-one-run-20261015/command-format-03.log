@@ -1,0 +1,6 @@
+$ prettier --check .
+Checking formatting...
+[warn] apps/web/e2e/operator-domain-acceptance-live.spec.ts
+[warn] tests/integration/lms-documents.test.ts
+[warn] Code style issues found in 2 files. Run Prettier with --write to fix.
+[ELIFECYCLE] Command failed with exit code 1.

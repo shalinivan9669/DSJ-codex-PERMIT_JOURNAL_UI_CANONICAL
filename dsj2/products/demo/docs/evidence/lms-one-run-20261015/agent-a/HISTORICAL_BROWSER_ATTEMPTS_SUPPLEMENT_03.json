@@ -1,0 +1,95 @@
+{
+  "status": "COMPLETED_TARGET_FACTS_NOT_FULL_SUITE_ACCEPTANCE",
+  "reviewer": "Agent A",
+  "reviewedAt": "2026-10-15T09:57:59.685581+00:00",
+  "overallAcceptance": false,
+  "runId": "domain-grade-20261015-04",
+  "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=domain-consumer --no-deps --grep 'UX04 actual fourth-row'",
+  "startedAt": "2026-10-15T09:46:10.2122597Z",
+  "finishedAt": "2026-10-15T09:53:16.8888860Z",
+  "exitCode": 0,
+  "stats": {
+    "startTime": "2026-10-15T09:46:14.315Z",
+    "duration": 422491.69,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "sourcePath": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+  "sourceSha256": "6d62b630387512c460aafa4e683ba2cc6127d8b627fabcc5da5d3f7f11b35af8",
+  "sourceUnchanged": true,
+  "buildId": "9daYzb73gsxr8g-J7toW7",
+  "contexts": [
+    {
+      "kind": "PERSON",
+      "category": "WORKER",
+      "status": "PASS",
+      "recordedStages": 24,
+      "companyInheritanceStageRecorded": false,
+      "negativeBinAndAddressStagesRecorded": false
+    },
+    {
+      "kind": "PERSON",
+      "category": "ITR",
+      "status": "PASS",
+      "recordedStages": 30,
+      "companyInheritanceStageRecorded": false,
+      "negativeBinAndAddressStagesRecorded": true
+    },
+    {
+      "kind": "COMPANY",
+      "category": "WORKER",
+      "status": "PASS",
+      "recordedStages": 18,
+      "companyInheritanceStageRecorded": true,
+      "negativeBinAndAddressStagesRecorded": false
+    },
+    {
+      "kind": "COMPANY",
+      "category": "ITR",
+      "status": "PASS",
+      "recordedStages": 24,
+      "companyInheritanceStageRecorded": true,
+      "negativeBinAndAddressStagesRecorded": true
+    }
+  ],
+  "reasonRepair": {
+    "recordedStatus": "PASS_EXACT_REASON_PRECHECK_REPAIR_ONLY",
+    "validationPostsWhileNavigating": 0,
+    "visibleReasonControls": 1,
+    "otherFieldsAssignmentsRecipientsAndConfirmationsUnchanged": true
+  },
+  "reviewMethod": "Actual terminal command/result parsed, four-context stage records and reason/structural records inspected as structured data. No browser or database work executed for this summary. Raw before/after drafts and screenshot trees are not selected.",
+  "limits": [
+    "Whole UX04/UX08 testcase passed as one targeted browser case. This does not claim the mandatory full219 suite passed.",
+    "Earlier failed domain attempts remain failed and retained; this later target does not rewrite them.",
+    "Legal approval and physical printing are not asserted."
+  ],
+  "retainedLocalRecords": [
+    {
+      "identifier": "agent-c/domain-grade-20261015-04/command.json",
+      "sha256": "01b5855aa0c024b08910e84022111233c99d9c3afac3a95a16a808b849ada34d"
+    },
+    {
+      "identifier": "agent-c/domain-grade-20261015-04/results.json",
+      "sha256": "e908c993b0aac6b9c61777470101c916fe16cead1f3a3d6b805240a8cab32f7e"
+    },
+    {
+      "identifier": "agent-c/domain-grade-20261015-04/ux08-next-targets/readiness-acceptance.json",
+      "sha256": "c704f02ee74aacffbd08ba765ebc5d3da3d00e002114c46d72ba586489f12b5d"
+    },
+    {
+      "identifier": "agent-c/domain-grade-20261015-04/ux08-reason-precheck/reason-precheck.json",
+      "sha256": "e855c78d573515976668f8fdc417de1b74ecfeef3ef4e180149c55d8f13d0a6a"
+    },
+    {
+      "identifier": "agent-c/domain-grade-20261015-04/domain-acceptance/ux04-structural-field-focus.json",
+      "sha256": "a565d134547bde78cbc30bf3897e3d3f9f4bc711dd43f4060cfdab0744f0d3f2"
+    }
+  ],
+  "evidencePaths": [
+    "agent-a/HISTORICAL_BROWSER_ATTEMPTS_SUPPLEMENT_01.json",
+    "agent-a/EMPLOYER_IDENTITY_HTTP_ACCEPTANCE.json"
+  ]
+}

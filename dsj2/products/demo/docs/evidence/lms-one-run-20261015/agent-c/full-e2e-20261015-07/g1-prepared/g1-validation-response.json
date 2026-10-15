@@ -1,0 +1,36 @@
+{
+  "stage": "JSON_PARSED",
+  "status": 201,
+  "requestId": "ac87969b-57e9-4bef-a2f4-ff767fd0f2fe",
+  "valid": true,
+  "documentCount": 101,
+  "validationContentType": "application/json; charset=utf-8",
+  "resolvedStatus": 200,
+  "resolvedContentType": "application/json; charset=utf-8",
+  "resolvedRecipients": 100,
+  "resolvedIssueCount": 0,
+  "validationStartedUtc": "2026-10-15T10:05:46.481Z",
+  "validationHeadersMs": 43318.56270000001,
+  "resolvedHeadersMs": 454.4344000000274,
+  "bothBodiesCompletedMs": 43432.5405,
+  "responseTimeoutMs": 240000,
+  "bodyDiagnostics": {
+    "validation": {
+      "bytes": 10723,
+      "sha256": "0ecc8bc4bd4374aba903823a208853377a4f617691ec75d9b107dce12ddd18ec",
+      "sanitizedTextPrefix": "{\"valid\":true,\"issues\":[],\"revision\":16,\"recipientCount\":100,\"documentCount\":101,\"protocolCount\":1,\"warnings\":[],\"assignments\":[{\"rowId\":\"eb41af2f-46ab-4cd5-ae45-e7fcff7f7834-10\",\"assignmentId\":\"a5c2e7f8-629a-424d-9db0-ae8f8d18a41a\"},{\"rowId\":\"[REDACTED_LONG_VALUE]\",\"assignmentId\":\"657e8044-fa9f-4dd3-945c-4422254f9a27\"},{\"rowId\":\"[REDACTED_LONG_VALUE]\",\"assignmentId\":\"830bfd26-7f14-4370-8209-28d147eb509e\"},{\"rowId\":\"eb41af2f-46ab-4cd5-ae45-e7fcff7f7834-11\",\"assignmentId\":\"c695b800-60b7-4f53-a885-853dd3a3478"
+    },
+    "resolved": {
+      "bytes": 310811,
+      "sha256": "6186f36fe824d1b3559977a1bf238d72923c5a79ed51b902a2e38f744be3bbc7",
+      "sanitizedTextPrefix": "{\"draft\":{\"kind\":\"COMPANY\",\"title\":\"Новая заявка организации\",\"customerId\":\"3db317bf-f448-43c5-9d47-f34416d1d83f\",\"organizationSnapshots\":[{\"id\":\"3db317bf-f448-43c5-9d47-f34416d1d83f\",\"nameRu\":\"ДЕМО — Тестовая организация «Учебный заказ»\",\"nameKz\":\"ДЕМО — «Оқу тапсырысы» сынақ ұйымы\",\"bin\":\"\",\"addressRu\":\"\",\"addressKz\":\"\"}],\"demoMode\":true,\"businessRuleVersion\":\"LIVE_V1\",\"englishAppendix\":false,\"languagePolicy\":\"RU_KZ\",\"schemaVersion\":2,\"profileVersionId\":\"ac63823b-c470-4186-9dbe-b0570d8027eb\",\"commonFields"
+    }
+  },
+  "bodyError": null,
+  "noHeadersCookiesTokensOrCredentials": true,
+  "genuineKeyboardEnter": true,
+  "keyboardFocusBeforeResponseTimers": true,
+  "apiShortcutCalls": 0,
+  "uiSettled": true,
+  "uiSettledMs": 43518.53270000004
+}

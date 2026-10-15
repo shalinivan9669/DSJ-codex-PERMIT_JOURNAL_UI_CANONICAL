@@ -1,0 +1,32 @@
+{
+  "status": "EXACT_TERMINAL_BLANK_LINE_NORMALIZATION",
+  "checkedAtUtc": "2026-10-15T17:56:49.094073+05:00",
+  "reason": "git diff --cached --check first includes newly added files and detected new blank line at EOF. No program statement or token changed. Historical executed-source manifests and browser results remain immutable.",
+  "files": [
+    {
+      "path": "scripts/verification/lms-acceptance-draft.py",
+      "beforeSha256": "ed82baddcbc121c0aa34b136585a7f89250d1f9e414f5c2ee1230258176f1291",
+      "afterSha256": "b6f588f69b3bff601e93c46efb96d8eed16a572e4963582b5adb4979e96933ba",
+      "beforeBytes": 33812,
+      "afterBytes": 33810,
+      "removedTerminalHex": "0d0a",
+      "onlyTerminalBlankLinesRemoved": true,
+      "executedManifestPreserved": true
+    },
+    {
+      "path": "scripts/verification/lms-full-e2e-env.ps1",
+      "beforeSha256": "d69a33920bb815acee6ce53c9b2a554b92fb05f3fab61e565da4b27fc978845a",
+      "afterSha256": "501cc82378f45acd105330716d4240a23600a39be97781dd969ccdf057633d32",
+      "beforeBytes": 2042,
+      "afterBytes": 2040,
+      "removedTerminalHex": "0d0a",
+      "onlyTerminalBlankLinesRemoved": true,
+      "executedManifestPreserved": true
+    }
+  ],
+  "pythonAstEquivalent": true,
+  "powershellParserEquivalent": true,
+  "productRuntimeChanged": false,
+  "browserRetestRequired": false,
+  "powershellNonWhitespaceTokensEquivalent": true
+}

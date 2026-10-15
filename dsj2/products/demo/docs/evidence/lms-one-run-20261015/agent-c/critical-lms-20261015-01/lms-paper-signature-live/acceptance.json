@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-15T00:42:04.370Z",
+  "synthetic": true,
+  "physicalPrintPerformed": false,
+  "beforeStatus": "AWAITING_SIGNATURE",
+  "afterStatus": "ISSUED",
+  "actorRecorded": true,
+  "dateRecorded": true,
+  "category": "OPERATOR_ATTESTED",
+  "electronicSignatures": 0,
+  "documentHashUnchanged": true,
+  "futureDateDenied": 422,
+  "unconfirmedDenied": 400,
+  "employerDenied": 403,
+  "immutableChangedReplayDenied": 409,
+  "exactReplayIdempotent": true,
+  "wrongRecipientBindingDenied": 409,
+  "unknownCanonicalAssignmentDenied": 409,
+  "adversarialFixture": "Copies reference actual original PDF bytes in this isolated synthetic tenant; existing immutable rows/files were not changed or removed. Added after successful original workflow completion."
+}

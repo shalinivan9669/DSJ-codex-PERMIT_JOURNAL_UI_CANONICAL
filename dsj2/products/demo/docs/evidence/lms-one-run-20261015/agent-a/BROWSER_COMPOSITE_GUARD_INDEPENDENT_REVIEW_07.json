@@ -1,0 +1,56 @@
+{
+  "status": "PASS_SOURCE_REVIEW_NOT_BROWSER_ACCEPTANCE",
+  "checkedAt": "2026-10-15T11:58:54.356621+00:00",
+  "reviewedPrivateCandidates": [
+    {
+      "provenancePath": ".runtime/lms-one-run/lms_browser_acceptance.candidate.py",
+      "sha256": "1a194ee3011db8b9c715282acec9666d455f09da0024ee21a35e6b863143dbfa"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/lms-final-criteria-candidate.composite-candidate.py",
+      "sha256": "7045fd2c6b41b9bd171a12441eddb1415de7fe30a6138104d367b44e89a309ed"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/lms-ux-draft.composite-candidate.py",
+      "sha256": "34e5814dd1cb5292123a0a3df8490f5b5ff690b8a041dfeb815a7254776dd739"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/run-affected-recheck.ps1",
+      "sha256": "867789904331bf8c2f7a6d5b1ba3bc810f708738a448bfef71d6bab1f6ac7071"
+    }
+  ],
+  "exactHarnessReview": {
+    "path": "agent-a/AFFECTED_HARNESS_EXACT_DELTA_REVIEW_07.json",
+    "sha256": "5318419f6b6ed43e5789cd72e74de131400cce16f8628a1061351a934b428b92"
+  },
+  "guardFindingsClosed": [
+    "Raw full command and stats remain exact, including recorded failure and the one explained dependency skip.",
+    "Every discovered identity/title/file remains bound; only the three approved actual failures may be replaced by their exact same-runtime successful whole-case rerun.",
+    "Only the named print-pack-scale case can be dependency-skipped. The actual Playwright reporter omits dependencies; the corrected guard verifies the unchanged original-hash-bound real config block and actual reporter project id/testMatch instead.",
+    "Both corrective command sourceManifest fields bind the exact delivered manifest.",
+    "Original07 checkpoint path, dependency-run copy path and original g1-result path are exact; bytes/run/request are equal and the dependent test must actually pass after the three-case recheck.",
+    "Unknown skips, retries, interrupted/timed-out cases, extra/missing identities, runtime drift, wrong build, altered checkpoint or failed corrections remain rejected.",
+    "Privacy readiness now requires exact browserAcceptance/envelope and every required evidence SHA, including corrections and dependency completion.",
+    "UX retains matchingMandatoryFullSuitePassed=false for failed raw command and reports separately verified coverage; no source measurements/counts are rewritten."
+  ],
+  "actualCompatibilityProbe": {
+    "configPath": "apps/web/playwright.config.ts",
+    "sha256": "7dfae24e2be8d4ebc872f3b586bc9a38b5cff1f1697744ec86359ff3d6b7c8ba",
+    "reporterProjectId": "print-pack-scale",
+    "actualReporterHasDependenciesField": false,
+    "sourceDependencyBlockMatches": true,
+    "remainingDependencyPresent": true
+  },
+  "syntheticGuardEvidence": {
+    "provenancePath": ".runtime/lms-one-run/browser-guard-tests-32.json",
+    "sha256": "3b12616584caf4f5fb935be667d151edcdca2d2d35c0faaca915f801e78e532b",
+    "reportedPassed": 32,
+    "scope": "Synthetic guard checks reported by Agent C; Agent A read the exact report and independently reviewed the guard/adapter/wrapper sources. This is not actual browser acceptance."
+  },
+  "publicationPrivacy": "PHOTO_INPUT_BOUNDARY.json is safe metadata; raw fixture image/manifest/checkpoint credentials remain excluded. Only sanitized checkpoint binding and required completed reports may be selected after actual review.",
+  "limitations": [
+    "Full07 still active; no actual composite validation or browser publication was executed.",
+    "Corrected cases and any skipped dependency must finish successfully before any final acceptance claim.",
+    "Original full command outcomes are never changed."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-15T01:23:49.858Z",
+  "buildId": "BV_9Qiz8LMZrZB5Rfnihw",
+  "tenantId": "eddd4f05-d66b-4076-9167-79c125d7e2dc",
+  "requestId": "ad4cf7c1-0b07-4eb9-8c5a-3348acb44080",
+  "kind": "COMPANY",
+  "legalForm": "INFORMATION_CARD",
+  "operatorDocumentLabel": "Обучение — сертификат центра, Обучение — удостоверение центра",
+  "technicalTemplateCodeVisible": false,
+  "revisionUnchanged": true,
+  "scope": "Read-only inspection of the existing issued synthetic INFORMATION_CARD operator request. Only authentication and GET were performed; no setup, metadata, approval or signature was changed. The script first tried an old paper negative-binding fixture whose deliberately adversarial documents correctly prevented its request-detail read; retained failure logs are not a fresh regression."
+}

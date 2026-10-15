@@ -1,0 +1,16 @@
+{
+  "command": "pnpm build",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "environment": {
+    "DATABASE_URL": "local disposable demo_test_lms_integration_20261015 at 127.0.0.1:55449",
+    "CI": "true",
+    "DEMO_NEXT_DIST_DIR": ".next-lms-final"
+  },
+  "startedAt": "2026-10-14T23:00:51.6991070Z",
+  "logPath": "command-build-02.log",
+  "reason": "Final integrated source including worker startup and visible spacing between request navigation links; owned runtime stopped",
+  "finishedAt": "2026-10-14T23:04:34.6913716Z",
+  "exitCode": 0,
+  "logSha256": "a095d1cde56f953536a2d72214368bba1466e400372ad0499f5617692a89847d",
+  "webBuildId": "sK53x-nSugI6ZzvRuNyOQ"
+}

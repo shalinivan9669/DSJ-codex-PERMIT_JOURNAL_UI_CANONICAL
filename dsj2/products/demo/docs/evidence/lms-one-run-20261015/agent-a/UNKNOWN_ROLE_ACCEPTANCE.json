@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "measuredAt": "2026-10-14T22:39:27.663Z",
+  "database": "demo_test_lms_unknown_role_8397668ee0b34ba8857e39516878e0f6",
+  "freshMigrations": [
+    {
+      "count": 25
+    }
+  ],
+  "roleCheckRejected23514": true,
+  "fixtureBoundary": "Only the newly created named disposable DB temporarily removed user_role to exercise unsupported-role HTTP defense; no shared database or migration was altered. Unknown user/session removed and original constraint restored in finally.",
+  "roleCheckRestored": true,
+  "routes": [
+    {
+      "method": "POST",
+      "route": "/auth/login",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "route": "/context",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "route": "/lms/courses",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "route": "/lms/sanitary/subjects",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "route": "/learn/enrollments",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "route": "/recipients",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "route": "/print-requests",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "route": "/settings/profile",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "route": "/artifacts/06f82c33-59a2-4521-ad7b-0bb7cc7e98e3",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "route": "/lms/courses",
+      "status": 403
+    }
+  ]
+}

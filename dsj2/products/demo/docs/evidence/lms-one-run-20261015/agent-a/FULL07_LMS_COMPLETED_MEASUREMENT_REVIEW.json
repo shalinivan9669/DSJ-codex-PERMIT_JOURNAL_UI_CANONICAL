@@ -1,0 +1,216 @@
+{
+  "status": "COMPLETED_LMS_MEASUREMENT_CONTENT_REVIEW_ONLY",
+  "runId": "full-e2e-20261015-07",
+  "reviewedAtUtc": "2026-10-15T11:16:20.475690+00:00",
+  "reviewer": "Agent A",
+  "wholeBrowserAcceptance": "PENDING_TERMINAL_219_TESTS",
+  "scope": "Entire exact completed JSON bytes parsed and scanned; semantic scenario/count/boundary fields inspected. No measurements rewritten, no new browser/test execution and no source-generator edits.",
+  "files": [
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-copy-original-live/acceptance.json",
+      "bytes": 16732,
+      "sha256": "8e2973d01adc2f81818762ba308d92274bec1a10c16f0e1aee3ad5f66318120a"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-demo-current-cycle/actions.json",
+      "bytes": 16450,
+      "sha256": "1679e03010e3cbcd5b70f7e87d87472c0187ae644c0fbb3a74a5dec4e1141ca9"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-first-flow-live/actions.json",
+      "bytes": 38254,
+      "sha256": "c1cb837b28f4871ba93e5af09b91d6e5a219df940c9fa3a9db18d5296683165a"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-first-flow-live/automatic-preparation-restart.json",
+      "bytes": 6926,
+      "sha256": "d0c540b773caa707174deda24a0f7dde82ce009f7f70394cf2a2c8144a206ef0"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-geometry-live/geometry.json",
+      "bytes": 25389,
+      "sha256": "2fb1de4123ac8e9bcb1e3402c4e9641a8427b6a5f6a8b39b548edfb6eb89b5c7"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-learning-live/actions.json",
+      "bytes": 4097,
+      "sha256": "6524758729cd918cc502b9dadad28729f7cc2cf46eea47ce721ce6ed0f359865"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-negative-states-live/acceptance.json",
+      "bytes": 10048,
+      "sha256": "2d26738fda2e9b0bccdea39a1cf6430a412e086739f2988cb871f19113634d67"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-operator-live/actions.json",
+      "bytes": 30155,
+      "sha256": "b7b265f64a9219acbbaa765a0b52a510cc9baa38dbba113e14819c5091650eaf"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-paper-signature-live/acceptance.json",
+      "bytes": 1877,
+      "sha256": "b760a2dcceec2ac737e258907395478a5fc2b5f89ad65cc02e30144eff836673"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-selection-regression-live/acceptance.json",
+      "bytes": 17393,
+      "sha256": "b4a6ef8e48ec7ce9dc5dd569678cda9465293ab4b2ce63564c20ceb9bc3c88fe"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-slow-response-live/acceptance.json",
+      "bytes": 3594,
+      "sha256": "c9fae88ee2031dc78d000948a064cbde6c795af7eb254edf5f3440171afc703d"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-video-live/PLAYBACK_ACCEPTANCE.json",
+      "bytes": 1224,
+      "sha256": "bde05b3cce6c8467614526e7668ff7b72c1226a1628b3f97cd76274aa2dde291"
+    }
+  ],
+  "scan": {
+    "rules": [
+      "syntheticCredential",
+      "bearerValue",
+      "privateKey",
+      "passwordDatabaseUrl",
+      "tokenUrl",
+      "credentialAssignment",
+      "serializedAnswerKey"
+    ],
+    "findings": 0
+  },
+  "freshFirstFlow": {
+    "checkedAt": "2026-10-15T11:11:53.373Z",
+    "fixtureVersion": "lms-first-ui-flow-v2-owned-worker-restart",
+    "counts": {
+      "clicks": 48,
+      "keyboardActions": 0,
+      "filledFields": 42,
+      "selections": 7,
+      "fileSelections": 1,
+      "repeatedFields": 2,
+      "authenticationRepeatedFields": 2,
+      "businessRepeatedFields": 0,
+      "decisions": 55,
+      "navigation": 22,
+      "dialogs": 0,
+      "confirmations": 4,
+      "manualRefresh": 0
+    },
+    "elapsedMilliseconds": 43578.16540000001,
+    "allUiClosedAt": "2026-10-15T11:11:14.316Z",
+    "workerLifecycle": [
+      {
+        "event": "STARTED",
+        "pid": 27184,
+        "ordinal": 1,
+        "at": "2026-10-15T11:11:11.598Z",
+        "executable": "C:\\Program Files\\nodejs\\node.exe",
+        "entrypoint": "apps/integration-worker/src/main.ts",
+        "shell": false
+      },
+      {
+        "event": "STOPPED",
+        "pid": 27184,
+        "ordinal": 1,
+        "at": "2026-10-15T11:11:14.335Z",
+        "reason": "All learner and director UI contexts closed after confirmed result",
+        "code": null,
+        "signal": "SIGTERM"
+      },
+      {
+        "event": "STARTED",
+        "pid": 37724,
+        "ordinal": 2,
+        "at": "2026-10-15T11:11:14.345Z",
+        "executable": "C:\\Program Files\\nodejs\\node.exe",
+        "entrypoint": "apps/integration-worker/src/main.ts",
+        "shell": false
+      }
+    ],
+    "beforeRestartOutboxStatus": "DONE",
+    "afterRestartOutboxStatus": "DONE",
+    "sameRecordedEntitiesAndHashes": {
+      "result": true,
+      "outbox": true,
+      "journal": true,
+      "items": true,
+      "deliveries": true
+    },
+    "countsAfterRestart": {
+      "outbox": 1,
+      "journal": 1,
+      "items": 1,
+      "deliveries": 1
+    },
+    "automaticPreparationElapsedMilliseconds": 148,
+    "automaticTriggerActions": 0,
+    "interpretation": "Fresh07 preparation was already DONE before UI closure/worker restart. This exact run proves preservation and no duplication across actual owned-worker PID replacement, not pending-work processing after restart. Earlier03 PENDING-to-DONE proof is separate historical evidence, not substituted here. Authentication/inspection remain separately measured."
+  },
+  "geometry": {
+    "samples": 64,
+    "widths": [
+      360,
+      390,
+      768,
+      1440
+    ],
+    "languages": [
+      "RU",
+      "KZ"
+    ],
+    "allRecordedWidthsFit": true,
+    "smallControlsRecorded": 0,
+    "technicalStatusesRecorded": 0,
+    "allRecordedFocusVisible": true,
+    "boundary": "Recorded geometry checks across64 samples; does not claim independent visual inspection of every screenshot."
+  },
+  "freshVideo": {
+    "pausedPosition": 6.015389,
+    "resumedAt": 6.015389,
+    "reloggedAt": 6.015389,
+    "rangeResponses": [
+      {
+        "status": 206,
+        "contentRange": "bytes 983040-984596/984597"
+      }
+    ],
+    "completedAt": "2026-10-15T11:13:53.405Z",
+    "boundary": "Uses HTMLMediaElement play/pause for deterministic native media control; no video/network/progress response mocking and no simulated elapsed server clock."
+  },
+  "legalAndPrivacyBoundaries": [
+    "Synthetic local fixtures and isolated roles; no live provider/legal authority/physical print.",
+    "COPY_OF_ORIGINAL and PAPER_ORIGINAL remain their declared legal forms; zero electronic signatures is not an electronic-original claim.",
+    "Ordinary unsigned files and mandatory electronic signatures retain publication denial.",
+    "Unknown delivery remains UNKNOWN with no blind resend; accepted count remains zero.",
+    "Scenario action counts preserve prepared-versus-first-entry boundaries and explicit authentication repeats; zero known-business re-entry is not zero login cost."
+  ],
+  "mediaReviews": [
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-first-flow-live/automatic-sanitary-list.png",
+      "sha256": "25d3bb9f897ad697c8edd92497dd2512b4e4f6f5a37b6f9f7889b89bbc8a820b",
+      "actualView": "Actual full1366x1272 image viewed. Synthetic center/person/course, one current list item ready and awaiting signature, accepted0/1. No provider acceptance or signature claimed; no credential/token/cookie or real personal data visible."
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/lms-copy-original-live/copy-page-1.png",
+      "sha256": "ad41d0e88d250b1af6f510c3c4ef7d83f966ec126fa0b8baffec0c1688f6e230",
+      "actualView": "Actual full1263x893 rendered PDF page viewed. Readable RU/KZ center certificate and copy-of-original label; explicit synthetic heading, original issuer/reference/date, no numerical score or electronic-signature claim. The printed disclaimer says copying does not verify original cryptographic signatures. No overlap/clipping observed on this page; no credential/token/cookie or real personal data visible. Physical print and legal authority are not established."
+    }
+  ],
+  "evidencePaths": [
+    "agent-c/full-e2e-20261015-07/lms-copy-original-live/acceptance.json",
+    "agent-c/full-e2e-20261015-07/lms-demo-current-cycle/actions.json",
+    "agent-c/full-e2e-20261015-07/lms-first-flow-live/actions.json",
+    "agent-c/full-e2e-20261015-07/lms-first-flow-live/automatic-preparation-restart.json",
+    "agent-c/full-e2e-20261015-07/lms-geometry-live/geometry.json",
+    "agent-c/full-e2e-20261015-07/lms-learning-live/actions.json",
+    "agent-c/full-e2e-20261015-07/lms-negative-states-live/acceptance.json",
+    "agent-c/full-e2e-20261015-07/lms-operator-live/actions.json",
+    "agent-c/full-e2e-20261015-07/lms-paper-signature-live/acceptance.json",
+    "agent-c/full-e2e-20261015-07/lms-selection-regression-live/acceptance.json",
+    "agent-c/full-e2e-20261015-07/lms-slow-response-live/acceptance.json",
+    "agent-c/full-e2e-20261015-07/lms-video-live/PLAYBACK_ACCEPTANCE.json",
+    "agent-c/full-e2e-20261015-07/lms-first-flow-live/automatic-sanitary-list.png",
+    "agent-c/full-e2e-20261015-07/lms-copy-original-live/copy-page-1.png"
+  ]
+}

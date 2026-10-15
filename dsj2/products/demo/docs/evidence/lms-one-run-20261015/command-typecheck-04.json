@@ -1,0 +1,13 @@
+{
+  "command": "pnpm typecheck",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-15T00:49:08.1595206Z",
+  "finishedAt": "2026-10-15T00:49:52.4606656Z",
+  "exitCode": 0,
+  "logPath": "command-typecheck-04.log",
+  "environment": {
+    "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+    "CI": "true",
+    "setup": "lms-test-env.ps1 integration"
+  }
+}

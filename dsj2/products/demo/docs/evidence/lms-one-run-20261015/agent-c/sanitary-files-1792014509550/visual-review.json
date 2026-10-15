@@ -1,0 +1,18 @@
+{
+  "physicalPrint": "NOT_PERFORMED",
+  "files": [
+    "internal-list-ru.png",
+    "internal-list-kz.png"
+  ],
+  "checkedAt": "2026-10-14T21:57:18.2603864Z",
+  "scope": "Actual generated internal-list-ru.pdf and internal-list-kz.pdf rendered with pypdfium, reviewed PNG visually",
+  "observations": [
+    "Both one-page internal lists fit the page without clipping",
+    "Kazakh long name and Cyrillic labels wrap inside cells",
+    "Dates use saved local exam date",
+    "Header states internal list; external acceptance unconfirmed; not medical admission",
+    "No electronic signature or LMK success asserted"
+  ],
+  "result": "PASS",
+  "reviewer": "Agent C"
+}

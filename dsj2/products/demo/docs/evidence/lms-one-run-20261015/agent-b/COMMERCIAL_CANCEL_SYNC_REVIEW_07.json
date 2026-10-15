@@ -1,0 +1,27 @@
+{
+  "status": "PASS_SOURCE_REVIEW",
+  "reviewedAt": "2026-10-15T12:38:03.973Z",
+  "reviewer": "agent-b",
+  "source": "apps/web/e2e/commercial.spec.ts",
+  "beforeSha256": "46831d0ec8fdf8bf8ca81b1aeded0e84ee3b0590135dec7578c61b7c869d11df",
+  "candidateSha256": "ce40aa96344e1b9e8d6e80bd0ef4ce4a1e33ac3fcc1fc0112902fc031b5a63c9",
+  "exactReverseVerified": true,
+  "actualSourceSha256": "ce40aa96344e1b9e8d6e80bd0ef4ce4a1e33ac3fcc1fc0112902fc031b5a63c9",
+  "actualMatchesReviewedCandidate": true,
+  "assertionCounts": {
+    "before": 71,
+    "after": 74,
+    "unchanged": 71,
+    "added": 3,
+    "removed": 0
+  },
+  "changedScope": "Exact own-request POST cancel response wait is armed with the same click, then201/ownid/FINALIZED/PENDING/UUID are checked before existing director approval. No timeout, product, fixture, or old assertion change.",
+  "contractSources": [
+    "apps/api/src/controller.ts:510 POST default201",
+    "apps/api/src/requests.ts:2901 cancelRequest submits CANCEL proposal inside transaction",
+    "apps/api/src/approvals.ts submitProposal returns working record with pending approval",
+    "apps/web/e2e/operator-role-fixture.ts:181 approve reads PENDING or otherwise submits SAVE"
+  ],
+  "actualBrowserValidation": "NOT_RUN_BY_REVIEWER; entire affected commercial testcase remains required in corrective command; unchanged other cases retain their actual full07 results",
+  "runtimeUnchanged": true
+}

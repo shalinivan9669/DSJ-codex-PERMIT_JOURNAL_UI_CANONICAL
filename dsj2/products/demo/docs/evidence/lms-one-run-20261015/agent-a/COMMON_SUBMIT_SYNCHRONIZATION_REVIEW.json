@@ -1,0 +1,34 @@
+{
+  "status": "PASS_SOURCE_REVIEW_ONLY_EXECUTION_PENDING",
+  "path": "apps/web/e2e/operator-common-history-live.spec.ts",
+  "beforeSha256": "1f1b4826f3f60eb472a3a58479929670f63f23c8f9ce723bbd05410a5213aced",
+  "afterSha256": "77d6a1cdf4cc0f834713b939411effcd7547a57ffcb66769f3bb4f03cad1e962",
+  "beforeReconstructedExact": true,
+  "assertionsBefore": 52,
+  "assertionsAfter": 54,
+  "removedAssertions": [],
+  "addedAssertions": [
+    "expect(submittedResponse.status()).toBe(201)",
+    "expect((await submittedResponse.json()).approval?.status).toBe(\"PENDING\")"
+  ],
+  "parseErrors": 0,
+  "checkedAtUtc": "2026-10-15T08:45:00.455456+00:00",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "localAccepted": false,
+  "reviewFindings": [
+    "Only the prior UI click is paired with waiting for the exact own request POST /api/print-requests/:id/approval/submit response. No direct API submission is introduced.",
+    "Actual response must be201 and body.approval.status PENDING. All52 earlier matcher assertions remain exact; the original PENDING poll and all configured timeouts remain unchanged.",
+    "Server submitApproval returns the response only after its transaction; BatchReadyPanel displays success only after awaiting this POST, then refreshes.",
+    "Observed full06 persisted PENDING/frozen resolution and success notice support a request completion synchronization issue; this is not a fabricated success or a reason to relax product rules."
+  ],
+  "actualFailureAttribution": {
+    "status": "FAILED_FULL06_RETAINED",
+    "diagnosisSha256": "b0afe2d246f8e4aa9ed1f5e41785ff4f4a1361856ae548a9bcd34e0e98df5b7c",
+    "dbReadbackSha256": "761374a50477ace85d7232dc9479daed22d4382dbe8502c2bd0e76af41b1713e",
+    "summary": "Agent C readback: actual proposal PENDING with frozen resolution/revision6 and zero render jobs; screenshot reviewed by C showed completed submission notice and still-busy refresh. A reviewed these reports,not a new browser execution.",
+    "rawScreenshot": "Private test-results image is excluded from publication; no copied raw screenshot or session data."
+  },
+  "executionStatus": "NOT_RUN_NEW_BROWSER_EXECUTION_REQUIRED",
+  "operations": "Independent source/AST review only; no product or test edit by A."
+}

@@ -1,0 +1,94 @@
+{
+  "status": "HISTORICAL_ATTEMPT_FACTS_NOT_OVERALL_ACCEPTANCE",
+  "createdAt": "2026-10-15T09:38:02.811721+00:00",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "runId": "g1-fresh-deep-20261015-02",
+  "command": "pnpm test:e2e --project=g1-producer",
+  "startedAt": "2026-10-15T09:09:56.7012443Z",
+  "finishedAt": "2026-10-15T09:32:55.7082908Z",
+  "exitCode": 1,
+  "stats": {
+    "startTime": "2026-10-15T09:09:58.853Z",
+    "duration": 1376632.893,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "sourceHashesBeforeAfterUnchanged": {
+    "sourceSha256": true,
+    "helperSha256": true,
+    "keyboardHelperSha256": true
+  },
+  "sourceSha256": "15447171423f69dd9b2b4b9f6a7ec6bac83a1de5f532591d0f521009e899fc64",
+  "helperSha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9",
+  "keyboardHelperSha256": "1c6e38731a189e9816cbd7a5ec0f1def3c85cd94ad24b0ad8650148ea36a96d8",
+  "buildId": "BV_9Qiz8LMZrZB5Rfnihw",
+  "terminalFailure": {
+    "type": "DOWNLOAD_EVENT_TIMEOUT",
+    "milliseconds": 20000,
+    "location": "operator-g1-keyboard-live.spec.ts:1289",
+    "concurrentOperation": "keyboardFocus traversal was still executing when the already-armed event waiter timed out.",
+    "keyboardArtifactDownloadsCompleted": 0,
+    "wholeAttemptStatus": "FAIL remains FAIL; successful generation does not promote the browser testcase."
+  },
+  "readbackFacts": {
+    "checkpointState": "FILES_VERIFIED",
+    "documents": 101,
+    "jobs": 204,
+    "allJobsSucceeded": true,
+    "filesByFormat": {
+      "DOCX": 101,
+      "PDF": 101,
+      "XLSX": 1,
+      "ZIP": 1
+    },
+    "all101PrintedTextChecksPassed": true,
+    "sourceRowsPreserved": true,
+    "photosEmbedded": 100,
+    "exactMatchedPhotoHashes": 100,
+    "publicDocumentDownloads": 202,
+    "internalSavedDerivatives": 2,
+    "publicUnsignedDeliveryScope": "GUARDED",
+    "legalApproval": false,
+    "internalReadbackNoDatabaseWrites": true,
+    "internalReadbackNoPublicSignatureBypass": true
+  },
+  "scope": "Agent A independently parsed the preserved execution manifests, result, keyboard metrics and saved-file readbacks. File-byte verification was performed by the recorded browser/helper run, not repeated by this summary. Raw fixtures, checkpoint contents, storage and ZIP bytes are not selected for publication.",
+  "retainedLocalRecords": [
+    {
+      "identifier": "agent-b/g1-fresh-deep-20261015-02/run-start.json",
+      "sha256": "942aef56baf1d0b0e2fee45f24ae5c666a86b32fb7adf5957e9ed3da8f6cbd86"
+    },
+    {
+      "identifier": "agent-b/g1-fresh-deep-20261015-02/run-end.json",
+      "sha256": "0e5bf8263f530a463ea36735602dea2a8c7dac62426cd605f9b1e0eb1059062e"
+    },
+    {
+      "identifier": "agent-b/g1-fresh-deep-20261015-02/results.json",
+      "sha256": "92ab82eb8fe7a6303ace25d56ef0e2af9c81973a657a6c940ec24fc840a80fd0"
+    },
+    {
+      "identifier": "agent-b/g1-fresh-deep-20261015-02/g1-prepared/g1-checkpoint.json",
+      "sha256": "eda4022b95a56f52febf68ff1ea108b80f1ddf4da3d0bc1d33dfe14a813b9a76"
+    },
+    {
+      "identifier": "agent-b/g1-fresh-deep-20261015-02/g1-prepared/g1-rendered-readback.json",
+      "sha256": "227c890583e6f571f7fcefef34984899d3dd4261f10f67a25685c1b58000c892"
+    },
+    {
+      "identifier": "agent-b/g1-fresh-deep-20261015-02/g1-prepared/g1-internal-saved-derivative-readback.json",
+      "sha256": "fd3602585b9d17d85ee27de827e42ec0e954c6a5588aa611922601a7a27b0a99"
+    },
+    {
+      "identifier": "agent-b/g1-fresh-deep-20261015-02/g1-prepared/keyboard-metrics.json",
+      "sha256": "1c065cdf64cf2f3be3f282143faa24bd28dfcc3a5aaef660be6e1384aeacf444"
+    }
+  ],
+  "evidencePaths": [
+    "agent-a/HISTORICAL_BROWSER_ATTEMPTS_SUMMARY.json",
+    "agent-a/HISTORICAL_BROWSER_ATTEMPTS_SUPPLEMENT_01.json",
+    "agent-a/G1_DOWNLOAD_ARMING_INDEPENDENT_REVIEW.json"
+  ]
+}

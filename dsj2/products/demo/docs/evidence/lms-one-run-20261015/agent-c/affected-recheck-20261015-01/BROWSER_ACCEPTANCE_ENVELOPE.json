@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "mode": "FULL_RUN_PLUS_AFFECTED_RECHECK",
+  "runId": "full-e2e-20261015-07",
+  "full": {
+    "command": {
+      "path": "agent-c/full-e2e-20261015-07/command.json",
+      "sha256": "5ca9f083399813d82d96c06d0df3de68386f53e5cfe13a4c24b9e4658afae6fe"
+    },
+    "results": {
+      "path": "agent-c/full-e2e-20261015-07/results.json",
+      "sha256": "974634a310cfdcef078442da1d9c817fbb7cf99dd8830b2a6055dc6d28eed1f1"
+    },
+    "testSource": {
+      "path": "agent-c/full-e2e-20261015-07/test-source.json",
+      "sha256": "0aef9993262745137b99b22c108ef17f221c03a91d106a97515f5d920abb8b51"
+    },
+    "runtimeSource": {
+      "path": "agent-c/full-e2e-20261015-07/runtime-source.json",
+      "sha256": "56e6008a0147181ed3de6a2c0c8e41b92a0e55699b475ee40cacf274f7e75de6"
+    }
+  },
+  "deliveredTestSource": {
+    "path": "agent-c/timing-final-recheck-20261015-01/test-source.json",
+    "sha256": "618069f79dec8ce3dabbf7b91477a9176e25ec799c2f34e324cafa70ef47216c"
+  },
+  "exactSourceDelta": {
+    "path": "agent-c/affected-recheck-20261015-01/EXACT_HARNESS_DELTA_FINAL.json",
+    "sha256": "0174b8b3e363434f1ccf9912a47866f52a569a9c74e6dca55dc3af26b9b6e95b"
+  },
+  "independentDeltaReview": {
+    "path": "agent-a/AFFECTED_HARNESS_EXACT_DELTA_FINAL_REVIEW_07.json",
+    "sha256": "b9122e19d5922ea2d9158d032bb0e33444aa0d570204b956864cec900659051a"
+  },
+  "timingDelta": {
+    "path": "agent-c/affected-recheck-20261015-01/TIMING_FINAL_DELTA.json",
+    "sha256": "c0d392b78f3ca2f40cc3bbb0aee14ca23cdca6e20da163e25fad8f509928600e"
+  },
+  "timingIndependentReview": {
+    "path": "agent-a/TIMING_FOCUS_CHAIN_SOURCE_REVIEW_07.json",
+    "sha256": "60ac9b4f906241a6c317e64bc4ea3da662f3bac8ad20a44dd95eca65085b8263"
+  },
+  "timingCompletion": {
+    "command": {
+      "path": "agent-c/timing-final-recheck-20261015-01/command.json",
+      "sha256": "ecfb0c8bd3568f29392a2f1a8bea4a64fb1b3708069c0e384f70bafd3c264de1"
+    },
+    "results": {
+      "path": "agent-c/timing-final-recheck-20261015-01/results.json",
+      "sha256": "0d48337193f63aba4454f6a1fab066b0ca76a4cb021e6e3d26adc29584358ead"
+    },
+    "sourceManifest": {
+      "path": "agent-c/timing-final-recheck-20261015-01/test-source.json",
+      "sha256": "618069f79dec8ce3dabbf7b91477a9176e25ec799c2f34e324cafa70ef47216c"
+    }
+  },
+  "affected": {
+    "command": {
+      "path": "agent-c/affected-recheck-20261015-01/command.json",
+      "sha256": "54e2e316b68a8eca6bade702b4bbf77ff54754bdbe05e0b6ea4df057b21fb1f9"
+    },
+    "results": {
+      "path": "agent-c/affected-recheck-20261015-01/results.json",
+      "sha256": "271bdefe1edcda5355cb20d5374b12580fbb5afaaf5d77dcfffe70780211460e"
+    },
+    "sourceManifest": {
+      "path": "agent-c/affected-recheck-20261015-01/test-source.json",
+      "sha256": "ac3f4c86330c0fc553336dee464144ca934e7b93c1d4e43bb3ad01f7ef533ce6"
+    },
+    "commonCheckpointBinding": {
+      "path": "agent-c/affected-recheck-20261015-01/COMMON_CHECKPOINT_BINDING.json",
+      "sha256": "78104b3485ebebeefa77a0c4bfd296f3947538efcd023daa0b9793923839bcd4"
+    },
+    "fixtureManifest": {
+      "path": "agent-c/affected-recheck-20261015-01/PHOTO_INPUT_BOUNDARY.json",
+      "sha256": "790a36c01f399b7734948e93ae2e5bc4eff86011d4d309e2691d1d11ded0296e"
+    },
+    "fixtureProductPath": ".runtime/lms-one-run/e2e-fixtures/large-synthetic.jpg"
+  },
+  "dependencyCompletion": {
+    "command": {
+      "path": "agent-c/dependency-completion-20261015-01/command.json",
+      "sha256": "8cd69af29dcf8f7f965ff4b9bd8acecbd32b7398e2a86ca0d516aa787ed1e322"
+    },
+    "results": {
+      "path": "agent-c/dependency-completion-20261015-01/results.json",
+      "sha256": "f88c8cb04aaf0bf5b67a63e64274918fcee89edefd60d020db4c5c3da3609fab"
+    },
+    "sourceManifest": {
+      "path": "agent-c/timing-final-recheck-20261015-01/test-source.json",
+      "sha256": "618069f79dec8ce3dabbf7b91477a9176e25ec799c2f34e324cafa70ef47216c"
+    },
+    "verifiedPages": {
+      "path": "agent-c/dependency-completion-20261015-01/large-print-pack/verified-pages.json",
+      "sha256": "9b5334a4117fdb24b30f512fb38d490b5badf2ea569b1760aa1d83a4ed0b92e6"
+    },
+    "checkpointBinding": {
+      "path": "agent-c/dependency-completion-20261015-01/CHECKPOINT_BINDING.json",
+      "sha256": "7980aef5cff7fc0ae983d0f05e92b890505c47845c58c9112eb440457b5ccbdc"
+    }
+  }
+}

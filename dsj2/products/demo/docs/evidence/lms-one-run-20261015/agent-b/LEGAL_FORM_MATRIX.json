@@ -1,0 +1,249 @@
+{
+  "reviewer": "Agent B",
+  "checkedAt": "2026-10-15T01:04:01.6991931Z",
+  "scope": "E10 four legal forms: actual local positive and prohibited transitions; this is not overall LOCAL_ACCEPTED",
+  "localAccepted": false,
+  "copyApplicationGap": "CLOSED_BY_ACTUAL_APP_RUN",
+  "priorFinding": "CRITERIA_REVIEW.json LEGAL01 remains an immutable historical snapshot; this matrix supplies the previously missing application COPY_OF_ORIGINAL and paper registry/public verification evidence.",
+  "pathConvention": "Paths relative to docs/evidence/lms-one-run-20261015",
+  "renderEvidenceBoundary": "References to agent-a/render-full-final.log below support only the six named LMS renderer subcases that passed. That entire renderer run ended with two neutral-batch LibreOffice timeout errors and is not a whole-suite PASS. The actual application COPY and PAPER results are separately proved by the cited browser runs and files.",
+  "latestRuntime": {
+    "webBuildId": "67WzZeXBqGI1ReRhjqN3k",
+    "origin": "http://127.0.0.1:3159",
+    "api": "http://127.0.0.1:4159",
+    "scope": "Local synthetic demoOnly tenants in guarded disposable PostgreSQL; real private files, shipping domain functions, director decisions and render worker; no provider network or real electronic signature",
+    "sourceBinding": "agent-c/full-e2e-20261015-04/runtime-start.json"
+  },
+  "forms": [
+    {
+      "legalForm": "INFORMATION_CARD",
+      "ui": {
+        "status": "PASS",
+        "actual": "Actual results UI prepares three applicable types, waits for director approval, then downloads the real PDF ZIP. The ready archived set invokes actual browser print for three decoded PDF pages.",
+        "evidence": [
+          "agent-b/copy-legal-run01/lms-operator-live/actions.json",
+          "agent-b/copy-legal-run01/lms-operator-live/03-ready-download.png"
+        ]
+      },
+      "metadata": {
+        "status": "PASS",
+        "actual": "Immutable eligible CENTER_EXAM snapshot, explicit information-card policy with zero required signatures; issuance cannot import ordinary DEMO signer defaults.",
+        "evidence": [
+          "agent-a/document-scheduling.log",
+          "command-test-05.log",
+          "root-documents-test.log"
+        ]
+      },
+      "files": {
+        "status": "PASS",
+        "actual": "Three actual application-issued DOCX/PDF types and real ZIP. PDF pages visually reviewed; no electronic-original claim.",
+        "evidence": [
+          "ROOT_DOCUMENT_VISUAL_REVIEW.json",
+          "root-documents",
+          "agent-b/copy-legal-run01/lms-operator-live/documents.zip"
+        ]
+      },
+      "registry": {
+        "status": "PASS_NUMBERED_RECORD",
+        "actual": "The three issued records have reserved numbers and active minimal public registry records. This row does not claim a separately measured INFORMATION_CARD XLSX download.",
+        "evidence": [
+          "root-public-browser/results.json",
+          "agent-a/document-scheduling.log"
+        ]
+      },
+      "qr": {
+        "status": "PASS",
+        "actual": "24 actual public views across three document types, four widths and RU/KZ expose number/legal form/state but not private subject data. This 24-view count is not a four-form count.",
+        "evidence": [
+          "root-public-browser/results.json"
+        ]
+      },
+      "prohibitedClaims": [
+        "Real professional qualification",
+        "Electronic original or real digital signature",
+        "Physical printing observed"
+      ]
+    },
+    {
+      "legalForm": "PAPER_ORIGINAL",
+      "ui": {
+        "status": "PASS",
+        "actual": "Real prepared paper original stays AWAITING_SIGNATURE. Separate director form records date, names, reason and explicit confirmation; only then ISSUED. Employer, future date, missing confirmation, wrong recipient/canonical assignment and changed replay are denied.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-paper-signature-live/acceptance.json",
+          "agent-b/copy-legal-run02/lms-paper-signature-live/01-explicit-paper-facts.png"
+        ]
+      },
+      "metadata": {
+        "status": "PASS",
+        "actual": "Immutable OPERATOR_ATTESTED event records actor/date; exact replay is idempotent. Real PDF hash is unchanged; zero DocumentSignature rows, no CMS claim.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-paper-signature-live/acceptance.json",
+          "command-test-05.log"
+        ]
+      },
+      "files": {
+        "status": "PASS_PREPARED_FILE_UNCHANGED",
+        "actual": "Shipping render produced the actual original bytes before attestation. Attestation never redraws signatures or rewrites that PDF. Form renderer retains the stated requirement for physical signatures.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-paper-signature-live/acceptance.json",
+          "agent-a/render-full-final.log"
+        ]
+      },
+      "registry": {
+        "status": "PASS_BLOCK_THEN_DOWNLOAD",
+        "actual": "XLSX control disabled before attestation. After attestation actual XLSX download succeeds and workbook contains the issued document number.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-paper-signature-live/paper-registry.xlsx",
+          "agent-b/copy-legal-run02/lms-paper-signature-live/acceptance.json"
+        ]
+      },
+      "qr": {
+        "status": "PASS_BLOCK_THEN_PUBLICATION",
+        "actual": "Before attestation publication UI is absent and real POST returns409 ISSUANCE_NOT_COMPLETE. After explicit publication permission the real QR/public page says 'Бумажный оригинал', shows number/state and excludes learner name/private fields.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-paper-signature-live/acceptance.json",
+          "agent-b/copy-legal-run02/lms-paper-signature-live/03-paper-public-minimal-record.png",
+          "agent-b/copy-legal-run02/VISUAL_REVIEW.json"
+        ]
+      },
+      "prohibitedClaims": [
+        "Physical signature inspected by this agent",
+        "Physical print performed",
+        "Electronic signature created or verified"
+      ]
+    },
+    {
+      "legalForm": "ELECTRONIC_ORIGINAL",
+      "ui": {
+        "status": "PASS_EXPECTED_BLOCK",
+        "actual": "Real approved/rendered electronic original remains awaiting the mandatory DIRECTOR signature. UI says electronic original, explains missing official verification connection, has no enabled signing action and cannot use paper attestation.",
+        "evidence": [
+          "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json",
+          "agent-b/copy-legal-run01/lms-negative-states-live/02-mandatory-signature.png"
+        ]
+      },
+      "metadata": {
+        "status": "PASS_EXPECTED_BLOCK",
+        "actual": "The real document link is ELECTRONIC_ORIGINAL/AWAITING_SIGNATURE. Explicit required/unbound signer policy is retained; missing or zero-signature electronic policy fails closed.",
+        "evidence": [
+          "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json",
+          "command-test-05.log"
+        ]
+      },
+      "files": {
+        "status": "PASS_PREPARED_NOT_SIGNED",
+        "actual": "Actual shipping queue produced prepared bytes for the negative fixture. Separate renderer assertions check explicit electronic-document wording and signature requirement. No signed original or signature verification success is claimed.",
+        "evidence": [
+          "agent-b/copy-legal-run01/lms-negative-states-live/fixture.json",
+          "agent-a/render-full-final.log",
+          "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json"
+        ]
+      },
+      "registry": {
+        "status": "PASS_EXPECTED_BLOCK",
+        "actual": "Official XLSX registry control remains disabled while required signatures are absent.",
+        "evidence": [
+          "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json"
+        ]
+      },
+      "qr": {
+        "status": "PASS_EXPECTED_BLOCK",
+        "actual": "Publication controls are absent; actual authenticated POST /verification-links for the prepared document returns409 ISSUANCE_NOT_COMPLETE.",
+        "evidence": [
+          "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json"
+        ]
+      },
+      "prohibitedClaims": [
+        "Positive signed-original issuance",
+        "Actual qualified signature or signer authority",
+        "Successful official QR publication without required signatures"
+      ]
+    },
+    {
+      "legalForm": "COPY_OF_ORIGINAL",
+      "ui": {
+        "status": "PASS",
+        "actual": "Prepared synthetic EXTERNAL_AUTHORIZED source becomes a copy through actual results preparation, separate director approval and shipping render. Known person/course/source fields are never entered again.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-copy-original-live/acceptance.json",
+          "agent-b/copy-legal-run02/lms-copy-original-live/01-copy-awaiting-approval.png",
+          "agent-b/copy-legal-run02/lms-copy-original-live/02-issued-copy-files.png"
+        ]
+      },
+      "metadata": {
+        "status": "PASS",
+        "actual": "DOCUMENT_REVIEWED external source retains private file hash, issuer, original number/date and distinct exam date. Immutable snapshot is COPY_OF_ORIGINAL/EXTERNAL_AUTHORIZED; score and maximum null; local attempts0 and electronic signatures0. Original private bytes read back unchanged.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-copy-original-live/readback.json",
+          "agent-b/copy-legal-run02/lms-copy-original-live/acceptance.json"
+        ]
+      },
+      "files": {
+        "status": "PASS",
+        "actual": "Actual browser downloads application PDF/DOCX matching stored hashes. Both contain 'Копия исходного документа', external issuer/original number and no invented9/10 or10/10. Actual PDF raster is legible with no clipping, and disclaimer denies cryptographic verification of the source signatures.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-copy-original-live/copy.pdf",
+          "agent-b/copy-legal-run02/lms-copy-original-live/copy.docx",
+          "agent-b/copy-legal-run02/lms-copy-original-live/file-validation.json",
+          "agent-b/copy-legal-run02/VISUAL_REVIEW.json"
+        ]
+      },
+      "registry": {
+        "status": "PASS",
+        "actual": "Actual issued XLSX download has header plus one record containing the application-issued document number. This registry is the local center's record, not proof of source authority.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-copy-original-live/registry.xlsx",
+          "agent-b/copy-legal-run02/lms-copy-original-live/file-validation.json"
+        ]
+      },
+      "qr": {
+        "status": "PASS",
+        "actual": "Explicit publication creates actual QR and minimal page: copy label, external source, original issuer/number/date, local document number/state. No learner name, login, source hash, private storage path or machine-verification claim is exposed.",
+        "evidence": [
+          "agent-b/copy-legal-run02/lms-copy-original-live/acceptance.json",
+          "agent-b/copy-legal-run02/lms-copy-original-live/03-public-copy-minimal-record.png",
+          "agent-b/copy-legal-run02/VISUAL_REVIEW.json"
+        ]
+      },
+      "prohibitedClaims": [
+        "Source MACHINE_VERIFIED",
+        "Cryptographic validation of original signatures",
+        "Own center exam or numerical score",
+        "Real authority of the synthetic external source"
+      ]
+    }
+  ],
+  "ordinaryDemoBoundary": {
+    "actual": "Ordinary prepared original documents retain real-signature requirements. Current ordinary browser test proves real files and unsigned registry/QR block, not positive ordinary signed publication.",
+    "evidence": [
+      "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json"
+    ],
+    "separateFrom": "Positive LMS INFORMATION_CARD, attested PAPER_ORIGINAL and reviewed COPY_OF_ORIGINAL publication"
+  },
+  "retainedFailures": [
+    {
+      "path": "agent-b/copy-legal-run01/command.json",
+      "actual": "2PASS2FAIL: operator and electronic/UNKNOWN negative passed; copy fixture used obsolete memory-buffer upload and paper select used a mismatched getByLabel locator. Both harness defects corrected and fresh copy/paper02 actually passed."
+    }
+  ],
+  "finalRunObligation": "The four-form gap is now covered locally within the exact stated boundaries. The ordinary raw LMS label mapper was fixed after this production build; planned fresh build/full218 must bind that final source. This matrix does not promote the whole goal to LOCAL_ACCEPTED or any external gate to accepted.",
+  "mapperFreshBuildFollowup": {
+    "status": "PENDING_FRESH_BUILD_EXECUTION",
+    "productFiles": [
+      {
+        "path": "apps/web/components/recipient-grid-row.tsx",
+        "sha256": "1bbbcd8ed9108b3206038ab1cfbb2173caf99d76f819c029be9817024b66fc6e"
+      },
+      {
+        "path": "apps/web/lib/recipient-course-context.ts",
+        "sha256": "356a3d818fb2072a5bcc49a4a153a1c88524e834c1308556dd5b7f25556398a7"
+      }
+    ],
+    "testPath": "apps/web/e2e/lms-copy-original-live.spec.ts",
+    "testSha256": "91ce1b0f4e72efc8a0441e5abbe467091e0e8587c16c78faaf186e84315655d0",
+    "domAssertion": "Issued copy request .recipient-grid-training-button has text and title Обучение — сертификат центра, and contains no lms-certificate",
+    "expectedEvidence": "Fresh full-suite lms-copy-original-live/acceptance.json: operatorDocumentLabel plus technicalTemplateCodeVisibleInOperatorControl=false",
+    "priorActualRunBoundary": "copy-legal-run02 passed before this assertion and before the mapper build; it does not prove the changed label"
+  }
+}

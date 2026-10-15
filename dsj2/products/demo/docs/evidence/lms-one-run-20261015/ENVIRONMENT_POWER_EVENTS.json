@@ -1,0 +1,188 @@
+{
+  "interpretation": "Sleep/resume occurred during the long render run. Exact causation of renderer errors remains subject to exception traceback and repeat of unchanged checks.",
+  "events": [
+    {
+      "eventId": 507,
+      "recordedAtUtc": "2026-10-15T00:15:22.6776042Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 506,
+      "recordedAtUtc": "2026-10-15T00:15:21.9159169Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 507,
+      "recordedAtUtc": "2026-10-15T00:15:21.0559873Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 506,
+      "recordedAtUtc": "2026-10-15T00:15:20.6147714Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 107,
+      "recordedAtUtc": "2026-10-15T00:08:22.4420606Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 42,
+      "recordedAtUtc": "2026-10-15T00:08:20.5058284Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 507,
+      "recordedAtUtc": "2026-10-15T00:07:41.5768585Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 506,
+      "recordedAtUtc": "2026-10-15T00:07:41.088734Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 107,
+      "recordedAtUtc": "2026-10-14T23:08:36.0120298Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 42,
+      "recordedAtUtc": "2026-10-14T23:08:32.7412738Z",
+      "provider": "Microsoft-Windows-Kernel-Power",
+      "powerEventData": {}
+    },
+    {
+      "eventId": 1,
+      "recordedAtUtc": "2026-10-15T00:15:20.795336Z",
+      "provider": "Microsoft-Windows-Power-Troubleshooter",
+      "powerEventData": {
+        "SleepDuration": "15267",
+        "SleepTime": "2026-10-15T00:08:05.6341873Z",
+        "WakeDuration": "1121",
+        "WakeTime": "2026-10-15T00:15:20.6231503Z"
+      }
+    },
+    {
+      "eventId": 1,
+      "recordedAtUtc": "2026-10-15T00:07:43.3567263Z",
+      "provider": "Microsoft-Windows-Power-Troubleshooter",
+      "powerEventData": {
+        "SleepDuration": "5447",
+        "SleepTime": "2026-10-14T23:08:29.2271453Z",
+        "WakeDuration": "1598",
+        "WakeTime": "2026-10-15T00:07:41.100391Z"
+      }
+    }
+  ],
+  "scope": "Read-only selected Windows power events; host/computer/account identifiers and unrelated event data excluded",
+  "capturedAtUtc": "2026-10-15T00:21:16.6003784Z",
+  "temporaryWakeRequest": {
+    "displayRequired": false,
+    "persistentPowerSettingsChanged": false,
+    "systemRequired": true,
+    "processId": 40368,
+    "sessionId": 13097,
+    "releaseStatus": "RELEASED; original process returned exit0 and LMS_WAKE_GUARD_RELEASED after its six-hour maximum; exact release clock was not captured",
+    "releasedAtUtc": null,
+    "releaseObservedAtUtc": "2026-10-15T08:45:09.9603182Z"
+  },
+  "rendererCorrelation": {
+    "reviewedAtUtc": "2026-10-15T05:39:42.163846+05:00",
+    "log": "agent-a/render-full-final.log",
+    "actualExitCode": 1,
+    "tests": 144,
+    "assertionFailures": 0,
+    "errors": 2,
+    "errorClass": "subprocess.TimeoutExpired",
+    "conversionTimeoutSeconds": 180,
+    "reportedRemainingTimeoutSeconds": [
+      -3411.7349999999988,
+      -292.28199999999924
+    ],
+    "unchangedTargetedRepeat": {
+      "status": "PASS",
+      "tests": 1,
+      "durationSeconds": 48.15,
+      "log": "agent-a/render-neutral-diagnostic.log"
+    },
+    "wholeRepeat": {
+      "status": "PASS",
+      "sessionId": 2642,
+      "startedAtUtc": "2026-10-15T00:37:38.8878332Z",
+      "finishedAtUtc": "2026-10-15T01:09:09.5225616Z",
+      "exitCode": 0,
+      "tests": 144,
+      "durationSeconds": 1884.922,
+      "logPath": "agent-a/render-full-final-02.log",
+      "evidenceRoot": "agent-a/final-render-02"
+    },
+    "interpretation": "The earlier full run failed with two TimeoutExpired errors during recorded sleep intervals. Its errors and unchanged targeted repeat remain preserved. The independent complete repeat subsequently passed all 144 tests with actual exit0; no earlier failure was rewritten as success."
+  },
+  "secondTemporaryWakeRequest": {
+    "systemRequired": true,
+    "persistentPowerSettingsChanged": false,
+    "stopFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\wake-guard-20261015-02.stop",
+    "status": "RELEASED",
+    "pid": 26700,
+    "displayRequired": false,
+    "startedAt": "2026-10-15T08:44:16.8014431Z",
+    "maximumUntilUtc": "2026-10-15T14:44:16.8014431Z",
+    "sessionId": 75564,
+    "releasedAtUtc": "2026-10-15T12:49:22.7015040Z",
+    "observedTerminalExitCode": 0,
+    "terminalOutput": "LMS_WAKE_GUARD_02_RELEASED",
+    "releaseVerifiedAtUtc": "2026-10-15T12:50:41.435728+00:00"
+  },
+  "subsequentGapReview": {
+    "afterUtc": "2026-10-15T02:55:00Z",
+    "interpretation": "A long wall-clock gap was observed during the G1 boundary diagnostic. Selected OS events are retained separately; no business acceptance is inferred from a runtime health probe.",
+    "events": [
+      {
+        "eventId": 1,
+        "recordedAtUtc": "2026-10-15T08:41:27.8168997Z",
+        "powerEventData": {
+          "WakeDuration": "1100",
+          "SleepDuration": "5894",
+          "WakeTime": "2026-10-15T08:41:26.6006215Z",
+          "SleepTime": "2026-10-15T03:04:24.1685745Z"
+        },
+        "provider": "Microsoft-Windows-Power-Troubleshooter"
+      },
+      {
+        "eventId": 507,
+        "recordedAtUtc": "2026-10-15T08:41:27.7666728Z",
+        "powerEventData": {},
+        "provider": "Microsoft-Windows-Kernel-Power"
+      },
+      {
+        "eventId": 506,
+        "recordedAtUtc": "2026-10-15T08:41:26.5880007Z",
+        "powerEventData": {},
+        "provider": "Microsoft-Windows-Kernel-Power"
+      },
+      {
+        "eventId": 107,
+        "recordedAtUtc": "2026-10-15T03:04:31.4245347Z",
+        "powerEventData": {},
+        "provider": "Microsoft-Windows-Kernel-Power"
+      },
+      {
+        "eventId": 42,
+        "recordedAtUtc": "2026-10-15T03:04:28.6044440Z",
+        "powerEventData": {},
+        "provider": "Microsoft-Windows-Kernel-Power"
+      }
+    ],
+    "capturedAtUtc": "2026-10-15T08:45:10.2284295Z"
+  }
+}

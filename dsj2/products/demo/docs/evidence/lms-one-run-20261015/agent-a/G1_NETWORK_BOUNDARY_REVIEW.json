@@ -1,0 +1,62 @@
+{
+  "checkedAtUtc": "2026-10-15T08:46:02.792Z",
+  "status": "PASS_SOURCE_ONLY_NEW_EXECUTION_REQUIRED",
+  "files": [
+    {
+      "path": ".runtime/g1-date-rule-repair/operator-g1-keyboard-live.spec.ts.pending",
+      "sha256": "7111acc7ff7d60f30bcc28da93f5e623c38fbc2410e7cb5eecebb940007cc85a",
+      "parseErrors": 0,
+      "matcherCalls": 101
+    },
+    {
+      "path": ".runtime/g1-date-rule-repair/operator-g1-keyboard-live.spec.response-sync.pending",
+      "sha256": "e9b98810170346fc7966b29ae654a7eb2f55ab0f32b672421861d6bc30c0422a",
+      "parseErrors": 0,
+      "matcherCalls": 111
+    }
+  ],
+  "removed": [],
+  "added": [
+    "expect(submitResponse.status()).toBe(201)",
+    "expect(submitReadback.requestId).toBe(requestId)",
+    "expect(submitReadback.approval?.status).toBe(\"PENDING\")",
+    "expect(decisionResponse.status()).toBe(201)",
+    "expect(decisionReadback.requestId).toBe(requestId)",
+    "expect(decisionReadback.proposalId).toBe(applied.approval!.proposalId)",
+    "expect(decisionReadback.status).toBe(\"APPROVED\")",
+    "expect(finalizeResponse.status()).toBe(201)",
+    "expect(finalizeReadback.requestId).toBe(requestId)",
+    "expect(finalizeReadback.documentIds).toHaveLength(101)"
+  ],
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "localAccepted": false,
+  "executionStatus": "NOT_RUN_NEW_BROWSER_EXECUTION_REQUIRED",
+  "scopeReview": [
+    "Only submission, director approval and finalization receive exact own-request/proposal POST response waits paired with the original keyboard action.",
+    "Focus is reached before wait registration; keyboardActivate is unchanged, uses Enter and actual keyboard metrics. No direct request mutation or backend setup shortcut.",
+    "All101 existing matcher assertions including original3polls remain exact. Ten added checks require actual201,own request/proposal IDs,PENDING/APPROVED and101 finalized document IDs.",
+    "No timeout, retry, expected status, fixture dates, document count or negative guard is loosened.",
+    "Controller @Post defaults and submitApproval,decision,issuanceResult return fields were read and match the new checks.",
+    "A source review is not actual completion of101documents, nor acceptance of full06."
+  ],
+  "sourceContractFiles": [
+    {
+      "path": "apps/api/src/controller.ts",
+      "sha256": "d10b24055506aa4ed4643571e237465a9db2c5907da2f5ef567f281ba4116b1d"
+    },
+    {
+      "path": "apps/api/src/approvals.ts",
+      "sha256": "fb93400ac6d6045e3153099194b4ce34e2457ba7d5cae9b03d40c3dbe975341c"
+    },
+    {
+      "path": "apps/api/src/requests.ts",
+      "sha256": "85fb0711ce87ed66887c64702aa8bf5afeb3bdc782da4684be88a0830ee019b6"
+    },
+    {
+      "path": "apps/web/e2e/operator-keyboard-helpers.ts",
+      "sha256": "715c8e9054aadda26c22fe3de132941bc922dd9682a47364210be3c2d0b96faf"
+    }
+  ],
+  "clockProvenance": "checkedAtUtc is host wall-clock capture. A host suspend/resume or time adjustment reported by the coordinator is an environment fact, not inferred test runtime."
+}

@@ -1,0 +1,224 @@
+{
+  "reviewer": "Agent B independent final reconciliation",
+  "reviewStatus": "PENDING_ACTUAL_FULL219_AND_FINAL_ROLLUP",
+  "localAccepted": false,
+  "method": "Read-only comparison of source handoff, current44-criterion draft, original52-row matrix, actual result files and test source. Separately authorized targeted runs are cited with exact executed results; this review itself performs no browser/database work.",
+  "pathConvention": "Evidence paths relative to docs/evidence/lms-one-run-20261015; apps/, scripts/, tests/ and docs/handoffs/ paths relative to product root.",
+  "structuralConclusion": "44 unique criteria map exactly in both directions to all52 original source rows:25 MVP,12 SAN,2 OPS,3 EXT and10 UX. All44 current draft top-level statuses remain NOT_RUN. Original source statuses are intact; no requirement disappeared.",
+  "previousFindings": [
+    {
+      "id": "MAP01",
+      "state": "CLOSED_MAPPING",
+      "actual": "Employer own-PDF browser evidence and precise confirmed-subject accounting log are now attached to L02/L03.",
+      "evidence": [
+        "agent-b/operator-live/actions.json",
+        "agent-a/accounting-boundaries.log"
+      ],
+      "remaining": "Only normal final-tree binding; no new functional run is needed solely to repair these links. Latest operator proof is also available in copy-legal-run01."
+    },
+    {
+      "id": "MAP02",
+      "state": "CLOSED_MAPPING",
+      "actual": "Two-tab409/relogin browser and exact deadline/process-boundary log are now linked to L07/E03.",
+      "evidence": [
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-a/exam-boundaries.log"
+      ],
+      "remaining": "Bind their source scope separately from the new full-suite result; process expiry is not a browser UX timing record."
+    },
+    {
+      "id": "MAP03",
+      "state": "CLOSED_PRECISE_ASSERTION_LINKS",
+      "actual": "Question-bank snapshots, six signing-policy assertions, scheduling and later immutable-projection regression are attached. COMMANDS_A.json remains a command-index reference rather than a direct subcase reference; its absence from each subcase does not require reexecution.",
+      "evidence": [
+        "agent-a/exam-boundaries.log",
+        "command-test-05.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.json",
+        "agent-a/COMMANDS_A.json"
+      ],
+      "remaining": "Final COMMANDS must retain exact command/source binding and the latest root regression after the approval error change."
+    },
+    {
+      "id": "MAP04",
+      "state": "CLOSED_MAPPING",
+      "actual": "Geometry and actual RU/KZ sanitary PDF visual-review paths are now explicit in the relevant bundles.",
+      "evidence": [
+        "agent-b/geometry-run01/lms-geometry-live/geometry.json",
+        "agent-c/sanitary-files-1792014509550/visual-review.json",
+        "ROOT_DOCUMENT_VISUAL_REVIEW.json"
+      ],
+      "remaining": "Do not substitute formula-injection or text extraction for visual inspection; retain final changed-label browser assertion separately."
+    },
+    {
+      "id": "SCOPE01",
+      "state": "CONDITIONAL_BOUNDARY_EXPLICIT",
+      "actual": "L02.04 now states the actually tested VIEWER restriction and links the conditional instructor interpretation. There is no positive teacher cabinet or assigned-course teacher authorization claim.",
+      "evidence": [
+        "agent-c/conditional-instructor-scope.json",
+        "agent-a/UNKNOWN_ROLE_ACCEPTANCE.json"
+      ],
+      "remaining": "Final MVP02/MVP21 and L02/L03 must preserve this coordinator interpretation of 'при необходимости', not relabel it as a direct user exclusion or implemented teacher capability. No test of an unsupported role proves positive teacher scope."
+    },
+    {
+      "id": "LEGAL01",
+      "state": "CLOSED_LOCAL_FOUR_FORM_BOUNDARIES",
+      "actual": "The four-form matrix now has distinct UI/metadata/files/registry/QR columns. Actual COPY app issuance/download/registry/minimalQR and PAPER unsigned-block then attested registry/QR are executed. ELECTRONIC remains a proven denied unsigned path. INFO retains actual three-type artifacts/public views.",
+      "evidence": [
+        "agent-b/LEGAL_FORM_MATRIX_FINAL.json",
+        "agent-b/final-label03/lms-copy-original-live/acceptance.json",
+        "agent-b/copy-legal-run02/lms-paper-signature-live/acceptance.json",
+        "agent-b/final-label03/VISUAL_REVIEW.json",
+        "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json"
+      ],
+      "remaining": "Attach publication-safe final matrix to E10/E12. Actual COPY PERSON summary and read-only COMPANY grid passed on build04; linked first-flow03 also passed. Only whole-suite/final-tree reconciliation remains, with legal boundaries unchanged."
+    },
+    {
+      "id": "LEGAL02",
+      "state": "CLOSED_ORDINARY_UNSIGNED_BOUNDARY",
+      "actual": "Current ordinary two-person manager/director cycle actually passed with preview and files, historicalPASSED/AUTO retained, registry disabled and verification-links409 without signatures. Positive public publication is separately shown only for eligible LMS legal forms.",
+      "evidence": [
+        "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+        "agent-c/critical-lms-20261015-01/results.json",
+        "agent-b/LEGAL_FORM_MATRIX.json"
+      ],
+      "remaining": "Fresh full suite must bind ordinary result to final production build. Earlier ordinary raw runtime had buildId=null because its dist env pointed at the old directory; do not silently rewrite that record. No cryptographic ordinary signature, physical print or historical-before speed improvement is claimed."
+    },
+    {
+      "id": "FINAL01",
+      "state": "PENDING_FRESH_COMPLETE_BROWSER_AND_SOURCE_BINDING",
+      "actual": "Latest complete renderer rerun actually passed144/144; root build04 passed. Fresh linked first-flow03 actually passed1/1 on build BV_9Qiz8LMZrZB5Rfnihw with explicit initial LMS form approval and real worker restart. Prior failed runs remain retained. Fresh complete mandatory219-test browser execution is still pending.",
+      "evidence": [
+        "agent-a/render-full-final-02.log",
+        "command-build-04.json",
+        "agent-c/full-e2e-20261015-03/command.json",
+        "agent-c/first-flow-linked-20261015-02/command.json",
+        "agent-b/template-upgrade-20261015-01/REPORT.json",
+        "agent-c/template-upgrade/command03.json",
+        "agent-c/AUDIT_ACCEPTANCE_03.json",
+        "agent-c/first-flow-linked-20261015-03/command.json",
+        "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/actions.json",
+        "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/automatic-preparation-restart.json"
+      ],
+      "remaining": "Complete219-test browser battery, final exact source/runtime/test manifests, affected regressions, all-command rollup and privacy/log audit. Bind actual first-flow03 metrics with2 repeated authentication fields and0 repeated business fields; initial center form approvals are separate actual setup costs."
+    },
+    {
+      "id": "FINAL02",
+      "state": "PENDING_FINAL52_ROW_ARTIFACT",
+      "actual": "S09/S12 now link EXTERNAL_GATES.json. P01-P13 and personal-data deployment packets exist; all three external gates remain BLOCKED_EXTERNAL_INPUTS. A final52-row artifact is not yet present at this review.",
+      "evidence": [
+        "EXTERNAL_GATES_REVIEWED.json",
+        "ROOT_GATES_FINAL_REVIEW.json",
+        "PROVIDER_CONNECTION_PACKET_RU.txt",
+        "PERSONAL_DATA_DEPLOYMENT_GATES_RU.txt"
+      ],
+      "remaining": "Publish MVP_COVERAGE_FINAL.tsv preserving every original column/value and append actualStatus/criterionIds/evidence/source/time/result/limits. Reconcile49 local rows individually and retain EXT01-EXT03 blocked. Publish final44-criterion results and UX_ACTIONS only after actual results are available."
+    }
+  ],
+  "mvp25Attention": {
+    "allTwentyFiveMapped": true,
+    "mobileMvp25": "L09/E03/E12/S11 map mobile adaptation. Existing evidence includes staff/employer64 geometry samples, additional16 exam/document samples, learner/registration widths and separate24 publicviews. Final UI/source reconciliation still pending; counts must not be merged into a fictitious all-screen/all-form matrix.",
+    "otherPendingIntegratedProof": "Completed linked first-flow03 now supplies actual first-input evidence for MVP01-09 and13-19; bind its exact IDs and action scopes to the final matrix. MVP22 retains immutable audit/restart plus final sensitive-log review. MVP23 retains legal/provider gates; MVP24 content language is not professional translation approval.",
+    "newUpgradeEvidence": "The reusable explicit-tenant upgrade preserves19 existing versions, numbering and profiles, adds exactly3 current LMS versions approvedfalse, then replays with0 new rows. C actual concurrent/HTTP tests passed4/4. This is initial center setup, not a hidden step in the prepared operator action budget."
+  },
+  "section8": [
+    {
+      "id": "А",
+      "state": "ACTUAL_FIRST_FLOW_PASS_FINAL_BINDING_PENDING",
+      "needed": "Fresh first-flow03 command1/1PASS and actions.json now exist. Aggregate actual first-entry51clicks/42filledFields/7selections/1fileSelection/58decisions/22navigation/7confirmations/0dialogs/0refresh,57451ms automatedwalltime; repeatedFields2 are authentication only, businessRepeatedFields0. Separate center-template-review.json records initial director form approvals.",
+      "evidence": [
+        "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/actions.json",
+        "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/center-template-review.json"
+      ]
+    },
+    {
+      "id": "Б",
+      "state": "ACTUAL_SEGMENTS_AVAILABLE_FINAL_AGGREGATION_PENDING",
+      "evidence": [
+        "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json",
+        "agent-b/copy-legal-run01/lms-operator-live/actions.json"
+      ],
+      "needed": "Merge fresh prepared assignment/continue/prepare/ZIP/realbrowserprint phases with their explicit start states, separate director decisions and all10 metrics. Current C draft still references failed critical operator test; latest B operator run actually passed."
+    },
+    {
+      "id": "В",
+      "state": "ACTUAL_CLOSED_UI_WORKER_RESTART_PASS_FINAL_BINDING_PENDING",
+      "evidence": [
+        "agent-a/RESTORED_OUTBOX_ACCEPTANCE.json",
+        "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/automatic-preparation-restart.json",
+        "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/worker-lifecycle.json"
+      ],
+      "needed": "Actual all-UI closure and owned PID43708→36596 restart changed the same outbox fromPENDING toDONE, with exactly1journal/item/delivery, unchangedresult/snapshot IDs and0 triggeractions. Serverduration2041ms; fresh login1click/2authenticationfields and inspection1click/1navigation measured separately. Final aggregate must preserve these scopes."
+    },
+    {
+      "id": "Г",
+      "state": "ACTUAL_PASS_FINAL_BINDING_PENDING",
+      "evidence": [
+        "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json"
+      ],
+      "needed": "Retain real ineligible states and mandatory electronic signature/publication409 checks; include in final fresh suite."
+    },
+    {
+      "id": "Д",
+      "state": "ACTUAL_PASS_FINAL_BINDING_PENDING",
+      "evidence": [
+        "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json",
+        "agent-b/copy-legal-run02/lms-copy-original-live/acceptance.json"
+      ],
+      "needed": "Preserve known/unknown exam date, immutable correction, issuer and no invented attempt/score; COPY extends this to actual files/registry/QR."
+    },
+    {
+      "id": "Е",
+      "state": "ACTUAL_PASS_FINAL_BINDING_PENDING",
+      "evidence": [
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "needed": "Retain1/10/100/250 targeted repair, keyboard, narrow screen, replay and explicit same-name selection; no inference from API-only results."
+    },
+    {
+      "id": "Ж",
+      "state": "ACTUAL_PASS_FINAL_BINDING_PENDING",
+      "evidence": [
+        "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json"
+      ],
+      "needed": "Retain real TEST timeout, honest UNKNOWN/no blind resubmit/no green accepted state and safe inspection measures. No provider or LMK acceptance claim."
+    },
+    {
+      "id": "З",
+      "state": "CURRENT_ORDINARY_PASS_FINAL_BINDING_PENDING",
+      "evidence": [
+        "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json"
+      ],
+      "needed": "Keep ordinary unsigned QR boundary and separate current-only measurements. Historical before comparison remains explicitly excluded, never invented."
+    }
+  ],
+  "ux08SlowOnline": {
+    "state": "ACTUAL_PASS_FINAL_BINDING_PENDING",
+    "test": "apps/web/e2e/lms-slow-response-live.spec.ts",
+    "reason": "Existing offline/relogin/conflict evidence did not explicitly measure slow-online feedback. New root-authorized single test holds a real successful assignment response for at least1000ms without changing payload; checks visible short wait, disabled primary, unchanged selection/course, no premature success, one POST and exactly two persisted enrollments after delivery.",
+    "staticChecks": [
+      "Prettier PASS",
+      "ESLint PASS",
+      "pnpm --filter @demo/web typecheck PASS"
+    ],
+    "needed": "Actual target passed with unchanged real HTTP payload, 1010.66ms response hold, one submission, two persisted rows and zero duplicates. Recorded 1click/1decision/1confirmation and 0 repeated fields/dialogs/manual refresh; elapsed1138.83ms includes artificial hold/assertions. Final full219 repeats this exact test.",
+    "evidence": [
+      "agent-b/final-label-slow01/lms-slow-response-live/acceptance.json",
+      "agent-b/final-label-slow01/results.json"
+    ]
+  },
+  "rawMapperFreshAssertion": {
+    "state": "ACTUAL_BUILD04_PASS_FINAL_BINDING_PENDING",
+    "test": "apps/web/e2e/lms-copy-original-live.spec.ts",
+    "assertion": "Fresh COPY PERSON summary shows Обучение — сертификат центра without raw lms-certificate. Separate actual read-only COMPANY request grid shows Обучение — сертификат центра, Обучение — удостоверение центра with no raw template ids and unchanged request revision.",
+    "discovery": "Actual219/93 discovery includes COPY and slow-response. C captured final177 test/helper source hashes after B freeze for mandatory full05; whole-suite execution is running and not yet accepted.",
+    "oldDiscovery": "agent-c/full-e2e-discovery-20261015-04/discovery.json",
+    "evidence": [
+      "agent-b/final-label03/command.json",
+      "agent-b/final-label03/lms-copy-original-live/acceptance.json",
+      "agent-b/final-label02/operator-grid-label-readonly/acceptance.json"
+    ]
+  },
+  "finalReviewRule": "Close this pending review only against the actual final44 criteria,52-row coverage,8-scenario UX measurements and command/source bindings. No report here sets an awaited run to PASS or changes frozen historical evidence.",
+  "checkedAt": "2026-10-15T01:27:06.7950289Z"
+}

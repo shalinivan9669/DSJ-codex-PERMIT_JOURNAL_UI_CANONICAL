@@ -1,0 +1,151 @@
+{
+  "scope": "SYNTHETIC_GUARD_TESTS_NOT_ACCEPTANCE",
+  "checks": [
+    {
+      "name": "exact210plus9",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "failed_full_without_envelope",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "raw_command_hash_tamper",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "source_product_changed",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "source_test_changed",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "target_actual_failure",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "envelope_wrong_run",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "fixture_oversize",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "fixture_wrong_dimensions",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "review_not_pass_with_matching_hash",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "full_missing_case",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "full_retry",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "discovery_wrong_identity",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "runtime_wrong_build",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "runtime_clock_reversed",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "envelope_path_traversal",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "affected_case_missing",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "affected_extra_case",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "affected_wrong_command",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "affected_wrong_build",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "affected_same_run_id",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "affected_wrong_title",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "review_wrong_impact",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "exact_reverse_proof_wrong",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "unchanged_full_pass_compatibility",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "exact209plus9plus1dependency",
+      "status": "PASS_ACCEPTED"
+    },
+    {
+      "name": "dependency_missing_completion",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "dependency_wrong_checkpoint",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "dependency_wrong_dag",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "dependency_same_full_command_identity",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "unknown_skip_rejected",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "affected_prior_pass_timing_missing",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "repeat_wrong_source",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "repeat_wrong_checkpoint_run",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "timing_failed_case_wrong_size",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "name": "deterministic_truthful_raw_and_exact_bindings",
+      "status": "PASS"
+    }
+  ],
+  "passed": 36,
+  "candidateSourceSha256": "35bcc07161f26da9f30fdf39f2766aff306e8d993a7bc4c6f8dbbc64f56aeeb0"
+}

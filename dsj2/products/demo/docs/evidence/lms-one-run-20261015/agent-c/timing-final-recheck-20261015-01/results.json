@@ -1,0 +1,433 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\playwright.config.ts",
+    "rootDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-producer",
+        "name": "common-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-history-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-consumers",
+        "name": "common-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-producer",
+        "name": "g1-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-keyboard-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-consumers",
+        "name": "g1-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-producer",
+        "name": "portal-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-three-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-consumer",
+        "name": "portal-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-390-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-producer",
+        "name": "manual-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-resume",
+        "name": "manual-resume",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-consumers",
+        "name": "manual-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-producer",
+        "name": "domain-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-role-full-fix-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-consumer",
+        "name": "domain-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "remaining",
+        "name": "remaining",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [
+          "/operator-common-history-live\\.spec\\.ts$/",
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-live\\.spec\\.ts$/",
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/",
+          "/final-portal-three-live\\.spec\\.ts$/",
+          "/final-portal-390-live\\.spec\\.ts$/",
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/",
+          "/operator-role-full-fix-live\\.spec\\.ts$/",
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/timing-final-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "print-pack-scale",
+        "name": "print-pack-scale",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\acceptance-failure-reporter.ts",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\timing-final-recheck-20261015-01\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "operator-timing.spec.ts",
+      "file": "operator-timing.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "comparable operator measurements: 10 mixed recipients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3238,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:44:04.974Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb83e24b218b03bab38d-2dafcd9f437fe0b71359",
+          "file": "operator-timing.spec.ts",
+          "line": 10,
+          "column": 7
+        },
+        {
+          "title": "comparable operator measurements: 100 mixed recipients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4002,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:44:08.442Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb83e24b218b03bab38d-cdeedf6b7721694e4c26",
+          "file": "operator-timing.spec.ts",
+          "line": 10,
+          "column": 7
+        },
+        {
+          "title": "comparable operator measurements: 150 mixed recipients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4604,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:44:12.467Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb83e24b218b03bab38d-cab6dfa5a98da41b9c87",
+          "file": "operator-timing.spec.ts",
+          "line": 10,
+          "column": 7
+        },
+        {
+          "title": "comparable operator measurements: 250 mixed recipients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5727,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:44:17.084Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb83e24b218b03bab38d-b40984dc5431f3803b7b",
+          "file": "operator-timing.spec.ts",
+          "line": 10,
+          "column": 7
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-15T12:44:03.338Z",
+    "duration": 19660.456,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

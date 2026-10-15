@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "exitCode": 0,
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-concurrency=1 tests/integration/lms-template-upgrade.test.ts",
+  "log": "command03.log",
+  "tests": 4,
+  "passed": 4,
+  "failed": 0,
+  "skipped": 0,
+  "startedAt": "2026-10-15T01:09:26.3898609Z",
+  "finishedAt": "2026-10-15T01:09:29.9279807Z",
+  "database": "demo_test_lms_integration_20261015",
+  "host": "127.0.0.1:55449",
+  "source": [
+    {
+      "sha256": "38691d3bd58416d2c196fca1c13acfd7b838042194a31dfa86a94c6510df4e1c",
+      "path": "tests/integration/lms-template-upgrade.test.ts"
+    },
+    {
+      "sha256": "315949fea31a8b00a6a7289378d35900ff281dfab11cd48c1ce4b56e4e2d23e8",
+      "path": "scripts/maintenance/register-lms-templates.ts"
+    },
+    {
+      "sha256": "d10b24055506aa4ed4643571e237465a9db2c5907da2f5ef567f281ba4116b1d",
+      "path": "apps/api/src/controller.ts"
+    }
+  ],
+  "priorRuns": [
+    "command.log retained schema-order harness failure",
+    "command02.log 4PASS before adding final three template SHA checks"
+  ],
+  "privateStorageNegativeBoundary": "Fresh unique synthetic bytes + mismatching expected checksum and random nonexistent valid key; no shared bytes modified/deleted."
+}

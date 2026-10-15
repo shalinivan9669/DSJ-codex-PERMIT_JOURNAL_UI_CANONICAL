@@ -1,0 +1,408 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\playwright.config.ts",
+    "rootDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-producer",
+        "name": "common-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-history-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-consumers",
+        "name": "common-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-producer",
+        "name": "g1-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-keyboard-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-consumers",
+        "name": "g1-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-producer",
+        "name": "portal-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-three-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-consumer",
+        "name": "portal-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-390-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-producer",
+        "name": "manual-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-resume",
+        "name": "manual-resume",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-consumers",
+        "name": "manual-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-producer",
+        "name": "domain-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-role-full-fix-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-consumer",
+        "name": "domain-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "remaining",
+        "name": "remaining",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [
+          "/operator-common-history-live\\.spec\\.ts$/",
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-live\\.spec\\.ts$/",
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/",
+          "/final-portal-three-live\\.spec\\.ts$/",
+          "/final-portal-390-live\\.spec\\.ts$/",
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/",
+          "/operator-role-full-fix-live\\.spec\\.ts$/",
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-b/final-label-slow01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "print-pack-scale",
+        "name": "print-pack-scale",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\acceptance-failure-reporter.ts",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-b\\final-label-slow01\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "lms-copy-original-live.spec.ts",
+      "file": "lms-copy-original-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "COPY_OF_ORIGINAL: reviewed external private source becomes an approved real copy with files, registry and minimal public QR",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 360000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 65317,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.recipient-grid-training-button').first()\nExpected: \u001b[32m\"Обучение — сертификат центра\"\u001b[39m\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.recipient-grid-training-button').first()\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.recipient-grid-training-button').first()\nExpected: \u001b[32m\"Обучение — сертификат центра\"\u001b[39m\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.recipient-grid-training-button').first()\u001b[22m\n\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-copy-original-live.spec.ts:220:31",
+                    "location": {
+                      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-copy-original-live.spec.ts",
+                      "column": 31,
+                      "line": 220
+                    },
+                    "snippet": "  218 |   );\n  219 |   const documentLabel = page.locator(\".recipient-grid-training-button\").first();\n> 220 |   await expect(documentLabel).toHaveText(\"Обучение — сертификат центра\");\n      |                               ^\n  221 |   await expect(documentLabel).toHaveAttribute(\n  222 |     \"title\",\n  223 |     \"Обучение — сертификат центра\","
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-copy-original-live.spec.ts",
+                        "column": 31,
+                        "line": 220
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.recipient-grid-training-button').first()\nExpected: \u001b[32m\"Обучение — сертификат центра\"\u001b[39m\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.recipient-grid-training-button').first()\u001b[22m\n\n\n  218 |   );\n  219 |   const documentLabel = page.locator(\".recipient-grid-training-button\").first();\n> 220 |   await expect(documentLabel).toHaveText(\"Обучение — сертификат центра\");\n      |                               ^\n  221 |   await expect(documentLabel).toHaveAttribute(\n  222 |     \"title\",\n  223 |     \"Обучение — сертификат центра\",\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-copy-original-live.spec.ts:220:31"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T01:17:38.323Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-b\\final-label-slow01\\test-results\\lms-copy-original-live-COP-f69d9-istry-and-minimal-public-QR-remaining\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-b\\final-label-slow01\\test-results\\lms-copy-original-live-COP-f69d9-istry-and-minimal-public-QR-remaining\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-copy-original-live.spec.ts",
+                    "column": 31,
+                    "line": 220
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c8541d79008d76b54a28-31a61edc875b71da236c",
+          "file": "lms-copy-original-live.spec.ts",
+          "line": 47,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-slow-response-live.spec.ts",
+      "file": "lms-slow-response-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "slow online assignment preserves the selected group and prevents duplicate submission while the real response is delayed",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4178,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T01:18:45.792Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "43b0a836029bcb62bef9-c8483bc7d76546d101d3",
+          "file": "lms-slow-response-live.spec.ts",
+          "line": 9,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-15T01:17:36.630Z",
+    "duration": 73737.16600000001,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

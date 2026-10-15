@@ -1,0 +1,804 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\playwright.config.ts",
+    "rootDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-producer",
+        "name": "common-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-history-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-consumers",
+        "name": "common-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-producer",
+        "name": "g1-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-keyboard-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-consumers",
+        "name": "g1-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-producer",
+        "name": "portal-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-three-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-consumer",
+        "name": "portal-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-390-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-producer",
+        "name": "manual-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-resume",
+        "name": "manual-resume",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-consumers",
+        "name": "manual-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-producer",
+        "name": "domain-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-role-full-fix-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-consumer",
+        "name": "domain-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "remaining",
+        "name": "remaining",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [
+          "/operator-common-history-live\\.spec\\.ts$/",
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-live\\.spec\\.ts$/",
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/",
+          "/final-portal-three-live\\.spec\\.ts$/",
+          "/final-portal-390-live\\.spec\\.ts$/",
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/",
+          "/operator-role-full-fix-live\\.spec\\.ts$/",
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/affected-recheck-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "print-pack-scale",
+        "name": "print-pack-scale",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\acceptance-failure-reporter.ts",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\affected-recheck-20261015-01\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "final-repeat-basis-live.spec.ts",
+      "file": "final-repeat-basis-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "V02 actual history repeat uses a current employer and cannot finalize an unknown new result",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "common-consumers",
+              "projectName": "common-consumers",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12630,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:33:25.402Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "fa6bb1fc5908355cd31a-4be98f20e7afdde50e9d",
+          "file": "final-repeat-basis-live.spec.ts",
+          "line": 33,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "commercial.spec.ts",
+      "file": "commercial.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "finalize response lost after commit: retry and double activation reuse one issuance and the exact approved final text",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 360000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 35495,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:33:41.019Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0cace22ba481f327a60b-e90477c139877d2ce719",
+          "file": "commercial.spec.ts",
+          "line": 375,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "final-delivery-three-live.spec.ts",
+      "file": "final-delivery-three-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "V08/V12: three saved people retain source order/profile/original bytes, unsigned official guards and explicit transfer without invented signed evidence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 1200000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 70306,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "(node:16048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:49980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:34:16.954Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "7e23cade3bd366805dcf-0aae4d61bc22284db90f",
+          "file": "final-delivery-three-live.spec.ts",
+          "line": 14,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "final-history-live.spec.ts",
+      "file": "final-history-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "real history UI preserves original files across search, damaged copy, reconstruction, new event and correction",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 720000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 193018,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "(node:19408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:17240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:41308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:47176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:33164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:43624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:30692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:2392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:53828) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:52132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:3020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:46624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:43544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:51120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:33788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:28504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:50224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:36576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:45084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:54204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:27812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:13144) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:9132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:44260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:6004) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:44104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:9152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:53108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:29064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:41712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:29408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:11864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:35:27.300Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "29865ac50e5632ee162d-ea4d9e9810c29cdf8e6a",
+          "file": "final-history-live.spec.ts",
+          "line": 105,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "operator-photo-details-live.spec.ts",
+      "file": "operator-photo-details-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "real PERSON large-photo upload persists the original request identity and reloads the normalized image",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4386,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:38:44.963Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "af7015613e55a9b3e8cc-7b510594974d63ef66df",
+          "file": "operator-photo-details-live.spec.ts",
+          "line": 24,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "operator-timing.spec.ts",
+      "file": "operator-timing.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "comparable operator measurements: 10 mixed recipients",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 18116,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 5', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 5', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 5\" data-grid-field=\"fullNameRu\" data-field-path=\"items.4.fullNameRu\" title=\"Найденная Исправленная Запись\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 5', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 5', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 5\" data-grid-field=\"fullNameRu\" data-field-path=\"items.4.fullNameRu\" title=\"Найденная Исправленная Запись\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts:144:25",
+                    "location": {
+                      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                      "column": 25,
+                      "line": 144
+                    },
+                    "snippet": "  142 |     // The UI schedules that restoration for the next animation frame.\n  143 |     if (process.env.DEMO_COMPARE_EXPECT_FIXED === \"1\")\n> 144 |       await expect(row).toBeFocused();\n      |                         ^\n  145 |     timings.cardRoundtripMs = performance.now() - started;\n  146 |     const restoredFocus = await row.evaluate(\n  147 |       (element) => document.activeElement === element,"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                        "column": 25,
+                        "line": 144
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 5', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 5', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 5\" data-grid-field=\"fullNameRu\" data-field-path=\"items.4.fullNameRu\" title=\"Найденная Исправленная Запись\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n\n\n  142 |     // The UI schedules that restoration for the next animation frame.\n  143 |     if (process.env.DEMO_COMPARE_EXPECT_FIXED === \"1\")\n> 144 |       await expect(row).toBeFocused();\n      |                         ^\n  145 |     timings.cardRoundtripMs = performance.now() - started;\n  146 |     const restoredFocus = await row.evaluate(\n  147 |       (element) => document.activeElement === element,\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts:144:25"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:38:49.841Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\affected-recheck-20261015-01\\test-results\\operator-timing-comparable-5a625-rements-10-mixed-recipients-remaining\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\affected-recheck-20261015-01\\test-results\\operator-timing-comparable-5a625-rements-10-mixed-recipients-remaining\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                    "column": 25,
+                    "line": 144
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "eb83e24b218b03bab38d-2dafcd9f437fe0b71359",
+          "file": "operator-timing.spec.ts",
+          "line": 10,
+          "column": 7
+        },
+        {
+          "title": "comparable operator measurements: 100 mixed recipients",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 19449,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 50', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 50', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 50\" data-grid-field=\"fullNameRu\" title=\"Найденная Исправленная Запись\" data-field-path=\"items.49.fullNameRu\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 50', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 50', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 50\" data-grid-field=\"fullNameRu\" title=\"Найденная Исправленная Запись\" data-field-path=\"items.49.fullNameRu\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts:144:25",
+                    "location": {
+                      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                      "column": 25,
+                      "line": 144
+                    },
+                    "snippet": "  142 |     // The UI schedules that restoration for the next animation frame.\n  143 |     if (process.env.DEMO_COMPARE_EXPECT_FIXED === \"1\")\n> 144 |       await expect(row).toBeFocused();\n      |                         ^\n  145 |     timings.cardRoundtripMs = performance.now() - started;\n  146 |     const restoredFocus = await row.evaluate(\n  147 |       (element) => document.activeElement === element,"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                        "column": 25,
+                        "line": 144
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 50', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 50', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 50\" data-grid-field=\"fullNameRu\" title=\"Найденная Исправленная Запись\" data-field-path=\"items.49.fullNameRu\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n\n\n  142 |     // The UI schedules that restoration for the next animation frame.\n  143 |     if (process.env.DEMO_COMPARE_EXPECT_FIXED === \"1\")\n> 144 |       await expect(row).toBeFocused();\n      |                         ^\n  145 |     timings.cardRoundtripMs = performance.now() - started;\n  146 |     const restoredFocus = await row.evaluate(\n  147 |       (element) => document.activeElement === element,\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts:144:25"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:39:09.626Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\affected-recheck-20261015-01\\test-results\\operator-timing-comparable-caa7e-ements-100-mixed-recipients-remaining\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\affected-recheck-20261015-01\\test-results\\operator-timing-comparable-caa7e-ements-100-mixed-recipients-remaining\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                    "column": 25,
+                    "line": 144
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "eb83e24b218b03bab38d-cdeedf6b7721694e4c26",
+          "file": "operator-timing.spec.ts",
+          "line": 10,
+          "column": 7
+        },
+        {
+          "title": "comparable operator measurements: 150 mixed recipients",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 19603,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 75', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 75', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 75\" data-grid-field=\"fullNameRu\" title=\"Найденная Исправленная Запись\" data-field-path=\"items.74.fullNameRu\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 75', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 75', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 75\" data-grid-field=\"fullNameRu\" title=\"Найденная Исправленная Запись\" data-field-path=\"items.74.fullNameRu\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts:144:25",
+                    "location": {
+                      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                      "column": 25,
+                      "line": 144
+                    },
+                    "snippet": "  142 |     // The UI schedules that restoration for the next animation frame.\n  143 |     if (process.env.DEMO_COMPARE_EXPECT_FIXED === \"1\")\n> 144 |       await expect(row).toBeFocused();\n      |                         ^\n  145 |     timings.cardRoundtripMs = performance.now() - started;\n  146 |     const restoredFocus = await row.evaluate(\n  147 |       (element) => document.activeElement === element,"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                        "column": 25,
+                        "line": 144
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeFocused\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByLabel('ФИО, строка 75', { exact: true })\nExpected: focused\nReceived: inactive\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeFocused\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByLabel('ФИО, строка 75', { exact: true })\u001b[22m\n\u001b[2m    18 × locator resolved to <input type=\"text\" placeholder=\"ФИО\" autocomplete=\"off\" spellcheck=\"false\" aria-invalid=\"false\" aria-label=\"ФИО, строка 75\" data-grid-field=\"fullNameRu\" title=\"Найденная Исправленная Запись\" data-field-path=\"items.74.fullNameRu\" value=\"Найденная Исправленная Запись\"/>\u001b[22m\n\u001b[2m       - unexpected value \"inactive\"\u001b[22m\n\n\n  142 |     // The UI schedules that restoration for the next animation frame.\n  143 |     if (process.env.DEMO_COMPARE_EXPECT_FIXED === \"1\")\n> 144 |       await expect(row).toBeFocused();\n      |                         ^\n  145 |     timings.cardRoundtripMs = performance.now() - started;\n  146 |     const restoredFocus = await row.evaluate(\n  147 |       (element) => document.activeElement === element,\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts:144:25"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:39:30.791Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\affected-recheck-20261015-01\\test-results\\operator-timing-comparable-f74a7-ements-150-mixed-recipients-remaining\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\affected-recheck-20261015-01\\test-results\\operator-timing-comparable-f74a7-ements-150-mixed-recipients-remaining\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\operator-timing.spec.ts",
+                    "column": 25,
+                    "line": 144
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "eb83e24b218b03bab38d-cab6dfa5a98da41b9c87",
+          "file": "operator-timing.spec.ts",
+          "line": 10,
+          "column": 7
+        },
+        {
+          "title": "comparable operator measurements: 250 mixed recipients",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5852,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T12:39:52.137Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "eb83e24b218b03bab38d-b40984dc5431f3803b7b",
+          "file": "operator-timing.spec.ts",
+          "line": 10,
+          "column": 7
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-15T12:33:22.712Z",
+    "duration": 396040.893,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

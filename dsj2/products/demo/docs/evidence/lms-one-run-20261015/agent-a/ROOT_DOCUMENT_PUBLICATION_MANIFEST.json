@@ -1,0 +1,451 @@
+{
+  "status": "EXACT_SYNTHETIC_APPLICATION_OUTPUT_MANIFEST",
+  "reviewedAt": "2026-10-15T01:25:34.392286+00:00",
+  "reviewer": "agent-a",
+  "sourceCommand": "root-document-projection-01.json",
+  "sourceCommandSha256": "e7dec8c6a27c4a675781d268a9b9700947958f588f3d93bcfb89e111098c0d49",
+  "sourceLog": "root-document-projection-01.log",
+  "sourceLogSha256": "4bdfda85bd02a9926365fe0ba5763c0d85cba885ed5c70f6cf63ef7656507caa",
+  "currentFiles": [
+    {
+      "path": "root-documents/0852dc2f-4d55-4c07-9ec6-8d4f1bf04234.docx",
+      "sha256": "7749ec9ccbb02da40113ed663a8d947b71d6acaafc82aa955a6af21dd426c27a",
+      "bytes": 37695,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "a41ec76895e64c57b17d98fefbf8a62300376de59ba8a5afa2b99468a5c248b2"
+    },
+    {
+      "path": "root-documents/0852dc2f-4d55-4c07-9ec6-8d4f1bf04234.pdf",
+      "sha256": "7fb0f16073c093c83c0e8450cff4f7684d5d5ad2d41f99ab76e2316c624a457d",
+      "bytes": 81455,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "7218026723defcb9e9cdab498b5baa6dc1a45deeb031ae41209027c3d2cc19fb"
+    },
+    {
+      "path": "root-documents/11d288a5-6c43-4a19-b748-4e5cb6de5c1b.docx",
+      "sha256": "ea6b3bc5fbfac781c90bb9174c190fcdbd7b8114ba51419a15bb56ebea9b539e",
+      "bytes": 37355,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "48a1faafe7a8bbb0ab1ce41c30b7091aff0f84e2daf2528728891c973e802084"
+    },
+    {
+      "path": "root-documents/11d288a5-6c43-4a19-b748-4e5cb6de5c1b.pdf",
+      "sha256": "056eba2b90f2e483fb4c50ad75165cec805e6f2ca7181644099e9b27c3bdc5b2",
+      "bytes": 75765,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "2cce4941c379592ada875cb794d588d9e6be4e83d5292f84dcdac5231dbf7c52"
+    },
+    {
+      "path": "root-documents/11d288a5-6c43-4a19-b748-4e5cb6de5c1b.png",
+      "sha256": "b904c3f5c84db8af0f9e68202de3739a4baf9e38b754b08498d3306838acf10f",
+      "bytes": 52210,
+      "selected": false
+    },
+    {
+      "path": "root-documents/20f36a2c-3d4f-4e42-bb18-83b32b0ebae0.docx",
+      "sha256": "faecb8f2b1b1063b2bf2fe7bd380f0b17928f8b74b6dece4d48dda9f8550d51b",
+      "bytes": 37374,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "15a7082b28bfe92a5268c6530c797e0ecd28b679416228b76b4cb5b51babc656"
+    },
+    {
+      "path": "root-documents/20f36a2c-3d4f-4e42-bb18-83b32b0ebae0.pdf",
+      "sha256": "290ab2258d7479f173bbc224324f98381411d4df74c171cabcad40663d87a33e",
+      "bytes": 77072,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "377baf33ded39cd34c6e573e2fd0a89ce1c654307ff1fbd8121b904709839f18"
+    },
+    {
+      "path": "root-documents/294ff742-6042-4ba8-a5ca-a6bec8c57af0.docx",
+      "sha256": "9ade7e33d5dc11e9adcc095a7de08122f4b75f08a0763a0f6faad178cac58c24",
+      "bytes": 37356,
+      "selected": true,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "38454c64240c2c987d7ca38e27f5ad9d0587fd89db5d50070d1276c90f2d8e5f"
+    },
+    {
+      "path": "root-documents/294ff742-6042-4ba8-a5ca-a6bec8c57af0.pdf",
+      "sha256": "0729a2c77e9b7dbcacb1952431bb17576ea55081f34de2928e90500e27f4074c",
+      "bytes": 75985,
+      "selected": true,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "259281a37c7ee5eb6d765a4a2f887a909f757118549226902047121c248560f9"
+    },
+    {
+      "path": "root-documents/2c827779-19f2-41b9-908f-e9e8277401cd.docx",
+      "sha256": "1f5f9cac781373080bf563e173266423eaccf5f6cd0b62629c20b285560cdf4d",
+      "bytes": 37693,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "7022016fbb47357cfbe57cfe2cd52534cb61080d946ddfb6a3ac8bf663933f5f"
+    },
+    {
+      "path": "root-documents/2c827779-19f2-41b9-908f-e9e8277401cd.pdf",
+      "sha256": "1ccae5641c111651f4680f0a12fe25267ff62c134ec837626abc5f7e213e3379",
+      "bytes": 81457,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "efbf5a651eb0d48d663f2ce555701889c45891f8a01f88dec21c9c2cc7260e7e"
+    },
+    {
+      "path": "root-documents/2d3f7f2b-ce5c-4240-a629-16820c9bc622.docx",
+      "sha256": "8857177df70980fc1fda74f5ca995e66bfb7c6a2396d281c77d6bfd65d0a8be7",
+      "bytes": 37352,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "213c0327a86f3725b54c0bd2ae8a79a62ed2bc6717039e3fe193b6accbcc2f69"
+    },
+    {
+      "path": "root-documents/2d3f7f2b-ce5c-4240-a629-16820c9bc622.pdf",
+      "sha256": "8ac8c612393bbd60013b0593a22f3464ffd6993f3721506e637aa03412b3d494",
+      "bytes": 75991,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "889e201a419dbb893c395328be6288142f5da2449082c11ce23581563c1974a2"
+    },
+    {
+      "path": "root-documents/344f98ba-c8e5-4761-9e86-c9b297591d78.docx",
+      "sha256": "72526450a5b3a4e40033299767e9d6b3bde53a2b454d6a8d98763db2d12a0441",
+      "bytes": 37355,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "f12c6bb1733a7a2cad486bea72ad7177cd9848e816932c79e865c5a8bab3bb4b"
+    },
+    {
+      "path": "root-documents/344f98ba-c8e5-4761-9e86-c9b297591d78.pdf",
+      "sha256": "b1af92c1ac7b2ce61489c97451a299833b9c689c85110aa1f8a9486e0c60ebd9",
+      "bytes": 75974,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "405b17a0ca8688cf99106d1b9ec4ce7fb24d8efd1a77864c38e16d1806530a51"
+    },
+    {
+      "path": "root-documents/5102ca92-b984-4af8-bc63-19f3a85f15dd.docx",
+      "sha256": "76272b7bd0a87840e414ffd73e0e1408aa6e6a9b24b857f096440235ddbe51bf",
+      "bytes": 37696,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "53647baf84bc26a3faa24e8f6620f9bb4d90b89e7efa701836f35f495e71db55"
+    },
+    {
+      "path": "root-documents/5102ca92-b984-4af8-bc63-19f3a85f15dd.pdf",
+      "sha256": "44bfe58704c8313fb3a40f6b536405cb27f508d24b55c3dbdc7316c7205a2ddf",
+      "bytes": 81435,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "eb006682c3783b6aa956413201b2a5e930cf2b1c3784bfe32547955cd527bf00"
+    },
+    {
+      "path": "root-documents/55429a80-a115-409e-b56b-c8e62737e401.docx",
+      "sha256": "e3b70e6fa9b6d6439473b8247321cbd41e0b20bbb8438673b26aeab47ab01a33",
+      "bytes": 37356,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "56034f3da75694be91609485122c20e3437d8c1c9b94210aa6994e0c5fa92a36"
+    },
+    {
+      "path": "root-documents/55429a80-a115-409e-b56b-c8e62737e401.pdf",
+      "sha256": "6456d51234a1ab1aff23342d4b7cda774ddc494558823cfa11af3460b23de0ad",
+      "bytes": 75975,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "16ddf80e89ba0991968546c503f4f948ec4fb88303edc4d92b940d9e69fbedd1"
+    },
+    {
+      "path": "root-documents/722d5caf-6e59-4ce3-b172-091365201c93.docx",
+      "sha256": "9343af198ad8add92c3ef88daedbe06d9476e7ba85392583227f14b0bc074985",
+      "bytes": 37694,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "abcffe75785f225ddcc638cb5e8d7907d331d6af44b1da13e6bb43f4162417ed"
+    },
+    {
+      "path": "root-documents/722d5caf-6e59-4ce3-b172-091365201c93.pdf",
+      "sha256": "817a9a09f00fc8c3926e0310519c2adedb691bb6bbdb785dc8eccf688a71ac21",
+      "bytes": 81230,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "d940d985d592ae5761f1484521b45f750802e05d2ac1d371efc1c2a93588d465"
+    },
+    {
+      "path": "root-documents/722d5caf-6e59-4ce3-b172-091365201c93.png",
+      "sha256": "b78c7a04f5094953fe9dedbffaac8980938ad17f08dccf7fd1210d2b61ae80c0",
+      "bytes": 67161,
+      "selected": false
+    },
+    {
+      "path": "root-documents/8accf722-84d9-4ef6-a204-89c01ece2de8.docx",
+      "sha256": "2f16d40cea73920331f89c50c248b565237f225a84c5fe40d6fafd88ddccab16",
+      "bytes": 37374,
+      "selected": true,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "92a27053d1fe916d55966500dee35958b806addc09dc086f224907d161d01067"
+    },
+    {
+      "path": "root-documents/8accf722-84d9-4ef6-a204-89c01ece2de8.pdf",
+      "sha256": "93ba49253f3d3151c7bf7e5081b9f7fa3fa6dce93cd6ee97642ad11282c1ae47",
+      "bytes": 77071,
+      "selected": true,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "8e5ac2d1e441efb4d31a3dd657a8fe193e706be64e55737a1b433e275ab6be05"
+    },
+    {
+      "path": "root-documents/9000c49d-61d8-4ef6-a61c-f7aa61467366.docx",
+      "sha256": "127fa414721cdaf811b7dfe34de1fb9ea4cd565158a18253eb3b4ffced56f2f0",
+      "bytes": 37695,
+      "selected": true,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "141e2a1855c8c846d1a27f5370c04fd1c9342ba753b0dba03ba4c33aee70bbfb"
+    },
+    {
+      "path": "root-documents/9000c49d-61d8-4ef6-a61c-f7aa61467366.pdf",
+      "sha256": "c528bc74dce94aba6be2e2dac94bf53399726d3cc185091e593a263e0354cc9a",
+      "bytes": 81449,
+      "selected": true,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "3c4dcb30b6d0dcb2c1e09e6ae8280351f7bc886c33081b18110e1c0cb5dc0ac3"
+    },
+    {
+      "path": "root-documents/962535eb-d762-4e15-ba7e-b27e7f5f6223.docx",
+      "sha256": "824e89297a14ce461bdf968bd2dfe768fea3d2011d65ef70ae9be965e8ddb75d",
+      "bytes": 37375,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "604de259b0b52b36e02cf7a990f7c09edc475eda1bf163a22d0764581af74bb9"
+    },
+    {
+      "path": "root-documents/962535eb-d762-4e15-ba7e-b27e7f5f6223.pdf",
+      "sha256": "50ba1b2bfa004ee382661d832b6e69bde27135cb78c0f9e4df455eeb95b3c4d6",
+      "bytes": 77054,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "2fe1c5836bdfcdb37658b7f70ade3a16b3d4c74db375e0ba5b33f9918c12a625"
+    },
+    {
+      "path": "root-documents/af944bb6-39ac-40e1-ba73-cc3fe558a74a.docx",
+      "sha256": "ade8965157537d8d1296ca7ea95681574f934a6f8206ef6098b7da601d57d41f",
+      "bytes": 37375,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "b638ef11e3d91834f47df4a36203cc2e23803a812e000884f59134de0e766a53"
+    },
+    {
+      "path": "root-documents/af944bb6-39ac-40e1-ba73-cc3fe558a74a.pdf",
+      "sha256": "cf3a48b09e83311447e2fee933243e330ece1cf23cfc5c1a989fe949b13102bc",
+      "bytes": 76841,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "c8d63f4c51c87b7b8cce829ca10aed96639e90d7bdc5a7c10ce4d48628c52360"
+    },
+    {
+      "path": "root-documents/af944bb6-39ac-40e1-ba73-cc3fe558a74a.png",
+      "sha256": "5ae39ed29965bd729c5626bb487806fc29c4ae633647569cdce85484d07e769d",
+      "bytes": 61229,
+      "selected": false
+    },
+    {
+      "path": "root-documents/babb846b-81a7-46cc-b555-e6932b83231e.docx",
+      "sha256": "7fe3d17c079a21cce13b2270a3147d5e51b0b778ad0a990e77dc73bf08ece2ff",
+      "bytes": 37371,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "8ac6f85b4cf1dd28bc9185e2f6c16c42c266a838550f64ffaf5977579c1c5051"
+    },
+    {
+      "path": "root-documents/babb846b-81a7-46cc-b555-e6932b83231e.pdf",
+      "sha256": "ea329efb08e234fa4c6eedeae61ace3e41fdca008a5f7dbf9a12099ce3deb721",
+      "bytes": 77082,
+      "selected": false,
+      "contentChecked": "All extracted PDF text or DOCX XML/JSON/relationships; synthetic label present; credential/answer-key scan clear.",
+      "legalForm": "INFORMATION_CARD",
+      "textSha256": "bb4d8b1e4380915607eeb48c1954c54a6f09eb137418f07c59c7239733bf2997"
+    }
+  ],
+  "selection": "Only latest3types ×DOCX/PDF, with3exact preview rasters, enter supplement. Older outputs are hash inventory only; no recursive folder selection.",
+  "priorPreservation": {
+    "sourceManifestSha256": "0ab2ee4c3596096e2edfa12d2219452be9bec3e485ea7d6c1098f9feedebf159",
+    "capturedAtUtc": "2026-10-15T00:47:49.993500+00:00",
+    "retainedFiles": [
+      {
+        "fileName": "0852dc2f-4d55-4c07-9ec6-8d4f1bf04234.docx",
+        "sha256": "7749ec9ccbb02da40113ed663a8d947b71d6acaafc82aa955a6af21dd426c27a",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "0852dc2f-4d55-4c07-9ec6-8d4f1bf04234.pdf",
+        "sha256": "7fb0f16073c093c83c0e8450cff4f7684d5d5ad2d41f99ab76e2316c624a457d",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "11d288a5-6c43-4a19-b748-4e5cb6de5c1b.docx",
+        "sha256": "ea6b3bc5fbfac781c90bb9174c190fcdbd7b8114ba51419a15bb56ebea9b539e",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "11d288a5-6c43-4a19-b748-4e5cb6de5c1b.pdf",
+        "sha256": "056eba2b90f2e483fb4c50ad75165cec805e6f2ca7181644099e9b27c3bdc5b2",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "11d288a5-6c43-4a19-b748-4e5cb6de5c1b.png",
+        "sha256": "b904c3f5c84db8af0f9e68202de3739a4baf9e38b754b08498d3306838acf10f",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "20f36a2c-3d4f-4e42-bb18-83b32b0ebae0.docx",
+        "sha256": "faecb8f2b1b1063b2bf2fe7bd380f0b17928f8b74b6dece4d48dda9f8550d51b",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "20f36a2c-3d4f-4e42-bb18-83b32b0ebae0.pdf",
+        "sha256": "290ab2258d7479f173bbc224324f98381411d4df74c171cabcad40663d87a33e",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "2c827779-19f2-41b9-908f-e9e8277401cd.docx",
+        "sha256": "1f5f9cac781373080bf563e173266423eaccf5f6cd0b62629c20b285560cdf4d",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "2c827779-19f2-41b9-908f-e9e8277401cd.pdf",
+        "sha256": "1ccae5641c111651f4680f0a12fe25267ff62c134ec837626abc5f7e213e3379",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "2d3f7f2b-ce5c-4240-a629-16820c9bc622.docx",
+        "sha256": "8857177df70980fc1fda74f5ca995e66bfb7c6a2396d281c77d6bfd65d0a8be7",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "2d3f7f2b-ce5c-4240-a629-16820c9bc622.pdf",
+        "sha256": "8ac8c612393bbd60013b0593a22f3464ffd6993f3721506e637aa03412b3d494",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "344f98ba-c8e5-4761-9e86-c9b297591d78.docx",
+        "sha256": "72526450a5b3a4e40033299767e9d6b3bde53a2b454d6a8d98763db2d12a0441",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "344f98ba-c8e5-4761-9e86-c9b297591d78.pdf",
+        "sha256": "b1af92c1ac7b2ce61489c97451a299833b9c689c85110aa1f8a9486e0c60ebd9",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "5102ca92-b984-4af8-bc63-19f3a85f15dd.docx",
+        "sha256": "76272b7bd0a87840e414ffd73e0e1408aa6e6a9b24b857f096440235ddbe51bf",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "5102ca92-b984-4af8-bc63-19f3a85f15dd.pdf",
+        "sha256": "44bfe58704c8313fb3a40f6b536405cb27f508d24b55c3dbdc7316c7205a2ddf",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "55429a80-a115-409e-b56b-c8e62737e401.docx",
+        "sha256": "e3b70e6fa9b6d6439473b8247321cbd41e0b20bbb8438673b26aeab47ab01a33",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "55429a80-a115-409e-b56b-c8e62737e401.pdf",
+        "sha256": "6456d51234a1ab1aff23342d4b7cda774ddc494558823cfa11af3460b23de0ad",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "722d5caf-6e59-4ce3-b172-091365201c93.docx",
+        "sha256": "9343af198ad8add92c3ef88daedbe06d9476e7ba85392583227f14b0bc074985",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "722d5caf-6e59-4ce3-b172-091365201c93.pdf",
+        "sha256": "817a9a09f00fc8c3926e0310519c2adedb691bb6bbdb785dc8eccf688a71ac21",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "722d5caf-6e59-4ce3-b172-091365201c93.png",
+        "sha256": "b78c7a04f5094953fe9dedbffaac8980938ad17f08dccf7fd1210d2b61ae80c0",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "962535eb-d762-4e15-ba7e-b27e7f5f6223.docx",
+        "sha256": "824e89297a14ce461bdf968bd2dfe768fea3d2011d65ef70ae9be965e8ddb75d",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "962535eb-d762-4e15-ba7e-b27e7f5f6223.pdf",
+        "sha256": "50ba1b2bfa004ee382661d832b6e69bde27135cb78c0f9e4df455eeb95b3c4d6",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "af944bb6-39ac-40e1-ba73-cc3fe558a74a.docx",
+        "sha256": "ade8965157537d8d1296ca7ea95681574f934a6f8206ef6098b7da601d57d41f",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "af944bb6-39ac-40e1-ba73-cc3fe558a74a.pdf",
+        "sha256": "cf3a48b09e83311447e2fee933243e330ece1cf23cfc5c1a989fe949b13102bc",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "af944bb6-39ac-40e1-ba73-cc3fe558a74a.png",
+        "sha256": "5ae39ed29965bd729c5626bb487806fc29c4ae633647569cdce85484d07e769d",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "babb846b-81a7-46cc-b555-e6932b83231e.docx",
+        "sha256": "7fe3d17c079a21cce13b2270a3147d5e51b0b778ad0a990e77dc73bf08ece2ff",
+        "retainedCopyHashMatches": true
+      },
+      {
+        "fileName": "babb846b-81a7-46cc-b555-e6932b83231e.pdf",
+        "sha256": "ea329efb08e234fa4c6eedeae61ace3e41fdca008a5f7dbf9a12099ce3deb721",
+        "retainedCopyHashMatches": true
+      }
+    ],
+    "boundary": "27 earlier copies verified against original pre-overwrite manifest. Historical output bytes are not newly published or relabeled as latest execution."
+  },
+  "observations": [
+    "Three selected one-page PDF previews were actually viewed; no clipping/overlap, bilingual text and synthetic INFORMATION_CARD label remain visible.",
+    "Documents are local synthetic application outputs of the recorded passing integration run; no physical print, actual Word UI rendering or real signature is claimed."
+  ],
+  "selectedPreviews": [
+    "agent-a/root-document-review/9000c49d-61d8-4ef6-a61c-f7aa61467366.png",
+    "agent-a/root-document-review/8accf722-84d9-4ef6-a204-89c01ece2de8.png",
+    "agent-a/root-document-review/294ff742-6042-4ba8-a5ca-a6bec8c57af0.png"
+  ]
+}

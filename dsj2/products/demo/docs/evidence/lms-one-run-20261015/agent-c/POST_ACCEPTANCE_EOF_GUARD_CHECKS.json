@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "candidateSha256": "b4fec80decf14056a70c5dc599ef26e137754dab2c02d5c5b5af4ccd9ff1229d",
+  "checks": [
+    "exact_reviewed_two_byte_trim_accepted",
+    "original_executed_bytes_still_accepted",
+    "extra_blank_line_not_accepted",
+    "missing_final_newline_not_accepted",
+    "program_text_change_not_accepted",
+    "unknown_executed_hash_not_accepted",
+    "different_path_not_accepted",
+    "changed_review_receipt_not_accepted",
+    "actual_browser_acceptance_object_byte_semantics_unchanged"
+  ],
+  "passed": 9,
+  "actualAcceptanceEquality": true,
+  "browserReexecuted": false,
+  "rawBrowserRecordsChanged": false,
+  "scope": "Exact EOF-only source acceptance, negative mutation tests, and equality with the existing deterministic actual219 acceptance object.",
+  "actualSourceApplied": true,
+  "actualAcceptanceEqualityAfterApply": true
+}

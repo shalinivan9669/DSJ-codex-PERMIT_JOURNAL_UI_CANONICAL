@@ -1,0 +1,798 @@
+$ tsx --tsconfig tsconfig.base.json --test tests/*.test.ts && pnpm --filter @demo/web test
+✔ director cannot approve an old unscoped autosave or promote any part of the proposal (76.1531ms)
+✔ complete PTM card/protocol data passes preapproval without rendering or changing approved storage (66.2221ms)
+✔ explicit submission cannot promote incomplete saved input to PENDING (96.9176ms)
+✔ approval validates frozen proposal values even when current working data is complete (5.524ms)
+✔ director preview binds immutable proposal hash, samples forms once and retains the full 400-person group (730.1782ms)
+✔ restored forms require the exact source signers plus director policy (4.9043ms)
+✔ training-specific profile head and commission survive frozen signer selection (23.3795ms)
+✔ a missing or older incomplete signing policy cannot silently omit commission slots (0.6498ms)
+✔ proposal comparison exposes exact field, array and removal changes without ordering noise (3.0749ms)
+✔ connector configuration refuses credential-bearing and insecure remote URLs (0.6161ms)
+✔ PERSON WORKER: new individual BiOT hours survive empty common placeholders and saved reload (28.1486ms)
+✔ PERSON ITR: new individual BiOT hours survive empty common placeholders and saved reload (86.2518ms)
+✔ PERSON: bulk BiOT assignment and subsequent WORKER/ITR recipients retain category hours (61.7475ms)
+✔ COMPANY WORKER: new individual BiOT hours survive empty common placeholders and saved reload (44.4991ms)
+✔ COMPANY ITR: new individual BiOT hours survive empty common placeholders and saved reload (5.0627ms)
+✔ COMPANY: bulk BiOT assignment and subsequent WORKER/ITR recipients retain category hours (45.6891ms)
+✔ manual/imported/cleared common hours remain authoritative, while unprotected blank origins are placeholders (2.7162ms)
+✔ individual manual/source hours and legacy manual markers survive category-common overrides and reload (2.0802ms)
+✔ BIOT rules distinguish worker theory/practice and all general/special training periods (88.0943ms)
+✔ BIOT date defaults use calendar anniversaries and clamp leap day without inventing a council term (0.4407ms)
+✔ explicit BIOT category enforces separate minimum hours with field-specific errors (3.6578ms)
+✔ explicit categories prevent worker/ITR and unrelated template mismatch (1.6137ms)
+✔ earlier repeated checks are allowed, extending beyond the category period is rejected (2.6038ms)
+✔ old assignments remain unchanged; explicit general categories identify external ECS scope (1.4927ms)
+✔ every BIOT draft remains saveable but cannot be newly issued without an explicit category (1.3065ms)
+✔ the new ITR protocol requires a category and actual score/proctoring facts (2.2117ms)
+✔ a supplied unique number and a linked certificate cannot ambiguously compete (1.2435ms)
+✔ ambiguous matching certificates are rejected for worker and special protocols (1.6503ms)
+✔ no external report explicitly records NOT_PROVIDED without touching a default file (17.6076ms)
+✔ an explicitly supplied missing, failed or malformed report fails closed (54.8912ms)
+✔ a supplied persisted valid report is attributed to its exact bytes, never to the new V12 tenant (5.4357ms)
+✔ LIVE_V1 mandatory kits include one protocol, category-specific BiOT and indefinite PS (88.3695ms)
+✔ a legacy protocol or witness expands into mandatory kit without duplicate assignment identifiers (11.6395ms)
+✔ legacy category inference does not use a job-title guess and remains unchanged until opt-in (1.8453ms)
+✔ individual issue dates differ within one shared protocol, while shared training conditions remain checked (5.0596ms)
+✔ direct API input cannot drop required forms or fake an indefinite expiry (1.8557ms)
+✔ historical English appendix JSON remains readable with its original factual validation (3.0348ms)
+✔ historical English appendix preserves reviewed source fields without enabling English for new drafts (200.5812ms)
+✔ calendar anniversary clamps leap day and does not invent out-of-range dates (0.302ms)
+✔ individual issuance exceptions do not move a shared event's calculated training schedule (3.9614ms)
+✔ one person may have independent issue dates per training kit and bilingual output has a single English appendix flag (4.2129ms)
+✔ date-only validates leap days and never substitutes today (2.5792ms)
+✔ tenant midnight changes only new defaults, saved leap-day dates remain literal (82.9333ms)
+✔ partial draft retains independent RU/KZ, accepts 400 and rejects only resource overflow (88.6633ms)
+✔ organization reference snapshots retain approved empty and bilingual values in a bounded strict draft contract (24.4971ms)
+✔ protocol reason/education roundtrip and unbroken print limits report the specific field (35.0776ms)
+✔ unknown client numbers, group protocol and oversized data are rejected (2.2284ms)
+✔ product policy exact method and path deny unknown, action replay, normalization for every role (51.4902ms)
+✔ director approval and signing routes stay exact and do not open legacy signing or arbitrary callbacks (0.9826ms)
+✔ registered API controller method/path map equals deny-by-default policy (10656.8656ms)
+✔ PERSON GROUP: each course has its own program, truthful outcome and linked forms (33.9817ms)
+✔ PERSON INDIVIDUAL: each course has its own program, truthful outcome and linked forms (93.0361ms)
+✔ COMPANY GROUP: each course has its own program, truthful outcome and linked forms (8.4678ms)
+✔ COMPANY INDIVIDUAL: each course has its own program, truthful outcome and linked forms (15.5877ms)
+✔ COURSE → centre → preset → request → event → MANUAL/IMPORTED/CLEARED priority survives reload and a second course (37.4772ms)
+✔ three WORKER → ITR → WORKER cycles refresh automatic program and retain explicit facts (4.5858ms)
+✔ non-passed outcomes replace every stale positive phrase even in individual protocol forms (3.8591ms)
+✔ automatic resolved events retain COURSE provenance and accept later profile changes without modifying input (1.4058ms)
+✔ a factual failed score remains saved while stale positive template grades are removed (3.805ms)
+✔ mixed courses preserve shared job, PS profession and separately awarded witness qualification after reload (2.6925ms)
+✔ today uses the center calendar across the UTC year boundary (26.4672ms)
+✔ no unsupported hours-to-days default is inferred from the BIOT category (6.1909ms)
+✔ configured inclusive calendar periods cross leap days, months and years and round incomplete days upward (1.4262ms)
+✔ weekday schedules skip only explicit weekends and reject a weekend anchor instead of silently moving it (0.6832ms)
+✔ the configured hour source controls duration; changing hours never changes category validity (0.5241ms)
+✔ request date and hours propagate to one shared event, individual documents and protocol without confirming outcomes (56.8902ms)
+✔ manual/imported/cleared event dates persist across serialized reload and explicit reset restores automatic calculation (10.8878ms)
+✔ saved legacy event values are preserved; individual manual date conflicts cannot silently alter the group (3.1545ms)
+✔ automatic markers survive stored calculated fields and disabling a rule clears only automatic dates (0.7804ms)
+✔ generated protocol does not leak common-only date metadata into its strict assignment contract (2.2555ms)
+✔ legacy schema1 group context receives no new period or validity calculations (4.4457ms)
+✔ resource document guard counts the shared protocol alongside personal documents (1576.9606ms)
+✔ failed group participants count only documents that will actually be issued (72.4576ms)
+✔ all new working values are RU/KZ while old source JSON remains byte-for-byte unchanged (95.1294ms)
+✔ new resolver cannot reintroduce English from an existing centre profile or provenance (23.6772ms)
+✔ viewing historical English fields does not convert their language policy or mutate their data (2.0167ms)
+✔ an explicit new edit clears an old freeze instead of silently rewriting its frozen data (1.059ms)
+✔ duplicate warning requires persistent identity, actual date and program; same name is never enough (45.5161ms)
+✔ group header pins unique supplied names independently, preserving order and legal forms (2.2483ms)
+✔ attachment PNG and JPEG are fully decoded without modifying accepted bytes (1569.8662ms)
+▶ attachment raster validation fails closed on false signatures, truncation, CRC, appended payload and animation
+  ✔ PNG signature only (536.8489ms)
+  ✔ PNG truncated scan (723.9966ms)
+  ✔ PNG invalid CRC (586.9686ms)
+  ✔ PNG appended markup (713.4731ms)
+  ✔ JPEG signature only (694.4351ms)
+  ✔ JPEG truncated entropy (509.5034ms)
+  ✔ animated PNG (336.4928ms)
+✔ attachment raster validation fails closed on false signatures, truncation, CRC, appended payload and animation (4105.4523ms)
+✔ attachment raster validation refuses excessive pixel allocation before decoding (380.9933ms)
+✔ actual revised 100-person fixture produces 2 added / 3 changed / 2 missing / 95 unchanged and retains 102 (49.5183ms)
+✔ names never auto-merge; duplicated source IDs are ambiguous; personnel numbers stay employer scoped (32.126ms)
+✔ blank retention and field mask never copy list assignments or assessment results (12.8817ms)
+✔ explicit company inheritance clears only selected employer overrides while retaining unrelated blanks and strong matching (2.1965ms)
+✔ reconciliation exposes explicit employee category and supplied English corrections without overwriting assessment facts (1.3563ms)
+✔ customer export follows source ordering and exact column order, dates and text IDs (2.2057ms)
+✔ person summary rejects two events in one number cell instead of joining or dropping numbers (11.1249ms)
+✔ RU/KZ file names resist traversal, Windows reserved paths, collisions and preserve source values (9.3927ms)
+✔ mixed worker/ITR registry protocol resolver distinguishes their actual form (0.3814ms)
+✔ only the sole empty starter of a never-approved live draft can be replaced (5.1304ms)
+✔ personal data, exceptions, import provenance, assignments and explicit extra fields are retained (14.3119ms)
+✔ batch scope selects actual person/course without waiting people's unrelated data (21.1318ms)
+✔ linked individual forms expand within the same course and not another course (24.959ms)
+✔ scope approval survives reorder/unselected changes and invalidates selected print changes (2.832ms)
+✔ technical reserve row ignores automatic course kit but retains facts, photo and saved people (2.577ms)
+✔ PERSON: ordinary ITR is complete without special industry, employer BIN/address or assessment facts (27.6781ms)
+✔ COMPANY: ordinary ITR is complete without special industry, employer BIN/address or assessment facts (3.4286ms)
+✔ explicit SPECIAL remains special and direct contract validation still demands its real facts (53.9731ms)
+✔ legacy saved SPECIAL and every actual outcome survive category normalization and linked-form creation (7.7684ms)
+✔ category transitions preserve explicitly cleared and imported hours even when they equal the former default (4.3738ms)
+✔ technical empty shared values inherit while explicit clears survive through the saved payload (13.3023ms)
+✔ course result RU/KZ defaults repair only unprotected blanks and retain imported or cleared wording (4.8346ms)
+✔ changing the shared ITR program selects the effective program in every linked form without replacing protected hours (65.3482ms)
+✔ a new automatic credential inherits a saved companion outcome instead of replacing it with PASSED (5.1391ms)
+✔ contradicting saved manual outcomes remain visible and block a course until explicitly reconciled (3.2716ms)
+✔ verified five-day calendars match official 2025 and revised 2026 annual totals (4.3183ms)
+✔ strict-before schedule accepts weekend issue day and skips holidays and transferred rest days (6.6371ms)
+✔ calendar version and full date coverage are explicit; unknown years never fall back to weekdays (1.4697ms)
+✔ separate academic and production blocks use separate explicit capacities without unit conversion (2.0602ms)
+✔ center schedule, request date and mixed individual category hours resolve independently with retroactive overrides (18.2657ms)
+✔ manual imported and cleared dates remain exact and invalid strict-before overrides point to their own fields (5.2611ms)
+✔ mixed events retain independent durations and shared protocol dates with the center schedule (3.9587ms)
+✔ 1203 actual plan identities survive bounded preflight and late overflow indexes (30.8966ms)
+✔ a failed chunk rejects the whole request and stops starting unchecked tail (23.9812ms)
+✔ partial or invalid renderer answers never certify unchecked plans (0.9424ms)
+✔ OPS01/02: every personal-data copy needs placement, owner/access/retention evidence; unknown or foreign placement denies real LMS (183.3457ms)
+✔ video seeks, repeat heartbeats and accelerated playback cannot invent watched intervals (2.4125ms)
+✔ sanitary strict more than 80 percent differs from ordinary GTE policy (0.8404ms)
+✔ multiple choice requires the exact set and partial byte ranges are bounded (0.6215ms)
+✔ LMS binds only explicit course signers and never imports DEMO director or commission defaults (34.5202ms)
+✔ an electronic original cannot omit signers and an absent LMS policy cannot use legacy defaults (1.2561ms)
+✔ only explicit information-card or copy policy grants a zero-signature exemption (0.96ms)
+✔ unbound explicit LMS signer remains required; an unrelated signer never substitutes (0.4908ms)
+✔ an unsigned paper original remains preparation after PDF completion and cannot archive (2.4624ms)
+✔ mixed LMS and existing DEMO documents preserve legacy signer slots (0.6432ms)
+✔ legacy checksum is deterministic and tampering is rejected (23.5806ms)
+✔ legacy counts and duplicate source ids never silently reconcile (0.6659ms)
+✔ legacy duplicate audit and global item identifiers are rejected (1.2062ms)
+✔ invisible-only names are blank, bilingual fallback uses significant text and raw values remain intact (11.5383ms)
+✔ category corrections return to the original identity and remove untouched empty derived events (55.865ms)
+✔ independent same-title events and empty events with facts are never merged or deleted (3.157ms)
+✔ a changed original context cannot silently receive an old confirmed fact from a derived category (2.5171ms)
+✔ every form restores linked program, hours and dates without changing another training or result (9.3193ms)
+✔ resetting a protocol date keeps inheritance after normalization and follows the changed common date (13.1408ms)
+✔ resetting an independent document basis preserves the companion basis and every confirmed fact (12.9236ms)
+✔ calculation causes point at hours, production, rule or calendar independently (13.955ms)
+✔ stable validation addresses follow recipient and assignment IDs across reorder (12.2699ms)
+✔ LIVE grouped protocols retain resolved employee-category validity instead of a conflicting category preset (2.4899ms)
+✔ the confirmed LIVE policy uses 1/3 years for every BiOT category across normalizer, resolver and group projection (95.0559ms)
+✔ assignment validity exceptions and legacy manual markers survive normalization, issue-date changes and reload (11.4935ms)
+✔ explicit shared expiry is inherited at every context level without overwriting individual exceptions (23.4986ms)
+✔ unprotected expiry recalculates at leap, month and year boundaries, and a restored explicit expiry returns to AUTO (1.7246ms)
+✔ factual ITR text is entered once, individual facts and clears stay distinct, and new English fields are discarded (2.2277ms)
+✔ saved centre schedule automatically drives linked forms; an explicit disabled rule remains disabled (3.997ms)
+✔ a shared assessment does not supply positive facts to failed absent or pending recipients (4.329ms)
+✔ PS uses one course profession and qualification across its three forms without conflating explicit values (1.8858ms)
+✔ KZT calculations preserve exact integer amounts, explicit tax basis and discounts (16.1004ms)
+✔ ordinary repeat reuses identity and course with fresh positive defaults, while historical assessment facts are removed (86.3211ms)
+✔ every repeated BiOT category gets its own default hours without carrying old source grades or origins (7.2982ms)
+✔ portal repeat preserves distinct same-direction event kits and resets each attempt's shared facts (9.2758ms)
+✔ external evidence distinguishes unknown, unverified, unknown expiry and review dates (0.5641ms)
+✔ rules require approval evidence and attachments have exactly one owner (5.4548ms)
+✔ explicit DSJ organization forms use RU prefixes and KZ suffixes without translating proper names (10.8095ms)
+✔ separate KZ proper name overrides only the shared name and server ignores fabricated generated labels (0.5169ms)
+✔ a selected form recognizes only its own separate edge designation and never doubles it (1.2285ms)
+✔ no legal form is inferred from legacy names, importer strings or the no-form option (5.8572ms)
+✔ conflicting, combined and repeated edge forms require clarification and do not silently erase the source (1.261ms)
+✔ legal-form-looking fragments inside the proper name remain intact (1.3079ms)
+✔ name contract rejects unknown forms, unnamed organizations and overflow after formatting (0.862ms)
+✖ PDF semantic validation preserves safe classic and compressed-object documents (789.816ms)
+▶ PDF semantic validation rejects escaped names, compressed active objects, nested actions and attachments
+  ✖ escaped catalog action (588.5094ms)
+  ✖ compressed active objects (387.7187ms)
+  ✖ action disguised as structure attribute (523.5829ms)
+  ✖ nested page additional actions (533.8076ms)
+  ✖ unreferenced active object (402.8261ms)
+  ✖ external action (346.8176ms)
+  ✖ embedded source (209.826ms)
+  ✖ XFA (258.3055ms)
+  ✖ remote stream (247.2878ms)
+✖ PDF semantic validation rejects escaped names, compressed active objects, nested actions and attachments (3512.4539ms)
+▶ PDF validator fails closed on malformed input and bounded decompression
+  ✖ corrupt Flate stream cannot be silently recovered (214.7163ms)
+  ✖ truncated Flate stream cannot be silently recovered (204.5065ms)
+  ✖ encrypted source (235.503ms)
+  ✖ truncated fake PDF (216.3208ms)
+  ✖ corrupt xref (205.8529ms)
+  ✖ decompression limit (248.4551ms)
+  ✖ excessive nesting (191.6293ms)
+  ✖ unknown filter (188.5171ms)
+✖ PDF validator fails closed on malformed input and bounded decompression (1707.6768ms)
+✖ missing PDF parser fails closed and releases its concurrency slot (199.5677ms)
+✖ PDF parser concurrency is bounded without retaining an unbounded queue (205.3512ms)
+▶ preview date guards cover draft and immutable proposal, with target and without target, while preserving optional and legacy periods
+  ✔ impossible/draft/general (37.6747ms)
+  ✔ impossible/draft/target (8.7772ms)
+  ✔ impossible/proposal/general (4.0351ms)
+  ✔ impossible/proposal/target (3.6921ms)
+  ✔ reversed/draft/general (2.6237ms)
+  ✔ reversed/draft/target (3.0653ms)
+  ✔ reversed/proposal/general (2.3993ms)
+  ✔ reversed/proposal/target (2.5079ms)
+  ✔ strict-schedule/draft/general (3.1615ms)
+  ✔ strict-schedule/draft/target (2.6473ms)
+  ✔ strict-schedule/proposal/general (20.693ms)
+  ✔ strict-schedule/proposal/target (25.4056ms)
+  ✔ optional-empty/draft/general (4.4382ms)
+  ✔ optional-empty/draft/target (3.3229ms)
+  ✔ optional-empty/proposal/general (3.0923ms)
+  ✔ optional-empty/proposal/target (8.5677ms)
+  ✔ optional-partial/draft/general (4.4127ms)
+  ✔ optional-partial/draft/target (2.5898ms)
+  ✔ optional-partial/proposal/general (19.3294ms)
+  ✔ optional-partial/proposal/target (2.3246ms)
+  ✔ cleared-with-schedule/draft/general (2.1673ms)
+  ✔ cleared-with-schedule/draft/target (2.8203ms)
+  ✔ cleared-with-schedule/proposal/general (3.0132ms)
+  ✔ cleared-with-schedule/proposal/target (2.5098ms)
+  ✔ legacy-no-schedule/draft/general (2.3226ms)
+  ✔ legacy-no-schedule/draft/target (3.0837ms)
+  ✔ legacy-no-schedule/proposal/general (2.1144ms)
+  ✔ legacy-no-schedule/proposal/target (3.5584ms)
+✔ preview date guards cover draft and immutable proposal, with target and without target, while preserving optional and legacy periods (248.0986ms)
+✔ saved originals partition by bytes preserving order and complete composition (35.3593ms)
+✔ committed recipient restore preserves exact raw facts and original trusted confirmation across AUTO group changes (48.7485ms)
+✔ restore ignores forged confirmation actor and timestamp and retains the server copy (18.4754ms)
+✔ recipient restore rejects mixed result, outcome, identity and context changes (46.1346ms)
+✔ restore requires exact same tenant, request, revision and immutable deletion payload (12.7302ms)
+✔ fast restore of a row still on the server preserves metadata without history and rejects mixed edits (2.6865ms)
+✔ ordinary result edits still get a fresh server confirmation and generic patch is unchanged (2.1947ms)
+✔ registration is strict, normalizes email and rejects authority injection or weak credentials (9.7215ms)
+✔ profile preserves legacy names and optional people and common fields through repeat validation (21.7054ms)
+✔ explicit legal form produces shared center name with RU/KZ abbreviations without approving incomplete setup (0.748ms)
+✔ worker expects the renderer version implemented by Python (1.8886ms)
+✔ person customer uses the supplied name without rewriting stored title, translations or legacy references (38.5015ms)
+✔ blank person names remain blank and explicitly supplied KZ names are reused without invention (18.7974ms)
+✔ one pinned company supplies all empty employee rows and preserves explicit exceptions (3.351ms)
+✔ manual employer identity never receives unrelated company BIN or address (1.7287ms)
+✔ autosave persists the person title and working data without submitting director review (79.7383ms)
+✔ request list display extraction preserves the existing four generic titles and fallback semantics (1.6003ms)
+✔ SAVE display uses only the matching frozen organization and never the current request fallback or before (1.5842ms)
+✔ custom historical titles remain byte exact for both request kinds and all operations (0.3894ms)
+✔ ARCHIVE and CANCEL display the frozen before identity, not action payload title or live request title (0.2496ms)
+✔ a frozen PERSON title uses the first supplied RU or KZ name, never its legacy employer (1.2418ms)
+✔ a KZ-only company snapshot is displayed without inventing or overwriting a translation (0.4052ms)
+✔ incomplete historical records keep safe title fallbacks and never use an unrelated company (0.3693ms)
+✔ one supplied spelling resolves both print languages without changing the raw draft or inventing English (41.4548ms)
+✔ explicit language spellings stay intact and a supplied Kazakh name can be reused verbatim (2.2974ms)
+✔ inherited BIOT date uses existing category expiry policy, preserving every explicit exception (13.2136ms)
+✔ common fields resolve with provenance; individual outcomes and raw saved draft remain independent (5.0215ms)
+✔ group common override is blocked; explicit clear does not silently inherit; same text preserves manual origin (1.8806ms)
+✔ one group protocol with failed/absent/unknown members and no positive credentials for them (2.4016ms)
+✔ live print kits inherit the effective issue date for an omitted protocol date without changing saved input (11.0421ms)
+✔ explicit, calculated and cleared protocol dates retain precedence over the live issue-date fallback (22.0809ms)
+✔ a group protocol and its credential bases use the shared event date even with a later individual issue date (2.1189ms)
+✔ retake clears every attempt language, evidence and its provenance while keeping the issued source intact (15.888ms)
+✔ retake event keeps its program but never old dates, date origins or lineage cache (6.1162ms)
+✔ pinned service rule requires approved evidence, compatible form/category and actual date in applicability period (10.0761ms)
+✔ preview target is an additive strict identity contract and cannot change finalization (10.931ms)
+✔ target scope retains selected course dependencies and manual period without hiding an incomplete recipient (26.086ms)
+✔ request identity preserves historical and generic titles for separately computed display names (0.7214ms)
+✔ personal preview keeps selected event issuer validation while excluding other event and group-only fields (12.1895ms)
+✔ ordinary and special ITR cannot select each other's latest template (2.6414ms)
+✔ special individual and group selection fails closed when its approved form is absent (11.2689ms)
+✔ translation suggestions require review and do not invent unknown text without a provider (5.4237ms)
+✔ translation endpoint accepts neither personal name keys nor a caller-supplied provider URL (1.7566ms)
+✔ numbered PDFs without bound signers stay printable preparation and never become a signed or archived issuance (22.4035ms)
+ℹ tests 263
+ℹ suites 0
+ℹ pass 241
+ℹ fail 22
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16055.1539
+
+✖ failing tests:
+
+test at tests\pdf-attachment.test.ts:2:1332
+✖ PDF semantic validation preserves safe classic and compressed-object documents (789.816ms)
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+      at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:24:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    response: { code: 'PDF_VALIDATOR_UNAVAILABLE', message: 'Проверка вложения временно недоступна. Файл не сохранён.', details: undefined },
+    status: 503,
+    options: undefined
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ escaped catalog action (588.5094ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ compressed active objects (387.7187ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ action disguised as structure attribute (523.5829ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ nested page additional actions (533.8076ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ unreferenced active object (402.8261ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ external action (346.8176ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ embedded source (209.826ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ XFA (258.3055ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3174
+✖ remote stream (247.2878ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:76:5)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3427
+✖ corrupt Flate stream cannot be silently recovered (214.7163ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:82:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:82:3)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:3726
+✖ truncated Flate stream cannot be silently recovered (204.5065ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:95:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:95:3)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:4061
+✖ encrypted source (235.503ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:108:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:108:3)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:4329
+✖ truncated fake PDF (216.3208ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:116:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:116:3)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:4510
+✖ corrupt xref (205.8529ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:122:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:122:3)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:4738
+✖ decompression limit (248.4551ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:134:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:134:3)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:5034
+✖ excessive nesting (191.6293ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:147:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:147:3)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:5261
+✖ unknown filter (188.5171ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:155:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+        at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+        at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:155:3)
+        at async Test.run (node:internal/test_runner/test:1313:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\pdf-attachment.test.ts:2:5526
+✖ missing PDF parser fails closed and releases its concurrency slot (199.5677ms)
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+      at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:179:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    response: { code: 'PDF_VALIDATOR_UNAVAILABLE', message: 'Проверка вложения временно недоступна. Файл не сохранён.', details: undefined },
+    status: 503,
+    options: undefined
+  }
+
+test at tests\pdf-attachment.test.ts:2:6113
+✖ PDF parser concurrency is bounded without retaining an unbounded queue (205.3512ms)
+  HttpException: Проверка вложения временно недоступна. Файл не сохранён.
+      at fail (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\core.ts:25:9)
+      at validateAttachment (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\pdf-attachment.ts:89:7)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Promise.all (index 1)
+      at async TestContext.<anonymous> (C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\tests\pdf-attachment.test.ts:189:3)
+      at async Test.run (node:internal/test_runner/test:1313:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {
+    response: { code: 'PDF_VALIDATOR_UNAVAILABLE', message: 'Проверка вложения временно недоступна. Файл не сохранён.', details: undefined },
+    status: 503,
+    options: undefined
+  }
+[ELIFECYCLE] Test failed. See above for more details.

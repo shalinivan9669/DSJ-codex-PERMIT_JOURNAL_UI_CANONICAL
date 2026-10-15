@@ -1,0 +1,157 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\playwright.config.ts",
+    "rootDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/learning-run04/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\learning-run04\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "lms-learning-live.spec.ts",
+      "file": "lms-learning-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "prepared assignment and learner continuation, RU/KZ/mobile, actual exam autosave and offline recovery",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10778,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "LMS_BROWSER_ASSIGNMENT_CONFIRMED\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LESSON_OPEN\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_VIEWPORT_360\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_KZ\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_RU\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_VIEWPORT_390\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_KZ\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_RU\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_VIEWPORT_768\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_KZ\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_RU\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_VIEWPORT_1440\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_KZ\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_RU\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T21:19:56.846Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e90af9943e68e4e8e1f5-a79970ac357ca0920009",
+          "file": "lms-learning-live.spec.ts",
+          "line": 29,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-14T21:19:54.911Z",
+    "duration": 13976.472000000002,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

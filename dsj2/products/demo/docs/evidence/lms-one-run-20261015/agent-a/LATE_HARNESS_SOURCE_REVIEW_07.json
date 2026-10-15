@@ -1,0 +1,122 @@
+{
+  "status": "PASS_SOURCE_REVIEW_NOT_EXECUTION",
+  "checkedAt": "2026-10-15T12:28:46.126938+00:00",
+  "fullRunId": "full-e2e-20261015-07",
+  "rawFullRunOutcome": {
+    "exitCode": 1,
+    "passed": 212,
+    "failed": 6,
+    "skipped": 1,
+    "flaky": 0
+  },
+  "scope": "Three late harness repairs only; no corrected browser execution or overall acceptance is claimed.",
+  "productSourcesChanged": false,
+  "actualSourcesApplied": false,
+  "sourceDeltas": [
+    {
+      "path": "apps/web/e2e/commercial.spec.ts",
+      "beforeSha256": "46831d0ec8fdf8bf8ca81b1aeded0e84ee3b0590135dec7578c61b7c869d11df",
+      "candidateSha256": "ce40aa96344e1b9e8d6e80bd0ef4ce4a1e33ac3fcc1fc0112902fc031b5a63c9",
+      "restoredSha256": "46831d0ec8fdf8bf8ca81b1aeded0e84ee3b0590135dec7578c61b7c869d11df"
+    },
+    {
+      "path": "apps/web/e2e/final-repeat-basis-live.spec.ts",
+      "beforeSha256": "06386b7b7654cab31efcc497a9d25a139a7fe3227842b226145dea0218abf0f2",
+      "candidateSha256": "8d01ab4e8cdb34476f848675966f25a1fb1dc5390b85e18da588359075a03d87",
+      "restoredSha256": "06386b7b7654cab31efcc497a9d25a139a7fe3227842b226145dea0218abf0f2"
+    },
+    {
+      "path": "apps/web/e2e/operator-timing.spec.ts",
+      "beforeSha256": "e4839c3aef1869803a22e59f589ad9ba1740843c167b357f7d4e0015eaeebc10",
+      "candidateSha256": "742d7848ecc26aa66deebfc72f99a5344ecb3df428144a86bad8f04ebe945bfa",
+      "restoredSha256": "e4839c3aef1869803a22e59f589ad9ba1740843c167b357f7d4e0015eaeebc10"
+    }
+  ],
+  "assertionAstReview": [
+    {
+      "path": "apps/web/e2e/commercial.spec.ts",
+      "oldAssertions": 68,
+      "newAssertions": 71,
+      "missing": []
+    },
+    {
+      "path": "apps/web/e2e/final-repeat-basis-live.spec.ts",
+      "oldAssertions": 48,
+      "newAssertions": 48,
+      "missing": []
+    },
+    {
+      "path": "apps/web/e2e/operator-timing.spec.ts",
+      "oldAssertions": 16,
+      "newAssertions": 17,
+      "missing": []
+    }
+  ],
+  "commercial": {
+    "cause": "The original test clicked the asynchronous cancel action and immediately invoked the generic approval helper. Before the cancellation POST committed, that helper saw the prior approved SAVE and attempted SAVE submission on a FINALIZED request, correctly rejected as REGISTERED_IMMUTABLE.",
+    "actualReadOnlyDatabase": "demo_test_lms_browser_20261015 on loopback55449",
+    "actualReadback": {
+      "requestId": "803efb20-9146-4252-9a86-fee0f07cf282",
+      "tenantDemoOnly": true,
+      "status": "FINALIZED",
+      "revision": 2,
+      "workingRevision": 3,
+      "cancelProposalId": "16e3b972-bb1e-4f69-a435-b36cd87df0e0",
+      "cancelProposalStatus": "PENDING",
+      "cancelSubmittedAt": "2026-10-15T11:22:21.282Z",
+      "issuanceCount": 1,
+      "documentCount": 2
+    },
+    "repair": "Wait for the exact same-request POST /cancel response before the unchanged director approval helper; assert201,request identity,FINALIZED state,PENDING approval,and UUID proposal. Existing issuance/idempotency/approved text/cancellation/document assertions remain byte-equivalent ASTs.",
+    "timeoutChanged": false,
+    "genericHelperChanged": false
+  },
+  "repeat": {
+    "cause": "BIOT-only personal dialog exposes exact label Должность; the stale test expected Должность / профессия.",
+    "repair": "Scope the same fill to the already-open personal dialog and the exact existing label.",
+    "originalAssertionsPreserved": true,
+    "dataOrTimeoutChanged": false
+  },
+  "timing": {
+    "cause": "The existing return contract restores the remembered last-edited row input, not the details opener; restoration runs on requestAnimationFrame.",
+    "repair": "Wait for that same row input focus before stopping the existing roundtrip timer; retain true focus assertion and all other original assertions.",
+    "timerIncludesRestorationWait": true,
+    "manualFocusIntroduced": false,
+    "timeoutChanged": false
+  },
+  "sourceReferences": [
+    {
+      "path": "apps/web/e2e/commercial.spec.ts",
+      "sha256": "46831d0ec8fdf8bf8ca81b1aeded0e84ee3b0590135dec7578c61b7c869d11df"
+    },
+    {
+      "path": "apps/web/e2e/operator-role-fixture.ts",
+      "sha256": "6007768165f609c5c857207b6f24ccb503284d79af086c788690708bea476ff9"
+    },
+    {
+      "path": "apps/api/src/approvals.ts",
+      "sha256": "fb93400ac6d6045e3153099194b4ce34e2457ba7d5cae9b03d40c3dbe975341c"
+    },
+    {
+      "path": "apps/api/src/requests.ts",
+      "sha256": "a02dd878a01dbad2f2b12bd311a15c9adfe27bcb250b60c55511ce9b44ed4a84"
+    },
+    {
+      "path": "apps/web/components/files-panel.tsx",
+      "sha256": "26f613a93888caf9514bb7989e5db0d9a08f5583ee5aa140f284dbfe5e95fbdb"
+    },
+    {
+      "path": "apps/web/components/editor.tsx",
+      "sha256": "25636087f38946eddd1134ebc09d2e89fb14ea024a9f16f9965f6db31bf909fb"
+    },
+    {
+      "path": "apps/web/lib/recipient-course-context.ts",
+      "sha256": "356a3d818fb2072a5bcc49a4a153a1c88524e834c1308556dd5b7f25556398a7"
+    },
+    {
+      "path": "apps/web/e2e/operator-grid-context.spec.ts",
+      "sha256": "764ab9f90e38681850a2eaff94c1dacfbba994ebff9c2044924dea100a5261fe"
+    }
+  ],
+  "executionBoundary": "Private candidates only. Actual corrective runs remain NOT_RUN; original full07 failure evidence remains unchanged."
+}

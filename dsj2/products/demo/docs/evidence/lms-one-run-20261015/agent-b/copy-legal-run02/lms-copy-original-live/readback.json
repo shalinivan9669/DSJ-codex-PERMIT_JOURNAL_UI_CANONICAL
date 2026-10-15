@@ -1,0 +1,209 @@
+{
+  "checkedAt": "2026-10-15T00:58:06.403Z",
+  "tenantId": "8a8f7384-04de-40ac-8bbd-d22461037311",
+  "enrollmentId": "2fce0d40-a087-4486-8363-0b3c6c067a3e",
+  "resultId": "b825d2a3-c16b-4f72-b558-fc3b383c7f79",
+  "sourceId": "80b0b17a-b99a-4605-b769-1804e0b4ab36",
+  "assessmentKind": "EXTERNAL_AUTHORIZED",
+  "score": null,
+  "maximum": null,
+  "sourceStatus": "DOCUMENT_REVIEWED",
+  "privateSourceSha256": "6b746301cb586590964d1dcd6a8149d295b8894b36a01dd8578c40146c2654c2",
+  "originalSourceSha256": "6b746301cb586590964d1dcd6a8149d295b8894b36a01dd8578c40146c2654c2",
+  "attempts": 0,
+  "signatures": 0,
+  "workflowStatus": "ISSUED",
+  "legalForm": "COPY_OF_ORIGINAL",
+  "originalReference": "Synthetic external authorized issuer COPY · SYNTHETIC-COPY-ORIGINAL-42 · 2026-01-14",
+  "issuanceSnapshot": {
+    "draft": {
+      "kind": "PERSON",
+      "items": [
+        {
+          "id": "1b42b4b5-bf53-4cc6-9324-5eeb1a7e1b25",
+          "fullNameKz": "Синтетикалық тыңдаушы Копия оригинала",
+          "fullNameRu": "Синтетический слушатель Копия оригинала",
+          "positionKz": "Қызметкер",
+          "positionRu": "Работник",
+          "assignments": [
+            {
+              "id": "b825d2a3-c16b-4f72-b558-fc3b383c7f79-CERTIFICATE",
+              "lms": {
+                "score": null,
+                "course": {
+                  "hours": 1,
+                  "titleKz": "Синтетикалық қауіпсіздік бағдарламасы",
+                  "titleRu": "Синтетическая программа внешнего экзамена для копии"
+                },
+                "examAt": "2026-01-12T07:00:00.000Z",
+                "issuer": "Synthetic external authorized issuer COPY",
+                "source": {
+                  "issuer": "Synthetic external authorized issuer COPY",
+                  "sha256": "6b746301cb586590964d1dcd6a8149d295b8894b36a01dd8578c40146c2654c2",
+                  "system": "Synthetic local engineering source",
+                  "examDate": "2026-01-12",
+                  "timezone": "Asia/Qyzylorda",
+                  "reviewedAt": "2026-10-15T00:57:37.663Z",
+                  "reviewedBy": "3fa64565-c2bd-4740-ab96-b88f29a1c283",
+                  "documentDate": "2026-01-14",
+                  "verification": "DOCUMENT_REVIEWED",
+                  "datePrecision": "DATE",
+                  "documentNumber": "SYNTHETIC-COPY-ORIGINAL-42",
+                  "externalEvidenceId": "80b0b17a-b99a-4605-b769-1804e0b4ab36",
+                  "derivedFromEvidenceId": null
+                },
+                "maximum": null,
+                "verdict": "PASSED",
+                "eligible": true,
+                "examDate": "2026-01-12",
+                "examiner": "Synthetic external authorized issuer COPY",
+                "resultId": "b825d2a3-c16b-4f72-b558-fc3b383c7f79",
+                "legalForm": "COPY_OF_ORIGINAL",
+                "synthetic": true,
+                "assessmentKind": "EXTERNAL_AUTHORIZED",
+                "resultRevision": 1,
+                "signatureState": "PREPARED",
+                "profileVersionId": "6e79b091-feeb-44ca-823a-5242b8183b08",
+                "originalReference": "Synthetic external authorized issuer COPY · SYNTHETIC-COPY-ORIGINAL-42 · 2026-01-14",
+                "requiredSignatures": []
+              },
+              "hours": "1",
+              "reason": "",
+              "result": "Сдал",
+              "outcome": {
+                "source": "LMS:b825d2a3-c16b-4f72-b558-fc3b383c7f79:1",
+                "status": "PASSED",
+                "confirmedAt": "2026-10-15T00:57:37.686Z",
+                "confirmedBy": "3fa64565-c2bd-4740-ab96-b88f29a1c283"
+              },
+              "resultKz": "Тапсырды",
+              "education": "",
+              "templateId": "lms-certificate",
+              "validUntil": "2027-10-15",
+              "trainingEnd": "",
+              "documentDate": "2026-10-15",
+              "fieldOrigins": {
+                "hours": "IMPORTED",
+                "result": "IMPORTED",
+                "outcome": "IMPORTED",
+                "resultKz": "IMPORTED",
+                "validUntil": "AUTO",
+                "documentDate": "IMPORTED",
+                "protocolDate": "IMPORTED",
+                "trainingSubject": "IMPORTED",
+                "trainingSubjectKz": "IMPORTED"
+              },
+              "protocolDate": "2026-10-15",
+              "protocolMode": "INDIVIDUAL",
+              "validityMode": "FIXED",
+              "trainingStart": "",
+              "trainingSubject": "Синтетическая программа внешнего экзамена для копии",
+              "trainingSubjectKz": "Синтетикалық қауіпсіздік бағдарламасы",
+              "externalBasisNumber": ""
+            }
+          ],
+          "employerBin": "",
+          "recipientId": "1b42b4b5-bf53-4cc6-9324-5eeb1a7e1b25",
+          "workplaceKz": "",
+          "workplaceRu": "",
+          "photoAssetId": null,
+          "employeeCategory": "WORKER",
+          "employerAddressKz": "",
+          "employerAddressRu": ""
+        }
+      ],
+      "title": "Синтетическая программа внешнего экзамена для копии",
+      "events": [],
+      "demoMode": true,
+      "customerId": null,
+      "commonFields": {
+        "documentDate": "2026-10-15"
+      },
+      "schemaVersion": 2,
+      "languagePolicy": "RU_KZ",
+      "englishAppendix": false,
+      "profileVersionId": "bad5bf3d-a3e2-4af3-bfeb-60bb4cb9855e",
+      "businessRuleVersion": "LIVE_V1",
+      "organizationSnapshots": []
+    },
+    "issuer": {
+      "cityKz": "Қызылорда",
+      "cityRu": "Кызылорда",
+      "nameKz": "Синтетикалық оқу орталығы",
+      "nameRu": "Синтетический учебный центр",
+      "approved": true,
+      "addressKz": "Көрнекі мекенжай",
+      "addressRu": "Демонстрационный адрес",
+      "commission": [
+        {
+          "name": "Тестовый Председатель",
+          "position": "Синтетические данные"
+        }
+      ],
+      "approvalBasis": "Учебный набор — не является выданным документом"
+    },
+    "photos": {},
+    "customer": null,
+    "employers": [],
+    "templates": [
+      {
+        "id": "20cd80d2-9963-454a-ad8e-230c10946f27",
+        "version": "1",
+        "approved": true,
+        "checksum": "bef8b699f63c11b6946e63af6242e7f5f36359246ab7634722ba299cc7dee1cf",
+        "contract": {
+          "id": "lms-certificate",
+          "file": "lms-certificate.v1.docx",
+          "photo": false,
+          "fields": [
+            "ASSESSMENT",
+            "COURSE",
+            "DOCUMENT_DATE",
+            "EMPLOYER",
+            "EXAM_DATE",
+            "HOURS",
+            "ISSUER",
+            "LEARNER",
+            "LEGAL_FORM",
+            "LEGAL_MEANING",
+            "NUMBER",
+            "POSITION",
+            "RESULT",
+            "SOURCE",
+            "SYNTHETIC",
+            "TRACE"
+          ],
+          "sha256": "bef8b699f63c11b6946e63af6242e7f5f36359246ab7634722ba299cc7dee1cf",
+          "exports": [
+            "DOCX",
+            "PDF"
+          ],
+          "version": 1,
+          "sections": [
+            {
+              "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}h": "11906",
+              "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}w": "16838",
+              "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}orient": "landscape"
+            }
+          ],
+          "languages": [
+            "ru",
+            "kk"
+          ],
+          "ownerKind": "INDIVIDUAL",
+          "formRevision": "LMS_CENTER_FORMS_V1",
+          "renderPolicy": "LMS_CENTER_FORMS_V1",
+          "legalApproval": "REQUIRED_BY_ISSUER",
+          "protocolSemantics": null,
+          "verificationStatus": "ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE"
+        },
+        "tenantId": "8a8f7384-04de-40ac-8bbd-d22461037311",
+        "createdAt": "2026-10-15T00:57:37.371Z",
+        "storageKey": "objects/be/bef8b699f63c11b6946e63af6242e7f5f36359246ab7634722ba299cc7dee1cf-09ecfe00-999a-440c-ae52-128523462e7f.docx",
+        "templateId": "lms-certificate"
+      }
+    ],
+    "serviceRules": [],
+    "profileVersionId": "bad5bf3d-a3e2-4af3-bfeb-60bb4cb9855e"
+  }
+}

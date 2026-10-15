@@ -1,0 +1,16 @@
+✔ person customer uses the supplied name without rewriting stored title, translations or legacy references (6.4521ms)
+✔ blank person names remain blank and explicitly supplied KZ names are reused without invention (7.8987ms)
+✔ one pinned company supplies all empty employee rows and preserves explicit exceptions (1.6568ms)
+✔ manual employer identity never receives unrelated company BIN or address (0.6252ms)
+✔ autosave persists the person title and working data without submitting director review (46.4374ms)
+✔ an explicitly linked employer with no directory BIN supplies names while preserving local requisites (1.1076ms)
+✔ server and editor agree on linked empty-BIN identities and reject unknown or conflicting identities (0.8312ms)
+✔ a missing organization cannot supply names even when an explicit identity is present (0.2538ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1198.2348

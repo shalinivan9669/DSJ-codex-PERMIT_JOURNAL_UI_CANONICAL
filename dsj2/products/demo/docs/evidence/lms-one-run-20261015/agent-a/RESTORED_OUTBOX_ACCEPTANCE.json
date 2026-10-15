@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "syntheticOnly": true,
+  "measuredAt": "2026-10-14T21:51:01.390Z",
+  "sourceDatabase": "demo_test_lms_backup_a_mv8m6zjq",
+  "restoredDatabase": "demo_test_lms_outbox_restore_mv8n6i78",
+  "backup": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\backup",
+  "firstWorker": {
+    "status": "PASS",
+    "initialOutboxStatus": "PENDING",
+    "processed": 2,
+    "counts": {
+      "results": 1,
+      "batchItems": 1,
+      "journalEntries": 1,
+      "deliveries": 1
+    },
+    "restoredResultHash": "1fe3b8dacfaa3ef5abd9ed83c0d4b93ec2b27d78409bbe9f3cb916749c07c12d",
+    "privateHash": "69954613bde128f4bd80a4bf14ac2696962a6157adaf33d6e6bd423c9be27b95",
+    "processId": 35028
+  },
+  "restartedWorker": {
+    "status": "PASS",
+    "initialOutboxStatus": "DONE",
+    "processed": 0,
+    "counts": {
+      "results": 1,
+      "batchItems": 1,
+      "journalEntries": 1,
+      "deliveries": 1
+    },
+    "restoredResultHash": "1fe3b8dacfaa3ef5abd9ed83c0d4b93ec2b27d78409bbe9f3cb916749c07c12d",
+    "privateHash": "69954613bde128f4bd80a4bf14ac2696962a6157adaf33d6e6bd423c9be27b95",
+    "processId": 37796
+  },
+  "backupOutput": {
+    "backup": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\backup",
+    "tables": 76,
+    "files": 1,
+    "assets": 126
+  },
+  "restoreOutput": {
+    "verified": true,
+    "databaseContentsVerified": true,
+    "tables": 76,
+    "files": 1,
+    "assets": 126
+  },
+  "verifyOutput": {
+    "verified": true,
+    "databaseContentsVerified": true,
+    "tables": 76,
+    "files": 1,
+    "assets": 126
+  },
+  "commands": [
+    {
+      "command": "node.exe node_modules/tsx/dist/cli.mjs --tsconfig tsconfig.base.json C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\lms-restored-outbox.ts seed C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\seed.json",
+      "exitCode": 0
+    },
+    {
+      "command": "node.exe deployment/backup.mjs backup C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\backup",
+      "exitCode": 0
+    },
+    {
+      "command": "psql.exe -X -v ON_ERROR_STOP=1 -d postgresql://postgres@127.0.0.1:55449/postgres -c CREATE DATABASE \"demo_test_lms_outbox_restore_mv8n6i78\"",
+      "exitCode": 0
+    },
+    {
+      "command": "node.exe deployment/backup.mjs restore C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\backup",
+      "exitCode": 0
+    },
+    {
+      "command": "node.exe deployment/backup.mjs verify C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\backup",
+      "exitCode": 0
+    },
+    {
+      "command": "node.exe node_modules/tsx/dist/cli.mjs --tsconfig tsconfig.base.json C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\lms-restored-outbox.ts resume C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\seed.json C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\first-worker.json",
+      "exitCode": 0
+    },
+    {
+      "command": "node.exe node_modules/tsx/dist/cli.mjs --tsconfig tsconfig.base.json C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\lms-restored-outbox.ts resume C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\seed.json C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\restored-outbox-mv8n6i78\\restarted-worker.json",
+      "exitCode": 0
+    }
+  ]
+}

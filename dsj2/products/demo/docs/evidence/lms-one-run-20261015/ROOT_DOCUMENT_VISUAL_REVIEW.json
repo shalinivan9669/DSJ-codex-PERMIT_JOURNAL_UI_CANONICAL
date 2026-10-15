@@ -1,0 +1,26 @@
+{
+  "reviewedAt": "2026-10-14T22:56:04.728085+00:00",
+  "reviewer": "root",
+  "method": "Viewed all three actual rasterized PDF pages through view_image; review applies to the exact SHA below. These are local synthetic examples, not physical print or real legal issuance.",
+  "status": "PASS",
+  "observations": [
+    "Russian and Kazakh headings/names are legible with visible glyphs; no clipping or overlap.",
+    "Certificate landscape, protocol portrait table and credential compact page retain all expected content.",
+    "Synthetic label and INFORMATION_CARD legal form are visible; no electronic original claim.",
+    "Protocol row text wraps within cells; date and score remain separated."
+  ],
+  "files": [
+    {
+      "path": "lms-render/lms-certificate-page-1.png",
+      "sha256": "f785106ebc2fdbe115a0709d5f94c54b7425300558aa6c8922515a3928bf4ba1"
+    },
+    {
+      "path": "lms-render/lms-protocol-page-1.png",
+      "sha256": "4efd7e01e3262e93bdb5d6b0fee57a654561a623ac8ae2d4e6181a6fdf95aacb"
+    },
+    {
+      "path": "lms-render/lms-credential-page-1.png",
+      "sha256": "bf49e8c1f2433c3f6325ae7da40988a6006718419ae45a3128acb603f96a2f45"
+    }
+  ]
+}

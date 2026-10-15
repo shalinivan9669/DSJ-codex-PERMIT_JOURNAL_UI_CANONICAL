@@ -1,0 +1,407 @@
+{
+  "checkedAt": "2026-10-15T01:23:27.805Z",
+  "result": "PASS",
+  "legalForm": "COPY_OF_ORIGINAL",
+  "synthetic": true,
+  "fixtureVersion": "lms-copy-original-v1",
+  "preconditions": "Prepared synthetic demoOnly tenant, director/learner, published CONFIRMED synthetic EXTERNAL_AUTHORIZED COPY_OF_ORIGINAL profile, assignment, real private PDF and DOCUMENT_REVIEWED result created through provisioning/domain functions. No local exam attempt, numerical score, electronic signature, issuance or generated document is seeded. This is prepared-form acceptance, not first entry or proof of real qualification.",
+  "requestId": "03d797eb-50ff-45c4-9a67-871473a5b586",
+  "documentId": "6ecde1d0-bfa0-4062-bfbe-f2fe990e3248",
+  "issuedNumber": "LMS-CERTIFICATE-00001",
+  "operatorDocumentLabel": "Обучение — сертификат центра",
+  "technicalTemplateCodeVisibleInOperatorControl": false,
+  "sourceId": "5c4418fe-8903-4bcd-b388-fe214fee6577",
+  "originalReference": "Synthetic external authorized issuer COPY · SYNTHETIC-COPY-ORIGINAL-42 · 2026-01-14",
+  "sourceStatus": "DOCUMENT_REVIEWED",
+  "assessmentKind": "EXTERNAL_AUTHORIZED",
+  "score": null,
+  "maximum": null,
+  "localAttempts": 0,
+  "electronicSignatures": 0,
+  "actualPrivateFileRetained": true,
+  "hashes": {
+    "PDF": "301e46f492409eba2f5294fb265af2d6e992562a2e1af3a635f85aa95f5a8181",
+    "DOCX": "e55db394a45253868bf17dc49f0f3986d9765d39a32038359e46723bb4555715"
+  },
+  "registryRows": 2,
+  "publicRecord": {
+    "learningDocument": {
+      "legalForm": "COPY_OF_ORIGINAL",
+      "assessmentKind": "EXTERNAL_AUTHORIZED",
+      "sourceIssuer": "Synthetic external authorized issuer COPY",
+      "resultRevision": 1,
+      "originalReference": "Synthetic external authorized issuer COPY · SYNTHETIC-COPY-ORIGINAL-42 · 2026-01-14",
+      "sourceVerification": "DOCUMENT_REVIEWED"
+    },
+    "issuer": {
+      "nameRu": "Синтетический учебный центр",
+      "nameKz": "Синтетикалық оқу орталығы"
+    },
+    "document": {
+      "type": "lms-certificate",
+      "number": "LMS-CERTIFICATE-00001",
+      "date": "2026-10-15"
+    },
+    "status": "ACTIVE_RECORD",
+    "replacement": null,
+    "limitation": "Проверяется запись в реестре этого центра. Страница не подтверждает неизменность любой копии документа и не заменяет проверку подписи."
+  },
+  "measurements": [
+    {
+      "scenario": "E10 COPY_OF_ORIGINAL: prepared copy request",
+      "role": "DIRECTOR",
+      "startBoundary": "Known eligible external result selected in the open result list",
+      "preconditions": [
+        "Prepared synthetic demoOnly tenant, director/learner, published CONFIRMED synthetic EXTERNAL_AUTHORIZED COPY_OF_ORIGINAL profile, assignment, real private PDF and DOCUMENT_REVIEWED result created through provisioning/domain functions. No local exam attempt, numerical score, electronic signature, issuance or generated document is seeded. This is prepared-form acceptance, not first entry or proof of real qualification.",
+        "Fixture setup 765.6989000000001 ms and initial authentication are outside this prepared operation."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Prepare selected copy",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 155.65139999999974
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 425.3173999999999,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "requestId": "03d797eb-50ff-45c4-9a67-871473a5b586",
+        "legalForm": "COPY_OF_ORIGINAL",
+        "waitingForApproval": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "prepared copy request",
+      "startState": "Known eligible external result selected in the open result list",
+      "goal": "Prepare the copy from saved source and learner fields without re-entry",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Prepare selected copy",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 155.65139999999974
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "E10 COPY_OF_ORIGINAL: separate director approval",
+      "role": "DIRECTOR",
+      "startBoundary": "Immutable submitted copy proposal exists; its page has not been opened",
+      "preconditions": [
+        "Prepared synthetic demoOnly tenant, director/learner, published CONFIRMED synthetic EXTERNAL_AUTHORIZED COPY_OF_ORIGINAL profile, assignment, real private PDF and DOCUMENT_REVIEWED result created through provisioning/domain functions. No local exam attempt, numerical score, electronic signature, issuance or generated document is seeded. This is prepared-form acceptance, not first entry or proof of real qualification.",
+        "Fixture setup 765.6989000000001 ms and initial authentication are outside this prepared operation."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open the immutable proposal",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 76.67780000000039
+        },
+        {
+          "kind": "click",
+          "label": "Approve this revision",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 243.29369999999926
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 419.73619999999937,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "approved": true,
+        "separateAuthorizedDecision": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "separate director approval",
+      "startState": "Immutable submitted copy proposal exists; its page has not been opened",
+      "goal": "Review the saved copy proposal and explicitly approve it",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the immutable proposal",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 76.67780000000039
+        },
+        {
+          "kind": "click",
+          "label": "Approve this revision",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 243.29369999999926
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "E10 COPY_OF_ORIGINAL: saved files and registry",
+      "role": "DIRECTOR",
+      "startBoundary": "Approved copy is issued by the application and its original files are ready",
+      "preconditions": [
+        "Prepared synthetic demoOnly tenant, director/learner, published CONFIRMED synthetic EXTERNAL_AUTHORIZED COPY_OF_ORIGINAL profile, assignment, real private PDF and DOCUMENT_REVIEWED result created through provisioning/domain functions. No local exam attempt, numerical score, electronic signature, issuance or generated document is seeded. This is prepared-form acceptance, not first entry or proof of real qualification.",
+        "Fixture setup 765.6989000000001 ms and initial authentication are outside this prepared operation."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open the saved copy request",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 46.65759999999864
+        },
+        {
+          "kind": "click",
+          "label": "Download original application PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 131.05189999999857
+        },
+        {
+          "kind": "click",
+          "label": "Download original application DOCX",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 30.967400000001362
+        },
+        {
+          "kind": "click",
+          "label": "Download real issued registry",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 34.169599999997445
+        }
+      ],
+      "clicks": 3,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 3,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 1218.3372999999992,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "actualPdf": true,
+        "actualDocx": true,
+        "registryDownload": true,
+        "artifactHashes": {
+          "PDF": "301e46f492409eba2f5294fb265af2d6e992562a2e1af3a635f85aa95f5a8181",
+          "DOCX": "e55db394a45253868bf17dc49f0f3986d9765d39a32038359e46723bb4555715"
+        }
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "saved files and registry",
+      "startState": "Approved copy is issued by the application and its original files are ready",
+      "goal": "Download actual PDF, DOCX and registry without changing saved source facts",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the saved copy request",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 46.65759999999864
+        },
+        {
+          "kind": "click",
+          "label": "Download original application PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 131.05189999999857
+        },
+        {
+          "kind": "click",
+          "label": "Download original application DOCX",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 30.967400000001362
+        },
+        {
+          "kind": "click",
+          "label": "Download real issued registry",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 34.169599999997445
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "E10 COPY_OF_ORIGINAL: explicit public verification",
+      "role": "DIRECTOR",
+      "startBoundary": "Issued copy request is open with publication controls available",
+      "preconditions": [
+        "Prepared synthetic demoOnly tenant, director/learner, published CONFIRMED synthetic EXTERNAL_AUTHORIZED COPY_OF_ORIGINAL profile, assignment, real private PDF and DOCUMENT_REVIEWED result created through provisioning/domain functions. No local exam attempt, numerical score, electronic signature, issuance or generated document is seeded. This is prepared-form acceptance, not first entry or proof of real qualification.",
+        "Fixture setup 765.6989000000001 ms and initial authentication are outside this prepared operation."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Open publication controls",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 29.099200000000565
+        },
+        {
+          "kind": "select",
+          "label": "Select the saved issued copy",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 11.426300000002811
+        },
+        {
+          "kind": "click",
+          "label": "Give explicit publication permission",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 33.968300000000454
+        },
+        {
+          "kind": "click",
+          "label": "Create the minimal link and QR",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 30.795500000000175
+        },
+        {
+          "kind": "click",
+          "label": "Open the public minimal record",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 51.92829999999958
+        }
+      ],
+      "clicks": 4,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 1,
+      "decisions": 3,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 2,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 1090.4653000000035,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "minimalPublicRecord": true,
+        "copyLabel": true,
+        "originalReference": "Synthetic external authorized issuer COPY · SYNTHETIC-COPY-ORIGINAL-42 · 2026-01-14",
+        "fullNamePublished": false,
+        "electronicSignatureClaimed": false
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "explicit public verification",
+      "startState": "Issued copy request is open with publication controls available",
+      "goal": "Publish only the minimal registry record and inspect the copy/source labels",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Open publication controls",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 29.099200000000565
+        },
+        {
+          "kind": "select",
+          "label": "Select the saved issued copy",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 11.426300000002811
+        },
+        {
+          "kind": "click",
+          "label": "Give explicit publication permission",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 33.968300000000454
+        },
+        {
+          "kind": "click",
+          "label": "Create the minimal link and QR",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 30.795500000000175
+        },
+        {
+          "kind": "click",
+          "label": "Open the public minimal record",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 51.92829999999958
+        }
+      ],
+      "filledFields": 0
+    }
+  ],
+  "physicalPrintPerformed": false,
+  "realAuthorityClaimed": false,
+  "visualReview": "Pending separate visual inspection of actual copy-page-1.png; text/hash/assertion PASS is not visual review."
+}

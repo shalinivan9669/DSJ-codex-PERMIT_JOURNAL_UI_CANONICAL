@@ -1,0 +1,17 @@
+{
+  "discovery": "217 tests in 91 files",
+  "status": "STOPPED_AFTER_CONFIRMED_FAILURE",
+  "webBuildId": "sK53x-nSugI6ZzvRuNyOQ",
+  "command": "pnpm test:e2e",
+  "authorization": "User explicitly authorized local browser acceptance; standard full-suite command preserves all checkpoint guards",
+  "runtime": "runtime-start.json",
+  "runId": "full-e2e-20261015-03",
+  "tests": "test-source.json",
+  "session": 99012,
+  "source": "runtime-source.json",
+  "noHistoricalBaseline": true,
+  "start": "2026-10-15T00:22:24.1149673Z",
+  "exitCode": 1,
+  "end": "2026-10-15T00:29:52.4425038Z",
+  "interruption": "Coordinator authorized stopping only this owned session after portal-producer failure; downstream remaining tests depend on this failed producer. Ctrl+C returned exit1; final reporter JSON was not flushed. Actual completed log:2PASS1FAIL; later tests are not accepted."
+}

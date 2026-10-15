@@ -1,0 +1,267 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-14T22:02:30.380Z",
+  "source": "Real three issued synthetic documents; public pages read without an authenticated session",
+  "rows": [
+    {
+      "documentType": "lms-certificate",
+      "width": 360,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-certificate-360-ru.png"
+    },
+    {
+      "documentType": "lms-certificate",
+      "width": 360,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-certificate-360-kz.png"
+    },
+    {
+      "documentType": "lms-certificate",
+      "width": 390,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-certificate-390-ru.png"
+    },
+    {
+      "documentType": "lms-certificate",
+      "width": 390,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-certificate-390-kz.png"
+    },
+    {
+      "documentType": "lms-certificate",
+      "width": 768,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-certificate-768-ru.png"
+    },
+    {
+      "documentType": "lms-certificate",
+      "width": 768,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-certificate-768-kz.png"
+    },
+    {
+      "documentType": "lms-certificate",
+      "width": 1440,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-certificate-1440-ru.png"
+    },
+    {
+      "documentType": "lms-certificate",
+      "width": 1440,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-certificate-1440-kz.png"
+    },
+    {
+      "documentType": "lms-credential",
+      "width": 360,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-credential-360-ru.png"
+    },
+    {
+      "documentType": "lms-credential",
+      "width": 360,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-credential-360-kz.png"
+    },
+    {
+      "documentType": "lms-credential",
+      "width": 390,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-credential-390-ru.png"
+    },
+    {
+      "documentType": "lms-credential",
+      "width": 390,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-credential-390-kz.png"
+    },
+    {
+      "documentType": "lms-credential",
+      "width": 768,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-credential-768-ru.png"
+    },
+    {
+      "documentType": "lms-credential",
+      "width": 768,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-credential-768-kz.png"
+    },
+    {
+      "documentType": "lms-credential",
+      "width": 1440,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-credential-1440-ru.png"
+    },
+    {
+      "documentType": "lms-credential",
+      "width": 1440,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-credential-1440-kz.png"
+    },
+    {
+      "documentType": "lms-protocol",
+      "width": 360,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-protocol-360-ru.png"
+    },
+    {
+      "documentType": "lms-protocol",
+      "width": 360,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-protocol-360-kz.png"
+    },
+    {
+      "documentType": "lms-protocol",
+      "width": 390,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-protocol-390-ru.png"
+    },
+    {
+      "documentType": "lms-protocol",
+      "width": 390,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-protocol-390-kz.png"
+    },
+    {
+      "documentType": "lms-protocol",
+      "width": 768,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-protocol-768-ru.png"
+    },
+    {
+      "documentType": "lms-protocol",
+      "width": 768,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-protocol-768-kz.png"
+    },
+    {
+      "documentType": "lms-protocol",
+      "width": 1440,
+      "language": "ru",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-protocol-1440-ru.png"
+    },
+    {
+      "documentType": "lms-protocol",
+      "width": 1440,
+      "language": "kz",
+      "numberVisible": true,
+      "legalFormVisible": true,
+      "privateSubjectAbsent": true,
+      "overflow": false,
+      "screenshot": "lms-protocol-1440-kz.png"
+    }
+  ],
+  "privatePageHeaders": [
+    {
+      "route": "/learn/invite",
+      "referrerPolicy": "no-referrer",
+      "cacheControl": "no-store, must-revalidate",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "/learn/recovery",
+      "referrerPolicy": "no-referrer",
+      "cacheControl": "no-store, must-revalidate",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "/verify/:token",
+      "referrerPolicy": "no-referrer",
+      "cacheControl": "no-store, must-revalidate",
+      "robots": "noindex, nofollow"
+    }
+  ]
+}

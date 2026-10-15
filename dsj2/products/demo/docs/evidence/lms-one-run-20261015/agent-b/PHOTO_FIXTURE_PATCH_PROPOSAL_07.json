@@ -1,0 +1,37 @@
+{
+  "status": "PRIVATE_PROPOSED_ONLY_NOT_APPLIED_NOT_EXECUTED",
+  "capturedUtc": "2026-10-15T11:22:21.976737+00:00",
+  "files": [
+    {
+      "path": "scripts/verification/lms-full-e2e-fixture.ts",
+      "currentSha256": "e2e717766dcc686600f6051e373232921748e8432a415f88c71521c3aa77a840",
+      "candidate": ".runtime/photo-large-fixture-repair/lms-full-e2e-fixture.ts.pending",
+      "candidateSha256": "f837363c728459c543ab13177eec14990914ac6c7cf822e8cf2106509501c70c"
+    },
+    {
+      "path": "apps/web/e2e/operator-photo-details-live.spec.ts",
+      "currentSha256": "8d743a3607bd6671f20e1333883ddda09254b3ad05de5fec5ecef3e2c92cb7a9",
+      "candidate": ".runtime/photo-large-fixture-repair/operator-photo-details-live.spec.ts.pending",
+      "candidateSha256": "e02e8733f15cf72f9b02f264c2f20a20dcad6e3a923cd7fc2c943af31650695e"
+    }
+  ],
+  "scopeImpact": {
+    "actualLargeFixtureConsumers": [
+      "apps/web/e2e/operator-photo-details-live.spec.ts"
+    ],
+    "environmentBinding": "scripts/verification/lms-full-e2e-env.ps1:26",
+    "proposedAffectedVerification": [
+      "operator-photo-details-live.spec.ts:1 whole test",
+      "operator-photo-component.spec.ts:6 whole tests including unchanged oversized and near-limit cases",
+      "operator-photo-retry-live.spec.ts:1 whole actual HTTP retry test"
+    ],
+    "otherFixtureOutputs": "portrait-test-pattern.png generator path and bytes logic unchanged",
+    "productChanges": false,
+    "databaseSchemaOrRenderChanges": false,
+    "existingAssertionChanges": false,
+    "timeoutsOrWaitsChanged": false
+  },
+  "proposal": "Keep deterministic12MP RGB source and JPEG dimensions, encodequality40 with strict JPEG/dimension/pixel and >1MiB <=5MiB byte guards before fixture writes. Add explicit positive-fixture assertions before realUI setup.",
+  "notYetVerified": "Quality40 candidate bytes have not been generated or measured; actual size asserts are mandatory after authorized terminal. Existing suite and9.3MB fixture remain unchanged.",
+  "evidencePlan": "Keep full07 actualFAIL immutable; run complete affected photo specs after repair on same app build and report coverage delta explicitly, not full219 single-commandPASS."
+}

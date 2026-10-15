@@ -1,0 +1,31 @@
+{
+  "runId": "full-e2e-20261015-07",
+  "command": "pnpm test:e2e",
+  "status": "FAIL",
+  "startedAt": "2026-10-15T09:55:45.5919923Z",
+  "expectedTests": 219,
+  "expectedFiles": 93,
+  "sourceManifest": "test-source.json",
+  "evidenceGeneratorSourceManifest": "evidence-generator-source.json",
+  "discoveryManifest": "agent-c/full-e2e-discovery-20261015-07/discovery.json",
+  "runtime": "runtime-start.json",
+  "buildId": "9daYzb73gsxr8g-J7toW7",
+  "integrationWorker": "Standalone OFF; first-flow owns and restarts its shipping child",
+  "priorFailuresPreserved": true,
+  "exitCode": 1,
+  "endedAt": "2026-10-15T12:18:13.2367101Z",
+  "testSourceUnchanged": true,
+  "changedtestSourcePaths": [],
+  "runtimeSourceUnchanged": true,
+  "changedruntimeSourcePaths": [],
+  "evidenceGeneratorSourceUnchanged": true,
+  "changedevidenceGeneratorSourcePaths": [],
+  "stats": {
+    "startTime": "2026-10-15T09:55:48.355Z",
+    "duration": 8544478.834,
+    "expected": 212,
+    "skipped": 1,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

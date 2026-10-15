@@ -1,0 +1,2138 @@
+{
+  "status": "CURATED_CURRENT_FILES_REVIEWED_FINAL_ACCEPTANCE_REFRESH_PENDING",
+  "reviewedAt": "2026-10-15T01:16:19.950457+00:00",
+  "reviewer": "agent-a",
+  "pathBase": "docs/evidence/lms-one-run-20261015",
+  "operation": "Read-only source/evidence review plus creation of this allowlist and sanitized rejection summary; no git add, copying, publishing, commit or deletion.",
+  "scope": "Minimal selected document/screen samples plus linked textual evidence and command history. Local synthetic evidence only. This manifest is an exact current snapshot, not permission to recursively publish the evidence tree.",
+  "counts": {
+    "files": 217,
+    "text": 201,
+    "selectedImages": 8,
+    "selectedDocuments": 8,
+    "totalBytes": 3301774
+  },
+  "selectionGroups": {
+    "44criteria": "agent-c/acceptance-results-draft.json is a conservative draft; its referenced evidence was selected. Final44/52 reconciliation and final browser acceptance remain owned by coordinator/C; no draft is relabeled final.",
+    "rawUx": "Actual actions/course-actions/registration-actions/acceptance/PLAYBACK_ACCEPTANCE records are included with independent UX_METRICS_REVIEW. Different counting conventions, prepared-state boundaries and missing values remain unchanged.",
+    "load": "agent-c/load-1792017682452.json retains all400samples, observed100inflight,p95 799.1326ms,0%unexpected5xx and actual local dataset/runtime.",
+    "storage": "agent-a/STORAGE_ACCEPTANCE.json and RESTORED_OUTBOX_ACCEPTANCE.json preserve migration/backup/restore/restarted outbox exact commands/hashes; no database dump/private storage payload is selected.",
+    "sixteenForms": "agent-a/RENDER_BASELINE_DIAGNOSTIC.json retains all16 source/archive/current comparisons and honest nonreproduction of old unrecorded-runtime goldens; final source-fidelity test and144-test command log included. The3LMS forms are separate new output samples.",
+    "commands": "ROOT_COMMANDS_DRAFT,COMMANDS_A and exact command logs retain successes/failures separately. Sanitized policy rejections are NOT_RUN; original launch command records excluded.",
+    "newMaintenance": "C command03 upgrade4PASS and B explicit-tenant dry/apply/replay included separately from earlier fullintegration02."
+  },
+  "hardExclusions": [
+    "**/traces/**",
+    "**/.playwright-artifacts*/**",
+    "**/test-results/**",
+    "**/private.runtime/**",
+    "**/*fixture*",
+    "**/runtime-*.log",
+    "**/*runtime-api-*.log",
+    "**/*runtime-web-*.log",
+    "**/*runtime-render-*.log",
+    "**/*runtime-integration-*.log",
+    "**/*worker-*.log",
+    "agent-a/pre-final-render-files/**",
+    "agent-c/first-flow-command-rejection*.json",
+    "agent-b/template-upgrade-20261015-01/snapshot.cjs*",
+    "**/*.zip",
+    "**/*.mp4",
+    "database backups/dumps and private artifact roots"
+  ],
+  "sensitiveFindings": [
+    {
+      "path": "agent-c/first-flow-command-rejection-02.json",
+      "rule": "credential environment assignments embedded in raw launch command",
+      "lineNumbers": [
+        4,
+        5
+      ],
+      "valuePrinted": false,
+      "decision": "EXCLUDE original and companion raw rejection record; use COMMAND_REJECTIONS.json"
+    }
+  ],
+  "contentReview": {
+    "textCandidatesScanned": 202,
+    "suspectOriginalHeld": 1,
+    "companionRawRecordAlsoExcluded": 1,
+    "remainingPatternFindings": 0,
+    "checks": [
+      "Assigned password/accessToken/refreshToken/csrfToken/sessionToken/client_secret/private_key/api_key/Authorization strings",
+      "Known synthetic credential literal, bearer, credential-bearing database URLs and private PEM",
+      "Private invite/recovery token URL patterns",
+      "Serialized correctOptionIds answer-key arrays",
+      "Recursive JSON credential/email/IIN field names reviewed without outputting values"
+    ],
+    "documentChecks": [
+      {
+        "path": "agent-a/final-render-02/lms-render/lms-protocol.docx",
+        "method": "PDF text or all DOCX XML/JSON/relationship parts extracted locally",
+        "credentialPatternFindings": 0,
+        "syntheticFixtureProvenance": true
+      },
+      {
+        "path": "agent-a/final-render-02/lms-render/lms-protocol.pdf",
+        "method": "PDF text or all DOCX XML/JSON/relationship parts extracted locally",
+        "credentialPatternFindings": 0,
+        "syntheticFixtureProvenance": true
+      },
+      {
+        "path": "agent-a/final-render-02/lms-render/lms-certificate.docx",
+        "method": "PDF text or all DOCX XML/JSON/relationship parts extracted locally",
+        "credentialPatternFindings": 0,
+        "syntheticFixtureProvenance": true
+      },
+      {
+        "path": "agent-a/final-render-02/lms-render/lms-certificate.pdf",
+        "method": "PDF text or all DOCX XML/JSON/relationship parts extracted locally",
+        "credentialPatternFindings": 0,
+        "syntheticFixtureProvenance": true
+      },
+      {
+        "path": "agent-a/final-render-02/lms-render/lms-credential.docx",
+        "method": "PDF text or all DOCX XML/JSON/relationship parts extracted locally",
+        "credentialPatternFindings": 0,
+        "syntheticFixtureProvenance": true
+      },
+      {
+        "path": "agent-a/final-render-02/lms-render/lms-credential.pdf",
+        "method": "PDF text or all DOCX XML/JSON/relationship parts extracted locally",
+        "credentialPatternFindings": 0,
+        "syntheticFixtureProvenance": true
+      },
+      {
+        "path": "agent-b/copy-legal-run02/lms-copy-original-live/copy.docx",
+        "method": "PDF text or all DOCX XML/JSON/relationship parts extracted locally",
+        "credentialPatternFindings": 0,
+        "syntheticFixtureProvenance": true
+      },
+      {
+        "path": "agent-b/copy-legal-run02/lms-copy-original-live/copy.pdf",
+        "method": "PDF text or all DOCX XML/JSON/relationship parts extracted locally",
+        "credentialPatternFindings": 0,
+        "syntheticFixtureProvenance": true
+      }
+    ],
+    "visualReview": [
+      "agent-a/final-render-02/lms-render/lms-certificate-page-1.png",
+      "agent-a/final-render-02/lms-render/lms-protocol-page-1.png",
+      "agent-a/final-render-02/lms-render/lms-credential-page-1.png",
+      "agent-b/copy-legal-run02/lms-copy-original-live/copy-page-1.png",
+      "agent-b/copy-legal-run02/lms-copy-original-live/03-public-copy-minimal-record.png",
+      "agent-b/copy-legal-run02/lms-paper-signature-live/03-paper-public-minimal-record.png",
+      "agent-b/copy-legal-run01/lms-negative-states-live/05-unknown-kz.png",
+      "agent-c/critical-lms-20261015-01/lms-video-live/02-completed.png"
+    ],
+    "limits": "Pattern and selected visual review support privacy triage; they are not a mathematical proof against every secret. Synthetic UUIDs, localhost paths, test names and synthetic learner/company content are retained as evidence. No real person, real-provider credential or raw authenticated browser session is intentionally selected."
+  },
+  "finalRefreshRequired": [
+    "Rehash changed final command/criteria/UX/source-review reports immediately before git staging; this report never silently blesses later byte changes.",
+    "Add final44criteria/52coverage and completed mandatory full browser report after actual execution and the same privacy scan.",
+    "Keep failed command records as failures; do not bundle raw traces or fixtures to explain them.",
+    "Read snapshot.cjs.txt privately if needed; it remains excluded regardless of extension and no source-script artifact is required for the final evidence packet."
+  ],
+  "selectedFiles": [
+    {
+      "path": "CLEAN_INSTALL.json",
+      "bytes": 4003,
+      "sha256": "1f10d3106c25583ef79489abe4b982b1d85adbfeb070cb3be85ffda16095b424",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "CLEAN_INSTALL_02.json",
+      "bytes": 4014,
+      "sha256": "b015773eda599f3412e3064bb3e9678b7ed37fe4005fee34ed0ee42500995aed",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "COMMAND_REJECTIONS.json",
+      "bytes": 1886,
+      "sha256": "44d98b9bc022965ee4b629942fa5b9d8fbb27ba66ef72081674200cbb838769c",
+      "purpose": [
+        "sanitized historical NOT_RUN policy rejections with quoted user scope"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "ENVIRONMENT_POWER_EVENTS.json",
+      "bytes": 4448,
+      "sha256": "f6df8bab531b838a25e40abb804aaa6cbb660565c1d4f8510fa14e4a0d173441",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "EVIDENCE_PUBLICATION_AUDIT.json",
+      "bytes": 7292,
+      "sha256": "947cfb4d38f5303f9adec563e585c2379cf6023e196f11c596bbe44e294b9aac",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "EVIDENCE_PUBLICATION_CANDIDATE_SCAN_02.json",
+      "bytes": 278,
+      "sha256": "1df666f9f6d96e8480cae9a5c9a78c0dcb10cc0ef93d2b5d4044af8695ef3fb3",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "EXTERNAL_GATES.json",
+      "bytes": 1840,
+      "sha256": "6da4b3539fbaf734c0c1d8ded94ca1f36133190b49332fd3c868dbb133855807",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "PERSONAL_DATA_DEPLOYMENT_GATES_RU.txt",
+      "bytes": 14633,
+      "sha256": "e641742153ab8abd121c6a553f516b7d7a50bbdf0e67519dc245e97ecc911e8b",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "PROVIDER_CONNECTION_PACKET_RU.txt",
+      "bytes": 12029,
+      "sha256": "05af677bba338c21524b751ec665b1903fc35d323ddf41647076e4bddf29a965",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "REPRODUCE_RU.draft.txt",
+      "bytes": 13686,
+      "sha256": "29a7c2ce506a6ccc51f66ba6a8343dd681e3f6dd0a5c34b7a242dbae27deb371",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "ROOT_COMMANDS_DRAFT.json",
+      "bytes": 46926,
+      "sha256": "892e822a413ee47281fad6aca73168a7a561fcdc3f034271cee218bd3788fa10",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "ROOT_DOCUMENT_VISUAL_REVIEW.json",
+      "bytes": 1196,
+      "sha256": "df340cc3acd53b6f2a1db4caee68d42068e91a68fac04cd4ee84d6098c8a18cd",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "RUN_STATE.json",
+      "bytes": 9299,
+      "sha256": "9d5abf224e5fc924d4ddd581a3a881032cccab3b8be54cf2dc893cee0518835c",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/ACCEPTANCE_RU.md",
+      "bytes": 26247,
+      "sha256": "e1053966f29a4ee7fb7024d2c62bd1cbb37cd299169376d8f470c71fdce0410e",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/COMMANDS_A.json",
+      "bytes": 74762,
+      "sha256": "05b7adcbcfe5381f1c23fd1faeadad4d1ef7bdb54babd068fac0d5e76f910784",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/PROXY_ACCEPTANCE.json",
+      "bytes": 395,
+      "sha256": "c996fa83639d317dfafbf4a244e343c8847ef5fff120cde2ad51263f75e0e8b1",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/RENDER_BASELINE_DIAGNOSTIC.json",
+      "bytes": 60007,
+      "sha256": "2d483f90493b55f37e9a3edbfd4a8c50d22a6a4b40dce02b578373b94d6bc78e",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/RENDER_OUTPUT_REWRITE_COMPARISON.json",
+      "bytes": 57870,
+      "sha256": "bca21077ca9d8953d5c5566e84d08fe6064412ec4b032b4362facab23b08994a",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/RENDER_SLEEP_TIMEOUT_DIAGNOSTIC.json",
+      "bytes": 3803,
+      "sha256": "9ab1e8b69a21270789681e628668e554b7b0baff274b1035e620e927b5ad1617",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/RESTORED_OUTBOX_ACCEPTANCE.json",
+      "bytes": 4217,
+      "sha256": "1ae479487d05d387b5f1c07af9407e43141292150a78ee3db68fe66f9a5c0cae",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/SECURITY_REVIEW.json",
+      "bytes": 16289,
+      "sha256": "3d45b27dc8a344e1a7a30c1f314a6f1af4fd0a70993cfcb84eeb0ad439f61024",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/STORAGE_ACCEPTANCE.json",
+      "bytes": 21794,
+      "sha256": "cf6161078d02e70db51fe4dc16d629558a58d2ca177d8f53441ebb2facad757d",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/TEST_ASSERTION_REVIEW.json",
+      "bytes": 31658,
+      "sha256": "a7cbb6fc5db3fa1d451a25f3b6065f956e7c5eeb772694e7b8d0a59e750170a8",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/UNKNOWN_ROLE_ACCEPTANCE.json",
+      "bytes": 1466,
+      "sha256": "cb0ba0c9cf27da0a84506abd1573785cfb4f5aa82a379a0ea68721de75fc678b",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/VIDEO_RELOGIN_CLOSURE.json",
+      "bytes": 2234,
+      "sha256": "bc760d08f64c349457643ab88834e33de17b66fd2e973ab6fede31aa9da41fdf",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/accounting-boundaries.log",
+      "bytes": 566,
+      "sha256": "5a530957a6af11f425860db8ebe13f07ee5fc36d6fe0fcc57569afb3287e21f8",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/document-scheduling.log",
+      "bytes": 1222,
+      "sha256": "c93570bc6ea2acc7155229d7c8f54ab2548c3da6c42675d6a2e1a1b9f40165e6",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/domain-materials-gc.log",
+      "bytes": 2991,
+      "sha256": "2ccae4e63d07834413e925b795737bdab8a47e58505695f48e5738b3e7cd9fe4",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/domain-unit-pdf.log",
+      "bytes": 1815,
+      "sha256": "57b2449fd1431a91c4e4ab12b7c1624196e7d5f0af5948ef23eb55f2642134c8",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/exam-boundaries.log",
+      "bytes": 467,
+      "sha256": "9e88da34f1ed385d0d5b5ee971382664ae432408c8993a5f146ef9f54b6e5160",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/exam-midnight.log",
+      "bytes": 209,
+      "sha256": "f634a66bd908e2e0bd21429007004ecf4d4db50d9fee469717ee4c7acba2e691",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/external-exams-final.log",
+      "bytes": 2676,
+      "sha256": "0bcb9c2fece58c7b865bfe8ded0d9e2210835494bb941fef580c69d2eb19bede",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/external-manual-evidence.log",
+      "bytes": 655,
+      "sha256": "630e8762f713c5df34de57968543b155d7d954bf75d80bf5296b5dd03b1c02ea",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/legacy-reference-equivalence/package-equivalence.json",
+      "bytes": 4081,
+      "sha256": "81b20244e6676ae22954c687a975722689f714d4f64e95530cfb75d82aaa4792",
+      "purpose": [
+        "final renderer artifact evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/legacy-reference-equivalence/physical-equivalence.json",
+      "bytes": 354,
+      "sha256": "50ec235d08d524b68e534e25931335f85f580c3d41031d2978ca8ed2b499bc93",
+      "purpose": [
+        "final renderer artifact evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/legacy-reference-equivalence/production-data-equivalence.json",
+      "bytes": 4614,
+      "sha256": "a9dbfcbdd9e6a5671d0bbe7186d8f779a814a53ef7561921cb59f438117949ed",
+      "purpose": [
+        "final renderer artifact evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/FILES.json",
+      "bytes": 713,
+      "sha256": "c273faccca06272f8c1e5544425b7b651ebb1d1b5f95aaeda7f26fe67db86115",
+      "purpose": [
+        "final renderer artifact evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-certificate-page-1.png",
+      "bytes": 73734,
+      "sha256": "f785106ebc2fdbe115a0709d5f94c54b7425300558aa6c8922515a3928bf4ba1",
+      "purpose": [
+        "independently visually reviewed selected synthetic screenshot; no credentials or private token URL visible"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-certificate.docx",
+      "bytes": 37235,
+      "sha256": "bc15e78d81693ea981cbcb1263ce6e2b3b30c9fe3a490d78942d7a4994978efa",
+      "purpose": [
+        "selected synthetic output; structured-content credential scan and paired page preview reviewed"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-certificate.pdf",
+      "bytes": 73449,
+      "sha256": "f428de423070caa7c8da5ce821e7bdea9863dd9a48a609d1b4e3273a9f947401",
+      "purpose": [
+        "selected synthetic output; structured-content credential scan and paired page preview reviewed"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-credential-page-1.png",
+      "bytes": 60414,
+      "sha256": "bf49e8c1f2433c3f6325ae7da40988a6006718419ae45a3128acb603f96a2f45",
+      "purpose": [
+        "independently visually reviewed selected synthetic screenshot; no credentials or private token URL visible"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-credential.docx",
+      "bytes": 37178,
+      "sha256": "7807d77e9f7b5495983bbbb8c059e96d8cf919d6cbaaaf99fa2d793bdf38c7d8",
+      "purpose": [
+        "selected synthetic output; structured-content credential scan and paired page preview reviewed"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-credential.pdf",
+      "bytes": 70754,
+      "sha256": "91cde21a84c84185b28a25d7f88f4976537d3192dd9d6a4ff67114021e1145ee",
+      "purpose": [
+        "selected synthetic output; structured-content credential scan and paired page preview reviewed"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-protocol-page-1.png",
+      "bytes": 82371,
+      "sha256": "4efd7e01e3262e93bdb5d6b0fee57a654561a623ac8ae2d4e6181a6fdf95aacb",
+      "purpose": [
+        "independently visually reviewed selected synthetic screenshot; no credentials or private token URL visible"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-protocol.docx",
+      "bytes": 37560,
+      "sha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "purpose": [
+        "selected synthetic output; structured-content credential scan and paired page preview reviewed"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/lms-protocol.pdf",
+      "bytes": 78761,
+      "sha256": "6cac0f927521df04135b85a402785b472a0f8d4dcd58b3200695444ff5a0edff",
+      "purpose": [
+        "selected synthetic output; structured-content credential scan and paired page preview reviewed"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/lms-render/preflight.json",
+      "bytes": 85,
+      "sha256": "88ffd2931d817f2e43a554fdd2314b14689d69a7918698f0948bf63d83977fea",
+      "purpose": [
+        "final renderer artifact evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/final-render-02/special-program/readback.json",
+      "bytes": 1871,
+      "sha256": "dbb7199ac4bf7eca74dcae59b382a73747086c2b10fadc5ab4edbd980279a38d",
+      "purpose": [
+        "final renderer artifact evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/material-boundaries.log",
+      "bytes": 247,
+      "sha256": "95a0b75221f8f698cd1b875cacae0c3c0c6006bad7238713cf16b4b1938399fd",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/recovery-race-after.log",
+      "bytes": 217,
+      "sha256": "64e2ec60e724418b5e0165230979194a804995dfd483f0c2f3f6a3506bad3f22",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/recovery-race-before.log",
+      "bytes": 954,
+      "sha256": "9c8ebaa8444ed1bdd2f1a1df49f9aa976e173801f7f18d3a5206ee950a7d4314",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/render-date.log",
+      "bytes": 257,
+      "sha256": "c37d87e7d10dda5a29b8c0b060d0c0101f41bbbb91fa65636e33be3ee4a912b4",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/render-full-final-02.log",
+      "bytes": 26027,
+      "sha256": "3863633e7c627fcccc9daf352a7c136d349c5c53d43f03ffbe6ec6d98730d5df",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/render-full-final.log",
+      "bytes": 32600,
+      "sha256": "e7ef3598e9cfd28fd745ff5af9b0ddf384646a94f53f2dcaab6f16430d805ce5",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/render-full.log",
+      "bytes": 48505,
+      "sha256": "fefd167e51328c1267bb85f193e59864c0dba3fea8b07d2261c25b860bfa436e",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/render-neutral-diagnostic.log",
+      "bytes": 258,
+      "sha256": "e36cc90fe05e2b1b76337d8a99729bfddf0e7676dd5b989a03c92ee89e1aee6e",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/render-source-fidelity-targeted.log",
+      "bytes": 1164,
+      "sha256": "4b618584c8ecf343ba54cb6e0dbb7bfcb67d585762c40ff83f764319f02ec75c",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/render-special-targeted.log",
+      "bytes": 308,
+      "sha256": "af335d9a1eb03f45ba2a1d53f3e8101cdbdf1cf61ee522e6a14a109bdfaff6eb",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/restored-outbox.log",
+      "bytes": 753,
+      "sha256": "d6e2efb368fc974b3339a6e058f43d61e4a27d859e5a51a956ff37cb58e701d8",
+      "purpose": [
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/route-calendar-boundaries.log",
+      "bytes": 1008,
+      "sha256": "4fcb4621cb125dea77bbc8c6be3f7efd71e4f2f05cd2e43a78081b822666df3d",
+      "purpose": [
+        "44-criteria cited evidence",
+        "agent A acceptance, actual commands and retained failures"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-a/video-browser/PLAYBACK_ACCEPTANCE.json",
+      "bytes": 1075,
+      "sha256": "f48346807187b021608230fb34ef900989c5e2c470c1eb17389a9a5028641de3",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/CRITERIA_REVIEW.json",
+      "bytes": 31912,
+      "sha256": "a9422f3d54bd7a80f8153dd635920c47b5a73b0ab109b2dbad04d54a4f13d984",
+      "purpose": [
+        "independent criteria and UX review"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/LEGAL_FORM_MATRIX.json",
+      "bytes": 14085,
+      "sha256": "787990c340991e96b3eebea63471ab3f251140f8467ba7b35f99e9e22a8f293f",
+      "purpose": [
+        "independent criteria and UX review"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/UX_METRICS_REVIEW.json",
+      "bytes": 26738,
+      "sha256": "5b0365cb61725ded038e8c74a95652013eb18b6b33cf5e1b67a95782a705fd6d",
+      "purpose": [
+        "independent criteria and UX review"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-negative-states-live/05-unknown-kz.png",
+      "bytes": 48743,
+      "sha256": "1146028b9841202ca2d8233a9a76f5d361ffd5e444b0e499d50e244f951100ae",
+      "purpose": [
+        "independently visually reviewed selected synthetic screenshot; no credentials or private token URL visible"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json",
+      "bytes": 10049,
+      "sha256": "4ce6102073d20074548a58599d2858498a5ee30a8fbf1d119877a40fccd2b571",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/command.json",
+      "bytes": 1315,
+      "sha256": "58298081840a38418e2c88bfc0dc742fa986b6deb62daadc2ee8af81ae2032f6",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/command.log",
+      "bytes": 783,
+      "sha256": "65e8679a859a0e39efbf4184d5b0b1865de8416745181892599dfe1dc3002a85",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/03-public-copy-minimal-record.png",
+      "bytes": 50334,
+      "sha256": "599db0eac9184a8b797c71b5f4e00edf217a4e7f7bb3f50c242f73f2db01f35e",
+      "purpose": [
+        "independently visually reviewed selected synthetic screenshot; no credentials or private token URL visible"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/acceptance.json",
+      "bytes": 16591,
+      "sha256": "328d0f5750d5b4e76185da15edb841725e8c8080d2a61e6929b3b7799ff05708",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/copy-page-1.png",
+      "bytes": 81484,
+      "sha256": "4c73fbd9d5fb5f55c6caf2e3f661386fc04208dc4c4f80a0a6c69e17867ad96f",
+      "purpose": [
+        "independently visually reviewed selected synthetic screenshot; no credentials or private token URL visible"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/copy.docx",
+      "bytes": 37790,
+      "sha256": "a55516314be3e3e1b7a2162508d1aaed760eeda4cafc8efd9d17da4f3713f0e2",
+      "purpose": [
+        "selected synthetic output; structured-content credential scan and paired page preview reviewed"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/copy.pdf",
+      "bytes": 84606,
+      "sha256": "bf2be16126312c3051f035dc77e6eccb26cb130db746081b4b1433cce76ff485",
+      "purpose": [
+        "selected synthetic output; structured-content credential scan and paired page preview reviewed"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/file-validation.json",
+      "bytes": 5818,
+      "sha256": "cd4ff600897f4915c781503d451eb15db429e8ce3990f3390ec0a76cde47b092",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-paper-signature-live/03-paper-public-minimal-record.png",
+      "bytes": 45143,
+      "sha256": "601f80d18a2a770cb309554ceadfecc8cd773b48a73589472b7dd23ffcc1e46d",
+      "purpose": [
+        "independently visually reviewed selected synthetic screenshot; no credentials or private token URL visible"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-paper-signature-live/acceptance.json",
+      "bytes": 1877,
+      "sha256": "4dc65598402bfd2ece4b95b91f6d17a81b51e739422db3a881bde87947b95f14",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/geometry-run01/lms-geometry-live/geometry.json",
+      "bytes": 25389,
+      "sha256": "096fc2cd7189d92b0d06c91b1692429e04578a71f7ffa9811ed6974c99e5e606",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/operator-live/actions.json",
+      "bytes": 1996,
+      "sha256": "0c3239b44e59eecc8acc5234e5e21434fa24e12b965c3e9c7dbde64006e0687b",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/operator-run03/results.json",
+      "bytes": 3223,
+      "sha256": "bed59c2787fa36270c1da0e1e4250c739231e8091714bd66073a5cf6ae13fbd6",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+      "bytes": 764,
+      "sha256": "4e17870a85fe8f7f9527fa48ac253b6c078599371ca02cf68fb681a0ad9b248d",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "bytes": 17226,
+      "sha256": "e835c4ba51d6bac86a15bc7a19d6ce0c8c8c18d5d093444e5d3ccdefa4892655",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-b/template-upgrade-20261015-01/REPORT.json",
+      "bytes": 1627,
+      "sha256": "901f067155c55418bcd93da289a7f9e2a2004eae56f9718c11b191ab98b29b1a",
+      "purpose": [
+        "latest append-only maintenance and actual HTTP upgrade acceptance"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/AMBIGUOUS_SELECTION_ACCEPTANCE.json",
+      "bytes": 324,
+      "sha256": "6637ee489ab12955512a3b74b794400047ba5de6a080489413e8ca5cf05a12e2",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/AUDIT_ACCEPTANCE.json",
+      "bytes": 2116,
+      "sha256": "731d83e09fa1d936326e0f896baeed9d9da50f0d4abd934bfb21b48d3dd6dfe9",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/AUDIT_ACCEPTANCE_03.json",
+      "bytes": 2116,
+      "sha256": "731d83e09fa1d936326e0f896baeed9d9da50f0d4abd934bfb21b48d3dd6dfe9",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/INTEGRATION_DISCOVERY_INVENTORY.json",
+      "bytes": 61768,
+      "sha256": "dd36b466b1b1b127a836645c0ed6d64e62446666d60562c6a2de6c97c9b6de52",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/INTEGRATION_FINAL_COMMAND_BINDING.json",
+      "bytes": 2544,
+      "sha256": "fecacf5b4b3be4fd383508282573966c75912be34641409afbb965c50605c953",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/LEGACY_AUTO_BOUNDARY_ACCEPTANCE.json",
+      "bytes": 458,
+      "sha256": "f03be036a0811a9d76d7554059ebfdf674c5728de2cf8960f53e76c77e40c7be",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/NEGATIVE_SCREEN_VISUAL_REVIEW.json",
+      "bytes": 1656,
+      "sha256": "f973cc6b4fe7bae67d90836b5be8288d9ca05d53f9aa6aea8e1ccf51c56db494",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/UX_ACTIONS_DRAFT.json",
+      "bytes": 191289,
+      "sha256": "74c3b642208e7899af01dd896f49142060e653005706446be39f79d347932f81",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/acceptance-gap-audit.json",
+      "bytes": 76426,
+      "sha256": "6ff31ca6cdc6433eafa4e31f140fd1692c1e05c55c63dab7aea46bc9c4a60647",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/acceptance-results-draft.json",
+      "bytes": 280934,
+      "sha256": "1bc14c430c3a8e7b36fb9c911ad0b15038768f2a94fa65bf5ea6d91eb7960457",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/baseline-build-command.json",
+      "bytes": 666,
+      "sha256": "2760aba5c1a74619f792f4d35120b21892aee0d137cf67604a1889a5ba7e014f",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/baseline-scope-adjustment.json",
+      "bytes": 1127,
+      "sha256": "e336e07fc24af724968bee2eb31668e752e127ffa38ca3ad5d06b71a2b928cd1",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+      "bytes": 6735,
+      "sha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/batch-ambiguity-20261015-02/results.json",
+      "bytes": 12336,
+      "sha256": "4993b14ecf5c3746a25ccc3daf3554481297baf4bb28781c0901f95995d44818",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/conditional-instructor-scope.json",
+      "bytes": 996,
+      "sha256": "2ea1acbb26f706c51ca5f6edc2f70a6d32b933bcc1d38b132e3e45331cca61aa",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/command.json",
+      "bytes": 3051,
+      "sha256": "4aad7d5a8a12f15978c56e9607896d32e0a725ece37dfea880f5df214020ebd4",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/command.log",
+      "bytes": 16345,
+      "sha256": "977608e149c4b22f2e2c33399ed6901a5749e05a69157f73d99ca69af845a4ae",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/current-full-suite/actions.json",
+      "bytes": 1512,
+      "sha256": "616af2c6e52b4dcc8bebb88eb785be6c912ec81ddc09cbe16b501e16fb02ed5f",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+      "bytes": 16431,
+      "sha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-first-entry-live/course-actions.json",
+      "bytes": 3091,
+      "sha256": "06aed0c40d10c5f00c3e1280a51259b041d44b5196e1f95ee2409fe9a4c83a7b",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-first-entry-live/registration-actions.json",
+      "bytes": 939,
+      "sha256": "fed88cafd075ca15f0e7bd8a88a229c755475fe36b62d65abb4c0d78514ee0ca",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-geometry-live/geometry.json",
+      "bytes": 25389,
+      "sha256": "a4ced1eea2546d09334ba64aeeb10473a3a13c1a05364fa645c3ef1e7c623283",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json",
+      "bytes": 3318,
+      "sha256": "40fcf4fb66c9688bb75f66e7924a6840a9dec83aab3c0609670634b4333e07eb",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+      "bytes": 9917,
+      "sha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-paper-signature-live/acceptance.json",
+      "bytes": 764,
+      "sha256": "cdc6ea995e1e20493219368c1b0b0a33f0b986fdd97fd12b8fe0844fef781909",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json",
+      "bytes": 17399,
+      "sha256": "f04bc40521470aa2eacf1746c0b218e51328d69d2c5b760ad3e92d02f6d9a56d",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-video-live/02-completed.png",
+      "bytes": 148100,
+      "sha256": "235b47f5899ca984722ff688a50032ec34103bf0252b17caa95f212be46767ed",
+      "purpose": [
+        "independently visually reviewed selected synthetic screenshot; no credentials or private token URL visible"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-video-live/PLAYBACK_ACCEPTANCE.json",
+      "bytes": 1087,
+      "sha256": "d238000157d1929e66b5efe4814be9f08f87a62fcdd2cb6c677754df70ab9391",
+      "purpose": [
+        "44-criteria cited evidence",
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/results.json",
+      "bytes": 46365,
+      "sha256": "e33e19138732ea98a3fb7088f0b0c6378e8d7903aa4b04ce7451cbb06e84b7f8",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/first-entry-live/course-actions.json",
+      "bytes": 2386,
+      "sha256": "e5c6885dc93d10b54fd0383b46c411edfb14cf401606b66fc6606acc01c141cc",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/first-entry-run02/results.json",
+      "bytes": 4323,
+      "sha256": "b8bcb4f2f18019ab50d305ef0ec026e90e85b76737999cc5e0698cf5177365f4",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/learning-run04/results.json",
+      "bytes": 4705,
+      "sha256": "7af9ec3bacb04d87acbbe5c6952a30498a12e8ba6b24297ae656821d66b1a65c",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-audit-01-command.json",
+      "bytes": 521,
+      "sha256": "e9d6fb74019f86a78e9e3213ed6d411725a1f85359b185fb7efe309d0b09033b",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-audit-02-command.json",
+      "bytes": 521,
+      "sha256": "0002e4503a1873e6179c41aafae86a5ff610daa25e71b5af6c35f842ed1fe716",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-audit-03-command.json",
+      "bytes": 521,
+      "sha256": "3550243d5766a9f7a7869ffa1038fcf86972de4b76022f745683464deab85084",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-audit-03.log",
+      "bytes": 766,
+      "sha256": "c33f372a3bcf6102f214b7dbe7196745983debba126741b4e08220f760cf6734",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-batches-clock-01-command.json",
+      "bytes": 563,
+      "sha256": "f612ab50cdd7d9d74ad7a20da6184ccfde597621ea6bb6a5bf8661ec30741bcb",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-http-01-command.json",
+      "bytes": 354,
+      "sha256": "0362d8601cf0effb5c33f419384b766ce5489351db33cb22983731448b07f559",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-http-01.log",
+      "bytes": 859,
+      "sha256": "7d2764e4232ef3d91aaedf501dd97b8b0fb072454d39a66346773b920c9ca4e4",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-identity-selection-01-command.json",
+      "bytes": 536,
+      "sha256": "cf2c1113a76a77bbe09d655fac8eeef364047cf2b6d89a9eca489843d8cb7d99",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-identity-selection-01.log",
+      "bytes": 244,
+      "sha256": "8e1e3e657801cfb75978c75c44a60b2c6c649951ce15ccc637c6034eb8600295",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-learning-02-command.json",
+      "bytes": 464,
+      "sha256": "1730a349fd0e60e720a837786692ef8c95c5faf389568d799cc7a7847fa0ccd9",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-learning-02.log",
+      "bytes": 1016,
+      "sha256": "3a08276c2bf78c7512a31a16583991fd4c7aacc538b86396db11ff3e68103575",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-legacy-outcome-01-command.json",
+      "bytes": 528,
+      "sha256": "6443dc488cc2ba4ee2542c8345f757c0ff1bbb5acbf3d11f8edec2810dd42066",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-legacy-outcome-01.log",
+      "bytes": 240,
+      "sha256": "7b677c1c53daf3e91833a26d56fb7f9644b77777bcdaad2c8b85edd38ef2f8a7",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-regulatory-02-command.json",
+      "bytes": 366,
+      "sha256": "8284f62a8d9a9c656dd0b57e2d1bd775ddfb96293ead769124495e5dfba9e2f6",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-regulatory-06-command.json",
+      "bytes": 561,
+      "sha256": "3b4761984917ea65c34313a5ec538e6e65af991f1ae79495fb09f1622999a071",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-regulatory-07-command.json",
+      "bytes": 561,
+      "sha256": "c12665017f35b79df2eb6b7963b419a1cb80dab9b22c22e0a728aedb3d3ca672",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/lms-regulatory-07.log",
+      "bytes": 1551,
+      "sha256": "68506d88e3cd0c3b5570d267225a447a2db968d9ec1ad676b760a033d5622aa9",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/load-1792011743613.json",
+      "bytes": 40182,
+      "sha256": "e18c5c08bf142dc15f214670828e93ede6f99232a54c10583dcc991f115b857c",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/load-1792014480297.json",
+      "bytes": 40560,
+      "sha256": "fda30481be63d5611171ea93fcf6886c0ec1981a9189cfa39b21fbfa7c79fd4f",
+      "purpose": [
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/load-1792017682452.json",
+      "bytes": 40137,
+      "sha256": "0a6eca5e4098542fa2930b6daccff719735297cc0cbd74f7662436f82d8c85a4",
+      "purpose": [
+        "44-criteria cited evidence",
+        "acceptance reconciliation or actual command metadata"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/sanitary-files-1792014509550/visual-review.json",
+      "bytes": 682,
+      "sha256": "b104ea6e63992d6acb44a762ebec613ce051cb4e5d364d24212fe254490683bb",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/targeted-batches-clock-20261015-01/results.json",
+      "bytes": 4544,
+      "sha256": "9dce25f5c38e0919669fa20c2ea4ad7b9f508f545c8bcdf82e6fbd88a8d1d316",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/template-upgrade/acceptance.json",
+      "bytes": 2633,
+      "sha256": "5753a34f50c133fc200d0c00d4c6c5aa0314ea884f3d2f5219409c850c62e994",
+      "purpose": [
+        "44-criteria cited evidence",
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/template-upgrade/command.log",
+      "bytes": 3041,
+      "sha256": "50c332b11a6961e9990339f7c1c8dd1dcff1db804e231b6ce6a572b84a2aaeb1",
+      "purpose": [
+        "actual local source reports or raw UX actions"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/template-upgrade/command03.json",
+      "bytes": 1266,
+      "sha256": "04552fe36f47a92261cf0ad03359f36c36cce56c481f748f8acd18ca6f049aa8",
+      "purpose": [
+        "latest append-only maintenance and actual HTTP upgrade acceptance"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "agent-c/template-upgrade/command03.log",
+      "bytes": 757,
+      "sha256": "bb155429d496802929872c67c7f9381d1936a2274a5722cff33254c557dccb9c",
+      "purpose": [
+        "latest append-only maintenance and actual HTTP upgrade acceptance"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-autonomy-02.json",
+      "bytes": 464,
+      "sha256": "1c1c5e4be11e6c531d7f878948605584ac4bd2af87f9c6caab0a569ac5f6a5af",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-autonomy-02.log",
+      "bytes": 104,
+      "sha256": "9ad5dff60be7a97a017bb18c3421dc9f3583d23b11ec12b50061d7e0d86d1ae4",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-autonomy-03.json",
+      "bytes": 380,
+      "sha256": "6d9f59c728ce65b2bb14cc54bffe902b117561cd7898ec77ecb878bb0fb22736",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-autonomy-03.log",
+      "bytes": 104,
+      "sha256": "270eb8343c8f31c6576ff7a63bf2c8f4e5bc8789fedef5adf06c35e9762ea516",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-autonomy-04.json",
+      "bytes": 319,
+      "sha256": "afe670f0443db0499d00ed0646ba3f1a88ff60b188b9907f0d54b75bb56ad65a",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-autonomy-04.log",
+      "bytes": 104,
+      "sha256": "7536fb2f8a1b9e95a282eae28a42116e6bce8fcef16a360ea905eebb1d52db75",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-autonomy.log",
+      "bytes": 104,
+      "sha256": "f9efc57026680960e068a3aad8151878b6f43204298e50537dfd9266c0492cd2",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-build-02.json",
+      "bytes": 740,
+      "sha256": "66c0c4f043c873b772879b4d94d2e45be92ae950ba68ec77c5ae68d68b2a99ea",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-build-02.log",
+      "bytes": 3656,
+      "sha256": "a095d1cde56f953536a2d72214368bba1466e400372ad0499f5617692a89847d",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-build-03.json",
+      "bytes": 424,
+      "sha256": "7e8303ac2de67431f6e8c9e90e40ed6c3e407036d02f0916b3ff34dad23ea2ec",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-build-03.log",
+      "bytes": 3655,
+      "sha256": "dac16f4bd0a09bc8553df4e9aa074f1c8591a285315688c8e61ba7064268a604",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-build-04.json",
+      "bytes": 424,
+      "sha256": "3cf236378bc7fe599344929aefc0d84ac3a18e6686b4d5b6f4237fcd7cc69b64",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-build-04.log",
+      "bytes": 3655,
+      "sha256": "494e1c03f5e3265993d2aa3793a3960b452d437d427a6077ce05978eb5c6293a",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-build-final.log",
+      "bytes": 6338,
+      "sha256": "063a612b9eb8272ca0eed5a64e04d0d4f1c47d6295b259dd9098d91236263067",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-clean-frozen-install-02.log",
+      "bytes": 1599,
+      "sha256": "04abe6ff5c6cf5873c0f8dc6cc954bd1283ee6a7e181666d7e62bd45b795fa39",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-clean-frozen-install.log",
+      "bytes": 1476,
+      "sha256": "8bc4f1f12a8df1397fd899f33612bfae7342d92d02c88b9a24e21a05f5e1465e",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-diff-02.log",
+      "bytes": 3701,
+      "sha256": "bd3dc604e5e657c40fe9904da2fae5dfb9e6a6f3f072c827bc593c2ac86db781",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-diff-03.json",
+      "bytes": 359,
+      "sha256": "5c8a8fe0a6a19d210fdeeed1d7cce0fd30bcd00de995c3cab1a9fa86c8c13817",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-diff-03.log",
+      "bytes": 3701,
+      "sha256": "bd3dc604e5e657c40fe9904da2fae5dfb9e6a6f3f072c827bc593c2ac86db781",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-diff-04.json",
+      "bytes": 293,
+      "sha256": "fa92943ff6f41040da02728967b06a695fc8b0b61e77121c4468b19fb47f7085",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-diff-04.log",
+      "bytes": 3701,
+      "sha256": "bd3dc604e5e657c40fe9904da2fae5dfb9e6a6f3f072c827bc593c2ac86db781",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-01.log",
+      "bytes": 28380,
+      "sha256": "23b0bf3d72da0821db45c9a65d182c9c20cc49bca9b65a368385d6b4859bf91c",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-02.log",
+      "bytes": 4462,
+      "sha256": "09b192fb18893a6ba82cb765abf317c7835e1b204b09bf1c497969099398488b",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-03.log",
+      "bytes": 280,
+      "sha256": "3bdbd145b44f71fbb67715d2fb15985924452ca31d392a9fc816fe7565ed7afe",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-05.log",
+      "bytes": 215,
+      "sha256": "79261eb978f5b23aee9bfd8d163773ba40914e299f649f70d8a6959875ff4836",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-06.log",
+      "bytes": 90,
+      "sha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-07.json",
+      "bytes": 340,
+      "sha256": "8060ad54d0cc5f28407ff9104db69d956fac27efc01c85fcbf6d15a82644b13c",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-07.log",
+      "bytes": 90,
+      "sha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-08.json",
+      "bytes": 296,
+      "sha256": "52a4e1b89308d0a3aa1a9eca78f8c76f2357f9fa555bba8d34cb507856b14dc7",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-08.log",
+      "bytes": 90,
+      "sha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-format-final.log",
+      "bytes": 90,
+      "sha256": "0b95efe7a1df96aa81440f70658e5c8169546d284587f7ba2e8d268fd1aaea15",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-integration-01.log",
+      "bytes": 38239,
+      "sha256": "c8d8e6d6b3a0dcd5b869a8b546f2e0d79fc22dec88eaf14e4ac872d125e17d97",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-integration-02.log",
+      "bytes": 34864,
+      "sha256": "77c24e34a9d0ad5c1381ef17962cff6bbc10920544a59baa295805c2a1ad571f",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint-02.log",
+      "bytes": 12,
+      "sha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint-03.log",
+      "bytes": 12,
+      "sha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint-04.log",
+      "bytes": 12,
+      "sha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint-05.json",
+      "bytes": 330,
+      "sha256": "30142d9abfe81fdead8cfc1b04290a34800e5ccd1d81b0027e89671e218269f9",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint-05.log",
+      "bytes": 12,
+      "sha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint-06.json",
+      "bytes": 477,
+      "sha256": "2d4674f7b124bee7ddcd9a89009839aadf24ab1c48691cf948e7eb1065f6092d",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint-06.log",
+      "bytes": 1596,
+      "sha256": "9d022fb00552efb146a759721b91595886357b60dfe111063ec78d37ed98f8d2",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint-final.log",
+      "bytes": 357,
+      "sha256": "77be16558c9f11eb4b5284a92e6e4cdba7919d14fd989b3ad74e7edfbaf47402",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-lint.log",
+      "bytes": 12,
+      "sha256": "cc5a0b39c7052d24c24888403c48018b4fcccc9d799f81be6c9c30c9e19c85fc",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-public-final.log",
+      "bytes": 30,
+      "sha256": "8d934de79cf7ad43dffbf28e0b8f5362a95e4f7d29171715a5ab4d25e016cf58",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-02.log",
+      "bytes": 61596,
+      "sha256": "029881c1df12b81204ed3675f436b219856419f6cfcffd90b3c599a8f57a70c5",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-03.log",
+      "bytes": 51341,
+      "sha256": "7e2e6ccc5968e7b7c8701655aff12693e3299b32ec5035eb8c8c2a72e69edbf3",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-04.log",
+      "bytes": 51327,
+      "sha256": "4a4e3c89e8c6618dd3b9d5cacd44ea30373d96a03398573a75aa00ba537f9b39",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-05.log",
+      "bytes": 51355,
+      "sha256": "b2370eb75da6cb8c206ae45854d26cd2fadf393d6f474600092e07b7cbdded5e",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-06.json",
+      "bytes": 1146,
+      "sha256": "52bd449d2a0cd893361c0c9236a028fcb8eaec809192d14dc28d120692a9594e",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-06.log",
+      "bytes": 61592,
+      "sha256": "2e294d0118794580522c4996191bfd7ba9dc4793f01e9aa777c098f2f116400a",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-07.json",
+      "bytes": 603,
+      "sha256": "83f874f65d2388ef6a7bbd47d929c3ebd4ee4cb821e7abcf1711620aa493b6cf",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-07.log",
+      "bytes": 51337,
+      "sha256": "6e69f6641a4f818682cdbd69972658fded0e555f1cded4c17fae51e2345e5d56",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-08.json",
+      "bytes": 427,
+      "sha256": "6556e2cd18a1d6eb5b4a6b72e643e277e65b82c0cbf94e3d203c26433d904db7",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test-08.log",
+      "bytes": 51300,
+      "sha256": "63042794d8f93d59d0d3a96efdc780bf0ece140a9cd976f42fc14fa36dc65681",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-test.log",
+      "bytes": 38785,
+      "sha256": "e3246fe837d54b4a824edd59cb01634827385b5aba1cd1418f38facedefc4ed3",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-typecheck-02.log",
+      "bytes": 1040,
+      "sha256": "73b88ff4fa07c58c798335fa2ea3b7704da962098c2a2a43dc2434a5b20536c7",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-typecheck-03.json",
+      "bytes": 666,
+      "sha256": "5239ec9cd40e64968affd7bc9de3aab0cfb2028e43e70bc4ea7901fc2ba0fb62",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-typecheck-03.log",
+      "bytes": 1088,
+      "sha256": "1425ad56edc2bb8c3af2118e2cde4b0798a4a6a29362c2d15c1c1e0fcaeadebb",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-typecheck-04.json",
+      "bytes": 432,
+      "sha256": "a4552b67c460937ccf1ef370ed6e4d920aa7507accc50a70507701ad26942ac6",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-typecheck-04.log",
+      "bytes": 1083,
+      "sha256": "7ceac6deff4cf799fa3c989d3cac0d6a41a048970e641769cf8123c6cd3206e6",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-typecheck-05.json",
+      "bytes": 386,
+      "sha256": "4363bb10b07d141891410ff5066537aa9c649a42a1bdc0959d54104240ceb669",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-typecheck-05.log",
+      "bytes": 1083,
+      "sha256": "ab526ff500d502913d9dfaf4e254a4af3a17ada2bd24160c6b1db60281dcf567",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-typecheck-final.log",
+      "bytes": 1583,
+      "sha256": "19ae89fcde154adb15d2ac36fbbd163423c68389ef86cdf2ecf3da09a4f16255",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-web-build-02.log",
+      "bytes": 1798,
+      "sha256": "4bb8324eeed140b0e78326f6f2597ba743dcffd0ac5cf09e43cfa30fb33f093a",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-web-build-03.log",
+      "bytes": 2185,
+      "sha256": "c40ddf8b394f1298c357103a562c49e0cec1b72dda8496530c442a7b684d4252",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-web-build-04.log",
+      "bytes": 2186,
+      "sha256": "938debb8dcbac52d89b1da80f686b8ea305bc5cf25c1835f993cdd953e246f8d",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-web-typecheck-02.log",
+      "bytes": 16,
+      "sha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "command-web-typecheck-03.log",
+      "bytes": 16,
+      "sha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-document-approval-message-01.json",
+      "bytes": 567,
+      "sha256": "21b6530ddbae5fe396a95557f08b37a9880752b223867b71a4cf82f8f8052471",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-document-approval-message-01.log",
+      "bytes": 539,
+      "sha256": "925aec8bb48fe320a51f7e7341fcaa41177eb21bafd9dd89811e9290a0f2d521",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-document-projection-01.json",
+      "bytes": 616,
+      "sha256": "e7dec8c6a27c4a675781d268a9b9700947958f588f3d93bcfb89e111098c0d49",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-document-projection-01.log",
+      "bytes": 1643,
+      "sha256": "4bdfda85bd02a9926365fe0ba5763c0d85cba885ed5c70f6cf63ef7656507caa",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-documents-test.log",
+      "bytes": 729,
+      "sha256": "f4d0b03a62bfd2097f545b91ac419f3d5f270b9e1476be5c07a5d96574d53820",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-external-date-01.log",
+      "bytes": 636,
+      "sha256": "2b6baf0dabbb6b8ed23c2685cb4d05f072539de2e4cfc758a7c83b8990f647f0",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-external-date-02.log",
+      "bytes": 633,
+      "sha256": "30f018234e0791ec29375d6ddbe824117c69b896bc65b585e9a2c839458464be",
+      "purpose": [
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-external-date-03.log",
+      "bytes": 632,
+      "sha256": "66d2c186018b35489cf1bae42dc73ef2482c7034825a9d0f5734c9746d53a42d",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-policy-tests.log",
+      "bytes": 1185,
+      "sha256": "5f3fe530e9a57d6a95aa7eeb06aaa99ba706ae8d4aecc707fadadb58e95b7657",
+      "purpose": [
+        "44-criteria cited evidence",
+        "root command, environment or external boundary"
+      ],
+      "immutableCopyNotCreated": true
+    },
+    {
+      "path": "root-public-browser/results.json",
+      "bytes": 7136,
+      "sha256": "a825ff1dbafe79729d8db9982e2fb074a64d61aab6db9384ab983fcabf1a9426",
+      "purpose": [
+        "44-criteria cited evidence"
+      ],
+      "immutableCopyNotCreated": true
+    }
+  ],
+  "finalTextScanAt": "2026-10-15T01:16:45.167339+00:00",
+  "finalTextScan": {
+    "scanned": 201,
+    "findings": [],
+    "changedWhilePreparingManifest": [],
+    "excludedSnapshotTextScan": {
+      "exists": true,
+      "findings": [],
+      "selected": false,
+      "reason": "Temporary evidence helper source; no need in published packet even if pattern-clear."
+    }
+  }
+}

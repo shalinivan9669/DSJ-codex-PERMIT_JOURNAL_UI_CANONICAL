@@ -1,0 +1,70 @@
+{
+  "status": "FAILED_RUN_RETAINED_WHOLE_COMMAND_REPEAT_PASSED",
+  "recordedAt": "2026-10-15T00:40:16.582470+00:00",
+  "command": "pnpm test:render",
+  "runLog": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-full-final.log",
+  "logSha256": "e7ef3598e9cfd28fd745ff5af9b0ddf384646a94f53f2dcaab6f16430d805ce5",
+  "actualExitCode": 1,
+  "testsRun": 144,
+  "runnerSeconds": 6852.939,
+  "assertionFailures": 0,
+  "errors": [
+    {
+      "template": "biot-itr-certificate",
+      "exception": "subprocess.TimeoutExpired",
+      "configuredTimeoutSeconds": 180,
+      "exceptionReportedRemainingTimeoutSeconds": -3411.7349999999988,
+      "inputDocx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\neutral-batch\\biot-itr-certificate-batch2.docx",
+      "inputSha256": "357aada731d9e9c8cf7c8a4a1f87cfa4754d7ca847075b601f270e2a89a64912",
+      "inputLastWriteUtc": "2026-10-14T23:08:14.533652+00:00"
+    },
+    {
+      "template": "ps-witness",
+      "exception": "subprocess.TimeoutExpired",
+      "configuredTimeoutSeconds": 180,
+      "exceptionReportedRemainingTimeoutSeconds": -292.28199999999924,
+      "inputDocx": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\neutral-batch\\ps-witness-batch2.docx",
+      "inputSha256": "7af5d79013d398bab156a329b0cceb79095e31cd832a18c5c2bc408f74841fed",
+      "inputLastWriteUtc": "2026-10-15T00:08:07.935869+00:00"
+    }
+  ],
+  "powerEvidence": {
+    "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\ENVIRONMENT_POWER_EVENTS.json",
+    "sha256AtReview": "736e0758786c585c49337ac614d0e1c7acfc88e6efa2c1d5740896299cb9f165",
+    "sleepWakeIntervals": [
+      {
+        "SleepDuration": "15267",
+        "SleepTime": "2026-10-15T00:08:05.6341873Z",
+        "WakeDuration": "1121",
+        "WakeTime": "2026-10-15T00:15:20.6231503Z"
+      },
+      {
+        "SleepDuration": "5447",
+        "SleepTime": "2026-10-14T23:08:29.2271453Z",
+        "WakeDuration": "1598",
+        "WakeTime": "2026-10-15T00:07:41.1003910Z"
+      }
+    ]
+  },
+  "interpretation": "Both unchanged neutral-batch PDF conversions raised subprocess.TimeoutExpired with deeply negative remaining time during independently recorded sleep/resume intervals. This establishes timeout failure and temporal correlation; it is not an assertion failure or proof of a document-content defect. No production converter timeout or test assertion was modified. The exact unchanged neutral-batch targeted test passed both templates in48.150seconds. The entire command is repeated under a temporary process-scoped wake request with separate output directory; only its actual completion may establish whole-command PASS. Whole-command repeat now completed: actual process exit0,144tests,OK in1884.922seconds; it used an independent artifact directory and unchanged production timeouts/assertions.",
+  "targetedDiagnostic": {
+    "log": "render-neutral-diagnostic.log",
+    "actualExitCode": 0,
+    "testsRun": 1,
+    "runnerSeconds": 48.15
+  },
+  "repeat": {
+    "log": "render-full-final-02.log",
+    "evidenceRoot": "final-render-02",
+    "startedAtUtc": "2026-10-15T00:37:38.8878332Z",
+    "status": "PASS",
+    "actualExitCode": 0,
+    "testsRun": 144,
+    "runnerSeconds": 1884.922,
+    "finishedAtUtc": "2026-10-15T01:09:09.5225616Z",
+    "logSha256": "3863633e7c627fcccc9daf352a7c136d349c5c53d43f03ffbe6ec6d98730d5df",
+    "assertionFailures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

@@ -1,0 +1,905 @@
+{
+  "reviewer": "Agent B, independent read-only reconciliation",
+  "reviewStatus": "NEEDS_RECONCILIATION",
+  "localAccepted": false,
+  "scope": "All 44 criterion definitions and their inverse mapping to 52 source rows; detailed non-UX evidence audit of L01-L10, E01-E12 and S01-S12. UX measurement semantics remain in the separate UX_METRICS_REVIEW.json snapshot.",
+  "method": "Read source handoff, draft criteria, actual command summaries and selected assertion/source/artifact reports. No application, browser or database operation was started. This review changes only this report; C drafts, tests and product files remain unchanged.",
+  "pathConvention": "Evidence paths are relative to docs/evidence/lms-one-run-20261015 unless prefixed with apps/, tests/, scripts/ or docs/handoffs/.",
+  "draftBoundary": {
+    "path": "agent-c/acceptance-results-draft.json",
+    "sha256": "491BF2BE0FE39956997EDC8A319DE776878EC324B7DCA9D08BEA6170F4E0AAC8",
+    "generatedAt": "2026-10-15T05:20:23.566768+05:00",
+    "observation": "All 44 top-level statuses remain NOT_RUN and localAccepted is false. No false overall PASS is present in this snapshot. PASS subcases are bounded assertions and cannot be promoted wholesale to criterion PASS."
+  },
+  "latestFullBrowserBoundary": {
+    "path": "agent-c/full-e2e-20261015-03/command.json",
+    "status": "STOPPED_AFTER_CONFIRMED_FAILURE",
+    "discovered": "217 tests in 91 files",
+    "actuallyCompleted": "2 PASS, 1 FAIL; downstream tests not accepted",
+    "exitCode": 1,
+    "failedProducer": "final-portal-three-live.spec.ts:58, V07 portal-producer",
+    "webBuildId": "sK53x-nSugI6ZzvRuNyOQ",
+    "requiredNextEvidence": "A fresh complete run after the producer defect is resolved, with final reporter output and exact runtime/test/source manifests. Discovery is not execution. The stopped run and its failure must be retained."
+  },
+  "findings": [
+    {
+      "id": "MAP01",
+      "severity": "evidence_mapping",
+      "criteria": [
+        "L02.03",
+        "L03.03"
+      ],
+      "finding": "L02.03 claims an actual employer browser PDF download but its evidencePaths omit that browser result. L03.03 claims exact own/foreign confirmed-person counts but omits the dedicated accounting log.",
+      "requiredReconciliation": "Attach the existing exact records to the matching subcases; do not rerun merely to repair links.",
+      "existingEvidence": [
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-a/accounting-boundaries.log"
+      ]
+    },
+    {
+      "id": "MAP02",
+      "severity": "evidence_mapping",
+      "criteria": [
+        "L07.02",
+        "E03"
+      ],
+      "finding": "L07.02 describes two-tab409/relogin but omits the conflict browser run. E03 describes closed-attempt expiry and process replay but omits the dedicated exam-boundaries log.",
+      "requiredReconciliation": "Link the precise browser conflict and process-boundary evidence, retaining their distinct scopes.",
+      "existingEvidence": [
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-a/exam-boundaries.log"
+      ]
+    },
+    {
+      "id": "MAP03",
+      "severity": "evidence_mapping",
+      "criteria": [
+        "L04.02",
+        "E09.01",
+        "E08",
+        "E11"
+      ],
+      "finding": "Changed-question-bank snapshot and explicit signing-policy assertions have more precise existing evidence than their current broad bundles. The latest document scheduling regression is absent from E08/E11 despite a later product change affecting advancement.",
+      "requiredReconciliation": "Add question-bank, six signing-policy assertions and latest combined document/scheduling evidence. Preserve the earlier 4/4 document log as historical evidence, not the sole final-tree boundary.",
+      "existingEvidence": [
+        "agent-a/exam-boundaries.log",
+        "command-test-05.log",
+        "tests/lms-signing-policy.test.ts",
+        "agent-a/document-scheduling.log",
+        "agent-a/COMMANDS_A.json"
+      ]
+    },
+    {
+      "id": "MAP04",
+      "severity": "evidence_mapping",
+      "criteria": [
+        "S09.02",
+        "S10.01",
+        "E12.01"
+      ],
+      "finding": "S09.02 cites geometry in its actual text but omits the geometry record. S10.01 and E12.01 claim visual review of actual sanitary RU/KZ PDFs but omit the direct visual-review artifact.",
+      "requiredReconciliation": "Link geometry and sanitary visual review explicitly; formula-injection/API tests alone do not prove visual rendering.",
+      "existingEvidence": [
+        "agent-b/geometry-run01/lms-geometry-live/geometry.json",
+        "agent-c/sanitary-files-1792014509550/visual-review.json",
+        "ROOT_DOCUMENT_VISUAL_REVIEW.json"
+      ]
+    },
+    {
+      "id": "SCOPE01",
+      "severity": "scope_boundary",
+      "criteria": [
+        "L02.04",
+        "L03"
+      ],
+      "finding": "The conditional instructor capability is not an implemented positive teacher workflow. Unsupported-role denial proves fail-closed behavior, not assigned teacher access. L02.04 says 'see scope interpretation' but omits its exact path.",
+      "requiredReconciliation": "Attach conditional-instructor-scope.json and keep the distinction explicit in final L02/L03 and MVP02/MVP21. Treat this as coordinator interpretation of the source phrase 'при необходимости', not as an explicit user exclusion or teacher cabinet PASS.",
+      "existingEvidence": [
+        "agent-c/conditional-instructor-scope.json",
+        "agent-a/UNKNOWN_ROLE_ACCEPTANCE.json",
+        "docs/handoffs/2026-10-15-lms-one-run/TZ_LMS_MVP_RU.txt:49"
+      ]
+    },
+    {
+      "id": "LEGAL01",
+      "severity": "scope_boundary",
+      "criteria": [
+        "E10.01",
+        "E10.03",
+        "E12"
+      ],
+      "finding": "The 24 public views are 3 document types x 4 widths x 2 languages. They are not a four-legal-form matrix. The visual document report explicitly covers synthetic INFORMATION_CARD. COPY_OF_ORIGINAL has actual renderer DOCX/PDF evidence, which is distinct from application issuance/registry/QR evidence.",
+      "requiredReconciliation": "Finalize a four-form evidence matrix with positive versus denied transitions and separate UI/metadata/files/registry/QR columns. Do not use one INFORMATION_CARD QR run to claim all four forms. Keep E10.03 pending until the coordinator reconciles every required boundary.",
+      "existingEvidence": [
+        "ROOT_DOCUMENT_VISUAL_REVIEW.json",
+        "root-public-browser/results.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "command-test-05.log",
+        "lms-render/lms-certificate-copy_of_original.docx",
+        "lms-render/lms-certificate-copy_of_original.pdf"
+      ]
+    },
+    {
+      "id": "LEGAL02",
+      "severity": "scope_boundary",
+      "criteria": [
+        "E09",
+        "E10",
+        "E12",
+        "S11",
+        "UX01"
+      ],
+      "finding": "Current ordinary DEMO regression intentionally ends with actual files and an unsigned publication guard: registry disabled, QR unavailable, verification-links409 ISSUANCE_NOT_COMPLETE. It does not prove a cryptographically signed ordinary original or positive ordinary QR.",
+      "requiredReconciliation": "Accept the ordinary negative publication boundary only with its actual future run. Link positive public verification separately to the LMS information-card flow. Do not bypass real signing or relabel a fixture as an ordinary signed original. Physical print and real signature remain unclaimed.",
+      "existingEvidence": [
+        "apps/web/e2e/lms-demo-baseline.spec.ts:151",
+        "apps/web/e2e/lms-demo-baseline.spec.ts:469",
+        "apps/api/src/public-verification.ts:30",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json"
+      ]
+    },
+    {
+      "id": "FINAL01",
+      "severity": "completion_gate",
+      "criteria": [
+        "L01.04",
+        "L10.03",
+        "E12.02",
+        "S11.05"
+      ],
+      "finding": "Fresh full browser acceptance is incomplete. Passing final typecheck/build/unit runs and earlier targeted cases do not replace the failed/stopped browser battery. The draft renderer/browser prose also predates current command state.",
+      "requiredReconciliation": "Bind final command outcomes and source hashes, retain all failed runs, resolve mandatory render/browser failures and refresh stale actual text. Sensitive-log review and safe error/rate-limit source binding are explicit final checks, not implied by UI success.",
+      "existingEvidence": [
+        "ROOT_COMMANDS_DRAFT.json",
+        "agent-c/full-e2e-20261015-03/command.json",
+        "agent-c/full-e2e-20261015-03/command.log",
+        "agent-c/AUDIT_ACCEPTANCE.json",
+        "agent-c/lms-http-01.log"
+      ]
+    },
+    {
+      "id": "FINAL02",
+      "severity": "completion_gate",
+      "criteria": [
+        "S09.03",
+        "S12.02"
+      ],
+      "finding": "P01-P13 packets and EXTERNAL_GATES.json already exist; final criterion references currently omit EXTERNAL_GATES.json. No final 52-row coverage artifact was found under the evidence directory at this review.",
+      "requiredReconciliation": "Bind the existing packets and independent gate statuses to the final tree; produce the final 52-row coverage matrix preserving original IDs, requirements and original statuses. All 49 local rows require reconciled local evidence. EXT01-EXT03 must remain BLOCKED_EXTERNAL_INPUTS, irrespective of local adapter/export PASS.",
+      "existingEvidence": [
+        "EXTERNAL_GATES.json",
+        "PROVIDER_CONNECTION_PACKET_RU.txt",
+        "PERSONAL_DATA_DEPLOYMENT_GATES_RU.txt",
+        "docs/handoffs/2026-10-15-lms-one-run/MVP_COVERAGE.tsv"
+      ]
+    }
+  ],
+  "legalFormEvidenceBoundaries": [
+    {
+      "form": "INFORMATION_CARD",
+      "proven": "Actual application-issued three types, actual DOCX/PDF and public verification views",
+      "notProvenByThis": "Real training authority or production legal validity"
+    },
+    {
+      "form": "PAPER_ORIGINAL",
+      "proven": "Actual prepared artifact remains awaiting signature; explicit local operator attestation transitions the correctly bound document; unchanged PDF hash and no electronic signature",
+      "notProvenByThis": "Physical signing or physical printing observed by the agent"
+    },
+    {
+      "form": "ELECTRONIC_ORIGINAL",
+      "proven": "Explicit signer requirement and fail-closed unsigned/missing-policy boundary in actual unit/domain assertions",
+      "notProvenByThis": "Real electronic signature, authority, successful signed-original publication"
+    },
+    {
+      "form": "COPY_OF_ORIGINAL",
+      "proven": "Actual renderer DOCX/PDF marks copy, retains external issuer/EXT-42 and avoids invented own score or verification; explicit zero-signature exemption policy",
+      "notProvenByThis": "A positive application issuance/registry/QR path for this legal form; final E10 matrix must reconcile this distinction"
+    }
+  ],
+  "remainingEvidenceExpectedFromFreshFullSuite": [
+    {
+      "criteria": [
+        "L02.05",
+        "E07.04",
+        "E08.03",
+        "E12.02",
+        "S11.05"
+      ],
+      "tests": [
+        "Full legacy producers and consumers including final-portal-three-live.spec.ts",
+        "lms-demo-baseline.spec.ts current ordinary test",
+        "ordinary outcome/history suites"
+      ],
+      "needed": "Completed actual results, not discovery. For E07 historical statuses, identify exact MANUAL/IMPORTED/CLEARED/FAILED/ABSENT assertions; one AUTO ordinary happy path is insufficient."
+    },
+    {
+      "criteria": [
+        "L04.03",
+        "L05.04",
+        "L07.04",
+        "E08.03",
+        "E10.03",
+        "S02.03",
+        "S11.05"
+      ],
+      "tests": [
+        "lms-first-flow-live.spec.ts"
+      ],
+      "needed": "Actual linked UI-authored course/profile/calendar, two registered learners, ordered text/PDF prerequisites, PDF open versus acknowledge, exam, approved files/QR; close all UI, restart the owned shipping worker with a new PID, fresh login and inspect same result/outbox/list IDs without an operator trigger."
+    },
+    {
+      "criteria": [
+        "L06.03"
+      ],
+      "tests": [
+        "lms-video-live.spec.ts"
+      ],
+      "needed": "Actual logout/login and saved-position resume, beyond earlier reload-only PLAYBACK_ACCEPTANCE."
+    },
+    {
+      "criteria": [
+        "L08.05"
+      ],
+      "tests": [
+        "lms-assignment-batches-live.spec.ts"
+      ],
+      "needed": "Actual browser selection of same-name distinct recipients using saved disambiguating positions, not only API identity checks."
+    },
+    {
+      "criteria": [
+        "L09.03",
+        "S06",
+        "S09.02",
+        "UX07",
+        "UX08",
+        "UX10"
+      ],
+      "tests": [
+        "lms-negative-states-live.spec.ts",
+        "lms-geometry-live.spec.ts",
+        "lms-selection-regression-live.spec.ts"
+      ],
+      "needed": "Successful final UI run for human-readable negative/UNKNOWN states, safe inspection without send/retry/green success, and selection/date-correction regression. Prior negative03 is FAIL and cannot be accepted after only a source fix."
+    },
+    {
+      "criteria": [
+        "E09",
+        "E10",
+        "E12",
+        "UX10"
+      ],
+      "tests": [
+        "lms-operator-live.spec.ts",
+        "lms-paper-signature-live.spec.ts"
+      ],
+      "needed": "Fresh operator metrics, bulk artifact download, actual browser print invocation with no physical-print claim, separate director/learner decisions and paper exact-binding regression."
+    }
+  ],
+  "fullSuiteDoesNotAutomaticallyClose": [
+    "Final-tree and environment/source manifests, command aggregation, final formatting/lint/diff checks, and sensitive-log audit.",
+    "The legal-form matrix and exact semantics of externally blocked signatures/authorities; a positive electronic-original result cannot be fabricated.",
+    "Final 52-row coverage and P01-P13/external gate reconciliation.",
+    "UX raw-schema reconciliation must preserve missing values rather than fabricate zeroes; see Agent B UX_METRICS_REVIEW.json and C current normalization provenance.",
+    "Fresh-install/upgrade/backup/restore/load evidence must stay linked to their actual command/source boundaries; browser completion alone is not migration or load proof."
+  ],
+  "reviewConclusion": "Draft structure is conservative and original mapping is intact. The listed mapping omissions are documentary, not new product defects. Local acceptance remains pending the complete fresh mandatory battery and explicit final reconciliation of scope/legal-form/coverage boundaries.",
+  "checkedAt": "2026-10-15T00:36:53.0810388Z",
+  "structuralChecks": {
+    "criteriaCount": 44,
+    "uniqueCriteria": 44,
+    "topLevelNotRun": 44,
+    "originalRows": 52,
+    "localRows": 49,
+    "externalRows": 3,
+    "inverseMappingMismatches": [],
+    "missingDraftEvidencePaths": [],
+    "sourceMatrixSha256": "C47991EF4DB0F2D286EB3E4A24515A2EE6A6354ABBDE9768F62931D9F6BC7528",
+    "sourceAcceptanceSha256": "EAA750311224C4764CC4DA025BB52BEEFAEF41038C2267654A56663D19F35E58"
+  },
+  "nonUxCriterionChecklist": [
+    {
+      "id": "L01",
+      "requirementIds": [
+        "MVP01",
+        "MVP02"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L01.01",
+        "L01.02",
+        "L01.03"
+      ],
+      "stillPendingSubcases": [
+        "L01.04"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L02",
+      "requirementIds": [
+        "MVP02",
+        "MVP21"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L02.01",
+        "L02.02",
+        "L02.03",
+        "L02.04"
+      ],
+      "stillPendingSubcases": [
+        "L02.05"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L03",
+      "requirementIds": [
+        "MVP01",
+        "MVP02",
+        "MVP03",
+        "MVP04",
+        "MVP20",
+        "MVP21"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L03.01",
+        "L03.02",
+        "L03.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L04",
+      "requirementIds": [
+        "MVP04",
+        "MVP05",
+        "MVP06",
+        "MVP21",
+        "MVP23"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L04.01",
+        "L04.02",
+        "L04.04"
+      ],
+      "stillPendingSubcases": [
+        "L04.03"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L05",
+      "requirementIds": [
+        "MVP07",
+        "MVP08"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L05.01",
+        "L05.02",
+        "L05.03"
+      ],
+      "stillPendingSubcases": [
+        "L05.04"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L06",
+      "requirementIds": [
+        "MVP07",
+        "MVP09"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L06.01",
+        "L06.02"
+      ],
+      "stillPendingSubcases": [
+        "L06.03"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L07",
+      "requirementIds": [
+        "MVP03",
+        "MVP06",
+        "MVP07",
+        "MVP08",
+        "MVP09"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L07.01",
+        "L07.02",
+        "L07.03"
+      ],
+      "stillPendingSubcases": [
+        "L07.04"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L08",
+      "requirementIds": [
+        "MVP20"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L08.01",
+        "L08.02",
+        "L08.03",
+        "L08.04"
+      ],
+      "stillPendingSubcases": [
+        "L08.05"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L09",
+      "requirementIds": [
+        "MVP24",
+        "MVP25"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L09.01",
+        "L09.02"
+      ],
+      "stillPendingSubcases": [
+        "L09.03"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "L10",
+      "requirementIds": [
+        "MVP01",
+        "MVP05",
+        "MVP09",
+        "MVP22"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "L10.01",
+        "L10.02"
+      ],
+      "stillPendingSubcases": [
+        "L10.03"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E01",
+      "requirementIds": [
+        "MVP11",
+        "MVP21",
+        "MVP23"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E01.01",
+        "E01.02",
+        "E01.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E02",
+      "requirementIds": [
+        "MVP06",
+        "MVP09",
+        "MVP10",
+        "MVP12"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E02.01",
+        "E02.02",
+        "E02.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E03",
+      "requirementIds": [
+        "MVP03",
+        "MVP10",
+        "MVP12",
+        "MVP25"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E03.01",
+        "E03.02",
+        "E03.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E04",
+      "requirementIds": [
+        "MVP10",
+        "MVP11",
+        "MVP12"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E04.01",
+        "E04.02",
+        "E04.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E05",
+      "requirementIds": [
+        "MVP10",
+        "MVP12",
+        "MVP16"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E05.01",
+        "E05.02",
+        "E05.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E06",
+      "requirementIds": [
+        "MVP10",
+        "MVP12",
+        "MVP23",
+        "SAN01"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E06.01",
+        "E06.02",
+        "E06.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E07",
+      "requirementIds": [
+        "MVP10",
+        "MVP12",
+        "MVP13",
+        "MVP14",
+        "MVP15",
+        "SAN01"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E07.01",
+        "E07.02",
+        "E07.03"
+      ],
+      "stillPendingSubcases": [
+        "E07.04"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E08",
+      "requirementIds": [
+        "MVP13",
+        "MVP14",
+        "MVP15",
+        "MVP16",
+        "MVP19"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E08.01",
+        "E08.02"
+      ],
+      "stillPendingSubcases": [
+        "E08.03"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E09",
+      "requirementIds": [
+        "MVP13",
+        "MVP14",
+        "MVP15"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E09.01",
+        "E09.02",
+        "E09.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E10",
+      "requirementIds": [
+        "MVP03",
+        "MVP17",
+        "MVP18",
+        "MVP19",
+        "MVP20"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E10.01",
+        "E10.02"
+      ],
+      "stillPendingSubcases": [
+        "E10.03"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E11",
+      "requirementIds": [
+        "MVP16",
+        "MVP17",
+        "MVP18",
+        "MVP19",
+        "MVP22",
+        "SAN08"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E11.01",
+        "E11.02"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "E12",
+      "requirementIds": [
+        "MVP13",
+        "MVP14",
+        "MVP15",
+        "MVP17",
+        "MVP24",
+        "MVP25"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "E12.01",
+        "E12.03"
+      ],
+      "stillPendingSubcases": [
+        "E12.02"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S01",
+      "requirementIds": [
+        "MVP23",
+        "SAN01"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S01.01",
+        "S01.02",
+        "S01.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S02",
+      "requirementIds": [
+        "SAN02"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S02.01",
+        "S02.02"
+      ],
+      "stillPendingSubcases": [
+        "S02.03"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S03",
+      "requirementIds": [
+        "MVP23",
+        "SAN03"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S03.01",
+        "S03.02",
+        "S03.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S04",
+      "requirementIds": [
+        "MVP22",
+        "SAN04"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S04.01",
+        "S04.02"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S05",
+      "requirementIds": [
+        "MVP22",
+        "SAN02",
+        "SAN05"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S05.01",
+        "S05.02",
+        "S05.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S06",
+      "requirementIds": [
+        "SAN06"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S06.01",
+        "S06.02",
+        "S06.03"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S07",
+      "requirementIds": [
+        "SAN07"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S07.01",
+        "S07.02"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S08",
+      "requirementIds": [
+        "SAN08"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S08.01",
+        "S08.02"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S09",
+      "requirementIds": [
+        "MVP21",
+        "SAN09",
+        "OPS01"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S09.01",
+        "S09.02"
+      ],
+      "stillPendingSubcases": [
+        "S09.03"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S10",
+      "requirementIds": [
+        "MVP21",
+        "MVP22",
+        "MVP24",
+        "SAN10",
+        "OPS01"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S10.01",
+        "S10.02"
+      ],
+      "stillPendingSubcases": [],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S11",
+      "requirementIds": [
+        "MVP01",
+        "MVP02",
+        "MVP03",
+        "MVP04",
+        "MVP05",
+        "MVP06",
+        "MVP07",
+        "MVP08",
+        "MVP09",
+        "MVP10",
+        "MVP11",
+        "MVP12",
+        "MVP13",
+        "MVP14",
+        "MVP15",
+        "MVP16",
+        "MVP17",
+        "MVP18",
+        "MVP19",
+        "MVP20",
+        "MVP21",
+        "MVP22",
+        "MVP24",
+        "MVP25",
+        "SAN11",
+        "OPS01",
+        "OPS02"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S11.01",
+        "S11.02",
+        "S11.03",
+        "S11.04"
+      ],
+      "stillPendingSubcases": [
+        "S11.05"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    },
+    {
+      "id": "S12",
+      "requirementIds": [
+        "MVP23",
+        "SAN12",
+        "OPS01",
+        "OPS02",
+        "EXT01",
+        "EXT02",
+        "EXT03"
+      ],
+      "actualDraftStatus": "NOT_RUN",
+      "boundedPassingSubcases": [
+        "S12.01"
+      ],
+      "stillPendingSubcases": [
+        "S12.02"
+      ],
+      "audit": "Definition and evidence bundle inspected; see review findings and final-run obligations. Bounded PASS is not whole-criterion acceptance."
+    }
+  ]
+}

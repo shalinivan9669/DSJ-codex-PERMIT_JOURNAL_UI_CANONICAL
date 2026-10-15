@@ -1,0 +1,20 @@
+[
+  {
+    "templateId": "lms-protocol",
+    "pages": 1,
+    "docxSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+    "pdfSha256": "6cac0f927521df04135b85a402785b472a0f8d4dcd58b3200695444ff5a0edff"
+  },
+  {
+    "templateId": "lms-certificate",
+    "pages": 1,
+    "docxSha256": "bc15e78d81693ea981cbcb1263ce6e2b3b30c9fe3a490d78942d7a4994978efa",
+    "pdfSha256": "f428de423070caa7c8da5ce821e7bdea9863dd9a48a609d1b4e3273a9f947401"
+  },
+  {
+    "templateId": "lms-credential",
+    "pages": 1,
+    "docxSha256": "7807d77e9f7b5495983bbbb8c059e96d8cf919d6cbaaaf99fa2d793bdf38c7d8",
+    "pdfSha256": "91cde21a84c84185b28a25d7f88f4976537d3192dd9d6a4ff67114021e1145ee"
+  }
+]

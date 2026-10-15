@@ -1,0 +1,419 @@
+{
+  "status": "SAFE_SUPPLEMENT_REVIEWED",
+  "checkedAt": "2026-10-15T01:25:34.392286+00:00",
+  "reviewer": "agent-a",
+  "baseAllowlist": "agent-a/CUREATED_EVIDENCE_REVIEW.json",
+  "baseAllowlistSha256": "80c4d8a3dcfcee70b55df34bf31e4460fb517f867c09b8861453e2fba3b11e33",
+  "baseFiles": 217,
+  "supplementCount": 47,
+  "supplementBytes": 1756660,
+  "originalGapClosure": {
+    "text12": "All12 read and scanned; preserved failure and partial-run boundaries.",
+    "media10": "5newPNG personally viewed,2XLSX fully read (one synthetic row,0formulas/externalLinks),3historicalPNG byte-equal to already reviewed final-render-02; exact old aliases included without altering ROOT_DOCUMENT_VISUAL_REVIEW.",
+    "privateFixtureZip": "Replace both links with agent-a/LEGAL_PRIVATE_SOURCE_SUMMARY.json; originals remain excluded.",
+    "rootDocuments": "Replace broadfolder with agent-a/ROOT_DOCUMENT_PUBLICATION_MANIFEST.json; only6documents+3previews selected.",
+    "nonexistentHistoricalMeasurements": "Both remain NOT_RUN/missing in historical draft; no files fabricated."
+  },
+  "freshFirstFlow03": "Actual exit0 and successful single browser test observed; PENDING before close/restart becomes DONE, result/outbox IDs/hash preserved, one journal/item/delivery. This does not replace pending complete browser command.",
+  "newChecks": [
+    {
+      "path": "agent-b/copy-legal-run01/command.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-negative-states-live/02-mandatory-signature.png",
+      "method": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-operator-live/03-ready-download.png",
+      "method": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-operator-live/actions.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/VISUAL_REVIEW.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/01-copy-awaiting-approval.png",
+      "method": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/02-issued-copy-files.png",
+      "method": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/readback.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/registry.xlsx",
+      "method": "All63columns and2rows reviewed: header+one synthetic record,0formulas,0externalLinks.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-paper-signature-live/01-explicit-paper-facts.png",
+      "method": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-paper-signature-live/paper-registry.xlsx",
+      "method": "All63columns and2rows reviewed: header+one synthetic record,0formulas,0externalLinks.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-c/baseline-build.log",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-c/baseline-db-deploy.log",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-first-flow-live/automatic-preparation-restart.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-c/first-entry-live/registration-actions.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-04/runtime-start.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-c/learning-live/actions.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "agent-c/targeted-batches-clock-20261015-01/lms-conflict-live/result.json",
+      "method": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "lms-render/lms-certificate-page-1.png",
+      "method": "Exact original alias path retained; bytes equal independently visually reviewed selected final-render-02 image. ROOT_DOCUMENT_VISUAL_REVIEW left unchanged.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "lms-render/lms-credential-page-1.png",
+      "method": "Exact original alias path retained; bytes equal independently visually reviewed selected final-render-02 image. ROOT_DOCUMENT_VISUAL_REVIEW left unchanged.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    },
+    {
+      "path": "lms-render/lms-protocol-page-1.png",
+      "method": "Exact original alias path retained; bytes equal independently visually reviewed selected final-render-02 image. ROOT_DOCUMENT_VISUAL_REVIEW left unchanged.",
+      "privacyDecision": "INCLUDE_EXACT_BYTES"
+    }
+  ],
+  "selectedFiles": [
+    {
+      "path": "agent-a/LEGAL_PRIVATE_SOURCE_SUMMARY.json",
+      "bytes": 3683,
+      "sha256": "7ed897e5d28b82da7b1ef7501ae4e5dda142cd28967509caf6a7f16a4a5ce499",
+      "review": "Sanitized replacement for fixture and archive references; exact original SHA and actual member/page checks."
+    },
+    {
+      "path": "agent-a/ROOT_DOCUMENT_PUBLICATION_MANIFEST.json",
+      "bytes": 22833,
+      "sha256": "7f73c1944847ab0f747ddb66f6ffaf92198d7ff7f52afa50b1154f2883226192",
+      "review": "Exact root-documents reference replacement with33file inventory,6selected documents and27verified retained prior hashes."
+    },
+    {
+      "path": "agent-a/root-document-review/294ff742-6042-4ba8-a5ca-a6bec8c57af0.png",
+      "bytes": 63987,
+      "sha256": "27d3bbfaf130b31eb7689961d019e833eeda0e6975e850f44b479a946295af63",
+      "review": "New raster of the exact existing application PDF, independently viewed: RU/KZ text legible, synthetic identity and information-card meaning visible, no secret or question key."
+    },
+    {
+      "path": "agent-a/root-document-review/8accf722-84d9-4ef6-a204-89c01ece2de8.png",
+      "bytes": 74211,
+      "sha256": "c4264bed7a72eab82a7c825f07743928afe04aae9f3d20930f33b7a0b72f3710",
+      "review": "New raster of the exact existing application PDF, independently viewed: RU/KZ text legible, synthetic identity and information-card meaning visible, no secret or question key."
+    },
+    {
+      "path": "agent-a/root-document-review/9000c49d-61d8-4ef6-a61c-f7aa61467366.png",
+      "bytes": 78145,
+      "sha256": "76c0a6c3cf39b3a06bf037237b205d0ee68d772dc518c540b6d69e65350dff35",
+      "review": "New raster of the exact existing application PDF, independently viewed: RU/KZ text legible, synthetic identity and information-card meaning visible, no secret or question key."
+    },
+    {
+      "path": "agent-b/copy-legal-run01/command.json",
+      "bytes": 1897,
+      "sha256": "bb3ae239de25146b9babdd8458b1650f4760a68b5104ee572b69a30b8fbd48cd",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-negative-states-live/02-mandatory-signature.png",
+      "bytes": 180264,
+      "sha256": "d1a245c6cb460906ff26e1d13a722f87bd9d8d43affee7536c1578c7040ffe19",
+      "review": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible."
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-operator-live/03-ready-download.png",
+      "bytes": 66814,
+      "sha256": "229506230a49ef68e8cb779e70aaac71eea6953bfd79b86a9ab76fdeb1bb6e15",
+      "review": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible."
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-operator-live/actions.json",
+      "bytes": 30160,
+      "sha256": "933b54691eb367b8bc664d9d29dfd518ef5027893471e3742121d354ac5d2090",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-b/copy-legal-run02/VISUAL_REVIEW.json",
+      "bytes": 1858,
+      "sha256": "8d42c6823c65f5c75ed23410939e89836e21854dd6407cb28e485ff29a020826",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/01-copy-awaiting-approval.png",
+      "bytes": 54756,
+      "sha256": "62c5eb6b637c68010f0bce330820b44e6551d844670a24cb3bda2ce124884041",
+      "review": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible."
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/02-issued-copy-files.png",
+      "bytes": 147628,
+      "sha256": "a56f888ff8174dff7ae6877941da222d9d12c1ad0878d555331633e6f7278abf",
+      "review": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible."
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/readback.json",
+      "bytes": 8577,
+      "sha256": "93d9abcb17efd6cddc2af9011adc6428d9decc1486e6b3c60dca5b2e1c80be15",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/registry.xlsx",
+      "bytes": 6733,
+      "sha256": "f716a7813c8aed09d37e5f73d749289a58e353de1b544f43b960e269aa614072",
+      "review": "All63columns and2rows reviewed: header+one synthetic record,0formulas,0externalLinks."
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-paper-signature-live/01-explicit-paper-facts.png",
+      "bytes": 109529,
+      "sha256": "15dbbe5c6c9654f72ce9c3a246a04c5d9e3db45062b88f8a72592fd310d137a5",
+      "review": "Actual image viewed independently; only synthetic learner/issuer/company or explicit paper signatory facts; no private token URL or credentials visible."
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-paper-signature-live/paper-registry.xlsx",
+      "bytes": 6770,
+      "sha256": "795c80940350decc278679052ad00651ba1c5f64b48870b124fd1b716d9b2fc5",
+      "review": "All63columns and2rows reviewed: header+one synthetic record,0formulas,0externalLinks."
+    },
+    {
+      "path": "agent-c/baseline-build.log",
+      "bytes": 7409,
+      "sha256": "10590356b51885f130eb5ad537c08ade00cee775e2b4efd89976b0bbd548a723",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-c/baseline-db-deploy.log",
+      "bytes": 3208,
+      "sha256": "7fafb08676b5e734959838eb078fea178aca101efe63ea815614b5589466ecfb",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-first-flow-live/automatic-preparation-restart.json",
+      "bytes": 5633,
+      "sha256": "c3833d8e565a4802b8de849d6606900ff63fa3638989d0ced74cbf88551619f2",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-c/first-entry-live/registration-actions.json",
+      "bytes": 655,
+      "sha256": "de0101cca0287024c8f25ae736552c53e0e190b7cac39d65638e5264bed44fd3",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/VISUAL_REVIEW.json",
+      "bytes": 697,
+      "sha256": "453c356bcc3a7a75ef321b0e377a240485361cd86bcc247a3a9a47a86e550672",
+      "review": "Fresh actual first-flow03 successful command, safe structured assertions/action/PID metadata; no credentials or token values."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/command.json",
+      "bytes": 1018,
+      "sha256": "18f294ddd2262e86d3234c12aac9fe978659f0f934fe534d2f6dd35bda595c14",
+      "review": "Fresh actual first-flow03 successful command, safe structured assertions/action/PID metadata; no credentials or token values."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/command.log",
+      "bytes": 930,
+      "sha256": "a5a0bf6aa9e7f1e403eedc6c0108782013dffb2758df1b3f9f68edb0c6e70328",
+      "review": "Fresh actual first-flow03 successful command, safe structured assertions/action/PID metadata; no credentials or token values."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/actions.json",
+      "bytes": 38192,
+      "sha256": "40dd122c03c35a065d045804ca8feca04ce148c1001466551dde96b67559e4c2",
+      "review": "Fresh actual first-flow03 successful command, safe structured assertions/action/PID metadata; no credentials or token values."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/automatic-preparation-restart.json",
+      "bytes": 5930,
+      "sha256": "a5b18f62e14b6822486f3c9712b278dd071de4ce382b702490a9c5d3276ca884",
+      "review": "Fresh actual first-flow03 successful command, safe structured assertions/action/PID metadata; no credentials or token values."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/automatic-sanitary-list.png",
+      "bytes": 78684,
+      "sha256": "bd52120c7f99f9b243267dfed1f9f7f1f3d0298db66bd967d90464cae09437fd",
+      "review": "Fresh first-flow03 actual screenshot independently viewed; synthetic data only, public page omits learner identity, no secret URLs."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/center-template-review.json",
+      "bytes": 3388,
+      "sha256": "bd144caf519c46e85cccdbdb94c24966635ee01174fe182f6b258a5c9c0f1b8f",
+      "review": "Fresh actual first-flow03 successful command, safe structured assertions/action/PID metadata; no credentials or token values."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/learner-passed.png",
+      "bytes": 32352,
+      "sha256": "e818c8f953ecedb1e0706dc9e8c4d7adf91a3ff3555447c1b2ede989cf426ba7",
+      "review": "Fresh first-flow03 actual screenshot independently viewed; synthetic data only, public page omits learner identity, no secret URLs."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/minimal-public-record.png",
+      "bytes": 42725,
+      "sha256": "b9501b772f624db6eedac54fab7c52f99f12c972dab9dff81f42bab39c363bfa",
+      "review": "Fresh first-flow03 actual screenshot independently viewed; synthetic data only, public page omits learner identity, no secret URLs."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/lms-first-flow-live/worker-lifecycle.json",
+      "bytes": 933,
+      "sha256": "59cdf047bd5ceb5b7752e8f281cf63d981383458bc854e894e944f37fde90242",
+      "review": "Fresh actual first-flow03 successful command, safe structured assertions/action/PID metadata; no credentials or token values."
+    },
+    {
+      "path": "agent-c/first-flow-linked-20261015-03/results.json",
+      "bytes": 12959,
+      "sha256": "6e1f8e924344bbe5db377704c05adff977571a5c2838ab111a8b49136724adc9",
+      "review": "Fresh actual first-flow03 successful command, safe structured assertions/action/PID metadata; no credentials or token values."
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-04/runtime-source.json",
+      "bytes": 45889,
+      "sha256": "3689ac1e44820d6da06eaea74f29e2bfa986bd3bf647982784c986e585c232a6",
+      "review": "Safe runtime/source provenance for selected command: loopback/demonstration environment only, source hashes and process/build identifiers."
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-04/runtime-start.json",
+      "bytes": 1126,
+      "sha256": "2204f68b3dae4f90efa7f1af65aff4878c0c3548574813b48f1e49555608c1c2",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-05/runtime-source.json",
+      "bytes": 45752,
+      "sha256": "88424bf3f0d372456d9e85f73423a26ff229d9ba1afd91483391b48b31f5e7b4",
+      "review": "Safe runtime/source provenance for selected command: loopback/demonstration environment only, source hashes and process/build identifiers."
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-05/runtime-start.json",
+      "bytes": 572,
+      "sha256": "018af8337374ea1b4b0394e6d0ca136d5c4c1b05d86134521b34f22166369e2b",
+      "review": "Safe runtime/source provenance for selected command: loopback/demonstration environment only, source hashes and process/build identifiers."
+    },
+    {
+      "path": "agent-c/learning-live/actions.json",
+      "bytes": 2769,
+      "sha256": "d1589b72d373edca4240e071ff751b9d6cc5c28326faa4c0a59556daeb0adb31",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json",
+      "bytes": 3784,
+      "sha256": "466501aee050d9d67bd3e09a36dd4e0ad61d41ecaa941c26f926e467bfbca40c",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "agent-c/targeted-batches-clock-20261015-01/lms-conflict-live/result.json",
+      "bytes": 761,
+      "sha256": "01f5072b65842bdd3a077f301b21bee1e314457fe41b58be1bb110e015f886fa",
+      "review": "Entire text loaded, credential/answer-key patterns checked and parsed semantic contents reviewed; historical failure/partial status preserved."
+    },
+    {
+      "path": "lms-render/lms-certificate-page-1.png",
+      "bytes": 73734,
+      "sha256": "f785106ebc2fdbe115a0709d5f94c54b7425300558aa6c8922515a3928bf4ba1",
+      "review": "Exact original alias path retained; bytes equal independently visually reviewed selected final-render-02 image. ROOT_DOCUMENT_VISUAL_REVIEW left unchanged."
+    },
+    {
+      "path": "lms-render/lms-credential-page-1.png",
+      "bytes": 60414,
+      "sha256": "bf49e8c1f2433c3f6325ae7da40988a6006718419ae45a3128acb603f96a2f45",
+      "review": "Exact original alias path retained; bytes equal independently visually reviewed selected final-render-02 image. ROOT_DOCUMENT_VISUAL_REVIEW left unchanged."
+    },
+    {
+      "path": "lms-render/lms-protocol-page-1.png",
+      "bytes": 82371,
+      "sha256": "4efd7e01e3262e93bdb5d6b0fee57a654561a623ac8ae2d4e6181a6fdf95aacb",
+      "review": "Exact original alias path retained; bytes equal independently visually reviewed selected final-render-02 image. ROOT_DOCUMENT_VISUAL_REVIEW left unchanged."
+    },
+    {
+      "path": "root-documents/294ff742-6042-4ba8-a5ca-a6bec8c57af0.docx",
+      "bytes": 37356,
+      "sha256": "9ade7e33d5dc11e9adcc095a7de08122f4b75f08a0763a0f6faad178cac58c24",
+      "review": "Actual latest root-document integration output; synthetic text/content scan and paired one-page PDF preview reviewed."
+    },
+    {
+      "path": "root-documents/294ff742-6042-4ba8-a5ca-a6bec8c57af0.pdf",
+      "bytes": 75985,
+      "sha256": "0729a2c77e9b7dbcacb1952431bb17576ea55081f34de2928e90500e27f4074c",
+      "review": "Actual latest root-document integration output; synthetic text/content scan and paired one-page PDF preview reviewed."
+    },
+    {
+      "path": "root-documents/8accf722-84d9-4ef6-a204-89c01ece2de8.docx",
+      "bytes": 37374,
+      "sha256": "2f16d40cea73920331f89c50c248b565237f225a84c5fe40d6fafd88ddccab16",
+      "review": "Actual latest root-document integration output; synthetic text/content scan and paired one-page PDF preview reviewed."
+    },
+    {
+      "path": "root-documents/8accf722-84d9-4ef6-a204-89c01ece2de8.pdf",
+      "bytes": 77071,
+      "sha256": "93ba49253f3d3151c7bf7e5081b9f7fa3fa6dce93cd6ee97642ad11282c1ae47",
+      "review": "Actual latest root-document integration output; synthetic text/content scan and paired one-page PDF preview reviewed."
+    },
+    {
+      "path": "root-documents/9000c49d-61d8-4ef6-a61c-f7aa61467366.docx",
+      "bytes": 37695,
+      "sha256": "127fa414721cdaf811b7dfe34de1fb9ea4cd565158a18253eb3b4ffced56f2f0",
+      "review": "Actual latest root-document integration output; synthetic text/content scan and paired one-page PDF preview reviewed."
+    },
+    {
+      "path": "root-documents/9000c49d-61d8-4ef6-a61c-f7aa61467366.pdf",
+      "bytes": 81449,
+      "sha256": "c528bc74dce94aba6be2e2dac94bf53399726d3cc185091e593a263e0354cc9a",
+      "review": "Actual latest root-document integration output; synthetic text/content scan and paired one-page PDF preview reviewed."
+    }
+  ],
+  "exclusionsUnchanged": [
+    "All runtime/worker logs, traces/test-results, fixtures, databases/backups, rawarchives and credentials remain excluded.",
+    "No broad folder, git add, commit or external publication performed."
+  ],
+  "finalRehashRequired": true
+}

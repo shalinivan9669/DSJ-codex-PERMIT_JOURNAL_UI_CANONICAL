@@ -1,0 +1,11 @@
+{
+  "command": "pnpm format:check",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-15T00:52:14.7568377Z",
+  "finishedAt": "2026-10-15T00:52:33.1950767Z",
+  "exitCode": 0,
+  "logPath": "command-format-07.log",
+  "environment": {
+    "CI": "true"
+  }
+}

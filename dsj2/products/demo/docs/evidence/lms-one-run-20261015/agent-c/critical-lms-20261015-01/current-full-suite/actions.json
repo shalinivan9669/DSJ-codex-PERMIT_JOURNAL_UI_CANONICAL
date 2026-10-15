@@ -1,0 +1,38 @@
+{
+  "phase": "current-full-suite",
+  "scenario": "ordinary DEMO draft entry/autosave/resume",
+  "startedAt": "2026-10-15T00:37:24.480Z",
+  "finishedAt": "2026-10-15T00:37:27.161Z",
+  "runtime": {
+    "origin": "http://127.0.0.1:3159",
+    "distDirectory": ".next-lms-one-run",
+    "buildId": null,
+    "runtimeKind": "build identity unavailable",
+    "historicalBeforeMeasurement": false
+  },
+  "role": "DIRECTOR",
+  "preconditions": "Synthetic center setup through existing setup command; no precreated request. Aggregate counts include the two login fields and login click; the steps identify authentication explicitly.",
+  "counts": {
+    "clicks": 3,
+    "keyboardActions": 1,
+    "filledFields": 3,
+    "repeatedFields": 0,
+    "decisions": 1,
+    "navigation": 5,
+    "dialogs": 0,
+    "confirmations": 0,
+    "manualRefresh": 0,
+    "elapsedMilliseconds": 2682
+  },
+  "steps": [
+    "Authenticate with the actual login form: two entered credentials, one click; open requests.",
+    "Create person request with default customer kind: New request link, Next button.",
+    "Enter one previously unknown full name, press Tab; real API confirms autosave.",
+    "Leave and return to existing edit URL; name preserved, no customer-type wizard."
+  ],
+  "result": "PASS",
+  "limitations": [
+    "This measures draft entry/autosave/resume only, not issuance, approval, documents or physical print.",
+    "This is current-code regression, not an original before measurement or a claim of measured improvement."
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "checkedAt": "2026-10-15T00:31:52.223491+00:00",
+  "candidateCount": 271,
+  "findings": [],
+  "finalCuratedScanStillRequired": true,
+  "limits": "Pattern scan only; values are not printed. Excluded traces, runtime logs and fixtures are not publication candidates."
+}

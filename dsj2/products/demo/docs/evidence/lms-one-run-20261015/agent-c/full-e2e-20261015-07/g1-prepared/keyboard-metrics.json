@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "keyboardOnlyInApp": true,
+  "mouseClicks": 0,
+  "programmaticElementFocus": 0,
+  "apiMutationsForUiShortcuts": 0,
+  "nativeFileChooserFixtureBoundary": true,
+  "tabs": 1486,
+  "shiftTabs": 628,
+  "activations": 45,
+  "textEntries": 16,
+  "selections": 7,
+  "focusVisibleChecks": 77,
+  "enterNoFinalizeChecks": 1,
+  "dialogTrapChecks": 1,
+  "artifactDownloads": 1,
+  "nativeFileSelections": 1,
+  "appReopens": 3
+}

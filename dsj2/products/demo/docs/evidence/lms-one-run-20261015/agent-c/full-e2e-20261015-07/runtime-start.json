@@ -1,0 +1,45 @@
+{
+  "status": "RUNNING",
+  "startedAt": "2026-10-15T09:40:30.3852173Z",
+  "startedAtMeaning": "Earliest actual listening application Node process StartTime",
+  "recordedAt": "2026-10-15T09:42:51.6483363Z",
+  "origin": "http://127.0.0.1:3159",
+  "apiOrigin": "http://127.0.0.1:4159",
+  "database": "demo_test_lms_browser_20261015",
+  "webMode": "production next start",
+  "webBuildId": "9daYzb73gsxr8g-J7toW7",
+  "source": "runtime-source.json",
+  "buildCommandEvidence": {
+    "path": "command-build-05.json",
+    "sha256": "ac0fb93d7bc0a6f21f3340611a03b089c3b098136109ae995120076f35b612bd"
+  },
+  "sourceFileCount": 293,
+  "sessions": {
+    "api": 25089,
+    "render": 74106,
+    "web": 50817
+  },
+  "listeningProcesses": [
+    {
+      "port": 4159,
+      "pid": 27912,
+      "startedAt": "2026-10-15T09:40:30.3852173Z"
+    },
+    {
+      "port": 3159,
+      "pid": 17932,
+      "startedAt": "2026-10-15T09:40:40.4579125Z"
+    }
+  ],
+  "standaloneIntegrationWorker": "OFF; first-flow owns its child lifecycle",
+  "renderConcurrency": 2,
+  "preflight": {
+    "checkedAt": "2026-10-15T09:41:54.6136197Z",
+    "shippingRenderWorkerStarted": true,
+    "unauthenticatedApiSessionStatus": 401,
+    "webLoginStatus": 200
+  },
+  "apiLiveLog": "agent-c/full-e2e-20261015-07/runtime-api-stdout.log",
+  "apiLiveErrorLog": "agent-c/full-e2e-20261015-07/runtime-api-stderr.log",
+  "previousRuntimeStoppedEvidence": "agent-c/full-e2e-20261015-05/runtime-stop.json"
+}

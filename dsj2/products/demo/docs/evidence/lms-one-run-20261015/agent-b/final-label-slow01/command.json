@@ -1,0 +1,28 @@
+{
+  "status": "FAIL",
+  "command": "pnpm --filter @demo/web exec playwright test e2e/lms-copy-original-live.spec.ts e2e/lms-slow-response-live.spec.ts --project=remaining --no-deps",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-15T01:17:34.5457666Z",
+  "runtime": "../../agent-c/full-e2e-20261015-05/runtime-start.json",
+  "buildId": "BV_9Qiz8LMZrZB5Rfnihw",
+  "source": [
+    {
+      "path": "apps/web/e2e/lms-copy-original-live.spec.ts",
+      "sha256": "91ce1b0f4e72efc8a0441e5abbe467091e0e8587c16c78faaf186e84315655d0"
+    },
+    {
+      "path": "apps/web/e2e/lms-slow-response-live.spec.ts",
+      "sha256": "d6fec00c03bbfd019dc84f928d8baa617fc1d19d56e798abbcb454d6c111e25a"
+    },
+    {
+      "path": "scripts/verification/lms-copy-fixture.ts",
+      "sha256": "9a1206d1c712af09bb895513b992bd744ce9efb3b55a4bdf49cb286b270793a4"
+    },
+    {
+      "path": "scripts/verification/lms-browser-fixture.ts",
+      "sha256": "f3e46f907bb378e67d16cde429081a1d7fb423f0a34147e183419520f2c9bb73"
+    }
+  ],
+  "exitCode": 1,
+  "finishedAt": "2026-10-15T01:18:50.4618196Z"
+}

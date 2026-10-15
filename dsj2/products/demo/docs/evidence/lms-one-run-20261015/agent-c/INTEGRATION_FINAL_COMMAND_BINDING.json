@@ -1,0 +1,56 @@
+{
+  "command": "pnpm test:integration",
+  "run": "command-integration-02",
+  "status": "PASS",
+  "exitCode": 0,
+  "exitCodeEvidence": "Coordinator confirmed exec session1101 completed exit0; actual shared log has final280pass/0fail/0cancelled/0skipped summary.",
+  "log": "../command-integration-02.log",
+  "tests": 280,
+  "passed": 280,
+  "failed": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "durationMilliseconds": 2726945.3043,
+  "currentGlobFileCount": 80,
+  "mainCommandFilesWithObservedTopLevelTitles": 73,
+  "lateFiles": [
+    "tests/integration/lms-audit-boundaries.test.ts",
+    "tests/integration/lms-document-scheduling.test.ts",
+    "tests/integration/lms-external-date.test.ts",
+    "tests/integration/lms-identity-selection.test.ts",
+    "tests/integration/lms-legacy-outcome.test.ts",
+    "tests/integration/lms-route-calendar-boundaries.test.ts",
+    "tests/integration/lms-template-upgrade.test.ts"
+  ],
+  "lateFileEvidence": "INTEGRATION_DISCOVERY_INVENTORY.json",
+  "notes": [
+    "Each late file has an independent actual passing log with all its static top-level test titles observed. No claim that the main process discovered these late files.",
+    "The existing lms-documents.test.ts also reran with the new scheduling test after the fairness fix. Their combined eight passing tests share one log and must not be counted twice.",
+    "Full integration01 failed and remains retained; run02 is the fresh successful rerun, including a quiet100activelearner load.",
+    "Final renderer144 passed independently. Complete final browser execution remains a separate requirement; this integration binding does not claim localAccepted.",
+    "The full run originally covered73 files. Current static-title matching is72 because lms-documents.test.ts later gained three assertions; their actual11-test combined pass is separately linked.",
+    "Additional existing-center template upgrade4PASS in agent-c/template-upgrade/command03.log; ordinary historical template/data unchanged, new forms await explicit director approval, actual HTTP guards preserved."
+  ],
+  "latestInventoryTopLevelMatches": 72,
+  "updatedExistingFile": {
+    "passed": 11,
+    "latestLog": "root-document-projection-01.log",
+    "failed": 0,
+    "latestCommand": "root-document-projection-01.json",
+    "combinedTests": 11,
+    "note": "Three projection regressions added to existing documents suite after fullintegration02; combined run also includes scheduling3. Do not count11 twice.",
+    "path": "tests/integration/lms-documents.test.ts"
+  },
+  "separateFinalRenderer": {
+    "failed": 0,
+    "skipped": 0,
+    "log": "agent-a/render-full-final-02.log",
+    "command": "pnpm test:render",
+    "sha256": "3863633e7c627fcccc9daf352a7c136d349c5c53d43f03ffbe6ec6d98730d5df",
+    "tests": 144,
+    "commandEvidence": "agent-a/COMMANDS_A.json",
+    "status": "PASS",
+    "exitCode": 0,
+    "note": "Separate mandatory renderer command, not part of integration280; earlier failed runs retained."
+  }
+}

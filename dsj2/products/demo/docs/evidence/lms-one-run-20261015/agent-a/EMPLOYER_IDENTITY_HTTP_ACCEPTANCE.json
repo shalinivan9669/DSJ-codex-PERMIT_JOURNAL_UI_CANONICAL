@@ -1,0 +1,56 @@
+{
+  "status": "PASS_TARGETED_HTTP_ACCEPTANCE",
+  "reviewedAt": "2026-10-15T09:34:43.303014+00:00",
+  "overallAcceptance": false,
+  "commandEvidence": {
+    "recordPath": "agent-a/employer-identity-http-01.json",
+    "sha256": "64ef5126f7ab0eb7ae9b8bd45997d10124287e2af8a30945553139b1b8a800a1",
+    "logPath": "agent-a/employer-identity-http-01.log",
+    "logSha256": "2682390bdbbfe21cf4a52620480ed8338c68eab08af39ec39b16f88f590f2c4f",
+    "exitCode": 0,
+    "startedAt": "2026-10-15T09:33:31.0974452Z",
+    "finishedAt": "2026-10-15T09:33:38.8660084Z",
+    "elapsedMilliseconds": 7761.2197
+  },
+  "testSummary": {
+    "tests": 4,
+    "logicalSubtests": 3,
+    "pass": 4,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "runnerDurationMilliseconds": 6734.9389
+  },
+  "actualAssertions": [
+    "HTTP creates an own company with empty directory BIN/address and a three-row group request with explicit employer ID and local BIN/address.",
+    "Real validation, including renderer layout preflight, returns valid true with zero issues, three recipients and four documents.",
+    "Resolved rows contain exact linked company names while retaining local BIN/address. Original stored items, revision and empty company directory requisites are unchanged.",
+    "Both unlinked partial identity and an explicitly linked employer with a conflicting nonempty BIN return valid false and exactly the three missing-workplace paths.",
+    "Foreign-tenant and nonexistent employer IDs each return HTTP 404 and create no print request."
+  ],
+  "sourceFiles": [
+    {
+      "path": "apps/api/src/requests.ts",
+      "sha256": "a02dd878a01dbad2f2b12bd311a15c9adfe27bcb250b60c55511ce9b44ed4a84"
+    },
+    {
+      "path": "tests/request-customer.test.ts",
+      "sha256": "631e39963b68c9d1c82c9773a57d56a1013df437a2a8f024007f3f2c53dd06b5"
+    },
+    {
+      "path": "tests/integration/employer-identity-http.test.ts",
+      "sha256": "e4e1794ebcca7af61eee9e249536a193d570cd49dcf2995189f7bff8333289e7"
+    }
+  ],
+  "sourceUnchangedBeforeAfter": true,
+  "sourcePaths": [
+    "apps/api/src/requests.ts",
+    "tests/request-customer.test.ts",
+    "tests/integration/employer-identity-http.test.ts"
+  ],
+  "evidencePaths": [
+    "agent-a/EMPLOYER_IDENTITY_SERVER_PARITY_REVIEW.json",
+    "agent-a/employer-identity-http-01.json"
+  ],
+  "scope": "Fresh isolated synthetic tenant in the loopback integration database. Independent Nest instance on port 0 closed and database disconnected on completion. Existing browser API was not restarted or used. No issuance or external mutation."
+}

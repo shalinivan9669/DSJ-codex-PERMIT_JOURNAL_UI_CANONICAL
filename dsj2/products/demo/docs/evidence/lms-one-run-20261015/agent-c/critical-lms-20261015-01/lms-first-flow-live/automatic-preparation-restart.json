@@ -1,0 +1,161 @@
+{
+  "allUiClosedAt": "2026-10-15T00:39:21.823Z",
+  "workerLifecycle": [
+    {
+      "event": "STARTED",
+      "pid": 46580,
+      "ordinal": 1,
+      "at": "2026-10-15T00:39:16.595Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "entrypoint": "apps/integration-worker/src/main.ts",
+      "shell": false
+    },
+    {
+      "event": "STOPPED",
+      "pid": 46580,
+      "ordinal": 1,
+      "at": "2026-10-15T00:39:21.848Z",
+      "reason": "All learner and director UI contexts closed after confirmed result",
+      "code": null,
+      "signal": "SIGTERM"
+    },
+    {
+      "event": "STARTED",
+      "pid": 37980,
+      "ordinal": 2,
+      "at": "2026-10-15T00:39:21.861Z",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "entrypoint": "apps/integration-worker/src/main.ts",
+      "shell": false
+    }
+  ],
+  "beforeRestart": {
+    "checkedAt": "2026-10-15T00:39:21.579Z",
+    "result": {
+      "id": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+      "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+      "enrollmentId": "70d6d4b4-369c-4ec7-89c8-5a3aa7b07d51",
+      "snapshotHash": "28b801ecb710881c166c2aa2f49ff44a6e1f21ffb5686991d90aa90e5b3bcd24"
+    },
+    "outbox": [
+      {
+        "id": "dc8b974d-725b-4fb5-97c6-2fa26a79730f",
+        "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+        "resultId": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+        "kind": "PREPARE",
+        "status": "DONE",
+        "leaseToken": 1,
+        "lockedUntil": null,
+        "availableAt": "2026-10-15T00:39:21.078Z",
+        "attempts": 1,
+        "createdAt": "2026-10-15T00:39:21.078Z",
+        "processedAt": "2026-10-15T00:39:21.173Z"
+      }
+    ],
+    "journal": [
+      {
+        "id": "7347560f-7423-411a-beef-b8144c5fa33f",
+        "resultId": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+        "snapshotHash": "07bfec6be35a4fd9e70c0f355082fa9fea76d86a8a193aed8975937730766780",
+        "signatureState": "AWAITING_SIGNATURE"
+      }
+    ],
+    "items": [
+      {
+        "id": "6da9fbe7-9ff1-47a0-881e-8a9df5813a8a",
+        "batchId": "3aec15d6-e554-4354-b5b6-e8709d0280c1",
+        "resultId": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+        "journalEntryId": "7347560f-7423-411a-beef-b8144c5fa33f",
+        "snapshotHash": "07bfec6be35a4fd9e70c0f355082fa9fea76d86a8a193aed8975937730766780"
+      }
+    ],
+    "deliveries": [
+      {
+        "id": "49c8bc2a-ec22-4bfe-9d08-45461dafd8d2",
+        "resultId": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+        "batchItemId": "6da9fbe7-9ff1-47a0-881e-8a9df5813a8a",
+        "state": "READY",
+        "lmkState": "NOT_CONFIRMED",
+        "payloadHash": "07bfec6be35a4fd9e70c0f355082fa9fea76d86a8a193aed8975937730766780"
+      }
+    ]
+  },
+  "afterRestart": {
+    "checkedAt": "2026-10-15T00:39:23.168Z",
+    "result": {
+      "id": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+      "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+      "enrollmentId": "70d6d4b4-369c-4ec7-89c8-5a3aa7b07d51",
+      "snapshotHash": "28b801ecb710881c166c2aa2f49ff44a6e1f21ffb5686991d90aa90e5b3bcd24"
+    },
+    "outbox": [
+      {
+        "id": "dc8b974d-725b-4fb5-97c6-2fa26a79730f",
+        "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+        "resultId": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+        "kind": "PREPARE",
+        "status": "DONE",
+        "leaseToken": 1,
+        "lockedUntil": null,
+        "availableAt": "2026-10-15T00:39:21.078Z",
+        "attempts": 1,
+        "createdAt": "2026-10-15T00:39:21.078Z",
+        "processedAt": "2026-10-15T00:39:21.173Z"
+      }
+    ],
+    "journal": [
+      {
+        "id": "7347560f-7423-411a-beef-b8144c5fa33f",
+        "resultId": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+        "snapshotHash": "07bfec6be35a4fd9e70c0f355082fa9fea76d86a8a193aed8975937730766780",
+        "signatureState": "AWAITING_SIGNATURE"
+      }
+    ],
+    "items": [
+      {
+        "id": "6da9fbe7-9ff1-47a0-881e-8a9df5813a8a",
+        "batchId": "3aec15d6-e554-4354-b5b6-e8709d0280c1",
+        "resultId": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+        "journalEntryId": "7347560f-7423-411a-beef-b8144c5fa33f",
+        "snapshotHash": "07bfec6be35a4fd9e70c0f355082fa9fea76d86a8a193aed8975937730766780"
+      }
+    ],
+    "deliveries": [
+      {
+        "id": "49c8bc2a-ec22-4bfe-9d08-45461dafd8d2",
+        "resultId": "3032a756-84d3-4f8a-984c-354bbbb8a816",
+        "batchItemId": "6da9fbe7-9ff1-47a0-881e-8a9df5813a8a",
+        "state": "READY",
+        "lmkState": "NOT_CONFIRMED",
+        "payloadHash": "07bfec6be35a4fd9e70c0f355082fa9fea76d86a8a193aed8975937730766780"
+      }
+    ]
+  },
+  "triggerOperatorActions": 0,
+  "login": {
+    "clicks": 1,
+    "filledFields": 2,
+    "repeatedFields": 2,
+    "authenticationRepeatedFields": 2,
+    "businessRepeatedFields": 0,
+    "navigation": 2,
+    "keyboardActions": 0,
+    "dialogs": 0,
+    "confirmations": 0,
+    "manualRefresh": 0,
+    "elapsedMilliseconds": 760.4652999999962
+  },
+  "inspection": {
+    "clicks": 1,
+    "filledFields": 0,
+    "repeatedFields": 0,
+    "decisions": 1,
+    "navigation": 1,
+    "keyboardActions": 0,
+    "dialogs": 0,
+    "confirmations": 0,
+    "manualRefresh": 0,
+    "elapsedMilliseconds": 294.5945000000065
+  },
+  "interpretation": "All UI contexts closed; only the test-owned shipping worker PID was stopped and a different PID started. The same confirmed result and outbox persisted, and exactly one journal/item/delivery is present after restart. beforeRestart records whether processing had already completed; no pending state is fabricated. Authentication and inspection are separate from the zero-action automatic trigger."
+}

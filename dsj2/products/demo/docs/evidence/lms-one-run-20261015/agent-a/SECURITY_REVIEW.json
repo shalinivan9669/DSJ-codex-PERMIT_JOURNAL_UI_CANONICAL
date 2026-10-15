@@ -1,0 +1,248 @@
+{
+  "status": "SOURCE_REVIEW_CLOSED",
+  "reviewedAt": "2026-10-15T01:13:49.044863+00:00",
+  "reviewer": "agent-a",
+  "syntheticOnly": true,
+  "scope": "Independent source review of LMS identity, frozen document provenance, per-recipient/per-result artifact access, deployment gates, test delivery, minimal public verification and paper attestation. Refreshed external date clarification, superseded source projections, staff result/settings controls and route allowlist.",
+  "fixes": [
+    {
+      "finding": "Concurrent distinct recovery links could both replace one learner password",
+      "closure": "Per-tenant/user transaction lock; token re-read under lock; sessions and all earlier recovery links invalidated",
+      "evidence": [
+        "recovery-race-before.log",
+        "recovery-race-after.log"
+      ],
+      "actualRegression": "FAIL 2 successful recoveries before; PASS exactly 1 after"
+    },
+    {
+      "finding": "Printed employer text could differ from frozen result",
+      "closure": "Both workplaceRu and workplaceKz equal frozen employer names; canonical result/type assignment ID also enforced",
+      "actualRegression": "Coordinator lms-documents integration suite owns final execution"
+    },
+    {
+      "finding": "Shared issuance/template could bind a different recipient or result revision",
+      "closure": "Artifact candidates match canonical assignment result/type; documentView additionally scopes rowId and assignmentId; requested artifact must occur in that exact view; public metadata applies same recipient/result binding",
+      "actualRegression": "Coordinator lms-documents integration suite owns final execution"
+    },
+    {
+      "finding": "Legacy request routes could bypass LMS deployment evidence",
+      "closure": "validateLmsReferences invokes deployment gate only when LMS assignment metadata or template is present"
+    },
+    {
+      "finding": "Unknown external exam date could advertise document eligibility",
+      "closure": "Stored eligible internal source remains immutable; projections expose documentEligible=false/EXAM_DATE_UNKNOWN; document metadata rejects missing examAt; transport claim excludes null examAt",
+      "evidence": [
+        "external-exams-final.log"
+      ]
+    },
+    {
+      "finding": "New invitation/recovery/verification URLs inherited same-origin referrers",
+      "closure": "Next middleware and configured route headers set no-referrer/no-store/noindex for new token paths and API responses",
+      "actualRegression": "Coordinator web header tests and full browser suite own final execution"
+    },
+    {
+      "finding": "Paper attestation used first result link of a shared issuance",
+      "closure": "Candidates restricted to tenant/request/issuance/type/PAPER_ORIGINAL, canonical assignment binding and linked result recipientId equal document rowId",
+      "actualRegression": "UI agent paper flow and coordinator regression own final execution"
+    },
+    {
+      "finding": "Legacy exact examAt input accepted a future timestamp while examDate rejected a future profile-local day",
+      "closure": "Both input forms now reject future profile-calendar dates with 422 EXAM_DATE_INVALID before writing the private file or evidence row",
+      "evidence": [
+        "../root-external-date-03.log"
+      ],
+      "actualRegression": "Observed actual 3 PASS, 0 fail, 0 skipped: both 2099 inputs denied and invalid exact timestamp adds no evidence row"
+    },
+    {
+      "finding": "Fresh B2C identity with no separate Kazakh spelling failed immutable snapshot guard after existing DEMO bilateral display fallback",
+      "closure": "documentRecipient derives the six name/position/workplace display fields and employer ID only from frozen result via existing itemSchema+resolveRecipientText. Both bridge creation and exact guard use it; no stored result mutation, live-directory read, translation or manual reentry. Metadata hash, canonicalassignment, request/type/recipient and all field tamper checks remain.",
+      "evidence": [
+        "../root-document-projection-01.log",
+        "../root-document-projection-01.json"
+      ],
+      "actualRegression": "Coordinator execution observed11PASS,0fail,0skip; two name variants×threeforms, post-result directory edits ignored, six field tamper+employerID denied, exact snapshot unchanged, no number reservations before director approval; prior actual app rendering/correction/private artifact + bounded scheduling regressions pass."
+    }
+  ],
+  "reviewedInvariants": [
+    "Director-only paper attestation; request row transaction lock serializes repeated attestations; immutable audit and exact PDF SHA; conflicting replay rejected",
+    "Paper record is OPERATOR_ATTESTED and cryptographicallyVerified=false; no CMS or DocumentSignature is fabricated",
+    "Zero required signers do not auto-complete PAPER_ORIGINAL; unsigned exemption limited to explicit INFORMATION_CARD/COPY_OF_ORIGINAL",
+    "Delivery adapter limited to TEST/non-production/loopback demo_test databases; SANDBOX/demoOnly/DataAccessPolicy enforced; lease fencing and UNKNOWN reconciliation preserve ambiguity",
+    "Public verification exposes minimal issuer/document/status/source-form metadata without learner name, IIN, score, files or question keys",
+    "Deployment inventory is a completeness gate, not proof of legal validity or actual production storage geography",
+    "External date clarification is ADMIN/DIRECTOR only, tenant scoped, requires reviewed DOCUMENT_REVIEWED evidence and an unrevoked existing result; enrollment/result locks serialize concurrent decisions.",
+    "Clarification copies retained source SHA/storage, issuer/document fields into a new evidence row; old evidence/result stay immutable, new result has supersedesResultId and explicit reason; superseded delivery lease is fenced.",
+    "Exact repeated clarification returns the prior replacement; changed date/review reason is409; source listing derives supersededByEvidenceId only from same-tenant scoped audit events.",
+    "Date-only source uses a timezone-local noon storage anchor with datePrecision=DATE and frozen calendar date; it does not claim an exact exam hour.",
+    "Sanitary settings accepts only destination plus DataAccessPolicy; role and strict body parsing prevent setting SANDBOX/PRODUCTION state or credentials through this route; policy save is audited.",
+    "Staff result list applies effective VOIDED/SUPERSEDED/unknown-date projections with paginationmax250; independent document gates remain applied.",
+    "Method/path policy includes only the exact date-clarification endpoint. No LMS real-provider callback or submit route exists; test adapter guards remain TEST/nonproduction/loopback demo_test +demoOnly/SANDBOX.",
+    "Document sweeps filter approved candidates in SQL before bounded LIMIT, then independently rotate requestId cursors for release/render. Process-local cursor reset changes scheduling only; database eligibility, actual approval, issuance idempotency, signing and artifact access gates are unchanged. Stale/missing requests or blocked signing do not abort the remaining page.",
+    "Template approval retains existing authenticated director/admin context, tenant-scoped lookup, current 14-template allowlist, private byte SHA verification and transactional actor/correlation audit. Unsupported historical forms and missing/corrupt bytes remain unapprovable.",
+    "LMS preparation only substitutes the actionable approval message when APPROVAL_DATA_INCOMPLETE contains a nonempty array exclusively of TEMPLATE_NOT_APPROVED issues. Other failures and all immutable identity guards remain unchanged; blocked preparation reserves no numbers.",
+    "Existing-center LMS registration is an explicit-tenant maintenance CLI, dry-run by default. Exactly three manifest assets and contracts are validated before writes; tenant transaction lock makes concurrent applies idempotent; new versions are approved=false; existing rows, approvals, numbering and profiles are never updated. Conflicting immutable/current stored bytes fail closed. This is a privileged local maintenance operation, not a newly exposed application/provider route."
+  ],
+  "limits": [
+    "Source review is not a penetration test or production acceptance",
+    "Runtime tests listed above are actual local tests; coordinator-owned pending full-suite results must be read from their final logs",
+    "Real cryptographic signature provider, government receipt, medical clearance and physical paper signing were not performed"
+  ],
+  "sourceHashes": [
+    {
+      "path": "apps/api/src/lms/identity.ts",
+      "sha256": "1389d73f814ab7677ee7791b41f5ac341e7bc13c7ebe4897a1855d2804c65e8e"
+    },
+    {
+      "path": "apps/api/src/lms/document-metadata.ts",
+      "sha256": "a2aecd71dc1b1924388b59a3ffc2f7f90dcf63b011e8a97a3c786bea113cb9f7"
+    },
+    {
+      "path": "apps/api/src/lms/document-bridge.ts",
+      "sha256": "532836989f391601750a2c704302f5411bc7091c9384f3c9eb144c1d18512656"
+    },
+    {
+      "path": "apps/api/src/lms/result-finalization.ts",
+      "sha256": "3caff00a2f2a65b98a5eccde0bf8351acd3e401e141a6ad6411824d5e175a7d3"
+    },
+    {
+      "path": "apps/api/src/lms/enrollments.ts",
+      "sha256": "c4c92c938c8e30b4fcabfdc953003aefafc1376ed5794c686abc39bf54193716"
+    },
+    {
+      "path": "apps/api/src/lms/deployment-gate.ts",
+      "sha256": "86f330e341654501d12886ea19ee1d8d6d1c9b076e087c5e52130a0e47dbc177"
+    },
+    {
+      "path": "apps/api/src/regulatory-results/delivery.ts",
+      "sha256": "d41ba8d3fbadfe7285c03641a900a1cb9bc8619dc3333b4fd784783c02bdc53d"
+    },
+    {
+      "path": "apps/api/src/public-verification.ts",
+      "sha256": "287362532ab61d2cb428086ec2ecb576d4474a7405199f4197bdb64f39e5a945"
+    },
+    {
+      "path": "apps/api/src/signing.ts",
+      "sha256": "116dc67f534b2b435cc66543fc4b428944ffd3ae63356919d28ccddb2b6b1a59"
+    },
+    {
+      "path": "apps/api/src/auth.ts",
+      "sha256": "a03d53f7e806e58c25468baa0dc7a3703623d9fe491ae419e89f1eace1613f06"
+    },
+    {
+      "path": "apps/web/middleware.ts",
+      "sha256": "5907e2e1ccdcc55a4c64d0eb2f56c13a7b1e84faec4b66c5e1ec64ae1def21b0"
+    },
+    {
+      "path": "apps/web/next.config.ts",
+      "sha256": "a53fe66405c6eb1907fc2a98edede85c46f0aaa6db9ef719b2a694347b25f0f2"
+    },
+    {
+      "path": "apps/web/app/api/[...path]/route.ts",
+      "sha256": "dc5a86c5e4c41edb3d4b90739c26e91f9f83e1090138a5a0c3e217165f988af7"
+    },
+    {
+      "path": "apps/api/src/lms/external.ts",
+      "sha256": "eb0e9fca67a70a782803aafcfd208102fcffb75d81d72d23d92f6711acdbae77"
+    },
+    {
+      "path": "apps/api/src/lms/controller.ts",
+      "sha256": "5b1f676caafb50ff9000323e43d7e1edd221314b05850439cc0b6f5dce376b9f"
+    },
+    {
+      "path": "apps/api/src/regulatory-results/controller.ts",
+      "sha256": "a5dd3fbabe48e71f9ad9f9972dd3d3c8437ad0b5b5a5125fe944adf4f09f3957"
+    },
+    {
+      "path": "apps/api/src/regulatory-results/preparation.ts",
+      "sha256": "cd96d192122dc3a50162bb1e2ea9c99e339694d1e6f8a45487e2f931f0daeabd"
+    },
+    {
+      "path": "packages/contracts/src/capabilities.ts",
+      "sha256": "ff6e4c5455065fb3bcf3f2d8b9e5d725993415320559bdac17049fa597af3519"
+    },
+    {
+      "path": "packages/contracts/src/product-policy.json",
+      "sha256": "7aa292fdc598299017c301f93f7b1707a6c5a021022aef5b5fc7ce4ccd506527"
+    },
+    {
+      "path": "tests/contracts.test.ts",
+      "sha256": "970b10ee62da6de7d1ec46d497160fec108e38d4e9b0028e0274d255989087a5"
+    },
+    {
+      "path": "apps/api/src/controller.ts",
+      "sha256": "d10b24055506aa4ed4643571e237465a9db2c5907da2f5ef567f281ba4116b1d"
+    },
+    {
+      "path": "scripts/maintenance/register-lms-templates.ts",
+      "sha256": "315949fea31a8b00a6a7289378d35900ff281dfab11cd48c1ce4b56e4e2d23e8"
+    }
+  ],
+  "additionalExecutedChecks": [
+    {
+      "result": "Own counts2/5/3, foreign1/8/7, tenant query ignored, learner/employer403",
+      "evidence": "accounting-boundaries.log",
+      "criterion": "OPS02"
+    },
+    {
+      "result": "Fresh isolated25-migration DB; normal CHECK23514, temporarily dropped only own named constraint, actual login401 and route403, original constraint restored",
+      "evidence": "UNKNOWN_ROLE_ACCEPTANCE.json",
+      "criterion": "L02"
+    },
+    {
+      "criterion": "External date clarification",
+      "result": "Coordinator log observed: 3 PASS, 0 fail, 0 skipped. Concurrent clarification creates one revision; changed replay409, tenant404/learner403; retained old source/result bytes and supersededByEvidenceId. Future examDate and examAt both422; invalid exact timestamp adds no source row.",
+      "evidence": "../root-external-date-03.log"
+    },
+    {
+      "criterion": "L10",
+      "result": "Acceptance-agent log observed:4PASS, real HTTP audit event actor/entity/correlation, role-session revocation, immutable/foreign audit denial and restart preservation.",
+      "evidence": "../agent-c/lms-audit-02.log"
+    },
+    {
+      "criterion": "E02/E04/E09/S03",
+      "result": "Reviewer executed6PASS: explicit practice/proctoring gates, missingcommission publication/finalizer, no learner keys with disclosure disabled, lateconfirmation original deadline and calendar-revision immutability.",
+      "evidence": "route-calendar-boundaries.log"
+    },
+    {
+      "criterion": "Fair bounded document scheduling and E08-E12 regression",
+      "result": "Reviewer executed combined8PASS,0fail,0skip,actualexit0:32olderunapproved requests retain no issuance while laterapproved progresses;more than30incomplete real workflows do not starve a later realPDF. Existing provenance,correction,publicrevocation,crossrowartifact guards stillPASS.",
+      "evidence": "document-scheduling.log"
+    },
+    {
+      "criterion": "E08/E10 frozen recipient display and E08-E12/scheduling regression",
+      "result": "Read coordinator log actual11PASS0skip125613.4391ms and command JSON exit0; original result stays immutable, legitimate existing RU/KZ display fallback succeeds, arbitrary substitutions remain rejected.",
+      "evidence": "../root-document-projection-01.log"
+    },
+    {
+      "criterion": "S11 append-only existing-center template upgrade and actual approval",
+      "result": "Read C command03.json and full log: actual exit0,4PASS,0fail,0skip. Concurrent applies created3+0, old manual FAILED request/template/numbering bytes unchanged, director accepted3 with exact audit actor/correlation, learner403/foreign404, unsupported/missing/corrupt422, replay preserves approvals. Separate B browser-tenant CLI dry/apply/replay created3 then0 and retained19 historic templates.",
+      "evidence": "../agent-c/template-upgrade/command03.log",
+      "commandManifest": "../agent-c/template-upgrade/command03.json",
+      "separateCliReport": "../agent-b/template-upgrade-20261015-01/REPORT.json",
+      "boundary": "Late targeted test, not part of the earlier fullintegration02 discovery."
+    },
+    {
+      "criterion": "E08/E10 approval message and immutable projection",
+      "result": "Read root command JSON actual exit0 and full log3PASS,0skip; blocked preparation has0items/0number reservations, explicit approval restoration enables all forms, six field/employer tamper guards and snapshot hash remain.",
+      "evidence": "../root-document-approval-message-01.log",
+      "commandManifest": "../root-document-approval-message-01.json"
+    }
+  ],
+  "openFindings": [],
+  "latestSourceDelta": [
+    {
+      "path": "apps/api/src/lms/document-bridge.ts",
+      "previousSha256": "911191181b60c9b26a5f6991e1e68bf96f0fb35cd8fd65faa57d6b952a23a696",
+      "currentSha256": "532836989f391601750a2c704302f5411bc7091c9384f3c9eb144c1d18512656"
+    }
+  ],
+  "templateUpgradeReview": {
+    "status": "CLOSED_SOURCE_AND_TARGETED_LOCAL_EXECUTION",
+    "reviewedTest": {
+      "path": "tests/integration/lms-template-upgrade.test.ts",
+      "sha256": "38691d3bd58416d2c196fca1c13acfd7b838042194a31dfa86a94c6510df4e1c"
+    },
+    "noNewExternalProviderPath": true,
+    "openFindings": []
+  }
+}

@@ -1,0 +1,378 @@
+{
+  "status": "DISCOVERY_PASS_NOT_EXECUTION",
+  "exitCode": 0,
+  "tests": 218,
+  "files": 92,
+  "command": "pnpm --filter @demo/web exec playwright test --list",
+  "createdAt": "2026-10-15T00:50:51.4936681Z",
+  "source": [
+    {
+      "path": "apps/web/e2e/anik-feedback.spec.ts",
+      "sha256": "4b0dc8a172a7acaf3d081ed7f75143f9ca4ed82629a3be43442656c62ff0d14a"
+    },
+    {
+      "path": "apps/web/e2e/biot-issue.spec.ts",
+      "sha256": "19d8580854551a6d6973318f5373b38da21cb2661bb30ffea593c4c2f81dd96a"
+    },
+    {
+      "path": "apps/web/e2e/biot-presets.spec.ts",
+      "sha256": "0d43f01a91bf0ccf93befe6b9684e9281b619ddaebf54822a1f2dd5129d0761f"
+    },
+    {
+      "path": "apps/web/e2e/center-registration-real.spec.ts",
+      "sha256": "1be188e290a2c8470dd7bb0d7010da4b5041f80c28825850cf4bc4d840aa0adf"
+    },
+    {
+      "path": "apps/web/e2e/center-registration.spec.ts",
+      "sha256": "ddc0810c5c7acfdd904201f285eefe6499763420261567705d7c90caec340818"
+    },
+    {
+      "path": "apps/web/e2e/commercial.spec.ts",
+      "sha256": "46831d0ec8fdf8bf8ca81b1aeded0e84ee3b0590135dec7578c61b7c869d11df"
+    },
+    {
+      "path": "apps/web/e2e/conflict-copy.spec.ts",
+      "sha256": "e8a7287499d636c9e3472a54717a47087c7bf7d9be87d3a308bf51ea5aaa878a"
+    },
+    {
+      "path": "apps/web/e2e/demo.spec.ts",
+      "sha256": "7f7fddfdf59bff8624c645e183a3468e2f772be2905e79ee748cd38914806606"
+    },
+    {
+      "path": "apps/web/e2e/employer-invites-live.spec.ts",
+      "sha256": "fbfeee97b7ab08fe1cff6df10881206f720a3922f4b68986e669fa8c1ccc9d85"
+    },
+    {
+      "path": "apps/web/e2e/final-delivery-three-live.spec.ts",
+      "sha256": "4c4cac690c39dae25dab6703fffc08016eefe60d540aa236d9182265db5fdbff"
+    },
+    {
+      "path": "apps/web/e2e/final-directory-live.spec.ts",
+      "sha256": "8287573570ddb8e6f9feb1486878835c5012b6dd5e4da0723c207ac4708fcb4b"
+    },
+    {
+      "path": "apps/web/e2e/final-handover-live.spec.ts",
+      "sha256": "a08bc97dac42978c15c78c01766504da49b256a8b559ac75d46d8145a7872dcb"
+    },
+    {
+      "path": "apps/web/e2e/final-history-live.spec.ts",
+      "sha256": "f1aa81f2f314ebad11a15704934d8477074cf61babffd4304541ae01cf1ba4af"
+    },
+    {
+      "path": "apps/web/e2e/final-local-readiness.spec.ts",
+      "sha256": "9e33b26bed0d70ea9e84ced4b5a7f88d2f7c6e78e40e7cc0637f9dab29c508e2"
+    },
+    {
+      "path": "apps/web/e2e/final-order-parties-live.spec.ts",
+      "sha256": "058008dd9f65cb9ce4163d2cefcd8780436e05d5a85c210d96267d98ceb69786"
+    },
+    {
+      "path": "apps/web/e2e/final-portal-390-live.spec.ts",
+      "sha256": "42962e6dced4525064004c1515c96c84814a4686c87e2b642a5cc2dff31f62ae"
+    },
+    {
+      "path": "apps/web/e2e/final-portal-three-live.spec.ts",
+      "sha256": "9969532bafbf35ec4e0468fa2deb8b2bb5ef9ea9d44d526c020f4050a44a0795"
+    },
+    {
+      "path": "apps/web/e2e/final-renewal-onboarding-live.spec.ts",
+      "sha256": "25aa75dee64fac6e92b357d739b583955417586d980e334c091542f24a6f236f"
+    },
+    {
+      "path": "apps/web/e2e/final-repeat-basis-live.spec.ts",
+      "sha256": "06386b7b7654cab31efcc497a9d25a139a7fe3227842b226145dea0218abf0f2"
+    },
+    {
+      "path": "apps/web/e2e/final-revised-six-live.spec.ts",
+      "sha256": "edaa26a49eaf7e118e2e2510bf110ddc5f0ef7b1ac1e49a40d589675501ee784"
+    },
+    {
+      "path": "apps/web/e2e/final-service-workflows-live.spec.ts",
+      "sha256": "ab37f449759ccdfec245e310f47d6134182390467301050c3ec2db58fb1667b3"
+    },
+    {
+      "path": "apps/web/e2e/final-sources-live.spec.ts",
+      "sha256": "1673c83f7962df642b8ca9ee3ca6d2f08fa45214a49d395ab774c899308e0c45"
+    },
+    {
+      "path": "apps/web/e2e/generated-photo.spec.ts",
+      "sha256": "aa2a7ca3e8cd0276d91e8967b3178e69301aacd99f8de32f2ccb6eed3e4d1fae"
+    },
+    {
+      "path": "apps/web/e2e/lms-assignment-batches-live.spec.ts",
+      "sha256": "75e7b4935cfea23c18b1484acc369ff75096f1d669e3289aa9380500dbeed05f"
+    },
+    {
+      "path": "apps/web/e2e/lms-conflict-live.spec.ts",
+      "sha256": "6d3d8fc46295f045d5f8d34264b5eceb1d17aa0525b0da03ce8302a41f082e6f"
+    },
+    {
+      "path": "apps/web/e2e/lms-copy-original-live.spec.ts",
+      "sha256": "c5d2d5b4c16650b8cac3151cf5f09e5a593da9536147c5a5c91254c9b3dd99d3"
+    },
+    {
+      "path": "apps/web/e2e/lms-demo-baseline.spec.ts",
+      "sha256": "1ea65c6e57c3e7410e66afb73dff2d16fd37dbbff9119405764b7960c0a2e686"
+    },
+    {
+      "path": "apps/web/e2e/lms-first-entry-live.spec.ts",
+      "sha256": "399147f6ae3be7f48ea444e6556638445e7dbc1bf995279d11ae2c5ff0d94fbc"
+    },
+    {
+      "path": "apps/web/e2e/lms-first-flow-live.spec.ts",
+      "sha256": "301a951875d6d70471551a19006d9ff13670a1a496045a76f0f37209e0e946a0"
+    },
+    {
+      "path": "apps/web/e2e/lms-geometry-live.spec.ts",
+      "sha256": "a48ff119765f6556f130ffcd32d88fdad634f65997c0c2cecc81ad1326b51e5c"
+    },
+    {
+      "path": "apps/web/e2e/lms-learning-live.spec.ts",
+      "sha256": "3a49ace8560b676e79e08cb0dc30996b67df6e37e0a591e391e24b9347ecb4d2"
+    },
+    {
+      "path": "apps/web/e2e/lms-negative-states-live.spec.ts",
+      "sha256": "5545b56b37cbccc927b97dc89e6e3ac3dabbbd53dbd675d935c6e4b96cdbfa2e"
+    },
+    {
+      "path": "apps/web/e2e/lms-operator-live.spec.ts",
+      "sha256": "93e209bf7a927ed9b8ca09f91b1a1ce3e5f5ff244ac2732e97c751805616d48c"
+    },
+    {
+      "path": "apps/web/e2e/lms-paper-signature-live.spec.ts",
+      "sha256": "032f28b650bc78f59022cf5d13ae83b270fbd4a8c2bba348c836855c4bffc865"
+    },
+    {
+      "path": "apps/web/e2e/lms-selection-regression-live.spec.ts",
+      "sha256": "9c6f7d9f3012085409acd91c2cb069d2a1e813827c86ffe0b5f9cac41930508e"
+    },
+    {
+      "path": "apps/web/e2e/lms-video-live.spec.ts",
+      "sha256": "a824eb036ed557f64a2e070af4d4df448ea7c9727feca42667a4aed38beb9c2b"
+    },
+    {
+      "path": "apps/web/e2e/mixed-feedback.spec.ts",
+      "sha256": "df722314726ea7b4ec50e246a4fa915d5b118ea2794dadd036274802175d1a20"
+    },
+    {
+      "path": "apps/web/e2e/operator-bulk-recipient-live.spec.ts",
+      "sha256": "2426cc7bd1e567107e60ef6b5b5debf0e2629028ecee21ade1451185121470bc"
+    },
+    {
+      "path": "apps/web/e2e/operator-common-history-live.spec.ts",
+      "sha256": "1f1b4826f3f60eb472a3a58479929670f63f23c8f9ce723bbd05410a5213aced"
+    },
+    {
+      "path": "apps/web/e2e/operator-common-resume-live.spec.ts",
+      "sha256": "548dc9854675137fef62a6df9fb2386deb665ff4e6c545328e809d53c3a90a6f"
+    },
+    {
+      "path": "apps/web/e2e/operator-company-import-conflict-live.spec.ts",
+      "sha256": "f45ceb382e9f96bb993e42e6e63bc3a3af17fd79b8f96db63dcf1e7688032812"
+    },
+    {
+      "path": "apps/web/e2e/operator-complete-live.spec.ts",
+      "sha256": "ad6debf08840edbc34c0c5a9cd5f18cfe2a978b0c7e52e6819e186f0fe286f5b"
+    },
+    {
+      "path": "apps/web/e2e/operator-customer-live.spec.ts",
+      "sha256": "da46f928b91802ee4ef756495007b234e04ea561f5867a80e8fc1b470645c63a"
+    },
+    {
+      "path": "apps/web/e2e/operator-date-causes-full-fix.spec.ts",
+      "sha256": "b1771eff525ebd4e8759e3189934eb925227da9a14241d3775b910aec03a2924"
+    },
+    {
+      "path": "apps/web/e2e/operator-details-acceptance-live.spec.ts",
+      "sha256": "2c744d855709b07e41cad616cbe9dc52caacc13cf5c916e4b069eedc6409fe03"
+    },
+    {
+      "path": "apps/web/e2e/operator-document-preview-component.spec.ts",
+      "sha256": "2aaa2cdc5de1d8c3756b6315fd2775804a4e78072a031b8075dd2e649c60ecc8"
+    },
+    {
+      "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+      "sha256": "4681b58ecec9980baca4f7b2afeec9feaf76f723fa88153b1089db3b4e262f35"
+    },
+    {
+      "path": "apps/web/e2e/operator-domain-full-fix-live.spec.ts",
+      "sha256": "823d5fccef1d804f30436aca3a73300781749f60975d6d587ce477c61728b3ec"
+    },
+    {
+      "path": "apps/web/e2e/operator-editor-live.spec.ts",
+      "sha256": "957c6ff4e31ad1d96b7c018661f726893ec58f93fa57dfdbb2f0ba150bbeb487"
+    },
+    {
+      "path": "apps/web/e2e/operator-error-focus-live.spec.ts",
+      "sha256": "c084b4e79bdac4e8654877a29784e90e52ef27390e5977723be11099ca59691c"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-complete.spec.ts",
+      "sha256": "1065e527af4a7c7f102796892371dcb9f44fd0b25c7eee2cd5bbeab9cdddaed1"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+      "sha256": "beceb0cd1aa5ee7f418323b41ec1b011461fdc36097f2e8e9de490a5550d81fa"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-keyboard-resume-live.spec.ts",
+      "sha256": "4a343f485266b5174d02369dbc7454aa05db8854e8d75a541baebccfca05322d"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-resume-live.spec.ts",
+      "sha256": "37166ff1547599e38f5d1934ce6465aa73e0a780682f4a95f4c2b1bf1ef9232d"
+    },
+    {
+      "path": "apps/web/e2e/operator-grid-context.spec.ts",
+      "sha256": "764ab9f90e38681850a2eaff94c1dacfbba994ebff9c2044924dea100a5261fe"
+    },
+    {
+      "path": "apps/web/e2e/operator-import-full-fix-live.spec.ts",
+      "sha256": "aad16affe628cd4c81f472ca6b81af4c267e371ad73cb2a9f992f78480f59528"
+    },
+    {
+      "path": "apps/web/e2e/operator-library-live.spec.ts",
+      "sha256": "57b57a87b48ad75da2116ab5caab03bc558d496ec978a4f71e1dbebb0be8ebd3"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-actions-400-live.spec.ts",
+      "sha256": "94d8f5c5e024a2f60aaa32184b3e34f90c6bcb1e029deb3e3aab63dfb7a08c90"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-exceptions-live.spec.ts",
+      "sha256": "c92ce5e15b5972c5cbeaf484bef622f2e9bdc39abaae3f93a130265ffb4ccc11"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-files-live.spec.ts",
+      "sha256": "062265446fd86a69df97f10c4c435daebc5794b26b4466609371f1d414f2aa70"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-live.spec.ts",
+      "sha256": "a94334b94eb9f6c7c60f7c9c219fc1c902765d6d2c2f710041e697d0dce9bf23"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-resume-live.spec.ts",
+      "sha256": "ce069bf44bbb15805fdfb58f17ad69153dbf818a089bbb22b3f9ef978e6468ce"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-review-layout-live.spec.ts",
+      "sha256": "925355213da5404bddd8f99d66de88e338f65f433983c5dc5c2f30361d1180e3"
+    },
+    {
+      "path": "apps/web/e2e/operator-native-zoom-live.spec.ts",
+      "sha256": "3dcd9ea7071162955554fe5ad71fb387ed18be9e8e895bb7984dd9a61519ece8"
+    },
+    {
+      "path": "apps/web/e2e/operator-person-flow.spec.ts",
+      "sha256": "f73f3fe76ef538b434ae27c06545b844548a195e873317cbf519dbbed2ea096a"
+    },
+    {
+      "path": "apps/web/e2e/operator-photo-component.spec.ts",
+      "sha256": "2107093222e5eb2b58c3cbbced7f0cb0e0e93350e428beafc7be892d06c81b11"
+    },
+    {
+      "path": "apps/web/e2e/operator-photo-details-live.spec.ts",
+      "sha256": "8d743a3607bd6671f20e1333883ddda09254b3ad05de5fec5ecef3e2c92cb7a9"
+    },
+    {
+      "path": "apps/web/e2e/operator-photo-retry-live.spec.ts",
+      "sha256": "3a3f6c091cadeddde7be41dbc4cfa104bb1b5bdf6f7f8eb2760ca5d143a4c737"
+    },
+    {
+      "path": "apps/web/e2e/operator-portal-retake-live.spec.ts",
+      "sha256": "7d48104864656578b4dbcf1f15a8b14a102f27760896db1d3c79da92c0c90c29"
+    },
+    {
+      "path": "apps/web/e2e/operator-preparation-full-fix.spec.ts",
+      "sha256": "e25d83c2cd750f85d85ad3755ee5588dca2633e3d6a9591ea874e69b4b79998e"
+    },
+    {
+      "path": "apps/web/e2e/operator-print-lifecycle-live.spec.ts",
+      "sha256": "c7d36a082a51b74e3ef95061400009e14f79bac2da23e490a83456af2cc71cbf"
+    },
+    {
+      "path": "apps/web/e2e/operator-render-performance.spec.ts",
+      "sha256": "b85fe6de5c3c3be2ce6eeed1813f46900b9878d012b07150b6fc424193ffc553"
+    },
+    {
+      "path": "apps/web/e2e/operator-role-full-fix-live.spec.ts",
+      "sha256": "a33fc743b4376104a19e8c1372f201731b584305a1c03a3f1d0d65316382b6c6"
+    },
+    {
+      "path": "apps/web/e2e/operator-table-live.spec.ts",
+      "sha256": "b1db656a0ded46538871422cf5a1b8e6f9c1d44b4f33484601f33ef198201abf"
+    },
+    {
+      "path": "apps/web/e2e/operator-table.spec.ts",
+      "sha256": "732ac3f0d9fc2f1eaff718708dc479e5f053a6a51a214c2b7d6480fd06f92292"
+    },
+    {
+      "path": "apps/web/e2e/operator-text-quality-live.spec.ts",
+      "sha256": "ce1794faf8bd9351006676c271948ea06b01b480c455fadb1e95836ab18144e6"
+    },
+    {
+      "path": "apps/web/e2e/operator-timing.spec.ts",
+      "sha256": "e4839c3aef1869803a22e59f589ad9ba1740843c167b357f7d4e0015eaeebc10"
+    },
+    {
+      "path": "apps/web/e2e/operator-ui-full-fix-live.spec.ts",
+      "sha256": "5fd1651b3948a499366730ec35e37ab656adedbb6a0a7589af86ad6c8748e018"
+    },
+    {
+      "path": "apps/web/e2e/operator-v01-live.spec.ts",
+      "sha256": "d53270bedbf6b1d758f1ce3bf53242e261eb7e1014958432d6b7d0e74911bba1"
+    },
+    {
+      "path": "apps/web/e2e/operator-v03-live.spec.ts",
+      "sha256": "692113c3bcdfa9d4c65b68138986c162b3bd189250f514c4c90e8c75257d7e76"
+    },
+    {
+      "path": "apps/web/e2e/operator-value-live.spec.ts",
+      "sha256": "27ab564fb1bc87e700bd5663c43c9188e9c5c14db68849fbc2fe2badb0e525dc"
+    },
+    {
+      "path": "apps/web/e2e/operator-workflow.spec.ts",
+      "sha256": "1f31d26cca82ea4374c0b7a181af37a5636d7f1df1a15f898d4729681c9ed92b"
+    },
+    {
+      "path": "apps/web/e2e/remaining-new-request-defaults-live.spec.ts",
+      "sha256": "e9c92c02b2ee2ebf3d7bc48815127bb12238397881830c236a766635374dee1b"
+    },
+    {
+      "path": "apps/web/e2e/remaining-operator-batches.spec.ts",
+      "sha256": "9f18d9d136ad33046a603295b961a25af4c3080be1e14213d3915c64c028f320"
+    },
+    {
+      "path": "apps/web/e2e/remaining-operator-input-live.spec.ts",
+      "sha256": "df55371ec20aa600234df850bddfc395c3b142f1990903eafb3d7afe61111c34"
+    },
+    {
+      "path": "apps/web/e2e/remaining-operator-input.spec.ts",
+      "sha256": "9b2322e3ebb3fa1f19a313892b92ed0d2178ba00202e0b3a2f3b82be7e4adc25"
+    },
+    {
+      "path": "apps/web/e2e/remaining-print-pack-scale-live.spec.ts",
+      "sha256": "18ed47eb499dda28afbad9a0132008f961b2c37fc40943ef4599d0536d311c75"
+    },
+    {
+      "path": "apps/web/e2e/remaining-signing-stages.spec.ts",
+      "sha256": "49b821b0657326982c021cffcd1b36acd3f2458459321d3ec036abfad9b9b530"
+    },
+    {
+      "path": "apps/web/e2e/save-reliability-live.spec.ts",
+      "sha256": "7f93ee393c03d315f09722907cd225ed3eebb466bb6951a60814136083be1619"
+    },
+    {
+      "path": "apps/web/e2e/save-reliability.spec.ts",
+      "sha256": "d3d90e772e1a70c173d13fc4871783ccecd4c8e9da17f2432d0faf54d593f09d"
+    },
+    {
+      "path": "apps/web/e2e/shared-employer-feedback.spec.ts",
+      "sha256": "d762f2a1d0525bb2a71522a3f010e1be3f6234cc1911f71c86f7922d69f773d3"
+    },
+    {
+      "path": "apps/web/e2e/training-calendar-feedback.spec.ts",
+      "sha256": "645d985a7a464f7028b65b8e7b5a1951c719748e5ad73b83ac29fdb11ce0dd03"
+    }
+  ]
+}

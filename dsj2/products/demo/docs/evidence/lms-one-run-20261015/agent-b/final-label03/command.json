@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "command": "pnpm --filter @demo/web exec playwright test e2e/lms-copy-original-live.spec.ts --project=remaining --no-deps",
+  "startedAt": "2026-10-15T01:22:51.3988293Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "runtime": "../../agent-c/full-e2e-20261015-05/runtime-start.json",
+  "buildId": "BV_9Qiz8LMZrZB5Rfnihw",
+  "source": [
+    {
+      "path": "apps/web/e2e/lms-copy-original-live.spec.ts",
+      "sha256": "c8fba338930073cc4200448956a7fd412ce1c86d29086fd9533fe4b303b793e4"
+    },
+    {
+      "path": "apps/web/e2e/lms-paper-signature-live.spec.ts",
+      "sha256": "6ec51ab1164ab0aa38eaee96352a669dfd2c382888d47de2381e3510101d0fbe"
+    },
+    {
+      "path": "apps/web/e2e/lms-slow-response-live.spec.ts",
+      "sha256": "d6fec00c03bbfd019dc84f928d8baa617fc1d19d56e798abbcb454d6c111e25a"
+    }
+  ],
+  "exitCode": 0,
+  "finishedAt": "2026-10-15T01:23:28.1282614Z"
+}

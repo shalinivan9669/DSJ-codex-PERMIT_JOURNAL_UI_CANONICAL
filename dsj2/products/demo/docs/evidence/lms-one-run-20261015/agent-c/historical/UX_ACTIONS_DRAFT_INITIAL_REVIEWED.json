@@ -1,0 +1,4752 @@
+{
+  "draftOnly": true,
+  "localAccepted": false,
+  "generatedAt": "2026-10-15T00:54:40.344576+00:00",
+  "before": {
+    "subcase": "Original fresh browser baseline before LMS implementation",
+    "status": "NOT_RUN",
+    "excludedByUserInstruction": true,
+    "instruction": "Продолжить без исходного браузерного замера",
+    "instructionReportedByCoordinator": true,
+    "documentGeneratedAtUtc": "2026-10-15T00:52:03.488062+00:00",
+    "userInstructionTimestampUtc": null,
+    "timestampMeaning": "This is report-generation time, not the time of the user's message. Agent C received the exact quote from the coordinator; original message timestamp is not supplied in this evidence.",
+    "actualRetainedEvidence": [
+      "agent-c/baseline-build-command.json",
+      "agent-c/baseline-build.log",
+      "agent-c/baseline-db-deploy.log"
+    ],
+    "archivedBaseCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+    "archiveSha256": "4D1AE93537DF142928C55E3816AF352475F9A49783C56F35851D8B464CEA5577",
+    "ordinaryDraftProbeCaveat": "agent-c/baseline was current development code with LMS navigation already integrated; it is not a preimplementation browser measurement.",
+    "noBeforeAfterTimeSavingClaim": true
+  },
+  "afterCurrentMeasurements": [
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json#scenarios/0",
+      "group": "learning",
+      "scenario": "prepared group assignment",
+      "sourcePointer": "/scenarios/0",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json",
+      "sourceSha256": "40fcf4fb66c9688bb75f66e7924a6840a9dec83aab3c0609670634b4333e07eb",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-learning-live.spec.ts"
+      },
+      "role": "ADMIN",
+      "phase": "prepared repeat and learning",
+      "goal": "prepared group assignment",
+      "result": "PASS",
+      "startState": "Existing group and course selected by prepared request/version URL",
+      "preconditions": "Synthetic prerequisite data entered by fixture API/domain calls. These are excluded only from the explicitly prepared-repeat scenario, never represented as measured first-entry UX.",
+      "actualSteps": [
+        "Click Assign training for the two preselected people"
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "confirmations": 1,
+        "elapsedMilliseconds": 151.3162999999986
+      },
+      "metadataAdd": [
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "prepared repeat and learning"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "prepared group assignment"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "prepared group assignment",
+        "role": "ADMIN",
+        "startState": "Existing group and course selected by prepared request/version URL",
+        "preconditions": "Synthetic prerequisite data entered by fixture API/domain calls. These are excluded only from the explicitly prepared-repeat scenario, never represented as measured first-entry UX.",
+        "actualSteps": [
+          "Click Assign training for the two preselected people"
+        ],
+        "counts": {
+          "clicks": 1,
+          "keyboardActions": 0,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 1,
+          "navigation": 0,
+          "dialogs": 0,
+          "manualRefresh": 0,
+          "confirmations": 1
+        },
+        "instrumentation": {
+          "timingIncludesAssertionsAndScreenshots": true
+        },
+        "elapsedMilliseconds": 151.3162999999986,
+        "result": "PASS"
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json#scenarios/1",
+      "group": "learning",
+      "scenario": "prepared lesson continuation",
+      "sourcePointer": "/scenarios/1",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json",
+      "sourceSha256": "40fcf4fb66c9688bb75f66e7924a6840a9dec83aab3c0609670634b4333e07eb",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-learning-live.spec.ts"
+      },
+      "role": "LEARNER",
+      "phase": "prepared repeat and learning",
+      "goal": "prepared lesson continuation",
+      "result": "PASS",
+      "startState": "Authenticated My learning screen, assigned program visible",
+      "preconditions": "Authenticated My learning screen, assigned program visible",
+      "actualSteps": [
+        "Click Continue, arrive directly at the lesson"
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "confirmations": 0,
+        "elapsedMilliseconds": 152.01390000000174
+      },
+      "metadataAdd": [
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "prepared repeat and learning"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "prepared lesson continuation"
+        },
+        {
+          "field": "preconditions",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Authenticated My learning screen, assigned program visible"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "prepared lesson continuation",
+        "role": "LEARNER",
+        "startState": "Authenticated My learning screen, assigned program visible",
+        "authentication": {
+          "filledFields": 2,
+          "clicks": 1,
+          "countedSeparately": true
+        },
+        "actualSteps": [
+          "Click Continue, arrive directly at the lesson"
+        ],
+        "counts": {
+          "clicks": 1,
+          "keyboardActions": 0,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 1,
+          "navigation": 1,
+          "dialogs": 0,
+          "manualRefresh": 0,
+          "confirmations": 0
+        },
+        "elapsedMilliseconds": 152.01390000000174,
+        "result": "PASS"
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json#scenarios/2",
+      "group": "learning",
+      "scenario": "first learner text acknowledgement and exam, including one offline save",
+      "sourcePointer": "/scenarios/2",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json",
+      "sourceSha256": "40fcf4fb66c9688bb75f66e7924a6840a9dec83aab3c0609670634b4333e07eb",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-learning-live.spec.ts"
+      },
+      "role": "LEARNER",
+      "phase": "prepared repeat and learning",
+      "goal": "first learner text acknowledgement and exam, including one offline save",
+      "result": "PASS",
+      "startState": "Assigned synthetic program open at required text lesson",
+      "preconditions": "Assigned synthetic program open at required text lesson",
+      "actualSteps": [
+        "Acknowledge text",
+        "Start exam",
+        "Select ten answers; tenth while offline",
+        "Network returns; answer saves automatically",
+        "Switch language without losing answers",
+        "Submit once; actual database-backed result is 10/10"
+      ],
+      "recordedMetrics": {
+        "clicks": 15,
+        "keyboardActions": 0,
+        "filledFields": 10,
+        "repeatedFields": 0,
+        "decisions": 13,
+        "navigation": 0,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "confirmations": 2,
+        "elapsedMilliseconds": 1534.2057999999997
+      },
+      "metadataAdd": [
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "prepared repeat and learning"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "first learner text acknowledgement and exam, including one offline save"
+        },
+        {
+          "field": "preconditions",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Assigned synthetic program open at required text lesson"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "first learner text acknowledgement and exam, including one offline save",
+        "role": "LEARNER",
+        "startState": "Assigned synthetic program open at required text lesson",
+        "actualSteps": [
+          "Acknowledge text",
+          "Start exam",
+          "Select ten answers; tenth while offline",
+          "Network returns; answer saves automatically",
+          "Switch language without losing answers",
+          "Submit once; actual database-backed result is 10/10"
+        ],
+        "counts": {
+          "clicks": 15,
+          "keyboardActions": 0,
+          "filledFields": 10,
+          "repeatedFields": 0,
+          "decisions": 13,
+          "navigation": 0,
+          "dialogs": 0,
+          "manualRefresh": 0,
+          "confirmations": 2
+        },
+        "elapsedMilliseconds": 1534.2057999999997,
+        "result": "PASS",
+        "viewportChecks": [
+          360,
+          390,
+          768,
+          1440
+        ],
+        "languages": [
+          "ru",
+          "kz"
+        ],
+        "instrumentation": "Viewport and network controls are test instrumentation. Elapsed time begins before text acknowledgement and includes the two language changes, assertions, offline wait and screenshots. Eight earlier language geometry clicks are outside this scenario boundary. No API responses were mocked.",
+        "startBoundary": "Required text lesson already open, before acknowledging it",
+        "endBoundary": "Submitted result and persisted 100% progress confirmed"
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json#measurements/0",
+      "group": "ordinary",
+      "scenario": "З: current ordinary prepared group and one manual exception",
+      "sourcePointer": "/measurements/0",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+      "sourceSha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-demo-baseline.spec.ts"
+      },
+      "role": "OPERATOR",
+      "phase": "З: current ordinary prepared group and one manual exception",
+      "goal": "Keep the compact two-person list, save one individual exception and submit the same group for director review",
+      "result": {
+        "status": "PENDING",
+        "requestId": "bfa0496c-9b58-43ee-a5f0-3edfc604e6cd",
+        "people": 2,
+        "exceptionRetained": true,
+        "namesReentered": false
+      },
+      "startState": "Authenticated operator, prepared current request exists; editor not yet open",
+      "preconditions": [
+        "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+        "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+      ],
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the existing ordinary request",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 83.54470000000038
+        },
+        {
+          "kind": "field",
+          "label": "New individual position exception in row two",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 41.69889999999941
+        },
+        {
+          "kind": "key",
+          "label": "Leave the edited field with Tab",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.310999999999694
+        },
+        {
+          "kind": "navigate",
+          "label": "Return to requests without losing saved rows",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 55.99289999999928
+        },
+        {
+          "kind": "navigate",
+          "label": "Resume the same request without a new wizard",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 56.48359999999957
+        },
+        {
+          "kind": "click",
+          "label": "Submit the prepared group to director",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 30.91240000000107
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 1,
+        "filledFields": 1,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 3,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1774.5182999999997,
+        "selections": 0,
+        "fileSelections": 0
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "scenario": "З: current ordinary prepared group and one manual exception",
+        "role": "OPERATOR",
+        "startBoundary": "Authenticated operator, prepared current request exists; editor not yet open",
+        "preconditions": [
+          "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+          "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+        ],
+        "steps": [
+          {
+            "kind": "navigate",
+            "label": "Open the existing ordinary request",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 83.54470000000038
+          },
+          {
+            "kind": "field",
+            "label": "New individual position exception in row two",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 41.69889999999941
+          },
+          {
+            "kind": "key",
+            "label": "Leave the edited field with Tab",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 18.310999999999694
+          },
+          {
+            "kind": "navigate",
+            "label": "Return to requests without losing saved rows",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 55.99289999999928
+          },
+          {
+            "kind": "navigate",
+            "label": "Resume the same request without a new wizard",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 56.48359999999957
+          },
+          {
+            "kind": "click",
+            "label": "Submit the prepared group to director",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 30.91240000000107
+          }
+        ],
+        "clicks": 1,
+        "keyboardActions": 1,
+        "fields": 1,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 1,
+        "navigation": 3,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 1774.5182999999997,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "status": "PENDING",
+          "requestId": "bfa0496c-9b58-43ee-a5f0-3edfc604e6cd",
+          "people": 2,
+          "exceptionRetained": true,
+          "namesReentered": false
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+        "phase": "З: current ordinary prepared group and one manual exception",
+        "startState": "Authenticated operator, prepared current request exists; editor not yet open",
+        "goal": "Keep the compact two-person list, save one individual exception and submit the same group for director review",
+        "actualSteps": [
+          {
+            "kind": "navigate",
+            "label": "Open the existing ordinary request",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 83.54470000000038
+          },
+          {
+            "kind": "field",
+            "label": "New individual position exception in row two",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 41.69889999999941
+          },
+          {
+            "kind": "key",
+            "label": "Leave the edited field with Tab",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 18.310999999999694
+          },
+          {
+            "kind": "navigate",
+            "label": "Return to requests without losing saved rows",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 55.99289999999928
+          },
+          {
+            "kind": "navigate",
+            "label": "Resume the same request without a new wizard",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 56.48359999999957
+          },
+          {
+            "kind": "click",
+            "label": "Submit the prepared group to director",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 30.91240000000107
+          }
+        ],
+        "filledFields": 1
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json#measurements/1",
+      "group": "ordinary",
+      "scenario": "З: separate director preview, download and decision",
+      "sourcePointer": "/measurements/1",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+      "sourceSha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-demo-baseline.spec.ts"
+      },
+      "role": "DIRECTOR",
+      "phase": "З: separate director preview, download and decision",
+      "goal": "Inspect a real PDF, download its DOCX and approve that exact revision",
+      "result": {
+        "approved": true,
+        "preview": "real PDF",
+        "downloaded": "real DOCX",
+        "proposalId": "d785c7fc-b125-42e5-9cab-5bf5a5a221cd"
+      },
+      "startState": "Director already authenticated; submitted immutable revision exists",
+      "preconditions": [
+        "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+        "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+      ],
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the submitted revision",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 77.13490000000093
+        },
+        {
+          "kind": "select",
+          "label": "Choose existing first person and form for preview",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 211.18719999999848
+        },
+        {
+          "kind": "click",
+          "label": "Render the actual submitted document preview",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 45.95309999999881
+        },
+        {
+          "kind": "click",
+          "label": "Download actual preview DOCX",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 34.18699999999808
+        },
+        {
+          "kind": "click",
+          "label": "Approve this exact ordinary revision",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 31.442799999997078
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 3,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 4,
+        "navigation": 1,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 23973.103300000002,
+        "selections": 1,
+        "fileSelections": 0
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "scenario": "З: separate director preview, download and decision",
+        "role": "DIRECTOR",
+        "startBoundary": "Director already authenticated; submitted immutable revision exists",
+        "preconditions": [
+          "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+          "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+        ],
+        "steps": [
+          {
+            "kind": "navigate",
+            "label": "Open the submitted revision",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 77.13490000000093
+          },
+          {
+            "kind": "select",
+            "label": "Choose existing first person and form for preview",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 211.18719999999848
+          },
+          {
+            "kind": "click",
+            "label": "Render the actual submitted document preview",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 45.95309999999881
+          },
+          {
+            "kind": "click",
+            "label": "Download actual preview DOCX",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 34.18699999999808
+          },
+          {
+            "kind": "click",
+            "label": "Approve this exact ordinary revision",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 31.442799999997078
+          }
+        ],
+        "clicks": 3,
+        "keyboardActions": 0,
+        "fields": 0,
+        "repeatedFields": 0,
+        "selections": 1,
+        "decisions": 4,
+        "navigation": 1,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 23973.103300000002,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "approved": true,
+          "preview": "real PDF",
+          "downloaded": "real DOCX",
+          "proposalId": "d785c7fc-b125-42e5-9cab-5bf5a5a221cd"
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+        "phase": "З: separate director preview, download and decision",
+        "startState": "Director already authenticated; submitted immutable revision exists",
+        "goal": "Inspect a real PDF, download its DOCX and approve that exact revision",
+        "actualSteps": [
+          {
+            "kind": "navigate",
+            "label": "Open the submitted revision",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 77.13490000000093
+          },
+          {
+            "kind": "select",
+            "label": "Choose existing first person and form for preview",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 211.18719999999848
+          },
+          {
+            "kind": "click",
+            "label": "Render the actual submitted document preview",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 45.95309999999881
+          },
+          {
+            "kind": "click",
+            "label": "Download actual preview DOCX",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 34.18699999999808
+          },
+          {
+            "kind": "click",
+            "label": "Approve this exact ordinary revision",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 31.442799999997078
+          }
+        ],
+        "filledFields": 0
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json#measurements/2",
+      "group": "ordinary",
+      "scenario": "З: approved ordinary prepared files",
+      "sourcePointer": "/measurements/2",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+      "sourceSha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-demo-baseline.spec.ts"
+      },
+      "role": "OPERATOR",
+      "phase": "З: approved ordinary prepared files",
+      "goal": "Generate saved ordinary files with no LMS fields or repeated people/forms",
+      "result": {
+        "requestId": "bfa0496c-9b58-43ee-a5f0-3edfc604e6cd",
+        "documents": 4,
+        "realOriginalFiles": 10,
+        "historicalAutoPreserved": true,
+        "assignmentLmsMetadataAdded": false
+      },
+      "startState": "Original operator editor still open; director decision arrives without manual refresh",
+      "preconditions": [
+        "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+        "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+      ],
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Generate the approved ordinary documents",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 37.66060000000289
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 70697.9022,
+        "selections": 0,
+        "fileSelections": 0
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "scenario": "З: approved ordinary prepared files",
+        "role": "OPERATOR",
+        "startBoundary": "Original operator editor still open; director decision arrives without manual refresh",
+        "preconditions": [
+          "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+          "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+        ],
+        "steps": [
+          {
+            "kind": "click",
+            "label": "Generate the approved ordinary documents",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 37.66060000000289
+          }
+        ],
+        "clicks": 1,
+        "keyboardActions": 0,
+        "fields": 0,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 70697.9022,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "requestId": "bfa0496c-9b58-43ee-a5f0-3edfc604e6cd",
+          "documents": 4,
+          "realOriginalFiles": 10,
+          "historicalAutoPreserved": true,
+          "assignmentLmsMetadataAdded": false
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+        "phase": "З: approved ordinary prepared files",
+        "startState": "Original operator editor still open; director decision arrives without manual refresh",
+        "goal": "Generate saved ordinary files with no LMS fields or repeated people/forms",
+        "actualSteps": [
+          {
+            "kind": "click",
+            "label": "Generate the approved ordinary documents",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 37.66060000000289
+          }
+        ],
+        "filledFields": 0
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json#measurements/3",
+      "group": "ordinary",
+      "scenario": "З: ordinary saved PDF and unsigned publication boundary",
+      "sourcePointer": "/measurements/3",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+      "sourceSha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-demo-baseline.spec.ts"
+      },
+      "role": "OPERATOR",
+      "phase": "З: ordinary saved PDF and unsigned publication boundary",
+      "goal": "Download a real prepared PDF and see the precise block on official unsigned publication",
+      "result": {
+        "downloadedPreparedPdf": true,
+        "officialRegistryDisabled": true,
+        "unsignedQrUnavailable": true,
+        "verificationGuardStatus": 409,
+        "noSignatureInvented": true
+      },
+      "startState": "Ordinary documents and artifacts prepared; genuine required signatures are not configured",
+      "preconditions": [
+        "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+        "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+      ],
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the current saved request record",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 89.24020000000019
+        },
+        {
+          "kind": "click",
+          "label": "Download the saved prepared PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 257.64229999999225
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 587.1248999999953,
+        "selections": 0,
+        "fileSelections": 0
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "scenario": "З: ordinary saved PDF and unsigned publication boundary",
+        "role": "OPERATOR",
+        "startBoundary": "Ordinary documents and artifacts prepared; genuine required signatures are not configured",
+        "preconditions": [
+          "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+          "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+        ],
+        "steps": [
+          {
+            "kind": "navigate",
+            "label": "Open the current saved request record",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 89.24020000000019
+          },
+          {
+            "kind": "click",
+            "label": "Download the saved prepared PDF",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 257.64229999999225
+          }
+        ],
+        "clicks": 1,
+        "keyboardActions": 0,
+        "fields": 0,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 587.1248999999953,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "downloadedPreparedPdf": true,
+          "officialRegistryDisabled": true,
+          "unsignedQrUnavailable": true,
+          "verificationGuardStatus": 409,
+          "noSignatureInvented": true
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+        "phase": "З: ordinary saved PDF and unsigned publication boundary",
+        "startState": "Ordinary documents and artifacts prepared; genuine required signatures are not configured",
+        "goal": "Download a real prepared PDF and see the precise block on official unsigned publication",
+        "actualSteps": [
+          {
+            "kind": "navigate",
+            "label": "Open the current saved request record",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 89.24020000000019
+          },
+          {
+            "kind": "click",
+            "label": "Download the saved prepared PDF",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 257.64229999999225
+          }
+        ],
+        "filledFields": 0
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/0",
+      "group": "negative",
+      "scenario": "Г: inspect ineligible results without creating official documents",
+      "sourcePointer": "/measurements/0",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+      "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-negative-states-live.spec.ts"
+      },
+      "role": "DIRECTOR",
+      "phase": "negative and unknown states",
+      "goal": "Г: inspect ineligible results without creating official documents",
+      "result": {
+        "practiceEligible": false,
+        "failedEligible": false,
+        "autoResultCount": 0,
+        "unverifiedResultCount": 0,
+        "needsReviewResultCount": 0,
+        "officialSelectionForAllFive": false,
+        "unverifiedNextStep": "Проверить источник и заполнить способ проверки"
+      },
+      "startState": "Authenticated director opens results with prepared negative scenarios",
+      "preconditions": [
+        "Fresh isolated synthetic tenant, existing DEMO provisioning/templates, actual course/assignment/attempt/result, AUTO print draft, scanned private external input, explicit director approval and real render queue, persisted test-adapter timeout. All preparation precedes measured browser paths. No live provider, real signature, legal approval or physical print.",
+        "Fixture setup 36339.3929 ms is separate from operator actions."
+      ],
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Открыть результаты",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 99.17820000000211
+        },
+        {
+          "kind": "click",
+          "label": "Открыть непроверенное основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 57.853900000001886
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 0,
+        "navigation": 1,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 806.0648999999976,
+        "selections": 0,
+        "fileSelections": 0,
+        "filledFields": 0
+      },
+      "metadataAdd": [
+        {
+          "field": "actualSteps",
+          "sourceField": "steps",
+          "kind": "descriptive alias; numeric values unchanged"
+        },
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "negative and unknown states"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Г: inspect ineligible results without creating official documents"
+        },
+        {
+          "field": "startState",
+          "sourceField": "startBoundary",
+          "kind": "descriptive alias; numeric values unchanged"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "Г: inspect ineligible results without creating official documents",
+        "role": "DIRECTOR",
+        "startBoundary": "Authenticated director opens results with prepared negative scenarios",
+        "preconditions": [
+          "Fresh isolated synthetic tenant, existing DEMO provisioning/templates, actual course/assignment/attempt/result, AUTO print draft, scanned private external input, explicit director approval and real render queue, persisted test-adapter timeout. All preparation precedes measured browser paths. No live provider, real signature, legal approval or physical print.",
+          "Fixture setup 36339.3929 ms is separate from operator actions."
+        ],
+        "steps": [
+          {
+            "kind": "navigate",
+            "label": "Открыть результаты",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 99.17820000000211
+          },
+          {
+            "kind": "click",
+            "label": "Открыть непроверенное основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 57.853900000001886
+          }
+        ],
+        "clicks": 1,
+        "keyboardActions": 0,
+        "fields": 0,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 0,
+        "navigation": 1,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 806.0648999999976,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "practiceEligible": false,
+          "failedEligible": false,
+          "autoResultCount": 0,
+          "unverifiedResultCount": 0,
+          "needsReviewResultCount": 0,
+          "officialSelectionForAllFive": false,
+          "unverifiedNextStep": "Проверить источник и заполнить способ проверки"
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/1",
+      "group": "negative",
+      "scenario": "Г: inspect mandatory electronic signature",
+      "sourcePointer": "/measurements/1",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+      "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-negative-states-live.spec.ts"
+      },
+      "role": "DIRECTOR",
+      "phase": "negative and unknown states",
+      "goal": "Г: inspect mandatory electronic signature",
+      "result": {
+        "status": "AWAITING_SIGNATURE",
+        "legalForm": "ELECTRONIC_ORIGINAL",
+        "issued": false,
+        "signatureInvented": false,
+        "enabledSignActions": 0,
+        "reason": "Подключение и проверка ЭЦП не настроены; требуется настройка подписантов директором"
+      },
+      "startState": "Prepared result list is open; source has real approved/rendered documents",
+      "preconditions": [
+        "Electronic original requires DIRECTOR signature; no signer service or synthetic signature is provided."
+      ],
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Закрыть основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 52.179400000000896
+        },
+        {
+          "kind": "click",
+          "label": "Посмотреть документ с обязательной подписью",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 51.36239999999816
+        },
+        {
+          "kind": "click",
+          "label": "Открыть комплект для подписания",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 70.58729999999923
+        },
+        {
+          "kind": "click",
+          "label": "Посмотреть электронные подписи",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 665.8102000000072
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 4,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 0,
+        "navigation": 1,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1256.0622999999978,
+        "selections": 0,
+        "fileSelections": 0,
+        "filledFields": 0
+      },
+      "metadataAdd": [
+        {
+          "field": "actualSteps",
+          "sourceField": "steps",
+          "kind": "descriptive alias; numeric values unchanged"
+        },
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "negative and unknown states"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Г: inspect mandatory electronic signature"
+        },
+        {
+          "field": "startState",
+          "sourceField": "startBoundary",
+          "kind": "descriptive alias; numeric values unchanged"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "Г: inspect mandatory electronic signature",
+        "role": "DIRECTOR",
+        "startBoundary": "Prepared result list is open; source has real approved/rendered documents",
+        "preconditions": [
+          "Electronic original requires DIRECTOR signature; no signer service or synthetic signature is provided."
+        ],
+        "steps": [
+          {
+            "kind": "click",
+            "label": "Закрыть основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 52.179400000000896
+          },
+          {
+            "kind": "click",
+            "label": "Посмотреть документ с обязательной подписью",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 51.36239999999816
+          },
+          {
+            "kind": "click",
+            "label": "Открыть комплект для подписания",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 70.58729999999923
+          },
+          {
+            "kind": "click",
+            "label": "Посмотреть электронные подписи",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 665.8102000000072
+          }
+        ],
+        "clicks": 4,
+        "keyboardActions": 0,
+        "fields": 0,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 0,
+        "navigation": 1,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 1256.0622999999978,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "status": "AWAITING_SIGNATURE",
+          "legalForm": "ELECTRONIC_ORIGINAL",
+          "issued": false,
+          "signatureInvented": false,
+          "enabledSignActions": 0,
+          "reason": "Подключение и проверка ЭЦП не настроены; требуется настройка подписантов директором"
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/2",
+      "group": "negative",
+      "scenario": "Г: unconfirmed exam route",
+      "sourcePointer": "/measurements/2",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+      "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-negative-states-live.spec.ts"
+      },
+      "role": "LEARNER",
+      "phase": "negative and unknown states",
+      "goal": "Г: unconfirmed exam route",
+      "result": {
+        "blocked": true,
+        "httpStatus": 409,
+        "nextStep": "Маршрут экзамена требует проверки учебным центром"
+      },
+      "startState": "Authenticated learner opens assigned course with all required learning already satisfied",
+      "preconditions": [
+        "Published immutable course; NEEDS_LEGAL_REVIEW profile; no raw state changes."
+      ],
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Открыть курс",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 144.14680000000226
+        },
+        {
+          "kind": "click",
+          "label": "Начать экзамен",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 198.80100000000675
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 535.9129000000103,
+        "selections": 0,
+        "fileSelections": 0,
+        "filledFields": 0
+      },
+      "metadataAdd": [
+        {
+          "field": "actualSteps",
+          "sourceField": "steps",
+          "kind": "descriptive alias; numeric values unchanged"
+        },
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "negative and unknown states"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Г: unconfirmed exam route"
+        },
+        {
+          "field": "startState",
+          "sourceField": "startBoundary",
+          "kind": "descriptive alias; numeric values unchanged"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "Г: unconfirmed exam route",
+        "role": "LEARNER",
+        "startBoundary": "Authenticated learner opens assigned course with all required learning already satisfied",
+        "preconditions": [
+          "Published immutable course; NEEDS_LEGAL_REVIEW profile; no raw state changes."
+        ],
+        "steps": [
+          {
+            "kind": "navigate",
+            "label": "Открыть курс",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 144.14680000000226
+          },
+          {
+            "kind": "click",
+            "label": "Начать экзамен",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 198.80100000000675
+          }
+        ],
+        "clicks": 1,
+        "keyboardActions": 0,
+        "fields": 0,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 535.9129000000103,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "blocked": true,
+          "httpStatus": 409,
+          "nextStep": "Маршрут экзамена требует проверки учебным центром"
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/3",
+      "group": "negative",
+      "scenario": "Ж: inspect unknown delivery without blind resend",
+      "sourcePointer": "/measurements/3",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+      "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-negative-states-live.spec.ts"
+      },
+      "role": "DIRECTOR",
+      "phase": "negative and unknown states",
+      "goal": "Ж: inspect unknown delivery without blind resend",
+      "result": {
+        "deliveryState": "UNKNOWN",
+        "accepted": 0,
+        "adapterSubmits": 1,
+        "sanitaryWrites": [],
+        "blindResendAvailable": false,
+        "greenSuccessClaim": false
+      },
+      "startState": "Authenticated director opens sanitary list after a real guarded test-adapter timeout",
+      "preconditions": [
+        "Fresh isolated synthetic tenant, existing DEMO provisioning/templates, actual course/assignment/attempt/result, AUTO print draft, scanned private external input, explicit director approval and real render queue, persisted test-adapter timeout. All preparation precedes measured browser paths. No live provider, real signature, legal approval or physical print.",
+        "One adapter submit threw after possible receipt; no further worker delivery runs before this measurement."
+      ],
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Открыть санитарное обучение",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 140.95750000000407
+        },
+        {
+          "kind": "click",
+          "label": "Открыть список с неизвестным исходом",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 154.78369999999995
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 0,
+        "navigation": 1,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 897.3981000000058,
+        "selections": 0,
+        "fileSelections": 0,
+        "filledFields": 0
+      },
+      "metadataAdd": [
+        {
+          "field": "actualSteps",
+          "sourceField": "steps",
+          "kind": "descriptive alias; numeric values unchanged"
+        },
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "negative and unknown states"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Ж: inspect unknown delivery without blind resend"
+        },
+        {
+          "field": "startState",
+          "sourceField": "startBoundary",
+          "kind": "descriptive alias; numeric values unchanged"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "Ж: inspect unknown delivery without blind resend",
+        "role": "DIRECTOR",
+        "startBoundary": "Authenticated director opens sanitary list after a real guarded test-adapter timeout",
+        "preconditions": [
+          "Fresh isolated synthetic tenant, existing DEMO provisioning/templates, actual course/assignment/attempt/result, AUTO print draft, scanned private external input, explicit director approval and real render queue, persisted test-adapter timeout. All preparation precedes measured browser paths. No live provider, real signature, legal approval or physical print.",
+          "One adapter submit threw after possible receipt; no further worker delivery runs before this measurement."
+        ],
+        "steps": [
+          {
+            "kind": "navigate",
+            "label": "Открыть санитарное обучение",
+            "decision": false,
+            "confirmation": false,
+            "navigation": true,
+            "elapsedMilliseconds": 140.95750000000407
+          },
+          {
+            "kind": "click",
+            "label": "Открыть список с неизвестным исходом",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 154.78369999999995
+          }
+        ],
+        "clicks": 1,
+        "keyboardActions": 0,
+        "fields": 0,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 0,
+        "navigation": 1,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 897.3981000000058,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "deliveryState": "UNKNOWN",
+          "accepted": 0,
+          "adapterSubmits": 1,
+          "sanitaryWrites": [],
+          "blindResendAvailable": false,
+          "greenSuccessClaim": false
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json#measurements/3",
+      "group": "external",
+      "scenario": "Д: add and review an external source with unknown exam date",
+      "sourcePointer": "/measurements/3",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "f04bc40521470aa2eacf1746c0b218e51328d69d2c5b760ad3e92d02f6d9a56d",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-selection-regression-live.spec.ts"
+      },
+      "role": "DIRECTOR",
+      "phase": "external source entry and correction",
+      "goal": "Д: add and review an external source with unknown exam date",
+      "result": {
+        "sourceId": "3ebe591e-3ace-40b1-b134-0eadf9777bce",
+        "examDate": null,
+        "documentDate": "2026-01-14",
+        "reviewed": true
+      },
+      "startState": "Authenticated director has results list open",
+      "preconditions": [
+        "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+        "Prepared fixture setup and selection/pagination regression are separate measurements."
+      ],
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Открыть слушателя",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 58.665799999995215
+        },
+        {
+          "kind": "click",
+          "label": "Добавить основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 61.09190000000672
+        },
+        {
+          "kind": "field",
+          "label": "Кем выдан",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.177800000004936
+        },
+        {
+          "kind": "field",
+          "label": "Источник",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.25209999999788
+        },
+        {
+          "kind": "field",
+          "label": "Номер документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 21.131499999995867
+        },
+        {
+          "kind": "field",
+          "label": "Дата документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.442199999997683
+        },
+        {
+          "kind": "file",
+          "label": "Файл основания",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 26.891600000002654
+        },
+        {
+          "kind": "click",
+          "label": "Добавить на проверку",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 48.71399999999994
+        },
+        {
+          "kind": "field",
+          "label": "Как проверено основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 59.01000000000204
+        },
+        {
+          "kind": "select",
+          "label": "Результат во внешнем документе",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 24.767799999994168
+        },
+        {
+          "kind": "click",
+          "label": "Подтвердить проверку",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 45.16449999999895
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 4,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 523.9761999999973,
+        "selections": 1,
+        "fileSelections": 1,
+        "filledFields": 5
+      },
+      "metadataAdd": [
+        {
+          "field": "actualSteps",
+          "sourceField": "steps",
+          "kind": "descriptive alias; numeric values unchanged"
+        },
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "external source entry and correction"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Д: add and review an external source with unknown exam date"
+        },
+        {
+          "field": "startState",
+          "sourceField": "startBoundary",
+          "kind": "descriptive alias; numeric values unchanged"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "Д: add and review an external source with unknown exam date",
+        "role": "DIRECTOR",
+        "startBoundary": "Authenticated director has results list open",
+        "preconditions": [
+          "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+          "Prepared fixture setup and selection/pagination regression are separate measurements."
+        ],
+        "steps": [
+          {
+            "kind": "click",
+            "label": "Открыть слушателя",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 58.665799999995215
+          },
+          {
+            "kind": "click",
+            "label": "Добавить основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 61.09190000000672
+          },
+          {
+            "kind": "field",
+            "label": "Кем выдан",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 18.177800000004936
+          },
+          {
+            "kind": "field",
+            "label": "Источник",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 18.25209999999788
+          },
+          {
+            "kind": "field",
+            "label": "Номер документа",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 21.131499999995867
+          },
+          {
+            "kind": "field",
+            "label": "Дата документа",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 18.442199999997683
+          },
+          {
+            "kind": "file",
+            "label": "Файл основания",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 26.891600000002654
+          },
+          {
+            "kind": "click",
+            "label": "Добавить на проверку",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 48.71399999999994
+          },
+          {
+            "kind": "field",
+            "label": "Как проверено основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 59.01000000000204
+          },
+          {
+            "kind": "select",
+            "label": "Результат во внешнем документе",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 24.767799999994168
+          },
+          {
+            "kind": "click",
+            "label": "Подтвердить проверку",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 45.16449999999895
+          }
+        ],
+        "clicks": 4,
+        "keyboardActions": 0,
+        "fields": 5,
+        "repeatedFields": 0,
+        "selections": 1,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "fileSelections": 1,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 523.9761999999973,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "sourceId": "3ebe591e-3ace-40b1-b134-0eadf9777bce",
+          "examDate": null,
+          "documentDate": "2026-01-14",
+          "reviewed": true
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json#measurements/4",
+      "group": "external",
+      "scenario": "Д: clarify unknown exam date without repeated source fields",
+      "sourcePointer": "/measurements/4",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "f04bc40521470aa2eacf1746c0b218e51328d69d2c5b760ad3e92d02f6d9a56d",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-selection-regression-live.spec.ts"
+      },
+      "role": "DIRECTOR",
+      "phase": "external source entry and correction",
+      "goal": "Д: clarify unknown exam date without repeated source fields",
+      "result": {
+        "oldSourceId": "3ebe591e-3ace-40b1-b134-0eadf9777bce",
+        "newSourceId": "8ab16d3b-f9a4-4c58-a2e2-3eb80e6f307c",
+        "unchangedFile": true,
+        "examDate": "2026-01-10",
+        "resultRevisions": 2
+      },
+      "startState": "Reviewed source with unknown exam date is open",
+      "preconditions": [
+        "Source bytes, issuer, document number, document date, learner and enrollment are already saved.",
+        "Only newly established exam date and justification are entered; existing evidence is immutable."
+      ],
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Уточнить дату экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 25.86239999999816
+        },
+        {
+          "kind": "field",
+          "label": "Дата экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 16.84440000000177
+        },
+        {
+          "kind": "field",
+          "label": "Основание уточнения",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 20.345500000003085
+        },
+        {
+          "kind": "click",
+          "label": "Сохранить уточнение",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 48.28029999999853
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 465.4681000000055,
+        "selections": 0,
+        "fileSelections": 0,
+        "filledFields": 2
+      },
+      "metadataAdd": [
+        {
+          "field": "actualSteps",
+          "sourceField": "steps",
+          "kind": "descriptive alias; numeric values unchanged"
+        },
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "external source entry and correction"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Д: clarify unknown exam date without repeated source fields"
+        },
+        {
+          "field": "startState",
+          "sourceField": "startBoundary",
+          "kind": "descriptive alias; numeric values unchanged"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "Д: clarify unknown exam date without repeated source fields",
+        "role": "DIRECTOR",
+        "startBoundary": "Reviewed source with unknown exam date is open",
+        "preconditions": [
+          "Source bytes, issuer, document number, document date, learner and enrollment are already saved.",
+          "Only newly established exam date and justification are entered; existing evidence is immutable."
+        ],
+        "steps": [
+          {
+            "kind": "click",
+            "label": "Уточнить дату экзамена",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 25.86239999999816
+          },
+          {
+            "kind": "field",
+            "label": "Дата экзамена",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 16.84440000000177
+          },
+          {
+            "kind": "field",
+            "label": "Основание уточнения",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 20.345500000003085
+          },
+          {
+            "kind": "click",
+            "label": "Сохранить уточнение",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 48.28029999999853
+          }
+        ],
+        "clicks": 2,
+        "keyboardActions": 0,
+        "fields": 2,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 465.4681000000055,
+        "excludedVerificationMilliseconds": 1193.6097999999984,
+        "result": {
+          "oldSourceId": "3ebe591e-3ace-40b1-b134-0eadf9777bce",
+          "newSourceId": "8ab16d3b-f9a4-4c58-a2e2-3eb80e6f307c",
+          "unchangedFile": true,
+          "examDate": "2026-01-10",
+          "resultRevisions": 2
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json#measurements/5",
+      "group": "external",
+      "scenario": "Д: add and review an external source with known exam date",
+      "sourcePointer": "/measurements/5",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "f04bc40521470aa2eacf1746c0b218e51328d69d2c5b760ad3e92d02f6d9a56d",
+      "enclosingPassedTest": {
+        "path": "agent-c/critical-lms-20261015-01/results.json",
+        "file": "lms-selection-regression-live.spec.ts"
+      },
+      "role": "DIRECTOR",
+      "phase": "external source entry and correction",
+      "goal": "Д: add and review an external source with known exam date",
+      "result": {
+        "sourceId": "8345be3c-e118-4718-9b94-2428dbbfc8fe",
+        "examDate": "2026-01-12",
+        "documentDate": "2026-01-14",
+        "reviewed": true
+      },
+      "startState": "Results list is open with prior source details still open",
+      "preconditions": [
+        "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+        "Prepared fixture setup and selection/pagination regression are separate measurements."
+      ],
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Закрыть предыдущее основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 30.577100000002247
+        },
+        {
+          "kind": "click",
+          "label": "Открыть слушателя",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 39.377400000004855
+        },
+        {
+          "kind": "click",
+          "label": "Добавить основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 80.73279999999795
+        },
+        {
+          "kind": "field",
+          "label": "Кем выдан",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 23.22989999999845
+        },
+        {
+          "kind": "field",
+          "label": "Источник",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 35.39530000000377
+        },
+        {
+          "kind": "field",
+          "label": "Номер документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 33.59109999999782
+        },
+        {
+          "kind": "field",
+          "label": "Дата документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 15.908799999997427
+        },
+        {
+          "kind": "field",
+          "label": "Дата экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 32.90529999999853
+        },
+        {
+          "kind": "file",
+          "label": "Файл основания",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 19.858600000006845
+        },
+        {
+          "kind": "click",
+          "label": "Добавить на проверку",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 39.771700000004785
+        },
+        {
+          "kind": "field",
+          "label": "Как проверено основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 60.263599999998405
+        },
+        {
+          "kind": "select",
+          "label": "Результат во внешнем документе",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 17.817199999997683
+        },
+        {
+          "kind": "click",
+          "label": "Подтвердить проверку",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 44.28070000000298
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 5,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 589.8024000000005,
+        "selections": 1,
+        "fileSelections": 1,
+        "filledFields": 6
+      },
+      "metadataAdd": [
+        {
+          "field": "actualSteps",
+          "sourceField": "steps",
+          "kind": "descriptive alias; numeric values unchanged"
+        },
+        {
+          "field": "phase",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "external source entry and correction"
+        },
+        {
+          "field": "goal",
+          "kind": "editorial description of the recorded scenario; no numeric inference",
+          "value": "Д: add and review an external source with known exam date"
+        },
+        {
+          "field": "startState",
+          "sourceField": "startBoundary",
+          "kind": "descriptive alias; numeric values unchanged"
+        }
+      ],
+      "rawActualRecord": {
+        "scenario": "Д: add and review an external source with known exam date",
+        "role": "DIRECTOR",
+        "startBoundary": "Results list is open with prior source details still open",
+        "preconditions": [
+          "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+          "Prepared fixture setup and selection/pagination regression are separate measurements."
+        ],
+        "steps": [
+          {
+            "kind": "click",
+            "label": "Закрыть предыдущее основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 30.577100000002247
+          },
+          {
+            "kind": "click",
+            "label": "Открыть слушателя",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 39.377400000004855
+          },
+          {
+            "kind": "click",
+            "label": "Добавить основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 80.73279999999795
+          },
+          {
+            "kind": "field",
+            "label": "Кем выдан",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 23.22989999999845
+          },
+          {
+            "kind": "field",
+            "label": "Источник",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 35.39530000000377
+          },
+          {
+            "kind": "field",
+            "label": "Номер документа",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 33.59109999999782
+          },
+          {
+            "kind": "field",
+            "label": "Дата документа",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 15.908799999997427
+          },
+          {
+            "kind": "field",
+            "label": "Дата экзамена",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 32.90529999999853
+          },
+          {
+            "kind": "file",
+            "label": "Файл основания",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 19.858600000006845
+          },
+          {
+            "kind": "click",
+            "label": "Добавить на проверку",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 39.771700000004785
+          },
+          {
+            "kind": "field",
+            "label": "Как проверено основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 60.263599999998405
+          },
+          {
+            "kind": "select",
+            "label": "Результат во внешнем документе",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 17.817199999997683
+          },
+          {
+            "kind": "click",
+            "label": "Подтвердить проверку",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 44.28070000000298
+          }
+        ],
+        "clicks": 5,
+        "keyboardActions": 0,
+        "fields": 6,
+        "repeatedFields": 0,
+        "selections": 1,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "nativeDialogs": 0,
+        "applicationDialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "fileSelections": 1,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 589.8024000000005,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "sourceId": "8345be3c-e118-4718-9b94-2428dbbfc8fe",
+          "examDate": "2026-01-12",
+          "documentDate": "2026-01-14",
+          "reviewed": true
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#measurements/0",
+      "group": "batch",
+      "scenario": "mixed prepared batch",
+      "sourcePointer": "/measurements/0",
+      "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d",
+      "enclosingPassedTest": {
+        "path": "agent-c/batch-ambiguity-20261015-02/results.json",
+        "file": "lms-assignment-batches-live.spec.ts"
+      },
+      "role": "OPERATOR",
+      "phase": "prepared mixed-group assignment and one-row repair",
+      "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+      "result": {
+        "firstCreated": 0,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 495.5744999999997
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "count": 1,
+        "role": "OPERATOR",
+        "phase": "prepared mixed-group assignment and one-row repair",
+        "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+        "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+        "startState": "Prepared known group with one missing employer relationship; published course already selected",
+        "fixtureSetupNotCountedAsFirstEntry": true,
+        "actualSteps": [
+          "Activate one group assignment using keyboard",
+          "Confirm only the failed row's known employer",
+          "Assign only the still selected failed row"
+        ],
+        "result": {
+          "firstCreated": 0,
+          "repairedCreated": 1,
+          "duplicateReplayCreated": 0
+        },
+        "counts": {
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0
+        },
+        "verificationOnly": {
+          "replayClicks": 1
+        },
+        "elapsedMilliseconds": 495.5744999999997
+      },
+      "timingBoundary": "Automated wall time includes verification-only replay and screenshot; not human-only timing.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#measurements/1",
+      "group": "batch",
+      "scenario": "mixed prepared batch",
+      "sourcePointer": "/measurements/1",
+      "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d",
+      "enclosingPassedTest": {
+        "path": "agent-c/batch-ambiguity-20261015-02/results.json",
+        "file": "lms-assignment-batches-live.spec.ts"
+      },
+      "role": "OPERATOR",
+      "phase": "prepared mixed-group assignment and one-row repair",
+      "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+      "result": {
+        "firstCreated": 9,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 470.7368999999999
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "count": 10,
+        "role": "OPERATOR",
+        "phase": "prepared mixed-group assignment and one-row repair",
+        "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+        "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+        "startState": "Prepared known group with one missing employer relationship; published course already selected",
+        "fixtureSetupNotCountedAsFirstEntry": true,
+        "actualSteps": [
+          "Activate one group assignment using keyboard",
+          "Confirm only the failed row's known employer",
+          "Assign only the still selected failed row"
+        ],
+        "result": {
+          "firstCreated": 9,
+          "repairedCreated": 1,
+          "duplicateReplayCreated": 0
+        },
+        "counts": {
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0
+        },
+        "verificationOnly": {
+          "replayClicks": 1
+        },
+        "elapsedMilliseconds": 470.7368999999999
+      },
+      "timingBoundary": "Automated wall time includes verification-only replay and screenshot; not human-only timing.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#measurements/2",
+      "group": "batch",
+      "scenario": "mixed prepared batch",
+      "sourcePointer": "/measurements/2",
+      "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d",
+      "enclosingPassedTest": {
+        "path": "agent-c/batch-ambiguity-20261015-02/results.json",
+        "file": "lms-assignment-batches-live.spec.ts"
+      },
+      "role": "OPERATOR",
+      "phase": "prepared mixed-group assignment and one-row repair",
+      "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+      "result": {
+        "firstCreated": 99,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 701.9268000000011
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "count": 100,
+        "role": "OPERATOR",
+        "phase": "prepared mixed-group assignment and one-row repair",
+        "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+        "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+        "startState": "Prepared known group with one missing employer relationship; published course already selected",
+        "fixtureSetupNotCountedAsFirstEntry": true,
+        "actualSteps": [
+          "Activate one group assignment using keyboard",
+          "Confirm only the failed row's known employer",
+          "Assign only the still selected failed row"
+        ],
+        "result": {
+          "firstCreated": 99,
+          "repairedCreated": 1,
+          "duplicateReplayCreated": 0
+        },
+        "counts": {
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0
+        },
+        "verificationOnly": {
+          "replayClicks": 1
+        },
+        "elapsedMilliseconds": 701.9268000000011
+      },
+      "timingBoundary": "Automated wall time includes verification-only replay and screenshot; not human-only timing.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#measurements/3",
+      "group": "batch",
+      "scenario": "mixed prepared batch",
+      "sourcePointer": "/measurements/3",
+      "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d",
+      "enclosingPassedTest": {
+        "path": "agent-c/batch-ambiguity-20261015-02/results.json",
+        "file": "lms-assignment-batches-live.spec.ts"
+      },
+      "role": "OPERATOR",
+      "phase": "prepared mixed-group assignment and one-row repair",
+      "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+      "result": {
+        "firstCreated": 249,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1429.0383999999995
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "count": 250,
+        "role": "OPERATOR",
+        "phase": "prepared mixed-group assignment and one-row repair",
+        "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+        "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+        "startState": "Prepared known group with one missing employer relationship; published course already selected",
+        "fixtureSetupNotCountedAsFirstEntry": true,
+        "actualSteps": [
+          "Activate one group assignment using keyboard",
+          "Confirm only the failed row's known employer",
+          "Assign only the still selected failed row"
+        ],
+        "result": {
+          "firstCreated": 249,
+          "repairedCreated": 1,
+          "duplicateReplayCreated": 0
+        },
+        "counts": {
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0
+        },
+        "verificationOnly": {
+          "replayClicks": 1
+        },
+        "elapsedMilliseconds": 1429.0383999999995
+      },
+      "timingBoundary": "Automated wall time includes verification-only replay and screenshot; not human-only timing.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    },
+    {
+      "measurementId": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#ambiguousSelection/0",
+      "group": "ambiguousIdentity",
+      "scenario": "explicit ambiguous person selection",
+      "sourcePointer": "/ambiguousSelection",
+      "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d",
+      "enclosingPassedTest": {
+        "path": "agent-c/batch-ambiguity-20261015-02/results.json",
+        "file": "lms-assignment-batches-live.spec.ts"
+      },
+      "role": "OPERATOR",
+      "phase": "explicit selection of existing people with the same name",
+      "goal": "Choose two distinct saved identities by their visible position without merging them or repeating their details",
+      "result": "PASS",
+      "startState": "Published version known; two existing recipients share the same name and have different saved positions",
+      "preconditions": "A published course and two saved recipients with equal names and distinct positions/IDs exist",
+      "actualSteps": [
+        "Open assignment with known course",
+        "Search the shared name once",
+        "Choose the electrician row by its visible saved position and assign",
+        "Clear that row, choose the welder by visible position and assign separately"
+      ],
+      "recordedMetrics": {
+        "clicks": 5,
+        "keyboardActions": 0,
+        "filledFields": 1,
+        "repeatedFields": 0,
+        "decisions": 4,
+        "navigation": 1,
+        "dialogs": 0,
+        "confirmations": 2,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 808.9368000000013
+      },
+      "metadataAdd": [],
+      "rawActualRecord": {
+        "role": "OPERATOR",
+        "phase": "explicit selection of existing people with the same name",
+        "goal": "Choose two distinct saved identities by their visible position without merging them or repeating their details",
+        "preconditions": "A published course and two saved recipients with equal names and distinct positions/IDs exist",
+        "startState": "Published version known; two existing recipients share the same name and have different saved positions",
+        "actualSteps": [
+          "Open assignment with known course",
+          "Search the shared name once",
+          "Choose the electrician row by its visible saved position and assign",
+          "Clear that row, choose the welder by visible position and assign separately"
+        ],
+        "counts": {
+          "clicks": 5,
+          "keyboardActions": 0,
+          "filledFields": 1,
+          "repeatedFields": 0,
+          "decisions": 4,
+          "navigation": 1,
+          "dialogs": 0,
+          "confirmations": 2,
+          "manualRefresh": 0
+        },
+        "elapsedMilliseconds": 808.9368000000013,
+        "distinctRecipientIds": [
+          "7c2e51b3-f37a-4c34-b621-2ab2b2f04568",
+          "f448057e-9e27-4315-9df3-f3f37fd57d26"
+        ],
+        "distinctEnrollmentIds": [
+          "bccf20c3-fef9-4024-9b41-987760d50653",
+          "079ee7b3-afd1-447f-80b6-58391077a7ed"
+        ],
+        "automaticIdentityMerge": false,
+        "result": "PASS"
+      },
+      "timingBoundary": "Actual automated measurement at the recorded scenario boundary, including explicitly described waits and verification.",
+      "missingMeasuredOrDescriptiveFields": [],
+      "status": "MEASURED"
+    }
+  ],
+  "requiredSection8Scenarios": [
+    {
+      "id": "A",
+      "title": "Complete first input",
+      "status": "NOT_RUN",
+      "actual": "One or more complete current measurements remain absent or their enclosing browser test has not passed. No absent value is inferred as zero.",
+      "measurementIds": [],
+      "sources": []
+    },
+    {
+      "id": "B",
+      "title": "Prepared operator repeat",
+      "status": "NOT_RUN",
+      "actual": "One or more complete current measurements remain absent or their enclosing browser test has not passed. No absent value is inferred as zero.",
+      "measurementIds": [
+        "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json#scenarios/0",
+        "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json#scenarios/1",
+        "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json#scenarios/2"
+      ],
+      "sources": [
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json",
+          "sourceSha256": "40fcf4fb66c9688bb75f66e7924a6840a9dec83aab3c0609670634b4333e07eb"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json",
+          "sourceSha256": "40fcf4fb66c9688bb75f66e7924a6840a9dec83aab3c0609670634b4333e07eb"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-learning-live/actions.json",
+          "sourceSha256": "40fcf4fb66c9688bb75f66e7924a6840a9dec83aab3c0609670634b4333e07eb"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "title": "Automatic sanitary preparation",
+      "status": "NOT_RUN",
+      "actual": "One or more complete current measurements remain absent or their enclosing browser test has not passed. No absent value is inferred as zero.",
+      "measurementIds": [],
+      "sources": []
+    },
+    {
+      "id": "D",
+      "title": "Ineligible sources and mandatory signatures",
+      "status": "PASS",
+      "actual": "Actual passing browser tests and their recorded measurements are linked below; this does not establish a passing full suite.",
+      "measurementIds": [
+        "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/0",
+        "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/1",
+        "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/2",
+        "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/3"
+      ],
+      "sources": [
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+          "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+          "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+          "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+          "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086"
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "title": "Permitted reviewed external source",
+      "status": "PASS",
+      "actual": "Actual passing browser tests and their recorded measurements are linked below; this does not establish a passing full suite.",
+      "measurementIds": [
+        "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json#measurements/3",
+        "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json#measurements/4",
+        "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json#measurements/5"
+      ],
+      "sources": [
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json",
+          "sourceSha256": "f04bc40521470aa2eacf1746c0b218e51328d69d2c5b760ad3e92d02f6d9a56d"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json",
+          "sourceSha256": "f04bc40521470aa2eacf1746c0b218e51328d69d2c5b760ad3e92d02f6d9a56d"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-selection-regression-live/acceptance.json",
+          "sourceSha256": "f04bc40521470aa2eacf1746c0b218e51328d69d2c5b760ad3e92d02f6d9a56d"
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "title": "Mixed batch with one error",
+      "status": "PASS",
+      "actual": "Actual passing browser tests and their recorded measurements are linked below; this does not establish a passing full suite.",
+      "measurementIds": [
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#measurements/0",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#measurements/1",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#measurements/2",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json#measurements/3"
+      ],
+      "sources": [
+        {
+          "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+          "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d"
+        },
+        {
+          "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+          "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d"
+        },
+        {
+          "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+          "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d"
+        },
+        {
+          "sourcePath": "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+          "sourceSha256": "892cd32be7abf54e278c9a6f9f017f5b17f69d061b3b6ae65631f842a64ab85d"
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "title": "Unknown provider outcome",
+      "status": "PASS",
+      "actual": "Actual passing browser tests and their recorded measurements are linked below; this does not establish a passing full suite.",
+      "measurementIds": [
+        "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/0",
+        "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/1",
+        "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/2",
+        "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json#measurements/3"
+      ],
+      "sources": [
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+          "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+          "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+          "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-negative-states-live/acceptance.json",
+          "sourceSha256": "d9c68d8865e42e2280492d8764324ae7769bad72f3754d181ffe1504a214d086"
+        }
+      ]
+    },
+    {
+      "id": "H",
+      "title": "Ordinary DEMO current regression",
+      "status": "PASS",
+      "actual": "Actual passing browser tests and their recorded measurements are linked below; this does not establish a passing full suite.",
+      "measurementIds": [
+        "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json#measurements/0",
+        "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json#measurements/1",
+        "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json#measurements/2",
+        "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json#measurements/3"
+      ],
+      "sources": [
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+          "sourceSha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+          "sourceSha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+          "sourceSha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0"
+        },
+        {
+          "sourcePath": "agent-c/critical-lms-20261015-01/lms-demo-current-cycle/actions.json",
+          "sourceSha256": "de536e9c98d88d65ef0ad568aa417ce29501a38dcdfd896a99d363786f61a2e0"
+        }
+      ]
+    }
+  ],
+  "functionalOrVisualEvidenceNotActionBudgets": [
+    {
+      "path": "agent-c/targeted-batches-clock-20261015-01/lms-conflict-live/result.json",
+      "exists": true
+    },
+    {
+      "path": "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+      "exists": true
+    },
+    {
+      "path": "agent-b/geometry-run01/lms-geometry-live/geometry.json",
+      "exists": true
+    },
+    {
+      "path": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "exists": true
+    },
+    {
+      "path": "agent-a/video-browser/PLAYBACK_ACCEPTANCE.json",
+      "exists": true
+    },
+    {
+      "path": "root-public-browser/results.json",
+      "exists": true
+    },
+    {
+      "measurementId": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json#0",
+      "measurementKind": "external source first entry/correction and explicit selection regression",
+      "sourcePath": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "e835c4ba51d6bac86a15bc7a19d6ce0c8c8c18d5d093444e5d3ccdefa4892655",
+      "actualRecordedAt": "2026-10-14T22:45:27.721Z",
+      "scenario": "selection and failed row retained across actual search responses",
+      "role": null,
+      "phase": null,
+      "goal": null,
+      "result": null,
+      "startState": "Authenticated director opens a prepared assignment group; search and clear are intentional regression actions.",
+      "preconditions": "Fresh synthetic prerequisite records prepared through actual domain functions; no UI/API mocks or application-output substitution.",
+      "actualSteps": null,
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "navigation": 1,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1301.8922000000002,
+        "selections": 1,
+        "filledFields": 4
+      },
+      "missingMeasuredFields": [
+        "decisions",
+        "confirmations"
+      ],
+      "rawActualRecord": {
+        "scenario": "selection and failed row retained across actual search responses",
+        "selectedProgram": "e6648cff-76c5-4929-bdee-d2e35ce65e6b",
+        "postedRecipients": [
+          "b9e66319-1ef0-45b9-b653-e54a7ccf70fb",
+          "ea134110-d343-48a9-b5f5-b5fa08bfc8b7"
+        ],
+        "selectedAfterPartial": "b9e66319-1ef0-45b9-b653-e54a7ccf70fb",
+        "startBoundary": "Authenticated director opens a prepared assignment group; search and clear are intentional regression actions.",
+        "navigation": 1,
+        "clicks": 2,
+        "fields": 4,
+        "selections": 1,
+        "repeatedFields": 0,
+        "dialogs": 0,
+        "keyboardActions": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1301.8922000000002
+      },
+      "actionBudgetEvidence": false,
+      "status": "FUNCTIONAL_MEASUREMENT_ONLY",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json#1",
+      "measurementKind": "external source first entry/correction and explicit selection regression",
+      "sourcePath": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "e835c4ba51d6bac86a15bc7a19d6ce0c8c8c18d5d093444e5d3ccdefa4892655",
+      "actualRecordedAt": "2026-10-14T22:45:27.721Z",
+      "scenario": "partial preparation preserves ready item, exact failed row and excluded result",
+      "role": null,
+      "phase": null,
+      "goal": null,
+      "result": null,
+      "startState": null,
+      "preconditions": "Fresh synthetic prerequisite records prepared through actual domain functions; no UI/API mocks or application-output substitution.",
+      "actualSteps": null,
+      "recordedMetrics": {
+        "clicks": 3,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "navigation": 1,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "filledFields": 0
+      },
+      "missingMeasuredFields": [
+        "decisions",
+        "confirmations",
+        "elapsedMilliseconds"
+      ],
+      "rawActualRecord": {
+        "scenario": "partial preparation preserves ready item, exact failed row and excluded result",
+        "initialSelection": [
+          "08f82efe-4c71-438e-a8f0-48bbef360f7d",
+          "c1406d6a-6a5d-4043-a7af-f542dbbecb17"
+        ],
+        "readyDocuments": [
+          "ea09cda3-06b4-4976-92e8-4d000764ba5d"
+        ],
+        "retrySelection": [
+          "c1406d6a-6a5d-4043-a7af-f542dbbecb17"
+        ],
+        "excludedDocuments": 0,
+        "navigation": 1,
+        "clicks": 3,
+        "fields": 0,
+        "repeatedFields": 0,
+        "dialogs": 0,
+        "keyboardActions": 0,
+        "manualRefresh": 0
+      },
+      "actionBudgetEvidence": false,
+      "status": "FUNCTIONAL_MEASUREMENT_ONLY",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json#2",
+      "measurementKind": "external source first entry/correction and explicit selection regression",
+      "sourcePath": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "e835c4ba51d6bac86a15bc7a19d6ce0c8c8c18d5d093444e5d3ccdefa4892655",
+      "actualRecordedAt": "2026-10-14T22:45:27.721Z",
+      "scenario": "independent page subsets survive returning between real server pages",
+      "role": null,
+      "phase": null,
+      "goal": null,
+      "result": null,
+      "startState": null,
+      "preconditions": "Fresh synthetic prerequisite records prepared through actual domain functions; no UI/API mocks or application-output substitution.",
+      "actualSteps": null,
+      "recordedMetrics": {
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "filledFields": 0
+      },
+      "missingMeasuredFields": [
+        "clicks",
+        "decisions",
+        "navigation",
+        "confirmations",
+        "elapsedMilliseconds"
+      ],
+      "rawActualRecord": {
+        "scenario": "independent page subsets survive returning between real server pages",
+        "totalEnrollments": 259,
+        "pageSize": 250,
+        "firstPageSelection": [
+          "574728d4-1d22-4ccd-937e-cbd0e394836c"
+        ],
+        "secondPageInitialCount": 2,
+        "secondPageRestoredSelection": [
+          "c7519f8b-eb31-4b5d-b83b-ee74d5016fea"
+        ],
+        "addedRealAttempts": 1,
+        "syntheticAdditionalEnrollments": 253,
+        "fields": 0,
+        "repeatedFields": 0,
+        "dialogs": 0,
+        "keyboardActions": 0,
+        "manualRefresh": 0
+      },
+      "actionBudgetEvidence": false,
+      "status": "FUNCTIONAL_MEASUREMENT_ONLY",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json#6",
+      "measurementKind": "external source first entry/correction and explicit selection regression",
+      "sourcePath": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "e835c4ba51d6bac86a15bc7a19d6ce0c8c8c18d5d093444e5d3ccdefa4892655",
+      "actualRecordedAt": "2026-10-14T22:45:27.721Z",
+      "scenario": "separate known/unknown exam date and immutable correction",
+      "role": null,
+      "phase": null,
+      "goal": null,
+      "result": null,
+      "startState": null,
+      "preconditions": "Fresh synthetic prerequisite records prepared through actual domain functions; no UI/API mocks or application-output substitution.",
+      "actualSteps": null,
+      "recordedMetrics": {},
+      "missingMeasuredFields": [
+        "clicks",
+        "keyboardActions",
+        "filledFields",
+        "repeatedFields",
+        "decisions",
+        "navigation",
+        "dialogs",
+        "confirmations",
+        "manualRefresh",
+        "elapsedMilliseconds"
+      ],
+      "rawActualRecord": {
+        "scenario": "separate known/unknown exam date and immutable correction",
+        "documentDate": "2026-01-14",
+        "knownExamDate": "2026-01-12",
+        "unknownOriginalEvidenceId": "2cdddb73-e436-4645-8454-6acc3fa9c57c",
+        "datedEvidenceId": "066a0877-2094-47ae-8e35-88288d606d6b",
+        "unchangedPrivateFileSha256": "9b4203e982cecb99c2223be14faa8d56de5097ab8dd10a8cf9984bef9a2a9f1f",
+        "resultRevisions": 2,
+        "originalExamAt": null,
+        "correction": {
+          "startBoundary": "Unknown reviewed source is already open in the result details.",
+          "clicks": 2,
+          "fields": 2,
+          "repeatedFields": 0,
+          "selections": 0,
+          "dialogs": 0,
+          "fileSelections": 0,
+          "keyboardActions": 0,
+          "manualRefresh": 0,
+          "navigation": 0
+        },
+        "initialUploadFileSelections": 2,
+        "nativeFilePickerObserved": false
+      },
+      "actionBudgetEvidence": false,
+      "status": "FUNCTIONAL_MEASUREMENT_ONLY",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    }
+  ],
+  "finalPending": [
+    "Complete all required current measurements",
+    "Pass the entire mandatory production browser suite",
+    "Reconcile exact raw source hashes and current implementation",
+    "Do not claim historical before/after time saving"
+  ],
+  "historicalPartialMeasurements": [
+    {
+      "measurementId": "agent-c/learning-live/actions.json#0",
+      "measurementKind": "prepared and learner first attempt",
+      "sourcePath": "agent-c/learning-live/actions.json",
+      "sourceSha256": "d1589b72d373edca4240e071ff751b9d6cc5c28326faa4c0a59556daeb0adb31",
+      "actualRecordedAt": "2026-10-14T21:20:07.868Z",
+      "scenario": "prepared group assignment",
+      "role": "DIRECTOR",
+      "phase": null,
+      "goal": null,
+      "result": "PASS",
+      "startState": "Existing group and course selected by prepared request/version URL",
+      "preconditions": "Synthetic prerequisite data entered by fixture API/domain calls. These are excluded only from the explicitly prepared-repeat scenario, never represented as measured first-entry UX.",
+      "actualSteps": [
+        "Click Assign training for the two preselected people"
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 234.28660000000036
+      },
+      "missingMeasuredFields": [
+        "confirmations"
+      ],
+      "rawActualRecord": {
+        "scenario": "prepared group assignment",
+        "role": "DIRECTOR",
+        "startState": "Existing group and course selected by prepared request/version URL",
+        "preconditions": "Synthetic prerequisite data entered by fixture API/domain calls. These are excluded only from the explicitly prepared-repeat scenario, never represented as measured first-entry UX.",
+        "actualSteps": [
+          "Click Assign training for the two preselected people"
+        ],
+        "counts": {
+          "clicks": 1,
+          "keyboardActions": 0,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 1,
+          "navigation": 0,
+          "dialogs": 0,
+          "manualRefresh": 0
+        },
+        "elapsedMilliseconds": 234.28660000000036,
+        "result": "PASS"
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED_PARTIAL_SCHEMA",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-c/learning-live/actions.json#1",
+      "measurementKind": "prepared and learner first attempt",
+      "sourcePath": "agent-c/learning-live/actions.json",
+      "sourceSha256": "d1589b72d373edca4240e071ff751b9d6cc5c28326faa4c0a59556daeb0adb31",
+      "actualRecordedAt": "2026-10-14T21:20:07.868Z",
+      "scenario": "prepared lesson continuation",
+      "role": "LEARNER",
+      "phase": null,
+      "goal": null,
+      "result": "PASS",
+      "startState": "Authenticated My learning screen, assigned program visible",
+      "preconditions": null,
+      "actualSteps": [
+        "Click Continue, arrive directly at the lesson"
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 405.4530999999988
+      },
+      "missingMeasuredFields": [
+        "confirmations"
+      ],
+      "rawActualRecord": {
+        "scenario": "prepared lesson continuation",
+        "role": "LEARNER",
+        "startState": "Authenticated My learning screen, assigned program visible",
+        "authentication": {
+          "filledFields": 2,
+          "clicks": 1,
+          "countedSeparately": true
+        },
+        "actualSteps": [
+          "Click Continue, arrive directly at the lesson"
+        ],
+        "counts": {
+          "clicks": 1,
+          "keyboardActions": 0,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 1,
+          "navigation": 1,
+          "dialogs": 0,
+          "manualRefresh": 0
+        },
+        "elapsedMilliseconds": 405.4530999999988,
+        "result": "PASS"
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED_PARTIAL_SCHEMA",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-c/learning-live/actions.json#2",
+      "measurementKind": "prepared and learner first attempt",
+      "sourcePath": "agent-c/learning-live/actions.json",
+      "sourceSha256": "d1589b72d373edca4240e071ff751b9d6cc5c28326faa4c0a59556daeb0adb31",
+      "actualRecordedAt": "2026-10-14T21:20:07.868Z",
+      "scenario": "first learner text acknowledgement and exam, including one offline save",
+      "role": "LEARNER",
+      "phase": null,
+      "goal": null,
+      "result": "PASS",
+      "startState": "Assigned synthetic program open at required text lesson",
+      "preconditions": null,
+      "actualSteps": [
+        "Acknowledge text",
+        "Start exam",
+        "Select ten answers; tenth while offline",
+        "Network returns; answer saves automatically",
+        "Switch language without losing answers",
+        "Submit once; actual database-backed result is 10/10"
+      ],
+      "recordedMetrics": {
+        "clicks": 15,
+        "keyboardActions": 0,
+        "filledFields": 10,
+        "repeatedFields": 0,
+        "decisions": 13,
+        "navigation": 0,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1603.0049
+      },
+      "missingMeasuredFields": [
+        "confirmations"
+      ],
+      "rawActualRecord": {
+        "scenario": "first learner text acknowledgement and exam, including one offline save",
+        "role": "LEARNER",
+        "startState": "Assigned synthetic program open at required text lesson",
+        "actualSteps": [
+          "Acknowledge text",
+          "Start exam",
+          "Select ten answers; tenth while offline",
+          "Network returns; answer saves automatically",
+          "Switch language without losing answers",
+          "Submit once; actual database-backed result is 10/10"
+        ],
+        "counts": {
+          "clicks": 15,
+          "keyboardActions": 0,
+          "filledFields": 10,
+          "repeatedFields": 0,
+          "decisions": 13,
+          "navigation": 0,
+          "dialogs": 0,
+          "manualRefresh": 0
+        },
+        "elapsedMilliseconds": 1603.0049,
+        "result": "PASS",
+        "viewportChecks": [
+          360,
+          390,
+          768,
+          1440
+        ],
+        "languages": [
+          "ru",
+          "kz"
+        ],
+        "instrumentation": "Viewport and network controls are test instrumentation. No API responses were mocked."
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED_PARTIAL_SCHEMA",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-c/first-entry-live/registration-actions.json#0",
+      "measurementKind": "first registration",
+      "sourcePath": "agent-c/first-entry-live/registration-actions.json",
+      "sourceSha256": "de0101cca0287024c8f25ae736552c53e0e190b7cac39d65638e5264bed44fd3",
+      "actualRecordedAt": "2026-10-14T21:23:26.691Z",
+      "scenario": "first registration",
+      "role": "NEW_LEARNER",
+      "phase": null,
+      "goal": null,
+      "result": "PASS",
+      "startState": "Public registration page, empty form, no authenticated session",
+      "preconditions": null,
+      "actualSteps": [
+        "Enter name, email and password",
+        "Check versioned consent",
+        "Continue; actual server creates LEARNER and opens My learning"
+      ],
+      "recordedMetrics": {
+        "filledFields": 3,
+        "repeatedFields": 0,
+        "clicks": 2,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 3111.3387
+      },
+      "missingMeasuredFields": [
+        "keyboardActions",
+        "confirmations"
+      ],
+      "rawActualRecord": {
+        "result": "PASS",
+        "measuredAt": "2026-10-14T21:23:26.691Z",
+        "role": "NEW_LEARNER",
+        "startState": "Public registration page, empty form, no authenticated session",
+        "actualSteps": [
+          "Enter name, email and password",
+          "Check versioned consent",
+          "Continue; actual server creates LEARNER and opens My learning"
+        ],
+        "counts": {
+          "filledFields": 3,
+          "repeatedFields": 0,
+          "clicks": 2,
+          "decisions": 1,
+          "navigation": 1,
+          "dialogs": 0,
+          "manualRefresh": 0
+        },
+        "instrumentation": {
+          "languageClicks": 8,
+          "viewportChanges": 4,
+          "notIncludedInBusinessCounts": true
+        },
+        "elapsedMilliseconds": 3111.3387
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED_PARTIAL_SCHEMA",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-c/first-entry-live/course-actions.json#0",
+      "measurementKind": "first course authoring",
+      "sourcePath": "agent-c/first-entry-live/course-actions.json",
+      "sourceSha256": "e5c6885dc93d10b54fd0383b46c411edfb14cf401606b66fc6606acc01c141cc",
+      "actualRecordedAt": "2026-10-14T21:23:33.987Z",
+      "scenario": "first course authoring",
+      "role": "DIRECTOR",
+      "phase": null,
+      "goal": null,
+      "result": "PASS",
+      "startState": "Authenticated course catalogue; no course exists for this scenario",
+      "preconditions": null,
+      "actualSteps": [
+        {
+          "kind": "click",
+          "target": "Create course"
+        },
+        {
+          "kind": "fill",
+          "target": "Название RU"
+        },
+        {
+          "kind": "fill",
+          "target": "Название KZ"
+        },
+        {
+          "kind": "fill",
+          "target": "Категория слушателей"
+        },
+        {
+          "kind": "click",
+          "target": "Add module"
+        },
+        {
+          "kind": "fill",
+          "target": "Модуль RU"
+        },
+        {
+          "kind": "fill",
+          "target": "Модуль KZ"
+        },
+        {
+          "kind": "click",
+          "target": "Add lesson"
+        },
+        {
+          "kind": "fill",
+          "target": "Урок RU"
+        },
+        {
+          "kind": "fill",
+          "target": "Урок KZ"
+        },
+        {
+          "kind": "fill",
+          "target": "Текст RU"
+        },
+        {
+          "kind": "fill",
+          "target": "Текст KZ"
+        },
+        {
+          "kind": "click",
+          "target": "Add question"
+        },
+        {
+          "kind": "click",
+          "target": "Open question"
+        },
+        {
+          "kind": "fill",
+          "target": "Вопрос RU"
+        },
+        {
+          "kind": "fill",
+          "target": "Вопрос KZ"
+        },
+        {
+          "kind": "fill",
+          "target": "Answer 1 RU"
+        },
+        {
+          "kind": "fill",
+          "target": "Answer 1 KZ"
+        },
+        {
+          "kind": "fill",
+          "target": "Answer 2 RU"
+        },
+        {
+          "kind": "fill",
+          "target": "Answer 2 KZ"
+        },
+        {
+          "kind": "click",
+          "target": "Open basis"
+        },
+        {
+          "kind": "click",
+          "target": "Synthetic program"
+        },
+        {
+          "kind": "click",
+          "target": "Leave editor, autosave flushes"
+        },
+        {
+          "kind": "navigation",
+          "target": "Return to exact course"
+        },
+        {
+          "kind": "click",
+          "target": "Publish practice course"
+        }
+      ],
+      "recordedMetrics": {
+        "filledFields": 15,
+        "clicks": 9,
+        "selections": 0,
+        "repeatedFields": 0,
+        "dialogs": 0,
+        "manualSaveButtons": 0,
+        "elapsedMilliseconds": 3605.370999999999
+      },
+      "missingMeasuredFields": [
+        "keyboardActions",
+        "decisions",
+        "navigation",
+        "confirmations",
+        "manualRefresh"
+      ],
+      "rawActualRecord": {
+        "result": "PASS",
+        "measuredAt": "2026-10-14T21:23:33.987Z",
+        "role": "DIRECTOR",
+        "startState": "Authenticated course catalogue; no course exists for this scenario",
+        "actions": [
+          {
+            "kind": "click",
+            "target": "Create course"
+          },
+          {
+            "kind": "fill",
+            "target": "Название RU"
+          },
+          {
+            "kind": "fill",
+            "target": "Название KZ"
+          },
+          {
+            "kind": "fill",
+            "target": "Категория слушателей"
+          },
+          {
+            "kind": "click",
+            "target": "Add module"
+          },
+          {
+            "kind": "fill",
+            "target": "Модуль RU"
+          },
+          {
+            "kind": "fill",
+            "target": "Модуль KZ"
+          },
+          {
+            "kind": "click",
+            "target": "Add lesson"
+          },
+          {
+            "kind": "fill",
+            "target": "Урок RU"
+          },
+          {
+            "kind": "fill",
+            "target": "Урок KZ"
+          },
+          {
+            "kind": "fill",
+            "target": "Текст RU"
+          },
+          {
+            "kind": "fill",
+            "target": "Текст KZ"
+          },
+          {
+            "kind": "click",
+            "target": "Add question"
+          },
+          {
+            "kind": "click",
+            "target": "Open question"
+          },
+          {
+            "kind": "fill",
+            "target": "Вопрос RU"
+          },
+          {
+            "kind": "fill",
+            "target": "Вопрос KZ"
+          },
+          {
+            "kind": "fill",
+            "target": "Answer 1 RU"
+          },
+          {
+            "kind": "fill",
+            "target": "Answer 1 KZ"
+          },
+          {
+            "kind": "fill",
+            "target": "Answer 2 RU"
+          },
+          {
+            "kind": "fill",
+            "target": "Answer 2 KZ"
+          },
+          {
+            "kind": "click",
+            "target": "Open basis"
+          },
+          {
+            "kind": "click",
+            "target": "Synthetic program"
+          },
+          {
+            "kind": "click",
+            "target": "Leave editor, autosave flushes"
+          },
+          {
+            "kind": "navigation",
+            "target": "Return to exact course"
+          },
+          {
+            "kind": "click",
+            "target": "Publish practice course"
+          }
+        ],
+        "counts": {
+          "filledFields": 15,
+          "clicks": 9,
+          "selections": 0,
+          "repeatedFields": 0,
+          "dialogs": 0,
+          "manualSaveButtons": 0
+        },
+        "authenticationCountedSeparately": {
+          "fields": 2,
+          "clicks": 1
+        },
+        "elapsedMilliseconds": 3605.370999999999,
+        "boundary": "Synthetic PRACTICE program, profile still NEEDS_LEGAL_REVIEW. Publication does not establish regulated examination authority or document eligibility."
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED_PARTIAL_SCHEMA",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json#0",
+      "measurementKind": "mixed batch recovery",
+      "sourcePath": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "466501aee050d9d67bd3e09a36dd4e0ad61d41ecaa941c26f926e467bfbca40c",
+      "actualRecordedAt": "2026-10-14T21:48:09.909Z",
+      "scenario": "mixed batch recovery",
+      "role": "OPERATOR",
+      "phase": null,
+      "goal": null,
+      "result": {
+        "firstCreated": 0,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "preconditions": null,
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1507.1041000000005
+      },
+      "missingMeasuredFields": [],
+      "rawActualRecord": {
+        "count": 1,
+        "role": "OPERATOR",
+        "startState": "Prepared known group with one missing employer relationship; published course already selected",
+        "fixtureSetupNotCountedAsFirstEntry": true,
+        "actualSteps": [
+          "Activate one group assignment using keyboard",
+          "Confirm only the failed row's known employer",
+          "Assign only the still selected failed row"
+        ],
+        "result": {
+          "firstCreated": 0,
+          "repairedCreated": 1,
+          "duplicateReplayCreated": 0
+        },
+        "counts": {
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0
+        },
+        "verificationOnly": {
+          "replayClicks": 1
+        },
+        "elapsedMilliseconds": 1507.1041000000005
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED",
+      "timingBoundary": "Automated scenario wall time includes verification-only replay and screenshot; not a human-only task timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json#1",
+      "measurementKind": "mixed batch recovery",
+      "sourcePath": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "466501aee050d9d67bd3e09a36dd4e0ad61d41ecaa941c26f926e467bfbca40c",
+      "actualRecordedAt": "2026-10-14T21:48:09.909Z",
+      "scenario": "mixed batch recovery",
+      "role": "OPERATOR",
+      "phase": null,
+      "goal": null,
+      "result": {
+        "firstCreated": 9,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "preconditions": null,
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1412.5204999999987
+      },
+      "missingMeasuredFields": [],
+      "rawActualRecord": {
+        "count": 10,
+        "role": "OPERATOR",
+        "startState": "Prepared known group with one missing employer relationship; published course already selected",
+        "fixtureSetupNotCountedAsFirstEntry": true,
+        "actualSteps": [
+          "Activate one group assignment using keyboard",
+          "Confirm only the failed row's known employer",
+          "Assign only the still selected failed row"
+        ],
+        "result": {
+          "firstCreated": 9,
+          "repairedCreated": 1,
+          "duplicateReplayCreated": 0
+        },
+        "counts": {
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0
+        },
+        "verificationOnly": {
+          "replayClicks": 1
+        },
+        "elapsedMilliseconds": 1412.5204999999987
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED",
+      "timingBoundary": "Automated scenario wall time includes verification-only replay and screenshot; not a human-only task timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json#2",
+      "measurementKind": "mixed batch recovery",
+      "sourcePath": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "466501aee050d9d67bd3e09a36dd4e0ad61d41ecaa941c26f926e467bfbca40c",
+      "actualRecordedAt": "2026-10-14T21:48:09.909Z",
+      "scenario": "mixed batch recovery",
+      "role": "OPERATOR",
+      "phase": null,
+      "goal": null,
+      "result": {
+        "firstCreated": 99,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "preconditions": null,
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1830.2940999999992
+      },
+      "missingMeasuredFields": [],
+      "rawActualRecord": {
+        "count": 100,
+        "role": "OPERATOR",
+        "startState": "Prepared known group with one missing employer relationship; published course already selected",
+        "fixtureSetupNotCountedAsFirstEntry": true,
+        "actualSteps": [
+          "Activate one group assignment using keyboard",
+          "Confirm only the failed row's known employer",
+          "Assign only the still selected failed row"
+        ],
+        "result": {
+          "firstCreated": 99,
+          "repairedCreated": 1,
+          "duplicateReplayCreated": 0
+        },
+        "counts": {
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0
+        },
+        "verificationOnly": {
+          "replayClicks": 1
+        },
+        "elapsedMilliseconds": 1830.2940999999992
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED",
+      "timingBoundary": "Automated scenario wall time includes verification-only replay and screenshot; not a human-only task timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json#3",
+      "measurementKind": "mixed batch recovery",
+      "sourcePath": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json",
+      "sourceSha256": "466501aee050d9d67bd3e09a36dd4e0ad61d41ecaa941c26f926e467bfbca40c",
+      "actualRecordedAt": "2026-10-14T21:48:09.909Z",
+      "scenario": "mixed batch recovery",
+      "role": "OPERATOR",
+      "phase": null,
+      "goal": null,
+      "result": {
+        "firstCreated": 249,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "preconditions": null,
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 3061.6803
+      },
+      "missingMeasuredFields": [],
+      "rawActualRecord": {
+        "count": 250,
+        "role": "OPERATOR",
+        "startState": "Prepared known group with one missing employer relationship; published course already selected",
+        "fixtureSetupNotCountedAsFirstEntry": true,
+        "actualSteps": [
+          "Activate one group assignment using keyboard",
+          "Confirm only the failed row's known employer",
+          "Assign only the still selected failed row"
+        ],
+        "result": {
+          "firstCreated": 249,
+          "repairedCreated": 1,
+          "duplicateReplayCreated": 0
+        },
+        "counts": {
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0
+        },
+        "verificationOnly": {
+          "replayClicks": 1
+        },
+        "elapsedMilliseconds": 3061.6803
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED",
+      "timingBoundary": "Automated scenario wall time includes verification-only replay and screenshot; not a human-only task timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/operator-live/actions.json#0",
+      "measurementKind": "prepared document operation and separate director approval",
+      "sourcePath": "agent-b/operator-live/actions.json",
+      "sourceSha256": "0c3239b44e59eecc8acc5234e5e21434fa24e12b965c3e9c7dbde64006e0687b",
+      "actualRecordedAt": "2026-10-14T21:36:39.133Z",
+      "scenario": "prepared eligible result to document set",
+      "role": "DIRECTOR",
+      "phase": null,
+      "goal": null,
+      "result": null,
+      "startState": "Result list with one eligible result automatically selected; synthetic prerequisites prepared by lms-operator-fixture.ts",
+      "preconditions": "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+      "actualSteps": [
+        "Click Prepare documents once; three document types await a director decision"
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "elapsedMilliseconds": 615.6686000000009,
+        "filledFields": 0
+      },
+      "missingMeasuredFields": [
+        "keyboardActions",
+        "confirmations",
+        "manualRefresh"
+      ],
+      "rawActualRecord": {
+        "scenario": "prepared eligible result to document set",
+        "role": "DIRECTOR",
+        "startState": "Result list with one eligible result automatically selected; synthetic prerequisites prepared by lms-operator-fixture.ts",
+        "steps": [
+          "Click Prepare documents once; three document types await a director decision"
+        ],
+        "clicks": 1,
+        "fields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "elapsedMilliseconds": 615.6686000000009,
+        "expectedTypes": 3
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED_PARTIAL_SCHEMA",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/operator-live/actions.json#1",
+      "measurementKind": "prepared document operation and separate director approval",
+      "sourcePath": "agent-b/operator-live/actions.json",
+      "sourceSha256": "0c3239b44e59eecc8acc5234e5e21434fa24e12b965c3e9c7dbde64006e0687b",
+      "actualRecordedAt": "2026-10-14T21:36:39.133Z",
+      "scenario": "required director decision",
+      "role": "DIRECTOR",
+      "phase": null,
+      "goal": null,
+      "result": null,
+      "startState": null,
+      "preconditions": "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+      "actualSteps": [
+        "Open the submitted revision in the existing director workspace",
+        "Review saved facts",
+        "Approve this revision"
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "filledFields": 0
+      },
+      "missingMeasuredFields": [
+        "keyboardActions",
+        "confirmations",
+        "manualRefresh",
+        "elapsedMilliseconds"
+      ],
+      "rawActualRecord": {
+        "scenario": "required director decision",
+        "role": "DIRECTOR",
+        "steps": [
+          "Open the submitted revision in the existing director workspace",
+          "Review saved facts",
+          "Approve this revision"
+        ],
+        "clicks": 1,
+        "navigation": 1,
+        "decisions": 1,
+        "fields": 0,
+        "repeatedFields": 0,
+        "dialogs": 0,
+        "separateFromPreparedDownloadBudget": true
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED_PARTIAL_SCHEMA",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/operator-live/actions.json#2",
+      "measurementKind": "prepared document operation and separate director approval",
+      "sourcePath": "agent-b/operator-live/actions.json",
+      "sourceSha256": "0c3239b44e59eecc8acc5234e5e21434fa24e12b965c3e9c7dbde64006e0687b",
+      "actualRecordedAt": "2026-10-14T21:36:39.133Z",
+      "scenario": "prepared document set download",
+      "role": "DIRECTOR",
+      "phase": null,
+      "goal": null,
+      "result": null,
+      "startState": "All three approved files ready, remembered default PDF format",
+      "preconditions": "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+      "actualSteps": [
+        "Click Download set once"
+      ],
+      "recordedMetrics": {
+        "clicks": 1,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "elapsedMilliseconds": 1496.4028999999864,
+        "filledFields": 0
+      },
+      "missingMeasuredFields": [
+        "keyboardActions",
+        "confirmations",
+        "manualRefresh"
+      ],
+      "rawActualRecord": {
+        "scenario": "prepared document set download",
+        "role": "DIRECTOR",
+        "startState": "All three approved files ready, remembered default PDF format",
+        "steps": [
+          "Click Download set once"
+        ],
+        "clicks": 1,
+        "fields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "elapsedMilliseconds": 1496.4028999999864,
+        "bytes": 214850
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED_PARTIAL_SCHEMA",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json#3",
+      "measurementKind": "external source first entry/correction and explicit selection regression",
+      "sourcePath": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "e835c4ba51d6bac86a15bc7a19d6ce0c8c8c18d5d093444e5d3ccdefa4892655",
+      "actualRecordedAt": "2026-10-14T22:45:27.721Z",
+      "scenario": "Д: add and review an external source with unknown exam date",
+      "role": "DIRECTOR",
+      "phase": null,
+      "goal": null,
+      "result": {
+        "sourceId": "2cdddb73-e436-4645-8454-6acc3fa9c57c",
+        "examDate": null,
+        "documentDate": "2026-01-14",
+        "reviewed": true
+      },
+      "startState": "Authenticated director has results list open",
+      "preconditions": [
+        "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+        "Prepared fixture setup and selection/pagination regression are separate measurements."
+      ],
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Открыть слушателя",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 74.88969999999972
+        },
+        {
+          "kind": "click",
+          "label": "Добавить основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 131.6165000000001
+        },
+        {
+          "kind": "field",
+          "label": "Кем выдан",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 30.863000000001193
+        },
+        {
+          "kind": "field",
+          "label": "Источник",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 26.80210000000079
+        },
+        {
+          "kind": "field",
+          "label": "Номер документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 28.098500000000058
+        },
+        {
+          "kind": "field",
+          "label": "Дата документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 38.70570000000225
+        },
+        {
+          "kind": "file",
+          "label": "Файл основания",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 35.05449999999837
+        },
+        {
+          "kind": "click",
+          "label": "Добавить на проверку",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 57.66080000000147
+        },
+        {
+          "kind": "field",
+          "label": "Как проверено основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 88.57070000000022
+        },
+        {
+          "kind": "select",
+          "label": "Результат во внешнем документе",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 23.159700000000157
+        },
+        {
+          "kind": "click",
+          "label": "Подтвердить проверку",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 244.79079999999885
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 4,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1108.349000000002,
+        "selections": 1,
+        "fileSelections": 1,
+        "filledFields": 5
+      },
+      "missingMeasuredFields": [],
+      "rawActualRecord": {
+        "scenario": "Д: add and review an external source with unknown exam date",
+        "role": "DIRECTOR",
+        "startBoundary": "Authenticated director has results list open",
+        "preconditions": [
+          "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+          "Prepared fixture setup and selection/pagination regression are separate measurements."
+        ],
+        "steps": [
+          {
+            "kind": "click",
+            "label": "Открыть слушателя",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 74.88969999999972
+          },
+          {
+            "kind": "click",
+            "label": "Добавить основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 131.6165000000001
+          },
+          {
+            "kind": "field",
+            "label": "Кем выдан",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 30.863000000001193
+          },
+          {
+            "kind": "field",
+            "label": "Источник",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 26.80210000000079
+          },
+          {
+            "kind": "field",
+            "label": "Номер документа",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 28.098500000000058
+          },
+          {
+            "kind": "field",
+            "label": "Дата документа",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 38.70570000000225
+          },
+          {
+            "kind": "file",
+            "label": "Файл основания",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 35.05449999999837
+          },
+          {
+            "kind": "click",
+            "label": "Добавить на проверку",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 57.66080000000147
+          },
+          {
+            "kind": "field",
+            "label": "Как проверено основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 88.57070000000022
+          },
+          {
+            "kind": "select",
+            "label": "Результат во внешнем документе",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 23.159700000000157
+          },
+          {
+            "kind": "click",
+            "label": "Подтвердить проверку",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 244.79079999999885
+          }
+        ],
+        "clicks": 4,
+        "keyboardActions": 0,
+        "fields": 5,
+        "repeatedFields": 0,
+        "selections": 1,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "fileSelections": 1,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 1108.349000000002,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "sourceId": "2cdddb73-e436-4645-8454-6acc3fa9c57c",
+          "examDate": null,
+          "documentDate": "2026-01-14",
+          "reviewed": true
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json#4",
+      "measurementKind": "external source first entry/correction and explicit selection regression",
+      "sourcePath": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "e835c4ba51d6bac86a15bc7a19d6ce0c8c8c18d5d093444e5d3ccdefa4892655",
+      "actualRecordedAt": "2026-10-14T22:45:27.721Z",
+      "scenario": "Д: clarify unknown exam date without repeated source fields",
+      "role": "DIRECTOR",
+      "phase": null,
+      "goal": null,
+      "result": {
+        "oldSourceId": "2cdddb73-e436-4645-8454-6acc3fa9c57c",
+        "newSourceId": "066a0877-2094-47ae-8e35-88288d606d6b",
+        "unchangedFile": true,
+        "examDate": "2026-01-10",
+        "resultRevisions": 2
+      },
+      "startState": "Reviewed source with unknown exam date is open",
+      "preconditions": [
+        "Source bytes, issuer, document number, document date, learner and enrollment are already saved.",
+        "Only newly established exam date and justification are entered; existing evidence is immutable."
+      ],
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Уточнить дату экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 45.51940000000104
+        },
+        {
+          "kind": "field",
+          "label": "Дата экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 25.44340000000011
+        },
+        {
+          "kind": "field",
+          "label": "Основание уточнения",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 28.95310000000245
+        },
+        {
+          "kind": "click",
+          "label": "Сохранить уточнение",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 73.57900000000154
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 2,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 863.5696000000025,
+        "selections": 0,
+        "fileSelections": 0,
+        "filledFields": 2
+      },
+      "missingMeasuredFields": [],
+      "rawActualRecord": {
+        "scenario": "Д: clarify unknown exam date without repeated source fields",
+        "role": "DIRECTOR",
+        "startBoundary": "Reviewed source with unknown exam date is open",
+        "preconditions": [
+          "Source bytes, issuer, document number, document date, learner and enrollment are already saved.",
+          "Only newly established exam date and justification are entered; existing evidence is immutable."
+        ],
+        "steps": [
+          {
+            "kind": "click",
+            "label": "Уточнить дату экзамена",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 45.51940000000104
+          },
+          {
+            "kind": "field",
+            "label": "Дата экзамена",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 25.44340000000011
+          },
+          {
+            "kind": "field",
+            "label": "Основание уточнения",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 28.95310000000245
+          },
+          {
+            "kind": "click",
+            "label": "Сохранить уточнение",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 73.57900000000154
+          }
+        ],
+        "clicks": 2,
+        "keyboardActions": 0,
+        "fields": 2,
+        "repeatedFields": 0,
+        "selections": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0,
+        "fileSelections": 0,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 863.5696000000025,
+        "excludedVerificationMilliseconds": 1924.649599999997,
+        "result": {
+          "oldSourceId": "2cdddb73-e436-4645-8454-6acc3fa9c57c",
+          "newSourceId": "066a0877-2094-47ae-8e35-88288d606d6b",
+          "unchangedFile": true,
+          "examDate": "2026-01-10",
+          "resultRevisions": 2
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    },
+    {
+      "measurementId": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json#5",
+      "measurementKind": "external source first entry/correction and explicit selection regression",
+      "sourcePath": "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json",
+      "sourceSha256": "e835c4ba51d6bac86a15bc7a19d6ce0c8c8c18d5d093444e5d3ccdefa4892655",
+      "actualRecordedAt": "2026-10-14T22:45:27.721Z",
+      "scenario": "Д: add and review an external source with known exam date",
+      "role": "DIRECTOR",
+      "phase": null,
+      "goal": null,
+      "result": {
+        "sourceId": "29be8a81-486f-46ad-a845-6f212f71219e",
+        "examDate": "2026-01-12",
+        "documentDate": "2026-01-14",
+        "reviewed": true
+      },
+      "startState": "Results list is open with prior source details still open",
+      "preconditions": [
+        "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+        "Prepared fixture setup and selection/pagination regression are separate measurements."
+      ],
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Закрыть предыдущее основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 49.02049999999872
+        },
+        {
+          "kind": "click",
+          "label": "Открыть слушателя",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 52.38680000000022
+        },
+        {
+          "kind": "click",
+          "label": "Добавить основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 107.71700000000055
+        },
+        {
+          "kind": "field",
+          "label": "Кем выдан",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 21.428100000000995
+        },
+        {
+          "kind": "field",
+          "label": "Источник",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 21.372599999998783
+        },
+        {
+          "kind": "field",
+          "label": "Номер документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 25.015800000001036
+        },
+        {
+          "kind": "field",
+          "label": "Дата документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 23.942599999998492
+        },
+        {
+          "kind": "field",
+          "label": "Дата экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 23.430399999997462
+        },
+        {
+          "kind": "file",
+          "label": "Файл основания",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 29.67410000000018
+        },
+        {
+          "kind": "click",
+          "label": "Добавить на проверку",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 53.18370000000141
+        },
+        {
+          "kind": "field",
+          "label": "Как проверено основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 90.84709999999905
+        },
+        {
+          "kind": "select",
+          "label": "Результат во внешнем документе",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 37.178799999997864
+        },
+        {
+          "kind": "click",
+          "label": "Подтвердить проверку",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 62.50130000000354
+        }
+      ],
+      "recordedMetrics": {
+        "clicks": 5,
+        "keyboardActions": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "elapsedMilliseconds": 1210.2227999999996,
+        "selections": 1,
+        "fileSelections": 1,
+        "filledFields": 6
+      },
+      "missingMeasuredFields": [],
+      "rawActualRecord": {
+        "scenario": "Д: add and review an external source with known exam date",
+        "role": "DIRECTOR",
+        "startBoundary": "Results list is open with prior source details still open",
+        "preconditions": [
+          "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+          "Prepared fixture setup and selection/pagination regression are separate measurements."
+        ],
+        "steps": [
+          {
+            "kind": "click",
+            "label": "Закрыть предыдущее основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 49.02049999999872
+          },
+          {
+            "kind": "click",
+            "label": "Открыть слушателя",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 52.38680000000022
+          },
+          {
+            "kind": "click",
+            "label": "Добавить основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 107.71700000000055
+          },
+          {
+            "kind": "field",
+            "label": "Кем выдан",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 21.428100000000995
+          },
+          {
+            "kind": "field",
+            "label": "Источник",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 21.372599999998783
+          },
+          {
+            "kind": "field",
+            "label": "Номер документа",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 25.015800000001036
+          },
+          {
+            "kind": "field",
+            "label": "Дата документа",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 23.942599999998492
+          },
+          {
+            "kind": "field",
+            "label": "Дата экзамена",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 23.430399999997462
+          },
+          {
+            "kind": "file",
+            "label": "Файл основания",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 29.67410000000018
+          },
+          {
+            "kind": "click",
+            "label": "Добавить на проверку",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 53.18370000000141
+          },
+          {
+            "kind": "field",
+            "label": "Как проверено основание",
+            "decision": false,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 90.84709999999905
+          },
+          {
+            "kind": "select",
+            "label": "Результат во внешнем документе",
+            "decision": true,
+            "confirmation": false,
+            "navigation": false,
+            "elapsedMilliseconds": 37.178799999997864
+          },
+          {
+            "kind": "click",
+            "label": "Подтвердить проверку",
+            "decision": true,
+            "confirmation": true,
+            "navigation": false,
+            "elapsedMilliseconds": 62.50130000000354
+          }
+        ],
+        "clicks": 5,
+        "keyboardActions": 0,
+        "fields": 6,
+        "repeatedFields": 0,
+        "selections": 1,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0,
+        "fileSelections": 1,
+        "nativeFilePickerObserved": false,
+        "elapsedMilliseconds": 1210.2227999999996,
+        "excludedVerificationMilliseconds": 0,
+        "result": {
+          "sourceId": "29be8a81-486f-46ad-a845-6f212f71219e",
+          "examDate": "2026-01-12",
+          "documentDate": "2026-01-14",
+          "reviewed": true
+        },
+        "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+      },
+      "actionBudgetEvidence": true,
+      "status": "MEASURED",
+      "timingBoundary": "Actual automated scenario wall time at the recorded source boundary; not inferred human-only timing.",
+      "measurementBoundary": "Copied recorded values only. Missing metrics are not inferred as zero; final full-suite instrumentation will replace the relevant incomplete measurement."
+    }
+  ],
+  "missingCurrentMeasurements": [
+    {
+      "group": "firstFlow",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-first-flow-live/actions.json",
+      "reason": "Missing completed measurement or enclosing actual test did not pass."
+    },
+    {
+      "group": "automatic",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-first-flow-live/automatic-preparation-restart.json",
+      "reason": "Missing completed measurement or enclosing actual test did not pass."
+    },
+    {
+      "group": "operator",
+      "sourcePath": "agent-c/critical-lms-20261015-01/lms-operator-live/actions.json",
+      "reason": "Missing completed measurement or enclosing actual test did not pass."
+    }
+  ],
+  "completeCurrentMeasurements": false,
+  "currentRun": "critical-lms-20261015-01"
+}

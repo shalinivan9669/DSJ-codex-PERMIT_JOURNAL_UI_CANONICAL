@@ -1,0 +1,9 @@
+{
+  "startedAt": "2026-10-15T09:19:36.7932510Z",
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/request-customer.test.ts",
+  "exitCode": 0,
+  "logPath": "command-employer-green-01.log",
+  "finishedAt": "2026-10-15T09:19:38.7590453Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "purpose": "GREEN after independently reviewed explicit employer identity correction; running browser API process remains on prior build04 until controlled restart"
+}

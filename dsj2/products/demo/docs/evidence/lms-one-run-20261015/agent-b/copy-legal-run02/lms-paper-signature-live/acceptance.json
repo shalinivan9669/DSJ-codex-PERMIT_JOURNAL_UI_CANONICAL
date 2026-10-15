@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-15T00:58:36.991Z",
+  "synthetic": true,
+  "physicalPrintPerformed": false,
+  "beforeStatus": "AWAITING_SIGNATURE",
+  "afterStatus": "ISSUED",
+  "actorRecorded": true,
+  "dateRecorded": true,
+  "category": "OPERATOR_ATTESTED",
+  "electronicSignatures": 0,
+  "unsignedPublicationDenied": 409,
+  "documentHashUnchanged": true,
+  "actualRegistryDownloaded": true,
+  "registryContainsIssuedNumber": true,
+  "publicRecord": {
+    "learningDocument": {
+      "legalForm": "PAPER_ORIGINAL",
+      "assessmentKind": "CENTER_EXAM",
+      "sourceIssuer": "Synthetic training center",
+      "resultRevision": 1,
+      "originalReference": null,
+      "sourceVerification": "CENTER_RECORDED"
+    },
+    "issuer": {
+      "nameRu": "Синтетический учебный центр",
+      "nameKz": "Синтетикалық оқу орталығы"
+    },
+    "document": {
+      "type": "lms-certificate",
+      "number": "LMS-CERTIFICATE-00001",
+      "date": "2026-10-15"
+    },
+    "status": "ACTIVE_RECORD",
+    "replacement": null,
+    "limitation": "Проверяется запись в реестре этого центра. Страница не подтверждает неизменность любой копии документа и не заменяет проверку подписи."
+  },
+  "paperPublicLabel": true,
+  "publicRecordContainsFullName": false,
+  "actualQrCreated": true,
+  "futureDateDenied": 422,
+  "unconfirmedDenied": 400,
+  "employerDenied": 403,
+  "immutableChangedReplayDenied": 409,
+  "exactReplayIdempotent": true,
+  "wrongRecipientBindingDenied": 409,
+  "unknownCanonicalAssignmentDenied": 409,
+  "adversarialFixture": "Copies reference actual original PDF bytes in this isolated synthetic tenant; existing immutable rows/files were not changed or removed. Added after successful original workflow completion."
+}

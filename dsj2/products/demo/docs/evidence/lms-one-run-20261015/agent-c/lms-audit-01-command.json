@@ -1,0 +1,14 @@
+{
+  "start": "2026-10-14T22:12:05.7814806Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "exitCode": 1,
+  "end": "2026-10-14T22:12:13.1128488Z",
+  "command": "pnpm exec tsx --tsconfig apps/api/tsconfig.json --test tests/integration/lms-audit-boundaries.test.ts",
+  "resultPath": "docs/evidence/lms-one-run-20261015/agent-c/lms-audit-01.log",
+  "envNames": [
+    "CI",
+    "DATABASE_URL",
+    "DEMO_LMS_TEST_RUNTIME",
+    "DEMO_ARTIFACT_ROOT"
+  ]
+}

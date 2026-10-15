@@ -1,0 +1,130 @@
+{
+  "checkedAt": "2026-10-14T22:35:05.585085+00:00",
+  "scope": "Candidate local synthetic acceptance text reports; runtime session/token logs, private fixtures, traces and browser artifacts remain excluded from publication. Values are never included in this scanner output.",
+  "scannedCount": 213,
+  "findings": [
+    {
+      "path": "agent-c/learning-run03/.playwright-artifacts-0/traces/resources/72774b195cb06f07beaa9a5aa69564782303acf4.json",
+      "findings": [
+        {
+          "rule": "assigned_secret",
+          "count": 1,
+          "lineNumbers": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "path": "agent-c/learning-run03/.playwright-artifacts-0/traces/resources/9f13721e090b32f8c2b0058c5f4745b17efabea3.json",
+      "findings": [
+        {
+          "rule": "assigned_secret",
+          "count": 1,
+          "lineNumbers": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "excludedPaths": [
+    "agent-a/video-browser/runner/test-results/.last-run.json",
+    "agent-b/geometry-run01/test-results/.last-run.json",
+    "agent-b/operator-run01/test-results/.last-run.json",
+    "agent-b/operator-run01/test-results/lms-operator-live-prepared-150b8-xtension-and-local-recovery/error-context.md",
+    "agent-b/operator-run02/test-results/.last-run.json",
+    "agent-b/operator-run02/test-results/lms-operator-live-prepared-150b8-xtension-and-local-recovery/error-context.md",
+    "agent-b/operator-run03/test-results/.last-run.json",
+    "agent-b/paper-run01/test-results/.last-run.json",
+    "agent-b/paper-run01/test-results/lms-paper-signature-live-s-0084e-vents-electronic-signatures/error-context.md",
+    "agent-b/paper-run02/test-results/.last-run.json",
+    "agent-b/paper-run03/test-results/.last-run.json",
+    "agent-b/paper-run04/test-results/.last-run.json",
+    "agent-b/selection-regression01/lms-selection-regression-live/fixture.json",
+    "agent-b/selection-regression01/test-results/.last-run.json",
+    "agent-b/selection-regression01/test-results/lms-selection-regression-l-e0a4e-correctable-without-reentry/error-context.md",
+    "agent-b/selection-regression02/lms-selection-regression-live/fixture.json",
+    "agent-b/selection-regression02/test-results/.last-run.json",
+    "agent-b/selection-regression02/test-results/lms-selection-regression-l-e0a4e-correctable-without-reentry/error-context.md",
+    "agent-b/selection-regression03/lms-selection-regression-live/fixture.json",
+    "agent-b/selection-regression03/test-results/.last-run.json",
+    "agent-c/full-e2e-20261015-02/build02-runtime-api-stderr.log",
+    "agent-c/full-e2e-20261015-02/build02-runtime-api-stdout.log",
+    "agent-c/full-e2e-20261015-02/build02-runtime-web-stderr.log",
+    "agent-c/full-e2e-20261015-02/build02-runtime-web-stdout.log",
+    "agent-c/full-e2e-20261015-02/runtime-api-stderr.log",
+    "agent-c/full-e2e-20261015-02/runtime-api-stdout.log",
+    "agent-c/full-e2e-20261015-02/runtime-web-stderr.log",
+    "agent-c/full-e2e-20261015-02/runtime-web-stdout.log",
+    "agent-c/baseline-run01/test-results/.last-run.json",
+    "agent-c/baseline-run03/test-results/.last-run.json",
+    "agent-c/conflict-run01/test-results/.last-run.json",
+    "agent-c/conflict-run01/test-results/lms-conflict-live-real-con-7b1cd-Enter-never-submits-an-exam/error-context.md",
+    "agent-c/conflict-run02/test-results/.last-run.json",
+    "agent-c/first-entry-run01/test-results/.last-run.json",
+    "agent-c/first-entry-run01/test-results/lms-first-entry-live-first-4830d-t-without-center-onboarding/error-context.md",
+    "agent-c/first-entry-run01/test-results/lms-first-entry-live-first-f61b6-avigation-calendar-persists/error-context.md",
+    "agent-c/first-entry-run02/test-results/.last-run.json",
+    "agent-c/learning-run01/test-results/lms-learning-live-prepared-de651-tosave-and-offline-recovery/error-context.md",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/10448076d8e37e8dcd5f19a4e9aa216dc2742708.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/18e1f5d2d6e2845903b1072dea06b68b40a8ba83.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/1b90ab2b887f8ecd50e4eb20237c8850d1391d74.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/1b92485b6745bd3656268952e4226d30a7f73ec6.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/2dc4ad700effa7a1d8a86e48810ba1181dda704d.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/2fbfc0524810201ed774c39f5df74ebbe7575f4b.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/3a58dd46655fc597e6fccc894feafe19b00e13d3.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/47a54c3381082f4ee6e2a6f9d5866848444d9d9e.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/641e941c46a922bad382f66abda4f0e3136c79cc.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/6bef7d3102a0c7d968f8cce2e3673920d221887c.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/7e77dbd9e886acd1e277bcb8a5b989e2eac6917f.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/80bf3c101b4aa1fc8159395d275fe43aa0093d90.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/9f13721e090b32f8c2b0058c5f4745b17efabea3.json",
+    "agent-c/learning-run01/test-results/.playwright-artifacts-0/traces/resources/ef1b52b25832c543563d7fa2c11aafd1acb10392.json",
+    "agent-c/learning-run04/test-results/.last-run.json",
+    "agent-c/targeted-batches-clock-20261015-01/test-results/.last-run.json"
+  ],
+  "status": "CANDIDATE_PATTERNS_CLEAR_AFTER_PRIVATE_TRACE_EXCLUSION",
+  "limits": "Pattern scan is supporting evidence, not proof against all secrets or a replacement for curated file review.",
+  "publicationExclusions": [
+    "**/.playwright-artifacts*/**",
+    "**/traces/**",
+    "**/test-results/**",
+    "**/private.runtime/**",
+    "**/runtime-api-*.log",
+    "**/runtime-web-*.log",
+    "**/runtime-render-*.log",
+    "**/runtime-integration-*.log",
+    "**/fixture.json"
+  ],
+  "reviewedFindings": [
+    {
+      "path": "agent-c/learning-run03/.playwright-artifacts-0/traces/resources/72774b195cb06f07beaa9a5aa69564782303acf4.json",
+      "findings": [
+        {
+          "rule": "assigned_secret",
+          "count": 1,
+          "lineNumbers": [
+            1
+          ]
+        }
+      ],
+      "decision": "EXCLUDE_RAW_BROWSER_TRACE_FROM_GIT_AND_FINAL_EVIDENCE"
+    },
+    {
+      "path": "agent-c/learning-run03/.playwright-artifacts-0/traces/resources/9f13721e090b32f8c2b0058c5f4745b17efabea3.json",
+      "findings": [
+        {
+          "rule": "assigned_secret",
+          "count": 1,
+          "lineNumbers": [
+            1
+          ]
+        }
+      ],
+      "decision": "EXCLUDE_RAW_BROWSER_TRACE_FROM_GIT_AND_FINAL_EVIDENCE"
+    }
+  ],
+  "remainingCandidateFindings": [],
+  "finalCuratedScanStillRequired": true
+}

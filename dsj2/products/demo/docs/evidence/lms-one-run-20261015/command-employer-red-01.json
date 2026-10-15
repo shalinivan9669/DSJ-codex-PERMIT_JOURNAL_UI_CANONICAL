@@ -1,0 +1,9 @@
+{
+  "logPath": "command-employer-red-01.log",
+  "exitCode": 1,
+  "startedAt": "2026-10-15T09:19:12.2631131Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "purpose": "Regression RED run with new boundary assertions against the original server predicate; a failing positive-known-identity case is expected and is not acceptance",
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/request-customer.test.ts",
+  "finishedAt": "2026-10-15T09:19:14.5003850Z"
+}

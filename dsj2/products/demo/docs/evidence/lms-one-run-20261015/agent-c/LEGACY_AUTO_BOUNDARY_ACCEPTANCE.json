@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-14T22:36:31.537Z",
+  "actualHttp": true,
+  "ordinaryOutcomePreserved": "PASSED/AUTO",
+  "ordinaryRevisionUnchanged": true,
+  "legacyIdsRejectedAsResults": 2,
+  "results": 0,
+  "outbox": 0,
+  "documentLinks": 0,
+  "jobs": 0,
+  "documents": 0,
+  "numbers": 0,
+  "scope": "Synthetic ordinary request created through the actual API; no renderer or ordinary print issuance requested by this negative boundary test."
+}

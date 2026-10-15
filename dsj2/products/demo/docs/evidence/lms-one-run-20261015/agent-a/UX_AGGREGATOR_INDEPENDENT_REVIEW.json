@@ -1,0 +1,48 @@
+{
+  "status": "PASS_INDEPENDENT_SOURCE_REVIEW_ONLY",
+  "reviewedAtUtc": "2026-10-15T08:53:22.868792+00:00",
+  "source": {
+    "path": "scripts/verification/lms-ux-draft.py",
+    "sha256": "7f1b66b80c4e6b26d27d71ad23337225ac85887be8d6c4b161ea42f0522edaa3"
+  },
+  "comparisonReference": {
+    "sha256": "81910c9406b4e8e3b8c0e46381fbfd3eecd58e963b964e4f96d7f69f94b1cd47",
+    "provenance": "Peer reverse-reconstructed normalized review reference from read source; not an immutable pre-run capture. Python aggregator was not in the 177-file TS/e2e source manifest."
+  },
+  "checks": {
+    "requiredAstUnchanged": true,
+    "sourcesAstUnchanged": true,
+    "current_groupsAstUnchanged": true,
+    "requirementsAstUnchanged": true,
+    "scenarioReadinessAstUnchanged": true,
+    "historicalMeasurementsAstUnchangedExceptHonestMissingPathKey": true,
+    "currentMeasurementsAstUnchangedExceptHonestMissingPathKey": true,
+    "sourceSyntaxCompileWithoutExecution": true
+  },
+  "reviewedBehavior": [
+    "Full-run pending clears only for matching current/batch run with exact mandatory command, PASS exit0, completed timestamp, unchanged sources, at least219 expected and exactly that many actual cases, all first attempts passed, no skips/failures/flakes/global errors.",
+    "Missing measurements retain NOT_RUN and use expectedPath when no file exists. Existing failed-enclosing-test source files remain sourcePath with explicit unavailable reason.",
+    "Current numeric mappings, raw recorded values, required dimensions, source groups, and readiness rules A-H are unchanged.",
+    "First-flow/current-measurement/full-suite pending states derive from actual data; final commit binding remains pending.",
+    "Historical baseline exclusion remains a permanent limitation; no historical before/after time saving is claimed.",
+    "publicationEvidence is a stable planned manifest description, not a privacy PASS claim; draftOnly true and localAccepted false remain.",
+    "Exact discovery identities, code-source hash validation, candidate eligibility and final publication closure remain independent stronger downstream guards."
+  ],
+  "peerPureGuardTests": {
+    "path": "agent-c/UX_AGGREGATOR_GUARD_REVIEW.json",
+    "sha256": "7e592f7c6710367a17bca9cc72891c7ce07da50d75c3e2e69ff3dcf1d691bfcf",
+    "cases": 16,
+    "allRecordedExpectedEqualActual": true,
+    "executionAttribution": "Agent C executed the pure guard checks; Agent A read their report and independently reviewed source and AST."
+  },
+  "boundaries": {
+    "aggregatorExecutedByThisReview": false,
+    "draftRewrittenByThisReview": false,
+    "browserExecutedByThisReview": false,
+    "overallAcceptance": false,
+    "publicationPassGenerated": false
+  },
+  "evidencePaths": [
+    "agent-c/UX_AGGREGATOR_GUARD_REVIEW.json"
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "result": "PASS",
+  "measuredAt": "2026-10-14T21:23:33.987Z",
+  "role": "DIRECTOR",
+  "startState": "Authenticated course catalogue; no course exists for this scenario",
+  "actions": [
+    {
+      "kind": "click",
+      "target": "Create course"
+    },
+    {
+      "kind": "fill",
+      "target": "Название RU"
+    },
+    {
+      "kind": "fill",
+      "target": "Название KZ"
+    },
+    {
+      "kind": "fill",
+      "target": "Категория слушателей"
+    },
+    {
+      "kind": "click",
+      "target": "Add module"
+    },
+    {
+      "kind": "fill",
+      "target": "Модуль RU"
+    },
+    {
+      "kind": "fill",
+      "target": "Модуль KZ"
+    },
+    {
+      "kind": "click",
+      "target": "Add lesson"
+    },
+    {
+      "kind": "fill",
+      "target": "Урок RU"
+    },
+    {
+      "kind": "fill",
+      "target": "Урок KZ"
+    },
+    {
+      "kind": "fill",
+      "target": "Текст RU"
+    },
+    {
+      "kind": "fill",
+      "target": "Текст KZ"
+    },
+    {
+      "kind": "click",
+      "target": "Add question"
+    },
+    {
+      "kind": "click",
+      "target": "Open question"
+    },
+    {
+      "kind": "fill",
+      "target": "Вопрос RU"
+    },
+    {
+      "kind": "fill",
+      "target": "Вопрос KZ"
+    },
+    {
+      "kind": "fill",
+      "target": "Answer 1 RU"
+    },
+    {
+      "kind": "fill",
+      "target": "Answer 1 KZ"
+    },
+    {
+      "kind": "fill",
+      "target": "Answer 2 RU"
+    },
+    {
+      "kind": "fill",
+      "target": "Answer 2 KZ"
+    },
+    {
+      "kind": "click",
+      "target": "Open basis"
+    },
+    {
+      "kind": "click",
+      "target": "Synthetic program"
+    },
+    {
+      "kind": "click",
+      "target": "Leave editor, autosave flushes"
+    },
+    {
+      "kind": "navigation",
+      "target": "Return to exact course"
+    },
+    {
+      "kind": "click",
+      "target": "Publish practice course"
+    }
+  ],
+  "counts": {
+    "filledFields": 15,
+    "clicks": 9,
+    "selections": 0,
+    "repeatedFields": 0,
+    "dialogs": 0,
+    "manualSaveButtons": 0
+  },
+  "authenticationCountedSeparately": {
+    "fields": 2,
+    "clicks": 1
+  },
+  "elapsedMilliseconds": 3605.370999999999,
+  "boundary": "Synthetic PRACTICE program, profile still NEEDS_LEGAL_REVIEW. Publication does not establish regulated examination authority or document eligibility."
+}

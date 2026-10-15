@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-15T11:13:37.809Z",
+  "fixtureVersion": "lms-one-run-synthetic-v1",
+  "requestId": "e1704313-6084-4c64-9ddb-10ca6395c2c0",
+  "courseVersionId": "b017b77c-9d15-46b6-8732-c8c14cc1847c",
+  "enrollmentIds": [
+    "a5e6be8d-4543-446a-848f-af4f4ab93b4e",
+    "27fff1ed-3f81-4c38-b20f-17a810d5c55b"
+  ],
+  "setupMilliseconds": 1671.181900000025,
+  "responseHoldMilliseconds": 1004.5856000000495,
+  "actualPayloadModified": false,
+  "actualDatabaseRows": 2,
+  "duplicateRows": 0,
+  "measurements": [
+    {
+      "scenario": "UX08 slow online assignment",
+      "role": "OPERATOR",
+      "startBoundary": "Authenticated operator on the prepared assignment page; two known recipients and the published course are already selected",
+      "preconditions": [
+        "Synthetic prerequisite data entered by fixture API/domain calls. These are excluded only from the explicitly prepared-repeat scenario, never represented as measured first-entry UX.",
+        "A fresh unique course, two synthetic learners and a prepared request were created by the existing guarded fixture. Initial authentication and navigation are measured as setup, outside this prepared operation.",
+        "Only delivery of the actual successful HTTP response is held for at least1000ms. No request body, response payload, enrollment, clock or UI state is fabricated."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Assign the prepared group once",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 23.243499999982305
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 1076.592500000028,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "created": 2,
+        "assignmentRequests": 1,
+        "selectionPreserved": true,
+        "shortWaitingStateVisible": true,
+        "repeatedSubmissionDisabled": true,
+        "automaticSuccessAfterResponse": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "prepared assignment with a delayed real success response",
+      "startState": "Authenticated operator on the prepared assignment page; two known recipients and the published course are already selected",
+      "goal": "Assign the same group once, retain its selection while waiting and receive the real persisted result without refresh or repeated input",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Assign the prepared group once",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 23.243499999982305
+        }
+      ],
+      "filledFields": 0
+    }
+  ],
+  "boundary": "Prepared operation only. Measured automated wall time includes the deliberate response hold and pending-state assertions/screenshot; final readback is verification outside the action budget. Native dialogs/physical typing are not claimed."
+}

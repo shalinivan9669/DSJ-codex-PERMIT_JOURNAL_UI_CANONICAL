@@ -1,0 +1,23 @@
+{
+  "status": "PASS_EXACT_METADATA_DELTA_ONLY",
+  "reviewedAt": "2026-10-15T09:32:32.416423+00:00",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "sourcePath": "scripts/verification/lms-final-criteria-candidate.py",
+  "previousSourceSha256": "52d95def32181597c3691520d4cb39f62069f8ea475e7109365299712eb9480b",
+  "sourceSha256": "5f07ed734bfb231692f8d3934c3d341fb138b7c6cfc83472eb64ad5b287ea962",
+  "change": "One E09.01 evidence reference changed from command-test-08.log to command-test-09.log. Reversing this one literal replacement restores the previous full source SHA-256 exactly.",
+  "unchanged": "validate_runtime_build, its caller, and every acceptance guard are byte-identical to the independently reviewed previous source.",
+  "guardExecution": {
+    "owner": "Agent C",
+    "status": "PASS_19_PURE_GUARD_CASES_NOT_ACCEPTANCE",
+    "recordSha256": "c60ef3af49a6127c0b0e3141587af0bfff75663dcf1ba0a1763b573b165150e8"
+  },
+  "evidencePaths": [
+    "agent-a/RUNTIME_BUILD_BINDING_INDEPENDENT_REVIEW.json",
+    "agent-c/RUNTIME_BUILD_BINDING_GUARD_REVIEW.json"
+  ],
+  "history": "The prior Agent A report remains unchanged as a review of the then-current source and then-current guard record; this supplement binds the updated source and guard record.",
+  "generatorExecuted": false,
+  "findings": []
+}

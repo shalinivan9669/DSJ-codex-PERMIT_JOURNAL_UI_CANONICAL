@@ -1,0 +1,671 @@
+{
+  "status": "STATIC_REVIEW_CLOSED",
+  "reviewedAt": "2026-10-14T23:03:03.075042+00:00",
+  "reviewer": "agent-a",
+  "baseline": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "method": "Compared all35 modified tracked TypeScript tests/helpers against HEAD using TypeScript parser/printer then common formatting; structural AST hashes ignore source positions/comments, redundant parenthesized wrappers and whitespace in empty nodes, while retaining literal text, declaration let/const flags and child/operator structure. Inspected each meaningful delta and producer/consumer dependencies manually. This is a static source review, not an execution result.",
+  "typeScriptFiles": [
+    {
+      "path": "apps/web/e2e/biot-presets.spec.ts",
+      "formatOnly": false,
+      "diffLines": 26,
+      "sourceSha256": "0d43f01a91bf0ccf93befe6b9684e9281b619ddaebf54822a1f2dd5129d0761f",
+      "oldExpectCount": 27,
+      "newExpectCount": 27,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "a9a87e925d147776962d2d1e817c56fa14c44761e8245da58a7137d9ada818ec",
+      "astHashAfter": "a9a87e925d147776962d2d1e817c56fa14c44761e8245da58a7137d9ada818ec"
+    },
+    {
+      "path": "apps/web/e2e/center-registration-real.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "1be188e290a2c8470dd7bb0d7010da4b5041f80c28825850cf4bc4d840aa0adf",
+      "oldExpectCount": 22,
+      "newExpectCount": 22,
+      "oldAssertCount": 1,
+      "newAssertCount": 1,
+      "astEqual": true,
+      "astHashBefore": "909e8628cef7ed75273d0008a919c56a213ce4c75f7f8e07d833008e2d72b2dd",
+      "astHashAfter": "909e8628cef7ed75273d0008a919c56a213ce4c75f7f8e07d833008e2d72b2dd"
+    },
+    {
+      "path": "apps/web/e2e/commercial.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "46831d0ec8fdf8bf8ca81b1aeded0e84ee3b0590135dec7578c61b7c869d11df",
+      "oldExpectCount": 68,
+      "newExpectCount": 68,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "c4bc2f6f9c636de3953003ab71890ac9caa7bf4c89a5a8bcea1e340890e058ce",
+      "astHashAfter": "c4bc2f6f9c636de3953003ab71890ac9caa7bf4c89a5a8bcea1e340890e058ce"
+    },
+    {
+      "path": "apps/web/e2e/demo.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "7f7fddfdf59bff8624c645e183a3468e2f772be2905e79ee748cd38914806606",
+      "oldExpectCount": 134,
+      "newExpectCount": 134,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "6878374bab587ca4e492f8ccdea3fec9c13813293c63e82ed78717aff22b7dbe",
+      "astHashAfter": "6878374bab587ca4e492f8ccdea3fec9c13813293c63e82ed78717aff22b7dbe"
+    },
+    {
+      "path": "apps/web/e2e/final-directory-live.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "8287573570ddb8e6f9feb1486878835c5012b6dd5e4da0723c207ac4708fcb4b",
+      "oldExpectCount": 33,
+      "newExpectCount": 33,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "3c29786db30f2005414bc661dc2feb85c594de576d948ffac1ebb3750ebc86b6",
+      "astHashAfter": "3c29786db30f2005414bc661dc2feb85c594de576d948ffac1ebb3750ebc86b6"
+    },
+    {
+      "path": "apps/web/e2e/final-history-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 22,
+      "sourceSha256": "f1aa81f2f314ebad11a15704934d8477074cf61babffd4304541ae01cf1ba4af",
+      "oldExpectCount": 74,
+      "newExpectCount": 74,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "d6c4a7ce420cb7b36f02db373618c24c117db8cd644c855dc60560e5328da325",
+      "astHashAfter": "d6c4a7ce420cb7b36f02db373618c24c117db8cd644c855dc60560e5328da325"
+    },
+    {
+      "path": "apps/web/e2e/final-renewal-onboarding-live.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "25aa75dee64fac6e92b357d739b583955417586d980e334c091542f24a6f236f",
+      "oldExpectCount": 74,
+      "newExpectCount": 74,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "6317c3ec100d8203f3c94f5c011eab9de1963148a3ca0d5484ec834091269b4c",
+      "astHashAfter": "6317c3ec100d8203f3c94f5c011eab9de1963148a3ca0d5484ec834091269b4c"
+    },
+    {
+      "path": "apps/web/e2e/final-service-workflows-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 18,
+      "sourceSha256": "2a5fefc7b88c6a0ea499077362a4c68b2033edce16e3ffbb765ce3c1325aeb91",
+      "oldExpectCount": 59,
+      "newExpectCount": 59,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "d246bfd541fe035266aba419e40ae1fa3603a73732a6fc723ed3f5dfd450e5f5",
+      "astHashAfter": "d246bfd541fe035266aba419e40ae1fa3603a73732a6fc723ed3f5dfd450e5f5"
+    },
+    {
+      "path": "apps/web/e2e/final-unsigned-public-qa.ts",
+      "formatOnly": false,
+      "diffLines": 20,
+      "sourceSha256": "1728c6de1d4ff16aed1fb9aa5c250a7f290fc75b697dd28a3dcdefb0f3c30893",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "13f894c891f9a4947f6678dc6d92fe65af3e87680ad12968e5a21a6b2bb95e0b",
+      "astHashAfter": "13f894c891f9a4947f6678dc6d92fe65af3e87680ad12968e5a21a6b2bb95e0b"
+    },
+    {
+      "path": "apps/web/e2e/mixed-feedback.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "df722314726ea7b4ec50e246a4fa915d5b118ea2794dadd036274802175d1a20",
+      "oldExpectCount": 33,
+      "newExpectCount": 33,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "8e6458991f7f5828173c4a8b46c8562d4b61a7c2080686892b44720f0000a13a",
+      "astHashAfter": "8e6458991f7f5828173c4a8b46c8562d4b61a7c2080686892b44720f0000a13a"
+    },
+    {
+      "path": "apps/web/e2e/operator-details-acceptance-live.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "2c744d855709b07e41cad616cbe9dc52caacc13cf5c916e4b069eedc6409fe03",
+      "oldExpectCount": 85,
+      "newExpectCount": 85,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "638d051c4c6a0de80470a33b37a710adc20f74f7a0814998b9ea590e045dae0b",
+      "astHashAfter": "638d051c4c6a0de80470a33b37a710adc20f74f7a0814998b9ea590e045dae0b"
+    },
+    {
+      "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 299,
+      "sourceSha256": "b284dad68dc7d2cece396f1744aacffd67b937eac2b976d7015a978e663dc030",
+      "oldExpectCount": 225,
+      "newExpectCount": 225,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "d448b7f023d56a107ddcd38f77bdbd6e1595a8fe2cc462b3100367b2fde12a33",
+      "astHashAfter": "d448b7f023d56a107ddcd38f77bdbd6e1595a8fe2cc462b3100367b2fde12a33"
+    },
+    {
+      "path": "apps/web/e2e/operator-editor-live.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "957c6ff4e31ad1d96b7c018661f726893ec58f93fa57dfdbb2f0ba150bbeb487",
+      "oldExpectCount": 69,
+      "newExpectCount": 69,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "a87065c3d245be32bc89fb2ff55546f0ae22b04d3f244881956b7bd531e48bb0",
+      "astHashAfter": "a87065c3d245be32bc89fb2ff55546f0ae22b04d3f244881956b7bd531e48bb0"
+    },
+    {
+      "path": "apps/web/e2e/operator-focus-acceptance-helpers.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "bed4e20906109dc1fa7a7ade2f4bfa544528d5ffb76ecd5a44cfc40b9e142e04",
+      "oldExpectCount": 40,
+      "newExpectCount": 40,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "41280019bd415989374e949b32ff25f98e75ca0c88596800f47224060a45aeff",
+      "astHashAfter": "41280019bd415989374e949b32ff25f98e75ca0c88596800f47224060a45aeff"
+    },
+    {
+      "path": "apps/web/e2e/operator-full-suite.ts",
+      "formatOnly": false,
+      "diffLines": 30,
+      "sourceSha256": "d4ee9cf95661066dc0697d6557a982776e0d5d56d442ee1dc8e05c11c6c341d0",
+      "oldExpectCount": 3,
+      "newExpectCount": 3,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": false,
+      "astHashBefore": "f8b3c13c411a2306671ff455101f981223bc6c9e78489a54718cdfa554e2dd1e",
+      "astHashAfter": "be7273113ad4bf9f63068e93eae5f7f75ee0e4ef9dd27b8ac6acd27cba937e14"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-helpers.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858",
+      "oldExpectCount": 111,
+      "newExpectCount": 111,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "32b285e75b661236600d4461154d651b582b4c0025a37003d856a73932d46416",
+      "astHashAfter": "32b285e75b661236600d4461154d651b582b4c0025a37003d856a73932d46416"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-keyboard-resume-live.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "4a343f485266b5174d02369dbc7454aa05db8854e8d75a541baebccfca05322d",
+      "oldExpectCount": 11,
+      "newExpectCount": 11,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "19c037a19bbf1539b09dd80bc44bc46e2b50fb831db9d128dde6e482271bab90",
+      "astHashAfter": "19c037a19bbf1539b09dd80bc44bc46e2b50fb831db9d128dde6e482271bab90"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-exceptions-live.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "c92ce5e15b5972c5cbeaf484bef622f2e9bdc39abaae3f93a130265ffb4ccc11",
+      "oldExpectCount": 28,
+      "newExpectCount": 28,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "40b8cdab4c5859f72cfb43311fadede31eb39d1110f41284c748de7663064f97",
+      "astHashAfter": "40b8cdab4c5859f72cfb43311fadede31eb39d1110f41284c748de7663064f97"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-files-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 58,
+      "sourceSha256": "7ac30813540479190c87ec61f210ebd5cc7cc94ea93de93ce7a1f711cbb1e227",
+      "oldExpectCount": 27,
+      "newExpectCount": 27,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": false,
+      "astHashBefore": "07251e4a2cebd4988abe7e40da40bdb96139c722c6cb4077c6f79ac6c5518704",
+      "astHashAfter": "302956948fa30c7eb07c5ad2df0dc7775bf1f98728180713bea2daf90a870bbf"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 31,
+      "sourceSha256": "a94334b94eb9f6c7c60f7c9c219fc1c902765d6d2c2f710041e697d0dce9bf23",
+      "oldExpectCount": 62,
+      "newExpectCount": 62,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": false,
+      "astHashBefore": "83a88c6ab3e06d4616e5a0b9cd9b62833f8df8b0d98436f0cae3bb775bb931b0",
+      "astHashAfter": "abd5ee294ffef98e05b4e3a0b6926f3eca6ee29eee25c2f2c2fe91350d503ad5"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-resume-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 92,
+      "sourceSha256": "2cf2689ec019a4805759eb0fb68c99cdb35079d46e1e4e11b13087aba29683d9",
+      "oldExpectCount": 32,
+      "newExpectCount": 42,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": false,
+      "astHashBefore": "75b75d47f62d87f25d3e1e29be06f357fe9442bcf985ee8bfd52f982b8961f3e",
+      "astHashAfter": "9232af808ea50ea4a0b1903bf867517b7a14b4cf309a653a14d42b814b2327bd"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-review-layout-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 27,
+      "sourceSha256": "c3f1d86eb22aaef1ad83ea80e9c86da52fdb4248c5fc02256ac17618d92fd890",
+      "oldExpectCount": 6,
+      "newExpectCount": 6,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": false,
+      "astHashBefore": "582d593e03c9bf04a92f5d447cd873c5dbbcb1e3627ea2e2321d67ede1914431",
+      "astHashAfter": "e8d22a745614a0984570e82ace9f5a964f0f68686ef2ea015daff87bf48b0fe8"
+    },
+    {
+      "path": "apps/web/e2e/operator-native-zoom-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 16,
+      "sourceSha256": "3dcd9ea7071162955554fe5ad71fb387ed18be9e8e895bb7984dd9a61519ece8",
+      "oldExpectCount": 26,
+      "newExpectCount": 26,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "3e57f3b18658f932a664c850937539cc7a36752bdeb4597273276db32377fb62",
+      "astHashAfter": "3e57f3b18658f932a664c850937539cc7a36752bdeb4597273276db32377fb62"
+    },
+    {
+      "path": "apps/web/e2e/operator-preparation-full-fix.spec.ts",
+      "formatOnly": false,
+      "diffLines": 17,
+      "sourceSha256": "e25d83c2cd750f85d85ad3755ee5588dca2633e3d6a9591ea874e69b4b79998e",
+      "oldExpectCount": 77,
+      "newExpectCount": 77,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "de9a528e5b4b55577bae111d234af5e4d044bce289f1af8601617fcb4880e6b7",
+      "astHashAfter": "de9a528e5b4b55577bae111d234af5e4d044bce289f1af8601617fcb4880e6b7"
+    },
+    {
+      "path": "apps/web/e2e/operator-role-full-fix-live.spec.ts",
+      "formatOnly": false,
+      "diffLines": 21,
+      "sourceSha256": "b2b8acd5143cccb2e033c7dc6599127c0b6ebe0aa784eda855f23f6e9194b655",
+      "oldExpectCount": 36,
+      "newExpectCount": 36,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": false,
+      "astHashBefore": "7c61a13af53592bf4c3f18a99bea5d0e010e910b94ce358dca1fa25f0f5d0d09",
+      "astHashAfter": "f446ac70eb89402d851ce4822806bc5cff6a1e59e3943d52a9db420ce7776b71"
+    },
+    {
+      "path": "apps/web/e2e/operator-table-live.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "b1db656a0ded46538871422cf5a1b8e6f9c1d44b4f33484601f33ef198201abf",
+      "oldExpectCount": 41,
+      "newExpectCount": 41,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "10265d4e6e0e27aefe3f8ff5a038492a442b1cdbe3bd67980ab734f707975cee",
+      "astHashAfter": "10265d4e6e0e27aefe3f8ff5a038492a442b1cdbe3bd67980ab734f707975cee"
+    },
+    {
+      "path": "apps/web/e2e/operator-value-live.spec.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "27ab564fb1bc87e700bd5663c43c9188e9c5c14db68849fbc2fe2badb0e525dc",
+      "oldExpectCount": 30,
+      "newExpectCount": 30,
+      "oldAssertCount": 0,
+      "newAssertCount": 0,
+      "astEqual": true,
+      "astHashBefore": "f687c6c1d2db59c818952cdbfe288f7b91aeb52424cb84fc05377bf58c2f53d8",
+      "astHashAfter": "f687c6c1d2db59c818952cdbfe288f7b91aeb52424cb84fc05377bf58c2f53d8"
+    },
+    {
+      "path": "tests/contracts.test.ts",
+      "formatOnly": false,
+      "diffLines": 52,
+      "sourceSha256": "970b10ee62da6de7d1ec46d497160fec108e38d4e9b0028e0274d255989087a5",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 43,
+      "newAssertCount": 43,
+      "astEqual": false,
+      "astHashBefore": "a47f1a7aaf5828534d72f77f4d830ed39016d4de868f19670b32f28cf32aac1f",
+      "astHashAfter": "4e80b75c504f7c557f93e3010dd565f7a6dd74c140c82c89155ec32468199eff"
+    },
+    {
+      "path": "tests/integration/artifact-stream-access.test.ts",
+      "formatOnly": false,
+      "diffLines": 73,
+      "sourceSha256": "918a75f170a09f5d076f51e3f66610bb00d31ceb72b49702cd62d30e9677146e",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 28,
+      "newAssertCount": 28,
+      "astEqual": true,
+      "astHashBefore": "0f3ebe5c943896306d1b8b39a163b0bfc64b8a95965edf884ac04ff872204dd4",
+      "astHashAfter": "0f3ebe5c943896306d1b8b39a163b0bfc64b8a95965edf884ac04ff872204dd4"
+    },
+    {
+      "path": "tests/integration/business-scenarios.test.ts",
+      "formatOnly": false,
+      "diffLines": 14,
+      "sourceSha256": "6165f39ca92f9058ead329c4b4fc46f814573eb08461a12cce6b0d214d2b5652",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 8,
+      "newAssertCount": 8,
+      "astEqual": false,
+      "astHashBefore": "cb021187c9fa9025571efebaeea14ce19599fee3e5da47dfe85a30b1221b26b6",
+      "astHashAfter": "724bce5694c57a79645fabf4d6dc2e18f17d8c7a1dcbb1083b76036a0db1df5f"
+    },
+    {
+      "path": "tests/integration/issuance-batches.test.ts",
+      "formatOnly": true,
+      "diffLines": 1,
+      "sourceSha256": "a41c3e96890220575cd70b683bddc54bd3e6fe4f9d3416727acb2971e11d98ca",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 36,
+      "newAssertCount": 36,
+      "astEqual": true,
+      "astHashBefore": "b36f3d7f9842047430b9c2cefcdeeae262eb62e4673e481956980c6b2a15bd99",
+      "astHashAfter": "b36f3d7f9842047430b9c2cefcdeeae262eb62e4673e481956980c6b2a15bd99"
+    },
+    {
+      "path": "tests/integration/neutral-template-upgrade.test.ts",
+      "formatOnly": false,
+      "diffLines": 105,
+      "sourceSha256": "51439f678672639d4947492a771a309ef594f0a0227ed6736a205dd29f97c3ab",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 25,
+      "newAssertCount": 29,
+      "astEqual": false,
+      "astHashBefore": "72e5af6c5fb3a05ea8b6cf81b9c7f746a9e6b668dff83367473b66cfa3b53a97",
+      "astHashAfter": "41a8f2aa66a681640404f09e180e6098a41bccdc10750c8aa6fe190d8f540adb"
+    },
+    {
+      "path": "tests/integration/portal-evidence-http.test.ts",
+      "formatOnly": false,
+      "diffLines": 16,
+      "sourceSha256": "5263a469c6ca63c51285adf693b313ae5911a5556d951080828d4c94f4ba04cd",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 62,
+      "newAssertCount": 62,
+      "astEqual": true,
+      "astHashBefore": "3167dd6fe1ff6c4dcc3d358f69b6fd29641ae27ca90f6c343fa0192358ec0698",
+      "astHashAfter": "3167dd6fe1ff6c4dcc3d358f69b6fd29641ae27ca90f6c343fa0192358ec0698"
+    },
+    {
+      "path": "tests/integration/registration.test.ts",
+      "formatOnly": false,
+      "diffLines": 82,
+      "sourceSha256": "38c79a4a1aa0f2122e1814e61634da59e29a9c1b1f7ac75ef1cf7ed42e6392e0",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 63,
+      "newAssertCount": 69,
+      "astEqual": false,
+      "astHashBefore": "571460d491bc5e414bcd8938ffc8fddb78b0e952d92ef4e9eb74f901e7f4b9a9",
+      "astHashAfter": "1eb89af8d99f764d74bf72a121a2632528d850c11eb25d16479b868e9911f7b5"
+    },
+    {
+      "path": "tests/integration/target-preview.test.ts",
+      "formatOnly": false,
+      "diffLines": 30,
+      "sourceSha256": "9dd13ee851f28fd1a6bf38ef92096ccc15172dfcdcc2f8190389a4c947739a8e",
+      "oldExpectCount": 0,
+      "newExpectCount": 0,
+      "oldAssertCount": 59,
+      "newAssertCount": 59,
+      "astEqual": false,
+      "astHashBefore": "3d8c5d9ad81f559100df9aa15c4f79771d5da76c1f54ab629e6534a58be8bbd7",
+      "astHashAfter": "41650226d4fddfce7323aed7c7084a8d0d35b4b96b59d4ffe73c12504b2b5ad9"
+    }
+  ],
+  "findings": [
+    {
+      "id": "HARNESS-MANUAL-ORIGINALS",
+      "status": "CLOSED_SOURCE_REVIEW",
+      "paths": [
+        "apps/web/e2e/operator-minimal-manual-live.spec.ts",
+        "apps/web/e2e/operator-minimal-manual-resume-live.spec.ts",
+        "apps/web/e2e/operator-minimal-manual-files-live.spec.ts"
+      ],
+      "description": "Full-run early return bypasses producer finishChecks; resume/files currently check total210 and22examples but do not retain original provenance plus separate105PDF/105DOCX counts and exact template-format key set. Coordinator assigned acceptance agent to restore these assertions in both consumers.",
+      "closure": "Both resume and files now retain ORIGINAL filter, separate105PDF/105DOCX, exact22template-format keys, and existing210/22/hash checks. Original targeted finishChecks unchanged."
+    },
+    {
+      "id": "HARNESS-MANUAL-REVIEW-NO-SKIP",
+      "status": "CLOSED_SOURCE_REVIEW",
+      "paths": [
+        "apps/web/e2e/operator-minimal-review-layout-live.spec.ts"
+      ],
+      "description": "Full-run malformed finalized checkpoint can leave proposalId empty and trigger the legacy targeted skip. Require full-run failure instead.",
+      "closure": "Full-run finalized checkpoint proposalId is asserted before navigation; skip predicate explicitly requires !fullSuiteRunId. Missing checkpoint/run identity fails before skip."
+    },
+    {
+      "id": "HARNESS-DOMAIN-RUN-IDENTITY",
+      "status": "CLOSED_SOURCE_REVIEW",
+      "paths": [
+        "apps/web/e2e/operator-role-full-fix-live.spec.ts",
+        "apps/web/e2e/operator-domain-acceptance-live.spec.ts"
+      ],
+      "description": "Full project dependencies and current evidence directory already run producer first, but report/consumer lack explicit suiteRunId validation. Add same full-run identity guard as manual checkpoints while preserving explicit targeted mode.",
+      "closure": "Producer writes suiteRunId and exclusivewx for full-run; consumer requires currentSource when full-run and checks same suite identity before use. Explicit targeted mode preserved."
+    }
+  ],
+  "confirmedPreservation": [
+    "operator-domain-acceptance-live original225expect and full AST unchanged before upcoming provenance guard additions.",
+    "Manual resume already carries transferred English-field suppression, ITR facts, saved positions/customer, names/date checks; files verifies unchanged issuance/artifact hashes and unsigned bundle409.",
+    "Fresh manual checkpoint files use exclusive wx writes; fullSuiteRunId is validated and required; pending→resume→finalized→files/review dependencies preserve all stages.",
+    "Registration still asserts exact legacy11individual+5group+3SPECIAL templates, adds3LMS, exactmanifest id/version/checksum and explicit14zeroed namespaces. Upgrade still asserts19legacy appended and immutableoldrows/files/sequences, plus3LMS.",
+    "Contracts test expands actual registered controllers and array route metadata while retaining exact deny-by-default route-policy equality.",
+    "Business scenario timeout changes600s→1200s only; no assertion or product performance limit removed. Target-preview evidence location is fresh or explicit; assertions unchanged.",
+    "Renderer16originalgolden hashes remain literal and unchanged; Windows alternative is independently archived preLMS8c andoriginal8825 bytes, exact16 source/output SHA andnative runtime guarded; unsupportedruntime fails. SPECIAL test requires exact3priorITR forms and leaves all their content/PDF checks; newLMS6tests separate."
+  ],
+  "limits": [
+    "Assertion counts alone are not treated as proof of unchanged coverage; manual split gaps were found by examining control flow.",
+    "Full test/e2e execution status belongs to actual runner logs, not this static review."
+  ],
+  "additionalSourceHashes": [
+    {
+      "path": "apps/web/playwright.config.ts",
+      "sha256": "5d554a99ce7ec854f24359b6f508d2c4e38061f3d4eaa6ce21a06e706848ba6a"
+    },
+    {
+      "path": "tests/render/test_source_fidelity_acceptance.py",
+      "sha256": "6d26c543acd77d0e41b726239b576c9a95047e53425d97f1dcf82a3391dc33b6"
+    },
+    {
+      "path": "tests/render/test_special_program_forms.py",
+      "sha256": "f26e2305c930eb4e4966dcf0db0c43fa5ac7c3760f1d9b85adf049b1045b1164"
+    },
+    {
+      "path": "tests/fixtures/render-pinned-windows-8c08334.json",
+      "sha256": "81fbce791d70f2257a53200c6006f1220884d149064d2bf5b32f488e9ad2752a"
+    }
+  ],
+  "closureReviewedAt": "2026-10-14T23:05:12.670454+00:00",
+  "closureReviewedSources": [
+    {
+      "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+      "sha256": "4681b58ecec9980baca4f7b2afeec9feaf76f723fa88153b1089db3b4e262f35"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-files-live.spec.ts",
+      "sha256": "062265446fd86a69df97f10c4c435daebc5794b26b4466609371f1d414f2aa70"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-live.spec.ts",
+      "sha256": "a94334b94eb9f6c7c60f7c9c219fc1c902765d6d2c2f710041e697d0dce9bf23"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-manual-resume-live.spec.ts",
+      "sha256": "ce069bf44bbb15805fdfb58f17ad69153dbf818a089bbb22b3f9ef978e6468ce"
+    },
+    {
+      "path": "apps/web/e2e/operator-minimal-review-layout-live.spec.ts",
+      "sha256": "925355213da5404bddd8f99d66de88e338f65f433983c5dc5c2f30361d1180e3"
+    },
+    {
+      "path": "apps/web/e2e/operator-role-full-fix-live.spec.ts",
+      "sha256": "a33fc743b4376104a19e8c1372f201731b584305a1c03a3f1d0d65316382b6c6"
+    }
+  ],
+  "closureLimits": "Read-only review confirms repair in current source. Acceptance agent owns lint/typecheck and full browser execution; this report does not claim browser PASS.",
+  "restartHarnessReview": {
+    "status": "CLOSED_SOURCE_REVIEW",
+    "reviewedAt": "2026-10-15T00:25:20.459577+00:00",
+    "sources": [
+      {
+        "path": "apps/web/e2e/lms-first-flow-live.spec.ts",
+        "sha256": "a1fbb40f8cc1cfe5c8efdc08eae18aa3a795c7bbe515900fcbcb5bc8ba8229d9"
+      },
+      {
+        "path": "scripts/verification/lms-first-flow-readback.ts",
+        "sha256": "9de96d050686540cea0de45c3e25d4c09346a728dfa91b284fdc36ce2cbb01bf"
+      }
+    ],
+    "findings": [],
+    "confirmed": [
+      "Only the spawned shipping integration-worker child is stopped; shell is false/default, executable process.execPath and explicit tsconfig. PID STARTED/STOPPED records retained. Unexpected worker exit fails the harness.",
+      "All learner/director UI contexts are closed, new worker PID differs, a fresh director context signs in using the real form.",
+      "Readback rejects nonloopback/non-demo_test runtime and non-demoOnly tenant, then reads exact result/tenant scoped rows. No pending state is written or fabricated.",
+      "Result identity/snapshot and outbox identity persist; final one journal/item/delivery chain is asserted. Any journal/item/delivery already present before restart must retain its exact IDs, relationship IDs and immutable snapshot/payload hashes.",
+      "beforeRestart status is retained honestly; a result processed before restart proves replay/persistence, not falsely claimed pending-work recovery. Authentication/inspection costs are separate from zero-action trigger."
+    ],
+    "limits": "Static source review only; actual browser execution and acceptance verdict belong to acceptance-agent runner evidence."
+  },
+  "dateAndReporterReview": {
+    "status": "CLOSED_SOURCE_REVIEW",
+    "reviewedAt": "2026-10-15T00:39:00.135Z",
+    "checks": [
+      {
+        "path": "apps/web/e2e/final-portal-three-live.spec.ts",
+        "sourceSha256": "9969532bafbf35ec4e0468fa2deb8b2bb5ef9ea9d44d526c020f4050a44a0795",
+        "oldExpectChainCallCount": 98,
+        "newExpectChainCallCount": 98,
+        "expectChainAstExactlyEqual": true
+      },
+      {
+        "path": "apps/web/e2e/final-delivery-three-live.spec.ts",
+        "sourceSha256": "4c4cac690c39dae25dab6703fffc08016eefe60d540aa236d9182265db5fdbff",
+        "oldExpectChainCallCount": 71,
+        "newExpectChainCallCount": 71,
+        "expectChainAstExactlyEqual": true
+      },
+      {
+        "path": "apps/web/e2e/final-service-workflows-live.spec.ts",
+        "sourceSha256": "ab37f449759ccdfec245e310f47d6134182390467301050c3ec2db58fb1667b3",
+        "oldExpectChainCallCount": 134,
+        "newExpectChainCallCount": 134,
+        "expectChainAstExactlyEqual": true
+      },
+      {
+        "path": "apps/web/e2e/final-handover-live.spec.ts",
+        "sourceSha256": "a08bc97dac42978c15c78c01766504da49b256a8b559ac75d46d8145a7872dcb",
+        "oldExpectChainCallCount": 54,
+        "newExpectChainCallCount": 54,
+        "expectChainAstExactlyEqual": true
+      }
+    ],
+    "additionalSources": [
+      {
+        "path": "apps/web/e2e/acceptance-failure-reporter.ts",
+        "sha256": "6e50d6439b459dd12d7daa593c44e361f54a30517d60c46edb672faf5b3c3b49"
+      },
+      {
+        "path": "apps/web/playwright.config.ts",
+        "sha256": "7dfae24e2be8d4ebc872f3b586bc9a38b5cff1f1697744ec86359ff3d6b7c8ba"
+      },
+      {
+        "path": "packages/contracts/src/resolution.ts",
+        "sha256": "f0620f3f62f79b7505a035f6814059f74a52351ae281f38a2e6b43ade26357bb"
+      },
+      {
+        "path": "tests/kz-training-dates.test.ts",
+        "sha256": "430d002e274fd47690bf1baeff83caa750b9e7a69b61689056d11d345ad37771"
+      }
+    ],
+    "confirmed": [
+      "Normalized TypeScript diff of four legacy positive fixtures changes only training dates (plus formatting): document/protocol date remains Sep24, training Sep22–23; dynamic service group uses UTC previous calendar day for training.",
+      "Existing strict training-before-document guard is present in baseline HEAD and current contracts; its negative tests still assert unchanged same-day manual/imported values produce TRAINING_BEFORE_DOCUMENT, while CLEARED and DOCUMENT_IS_END behavior remain.",
+      "Every expect-chain expression and argument has the same structural AST before/after in all four files. Handover explicitly CLEARED unknown document date and negative outcomes remain intact.",
+      "Additional reporter reads failed/timedOut/interrupted results and writes immediate redacted JSON to stderr. It assigns no outcome, introduces no retry, skip, onEnd override, process exit override or test filtering. Existing list/JSON reporters remain. Exact environment password/secret/token/cookie/databaseURL values are redacted and terminal control characters stripped."
+    ],
+    "findings": [],
+    "limits": "Static source review only. Does not claim runtime browser PASS; runner reports remain authoritative."
+  },
+  "copyFixtureReview": {
+    "status": "CLOSED_SOURCE_REVIEW",
+    "reviewedAt": "2026-10-15T00:50:42.566463+00:00",
+    "sources": [
+      {
+        "path": "scripts/verification/lms-copy-fixture.ts",
+        "sha256": "b7fc5aa30db461ffeee58c345bf2ad3ed928603607695954fa3f0de70fafbd21"
+      }
+    ],
+    "confirmed": [
+      "Runtime requires loopback127.0.0.1 demo_test_lms_browser_ and DEMO_LMS_TEST_RUNTIME; provision sample creates fresh synthetic tenant. Advance/readback both assert tenant.demoOnly.",
+      "Actual private synthetic PDF goes through addExternalEvidence and DOCUMENT_REVIEWED review, with matching approved external issuer and known past date. No exam attempt or numerical score is seeded; counts/null fields asserted.",
+      "Prepared-form setup does not seed issuance, generated documents, signatures or transport success. Advance uses shipping scheduler and existing render worker, not a fabricated outcome or new integration process."
+    ],
+    "limits": "Read-only fixture review only. Actual COPY_OF_ORIGINAL app output, private SHA, DOCX/PDF, registry and QR acceptance belongs to UI-agent browser run; this report does not claim that run passed."
+  },
+  "finalCriteriaGeneratorReview": {
+    "status": "CLOSED_SOURCE_REVIEW_NOT_EXECUTED",
+    "reviewedAt": "2026-10-15T01:26:45.185148+00:00",
+    "source": {
+      "path": "scripts/verification/lms-final-criteria-candidate.py",
+      "sha256": "5b1ad25392216b3523f05d4b671b24a4c2f878fca6d1849779ea05711116b9ad"
+    },
+    "findingClosed": "Initial unconditional UX02/UX10 readiness could promote stale/incomplete UX aggregation despite a passed full browser command. Candidate now independently requires exact current run, allA-H PASS, completeness true, no missing measurement, required context/counts, steps/zeroaction semantics and matching raw source SHA.",
+    "otherGuards": [
+      "Exact pnpm test:e2e command and runId; discovery PASS_NOT_EXECUTION with exact expected-count equality andminimum219; no unexpected/skipped/flaky/global errors; testSourceUnchanged required.",
+      "ROOT_GATES_REVIEW reviewed status, exact P01-P13 set and all packet SHA checked.",
+      "deepcopy preserves historical draft; candidateOnly=true and localAccepted=false; explicit user exclusions retained; each unresolved condition staysNOT_RUN; missing evidence file raises rather than synthesizing a report."
+    ],
+    "pathSemantics": "Evidence-root relative paths are bound with exact fileSHA; runtime/build/command and late targeted proof remain separate. Source links point to preserved existing artifacts, not regenerated private traces.",
+    "currentUxSchemaVerified": "completeCurrentMeasurements is bool; requiredSection8Scenarios IDs areA-H; current partial False/NOT_RUN state cannot satisfy ux_ready.",
+    "execution": "Generator not run during review; mandatory browser command still running, so no final criterion PASS asserted."
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "status": "PASS_SOURCE_REVIEW_NOT_EXECUTION",
+  "checkedAt": "2026-10-15T12:43:40.718015+00:00",
+  "testHarnessOnly": true,
+  "productSourcesChanged": false,
+  "originalAssertionIntentPreserved": true,
+  "sourceDelta": {
+    "path": "apps/web/e2e/operator-timing.spec.ts",
+    "beforeSha256": "742d7848ecc26aa66deebfc72f99a5344ecb3df428144a86bad8f04ebe945bfa",
+    "candidateSha256": "1fd423046f366c243ea4470554a08286777bb20f865a9c9f90132fdacc727334",
+    "restoredSha256": "742d7848ecc26aa66deebfc72f99a5344ecb3df428144a86bad8f04ebe945bfa"
+  },
+  "originalFullToFinal": {
+    "path": "apps/web/e2e/operator-timing.spec.ts",
+    "beforeSha256": "e4839c3aef1869803a22e59f589ad9ba1740843c167b357f7d4e0015eaeebc10",
+    "candidateSha256": "1fd423046f366c243ea4470554a08286777bb20f865a9c9f90132fdacc727334",
+    "restoredSha256": "e4839c3aef1869803a22e59f589ad9ba1740843c167b357f7d4e0015eaeebc10"
+  },
+  "bothExactReverseProofsActuallyVerified": true,
+  "rawFirstCorrectiveOutcome": {
+    "runId": "affected-recheck-20261015-01",
+    "exitCode": 1,
+    "passed": 6,
+    "failed": 3,
+    "skipped": 0,
+    "flaky": 0,
+    "failedTimingCounts": [
+      10,
+      100,
+      150
+    ],
+    "passedTimingCount": 250
+  },
+  "diagnosis": "The connected remembered input is the return target only while its original DOM node survives the filter transition. In the10/100/150 failed cases the active details opener is the valid fallback;250 retained the field and passed. Earlier fixed-field oracle was too broad.",
+  "preActionOracle": "Capture the original edited ElementHandle before resetting the filter. Wait for the full row count. Freeze connected-node status and choose that same row input or clicked same-row details opener before opening the card. Then require that exact target focused; never select the expected target from observed post-return focus.",
+  "sourceContract": {
+    "path": "apps/web/components/editor.tsx",
+    "sha256": "25636087f38946eddd1134ebc09d2e89fb14ea024a9f16f9965f6db31bf909fb",
+    "functions": [
+      "openRecipient",
+      "returnToTable"
+    ]
+  },
+  "assertionReview": {
+    "stage1OrdinaryMatcherCalls": 17,
+    "finalOrdinaryMatcherCalls": 19,
+    "soleReplacedMatcher": "Post-card expect(row).toBeFocused() becomes expect(returnTarget).toBeFocused(); target is frozen before card.",
+    "originalFullAssertionsPreservedInIntent": true,
+    "addedChecks": [
+      "original element handle is not null",
+      "full row count restored before target decision"
+    ],
+    "timerIncludesFocusWait": true,
+    "manualFocusAdded": false,
+    "timeoutsChanged": false
+  },
+  "executionBoundary": "Final four timing cases remain NOT_RUN at source review. Five other affected identities already passed in the actual first corrective command and are not repeated; timing250 reruns because the timing source changed. Original full07 and first corrective failures remain immutable."
+}

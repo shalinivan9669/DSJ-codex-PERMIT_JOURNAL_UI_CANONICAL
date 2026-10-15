@@ -1,0 +1,50 @@
+{
+  "status": "APPLIED_REVIEWED_POST_TERMINAL_REPORT_TOOLS",
+  "recordedAt": "2026-10-15T12:35:37.127989+00:00",
+  "originalFullRunId": "full-e2e-20261015-07",
+  "originalFullRunEndedAt": "2026-10-15T12:18:13.2367101Z",
+  "scope": "Reporting and validation only, after full07 terminal. Original full07 generatorSourceUnchanged describes the run interval and is retained. Runtime/product and browser source captures are not rewritten.",
+  "beforeManifest": {
+    "path": "agent-c/full-e2e-20261015-07/evidence-generator-source.json",
+    "sha256": "108f06633afc228938fe412343383b63c79f370f9be5951588bb1d6aacb4d4c0"
+  },
+  "files": [
+    {
+      "path": "scripts/verification/lms-final-criteria-candidate.py",
+      "beforeSha256": "99f9a8164763b446d9fc31dfe38ecbc014330344dfb52544ee83b99a2a259ad3",
+      "afterSha256": "7045fd2c6b41b9bd171a12441eddb1415de7fe30a6138104d367b44e89a309ed"
+    },
+    {
+      "path": "scripts/verification/lms-finalize-evidence.py",
+      "beforeSha256": "fd6d41af187fd4b44788838e66784d91c1b52acf9f2e10e40353b8c5ee1e896a",
+      "afterSha256": "3c3a71e329d928062b22235c367a390a1b3a10e1dd12a3b877109851f7f38c1a"
+    },
+    {
+      "path": "scripts/verification/lms-publication-review.py",
+      "beforeSha256": "3150f07175fcd719e2c0bee418e19a48d4fc2e8b66c5a62b6084a797cff192b8",
+      "afterSha256": "389d4cb42124288858a3230dbd95410b720d42e00a75d16790f95415bc8284f8"
+    },
+    {
+      "path": "scripts/verification/lms-ux-draft.py",
+      "beforeSha256": "7f1b66b80c4e6b26d27d71ad23337225ac85887be8d6c4b161ea42f0522edaa3",
+      "afterSha256": "34e5814dd1cb5292123a0a3df8490f5b5ff690b8a041dfeb815a7254776dd739"
+    }
+  ],
+  "added": [
+    {
+      "path": "scripts/verification/lms_browser_acceptance.py",
+      "sha256": "35bcc07161f26da9f30fdf39f2766aff306e8d993a7bc4c6f8dbbc64f56aeeb0"
+    }
+  ],
+  "reviews": [
+    {
+      "path": "agent-a/BROWSER_COMPOSITE_GUARD_FINAL_INDEPENDENT_REVIEW_07.json",
+      "sha256": "fd910ccbd521408049c70998024b9c4f86a6a5026b10e286984d79436aab02c7"
+    },
+    {
+      "path": "agent-a/PUBLICATION_ADAPTER_APPLICATION_07.json",
+      "sha256": "4f5450ddc7358f6f4616abc5cc6ba7c23633b86fff64f9bcee812bfb99e7c889"
+    }
+  ],
+  "browserExecutionClaim": "NOT_CLAIMED_BY_THIS_SOURCE_REVISION; raw and corrected executions remain separate actual records."
+}

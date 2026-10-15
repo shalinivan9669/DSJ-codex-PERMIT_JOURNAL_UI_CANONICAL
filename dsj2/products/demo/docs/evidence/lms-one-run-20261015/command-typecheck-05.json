@@ -1,0 +1,12 @@
+{
+  "logPath": "command-typecheck-05.log",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "finishedAt": "2026-10-15T01:10:38.3180223Z",
+  "startedAt": "2026-10-15T01:09:54.0395794Z",
+  "environment": {
+    "setup": "lms-test-env.ps1 integration",
+    "CI": "true"
+  },
+  "exitCode": 0,
+  "command": "pnpm typecheck"
+}

@@ -1,0 +1,64 @@
+{
+  "fixtureVersion": "lms-operator-ui-v1",
+  "setup": "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+  "checkedAt": "2026-10-14T21:36:39.133Z",
+  "metrics": [
+    {
+      "scenario": "prepared eligible result to document set",
+      "role": "DIRECTOR",
+      "startState": "Result list with one eligible result automatically selected; synthetic prerequisites prepared by lms-operator-fixture.ts",
+      "steps": [
+        "Click Prepare documents once; three document types await a director decision"
+      ],
+      "clicks": 1,
+      "fields": 0,
+      "repeatedFields": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "elapsedMilliseconds": 615.6686000000009,
+      "expectedTypes": 3
+    },
+    {
+      "scenario": "required director decision",
+      "role": "DIRECTOR",
+      "steps": [
+        "Open the submitted revision in the existing director workspace",
+        "Review saved facts",
+        "Approve this revision"
+      ],
+      "clicks": 1,
+      "navigation": 1,
+      "decisions": 1,
+      "fields": 0,
+      "repeatedFields": 0,
+      "dialogs": 0,
+      "separateFromPreparedDownloadBudget": true
+    },
+    {
+      "scenario": "prepared document set download",
+      "role": "DIRECTOR",
+      "startState": "All three approved files ready, remembered default PDF format",
+      "steps": [
+        "Click Download set once"
+      ],
+      "clicks": 1,
+      "fields": 0,
+      "repeatedFields": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "elapsedMilliseconds": 1496.4028999999864,
+      "bytes": 214850
+    }
+  ],
+  "checks": {
+    "actualThreeDocumentZip": true,
+    "directorDecision": true,
+    "ownEmployerDownload": true,
+    "foreignEmployer404": true,
+    "extensionPersisted": true,
+    "recoveryLogin": true
+  },
+  "secretsExcluded": true
+}

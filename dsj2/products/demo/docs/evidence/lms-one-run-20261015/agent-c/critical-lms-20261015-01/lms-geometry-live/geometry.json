@@ -1,0 +1,1169 @@
+{
+  "checkedAt": "2026-10-15T00:39:38.418Z",
+  "fixture": "fresh synthetic accounts, existing results and editable course",
+  "widths": [
+    360,
+    390,
+    768,
+    1440
+  ],
+  "languages": [
+    "RU",
+    "KZ"
+  ],
+  "samples": 64,
+  "measurements": [
+    {
+      "role": "director",
+      "screen": "catalogue",
+      "language": "RU",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 6,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "catalogue",
+      "language": "RU",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 6,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "catalogue",
+      "language": "RU",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 6,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "catalogue",
+      "language": "RU",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 6,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "catalogue",
+      "language": "KZ",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 6,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "catalogue",
+      "language": "KZ",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 6,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "catalogue",
+      "language": "KZ",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 6,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "catalogue",
+      "language": "KZ",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 6,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "assignment",
+      "language": "RU",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 8,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "assignment",
+      "language": "RU",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 8,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "assignment",
+      "language": "RU",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 8,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "assignment",
+      "language": "RU",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 8,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "assignment",
+      "language": "KZ",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 8,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "assignment",
+      "language": "KZ",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 8,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "assignment",
+      "language": "KZ",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 8,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "assignment",
+      "language": "KZ",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 8,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "results",
+      "language": "RU",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 15,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "results",
+      "language": "RU",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 15,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "results",
+      "language": "RU",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 15,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "results",
+      "language": "RU",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 15,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "results",
+      "language": "KZ",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 15,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "results",
+      "language": "KZ",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 15,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "results",
+      "language": "KZ",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 15,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "results",
+      "language": "KZ",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 15,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "editor",
+      "language": "RU",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 164,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "editor",
+      "language": "RU",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 164,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "editor",
+      "language": "RU",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 164,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "editor",
+      "language": "RU",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 164,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "editor",
+      "language": "KZ",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 164,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "editor",
+      "language": "KZ",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 164,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "editor",
+      "language": "KZ",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 164,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "editor",
+      "language": "KZ",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 164,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "sanitary-settings",
+      "language": "RU",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 26,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "sanitary-settings",
+      "language": "RU",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 26,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "sanitary-settings",
+      "language": "RU",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 26,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "sanitary-settings",
+      "language": "RU",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 26,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "sanitary-settings",
+      "language": "KZ",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 26,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "sanitary-settings",
+      "language": "KZ",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 26,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "sanitary-settings",
+      "language": "KZ",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 26,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "director",
+      "screen": "sanitary-settings",
+      "language": "KZ",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 26,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "catalogue",
+      "language": "RU",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "catalogue",
+      "language": "RU",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "catalogue",
+      "language": "RU",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "catalogue",
+      "language": "RU",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "catalogue",
+      "language": "KZ",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "catalogue",
+      "language": "KZ",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "catalogue",
+      "language": "KZ",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "catalogue",
+      "language": "KZ",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "assignment",
+      "language": "RU",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 7,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "assignment",
+      "language": "RU",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 7,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "assignment",
+      "language": "RU",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 7,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "assignment",
+      "language": "RU",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 7,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "assignment",
+      "language": "KZ",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 7,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "assignment",
+      "language": "KZ",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 7,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "assignment",
+      "language": "KZ",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 7,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "assignment",
+      "language": "KZ",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 7,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "results",
+      "language": "RU",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "results",
+      "language": "RU",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "results",
+      "language": "RU",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "results",
+      "language": "RU",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "results",
+      "language": "KZ",
+      "width": 360,
+      "viewport": 360,
+      "documentWidth": 360,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "results",
+      "language": "KZ",
+      "width": 390,
+      "viewport": 390,
+      "documentWidth": 390,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "results",
+      "language": "KZ",
+      "width": 768,
+      "viewport": 768,
+      "documentWidth": 768,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    },
+    {
+      "role": "employer",
+      "screen": "results",
+      "language": "KZ",
+      "width": 1440,
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "small": [],
+      "technicalStatuses": [],
+      "activeControls": 4,
+      "focus": {
+        "visible": true,
+        "outline": "solid"
+      },
+      "keyboardActions": 1,
+      "manualRefresh": 0,
+      "dialogs": 0
+    }
+  ]
+}

@@ -1,0 +1,549 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-15T00:42:18.084Z",
+  "fixtureVersion": "lms-selection-regression-v1",
+  "setup": "Fresh synthetic prerequisite records prepared through actual domain functions; no UI/API mocks or application-output substitution.",
+  "measurements": [
+    {
+      "scenario": "selection and failed row retained across actual search responses",
+      "selectedProgram": "4355f30d-dd4c-4f86-b3dc-d42e25d5a73f",
+      "postedRecipients": [
+        "bbaed752-2bea-42a1-ae70-6afcd5113812",
+        "4130298d-36a5-4954-9101-b5b833cfa930"
+      ],
+      "selectedAfterPartial": "bbaed752-2bea-42a1-ae70-6afcd5113812",
+      "startBoundary": "Authenticated director opens a prepared assignment group; search and clear are intentional regression actions.",
+      "navigation": 1,
+      "clicks": 2,
+      "fields": 4,
+      "selections": 1,
+      "repeatedFields": 0,
+      "dialogs": 0,
+      "keyboardActions": 0,
+      "manualRefresh": 0,
+      "elapsedMilliseconds": 518.8730999999971
+    },
+    {
+      "scenario": "partial preparation preserves ready item, exact failed row and excluded result",
+      "initialSelection": [
+        "d7f01825-9c51-487e-9fa5-54842d7e5ca6",
+        "85863708-5048-4668-841d-20950cfb560c"
+      ],
+      "readyDocuments": [
+        "95046ab2-33cc-4568-9825-f4da39217c46"
+      ],
+      "retrySelection": [
+        "85863708-5048-4668-841d-20950cfb560c"
+      ],
+      "excludedDocuments": 0,
+      "navigation": 1,
+      "clicks": 3,
+      "fields": 0,
+      "repeatedFields": 0,
+      "dialogs": 0,
+      "keyboardActions": 0,
+      "manualRefresh": 0
+    },
+    {
+      "scenario": "independent page subsets survive returning between real server pages",
+      "totalEnrollments": 259,
+      "pageSize": 250,
+      "firstPageSelection": [
+        "8920345c-3498-4f7f-b042-7c2078627cd1"
+      ],
+      "secondPageInitialCount": 2,
+      "secondPageRestoredSelection": [
+        "3a2cc475-7eca-483e-92b4-af6f4dfb6009"
+      ],
+      "addedRealAttempts": 1,
+      "syntheticAdditionalEnrollments": 253,
+      "fields": 0,
+      "repeatedFields": 0,
+      "dialogs": 0,
+      "keyboardActions": 0,
+      "manualRefresh": 0
+    },
+    {
+      "scenario": "Д: add and review an external source with unknown exam date",
+      "role": "DIRECTOR",
+      "startBoundary": "Authenticated director has results list open",
+      "preconditions": [
+        "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+        "Prepared fixture setup and selection/pagination regression are separate measurements."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Открыть слушателя",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 58.665799999995215
+        },
+        {
+          "kind": "click",
+          "label": "Добавить основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 61.09190000000672
+        },
+        {
+          "kind": "field",
+          "label": "Кем выдан",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.177800000004936
+        },
+        {
+          "kind": "field",
+          "label": "Источник",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.25209999999788
+        },
+        {
+          "kind": "field",
+          "label": "Номер документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 21.131499999995867
+        },
+        {
+          "kind": "field",
+          "label": "Дата документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.442199999997683
+        },
+        {
+          "kind": "file",
+          "label": "Файл основания",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 26.891600000002654
+        },
+        {
+          "kind": "click",
+          "label": "Добавить на проверку",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 48.71399999999994
+        },
+        {
+          "kind": "field",
+          "label": "Как проверено основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 59.01000000000204
+        },
+        {
+          "kind": "select",
+          "label": "Результат во внешнем документе",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 24.767799999994168
+        },
+        {
+          "kind": "click",
+          "label": "Подтвердить проверку",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 45.16449999999895
+        }
+      ],
+      "clicks": 4,
+      "keyboardActions": 0,
+      "fields": 5,
+      "repeatedFields": 0,
+      "selections": 1,
+      "decisions": 3,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 1,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 523.9761999999973,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "sourceId": "3ebe591e-3ace-40b1-b134-0eadf9777bce",
+        "examDate": null,
+        "documentDate": "2026-01-14",
+        "reviewed": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+    },
+    {
+      "scenario": "Д: clarify unknown exam date without repeated source fields",
+      "role": "DIRECTOR",
+      "startBoundary": "Reviewed source with unknown exam date is open",
+      "preconditions": [
+        "Source bytes, issuer, document number, document date, learner and enrollment are already saved.",
+        "Only newly established exam date and justification are entered; existing evidence is immutable."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Уточнить дату экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 25.86239999999816
+        },
+        {
+          "kind": "field",
+          "label": "Дата экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 16.84440000000177
+        },
+        {
+          "kind": "field",
+          "label": "Основание уточнения",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 20.345500000003085
+        },
+        {
+          "kind": "click",
+          "label": "Сохранить уточнение",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 48.28029999999853
+        }
+      ],
+      "clicks": 2,
+      "keyboardActions": 0,
+      "fields": 2,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 465.4681000000055,
+      "excludedVerificationMilliseconds": 1193.6097999999984,
+      "result": {
+        "oldSourceId": "3ebe591e-3ace-40b1-b134-0eadf9777bce",
+        "newSourceId": "8ab16d3b-f9a4-4c58-a2e2-3eb80e6f307c",
+        "unchangedFile": true,
+        "examDate": "2026-01-10",
+        "resultRevisions": 2
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+    },
+    {
+      "scenario": "Д: add and review an external source with known exam date",
+      "role": "DIRECTOR",
+      "startBoundary": "Results list is open with prior source details still open",
+      "preconditions": [
+        "Existing learner, enrollment and course are selected from saved records; new external source metadata has not been entered before.",
+        "Prepared fixture setup and selection/pagination regression are separate measurements."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Закрыть предыдущее основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 30.577100000002247
+        },
+        {
+          "kind": "click",
+          "label": "Открыть слушателя",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 39.377400000004855
+        },
+        {
+          "kind": "click",
+          "label": "Добавить основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 80.73279999999795
+        },
+        {
+          "kind": "field",
+          "label": "Кем выдан",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 23.22989999999845
+        },
+        {
+          "kind": "field",
+          "label": "Источник",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 35.39530000000377
+        },
+        {
+          "kind": "field",
+          "label": "Номер документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 33.59109999999782
+        },
+        {
+          "kind": "field",
+          "label": "Дата документа",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 15.908799999997427
+        },
+        {
+          "kind": "field",
+          "label": "Дата экзамена",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 32.90529999999853
+        },
+        {
+          "kind": "file",
+          "label": "Файл основания",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 19.858600000006845
+        },
+        {
+          "kind": "click",
+          "label": "Добавить на проверку",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 39.771700000004785
+        },
+        {
+          "kind": "field",
+          "label": "Как проверено основание",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 60.263599999998405
+        },
+        {
+          "kind": "select",
+          "label": "Результат во внешнем документе",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 17.817199999997683
+        },
+        {
+          "kind": "click",
+          "label": "Подтвердить проверку",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 44.28070000000298
+        }
+      ],
+      "clicks": 5,
+      "keyboardActions": 0,
+      "fields": 6,
+      "repeatedFields": 0,
+      "selections": 1,
+      "decisions": 3,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 1,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 589.8024000000005,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "sourceId": "8345be3c-e118-4718-9b94-2428dbbfc8fe",
+        "examDate": "2026-01-12",
+        "documentDate": "2026-01-14",
+        "reviewed": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario."
+    },
+    {
+      "scenario": "separate known/unknown exam date and immutable correction",
+      "documentDate": "2026-01-14",
+      "knownExamDate": "2026-01-12",
+      "unknownOriginalEvidenceId": "3ebe591e-3ace-40b1-b134-0eadf9777bce",
+      "datedEvidenceId": "8ab16d3b-f9a4-4c58-a2e2-3eb80e6f307c",
+      "unchangedPrivateFileSha256": "9b4203e982cecb99c2223be14faa8d56de5097ab8dd10a8cf9984bef9a2a9f1f",
+      "resultRevisions": 2,
+      "originalExamAt": null,
+      "correction": {
+        "startBoundary": "Unknown reviewed source is already open in the result details.",
+        "clicks": 2,
+        "fields": 2,
+        "repeatedFields": 0,
+        "selections": 0,
+        "dialogs": 0,
+        "fileSelections": 0,
+        "keyboardActions": 0,
+        "manualRefresh": 0,
+        "navigation": 0
+      },
+      "initialUploadFileSelections": 2,
+      "nativeFilePickerObserved": false
+    }
+  ],
+  "geometry": [
+    {
+      "screen": "date-correction",
+      "language": "RU",
+      "width": 360,
+      "pageWidth": 360,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-correction",
+      "language": "RU",
+      "width": 390,
+      "pageWidth": 390,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-correction",
+      "language": "RU",
+      "width": 768,
+      "pageWidth": 768,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-correction",
+      "language": "RU",
+      "width": 1440,
+      "pageWidth": 1440,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-correction",
+      "language": "KZ",
+      "width": 360,
+      "pageWidth": 360,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-correction",
+      "language": "KZ",
+      "width": 390,
+      "pageWidth": 390,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-correction",
+      "language": "KZ",
+      "width": 768,
+      "pageWidth": 768,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-correction",
+      "language": "KZ",
+      "width": 1440,
+      "pageWidth": 1440,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-upload",
+      "language": "RU",
+      "width": 360,
+      "pageWidth": 360,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-upload",
+      "language": "RU",
+      "width": 390,
+      "pageWidth": 390,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-upload",
+      "language": "RU",
+      "width": 768,
+      "pageWidth": 768,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-upload",
+      "language": "RU",
+      "width": 1440,
+      "pageWidth": 1440,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-upload",
+      "language": "KZ",
+      "width": 360,
+      "pageWidth": 360,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-upload",
+      "language": "KZ",
+      "width": 390,
+      "pageWidth": 390,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-upload",
+      "language": "KZ",
+      "width": 768,
+      "pageWidth": 768,
+      "small": [],
+      "keyboardFocusVisible": true
+    },
+    {
+      "screen": "date-upload",
+      "language": "KZ",
+      "width": 1440,
+      "pageWidth": 1440,
+      "small": [],
+      "keyboardFocusVisible": true
+    }
+  ],
+  "boundary": "Real local API and browser; synthetic data and input PDF only. Search/clear, retry and geometry actions intentionally exercise regressions and do not claim a prepared-flow action budget. No network provider, legal authority, issued external document or physical printing claimed."
+}

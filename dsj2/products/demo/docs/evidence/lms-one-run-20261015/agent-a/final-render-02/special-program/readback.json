@@ -1,0 +1,52 @@
+[
+  {
+    "form": "biot-itr-certificate",
+    "version": "special-14-1",
+    "sourceSha256": "ee6a5e8089d63fdcf1755259c8acb52aac8e8a23a7fed1d6025781aee2505e7c",
+    "pages": 1,
+    "docxSha256": "f2c100037cf299532fe3f4569b2af6f3db139f91b920761aa94febc7056a8e4e",
+    "pdfSha256": "ebd092a634bb56033d168dcc36c4c054a406dc1d75ce3c25c2ca0cadba24ec9e",
+    "verifiedValues": [
+      "Тестов Иван Петрович",
+      "промышленной",
+      "өнеркәсіп",
+      "40",
+      "Тестова А. Б."
+    ]
+  },
+  {
+    "form": "biot-itr-protocol",
+    "version": "special-1-1",
+    "sourceSha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+    "pages": 1,
+    "docxSha256": "0555c99227e98204a6f3685561e3716240c6ec0fcf32c80aafb3e6a5b5fd15ca",
+    "pdfSha256": "b856239292913f4cc9575fc0e2f4c97a4029bba5d009f7232eab977574131ee0",
+    "verifiedValues": [
+      "Тестов Иван Петрович",
+      "990240000000",
+      "Астана, Тестовая 1",
+      "Астана, Сынақ 1",
+      "90 / 100",
+      "прошел / өткен",
+      "СЕРТ-00001"
+    ]
+  },
+  {
+    "form": "biot-itr-protocol-group",
+    "version": "special-1-group-1",
+    "sourceSha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29",
+    "pages": 1,
+    "docxSha256": "ab949ebf1473bdcf36c702cb1ceba16456fba4dfa13e61c54ed16fa554551123",
+    "pdfSha256": "b46d942d196b37e0ea1845068f2285d98a2b0192457730b8bb0a5cd7247af9bc",
+    "verifiedValues": [
+      "Синтетический Слушатель 001",
+      "Синтетический Слушатель 002",
+      "990240000000",
+      "Астана, Тестовая 1",
+      "Астана, Сынақ 1",
+      "90 / 100",
+      "прошел / өткен",
+      "СЕРТ-00001"
+    ]
+  }
+]

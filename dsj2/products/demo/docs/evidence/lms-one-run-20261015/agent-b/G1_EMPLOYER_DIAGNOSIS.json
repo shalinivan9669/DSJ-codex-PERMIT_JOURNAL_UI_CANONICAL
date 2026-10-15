@@ -1,0 +1,112 @@
+{
+  "status": "ACTUAL_FIXTURE_INPUT_CONFLICT_REPAIR_PENDING_FULL05_TERMINAL",
+  "reviewer": "Agent B",
+  "checkedAt": "2026-10-15T01:40:03.4523347Z",
+  "sourceBaseCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "sourceFilesUnchangedAgainstBase": true,
+  "sourceFilesDiffFromBase": [],
+  "sourceFiles": [
+    {
+      "sha256": "beceb0cd1aa5ee7f418323b41ec1b011461fdc36097f2e8e9de490a5550d81fa",
+      "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts"
+    },
+    {
+      "sha256": "87dcfafb8b884a4cd55c7e4efa56b36aa144fff24647a1ac10446da5c6d06838",
+      "path": "apps/web/components/import-dialog.tsx"
+    },
+    {
+      "sha256": "bf75d3fc1c8cd46da0e7fcef4d78de1c40d3629bb35bd8ffb7f8ab763c6e8e5b",
+      "path": "apps/web/lib/import-employer.ts"
+    },
+    {
+      "sha256": "7f01e5b5c5f08ed395d3cc3bbedc2c89554ba5f0326421857c3bd4887d4c4126",
+      "path": "apps/web/lib/recipient-employer.ts"
+    },
+    {
+      "sha256": "ee417777ab8ba9988b8dcffef9b4c39b4e951ca35dbbd4e07112ae1e080f8036",
+      "path": "apps/web/components/request-organization-fields.tsx"
+    },
+    {
+      "sha256": "3069f86e8524ea5b62fec266adc345c0eece13db34edc5b39fb9bb53d131bfa5",
+      "path": "apps/web/components/organization-name-fields.tsx"
+    },
+    {
+      "sha256": "269ee5ff62804ff2b3a50e5e946c2fee78656850b1d98b953f51563d0954a7bb",
+      "path": "packages/contracts/src/organization.ts"
+    }
+  ],
+  "failure": {
+    "path": "agent-c/full-e2e-20261015-05/g1-prepared/g1-failure-diagnostic.json",
+    "line": 600,
+    "actual": "",
+    "expected": "ДЕМО — Тестовая организация «Учебный заказ»"
+  },
+  "actualReadOnlyDatabase": {
+    "tenantDemoOnly": true,
+    "blankRawEmployerRows": 100,
+    "importId": "eb41af2f-46ab-4cd5-ae45-e7fcff7f7834",
+    "companyId": "7533f085-9643-46af-9081-bea565f6e5b0",
+    "updatedAtUtc": "2026-10-15T01:34:54.543Z",
+    "host": "127.0.0.1:55449",
+    "createdAtUtc": "2026-10-15T01:31:25.287Z",
+    "database": "demo_test_lms_browser_20261015",
+    "revision": 12,
+    "kind": "COMPANY",
+    "firstRow": {
+      "employerId": null,
+      "externalId": "DEMO-P001",
+      "workplaceRu": "",
+      "workplaceKz": ""
+    },
+    "status": "DRAFT",
+    "rows": 100,
+    "queryScope": "SELECT only, exact loopback demo_test database and known demoOnly tenant; no browser or mutation",
+    "companyKz": "ДЕМО — Тестовая организация «Учебный заказ» ЖШС",
+    "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+    "companyRu": "ТОО ДЕМО — Тестовая организация «Учебный заказ»",
+    "requestId": "dc8a581d-11cf-4b23-97a8-cfb9212089f9"
+  },
+  "sourceFixture": {
+    "path": "tests/fixtures/operator-value/100_people.json",
+    "distinctWorkplaceRu": [
+      "ДЕМО — Тестовая организация «Учебный заказ»"
+    ],
+    "distinctWorkplaceKz": [
+      "ДЕМО — «Оқу тапсырысы» сынақ ұйымы"
+    ],
+    "count": 100
+  },
+  "causeChain": [
+    "G1 leaves the pre-existing new-company default form TOO and enters only the raw RU source name.",
+    "Stored company consequently gains the RU TOO prefix and KZ ZHSHS suffix with RU fallback, conflicting with the two exact unprefixed source names.",
+    "G1 explicitly checks the conflict resolution checkbox to align imported rows with the request company.",
+    "Existing inheritImportEmployer deliberately clears both local name overrides for inheritance.",
+    "Later G1 assertion still requires the original raw imported names, contradicting its earlier input/normalization decision."
+  ],
+  "verdict": "Fixture UI setup and assertion mismatch; no LMS product regression identified. Existing product behavior is source-unchanged from base and matches the explicitly selected inheritance operation.",
+  "authorizedRepair": {
+    "newAssertions": [
+      "Both saved company names exactly match original source before import",
+      "Employer conflict/alignment control is absent after preview"
+    ],
+    "actualNewInputCounts": null,
+    "target": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+    "preservedAssertions": [
+      "All100 original raw names and RU/KZ positions/workplaces",
+      "All100 photos",
+      "PASSED/AUTO original semantics",
+      "101issued documents and original file verification",
+      "Zero mouse clicks and keyboard metrics"
+    ],
+    "baselineReference": "apps/web/e2e/operator-v03-live.spec.ts:148-184",
+    "method": "Use actual existing UI entirely with keyboard helpers: select form NONE, keep original RU input, resolve staged company through import disclosure, open saved company card, enter distinct original KZ once, then import source without normalization.",
+    "actualTargetedResult": null,
+    "plannedAdditionalBusinessInputs": [
+      "One explicit NONE form selection",
+      "One distinct-KZ choice",
+      "One original KZ field input"
+    ],
+    "applyAfter": "C full05 terminal and retained result"
+  },
+  "boundary": "Diagnosis only. Product/test source, database state and current full-suite execution remain unchanged. Additional input counts and new source hash will be recorded after the authorized patch and actual targeted producer run."
+}

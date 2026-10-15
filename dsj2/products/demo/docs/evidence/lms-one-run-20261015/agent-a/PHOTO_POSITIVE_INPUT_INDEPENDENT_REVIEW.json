@@ -1,0 +1,58 @@
+{
+  "status": "PASS_PRIVATE_CANDIDATE_SOURCE_REVIEW_ONLY",
+  "reviewedAtUtc": "2026-10-15T11:24:39.814394+00:00",
+  "reviewer": "Agent A",
+  "notAppliedAtReview": true,
+  "full07StateAtReview": "RUNNING_WITH_RECORDED_PHOTO_INPUT_FAILURE",
+  "scope": "Read-only independent review of two private test fixture candidates; no product/source/fixture mutation or browser rerun.",
+  "files": [
+    {
+      "path": "apps/web/e2e/operator-photo-details-live.spec.ts",
+      "beforeSha256": "8d743a3607bd6671f20e1333883ddda09254b3ad05de5fec5ecef3e2c92cb7a9",
+      "candidateSha256": "e02e8733f15cf72f9b02f264c2f20a20dcad6e3a923cd7fc2c943af31650695e"
+    },
+    {
+      "path": "scripts/verification/lms-full-e2e-fixture.ts",
+      "beforeSha256": "e2e717766dcc686600f6051e373232921748e8432a415f88c71521c3aa77a840",
+      "candidateSha256": "f837363c728459c543ab13177eec14990914ac6c7cf822e8cf2106509501c70c"
+    }
+  ],
+  "independentAst": {
+    "parser": "Installed TypeScript compiler AST with canonical printer",
+    "beforeAssertions": 14,
+    "candidateAssertions": 20,
+    "missingOriginalAssertions": [],
+    "addedAssertions": [
+      "expect(bytes.length, \"Positive large-photo fixture must exceed 1 MiB\").toBeGreaterThan(1024 * 1024)",
+      "expect(bytes.length, \"Positive large-photo fixture must respect the existing 5 MiB limit\").toBeLessThanOrEqual(LIMITS.photoBytes)",
+      "expect(sourceMetadata.format).toBe(\"jpeg\")",
+      "expect(sourceMetadata.width).toBe(3000)",
+      "expect(sourceMetadata.height).toBe(4000)",
+      "expect(sourceMetadata.width * sourceMetadata.height).toBeLessThanOrEqual(LIMITS.imagePixels)"
+    ],
+    "boundary": "Counts cover matcher call ASTs; complete two-file diff independently inspected as well."
+  },
+  "generatorReview": {
+    "originalJpegQuality": 88,
+    "candidateJpegQuality": 40,
+    "unchangedPattern": "Deterministic seeded RGB3000x4000,12MP,no real portrait",
+    "newPreconditions": [
+      "JPEG format",
+      "exact3000x4000",
+      "<=20MP existing pixel limit",
+      ">1MiB input",
+      "<=5MiB existing byte limit beforewrite"
+    ],
+    "otherGeneratedPortraitUnchanged": true
+  },
+  "preserved": [
+    "All14 original matcher assertions byte-equivalent under AST printer",
+    "Save enabled and actual upload/crop/rotation/reload checks",
+    "Original request identity and original source-byte SHA verification",
+    "Exact normalized-image assertions",
+    "Existing test and producttimeouts",
+    "Existing product limits and rejection path"
+  ],
+  "executionBoundary": "Candidate codec measurement3895985bytes was supplied by Agent B; A independently reviewed source/hash/AST but did not regenerate or run the browser. Passing execution is still required after authorized terminal window.",
+  "sourceEditsByReviewer": []
+}

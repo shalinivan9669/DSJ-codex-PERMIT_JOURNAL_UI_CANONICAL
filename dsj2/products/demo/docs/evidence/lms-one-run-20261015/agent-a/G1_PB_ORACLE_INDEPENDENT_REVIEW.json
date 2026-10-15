@@ -1,0 +1,92 @@
+{
+  "status": "PASS_INDEPENDENT_SOURCE_AND_SAVED_CONTROL_REVIEW_ONLY",
+  "checkedAtUtc": "2026-10-15T02:29:20.017145+00:00",
+  "reviewer": "Agent A",
+  "actual100G1Execution": "NOT_RUN",
+  "actualSourceChanged": false,
+  "overallAcceptance": false,
+  "candidateSha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9",
+  "actualSourceSha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858",
+  "artifactChecks": [
+    {
+      "artifactId": "11b21afc-52c8-4286-b0f0-398a342f1543",
+      "documentId": "950918fd-2e68-46a7-9926-227e93853ae9",
+      "sha256": "b1dc6ba4c41f0ee03e63ea96b77d02130532f2fd901de14311368c7fde1e14e1",
+      "bytes": 7418438,
+      "actualRosterRows": 2,
+      "resultCellCounts": {
+        "Тапсырды/сдал": 2
+      },
+      "oldStandaloneMatches": 0,
+      "newExactBilingualMatches": 2,
+      "snapshotStatusSource": "Agent B tenant-scoped read-only snapshot summary; Agent A independently read product source and actual file bytes only."
+    },
+    {
+      "artifactId": "791fa05e-c9bb-4fac-8ab0-9b630c3dd647",
+      "documentId": "13c0aeb6-ee08-4d03-8c23-c70055168588",
+      "sha256": "571ee19c71497ea766ca8748f1feeac11064a01d937006cfbb8a547aa1595700",
+      "bytes": 7418936,
+      "actualRosterRows": 5,
+      "resultCellCounts": {
+        "Сдал": 5
+      },
+      "oldStandaloneMatches": 5,
+      "newExactBilingualMatches": 0,
+      "snapshotStatusSource": "Agent B tenant-scoped read-only snapshot summary; Agent A independently read product source and actual file bytes only."
+    }
+  ],
+  "astComparison": {
+    "method": "TypeScript AST matcher calls including outer expect.poll assertions, excluding bare poll construction; normalized exact expression multiset",
+    "files": [
+      {
+        "path": "apps/web/e2e/operator-g1-helpers.ts",
+        "sha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858",
+        "parseErrors": 0,
+        "matcherCalls": 111
+      },
+      {
+        "path": ".runtime/g1-ui-repair/operator-g1-helpers.ts.pending",
+        "sha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9",
+        "parseErrors": 0,
+        "matcherCalls": 111
+      }
+    ],
+    "removed": [
+      [
+        "expect([...text.matchAll(/(?:^|\\s)Сдал(?=\\s|$)/g)]).toHaveLength(100)",
+        1
+      ]
+    ],
+    "added": [
+      [
+        "expect([\n    ...text.matchAll(/(?:^|\\s)Тапсырды\\/сдал(?=\\s|$)/g),\n]).toHaveLength(100)",
+        1
+      ]
+    ],
+    "unchangedMatcherCalls": 110,
+    "actualSourceUnchanged": true
+  },
+  "ordinaryMatcherCrossCheck": {
+    "ordinaryExpectBefore": 106,
+    "ordinaryExpectCandidate": 106,
+    "ordinaryExactUnchanged": 105,
+    "outerExpectPollUnchanged": 5
+  },
+  "sourceFindings": [
+    "G1 uses initial COURSE PB result and later confirms PASSED/source through actual UI; no manual resultText overwrite is performed.",
+    "outcomeWording replaces COURSE text with canonical PB Тапсырды/сдал while preserving factual nonempty protected/manual or origin-missing text.",
+    "Independent literal exact full bilingual phrase with the same bounded100 count is correct for this exact fixture. No result alternatives, case folding, broad match or count relaxation introduced.",
+    "No live renderer, default wording, fixture content, manualV07 control, photo/name/file/number/hash/snapshot or privacy guard changed.",
+    "G1 helper already contains separately approved earlier full-run checkpoint guards relative to8c; these are not attributed to this one-line oracle repair. Compared candidate against current c4b46e16 frozen prepatch source. Relevant product wording/render source has zero diff to8c."
+  ],
+  "binaryMethod": "Read only the two already saved exact SHA-selected DOCX files in local browser-storage, verify full SHA/size, extract every numeric five-cell roster row and compare all result cells plus both old/new exact-match counts. No DB/browser/render action performed by Agent A. Original private DOCX bytes remain excluded from publication.",
+  "supportingReport": {
+    "path": "agent-b/G1_PB_RESULT_ORACLE_REVIEW.json",
+    "sha256": "67f0446dcd5263a41417b3d2e512bab0d0468b89dbfd1cab77703ea809c7c883"
+  },
+  "limitations": [
+    "2-row COURSE control and5-row manual control are not a100-row G1 acceptance.",
+    "Snapshot origin assertions are attributed to B exact-tenant read-only SQL; A independently confirms file bytes and source branches.",
+    "Apply only after full05 terminal, then mandatory fresh producer/consumers and whole full run remain required."
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "status": "STALE_TEST_ASSERTION_CONFIRMED_REPAIR_PENDING_FULL05_TERMINAL",
+  "reviewer": "Agent A independent read-only review",
+  "checkedAtUtc": "2026-10-15T01:59:16.453039+00:00",
+  "sourceBaseCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "allRelevantGitDiffsEmpty": true,
+  "sources": [
+    {
+      "path": "apps/web/e2e/operator-common-history-helpers.ts",
+      "currentSha256": "00b2e85bf0bf3770b56be4c25d19cebb53dc65b1b9e45eb9cd7a0d02ddb5022f",
+      "baselineGitBlobSha256": "de598b72ff54201df7d1dd81abb402a80961201ace78e932b929abc68bdaf2ea",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    },
+    {
+      "path": "apps/web/e2e/operator-common-history-live.spec.ts",
+      "currentSha256": "1f1b4826f3f60eb472a3a58479929670f63f23c8f9ce723bbd05410a5213aced",
+      "baselineGitBlobSha256": "4e09fcea1096ece0c67dcdb178e95d2e220e50d78f9cd833ec2d6652074d60b0",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    },
+    {
+      "path": "packages/contracts/src/course-defaults.ts",
+      "currentSha256": "2b5af5f33ff70497c9dec1bb38b12d66b3c4c06c9358d92f761e4aac4b38d8f1",
+      "baselineGitBlobSha256": "37f45fd5b387f84772d689acdcd72b7ba51bdf08b71fb5165a8ad3844204f221",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    },
+    {
+      "path": "scripts/render/legacy_reference.py",
+      "currentSha256": "b8c43f500901a40ec39097f32e81cc7f841621a1eeb4a13495ae16e8ff4a0c79",
+      "baselineGitBlobSha256": "46b084e7968325e31789cb4fa5ce2e7f35fc4725caf06647f84d8c6e91735489",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    },
+    {
+      "path": "scripts/render/legacy_snapshot_fields.py",
+      "currentSha256": "bdb36adb6ebf1efc58e61e6a7db8ec66a38d5923c8debbc0d633f56c2d9d8ec5",
+      "baselineGitBlobSha256": "cd3f0cbb8cc27107780ebc72cfb09efe71725d4754eb9c465ad24eced5dbb2e4",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    },
+    {
+      "path": "scripts/render/neutral_forms.py",
+      "currentSha256": "41af4ec97f350a41c3a5a1e0c77d0fc8beb9f3f20a87fd1877bfcb4e1dd8aeae",
+      "baselineGitBlobSha256": "3217bd53d5970696d560f5c1140a0e8e336fe98cbd50bb2c08252d93b44d2aed",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    },
+    {
+      "path": "scripts/render/group_protocol.py",
+      "currentSha256": "79952f78ee91e2c5255794aba7b1a8ea9b85efb5ceeff1ce7c72d137851cb8a6",
+      "baselineGitBlobSha256": "06dfc98e689552ab518109b437b4bfa08c984e51133b1e2e5ec105255cb0a4b9",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    },
+    {
+      "path": "assets/templates/ptm-protocol.v13.docx",
+      "currentSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "baselineGitBlobSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    },
+    {
+      "path": "assets/templates/ptm-protocol.group-v5.docx",
+      "currentSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "baselineGitBlobSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+      "gitDiffAgainstBaseline": null,
+      "note": "Git checkout may use CRLF; empty semantic/full git diff is recorded separately from raw blob SHA."
+    }
+  ],
+  "actualFailure": {
+    "runId": "full-e2e-20261015-05",
+    "source": "agent-c/full-e2e-20261015-05/command.log",
+    "assertion": "apps/web/e2e/operator-common-history-helpers.ts:382",
+    "expected": "Сдал",
+    "actualPtmResult": "Прошел/ Өтті",
+    "suiteStatus": "FAIL"
+  },
+  "actualArtifacts": [
+    {
+      "templateId": "biot-protocol",
+      "documentId": "89ea776f-5fb7-4eb7-a856-89b8df4b03e7",
+      "artifactId": "a7def769-1452-4e6b-be43-4643dbcc0469",
+      "sha256": "7e6387f2fdb6d7405dfd7f3041d775d12b15cbaa25abdafaa7ed643daa948312",
+      "bytes": 50685,
+      "actualRosterRows": 100,
+      "firstRosterCells": [
+        "1",
+        "Синтетический Общий Получатель 001 ",
+        "Синтетический исторический работодатель A 43c89ae1 / Синтетикалық жұмыс беруші A   ",
+        "Должность A до выпуска / Должность A до выпуска   ",
+        "Өтті/прошел",
+        " "
+      ],
+      "lastRosterCells": [
+        "100",
+        "Синтетический Общий Получатель 100 ",
+        "Синтетический исторический работодатель A 43c89ae1 / Синтетикалық жұмыс беруші A   ",
+        "Синтетический рабочий / Синтетический рабочий   ",
+        "Өтті/прошел",
+        " "
+      ],
+      "allRosterResultCellsChecked": true,
+      "resultCellCounts": {
+        "Өтті/прошел": 100
+      },
+      "exactExpectedResult": "Өтті/прошел"
+    },
+    {
+      "templateId": "ptm-protocol",
+      "documentId": "44f8c35c-ee0b-4fba-b04d-ca48288acabc",
+      "artifactId": "b1ced554-0c80-42d1-a7cc-1e22c0cc3ab0",
+      "sha256": "99400756396756a8869b36b3010446490821ee12c9ce2e525291dd53c55cd7f1",
+      "bytes": 6911107,
+      "actualRosterRows": 1,
+      "firstRosterCells": [
+        "1",
+        "Синтетический Общий Получатель 002 ",
+        "Синтетический рабочий / Синтетический рабочий ",
+        "Синтетический исторический работодатель A 43c89ae1 / Синтетикалық жұмыс беруші A    ",
+        "   ",
+        "Прошел/ Өтті  ",
+        ""
+      ],
+      "lastRosterCells": [
+        "1",
+        "Синтетический Общий Получатель 002 ",
+        "Синтетический рабочий / Синтетический рабочий ",
+        "Синтетический исторический работодатель A 43c89ae1 / Синтетикалық жұмыс беруші A    ",
+        "   ",
+        "Прошел/ Өтті  ",
+        ""
+      ],
+      "allRosterResultCellsChecked": true,
+      "resultCellCounts": {
+        "Прошел/ Өтті": 1
+      },
+      "exactExpectedResult": "Прошел/ Өтті"
+    },
+    {
+      "templateId": "ptm-protocol",
+      "documentId": "8e030b04-1076-405b-af7a-9b13b69a0f01",
+      "artifactId": "beb796c4-6deb-47d7-87d3-5ae5aa0d3817",
+      "sha256": "f31315f61b7bf4e9cf7f3767dcc09348fdeed8a61c83e4a8f6e208e5f6246610",
+      "bytes": 6911121,
+      "actualRosterRows": 1,
+      "firstRosterCells": [
+        "1",
+        "Синтетический Общий Получатель 001 ",
+        "Должность A до выпуска / Должность A до выпуска ",
+        "Синтетический исторический работодатель A 43c89ae1 / Синтетикалық жұмыс беруші A    ",
+        "   ",
+        "Прошел/ Өтті  ",
+        ""
+      ],
+      "lastRosterCells": [
+        "1",
+        "Синтетический Общий Получатель 001 ",
+        "Должность A до выпуска / Должность A до выпуска ",
+        "Синтетический исторический работодатель A 43c89ae1 / Синтетикалық жұмыс беруші A    ",
+        "   ",
+        "Прошел/ Өтті  ",
+        ""
+      ],
+      "allRosterResultCellsChecked": true,
+      "resultCellCounts": {
+        "Прошел/ Өтті": 1
+      },
+      "exactExpectedResult": "Прошел/ Өтті"
+    }
+  ],
+  "actualReadMethod": "Read only the three actual DOCX files identified by C COMMON_FILES_READBACK manifest, resolving their already-known SHA prefix within guarded local browser-storage; verify each actual SHA before extracting OOXML roster cells. No database/API/browser or render operation. Private storage paths are not copied into this report.",
+  "frozenSnapshotPolicy": {
+    "source": "agent-c/full-e2e-20261015-05/common-prepared/checkpoint.json",
+    "sourcePublication": "Raw checkpoint is not selected for publication; this report records only needed synthetic result-policy facts.",
+    "requestId": "142c9991-6bca-439e-9979-78b44e0027ca",
+    "issuanceId": "d4455886-f686-4c7b-a92a-fdc8acc2adce",
+    "biotWorkerPassedResult": "Өтті/прошел",
+    "ptmCardAndProtocolPassedResult": "Прошел/ Өтті",
+    "ptmTemplateVersion": "13",
+    "ptmSourceSha256": "1c4f1a8e42ed9ca135c437e0b8213a9673769c8d16dbec7f6bcdfbcc0d7fed8e",
+    "ptmPolicy": "NEUTRAL_FORMS_V1"
+  },
+  "integrityEvidence": {
+    "path": "agent-c/full-e2e-20261015-05/COMMON_FILES_READBACK.json",
+    "sha256": "4509f01dba9a7996a001f264846521cc92000d21e96b11f3980a9c71386e1dbd",
+    "status": "PASS_FILE_INTEGRITY_ONLY",
+    "actualDocuments": 105,
+    "actualFiles": 210,
+    "boundary": "Integrity success does not convert the failed browser run into PASS."
+  },
+  "proposedRepair": {
+    "target": "apps/web/e2e/operator-common-history-helpers.ts",
+    "independentLiteralOracle": {
+      "biot-protocol": "Өтті/прошел",
+      "ptm-protocol": "Прошел/ Өтті"
+    },
+    "method": "Require supported protocol id and exact complete bilingual phrase in saved Word; do not call production courseResultText to calculate the expected text. Record expected phrase in text readback.",
+    "preserve": "All other name, number, date, subject, artifact-count, byte-hash, PDF signature and immutable snapshot assertions; all105documents/210files actual verification.",
+    "noRegexAlternative": true,
+    "noProductChange": true,
+    "actualEdit": false,
+    "executionStatus": "NOT_RUN"
+  },
+  "overallAcceptance": false,
+  "initialReviewsUnchanged": true,
+  "privatePatch": {
+    "status": "PRIVATE_PATCH_PREPARED_NOT_APPLIED_NOT_RUN",
+    "checkedAtUtc": "2026-10-15T02:20:01.309837+00:00",
+    "candidateSha256": "0c2e66e0b51d7fe2d0539d85fa443ef251e223142936280b2c0d1cd54c3f8dc2",
+    "actualSourceSha256Unchanged": "00b2e85bf0bf3770b56be4c25d19cebb53dc65b1b9e45eb9cd7a0d02ddb5022f",
+    "changedSourceFile": "apps/web/e2e/operator-common-history-helpers.ts",
+    "independentExactMap": {
+      "biot-protocol": "Өтті/прошел",
+      "ptm-protocol": "Прошел/ Өтті"
+    },
+    "astReview": {
+      "beforeOrdinaryExpectMatchers": 26,
+      "candidateOrdinaryExpectMatchers": 27,
+      "unchanged": 25,
+      "removedOnly": "expect(text).toContain(\"Сдал\")",
+      "added": [
+        "expect(expectedProtocolResult).toBeDefined()",
+        "expect(text).toContain(expectedProtocolResult)"
+      ],
+      "parseErrors": 0
+    },
+    "otherChange": "Record expectedProtocolResult in actual saved-file text readback. No product/fixture/browser operation or new test skip/timeouts.",
+    "executionStatus": "NOT_RUN",
+    "independentPeerReview": "Requested from Agent B"
+  }
+}

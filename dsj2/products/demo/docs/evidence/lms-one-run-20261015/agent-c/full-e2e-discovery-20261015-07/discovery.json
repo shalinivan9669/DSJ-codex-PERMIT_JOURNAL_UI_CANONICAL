@@ -1,0 +1,14 @@
+{
+  "runId": "full-e2e-20261015-07",
+  "discoveryRunId": "full-e2e-discovery-20261015-07",
+  "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --list",
+  "status": "DISCOVERY_PASS_NOT_EXECUTION",
+  "exitCode": 0,
+  "finishedAt": "2026-10-15T09:55:44.931889+00:00",
+  "tests": 219,
+  "files": 93,
+  "resultsSha256": "94c8fb3c7bf0cf2790d2a2b27beae6d0cc8a417aca44488a5d0d3bcbf0e6e6fc",
+  "testSourceManifest": "agent-c/full-e2e-20261015-07/test-source.json",
+  "testSourceSha256": "0aef9993262745137b99b22c108ef17f221c03a91d106a97515f5d920abb8b51",
+  "note": "Full current source discovery only. No execution PASS inferred."
+}

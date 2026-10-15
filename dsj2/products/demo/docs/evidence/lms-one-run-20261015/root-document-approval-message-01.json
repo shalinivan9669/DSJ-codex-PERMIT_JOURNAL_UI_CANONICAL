@@ -1,0 +1,12 @@
+{
+  "exitCode": 0,
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-name-pattern=\"single-language frozen identity\" tests/integration/lms-documents.test.ts",
+  "environment": {
+    "database": "demo_test_lms_integration_20261015",
+    "setup": "lms-test-env.ps1 integration"
+  },
+  "logPath": "root-document-approval-message-01.log",
+  "startedAt": "2026-10-15T01:03:29.2916394Z",
+  "finishedAt": "2026-10-15T01:03:33.2975242Z"
+}

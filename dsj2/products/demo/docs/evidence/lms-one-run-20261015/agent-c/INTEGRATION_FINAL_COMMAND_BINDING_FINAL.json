@@ -1,0 +1,95 @@
+{
+  "command": "pnpm test:integration",
+  "run": "command-integration-02",
+  "status": "PASS",
+  "exitCode": 0,
+  "exitCodeEvidence": "Coordinator confirmed exec session1101 completed exit0; actual shared log has final280pass/0fail/0cancelled/0skipped summary.",
+  "log": "../command-integration-02.log",
+  "tests": 280,
+  "passed": 280,
+  "failed": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "durationMilliseconds": 2726945.3043,
+  "currentGlobFileCount": 81,
+  "mainCommandFilesWithObservedTopLevelTitles": 73,
+  "lateFiles": [
+    "tests/integration/employer-identity-http.test.ts",
+    "tests/integration/lms-audit-boundaries.test.ts",
+    "tests/integration/lms-document-scheduling.test.ts",
+    "tests/integration/lms-external-date.test.ts",
+    "tests/integration/lms-identity-selection.test.ts",
+    "tests/integration/lms-legacy-outcome.test.ts",
+    "tests/integration/lms-route-calendar-boundaries.test.ts",
+    "tests/integration/lms-template-upgrade.test.ts"
+  ],
+  "lateFileEvidence": "INTEGRATION_DISCOVERY_INVENTORY_FINAL.json",
+  "notes": [
+    "Each late file has an independent actual passing log with all its static top-level test titles observed. No claim that the main process discovered these late files.",
+    "The existing lms-documents.test.ts also reran with the new scheduling test after the fairness fix. The latest combined11 passing tests share one log and must not be counted twice; the earlier fairness-only8 remains historical.",
+    "Full integration01 failed and remains retained; run02 is the fresh successful rerun, including a quiet100activelearner load.",
+    "Final renderer144 passed independently. Complete final browser execution remains a separate requirement; this integration binding does not claim localAccepted.",
+    "The full run originally covered73 files. Current static-title matching is72 because lms-documents.test.ts later gained three assertions; their actual11-test combined pass is separately linked.",
+    "Additional existing-center template upgrade4PASS in agent-c/template-upgrade/command03.log; ordinary historical template/data unchanged, new forms await explicit director approval, actual HTTP guards preserved.",
+    "The late employer-identity HTTP regression passed4 after the actual server correction, with unchanged before/after source hashes. It is separate from historical integration280 and is not counted as discovered by that old run."
+  ],
+  "latestInventoryTopLevelMatches": 72,
+  "updatedExistingFile": {
+    "passed": 11,
+    "latestLog": "root-document-projection-01.log",
+    "failed": 0,
+    "latestCommand": "root-document-projection-01.json",
+    "combinedTests": 11,
+    "note": "Three projection regressions added to existing documents suite after fullintegration02; combined run also includes scheduling3. Do not count11 twice.",
+    "path": "tests/integration/lms-documents.test.ts"
+  },
+  "separateFinalRenderer": {
+    "failed": 0,
+    "skipped": 0,
+    "log": "agent-a/render-full-final-02.log",
+    "command": "pnpm test:render",
+    "sha256": "3863633e7c627fcccc9daf352a7c136d349c5c53d43f03ffbe6ec6d98730d5df",
+    "tests": 144,
+    "commandEvidence": "agent-a/COMMANDS_A.json",
+    "status": "PASS",
+    "exitCode": 0,
+    "note": "Separate mandatory renderer command, not part of integration280; earlier failed runs retained."
+  },
+  "generatedAt": "2026-10-15T09:36:46.861036+00:00",
+  "historicalBinding": {
+    "path": "agent-c/INTEGRATION_FINAL_COMMAND_BINDING.json",
+    "sha256": "d5cc3e86a9631afe26a0ef1a9cee2e25b72169255166c194dd7b173b51b70175"
+  },
+  "latestAffectedPathSupplement": {
+    "path": "tests/integration/employer-identity-http.test.ts",
+    "command": {
+      "path": "agent-a/employer-identity-http-01.json",
+      "sha256": "64ef5126f7ab0eb7ae9b8bd45997d10124287e2af8a30945553139b1b8a800a1"
+    },
+    "log": {
+      "path": "agent-a/employer-identity-http-01.log",
+      "sha256": "2682390bdbbfe21cf4a52620480ed8338c68eab08af39ec39b16f88f590f2c4f"
+    },
+    "status": "PASS",
+    "tests": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "sourceUnchanged": true,
+    "sourceFiles": [
+      {
+        "path": "apps/api/src/requests.ts",
+        "sha256": "a02dd878a01dbad2f2b12bd311a15c9adfe27bcb250b60c55511ce9b44ed4a84"
+      },
+      {
+        "path": "tests/request-customer.test.ts",
+        "sha256": "631e39963b68c9d1c82c9773a57d56a1013df437a2a8f024007f3f2c53dd06b5"
+      },
+      {
+        "path": "tests/integration/employer-identity-http.test.ts",
+        "sha256": "e4e1794ebcca7af61eee9e249536a193d570cd49dcf2995189f7bff8333289e7"
+      }
+    ],
+    "notIncludedInHistorical280": true
+  }
+}

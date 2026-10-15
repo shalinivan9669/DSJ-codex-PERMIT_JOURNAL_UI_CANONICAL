@@ -1,0 +1,32 @@
+{
+  "start": "2026-10-15T00:53:14.4723185Z",
+  "status": "FAIL",
+  "command": "pnpm --filter @demo/web exec playwright test e2e/lms-copy-original-live.spec.ts e2e/lms-paper-signature-live.spec.ts e2e/lms-negative-states-live.spec.ts e2e/lms-operator-live.spec.ts --project=remaining --no-deps",
+  "webBuildId": "67WzZeXBqGI1ReRhjqN3k",
+  "runtime": "../../agent-c/full-e2e-20261015-04/runtime-start.json",
+  "scope": "Four self-contained synthetic LMS tests; full checkpoint identity guards retained; does not replace complete pnpm test:e2e",
+  "source": [
+    {
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\lms-copy-fixture.ts",
+      "sha256": "B7FC5AA30DB461FFEEE58C345BF2AD3ED928603607695954FA3F0DE70FAFBD21"
+    },
+    {
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-copy-original-live.spec.ts",
+      "sha256": "C5D2D5B4C16650B8CAC3151CF5F09E5A593DA9536147C5A5C91254C9B3DD99D3"
+    },
+    {
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-paper-signature-live.spec.ts",
+      "sha256": "032F28B650BC78F59022CF5D13AE83B270FBD4A8C2BBA348C836855C4BFFC865"
+    },
+    {
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-negative-states-live.spec.ts",
+      "sha256": "5545B56B37CBCCC927B97DC89E6E3AC3DABBBD53DBD675D935C6E4B96CDBFA2E"
+    },
+    {
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-operator-live.spec.ts",
+      "sha256": "93E209BF7A927ED9B8CA09F91B1A1CE3E5F5FF244AC2732E97C751805616D48C"
+    }
+  ],
+  "exitCode": 1,
+  "end": "2026-10-15T00:56:21.7194167Z"
+}

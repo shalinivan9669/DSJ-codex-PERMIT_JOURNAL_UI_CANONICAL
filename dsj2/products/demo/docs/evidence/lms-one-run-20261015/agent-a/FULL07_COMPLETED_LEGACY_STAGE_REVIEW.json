@@ -1,0 +1,209 @@
+{
+  "status": "COMPLETED_STAGE_CONTENT_REVIEW_ONLY",
+  "runId": "full-e2e-20261015-07",
+  "reviewedAtUtc": "2026-10-15T11:10:20.079994+00:00",
+  "reviewer": "Agent A",
+  "wholeBrowserAcceptance": "PENDING_TERMINAL_219_TESTS",
+  "scope": "Read-only review of completed common, four domain readiness contexts and UX15. No browser/test execution, no edits to source or source reports.",
+  "privateSourceProvenance": [
+    {
+      "identifier": "agent-c/full-e2e-20261015-07/ux08-next-targets/readiness-acceptance.json",
+      "bytes": 786923,
+      "sha256": "d3aaf132f7e43d916599710e5f1786b100233cfe3f0c40902d2cda55be68166a"
+    },
+    {
+      "identifier": "agent-c/full-e2e-20261015-07/domain-acceptance/ux15-all-form-reset.json",
+      "bytes": 120228,
+      "sha256": "93c075003f497f593a8953d931befe71ee88e9810559b84e97092370f677ae4c"
+    }
+  ],
+  "privateSourceBoundary": "Exact source bytes parsed/scanned; large repeated draft/fixture snapshots remain private and are not selected publication dependencies. Identifier fields denote provenance only.",
+  "domain": {
+    "recordedStatus": "PASS",
+    "legalApproval": false,
+    "contexts": [
+      {
+        "kind": "PERSON",
+        "category": "WORKER",
+        "recordedStatus": "PASS",
+        "stageCount": 24,
+        "actualReadinessComplete": true,
+        "noInventedPassedResult": true,
+        "otherTrainingFactsAndOriginsPreserved": true,
+        "exactFocusChecks": {
+          "count": 9,
+          "allRecordedTrue": true
+        },
+        "predictableReturnChecks": {
+          "count": 3,
+          "allRecordedTrue": true
+        },
+        "companyInheritance": [],
+        "negativeCauseCodes": [
+          "BIOT_FIELD_REQUIRED",
+          "DATE_INVALID",
+          "OUTCOME_SOURCE_REQUIRED",
+          "PROTOCOL_DATE_REQUIRED",
+          "RESULT_REQUIRED",
+          "SUBJECT_REQUIRED"
+        ]
+      },
+      {
+        "kind": "PERSON",
+        "category": "ITR",
+        "recordedStatus": "PASS",
+        "stageCount": 30,
+        "actualReadinessComplete": true,
+        "noInventedPassedResult": true,
+        "otherTrainingFactsAndOriginsPreserved": true,
+        "exactFocusChecks": {
+          "count": 11,
+          "allRecordedTrue": true
+        },
+        "predictableReturnChecks": {
+          "count": 5,
+          "allRecordedTrue": true
+        },
+        "companyInheritance": [],
+        "negativeCauseCodes": [
+          "BIOT_BIN_REQUIRED",
+          "BIOT_FIELD_REQUIRED",
+          "DATE_INVALID",
+          "OUTCOME_SOURCE_REQUIRED",
+          "PROTOCOL_DATE_REQUIRED",
+          "RESULT_REQUIRED",
+          "SUBJECT_REQUIRED"
+        ]
+      },
+      {
+        "kind": "COMPANY",
+        "category": "WORKER",
+        "recordedStatus": "PASS",
+        "stageCount": 18,
+        "actualReadinessComplete": true,
+        "noInventedPassedResult": true,
+        "otherTrainingFactsAndOriginsPreserved": true,
+        "exactFocusChecks": {
+          "count": 6,
+          "allRecordedTrue": true
+        },
+        "predictableReturnChecks": {
+          "count": 0,
+          "allRecordedTrue": null
+        },
+        "companyInheritance": [
+          {
+            "rawWorkplacesEmpty": true,
+            "noFalsePersonalEmployerRequirement": true
+          }
+        ],
+        "negativeCauseCodes": [
+          "CUSTOMER_REQUIRED",
+          "DATE_INVALID",
+          "OUTCOME_SOURCE_REQUIRED",
+          "PROTOCOL_DATE_REQUIRED",
+          "RESULT_REQUIRED",
+          "SUBJECT_REQUIRED"
+        ]
+      },
+      {
+        "kind": "COMPANY",
+        "category": "ITR",
+        "recordedStatus": "PASS",
+        "stageCount": 24,
+        "actualReadinessComplete": true,
+        "noInventedPassedResult": true,
+        "otherTrainingFactsAndOriginsPreserved": true,
+        "exactFocusChecks": {
+          "count": 8,
+          "allRecordedTrue": true
+        },
+        "predictableReturnChecks": {
+          "count": 2,
+          "allRecordedTrue": true
+        },
+        "companyInheritance": [
+          {
+            "rawWorkplacesEmpty": true,
+            "noFalsePersonalEmployerRequirement": true
+          }
+        ],
+        "negativeCauseCodes": [
+          "BIOT_BIN_REQUIRED",
+          "BIOT_FIELD_REQUIRED",
+          "CUSTOMER_REQUIRED",
+          "DATE_INVALID",
+          "OUTCOME_SOURCE_REQUIRED",
+          "PROTOCOL_DATE_REQUIRED",
+          "RESULT_REQUIRED",
+          "SUBJECT_REQUIRED"
+        ]
+      }
+    ]
+  },
+  "ux15": {
+    "recordedIdentityCount": 5,
+    "proofs": [
+      {
+        "selectedTemplate": "biot-worker-card",
+        "retainedAssignmentCount": 5,
+        "displayComparisons": 22,
+        "allRecordedDisplayedEqualResolved": true,
+        "recordedHiddenLanguageFactRows": 5,
+        "recordedIndividualAssessmentFactRows": 5
+      },
+      {
+        "selectedTemplate": "biot-protocol",
+        "retainedAssignmentCount": 5,
+        "displayComparisons": 22,
+        "allRecordedDisplayedEqualResolved": true,
+        "recordedHiddenLanguageFactRows": 5,
+        "recordedIndividualAssessmentFactRows": 5
+      },
+      {
+        "selectedTemplate": "ps-witness",
+        "retainedAssignmentCount": 5,
+        "displayComparisons": 23,
+        "allRecordedDisplayedEqualResolved": true,
+        "recordedHiddenLanguageFactRows": 5,
+        "recordedIndividualAssessmentFactRows": 5
+      }
+    ],
+    "pacingStages": 6,
+    "allRecordedPacingKeptItemsEventsRevision": true,
+    "unchangedProductRateLimitPerMinute": 600,
+    "boundary": "Copied recorded actual comparison outcomes and counts; no inferred operator action budget or new acceptance promotion."
+  },
+  "mediaReviews": [
+    {
+      "path": "agent-c/full-e2e-20261015-07/common-prepared/director-100-approved.png",
+      "sha256": "ea2d2e1c62f04e28735b1dcb3a07def037bbaacdf75c20336c830f6732823919",
+      "actualView": "1366x1443 full image. Synthetic director page with 100-person BIOT and 2-person PTM entries and exact bilingual result phrases. Success notice is visible while busy button/old pending labels remain, so this is a transient approval capture, not proof of a settled page or rendered files. No credential/token/cookie or real personal data visible."
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-07/ux08-next-targets/COMPANY-ITR-company-employer-inherited.png",
+      "sha256": "3315d1ae7ed5423032247d3bbd54f586e0dcae377ac4cddd51429736c85406e5",
+      "actualView": "1366x2490 source shown at1124x2048. Synthetic COMPANY/ITR draft with known company, blank directory BIN, three synthetic recipients, savedrevision8 and four planned documents. Visible separate employer-detail exceptions; no credential/token/cookie or real personal data visible. This does not claim all fields are in view or whole-suite success."
+    }
+  ],
+  "scan": {
+    "rules": [
+      "syntheticCredential",
+      "bearerValue",
+      "privateKey",
+      "passwordDatabaseUrl",
+      "tokenUrl",
+      "credentialAssignment",
+      "serializedAnswerKey"
+    ],
+    "findings": 0,
+    "scope": "Two entire selected common JSONs and two entire private domain JSONs; private raw drafts are not published."
+  },
+  "evidencePaths": [
+    "agent-c/full-e2e-20261015-07/common-prepared/common-history-result.json",
+    "agent-c/full-e2e-20261015-07/common-prepared/common-public-aggregate-guard.json",
+    "agent-c/full-e2e-20261015-07/common-prepared/director-100-approved.png",
+    "agent-c/full-e2e-20261015-07/ux08-next-targets/COMPANY-ITR-company-employer-inherited.png"
+  ],
+  "generatorCompatibility": "Frozen criteria candidate/UX aggregator references do not require these private raw domain report paths. This supplemental summary is additive; required final LMS raw measurement files retain exact paths and hashes."
+}

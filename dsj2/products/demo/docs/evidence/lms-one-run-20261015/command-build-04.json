@@ -1,0 +1,13 @@
+{
+  "logPath": "command-build-04.log",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "environment": {
+    "CI": "true",
+    "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+    "setup": "lms-test-env.ps1 integration"
+  },
+  "finishedAt": "2026-10-15T01:11:54.2653552Z",
+  "startedAt": "2026-10-15T01:10:57.1200763Z",
+  "exitCode": 0,
+  "command": "pnpm build"
+}

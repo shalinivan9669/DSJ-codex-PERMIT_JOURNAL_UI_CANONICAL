@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "syntheticOnly": true,
+  "measuredAt": "2026-10-15T11:13:53.522Z",
+  "enrollmentId": "607042b8-96ea-4392-b832-2a7776fd570a",
+  "pausedPosition": 6.015389,
+  "resumedAt": 6.015389,
+  "reloggedAt": 6.015389,
+  "intervals": [
+    [
+      0.000137,
+      12
+    ]
+  ],
+  "completedAt": "2026-10-15T11:13:53.405Z",
+  "elapsedMilliseconds": 12906.878700000001,
+  "rangeResponses": [
+    {
+      "status": 206,
+      "contentRange": "bytes 983040-984596/984597"
+    }
+  ],
+  "preparedFixture": "Synthetic generated 12-second private MP4 and course/assignment created through local fixture; actual initial login and repeated login after logout are both performed in this scenario.",
+  "browserActions": [
+    "seek to 11 seconds: no completion",
+    "seek back to zero",
+    "real HTML video playback",
+    "pause after >5 seconds",
+    "reload",
+    "resume at server-saved position",
+    "logout, login again and resume at the same saved position",
+    "play naturally to end",
+    "server completion and Next lesson visible"
+  ],
+  "limitations": "Uses HTMLMediaElement play/pause for deterministic native media control; no video/network/progress response mocking and no simulated elapsed server clock."
+}

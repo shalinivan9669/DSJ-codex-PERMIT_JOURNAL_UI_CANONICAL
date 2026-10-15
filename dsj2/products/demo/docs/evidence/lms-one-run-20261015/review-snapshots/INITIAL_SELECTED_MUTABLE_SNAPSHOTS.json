@@ -1,0 +1,64 @@
+{
+  "status": "EXACT_AVAILABLE_SNAPSHOTS_PRESERVED",
+  "checkedAtUtc": "2026-10-15T01:36:30.781978+00:00",
+  "initialReviewSha256": "a43be52d29dd3404f8243c7766ee1ce747158a2b19a290552a84dacb23d6b7ab",
+  "operation": "Copy only exact hash-matching selected evidence versions; no old contents invented. Initial review unchanged.",
+  "files": [
+    {
+      "path": "EXTERNAL_GATES.json",
+      "initialSha256": "6da4b3539fbaf734c0c1d8ded94ca1f36133190b49332fd3c868dbb133855807",
+      "currentSha256": "6da4b3539fbaf734c0c1d8ded94ca1f36133190b49332fd3c868dbb133855807",
+      "initialBytes": 1840,
+      "status": "INITIAL_BYTES_PRESERVED",
+      "snapshotPath": "review-snapshots/EXTERNAL_GATES--6da4b3539fbaf734c0c1d8ded94ca1f36133190b49332fd3c868dbb133855807.json",
+      "bytes": 1840
+    },
+    {
+      "path": "ROOT_COMMANDS_DRAFT.json",
+      "initialSha256": "09c714ab96139e6757a866c01b052ab55f87ce404747a091e636f48247006b82",
+      "currentSha256": "98d9ccb14fc06b1ead4c7dc170015d0ae84e5afa9b80341265e505a0f87eb55f",
+      "initialBytes": 51259,
+      "status": "INITIAL_BYTES_NO_LONGER_PRESENT_AT_SOURCE",
+      "snapshotPath": null,
+      "note": "No matching retained scan-version has been found. No reconstruction attempted."
+    },
+    {
+      "path": "RUN_STATE.json",
+      "initialSha256": "4c1aec08a00f012a9b885c7e40aaa705179b7c8895cfb354ccd00754d6c8106a",
+      "currentSha256": "4c1aec08a00f012a9b885c7e40aaa705179b7c8895cfb354ccd00754d6c8106a",
+      "initialBytes": 7246,
+      "status": "INITIAL_BYTES_PRESERVED",
+      "snapshotPath": "review-snapshots/RUN_STATE--4c1aec08a00f012a9b885c7e40aaa705179b7c8895cfb354ccd00754d6c8106a.json",
+      "bytes": 7246
+    },
+    {
+      "path": "ENVIRONMENT_POWER_EVENTS.json",
+      "initialSha256": "f6df8bab531b838a25e40abb804aaa6cbb660565c1d4f8510fa14e4a0d173441",
+      "currentSha256": "f6df8bab531b838a25e40abb804aaa6cbb660565c1d4f8510fa14e4a0d173441",
+      "initialBytes": 4448,
+      "status": "INITIAL_BYTES_PRESERVED",
+      "snapshotPath": "review-snapshots/ENVIRONMENT_POWER_EVENTS--f6df8bab531b838a25e40abb804aaa6cbb660565c1d4f8510fa14e4a0d173441.json",
+      "bytes": 4448
+    },
+    {
+      "path": "REPRODUCE_RU.draft.txt",
+      "initialSha256": "4a3b54f2b2b6fb28634a84f5967e45778d3052c862183f4e2ba5e8a29730ea29",
+      "currentSha256": "4a3b54f2b2b6fb28634a84f5967e45778d3052c862183f4e2ba5e8a29730ea29",
+      "initialBytes": 13991,
+      "status": "INITIAL_BYTES_PRESERVED",
+      "snapshotPath": "review-snapshots/REPRODUCE_RU.draft--4a3b54f2b2b6fb28634a84f5967e45778d3052c862183f4e2ba5e8a29730ea29.txt",
+      "bytes": 13991
+    },
+    {
+      "path": "agent-c/UX_ACTIONS_DRAFT.json",
+      "initialSha256": "74c3b642208e7899af01dd896f49142060e653005706446be39f79d347932f81",
+      "currentSha256": "74c3b642208e7899af01dd896f49142060e653005706446be39f79d347932f81",
+      "initialBytes": 191289,
+      "status": "INITIAL_BYTES_PRESERVED",
+      "snapshotPath": "agent-c/historical/UX_ACTIONS_DRAFT_INITIAL_REVIEWED.json",
+      "bytes": 191289,
+      "preservedBy": "Agent C copied exact current bytes before the future final UX aggregation; Agent A independently verified equality with initial296 selected SHA and registered this snapshot."
+    }
+  ],
+  "updatedAtUtc": "2026-10-15T10:09:17.322580+00:00"
+}

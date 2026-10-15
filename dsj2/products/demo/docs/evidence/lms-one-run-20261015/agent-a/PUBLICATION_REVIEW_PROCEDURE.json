@@ -1,0 +1,79 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "preparedAtUtc": "2026-10-15T02:14:29.202558+00:00",
+  "script": {
+    "path": "scripts/verification/lms-publication-review.py",
+    "sha256": "3150f07175fcd719e2c0bee418e19a48d4fc2e8b66c5a62b6084a797cff192b8",
+    "validation": "Syntax compile only; neither browser nor final review stage executed."
+  },
+  "immutableInitialReview": {
+    "path": "EVIDENCE_PUBLICATION_FINAL_REVIEW.json",
+    "sha256": "a43be52d29dd3404f8243c7766ee1ce747158a2b19a290552a84dacb23d6b7ab",
+    "modified": false
+  },
+  "sequence": [
+    "Wait for actual full mandatory pnpm test:e2e exit0, exact discovered cases all passed with0skips/failures/flakes, unchanged test/runtime source. Failed05 is never eligible.",
+    "Read fresh full command.log/results/command and selected action/acceptance reports; prepare an explicit JSON files list of exact path+SHA. Review new screenshots/documents before marking contentReview.actuallyReviewed. Never enumerate all output directories for publication.",
+    "Run browser stage once with actual successful run-id and selection. It refuses running/failed results, changed hashes, forbidden private files, secret findings, unreviewed media and overwriting any existing report.",
+    "Only then allow candidate generation. Once candidate is hash-bound, do not rewrite FULL_BROWSER_PUBLICATION_REVIEW or the initial296 review.",
+    "After final canonical reports, prepare final selection union plus exact entrypoints for candidate, UX, COMMANDS and other final reports. Provide explicit code-source manifest for sourcePath references. Run final stage once. Every evidencePaths/sourcePath/logPath/recordPath reference must resolve to selected evidence or code-source hash; missing references block output."
+  ],
+  "commands": {
+    "browser": ".runtime/lms-one-run/python/Scripts/python.exe scripts/verification/lms-publication-review.py browser --run-id ACTUAL_SUCCESSFUL_FULL_RUN --selection .runtime/lms-one-run/browser-publication-selection.json --initial-sha256 a43be52d29dd3404f8243c7766ee1ce747158a2b19a290552a84dacb23d6b7ab",
+    "final": ".runtime/lms-one-run/python/Scripts/python.exe scripts/verification/lms-publication-review.py final --run-id ACTUAL_SUCCESSFUL_FULL_RUN --selection .runtime/lms-one-run/final-publication-selection.json --code-manifest .runtime/lms-one-run/final-code-source-manifest.json --initial-sha256 a43be52d29dd3404f8243c7766ee1ce747158a2b19a290552a84dacb23d6b7ab"
+  },
+  "selectionSchema": {
+    "files": [
+      {
+        "path": "Exact relative file path under evidence root",
+        "sha256": "Current actually-reviewed hash",
+        "contentReview": {
+          "actuallyReviewed": true,
+          "reviewer": "Actual reviewer name, required for new media only",
+          "method": "Actual image/document/cell inspection already performed"
+        }
+      }
+    ],
+    "entrypoints": [
+      "agent-c/FINAL_CRITERIA_CANDIDATE.json",
+      "UX_ACTIONS.json",
+      "COMMANDS.json"
+    ],
+    "reviewedNonSecretMatches": [
+      {
+        "path": "Exact already-read text file",
+        "sha256": "Exact hash",
+        "rule": "credentialAssignment",
+        "line": 1,
+        "reviewer": "Actual reviewer",
+        "reason": "Only an independently inspected benign match; no blanket rule suppression"
+      }
+    ]
+  },
+  "knownMutableReplacements": [
+    "ROOT_COMMANDS_DRAFT.json changed from initial53record bytes to54records; prior bytes unavailable, do not invent snapshot",
+    "RUN_STATE.json may change at completion",
+    "ENVIRONMENT_POWER_EVENTS.json will change when process-scoped wakeguard is released",
+    "EXTERNAL_GATES.json will become final4-gate envelope; EXTERNAL_GATES_REVIEWED stays immutable"
+  ],
+  "newReviewCandidates": [
+    "agent-b/G1_EMPLOYER_DIAGNOSIS.json",
+    "agent-a/COMMON_PROTOCOL_WORDING_REVIEW.json",
+    "agent-a/TEST_ASSERTION_FINAL_SUPPLEMENT.json",
+    "agent-b/DOMAIN_GRADE_FIXTURE_REVIEW.json"
+  ],
+  "hardExclusions": [
+    "Raw fixtures and checkpoints",
+    "Private ZIP/MP4/database backups",
+    "Traces/test-results/error-context/runtime/session/worker logs",
+    "Credential-bearing raw command rejections and .cjs helpers"
+  ],
+  "historicalMissingReferences": "Keep NOT_RUN or user-excluded facts as metadata; nonexistent paths cannot be accepted as evidence/source/log references. Use reviewed sanitized summary references for excluded private originals.",
+  "selfHashPolicy": "Each output excludes itself from files; exclusive creation prevents accidental overwrite. Final manifest may include the two earlier immutable reviews.",
+  "textFormats": "UTF-8 JSON/TXT/LOG/MD/JSONL/TSV. MVP_COVERAGE_FINAL.tsv gets complete text scan; finalizer owns its exact52-row structural validation.",
+  "exactSafeSummaryException": {
+    "path": "agent-b/DOMAIN_GRADE_FIXTURE_REVIEW.json",
+    "sha256": "4c05fb7ce2906571444baf8e804e83a459bad942025fc3cb99695d5880ad247a",
+    "review": "Entire actual summary read; any different path/hash remains forbidden by fixture rule."
+  }
+}

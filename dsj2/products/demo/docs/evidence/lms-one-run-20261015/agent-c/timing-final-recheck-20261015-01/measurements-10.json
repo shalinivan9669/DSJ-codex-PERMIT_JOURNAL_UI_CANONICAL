@@ -1,0 +1,22 @@
+{
+  "count": 10,
+  "synthetic": true,
+  "api": "deterministic mock, PATCH 100 ms",
+  "timings": {
+    "openMs": 414.86950000000024,
+    "inputActionMs": 63.494300000000294,
+    "firstSaveFromInputMs": 962.1052,
+    "searchActionMs": 20.56829999999991,
+    "selectActionMs": 25.319500000000062,
+    "cardRoundtripMs": 210.23839999999927,
+    "reloadMs": 202.23670000000038
+  },
+  "focusLossOnRename": 0,
+  "focusLossAfterCard": 0,
+  "focusRestoreTarget": "row-details-opener",
+  "editedFieldStillConnectedBeforeCard": false,
+  "dataEqualAfterReload": true,
+  "humanTiming": false,
+  "readyValidatedRequestTiming": null,
+  "comment": "Timings include Playwright actionability and assertions. Single run, no statistical speed claim. Render/compile and system load may differ."
+}

@@ -1,0 +1,15 @@
+{
+  "command": "pnpm typecheck",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "environment": {
+    "DEMO_NEXT_DIST_DIR": ".next-lms-final",
+    "DATABASE_URL": "local disposable demo_test_lms_integration_20261015 at 127.0.0.1:55449",
+    "CI": "true"
+  },
+  "startedAt": "2026-10-14T22:59:12.7340834Z",
+  "logPath": "command-typecheck-03.log",
+  "reason": "Final integrated source including bounded document scheduling and worker startup fix",
+  "finishedAt": "2026-10-14T23:00:29.8809456Z",
+  "exitCode": 0,
+  "logSha256": "1425ad56edc2bb8c3af2118e2cde4b0798a4a6a29362c2d15c1c1e0fcaeadebb"
+}

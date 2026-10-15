@@ -1,0 +1,1146 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-15T11:11:53.373Z",
+  "fixtureVersion": "lms-first-ui-flow-v2-owned-worker-restart",
+  "role": "DIRECTOR and LEARNER; explicit role transitions are recorded in the actions",
+  "phase": "complete first entry and linked execution",
+  "goal": "Create the first sanitary course, calendar and learner through the UI, assign and complete learning, prepare and approve real documents, and inspect the automatic list and minimal public record",
+  "startBoundary": "Director already authenticated; elapsed time and actions begin immediately after login. Learner first registration is included below.",
+  "prerequisites": "Existing synthetic demo center, accounts, installed DEMO/LMS templates and locally running API/render worker. One-time director review and any missing LMS template approvals are performed through actual settings UI and included in the counts, with initial approval states separately recorded. Test owns and restarts the real shipping integration-worker process with an explicit tsconfig. Course, profile, calendar, people, assignment and exam created only through actual UI in this scenario. Test PDF authored as input fixture, not substituted for application output.",
+  "centerTemplateReview": {
+    "role": "DIRECTOR",
+    "phase": "one-time center template review",
+    "goal": "Review the three installed LMS forms once at center setup and explicitly confirm any not yet approved",
+    "startState": "Authenticated director; installed template versions are available in existing center settings",
+    "preconditions": "This isolated synthetic center was provisioned before LMS form approvals. No database approval bypass or automatic approval is performed. On subsequent runs already approved versions remain approved and no new approval is invented.",
+    "initialApprovalStates": [
+      {
+        "templateId": "lms-protocol",
+        "id": "665fdce3-6dda-462b-987b-ef83d4d5c14f",
+        "approved": true,
+        "checksum": "95a356d5643f757552d424c0b9820f8513fb04ca2676c8fafff8ddc01596b2ca",
+        "version": "1"
+      },
+      {
+        "templateId": "lms-certificate",
+        "id": "3e5c1030-64e7-4be6-ab62-0838c2ec4c68",
+        "approved": true,
+        "checksum": "bef8b699f63c11b6946e63af6242e7f5f36359246ab7634722ba299cc7dee1cf",
+        "version": "1"
+      },
+      {
+        "templateId": "lms-credential",
+        "id": "cf6530a6-cf43-40be-8a7d-6f2b6b2b7e6d",
+        "approved": true,
+        "checksum": "86f45fd52dbe976c446f9cacb03727d262706b19d34b1e8604d6431015f6c479",
+        "version": "1"
+      }
+    ],
+    "actualSteps": [
+      {
+        "phase": "one-time center template review",
+        "role": "DIRECTOR",
+        "kind": "navigation",
+        "target": "Open task page",
+        "elapsedMilliseconds": 72.4036999999953
+      },
+      {
+        "phase": "one-time center template review",
+        "role": "DIRECTOR",
+        "kind": "click",
+        "target": "Open center document forms",
+        "elapsedMilliseconds": 172.35770000000775
+      },
+      {
+        "phase": "one-time center template review",
+        "role": "DIRECTOR",
+        "kind": "click",
+        "target": "Review center template contract: lms-protocol",
+        "elapsedMilliseconds": 231.8683000000019
+      },
+      {
+        "phase": "one-time center template review",
+        "role": "DIRECTOR",
+        "kind": "click",
+        "target": "Review center template contract: lms-certificate",
+        "elapsedMilliseconds": 320.44190000000526
+      },
+      {
+        "phase": "one-time center template review",
+        "role": "DIRECTOR",
+        "kind": "click",
+        "target": "Review center template contract: lms-credential",
+        "elapsedMilliseconds": 371.31750000000466
+      }
+    ],
+    "counts": {
+      "clicks": 4,
+      "keyboardActions": 0,
+      "filledFields": 0,
+      "repeatedFields": 0,
+      "decisions": 4,
+      "navigation": 1,
+      "dialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0
+    },
+    "elapsedMilliseconds": 384.31700000001,
+    "result": "All three exact visible center forms are confirmed through the existing UI"
+  },
+  "source": {
+    "courseId": "6272694a-8d1a-4377-a090-3daa003796ca",
+    "courseVersionId": "404d0444-9122-4866-8ba3-1ee198bb0a0a",
+    "enrollmentId": "d89fca35-79d2-4d52-8563-bf236c812b39",
+    "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+    "requestId": "499b87d6-865f-4cc7-8c53-043b8889c63c",
+    "sanitaryBatchId": "3440adb3-676b-4edc-a80e-f73b00da6042"
+  },
+  "actions": [
+    {
+      "phase": "one-time center template review",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 72.4036999999953
+    },
+    {
+      "phase": "one-time center template review",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Open center document forms",
+      "elapsedMilliseconds": 172.35770000000775
+    },
+    {
+      "phase": "one-time center template review",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Review center template contract: lms-protocol",
+      "elapsedMilliseconds": 231.8683000000019
+    },
+    {
+      "phase": "one-time center template review",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Review center template contract: lms-certificate",
+      "elapsedMilliseconds": 320.44190000000526
+    },
+    {
+      "phase": "one-time center template review",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Review center template contract: lms-credential",
+      "elapsedMilliseconds": 371.31750000000466
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 430.5506000000023
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Параметры центра",
+      "elapsedMilliseconds": 491.636599999998
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Производственный календарь",
+      "elapsedMilliseconds": 540.027900000001
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Добавить версию календаря",
+      "elapsedMilliseconds": 558.2566999999981
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Название календаря",
+      "elapsedMilliseconds": 569.5892000000022
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Начало периода",
+      "elapsedMilliseconds": 579.1906000000017
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Конец периода",
+      "elapsedMilliseconds": 587.6912000000011
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Источники календаря, по одному в строке",
+      "elapsedMilliseconds": 598.4067000000068
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Mark calendar synthetic",
+      "elapsedMilliseconds": 620.3479999999981
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Save one calendar version",
+      "elapsedMilliseconds": 644.1560000000027
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 698.3684999999969
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Create course",
+      "elapsedMilliseconds": 746.123900000006
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Created course editor opened",
+      "elapsedMilliseconds": 865.5084999999963
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Название RU",
+      "elapsedMilliseconds": 881.4759999999951
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Название KZ",
+      "elapsedMilliseconds": 894.0715000000055
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Категория слушателей",
+      "elapsedMilliseconds": 905.6100000000006
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Add module",
+      "elapsedMilliseconds": 931.1269000000029
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Модуль RU",
+      "elapsedMilliseconds": 943.187300000005
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Модуль KZ",
+      "elapsedMilliseconds": 954.9483999999939
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Add first required lesson",
+      "elapsedMilliseconds": 986.8727999999974
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Урок RU",
+      "elapsedMilliseconds": 998.3747000000003
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Урок KZ",
+      "elapsedMilliseconds": 1010.2127000000037
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Текст RU",
+      "elapsedMilliseconds": 1021.7581000000064
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Текст KZ",
+      "elapsedMilliseconds": 1037.4814000000042
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Add private PDF lesson",
+      "elapsedMilliseconds": 1062.116399999999
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Урок RU",
+      "elapsedMilliseconds": 1074.7229999999981
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Урок KZ",
+      "elapsedMilliseconds": 1086.3438000000024
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Текст RU",
+      "elapsedMilliseconds": 1097.0878999999986
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Текст KZ",
+      "elapsedMilliseconds": 1111.0877000000037
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "selection",
+      "target": "PDF material type",
+      "elapsedMilliseconds": 1125.704899999997
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "file",
+      "target": "Upload authored synthetic lesson PDF",
+      "elapsedMilliseconds": 1146.391100000008
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Set prerequisite",
+      "elapsedMilliseconds": 1191.1857000000018
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Require previous lesson",
+      "elapsedMilliseconds": 1216.3787000000011
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Add question",
+      "elapsedMilliseconds": 1240.493300000002
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Open question",
+      "elapsedMilliseconds": 1266.405500000008
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Вопрос RU",
+      "elapsedMilliseconds": 1278.3895000000048
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Вопрос KZ",
+      "elapsedMilliseconds": 1289.5544999999984
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Answer 1 RU",
+      "elapsedMilliseconds": 1299.0139000000054
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Answer 1 KZ",
+      "elapsedMilliseconds": 1310.5212000000029
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Answer 2 RU",
+      "elapsedMilliseconds": 1319.6343000000052
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Answer 2 KZ",
+      "elapsedMilliseconds": 1332.0391999999993
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Open exam policy",
+      "elapsedMilliseconds": 1355.029899999994
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "selection",
+      "target": "Правило порога",
+      "elapsedMilliseconds": 1363.2823999999964
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Open regulatory profile",
+      "elapsedMilliseconds": 1385.3280999999988
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Название основания",
+      "elapsedMilliseconds": 1402.3583000000071
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "selection",
+      "target": "Проверка основания",
+      "elapsedMilliseconds": 1413.7418000000034
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "selection",
+      "target": "Компетенции",
+      "elapsedMilliseconds": 1425.8277999999991
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "selection",
+      "target": "Оценка",
+      "elapsedMilliseconds": 1436.8273999999947
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Действует с",
+      "elapsedMilliseconds": 1451.3040000000037
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Действует до",
+      "elapsedMilliseconds": 1463.2908000000025
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Основание проверки",
+      "elapsedMilliseconds": 1480.0669000000053
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Уполномоченный экзаменатор",
+      "elapsedMilliseconds": 1493.541200000007
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Эмитент документа",
+      "elapsedMilliseconds": 1509.2860000000073
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Протокол",
+      "elapsedMilliseconds": 1541.1680000000051
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Сертификат",
+      "elapsedMilliseconds": 1562.806899999996
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Удостоверение",
+      "elapsedMilliseconds": 1585.589399999997
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Синтетическая учебная программа",
+      "elapsedMilliseconds": 1616.7727000000014
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Санитарное обучение",
+      "elapsedMilliseconds": 1642.8384000000078
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "selection",
+      "target": "Производственный календарь",
+      "elapsedMilliseconds": 1656.0547000000079
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Add declared synthetic source",
+      "elapsedMilliseconds": 1683.3157000000065
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Название",
+      "elapsedMilliseconds": 1701.4232000000047
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Ссылка",
+      "elapsedMilliseconds": 1718.4958000000042
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Редакция",
+      "elapsedMilliseconds": 1734.4765999999945
+    },
+    {
+      "phase": "course and calendar first entry",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Publish authored synthetic course",
+      "elapsedMilliseconds": 1761.790399999998
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 2084.8896999999997
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "field",
+      "target": "ФИО",
+      "elapsedMilliseconds": 2101.5200999999943
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "field",
+      "target": "Электронная почта",
+      "elapsedMilliseconds": 2117.718000000008
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "field",
+      "target": "Пароль",
+      "elapsedMilliseconds": 2130.8436000000074
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "click",
+      "target": "Consent to versioned learner data processing",
+      "elapsedMilliseconds": 2151.677899999995
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "click",
+      "target": "Register learner",
+      "elapsedMilliseconds": 2176.1141999999963
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "navigation",
+      "target": "Registration opened My learning",
+      "elapsedMilliseconds": 2282.9562000000005
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 2570.799700000003
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "field",
+      "target": "ФИО",
+      "elapsedMilliseconds": 2589.829500000007
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "field",
+      "target": "Электронная почта",
+      "elapsedMilliseconds": 2605.583599999998
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "field",
+      "target": "Пароль",
+      "elapsedMilliseconds": 2621.128800000006
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "click",
+      "target": "Consent to versioned learner data processing",
+      "elapsedMilliseconds": 2654.9590000000026
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "click",
+      "target": "Register learner",
+      "elapsedMilliseconds": 2680.916100000002
+    },
+    {
+      "phase": "first learner registration",
+      "role": "NEW_LEARNER",
+      "kind": "navigation",
+      "target": "Registration opened My learning",
+      "elapsedMilliseconds": 2790.6670000000013
+    },
+    {
+      "phase": "first group assignment",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 2867.564400000003
+    },
+    {
+      "phase": "first group assignment",
+      "role": "DIRECTOR",
+      "kind": "field",
+      "target": "Найти сотрудника",
+      "elapsedMilliseconds": 2920.7678000000014
+    },
+    {
+      "phase": "first group assignment",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Select the two newly registered people",
+      "elapsedMilliseconds": 3310.6117999999988
+    },
+    {
+      "phase": "first group assignment",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Assign group once",
+      "elapsedMilliseconds": 3332.6919999999955
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 3411.3148000000074
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "click",
+      "target": "Continue assigned course",
+      "elapsedMilliseconds": 3472.199900000007
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "navigation",
+      "target": "Continue opened assigned course",
+      "elapsedMilliseconds": 3476.3928000000014
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "click",
+      "target": "Acknowledge first required lesson",
+      "elapsedMilliseconds": 3609.833500000008
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "click",
+      "target": "Open private PDF in browser",
+      "elapsedMilliseconds": 3798.189599999998
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "navigation",
+      "target": "Private PDF viewer opened",
+      "elapsedMilliseconds": 3817.275600000008
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "navigation",
+      "target": "Close PDF viewer and return to lesson",
+      "elapsedMilliseconds": 3845.9954
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "click",
+      "target": "Acknowledge PDF separately from download",
+      "elapsedMilliseconds": 3878.040300000008
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "click",
+      "target": "Start own eligible synthetic exam",
+      "elapsedMilliseconds": 3915.721099999995
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "click",
+      "target": "Answer authored question",
+      "elapsedMilliseconds": 3971.3531000000075
+    },
+    {
+      "phase": "required learning and own exam",
+      "role": "LEARNER",
+      "kind": "click",
+      "target": "Explicitly submit attempt",
+      "elapsedMilliseconds": 3992.651700000002
+    },
+    {
+      "phase": "automatic sanitary preparation after closed UI and worker restart",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 4813.537700000001
+    },
+    {
+      "phase": "automatic sanitary preparation after closed UI and worker restart",
+      "role": "DIRECTOR",
+      "kind": "authentication-field",
+      "target": "Электронная почта",
+      "elapsedMilliseconds": 4849.17839999999
+    },
+    {
+      "phase": "automatic sanitary preparation after closed UI and worker restart",
+      "role": "DIRECTOR",
+      "kind": "authentication-field",
+      "target": "Пароль",
+      "elapsedMilliseconds": 4860.899099999995
+    },
+    {
+      "phase": "automatic sanitary preparation after closed UI and worker restart",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Sign in again to inspect automatically prepared list",
+      "elapsedMilliseconds": 4892.592199999999
+    },
+    {
+      "phase": "automatic sanitary preparation after closed UI and worker restart",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Fresh director login completed",
+      "elapsedMilliseconds": 5264.640999999989
+    },
+    {
+      "phase": "automatic sanitary preparation after closed UI and worker restart",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 5642.036100000012
+    },
+    {
+      "phase": "automatic sanitary preparation after closed UI and worker restart",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Inspect automatically prepared list",
+      "elapsedMilliseconds": 5769.467500000013
+    },
+    {
+      "phase": "document preparation and separate director approval",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 5901.911100000012
+    },
+    {
+      "phase": "document preparation and separate director approval",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Prepare three requested document types",
+      "elapsedMilliseconds": 6083.5146000000095
+    },
+    {
+      "phase": "document preparation and separate director approval",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 6585.085000000006
+    },
+    {
+      "phase": "document preparation and separate director approval",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Director explicitly approves frozen revision",
+      "elapsedMilliseconds": 6754.64409999999
+    },
+    {
+      "phase": "document preparation and separate director approval",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Close approval page and return to prepared documents",
+      "elapsedMilliseconds": 6772.959699999992
+    },
+    {
+      "phase": "document preparation and separate director approval",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Download three real application PDFs",
+      "elapsedMilliseconds": 41421.00240000001
+    },
+    {
+      "phase": "registry and public QR",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Open task page",
+      "elapsedMilliseconds": 42063.1884
+    },
+    {
+      "phase": "registry and public QR",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Open public verification controls",
+      "elapsedMilliseconds": 42288.3765
+    },
+    {
+      "phase": "registry and public QR",
+      "role": "DIRECTOR",
+      "kind": "selection",
+      "target": "Выданный документ",
+      "elapsedMilliseconds": 42297.5782
+    },
+    {
+      "phase": "registry and public QR",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Explicit publication permission",
+      "elapsedMilliseconds": 42321.39709999999
+    },
+    {
+      "phase": "registry and public QR",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Create verification link and QR",
+      "elapsedMilliseconds": 42344.00170000001
+    },
+    {
+      "phase": "registry and public QR",
+      "role": "DIRECTOR",
+      "kind": "click",
+      "target": "Inspect public minimal record",
+      "elapsedMilliseconds": 43272.186700000006
+    },
+    {
+      "phase": "registry and public QR",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Public verification opened",
+      "elapsedMilliseconds": 43280.104999999996
+    },
+    {
+      "phase": "registry and public QR",
+      "role": "DIRECTOR",
+      "kind": "navigation",
+      "target": "Close public verification and return to registry",
+      "elapsedMilliseconds": 43577.01909999999
+    }
+  ],
+  "counts": {
+    "clicks": 48,
+    "keyboardActions": 0,
+    "filledFields": 42,
+    "selections": 7,
+    "fileSelections": 1,
+    "repeatedFields": 2,
+    "authenticationRepeatedFields": 2,
+    "businessRepeatedFields": 0,
+    "decisions": 55,
+    "navigation": 22,
+    "dialogs": 0,
+    "confirmations": 4,
+    "manualRefresh": 0
+  },
+  "applicationDialogs": 0,
+  "nativeDialogs": 0,
+  "fileInputMeasurement": "One synthetic PDF is selected through Playwright setInputFiles and counted as file selection/filled field. JavaScript and visible application dialogs are observed separately. The native OS file picker was not observed and its interactions are not claimed.",
+  "nativeFilePickerObserved": false,
+  "automaticSanitaryOperatorActions": 0,
+  "automaticPreparation": {
+    "preparationMetrics": {
+      "scenario": "В: automatic internal sanitary preparation",
+      "role": "SYSTEM",
+      "phase": "automatic preparation",
+      "goal": "Prepare exactly one internal sanitary list item from the confirmed exam result without a triggering operator action",
+      "startState": "A real confirmed exam result and its transactional outbox record exist",
+      "preconditions": "The shipping integration worker is running against the isolated synthetic database. UI closure and worker restart are independently recorded below; no pending state is fabricated.",
+      "actualSteps": [],
+      "counts": {
+        "clicks": 0,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 0,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 0,
+        "manualRefresh": 0
+      },
+      "elapsedMilliseconds": 148,
+      "timingBoundary": "Persisted server timestamps: outbox creation to actual processing completion. Authentication, UI inspection and restart instrumentation are separate recorded costs, not included in this automatic-processing duration.",
+      "result": {
+        "outboxId": "a8aea5a3-06f6-4bb0-8401-829a878a2561",
+        "status": "DONE",
+        "journalCount": 1,
+        "itemCount": 1,
+        "deliveryCount": 1
+      }
+    },
+    "allUiClosedAt": "2026-10-15T11:11:14.316Z",
+    "workerLifecycle": [
+      {
+        "event": "STARTED",
+        "pid": 27184,
+        "ordinal": 1,
+        "at": "2026-10-15T11:11:11.598Z",
+        "executable": "C:\\Program Files\\nodejs\\node.exe",
+        "entrypoint": "apps/integration-worker/src/main.ts",
+        "shell": false
+      },
+      {
+        "event": "STOPPED",
+        "pid": 27184,
+        "ordinal": 1,
+        "at": "2026-10-15T11:11:14.335Z",
+        "reason": "All learner and director UI contexts closed after confirmed result",
+        "code": null,
+        "signal": "SIGTERM"
+      },
+      {
+        "event": "STARTED",
+        "pid": 37724,
+        "ordinal": 2,
+        "at": "2026-10-15T11:11:14.345Z",
+        "executable": "C:\\Program Files\\nodejs\\node.exe",
+        "entrypoint": "apps/integration-worker/src/main.ts",
+        "shell": false
+      }
+    ],
+    "beforeRestart": {
+      "checkedAt": "2026-10-15T11:11:14.126Z",
+      "result": {
+        "id": "b4463abe-ed1f-450c-b846-2cfe84413557",
+        "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+        "enrollmentId": "d89fca35-79d2-4d52-8563-bf236c812b39",
+        "snapshotHash": "46fef032adfd7dbf1ce5fe84aeebff04fc7218f8246661231c7a44cd4149c3ba"
+      },
+      "outbox": [
+        {
+          "id": "a8aea5a3-06f6-4bb0-8401-829a878a2561",
+          "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+          "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+          "kind": "PREPARE",
+          "status": "DONE",
+          "leaseToken": 1,
+          "lockedUntil": null,
+          "availableAt": "2026-10-15T11:11:13.836Z",
+          "attempts": 1,
+          "createdAt": "2026-10-15T11:11:13.836Z",
+          "processedAt": "2026-10-15T11:11:13.984Z"
+        }
+      ],
+      "journal": [
+        {
+          "id": "cd98f368-01f0-4d56-962b-dd9f6cda77e3",
+          "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+          "snapshotHash": "f1740ec5e1e2cce84090ac34ced36f188697ba5d06610bc680bcd5aa6dfb5804",
+          "signatureState": "AWAITING_SIGNATURE"
+        }
+      ],
+      "items": [
+        {
+          "id": "c6adbc5c-fd6b-4685-b6d3-d11c26c0e446",
+          "batchId": "3440adb3-676b-4edc-a80e-f73b00da6042",
+          "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+          "journalEntryId": "cd98f368-01f0-4d56-962b-dd9f6cda77e3",
+          "snapshotHash": "f1740ec5e1e2cce84090ac34ced36f188697ba5d06610bc680bcd5aa6dfb5804"
+        }
+      ],
+      "deliveries": [
+        {
+          "id": "583af307-db7f-4f65-bfcb-fb73cc9dd906",
+          "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+          "batchItemId": "c6adbc5c-fd6b-4685-b6d3-d11c26c0e446",
+          "state": "READY",
+          "lmkState": "NOT_CONFIRMED",
+          "payloadHash": "f1740ec5e1e2cce84090ac34ced36f188697ba5d06610bc680bcd5aa6dfb5804"
+        }
+      ]
+    },
+    "afterRestart": {
+      "checkedAt": "2026-10-15T11:11:15.351Z",
+      "result": {
+        "id": "b4463abe-ed1f-450c-b846-2cfe84413557",
+        "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+        "enrollmentId": "d89fca35-79d2-4d52-8563-bf236c812b39",
+        "snapshotHash": "46fef032adfd7dbf1ce5fe84aeebff04fc7218f8246661231c7a44cd4149c3ba"
+      },
+      "outbox": [
+        {
+          "id": "a8aea5a3-06f6-4bb0-8401-829a878a2561",
+          "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+          "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+          "kind": "PREPARE",
+          "status": "DONE",
+          "leaseToken": 1,
+          "lockedUntil": null,
+          "availableAt": "2026-10-15T11:11:13.836Z",
+          "attempts": 1,
+          "createdAt": "2026-10-15T11:11:13.836Z",
+          "processedAt": "2026-10-15T11:11:13.984Z"
+        }
+      ],
+      "journal": [
+        {
+          "id": "cd98f368-01f0-4d56-962b-dd9f6cda77e3",
+          "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+          "snapshotHash": "f1740ec5e1e2cce84090ac34ced36f188697ba5d06610bc680bcd5aa6dfb5804",
+          "signatureState": "AWAITING_SIGNATURE"
+        }
+      ],
+      "items": [
+        {
+          "id": "c6adbc5c-fd6b-4685-b6d3-d11c26c0e446",
+          "batchId": "3440adb3-676b-4edc-a80e-f73b00da6042",
+          "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+          "journalEntryId": "cd98f368-01f0-4d56-962b-dd9f6cda77e3",
+          "snapshotHash": "f1740ec5e1e2cce84090ac34ced36f188697ba5d06610bc680bcd5aa6dfb5804"
+        }
+      ],
+      "deliveries": [
+        {
+          "id": "583af307-db7f-4f65-bfcb-fb73cc9dd906",
+          "resultId": "b4463abe-ed1f-450c-b846-2cfe84413557",
+          "batchItemId": "c6adbc5c-fd6b-4685-b6d3-d11c26c0e446",
+          "state": "READY",
+          "lmkState": "NOT_CONFIRMED",
+          "payloadHash": "f1740ec5e1e2cce84090ac34ced36f188697ba5d06610bc680bcd5aa6dfb5804"
+        }
+      ]
+    },
+    "triggerOperatorActions": 0,
+    "login": {
+      "clicks": 1,
+      "filledFields": 2,
+      "repeatedFields": 2,
+      "authenticationRepeatedFields": 2,
+      "businessRepeatedFields": 0,
+      "navigation": 2,
+      "keyboardActions": 0,
+      "dialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "elapsedMilliseconds": 606.1003999999957
+    },
+    "inspection": {
+      "clicks": 1,
+      "filledFields": 0,
+      "repeatedFields": 0,
+      "decisions": 1,
+      "navigation": 1,
+      "keyboardActions": 0,
+      "dialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "elapsedMilliseconds": 280.03800000000047
+    },
+    "interpretation": "All UI contexts closed; only the test-owned shipping worker PID was stopped and a different PID started. The same confirmed result and outbox persisted, and exactly one journal/item/delivery is present after restart. beforeRestart records whether processing had already completed; no pending state is fabricated. Authentication and inspection are separate from the zero-action automatic trigger."
+  },
+  "measurementConventions": "Navigation counts explicit routes, implicit page transitions and popup open/return. Decisions count each explicit activated control or selected option. fill is one semantic field entry, not a claim about physical keystrokes. Closing UI contexts, process restart, database/API readback, assertions and screenshots are verification instrumentation; their elapsed time remains included. Two re-entered authentication fields are explicit; repeated known business data remains zero. No operator action starts automatic sanitary preparation; fresh login and opening its existing list are separately recorded inspection costs.",
+  "elapsedMilliseconds": 43578.16540000001,
+  "boundary": "Synthetic HYGIENE/CENTER_EXAM/INFORMATION_CARD engineering route only. No production legal authority, cryptographic signature, physical printing, provider acceptance or LMK mark claimed."
+}

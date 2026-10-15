@@ -1,0 +1,1561 @@
+{
+  "owner": "agent-a",
+  "generatedAt": "2026-10-15T03:37:20.251476+05:00",
+  "workspace": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "branch": "codex/lms-one-run-20261015",
+  "syntheticOnly": true,
+  "provenancePolicy": "Numeric exit codes are supplied only when separately retained; PASS runner output is not relabeled an observed shell exit. Commands marked reconstructed are reproducible equivalents, not verbatim historic shell transcripts. Initial retained failures remain separate. This ledger does not claim an exhaustive transcript of earlier tool attempts whose outputs were not saved.",
+  "runtimeObservedNow": {
+    "node": "24.16.0",
+    "pnpm": "11.27.1",
+    "pythonAndNativeRender": {
+      "platform": "win32",
+      "python": "3.12.14",
+      "implementation": "CPython",
+      "pillow": "12.3.0",
+      "freetype": "2.14.3",
+      "lxml": "6.1.1",
+      "libxml": "2.11.9",
+      "zlib": "1.3.2",
+      "pillowZlib": "1.3.1.zlib-ng",
+      "pillowZlibNg": "2.3.3",
+      "raqm": false
+    },
+    "libreoffice": "26.2.6.3",
+    "postgresServer": "16.15 (local WSL)",
+    "backupTools": "16.14 WSL via restricted loopback demo_test wrapper",
+    "psqlClient": "17.11",
+    "observationBasis": "Current node/pnpm --version; retained renderer health and independent runtime diagnostic; storage report captures dump/restore --version"
+  },
+  "runs": [
+    {
+      "id": "render-initial",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm test:render",
+      "commandCaptureBasis": "Exact top-level command recorded by runner and session",
+      "startedAt": "2026-10-15T02:24:21.888763+05:00",
+      "finishedAt": "2026-10-15T03:05:30.963439+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": 1,
+      "exitCodeCaptureBasis": "Actual exec completion recorded in session; unittest reports failures=16, errors=1",
+      "status": "FAIL",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-full.log",
+        "sha256": "fefd167e51328c1267bb85f193e59864c0dba3fea8b07d2261c25b860bfa436e",
+        "createdUtc": "2026-10-15T02:24:21.888763+05:00",
+        "lastWriteUtc": "2026-10-15T03:05:30.963439+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration"
+    },
+    {
+      "id": "recovery-race-before",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-recovery-race.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:41:37.508403+05:00",
+      "finishedAt": "2026-10-15T02:41:40.543315+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "FAIL",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\recovery-race-before.log",
+        "sha256": "9c8ebaa8444ed1bdd2f1a1df49f9aa976e173801f7f18d3a5206ee950a7d4314",
+        "createdUtc": "2026-10-15T02:41:37.508403+05:00",
+        "lastWriteUtc": "2026-10-15T02:41:40.543315+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 2186.9466
+    },
+    {
+      "id": "recovery-race-after",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-recovery-race.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:42:04.37766+05:00",
+      "finishedAt": "2026-10-15T02:42:07.175601+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\recovery-race-after.log",
+        "sha256": "64e2ec60e724418b5e0165230979194a804995dfd483f0c2f3f6a3506bad3f22",
+        "createdUtc": "2026-10-15T02:42:04.37766+05:00",
+        "lastWriteUtc": "2026-10-15T02:42:07.175601+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 2155.8232
+    },
+    {
+      "id": "domain-materials-gc",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-concurrency=1 tests/integration/lms-exams.test.ts tests/integration/lms-materials.test.ts tests/integration/lms-storage.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:32:34.106692+05:00",
+      "finishedAt": "2026-10-15T02:32:43.088663+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\domain-materials-gc.log",
+        "sha256": "2ccae4e63d07834413e925b795737bdab8a47e58505695f48e5738b3e7cd9fe4",
+        "createdUtc": "2026-10-15T02:32:34.106692+05:00",
+        "lastWriteUtc": "2026-10-15T02:32:43.088663+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 23,
+        "pass": 23,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 8794.7092
+    },
+    {
+      "id": "domain-unit-pdf",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/lms-domain.test.ts tests/pdf-attachment.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:33:04.21588+05:00",
+      "finishedAt": "2026-10-15T02:33:12.070344+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\domain-unit-pdf.log",
+        "sha256": "57b2449fd1431a91c4e4ab12b7c1624196e7d5f0af5948ef23eb55f2642134c8",
+        "createdUtc": "2026-10-15T02:33:04.21588+05:00",
+        "lastWriteUtc": "2026-10-15T02:33:12.070344+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 25,
+        "pass": 25,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 7709.3214
+    },
+    {
+      "id": "external-manual-evidence",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-source-review.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:36:01.622271+05:00",
+      "finishedAt": "2026-10-15T02:36:40.961957+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\external-manual-evidence.log",
+        "sha256": "630e8762f713c5df34de57968543b155d7d954bf75d80bf5296b5dd03b1c02ea",
+        "createdUtc": "2026-10-15T02:36:01.622271+05:00",
+        "lastWriteUtc": "2026-10-15T02:36:40.961957+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 3765.903
+    },
+    {
+      "id": "external-exams-final",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-concurrency=1 tests/integration/lms-exams.test.ts tests/integration/lms-source-review.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:37:02.209712+05:00",
+      "finishedAt": "2026-10-15T02:37:08.79142+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\external-exams-final.log",
+        "sha256": "0bcb9c2fece58c7b865bfe8ded0d9e2210835494bb941fef580c69d2eb19bede",
+        "createdUtc": "2026-10-15T02:37:02.209712+05:00",
+        "lastWriteUtc": "2026-10-15T02:37:08.79142+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 6407.0107
+    },
+    {
+      "id": "exam-boundaries",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-exam-boundaries.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:46:24.177735+05:00",
+      "finishedAt": "2026-10-15T02:46:57.748753+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\exam-boundaries.log",
+        "sha256": "9e88da34f1ed385d0d5b5ee971382664ae432408c8993a5f146ef9f54b6e5160",
+        "createdUtc": "2026-10-15T02:46:24.177735+05:00",
+        "lastWriteUtc": "2026-10-15T02:46:57.748753+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 7972.5505
+    },
+    {
+      "id": "exam-midnight",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-name-pattern=\"admission uses the profile calendar date\" tests/integration/lms-exam-boundaries.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:50:47.726525+05:00",
+      "finishedAt": "2026-10-15T02:51:01.703932+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\exam-midnight.log",
+        "sha256": "f634a66bd908e2e0bd21429007004ecf4d4db50d9fee469717ee4c7acba2e691",
+        "createdUtc": "2026-10-15T02:50:47.726525+05:00",
+        "lastWriteUtc": "2026-10-15T02:51:01.703932+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 7636.8286
+    },
+    {
+      "id": "material-boundaries",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-material-boundaries.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:47:42.272509+05:00",
+      "finishedAt": "2026-10-15T02:47:56.138741+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\material-boundaries.log",
+        "sha256": "95a0b75221f8f698cd1b875cacae0c3c0c6006bad7238713cf16b4b1938399fd",
+        "createdUtc": "2026-10-15T02:47:42.272509+05:00",
+        "lastWriteUtc": "2026-10-15T02:47:56.138741+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 10140.4042
+    },
+    {
+      "id": "accounting-boundaries",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-accounting-boundaries.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:56:00.490626+05:00",
+      "finishedAt": "2026-10-15T03:01:14.557577+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\accounting-boundaries.log",
+        "sha256": "5a530957a6af11f425860db8ebe13f07ee5fc36d6fe0fcc57569afb3287e21f8",
+        "createdUtc": "2026-10-15T02:56:00.490626+05:00",
+        "lastWriteUtc": "2026-10-15T03:01:14.557577+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 14727.9868,
+      "reports": [
+        {
+          "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\UNKNOWN_ROLE_ACCEPTANCE.json",
+          "sha256": "00d45e6eefb33238425674fda5dcd3bf3a5c30370dda4e9722ad869ada719b83",
+          "createdUtc": "2026-10-15T03:01:14.490352+05:00",
+          "lastWriteUtc": "2026-10-15T03:01:14.495471+05:00"
+        }
+      ]
+    },
+    {
+      "id": "restored-outbox",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json scripts/verification/lms-restored-outbox.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:48:41.331731+05:00",
+      "finishedAt": "2026-10-15T02:51:01.415892+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\restored-outbox.log",
+        "sha256": "d6e2efb368fc974b3339a6e058f43d61e4a27d859e5a51a956ff37cb58e701d8",
+        "createdUtc": "2026-10-15T02:48:41.331731+05:00",
+        "lastWriteUtc": "2026-10-15T02:51:01.415892+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "reports": [
+        {
+          "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\RESTORED_OUTBOX_ACCEPTANCE.json",
+          "sha256": "1ae479487d05d387b5f1c07af9407e43141292150a78ee3db68fe66f9a5c0cae",
+          "createdUtc": "2026-10-15T02:51:01.390695+05:00",
+          "lastWriteUtc": "2026-10-15T02:51:01.391696+05:00"
+        }
+      ]
+    },
+    {
+      "id": "render-frozen-date",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": ".runtime/lms-one-run/python/Scripts/python.exe -m unittest discover -s tests/render -p test_lms_render.py -k test_06_exam_calendar_date_is_frozen_in_profile_timezone -v",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T02:49:13.06663+05:00",
+      "finishedAt": "2026-10-15T02:49:15.896796+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-date.log",
+        "sha256": "c37d87e7d10dda5a29b8c0b060d0c0101f41bbbb91fa65636e33be3ee4a912b4",
+        "createdUtc": "2026-10-15T02:49:13.06663+05:00",
+        "lastWriteUtc": "2026-10-15T02:49:15.896796+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration"
+    },
+    {
+      "id": "render-special-targeted",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": ".runtime/lms-one-run/python/Scripts/python.exe -m unittest discover -s tests/render -p test_special_program_forms.py -v",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T03:06:54.349159+05:00",
+      "finishedAt": "2026-10-15T03:07:38.36987+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-special-targeted.log",
+        "sha256": "af335d9a1eb03f45ba2a1d53f3e8101cdbdf1cf61ee522e6a14a109bdfaff6eb",
+        "createdUtc": "2026-10-15T03:06:54.349159+05:00",
+        "lastWriteUtc": "2026-10-15T03:07:38.36987+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration"
+    },
+    {
+      "id": "render-source-fidelity-targeted",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": ".runtime/lms-one-run/python/Scripts/python.exe -m unittest discover -s tests/render -p test_source_fidelity_acceptance.py -v",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T03:15:08.108176+05:00",
+      "finishedAt": "2026-10-15T03:16:11.761843+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-source-fidelity-targeted.log",
+        "sha256": "4b618584c8ecf343ba54cb6e0dbb7bfcb67d585762c40ff83f764319f02ec75c",
+        "createdUtc": "2026-10-15T03:15:08.108176+05:00",
+        "lastWriteUtc": "2026-10-15T03:16:11.761843+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration"
+    },
+    {
+      "id": "route-calendar-boundaries",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-route-calendar-boundaries.test.ts",
+      "commandCaptureBasis": "Reproduction command reconstructed from retained runner output and test file; original PowerShell wrapper was not captured",
+      "startedAt": "2026-10-15T03:19:53.207613+05:00",
+      "finishedAt": "2026-10-15T03:20:46.339273+05:00",
+      "timeCaptureBasis": "Filesystem creation/write timestamps; creation may precede an overwritten targeted retry and is not an exact process start",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Not separately retained; test runner outcome is recorded in the log",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\route-calendar-boundaries.log",
+        "sha256": "4fcb4621cb125dea77bbc8c6be3f7efd71e4f2f05cd2e43a78081b822666df3d",
+        "createdUtc": "2026-10-15T03:19:53.207613+05:00",
+        "lastWriteUtc": "2026-10-15T03:20:46.339273+05:00"
+      },
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME",
+        "NODE_PATH"
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "runnerSummary": {
+        "tests": 6,
+        "pass": 6,
+        "fail": 0,
+        "skipped": 0
+      },
+      "runnerElapsedMilliseconds": 14723.9003
+    },
+    {
+      "id": "private-proxy",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "node scripts/verification/lms-proxy-acceptance.mjs",
+      "commandCaptureBasis": "Exact harness entrypoint; original PowerShell wrapper not retained",
+      "status": "PASS",
+      "startedAt": null,
+      "finishedAt": "2026-10-14T21:31:13.685Z",
+      "timeCaptureBasis": "Harness measuredAt gives completion; original process start not recorded. fileCapturedAt is report file creation and is not execution time.",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Top-level process exit code was not retained in report; nested storage commands retain actual codes",
+      "reports": [
+        {
+          "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\PROXY_ACCEPTANCE.json",
+          "sha256": "c996fa83639d317dfafbf4a244e343c8847ef5fff120cde2ad51263f75e0e8b1",
+          "createdUtc": "2026-10-15T02:30:59.234059+05:00",
+          "lastWriteUtc": "2026-10-15T02:31:13.688735+05:00"
+        }
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 browser",
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_PSQL",
+        "DEMO_PG_DUMP",
+        "DEMO_PG_RESTORE",
+        "DEMO_MAINTENANCE",
+        "DEMO_E2E_TRACE",
+        "DEMO_E2E_CHANNEL"
+      ],
+      "fileCapturedAt": "2026-10-15T02:30:59.234059+05:00"
+    },
+    {
+      "id": "storage-upgrade-backup-restore",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "node scripts/verification/lms-storage-acceptance.mjs",
+      "commandCaptureBasis": "Exact harness entrypoint; original PowerShell wrapper not retained",
+      "status": "PASS",
+      "startedAt": "2026-10-14T21:21:09.496Z",
+      "finishedAt": "2026-10-14T21:22:19.601Z",
+      "timeCaptureBasis": "Harness clocks where present, otherwise report filesystem creation time (not exact process start)",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Top-level process exit code was not retained in report; nested storage commands retain actual codes",
+      "reports": [
+        {
+          "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\STORAGE_ACCEPTANCE.json",
+          "sha256": "cf6161078d02e70db51fe4dc16d629558a58d2ca177d8f53441ebb2facad757d",
+          "createdUtc": "2026-10-15T02:14:44.919919+05:00",
+          "lastWriteUtc": "2026-10-15T02:22:19.602308+05:00"
+        }
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_PSQL",
+        "DEMO_PG_DUMP",
+        "DEMO_PG_RESTORE",
+        "DEMO_MAINTENANCE",
+        "DEMO_E2E_TRACE",
+        "DEMO_E2E_CHANNEL"
+      ],
+      "exactNestedCommands": [
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "csc.exe",
+          "args": [
+            "/nologo",
+            "/target:exe",
+            "/out:C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\pg_dump_wsl16.exe",
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\PgWslTestWrapper.cs"
+          ],
+          "startedAt": "2026-10-14T21:21:09.499Z",
+          "finishedAt": "2026-10-14T21:21:09.725Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "wsl.exe",
+          "args": [
+            "--exec",
+            "/usr/lib/postgresql/16/bin/pg_dump",
+            "--version"
+          ],
+          "startedAt": "2026-10-14T21:21:09.726Z",
+          "finishedAt": "2026-10-14T21:21:09.842Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "wsl.exe",
+          "args": [
+            "--exec",
+            "/usr/lib/postgresql/16/bin/pg_restore",
+            "--version"
+          ],
+          "startedAt": "2026-10-14T21:21:09.842Z",
+          "finishedAt": "2026-10-14T21:21:09.964Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "-C",
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL",
+            "ls-tree",
+            "-r",
+            "--name-only",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b",
+            "--",
+            "dsj2/products/demo/packages/database/prisma/"
+          ],
+          "startedAt": "2026-10-14T21:21:09.964Z",
+          "finishedAt": "2026-10-14T21:21:10.032Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220001_demo/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.034Z",
+          "finishedAt": "2026-10-14T21:21:10.095Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220002_invariants/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.096Z",
+          "finishedAt": "2026-10-14T21:21:10.17Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220003_demo_import/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.172Z",
+          "finishedAt": "2026-10-14T21:21:10.233Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220004_import_mapping/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.234Z",
+          "finishedAt": "2026-10-14T21:21:10.297Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220005_utc_runtime/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.298Z",
+          "finishedAt": "2026-10-14T21:21:10.398Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240006_group_events/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.399Z",
+          "finishedAt": "2026-10-14T21:21:10.513Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240007_operator_value/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.514Z",
+          "finishedAt": "2026-10-14T21:21:10.693Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240008_core_integrity/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.695Z",
+          "finishedAt": "2026-10-14T21:21:10.846Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240009_public_verification/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.849Z",
+          "finishedAt": "2026-10-14T21:21:10.956Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240010_value_attachment_event/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:10.958Z",
+          "finishedAt": "2026-10-14T21:21:11.034Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240011_group_revision_required/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.035Z",
+          "finishedAt": "2026-10-14T21:21:11.114Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240012_employer_invites/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.115Z",
+          "finishedAt": "2026-10-14T21:21:11.2Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609250013_order_employer_scope/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.201Z",
+          "finishedAt": "2026-10-14T21:21:11.281Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609250014_organization_names/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.283Z",
+          "finishedAt": "2026-10-14T21:21:11.366Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609290015_request_capacity_250/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.367Z",
+          "finishedAt": "2026-10-14T21:21:11.445Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610010016_director_approval/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.446Z",
+          "finishedAt": "2026-10-14T21:21:11.547Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610010017_approval_lifecycle_guard/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.549Z",
+          "finishedAt": "2026-10-14T21:21:11.629Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610020018_two_working_roles/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.63Z",
+          "finishedAt": "2026-10-14T21:21:11.716Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610040019_partial_issuance_scope/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.717Z",
+          "finishedAt": "2026-10-14T21:21:11.791Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610040020_draft_proposal_status/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.792Z",
+          "finishedAt": "2026-10-14T21:21:11.867Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610040021_legacy_issuance_compatibility/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.868Z",
+          "finishedAt": "2026-10-14T21:21:11.946Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610040029_request_resource_capacity/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:11.948Z",
+          "finishedAt": "2026-10-14T21:21:12.071Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610050030_approval_resolved_snapshot/migration.sql"
+          ],
+          "startedAt": "2026-10-14T21:21:12.072Z",
+          "finishedAt": "2026-10-14T21:21:12.156Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/migration_lock.toml"
+          ],
+          "startedAt": "2026-10-14T21:21:12.158Z",
+          "finishedAt": "2026-10-14T21:21:12.271Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "git",
+          "args": [
+            "show",
+            "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/schema.prisma"
+          ],
+          "startedAt": "2026-10-14T21:21:12.272Z",
+          "finishedAt": "2026-10-14T21:21:12.351Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT count(*) FROM pg_database WHERE datname='demo_test_lms_upgrade_a_mv8m6zjq'"
+          ],
+          "startedAt": "2026-10-14T21:21:12.352Z",
+          "finishedAt": "2026-10-14T21:21:12.421Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "CREATE DATABASE \"demo_test_lms_upgrade_a_mv8m6zjq\""
+          ],
+          "startedAt": "2026-10-14T21:21:12.421Z",
+          "finishedAt": "2026-10-14T21:21:12.527Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "node.exe",
+          "args": [
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\node_modules\\prisma\\build\\index.js",
+            "migrate",
+            "deploy",
+            "--schema",
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\baseline-prisma\\schema.prisma"
+          ],
+          "startedAt": "2026-10-14T21:21:12.527Z",
+          "finishedAt": "2026-10-14T21:21:15.505Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT count(*) FROM pg_tables WHERE schemaname='public' AND tablename='Course'"
+          ],
+          "startedAt": "2026-10-14T21:21:15.505Z",
+          "finishedAt": "2026-10-14T21:21:15.559Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "[bounded synthetic SQL]"
+          ],
+          "startedAt": "2026-10-14T21:21:15.559Z",
+          "finishedAt": "2026-10-14T21:21:15.614Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT to_jsonb(t)::text FROM \"Tenant\" t ORDER BY id"
+          ],
+          "startedAt": "2026-10-14T21:21:15.614Z",
+          "finishedAt": "2026-10-14T21:21:15.667Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT to_jsonb(t)::text FROM \"User\" t ORDER BY id"
+          ],
+          "startedAt": "2026-10-14T21:21:15.668Z",
+          "finishedAt": "2026-10-14T21:21:15.723Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT to_jsonb(t)::text FROM \"Recipient\" t ORDER BY id"
+          ],
+          "startedAt": "2026-10-14T21:21:15.723Z",
+          "finishedAt": "2026-10-14T21:21:15.777Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT count(*) FROM \"_prisma_migrations\""
+          ],
+          "startedAt": "2026-10-14T21:21:15.777Z",
+          "finishedAt": "2026-10-14T21:21:15.828Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "node.exe",
+          "args": [
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\node_modules\\prisma\\build\\index.js",
+            "migrate",
+            "deploy",
+            "--schema",
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\prisma\\schema.prisma"
+          ],
+          "startedAt": "2026-10-14T21:21:15.829Z",
+          "finishedAt": "2026-10-14T21:21:17.984Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT to_jsonb(t)::text FROM \"Tenant\" t ORDER BY id"
+          ],
+          "startedAt": "2026-10-14T21:21:17.984Z",
+          "finishedAt": "2026-10-14T21:21:18.031Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT to_jsonb(t)::text FROM \"User\" t ORDER BY id"
+          ],
+          "startedAt": "2026-10-14T21:21:18.031Z",
+          "finishedAt": "2026-10-14T21:21:18.076Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT to_jsonb(t)::text FROM \"Recipient\" t ORDER BY id"
+          ],
+          "startedAt": "2026-10-14T21:21:18.076Z",
+          "finishedAt": "2026-10-14T21:21:18.126Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT count(*) FROM \"VerifiedExamResult\""
+          ],
+          "startedAt": "2026-10-14T21:21:18.126Z",
+          "finishedAt": "2026-10-14T21:21:18.192Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT count(*) FROM \"_prisma_migrations\""
+          ],
+          "startedAt": "2026-10-14T21:21:18.192Z",
+          "finishedAt": "2026-10-14T21:21:18.315Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT count(*) FROM pg_database WHERE datname='demo_test_lms_backup_a_mv8m6zjq'"
+          ],
+          "startedAt": "2026-10-14T21:21:18.315Z",
+          "finishedAt": "2026-10-14T21:21:18.414Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "CREATE DATABASE \"demo_test_lms_backup_a_mv8m6zjq\""
+          ],
+          "startedAt": "2026-10-14T21:21:18.414Z",
+          "finishedAt": "2026-10-14T21:21:18.541Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT count(*) FROM pg_database WHERE datname='demo_test_lms_restore_a_mv8m6zjq'"
+          ],
+          "startedAt": "2026-10-14T21:21:18.541Z",
+          "finishedAt": "2026-10-14T21:21:18.656Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "CREATE DATABASE \"demo_test_lms_restore_a_mv8m6zjq\""
+          ],
+          "startedAt": "2026-10-14T21:21:18.656Z",
+          "finishedAt": "2026-10-14T21:21:18.745Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "node.exe",
+          "args": [
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\node_modules\\prisma\\build\\index.js",
+            "migrate",
+            "deploy",
+            "--schema",
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\prisma\\schema.prisma"
+          ],
+          "startedAt": "2026-10-14T21:21:18.745Z",
+          "finishedAt": "2026-10-14T21:21:20.793Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "[bounded synthetic SQL]"
+          ],
+          "startedAt": "2026-10-14T21:21:20.795Z",
+          "finishedAt": "2026-10-14T21:21:20.848Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "node.exe",
+          "args": [
+            "deployment/backup.mjs",
+            "backup",
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\backup"
+          ],
+          "startedAt": "2026-10-14T21:21:20.848Z",
+          "finishedAt": "2026-10-14T21:21:59.142Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "node.exe",
+          "args": [
+            "deployment/backup.mjs",
+            "restore",
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\backup"
+          ],
+          "startedAt": "2026-10-14T21:21:59.142Z",
+          "finishedAt": "2026-10-14T21:22:11.553Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "node.exe",
+          "args": [
+            "deployment/backup.mjs",
+            "verify",
+            "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\backup"
+          ],
+          "startedAt": "2026-10-14T21:22:11.553Z",
+          "finishedAt": "2026-10-14T21:22:19.527Z",
+          "exitCode": 0
+        },
+        {
+          "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+          "captureBasis": "Harness spawnSync command and process result recorded at execution",
+          "executable": "psql.exe",
+          "args": [
+            "-X",
+            "-A",
+            "-t",
+            "-v",
+            "ON_ERROR_STOP=1",
+            "-c",
+            "SELECT count(*) FROM \"RegulatoryOutbox\" WHERE status='PENDING'"
+          ],
+          "startedAt": "2026-10-14T21:22:19.529Z",
+          "finishedAt": "2026-10-14T21:22:19.601Z",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "id": "video-browser",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm --filter @demo/web exec playwright test e2e/lms-video-live.spec.ts",
+      "commandCaptureBasis": "Exact harness entrypoint; original PowerShell wrapper not retained",
+      "status": "PASS",
+      "startedAt": null,
+      "finishedAt": "2026-10-14T21:29:17.801Z",
+      "timeCaptureBasis": "Harness measuredAt gives completion; original process start not recorded. fileCapturedAt is report file creation and is not execution time.",
+      "exitCode": null,
+      "exitCodeCaptureBasis": "Top-level process exit code was not retained in report; nested storage commands retain actual codes",
+      "reports": [
+        {
+          "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\video-browser\\PLAYBACK_ACCEPTANCE.json",
+          "sha256": "f48346807187b021608230fb34ef900989c5e2c470c1eb17389a9a5028641de3",
+          "createdUtc": "2026-10-15T02:29:17.804421+05:00",
+          "lastWriteUtc": "2026-10-15T02:29:17.805853+05:00"
+        }
+      ],
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 browser",
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_PSQL",
+        "DEMO_PG_DUMP",
+        "DEMO_PG_RESTORE",
+        "DEMO_MAINTENANCE",
+        "DEMO_E2E_TRACE",
+        "DEMO_E2E_CHANNEL"
+      ],
+      "limits": "This earlier measured run proves reload/resume; later logout/login addition is delegated to final browser suite and is not claimed by this report.",
+      "fileCapturedAt": "2026-10-15T02:29:17.804421+05:00"
+    },
+    {
+      "id": "document-scheduling-and-existing-documents",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test --test-concurrency=1 tests/integration/lms-documents.test.ts tests/integration/lms-document-scheduling.test.ts",
+      "commandCaptureBasis": "Exact command executed",
+      "startedAt": "2026-10-15T03:45:43.8461921+05:00",
+      "finishedAt": "2026-10-15T03:48:45.3552637+05:00",
+      "timeCaptureBasis": "Actual UTC clocks immediately before/after process",
+      "exitCode": 0,
+      "exitCodeCaptureBasis": "Actual LASTEXITCODE",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\document-scheduling.log",
+        "sha256": "c93570bc6ea2acc7155229d7c8f54ab2548c3da6c42675d6a2e1a1b9f40165e6"
+      },
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_LMS_TEST_RUNTIME"
+      ]
+    },
+    {
+      "id": "render-neutral-diagnostic-01",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "& $env:DEMO_PYTHON -m unittest discover -s tests/render -p test_neutral_batch.py -v",
+      "commandCaptureBasis": "Exact executed command; isolated evidence output root",
+      "startedAt": null,
+      "finishedAt": null,
+      "timeCaptureBasis": "Process UTC clocks were not captured; fileCapturedAt and fileLastWriteAt are filesystem observation only, runner duration is48.150seconds",
+      "fileCapturedAt": "2026-10-15T05:17:08.459866+05:00",
+      "fileLastWriteAt": "2026-10-15T05:17:57.902911+05:00",
+      "runnerDurationSeconds": 48.15,
+      "exitCode": 0,
+      "exitCodeCaptureBasis": "Actual exec session37828 process return code",
+      "status": "PASS",
+      "tests": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-neutral-diagnostic.log",
+        "sha256": "e36cc90fe05e2b1b76337d8a99729bfddf0e7676dd5b989a03c92ee89e1aee6e"
+      },
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "safeEnvironmentNames": [
+        "CI",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_RENDER_EVIDENCE_ROOT"
+      ],
+      "evidenceRoot": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\neutral-diagnostic-01",
+      "limits": "Diagnostic unchanged test passed; does not erase full-run error or establish its precise cause before traceback."
+    },
+    {
+      "id": "render-full-final",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm test:render",
+      "commandCaptureBasis": "Exact command executed by this PowerShell wrapper",
+      "startedAt": "2026-10-15T03:42:43.4147885+05:00",
+      "finishedAt": "2026-10-15T05:37:00.5098507+05:00",
+      "timeCaptureBasis": "Actual UTC clocks immediately before/after the process",
+      "exitCode": 1,
+      "exitCodeCaptureBasis": "Actual LASTEXITCODE returned by pnpm",
+      "status": "FAIL",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-full-final.log",
+        "sha256": "e7ef3598e9cfd28fd745ff5af9b0ddf384646a94f53f2dcaab6f16430d805ce5"
+      },
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "safeEnvironmentNames": [
+        "CI",
+        "DATABASE_URL",
+        "DEMO_ARTIFACT_ROOT",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_RENDER_EVIDENCE_ROOT"
+      ]
+    },
+    {
+      "id": "render-full-final-02",
+      "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+      "command": "pnpm test:render",
+      "commandCaptureBasis": "Exact command executed",
+      "startedAt": "2026-10-15T00:37:38.8878332+00:00",
+      "finishedAt": "2026-10-15T01:09:09.5225616+00:00",
+      "timeCaptureBasis": "Actual UTC clocks immediately before and after process",
+      "exitCode": 0,
+      "exitCodeCaptureBasis": "Actual LASTEXITCODE",
+      "status": "PASS",
+      "log": {
+        "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-full-final-02.log",
+        "sha256": "3863633e7c627fcccc9daf352a7c136d349c5c53d43f03ffbe6ec6d98730d5df"
+      },
+      "environmentSetup": ". ./scripts/verification/lms-test-env.ps1 integration",
+      "safeEnvironmentNames": [
+        "CI",
+        "DEMO_PYTHON",
+        "DEMO_SOFFICE",
+        "DEMO_RENDER_EVIDENCE_ROOT"
+      ],
+      "evidenceRoot": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\final-render-02"
+    }
+  ],
+  "pendingFinalRender": {
+    "command": "pnpm test:render",
+    "log": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\render-full-final-02.log",
+    "state": "COMPLETED",
+    "startedAt": "2026-10-15T00:37:38.8878332+00:00",
+    "finishedAt": "2026-10-15T01:09:09.5225616+00:00",
+    "exitCode": 0,
+    "evidenceRoot": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-a\\final-render-02"
+  }
+}

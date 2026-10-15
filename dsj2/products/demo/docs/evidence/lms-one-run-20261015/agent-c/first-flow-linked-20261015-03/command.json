@@ -1,0 +1,27 @@
+{
+  "buildId": "BV_9Qiz8LMZrZB5Rfnihw",
+  "runtime": "../full-e2e-20261015-05/runtime-start.json",
+  "source": [
+    {
+      "path": "apps/web/e2e/lms-first-flow-live.spec.ts",
+      "sha256": "45392a055d007874a4481a6242c3aee40cbba841e34115ba162865d89e36df0a"
+    },
+    {
+      "path": "scripts/verification/lms-first-flow-readback.ts",
+      "sha256": "9de96d050686540cea0de45c3e25d4c09346a728dfa91b284fdc36ce2cbb01bf"
+    },
+    {
+      "path": "apps/web/e2e/operator-role-fixture.ts",
+      "sha256": "6007768165f609c5c857207b6f24ccb503284d79af086c788690708bea476ff9"
+    },
+    {
+      "path": "scripts/verification/lms-full-e2e-env.ps1",
+      "sha256": "d69a33920bb815acee6ce53c9b2a554b92fb05f3fab61e565da4b27fc978845a"
+    }
+  ],
+  "endedAt": "2026-10-15T01:16:39.1160203Z",
+  "startedAt": "2026-10-15T01:15:34.3299807Z",
+  "command": "pnpm --filter @demo/web exec playwright test e2e/lms-first-flow-live.spec.ts --project=remaining --no-deps",
+  "exitCode": 0,
+  "status": "PASS"
+}

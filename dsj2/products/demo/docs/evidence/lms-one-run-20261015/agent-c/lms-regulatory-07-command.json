@@ -1,0 +1,16 @@
+{
+  "envNames": [
+    "CI",
+    "DATABASE_URL",
+    "DEMO_LMS_TEST_RUNTIME",
+    "DEMO_ARTIFACT_ROOT",
+    "DEMO_PYTHON",
+    "DEMO_SOFFICE"
+  ],
+  "exitCode": 0,
+  "command": "pnpm exec tsx --tsconfig apps/api/tsconfig.json --test tests/integration/lms-regulatory.test.ts",
+  "resultPath": "docs/evidence/lms-one-run-20261015/agent-c/lms-regulatory-07.log",
+  "end": "2026-10-14T21:33:03.7932374Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "start": "2026-10-14T21:32:21.7927634Z"
+}

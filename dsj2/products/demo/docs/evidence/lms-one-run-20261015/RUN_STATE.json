@@ -1,0 +1,72 @@
+{
+  "runId": "lms-one-run-20261015",
+  "status": "LOCAL_ACCEPTED",
+  "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "branch": "codex/lms-one-run-20261015",
+  "baseCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "initialDirtyPaths": [],
+  "phase": "Local implementation and actual acceptance complete. Code committed; canonical44criteria/49localrequirements/52originalrows generated with exactimplementationcommit. Raw failed browser commands preserved, effective219distinctcases verified. Final exact evidence publication/commit is the remaining repository packaging step.",
+  "owners": {
+    "root": "Prisma/migration/contracts/auth/policy/identity/result-finalization/document bridge/regulatory workflow and worker/evidence integration",
+    "api_domain": "apps/api/src/lms except root files; tests/lms-domain.test.ts",
+    "ui": "components/lms, lib/lms-api.ts, components/workspace.tsx, lib/user-roles.ts",
+    "acceptance": "tests/lms*, tests/integration/lms*, e2e/lms*, scripts/verification/lms*, evidence/agent-c; environment"
+  },
+  "environment": {
+    "node": "24.16.0",
+    "pnpm": "11.27.1",
+    "pnpmEnvironment": "CI=true required to match install virtual-store setting",
+    "postgres": "localhost:55449 (own WSL cluster)",
+    "integrationDatabase": "demo_test_lms_integration_20261015",
+    "browserDatabase": "demo_test_lms_browser_20261015"
+  },
+  "checks": [
+    "All25MVP+12SAN+2OPS+10UX localrowsPASS; EXT01–03 BLOCKED_EXTERNAL_INPUTS.44criteria,137subcases;135PASS and2historicalbaseline measurements explicitlyexcludedbyuserNOT_RUN.",
+    "507unitPASS; mandatoryintegration280PASS plus individuallyboundnew/affectedfiles; renderer144PASS. Requiredlint/format/typecheck/unit/integration/render/build/autonomy/gitdiff allEXIT0. Fullbrowser raw212PASS6FAIL1dependencySKIP EXIT1 retained; firstcorrective6PASS3FAIL EXIT1 retained; finaltiming4PASS0 anddependency1PASS0. Effective209+5+4+1=219distinct,0unresolved.",
+    "37currentUXmeasurements,8requiredscenarioPASS,0businessreentry. Preparedactions<=2; continue1; sanitarypreparation0. Wholefirstentry/auth/actions remainseparate, no before/after savingsclaim.",
+    "Currentbuild05 and293runtimefilesunchanged duringcorrectives.177executedsources boundvia exactrevieweddeltas; only2terminalCRLFblank removals aftertests are separatelybound inSOURCE_EOF_NORMALIZATION with PythonAST/PowerShelltoken equivalence.",
+    "Freshfrozeninstall,25freshmigrations,upgrade,126privatefilebackuprestore,actualPENDING-to-DONE2041msworkerrecovery,250assignments,100concurrentlocalHTTP/400requests p95799.1326ms0unexpected5xx proven. No productionclaim.",
+    "Codecommit db5806f54147d8592bdf3b32cde9b6e76b9ad1bb contains217productsourcefiles only. ActualstagedandworkinggitdiffcheckEXIT0. Historicalprogress bytes preservedbyappendonly.",
+    "Canonical FINAL_FACTS/RUN_MANIFEST/ACCEPTANCE_RESULTS/MVP_COVERAGE_FINAL/UX_ACTIONS/COMMANDS/EXTERNAL_GATES/FINAL_ACCEPTANCE_RU/REPRODUCE_RU generated successfully. Immutableinitial296privacy andbrowser66privacy reviews retained; finalexactpublicationselection follows.",
+    "Wakeguard02 releasedactualEXIT0; no persistent powerchanges. Web/API/render remainalive. IntegrationworkerOFF because post-acceptance restore was NOT_STARTED_POLICY_BLOCK (blocked by policy), no retry/workaround. LOCAL_RUNTIME_FINAL.json records this handofflimitation separately from completedfunctionalacceptance."
+  ],
+  "next": "Finish exact selected-evidence privacy/reference review and separate evidence commit. No implementation or browser acceptance work remains; external connection is outside current authorization.",
+  "external": "NOT_CONNECTED. No external services authorized. No production or live DB changes.",
+  "scopeAdjustment": {
+    "instruction": "Продолжить без исходного браузерного замера",
+    "receivedAt": "2026-10-15T02:51:13.363248+05:00",
+    "baselineBrowser": "NOT_RUN",
+    "excludedByUserInstruction": true,
+    "comparisonClaim": "No before/after timing or savings claimed"
+  },
+  "updatedAt": "2026-10-15T13:02:48.853241+00:00",
+  "activeRuntime": {
+    "apiSession": 25089,
+    "webSession": 50817,
+    "renderWorkerSession": 74106,
+    "integrationWorkerSession": null,
+    "integrationWorkerNote": "STOPPED; post-acceptance restart rejected by automatic approval review: blocked by policy. No retry/workaround. Actual earlier recovery remains separately proven.",
+    "origin": "http://127.0.0.1:3159",
+    "apiOrigin": "http://127.0.0.1:4159",
+    "buildId": "9daYzb73gsxr8g-J7toW7",
+    "webDist": ".next-lms-final",
+    "runtimeFolder": "agent-c/full-e2e-20261015-07",
+    "runtimeOriginFolder": "agent-c/full-e2e-20261015-07",
+    "browserSuiteSession": null,
+    "targetedDomainSession": null,
+    "sourceFiles": 293,
+    "browserSuiteTerminalExitCode": 1,
+    "finalRuntimeEvidence": "LOCAL_RUNTIME_FINAL.json"
+  },
+  "evidencePublication": "Pattern scan found2 serialized test secrets only in old raw .playwright-artifacts traces. Exclude ALL traces/private.runtime/session logs from committed evidence; final curated scan still required. Values never printed.",
+  "newEvidenceGenerator": "Composite acceptance retains raw full-suite FAIL/EXIT1 and requires separately executed exact affected coverage; criteria44/subcases137/rows52 unchanged. No coverage success claimed before actual corrective results.",
+  "browserPermission": {
+    "instruction": "Разрешаю локальную браузерную приёмку",
+    "scope": "Current LMS local127.0.0.1:3159 synthetic test DB, noexternaltransmission/signatures/production",
+    "standardCommandAccepted": true,
+    "originalBaselineStillExcluded": true
+  },
+  "priorStatePrivateSnapshotSha256": "e53832ad898ec12dde5206902dc4ccd0177a3e7e9a6c16b175521ad6262603c3",
+  "implementationCommit": "db5806f54147d8592bdf3b32cde9b6e76b9ad1bb",
+  "finalEvidenceCommit": "Separate following commit; deliberately not self-referenced in its own contents."
+}

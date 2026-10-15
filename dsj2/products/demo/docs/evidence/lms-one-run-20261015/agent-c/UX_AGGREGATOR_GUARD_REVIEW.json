@@ -1,0 +1,89 @@
+{
+  "status": "PASS_PURE_GUARD_CHECKS_ONLY",
+  "cases": [
+    {
+      "name": "matching complete actual command structure",
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "different batch run",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "failed command",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "running command",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "different command run identity",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "targeted command cannot clear mandatory run",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "missing finish timestamp",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "source changed",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "skipped case",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "flaky case",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "global error",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "missing executed case",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "failed actual result",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "expected failure is not acceptance PASS",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "retry is not clean first attempt",
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "boolean expected count",
+      "expected": false,
+      "actual": false
+    }
+  ],
+  "count": 16,
+  "noBrowserExecution": true,
+  "noAcceptancePromotion": true,
+  "historicalDraftNotModified": true
+}

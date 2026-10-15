@@ -1,0 +1,21 @@
+{
+  "recordedAt": "2026-10-14T22:30:06.100468+00:00",
+  "sourcePath": "docs/handoffs/2026-10-15-lms-one-run/TZ_LMS_MVP_RU.txt",
+  "sourceLine": 49,
+  "exactQuote": "Методист/преподаватель при необходимости получает capabilities на назначенные курсы и группы.",
+  "interpretationByCoordinator": "Conditional feature is not activated in the agreed25MVP scope. Existing center roles manage LMS. No instructor/teacher login role or separate cabinet is introduced. TEACHER signer designation is not user authorization. Unsupported login roles fail closed. Do not claim a teacher cabinet or teacher-scoped positive workflow.",
+  "supportedUserRoles": [
+    "ADMIN",
+    "DIRECTOR",
+    "OPERATOR",
+    "VIEWER",
+    "EMPLOYER",
+    "LEARNER"
+  ],
+  "actualEvidence": [
+    "agent-a/UNKNOWN_ROLE_ACCEPTANCE.json",
+    "agent-c/lms-audit-03.log",
+    "root-policy-tests.log"
+  ],
+  "notAUserScopeExclusion": true
+}

@@ -1,0 +1,11 @@
+{
+  "database": "demo_test_lms_browser_20261015",
+  "finishedAt": "2026-10-14T21:48:49.1963571Z",
+  "startedAt": "2026-10-14T21:47:22.3422758Z",
+  "fixtureVersion": "lms-one-run-synthetic-v1",
+  "command": "pnpm --filter @demo/web exec playwright test lms-assignment-batches-live.spec.ts lms-conflict-live.spec.ts",
+  "log": "docs/evidence/lms-one-run-20261015/agent-c/lms-batches-clock-01.log",
+  "origin": "http://127.0.0.1:3159",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "exitCode": 0
+}

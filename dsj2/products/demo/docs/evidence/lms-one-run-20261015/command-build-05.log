@@ -1,0 +1,69 @@
+$ pnpm db:generate && pnpm -r build
+$ pnpm --filter @demo/database generate
+$ prisma generate
+Prisma schema loaded from prisma\schema.prisma
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.19.3 -> 8.0.0-rc.22                 │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+
+✔ Generated Prisma Client (v6.19.3) to .\..\..\node_modules\.pnpm\@prisma+client@6.19.3_prism_1d040ab5215f59f0e27ddee7f0cf082e\node_modules\@prisma\client in 1.10s
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
+
+Scope: 8 of 9 workspace projects
+packages/contracts build$ tsc --noEmit
+packages/database build$ tsc --noEmit
+packages/database build: Done
+packages/contracts build: Done
+apps/web build$ next build
+packages/printing build$ tsc --noEmit
+packages/printing build: Done
+apps/api build$ tsc --noEmit
+apps/render-worker build$ tsc --noEmit
+apps/render-worker build: Done
+apps/web build:    ▲ Next.js 15.5.25
+apps/web build:    - Experiments (use with caution):
+apps/web build:      · cpus: 2
+apps/web build:      · proxyTimeout: 210000
+apps/web build:    Creating an optimized production build ...
+apps/web build:    Using tsconfig file: tsconfig.build.json
+apps/web build:    Using tsconfig file: tsconfig.build.json
+apps/api build: Done
+apps/integration-worker build$ tsc --noEmit
+apps/web build:    Using tsconfig file: tsconfig.build.json
+apps/web build:  ✓ Compiled successfully in 22.7s
+apps/web build:    Linting and checking validity of types ...
+apps/web build:    
+apps/web build: Your tsconfig.json extends another configuration, which means we cannot add the Next.js TypeScript plugin automatically. To improve your development experience, we recommend adding the Next.js plugin (`"plugins": [{ "name": "next" }]`) manually to your TypeScript configuration. Learn more: https://nextjs.org/docs/app/api-reference/config/typescript#the-typescript-plugin
+apps/web build:    We detected TypeScript in your project and reconfigured your tsconfig.json file for you. Strict-mode is set to false by default.
+apps/web build:    The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+apps/web build:    	- include was set to ['**/*.ts', '**/*.tsx', '.next/types/**/*.ts', 'next-env.d.ts', '.next-lms-final/types/**/*.ts']
+apps/web build:  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+apps/integration-worker build: Done
+apps/web build:    Collecting page data ...
+apps/web build:    Generating static pages (0/3) ...
+apps/web build:  ✓ Generating static pages (3/3)
+apps/web build:    Finalizing page optimization ...
+apps/web build:    Collecting build traces ...
+apps/web build: Route (app)                                 Size  First Load JS
+apps/web build: ┌ ○ /_not-found                            996 B         103 kB
+apps/web build: ├ ƒ /[[...path]]                          238 kB         344 kB
+apps/web build: ├ ƒ /api/[...path]                         122 B         102 kB
+apps/web build: └ ƒ /invite                              3.33 kB         109 kB
+apps/web build: + First Load JS shared by all             102 kB
+apps/web build:   ├ chunks/35eb99f2-ac10e59429fc8161.js  54.2 kB
+apps/web build:   ├ chunks/689-174972865c883b07.js         46 kB
+apps/web build:   └ other shared chunks (total)          2.18 kB
+apps/web build: ƒ Middleware                             36.4 kB
+apps/web build: ○  (Static)   prerendered as static content
+apps/web build: ƒ  (Dynamic)  server-rendered on demand
+apps/web build: Done

@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "suiteRunId": "full-e2e-20261015-07",
+  "requestId": "047cc1c7-2166-4baa-ad21-c7c143d5f96f",
+  "nextId": "1fa04142-54f9-4eb2-8003-d9117e2bb00f",
+  "personId": "26e308a5-00eb-427f-85e9-22df2b188793",
+  "companies": [
+    {
+      "id": "0688ab98-1207-41fa-b61c-0caf82914df5",
+      "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+      "nameRu": "Синтетический исторический работодатель A fe02ad17",
+      "nameKz": "Синтетикалық жұмыс беруші A",
+      "legalForm": null,
+      "ownNameRu": null,
+      "ownNameKz": null,
+      "bin": "000598911240",
+      "addressRu": "Синтетический адрес",
+      "addressKz": "Синтетикалық мекенжай",
+      "archived": false,
+      "createdAt": "2026-10-15T10:24:51.138Z"
+    },
+    {
+      "id": "67c23319-a949-4545-be64-c02cd0733f2d",
+      "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+      "nameRu": "Синтетический исторический работодатель B 4b7b6653",
+      "nameKz": "Синтетикалық жұмыс беруші B",
+      "legalForm": null,
+      "ownNameRu": null,
+      "ownNameKz": null,
+      "bin": "000598911471",
+      "addressRu": "Синтетический адрес",
+      "addressKz": "Синтетикалық мекенжай",
+      "archived": false,
+      "createdAt": "2026-10-15T10:24:51.158Z"
+    }
+  ],
+  "actualRecipients": 100,
+  "actualDocuments": 105,
+  "actualDocumentFiles": 210,
+  "actualJobs": 212,
+  "mappedFieldsUiAndResolvedAndRenderedWordAgree": true,
+  "programmeScope": "Programs verified in UI/resolver and the 102 personal cards. Preserved BIOT/PTM protocol templates do not map SUBJECT; protocol dates/results/numbers/names verified in saved Word.",
+  "twoSupportedIndividualOverrides": [
+    "MANUAL",
+    "IMPORTED"
+  ],
+  "currentEmployerChanged": true,
+  "historicalSnapshotAndFileHashesUnchanged": true,
+  "reusedPersonHasNoOldAssignmentsDatesOrResult": true,
+  "officialUnsignedExport": "DENIED_ISSUANCE_NOT_COMPLETE",
+  "apiSetup": true,
+  "realUiResultApplyAndDirectorApproval": true,
+  "noMocks": true,
+  "sameFreshCheckpointContinuation": null,
+  "apiRequests": 851,
+  "elapsedMs": 941947.9668,
+  "humanActiveMs": null,
+  "checkpoints": [
+    {
+      "step": "fresh-100-UNKNOWN",
+      "elapsedMs": 1249.3917000000074,
+      "revision": 1,
+      "rows": 100,
+      "apiSetup": true
+    },
+    {
+      "step": "100-common-and-two-supported-individual-overrides-reloaded",
+      "elapsedMs": 7170.607400000008,
+      "rawOrigins": [
+        "MANUAL",
+        "IMPORTED"
+      ],
+      "uiRows": [
+        1,
+        2,
+        100
+      ]
+    },
+    {
+      "step": "explicit-UI-results-server-confirmed",
+      "elapsedMs": 12869.7203,
+      "revision": 6,
+      "outcomes": 104
+    },
+    {
+      "step": "approved-and-issued-105-documents",
+      "elapsedMs": 50622.4783,
+      "revision": 6,
+      "documents": 105
+    },
+    {
+      "step": "rendered-and-inspected-210-real-document-files",
+      "elapsedMs": 938174.7342000001,
+      "jobs": 212,
+      "files": 210
+    },
+    {
+      "step": "employer-history-and-existing-file-hashes-preserved",
+      "elapsedMs": 941931.969,
+      "historyPeriods": 2,
+      "nextRequestAssignments": 0
+    }
+  ]
+}

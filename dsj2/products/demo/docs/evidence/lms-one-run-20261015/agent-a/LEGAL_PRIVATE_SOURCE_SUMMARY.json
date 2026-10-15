@@ -1,0 +1,96 @@
+{
+  "status": "ACTUAL_EXISTING_EVIDENCE_SANITIZED",
+  "checkedAt": "2026-10-15T01:25:34.392286+00:00",
+  "reviewer": "agent-a",
+  "fixture": {
+    "originalExcluded": "agent-b/copy-legal-run01/lms-negative-states-live/fixture.json",
+    "sha256": "d627b78ace43eb8c6c7f4d5a802e715e7b7640ed47872433921e3b16380efdf2",
+    "fixtureVersion": "lms-negative-real-domain-v1",
+    "caseCount": 7,
+    "signatureStatus": "AWAITING_SIGNATURE",
+    "actorOrCredentialsCopied": false,
+    "browserAcceptance": {
+      "path": "agent-b/copy-legal-run01/lms-negative-states-live/acceptance.json",
+      "sha256": "4ce6102073d20074548a58599d2858498a5ee30a8fbf1d119877a40fccd2b571",
+      "status": "PASS",
+      "requiredSignatureObservedResult": {
+        "status": "AWAITING_SIGNATURE",
+        "legalForm": "ELECTRONIC_ORIGINAL",
+        "issued": false,
+        "signatureInvented": false,
+        "enabledSignActions": 0,
+        "officialRegistryDisabled": true,
+        "publicationControlsUnavailable": true,
+        "unsignedPublicationDenied": 409,
+        "reason": "Подключение и проверка ЭЦП не настроены; требуется настройка подписантов директором"
+      }
+    }
+  },
+  "downloadedSet": {
+    "originalExcluded": "agent-b/copy-legal-run01/lms-operator-live/documents.zip",
+    "archiveSha256": "be44b021d925cd2f098497b7a50f0642903e4d9f8761bdc86c9aedac8e91de46",
+    "archiveBytes": 214764,
+    "memberCount": 7,
+    "members": [
+      {
+        "index": 1,
+        "extension": ".txt",
+        "bytes": 189,
+        "sha256": "50f2cc798d934ae1e6c644c176b0c06120271cfb7b34cdc06ed2cafeda400772"
+      },
+      {
+        "index": 2,
+        "extension": ".pdf",
+        "bytes": 79656,
+        "sha256": "6e85d8f5941f33e6b023a7c105a1c4ba9b751f20402eaceeefa1aed4f4dcc751",
+        "pages": 1,
+        "syntheticLabel": true,
+        "legalForm": "INFORMATION_CARD",
+        "documentNumber": "LMS-CERTIFICATE-00001"
+      },
+      {
+        "index": 3,
+        "extension": ".pdf",
+        "bytes": 76471,
+        "sha256": "097cf272ecb54a248ea20bae3e14713a616e6a0fd24b493081dbee938ff2a0bb",
+        "pages": 1,
+        "syntheticLabel": true,
+        "legalForm": "INFORMATION_CARD",
+        "documentNumber": "LMS-CARD-00001"
+      },
+      {
+        "index": 4,
+        "extension": ".pdf",
+        "bytes": 82147,
+        "sha256": "5f992ff75c2a058fb60b8816d3ae6f479329de95cc5550d59e3e568ca1ba181e",
+        "pages": 1,
+        "syntheticLabel": true,
+        "legalForm": "INFORMATION_CARD",
+        "documentNumber": "LMS-PROTOCOL-00001"
+      },
+      {
+        "index": 5,
+        "extension": ".json",
+        "bytes": 2248,
+        "sha256": "1fd500b6f68a4e9689b3d2cf8c240172f3cd1185de711e5f494d7ee3da2169b6"
+      },
+      {
+        "index": 6,
+        "extension": ".tsv",
+        "bytes": 478,
+        "sha256": "b5ca00c4443f3bd709566a479041cbda52ff9d3db602499adc3c4c64d121b6a5"
+      },
+      {
+        "index": 7,
+        "extension": ".txt",
+        "bytes": 503,
+        "sha256": "161b84741c431ca123ff86207a4b12dd0c16e60b113204834c24b7fd123e19c3"
+      }
+    ],
+    "actualBrowserRecord": {
+      "path": "agent-b/copy-legal-run01/lms-operator-live/actions.json",
+      "sha256": "933b54691eb367b8bc664d9d29dfd518ef5027893471e3742121d354ac5d2090"
+    }
+  },
+  "boundary": "Read existing files only. Original fixture and archive remain excluded. Byte/member inspection corroborates recorded local synthetic download; this is not a new browser run, real signature, physical print or provider receipt."
+}

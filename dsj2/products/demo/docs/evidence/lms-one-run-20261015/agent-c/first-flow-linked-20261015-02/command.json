@@ -1,0 +1,26 @@
+{
+  "status": "FAIL",
+  "command": "pnpm --filter @demo/web exec playwright test e2e/lms-first-flow-live.spec.ts --project=remaining --no-deps",
+  "runtime": "../full-e2e-20261015-04/runtime-start.json",
+  "buildId": "67WzZeXBqGI1ReRhjqN3k",
+  "source": [
+    {
+      "sha256": "b65b184bd293447a613c7634ecdd91c9e6473b1696f5d67a7539a2100d150ea0",
+      "path": "apps/web/e2e/lms-first-flow-live.spec.ts"
+    },
+    {
+      "sha256": "9de96d050686540cea0de45c3e25d4c09346a728dfa91b284fdc36ce2cbb01bf",
+      "path": "scripts/verification/lms-first-flow-readback.ts"
+    },
+    {
+      "sha256": "6007768165f609c5c857207b6f24ccb503284d79af086c788690708bea476ff9",
+      "path": "apps/web/e2e/operator-role-fixture.ts"
+    },
+    {
+      "sha256": "d69a33920bb815acee6ce53c9b2a554b92fb05f3fab61e565da4b27fc978845a",
+      "path": "scripts/verification/lms-full-e2e-env.ps1"
+    }
+  ],
+  "exitCode": 1,
+  "failure": "Existing center has no registered LMS template versions; actual Settings UI cannot review or approve missing rows. Read-only DB and DOM evidence retained."
+}

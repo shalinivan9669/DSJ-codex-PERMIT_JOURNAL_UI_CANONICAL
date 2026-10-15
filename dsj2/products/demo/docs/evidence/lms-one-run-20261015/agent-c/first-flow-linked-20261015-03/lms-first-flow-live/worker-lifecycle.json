@@ -1,0 +1,38 @@
+[
+  {
+    "event": "STARTED",
+    "pid": 43708,
+    "ordinal": 1,
+    "at": "2026-10-15T01:15:44.196Z",
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "entrypoint": "apps/integration-worker/src/main.ts",
+    "shell": false
+  },
+  {
+    "event": "STOPPED",
+    "pid": 43708,
+    "ordinal": 1,
+    "at": "2026-10-15T01:15:48.198Z",
+    "reason": "All learner and director UI contexts closed after confirmed result",
+    "code": null,
+    "signal": "SIGTERM"
+  },
+  {
+    "event": "STARTED",
+    "pid": 36596,
+    "ordinal": 2,
+    "at": "2026-10-15T01:15:48.210Z",
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "entrypoint": "apps/integration-worker/src/main.ts",
+    "shell": false
+  },
+  {
+    "event": "STOPPED",
+    "pid": 36596,
+    "ordinal": 2,
+    "at": "2026-10-15T01:16:38.834Z",
+    "reason": "Test cleanup stops only its current owned child PID",
+    "code": null,
+    "signal": "SIGTERM"
+  }
+]

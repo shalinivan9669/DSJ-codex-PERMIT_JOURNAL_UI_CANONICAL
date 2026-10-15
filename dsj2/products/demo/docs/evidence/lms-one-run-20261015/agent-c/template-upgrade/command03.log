@@ -1,0 +1,13 @@
+▶ S11: existing-center LMS template upgrade is append-only and actual HTTP approval preserves role, scope and byte validation
+  ✔ dry-run is read-only; two concurrent applies add exactly three unapproved forms and preserve old bytes/data (66.5761ms)
+  ✔ actual director approval works for all three LMS forms, audits the exact actor and denies learner/foreign scope (151.1937ms)
+  ✔ unknown historical form and missing/corrupt private template bytes cannot be approved (57.3557ms)
+✔ S11: existing-center LMS template upgrade is append-only and actual HTTP approval preserves role, scope and byte validation (883.0662ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2788.1704

@@ -1,0 +1,40 @@
+{
+  "status": "PASS_CORRECTED_CANDIDATE_SOURCE_REVIEW_ONLY",
+  "reviewedAtUtc": "2026-10-15T09:09:23.355235+00:00",
+  "sourcePath": "apps/web/e2e/operator-keyboard-helpers.ts",
+  "beforeSha256": "715c8e9054aadda26c22fe3de132941bc922dd9682a47364210be3c2d0b96faf",
+  "candidateSha256": "1c6e38731a189e9816cbd7a5ec0f1def3c85cd94ad24b0ad8650148ea36a96d8",
+  "ast": {
+    "status": "PASS_CANDIDATE_SOURCE_ONLY",
+    "beforeSha256": "715c8e9054aadda26c22fe3de132941bc922dd9682a47364210be3c2d0b96faf",
+    "candidateSha256": "1c6e38731a189e9816cbd7a5ec0f1def3c85cd94ad24b0ad8650148ea36a96d8",
+    "assertionsBefore": 17,
+    "assertionsAfter": 19,
+    "removedAssertions": [],
+    "addedAssertions": [
+      "expect(requestMatch).not.toBeNull()",
+      "expect(new URL(page.url()).pathname).toBe(requestPath)"
+    ],
+    "parseErrors": 0
+  },
+  "reviewedBehavior": [
+    "Capture the exact request ID from either /requests/:id or /requests/:id/edit before leaving.",
+    "Navigate with the existing keyboard action to the actual request list.",
+    "Intersect the original exact-title link with the exact canonical /requests/:id href; never choose first() or alter the synthetic title.",
+    "Keep existing search fallback, title assertion, keyboard navigation and measured counters.",
+    "Assert the final canonical pathname matches the captured request ID."
+  ],
+  "rejectedEarlierCandidate": {
+    "sha256": "ec344fa3e7aa9f18f87d1b719960561535ea1b586b9b2890e32810d2dc33e0d0",
+    "reason": "Rejected during peer review because it allowed only /requests/:id and failed supported /edit entry; never treat as approved final candidate."
+  },
+  "sourceContract": [
+    {
+      "path": "apps/web/components/request-list.tsx",
+      "sha256": "e08758b6a81f149194eb6598f9ec9fc32cda909ebc4747f7ea4e002ec44a68e5",
+      "facts": "Creation navigates to /requests/:id/edit; list title link navigates to /requests/:id."
+    }
+  ],
+  "actualBrowserExecutionByThisReview": false,
+  "overallAcceptance": false
+}

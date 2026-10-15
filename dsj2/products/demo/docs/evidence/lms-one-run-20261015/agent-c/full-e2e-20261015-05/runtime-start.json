@@ -1,0 +1,20 @@
+{
+  "origin": "http://127.0.0.1:3159",
+  "database": "demo_test_lms_browser_20261015",
+  "startedAt": "2026-10-15T01:15:14.7155269Z",
+  "source": "runtime-source.json",
+  "preflight": {
+    "loginStatus": 200,
+    "unauthenticatedSessionStatus": 401
+  },
+  "sessions": {
+    "api": 37455,
+    "web": 13960,
+    "render": 62846
+  },
+  "standaloneIntegrationWorker": "OFF; first-flow owns its child lifecycle",
+  "webMode": "production next start",
+  "apiOrigin": "http://127.0.0.1:4159",
+  "status": "RUNNING",
+  "webBuildId": "BV_9Qiz8LMZrZB5Rfnihw"
+}

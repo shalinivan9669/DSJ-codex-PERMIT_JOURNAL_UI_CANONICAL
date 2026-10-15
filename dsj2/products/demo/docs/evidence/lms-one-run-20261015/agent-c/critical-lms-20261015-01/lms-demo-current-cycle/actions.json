@@ -1,0 +1,414 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-15T00:39:06.408Z",
+  "runtime": {
+    "origin": "http://127.0.0.1:3159",
+    "distDirectory": ".next-lms-one-run",
+    "buildId": null,
+    "runtimeKind": "build identity unavailable",
+    "historicalBeforeMeasurement": false
+  },
+  "source": {
+    "requestId": "bfa0496c-9b58-43ee-a5f0-3edfc604e6cd",
+    "proposalId": "d785c7fc-b125-42e5-9cab-5bf5a5a221cd",
+    "issuanceId": "2ec15c79-46cb-4be0-84b9-4be48fe1a464"
+  },
+  "phase": "current ordinary regression",
+  "prerequisites": [
+    "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+    "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+  ],
+  "setupMilliseconds": 1512.2495999999992,
+  "measurements": [
+    {
+      "scenario": "З: current ordinary prepared group and one manual exception",
+      "role": "OPERATOR",
+      "startBoundary": "Authenticated operator, prepared current request exists; editor not yet open",
+      "preconditions": [
+        "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+        "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open the existing ordinary request",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 83.54470000000038
+        },
+        {
+          "kind": "field",
+          "label": "New individual position exception in row two",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 41.69889999999941
+        },
+        {
+          "kind": "key",
+          "label": "Leave the edited field with Tab",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.310999999999694
+        },
+        {
+          "kind": "navigate",
+          "label": "Return to requests without losing saved rows",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 55.99289999999928
+        },
+        {
+          "kind": "navigate",
+          "label": "Resume the same request without a new wizard",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 56.48359999999957
+        },
+        {
+          "kind": "click",
+          "label": "Submit the prepared group to director",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 30.91240000000107
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 1,
+      "fields": 1,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 3,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 1774.5182999999997,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "status": "PENDING",
+        "requestId": "bfa0496c-9b58-43ee-a5f0-3edfc604e6cd",
+        "people": 2,
+        "exceptionRetained": true,
+        "namesReentered": false
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "З: current ordinary prepared group and one manual exception",
+      "startState": "Authenticated operator, prepared current request exists; editor not yet open",
+      "goal": "Keep the compact two-person list, save one individual exception and submit the same group for director review",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the existing ordinary request",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 83.54470000000038
+        },
+        {
+          "kind": "field",
+          "label": "New individual position exception in row two",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 41.69889999999941
+        },
+        {
+          "kind": "key",
+          "label": "Leave the edited field with Tab",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 18.310999999999694
+        },
+        {
+          "kind": "navigate",
+          "label": "Return to requests without losing saved rows",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 55.99289999999928
+        },
+        {
+          "kind": "navigate",
+          "label": "Resume the same request without a new wizard",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 56.48359999999957
+        },
+        {
+          "kind": "click",
+          "label": "Submit the prepared group to director",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 30.91240000000107
+        }
+      ],
+      "filledFields": 1
+    },
+    {
+      "scenario": "З: separate director preview, download and decision",
+      "role": "DIRECTOR",
+      "startBoundary": "Director already authenticated; submitted immutable revision exists",
+      "preconditions": [
+        "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+        "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open the submitted revision",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 77.13490000000093
+        },
+        {
+          "kind": "select",
+          "label": "Choose existing first person and form for preview",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 211.18719999999848
+        },
+        {
+          "kind": "click",
+          "label": "Render the actual submitted document preview",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 45.95309999999881
+        },
+        {
+          "kind": "click",
+          "label": "Download actual preview DOCX",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 34.18699999999808
+        },
+        {
+          "kind": "click",
+          "label": "Approve this exact ordinary revision",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 31.442799999997078
+        }
+      ],
+      "clicks": 3,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 1,
+      "decisions": 4,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 23973.103300000002,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "approved": true,
+        "preview": "real PDF",
+        "downloaded": "real DOCX",
+        "proposalId": "d785c7fc-b125-42e5-9cab-5bf5a5a221cd"
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "З: separate director preview, download and decision",
+      "startState": "Director already authenticated; submitted immutable revision exists",
+      "goal": "Inspect a real PDF, download its DOCX and approve that exact revision",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the submitted revision",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 77.13490000000093
+        },
+        {
+          "kind": "select",
+          "label": "Choose existing first person and form for preview",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 211.18719999999848
+        },
+        {
+          "kind": "click",
+          "label": "Render the actual submitted document preview",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 45.95309999999881
+        },
+        {
+          "kind": "click",
+          "label": "Download actual preview DOCX",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 34.18699999999808
+        },
+        {
+          "kind": "click",
+          "label": "Approve this exact ordinary revision",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 31.442799999997078
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "З: approved ordinary prepared files",
+      "role": "OPERATOR",
+      "startBoundary": "Original operator editor still open; director decision arrives without manual refresh",
+      "preconditions": [
+        "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+        "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Generate the approved ordinary documents",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 37.66060000000289
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 70697.9022,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "requestId": "bfa0496c-9b58-43ee-a5f0-3edfc604e6cd",
+        "documents": 4,
+        "realOriginalFiles": 10,
+        "historicalAutoPreserved": true,
+        "assignmentLmsMetadataAdded": false
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "З: approved ordinary prepared files",
+      "startState": "Original operator editor still open; director decision arrives without manual refresh",
+      "goal": "Generate saved ordinary files with no LMS fields or repeated people/forms",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Generate the approved ordinary documents",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 37.66060000000289
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "З: ordinary saved PDF and unsigned publication boundary",
+      "role": "OPERATOR",
+      "startBoundary": "Ordinary documents and artifacts prepared; genuine required signatures are not configured",
+      "preconditions": [
+        "Prepared current ordinary DEMO regression, not first entry: two known synthetic people, company, print assignments, dates and ordinary center signatories are created through actual authorized API calls before measurement.",
+        "Operator and director already authenticated in separate real-role contexts; no LMS course, enrollment, VerifiedExamResult, signing receipt or workflow override is supplied."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open the current saved request record",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 89.24020000000019
+        },
+        {
+          "kind": "click",
+          "label": "Download the saved prepared PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 257.64229999999225
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 587.1248999999953,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "downloadedPreparedPdf": true,
+        "officialRegistryDisabled": true,
+        "unsignedQrUnavailable": true,
+        "verificationGuardStatus": 409,
+        "noSignatureInvented": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "З: ordinary saved PDF and unsigned publication boundary",
+      "startState": "Ordinary documents and artifacts prepared; genuine required signatures are not configured",
+      "goal": "Download a real prepared PDF and see the precise block on official unsigned publication",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the current saved request record",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 89.24020000000019
+        },
+        {
+          "kind": "click",
+          "label": "Download the saved prepared PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 257.64229999999225
+        }
+      ],
+      "filledFields": 0
+    }
+  ],
+  "historicalBeforeMeasurement": "Excluded by user instruction; this current test does not fabricate a before value or time saving.",
+  "publicationBoundary": "Ordinary prepared files retain the existing real-signature requirement. Positive registry/QR is covered separately by the LMS information-card flow; this ordinary path proves its honest unsigned guard without bypass.",
+  "physicalPrint": false
+}

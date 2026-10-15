@@ -1,0 +1,10 @@
+{
+  "log": "lms-learning-02.log",
+  "fixtureVersion": "lms-one-run-synthetic-v1",
+  "startedAt": "2026-10-14T21:00:37.6266165Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "finishedAt": "2026-10-14T21:00:42.3663751Z",
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-learning.test.ts",
+  "database": "demo_test_lms_integration_20261015",
+  "exitCode": 0
+}

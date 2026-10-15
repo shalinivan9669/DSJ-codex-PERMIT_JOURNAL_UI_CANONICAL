@@ -1,0 +1,1041 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\playwright.config.ts",
+    "rootDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-producer",
+        "name": "common-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-history-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "common-consumers",
+        "name": "common-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-producer",
+        "name": "g1-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-keyboard-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "g1-consumers",
+        "name": "g1-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-producer",
+        "name": "portal-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-three-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "portal-consumer",
+        "name": "portal-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/final-portal-390-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-producer",
+        "name": "manual-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-resume",
+        "name": "manual-resume",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "manual-consumers",
+        "name": "manual-consumers",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-producer",
+        "name": "domain-producer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-role-full-fix-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "domain-consumer",
+        "name": "domain-consumer",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "remaining",
+        "name": "remaining",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [
+          "/operator-common-history-live\\.spec\\.ts$/",
+          "/operator-common-resume-live\\.spec\\.ts$/",
+          "/final-repeat-basis-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-live\\.spec\\.ts$/",
+          "/operator-g1-complete\\.spec\\.ts$/",
+          "/operator-g1-resume-live\\.spec\\.ts$/",
+          "/operator-g1-keyboard-resume-live\\.spec\\.ts$/",
+          "/final-portal-three-live\\.spec\\.ts$/",
+          "/final-portal-390-live\\.spec\\.ts$/",
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-resume-live\\.spec\\.ts$/",
+          "/operator-minimal-manual-files-live\\.spec\\.ts$/",
+          "/operator-minimal-review-layout-live\\.spec\\.ts$/",
+          "/operator-role-full-fix-live\\.spec\\.ts$/",
+          "/operator-domain-acceptance-live\\.spec\\.ts$/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 240000
+      },
+      {
+        "outputDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/docs/evidence/lms-one-run-20261015/agent-c/critical-lms-20261015-01/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "print-pack-scale",
+        "name": "print-pack-scale",
+        "testDir": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo/apps/web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/remaining-print-pack-scale-live\\.spec\\.ts$/"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\acceptance-failure-reporter.ts",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "runAgents": "none",
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.58.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "lms-assignment-batches-live.spec.ts",
+      "file": "lms-assignment-batches-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "prepared 1/10/100/250 assignments preserve good rows and repair only one employment error without reentry",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 30926,
+                  "error": {
+                    "message": "TimeoutError: locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Найти сотрудника', exact: true })\u001b[22m\n",
+                    "stack": "TimeoutError: locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Найти сотрудника', exact: true })\u001b[22m\n\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-assignment-batches-live.spec.ts:169:6",
+                    "location": {
+                      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-assignment-batches-live.spec.ts",
+                      "column": 6,
+                      "line": 169
+                    },
+                    "snippet": "  167 |   await page\n  168 |     .getByRole(\"textbox\", { name: \"Найти сотрудника\", exact: true })\n> 169 |     .fill(fixture.ambiguous.name);\n      |      ^\n  170 |   const ambiguousRows = page\n  171 |     .getByRole(\"row\")\n  172 |     .filter({ hasText: fixture.ambiguous.name });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-assignment-batches-live.spec.ts",
+                        "column": 6,
+                        "line": 169
+                      },
+                      "message": "TimeoutError: locator.fill: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Найти сотрудника', exact: true })\u001b[22m\n\n\n  167 |   await page\n  168 |     .getByRole(\"textbox\", { name: \"Найти сотрудника\", exact: true })\n> 169 |     .fill(fixture.ambiguous.name);\n      |      ^\n  170 |   const ambiguousRows = page\n  171 |     .getByRole(\"row\")\n  172 |     .filter({ hasText: fixture.ambiguous.name });\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-assignment-batches-live.spec.ts:169:6"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:36:43.865Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-assignment-batches-liv-ee74a-yment-error-without-reentry-remaining\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-assignment-batches-liv-ee74a-yment-error-without-reentry-remaining\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-assignment-batches-live.spec.ts",
+                    "column": 6,
+                    "line": 169
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "626a3d4e86deb3c2a188-81826df7153409954f2b",
+          "file": "lms-assignment-batches-live.spec.ts",
+          "line": 7,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-conflict-live.spec.ts",
+      "file": "lms-conflict-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "real concurrent tabs preserve saved answers, explain conflict, and Enter never submits an exam",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7522,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:37:16.452Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bc645fc3d67e7e66b574-c1a3488cb19656cb39a2",
+          "file": "lms-conflict-live.spec.ts",
+          "line": 6,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-demo-baseline.spec.ts",
+      "file": "lms-demo-baseline.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "current DEMO draft: known person autosaves and survives a return without a new wizard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2843,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:37:24.355Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5b51e82a9bbf934203e1-f6bd0d1166962b330532",
+          "file": "lms-demo-baseline.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "current ordinary DEMO: prepared compact group, manual exception, director preview and decision, real files and honest unsigned publication guard",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 99462,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:37:27.214Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5b51e82a9bbf934203e1-134010fd71a1b4479092",
+          "file": "lms-demo-baseline.spec.ts",
+          "line": 151,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-first-entry-live.spec.ts",
+      "file": "lms-first-entry-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "first learner registration uses three fields and explicit consent without center onboarding",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1754,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:39:06.710Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "483d382ff908c0c940c4-e47c7cd696f4325c7e8e",
+          "file": "lms-first-entry-live.spec.ts",
+          "line": 24,
+          "column": 5
+        },
+        {
+          "title": "first course is authored and published through UI, autosave survives navigation, calendar persists",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 150000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3647,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:39:08.483Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "483d382ff908c0c940c4-bb8058df5f12185f4841",
+          "file": "lms-first-entry-live.spec.ts",
+          "line": 112,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-first-flow-live.spec.ts",
+      "file": "lms-first-flow-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "first UI-authored synthetic sanitary course links registration, group assignment, private PDF, exam, real documents, QR and automatic list",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 600000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 12028,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 6\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"message\": \"Документ должен использовать сохранённый результат. Исправление оформляется отдельной редакцией\",\u001b[39m\n\u001b[31m+     \"resultId\": \"3032a756-84d3-4f8a-984c-354bbbb8a816\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 6\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"message\": \"Документ должен использовать сохранённый результат. Исправление оформляется отдельной редакцией\",\u001b[39m\n\u001b[31m+     \"resultId\": \"3032a756-84d3-4f8a-984c-354bbbb8a816\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-first-flow-live.spec.ts:714:29",
+                    "location": {
+                      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-first-flow-live.spec.ts",
+                      "column": 29,
+                      "line": 714
+                    },
+                    "snippet": "  712 |     );\n  713 |     const prepared = await (await preparation).json();\n> 714 |     expect(prepared.errors).toEqual([]);\n      |                             ^\n  715 |     expect(prepared.items).toHaveLength(3);\n  716 |     const requestId = prepared.items[0].requestId;\n  717 |     const approvals = await (await page.request.get(\"/api/approvals\")).json();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-first-flow-live.spec.ts",
+                        "column": 29,
+                        "line": 714
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 6\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"message\": \"Документ должен использовать сохранённый результат. Исправление оформляется отдельной редакцией\",\u001b[39m\n\u001b[31m+     \"resultId\": \"3032a756-84d3-4f8a-984c-354bbbb8a816\",\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  712 |     );\n  713 |     const prepared = await (await preparation).json();\n> 714 |     expect(prepared.errors).toEqual([]);\n      |                             ^\n  715 |     expect(prepared.items).toHaveLength(3);\n  716 |     const requestId = prepared.items[0].requestId;\n  717 |     const approvals = await (await page.request.get(\"/api/approvals\")).json();\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-first-flow-live.spec.ts:714:29"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "buffer": ""
+                    },
+                    {
+                      "text": "(node:32196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    },
+                    {
+                      "text": "(node:39860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:39:12.170Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-first-flow-live-first--9b3ca-ments-QR-and-automatic-list-remaining\\test-failed-1.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-first-flow-live-first--9b3ca-ments-QR-and-automatic-list-remaining\\test-failed-2.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-first-flow-live-first--9b3ca-ments-QR-and-automatic-list-remaining\\test-failed-3.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-first-flow-live-first--9b3ca-ments-QR-and-automatic-list-remaining\\test-failed-4.png"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-first-flow-live.spec.ts",
+                    "column": 29,
+                    "line": 714
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0b3fb2dc05ec478ae376-60d0b2af6b27c708bcbf",
+          "file": "lms-first-flow-live.spec.ts",
+          "line": 9,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-geometry-live.spec.ts",
+      "file": "lms-geometry-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "secondary LMS screens preserve readable RU and KZ controls at all four acceptance widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11885,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:39:26.160Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ccee8524455f88c418b9-c56ed17725d8c28a906a",
+          "file": "lms-geometry-live.spec.ts",
+          "line": 23,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-learning-live.spec.ts",
+      "file": "lms-learning-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "prepared assignment and learner continuation, RU/KZ/mobile, actual exam autosave and offline recovery",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6676,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "LMS_BROWSER_ASSIGNMENT_CONFIRMED\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LESSON_OPEN\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_VIEWPORT_360\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_KZ\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_RU\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_VIEWPORT_390\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_KZ\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_RU\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_VIEWPORT_768\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_KZ\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_RU\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_VIEWPORT_1440\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_KZ\n"
+                    },
+                    {
+                      "text": "LMS_BROWSER_LANGUAGE_RU\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:39:38.443Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e90af9943e68e4e8e1f5-e82cf435a7ca0a309385",
+          "file": "lms-learning-live.spec.ts",
+          "line": 34,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-negative-states-live.spec.ts",
+      "file": "lms-negative-states-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "prepared negative results and unknown delivery remain human-readable and fail closed without blind retries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 360000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 48672,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:39:45.151Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ebdc44143a36349a8f47-1d9192734115905184f0",
+          "file": "lms-negative-states-live.spec.ts",
+          "line": 18,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-operator-live.spec.ts",
+      "file": "lms-operator-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "prepared document bundle, director approval, employer documents, access extension and local recovery",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 53919,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('row').filter({ has: locator('a.row-title[href=\"/requests/a4f0aa7a-3db1-41c0-829d-41c07cd7f19a\"]') })\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('row').filter({ has: locator('a.row-title[href=\"/requests/a4f0aa7a-3db1-41c0-829d-41c07cd7f19a\"]') })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('row').filter({ has: locator('a.row-title[href=\"/requests/a4f0aa7a-3db1-41c0-829d-41c07cd7f19a\"]') })\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('row').filter({ has: locator('a.row-title[href=\"/requests/a4f0aa7a-3db1-41c0-829d-41c07cd7f19a\"]') })\u001b[22m\n\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-operator-live.spec.ts:216:26",
+                    "location": {
+                      "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-operator-live.spec.ts",
+                      "column": 26,
+                      "line": 216
+                    },
+                    "snippet": "  214 |     ),\n  215 |   });\n> 216 |   await expect(printRow).toBeVisible();\n      |                          ^\n  217 |   printEntry.finish({\n  218 |     requestId: prepared.items[0].requestId,\n  219 |     readyRowVisible: true,"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-operator-live.spec.ts",
+                        "column": 26,
+                        "line": 216
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('row').filter({ has: locator('a.row-title[href=\"/requests/a4f0aa7a-3db1-41c0-829d-41c07cd7f19a\"]') })\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('row').filter({ has: locator('a.row-title[href=\"/requests/a4f0aa7a-3db1-41c0-829d-41c07cd7f19a\"]') })\u001b[22m\n\n\n  214 |     ),\n  215 |   });\n> 216 |   await expect(printRow).toBeVisible();\n      |                          ^\n  217 |   printEntry.finish({\n  218 |     requestId: prepared.items[0].requestId,\n  219 |     readyRowVisible: true,\n    at C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-operator-live.spec.ts:216:26"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:40:33.867Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-operator-live-prepared-150b8-xtension-and-local-recovery-remaining\\test-failed-1.png"
+                    },
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-operator-live-prepared-150b8-xtension-and-local-recovery-remaining\\test-failed-2.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\docs\\evidence\\lms-one-run-20261015\\agent-c\\critical-lms-20261015-01\\test-results\\lms-operator-live-prepared-150b8-xtension-and-local-recovery-remaining\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-operator-live.spec.ts",
+                    "column": 26,
+                    "line": 216
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c3f0c4dd8c17f275b957-6fbd9d6ea54c03392821",
+          "file": "lms-operator-live.spec.ts",
+          "line": 24,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-paper-signature-live.spec.ts",
+      "file": "lms-paper-signature-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "synthetic paper original requires a separate immutable director attestation and never invents electronic signatures",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 34181,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:41:29.819Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9b1e7cd7c3ccdeeb7ba8-c6b9dbf8f7053d896bbe",
+          "file": "lms-paper-signature-live.spec.ts",
+          "line": 47,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-selection-regression-live.spec.ts",
+      "file": "lms-selection-regression-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "operator choices survive real filtering and partial preparation; external exam dates remain separate and correctable without reentry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13673,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "buffer": "KG5vZGU6MjkzNjgpIFdhcm5pbmc6IFRoZSAnTk9fQ09MT1InIGVudiBpcyBpZ25vcmVkIGR1ZSB0byB0aGUgJ0ZPUkNFX0NPTE9SJyBlbnYgYmVpbmcgc2V0LgooVXNlIGBub2RlIC0tdHJhY2Utd2FybmluZ3MgLi4uYCB0byBzaG93IHdoZXJlIHRoZSB3YXJuaW5nIHdhcyBjcmVhdGVkKQoobm9kZTo2ODUyKSBXYXJuaW5nOiBUaGUgJ05PX0NPTE9SJyBlbnYgaXMgaWdub3JlZCBkdWUgdG8gdGhlICdGT1JDRV9DT0xPUicgZW52IGJlaW5nIHNldC4KKFVzZSBgbm9kZSAtLXRyYWNlLXdhcm5pbmdzIC4uLmAgdG8gc2hvdyB3aGVyZSB0aGUgd2FybmluZyB3YXMgY3JlYXRlZCkK"
+                    },
+                    {
+                      "buffer": "KG5vZGU6MzkxNTIpIFdhcm5pbmc6IFRoZSAnTk9fQ09MT1InIGVudiBpcyBpZ25vcmVkIGR1ZSB0byB0aGUgJ0ZPUkNFX0NPTE9SJyBlbnYgYmVpbmcgc2V0LgooVXNlIGBub2RlIC0tdHJhY2Utd2FybmluZ3MgLi4uYCB0byBzaG93IHdoZXJlIHRoZSB3YXJuaW5nIHdhcyBjcmVhdGVkKQoobm9kZToyMjQwKSBXYXJuaW5nOiBUaGUgJ05PX0NPTE9SJyBlbnYgaXMgaWdub3JlZCBkdWUgdG8gdGhlICdGT1JDRV9DT0xPUicgZW52IGJlaW5nIHNldC4KKFVzZSBgbm9kZSAtLXRyYWNlLXdhcm5pbmdzIC4uLmAgdG8gc2hvdyB3aGVyZSB0aGUgd2FybmluZyB3YXMgY3JlYXRlZCkK"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:42:04.467Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "67f18ca467fdc0167163-ed8e4528baab4f903f73",
+          "file": "lms-selection-regression-live.spec.ts",
+          "line": 8,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "lms-video-live.spec.ts",
+      "file": "lms-video-live.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "L07 real private video plays, pauses, resumes after reload and cannot complete by seeking",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "remaining",
+              "projectName": "remaining",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 18504,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-15T00:42:18.179Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "72e6602a77b60247c342-a3e921fd398707afef60",
+          "file": "lms-video-live.spec.ts",
+          "line": 6,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-15T00:36:42.355Z",
+    "duration": 354635.375,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

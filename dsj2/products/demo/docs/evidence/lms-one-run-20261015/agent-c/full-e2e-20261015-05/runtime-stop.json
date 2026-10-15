@@ -1,0 +1,28 @@
+{
+  "stoppedAt": "2026-10-15T09:34:15.0000907Z",
+  "status": "OWNED_RUNTIME_STOPPED_FOR_NEW_BUILD",
+  "method": "Ctrl+C via write_stdin",
+  "sessions": {
+    "api": 37455,
+    "render": 62846,
+    "web": 13960
+  },
+  "observedTerminalExitCodes": {
+    "api": 1,
+    "render": 1,
+    "web": 1
+  },
+  "verifiedPorts3159And4159HaveNoListeners": true,
+  "oldApiPid30732Present": false,
+  "oldWebPid10928Present": false,
+  "matchingApiRenderIntegrationNodeProcesses": [],
+  "postgresAndRootWakeGuardUntouched": true,
+  "originalRuntimeRun": "full-e2e-20261015-05",
+  "laterUses": [
+    "full-e2e-20261015-06",
+    "domain-grade-20261015-02",
+    "domain-grade-20261015-03",
+    "agent-b/g1-fresh-deep-20261015-02"
+  ],
+  "reason": "Actual employer identity correction requires fresh full build and runtime. All old browser targets terminal; independent Nest HTTP target completed4PASS and disconnected before this stop."
+}

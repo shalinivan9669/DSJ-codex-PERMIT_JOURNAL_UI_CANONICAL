@@ -1,0 +1,22 @@
+{
+  "runId": "timing-final-recheck-20261015-01",
+  "fullRunId": "full-e2e-20261015-07",
+  "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=remaining --no-deps e2e/operator-timing.spec.ts",
+  "status": "PASS",
+  "exitCode": 0,
+  "startedAt": "2026-10-15T12:44:01.4194391Z",
+  "buildId": "9daYzb73gsxr8g-J7toW7",
+  "sourceManifest": "agent-c/timing-final-recheck-20261015-01/test-source.json",
+  "runtimeSource": "agent-c/full-e2e-20261015-07/runtime-source.json",
+  "finishedAt": "2026-10-15T12:44:23.0635015Z",
+  "stats": {
+    "startTime": "2026-10-15T12:44:03.338Z",
+    "duration": 19660.456,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "testSourceUnchanged": true,
+  "runtimeSourceUnchanged": true
+}

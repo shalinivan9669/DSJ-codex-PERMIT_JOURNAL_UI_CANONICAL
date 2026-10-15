@@ -1,0 +1,78 @@
+{
+  "reviewer": "Agent B",
+  "checkedAt": "2026-10-15T01:33:47.5649934Z",
+  "method": "Initial read-only source audit followed by root-authorized changes to only the final Python assembler and immutable review snapshots. Pure-function synthetic validation and py_compile executed; finalization, browser, database and canonical PASS generation not executed.",
+  "status": "CLOSED_BY_SOURCE_FIX_AND_SYNTHETIC_VALIDATION",
+  "safeGuards": [
+    "Candidate requires actual pnpm test:e2e command exit0/PASS and matching runId",
+    "Discovery actual count at least219 and exact executed expected count",
+    "No unexpected/skipped/flaky/global errors",
+    "Test source unchanged during actual execution",
+    "Required UX contexts and10numericmetrics, raw source SHA checked",
+    "External gates remain separately blocked; no full acceptance while privacy review missing"
+  ],
+  "findings": [
+    {
+      "id": "FINAL_ASSEMBLY01",
+      "state": "FIXED_AND_VALIDATED",
+      "location": "scripts/verification/lms-finalize-evidence.py:94",
+      "actual": "Finalizer reads missingMeasuredFields; current aggregator records missingMeasuredOrDescriptiveFields. No explicit adapter exists in inspected files.",
+      "required": "Use the current named field or explicitly normalize with provenance before validation. Do not fabricate missing counts.",
+      "resolution": "Strict validate_ux_measurement_shape requires missingMeasuredOrDescriptiveFields as an empty list. No legacy-key fallback; all ten metrics must exist and be finite nonnegative numeric values excluding booleans. Empty steps require all action counts including repeated fields to be zero."
+    },
+    {
+      "id": "FINAL_ASSEMBLY02",
+      "state": "FIXED_AND_VALIDATED",
+      "location": "scripts/verification/lms-finalize-evidence.py:149",
+      "actual": "Finalizer overwrites EXTERNAL_GATES.json after candidate and ROOT_GATES_REVIEW bind its pre-publication SHA.",
+      "required": "Preserve the reviewed immutable source or recompute all affected bindings consistently. Do not retain stale SHA for a changed file.",
+      "resolution": "EXTERNAL_GATES_REVIEWED.json is byte-identical to the original reviewed gate file. ROOT_GATES_FINAL_REVIEW.json binds that snapshot and unchanged two packets. Assembler validates exact bytes and FINAL_FACTS object equality before any canonical output; final EXTERNAL_GATES envelope adds LOCAL_ACCEPTED and preserves the three external objects unchanged. Candidate remaps historical gate/review paths before hashing, so snapshot hashes remain valid."
+    }
+  ],
+  "invocationNotes": {
+    "batchRun": "Set LMS_UX_BATCH_RUN to the same full run if claiming fresh full-run batch measurements; otherwise label prior targeted proof explicitly.",
+    "currentRun": "Set LMS_UX_CURRENT_RUN to the final completed run"
+  },
+  "unchangedBoundaries": [
+    "Optional teacher scope remains conditional, not an implemented positive role claim.",
+    "Unsigned ordinary documents retain registry/QR denial.",
+    "Electronic-original success is not claimed without real signatures.",
+    "First-entry/setup/other-role/authentication costs stay separate from prepared business-action budgets."
+  ],
+  "inputs": [
+    {
+      "path": "scripts/verification/lms-finalize-evidence.py",
+      "sha256": "74abce42d196dd39a8237a5b23745222870b66a2f18465b19ee2be48feb77af0"
+    },
+    {
+      "path": "scripts/verification/lms-final-criteria-candidate.py",
+      "sha256": "ad0f116465e689c92582a254bfee67ee16b4478323b6dcec58285cfadc0db175"
+    },
+    {
+      "path": "scripts/verification/lms-ux-draft.py",
+      "sha256": "0603286d81fb8f8f5a76962ef4a1f1b95e5b16c902b1665bbd9d1b3f55abac26"
+    }
+  ],
+  "validation": {
+    "cases": 17,
+    "pyCompile": "PASS",
+    "mainInvoked": false,
+    "path": "agent-b/finalizer-shape-validation.json",
+    "canonicalPassCreated": false,
+    "canonicalFilesUnchanged": true
+  },
+  "finalSource": {
+    "path": "scripts/verification/lms-finalize-evidence.py",
+    "sha256": "fd6d41af187fd4b44788838e66784d91c1b52acf9f2e10e40353b8c5ee1e896a"
+  },
+  "immutableGateBindings": [
+    {
+      "path": "EXTERNAL_GATES_REVIEWED.json",
+      "sha256": "6da4b3539fbaf734c0c1d8ded94ca1f36133190b49332fd3c868dbb133855807"
+    },
+    {
+      "path": "ROOT_GATES_FINAL_REVIEW.json",
+      "sha256": "34e1acef4f3df6bd4c2a33859b0c8b925b606dee0b70d1586f2f1d85fedcbb61"
+    }
+  ]
+}

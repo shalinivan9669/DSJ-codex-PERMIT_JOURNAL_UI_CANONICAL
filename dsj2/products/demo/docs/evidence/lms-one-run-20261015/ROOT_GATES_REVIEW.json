@@ -1,0 +1,60 @@
+{
+  "providerInputs": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P07",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P12",
+    "P13"
+  ],
+  "relatedEvidence": [
+    "agent-a/SECURITY_REVIEW.json",
+    "root-policy-tests.log",
+    "tests/lms-deployment-gates.test.ts",
+    "apps/api/src/lms/deployment-gate.ts"
+  ],
+  "providerConnection": "NOT_CONNECTED",
+  "productionDeploymentPerformed": false,
+  "reviewedAtUtc": "2026-10-15T01:19:08.2514105Z",
+  "realSignaturePerformed": false,
+  "networkSubmissionPerformed": false,
+  "sourceBinding": "Implementation commit is assigned by the final canonical evidence generator after the code commit; this review does not declare local goal complete.",
+  "reviewer": "root",
+  "actual": "Reviewed all P01-P13 entries with owners, missing inputs, statuses and exact independent sandbox/production/LMK boundaries. Personal-data packet enumerates 11 classes of copies, including private storage, render/temp, logs, backups, exports, provider and test evidence; retains unconfirmed production placement, documented bases/retention/deletion/incident responsibilities and unique-subject caveat.",
+  "status": "PASS_LOCAL_GATE_DOCUMENTATION",
+  "externalGateStates": [
+    {
+      "id": "PROVIDER_SANDBOX_ACCEPTED",
+      "status": "BLOCKED_EXTERNAL_INPUTS"
+    },
+    {
+      "id": "PRODUCTION_ACCEPTED",
+      "status": "BLOCKED_EXTERNAL_INPUTS"
+    },
+    {
+      "id": "LMK_MARK_CONFIRMED",
+      "status": "BLOCKED_EXTERNAL_INPUTS"
+    }
+  ],
+  "files": [
+    {
+      "path": "PROVIDER_CONNECTION_PACKET_RU.txt",
+      "sha256": "05af677bba338c21524b751ec665b1903fc35d323ddf41647076e4bddf29a965"
+    },
+    {
+      "path": "PERSONAL_DATA_DEPLOYMENT_GATES_RU.txt",
+      "sha256": "4224d31d241732f50bd9758316f42d15ed3a19f3bafee8f7c31794b95f81aae7"
+    },
+    {
+      "path": "EXTERNAL_GATES.json",
+      "sha256": "6da4b3539fbaf734c0c1d8ded94ca1f36133190b49332fd3c868dbb133855807"
+    }
+  ]
+}

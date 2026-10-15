@@ -1,0 +1,559 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-15T00:23:47.074Z",
+  "reviewer": "agent-b",
+  "scope": "Independent filesystem-only review of UX_ACTIONS_DRAFT against section 8 and UX10; no browser, database or application process was started for this review.",
+  "repositoryRelativeRoot": "dsj2/products/demo",
+  "draft": {
+    "path": "docs/evidence/lms-one-run-20261015/agent-c/UX_ACTIONS_DRAFT.json",
+    "reviewedSha256": "ad7a35119c4633608ea793d68a765e341266eb1c49d0e2048a24e0678ef00707",
+    "generatedAt": "2026-10-14T22:57:15.339688+00:00",
+    "actualSourceFilesChecked": 6,
+    "allReferencedMeasurementSourceHashesMatched": true,
+    "reviewedRecords": 19,
+    "draftOnly": true,
+    "localAccepted": false
+  },
+  "requirements": [
+    {
+      "path": "docs/handoffs/2026-10-15-lms-one-run/ACCEPTANCE_AND_VERIFICATION_RU.txt",
+      "lines": "176-188",
+      "requirement": "All mandatory A-H scenarios need role/startState/preconditions/goal/actualSteps/result and independent counts for clicks/keyboard/filled/repeated/decisions/navigation/dialogs/confirmations/manualRefresh/elapsed."
+    },
+    {
+      "path": "docs/handoffs/2026-10-15-lms-one-run/UX_OPERATOR_CONTRACT_RU.txt",
+      "lines": "62-67",
+      "requirement": "Prepared assignment/preparation/download-print <=2 actions, continuation 1, automatic sanitary preparation 0 operator actions; setup, first entry and another participant's decisions remain separate. Evidence has phase."
+    }
+  ],
+  "conclusion": {
+    "status": "UX10_NOT_COMPLETE_IN_REVIEWED_DRAFT",
+    "measuredCompleteCountGroups": [
+      "Д: external source entry/review/correction",
+      "Е: four actual mixed-assignment recovery sizes"
+    ],
+    "preparedBudgetEvidence": "Existing actual assignment/continuation/preparation/download counts meet their respective click budgets, but older operator/learning records lack required confirmations or other categories. Fresh complete recorder output is still required.",
+    "outstandingActualRuns": [
+      "А linked first flow",
+      "В closed UI and actual worker restart/list observation",
+      "Г complete negative UI scenario",
+      "Ж complete UNKNOWN UI scenario",
+      "Б new complete operator and browser-print measurements",
+      "З current ordinary complete role-separated regression"
+    ],
+    "beforeMeasurement": "Original before measurement is explicitly excluded by the user instruction reported by coordinator in the draft. Preserve NOT_RUN/waiver and do not fabricate before values or time savings.",
+    "allCasesAccepted": false
+  },
+  "scenarios": [
+    {
+      "id": "А",
+      "draftId": "A",
+      "title": "Первый ввод",
+      "actualStatus": "NOT_RUN_LINKED",
+      "currentEvidence": [
+        "agent-c/first-entry-live/registration-actions.json",
+        "agent-c/first-entry-live/course-actions.json",
+        "agent-c/learning-live/actions.json#2"
+      ],
+      "currentFinding": "Separate registration, practice-course authoring and learner attempt evidence does not constitute the linked initial program/profile/material/question/registration/group/learning/exam/document/QR/sanitary flow.",
+      "missing": [
+        {
+          "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[3].recordedMetrics",
+          "fields": [
+            "keyboardActions",
+            "confirmations"
+          ]
+        },
+        {
+          "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[4].recordedMetrics",
+          "fields": [
+            "keyboardActions",
+            "decisions",
+            "navigation",
+            "manualRefresh",
+            "confirmations"
+          ]
+        },
+        {
+          "path": "<new-run>/lms-first-flow-live/actions.json",
+          "fields": [
+            "whole actual linked flow",
+            "all actual counts and elapsed",
+            "roles/phases and actual file selection",
+            "result/source IDs"
+          ]
+        }
+      ],
+      "writtenTests": [
+        {
+          "path": "apps/web/e2e/lms-first-flow-live.spec.ts",
+          "fills": "Linked UI-authored CENTER_EXAM/INFORMATION_CARD first flow, actual phases/roles/actions, course/calendar/material/question and registrations; separate real director decision, files/QR/list.",
+          "execution": "Pending permitted full-suite execution at review time; no actual metrics inferred from source."
+        },
+        {
+          "path": "apps/web/e2e/lms-first-entry-live.spec.ts",
+          "fills": "Fresh registration/course/calendar standalone schema fields; complements but does not replace the linked first flow."
+        }
+      ],
+      "semantics": "Initial director authentication, center provisioning and creation of synthetic input PDF are explicit prerequisites. The file selection itself is counted. fill and setInputFiles are semantic actions, not physical keystroke/native picker measurements."
+    },
+    {
+      "id": "Б",
+      "draftId": "B",
+      "title": "Подготовленный повтор",
+      "actualStatus": "PARTIAL_METRICS",
+      "currentEvidence": [
+        "agent-c/learning-live/actions.json#0",
+        "agent-c/learning-live/actions.json#1",
+        "agent-b/operator-live/actions.json#metrics[0..2]"
+      ],
+      "actualCounts": {
+        "assignment": {
+          "clicks": 1,
+          "repeatedFields": 0,
+          "elapsedMilliseconds": 234.28660000000036
+        },
+        "continuation": {
+          "clicks": 1,
+          "navigation": 1,
+          "repeatedFields": 0,
+          "elapsedMilliseconds": 405.4530999999988
+        },
+        "prepare": {
+          "clicks": 1,
+          "repeatedFields": 0,
+          "elapsedMilliseconds": 615.6686000000009
+        },
+        "directorDecisionSeparate": {
+          "clicks": 1,
+          "navigation": 1,
+          "repeatedFields": 0,
+          "elapsedMilliseconds": null
+        },
+        "readyDownload": {
+          "clicks": 1,
+          "repeatedFields": 0,
+          "elapsedMilliseconds": 1496.4028999999864
+        },
+        "preparedBrowserPrint": null
+      },
+      "missing": [
+        {
+          "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[0..1].recordedMetrics",
+          "fields": [
+            "confirmations"
+          ]
+        },
+        {
+          "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[9..11].recordedMetrics",
+          "fields": [
+            "keyboardActions",
+            "manualRefresh",
+            "confirmations"
+          ]
+        },
+        {
+          "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[10]",
+          "fields": [
+            "startState",
+            "recordedMetrics.elapsedMilliseconds"
+          ]
+        },
+        {
+          "path": "<new-run>/lms-operator-live/actions.json",
+          "fields": [
+            "actual whole-set browser print measurement"
+          ]
+        }
+      ],
+      "writtenTests": [
+        {
+          "path": "apps/web/e2e/lms-learning-live.spec.ts",
+          "fills": "Fresh assignment/continuation counts including confirmations and explicit authentication boundary."
+        },
+        {
+          "path": "apps/web/e2e/lms-operator-live.spec.ts",
+          "fills": "Patched during this review under root authorization: actual recorder for all actions and observed JS/DOM dialogs, director timer/startState, goal/phase/result, prepare/approval/download confirmations, separate print entry navigation and actual two-button native beforeprint observation, split director/learner recovery and authentication.",
+          "execution": "Static format/ESLint/web tsc PASS; new browser values NOT_RUN until full suite."
+        }
+      ],
+      "semantics": "Prepared URL/list selections are explicitly declared start conditions. Do not claim a two-action total including unknown first input, director approval, role changes, finding an arbitrary group, or printer settings. Browser beforeprint does not prove physical paper output."
+    },
+    {
+      "id": "В",
+      "draftId": "C",
+      "title": "Санитарная автоматизация",
+      "actualStatus": "SERVER_PROOF_EXISTS_BROWSER_RESTART_MEASUREMENT_PENDING",
+      "currentEvidence": [
+        "agent-a/restored-outbox.log",
+        "tests/integration/lms-regulatory.test.ts:152"
+      ],
+      "currentFinding": "Restored-outbox evidence contains actual first worker PID 35028 and restarted PID 37796, processed2 then0, one result/list item/journal/delivery. This is actual server persistence evidence, not a completed browser UX timing record.",
+      "missing": [
+        {
+          "path": "UX_ACTIONS_DRAFT.requiredSection8Scenarios[2]",
+          "fields": [
+            "fresh browser close/relogin/list result",
+            "exact linked result/outbox/batch/journal IDs",
+            "measured inspection/authentication separate from zero trigger actions",
+            "elapsed"
+          ]
+        }
+      ],
+      "writtenTests": [
+        {
+          "path": "apps/web/e2e/lms-first-flow-live.spec.ts",
+          "fills": "C reported a new owned worker PID restart + closed context + fresh login and exact list/journal/outbox ID verification while this review was in progress. Source work belongs to C; actual execution still pending."
+        },
+        {
+          "path": "tests/integration/lms-regulatory.test.ts",
+          "fills": "Persisted preparation/expired lease/fencing/no-duplicate functional proof; does not itself create human browser action counts."
+        }
+      ],
+      "semantics": "Zero refers only to triggering internal preparation after an eligible result. Real authentication, opening the journal and inspecting the list are separate measured actions. No auto signature or external accepted state may be inferred."
+    },
+    {
+      "id": "Г",
+      "draftId": "D",
+      "title": "Неподходящие основания и обязательная подпись",
+      "actualStatus": "FAILED_RUN_WITH_PASSED_PREFIX_NOT_COMPLETE",
+      "currentEvidence": [
+        "agent-b/negative-states03/results.json",
+        "agent-b/negative-states03/lms-negative-states-live/fixture.json",
+        "agent-b/negative-states03/lms-negative-states-live/01-ineligible-and-unverified.png",
+        "agent-b/negative-states03/lms-negative-states-live/02-mandatory-signature.png",
+        "agent-b/negative-states03/lms-negative-states-live/03-route-review-blocked.png"
+      ],
+      "currentFinding": "The actual failed run passed the five ineligible result selection checks, unverified source UI, mandatory disconnected signature UI and blocked learner examination before an unrelated absent-history click failed. No complete acceptance.json or action metrics was written.",
+      "missing": [
+        {
+          "path": "<new-run>/lms-negative-states-live/acceptance.json#measurements",
+          "fields": [
+            "full actual completed negative measurements for DIRECTOR and LEARNER",
+            "all counts and elapsed",
+            "complete PASS result"
+          ]
+        }
+      ],
+      "writtenTests": [
+        {
+          "path": "apps/web/e2e/lms-negative-states-live.spec.ts",
+          "fills": "Prepared domain-generated PRACTICE/AUTO/FAILED/UNVERIFIED/NEEDS_LEGAL_REVIEW/mandatory-signature UI, actual recorder and role-separated learner route. Absent-history harness click corrected; fresh execution required."
+        }
+      ],
+      "semantics": "Fixtures produce real domain results/files/signature wait states; setup/render time is separate. No signature/receipt/status is fabricated. A passed prefix of negative03 must not be promoted to a completed scenario."
+    },
+    {
+      "id": "Д",
+      "draftId": "E",
+      "title": "Допустимый внешний источник",
+      "actualStatus": "MEASURED_COMPLETE_COUNTS_NORMALIZATION_GAPS",
+      "currentEvidence": [
+        "agent-b/selection-regression04/lms-selection-regression-live/acceptance.json#measurements[3..5]"
+      ],
+      "actualCounts": [
+        {
+          "operation": "unknown date: new source and review",
+          "clicks": 4,
+          "keyboardActions": 0,
+          "filledFields": 5,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0,
+          "selections": 1,
+          "fileSelections": 1,
+          "elapsedMilliseconds": 1108.349000000002
+        },
+        {
+          "operation": "clarify saved unknown date",
+          "clicks": 2,
+          "keyboardActions": 0,
+          "filledFields": 2,
+          "repeatedFields": 0,
+          "decisions": 1,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 0,
+          "manualRefresh": 0,
+          "selections": 0,
+          "fileSelections": 0,
+          "elapsedMilliseconds": 863.5696000000025,
+          "excludedVerificationMilliseconds": 1924.6496
+        },
+        {
+          "operation": "known date: new source and review",
+          "clicks": 5,
+          "keyboardActions": 0,
+          "filledFields": 6,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0,
+          "selections": 1,
+          "fileSelections": 1,
+          "elapsedMilliseconds": 1210.2227999999996
+        }
+      ],
+      "missing": [
+        {
+          "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[15..17].startState",
+          "fields": [
+            "Copy actual rawActualRecord.startBoundary; no new browser run is needed for this mapping"
+          ]
+        },
+        {
+          "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[15..17]",
+          "fields": [
+            "phase and goal normalization from recorded operation and declared boundary"
+          ]
+        }
+      ],
+      "writtenTests": [
+        {
+          "path": "apps/web/e2e/lms-selection-regression-live.spec.ts",
+          "fills": "Already produced selection04 actual complete external-source action categories, unknown/known date separation and immutable correction proof."
+        }
+      ],
+      "semantics": "The 5-click known-date operation includes closing the previous source. Native picker and physical keystrokes were not observed. Already-saved learner/course/source metadata is not re-entered; correction inputs are new facts, not repeated fields."
+    },
+    {
+      "id": "Е",
+      "draftId": "F",
+      "title": "Пачка с одной ошибкой",
+      "actualStatus": "MEASURED_COMPLETE_COUNTS_WITH_TIMING_CAVEAT",
+      "currentEvidence": [
+        "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json"
+      ],
+      "actualCounts": [
+        {
+          "size": 1,
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0,
+          "elapsedMilliseconds": 1507.1041000000005
+        },
+        {
+          "size": 10,
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0,
+          "elapsedMilliseconds": 1412.5204999999987
+        },
+        {
+          "size": 100,
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0,
+          "elapsedMilliseconds": 1830.2940999999992
+        },
+        {
+          "size": 250,
+          "clicks": 2,
+          "keyboardActions": 1,
+          "filledFields": 0,
+          "repeatedFields": 0,
+          "decisions": 3,
+          "navigation": 0,
+          "dialogs": 0,
+          "confirmations": 1,
+          "manualRefresh": 0,
+          "elapsedMilliseconds": 3061.6803
+        }
+      ],
+      "missing": [
+        {
+          "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[5..8]",
+          "fields": [
+            "goal/phase",
+            "preconditions should retain actual fixtureSetupNotCountedAsFirstEntry instead of null"
+          ]
+        },
+        {
+          "path": "<new-run>/lms-assignment-batches-live/actions.json",
+          "fields": [
+            "new identical-name disambiguation extension actual result; older four cases already measured"
+          ]
+        }
+      ],
+      "writtenTests": [
+        {
+          "path": "apps/web/e2e/lms-assignment-batches-live.spec.ts",
+          "fills": "Four real known-group sizes, targeted employer repair, keyboard Enter, one-row retry, replay and current new ambiguous-name scenario."
+        }
+      ],
+      "semantics": "An additional replay click is explicitly verificationOnly.replayClicks=1 and excluded from the business click budget, but its response/readback/screenshot time remains in elapsed. Current narrow screen assertions cover100/250 at390px;1/10 were1440px. Do not call the elapsed values pure operator time."
+    },
+    {
+      "id": "Ж",
+      "draftId": "G",
+      "title": "Неизвестный исход",
+      "actualStatus": "FAILED_RUN_WITH_PASSED_PREFIX_NOT_COMPLETE",
+      "currentEvidence": [
+        "agent-b/negative-states03/results.json",
+        "agent-b/negative-states03/lms-negative-states-live/fixture.json",
+        "tests/integration/lms-regulatory.test.ts:536"
+      ],
+      "currentFinding": "Persisted actual TEST adapter timeout and UNKNOWN human UI were observed; no blind resend/green success/private diagnostic was shown. The run then failed on an absent history block. No finished measurement exists and numbers cannot be reconstructed.",
+      "missing": [
+        {
+          "path": "<new-run>/lms-negative-states-live/acceptance.json#measurements[Ж]",
+          "fields": [
+            "fresh complete safe-inspection counts/time/result",
+            "complete KZ360 check"
+          ]
+        }
+      ],
+      "writtenTests": [
+        {
+          "path": "apps/web/e2e/lms-negative-states-live.spec.ts",
+          "fills": "Corrected full actual UNKNOWN safe-inspection UI scenario, no sanitary POST, accepted0, one real adapter submit, complete recorder."
+        },
+        {
+          "path": "tests/integration/lms-regulatory.test.ts",
+          "fills": "Retry/replay/two-worker/no-duplicate domain proof, linked separately; not substituted for browser action measurement."
+        }
+      ],
+      "semantics": "No history/receipt is invented for a timeout that returned no receipt. Inspection is a prepared error scenario, not first setup or external provider acceptance."
+    },
+    {
+      "id": "З",
+      "draftId": "H",
+      "title": "Обычный DEMO до/после",
+      "actualStatus": "CURRENT_DRAFT_ONLY_FULL_CURRENT_MEASUREMENT_PENDING",
+      "currentEvidence": [
+        "agent-c/baseline/actions.json"
+      ],
+      "currentFinding": "Existing current-code draft/autosave/resume has actual counts but is not the historical before measurement and does not cover the full role-separated ordinary cycle. Current old evidence includes login in aggregate counts despite wording 'counted separately'.",
+      "missing": [
+        {
+          "path": "<new-run>/lms-demo-current-cycle/actions.json",
+          "fields": [
+            "current operator/director complete action sequence",
+            "manual exception/compact list",
+            "actual preview/download and honest publication state",
+            "all counts/time per role"
+          ]
+        }
+      ],
+      "writtenTests": [
+        {
+          "path": "apps/web/e2e/lms-demo-baseline.spec.ts",
+          "fills": "Root-authorized current-only extension implemented during this review: retains original draft assertions; runtime metadata reads current build; new prepared ordinary company/two-person manual exception, director real preview/DOCX and approval, real generation/PDF download, PASSED/AUTO preserved without assignment LMS metadata and genuine unsigned registry/QR block. Each phase uses actual recorder. Format/ESLint/web tsc PASS; browser not run during review."
+        },
+        {
+          "path": "apps/web/e2e/operator-details-acceptance-live.spec.ts",
+          "fills": "Functional ordinary forms/preview/issue coverage, not a replacement for UX10 aggregate counts."
+        }
+      ],
+      "semantics": "Ordinary legacy originals require actual NCA signatures. They cannot be marked ISSUED to obtain a positive QR for test convenience. Positive local public QR uses the separately permitted information-card path; this ordinary scenario measures the real unsigned publication guard and records that limit. Before/after efficiency improvement remains unclaimed."
+    }
+  ],
+  "normalizationFindings": [
+    {
+      "id": "N01",
+      "severity": "required-field",
+      "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[*].missingMeasuredFields",
+      "finding": "Completeness check omits confirmations. Twelve of nineteen records have no recorded confirmations; some still say MEASURED and missingMeasuredFields=[] (indices0..2).",
+      "resolution": "Include confirmations in final required numeric schema. Preserve missing as unknown until a new actual record supplies it."
+    },
+    {
+      "id": "N02",
+      "severity": "metadata",
+      "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[12,15,16,17].startState",
+      "finding": "Normalized startState is null while the raw actual record has startBoundary.",
+      "resolution": "Map existing startBoundary to startState without inferring new actions or timing."
+    },
+    {
+      "id": "N03",
+      "severity": "metadata",
+      "path": "UX_ACTIONS_DRAFT.afterCurrentMeasurements[*]",
+      "finding": "All nineteen normalized records lack explicit goal and phase. Several also lose fixture precondition context; four functional-only records have no role.",
+      "resolution": "Add factual goal/phase/precondition metadata from recorded scenario/start/setup. Keep non-action functional rows12..14 and18 in functional evidence, rather than treating them as completed action budgets."
+    },
+    {
+      "id": "N04",
+      "severity": "pending-actual-run",
+      "path": "apps/web/e2e/lms-operator-live.spec.ts",
+      "finding": "Before this review, rerun still could not provide director elapsed/start or confirmations. This was fixed in the owned test under root authorization, including genuine print event measurement.",
+      "resolution": "Consume only the new successful run output; never backfill old operator evidence."
+    },
+    {
+      "id": "N05",
+      "severity": "interpretation",
+      "path": "UX_ACTIONS_DRAFT.requiredSection8Scenarios[B]",
+      "finding": "MEASURED refers to known existing partial measurements, not all UX10 schema fields or print. Total operator sequence contains director decision and task navigation outside prepared sub-budgets.",
+      "resolution": "Represent partial schema/print-not-yet-run explicitly until fresh output; keep separate budgets and full costs visible."
+    },
+    {
+      "id": "N06",
+      "severity": "interpretation",
+      "path": "UX_ACTIONS_DRAFT.before",
+      "finding": "Original before browser measurement is explicitly excluded, and draft correctly does not claim a historical before or improvement.",
+      "resolution": "Keep waiver and current-regression evidence distinct. The current draft probe must never be relabeled as preimplementation."
+    }
+  ],
+  "metricSemantics": {
+    "clicks": "Completed pointer activations; selections/file choices are separate semantic operations. A click that also navigates appears in both dimensions, not summed as two distinct physical inputs.",
+    "keyboardActions": "Explicit standalone key presses only. Playwright fill is a semantic field entry and does not claim a count of physical typing keys.",
+    "filledFields": "New literal entries; keep selections and fileSelections visible. First-flow counts file as a filled field, shared helper records it separately; do not compare totals without noting the convention.",
+    "repeatedFields": "Existing application facts entered again; new exception/date/review reason is not repeated. Authentication re-entry is separate and now explicitly counted in operator recovery.",
+    "decisions": "Sources use different explicit conventions: first-flow counts each activated control/selection; standalone course entry excludes disclosure from business decisions; shared recorder flags specified business choices. Preserve definitions; do not equate totals blindly.",
+    "navigation": "Page transitions are distinct from clicks and not silently excluded when crossing roles/tasks. Some existing cases start at a prepared URL; that boundary must remain visible.",
+    "dialogs": "Preserve observer scope: JS page dialogs, DOM application modals and native OS picker/print UI are different. Shared helper observes JS and visible DOM dialogs; native picker and printer UI are not inspected.",
+    "confirmations": "Separate explicit consent/approval/publication/business commitment from reversible viewing/navigation/download. Missing old values are unknown, not zero.",
+    "manualRefresh": "Explicit operator reload/update actions; automatic background polling is not a manual refresh.",
+    "elapsedTime": "Measured automated wall time, not human effort or typing speed. Assertions/API readback/render waits and some screenshots are included. Excluded geometry time is recorded separately. First-flow action timestamps are cumulative; shared helper per-step timestamps are durations and must not be aggregated the same way."
+  },
+  "sourceWorkDuringReview": {
+    "authorizedByRootAfterReadOnlyAudit": true,
+    "modifiedTestFilesOnly": [
+      "apps/web/e2e/lms-operator-live.spec.ts",
+      "apps/web/e2e/lms-demo-baseline.spec.ts"
+    ],
+    "untouched": [
+      "C draft",
+      "C scripts",
+      "product source",
+      "existing evidence"
+    ],
+    "staticChecks": [
+      {
+        "command": "CI=true pnpm exec prettier --write apps/web/e2e/lms-demo-baseline.spec.ts apps/web/e2e/lms-operator-live.spec.ts",
+        "result": "PASS"
+      },
+      {
+        "command": "CI=true pnpm exec eslint apps/web/e2e/lms-demo-baseline.spec.ts apps/web/e2e/lms-operator-live.spec.ts",
+        "result": "PASS"
+      },
+      {
+        "command": "CI=true pnpm exec tsc --noEmit -p apps/web/tsconfig.json",
+        "result": "PASS"
+      }
+    ],
+    "browserOrDatabaseExecutionByReviewer": false,
+    "newActualMeasurementsFabricated": false
+  }
+}

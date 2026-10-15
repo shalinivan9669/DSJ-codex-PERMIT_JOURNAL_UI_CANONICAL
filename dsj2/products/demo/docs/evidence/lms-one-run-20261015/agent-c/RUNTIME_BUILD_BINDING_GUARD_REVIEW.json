@@ -1,0 +1,104 @@
+{
+  "checkedAt": "2026-10-15T09:37:21.951169+00:00",
+  "status": "PASS_GUARD_TESTS_NOT_ACCEPTANCE",
+  "sourcePath": "scripts/verification/lms-final-criteria-candidate.py",
+  "sourceSha256": "99f9a8164763b446d9fc31dfe38ecbc014330344dfb52544ee83b99a2a259ad3",
+  "scope": "Pure extracted validation function against synthetic data. Candidate generator not executed; no browser, build or local acceptance inferred.",
+  "tests": [
+    {
+      "name": "actual matching build, ordered UTC clocks and source verification",
+      "status": "PASS",
+      "expectedError": null
+    },
+    {
+      "name": "different build command bytes",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_COMMAND_HASH_MISMATCH"
+    },
+    {
+      "name": "build identifier mismatch at input 0",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_ID_MISMATCH"
+    },
+    {
+      "name": "build identifier mismatch at input 1",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_ID_MISMATCH"
+    },
+    {
+      "name": "build identifier mismatch at input 2",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_ID_MISMATCH"
+    },
+    {
+      "name": "build identifier mismatch at input 3",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_ID_MISMATCH"
+    },
+    {
+      "name": "missing build identifier",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_ID_MISMATCH"
+    },
+    {
+      "name": "other command is not pnpm build",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_COMMAND_HAS_NOT_PASSED"
+    },
+    {
+      "name": "failed build",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_COMMAND_HAS_NOT_PASSED"
+    },
+    {
+      "name": "wrong runtime link",
+      "status": "PASS",
+      "expectedError": "RUNTIME_MANIFEST_LINK_MISMATCH"
+    },
+    {
+      "name": "wrong source link",
+      "status": "PASS",
+      "expectedError": "RUNTIME_MANIFEST_LINK_MISMATCH"
+    },
+    {
+      "name": "unverified source",
+      "status": "PASS",
+      "expectedError": "RUNTIME_SOURCE_NOT_VERIFIED_UNCHANGED"
+    },
+    {
+      "name": "changed source",
+      "status": "PASS",
+      "expectedError": "RUNTIME_SOURCE_NOT_VERIFIED_UNCHANGED"
+    },
+    {
+      "name": "missing build finish clock",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_CLOCKS_NOT_VERIFIED"
+    },
+    {
+      "name": "naive build finish clock",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_CLOCKS_NOT_VERIFIED"
+    },
+    {
+      "name": "build finished after source capture",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_CLOCKS_NOT_VERIFIED"
+    },
+    {
+      "name": "source captured after runtime started",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_CLOCKS_NOT_VERIFIED"
+    },
+    {
+      "name": "runtime started after browser command",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_CLOCKS_NOT_VERIFIED"
+    },
+    {
+      "name": "invalid clock",
+      "status": "PASS",
+      "expectedError": "RUNTIME_BUILD_CLOCKS_NOT_VERIFIED"
+    }
+  ]
+}

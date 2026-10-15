@@ -1,0 +1,1154 @@
+{
+  "comparedAt": "2026-10-15T00:39:42.125547+00:00",
+  "boundary": "Snapshot preserved before final-run rewrites. Some earlier targeted outputs were already represented; not relabeled as pristine full01 outputs. Final-repeat02 uses separate evidence directory.",
+  "sourceManifest": "pre-final-render-files/MANIFEST.json",
+  "finishedRunLog": "render-full-final.log",
+  "summary": {
+    "IDENTICAL": 100,
+    "CHANGED": 63
+  },
+  "retainedSnapshotIntegrity": true,
+  "files": [
+    {
+      "path": "render/100.csv",
+      "retainedSnapshotSha256": "b6b9501c4eba4d1439cfd686693b49586e736f038cf0a84bb92fbd27fa354d23",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "b6b9501c4eba4d1439cfd686693b49586e736f038cf0a84bb92fbd27fa354d23",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/100.json",
+      "retainedSnapshotSha256": "a703040523407c585292b9f4032caa16139cfaafb093a3346b063cff1ae8bafa",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "a703040523407c585292b9f4032caa16139cfaafb093a3346b063cff1ae8bafa",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/10001.csv",
+      "retainedSnapshotSha256": "29d74e633220046da0f05fca17104013246cf66a6b9d1ec6c4f7b0791b5c2b22",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "29d74e633220046da0f05fca17104013246cf66a6b9d1ec6c4f7b0791b5c2b22",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/10001.json",
+      "retainedSnapshotSha256": "a0e354e3fd9e13ae5f83b6ef32ce0c187dbc697ce3cdadf0ed707be372e9bb0c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "a0e354e3fd9e13ae5f83b6ef32ce0c187dbc697ce3cdadf0ed707be372e9bb0c",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/250.csv",
+      "retainedSnapshotSha256": "8618ba7427ff7a8c86fefdff5ede60009cca7d12659be943677255e4f995583c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "8618ba7427ff7a8c86fefdff5ede60009cca7d12659be943677255e4f995583c",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/250.json",
+      "retainedSnapshotSha256": "1ea1dd43c19e2b0c77d1780c70bac8a2821efbacd123063885faa53681c16940",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "1ea1dd43c19e2b0c77d1780c70bac8a2821efbacd123063885faa53681c16940",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/400.csv",
+      "retainedSnapshotSha256": "93038582c1f24477c9991c5ad158d7a45e1eb258ba9e1b06fb9edeef554e7d46",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "93038582c1f24477c9991c5ad158d7a45e1eb258ba9e1b06fb9edeef554e7d46",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/400.json",
+      "retainedSnapshotSha256": "6d98012571e4f0f9f7747f3f6cb1aa996833dc2d1b07933a284bc740a28c7685",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6d98012571e4f0f9f7747f3f6cb1aa996833dc2d1b07933a284bc740a28c7685",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/bad.png",
+      "retainedSnapshotSha256": "5464533c9647b67eb320c40ccc5959537c09102ae75388f6a7675b433e745c9d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5464533c9647b67eb320c40ccc5959537c09102ae75388f6a7675b433e745c9d",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-100.docx",
+      "retainedSnapshotSha256": "b21bacfdb905322d6bceee541a44b4486aa6e92bfe16174346067446df0e7bcc",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "b21bacfdb905322d6bceee541a44b4486aa6e92bfe16174346067446df0e7bcc",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-100.pdf",
+      "retainedSnapshotSha256": "4ec4160707ee5fbcb663ef1737141dcb68805bd69e2ef4f7b44e939cd99b82ff",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "3fd1065abcf8856a7f9601e03815ceae3a6c41dac7574165e44f5422cf9d5b1a",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/biot-batch-two.docx",
+      "retainedSnapshotSha256": "e2ea080eb31e83d23126004a3165e3175aeace8b21d09c36e686e0a51f4ffeeb",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e2ea080eb31e83d23126004a3165e3175aeace8b21d09c36e686e0a51f4ffeeb",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-batch-two.pdf",
+      "retainedSnapshotSha256": "983ae4124433dcf94e628fefe9d24c30dcb233addb2fcee2f1d66a209d94d76c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "538bdd36f74e02684246e091398b09d939a645dcdffcb89b32991cf4a708ee93",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/biot-current-preflight.json",
+      "retainedSnapshotSha256": "57ea13e202280d8eb7b76528776092532ed4204fb723c0c2699a87dcc9489191",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "57ea13e202280d8eb7b76528776092532ed4204fb723c0c2699a87dcc9489191",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-itr-certificate-bilingual-regression.docx",
+      "retainedSnapshotSha256": "05f5b2a996a68d094de32e7fc1b587d04f60d697694d1e47d26515441b900b8d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "05f5b2a996a68d094de32e7fc1b587d04f60d697694d1e47d26515441b900b8d",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-itr-certificate.docx",
+      "retainedSnapshotSha256": "eab50df2dcea937c62a234dcf5013ec1759cf1298af4a4a4de77850dd3568f2a",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "eab50df2dcea937c62a234dcf5013ec1759cf1298af4a4a4de77850dd3568f2a",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-itr-certificate.pdf",
+      "retainedSnapshotSha256": "5dd981008065f5b1e608dd03856752a85cfc4b5214395727c5cc889a4bf7e20a",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "983df2731695a992962dd9fdcf43aec3f56dfd33800da96b3477efff68a9ba87",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/biot-itr-protocol-current-contract.docx",
+      "retainedSnapshotSha256": "8d29ae5a4ef7e135268b6e7b2adc6be3d65649c97caedc144a6eefebe1205d19",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "8d29ae5a4ef7e135268b6e7b2adc6be3d65649c97caedc144a6eefebe1205d19",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-itr-protocol.docx",
+      "retainedSnapshotSha256": "dc2592766235943312b2fabd5e8983114a4717eb5e8d96c26279efc61c0f2353",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "dc2592766235943312b2fabd5e8983114a4717eb5e8d96c26279efc61c0f2353",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-itr-protocol.pdf",
+      "retainedSnapshotSha256": "1cc0350c9c3e64b5e5c0fd5647668e92a2b19c2391ba1c0673d5e4fc7cec639c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e96eb65169bfa26cdbffa151a5da2aaf3fd9d9ad0c8c99bace55aa90902086c2",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/biot-protocol-bilingual-regression.docx",
+      "retainedSnapshotSha256": "16eab0f0c03d7bb5e2ba5cd918a39fbd5e6ea4a7f4731af3235de3c7170f5361",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "16eab0f0c03d7bb5e2ba5cd918a39fbd5e6ea4a7f4731af3235de3c7170f5361",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-protocol-current-contract.docx",
+      "retainedSnapshotSha256": "cf6f35694d4f33c8e91de90f2cfcbad5e2f420ec4931829dadeb6c54a938efd8",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "cf6f35694d4f33c8e91de90f2cfcbad5e2f420ec4931829dadeb6c54a938efd8",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-protocol-mapping-regression.docx",
+      "retainedSnapshotSha256": "dc2592766235943312b2fabd5e8983114a4717eb5e8d96c26279efc61c0f2353",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "dc2592766235943312b2fabd5e8983114a4717eb5e8d96c26279efc61c0f2353",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-protocol.docx",
+      "retainedSnapshotSha256": "dc2592766235943312b2fabd5e8983114a4717eb5e8d96c26279efc61c0f2353",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "dc2592766235943312b2fabd5e8983114a4717eb5e8d96c26279efc61c0f2353",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-protocol.pdf",
+      "retainedSnapshotSha256": "d2a7f80aea703d8a85bd85305dda548b39619a4e4831a1b478653fe56a8632ec",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "107426c20feef45e0e915a7d2689ea481728621911ef209c412cd38e1cb22f12",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/biot-worker-card-mapping-regression.docx",
+      "retainedSnapshotSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-worker-card.docx",
+      "retainedSnapshotSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/biot-worker-card.pdf",
+      "retainedSnapshotSha256": "ddbf1827bfd0fabe47174219131e043599a746ddbe57de8c245fbc11e6e16279",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "ec7dd6c9dff3e140edabf4d24bfc39673e0f31a85eb17b0111332cddf2c54dc6",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/byte-limit.png",
+      "retainedSnapshotSha256": "c9733e22cab28ebf0f7fe670f1db9db61ffb5373105bc71614b6e2fac465b687",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "c9733e22cab28ebf0f7fe670f1db9db61ffb5373105bc71614b6e2fac465b687",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/complete.zip",
+      "retainedSnapshotSha256": "903e18da61be40f8c79976bee0653352ab802acd78cbcf54e2f163bc9ed4a075",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "903e18da61be40f8c79976bee0653352ab802acd78cbcf54e2f163bc9ed4a075",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/duplicate.csv",
+      "retainedSnapshotSha256": "7b3b3baa7ca7c74fc494831a61a21aba4bcad90106226feea566def6a95164f6",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "7b3b3baa7ca7c74fc494831a61a21aba4bcad90106226feea566def6a95164f6",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/duplicate.json",
+      "retainedSnapshotSha256": "8ac5d04d1e296d32c93082d59361465c35a3994b4239cfdcde0be54a76a334fa",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "8ac5d04d1e296d32c93082d59361465c35a3994b4239cfdcde0be54a76a334fa",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/files.json",
+      "retainedSnapshotSha256": "0bbbd6a9ce7f3ae30186d7865abe84a64f132f5ea2b1e2836471dcb1b1883b96",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "ea5fb2d7540f2355c61d9c97678d0535d49c086d3b9f22a5ee7cfb101b8c45e3",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/formula-input.xlsx",
+      "retainedSnapshotSha256": "784dce29152800d13b086c82457f11c019ca7e7cd3de9e93c043d3e01b97b71d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "ac7917305e40d929a1c93167689544337cb2400bcd1c8eb4858d2d2c65cd020e",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/formula-only.json",
+      "retainedSnapshotSha256": "036d672616d78da1b441ed5bfeb1bedf2d03219805cf5456564bf67ea881d2d7",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "42c67b46d201dd6db7b9a6167799c500fc6aa44b16e13d137ce91ef90f2c4498",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/formula-only.xlsx",
+      "retainedSnapshotSha256": "c3b24d0d9feb6cf65bb98f63216c42c843451aac8dfc79b28cfe6fe840b3faf1",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "d0021d9469aae2dd105520c32c79619326d2c2c0a44b53f1a6f7e9ef1e4d2012",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/formula-result.json",
+      "retainedSnapshotSha256": "dbb8ee650c4c13f9d619531cc86f2eafc7c55dd7393182755c6e9204b796c69e",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6a6c6581ddf54b9114e5e89e66f959a490b07678334d591a1bb2ee0b90b276b2",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/import.json",
+      "retainedSnapshotSha256": "d819ae49d1a751d8e6377c59533650fe91d3798178f858f1b6e8f877373047e4",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e1d4bbf931265b37cdde5fd47929f5473e9613c8edf5cd6e5df174b2f2e1eb94",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/normalized-photo.png",
+      "retainedSnapshotSha256": "3ff6cbe12f52f630274e5bef5d30714bc1a1d1866d4b203e6eda5a883e1e0715",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "3ff6cbe12f52f630274e5bef5d30714bc1a1d1866d4b203e6eda5a883e1e0715",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/partial.zip",
+      "retainedSnapshotSha256": "3fffe3ee304f8ae792478d3182365d14406f5924d838959c737b0afff2684d42",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "3fffe3ee304f8ae792478d3182365d14406f5924d838959c737b0afff2684d42",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/pb-card.docx",
+      "retainedSnapshotSha256": "7ae2f96ef7cdb16bbf96aee0e8a891b840db01760418bc6e33be7d17afc3820f",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "7ae2f96ef7cdb16bbf96aee0e8a891b840db01760418bc6e33be7d17afc3820f",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/pb-card.pdf",
+      "retainedSnapshotSha256": "76c651a0e38ab14fd5d05b4fb764dd8d6e38fd04ce1d56f628e4d8562a4c30e7",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5e18988df8517342d3bdf80489db948f6813442c4737d89a2d88f3f19f0a240f",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/pb-protocol-bilingual-regression.docx",
+      "retainedSnapshotSha256": "32bd24d0d1684185ca7992fd111d3f931c89140193035a0dbb3624bfa77685c6",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "32bd24d0d1684185ca7992fd111d3f931c89140193035a0dbb3624bfa77685c6",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/pb-protocol-mapping-regression.docx",
+      "retainedSnapshotSha256": "6fb9166f694397c3f3da193acb887e2d2948bfd0299b6a24fa8d7a89c60605d4",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6fb9166f694397c3f3da193acb887e2d2948bfd0299b6a24fa8d7a89c60605d4",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/pb-protocol-mapping-regression.pdf",
+      "retainedSnapshotSha256": "3ae4efac298726b33aa9eed93fc92bc35a83062ee49ae5c034c11fdc97f8595c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "bf372a7c6e1c678744864965082a140f635b5db54e5d6c24b5c76084f2ec6673",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/pb-protocol.docx",
+      "retainedSnapshotSha256": "df9a7edb31bfbdd09aa0529a5c9e24830a666065390c1d5850f3ad6eb2af0260",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "df9a7edb31bfbdd09aa0529a5c9e24830a666065390c1d5850f3ad6eb2af0260",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/pb-protocol.pdf",
+      "retainedSnapshotSha256": "9f3c1cab93a8cdfc20e601f43618fced76e29cf5604da90b4590123b8cdbe8c2",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "1a137be2bc3560ca4f9e21c2c5e8018ce7d49da68664e243aba6e4229a46c44d",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/pixel-limit.png",
+      "retainedSnapshotSha256": "d4616de8792bc95e5ebabf139d014908cdeae1ddd40334e613269d43c2c2d460",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "d4616de8792bc95e5ebabf139d014908cdeae1ddd40334e613269d43c2c2d460",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/preflight-overflow.json",
+      "retainedSnapshotSha256": "496c1dbf0c5a661df6e4511405b65e12f145b00f9ce04a8503ebab8d29602ea2",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "496c1dbf0c5a661df6e4511405b65e12f145b00f9ce04a8503ebab8d29602ea2",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ps-card.docx",
+      "retainedSnapshotSha256": "6d9ae1dff66195e6daf8c4e9e7725e1c465191cbfd3a6f150500300f27597f04",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6d9ae1dff66195e6daf8c4e9e7725e1c465191cbfd3a6f150500300f27597f04",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ps-card.pdf",
+      "retainedSnapshotSha256": "24d9a69a2129fd3c295a2bafc8cbe95cf5dc15245b5e24f2930b6a1e8e6415a2",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "804145d8e571e42131ccde651682da2a206f19532f16200e0e4cda76a30a5bce",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/ps-protocol-bilingual-regression.docx",
+      "retainedSnapshotSha256": "adf467768253ac6f2a869317639795b4855fd9b6d3b1dedc6ca6ee1b55a21406",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "adf467768253ac6f2a869317639795b4855fd9b6d3b1dedc6ca6ee1b55a21406",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ps-protocol-mapping-regression.docx",
+      "retainedSnapshotSha256": "65de96827a4809a453486a2923a3ba4456ce863d8bdb8b48937b41a8052d0f31",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "65de96827a4809a453486a2923a3ba4456ce863d8bdb8b48937b41a8052d0f31",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ps-protocol.docx",
+      "retainedSnapshotSha256": "f9f27eb2ae137e3f306faa3bd1a90ab7ad26c987ccbdd5dee7bd64e3310dcbf8",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "f9f27eb2ae137e3f306faa3bd1a90ab7ad26c987ccbdd5dee7bd64e3310dcbf8",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ps-protocol.pdf",
+      "retainedSnapshotSha256": "97f84eb5fa1fd86cbfc700b9158e198f0da9b249134d1ce454b43801c4b579ce",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "8383894ee19770b01b751b2dcc89eb53fcf2124205c2af444edd36213caf6459",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/ps-witness-mapping-regression.docx",
+      "retainedSnapshotSha256": "8e0205577d51766dfca54d6eabbe363c5fc33818e0b00e6615372d0526fe38d8",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "8e0205577d51766dfca54d6eabbe363c5fc33818e0b00e6615372d0526fe38d8",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ps-witness.docx",
+      "retainedSnapshotSha256": "8e0205577d51766dfca54d6eabbe363c5fc33818e0b00e6615372d0526fe38d8",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "8e0205577d51766dfca54d6eabbe363c5fc33818e0b00e6615372d0526fe38d8",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ps-witness.pdf",
+      "retainedSnapshotSha256": "180396ffc7db56d8c3a7ed5aec4cb28c7fe3b37e384cbe95e0cc232fd270e83f",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "2a0c659451da0f19a127e6f51a1b5a7c3d1dc40539550b9168de04962c5d3e33",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/ptm-card.docx",
+      "retainedSnapshotSha256": "9490338218ee89a40f2a7f8375e367a0a912d510a6cb9ed8ff02af4cc29e617b",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "9490338218ee89a40f2a7f8375e367a0a912d510a6cb9ed8ff02af4cc29e617b",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ptm-card.pdf",
+      "retainedSnapshotSha256": "bedbf4e47dc5c82dbafd17a8e654320162173dcd0b08d558f2088fa6c4a4571c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5d3cac214aa55d8ab424c8a70553a84e43912013fb5ce4b7f462ef84283ad805",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/ptm-protocol-bilingual-regression.docx",
+      "retainedSnapshotSha256": "3e726d34548cba4648ae03d3861b018ce083ba786719245f2b2e9cefe389970a",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "3e726d34548cba4648ae03d3861b018ce083ba786719245f2b2e9cefe389970a",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ptm-protocol-mapping-regression.docx",
+      "retainedSnapshotSha256": "e5bc8ea3c40d7ed0aa1845235331c09bf2434a2c24dcb369022434bb0333b610",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e5bc8ea3c40d7ed0aa1845235331c09bf2434a2c24dcb369022434bb0333b610",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ptm-protocol.docx",
+      "retainedSnapshotSha256": "e5bc8ea3c40d7ed0aa1845235331c09bf2434a2c24dcb369022434bb0333b610",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e5bc8ea3c40d7ed0aa1845235331c09bf2434a2c24dcb369022434bb0333b610",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/ptm-protocol.pdf",
+      "retainedSnapshotSha256": "314485778d7378e93d89687076cf64276dc548b33d8eea0060e70d0e4425fa9a",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "97fee65349137fb3c6adf3138c61bacde4ccfc495c2b8c62070b795cae73d404",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/registry.xlsx",
+      "retainedSnapshotSha256": "5f07a7024fb896555ae0499f0411e62bdfd606e2816eb5a69353dd003cb55d19",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "a284d6fb66cc2b97a3a808071988ac590f0b226dfbac024b595804ef550ff656",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/remaining-course-defaults-ps-card.docx",
+      "retainedSnapshotSha256": "e77d032db002f240456d3df97426512077de0b5f40a8f448397d6a62410899c5",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e77d032db002f240456d3df97426512077de0b5f40a8f448397d6a62410899c5",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/remaining-course-defaults-ps-card.pdf",
+      "retainedSnapshotSha256": "bc252fddd6ea77afc80721fec6c2f1a89db0065ef269cdca2aa983cbf354bd18",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "d254b4ced4aff0a6fdaddd0953faaf57ec223060d27a76045c07f6a24bd74136",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/remaining-course-defaults-ps-protocol.docx",
+      "retainedSnapshotSha256": "5a61234666ea0f5b7c5aa7a0cbf5a3b0f019023d8fa8a4c84e1af313fbabfa88",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5a61234666ea0f5b7c5aa7a0cbf5a3b0f019023d8fa8a4c84e1af313fbabfa88",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/remaining-course-defaults-ps-protocol.pdf",
+      "retainedSnapshotSha256": "b98b4df856c67a4e88157752a130cfa21485feaf00b3e5c3a4b26e4c0cd3dbf1",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "00e39cb84125df2563555d5a1490e09a43cb7e885501af7c746d92ad7a10c76d",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/remaining-course-defaults-ps-witness.docx",
+      "retainedSnapshotSha256": "049f71369c7b7735d620753d86a4b838a1a8d56b13c623ba822f8528527bb3a0",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "049f71369c7b7735d620753d86a4b838a1a8d56b13c623ba822f8528527bb3a0",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/remaining-course-defaults-ps-witness.pdf",
+      "retainedSnapshotSha256": "d43c13fa04081392d3840721a5f122ce11282ac12a28c5e613f25d4c52ee416e",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "7569f5079510812f3c8a3023afcf005e033f5701b7a138c5c34f2b26f913ed03",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/remaining-course-defaults-real-files.json",
+      "retainedSnapshotSha256": "c5de1091524b6aecf741f076d6a36b9dad0251a2175c501bd77b48066637cf32",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "12602f7251de53d32577841e5c4a98e57c10ce60edcfeb35b0132934d8f1690a",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/rotated-normalized.png",
+      "retainedSnapshotSha256": "72bb6341c0aa758f5fb2c371ecbcfbe97ad769d35135ff9ffadc57a8b61bd1df",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "72bb6341c0aa758f5fb2c371ecbcfbe97ad769d35135ff9ffadc57a8b61bd1df",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/rotated.jpg",
+      "retainedSnapshotSha256": "25c77755fb04e2068a6766948fd79f2a8ce49fbde444e8b2b3e3e3510299fecb",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "25c77755fb04e2068a6766948fd79f2a8ce49fbde444e8b2b3e3e3510299fecb",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/semicolon-import.json",
+      "retainedSnapshotSha256": "0de68af2fd467f3e267e106b004caa407bb7b90b87a71cbbdf5047a8753eed41",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "0de68af2fd467f3e267e106b004caa407bb7b90b87a71cbbdf5047a8753eed41",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/semicolon.csv",
+      "retainedSnapshotSha256": "5cbb58cdf7d9ca883dac87ec265510d322c1eb7d309b20ff3be0d1250921f0c2",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5cbb58cdf7d9ca883dac87ec265510d322c1eb7d309b20ff3be0d1250921f0c2",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/sheets-import.json",
+      "retainedSnapshotSha256": "5700664a324e3e06eb65edc47f079d13f7b262758d059d806b7491aaaabd65d8",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "497b8715fe7950e299f96ec9374699e3fc990040e88a3188e8411e3099ed7ca0",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/sheets.xlsx",
+      "retainedSnapshotSha256": "70e6f394fccbf058f610e638b7c752262bd336dd06c73c7dc0dff9cce0be4098",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e3606d9018e5a85c3cdd0ca0ce6e85eef8af57e1b213bc8065777edcbb3f6d52",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "render/snapshot-first.docx",
+      "retainedSnapshotSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/snapshot-second.docx",
+      "retainedSnapshotSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6a1b6ba22d2baa216e0759ce5632189abed2983a274f298e793bb27f2e4a5513",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/source-photo.png",
+      "retainedSnapshotSha256": "b4309a0b53cdef00059f97104a91d5cce0ebf3fa9fabceeb289e16d4fac2f3f3",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "b4309a0b53cdef00059f97104a91d5cce0ebf3fa9fabceeb289e16d4fac2f3f3",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/word-contract-mutant.docx",
+      "retainedSnapshotSha256": "1b8e17e17cdb518b37c5d04e491ff8f59ec9bd4f9aa7d03fa1a21a48f8f42fdc",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "1b8e17e17cdb518b37c5d04e491ff8f59ec9bd4f9aa7d03fa1a21a48f8f42fdc",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/word-contract.docx",
+      "retainedSnapshotSha256": "dc2592766235943312b2fabd5e8983114a4717eb5e8d96c26279efc61c0f2353",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "dc2592766235943312b2fabd5e8983114a4717eb5e8d96c26279efc61c0f2353",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "render/working-unmarked.docx",
+      "retainedSnapshotSha256": "d26b83ec060181c27959d779340f970ea5bfdc4c6b265172a513d4e9142f0c17",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "d26b83ec060181c27959d779340f970ea5bfdc4c6b265172a513d4e9142f0c17",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/exam-local-date.docx",
+      "retainedSnapshotSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/FILES.json",
+      "retainedSnapshotSha256": "d661a04270322736950c735a98b557bb428a8447199b507b8ab776496d55c718",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "592cb5cf94918b527602e28a5843268d753d201e1c008a69b0c84e705ad691a4",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "lms-render/lms-certificate-copy_of_original.docx",
+      "retainedSnapshotSha256": "72d626a7601b6c26df0ee1260ce01ee725a73242ee915e851cb9a3e8da3bed6d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "72d626a7601b6c26df0ee1260ce01ee725a73242ee915e851cb9a3e8da3bed6d",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-certificate-copy_of_original.pdf",
+      "retainedSnapshotSha256": "e2096e6bd21a59546f9c03bd0081ea76a8a6c8a52f60764e5a3e08118e2c20d8",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e0b59b5c6c17b3ec788ad0795c872cad14352e11239925ee94863332262a2792",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "lms-render/lms-certificate-electronic_original.docx",
+      "retainedSnapshotSha256": "a3fdfa953691e0b33bbc50a3716966665e750a33c32fe3e0184909206da79367",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "a3fdfa953691e0b33bbc50a3716966665e750a33c32fe3e0184909206da79367",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-certificate-electronic_original.pdf",
+      "retainedSnapshotSha256": "4b0aa700fa1c5edfbb013c9988b0690277dd25cf31c384ab5aee832503a9078b",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "6e63e5c87bd1a34818e27f462d962b6922b96c12080b36d3380b0927a3f6f6ed",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "lms-render/lms-certificate-page-1.png",
+      "retainedSnapshotSha256": "f785106ebc2fdbe115a0709d5f94c54b7425300558aa6c8922515a3928bf4ba1",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "f785106ebc2fdbe115a0709d5f94c54b7425300558aa6c8922515a3928bf4ba1",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-certificate-paper_original.docx",
+      "retainedSnapshotSha256": "39d31f31f70ed083b52b4ccd94d50d9376fbdc8fc7538c81cfe7e7f1ec740cf6",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "39d31f31f70ed083b52b4ccd94d50d9376fbdc8fc7538c81cfe7e7f1ec740cf6",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-certificate-paper_original.pdf",
+      "retainedSnapshotSha256": "bbe95c2701d6543379bce02ce113e3f4c19b1e7f245b9eda1dd43d18ca2d90fe",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "f28ed675e706e94f99c3cac29d7eef62ac7413164f95789fad172a1b69e719e1",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "lms-render/lms-certificate.docx",
+      "retainedSnapshotSha256": "bc15e78d81693ea981cbcb1263ce6e2b3b30c9fe3a490d78942d7a4994978efa",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "bc15e78d81693ea981cbcb1263ce6e2b3b30c9fe3a490d78942d7a4994978efa",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-certificate.pdf",
+      "retainedSnapshotSha256": "5ea37d0e8c59568752891539a62c6898bca31d90bde3e580dab3585f951fc989",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "83fa3c90fc9195a224b66da6ed6bbf1cd8001cee936b08fd31361b6979719b13",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "lms-render/lms-credential-page-1.png",
+      "retainedSnapshotSha256": "bf49e8c1f2433c3f6325ae7da40988a6006718419ae45a3128acb603f96a2f45",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "bf49e8c1f2433c3f6325ae7da40988a6006718419ae45a3128acb603f96a2f45",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-credential.docx",
+      "retainedSnapshotSha256": "7807d77e9f7b5495983bbbb8c059e96d8cf919d6cbaaaf99fa2d793bdf38c7d8",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "7807d77e9f7b5495983bbbb8c059e96d8cf919d6cbaaaf99fa2d793bdf38c7d8",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-credential.pdf",
+      "retainedSnapshotSha256": "b8027ad35757c5bc132006da6a719626a650233e85e76a9a5c520f7ce9f16ffb",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e809123ca2b37d20bb6f93aa955777a791c270c3474826a2a0e28fec414daacf",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "lms-render/lms-protocol-page-1.png",
+      "retainedSnapshotSha256": "4efd7e01e3262e93bdb5d6b0fee57a654561a623ac8ae2d4e6181a6fdf95aacb",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "4efd7e01e3262e93bdb5d6b0fee57a654561a623ac8ae2d4e6181a6fdf95aacb",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-protocol.docx",
+      "retainedSnapshotSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/lms-protocol.pdf",
+      "retainedSnapshotSha256": "fe65860e022b6845df2078330e0e2b63dc7bb8cbb59176f0d70f0e419eb6153a",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "d8e3ecff0d9e6ade730297c798eea5b3aacfda987df70da382d6238a2f705974",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "lms-render/preflight.json",
+      "retainedSnapshotSha256": "88ffd2931d817f2e43a554fdd2314b14689d69a7918698f0948bf63d83977fea",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "88ffd2931d817f2e43a554fdd2314b14689d69a7918698f0948bf63d83977fea",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/protocol-batch.docx",
+      "retainedSnapshotSha256": "bf4c7b2cabe9c4548eb21f2cfce7e783a26dd11d207a507e4bab59688d92f43a",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "bf4c7b2cabe9c4548eb21f2cfce7e783a26dd11d207a507e4bab59688d92f43a",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/protocol-batch.pdf",
+      "retainedSnapshotSha256": "bb031d0095d2343f02e3c9059d515c2e4ced2776332924c048b9e053353e9187",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "b1aa02663514d4afe8c15d0e1aff645de85f45abf2f873698d1abeb155223f48",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "lms-render/same-first.docx",
+      "retainedSnapshotSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "lms-render/same-second.docx",
+      "retainedSnapshotSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5e119bfed90ebe17095f73164f0f42c5bc848a2f80b337ec0b1a82f64022b3d7",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-adapter.docx",
+      "retainedSnapshotSha256": "347fff6f09f1d6253aaee2c1140f4eb7f4f80262d783b09e04f1f4593b62d76d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "347fff6f09f1d6253aaee2c1140f4eb7f4f80262d783b09e04f1f4593b62d76d",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-control.docx",
+      "retainedSnapshotSha256": "8bcf5c238265ad0734a72df1cd1f1d1306b0e956e92328ee00640c25a7f3563c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "d846fbbe89d76aa24e6e6a26a4a2908c96e66eec17c32b37f2ebd4a07c033dc7",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-data-control.docx",
+      "retainedSnapshotSha256": "7d4e36627250aad9930fc84622a9d523ef170678ed2dbecfd9395d9b866fe605",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "7d4e36627250aad9930fc84622a9d523ef170678ed2dbecfd9395d9b866fe605",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-physical-adapter.docx",
+      "retainedSnapshotSha256": "347fff6f09f1d6253aaee2c1140f4eb7f4f80262d783b09e04f1f4593b62d76d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "347fff6f09f1d6253aaee2c1140f4eb7f4f80262d783b09e04f1f4593b62d76d",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-physical-adapter.pdf",
+      "retainedSnapshotSha256": "ffb8aa47b132053d2af201d218f89ef42da0b4ac98996048d8e5d5dd8873cf73",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "b78be97d7db1fde0a6b81348a7e5e02949f264d55568060f47fc901d8e80937e",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-physical-control.docx",
+      "retainedSnapshotSha256": "347fff6f09f1d6253aaee2c1140f4eb7f4f80262d783b09e04f1f4593b62d76d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "347fff6f09f1d6253aaee2c1140f4eb7f4f80262d783b09e04f1f4593b62d76d",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-physical-control.pdf",
+      "retainedSnapshotSha256": "495cac7b794ccbaaca8e5ae7f9d812bd6e8130076250232b68dd932b27e9bbba",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "0789494623baeb24a3247a26b11a30e0dc9d99d4d13407b7c29e2f207f4c03e0",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-physical-core.docx",
+      "retainedSnapshotSha256": "3d9da24ce4c27d20805d2cdc32fb10f36b5a138d64a6859d6abc2d0ca1eeab3d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "fb2f73d928f1441cbd6ebd6db266c15ddf13857ca5cddf537bd891dd56754b3d",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-certificate-production-core.docx",
+      "retainedSnapshotSha256": "83962d06b640a234849eef828ce591d52647d1df437ddd497e74eb2fa3774bd7",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "d3d984f662b1bc0578b07d80d63d8bf5df50610b82d83c772dafa20c7085da1e",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-protocol-adapter.docx",
+      "retainedSnapshotSha256": "0667a2efb2cb331c0542475764595f5d3b12a09f628d013eeec910c58a82438e",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "0667a2efb2cb331c0542475764595f5d3b12a09f628d013eeec910c58a82438e",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-protocol-control.docx",
+      "retainedSnapshotSha256": "0249a98abfb6eb3fd3f58e0813cdff24528e7162989c66d73f8ba514c5e4b303",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "9b56e04e7547f650c30d0c0e30dbfd8e4e7858df057188d4c7a7729ce9d77efe",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-protocol-data-control.docx",
+      "retainedSnapshotSha256": "afbbcb15824505e4688e488acb1a2a335cdf6ca31ae84a55f71ecf9818031860",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "afbbcb15824505e4688e488acb1a2a335cdf6ca31ae84a55f71ecf9818031860",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-itr-protocol-production-core.docx",
+      "retainedSnapshotSha256": "2289a8dac4a5b1d75566defa0624214a9d97e88fbaf0bd361007a08aa0aee8d8",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e79ccefb509320f6b2d7c627f6dadb92a77dadd50b8dc35a1c49de9a09bb168a",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-protocol-adapter.docx",
+      "retainedSnapshotSha256": "0667a2efb2cb331c0542475764595f5d3b12a09f628d013eeec910c58a82438e",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "0667a2efb2cb331c0542475764595f5d3b12a09f628d013eeec910c58a82438e",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-protocol-control.docx",
+      "retainedSnapshotSha256": "3cc8de6d99006546eb7e5fc5badff3f031804c21d302a419906a13fec2c563ff",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "daebfc436c9ee8c7540018132009cdc7d03b94e1c90bd7725dc442f06b4656c0",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-protocol-data-control.docx",
+      "retainedSnapshotSha256": "afbbcb15824505e4688e488acb1a2a335cdf6ca31ae84a55f71ecf9818031860",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "afbbcb15824505e4688e488acb1a2a335cdf6ca31ae84a55f71ecf9818031860",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-protocol-production-core.docx",
+      "retainedSnapshotSha256": "961550a52853a5479716dd06ef058a34b011d9bd4fd74ccf367525f67270fd75",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "65ef24c48c0983d48073dc5069ccf542ac767d9f4afbe6d2a2cf2b1eff3da4d6",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-adapter.docx",
+      "retainedSnapshotSha256": "5c73528bf1a986524fa356de901b8d8f71b105bf1f52e659682566ae18bac0c0",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5c73528bf1a986524fa356de901b8d8f71b105bf1f52e659682566ae18bac0c0",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-control.docx",
+      "retainedSnapshotSha256": "72d1174fec0be0ff476280af2c20bb2a707a44dd578ee14cf942a065db1b7cc1",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "f5db4a499784e83cbf2fff588836bf613e69c1240d66de45e91076a4575920d7",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-data-control.docx",
+      "retainedSnapshotSha256": "8c840090dc4b4373e79534d20b804880d76d61df6d6488d0130afcb0c27d10e9",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "8c840090dc4b4373e79534d20b804880d76d61df6d6488d0130afcb0c27d10e9",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-physical-adapter.docx",
+      "retainedSnapshotSha256": "5c73528bf1a986524fa356de901b8d8f71b105bf1f52e659682566ae18bac0c0",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5c73528bf1a986524fa356de901b8d8f71b105bf1f52e659682566ae18bac0c0",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-physical-adapter.pdf",
+      "retainedSnapshotSha256": "4881de8a60dca5ebed8d4cdf8b013cacd3cd8bfc7a88fa702a58711201f12109",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "c93e98af685e5608343ad17efc5e2b016c18c31dfe83ab37a0abefb55bba54e3",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-physical-control.docx",
+      "retainedSnapshotSha256": "5c73528bf1a986524fa356de901b8d8f71b105bf1f52e659682566ae18bac0c0",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5c73528bf1a986524fa356de901b8d8f71b105bf1f52e659682566ae18bac0c0",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-physical-control.pdf",
+      "retainedSnapshotSha256": "206a389eef2c38276f3948447c57c39782f1f04f66caf827d99189cb533c953d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "d9022263d41fe677b471e52fe97b765a08acbfe8670171a9c52be5f0e5d2adba",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-physical-core.docx",
+      "retainedSnapshotSha256": "543168bc612608e2cf52bca29ca3b62120e813461794f0fd11648fa547724899",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "a21a64ffd7489f128bd4f057009e16ccc883bba6447a62dc2ff62f3aa27e930c",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/biot-worker-card-production-core.docx",
+      "retainedSnapshotSha256": "516240049b86b2013479b921962489acd9742c169e187ceecd5d4559ad4a5e99",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "81698bc8908ddc3e72ddac1a7ad3e2f445561ef36db46fbe79e68665c566305e",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/package-equivalence.json",
+      "retainedSnapshotSha256": "81b20244e6676ae22954c687a975722689f714d4f64e95530cfb75d82aaa4792",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "81b20244e6676ae22954c687a975722689f714d4f64e95530cfb75d82aaa4792",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/pb-card-adapter.docx",
+      "retainedSnapshotSha256": "54355b640d66ca230eae398569effc2038e1012dba41df3a5d47f8358f654960",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "54355b640d66ca230eae398569effc2038e1012dba41df3a5d47f8358f654960",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/pb-card-control.docx",
+      "retainedSnapshotSha256": "d48235bf069c8795185510b043f47fda56ee823fe7c1b5cee4c4af72a52c8c84",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "942dd45c28073ebc4e32185a42fb70ad141d115d4d0b831a8e4dba64200ec29f",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/pb-card-data-control.docx",
+      "retainedSnapshotSha256": "2e95ebd4951163a491041eacbcfafccf5a88a5b667aa59511a9dc39c175f520e",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "2e95ebd4951163a491041eacbcfafccf5a88a5b667aa59511a9dc39c175f520e",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/pb-card-production-core.docx",
+      "retainedSnapshotSha256": "d3a34db5138dda2697f7c7bf6e2d266260f29eacbd696949af263d936cd7c38f",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "756d529b49f427d0390b4853e6882bd1b47bc6dbf82fe7bf335e9fa1fa5357d0",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/pb-protocol-adapter.docx",
+      "retainedSnapshotSha256": "cd9433e36be2f61a23398e1058ffb29e434e1402b2924949e8711a278eade7d6",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "cd9433e36be2f61a23398e1058ffb29e434e1402b2924949e8711a278eade7d6",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/pb-protocol-control.docx",
+      "retainedSnapshotSha256": "ce1f8d1d1f86f5ecf6d1939b0a97182070890c3e6e969277f4b5031c0243cbdc",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "53054be073abe4b16b7921aa41dc9c30b429c87581b4b6bc50601e460ac2a523",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/pb-protocol-data-control.docx",
+      "retainedSnapshotSha256": "b87b786ff652c886c0abe25ad03d2e5ebe9509fbe0f1563b3c83a59dfb28a320",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "b87b786ff652c886c0abe25ad03d2e5ebe9509fbe0f1563b3c83a59dfb28a320",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/pb-protocol-production-core.docx",
+      "retainedSnapshotSha256": "b9b8ba2472d5631434eac1e70db6d13c08b122b1060475ed1df5a5914f9e48f9",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "da84064b2dd37201245417c8a8df9da162445ccf948e4eabb9951df8e6f9342e",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/physical-equivalence.json",
+      "retainedSnapshotSha256": "50ec235d08d524b68e534e25931335f85f580c3d41031d2978ca8ed2b499bc93",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "50ec235d08d524b68e534e25931335f85f580c3d41031d2978ca8ed2b499bc93",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/production-data-equivalence.json",
+      "retainedSnapshotSha256": "a9dbfcbdd9e6a5671d0bbe7186d8f779a814a53ef7561921cb59f438117949ed",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "a9dbfcbdd9e6a5671d0bbe7186d8f779a814a53ef7561921cb59f438117949ed",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-card-adapter.docx",
+      "retainedSnapshotSha256": "46e3207fcb3a513a6e5500ad6a821e7eec8fac4a458fa209688a6cfec19164f7",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "46e3207fcb3a513a6e5500ad6a821e7eec8fac4a458fa209688a6cfec19164f7",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-card-control.docx",
+      "retainedSnapshotSha256": "d1fca9fc87d8de57b050b3b391f9c3f8061d9730ec0fc81626a3bf025ed4b566",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "0bb2035e3041029b5447eca76bf53e575e1c456ebf9c44b65e5cc9407819c01d",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-card-data-control.docx",
+      "retainedSnapshotSha256": "cb6c880656cd03f228829a315754a860f3be93912e3fc355c016f8f7c4f4ea4c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "cb6c880656cd03f228829a315754a860f3be93912e3fc355c016f8f7c4f4ea4c",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-card-production-core.docx",
+      "retainedSnapshotSha256": "a0d0c2a592d7c0f7178b6d17230e4f072a32f108af80b765997c283da207f132",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "a6f5e8ac6ed676ae55325b53d09d1a72d218bee9c4b7e16c82fece5045cb195e",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-protocol-adapter.docx",
+      "retainedSnapshotSha256": "4578080bf99a2c151c715781ef9bb48242e5f62a839bc7a11c49c98e5982107b",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "4578080bf99a2c151c715781ef9bb48242e5f62a839bc7a11c49c98e5982107b",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-protocol-control.docx",
+      "retainedSnapshotSha256": "91b77b49258a9383c9d94e7f2a2a795d3bf9682bc67f40d1efb5d986675525a5",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "692a94e3a8de9375a5c7ce8489266cb9daf5502af7a6c68a6fda530bed6861ef",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-protocol-data-control.docx",
+      "retainedSnapshotSha256": "67019e68c3be9e83475aa421ac898ce639c04d71fcd3aecb2104c61fe30b8235",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "67019e68c3be9e83475aa421ac898ce639c04d71fcd3aecb2104c61fe30b8235",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-protocol-production-core.docx",
+      "retainedSnapshotSha256": "48d5bc2fecb0c509290c983dea5d811dff5370860b8f09d04805d196be30f94d",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "e7f042e16ce644368412f46ec79a44f34fdb7d75cee544a3b4dd22021ba21ffa",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-witness-adapter.docx",
+      "retainedSnapshotSha256": "425c3831d955e767b63acf4224b8a692a1f55899573df22a2b4975df3110b443",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "425c3831d955e767b63acf4224b8a692a1f55899573df22a2b4975df3110b443",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-witness-control.docx",
+      "retainedSnapshotSha256": "4ea4acb652f53e3b2f0dc9af57fc7a2aa1c754b253f668cdd0a3a8137f49be4a",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "52324313617fec1f1730d371a41cd0dab9e8f5715734c6b23a1bf02fc4264cd7",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-witness-data-control.docx",
+      "retainedSnapshotSha256": "425c3831d955e767b63acf4224b8a692a1f55899573df22a2b4975df3110b443",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "425c3831d955e767b63acf4224b8a692a1f55899573df22a2b4975df3110b443",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ps-witness-production-core.docx",
+      "retainedSnapshotSha256": "c57f452f068230f7ac525a532aaab91b1513f18047ec8cb76bf3ae6124c36f72",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "7cfb6a1d6378b0f41f5e92b329d4539037e5127f41dff1cff65825a21aed1aad",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ptm-card-adapter.docx",
+      "retainedSnapshotSha256": "3d927364e72b0ae97cd79d7baa84a5509b183f21e75a23739d5cb35b60f16dff",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "3d927364e72b0ae97cd79d7baa84a5509b183f21e75a23739d5cb35b60f16dff",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ptm-card-control.docx",
+      "retainedSnapshotSha256": "dcdbb6f28de918e0c36cf1f0ea588f4ddd1ea1d03a40b9b671d40d6694ae388c",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "1d9d079926ba8b1224b9fcedb44dc863f025192aa6e7b4e58d086236f4857738",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ptm-card-data-control.docx",
+      "retainedSnapshotSha256": "45900cd1864032e60838c4f64f18763d0c4ef1b2df160cacbf53830b156afa32",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "45900cd1864032e60838c4f64f18763d0c4ef1b2df160cacbf53830b156afa32",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ptm-card-production-core.docx",
+      "retainedSnapshotSha256": "05236f364a75214c8bc23ac1bc5509497e10f9766a85ae3e0bd77d135fd751c6",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "5585d1d284c1a959f1af9b4000793cbbdbfd21c2f061d5d139a71239281f6261",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ptm-protocol-adapter.docx",
+      "retainedSnapshotSha256": "93ff411109b99d2557ce8ccbfa3cb49a21df4951bab615a3f914216a83438aac",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "93ff411109b99d2557ce8ccbfa3cb49a21df4951bab615a3f914216a83438aac",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ptm-protocol-control.docx",
+      "retainedSnapshotSha256": "77f202de6f27bc0099ec16448b331427082dc98559e455ae583231782d610b85",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "0ab0395ec6381a2fdc7a40482170d13c700187985814fc47f5e027d89be0c919",
+      "comparison": "CHANGED"
+    },
+    {
+      "path": "legacy-reference-equivalence/ptm-protocol-data-control.docx",
+      "retainedSnapshotSha256": "2b265c7c58daf3b9924d50682c18954024fc8354a9f3e5d853f4fc721861ad63",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "2b265c7c58daf3b9924d50682c18954024fc8354a9f3e5d853f4fc721861ad63",
+      "comparison": "IDENTICAL"
+    },
+    {
+      "path": "legacy-reference-equivalence/ptm-protocol-production-core.docx",
+      "retainedSnapshotSha256": "191f4b8c23e467829c92fe48663edc32dce56ec13ecf012d9d5d7ed981ece208",
+      "retainedSnapshotVerified": true,
+      "afterFailedFinalRunSha256": "3bb830046957b23f9ae06edadad9076533359fcfceff9132a1e50b263fe35dc6",
+      "comparison": "CHANGED"
+    }
+  ]
+}

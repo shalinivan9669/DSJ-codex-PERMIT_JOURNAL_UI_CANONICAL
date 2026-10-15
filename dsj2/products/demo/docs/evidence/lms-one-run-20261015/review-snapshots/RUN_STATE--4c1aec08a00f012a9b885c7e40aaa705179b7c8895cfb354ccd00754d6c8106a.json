@@ -1,0 +1,72 @@
+{
+  "runId": "lms-one-run-20261015",
+  "status": "IN_PROGRESS",
+  "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "branch": "codex/lms-one-run-20261015",
+  "baseCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "initialDirtyPaths": [],
+  "phase": "Mandatory full browser219 running session41661 on finalbuild04; product/test sources frozen, remaining work evidence reconciliation and actual suite completion/fixes if needed.",
+  "owners": {
+    "root": "Prisma/migration/contracts/auth/policy/identity/result-finalization/document bridge/regulatory workflow and worker/evidence integration",
+    "api_domain": "apps/api/src/lms except root files; tests/lms-domain.test.ts",
+    "ui": "components/lms, lib/lms-api.ts, components/workspace.tsx, lib/user-roles.ts",
+    "acceptance": "tests/lms*, tests/integration/lms*, e2e/lms*, scripts/verification/lms*, evidence/agent-c; environment"
+  },
+  "environment": {
+    "node": "24.16.0",
+    "pnpm": "11.27.1",
+    "pnpmEnvironment": "CI=true required to match install virtual-store setting",
+    "postgres": "localhost:55449 (own WSL cluster)",
+    "integrationDatabase": "demo_test_lms_integration_20261015",
+    "browserDatabase": "demo_test_lms_browser_20261015"
+  },
+  "checks": [
+    "Source scope confined to autonomous products/demo; initialdirtynone; branch codex/lms-one-run-20261015 from actual8c0833407675d8d31c786f37a55572357d7b9805. No commits yet.",
+    "Full integration02 actual280/280PASS0skip; finalinventory80files:72main-title-matched +8supplementary mappings (7latefiles +updateddocs). Latest rootprojection11PASS, approval-message3PASS, Ctemplateupgrade03 4PASS; all earlyfailures retained.",
+    "Full renderer02 actualEXIT0,144/144PASS1884.922s,00:37:38.8878332Z→01:09:09.5225616Z, agent-a/render-full-final-02.log. Earlier2sleepTimeoutExpired failure and targetedneutralPASS retained, no assertion weakening.",
+    "Build04 actualEXIT0 BV_9Qiz8LMZrZB5Rfnihw; typecheck05PASS; unit08 actual263+241PASS; lint07PASS; format09PASS; autonomy04PASS382sources9manifests0externalDSJ; diff04PASS. RootCOMMANDSdraft51records9requiredPASS; wholebrowserpending.",
+    "Codefixed frozenidentity bilingualfallback preservingimmutablefacts; missingtemplate message nowaddressed; approvalallowlist14only; display useshumanlabels. A22-source securityreviewclosed noopenissue.",
+    "Append-only register-lms-templates CLI actualmainbrowser19→22, old19/fullprofile/numberinghash unchanged, new3approvedfalse; dryrun0/apply3/replay0. CactualHTTPdirector3approve/audit/learner403/foreign404/unknown422/missing422/corrupt422; no sharedassetcorruption.",
+    "Firstflow03 actual1PASS58.5s build04: actualUIreview+approval3, UIauthoredcourse/calendar/learnerPDF/exam, 3realdocumentsZIP/registryQR. OutboxPENDING→DONE afterownPID43708→36596 in2041ms; exactly1journal/item/delivery withimmutablehashes. Whole57.451s51click42fields7selection22navigation7confirm0dialogs0refresh; businessreentry0/auth2, separatepreparedbudgets.",
+    "B4legalformmatrixactualCOPY/PAPERpositive+electronicunsignednegative+INFO3types; slowonlineactualPASS1010.66ms,1click1POST/selected2preserved/no duplicate/0refresh. COPYnewlocatorfailedbecausePERSONsummarynotgrid, harnessfixpendingfreshactualtarget.",
+    "Finaldiscovery05 actual219tests93files; completefullsuite notyetstarted. Cpreparing44criteria candidate+fresh8UXscenarios;2originalbaselineNOT_RUNexplicitlyexcluded.",
+    "Quietloadactual100inflight400requests p95799.1326ms0unexpected5xx beforeheavybuild; cleanfrozeninstall02PASS271packages12manifestSHAunchanged; fresh/upgrade/126privatefilebackuprestore/ownedworkerrecovery actualevidence.",
+    "Acuration217exactfiles3.3MB/201texts0patternfindings; PUBLICATION_REFERENCE_GAPS identifies29items withsafe/private/absent/provenancecategories. Aclosing12texts+10media/sanitizedsummaries. Rawtraces/testresults/credentials/runtime logs/rejectioncommands excluded; COMMAND_REJECTIONS.json safe.",
+    "Rootgatepacketsreview ROOT_GATES_REVIEW.json proves13inputowners/statuses +11PDncopyclasses +3independentBLOCKEDexternalgates. Need finalselectedfreshprivacy scan and codecommit binding beforecanonicalacceptance.",
+    "Temporarywakeguard session13097PID40368ACTIVE; release via .runtime/lms-one-run/wake-guard-20261015.stop and updateENVIRONMENT_POWER_EVENTS beforefinal. No persistentpowerchanges.",
+    "B latestCOPY03 actual1PASS32s; realPERSONhumanlabelassertfixed, operator COMPANYgrid readonlylabelPASS no technicalcodes. Slowonline1PASS preserves2selected/1POST. Diagnostichelpers retainedas.cjs.txt exactbytes tokeep lint sources clean.",
+    "C full05 pnpmtest:e2e nowRUNNING session41661:219tests93files,177test/helperpackageSHA and292runtimeSHA recorded. No fullPASSclaim yet.",
+    "A supplement47exactfiles1.76MB adds12texts/10selectedmedia+rootdocmanifest+safeprivateZIP/fixture summary+freshfirstflow03. Base217unchanged; total264currentcurated before finalfullfiles. Finalpublicationreview/hashrefresh stillrequired."
+  ],
+  "next": "Monitorfull21941661 untilactualcompletion; fixonlyactualfailures and rerunaffectedchecks. A/B/C finalsource/reports reconciliation. Run final privacyselectedscan, candidate44+UX8, codecommit first, FINAL_FACTS/finalizer then curatedevidencecommit. Restoreintegrationworker; releasewakeguard13097; goalcompleteonlyalllocalPASS.",
+  "external": "NOT_CONNECTED. No external services authorized. No production or live DB changes.",
+  "scopeAdjustment": {
+    "instruction": "Продолжить без исходного браузерного замера",
+    "receivedAt": "2026-10-15T02:51:13.363248+05:00",
+    "baselineBrowser": "NOT_RUN",
+    "excludedByUserInstruction": true,
+    "comparisonClaim": "No before/after timing or savings claimed"
+  },
+  "updatedAt": "2026-10-15T01:26:52.9001528Z",
+  "activeRuntime": {
+    "apiSession": 37455,
+    "webSession": 13960,
+    "renderWorkerSession": 62846,
+    "integrationWorkerSession": null,
+    "integrationWorkerNote": "Firstflow owns actual shippingworker restart; restore persistent integrationworker after complete suite",
+    "origin": "http://127.0.0.1:3159",
+    "apiOrigin": "http://127.0.0.1:4159",
+    "buildId": "BV_9Qiz8LMZrZB5Rfnihw",
+    "webDist": ".next-lms-final",
+    "runtimeFolder": "agent-c/full-e2e-20261015-05",
+    "browserSuiteSession": 41661
+  },
+  "evidencePublication": "Pattern scan found2 serialized test secrets only in old raw .playwright-artifacts traces. Exclude ALL traces/private.runtime/session logs from committed evidence; final curated scan still required. Values never printed.",
+  "newEvidenceGenerator": "scripts/verification/lms-finalize-evidence.py validates reviewed FINAL_FACTS.json, existing codecommit,44allmandatoryPASS,10commands0,100load,52originalcolumns; has not published final acceptance.",
+  "browserPermission": {
+    "instruction": "Разрешаю локальную браузерную приёмку",
+    "scope": "Current LMS local127.0.0.1:3159 synthetic test DB, noexternaltransmission/signatures/production",
+    "standardCommandAccepted": true,
+    "originalBaselineStillExcluded": true
+  }
+}

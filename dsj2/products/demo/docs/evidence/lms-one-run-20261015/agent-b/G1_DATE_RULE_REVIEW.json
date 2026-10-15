@@ -1,0 +1,175 @@
+{
+  "status": "ACTUAL_FIXTURE_PRECONDITION_DIAGNOSIS_CONFIRMED_CANDIDATE_NOT_EXECUTED",
+  "checkedAt": "2026-10-15T02:59:51.089131+00:00",
+  "scope": "Read-only SELECTs bound to existing local demoOnly synthetic tenant and immutable saved artifact bytes. No product/request/profile/test-source mutation, no new browser, no render.",
+  "sourceEvent": {
+    "id": "PB-G1",
+    "trainingStart": "2026-09-21",
+    "trainingEnd": "2026-09-22",
+    "documentDate": "2026-09-22",
+    "protocolDate": "2026-09-22",
+    "hours": "8",
+    "trainingSubject": "ДЕМО — тестовая программа PB; не нормативный учебный план"
+  },
+  "failedRequest": {
+    "id": "d0d2ee79-ce85-42f3-8f38-87cf6f9dcc23",
+    "revision": 18,
+    "status": "DRAFT",
+    "updatedAt": "2026-10-15T02:50:26.397",
+    "rawDraftPostgresJsonTextSha256": "1520d270c258b0fb0bfcc84758547415e00edb06299c1842544633988d1eeb75",
+    "profileVersionId": "6f6b20bd-8073-410f-8dd1-d12b314fd7a4",
+    "rawProfilePostgresJsonTextSha256": "9f65d3655c13324ead3bb51189fe1aad053a8eeed8a40c46c2b663c765475910",
+    "rows": 100,
+    "photoRows": 100,
+    "eventId": "76591d0b-9cae-4b85-a514-4aab84c16ee6",
+    "eventRevision": 27,
+    "eventDates": {
+      "trainingStart": "2026-09-21",
+      "trainingEnd": "2026-09-22",
+      "documentDate": "2026-09-22",
+      "protocolDate": "2026-09-22"
+    },
+    "dateOrigins": {
+      "trainingEnd": "MANUAL",
+      "protocolDate": "MANUAL",
+      "trainingStart": "MANUAL"
+    },
+    "eventRule": null,
+    "inheritedCenterRule": {
+      "anchor": "DOCUMENT_AFTER_TRAINING",
+      "source": "СИНТЕТИЧЕСКИЙ график локальной проверки 3e68c99a",
+      "calendar": "KZ_FIVE_DAY",
+      "hoursPerDay": 8,
+      "hoursSource": "THEORY",
+      "protocolDate": "DOCUMENT_DATE",
+      "calendarVersion": "KZ_2025_2026_V1"
+    }
+  },
+  "profileHistory": [
+    {
+      "id": "6f6b20bd-8073-410f-8dd1-d12b314fd7a4",
+      "version": 11,
+      "createdAt": "2026-10-15T02:41:16.597",
+      "rule": {
+        "anchor": "DOCUMENT_AFTER_TRAINING",
+        "source": "СИНТЕТИЧЕСКИЙ график локальной проверки 3e68c99a",
+        "calendar": "KZ_FIVE_DAY",
+        "hoursPerDay": 8,
+        "hoursSource": "THEORY",
+        "protocolDate": "DOCUMENT_DATE",
+        "calendarVersion": "KZ_2025_2026_V1"
+      }
+    },
+    {
+      "id": "5bac89dc-13f5-4ac4-8152-70435d318000",
+      "version": 10,
+      "createdAt": "2026-10-15T02:36:02.786",
+      "rule": {
+        "anchor": "DOCUMENT_AFTER_TRAINING",
+        "source": "СИНТЕТИЧЕСКИЙ график локальной проверки 3e68c99a",
+        "calendar": "KZ_FIVE_DAY",
+        "hoursPerDay": 8,
+        "hoursSource": "THEORY",
+        "protocolDate": "DOCUMENT_DATE",
+        "calendarVersion": "KZ_2025_2026_V1"
+      }
+    },
+    {
+      "id": "4dea6c73-d7b1-4099-acca-6b44e73bbf8a",
+      "version": 9,
+      "createdAt": "2026-10-15T01:29:34.052",
+      "rule": {
+        "anchor": "DOCUMENT_AFTER_TRAINING",
+        "source": "СИНТЕТИЧЕСКИЙ график локальной проверки 3e68c99a",
+        "calendar": "KZ_FIVE_DAY",
+        "hoursPerDay": 8,
+        "hoursSource": "THEORY",
+        "protocolDate": "DOCUMENT_DATE",
+        "calendarVersion": "KZ_2025_2026_V1"
+      }
+    },
+    {
+      "id": "c3ce917c-d94d-4460-a0aa-83893e41dae8",
+      "version": 8,
+      "createdAt": "2026-10-15T01:27:05.879",
+      "rule": {
+        "anchor": "DOCUMENT_AFTER_TRAINING",
+        "source": "СИНТЕТИЧЕСКИЙ график локальной проверки 3e68c99a",
+        "calendar": "KZ_FIVE_DAY",
+        "hoursPerDay": 8,
+        "hoursSource": "THEORY",
+        "protocolDate": "DOCUMENT_DATE",
+        "calendarVersion": "KZ_2025_2026_V1"
+      }
+    }
+  ],
+  "causality": "The protected original PB-G1 trainingEnd equals its documentDate. Its event does not override the retained strict center DOCUMENT_AFTER_TRAINING rule, so unchanged validation correctly reports TRAINING_BEFORE_DOCUMENT for100 rows. The retained source3e68c99a is already present in earlier profile versions8/9; do not attribute its creation to the current manual20 producer.",
+  "validation": {
+    "path": "docs/evidence/lms-one-run-20261015/agent-c/full-e2e-20261015-06/g1-prepared/g1-validation-response.json",
+    "fileSha256": "ea5f8fc624403cac6d3ab2b3428c86f9a49ca40e0ccd08ab7dec2ae980850fc6",
+    "httpStatus": 201,
+    "valid": false,
+    "documentCount": 101,
+    "resolvedRecipients": 100,
+    "resolvedIssueCount": 100,
+    "bodies": {
+      "validation": {
+        "bytes": 60101,
+        "sha256": "d31c20db40a595d31a15c637b56982fdc6771ff0fc38022fd3918f48f578e20d",
+        "sanitizedTextPrefix": "{\"valid\":false,\"issues\":[{\"code\":\"TRAINING_BEFORE_DOCUMENT\",\"path\":\"items.0.assignments.0.trainingEnd\",\"rowId\":\"eb41af2f-46ab-4cd5-ae45-e7fcff7f7834-2\",\"message\":\"Окончание обучения должно быть раньше даты документа. Исправьте эту дату или дату документа.\",\"recipientId\":\"eb41af2f-46ab-4cd5-ae45-e7fcff7f7834-2\",\"assignmentId\":\"dafeb962-abb4-4866-ab01-80e35efad98b\",\"eventId\":\"76591d0b-9cae-4b85-a514-4aab84c16ee6\",\"field\":\"trainingEnd\"},{\"code\":\"TRAINING_BEFORE_DOCUMENT\",\"path\":\"items.1.assignments.0.trainingE"
+      },
+      "resolved": {
+        "bytes": 351300,
+        "sha256": "391595f3790a1dc3daf45ba1e70a1039edbca97cfe717c322ac3fbba23821709",
+        "sanitizedTextPrefix": "{\"draft\":{\"kind\":\"COMPANY\",\"title\":\"Новая заявка организации\",\"customerId\":\"4a9a3624-be32-4ad0-bcde-b8fe36d77b9d\",\"organizationSnapshots\":[{\"id\":\"4a9a3624-be32-4ad0-bcde-b8fe36d77b9d\",\"nameRu\":\"ДЕМО — Тестовая организация «Учебный заказ»\",\"nameKz\":\"ДЕМО — «Оқу тапсырысы» сынақ ұйымы\",\"bin\":\"\",\"addressRu\":\"\",\"addressKz\":\"\"}],\"demoMode\":true,\"businessRuleVersion\":\"LIVE_V1\",\"englishAppendix\":false,\"languagePolicy\":\"RU_KZ\",\"schemaVersion\":2,\"profileVersionId\":\"6f6b20bd-8073-410f-8dd1-d12b314fd7a4\",\"commonFields"
+      }
+    }
+  },
+  "supportedRepair": "Use existing event-only schedule UI to explicitly choose DOCUMENT_IS_END and enter synthetic source, then preview/apply. Preserve all original dates, rows/photos, request-level common fields, other events, profile binding and exact center profile by added before/after assertions. The chosen event schedule is not legal approval or proof of training.",
+  "sources": [
+    {
+      "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+      "sha256": "2359ebd2cbe559fa90c8cb7515e00144f49835dc7367bfd9c97948f27b02440b"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-helpers.ts",
+      "sha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9"
+    },
+    {
+      "path": "tests/fixtures/operator-value/training_events.json",
+      "sha256": "004ec7afb330704815594d9ecce9200765470b1146ac70b1a89527438a689a86"
+    },
+    {
+      "path": "packages/contracts/src/date-calculation.ts",
+      "sha256": "92136c6b5b7fa4ca8b63c2dff15fe7925e874f0176b22155435345d14b707381"
+    },
+    {
+      "path": "packages/contracts/src/resolution.ts",
+      "sha256": "f0620f3f62f79b7505a035f6814059f74a52351ae281f38a2e6b43ade26357bb"
+    },
+    {
+      "path": "apps/web/components/event-context.tsx",
+      "sha256": "35f7ffcf5e7c8bb8b668d7baadf5abb42879ac9e649321e196166716c4da489f"
+    },
+    {
+      "path": "apps/web/components/training-date-settings.tsx",
+      "sha256": "7a5f72b31a08817331eb217e4ca24ad8dba7d2ce4f186c80d5bccabc11a7cbd7"
+    },
+    {
+      "path": "apps/web/lib/calendar-preparation.ts",
+      "sha256": "03b95d08a0a6066f71d15b4fee2dfeafeec7c4f2b422e16f5cd626742bed689c"
+    },
+    {
+      "path": "tests/kz-training-dates.test.ts",
+      "sha256": "430d002e274fd47690bf1baeff83caa750b9e7a69b61689056d11d345ad37771"
+    }
+  ],
+  "baseDiff": "",
+  "candidate": {
+    "path": ".runtime/g1-date-rule-repair/operator-g1-keyboard-live.spec.ts.pending",
+    "sha256": "7111acc7ff7d60f30bcc28da93f5e623c38fbc2410e7cb5eecebb940007cc85a",
+    "patch": ".runtime/g1-date-rule-repair/g1-event-only-schedule.patch",
+    "actualRun": "NOT_RUN",
+    "applied": false
+  }
+}

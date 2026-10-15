@@ -1,0 +1,161 @@
+{
+  "status": "G1_STALE_PRINTED_RESULT_ASSERTION_CONFIRMED_REPAIR_NOT_APPLIED",
+  "reviewer": "Agent B",
+  "checkedAt": "2026-10-15T02:26:36.899Z",
+  "scope": "Read-only code, exact demoOnly tenant SELECTs and SHA-verified already-saved DOCX bytes; no request/issuance/render change or new browser/test run",
+  "sources": [
+    {
+      "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+      "sha256": "beceb0cd1aa5ee7f418323b41ec1b011461fdc36097f2e8e9de490a5550d81fa"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-helpers.ts",
+      "sha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858"
+    },
+    {
+      "path": "apps/web/lib/event-outcomes.ts",
+      "sha256": "189f1d31a108eae1517f752f0e4867382c985affd937cba1efefbd709550cb48"
+    },
+    {
+      "path": "apps/web/components/event-context.tsx",
+      "sha256": "35f7ffcf5e7c8bb8b668d7baadf5abb42879ac9e649321e196166716c4da489f"
+    },
+    {
+      "path": "packages/contracts/src/course-defaults.ts",
+      "sha256": "2b5af5f33ff70497c9dec1bb38b12d66b3c4c06c9358d92f761e4aac4b38d8f1"
+    },
+    {
+      "path": "scripts/render/legacy_reference.py",
+      "sha256": "b8c43f500901a40ec39097f32e81cc7f841621a1eeb4a13495ae16e8ff4a0c79"
+    },
+    {
+      "path": "scripts/render/legacy_snapshot_fields.py",
+      "sha256": "bdb36adb6ebf1efc58e61e6a7db8ec66a38d5923c8debbc0d633f56c2d9d8ec5"
+    },
+    {
+      "path": "scripts/render/neutral_forms.py",
+      "sha256": "41af4ec97f350a41c3a5a1e0c77d0fc8beb9f3f20a87fd1877bfcb4e1dd8aeae"
+    },
+    {
+      "path": "scripts/render/neutral_forms_sources.json",
+      "sha256": "c7ba16265e83ec2f6001ef78e2342c3832ab95bf1cadc8b9ef4b54dabed62d80"
+    },
+    {
+      "path": "assets/templates/pb-protocol.group-v5.docx",
+      "sha256": "b2fab23441d4026a35ecb338c7838373adaede3f80b6aa2ba3cf871216222503"
+    },
+    {
+      "path": "tests/fixtures/operator-value/results_G1.json",
+      "sha256": "d59b9bf3d717c56f70cefd6fa8c3994dcba57e252c873144876845cc6cff58d0"
+    }
+  ],
+  "codePath": [
+    "G1 creates pb-card assignments and explicitly asserts the initial COURSE positive result equals courseResultText before the bulk confirmation.",
+    "G1 selects PASSED and fills only the confirmation source. It never inputs results_G1.resultText into the result field.",
+    "event-context calls applyEventOutcomes. outcomeWording preserves factual protected/manual/origin-missing text, but COURSE text takes the PB positive fallback: Тапсырды/сдал.",
+    "Legacy/reference/neutral PB group rendering fills each member from its frozen assignment.result; it does not force the title-case Russian word Сдал.",
+    "The helper currently expects100 standalone title-case Сдал matches and will disagree with this current G1 source path."
+  ],
+  "actualSavedControls": [
+    {
+      "requestId": "a8a6aef4-9426-4252-850b-2ec056c779a2",
+      "issuanceId": "4af44935-efbc-4c32-b475-735d5e66543f",
+      "artifactId": "11b21afc-52c8-4286-b0f0-398a342f1543",
+      "documentId": "950918fd-2e68-46a7-9926-227e93853ae9",
+      "sha256": "b1dc6ba4c41f0ee03e63ea96b77d02130532f2fd901de14311368c7fde1e14e1",
+      "bytes": 7418438,
+      "templateId": "pb-protocol",
+      "templateVersion": "13-group-1",
+      "ownerKind": "GROUP",
+      "snapshotRows": 2,
+      "snapshotResult": "Тапсырды/сдал",
+      "snapshotResultKz": "Тапсырды",
+      "snapshotResultOrigin": "COURSE",
+      "snapshotOutcome": "PASSED",
+      "snapshotOutcomeSource": "СИНТЕТИЧЕСКАЯ известная ведомость role UI; не реальное обучение",
+      "actualRosterRows": 2,
+      "resultCellCounts": {
+        "Тапсырды/сдал": 2
+      },
+      "oldRegexMatches": 0,
+      "exactFullPhraseMatches": 2,
+      "snapshotSha256": "91554e3f24f094869639f30577b500171ce1b94ca19bbac871a4299b4d891222",
+      "snapshotHashEncoding": "Exact PostgreSQL jsonb snapshot::text UTF-8, excluding psql terminal newline"
+    },
+    {
+      "requestId": "5636df04-846a-4953-a4b1-0be3e3fc78f8",
+      "issuanceId": "ded9e36e-fef3-48d2-95a6-6d25d64f0e66",
+      "artifactId": "791fa05e-c9bb-4fac-8ab0-9b630c3dd647",
+      "documentId": "13c0aeb6-ee08-4d03-8c23-c70055168588",
+      "sha256": "571ee19c71497ea766ca8748f1feeac11064a01d937006cfbb8a547aa1595700",
+      "bytes": 7418936,
+      "templateId": "pb-protocol",
+      "templateVersion": "13-group-1",
+      "ownerKind": "GROUP",
+      "snapshotRows": 5,
+      "snapshotResult": "Сдал",
+      "snapshotResultKz": "Тапсырды",
+      "snapshotResultOrigin": null,
+      "snapshotOutcome": "PASSED",
+      "snapshotOutcomeSource": "Синтетическая подписанная ведомость V07",
+      "actualRosterRows": 5,
+      "resultCellCounts": {
+        "Сдал": 5
+      },
+      "oldRegexMatches": 5,
+      "exactFullPhraseMatches": 0,
+      "snapshotSha256": "9a3cd73304d0c835fb911c1b94d5cfd4bdd3623246e366558fe0a57b34c763fc",
+      "snapshotHashEncoding": "Exact PostgreSQL jsonb snapshot::text UTF-8, excluding psql terminal newline"
+    }
+  ],
+  "actualMethod": {
+    "database": "demo_test_lms_browser_20261015",
+    "host": "127.0.0.1:55449",
+    "tenantDemoOnlyVerified": true,
+    "sql": "Read only exact known synthetic tenant, Issuance frozen snapshot result summaries and latest two saved PB-group DOCX artifact identities; no DML",
+    "savedBytes": "Resolved only returned storage keys within the owned local browser-storage; verified full SHA before extracting numeric-member five-cell OOXML rows. Private storage paths omitted."
+  },
+  "proposedOracle": {
+    "literal": "Тапсырды/сдал",
+    "expectedMembers": 100,
+    "derivation": "Independent exact literal corroborated by the actual2-row COURSE-result control and current G1 UI input path; not computed by the production helper.",
+    "preserve": [
+      "All100 identities and photos",
+      "All101 documents/202 personal+protocol file hash checks",
+      "Allimmutable snapshot and issuance equalities",
+      "Allmanualsource confirmation assertions",
+      "V07 manual Сдал semantics and other negative tests"
+    ],
+    "requiresOwnerDecision": false,
+    "ownerApproval": "Root explicitly authorized this fourth test-only correction after actual saved COURSE versus manual controls; apply only after full05 terminal."
+  },
+  "limitations": [
+    "No fresh G1 100-row issuance exists in full05: producer stopped earlier at the known employer input mismatch.",
+    "The actual saved COURSE-result control has2members, and the contrasting manual-result control has5; neither is presented as100-row G1 acceptance.",
+    "The current manual20 PBgroup artifact was not ready at the initial exact request lookup; it was not rerendered or altered.",
+    "Actual next full06 G1 producer and consumers remain mandatory after approved fixture/helper repairs."
+  ],
+  "actualSourceChanged": false,
+  "executionStatus": "NOT_RUN",
+  "overallAcceptance": false,
+  "privateCandidate": {
+    "status": "PREPARED_NOT_APPLIED_NOT_RUN",
+    "path": ".runtime/g1-ui-repair/operator-g1-helpers.ts.pending",
+    "sourceSha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858",
+    "oracle": "100 matches of exact bounded Тапсырды/сдал, no alternatives or production helper",
+    "actualTarget": "NOT_RUN",
+    "candidateSha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9",
+    "assertionReview": {
+      "before": 106,
+      "candidate": 106,
+      "unchanged": 105,
+      "removedOnly": [
+        "expect([...text.matchAll(/(?:^|\\s)Сдал(?=\\s|$)/g)]).toHaveLength(100)"
+      ],
+      "addedOnly": [
+        "expect([\n    ...text.matchAll(/(?:^|\\s)Тапсырды\\/сдал(?=\\s|$)/g),\n]).toHaveLength(100)"
+      ],
+      "parseDiagnostics": 0
+    }
+  }
+}

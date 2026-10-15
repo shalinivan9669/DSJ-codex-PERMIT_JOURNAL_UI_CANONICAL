@@ -1,0 +1,22 @@
+{
+  "status": "APPLIED_REVIEWED_REPORTING_ADAPTERS_NOT_BROWSER_ACCEPTANCE",
+  "appliedAt": "2026-10-15T12:34:45.414513+00:00",
+  "records": [
+    {
+      "path": "scripts/verification/lms-publication-review.py",
+      "beforeSha256": "3150f07175fcd719e2c0bee418e19a48d4fc2e8b66c5a62b6084a797cff192b8",
+      "afterSha256": "389d4cb42124288858a3230dbd95410b720d42e00a75d16790f95415bc8284f8",
+      "exactCandidateApplied": true,
+      "syntaxCompile": "PASS"
+    },
+    {
+      "path": ".runtime/lms-one-run/collect-publication-selection.py",
+      "beforeSha256": "3fdb2922babf659710b4ec8b2915a32beb70d5a06b8705d9f435976ee57be792",
+      "afterSha256": "8204e73a9e572b4e560d382d3405daa6b72d87fa295b3e6285642d59e21aac46",
+      "exactCandidateApplied": true,
+      "syntaxCompile": "PASS"
+    }
+  ],
+  "fullRunId": "full-e2e-20261015-07",
+  "boundary": "Original full run remains FAIL; corrected9 and dependency1 must actually pass shared validation before publication. No publication selection/review executed by this apply."
+}

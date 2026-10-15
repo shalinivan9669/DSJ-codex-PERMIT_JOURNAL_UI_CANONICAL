@@ -1,0 +1,83 @@
+{
+  "status": "DIAGNOSIS_CONFIRMED_FIX_NOT_EXECUTED",
+  "reviewer": "Agent B",
+  "checkedAt": "2026-10-15T02:05:59.4210739Z",
+  "readOnly": true,
+  "method": "Read immutable DOCX RESULT cell width and font size with lxml; measure Unicode text read directly from current UTF-8 test source using Pillow LiberationSerif-Regular, identical token width calculation to biot_2026.assert_page_fit. No renderer, browser, database or mutation calls.",
+  "sources": [
+    {
+      "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+      "sha256": "4681b58ecec9980baca4f7b2afeec9feaf76f723fa88153b1089db3b4e262f35"
+    },
+    {
+      "path": "assets/templates/manifest.json",
+      "sha256": "643efccf1f62ebbf0c80e0a3a28d6d40ed65da5714117ac223af3694bdb2f693"
+    },
+    {
+      "path": "assets/templates/biot-itr-protocol.v1.docx",
+      "sha256": "4ee4d6be0dde0511da26178dad0a01fad08228cd898c4b865b4df9aae45cdc29"
+    },
+    {
+      "path": "scripts/render/biot_2026.py",
+      "sha256": "66ba89bf040c6147bdbe24170c16e2ee1e5a99e2d7a565016aa3e7de3f9a6030"
+    },
+    {
+      "path": "assets/fonts/LiberationSerif-Regular.ttf",
+      "sha256": "058ea80864aef09a23f45cbec2bb5400bc3dfbdea01c3f10538a21fcb497fb74"
+    },
+    {
+      "path": "docs/evidence/lms-one-run-20261015/DOMAIN_FAILURE_READBACK_05.json",
+      "sha256": "907c04f4a8d77291fcae7981962070eef36fe2ce85bd6e244d0b63d8db46fab1"
+    }
+  ],
+  "actualValidation": {
+    "path": "DOMAIN_FAILURE_READBACK_05.json",
+    "requestId": "937386f5-c205-4cd0-b5c4-e112404e57f3",
+    "httpStatus": 201,
+    "valid": false,
+    "onlyIssueCode": "PRINT_LAYOUT_OVERFLOW",
+    "rawDraftUnchanged": true,
+    "resultRequiredIssue": false
+  },
+  "template": {
+    "id": "biot-itr-protocol",
+    "file": "assets/templates/biot-itr-protocol.v1.docx",
+    "program": "SPECIAL",
+    "versions": [
+      "special-1-1",
+      "special-1-group-1"
+    ],
+    "category": "OHS_SPECIALIST_SPECIAL",
+    "resultCellRawWidthPt": 83.0,
+    "horizontalPaddingPt": 9.0,
+    "resultAvailableWidthPt": 74.0,
+    "font": "LiberationSerif-Regular.ttf",
+    "fontSizePt": 9.0,
+    "failureRule": "biot_2026.py:59 rejects an unbreakable token whose measured width exceeds the cell space"
+  },
+  "measurements": [
+    {
+      "value": "СИНТЕТИЧЕСКАЯ подтверждённая оценка UX08 PERSON/ITR",
+      "widestToken": "СИНТЕТИЧЕСКАЯ",
+      "maxTokenWidthPt": 77.8,
+      "fitsTokenWidth": false
+    },
+    {
+      "value": "95 баллов",
+      "maxTokenWidthPt": 26.4015625,
+      "fitsTokenWidth": true
+    },
+    {
+      "value": "95 балл",
+      "maxTokenWidthPt": 17.6015625,
+      "fitsTokenWidth": true
+    }
+  ],
+  "recommendation": "Only the positive ITR manualResult/manualResultKz fixture should use the short exact grade literals. Preserve WORKER long-text input, all authenticated confirmation stamps/raw-fact equality assertions, and every negative overflow test.",
+  "limits": [
+    "Token capacity diagnosis is not a new complete render or successful full-suite proof.",
+    "No fixture repair has been applied by this review.",
+    "The two proposed strings were measured for the RESULT cell; KZ remains independently entered and exact-asserted by the existing test."
+  ],
+  "candidateProof": "Actual next full-suite run after terminal full05 and approved narrow fixture repair; do not claim PASS from the measurement alone."
+}

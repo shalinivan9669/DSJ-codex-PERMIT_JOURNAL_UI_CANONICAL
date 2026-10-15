@@ -1,0 +1,22 @@
+{
+  "command": "pnpm test",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-15T00:52:50.2337110Z",
+  "finishedAt": "2026-10-15T00:53:06.0498363Z",
+  "exitCode": 1,
+  "logPath": "command-test-06.log",
+  "environment": {
+    "CI": "true"
+  },
+  "reason": "Current product changed: shared immutable document recipient projection; verify unit imports and existing contract/signing behavior after targeted document regression",
+  "diagnosis": {
+    "checkedAtUtc": "2026-10-15T00:54:54.996332+00:00",
+    "failure": "CI-only invocation omitted the documented DEMO_PYTHON setup, so PDF validator used system Python.",
+    "readOnlyProbe": "python -I -c \"import sys; print(sys.executable); import pypdf; print(pypdf.__version__)\"",
+    "probeExitCode": 1,
+    "actualExecutable": "C:/Python314/python.exe",
+    "actualException": "ModuleNotFoundError: No module named 'pypdf'",
+    "repair": "No product or assertion change. Repeat with lms-test-env.ps1 integration and its isolated Python runtime.",
+    "replacementRun": "command-test-07.json"
+  }
+}

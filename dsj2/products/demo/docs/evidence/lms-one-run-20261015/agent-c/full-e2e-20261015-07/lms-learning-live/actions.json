@@ -1,0 +1,105 @@
+{
+  "measuredAt": "2026-10-15T11:12:07.247Z",
+  "fixtureVersion": "lms-one-run-synthetic-v1",
+  "scenarios": [
+    {
+      "scenario": "prepared group assignment",
+      "phase": "prepared repeat",
+      "goal": "Assign the already selected group and published course without entering known business data again",
+      "role": "ADMIN",
+      "startState": "Existing group and course selected by prepared request/version URL",
+      "preconditions": "Synthetic prerequisite data entered by fixture API/domain calls. These are excluded only from the explicitly prepared-repeat scenario, never represented as measured first-entry UX.",
+      "actualSteps": [
+        "Click Assign training for the two preselected people"
+      ],
+      "counts": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 0,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "confirmations": 1
+      },
+      "instrumentation": {
+        "timingIncludesAssertionsAndScreenshots": true
+      },
+      "elapsedMilliseconds": 103.00690000000759,
+      "result": "PASS"
+    },
+    {
+      "scenario": "prepared lesson continuation",
+      "phase": "prepared repeat",
+      "goal": "Continue the assigned lesson from the learner's existing course card",
+      "role": "LEARNER",
+      "startState": "Authenticated My learning screen, assigned program visible",
+      "preconditions": "The actual assignment has completed; the learner is authenticated and has opened My learning. Authentication costs are recorded separately.",
+      "authentication": {
+        "filledFields": 2,
+        "clicks": 1,
+        "countedSeparately": true
+      },
+      "actualSteps": [
+        "Click Continue, arrive directly at the lesson"
+      ],
+      "counts": {
+        "clicks": 1,
+        "keyboardActions": 0,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 1,
+        "navigation": 1,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "confirmations": 0
+      },
+      "elapsedMilliseconds": 123.15239999999176,
+      "result": "PASS"
+    },
+    {
+      "scenario": "first learner text acknowledgement and exam, including one offline save",
+      "phase": "learning and first exam",
+      "goal": "Complete the required text and exam while preserving an answer through a real network interruption",
+      "role": "LEARNER",
+      "startState": "Assigned synthetic program open at required text lesson",
+      "preconditions": "The actual learner is authenticated and has continued to the assigned published course. The lesson has not been acknowledged and no exam answers are prefilled.",
+      "actualSteps": [
+        "Acknowledge text",
+        "Start exam",
+        "Select ten answers; tenth while offline",
+        "Network returns; answer saves automatically",
+        "Switch language without losing answers",
+        "Submit once; actual database-backed result is 10/10"
+      ],
+      "counts": {
+        "clicks": 15,
+        "keyboardActions": 0,
+        "filledFields": 10,
+        "repeatedFields": 0,
+        "decisions": 13,
+        "navigation": 0,
+        "dialogs": 0,
+        "manualRefresh": 0,
+        "confirmations": 2
+      },
+      "elapsedMilliseconds": 1356.193900000013,
+      "result": "PASS",
+      "viewportChecks": [
+        360,
+        390,
+        768,
+        1440
+      ],
+      "languages": [
+        "ru",
+        "kz"
+      ],
+      "instrumentation": "Viewport and network controls are test instrumentation. Elapsed time begins before text acknowledgement and includes the two language changes, assertions, offline wait and screenshots. Eight earlier language geometry clicks are outside this scenario boundary. No API responses were mocked.",
+      "startBoundary": "Required text lesson already open, before acknowledging it",
+      "endBoundary": "Submitted result and persisted 100% progress confirmed"
+    }
+  ],
+  "limitations": "Prepared fixture cost is explicit; this is not a first-entry course-editor or document issuance acceptance."
+}

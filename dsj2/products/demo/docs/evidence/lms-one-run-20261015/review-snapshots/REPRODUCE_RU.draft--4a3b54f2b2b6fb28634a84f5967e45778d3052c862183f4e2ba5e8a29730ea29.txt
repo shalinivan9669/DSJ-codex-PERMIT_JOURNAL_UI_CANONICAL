@@ -1,0 +1,85 @@
+ВОСПРОИЗВЕДЕНИЕ ЛОКАЛЬНОЙ LMS И САНИТАРНОГО ПРОЦЕССА
+
+Продукт: C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo
+Ветка: codex/lms-one-run-20261015
+Коммит реализации: {IMPLEMENTATION_COMMIT}
+Исходная актуальная ветка: codex/lms-sanitary-integration-20261014, 8c0833407675d8d31c786f37a55572357d7b9805.
+
+Это описание локальной синтетической среды. Рабочие базы, реальные документы, внешние подписи и провайдер не используются. Приватные runtime-файлы, базы и учётные данные не включены в комплект evidence. Повторный запуск тестов создаёт новые синтетические записи и артефакты только в выделенных demo_test* базах.
+
+1. СРЕДА ЭТОГО КОМПЬЮТЕРА
+
+Проверенные версии: Node 24.16.0, pnpm 11.27.1, PostgreSQL 16.15 в собственном WSL Ubuntu, Python 3.12.14, LibreOffice 26.2.6.3. Локальный PostgreSQL слушает 127.0.0.1:55449; каталог экземпляра /tmp/demo-lms-20261015-pg. Не подменять его рабочим PostgreSQL. Клиентские утилиты PostgreSQL 17 лежат в .runtime/lms-one-run/postgresql/pgsql/bin; для восстановления дампа PostgreSQL 16 использовались совместимые утилиты самого WSL PostgreSQL 16. Точные версии и команды backup/restore находятся в agent-a/STORAGE_ACCEPTANCE.json и agent-a/COMMANDS_A.json.
+
+Базы: demo_test_lms_integration_20261015 для интеграционных проверок и demo_test_lms_browser_20261015 для браузера. Приватные хранилища: .runtime/lms-one-run/integration-storage и .runtime/lms-one-run/browser-storage. Python и LibreOffice: .runtime/lms-one-run/python/Scripts/python.exe и .runtime/lms-one-run/libreoffice/program/soffice.com. Эти исполняемые файлы не входят в Git.
+
+Из PowerShell перейти в указанный каталог продукта. Для каждой отдельной консоли сначала выполнить:
+  . ./scripts/verification/lms-test-env.ps1 browser
+  $env:DEMO_ORIGIN='http://127.0.0.1:3159'
+  $env:DEMO_NEXT_DIST_DIR='.next-lms-final'
+
+Helper проверяет loopback-host, имя demo_test_lms_* и наличие локальных исполняемых файлов. CI=true нужен для совпадения параметров существующей pnpm virtual store. Не выводить DATABASE_URL/пароли в публичный лог. У этой изолированной синтетической БД пароль не используется; это не конфигурация production.
+
+2. ПОДГОТОВКА И ЗАПУСК
+
+Если зависимости ещё не установлены:
+  pnpm install --frozen-lockfile
+
+Только после проверки, что выбран именно описанный собственный тестовый PostgreSQL:
+  pnpm db:deploy
+
+Применяются 25 миграций, включая две аддитивные LMS-миграции 202610150023_lms_foundation и 202610150024_lms_result_revisions. Не использовать db push, legacy seed, reset или clean. Для повторения установки с нуля брать отдельную новую demo_test* БД и новое хранилище; точная исполненная процедура с проверками SHA находится в STORAGE_ACCEPTANCE.json. Чистая установка зависимостей проверена отдельно без прежнего node_modules: CLEAN_INSTALL_02.json.
+
+Для существующего центра после миграций добавить три текущие формы LMS отдельной явной командой, указав его проверенный tenant UUID:
+  pnpm exec tsx --tsconfig tsconfig.base.json scripts/maintenance/register-lms-templates.ts --tenant=<UUID>
+  pnpm exec tsx --tsconfig tsconfig.base.json scripts/maintenance/register-lms-templates.ts --tenant=<UUID> --apply
+
+Первый вызов только показывает план. Второй добавляет недостающие версии с approved=false, сверяет байты/контракты и не меняет старые формы, номера или профиль центра. Повтор идемпотентен. Затем директор один раз открывает «Настройки → Формы», просматривает и подтверждает три новые формы. Это отдельная первичная настройка центра, не повторный ввод в операторской подготовке документов. Для нового центра формы устанавливаются штатной регистрацией и также требуют подтверждения. Команда не подтверждает нормативный профиль и не заменяет подпись документа. Для этого запуска фактический старый синтетический центр и сохранность его 19 прежних форм документируются в agent-c/template-upgrade-before.json и доказательствах регистрации/HTTP/UI.
+Перед pnpm typecheck или pnpm build на Windows корректно остановить только собственные API и workers, использующие сгенерированный Prisma Client. Иначе DLL может быть занята. Не останавливать соседние процессы. Для сборки также остановить собственный web-процесс, использующий тот же dist-каталог.
+  pnpm build
+
+Четыре процесса запускаются в отдельных подготовленных консолях из корня продукта:
+  pnpm --filter @demo/api start
+  pnpm --filter @demo/web exec next start --hostname 127.0.0.1 --port 3159
+  pnpm --filter @demo/render-worker start
+  pnpm --filter @demo/integration-worker start
+
+Открыть http://127.0.0.1:3159/login. Синтетические роли и локальная тестовая настройка перечислены в scripts/verification/lms-full-e2e-env.ps1; тестовые учётные записи готовит scripts/verification/lms-full-e2e-fixture.ts. Пароли в этот отчёт не копируются. Для обычной работы используются существующие роли менеджера и директора, для обучения — отдельный LEARNER. Работодатель видит только доступные ему данные по membership.
+
+API слушает 127.0.0.1:4159. Интеграционный worker автоматически завершает истёкшие попытки, готовит внутренний санитарный журнал/список и продвигает согласованные документы. Он не выполняет сетевую передачу провайдеру. Внешнее соединение остаётся NOT_CONNECTED.
+
+3. ПРОВЕРКИ
+
+Из корня продукта, каждую команду отдельно:
+  pnpm lint
+  pnpm format:check
+  pnpm typecheck
+  pnpm test
+  pnpm test:integration
+  pnpm test:render
+  pnpm test:e2e
+  pnpm build
+  node scripts/verification/autonomy.mjs
+  git diff --check
+
+Для интеграционного набора вместо browser загрузить:
+  . ./scripts/verification/lms-test-env.ps1 integration
+
+Для рендера задать новый абсолютный DEMO_RENDER_EVIDENCE_ROOT внутри docs/evidence с уникальным именем запуска, чтобы сохранить прежние результаты. Для регистрации и target-preview также использовать отдельные evidence-каталоги, как в COMMANDS.json. Точные исполненные команды, env без секретов, время, коды завершения и логи перечислены в COMMANDS.json. Полный discovery и фактическое исполнение новых интеграционных файлов: agent-c/INTEGRATION_DISCOVERY_INVENTORY.json.
+
+Для нового полного браузерного запуска нужен свежий уникальный RunId:
+  . ./scripts/verification/lms-full-e2e-env.ps1 -RunId lms-full-repeat-YYYYMMDD-HHMMSS
+  pnpm exec tsx --tsconfig tsconfig.base.json scripts/verification/lms-full-e2e-fixture.ts
+  pnpm test:e2e
+
+Для полного браузерного набора должны работать свежие API, production web и render-worker на указанных loopback-портах. Отдельный постоянный integration-worker на время этого набора не запускать: lms-first-flow-live.spec.ts сам создаёт настоящий дочерний процесс штатного integration-worker, останавливает и перезапускает только принадлежащий ему PID, затем завершает его. Это позволяет проверить восстановление без вмешательства другого worker. После набора для обычной локальной работы снова запустить integration-worker приведённой выше командой. Helper включает текущие producers/consumers старых сценариев DEMO и привязывает checkpoints к этому RunId; не подставлять исторические заявки/evidence вместо нового выполнения. Не менять выключенные/неподключённые реальные провайдеры ради теста. Браузер использует установленный Chrome. Raw trace, cookies, fixture credentials и runtime-логи не публикуются.
+
+Нагрузочную проверку 100 учащихся выполнять отдельно от тяжёлого LibreOffice-рендера и сборки: tests/integration/lms-http.test.ts. Это read/autosave-нагрузка на локальный синтетический стенд, без видео/рендера и без заявления production-capacity. Актуальный результат и точная команда находятся в COMMANDS.json и agent-c/load-1792017682452.json.
+
+4. ДОКАЗАТЕЛЬСТВА И ГРАНИЦЫ
+
+RUN_MANIFEST.json связывает проверенные источники с коммитом реализации. ACCEPTANCE_RESULTS.json содержит ровно 44 критерия и обязательные подслучаи. MVP_COVERAGE_FINAL.tsv сохраняет все исходные 52 строки, включая начальные статусы, и добавляет фактические результаты. UX_ACTIONS.json разделяет первичный ввод, подготовленную задачу, ошибку/восстановление и действия разных ролей. Исходный браузерный замер исключён прямым указанием пользователя «Продолжить без исходного браузерного замера»; экономия времени относительно него не заявляется.
+
+Проверенные документы перечислены точно в agent-a/ROOT_DOCUMENT_PUBLICATION_MANIFEST.json и agent-a/CUREATED_EVIDENCE_REVIEW.json: синтетические DOCX, PDF и изображения фактических страниц. ROOT_DOCUMENT_VISUAL_REVIEW.json содержит SHA просмотренных страниц. Правовой смысл четырёх форм и проверенные выходы приложения сверены в agent-b/LEGAL_FORM_MATRIX_FINAL.json. Результаты приложения и физическая печать — разные факты: физическая печать не выполнялась. Реальное юридическое завершение документа требует применимого профиля, полномочий и обязательных подписей; локальная инженерная проверка это не заменяет.
+
+Провайдер, sandbox, production и отметка ЛМК учитываются независимо в EXTERNAL_GATES.json. Недостающие входы P01–P13 и порядок отдельного подключения — PROVIDER_CONNECTION_PACKET_RU.txt. Карта всех копий ПДн, обязанности и допуски размещения — PERSONAL_DATA_DEPLOYMENT_GATES_RU.txt. Никакая локальная квитанция тестового адаптера, HTTP200/202, выгрузка или ручное подтверждение не являются подтверждением внешнего принятия или ЛМК.

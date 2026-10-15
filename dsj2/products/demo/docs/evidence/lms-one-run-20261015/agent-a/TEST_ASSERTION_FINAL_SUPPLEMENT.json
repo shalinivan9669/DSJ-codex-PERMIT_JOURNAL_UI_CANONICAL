@@ -1,0 +1,257 @@
+{
+  "status": "PASS_INDEPENDENT_FOUR_APPLIED_TEST_SOURCE_REVIEW_FULL06_REQUIRED",
+  "reviewer": "Agent A independent read-only assertion review",
+  "checkedAtUtc": "2026-10-15T01:42:20.588791+00:00",
+  "overallAcceptance": false,
+  "initialReportsUnchanged": [
+    "EVIDENCE_PUBLICATION_FINAL_REVIEW.json",
+    "agent-a/TEST_ASSERTION_REVIEW.json"
+  ],
+  "case": "G1 keyboard-only original100 import fixture setup",
+  "actualFailure": {
+    "runId": "full-e2e-20261015-05",
+    "path": "agent-c/full-e2e-20261015-05/g1-prepared/g1-failure-diagnostic.json",
+    "line": 600,
+    "description": "Exact raw source workplace assertion failed after this same scenario explicitly normalized conflicting employer fields to company inheritance. Full05 failure remains a failure."
+  },
+  "independentFindings": [
+    "Verified git diff against8c0833407675d8d31c786f37a55572357d7b9805 is empty for G1 test and six relevant product files cited by Agent B.",
+    "Read current importEmployerConflict/inheritImportEmployer: explicit normalization deliberately clears raw bilingual workplace overrides; this is not an LMS code delta.",
+    "Read unchanged G1 setup: company defaultTOO, sourceRU only, conditional explicit alignment, then later raw original workplace assertions. These are contradictory inputs and expected raw preservation.",
+    "Read existing operator-v03-live UI scenario that selects NONE, resolves staged organization, enters distinct sourceKZ and imports without conflict."
+  ],
+  "databaseEvidenceBoundary": "Agent A did not query database. Actual100 blank rows/company mismatch is Agent B read-only evidence in agent-b/G1_EMPLOYER_DIAGNOSIS.json; its source cause independently inspected here.",
+  "proposedChangeReview": {
+    "status": "ACCEPTABLE_WITH_PRESERVATION_CONDITIONS",
+    "target": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+    "method": "Existing visible UI via keyboard helpers: explicit NONE company form, original RU, existing company card distinctKZ checkbox and original KZ; re-open import and paste unchanged original100 rows.",
+    "requiredAdditions": [
+      "Exact saved company RU and KZ names equal original source before import",
+      "Conflict/alignment control absent after actual import preview"
+    ],
+    "requiredPreservation": [
+      "All79 original AST-normalized assertion calls",
+      "All100 original raw identities, RU/KZ names/positions/workplaces, photo bindings and all helper image/hash checks",
+      "All101 document and101DOCX+101PDF file assertions, original verification helpers and negative other-person exclusion",
+      "PASSED/AUTO contract, immutable issuance checks, no changed fixture content",
+      "Zero actual mouse clicks and honest extra keyboard/input counts",
+      "No seed API or direct DB state change; no skip, timeout/result reclassification or relaxed equality"
+    ],
+    "executionStatus": "NOT_RUN",
+    "actualPatchReviewed": false
+  },
+  "sourceFilesBeforePatch": [
+    {
+      "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+      "sha256": "beceb0cd1aa5ee7f418323b41ec1b011461fdc36097f2e8e9de490a5550d81fa"
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-helpers.ts",
+      "sha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858"
+    },
+    {
+      "path": "apps/web/e2e/operator-v03-live.spec.ts",
+      "sha256": "692113c3bcdfa9d4c65b68138986c162b3bd189250f514c4c90e8c75257d7e76"
+    },
+    {
+      "path": "apps/web/components/import-dialog.tsx",
+      "sha256": "87dcfafb8b884a4cd55c7e4efa56b36aa144fff24647a1ac10446da5c6d06838"
+    },
+    {
+      "path": "apps/web/lib/import-employer.ts",
+      "sha256": "bf75d3fc1c8cd46da0e7fcef4d78de1c40d3629bb35bd8ffb7f8ab763c6e8e5b"
+    },
+    {
+      "path": "apps/web/lib/recipient-employer.ts",
+      "sha256": "7f01e5b5c5f08ed395d3cc3bbedc2c89554ba5f0326421857c3bd4887d4c4126"
+    },
+    {
+      "path": "apps/web/components/request-organization-fields.tsx",
+      "sha256": "ee417777ab8ba9988b8dcffef9b4c39b4e951ca35dbbd4e07112ae1e080f8036"
+    },
+    {
+      "path": "apps/web/components/organization-name-fields.tsx",
+      "sha256": "3069f86e8524ea5b62fec266adc345c0eece13db34edc5b39fb9bb53d131bfa5"
+    },
+    {
+      "path": "packages/contracts/src/organization.ts",
+      "sha256": "269ee5ff62804ff2b3a50e5e946c2fee78656850b1d98b953f51563d0954a7bb"
+    },
+    {
+      "path": "tests/fixtures/operator-value/100_people.json",
+      "sha256": "2a7e04492be132472e4ab039dd45b43ba16785edddc02d54369deb3faa4773e2"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "agent-b/G1_EMPLOYER_DIAGNOSIS.json",
+      "sha256": "c5fe813f118d840bb6be5d04583af45a37871b644700de6ef1098402edbbcc48"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-05/g1-prepared/g1-failure-diagnostic.json",
+      "sha256": "079c4c499c2461f015ec13dee9a99e532b729d7034bfe38ef133f37639e6ad0c"
+    }
+  ],
+  "operations": "Source/report reads and local reviewer snapshot only. No product/test edits, browser, database or worker actions; no staging or commit.",
+  "stagedCandidateReview": {
+    "status": "PASS_SOURCE_REVIEW_ONLY_NOT_APPLIED_NOT_RUN",
+    "checkedAtUtc": "2026-10-15T02:15:57.926778+00:00",
+    "candidateSha256": "2359ebd2cbe559fa90c8cb7515e00144f49835dc7367bfd9c97948f27b02440b",
+    "actualSourceSha256StillUnchanged": "beceb0cd1aa5ee7f418323b41ec1b011461fdc36097f2e8e9de490a5550d81fa",
+    "astAssertionComparison": {
+      "method": "TypeScript compiler AST printer, comments removed; exact expression multiset preserves multiplicity, not text grep",
+      "beforeOrdinaryExpectMatchers": 79,
+      "candidateOrdinaryExpectMatchers": 87,
+      "removedOrChangedAssertions": [],
+      "addedAssertions": 8,
+      "expectPollNote": "Agent B counts expect.poll as one extra call:80to88; this review ordinary expect matcher enumeration excludes expect.poll consistently on both sides."
+    },
+    "codeChecks": [
+      "Read actual109add/2conditionalalignmentremove diff; only new initial company UI preparation and its proof/metrics.",
+      "All original raw workplace assertions remain in spec and unchanged G1 helper. Source100 fixture not changed.",
+      "Existing V03 locators match current OrganizationNameFields and request organization card; no selector force or hidden field setter added.",
+      "All setup mutations use existing keyboardSelect/keyboardEnter/keyboardCheck/keyboardActivate, which use page.keyboard and record actual deltas.",
+      "Only new HTTP call is GET customer by currently saved request.customerId; controller returns tenant-scoped organization record directly. Assertions require matching id, NONE and exact original RU/KZ.",
+      "Current editor openImport flushes before showing dialog; actual import modal remains prerequisite, no data prefill API bypass.",
+      "No skip, timeout, retry, fixture/row-count/file-count/outcome/mouse assertion relaxation."
+    ],
+    "executionStatus": "NOT_RUN",
+    "postApplicationHashVerificationRequired": true
+  },
+  "commonProtocolPrivatePatch": {
+    "status": "PRIVATE_PATCH_PREPARED_NOT_APPLIED_NOT_RUN",
+    "checkedAtUtc": "2026-10-15T02:20:01.309837+00:00",
+    "candidateSha256": "0c2e66e0b51d7fe2d0539d85fa443ef251e223142936280b2c0d1cd54c3f8dc2",
+    "actualSourceSha256Unchanged": "00b2e85bf0bf3770b56be4c25d19cebb53dc65b1b9e45eb9cd7a0d02ddb5022f",
+    "changedSourceFile": "apps/web/e2e/operator-common-history-helpers.ts",
+    "independentExactMap": {
+      "biot-protocol": "Өтті/прошел",
+      "ptm-protocol": "Прошел/ Өтті"
+    },
+    "astReview": {
+      "beforeOrdinaryExpectMatchers": 26,
+      "candidateOrdinaryExpectMatchers": 27,
+      "unchanged": 25,
+      "removedOnly": "expect(text).toContain(\"Сдал\")",
+      "added": [
+        "expect(expectedProtocolResult).toBeDefined()",
+        "expect(text).toContain(expectedProtocolResult)"
+      ],
+      "parseErrors": 0
+    },
+    "otherChange": "Record expectedProtocolResult in actual saved-file text readback. No product/fixture/browser operation or new test skip/timeouts.",
+    "executionStatus": "NOT_RUN",
+    "independentPeerReview": {
+      "path": "agent-b/COMMON_PROTOCOL_CANDIDATE_REVIEW.json",
+      "sha256": "615c6d6c272b3ee849a4f378a890f516f0637dca1cd9f5eebab68fd5a5f6bedb",
+      "status": "PASS_SOURCE_REVIEW_ONLY"
+    }
+  },
+  "g1PbOracleReview": {
+    "status": "PASS_INDEPENDENT_SOURCE_AND_SAVED_CONTROL_REVIEW_ONLY",
+    "path": "agent-a/G1_PB_ORACLE_INDEPENDENT_REVIEW.json",
+    "sha256": "02f423bb39825fbb5416f2c10960559bbce58adaf5a0f551eeaf268ad8e49965",
+    "candidateSha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9",
+    "execution": "NOT_RUN",
+    "sourceChanged": false
+  },
+  "finalReviewAtUtc": "2026-10-15T02:34:36.993337+00:00",
+  "historicalSectionBoundary": "Earlier staged/private sections describe their recorded pre-application time and are retained. The actualAppliedReview below supersedes pending application status only; no failed full05 result is changed.",
+  "actualAppliedReview": {
+    "status": "PASS_SOURCE_REVIEW_ONLY",
+    "checkedAtUtc": "2026-10-15T02:34:36.993337+00:00",
+    "applicationGate": "Agent C confirmed full05 terminal exit1 before application. Source edits did not occur during full05.",
+    "files": [
+      {
+        "path": "apps/web/e2e/operator-common-history-helpers.ts",
+        "beforeSha256": "00b2e85bf0bf3770b56be4c25d19cebb53dc65b1b9e45eb9cd7a0d02ddb5022f",
+        "afterSha256": "0c2e66e0b51d7fe2d0539d85fa443ef251e223142936280b2c0d1cd54c3f8dc2",
+        "bytesEqualIndependentlyReviewedCandidate": true
+      },
+      {
+        "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+        "beforeSha256": "beceb0cd1aa5ee7f418323b41ec1b011461fdc36097f2e8e9de490a5550d81fa",
+        "afterSha256": "2359ebd2cbe559fa90c8cb7515e00144f49835dc7367bfd9c97948f27b02440b",
+        "bytesEqualIndependentlyReviewedCandidate": true
+      },
+      {
+        "path": "apps/web/e2e/operator-g1-helpers.ts",
+        "beforeSha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858",
+        "afterSha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9",
+        "bytesEqualIndependentlyReviewedCandidate": true
+      }
+    ],
+    "domainItrPositiveFixture": {
+      "status": "PASS_INDEPENDENT_ACTUAL_SOURCE_REVIEW",
+      "checkedAtUtc": "2026-10-15T02:33:24.727Z",
+      "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+      "beforeSha256": "4681b58ecec9980baca4f7b2afeec9feaf76f723fa88153b1089db3b4e262f35",
+      "afterSha256": "7d43a5942e379fc637d925472d750bb94faf474bb43e4e8df551fdd6baf1319f",
+      "beforeReconstruction": "Reversed only the two exact approved ITR ternaries in memory; reconstructed bytes match captured full05 pre-run SHA256.",
+      "assertionsBefore": 226,
+      "assertionsAfter": 226,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "parseErrors": 0,
+      "change": "Only ITR positive grade uses exact 95 баллов / 95 балл; WORKER branch retains original strings.",
+      "executionStatus": "NOT_RUN_FULL06_REQUIRED"
+    },
+    "preservation": {
+      "commonProtocol": {
+        "ordinaryExpectBefore": 26,
+        "ordinaryExpectAfter": 27,
+        "exactUnchanged": 25,
+        "onlyReplacement": "Old standalone Сдал containment replaced with mandatory defined template lookup and exact independently pinned bilingual phrase containment.",
+        "noProductionOracleImport": true
+      },
+      "g1UiSetup": {
+        "ordinaryExpectBefore": 79,
+        "ordinaryExpectAfter": 87,
+        "allOriginalAssertionsRetained": true,
+        "newAssertions": 8,
+        "actualSetup": "Keyboard UI selects NONE and saves exact original RU/KZ company names; GET only verifies saved company; original100 source rows and101-document checks retained."
+      },
+      "g1PbGroup": {
+        "ordinaryExpectBefore": 106,
+        "ordinaryExpectAfter": 106,
+        "exactUnchanged": 105,
+        "expectPollOuterMatchersUnchanged": 5,
+        "onlyReplacement": "Count exactly100 bounded Тапсырды/сдал phrases for COURSE protocol; old standalone Сдал count removed. No alternatives or relaxed count."
+      },
+      "domainItr": {
+        "before": 226,
+        "after": 226,
+        "allNormalizedAssertionExpressionsIdentical": true,
+        "workerInputsUnchanged": true
+      }
+    },
+    "ownCommonValidation": {
+      "command": "pnpm exec prettier --check apps/web/e2e/operator-common-history-helpers.ts; pnpm exec eslint apps/web/e2e/operator-common-history-helpers.ts",
+      "executionMode": "Sequential with first exit checked; CI=true",
+      "actualExitCode": 0,
+      "toolSessionId": 73663,
+      "startedAt": null,
+      "finishedAt": null,
+      "clockBasis": "Exact process clocks were not recorded. Actual terminal completion and exit0 were observed.",
+      "stdout": "Checking formatting... All matched files use Prettier code style! ESLint emitted no diagnostics."
+    },
+    "sourceFrozen": true,
+    "executionStatus": "NOT_RUN_FULL06_REQUIRED",
+    "full05Preserved": {
+      "exitCode": 1,
+      "passed": 10,
+      "failed": 3,
+      "dependencyNotRun": 206,
+      "completedAtUtc": "2026-10-15T02:27:56Z",
+      "attribution": "Agent C terminal run record; not independently re-executed by A."
+    },
+    "noProductEdits": true,
+    "noAdditionalBrowserDatabaseOrRendererActions": true,
+    "overallAcceptance": false,
+    "peerAppliedReport": {
+      "path": "agent-b/G1_REPAIR_APPLIED_REVIEW.json",
+      "sha256": "402265a43af6dc316efaf6cb6115ff450bf8c480498a1789bea2206459da7d47",
+      "readByA": true
+    }
+  }
+}

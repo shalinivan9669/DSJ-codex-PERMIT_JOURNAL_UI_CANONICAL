@@ -1,0 +1,104 @@
+{
+  "status": "PASS_PREPARED_DOWNLOAD_BOUNDARY_ONLY",
+  "reviewedAt": "2026-10-15T09:48:34.657629+00:00",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "historicalAttempts": [
+    {
+      "runId": "g1-download-boundary-20261015-01",
+      "command": "pnpm exec playwright test --config .runtime/g1-download-order-repair/download.config.ts",
+      "startedAt": "2026-10-15T09:42:36.6438252Z",
+      "finishedAt": "2026-10-15T09:43:46.9943611Z",
+      "exitCode": 1,
+      "buildId": "9daYzb73gsxr8g-J7toW7",
+      "diagnosticSha256": "e9cd8ccf85fb91cef211e32fec2d337ddfe84b3d21f7d08e45f3320d4f5a2fba",
+      "producerSha256": "6dd2523fef1f45223b968ee3e0ba99cc582b961359c19deffbbe2ad6ce2d8463",
+      "consumerSha256": "31261350ef24be2fb8da31d1d69b098c84b1e7d846d4986704f660d0a4620cb2",
+      "sourceUnchangedBeforeAfter": true,
+      "retainedLocalRecords": [
+        {
+          "identifier": "agent-b/g1-download-boundary-20261015-01/run-start.json",
+          "sha256": "040e9255115b6c862b778a1c3d5488f4d637407a39eb3edc45d0072e03239d1d"
+        },
+        {
+          "identifier": "agent-b/g1-download-boundary-20261015-01/run-end.json",
+          "sha256": "81a09ddb0ee508573150b5a48e4cf7e3aa07fb01cc8705e1c8b294128b0e99ac"
+        },
+        {
+          "identifier": "agent-b/g1-download-boundary-20261015-01/command.log",
+          "sha256": "8c853617aaad40306e0b477dc20482b37507f401886dbace08da4262a99c89b7"
+        },
+        {
+          "identifier": "agent-b/g1-download-boundary-20261015-01/download-existing.spec.ts.txt",
+          "sha256": "e9cd8ccf85fb91cef211e32fec2d337ddfe84b3d21f7d08e45f3320d4f5a2fba"
+        }
+      ]
+    },
+    {
+      "runId": "g1-download-boundary-20261015-02",
+      "command": "pnpm exec playwright test --config .runtime/g1-download-order-repair/download.config.ts",
+      "startedAt": "2026-10-15T09:44:31.1198458Z",
+      "finishedAt": "2026-10-15T09:45:35.6145880Z",
+      "exitCode": 0,
+      "buildId": "9daYzb73gsxr8g-J7toW7",
+      "diagnosticSha256": "2b4eac07e23999fcc12104513cca340c838da6cb160d4f023035c8dd545bf36b",
+      "producerSha256": "6dd2523fef1f45223b968ee3e0ba99cc582b961359c19deffbbe2ad6ce2d8463",
+      "consumerSha256": "31261350ef24be2fb8da31d1d69b098c84b1e7d846d4986704f660d0a4620cb2",
+      "sourceUnchangedBeforeAfter": true,
+      "retainedLocalRecords": [
+        {
+          "identifier": "agent-b/g1-download-boundary-20261015-02/run-start.json",
+          "sha256": "837982e372a9ec2e932110d44a06bfb80ba2e723c399854be922f683013dee51"
+        },
+        {
+          "identifier": "agent-b/g1-download-boundary-20261015-02/run-end.json",
+          "sha256": "d3c5b31e0dea04f662482366fc89f8d5aec4d29e437d17ccb420d7b488974f11"
+        },
+        {
+          "identifier": "agent-b/g1-download-boundary-20261015-02/command.log",
+          "sha256": "2cdfdb9c9d9f2249a7913da8abb775aad36318fd14f39ed15e4cde7bb9cb5341"
+        },
+        {
+          "identifier": "agent-b/g1-download-boundary-20261015-02/download-existing.spec.ts.txt",
+          "sha256": "2b4eac07e23999fcc12104513cca340c838da6cb160d4f023035c8dd545bf36b"
+        }
+      ]
+    }
+  ],
+  "firstAttempt": {
+    "status": "FAIL_RETAINED",
+    "reason": "The diagnostic asserted the canonical pathname before waiting for the existing files panel to load; it observed /requests and failed before download.",
+    "repair": "The only archived diagnostic source difference moves the existing files-ready assertion before the same exact pathname assertion. No assertion is removed or weakened."
+  },
+  "secondAttempt": {
+    "status": "PASS",
+    "testCount": 1,
+    "skipped": 0,
+    "scope": "One real keyboard download and reopen of an already existing synthetic issuance; no new entry, approval, issuance or render.",
+    "elapsedMilliseconds": 59296.278,
+    "focusElapsedMilliseconds": 25706.638899999998,
+    "focusShiftTabs": 502,
+    "focusTabs": 0,
+    "downloadElapsedMilliseconds": 291.0232999999971,
+    "mouseClicks": 0,
+    "businessWrites": 0,
+    "requestUnchanged": true,
+    "actualDownloads": 1,
+    "downloadedBytes": 114229,
+    "downloadedSha256": "9448719de46f305a82f7d4ec5eb52127fa6cb6ea9265ca672b028fe51aa30419",
+    "actualAcceptanceRecordSha256": "95ad9f7fc3d392fa5de3b1d20354e3a65fcc17b4b4c572a9ecfc20bd8792d896",
+    "artifactBytesIndependentlyRehashedByAgentA": true
+  },
+  "limits": [
+    "The fresh whole G1 producer deep02 remains FAILED; this diagnostic does not replace full-suite acceptance.",
+    "502 Shift+Tab actions and 25.7 seconds of focus traversal are recorded facts, not a claim that a minimum-action UX budget was achieved.",
+    "The very tall screenshot is excluded: a downscaled whole-page image does not support readable full visual QA.",
+    "The PDF is hash-verified only in this review; no new visual, physical-print or signature-completion claim.",
+    "Private diagnostic sources, traces, runtime logs and raw checkpoint/ZIP files remain outside this publication selection."
+  ],
+  "evidencePaths": [
+    "agent-a/G1_DOWNLOAD_ARMING_INDEPENDENT_REVIEW.json",
+    "agent-a/HISTORICAL_BROWSER_ATTEMPTS_SUPPLEMENT_02.json"
+  ],
+  "publicationSelection": "This sanitized self-contained summary only; original diagnostic artifacts remain retained locally."
+}

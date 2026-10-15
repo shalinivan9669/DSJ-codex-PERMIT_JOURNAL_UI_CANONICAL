@@ -1,0 +1,15 @@
+▶ E02/E04/E09/S03: route requirements, private projections and frozen late deadlines
+  ✔ E02/E09: requiresPractice denies real HTTP exam start and external official eligibility (1567.2672ms)
+  ✔ E02/E09: requiresProctoring denies real HTTP exam start and external official eligibility (1074.6868ms)
+  ✔ E09: missing required commission blocks publication and cannot become an official result even after a malformed stored publication (749.8532ms)
+  ✔ E04: every learner course, enrollment, attempt, autosave and material response omits grading keys before and after completion when disclosure is disabled (3587.9155ms)
+  ✔ S03: late external confirmation keeps the original exam-day deadline and a new calendar version cannot rewrite the sealed batch (1588.2466ms)
+✔ E02/E04/E09/S03: route requirements, private projections and frozen late deadlines (9840.9378ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14723.9003

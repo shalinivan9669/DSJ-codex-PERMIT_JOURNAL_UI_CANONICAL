@@ -1,0 +1,1182 @@
+{
+  "purpose": "Independent gap map for coordinator; does not declare LOCAL_ACCEPTED or replace final 44/52 artifacts.",
+  "checkedAt": "2026-10-15T01:10:29.580868+00:00",
+  "criteriaCount": 44,
+  "requirementCount": 52,
+  "localRequirements": 49,
+  "externalRequirements": [
+    {
+      "id": "EXT01",
+      "status": "BLOCKED_EXTERNAL_INPUTS",
+      "requiredInputs": "Нет выбранной МИС, API-контракта, тестового доступа/ключей и разрешения внешнего взаимодействия"
+    },
+    {
+      "id": "EXT02",
+      "status": "BLOCKED_EXTERNAL_INPUTS",
+      "requiredInputs": "Три локальных запуска не разрешают production deploy, миграции, ПДн и внешнюю отправку"
+    },
+    {
+      "id": "EXT03",
+      "status": "BLOCKED_EXTERNAL_INPUTS",
+      "requiredInputs": "Учебный центр передаёт учебный факт; медицинская организация ведёт ЛМК; реальный доступ отсутствует"
+    }
+  ],
+  "baselineScopeAdjustment": {
+    "subcase": "Original fresh browser baseline before LMS implementation",
+    "status": "NOT_RUN",
+    "excludedByUserInstruction": true,
+    "instruction": "Продолжить без исходного браузерного замера",
+    "instructionReportedByCoordinator": true,
+    "documentGeneratedAtUtc": "2026-10-15T01:10:29.580868+00:00",
+    "userInstructionTimestampUtc": null,
+    "timestampMeaning": "This is report-generation time, not the time of the user's message. Agent C received the exact quote from the coordinator; original message timestamp is not supplied in this evidence.",
+    "actualRetainedEvidence": [
+      "agent-c/baseline-build-command.json",
+      "agent-c/baseline-build.log",
+      "agent-c/baseline-db-deploy.log"
+    ],
+    "archivedBaseCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+    "archiveSha256": "4D1AE93537DF142928C55E3816AF352475F9A49783C56F35851D8B464CEA5577",
+    "ordinaryDraftProbeCaveat": "agent-c/baseline was current development code with LMS navigation already integrated; it is not a preimplementation browser measurement.",
+    "noBeforeAfterTimeSavingClaim": true
+  },
+  "criteria": [
+    {
+      "criterionId": "L01",
+      "title": "Регистрация и приглашение без повышения прав.",
+      "requirementIds": [
+        "MVP01",
+        "MVP02"
+      ],
+      "sourceDefinition": "Пройти B2C-регистрацию и B2B-приглашение, вход/выход/отзыв сессии, профиль и версию согласия. Проверить истёкший/повторный invite, изменение role/tenant/membership в запросе, безопасные ошибки и ограничения частоты. Саморегистрация даёт только learner; знание ИИН не связывает с чужим Recipient. Реальные email/SMS не отправляются; локальный token flow показывается как локально проверенный.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-http-01.log",
+        "agent-c/first-entry-run02/results.json",
+        "agent-a/recovery-race-after.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "L02",
+      "title": "Явная матрица доступа к новым и старым поверхностям.",
+      "requirementIds": [
+        "MVP02",
+        "MVP21"
+      ],
+      "sourceDefinition": "Проверить каждую новую роль и неизвестную роль через прямые URL/API/server actions, файлы/download/public links/jobs, старые выдачу/settings/users/corrections/approvals. Результат запрета проверять сервером, а не скрытой кнопкой. Неявное разрешение старого ctx(write) для всех, кроме VIEWER/EMPLOYER, не допускается. Существующие разрешённые действия менеджера/директора сохранены; product-policy/allowlist не обходится новой ролью.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "root-policy-tests.log",
+        "agent-c/lms-http-01.log",
+        "agent-a/accounting-boundaries.log",
+        "agent-a/UNKNOWN_ROLE_ACCEPTANCE.json",
+        "agent-c/lms-audit-03.log",
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-c/conditional-instructor-scope.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "L03",
+      "title": "Tenant, организация и слушатель.",
+      "requirementIds": [
+        "MVP01",
+        "MVP02",
+        "MVP03",
+        "MVP04",
+        "MVP20",
+        "MVP21"
+      ],
+      "sourceDefinition": "Подменить tenant/organization/recipient/enrollment/material/result IDs при чтении, записи и скачивании. Пользователь не получает чужие записи, файлы, число людей или подтверждение существования человека через поиск/дедупликацию. Представитель работодателя действует только по проверенному membership, преподаватель — по назначенному scope. Tenant из тела запроса не принимается как источник полномочий.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-http-01.log",
+        "agent-c/first-entry-run02/results.json",
+        "agent-a/recovery-race-after.log",
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-c/conditional-instructor-scope.json",
+        "agent-a/UNKNOWN_ROLE_ACCEPTANCE.json",
+        "agent-a/accounting-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "L04",
+      "title": "Редактор и неизменяемые опубликованные версии.",
+      "requirementIds": [
+        "MVP04",
+        "MVP05",
+        "MVP06",
+        "MVP21",
+        "MVP23"
+      ],
+      "sourceDefinition": "Создать двуязычный курс, модули/уроки/порядок/обязательность/сроки, нормативное основание и единый RegulatoryProfileVersion; сохранить черновик, опубликовать, создать следующую версию. Подтвердить, что прежние enrollment/result/document остаются на своей версии. Черновик недоступен learner напрямую. Неподтверждённая правовая версия не получает CONFIRMED/effectiveFrom по догадке.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/first-entry-run02/results.json",
+        "agent-c/first-entry-live/course-actions.json",
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "agent-a/exam-boundaries.log",
+        "agent-a/external-exams-final.log",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Actual critical first-flow reached course/PDF/exam and worker restart, then exposed a real document snapshot name-fallback mismatch. Root fix and targeted regression pass; complete fresh first-flow must rerun on the rebuilt API."
+      ]
+    },
+    {
+      "criterionId": "L05",
+      "title": "Приватные материалы.",
+      "requirementIds": [
+        "MVP07",
+        "MVP08"
+      ],
+      "sourceDefinition": "Загрузить и открыть разрешённые PDF/файлы; проверить ограничения типа/размера, защиту storage URL, path traversal, scope, закрытый курс и неподходящий enrollment. Активный HTML не исполняется. Публичная ссылка/токен другого назначения не открывает закрытый материал. Скачивание не объявляется прочтением; подтверждение ознакомления имеет честное назначение.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/domain-materials-gc.log",
+        "agent-a/PROXY_ACCEPTANCE.json",
+        "agent-a/material-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "L06",
+      "title": "Видео, Range и продолжение.",
+      "requirementIds": [
+        "MVP07",
+        "MVP09"
+      ],
+      "sourceDefinition": "Проверить play/pause/seek, авторизованные Range, сохранение позиции и продолжение после reload/relogin. Большой файл не буферизуется целиком в API. Повтор heartbeat, перекрывающиеся интервалы, seek в конец и произвольная client position не создают фиктивный просмотр. Чужой Range-запрос отклоняется. Технический просмотр не заявляется доказательством личности или усвоения.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/domain-materials-gc.log",
+        "agent-a/PROXY_ACCEPTANCE.json",
+        "agent-a/material-boundaries.log",
+        "agent-a/video-browser/PLAYBACK_ACCEPTANCE.json",
+        "agent-c/critical-lms-20261015-01/lms-video-live/PLAYBACK_ACCEPTANCE.json",
+        "agent-c/critical-lms-20261015-01/results.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Actual critical video test now passed including logout/login; bind this exact evidence to final source."
+      ]
+    },
+    {
+      "criterionId": "L07",
+      "title": "Серверный прогресс и пререквизиты.",
+      "requirementIds": [
+        "MVP03",
+        "MVP06",
+        "MVP07",
+        "MVP08",
+        "MVP09"
+      ],
+      "sourceDefinition": "Пройти обязательные элементы, проверить агрегированный прогресс и допуск. Подмена completion=100, повтор/перестановка сообщений, старая revision и смена CourseVersion не обходят условия и не затирают свежие данные. Состояние сохраняется после reload/relogin/restart. Просроченный доступ и разрешённое продление обрабатываются по политике и журналируются.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "agent-a/video-browser/PLAYBACK_ACCEPTANCE.json",
+        "agent-c/critical-lms-20261015-01/lms-video-live/PLAYBACK_ACCEPTANCE.json",
+        "agent-c/critical-lms-20261015-01/results.json",
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-a/STORAGE_ACCEPTANCE.json",
+        "agent-a/RESTORED_OUTBOX_ACCEPTANCE.json",
+        "agent-c/load-1792017682452.json",
+        "agent-a/accounting-boundaries.log",
+        "agent-c/template-upgrade/acceptance.json",
+        "agent-c/template-upgrade/command03.json",
+        "agent-c/template-upgrade/command03.log",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Linked first-flow text/PDF and exam were reached, but the enclosing whole flow failed later at document preparation. Complete fresh rerun remains required."
+      ]
+    },
+    {
+      "criterionId": "L08",
+      "title": "Массовое назначение и дедупликация.",
+      "requirementIds": [
+        "MVP20"
+      ],
+      "sourceDefinition": "На масштабе 1/10/100/250 назначить готовой группе опубликованную версию одной общей операцией. Проверить одинаковые/повторные запросы, смешанную пачку с ошибкой, неоднозначное совпадение человека и индивидуальные исключения. Создаётся ровно требуемое число связей; нет дублей/потери готовых строк/самовольного угадывания Recipient.250 — тестовый масштаб, не новый бизнес-лимит.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+        "agent-c/lms-identity-selection-01.log",
+        "agent-c/lms-identity-selection-01-command.json",
+        "agent-c/AMBIGUOUS_SELECTION_ACCEPTANCE.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Actual complete batch-ambiguity-02 passed all four group sizes and explicit selection by distinguishing visible person data. Complete mandatory suite remains pending."
+      ]
+    },
+    {
+      "criterionId": "L09",
+      "title": "RU/KZ и мобильный путь обучения.",
+      "requirementIds": [
+        "MVP24",
+        "MVP25"
+      ],
+      "sourceDefinition": "Проверить новые формы и learner/employer path в RU/KZ на 360/390/768/1440px, длинные имена/казахские подписи, keyboard/focus/errors. Смена языка не теряет данные. Доступны продолжение, материалы и действия; нет обрезанного CTA, управления только hover и обязательного горизонтального scroll всей страницы. Контентные переводы не выдаются за утверждённые профессиональные материалы.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "agent-b/geometry-run01/lms-geometry-live/geometry.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "L10",
+      "title": "Аудит и сохранение.",
+      "requirementIds": [
+        "MVP01",
+        "MVP05",
+        "MVP09",
+        "MVP22"
+      ],
+      "sourceDefinition": "Проверить события регистрации, публикации, назначения, продления, изменения содержания и разрешений: actor/scope/revision/time/correlation. Обычный пользователь не редактирует аудит. После перезапуска реальные данные/связи/файлы/прогресс доступны; секреты, ответы экзамена и ПДн не оказываются в открытых логах. Сохранённый audit подтверждает выполненное действие, а не только вызов UI.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-http-01.log",
+        "agent-c/first-entry-run02/results.json",
+        "agent-a/recovery-race-after.log",
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "agent-a/STORAGE_ACCEPTANCE.json",
+        "agent-a/RESTORED_OUTBOX_ACCEPTANCE.json",
+        "agent-c/load-1792017682452.json",
+        "agent-a/accounting-boundaries.log",
+        "agent-c/template-upgrade/acceptance.json",
+        "agent-c/template-upgrade/command03.json",
+        "agent-c/template-upgrade/command03.log",
+        "agent-c/lms-audit-03.log",
+        "agent-c/lms-audit-03-command.json",
+        "agent-c/AUDIT_ACCEPTANCE.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Actual audit/permission/restart tests now pass; final source/runtime manifest and all-log privacy reconciliation by coordinator remain."
+      ]
+    },
+    {
+      "criterionId": "E01",
+      "title": "Банк вопросов и версия экзамена.",
+      "requirementIds": [
+        "MVP11",
+        "MVP21",
+        "MVP23"
+      ],
+      "sourceDefinition": "Создать/изменить RU/KZ вопросы с одним/несколькими ответами, категории, выборку и порядок. Опубликованные QuestionVersion/ExamVersion неизменяемы; изменение банка не меняет начатую попытку. Собственная попытка сохраняет набор/порядок/правило оценки. Внешнему экзамену не приписываются наши вопросы и попытка.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/exam-boundaries.log",
+        "agent-a/external-exams-final.log",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-c/first-entry-run02/results.json",
+        "agent-c/first-entry-live/course-actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "E02",
+      "title": "Допуск и маршрут оценки.",
+      "requirementIds": [
+        "MVP06",
+        "MVP09",
+        "MVP10",
+        "MVP12"
+      ],
+      "sourceDefinition": "Сервер проверяет Enrollment/CourseVersion/RegulatoryProfileVersion, обязательные элементы и assessmentRoute. PRACTICE, CENTER_EXAM и EXTERNAL_AUTHORIZED не взаимозаменяемы. PRACTICE может закрыть учебный элемент, но не создаёт официальный результат; NEEDS_LEGAL_REVIEW не обходится администратором/прямым API. Название курса «БиОТ» не определяет маршрут. Общие компетенции не превращаются в разрешённый экзамен центра ради e2e; отдельный профиль специальных компетенций сохраняется.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/external-exams-final.log",
+        "agent-c/learning-run04/results.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "E03",
+      "title": "Таймер, reload, offline и autosave.",
+      "requirementIds": [
+        "MVP03",
+        "MVP10",
+        "MVP12",
+        "MVP25"
+      ],
+      "sourceDefinition": "Начать реальную попытку, изменить клиентские часы, перезагрузить страницу, отключить/восстановить сеть, отправить ответы в обратном порядке revisions и закрыть браузер до истечения срока. Серверный deadline не сдвигается, сохранённые ответы не теряются, старая запись не затирает новую, истечение времени завершает попытку без активной страницы. Возврат показывает фактическое состояние.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/external-exams-final.log",
+        "agent-c/learning-run04/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json",
+        "agent-a/exam-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Include new expiry/restart race test with latest client-clock UI proof in final source binding."
+      ]
+    },
+    {
+      "criterionId": "E04",
+      "title": "Серверная оценка и защита ключей.",
+      "requirementIds": [
+        "MVP10",
+        "MVP11",
+        "MVP12"
+      ],
+      "sourceDefinition": "Подмена score/pass/correctAnswer/maximum из клиента не влияет на итог. До разрешённого момента ключи и объяснения не выдаются через ответы API, source/serialized state или материалы. После завершения раскрываются только согласно политике. Клиент получает достоверный процент/счёт/правило, но не полномочие изменять финализированный результат.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/external-exams-final.log",
+        "agent-c/learning-run04/results.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "E05",
+      "title": "Concurrency, повтор и лимиты.",
+      "requirementIds": [
+        "MVP10",
+        "MVP12",
+        "MVP16"
+      ],
+      "sourceDefinition": "Одновременно создать попытку из двух вкладок, дважды отправить submit, столкнуть submit с deadline, повторить запрос после restart и исчерпать пересдачи. Транзакционные ограничения не дают лишней активной попытки, дублированного результата или обхода лимита. Ответы повторов согласованы с исходным результатом. Доказательство включает состояние БД/счётчики, а не только отсутствие ошибки в браузере.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/exam-boundaries.log",
+        "agent-a/external-exams-final.log",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "E06",
+      "title": "Порог и точность сравнения.",
+      "requirementIds": [
+        "MVP10",
+        "MVP12",
+        "MVP23",
+        "SAN01"
+      ],
+      "sourceDefinition": "Для применимого тестового санитарного профиля 80% дают FAIL, ближайшая достижимая доля строго выше 80% — PASS. Проверить дробные значения без ошибочного округления, пустой/неполный результат и известный максимум. Правило связано с версией и не переносится автоматически на БиОТ/другие курсы. Неизвестный score внешнего экзамена не заполняется выдуманным числом.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/exam-boundaries.log",
+        "agent-a/external-exams-final.log",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "E07",
+      "title": "Происхождение и eligibility результата.",
+      "requirementIds": [
+        "MVP10",
+        "MVP12",
+        "MVP13",
+        "MVP14",
+        "MVP15",
+        "SAN01"
+      ],
+      "sourceDefinition": "FAILED/ABSENT/VOIDED, архивный PASSED/AUTO, PRACTICE и UNVERIFIED external evidence не дают официальный LMS-документ или санитарную отправку. Обычное старое печатное поведение и MANUAL/IMPORTED/CLEARED не меняются. CENTER_EXAM ссылается на attemptId; разрешённый EXTERNAL_AUTHORIZED — на externalEvidenceId без фиктивной внутренней попытки. DOCUMENT_REVIEWED не обозначается MACHINE_VERIFIED; достаточность проверки задаёт маршрут. Отсутствующее основание оставляет ожидание, а не eligible result.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/external-exams-final.log",
+        "agent-c/learning-run04/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-a/external-manual-evidence.log",
+        "root-external-date-03.log",
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-c/lms-legacy-outcome-01.log",
+        "agent-c/lms-legacy-outcome-01-command.json",
+        "agent-c/LEGACY_AUTO_BOUNDARY_ACCEPTANCE.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "E08",
+      "title": "Document bridge, типы и нумерация.",
+      "requirementIds": [
+        "MVP13",
+        "MVP14",
+        "MVP15",
+        "MVP16",
+        "MVP19"
+      ],
+      "sourceDefinition": "Провести допустимый синтетический результат через существующий DEMO workflow отдельно для протокола, сертификата и удостоверения. Проверить ключ tenant/enrollment/result revision/document type, транзакционные номера, повтор event/выпуска и crash worker. Нет второго движка печати/нумерации, двойной выдачи или расхода нового номера без основания. Свой тест не создаёт официальный результат ЕЦС и не меняет внешнего эмитента на учебный центр.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Final full DEMO regression and linked first-entry flow await execution."
+      ]
+    },
+    {
+      "criterionId": "E09",
+      "title": "Согласования, комиссии и подписи.",
+      "requirementIds": [
+        "MVP13",
+        "MVP14",
+        "MVP15"
+      ],
+      "sourceDefinition": "Проверить разрешённый тестовый путь подготовки и отрицательные сценарии обязательного approval/подписи/комиссии/практики/прокторинга. Один директор не заменяет требуемые подписи комиссии работодателя, центра или внешнего эмитента. Отсутствие внешнего провайдера ЭЦП даёт ожидание; локальный success/изображение подписи не заменяет криптографическую проверку. Исключение прокторинга из MVP не отменяет обязательного требования конкретного официального маршрута.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "command-test-05.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "E10",
+      "title": "Реестр, QR, приватность и legalForm.",
+      "requirementIds": [
+        "MVP03",
+        "MVP17",
+        "MVP18",
+        "MVP19",
+        "MVP20"
+      ],
+      "sourceDefinition": "UI/метаданные/файлы/реестр/QR различают PAPER_ORIGINAL, ELECTRONIC_ORIGINAL, COPY_OF_ORIGINAL, INFORMATION_CARD. Подготовленный неподписанный PDF не выдаётся за электронный оригинал; бумажное подписание подтверждается отдельно; скан — копия конкретного оригинала с правильным эмитентом. Public verification показывает только разрешённый минимум, без ИИН/телефона/фото/ключей/медицинских данных. Закрытые скачивания защищены membership; QR не подтверждает государственную регистрацию или медицинский допуск.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Linked first-flow actual UI QR publication awaits execution; separate public24-view and exact paper binding browser evidence pass."
+      ]
+    },
+    {
+      "criterionId": "E11",
+      "title": "Исправление, отзыв и история источника.",
+      "requirementIds": [
+        "MVP16",
+        "MVP17",
+        "MVP18",
+        "MVP19",
+        "MVP22",
+        "SAN08"
+      ],
+      "sourceDefinition": "Исправить данные после выпуска, отозвать и выпустить новую связанную версию. Исходный номер, байты и snapshot остаются; новый профиль/курс/шаблон не переписывает историю. QR показывает актуальный статус, сохраняется связь исправления с оригиналом и внешним основанием. Источник и эмитент не теряются при исправлении; повтор запроса не создаёт лишнюю связанную выдачу.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/external-manual-evidence.log",
+        "agent-a/external-exams-final.log",
+        "root-external-date-03.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "E12",
+      "title": "Реальные документы и регрессия печати.",
+      "requirementIds": [
+        "MVP13",
+        "MVP14",
+        "MVP15",
+        "MVP17",
+        "MVP24",
+        "MVP25"
+      ],
+      "sourceDefinition": "Из свежей сборки пройти UI → API/БД → application preview/PDF → сохранённые DOCX/PDF → скачивание/QR. Открыть и визуально проверить реальные файлы, длинные данные, RU/KZ, читаемость, страницы и отсутствие повреждения старых форм/чужой визуальной идентичности. Не заменять application PDF синтетическим отдельно созданным файлом. Физическая печать и реальные подписи — отдельные доказательства; PNG/preview не означают, что они выполнены.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "ROOT_DOCUMENT_VISUAL_REVIEW.json",
+        "agent-c/sanitary-files-1792014509550/visual-review.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Full render and mandatory complete browser command still pending; no final criterion PASS."
+      ]
+    },
+    {
+      "criterionId": "S01",
+      "title": "Применимая программа и подтверждённый источник.",
+      "requirementIds": [
+        "MVP23",
+        "SAN01"
+      ],
+      "sourceDefinition": "Список/очередь получают только eligible confirmed VerifiedExamResult по единому RegulatoryProfileVersion, правильному tenant/learner/enrollment и разрешённому маршруту. Проверить оба допустимых источника: attemptId и externalEvidenceId. PRACTICE/AUTO/UNVERIFIED/VOIDED/NEEDS_LEGAL_REVIEW, чужая запись и неподходящая программа не создают отправку. Название СЭЗ/БиОТ/ПТМ не даёт разрешения автоматически; решение суда 3586 по БиОТ не является разрешением санитарной МИС.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-a/external-manual-evidence.log",
+        "agent-a/external-exams-final.log",
+        "root-external-date-03.log",
+        "agent-c/learning-run04/results.json",
+        "agent-c/lms-legacy-outcome-01.log",
+        "agent-c/lms-legacy-outcome-01-command.json",
+        "agent-c/LEGACY_AUTO_BOUNDARY_ACCEPTANCE.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S02",
+      "title": "Автоматическая подготовка без потерь.",
+      "requirementIds": [
+        "SAN02"
+      ],
+      "sourceDefinition": "Финализировать eligible result, затем выполнить restart/crash между commit результата, записью/обработкой события и сборкой списка. Журнал/список/срок/outbox появляются без открытия страницы, ручной кнопки, готовности PDF или refresh; при готовых предпосылках 0 операторских действий. Нет потерянной/дублированной строки. Подпись работника не подменяется записью БД, её ожидание учитывается отдельно.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-a/STORAGE_ACCEPTANCE.json",
+        "agent-a/RESTORED_OUTBOX_ACCEPTANCE.json",
+        "agent-c/load-1792017682452.json",
+        "agent-a/accounting-boundaries.log",
+        "agent-c/template-upgrade/acceptance.json",
+        "agent-c/template-upgrade/command03.json",
+        "agent-c/template-upgrade/command03.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Persistent local integration worker / linked first-flow list execution pending; restored independent worker PASS already recorded."
+      ]
+    },
+    {
+      "criterionId": "S03",
+      "title": "Следующий рабочий день и календарь.",
+      "requirementIds": [
+        "MVP23",
+        "SAN03"
+      ],
+      "sourceDefinition": "Проверить basis=INTERNAL_SLA, исходное время экзамена, timezone центра, настраиваемый cutoff и сохранённую CalendarVersion. Случаи: пятница, праздничная цепочка, рабочая суббота, граница года/покрытия, локальная полночь, позднее подтверждение и новая версия календаря. Неизвестное покрытие не экстраполируется; список готовится немедленно, срок требует проверки. Внешняя неизвестная дата не заменяется датой загрузки. Срок подготовки не называется подтверждённым законом сроком доставки/отметки ЛМК.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-a/external-manual-evidence.log",
+        "agent-a/external-exams-final.log",
+        "root-external-date-03.log",
+        "agent-c/first-entry-run02/results.json",
+        "agent-c/first-entry-live/course-actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S04",
+      "title": "Снимок и минимальный payload.",
+      "requirementIds": [
+        "MVP22",
+        "SAN04"
+      ],
+      "sourceDefinition": "Проверить Batch/Item: точные RegulatoryProfileVersion, route, assessmentKind, result revision и источник, состав, preparedAt/dueAt, hash. После подготовки изменить текущего человека/работодателя/курс — исходный snapshot неизменен. Межtenant доступ к списку/вложениям невозможен. Поля внутреннего журнала не выдаются за спецификацию API; ИИН/БИН добавляются только при подтверждённой необходимости маршрута, клиническая карта не собирается.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S05",
+      "title": "Outbox, lease и аварийное восстановление.",
+      "requirementIds": [
+        "MVP22",
+        "SAN02",
+        "SAN05"
+      ],
+      "sourceDefinition": "Два workers, heartbeat, истечение lease, устаревший fencing token, replay, rate limit, crash до/после локального checkpoint и конфликт другого payload под тем же ключом. Проверить идемпотентность destination/result revision, bounded retries/backoff, отсутствие дублей и возобновление после restart. GenerationJob не используется как внешняя очередь. Безопасные повторы автоматические; универсальная внешняя exactly-once не заявляется.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-a/STORAGE_ACCEPTANCE.json",
+        "agent-a/RESTORED_OUTBOX_ACCEPTANCE.json",
+        "agent-c/load-1792017682452.json",
+        "agent-a/accounting-boundaries.log",
+        "agent-c/template-upgrade/acceptance.json",
+        "agent-c/template-upgrade/command03.json",
+        "agent-c/template-upgrade/command03.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S06",
+      "title": "Доставка, предметное принятие и неизвестный исход.",
+      "requirementIds": [
+        "SAN06"
+      ],
+      "sourceDefinition": "На контролируемом тестовом адаптере проверить HTTP200/202 без принятия, предметный receipt, partial/reject/pending, timeout/UNKNOWN, lookup/reconciliation. Частичная приёмка учитывается по строкам. Нет зелёной пачки по одному принятому item; ACCEPTED МИС не означает LMK_CONFIRMED. При неизвестном исходе без lookup/документированной идемпотентности нет слепой повторной регистрации. Это контрактная локальная проверка; статус реального провайдера остаётся отдельным.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S07",
+      "title": "Callback и внешние идентификаторы.",
+      "requirementIds": [
+        "SAN07"
+      ],
+      "sourceDefinition": "В тестовом контракте проверить auth, подпись/секрет согласно поддержанному контракту, replay, body hash, внешний ID, correlation, tenant и destination. Подделка, повтор с конфликтом, неверный tenant и неверная среда отклоняются; корректный повтор идемпотентен. Не включать реальный публичный callback по придуманной схеме и не считать тестовый обработчик подключённым сервисом.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S08",
+      "title": "Исправление и отзыв после передачи.",
+      "requirementIds": [
+        "SAN08"
+      ],
+      "sourceDefinition": "Создать новую связанную result revision/delivery для поддержанного тестовым маршрутом исправления; сохранить первоначальные payload/receipt/evidence. Неподдержанная correction/revoke не изображается успешной. Проверить повтор, конфликт и гонку исправления с получением receipt; исходная запись не редактируется на месте, история показывает фактический результат каждой версии.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S09",
+      "title": "NOT_CONNECTED и DataAccessPolicy.",
+      "requirementIds": [
+        "MVP21",
+        "SAN09",
+        "OPS01"
+      ],
+      "sourceDefinition": "Без провайдера/ключей/контракта нет реальной сети, fake success или доступной ложной «Отправить». Даже с технической конфигурацией обязательный DataAccessPolicy блокирует соответствующие получение/передачу без основания/согласия/прав и применимого механизма доступа. Неизвестность остаётся ACCESS_CONTROL_ROUTE_REQUIRES_CLARIFICATION; «интеграция отсутствует» не трактуется как освобождение. Обычный DEMO и независимые локальные операции продолжают работать. Ответственной роли в уместном контексте видно «Подключение не настроено», слушателю служебная настройка не показывается.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log",
+        "PERSONAL_DATA_DEPLOYMENT_GATES_RU.txt",
+        "PROVIDER_CONNECTION_PACKET_RU.txt",
+        "root-policy-tests.log",
+        "EXTERNAL_GATES.json",
+        "agent-b/geometry-run01/lms-geometry-live/geometry.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S10",
+      "title": "Выгрузки и ручные доказательства.",
+      "requirementIds": [
+        "MVP21",
+        "MVP22",
+        "MVP24",
+        "SAN10",
+        "OPS01"
+      ],
+      "sourceDefinition": "Получить реальные CSV/XLSX/PDF внутреннего списка, проверить состав/число строк, formula injection, авторизацию, доступ к скачиванию и безопасное хранение вложений. Ручная фиксация основания сохраняет actor/time/source/среду/hash/item revision; известные значения не вводятся повторно. Operator-attested не повышается автоматически в machine-verified ACCEPTED/LMK_CONFIRMED. До подтверждения схемы файл не называется официальным импортом. LMS не выпускает ЛМК и не подтверждает медицинский допуск.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-a/external-manual-evidence.log",
+        "agent-a/external-exams-final.log",
+        "root-external-date-03.log",
+        "agent-c/sanitary-files-1792014509550/visual-review.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "S11",
+      "title": "Сквозной путь, масштаб, миграции, восстановление и DEMO.",
+      "requirementIds": [
+        "MVP01",
+        "MVP02",
+        "MVP03",
+        "MVP04",
+        "MVP05",
+        "MVP06",
+        "MVP07",
+        "MVP08",
+        "MVP09",
+        "MVP10",
+        "MVP11",
+        "MVP12",
+        "MVP13",
+        "MVP14",
+        "MVP15",
+        "MVP16",
+        "MVP17",
+        "MVP18",
+        "MVP19",
+        "MVP20",
+        "MVP21",
+        "MVP22",
+        "MVP24",
+        "MVP25",
+        "SAN11",
+        "OPS01",
+        "OPS02"
+      ],
+      "sourceDefinition": "В свежем браузере выполнить весь локальный путь из раздела 8 и регрессию обычной печати/ручных исключений/менеджера/директора. Проверить fresh install и upgrade с базовой схемы f8a9a66 на разных disposable БД; applied migrations не меняются. Backup/restore включает новые связи, аудит, outbox и приватные файлы: после восстановления прочитать связанный результат/файл и возобновить задачи без дублей.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-a/STORAGE_ACCEPTANCE.json",
+        "agent-a/RESTORED_OUTBOX_ACCEPTANCE.json",
+        "agent-c/load-1792017682452.json",
+        "agent-a/accounting-boundaries.log",
+        "agent-c/template-upgrade/acceptance.json",
+        "agent-c/template-upgrade/command03.json",
+        "agent-c/template-upgrade/command03.log",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Full integration02 passed280/280 with quiet100-learner load; final production build02 passed. Full browser03 stopped after portal fixture failure, targeted portal correction passed; complete fresh browser command and final renderer evidence remain to bind."
+      ]
+    },
+    {
+      "criterionId": "S12",
+      "title": "Полнота внешних условий и честные границы результата.",
+      "requirementIds": [
+        "MVP23",
+        "SAN12",
+        "OPS01",
+        "OPS02",
+        "EXT01",
+        "EXT02",
+        "EXT03"
+      ],
+      "sourceDefinition": "Подготовить P01–P13, владельцев, статус и недостающие подтверждения маршрута/полномочий/API/ключей/подписей/календаря/контента/оснований. Проверить локальные gates размещения ПДн в Казахстане и условного гос-сервиса доступа; неизвестные production регионы не превращаются в «соответствует». Для каждого внешнего результата есть самостоятельный status/evidence: PROVIDER_SANDBOX_ACCEPTED, PRODUCTION_ACCEPTED, LMK_MARK_CONFIRMED. Три последних сейчас BLOCKED_EXTERNAL_INPUTS; локальный mock/HTTP/выгрузка не повышают их. Судебная/нормативная неопределённость не переписывает историю и не открывает спорный официальный маршрут.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "PERSONAL_DATA_DEPLOYMENT_GATES_RU.txt",
+        "PROVIDER_CONNECTION_PACKET_RU.txt",
+        "root-policy-tests.log",
+        "EXTERNAL_GATES.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator to publish final EXTERNAL_GATES and reconcile P01-P13 with final policy tests."
+      ]
+    },
+    {
+      "criterionId": "UX01",
+      "title": "Преемственность.",
+      "requirementIds": [
+        "UX01"
+      ],
+      "sourceDefinition": "Сравнить свежий baseline и итог в той же среде: типовая обычная работа DEMO не получила новых обязательных LMS-полей, переходов, кабинетов и решений. Сохранены полезные компоненты, компактная таблица, общие значения/исключения, вставка/импорт, keyboard, autosave и пакет документов. Возврат к записи не запускает первоначальный мастер. Исторический screenshot не заменяет текущее сравнение.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Complete current DEMO regression pending. Original browser baseline explicitly excluded by user; no before/after timing claim."
+      ]
+    },
+    {
+      "criterionId": "UX02",
+      "title": "Главные действия и фактический бюджет.",
+      "requirementIds": [
+        "UX02"
+      ],
+      "sourceDefinition": "В текущей области задачи один очевидный основной CTA и максимум одно необходимое вторичное действие; второе не добавлено ради симметрии. Подготовленные назначение группы, подготовка комплекта и скачивание целятся в ≤2 фактических действия, продолжение —1. Проверить полную последовательность, включая поиск/выбор/переход, а не последние две кнопки. Необязательные лишние действия устраняются; превышение бюджета не округляется до PASS.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "UX03",
+      "title": "Ноль повторного ввода.",
+      "requirementIds": [
+        "UX03"
+      ],
+      "sourceDefinition": "Для известных подтверждённых данных по пути человек → назначение → оценка → документ → санитарный список repeatedFields=0. Переключение вкладки/шага не очищает данные. Исправление действительно нового/ошибочного значения учитывается отдельно. Данные не угадываются по одному ИИН/ФИО; одна неоднозначная строка требует только адресного решения.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "UX04",
+      "title": "Defaults и autosave.",
+      "requirementIds": [
+        "UX04"
+      ],
+      "sourceDefinition": "Общие значения, безопасные предпочтения и вычисления работают; ручные/импортированные/очищенные исключения не затираются. Нет отдельного «Сохранить» для каждой строки и toast на каждое поле. Ошибка/задержка сохранения видна кратко и не теряет ввод. Defaults не создают факт экзамена, согласия, подписи, дату или внешнюю квитанцию; необходимые бизнес-действия не скрываются.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/first-entry-run02/results.json",
+        "agent-c/first-entry-live/course-actions.json",
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Final unchanged old DEMO autosave/manual/imported/cleared regression pending."
+      ]
+    },
+    {
+      "criterionId": "UX05",
+      "title": "Пакетная работа.",
+      "requirementIds": [
+        "UX05"
+      ],
+      "sourceDefinition": "Для 1/10/100/250 участников количество одинаковых подтверждений не растёт на человека. Готовые данные, выбор людей/форм и формат сохраняются; одна ошибочная строка исправляется адресно без ручного разделения списка, повторного ввода и каскада диалогов. Реальные обязательные действия разных подписантов учитываются отдельно, не объявляются автоматически выполненными.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "UX06",
+      "title": "Контекст и исключения.",
+      "requirementIds": [
+        "UX06"
+      ],
+      "sourceDefinition": "Нужные поля/действия соответствуют роли и состоянию; редкие настройки доступны по требованию. При готовых предпосылках санитарные список/срок/outbox/безопасные повторы требуют 0 операторских действий; нет ручного продвижения технических состояний или постоянного refresh. Существенное исключение имеет человеческую причину и следующий доступный шаг. Неподключённый провайдер не добавляет памятки всем ролям и ложную отправку.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-regulatory-07.log",
+        "agent-c/lms-regulatory-07-command.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-b/geometry-run01/lms-geometry-live/geometry.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Linked first-entry automatic sanitary flow pending; internal no-UI worker assertions already pass."
+      ]
+    },
+    {
+      "criterionId": "UX07",
+      "title": "Микротекст.",
+      "requirementIds": [
+        "UX07"
+      ],
+      "sourceDefinition": "Проверить глазами штатные и ошибочные экраны: нет лишних пояснений очевидного, дублей, постоянных советов, обязательных tutorial/tooltip, DTO/enum/outbox/HTTP/stack trace. Labels и доступные названия контролов сохранены. Смысл документа, отсутствие подписи, непринятие и неизвестный исход показаны коротко и честно. Нельзя «пройти» проверку удалением всех подписей или одним поиском regex.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-b/geometry-run01/lms-geometry-live/geometry.json",
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "UX08",
+      "title": "Восстановление и обратная связь.",
+      "requirementIds": [
+        "UX08"
+      ],
+      "sourceDefinition": "Медленная сеть, offline, повторный вход, конфликт и повтор запроса не теряют работу и не создают дубликаты. Есть короткое состояние выполнения/сохранения и переход к точному исправлению с корректным focus; нет каскада toast/модальных окон или возврата к началу пути. Неизвестный исход передачи не превращается в успех автоматически.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "agent-c/lms-http-01.log",
+        "agent-c/first-entry-run02/results.json",
+        "agent-a/recovery-race-after.log",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "UX09",
+      "title": "Эргономика.",
+      "requirementIds": [
+        "UX09"
+      ],
+      "sourceDefinition": "Свежий браузер: крупные действия и компактные списки, доступные зоны нажатия с целью ≥44×44 CSS px, разумные Tab/Enter/Escape, focus/loading, длинные значения, RU/KZ и 360/390/768/1440px. Основная кнопка не закрывает данные/ошибку/клавиатурный фокус; Enter не вызывает опасную финализацию. Hover не единственный способ доступа; сложная таблица может иметь собственный доступный scroll с идентификацией строки.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "agent-b/geometry-run01/lms-geometry-live/geometry.json",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "Coordinator final review of every mandatory subcase and bind results to delivered tree."
+      ]
+    },
+    {
+      "criterionId": "UX10",
+      "title": "Полное измерение, а не визуальное обещание.",
+      "requirementIds": [
+        "UX10"
+      ],
+      "sourceDefinition": "Для обязательных сценариев раздела 8 есть role/startState/preconditions/goal/actualSteps/result и отдельные counts: clicks/taps, keyboard actions, filledFields, repeatedFields, decisions, navigation, dialogs/confirmations, manualRefresh, elapsedTime. Разделены первичный ввод, подготовленный повтор и восстановление после ошибки; seed/API не скрывает стоимость пользовательского ввода. Реальные подписи/действия другого участника показаны отдельно. Есть свежие доказательства и сравнение до/после; выдуманные секунды/экономия отсутствуют. Непройденный UX-критерий блокирует локальную приёмку соответствующего сценария.",
+      "auditStatus": "EVIDENCE_COLLECTED_NOT_FINAL_ACCEPTANCE",
+      "existingEvidencePaths": [
+        "agent-c/first-entry-run02/results.json",
+        "agent-c/first-entry-live/course-actions.json",
+        "agent-c/lms-learning-02.log",
+        "agent-c/learning-run04/results.json",
+        "root-documents-test.log",
+        "agent-a/document-scheduling.log",
+        "root-document-projection-01.log",
+        "root-document-projection-01.json",
+        "agent-b/operator-run03/results.json",
+        "agent-b/operator-live/actions.json",
+        "agent-b/paper-run04/lms-paper-signature-live/acceptance.json",
+        "root-public-browser/results.json",
+        "agent-a/route-calendar-boundaries.log",
+        "agent-c/targeted-batches-clock-20261015-01/results.json",
+        "agent-c/lms-batches-clock-01-command.json",
+        "agent-c/batch-ambiguity-20261015-02/results.json",
+        "agent-c/batch-ambiguity-20261015-02/lms-assignment-batches-live/actions.json"
+      ],
+      "missingIndexedPaths": [],
+      "remainingChecks": [
+        "New linked first-entry test measures whole course/people/exam/documents/sanitary chain; execution pending.",
+        "Merge all UX schemas with explicit keyboard/fields/repeated/decisions/navigation/dialogs/manualRefresh/time and separate participant decisions.",
+        "Original browser baseline excluded by user; retain NOT_RUN subcase with scope adjustment."
+      ]
+    }
+  ]
+}

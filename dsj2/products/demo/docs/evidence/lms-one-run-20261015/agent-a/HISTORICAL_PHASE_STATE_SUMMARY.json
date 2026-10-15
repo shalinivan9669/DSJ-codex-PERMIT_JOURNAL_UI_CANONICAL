@@ -1,0 +1,42 @@
+{
+  "status": "REVIEWED_SANITIZED_HISTORICAL_STATE_ONLY",
+  "reviewedAtUtc": "2026-10-15T02:40:52.745768+00:00",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "localAccepted": false,
+  "historicalCapturedAt": "2026-10-14T22:59:07.5526099Z",
+  "privateSourceProvenance": {
+    "name": "CHECKPOINT_BEFORE_FINAL_BUILD.json",
+    "sha256": "85d5e236b40eb627bbe259d3277870cbcf7caa64db9be4128771d02f3f4f0ad1",
+    "bytes": 887,
+    "publication": "Original operational source not selected; only this explicit sanitized historical summary is selected."
+  },
+  "historicalFacts": {
+    "criterionCount": 44,
+    "boundedSubcases": 137,
+    "unresolvedOrExcludedSubcases": 28,
+    "finalTopLevelPass": 0,
+    "fullIntegration": {
+      "lateFileCount": 6,
+      "tests": 280,
+      "status": "PASS",
+      "skipped": 0,
+      "failures": 0
+    },
+    "runtime": "Owned API/web/render/integration processes paused for final build",
+    "mandatoryFullBrowser": {
+      "status": "NOT_RUN",
+      "reason": "Automatic tool approval rejected targeted first-flow command before execution; coordinator requested user confirmation for current browser run",
+      "sanitizedEvidence": "COMMAND_REJECTIONS.json"
+    },
+    "originalBaseline": {
+      "status": "NOT_RUN",
+      "excludedByUserInstruction": true,
+      "sourceQuoteOmitted": "The historical source quote contains replacement characters and is not reconstructed here; the separate sanitized authorization record retains the actual instruction."
+    }
+  },
+  "evidencePaths": [
+    "COMMAND_REJECTIONS.json"
+  ],
+  "sourceReadReview": "Entire887-byte source read; no scanner findings. Private rejection filename replaced with sanitized record. No raw commands, credentials, tokens, fixture rows or session data copied. Counts are the historical captured state, not the current final acceptance."
+}

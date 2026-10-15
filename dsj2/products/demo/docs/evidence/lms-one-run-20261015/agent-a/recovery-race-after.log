@@ -1,0 +1,9 @@
+✔ two different recovery tokens cannot both replace the same learner password (1240.1339ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2155.8232

@@ -1,0 +1,114 @@
+{
+  "status": "PASS_SAMPLED_TWO_PAGE_VISUAL_REVIEW_WITH_DECLARED_LEGACY_SCOPE",
+  "reviewedUtc": "2026-10-15T09:51:22.283627+00:00",
+  "source": {
+    "path": "docs/evidence/lms-one-run-20261015/agent-b/g1-download-boundary-20261015-02/keyboard-download.pdf",
+    "sha256": "9448719de46f305a82f7d4ec5eb52127fa6cb6ea9265ca672b028fe51aa30419",
+    "bytes": 114229,
+    "pageCount": 2,
+    "requestId": "3944e3eb-ff4f-492d-8759-a004216f6320",
+    "artifactId": "aa341437-5929-4b29-be38-e0324c76ae4c",
+    "generatedOn": "Earlier production build04; same immutable bytes subsequently downloaded on build9daYzb73gsxr8g-J7toW7"
+  },
+  "render": {
+    "command": "pdftoppm -r 180 -png <source> <review-dir>/page",
+    "engine": "Poppler",
+    "dpi": 180,
+    "allSourcePagesRenderedAndViewed": true,
+    "pdfModified": false
+  },
+  "pages": [
+    {
+      "page": 1,
+      "png": "docs/evidence/lms-one-run-20261015/agent-b/g1-pdf-sample-visual-20261015-01/page-1.png",
+      "pngSha256": "a8ec7e28ef852817f403e657b48ffe991d8e7e4b947ade492b3f581a17919430",
+      "pixelDimensions": [
+        1489,
+        2105
+      ],
+      "actualViewed": true,
+      "reviewMethod": "Full-page Poppler PNG inspected with view_image at original detail; page2 separately re-opened to inspect all content",
+      "pdfSizePt": [
+        595.303955078125,
+        841.8897705078125
+      ],
+      "textBlocksWithinPage": true,
+      "visiblePhotoPlacements": 1,
+      "demoNotIssuedFooterPresent": true
+    },
+    {
+      "page": 2,
+      "png": "docs/evidence/lms-one-run-20261015/agent-b/g1-pdf-sample-visual-20261015-01/page-2.png",
+      "pngSha256": "61845ca496e9385641726bebcecefd27f971c00ed4edc631eb6de7f9f4df3d52",
+      "pixelDimensions": [
+        1489,
+        2105
+      ],
+      "actualViewed": true,
+      "reviewMethod": "Full-page Poppler PNG inspected with view_image at original detail; page2 separately re-opened to inspect all content",
+      "pdfSizePt": [
+        595.303955078125,
+        841.8897705078125
+      ],
+      "textBlocksWithinPage": true,
+      "visiblePhotoPlacements": 0,
+      "demoNotIssuedFooterPresent": true
+    }
+  ],
+  "observations": [
+    {
+      "check": "Readability and overflow",
+      "result": "PASS_SAMPLE",
+      "details": "Both full A4 pages actually viewed. Text stays within its card borders; no clipped words, overlapping text, missing-glyph squares or content outside page edges observed. Text bounding boxes independently fit each page."
+    },
+    {
+      "check": "Photo field",
+      "result": "PASS_SYNTHETIC_IMAGE_PLACEMENT",
+      "details": "Page1 contains a solid teal synthetic test image inside the bordered photo field. It is intentionally not a real portrait; page2 contains blank repeat-examination forms."
+    },
+    {
+      "check": "Learner name languages",
+      "result": "DECLARED_PRESERVED_LEGACY_MAPPING",
+      "details": "Printed learner name is Russian only, matching FULL_NAME_RU. Distinct Kazakh name remains in raw/snapshot but is not printed by the pinned PB card reference. This is not a claim of bilingual printed learner names."
+    },
+    {
+      "check": "Other bilingual text",
+      "result": "PASS_SAMPLE",
+      "details": "Organization and position show RU/KZ values. Certificate, course, protocol/date and signature captions contain readable RU/KZ text. Long organization/course text wraps inside the card without overlap."
+    },
+    {
+      "check": "Identity and dates",
+      "result": "PASS_SAMPLE",
+      "details": "PB-CARD-00044 and matching PB-PROTOCOL-00010 are readable. Issue/protocol date22.09.2026 and validity22.09.2027 are visible."
+    },
+    {
+      "check": "Blank repeat forms",
+      "result": "INTENTIONAL_REFERENCE_CONTENT",
+      "details": "Secondary cells preserve blank repeat-knowledge-examination fields and signature/place-of-stamp lines; they are not populated learner records or evidence of a second examination."
+    },
+    {
+      "check": "Legal meaning",
+      "result": "PASS_DEMO_UNSIGNED_BOUNDARY",
+      "details": "Both pages visibly contain red ДЕМО — НЕ ЯВЛЯЕТСЯ ВЫДАННЫМ ДОКУМЕНТОМ. Signature/stamp areas are unfilled; no real signature, electronic-original or legal-issuance claim is made."
+    }
+  ],
+  "privacySelection": {
+    "candidateFiles": [
+      "docs/evidence/lms-one-run-20261015/agent-b/g1-pdf-sample-visual-20261015-01/page-1.png",
+      "docs/evidence/lms-one-run-20261015/agent-b/g1-pdf-sample-visual-20261015-01/page-2.png",
+      "docs/evidence/lms-one-run-20261015/agent-b/g1-pdf-sample-visual-20261015-01/VISUAL_REVIEW.json"
+    ],
+    "syntheticOnly": true,
+    "containsCredentialsOrTokens": false,
+    "realPortraitIncluded": false,
+    "giantBrowserScreenshotExcluded": true,
+    "independentAgentAPrivacyReview": "PENDING_EXPLICIT_SELECTION",
+    "overallPublicationAcceptance": "PENDING_FULL_SUITE"
+  },
+  "limits": [
+    "Visual review covers only this one downloaded PB card PDF and all of its two pages, not all101 saved PDFs.",
+    "Prior101DOCX/101PDF hash and text checks are separate evidence.",
+    "No physical print output or actual legal signature is verified.",
+    "This read-only sampled visual review does not upgrade failed G1 deep02 or pending full-suite acceptance toPASS."
+  ]
+}

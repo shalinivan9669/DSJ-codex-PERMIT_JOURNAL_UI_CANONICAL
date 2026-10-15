@@ -1,0 +1,717 @@
+{
+  "startedAt": "2026-10-14T21:21:09.496Z",
+  "host": "127.0.0.1",
+  "port": "55449",
+  "baselineRef": "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b",
+  "syntheticOnly": true,
+  "checks": [
+    {
+      "id": "UPGRADE_FROM_F8A9A66",
+      "status": "PASS",
+      "database": "demo_test_lms_upgrade_a_mv8m6zjq",
+      "priorMigrations": 23,
+      "currentMigrations": 25,
+      "preservedRowHashes": {
+        "Tenant": "3e7c308d408831580b599f4819b5aabdacd1bfef8badf70b6b3bdc4b825cc426",
+        "User": "1668daa5bd385ce552f26181dcb1648a96f95c845e28be7ccbef573c61ea995a",
+        "Recipient": "620248c5633579040307dcfb8f2e65e3086de4d103706c708fbbe860541b4185"
+      },
+      "automaticHistoricalExamBackfill": 0
+    },
+    {
+      "id": "FRESH_INSTALL_BACKUP_RESTORE",
+      "status": "PASS",
+      "sourceDatabase": "demo_test_lms_backup_a_mv8m6zjq",
+      "restoredDatabase": "demo_test_lms_restore_a_mv8m6zjq",
+      "tables": 76,
+      "privateFiles": 1,
+      "privateFileHash": "e22254f13999675c9ddfd574da8309f106b4ecd33c6db5b930e7d08d26be41b8",
+      "databaseRowHashesVerified": true,
+      "pendingOutboxRestored": "1",
+      "backupOutput": {
+        "backup": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\backup",
+        "tables": 76,
+        "files": 1,
+        "assets": 126
+      },
+      "restoreOutput": {
+        "verified": true,
+        "databaseContentsVerified": true,
+        "tables": 76,
+        "files": 1,
+        "assets": 126
+      },
+      "verifyOutput": {
+        "verified": true,
+        "databaseContentsVerified": true,
+        "tables": 76,
+        "files": 1,
+        "assets": 126
+      },
+      "backupManifest": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\backup\\manifest.json"
+    }
+  ],
+  "dumpTool": "pg_dump (PostgreSQL) 16.14 (Ubuntu 16.14-0ubuntu0.24.04.1)",
+  "restoreTool": "pg_restore (PostgreSQL) 16.14 (Ubuntu 16.14-0ubuntu0.24.04.1)",
+  "status": "PASS",
+  "finishedAt": "2026-10-14T21:22:19.601Z",
+  "commands": [
+    {
+      "executable": "csc.exe",
+      "args": [
+        "/nologo",
+        "/target:exe",
+        "/out:C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\pg_dump_wsl16.exe",
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\PgWslTestWrapper.cs"
+      ],
+      "startedAt": "2026-10-14T21:21:09.499Z",
+      "finishedAt": "2026-10-14T21:21:09.725Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "wsl.exe",
+      "args": [
+        "--exec",
+        "/usr/lib/postgresql/16/bin/pg_dump",
+        "--version"
+      ],
+      "startedAt": "2026-10-14T21:21:09.726Z",
+      "finishedAt": "2026-10-14T21:21:09.842Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "wsl.exe",
+      "args": [
+        "--exec",
+        "/usr/lib/postgresql/16/bin/pg_restore",
+        "--version"
+      ],
+      "startedAt": "2026-10-14T21:21:09.842Z",
+      "finishedAt": "2026-10-14T21:21:09.964Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "-C",
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b",
+        "--",
+        "dsj2/products/demo/packages/database/prisma/"
+      ],
+      "startedAt": "2026-10-14T21:21:09.964Z",
+      "finishedAt": "2026-10-14T21:21:10.032Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220001_demo/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.034Z",
+      "finishedAt": "2026-10-14T21:21:10.095Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220002_invariants/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.096Z",
+      "finishedAt": "2026-10-14T21:21:10.170Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220003_demo_import/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.172Z",
+      "finishedAt": "2026-10-14T21:21:10.233Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220004_import_mapping/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.234Z",
+      "finishedAt": "2026-10-14T21:21:10.297Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609220005_utc_runtime/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.298Z",
+      "finishedAt": "2026-10-14T21:21:10.398Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240006_group_events/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.399Z",
+      "finishedAt": "2026-10-14T21:21:10.513Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240007_operator_value/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.514Z",
+      "finishedAt": "2026-10-14T21:21:10.693Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240008_core_integrity/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.695Z",
+      "finishedAt": "2026-10-14T21:21:10.846Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240009_public_verification/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.849Z",
+      "finishedAt": "2026-10-14T21:21:10.956Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240010_value_attachment_event/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:10.958Z",
+      "finishedAt": "2026-10-14T21:21:11.034Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240011_group_revision_required/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.035Z",
+      "finishedAt": "2026-10-14T21:21:11.114Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609240012_employer_invites/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.115Z",
+      "finishedAt": "2026-10-14T21:21:11.200Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609250013_order_employer_scope/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.201Z",
+      "finishedAt": "2026-10-14T21:21:11.281Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609250014_organization_names/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.283Z",
+      "finishedAt": "2026-10-14T21:21:11.366Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202609290015_request_capacity_250/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.367Z",
+      "finishedAt": "2026-10-14T21:21:11.445Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610010016_director_approval/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.446Z",
+      "finishedAt": "2026-10-14T21:21:11.547Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610010017_approval_lifecycle_guard/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.549Z",
+      "finishedAt": "2026-10-14T21:21:11.629Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610020018_two_working_roles/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.630Z",
+      "finishedAt": "2026-10-14T21:21:11.716Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610040019_partial_issuance_scope/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.717Z",
+      "finishedAt": "2026-10-14T21:21:11.791Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610040020_draft_proposal_status/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.792Z",
+      "finishedAt": "2026-10-14T21:21:11.867Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610040021_legacy_issuance_compatibility/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.868Z",
+      "finishedAt": "2026-10-14T21:21:11.946Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610040029_request_resource_capacity/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:11.948Z",
+      "finishedAt": "2026-10-14T21:21:12.071Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/202610050030_approval_resolved_snapshot/migration.sql"
+      ],
+      "startedAt": "2026-10-14T21:21:12.072Z",
+      "finishedAt": "2026-10-14T21:21:12.156Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/migrations/migration_lock.toml"
+      ],
+      "startedAt": "2026-10-14T21:21:12.158Z",
+      "finishedAt": "2026-10-14T21:21:12.271Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "git",
+      "args": [
+        "show",
+        "f8a9a663a5fb26454917f84ed8bb8ca62d503e1b:dsj2/products/demo/packages/database/prisma/schema.prisma"
+      ],
+      "startedAt": "2026-10-14T21:21:12.272Z",
+      "finishedAt": "2026-10-14T21:21:12.351Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM pg_database WHERE datname='demo_test_lms_upgrade_a_mv8m6zjq'"
+      ],
+      "startedAt": "2026-10-14T21:21:12.352Z",
+      "finishedAt": "2026-10-14T21:21:12.421Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "CREATE DATABASE \"demo_test_lms_upgrade_a_mv8m6zjq\""
+      ],
+      "startedAt": "2026-10-14T21:21:12.421Z",
+      "finishedAt": "2026-10-14T21:21:12.527Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "node.exe",
+      "args": [
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\node_modules\\prisma\\build\\index.js",
+        "migrate",
+        "deploy",
+        "--schema",
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\baseline-prisma\\schema.prisma"
+      ],
+      "startedAt": "2026-10-14T21:21:12.527Z",
+      "finishedAt": "2026-10-14T21:21:15.505Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM pg_tables WHERE schemaname='public' AND tablename='Course'"
+      ],
+      "startedAt": "2026-10-14T21:21:15.505Z",
+      "finishedAt": "2026-10-14T21:21:15.559Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "[bounded synthetic SQL]"
+      ],
+      "startedAt": "2026-10-14T21:21:15.559Z",
+      "finishedAt": "2026-10-14T21:21:15.614Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT to_jsonb(t)::text FROM \"Tenant\" t ORDER BY id"
+      ],
+      "startedAt": "2026-10-14T21:21:15.614Z",
+      "finishedAt": "2026-10-14T21:21:15.667Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT to_jsonb(t)::text FROM \"User\" t ORDER BY id"
+      ],
+      "startedAt": "2026-10-14T21:21:15.668Z",
+      "finishedAt": "2026-10-14T21:21:15.723Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT to_jsonb(t)::text FROM \"Recipient\" t ORDER BY id"
+      ],
+      "startedAt": "2026-10-14T21:21:15.723Z",
+      "finishedAt": "2026-10-14T21:21:15.777Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM \"_prisma_migrations\""
+      ],
+      "startedAt": "2026-10-14T21:21:15.777Z",
+      "finishedAt": "2026-10-14T21:21:15.828Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "node.exe",
+      "args": [
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\node_modules\\prisma\\build\\index.js",
+        "migrate",
+        "deploy",
+        "--schema",
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\prisma\\schema.prisma"
+      ],
+      "startedAt": "2026-10-14T21:21:15.829Z",
+      "finishedAt": "2026-10-14T21:21:17.984Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT to_jsonb(t)::text FROM \"Tenant\" t ORDER BY id"
+      ],
+      "startedAt": "2026-10-14T21:21:17.984Z",
+      "finishedAt": "2026-10-14T21:21:18.031Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT to_jsonb(t)::text FROM \"User\" t ORDER BY id"
+      ],
+      "startedAt": "2026-10-14T21:21:18.031Z",
+      "finishedAt": "2026-10-14T21:21:18.076Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT to_jsonb(t)::text FROM \"Recipient\" t ORDER BY id"
+      ],
+      "startedAt": "2026-10-14T21:21:18.076Z",
+      "finishedAt": "2026-10-14T21:21:18.126Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM \"VerifiedExamResult\""
+      ],
+      "startedAt": "2026-10-14T21:21:18.126Z",
+      "finishedAt": "2026-10-14T21:21:18.192Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM \"_prisma_migrations\""
+      ],
+      "startedAt": "2026-10-14T21:21:18.192Z",
+      "finishedAt": "2026-10-14T21:21:18.315Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM pg_database WHERE datname='demo_test_lms_backup_a_mv8m6zjq'"
+      ],
+      "startedAt": "2026-10-14T21:21:18.315Z",
+      "finishedAt": "2026-10-14T21:21:18.414Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "CREATE DATABASE \"demo_test_lms_backup_a_mv8m6zjq\""
+      ],
+      "startedAt": "2026-10-14T21:21:18.414Z",
+      "finishedAt": "2026-10-14T21:21:18.541Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM pg_database WHERE datname='demo_test_lms_restore_a_mv8m6zjq'"
+      ],
+      "startedAt": "2026-10-14T21:21:18.541Z",
+      "finishedAt": "2026-10-14T21:21:18.656Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "CREATE DATABASE \"demo_test_lms_restore_a_mv8m6zjq\""
+      ],
+      "startedAt": "2026-10-14T21:21:18.656Z",
+      "finishedAt": "2026-10-14T21:21:18.745Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "node.exe",
+      "args": [
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\node_modules\\prisma\\build\\index.js",
+        "migrate",
+        "deploy",
+        "--schema",
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\packages\\database\\prisma\\schema.prisma"
+      ],
+      "startedAt": "2026-10-14T21:21:18.745Z",
+      "finishedAt": "2026-10-14T21:21:20.793Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "[bounded synthetic SQL]"
+      ],
+      "startedAt": "2026-10-14T21:21:20.795Z",
+      "finishedAt": "2026-10-14T21:21:20.848Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "node.exe",
+      "args": [
+        "deployment/backup.mjs",
+        "backup",
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\backup"
+      ],
+      "startedAt": "2026-10-14T21:21:20.848Z",
+      "finishedAt": "2026-10-14T21:21:59.142Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "node.exe",
+      "args": [
+        "deployment/backup.mjs",
+        "restore",
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\backup"
+      ],
+      "startedAt": "2026-10-14T21:21:59.142Z",
+      "finishedAt": "2026-10-14T21:22:11.553Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "node.exe",
+      "args": [
+        "deployment/backup.mjs",
+        "verify",
+        "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\.runtime\\lms-one-run\\agent-a-storage-mv8m6zjq\\backup"
+      ],
+      "startedAt": "2026-10-14T21:22:11.553Z",
+      "finishedAt": "2026-10-14T21:22:19.527Z",
+      "exitCode": 0
+    },
+    {
+      "executable": "psql.exe",
+      "args": [
+        "-X",
+        "-A",
+        "-t",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT count(*) FROM \"RegulatoryOutbox\" WHERE status='PENDING'"
+      ],
+      "startedAt": "2026-10-14T21:22:19.529Z",
+      "finishedAt": "2026-10-14T21:22:19.601Z",
+      "exitCode": 0
+    }
+  ]
+}

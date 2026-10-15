@@ -1,0 +1,707 @@
+{
+  "status": "REFERENCE_GRAPH_REVIEWED_AGAINST_CURATED217_SNAPSHOT",
+  "checkedAt": "2026-10-15T01:20:14.490633+00:00",
+  "reviewer": "agent-a",
+  "pathBase": "docs/evidence/lms-one-run-20261015",
+  "allowlist": {
+    "path": "agent-a/CUREATED_EVIDENCE_REVIEW.json",
+    "sha256": "80c4d8a3dcfcee70b55df34bf31e4460fb517f867c09b8861453e2fba3b11e33",
+    "selectedFiles": 217
+  },
+  "inputs": [
+    {
+      "path": "agent-c/acceptance-results-draft.json",
+      "sha256": "1bc14c430c3a8e7b36fb9c911ad0b15038768f2a94fa65bf5ea6d91eb7960457"
+    },
+    {
+      "path": "agent-b/LEGAL_FORM_MATRIX.json",
+      "sha256": "787990c340991e96b3eebea63471ab3f251140f8467ba7b35f99e9e22a8f293f"
+    },
+    {
+      "path": "ROOT_DOCUMENT_VISUAL_REVIEW.json",
+      "sha256": "df340cc3acd53b6f2a1db4caee68d42068e91a68fac04cd4ee84d6098c8a18cd"
+    },
+    {
+      "path": "ROOT_COMMANDS_DRAFT.json",
+      "sha256": "892e822a413ee47281fad6aca73168a7a561fcdc3f034271cee218bd3788fa10"
+    },
+    {
+      "path": "agent-a/COMMANDS_A.json",
+      "sha256": "05b7adcbcfe5381f1c23fd1faeadad4d1ef7bdb54babd068fac0d5e76f910784"
+    },
+    {
+      "path": "agent-c/UX_ACTIONS_DRAFT.json",
+      "sha256": "74c3b642208e7899af01dd896f49142060e653005706446be39f79d347932f81"
+    }
+  ],
+  "method": "Read direct/embedded evidence file references, normalized absolute product/evidence roots and source-relative basenames, removed JSON fragment/line suffix only for filesystem comparison. Compare to allowlist regardless of local existence. No referenced file was automatically included, rewritten, staged or published. Repository sources and private runtime tools are listed separately.",
+  "counts": {
+    "uniqueEvidenceReferences": 170,
+    "alreadySelected": 141,
+    "gaps": 29,
+    "byCategory": {
+      "OUTPUT_DIRECTORY_METADATA": 2,
+      "SAFE_REQUIRED_TEXT": 12,
+      "SAFE_REQUIRED_MEDIA_REVIEW": 10,
+      "PRIVATE_EXCLUDED": 2,
+      "DECLARED_MISSING_MEASUREMENT": 2,
+      "BROAD_DIRECTORY_REFERENCE": 1
+    },
+    "ambiguousBasenames": 0
+  },
+  "gaps": [
+    {
+      "path": "agent-a/final-render-02",
+      "localExists": true,
+      "localKind": "directory",
+      "references": [
+        {
+          "source": "agent-a/COMMANDS_A.json",
+          "pointer": "/runs/22/evidenceRoot",
+          "referenceFragmentRetainedInSource": false
+        },
+        {
+          "source": "agent-a/COMMANDS_A.json",
+          "pointer": "/pendingFinalRender/evidenceRoot",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "OUTPUT_DIRECTORY_METADATA",
+      "action": "This evidenceRoot field records where outputs were generated, not a request to publish every child. Retain path as provenance; exact selected files/logs establish publication coverage.",
+      "fileCount": 229
+    },
+    {
+      "path": "agent-a/neutral-diagnostic-01",
+      "localExists": true,
+      "localKind": "directory",
+      "references": [
+        {
+          "source": "agent-a/COMMANDS_A.json",
+          "pointer": "/runs/20/evidenceRoot",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "OUTPUT_DIRECTORY_METADATA",
+      "action": "This evidenceRoot field records where outputs were generated, not a request to publish every child. Retain path as provenance; exact selected files/logs establish publication coverage.",
+      "fileCount": 4
+    },
+    {
+      "path": "agent-b/copy-legal-run01/command.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/retainedFailures/0/path",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 1897,
+      "sha256": "bb3ae239de25146b9babdd8458b1650f4760a68b5104ee572b69a30b8fbd48cd"
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-negative-states-live/02-mandatory-signature.png",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/2/ui/evidence/1",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Synthetic evidence candidate; inspect exact image/document or workbook content before adding to allowlist. No automatic inclusion.",
+      "bytes": 180264,
+      "sha256": "d1a245c6cb460906ff26e1d13a722f87bd9d8d43affee7536c1578c7040ffe19"
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-negative-states-live/fixture.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/2/files/evidence/0",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "PRIVATE_EXCLUDED",
+      "action": "Keep original excluded. Replace final evidence link with a sanitized report recording only assertion outcome, SHA/counts and nonsecret source provenance.",
+      "bytes": 3455,
+      "sha256": "d627b78ace43eb8c6c7f4d5a802e715e7b7640ed47872433921e3b16380efdf2"
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-operator-live/03-ready-download.png",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/0/ui/evidence/1",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Synthetic evidence candidate; inspect exact image/document or workbook content before adding to allowlist. No automatic inclusion.",
+      "bytes": 66814,
+      "sha256": "229506230a49ef68e8cb779e70aaac71eea6953bfd79b86a9ab76fdeb1bb6e15"
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-operator-live/actions.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/0/ui/evidence/0",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 30160,
+      "sha256": "933b54691eb367b8bc664d9d29dfd518ef5027893471e3742121d354ac5d2090"
+    },
+    {
+      "path": "agent-b/copy-legal-run01/lms-operator-live/documents.zip",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/0/files/evidence/2",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "PRIVATE_EXCLUDED",
+      "action": "Keep original excluded. Replace final evidence link with a sanitized report recording only assertion outcome, SHA/counts and nonsecret source provenance.",
+      "bytes": 214764,
+      "sha256": "be44b021d925cd2f098497b7a50f0642903e4d9f8761bdc86c9aedac8e91de46"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/VISUAL_REVIEW.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/1/qr/evidence/2",
+          "referenceFragmentRetainedInSource": false
+        },
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/3/files/evidence/3",
+          "referenceFragmentRetainedInSource": false
+        },
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/3/qr/evidence/2",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 1858,
+      "sha256": "8d42c6823c65f5c75ed23410939e89836e21854dd6407cb28e485ff29a020826"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/01-copy-awaiting-approval.png",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/3/ui/evidence/1",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Synthetic evidence candidate; inspect exact image/document or workbook content before adding to allowlist. No automatic inclusion.",
+      "bytes": 54756,
+      "sha256": "62c5eb6b637c68010f0bce330820b44e6551d844670a24cb3bda2ce124884041"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/02-issued-copy-files.png",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/3/ui/evidence/2",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Synthetic evidence candidate; inspect exact image/document or workbook content before adding to allowlist. No automatic inclusion.",
+      "bytes": 147628,
+      "sha256": "a56f888ff8174dff7ae6877941da222d9d12c1ad0878d555331633e6f7278abf"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/readback.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/3/metadata/evidence/0",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 8577,
+      "sha256": "93d9abcb17efd6cddc2af9011adc6428d9decc1486e6b3c60dca5b2e1c80be15"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-copy-original-live/registry.xlsx",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/3/registry/evidence/0",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Synthetic evidence candidate; inspect exact image/document or workbook content before adding to allowlist. No automatic inclusion.",
+      "bytes": 6733,
+      "sha256": "f716a7813c8aed09d37e5f73d749289a58e353de1b544f43b960e269aa614072"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-paper-signature-live/01-explicit-paper-facts.png",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/1/ui/evidence/1",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Synthetic evidence candidate; inspect exact image/document or workbook content before adding to allowlist. No automatic inclusion.",
+      "bytes": 109529,
+      "sha256": "15dbbe5c6c9654f72ce9c3a246a04c5d9e3db45062b88f8a72592fd310d137a5"
+    },
+    {
+      "path": "agent-b/copy-legal-run02/lms-paper-signature-live/paper-registry.xlsx",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/1/registry/evidence/0",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Synthetic evidence candidate; inspect exact image/document or workbook content before adding to allowlist. No automatic inclusion.",
+      "bytes": 6770,
+      "sha256": "795c80940350decc278679052ad00651ba1c5f64b48870b124fd1b716d9b2fc5"
+    },
+    {
+      "path": "agent-c/baseline-build.log",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/before/actualRetainedEvidence/1",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 7409,
+      "sha256": "10590356b51885f130eb5ad537c08ade00cee775e2b4efd89976b0bbd548a723"
+    },
+    {
+      "path": "agent-c/baseline-db-deploy.log",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/before/actualRetainedEvidence/2",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 3208,
+      "sha256": "7fafb08676b5e734959838eb078fea178aca101efe63ea815614b5589466ecfb"
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-first-flow-live/actions.json",
+      "localExists": false,
+      "localKind": "missing",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/missingCurrentMeasurements/0/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "DECLARED_MISSING_MEASUREMENT",
+      "action": "Already explicitly listed under missingCurrentMeasurements, not cited as completed evidence. Preserve missing/NOT_RUN and link a later completed fresh run when it exists."
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-first-flow-live/automatic-preparation-restart.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/missingCurrentMeasurements/1/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 5633,
+      "sha256": "c3833d8e565a4802b8de849d6606900ff63fa3638989d0ced74cbf88551619f2"
+    },
+    {
+      "path": "agent-c/critical-lms-20261015-01/lms-operator-live/actions.json",
+      "localExists": false,
+      "localKind": "missing",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/missingCurrentMeasurements/2/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "DECLARED_MISSING_MEASUREMENT",
+      "action": "Already explicitly listed under missingCurrentMeasurements, not cited as completed evidence. Preserve missing/NOT_RUN and link a later completed fresh run when it exists."
+    },
+    {
+      "path": "agent-c/first-entry-live/registration-actions.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/3/measurementId",
+          "referenceFragmentRetainedInSource": true
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/3/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 655,
+      "sha256": "de0101cca0287024c8f25ae736552c53e0e190b7cac39d65638e5264bed44fd3"
+    },
+    {
+      "path": "agent-c/full-e2e-20261015-04/runtime-start.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/latestRuntime/sourceBinding",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 1126,
+      "sha256": "2204f68b3dae4f90efa7f1af65aff4878c0c3548574813b48f1e49555608c1c2"
+    },
+    {
+      "path": "agent-c/learning-live/actions.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/0/measurementId",
+          "referenceFragmentRetainedInSource": true
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/0/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/1/measurementId",
+          "referenceFragmentRetainedInSource": true
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/1/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/2/measurementId",
+          "referenceFragmentRetainedInSource": true
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/2/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 2769,
+      "sha256": "d1589b72d373edca4240e071ff751b9d6cc5c28326faa4c0a59556daeb0adb31"
+    },
+    {
+      "path": "agent-c/targeted-batches-clock-20261015-01/lms-assignment-batches-live/actions.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/5/measurementId",
+          "referenceFragmentRetainedInSource": true
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/5/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/6/measurementId",
+          "referenceFragmentRetainedInSource": true
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/6/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/7/measurementId",
+          "referenceFragmentRetainedInSource": true
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/7/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/8/measurementId",
+          "referenceFragmentRetainedInSource": true
+        },
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/historicalPartialMeasurements/8/sourcePath",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 3784,
+      "sha256": "466501aee050d9d67bd3e09a36dd4e0ad61d41ecaa941c26f926e467bfbca40c"
+    },
+    {
+      "path": "agent-c/targeted-batches-clock-20261015-01/lms-conflict-live/result.json",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "agent-c/UX_ACTIONS_DRAFT.json",
+          "pointer": "/functionalOrVisualEvidenceNotActionBudgets/0/path",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_TEXT",
+      "action": "Needed to close reference graph. Text pattern scan is clear; review content/status and add exact file SHA to final allowlist.",
+      "bytes": 761,
+      "sha256": "01f5072b65842bdd3a077f301b21bee1e314457fe41b58be1bb110e015f886fa"
+    },
+    {
+      "path": "lms-render/lms-certificate-page-1.png",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "ROOT_DOCUMENT_VISUAL_REVIEW.json",
+          "pointer": "/files/0/path",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Bytes equal an already selected final-render-02 image. Final report may cite that exact selected path while preserving this historical report/hash; no duplicate binary is necessary.",
+      "bytes": 73734,
+      "sha256": "f785106ebc2fdbe115a0709d5f94c54b7425300558aa6c8922515a3928bf4ba1",
+      "identicalSelectedFile": "agent-a/final-render-02/lms-render/lms-certificate-page-1.png"
+    },
+    {
+      "path": "lms-render/lms-credential-page-1.png",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "ROOT_DOCUMENT_VISUAL_REVIEW.json",
+          "pointer": "/files/2/path",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Bytes equal an already selected final-render-02 image. Final report may cite that exact selected path while preserving this historical report/hash; no duplicate binary is necessary.",
+      "bytes": 60414,
+      "sha256": "bf49e8c1f2433c3f6325ae7da40988a6006718419ae45a3128acb603f96a2f45",
+      "identicalSelectedFile": "agent-a/final-render-02/lms-render/lms-credential-page-1.png"
+    },
+    {
+      "path": "lms-render/lms-protocol-page-1.png",
+      "localExists": true,
+      "localKind": "file",
+      "references": [
+        {
+          "source": "ROOT_DOCUMENT_VISUAL_REVIEW.json",
+          "pointer": "/files/1/path",
+          "referenceFragmentRetainedInSource": false
+        }
+      ],
+      "category": "SAFE_REQUIRED_MEDIA_REVIEW",
+      "action": "Bytes equal an already selected final-render-02 image. Final report may cite that exact selected path while preserving this historical report/hash; no duplicate binary is necessary.",
+      "bytes": 82371,
+      "sha256": "4efd7e01e3262e93bdb5d6b0fee57a654561a623ac8ae2d4e6181a6fdf95aacb",
+      "identicalSelectedFile": "agent-a/final-render-02/lms-render/lms-protocol-page-1.png"
+    },
+    {
+      "path": "root-documents",
+      "localExists": true,
+      "localKind": "directory",
+      "references": [
+        {
+          "source": "agent-b/LEGAL_FORM_MATRIX.json",
+          "pointer": "/forms/0/files/evidence/1"
+        }
+      ],
+      "category": "BROAD_DIRECTORY_REFERENCE",
+      "action": "Legal-form claim cites a whole folder. Replace with exact application output identifiers+hashes from document acceptance, select only needed synthetic files after inspection, or cite a sanitized output manifest. Do not recursively force-add this folder.",
+      "fileCount": 33
+    }
+  ],
+  "ambiguousReferences": [],
+  "nonEvidenceReferences": [
+    {
+      "path": "scripts/verification/lms-acceptance-draft.py",
+      "kind": "repository source, not evidence attachment"
+    },
+    {
+      "path": "scripts/verification/lms-acceptance-gap-audit.py",
+      "kind": "repository source, not evidence attachment"
+    },
+    {
+      "path": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL/dsj2/products/demo",
+      "kind": "private runtime/outside publication; retain sanitized command metadata only"
+    },
+    {
+      "path": "apps/web/components/recipient-grid-row.tsx",
+      "kind": "repository source, not evidence attachment"
+    },
+    {
+      "path": "apps/web/lib/recipient-course-context.ts",
+      "kind": "repository source, not evidence attachment"
+    },
+    {
+      "path": "apps/web/e2e/lms-copy-original-live.spec.ts",
+      "kind": "repository source, not evidence attachment"
+    },
+    {
+      "path": "C:/Python314/python.exe",
+      "kind": "private runtime/outside publication; retain sanitized command metadata only"
+    },
+    {
+      "path": ".runtime/lms-one-run/agent-a-storage-mv8m6zjq/PgWslTestWrapper.cs",
+      "kind": "private runtime/outside publication; retain sanitized command metadata only"
+    },
+    {
+      "path": "C:/Users/Admin/Documents/DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL",
+      "kind": "private runtime/outside publication; retain sanitized command metadata only"
+    },
+    {
+      "path": "packages/database/node_modules/prisma/build/index.js",
+      "kind": "repository source, not evidence attachment"
+    },
+    {
+      "path": ".runtime/lms-one-run/agent-a-storage-mv8m6zjq/baseline-prisma/schema.prisma",
+      "kind": "private runtime/outside publication; retain sanitized command metadata only"
+    },
+    {
+      "path": "packages/database/prisma/schema.prisma",
+      "kind": "repository source, not evidence attachment"
+    },
+    {
+      "path": ".runtime/lms-one-run/agent-a-storage-mv8m6zjq/backup",
+      "kind": "private runtime/outside publication; retain sanitized command metadata only"
+    },
+    {
+      "path": "lms-learning-live.spec.ts",
+      "kind": "source filename without evidence location"
+    },
+    {
+      "path": "lms-demo-baseline.spec.ts",
+      "kind": "source filename without evidence location"
+    },
+    {
+      "path": "lms-negative-states-live.spec.ts",
+      "kind": "source filename without evidence location"
+    },
+    {
+      "path": "lms-selection-regression-live.spec.ts",
+      "kind": "source filename without evidence location"
+    },
+    {
+      "path": "lms-assignment-batches-live.spec.ts",
+      "kind": "source filename without evidence location"
+    }
+  ],
+  "privateReplacementGuidance": [
+    {
+      "pattern": "first-flow-command-rejection*.json",
+      "replacement": "COMMAND_REJECTIONS.json",
+      "reason": "Historical launch NOT_RUN and exact policy reason without raw command/credential values."
+    },
+    {
+      "pattern": "*/fixture.json",
+      "replacement": "Corresponding acceptance.json/file-validation.json plus source fixture SHA, preserving only required nonsecret assertions.",
+      "reason": "Test setup can contain credential/session/source data and does not itself prove completed browser acceptance."
+    },
+    {
+      "pattern": "runtime-*.log / worker logs / traces / test-results",
+      "replacement": "Sanitized command or runtime provenance manifest with PID/start/end/outcome/source/build IDs; no raw session traffic.",
+      "reason": "Keep private execution state out of publication."
+    },
+    {
+      "pattern": "documents.zip",
+      "replacement": "Existing actions/acceptance download record plus ZIP hash/member-count assertion; if bytes are needed, audit and select individual synthetic DOCX/PDF files.",
+      "reason": "No blind archive inclusion."
+    }
+  ],
+  "limits": [
+    "This is a report of missing allowlist coverage, not a declaration that referenced evidence is missing on local disk.",
+    "Pattern-clear media/text are candidates; final source/status review and exact SHA are still required.",
+    "Final browser/44/52 reports may change after this snapshot; rerun graph/scan before final staging.",
+    "No product source, original report links or existing allowlist was modified."
+  ],
+  "summary": {
+    "actualLocalMissingFiles": 2,
+    "actualLocalMissingInterpretation": "Both are honestly declared missingCurrentMeasurements entries after failed critical scenarios; neither is asserted as a completed measurement.",
+    "privateEvidenceLinksToReplace": 2,
+    "neededSafeTextCandidates": 12,
+    "mediaCandidatesRequiringReview": 10,
+    "alreadySelectedImageAliases": 3,
+    "broadEvidenceDirectory": 1,
+    "outputDirectoryProvenanceOnly": 2,
+    "allowlistUnmodified": true
+  }
+}

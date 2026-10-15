@@ -1,0 +1,21 @@
+{
+  "reviewer": "Agent B",
+  "checkedAt": "2026-10-15T01:27:06.7950289Z",
+  "status": "PASS_VISUAL_LOCAL_SYNTHETIC",
+  "sourceRun": "agent-b/final-label03/command.json",
+  "buildId": "BV_9Qiz8LMZrZB5Rfnihw",
+  "observations": [
+    {
+      "checked": "Actual saved application PDF raster: readable bilingual headings, copy label, source issuer and original number/date; no clipping, overlap or invented numeric score. Source-signature disclaimer remains legible.",
+      "path": "agent-b/final-label03/lms-copy-original-live/copy-page-1.png"
+    },
+    {
+      "checked": "Actual public page: copy and external source labels, original reference and local record number/state are readable. Learner name, private storage/hash and machine verification claims are absent.",
+      "path": "agent-b/final-label03/lms-copy-original-live/03-public-copy-minimal-record.png"
+    }
+  ],
+  "boundaries": [
+    "These images establish the sampled saved PDF and public page only.",
+    "No physical printing, real signatures, external authority verification or whole-device responsiveness inferred."
+  ]
+}

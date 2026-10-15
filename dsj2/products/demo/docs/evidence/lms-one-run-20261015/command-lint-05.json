@@ -1,0 +1,11 @@
+{
+  "command": "pnpm lint",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "startedAt": "2026-10-15T00:50:00.4467863Z",
+  "finishedAt": "2026-10-15T00:50:17.9897934Z",
+  "exitCode": 0,
+  "logPath": "command-lint-05.log",
+  "environment": {
+    "CI": "true"
+  }
+}

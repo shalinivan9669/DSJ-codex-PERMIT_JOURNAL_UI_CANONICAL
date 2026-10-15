@@ -1,0 +1,29 @@
+{
+  "status": "PASS_SOURCE_REVIEW_ONLY",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "sourcePath": "scripts/verification/lms-final-criteria-candidate.py",
+  "sourceSha256": "52d95def32181597c3691520d4cb39f62069f8ea475e7109365299712eb9480b",
+  "scope": "Read-only review of validate_runtime_build and its caller. Acceptance generator was not executed.",
+  "checks": [
+    "Exact completed pnpm build command with exitCode 0 is required.",
+    "Build command bytes are SHA-256 bound by runtime-start.",
+    "Browser command, runtime-start, runtime-source and build-command require one identical nonempty webBuildId.",
+    "Runtime/source manifest links must use their exact canonical filenames.",
+    "Build completion, source capture, runtime start and browser start require ordered timezone-aware clocks.",
+    "Browser runtimeSourceUnchanged must be true and current runtime files must still match their recorded SHA-256 values.",
+    "Build evidence path rejects absolute paths and parent traversal."
+  ],
+  "executedGuardTests": {
+    "owner": "Agent C",
+    "count": 19,
+    "status": "PASS reported in independently read guard evidence; not rerun by Agent A",
+    "recordSha256": "dda218da518ed3bd006fa30b8a12b2415131d2433aad66079cab13069db847d7"
+  },
+  "evidencePaths": [
+    "agent-c/RUNTIME_BUILD_BINDING_GUARD_REVIEW.json"
+  ],
+  "findings": [],
+  "generatorExecuted": false,
+  "reviewedAt": "2026-10-15T09:24:46.049538+00:00"
+}

@@ -1,0 +1,13 @@
+▶ L10: immutable audit records actual HTTP registration, content, publication, enrollment, extension and permission changes across restart
+  ✔ role changes are audit facts and invalidate the old persisted session (492.6458ms)
+  ✔ ordinary and foreign users cannot read/change audit, including direct database mutation protection (156.7583ms)
+  ✔ audit/content/enrollment remain readable after actual API restart and Prisma reconnect without leaking secret fields (154.0004ms)
+✔ L10: immutable audit records actual HTTP registration, content, publication, enrollment, extension and permission changes across restart (1884.3614ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4908.2422

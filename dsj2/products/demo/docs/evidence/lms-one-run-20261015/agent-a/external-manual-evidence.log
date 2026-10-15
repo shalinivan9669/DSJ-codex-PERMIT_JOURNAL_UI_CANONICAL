@@ -1,0 +1,12 @@
+▶ S03/S09: unknown external exam date stays null, prepares internal review list, and protected manual file proves only operator attestation
+  ✔ verified source prepares immediately without inventing exam date, score or attempt; documents remain gated (133.7619ms)
+  ✔ manual PDF upload/download preserves SHA, tenant scope and original delivery/LMK states (424.1074ms)
+✔ S03/S09: unknown external exam date stays null, prepares internal review list, and protected manual file proves only operator attestation (843.5678ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3765.903

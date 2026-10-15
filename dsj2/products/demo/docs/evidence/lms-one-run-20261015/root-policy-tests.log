@@ -1,0 +1,18 @@
+✔ date-only validates leap days and never substitutes today (2.6709ms)
+✔ tenant midnight changes only new defaults, saved leap-day dates remain literal (25.2583ms)
+✔ partial draft retains independent RU/KZ, accepts 400 and rejects only resource overflow (69.0388ms)
+✔ organization reference snapshots retain approved empty and bilingual values in a bounded strict draft contract (18.6445ms)
+✔ protocol reason/education roundtrip and unbroken print limits report the specific field (0.9176ms)
+✔ unknown client numbers, group protocol and oversized data are rejected (0.6131ms)
+✔ product policy exact method and path deny unknown, action replay, normalization for every role (5.5594ms)
+✔ director approval and signing routes stay exact and do not open legacy signing or arbitrary callbacks (0.5414ms)
+✔ registered API controller method/path map equals deny-by-default policy (1530.1545ms)
+✔ OPS01/02: every personal-data copy needs placement, owner/access/retention evidence; unknown or foreign placement denies real LMS (40.2607ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2206.4605

@@ -1,0 +1,50 @@
+{
+  "status": "PRIVATE_CANDIDATE_ACTUALLY_ENCODED_AND_VALID_SOURCE_NOT_APPLIED",
+  "capturedUtc": "2026-10-15T11:23:51.930821+00:00",
+  "actualImageMetadata": {
+    "status": "PRIVATE_CANDIDATE_BYTES_VALID_NOT_APPLIED",
+    "capturedUtc": "2026-10-15T11:22:48.324Z",
+    "width": 3000,
+    "height": 4000,
+    "pixels": 12000000,
+    "quality": 40,
+    "bytes": 3895985,
+    "sha256": "73697c9b8935bb27af9f4e329cf4e3291599089644097edce2688c4dd6896428",
+    "range": {
+      "minimumExclusive": 1048576,
+      "maximumInclusive": 5242880
+    },
+    "liveFixtureUnchangedSha256": "e4c32aff5c65c65a0ca8da6118a2a6b75f8da7cffe463cc45fa94079f50a1704",
+    "sourcePattern": "Same deterministic seed20261015 RGB generator;12MP retained; JPEG compression only",
+    "output": ".runtime\\photo-large-fixture-repair\\large-synthetic-positive-candidate.jpg"
+  },
+  "sourceCandidates": [
+    {
+      "source": "scripts/verification/lms-full-e2e-fixture.ts",
+      "unchangedCurrentSourceSha256": "e2e717766dcc686600f6051e373232921748e8432a415f88c71521c3aa77a840",
+      "candidateSha256": "f837363c728459c543ab13177eec14990914ac6c7cf822e8cf2106509501c70c",
+      "candidatePrivatePath": ".runtime/photo-large-fixture-repair/lms-full-e2e-fixture.ts.pending"
+    },
+    {
+      "source": "apps/web/e2e/operator-photo-details-live.spec.ts",
+      "unchangedCurrentSourceSha256": "8d743a3607bd6671f20e1333883ddda09254b3ad05de5fec5ecef3e2c92cb7a9",
+      "candidateSha256": "e02e8733f15cf72f9b02f264c2f20a20dcad6e3a923cd7fc2c943af31650695e",
+      "candidatePrivatePath": ".runtime/photo-large-fixture-repair/operator-photo-details-live.spec.ts.pending"
+    }
+  ],
+  "actualSourceMutation": false,
+  "actualEnvFixtureMutation": false,
+  "browserExecution": false,
+  "independentReview": "REQUESTED_AGENT_A",
+  "targetedVerificationAfterTerminal": {
+    "scope": "Exactly the1whole test in operator-photo-details-live.spec.ts; already passed neighbor photo tests do not require repetition",
+    "reason": "Only this test reads DEMO_E2E_LARGE_PHOTO. No product or shared photo logic changes. Root accepted targeted verification per user instruction §3 and acceptance §9.",
+    "supersedesProposedNeighborRetestOption": "agent-b/PHOTO_FIXTURE_PATCH_PROPOSAL_07.json",
+    "full07VerdictPreserved": "FAIL; successful affected rerun would be separately recorded and reconciled by exact changed-source coverage, never rewritten to full-commandPASS"
+  },
+  "limits": [
+    "No corrected UI test has run; candidate metadata is not browser acceptance.",
+    "Source and livefixture remain frozen whilefull07 runs.",
+    "All existing crop/rotation/normalizedSHA/originalSHA/recipientidentity/reload assertions remain in proposed code."
+  ]
+}

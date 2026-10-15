@@ -1,0 +1,12 @@
+{
+  "scope": "Byte-identical completed checkpoint; no producer, reissue or new original rendering.",
+  "checkpointSha256": "8d7264a82268c073a3adaac9a9fd6e3cb220ff7227276787f4e3ad34d6ad7fe8",
+  "privateCopyProductPath": "docs/evidence/lms-one-run-20261015/agent-c/dependency-completion-20261015-01/g1-prepared/g1-checkpoint.json",
+  "requestId": "ac87969b-57e9-4bef-a2f4-ff767fd0f2fe",
+  "privateOriginalProductPath": "docs/evidence/lms-one-run-20261015/agent-c/full-e2e-20261015-07/g1-prepared/g1-checkpoint.json",
+  "g1Result": {
+    "path": "agent-c/full-e2e-20261015-07/g1-prepared/g1-result.json",
+    "sha256": "05b13f776d21a3cb08efa4e05ac88d87027c35362dd88f92ba6c97292740cc5d"
+  },
+  "suiteRunId": "full-e2e-20261015-07"
+}

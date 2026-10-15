@@ -1,0 +1,700 @@
+{
+  "status": "PASS_INDEPENDENT_SOURCE_AND_SAVED_CONTROL_REVIEW_ONLY",
+  "checkedAtUtc": "2026-10-15T08:45:00.455456+00:00",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "localAccepted": false,
+  "executionStatus": "NOT_RUN_NEW_BROWSER_EXECUTION_REQUIRED",
+  "delta": {
+    "file": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+    "beforeSha256": "2359ebd2cbe559fa90c8cb7515e00144f49835dc7367bfd9c97948f27b02440b",
+    "calendarAppliedSha256": "7111acc7ff7d60f30bcc28da93f5e623c38fbc2410e7cb5eecebb940007cc85a",
+    "candidateBytesEqualAppliedObserved": true,
+    "separateFurtherNetworkPatch": "Any subsequent network-boundary delta requires its own review; this report binds only the calendar delta."
+  },
+  "astPreservation": {
+    "method": "TypeScript compiler AST expectation-receiver matcher recognition including expect.poll; exact printed multiset preserves multiplicity",
+    "beforeMatchers": 90,
+    "afterMatchers": 101,
+    "removed": [],
+    "added": [
+      "expect(profileResponseBefore.ok()).toBe(true)",
+      "expect(scheduleEventBefore).toBeDefined()",
+      "expect(scheduleEventBefore.commonFields).toMatchObject(sourceDates)",
+      "expect(scheduleEventAfter?.commonFields.trainingDateRule).toMatchObject({\n    anchor: \"DOCUMENT_IS_END\",\n    source: scheduleSource,\n})",
+      "expect(scheduleEventAfter?.commonFields).toMatchObject(sourceDates)",
+      "expect(afterSchedule.items).toEqual(beforeSchedule.items)",
+      "expect(afterSchedule.commonFields).toEqual(beforeSchedule.commonFields)",
+      "expect(afterSchedule.profileVersionId).toBe(beforeSchedule.profileVersionId)",
+      "expect(afterSchedule.events?.filter((event) => event.id !== scheduleEventBefore.id)).toEqual(beforeSchedule.events?.filter((event) => event.id !== scheduleEventBefore.id))",
+      "expect(profileResponseAfter.ok()).toBe(true)",
+      "expect(profileAfterSchedule).toEqual(profileBeforeSchedule)"
+    ],
+    "ordinaryMatcherCount": [
+      87,
+      98
+    ],
+    "outerPollMatchersUnchanged": 3,
+    "parseErrors": 0
+  },
+  "sourceProof": {
+    "sourceProof": [
+      {
+        "path": "apps/web/components/training-date-settings.tsx",
+        "sha256": "7a5f72b31a08817331eb217e4ca24ad8dba7d2ce4f186c80d5bccabc11a7cbd7",
+        "baseGitBlobSha256": "51897e112c3fea95cdebb80c8f4064f04beac1d0c3d73d50d3e86be737fb0343",
+        "LFNormalizedBytesIdenticalToBase8c": true,
+        "exactBytesEqual": false
+      },
+      {
+        "path": "apps/web/components/event-context.tsx",
+        "sha256": "35f7ffcf5e7c8bb8b668d7baadf5abb42879ac9e649321e196166716c4da489f",
+        "baseGitBlobSha256": "e640b5445ac03b761f9bdde1cfae601c0e1284cfcea346d62e370b1d1990de6e",
+        "LFNormalizedBytesIdenticalToBase8c": true,
+        "exactBytesEqual": false
+      },
+      {
+        "path": "packages/contracts/src/date-calculation.ts",
+        "sha256": "92136c6b5b7fa4ca8b63c2dff15fe7925e874f0176b22155435345d14b707381",
+        "baseGitBlobSha256": "4be5b36a080cac700700726553cc6ce4aa5f0be866c153771d55d027b933ff10",
+        "LFNormalizedBytesIdenticalToBase8c": true,
+        "exactBytesEqual": false
+      },
+      {
+        "path": "packages/contracts/src/resolution.ts",
+        "sha256": "f0620f3f62f79b7505a035f6814059f74a52351ae281f38a2e6b43ade26357bb",
+        "baseGitBlobSha256": "7dc9859a98a52bf7cfdf662d01d9232ac63c54f26a77aece9ffa7ae3aface5ea",
+        "LFNormalizedBytesIdenticalToBase8c": true,
+        "exactBytesEqual": false
+      },
+      {
+        "path": "apps/web/lib/calendar-preparation.ts",
+        "sha256": "03b95d08a0a6066f71d15b4fee2dfeafeec7c4f2b422e16f5cd626742bed689c",
+        "baseGitBlobSha256": "4d68d099a9901bfd56fd276608e58e0c8b390e3cb9010bdce955c067913e4a51",
+        "LFNormalizedBytesIdenticalToBase8c": true,
+        "exactBytesEqual": false
+      },
+      {
+        "path": "tests/kz-training-dates.test.ts",
+        "sha256": "430d002e274fd47690bf1baeff83caa750b9e7a69b61689056d11d345ad37771",
+        "baseGitBlobSha256": "31bb330817470c0e8e02616a4e1526bb21e2e2a93b83c4130a56e92d1ae7da8d",
+        "LFNormalizedBytesIdenticalToBase8c": true,
+        "exactBytesEqual": false
+      },
+      {
+        "path": "tests/date-calculation.test.ts",
+        "sha256": "3221526bfad3b16f7948fee61484c6db1c6e0cef0ccce8f0516cf4bc89305e6f",
+        "baseGitBlobSha256": "2bf5cad02aea1bbf4897ef0a524bd87053a0e26c6687f447ed6a7857c1278f8f",
+        "LFNormalizedBytesIdenticalToBase8c": true,
+        "exactBytesEqual": false
+      }
+    ],
+    "fixturePath": "tests/fixtures/operator-value/training_events.json",
+    "fixtureSha256": "004ec7afb330704815594d9ecce9200765470b1146ac70b1a89527438a689a86",
+    "eventDates": {
+      "documentDate": "2026-09-22",
+      "trainingStart": "2026-09-21",
+      "trainingEnd": "2026-09-22",
+      "protocolDate": "2026-09-22",
+      "hours": "8"
+    }
+  },
+  "scopeReview": [
+    "The only added mutation uses existing keyboard UI scoped to the selected event: choose DOCUMENT_IS_END, enter explicit SYNTHETIC PB-G1 fixture source, preview, apply.",
+    "Event-context updates only this event commonFields.trainingDateRule. Resolution precedence COURSE,CENTER,PRESET,REQUEST,EVENT makes the event rule explicit and local.",
+    "New HTTP calls are GET settings/profile before/after. Exact profile equality, request common fields/profile binding, other events and all100 raw items/photos remain asserted.",
+    "All four original dates are asserted unchanged before and after. TrainingDateSettings explicitly says date calculation does not confirm actual training or exam.",
+    "Existing strict AFTER validation and its negative tests remain unchanged. Existing END anchor is explicitly supported; no normative/legal approval, actual result confirmation or signing is inferred.",
+    "B DB history records show the strict center source already existed in earlier profile versions8/9. This review does not attribute its creation to the current manual20 execution."
+  ],
+  "peerDatabaseAttribution": {
+    "path": "agent-b/G1_DATE_RULE_REVIEW.json",
+    "sha256": "f6dc27b0256aadc7606334ff7437e3d1f0478c488f434c51f11a47a8b9a32836",
+    "boundary": "Agent A read this report and independently read unchanged source and fixture. A did not repeat its DB SELECTs."
+  },
+  "remainingG1OracleAudit": {
+    "status": "NO_ADDITIONAL_PREDICTABLE_LITERAL_MISMATCH_FOUND_IN_REVIEWED_CONTROLS",
+    "actualSavedDocumentsRead": 30,
+    "groups": 3,
+    "cards": 27,
+    "checked": "Actual DOCX byte SHA/size, XML hours phrase, snapshot subject, own and group protocol number, exact bounded result literals. Original source day22 is compatible with the retained bilingual date oracle.",
+    "limitations": [
+      "Control card snapshots do not bind the G1 source photos; actual100 photo embeddings must still pass.",
+      "No100-row issuance,101document,202public-download,203ZIP-source or final browser PASS is inferred from these smaller saved controls.",
+      "Names/snapshot ownership metadata comes from Agent B read-only DB capture; A independently checked actual bytes/XML and fields described in each record."
+    ],
+    "records": [
+      {
+        "artifactId": "11b21afc-52c8-4286-b0f0-398a342f1543",
+        "documentId": "950918fd-2e68-46a7-9926-227e93853ae9",
+        "issuanceId": "4af44935-efbc-4c32-b475-735d5e66543f",
+        "templateId": "pb-protocol",
+        "ownerKind": "GROUP",
+        "sha256": "b1dc6ba4c41f0ee03e63ea96b77d02130532f2fd901de14311368c7fde1e14e1",
+        "bytes": 7418438,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "hourPhraseFromSnapshotPresent": true,
+          "boundLiteralCountsMatchIndependentReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "5d44150c-9bce-4a28-b825-d03e28471d1c",
+        "documentId": "8216d31a-f2b1-4f41-9c79-179edb673f08",
+        "issuanceId": "4af44935-efbc-4c32-b475-735d5e66543f",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "b3d5da8b5e22b8163c47b6aefdef9216e10e8003c26d91e6003bb282b0b9fd5d",
+        "bytes": 21468,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "80dda9e5-80d9-4294-9150-0edbbe7ac7ce",
+        "documentId": "312876c6-6ead-41a4-ac2c-6e2a4fb67002",
+        "issuanceId": "4af44935-efbc-4c32-b475-735d5e66543f",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "fa88ec5f4510bfb0a06be028e024cdc6019203ac4de5bf077d12e2556aacc0f3",
+        "bytes": 21467,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "791fa05e-c9bb-4fac-8ab0-9b630c3dd647",
+        "documentId": "13c0aeb6-ee08-4d03-8c23-c70055168588",
+        "issuanceId": "ded9e36e-fef3-48d2-95a6-6d25d64f0e66",
+        "templateId": "pb-protocol",
+        "ownerKind": "GROUP",
+        "sha256": "571ee19c71497ea766ca8748f1feeac11064a01d937006cfbb8a547aa1595700",
+        "bytes": 7418936,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "hourPhraseFromSnapshotPresent": true,
+          "boundLiteralCountsMatchIndependentReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "43022848-6e9d-4a8b-8a9a-13cbc9c9ca0f",
+        "documentId": "4a5e69a2-97d4-4683-9d29-d0bb36e2bc67",
+        "issuanceId": "ded9e36e-fef3-48d2-95a6-6d25d64f0e66",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "6dcd040d98283d6b3042ed0f0125fba6944d17a6352ac0fd0de92ac4488133f1",
+        "bytes": 21494,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "498bc512-ce69-48f8-a73e-d5b7c3221e1f",
+        "documentId": "b61b89ae-6065-47e6-bc6f-a3b026bf723b",
+        "issuanceId": "ded9e36e-fef3-48d2-95a6-6d25d64f0e66",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "ddef2fc1a29521a2a4badb553866f26073c0cefef7c601a9cf2cf9e90af6c437",
+        "bytes": 21494,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "7300d8b1-90a8-49eb-812a-b3bdca1b88d0",
+        "documentId": "5fa960ab-5eb2-4359-828d-66894dd940af",
+        "issuanceId": "ded9e36e-fef3-48d2-95a6-6d25d64f0e66",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "00a0e60384adf2e2ece92c43f059c21acdc0a1f6ba0e258e8db683fa61ad8a14",
+        "bytes": 21495,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "92096976-efc5-4750-8d4f-aa4de04f8560",
+        "documentId": "dc171036-f0c6-461b-82c9-915f8c298448",
+        "issuanceId": "ded9e36e-fef3-48d2-95a6-6d25d64f0e66",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "ed2c8f9c80c8008ff47500130b950ed34e6afc7f0d1675058b04d2b71c698250",
+        "bytes": 21493,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "aeb26e34-74f0-44ca-aa6b-457a75f0b00b",
+        "documentId": "fc45630a-6ed9-492b-b99d-4d305b8feedf",
+        "issuanceId": "ded9e36e-fef3-48d2-95a6-6d25d64f0e66",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "9e67f374433b5de481f2df68a764224f231c1b0067cdaf34ec822d82febdcc5c",
+        "bytes": 21495,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "f5759400-35eb-45c1-ba9c-36ba6eb93d56",
+        "documentId": "897e9da2-2619-48ad-b74e-628f7e1d308d",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-protocol",
+        "ownerKind": "GROUP",
+        "sha256": "d4f12f6556f58789a7183de6bc7644ee52c948f5f834a53c03e1a0631d9d4fcf",
+        "bytes": 7420936,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "hourPhraseFromSnapshotPresent": true,
+          "boundLiteralCountsMatchIndependentReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "0520faa5-aad6-4ad8-a9fc-3e0e20fefb6e",
+        "documentId": "2a49042c-1508-4e63-a0b5-707da1e1a4e3",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "8d3900a54f7ddde4ad66c856f4b5033c1f56f5d9b0cbdff73508f0e71b640b70",
+        "bytes": 21673,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "113f4618-4a0c-4c49-ae94-a61c70a68f33",
+        "documentId": "ae365984-43c4-494c-83a7-4e4e379f3d04",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "8bbbfd16057a2dc34960bf37b5188fc41c8e3d9f514db44330c3f0b07debfab9",
+        "bytes": 21677,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "3a14c352-7628-43ec-910b-e7c1015c1f3d",
+        "documentId": "84d32312-5a87-42de-8105-ae41f83fcb69",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "155c7bf4601e9685efa12e090afa259cdfa791586a1b9d4c18ec0578732eb09d",
+        "bytes": 21676,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "4061f645-9572-4c87-b7b0-36630f36d332",
+        "documentId": "fde4a4fd-6c81-43c2-9f37-9db717944e09",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "a4752af748d0b96aa54fafc57715c7574b753c169056df189520e93903c469af",
+        "bytes": 21674,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "47a88401-098a-4b78-815c-ecb9c9c1f335",
+        "documentId": "84371320-3a1e-4e1a-82c9-f931bf5f6919",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "9e0b51bca42315453b32513e43c23e0a875f92b0c487b26f3f7dc3d6f9a134fb",
+        "bytes": 21675,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "4bbe15af-8879-4809-8d09-01f5ab7d1e73",
+        "documentId": "46291e3f-d3e5-4aca-acf2-bd8865b60127",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "bac039b8761d0f64629755958e62f28bef0d937c5d89f959d7f3286b8f33d36b",
+        "bytes": 21674,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "60048b2f-d4cc-48c3-9486-a42cb94217d2",
+        "documentId": "668ff257-2ad9-4541-82b5-c98dc1ac86d1",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "324837320544bde06c4a711c05dcc06716cf0d049daff76b7c1ec9f9a5c29bde",
+        "bytes": 21676,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "62324cf4-13db-421c-aa0c-5de1247c0b74",
+        "documentId": "7c82ec6b-3ca2-4d24-bf2c-34e7b9af87b3",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "e7534837da945d646442ef983d6f0609248b0034bee1592f3dd763d1a092709c",
+        "bytes": 21675,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "7b90784b-afbc-4484-8efd-9afb5a32b721",
+        "documentId": "2ce0694a-7562-4925-bcc0-6a6a3b357208",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "07e9cc05389a54df784e4fde236641466731c28cdd271580f34959b9e0a15fac",
+        "bytes": 21675,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "7bdcfbb1-01ec-418f-90c8-475216e25544",
+        "documentId": "76035787-a702-4b6e-98c7-e21876b23849",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "2b0e599cac02ce31436e7000339417b3c7c982f8515163a895b88e39a8666e08",
+        "bytes": 21677,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "7d4b39a2-f02a-45ab-80a4-4a4e357bfbf3",
+        "documentId": "01ed5e64-62e9-4055-adc8-0c13581d2769",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "0664fafe6cb7bb271a0a92e23e77c3d3dce6563bc25b00be9d98d55aefc8fc5f",
+        "bytes": 21676,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "a0523d2b-40c4-4270-ba78-7c732f780abe",
+        "documentId": "fcb9333c-2485-469b-91ea-a79856ecf14c",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "1b3e3eadc6949cabb404568f50fc8cfc31796a1c8fb74e5e21d28514909ece75",
+        "bytes": 21677,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "a1cbbe3e-4d47-434c-903f-d8b5a6702336",
+        "documentId": "c64ca26d-0e72-43e1-9146-b1e49af9fdb2",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "d4b0fae1af3c3f018a15286c97359313c18ce4695bccace7dc5d860ffe5f528a",
+        "bytes": 21675,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "b0adda7c-93ae-4429-9815-6fd5d5ee876b",
+        "documentId": "0e027e6d-1af3-41f1-8690-525041f0bacc",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "393bd5d24ce3f6fe31ff67d81d234ec8e22c63ee87885c50b0d9ec5414df98d9",
+        "bytes": 21675,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "b59f18e6-4a16-43cb-a827-3ecf610e829b",
+        "documentId": "649ac93b-566b-43bd-98d7-73b2d26820f6",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "54a25b3d5762e549a2bab35f60da5b42eed5ff2afece47e4e77ffd8a7dfb1649",
+        "bytes": 21676,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "bbd4407c-70cf-4088-b59f-acf5cbce69d5",
+        "documentId": "cb7ca1a3-7537-43a9-ba64-5874c8381a56",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "b3f172ebb96f733395c956b005b23614a4c2040c83e82afe97f783b6ef96b459",
+        "bytes": 21676,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "c87339eb-80f9-437a-918d-555e88378043",
+        "documentId": "0d1f7492-e3eb-48af-b10d-01cbc9e5fa24",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "bc241f591434280b06c600af6e68aac9bdfdc76e44c90f7b2f7814b8d5565481",
+        "bytes": 21665,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "d3e66617-0dfd-480e-8983-626e32cdc954",
+        "documentId": "c783f8c7-d014-4f1d-82b2-f68a477b0609",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "73f8d1b72421c2e5df14e63cd1e38b5432705bc9cd4ae7ee00f64938f1efaefc",
+        "bytes": 21675,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "ef5efc5a-6d09-4360-a7a4-1ad62a15dcf8",
+        "documentId": "0ea7c3aa-904b-487f-af0c-cee64e074e7a",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "e225bc9c53fa29685b8563cf6aed2df161a8d2dc44eedca17d4fe33566a70a1e",
+        "bytes": 21676,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      },
+      {
+        "artifactId": "f05c48b9-95b9-4329-a04b-03576c8500f9",
+        "documentId": "08302109-6e3c-4585-b35f-658f80a1cb9d",
+        "issuanceId": "244b5f9a-5d59-43df-bd4d-7bf4ab057bd3",
+        "templateId": "pb-card",
+        "ownerKind": "INDIVIDUAL",
+        "sha256": "27d64d68a01e713895f85e851a161c9a0ad87b44406a741eae8f09f2c915bdbb",
+        "bytes": 21675,
+        "checks": {
+          "exactArtifactHashAndSize": true,
+          "ownDocumentNumberPresent": true,
+          "exactSnapshotSubjectPresent": true,
+          "exactGroupProtocolNumberPresent": true,
+          "ownNameVerifiedByPeerReadback": true
+        },
+        "embeddedMediaCount": 0,
+        "snapshotPhotoBindingPresent": false,
+        "snapshotShaAttribution": "Snapshot metadata/own-name mapping provided by Agent B read-only DB capture; actual artifact bytes/XML/hash/subject/number independently read by Agent A."
+      }
+    ]
+  },
+  "operations": "Read-only source/fixture/saved-artifact audit and this separate report. No product/fixture/global-profile edits, DB writes, new render or browser by reviewer.",
+  "evidencePaths": [
+    "agent-b/G1_DATE_RULE_REVIEW.json"
+  ]
+}

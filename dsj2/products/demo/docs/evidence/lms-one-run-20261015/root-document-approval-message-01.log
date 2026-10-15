@@ -1,0 +1,12 @@
+▶ E08/E10: single-language frozen identity prepares all three forms without reentry and still rejects changed recipient fields
+  ✔ B2C Russian name without employer or position (833.7366ms)
+  ✔ Kazakh-only directory spelling with whitespace counterpart (441.9694ms)
+✔ E08/E10: single-language frozen identity prepares all three forms without reentry and still rejects changed recipient fields (2019.566ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3145.424

@@ -1,0 +1,14 @@
+{
+  "start": "2026-10-14T22:36:25.9031271Z",
+  "end": "2026-10-14T22:36:31.6915333Z",
+  "resultPath": "docs/evidence/lms-one-run-20261015/agent-c/lms-legacy-outcome-01.log",
+  "envNames": [
+    "CI",
+    "DATABASE_URL",
+    "DEMO_LMS_TEST_RUNTIME",
+    "DEMO_ARTIFACT_ROOT"
+  ],
+  "exitCode": 0,
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "command": "pnpm exec tsx --tsconfig apps/api/tsconfig.json --test tests/integration/lms-legacy-outcome.test.ts"
+}

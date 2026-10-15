@@ -1,0 +1,28 @@
+{
+  "suiteRunId": "full-e2e-20261015-07",
+  "requestId": "047cc1c7-2166-4baa-ad21-c7c143d5f96f",
+  "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+  "issuanceId": "4393fcab-1e6c-4c1e-943e-cf1875a0ff89",
+  "status": "VERIFIED_PUBLIC_UNSIGNED_DELIVERY_GUARD",
+  "files": [
+    {
+      "id": "dc34c2d4-d50a-4bf5-9498-e72eaebacaef",
+      "format": "XLSX",
+      "issuanceId": "4393fcab-1e6c-4c1e-943e-cf1875a0ff89",
+      "sha256": "42b39a0b7c9da80fb3b98c00130fe7863a55a537463763aca5c8b30bd27bd1ca",
+      "size": 40583,
+      "publicStatus": 409,
+      "publicCode": "ISSUANCE_NOT_COMPLETE"
+    },
+    {
+      "id": "ad1a8662-aab5-4346-b339-6b283f0b7146",
+      "format": "ZIP",
+      "issuanceId": "4393fcab-1e6c-4c1e-943e-cf1875a0ff89",
+      "sha256": "6ebb1e2cab61c139ca87dbd35bdcafcbfa5de496faf93c62cef1d041cefd0f73",
+      "size": 22857339,
+      "publicStatus": 409,
+      "publicCode": "ISSUANCE_NOT_COMPLETE"
+    }
+  ],
+  "noSignatureOrWorkflowMutation": true
+}

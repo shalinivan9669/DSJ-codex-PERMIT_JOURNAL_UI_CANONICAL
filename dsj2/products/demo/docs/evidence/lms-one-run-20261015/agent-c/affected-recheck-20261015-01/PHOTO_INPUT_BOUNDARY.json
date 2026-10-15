@@ -1,0 +1,19 @@
+{
+  "synthetic": true,
+  "images": [
+    {
+      "name": "large-synthetic.jpg",
+      "width": 3000,
+      "height": 4000,
+      "bytes": 3895985,
+      "sha256": "73697c9b8935bb27af9f4e329cf4e3291599089644097edce2688c4dd6896428"
+    },
+    {
+      "name": "portrait-test-pattern.png",
+      "width": 300,
+      "height": 400,
+      "bytes": 2659,
+      "sha256": "ee529a62d4d926a8fb7afcfee1ad4d754c49ad7aea41006f95eda35fc6b05c2f"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "measuredAt": "2026-10-14T21:31:13.685Z",
+  "syntheticOnly": true,
+  "uploadAboveLegacy5MB": {
+    "status": 201,
+    "size": 7276053
+  },
+  "byteRangeThroughNextProxy": {
+    "status": 206,
+    "exactBytes": 15,
+    "privateCache": true
+  },
+  "oversizedContentLengthRejected": 413,
+  "oversizedChunkedBodyRejected": 413,
+  "externalEvidenceRowsAfterRejectedStream": 0
+}

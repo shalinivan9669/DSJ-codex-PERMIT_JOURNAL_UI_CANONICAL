@@ -1,0 +1,48 @@
+{
+  "status": "PASS_SOURCE_REVIEW_ONLY",
+  "reviewer": "Agent A",
+  "reviewedAt": "2026-10-15T09:38:02.764980+00:00",
+  "overallAcceptance": false,
+  "sourcePaths": [
+    "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+    "apps/web/e2e/operator-g1-keyboard-resume-live.spec.ts"
+  ],
+  "files": [
+    {
+      "sourcePath": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+      "beforeSha256": "15447171423f69dd9b2b4b9f6a7ec6bac83a1de5f532591d0f521009e899fc64",
+      "candidateSha256": "6dd2523fef1f45223b968ee3e0ba99cc582b961359c19deffbbe2ad6ce2d8463",
+      "assertionsBefore": 108,
+      "assertionsAfter": 108,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "timeBudgetAndEventCallsUnchanged": true,
+      "parseErrors": 0,
+      "actualSourceSha256AtReport": "6dd2523fef1f45223b968ee3e0ba99cc582b961359c19deffbbe2ad6ce2d8463",
+      "appliedCandidateMatchesAtReport": true
+    },
+    {
+      "sourcePath": "apps/web/e2e/operator-g1-keyboard-resume-live.spec.ts",
+      "beforeSha256": "4975e5df3f9d10fc74df29534d6b0a0025b520710bb2988303a33730c0010ce5",
+      "candidateSha256": "31261350ef24be2fb8da31d1d69b098c84b1e7d846d4986704f660d0a4620cb2",
+      "assertionsBefore": 12,
+      "assertionsAfter": 12,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "timeBudgetAndEventCallsUnchanged": true,
+      "parseErrors": 0,
+      "actualSourceSha256AtReport": "31261350ef24be2fb8da31d1d69b098c84b1e7d846d4986704f660d0a4620cb2",
+      "appliedCandidateMatchesAtReport": true
+    }
+  ],
+  "checks": [
+    "The selected PDF download link locator expression is unchanged; it is assigned to a variable.",
+    "Real keyboard focus traversal completes before the download event waiter is armed.",
+    "Promise.all arms the same download event before the same keyboard activation.",
+    "The unchanged helper verifies already-focused target and presses Enter; no DOM focus, click, API setup or direct navigation shortcut was introduced.",
+    "The same PDF save path, all file verification and all 120 assertion AST calls are preserved.",
+    "No timeout or existing waitForEvent call was changed."
+  ],
+  "execution": "Targeted browser verification and the whole mandatory browser suite remain separate; no browser PASS claimed by this source review.",
+  "findings": []
+}

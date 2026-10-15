@@ -1,0 +1,6 @@
+test_06_exam_calendar_date_is_frozen_in_profile_timezone (test_lms_render.LmsRenderTests.test_06_exam_calendar_date_is_frozen_in_profile_timezone) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.384s
+
+OK

@@ -1,0 +1,39 @@
+$ next build
+   ▲ Next.js 15.5.25
+   - Experiments (use with caution):
+     · cpus: 2
+     · proxyTimeout: 210000
+
+   Creating an optimized production build ...
+   Using tsconfig file: tsconfig.build.json
+   Using tsconfig file: tsconfig.build.json
+   Using tsconfig file: tsconfig.build.json
+ ✓ Compiled successfully in 12.9s
+   Linting and checking validity of types ...
+   
+Your tsconfig.json extends another configuration, which means we cannot add the Next.js TypeScript plugin automatically. To improve your development experience, we recommend adding the Next.js plugin (`"plugins": [{ "name": "next" }]`) manually to your TypeScript configuration. Learn more: https://nextjs.org/docs/app/api-reference/config/typescript#the-typescript-plugin
+
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+   Collecting page data ...
+   Generating static pages (0/3) ...
+ ✓ Generating static pages (3/3)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /_not-found                            996 B         103 kB
+├ ƒ /[[...path]]                          237 kB         343 kB
+├ ƒ /api/[...path]                         122 B         102 kB
+└ ƒ /invite                              3.33 kB         109 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/35eb99f2-ac10e59429fc8161.js  54.2 kB
+  ├ chunks/689-174972865c883b07.js         46 kB
+  └ other shared chunks (total)          2.18 kB
+
+
+ƒ Middleware                             36.4 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

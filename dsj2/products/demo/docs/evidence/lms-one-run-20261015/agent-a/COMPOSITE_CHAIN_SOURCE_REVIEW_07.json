@@ -1,0 +1,57 @@
+{
+  "status": "SOURCE_REVIEW_COMPLETED_NOT_EXECUTION_ACCEPTANCE",
+  "checkedAt": "2026-10-15T11:41:07.635836+00:00",
+  "fullRunId": "full-e2e-20261015-07",
+  "fullRunState": "RUNNING_WITH_AT_LEAST_THREE_RECORDED_FAILURES",
+  "reviewedPrivateSources": [
+    {
+      "provenancePath": ".runtime/lms-one-run/lms-finalize-evidence.composite-candidate.py",
+      "sha256": "3c3a71e329d928062b22235c367a390a1b3a10e1dd12a3b877109851f7f38c1a"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/lms_browser_acceptance.candidate.py",
+      "sha256": "1b474f2d30d41d4b4a1dc6d96c7c8b6d39ad38a88e4acf39d74ffcb1db227cc4"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/assemble-final-facts.py",
+      "sha256": "16d74133be5118140faa39b9a62d37e1d7426975a61ab4fdb8e7609ea5d1bd7b"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/append-accepted-progress.py",
+      "sha256": "4f3ec7cfc8d64b9955388ccc19f6cc1efcc5655fa5f7612725abea7f6ae27a6f"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/lms-publication-review.composite-candidate.py",
+      "sha256": "389d4cb42124288858a3230dbd95410b720d42e00a75d16790f95415bc8284f8"
+    },
+    {
+      "provenancePath": ".runtime/lms-one-run/collect-publication-selection.composite-candidate.py",
+      "sha256": "cbd53a7ff24451ff3671fe7a904e70fcf8a52046cb270d51b620e5b6ef8330c4"
+    }
+  ],
+  "closedFindings": [
+    "Finalizer preserves actual raw full command status/exit and compares original command fields, evidence path/hash and log hash. Nine other mandatory commands still require zero exit.",
+    "Assembler and append-only progress wording distinguish the failed full command from exact affected-case reconciliation. No all-ten-success claim remains.",
+    "Original command currently has no cwd/logPath keys. Adding descriptive canonical keys does not replace existing original values; terminal keys must be checked before final execution.",
+    "First-flow03 pending-work recovery and fresh07 preserved completed work remain distinct evidence claims."
+  ],
+  "stillBlocked": [
+    "Current shared validator intentionally accepts only the exact single approved photo failure; it must reject the now-known delivery/history failures until all actual failed identities and reviewed source impacts are represented.",
+    "No publication, canonical finalizer, candidate criteria generator or acceptance workflow was executed by this review.",
+    "No corrected browser rerun has yet established these three cases as passed."
+  ],
+  "independentDiagnosis": {
+    "delivery": {
+      "source": "scripts/verification/final-delivery-internal-qa.ts",
+      "sha256": "5ea408296635a2126e16e96a2e7a3a615dec5d7d3557750b162c5364d52e0d0a",
+      "finding": "Evidence path allowlist contains only two older task roots. New LMS task root is rejected before business work; test-database, demoOnly, synthetic tenant name, UUID and descendant containment guards are separate and must remain."
+    },
+    "history": {
+      "source": "apps/web/e2e/final-history-live.spec.ts",
+      "sha256": "f1aa81f2f314ebad11a15704934d8477074cf61babffd4304541ae01cf1ba4af",
+      "finding": "Original, reconstructed and reread documents[0] are compared despite API issuedDocument.findMany lacking orderBy. Correct comparison must bind original document ID and compare like-for-like template identity for new events/corrections; no product sorting or assertion weakening is justified."
+    }
+  },
+  "privacyPolicy": "Only exact reviewed summary path+SHA may bypass fixture filename exclusion. Raw fixture setup, runtime credentials, traces, test-results and private binaries stay excluded.",
+  "limits": "Source-only review. Actual full failure records and eventual corrective commands remain separate and unchanged; no overall PASS or LOCAL_ACCEPTED claim."
+}

@@ -1,0 +1,9 @@
+{
+  "exitCode": 1,
+  "logPath": "command-lint-06.log",
+  "finishedAt": "2026-10-15T01:13:42.817173Z",
+  "startedAt": "2026-10-15T01:13:23.5421265Z",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "command": "pnpm lint",
+  "diagnosis": "Only temporary evidence snapshot.cjs failed no-undef/no-require-import rules. Exact helper bytes retained as snapshot.cjs.txt; no product lint exclusions or rule weakening."
+}

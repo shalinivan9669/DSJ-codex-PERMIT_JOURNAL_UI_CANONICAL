@@ -1,0 +1,103 @@
+{
+  "status": "PASS_SOURCE_REVIEW_NOT_EXECUTION",
+  "checkedAt": "2026-10-15T12:31:17.725758+00:00",
+  "fullRunId": "full-e2e-20261015-07",
+  "testHarnessOnly": true,
+  "productSourcesChanged": false,
+  "originalAssertionIntentPreserved": true,
+  "exactSourceDelta": {
+    "path": "agent-c/affected-recheck-20261015-01/EXACT_HARNESS_DELTA_FINAL.json",
+    "sha256": "0174b8b3e363434f1ccf9912a47866f52a569a9c74e6dca55dc3af26b9b6e95b"
+  },
+  "sourceDeltas": [
+    {
+      "path": "apps/web/e2e/operator-photo-details-live.spec.ts",
+      "beforeSha256": "8d743a3607bd6671f20e1333883ddda09254b3ad05de5fec5ecef3e2c92cb7a9",
+      "candidateSha256": "59fa5f8d26b120c8d68ee978bc38fcc9d8a9332fe0328de4867f9df694a03181",
+      "exactOriginalBytesRestored": true
+    },
+    {
+      "path": "scripts/verification/lms-full-e2e-fixture.ts",
+      "beforeSha256": "e2e717766dcc686600f6051e373232921748e8432a415f88c71521c3aa77a840",
+      "candidateSha256": "f837363c728459c543ab13177eec14990914ac6c7cf822e8cf2106509501c70c",
+      "exactOriginalBytesRestored": true
+    },
+    {
+      "path": "scripts/verification/final-delivery-internal-qa.ts",
+      "beforeSha256": "5ea408296635a2126e16e96a2e7a3a615dec5d7d3557750b162c5364d52e0d0a",
+      "candidateSha256": "4f418672cf33887159b9cc6b0924387a6988d09478637b94697cc349d58d0a12",
+      "exactOriginalBytesRestored": true
+    },
+    {
+      "path": "apps/web/e2e/final-history-live.spec.ts",
+      "beforeSha256": "f1aa81f2f314ebad11a15704934d8477074cf61babffd4304541ae01cf1ba4af",
+      "candidateSha256": "62961cef8c70a9030411a8476c7c8eb9e823e5ef459521685b83e5fb12d7f619",
+      "exactOriginalBytesRestored": true
+    },
+    {
+      "path": "apps/web/e2e/operator-timing.spec.ts",
+      "beforeSha256": "e4839c3aef1869803a22e59f589ad9ba1740843c167b357f7d4e0015eaeebc10",
+      "candidateSha256": "742d7848ecc26aa66deebfc72f99a5344ecb3df428144a86bad8f04ebe945bfa",
+      "exactOriginalBytesRestored": true
+    },
+    {
+      "path": "apps/web/e2e/commercial.spec.ts",
+      "beforeSha256": "46831d0ec8fdf8bf8ca81b1aeded0e84ee3b0590135dec7578c61b7c869d11df",
+      "candidateSha256": "ce40aa96344e1b9e8d6e80bd0ef4ce4a1e33ac3fcc1fc0112902fc031b5a63c9",
+      "exactOriginalBytesRestored": true
+    },
+    {
+      "path": "apps/web/e2e/final-repeat-basis-live.spec.ts",
+      "beforeSha256": "06386b7b7654cab31efcc497a9d25a139a7fe3227842b226145dea0218abf0f2",
+      "candidateSha256": "8d01ab4e8cdb34476f848675966f25a1fb1dc5390b85e18da588359075a03d87",
+      "exactOriginalBytesRestored": true
+    }
+  ],
+  "affectedCaseFiles": [
+    "operator-photo-details-live.spec.ts",
+    "final-delivery-three-live.spec.ts",
+    "final-history-live.spec.ts",
+    "operator-timing.spec.ts",
+    "commercial.spec.ts",
+    "final-repeat-basis-live.spec.ts"
+  ],
+  "affectedCaseCount": 9,
+  "dependencyCompletionCaseCount": 1,
+  "sourceIntegrityBeforeApply": {
+    "test-source": {
+      "files": 177,
+      "drift": 0
+    },
+    "runtime-source": {
+      "files": 293,
+      "drift": 0
+    }
+  },
+  "supportingReviews": [
+    {
+      "path": "agent-a/PHOTO_POSITIVE_INPUT_INDEPENDENT_REVIEW.json",
+      "sha256": "ffedfb4742e4a89e02783795e7432a33c60e2ed65cae73b072c0be1626424f6f"
+    },
+    {
+      "path": "agent-a/PHOTO_CANDIDATE_LINE_ENDINGS_REVIEW.json",
+      "sha256": "aebe54a7a3c45d168086276baa048666727a2520ac955ba05e90c569a388309d"
+    },
+    {
+      "path": "agent-a/FINAL_HISTORY_DELIVERY_INDEPENDENT_REVIEW_07.json",
+      "sha256": "80a46a3b5b6ccd9c9905af852a5acce5e91602ee93e182aa2b327ab66231aedc"
+    },
+    {
+      "path": "agent-a/LATE_HARNESS_SOURCE_REVIEW_07.json",
+      "sha256": "4f89faff45021fb3f36772f410bfac4b0669715e68d5db8025fee43fc5cc45d2"
+    }
+  ],
+  "reviewScope": "The first four exact delta entries equal the earlier independently reviewed bytes. The three late deltas were independently reversed and reviewed against API/UI contracts and assertion ASTs. History uses stable document identity instead of unordered array position; all original assertion intent is preserved, not every former matcher string. All other original assertions are retained.",
+  "rawFullRunOutcome": {
+    "exitCode": 1,
+    "passed": 212,
+    "failed": 6,
+    "skipped": 1,
+    "flaky": 0
+  },
+  "executionBoundary": "All seven candidates remain unapplied at this review. Nine affected cases and one declared dependency completion remain NOT_RUN. No browser coverage or overall acceptance is promoted."
+}

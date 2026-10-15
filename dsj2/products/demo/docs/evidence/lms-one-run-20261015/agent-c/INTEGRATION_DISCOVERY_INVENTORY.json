@@ -1,0 +1,1419 @@
+{
+  "generatedAt": "2026-10-15T01:10:19.579Z",
+  "command": "pnpm test:integration",
+  "glob": "tests/integration/*.test.ts",
+  "mainLog": "command-integration-02.log",
+  "mainLogSummary": {
+    "tests": 280,
+    "suites": 0,
+    "pass": 280,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "mainLogCompleteSummaryObserved": true,
+  "note": "Inventory records the actual final glob and test titles observed in logs, not an assumption that every current file existed at process launch. Supplementary late/updated cases have explicit independent command evidence; shared combined logs must not be double-counted. A matching title does not by itself prove PASS; the coordinator must bind the final command exit and all outcomes. Current source hashes are inventory hashes, not fabricated execution-time hashes.",
+  "files": [
+    {
+      "file": "tests/integration/approval-autofill.test.ts",
+      "currentInventorySha256": "b51c5ea56522360e77c4b6e884d32550c1fe9ef53e6397f1e0538e3197cdc9a6",
+      "staticTopLevelTestTitles": [
+        "explicit approval freezes effective values; historical pending has one safe preparation path"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "explicit approval freezes effective values; historical pending has one safe preparation path",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/approval-display-title.test.ts",
+      "currentInventorySha256": "67a7c4f7e8c04a0a45e095cf695032d10bd5a7041c52d7340015695dfbc9d2be",
+      "staticTopLevelTestTitles": [
+        "director queue and detail display frozen identities, preserve custom titles and do not rewrite submitted data after a directory rename"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "director queue and detail display frozen identities, preserve custom titles and do not rewrite submitted data after a directory rename",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/archive-preview-race.test.ts",
+      "currentInventorySha256": "7a27c4306a81f46401fe0df45c7595e20a3b0b1f0614f809f3e61c3f428197cb",
+      "staticTopLevelTestTitles": [
+        "archive decision serializes with preview so a concurrent archive cannot enqueue a stale print set"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "archive decision serializes with preview so a concurrent archive cannot enqueue a stale print set",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/artifact-stream-access.test.ts",
+      "currentInventorySha256": "918a75f170a09f5d076f51e3f66610bb00d31ceb72b49702cd62d30e9677146e",
+      "staticTopLevelTestTitles": [
+        "actual HTTP streaming preserves unsigned bundle guards, individual bytes/headers and tenant isolation"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "actual HTTP streaming preserves unsigned bundle guards, individual bytes/headers and tenant isolation",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/biot-issuance.test.ts",
+      "currentInventorySha256": "a7b84664b49c56b3394f9e633aeef5cf3bfb230b667ed120551acd7626d41da4",
+      "staticTopLevelTestTitles": [
+        "BIOT category and linked credential issuance in isolated PostgreSQL"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "BIOT category and linked credential issuance in isolated PostgreSQL",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/business-scenarios.test.ts",
+      "currentInventorySha256": "6165f39ca92f9058ead329c4b4fc46f814573eb08461a12cce6b0d214d2b5652",
+      "staticTopLevelTestTitles": [
+        "daily business scenarios persist real history, output, obligations, renewal and scoped evidence"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "daily business scenarios persist real history, output, obligations, renewal and scoped evidence",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/center-dossier.test.ts",
+      "currentInventorySha256": "e29b3a151788d1b906d24770177d905f468ad50664c2aa1a077eac805d09c123",
+      "staticTopLevelTestTitles": [
+        "center dossier: calendar review reminders and explicitly selected public-only file package"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "center dossier: calendar review reminders and explicitly selected public-only file package",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/clarification-scope.test.ts",
+      "currentInventorySha256": "7edd552afa2e578d3b7361ee17d7feac57cdd379f73c5c9bcdec6db6b4efc6f0",
+      "staticTopLevelTestTitles": [
+        "mixed-company clarification requires a recipient scope and excludes every other company's source rows"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "mixed-company clarification requires a recipient scope and excludes every other company's source rows",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/customer-export-scope.test.ts",
+      "currentInventorySha256": "467ef21157c62347899b262a283f49e8fc9c7e514fc93a54cbf6762b9e544052",
+      "staticTopLevelTestTitles": [
+        "staff company output scopes frozen mixed-employer rows, individual bytes, shared group omissions and registry derivatives"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "staff company output scopes frozen mixed-employer rows, individual bytes, shared group omissions and registry derivatives",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/customer-idempotency.test.ts",
+      "currentInventorySha256": "aa3776b140625ab659b4eb2a0f90d85ae5d222ecea5ad340551de436632a4b72",
+      "staticTopLevelTestTitles": [
+        "company continuation retries and concurrent HTTP-equivalent commands create exactly one directory card"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "company continuation retries and concurrent HTTP-equivalent commands create exactly one directory card",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/date-calculation.test.ts",
+      "currentInventorySha256": "9193c956884bf6573630def54d47373410a99a0dc55829975c3e54f4d94c15c3",
+      "staticTopLevelTestTitles": [
+        "API creation defaults to tenant calendar date once; saved/blank/imported dates and automatic provenance survive reload"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "API creation defaults to tenant calendar date once; saved/blank/imported dates and automatic provenance survive reload",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/director-approval.test.ts",
+      "currentInventorySha256": "95bde69fbd811617b0a7d265eb34d26915456345a026de046d320892b6cdfdb7",
+      "staticTopLevelTestTitles": [
+        "director approval, immutable official versions and real CMS rejection in isolated PostgreSQL"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "director approval, immutable official versions and real CMS rejection in isolated PostgreSQL",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/document-capacity.test.ts",
+      "currentInventorySha256": "dda1f3efaed24cc9fa31fbe4893c4feeb1da16ea39887363bcaf1877a943b90d",
+      "staticTopLevelTestTitles": [
+        "1001 planned documents including a group protocol no longer hit a business ceiling and remain unissued before approval"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "1001 planned documents including a group protocol no longer hit a business ceiling and remain unissued before approval",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/duplicate-issuance.test.ts",
+      "currentInventorySha256": "520c06447db6aa4a45166828ad53b0cfaa3b14b20289b6b6fda3364c16273ed0",
+      "staticTopLevelTestTitles": [
+        "duplicate lookup reads immutable PostgreSQL history by stable recipient, scopes tenant and never allocates numbers"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "duplicate lookup reads immutable PostgreSQL history by stable recipient, scopes tenant and never allocates numbers",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/employer-invites.test.ts",
+      "currentInventorySha256": "c1dff50bc14e5c1b132712a7264d9b6313db6d2dc2b06ef2538e1f6e69b2fef2",
+      "staticTopLevelTestTitles": [
+        "employer invitations: atomic one-time exchange, principal isolation, expiry, revocation and HTTP boundaries"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "employer invitations: atomic one-time exchange, principal isolation, expiry, revocation and HTTP boundaries",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/event-profiles.test.ts",
+      "currentInventorySha256": "4e8f8a2f3c0347993a0f82741063c64eb52596b9d52f1c33245c6e4714a65c3d",
+      "staticTopLevelTestTitles": [
+        "named commissions are pinned per distinct event across credentials/protocol, correction gets new events and old snapshots persist"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "named commissions are pinned per distinct event across credentials/protocol, correction gets new events and old snapshots persist",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/files-import.test.ts",
+      "currentInventorySha256": "f708962de2b62d182b953adc4572a91ae1babbdb2caa30e39cfae4c50416ce23",
+      "staticTopLevelTestTitles": [
+        "real image/import/export/original/reconstruction integration"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "real image/import/export/original/reconstruction integration",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/finalize-races.test.ts",
+      "currentInventorySha256": "eed983c75586485eb00bd720cc9bf53d69154cbc730882ce271f82033aa75ced",
+      "staticTopLevelTestTitles": [
+        "AT135/AT136 controlled real database races preserve autosave revision and reject changed preflight inputs"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "AT135/AT136 controlled real database races preserve autosave revision and reject changed preflight inputs",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/forms-ux-bundles.test.ts",
+      "currentInventorySha256": "353fed46b47392cfcfb2e7b0f0f7894a6923ba750f61604f2a2d75f9ba69dffd",
+      "staticTopLevelTestTitles": [
+        "manager and director prepare worker and ITR bundles for 1/3/100/250 people with individual or shared protocols"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "manager and director prepare worker and ITR bundles for 1/3/100/250 people with individual or shared protocols",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/group-events.test.ts",
+      "currentInventorySha256": "24f0a5d378221e477fef80aad814ebbf67a7b62b1b5b7643a74556a993708a6c",
+      "staticTopLevelTestTitles": [
+        "real group owner, immutable roster, atomic counts and idempotent concurrent registration"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "real group owner, immutable roster, atomic counts and idempotent concurrent registration",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/group-workplace.test.ts",
+      "currentInventorySha256": "24c40d7ac6463281140b44f8d4895effa9de418f2b2d607afbe79d4298f14915",
+      "staticTopLevelTestTitles": [
+        "preview and issuance freeze the same factual mixed-employer heading without changing participant names"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "preview and issuance freeze the same factual mixed-employer heading without changing participant names",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/history-links.test.ts",
+      "currentInventorySha256": "47acc024116d5b77078baf82b538fbcfe7ece50b03ca57c5d86fb141d7bb821d",
+      "staticTopLevelTestTitles": [
+        "history readback links corrected and original requests within tenant, preserves snapshot and refuses foreign link targets"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "history readback links corrected and original requests within tenant, preserves snapshot and refuses foreign link targets",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/http.test.ts",
+      "currentInventorySha256": "36b63cac403f37efd51ee98417a486148249dd8c2295404ef7d91f2b4d0c324f",
+      "staticTopLevelTestTitles": [
+        "real Nest HTTP authentication, role revocation, CSRF, uploads and tenant boundary"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "real Nest HTTP authentication, role revocation, CSRF, uploads and tenant boundary",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/import-delivery.test.ts",
+      "currentInventorySha256": "ebcb7d78fcfe367fd6e37ad0eda25310ef943cc2b35e3fa84a414723a940e772",
+      "staticTopLevelTestTitles": [
+        "revised import uses one atomic revision, explicit exclusion, replay conflict, tenant guards; mixed BIOT registry uses saved actual protocol"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "revised import uses one atomic revision, explicit exclusion, replay conflict, tenant guards; mixed BIOT registry uses saved actual protocol",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/import-scaffold.test.ts",
+      "currentInventorySha256": "24efe31362023cbeb72e1495b0d018aed68117c3754579b53b7a6012420daf38",
+      "staticTopLevelTestTitles": [
+        "import replaces only an untouched live starter atomically and preserves existing recipients"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "import replaces only an untouched live starter atomically and preserves existing recipients",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/issuance-batches.test.ts",
+      "currentInventorySha256": "a41c3e96890220575cd70b683bddc54bd3e6fe4f9d3416727acb2971e11d98ca",
+      "staticTopLevelTestTitles": [
+        "arbitrary immutable batches in one request: explicit scope review, reload, waiting courses and concurrent retries"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "arbitrary immutable batches in one request: explicit scope review, reload, waiting courses and concurrent retries",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/issuance-signing-registry.test.ts",
+      "currentInventorySha256": "0779cef0ae105db00b2a3f5dd47a67ce436bd22e32300e712dd3bfb405c2269d",
+      "staticTopLevelTestTitles": [
+        "immutable stages sign independently, retain exact registry/customer scope and archive only after every stage completes"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "immutable stages sign independently, retain exact registry/customer scope and archive only after every stage completes",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/legacy-migration.test.ts",
+      "currentInventorySha256": "79c90380472660a4d2f8f349f1df9ac567081cb42b79cd55175dc11fd92b23c9",
+      "staticTopLevelTestTitles": [
+        "legacy import is dry-run, repeatable, tenant-scoped, preserves numbers and never invents files"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "legacy import is dry-run, repeatable, tenant-scoped, preserves numbers and never invents files",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/legacy-portal-proposals.test.ts",
+      "currentInventorySha256": "b4c8d36bc0c21580848e09ce626a3f5e172ed8e1d8dcb1095b11701f4f21f890",
+      "staticTopLevelTestTitles": [
+        "legacy pending employer commands recover only their historical public scope, preserving revision, hash and current grants"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "legacy pending employer commands recover only their historical public scope, preserving revision, hash and current grants",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lifecycle.test.ts",
+      "currentInventorySha256": "ad3006f2483df528a599ab3713ab36fd34f42f34340a1bb12efc398d0c5a24f9",
+      "staticTopLevelTestTitles": [
+        "real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuance invariants"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "real PostgreSQL lifecycle, tenant isolation, concurrency and >1000 issuance invariants",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/live-import-contract.test.ts",
+      "currentInventorySha256": "64cb5307f26018d61f3ac8249abed49a386b8155fcb4702fb8cf521441011e71",
+      "staticTopLevelTestTitles": [
+        "real XLSX import retains per-person category and RU/KZ while English columns stay outside new drafts"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "real XLSX import retains per-person category and RU/KZ while English columns stay outside new drafts",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-accounting-boundaries.test.ts",
+      "currentInventorySha256": "3ff25565168a76219bce50a52b6c881444cdf0c146483e7e882f14bc6d94e1b6",
+      "staticTopLevelTestTitles": [
+        "OPS02/L02: confirmed subject accounting and unknown-role denial are enforced through real HTTP"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "OPS02/L02: confirmed subject accounting and unknown-role denial are enforced through real HTTP",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-audit-boundaries.test.ts",
+      "currentInventorySha256": "38b726b8581c72068a73fb27d4c8ce48b60c0cb8cb79283bb56330a52a11431a",
+      "staticTopLevelTestTitles": [
+        "L10: immutable audit records actual HTTP registration, content, publication, enrollment, extension and permission changes across restart"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "L10: immutable audit records actual HTTP registration, content, publication, enrollment, extension and permission changes across restart",
+          "observedInLog": false
+        }
+      ],
+      "mainLogStatus": "NOT_YET_OBSERVED_OR_LATE_ADDED",
+      "supplementary": {
+        "log": "agent-c/lms-audit-03.log",
+        "command": "agent-c/lms-audit-03-command.json",
+        "sha256": "c33f372a3bcf6102f214b7dbe7196745983debba126741b4e08220f760cf6734",
+        "summary": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "allStaticTitlesObserved": true
+      }
+    },
+    {
+      "file": "tests/integration/lms-document-scheduling.test.ts",
+      "currentInventorySha256": "000cc7452c50494b90d8cbe67e692b025dfd0b27a218ccff767c14a029495c85",
+      "staticTopLevelTestTitles": [
+        "document scheduling crosses blocked pages without bypassing approval or rendering"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "document scheduling crosses blocked pages without bypassing approval or rendering",
+          "observedInLog": false
+        }
+      ],
+      "mainLogStatus": "NOT_YET_OBSERVED_OR_LATE_ADDED",
+      "supplementary": {
+        "log": "root-document-projection-01.log",
+        "command": "root-document-projection-01.json",
+        "note": "Latest combined command after immutable recipient projection fix: scheduling3 plus documents8 gives11; shared total must not be counted twice. Earlier fairness-only8 PASS retained in agent-a/document-scheduling.log.",
+        "sha256": "4bdfda85bd02a9926365fe0ba5763c0d85cba885ed5c70f6cf63ef7656507caa",
+        "summary": {
+          "tests": 11,
+          "suites": 0,
+          "pass": 11,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "allStaticTitlesObserved": true
+      }
+    },
+    {
+      "file": "tests/integration/lms-documents.test.ts",
+      "currentInventorySha256": "01c3a2f4deab753a53db622e243bfeaa2097f285521b3a6f6f31a04ec6d5273f",
+      "staticTopLevelTestTitles": [
+        "E08/E10: single-language frozen identity prepares all three forms without reentry and still rejects changed recipient fields",
+        "E08–E12: verified result reuses real DEMO approval, numbers, rendering, guarded documents and immutable correction"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "E08/E10: single-language frozen identity prepares all three forms without reentry and still rejects changed recipient fields",
+          "observedInLog": false
+        },
+        {
+          "title": "E08–E12: verified result reuses real DEMO approval, numbers, rendering, guarded documents and immutable correction",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "NOT_YET_OBSERVED_OR_LATE_ADDED",
+      "supplementary": {
+        "log": "root-document-projection-01.log",
+        "command": "root-document-projection-01.json",
+        "note": "Existing file gained three actual regression cases after the full integration run: two immutable recipient projection cases and one actual B2C preparation/forged-field case. Latest combined11 also includes scheduling3; do not infer that full integration02 executed these later assertions.",
+        "additionalCommands": [
+          {
+            "log": "root-document-approval-message-01.log",
+            "command": "root-document-approval-message-01.json",
+            "note": "Later targeted single-language parent and two child cases passed3 after adding the explicit template-approval error assertion; this is a targeted subset, not a repeat of all document tests."
+          }
+        ],
+        "sha256": "4bdfda85bd02a9926365fe0ba5763c0d85cba885ed5c70f6cf63ef7656507caa",
+        "summary": {
+          "tests": 11,
+          "suites": 0,
+          "pass": 11,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "allStaticTitlesObserved": true
+      }
+    },
+    {
+      "file": "tests/integration/lms-exam-boundaries.test.ts",
+      "currentInventorySha256": "9ef8391bd8324a1b924b5bfe0f1efc24e9827699177c261d7c800b79cb117343",
+      "staticTopLevelTestTitles": [
+        "E01: a published new bilingual multiple-answer bank cannot change an existing selected exam snapshot",
+        "E05: deadline worker racing submit finalizes once and a new process replays the same result",
+        "E06: exact fractional boundary and empty answers are graded without rounding or fabricated maximum",
+        "E02: admission uses the profile calendar date across local midnight"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "E01: a published new bilingual multiple-answer bank cannot change an existing selected exam snapshot",
+          "observedInLog": true
+        },
+        {
+          "title": "E05: deadline worker racing submit finalizes once and a new process replays the same result",
+          "observedInLog": true
+        },
+        {
+          "title": "E06: exact fractional boundary and empty answers are graded without rounding or fabricated maximum",
+          "observedInLog": true
+        },
+        {
+          "title": "E02: admission uses the profile calendar date across local midnight",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-exams.test.ts",
+      "currentInventorySha256": "73546f24a653d03f3becf631fc0c73ad36a26b4dd35e2ff5810b7e9e4715f8e7",
+      "staticTopLevelTestTitles": [
+        "E02–E07: real PostgreSQL exams preserve scope, strict threshold, sequences, deadlines and exactly one final result",
+        "E02 E07: practice and unreviewed route never produce eligible official results",
+        "E07: external source review has no fabricated attempt, score, machine verification or duplicate result"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "E02–E07: real PostgreSQL exams preserve scope, strict threshold, sequences, deadlines and exactly one final result",
+          "observedInLog": true
+        },
+        {
+          "title": "E02 E07: practice and unreviewed route never produce eligible official results",
+          "observedInLog": true
+        },
+        {
+          "title": "E07: external source review has no fabricated attempt, score, machine verification or duplicate result",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-external-date.test.ts",
+      "currentInventorySha256": "d158edcc422497bee932b74b149918d551c1f74d5dc3d9f040d93b5ad3a98f90",
+      "staticTopLevelTestTitles": [
+        "external date-only source and immutable date clarification reuse known fields and preserve exact provenance"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "external date-only source and immutable date clarification reuse known fields and preserve exact provenance",
+          "observedInLog": false
+        }
+      ],
+      "mainLogStatus": "NOT_YET_OBSERVED_OR_LATE_ADDED",
+      "supplementary": {
+        "log": "root-external-date-03.log",
+        "sha256": "66d2c186018b35489cf1bae42dc73ef2482c7034825a9d0f5734c9746d53a42d",
+        "summary": {
+          "tests": 3,
+          "suites": 0,
+          "pass": 3,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "allStaticTitlesObserved": true
+      }
+    },
+    {
+      "file": "tests/integration/lms-http.test.ts",
+      "currentInventorySha256": "4e9976db87b43e6ff03f424e402cccd964a6138a58d1747a4f332e82dadda33e",
+      "staticTopLevelTestTitles": [
+        "L01 L02 L03: actual Nest HTTP learner identity, one-time invitation, CSRF, scope and old-surface denial",
+        "S11: 100 simultaneously active synthetic learners read and autosave through real authenticated HTTP"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "L01 L02 L03: actual Nest HTTP learner identity, one-time invitation, CSRF, scope and old-surface denial",
+          "observedInLog": true
+        },
+        {
+          "title": "S11: 100 simultaneously active synthetic learners read and autosave through real authenticated HTTP",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-identity-selection.test.ts",
+      "currentInventorySha256": "a7b4f73994817f6ec1fd0fe18b0dd893780a5647437b657cb6b2142424611267",
+      "staticTopLevelTestTitles": [
+        "L08: identical names remain two confirmed people; only explicitly selected Recipient IDs are enrolled"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "L08: identical names remain two confirmed people; only explicitly selected Recipient IDs are enrolled",
+          "observedInLog": false
+        }
+      ],
+      "mainLogStatus": "NOT_YET_OBSERVED_OR_LATE_ADDED",
+      "supplementary": {
+        "log": "agent-c/lms-identity-selection-01.log",
+        "command": "agent-c/lms-identity-selection-01-command.json",
+        "sha256": "8e1e3e657801cfb75978c75c44a60b2c6c649951ce15ccc637c6034eb8600295",
+        "summary": {
+          "tests": 1,
+          "suites": 0,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "allStaticTitlesObserved": true
+      }
+    },
+    {
+      "file": "tests/integration/lms-learning.test.ts",
+      "currentInventorySha256": "278d4146a5782d0ea24bb9a8f74cd622c107e694a7c522f898132d3af7241000",
+      "staticTopLevelTestTitles": [
+        "L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment and preserved history"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment and preserved history",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-legacy-outcome.test.ts",
+      "currentInventorySha256": "76e67bb2ce2c0e263021c8f1dd0e4d304111126752249a497b8b344519ca7320",
+      "staticTopLevelTestTitles": [
+        "E12: ordinary PASSED/AUTO assignment cannot become an eligible LMS result or create a document link"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "E12: ordinary PASSED/AUTO assignment cannot become an eligible LMS result or create a document link",
+          "observedInLog": false
+        }
+      ],
+      "mainLogStatus": "NOT_YET_OBSERVED_OR_LATE_ADDED",
+      "supplementary": {
+        "log": "agent-c/lms-legacy-outcome-01.log",
+        "command": "agent-c/lms-legacy-outcome-01-command.json",
+        "sha256": "7b677c1c53daf3e91833a26d56fb7f9644b77777bcdaad2c8b85edd38ef2f8a7",
+        "summary": {
+          "tests": 1,
+          "suites": 0,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "allStaticTitlesObserved": true
+      }
+    },
+    {
+      "file": "tests/integration/lms-material-boundaries.test.ts",
+      "currentInventorySha256": "42d2843e157974884b07ea297e613955f713cbbb3d14110139321b301a06bf3e",
+      "staticTopLevelTestTitles": [
+        "L05: traversal, public storage paths and a valid token for another purpose never authorize a private PDF"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "L05: traversal, public storage paths and a valid token for another purpose never authorize a private PDF",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-materials.test.ts",
+      "currentInventorySha256": "f393d0a453d59302039f8d638df0f35310ca8a33cc7207514eb99c925db9cea0",
+      "staticTopLevelTestTitles": [
+        "L05 L06 L07: protected real video Range, prerequisite gates, resume and server progress resist seek/replay"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "L05 L06 L07: protected real video Range, prerequisite gates, resume and server progress resist seek/replay",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-recovery-race.test.ts",
+      "currentInventorySha256": "c65777f2f13d7816f560d11d255cbd6ce779e21b7c66f00149e9245aa864f83f",
+      "staticTopLevelTestTitles": [
+        "two different recovery tokens cannot both replace the same learner password"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "two different recovery tokens cannot both replace the same learner password",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-regulatory.test.ts",
+      "currentInventorySha256": "20e73f05df11cbcb14191b9c469a7953badb2b0941a0fe83d186a29ffe985142",
+      "staticTopLevelTestTitles": [
+        "S01-S10: real persisted sanitary preparation, fencing, receipt semantics and safe disconnected mode"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "S01-S10: real persisted sanitary preparation, fencing, receipt semantics and safe disconnected mode",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-route-calendar-boundaries.test.ts",
+      "currentInventorySha256": "4bfc5e6d22d2257779692a1dd30b8c470b92d4c5191c93735433a1940bd31b87",
+      "staticTopLevelTestTitles": [
+        "E02/E04/E09/S03: route requirements, private projections and frozen late deadlines"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "E02/E04/E09/S03: route requirements, private projections and frozen late deadlines",
+          "observedInLog": false
+        }
+      ],
+      "mainLogStatus": "NOT_YET_OBSERVED_OR_LATE_ADDED",
+      "supplementary": {
+        "log": "agent-a/route-calendar-boundaries.log",
+        "sha256": "4fcb4621cb125dea77bbc8c6be3f7efd71e4f2f05cd2e43a78081b822666df3d",
+        "summary": {
+          "tests": 6,
+          "suites": 0,
+          "pass": 6,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "allStaticTitlesObserved": true
+      }
+    },
+    {
+      "file": "tests/integration/lms-source-review.test.ts",
+      "currentInventorySha256": "6266f6618c27552e213ce422f81ca73489af9abc279c214a8ec66ab2872b2a89",
+      "staticTopLevelTestTitles": [
+        "S03/S09: unknown external exam date stays null, prepares internal review list, and protected manual file proves only operator attestation"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "S03/S09: unknown external exam date stays null, prepares internal review list, and protected manual file proves only operator attestation",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-storage.test.ts",
+      "currentInventorySha256": "94f9f9a0ed895b59953d89d0d1f33e3507bb015d3cddaccca2a7fd72cdb26030",
+      "staticTopLevelTestTitles": [
+        "GC retains old template and every new LMS material/evidence reference beyond orphan age"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "GC retains old template and every new LMS material/evidence reference beyond orphan age",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/lms-template-upgrade.test.ts",
+      "currentInventorySha256": "38691d3bd58416d2c196fca1c13acfd7b838042194a31dfa86a94c6510df4e1c",
+      "staticTopLevelTestTitles": [
+        "S11: existing-center LMS template upgrade is append-only and actual HTTP approval preserves role, scope and byte validation"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "S11: existing-center LMS template upgrade is append-only and actual HTTP approval preserves role, scope and byte validation",
+          "observedInLog": false
+        }
+      ],
+      "mainLogStatus": "NOT_YET_OBSERVED_OR_LATE_ADDED",
+      "supplementary": {
+        "log": "agent-c/template-upgrade/command03.log",
+        "command": "agent-c/template-upgrade/command03.json",
+        "note": "Late actual4-pass existing-center registration/HTTP approval suite, including final checksum verification after negative fixtures. Fullintegration02 predates this file.",
+        "sha256": "bb155429d496802929872c67c7f9381d1936a2274a5722cff33254c557dccb9c",
+        "summary": {
+          "tests": 4,
+          "suites": 0,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "allStaticTitlesObserved": true
+      }
+    },
+    {
+      "file": "tests/integration/neutral-template-upgrade.test.ts",
+      "currentInventorySha256": "51439f678672639d4947492a771a309ef594f0a0227ed6736a205dd29f97c3ab",
+      "staticTopLevelTestTitles": [
+        "neutral, explicit special and LMS upgrade appends all 22 unapproved manifest versions and preserves historical records, renderer and authenticated downloads"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "neutral, explicit special and LMS upgrade appends all 22 unapproved manifest versions and preserves historical records, renderer and authenticated downloads",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/operator-flow-domain.test.ts",
+      "currentInventorySha256": "d2eda786ebf7f6d99249611f5687831fd988581cadc857f89371761d396c92ae",
+      "staticTopLevelTestTitles": [
+        "operator-flow API integrity: scoped durable restoration, conflicts, metadata and incremental import"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "operator-flow API integrity: scoped durable restoration, conflicts, metadata and incremental import",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/operator-value-http.test.ts",
+      "currentInventorySha256": "7e05ac3ce821d787107859962bc21861ebee3a05ed2e8af7704e4380a39cbd58",
+      "staticTopLevelTestTitles": [
+        "HTTP service boundary: employer auth and scoped files, public privacy/Origin/rate limit, membership revocation"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "HTTP service boundary: employer auth and scoped files, public privacy/Origin/rate limit, membership revocation",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/operator-value.test.ts",
+      "currentInventorySha256": "289f01973a18b9a53d9fd6fbf250a6b4c9983e35bb0cde8babd07dd3c559665d",
+      "staticTopLevelTestTitles": [
+        "persistent service workflow: obligations, renewal, exact finance, proposals, tenant/customer isolation and revocation"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "persistent service workflow: obligations, renewal, exact finance, proposals, tenant/customer isolation and revocation",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/order-employer-scope.test.ts",
+      "currentInventorySha256": "cac1f91a50ccbad361fd8cc4b5c08f87be588188e8b6f8aba0bb38bc78f54ade",
+      "staticTopLevelTestTitles": [
+        "distinct contractual customer, payer and persisted participant employer preserve scopes and history"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "distinct contractual customer, payer and persisted participant employer preserve scopes and history",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/order-progress.test.ts",
+      "currentInventorySha256": "834a0ac6af547fab743c04bdfea4be5aa3d58d4a2039e740435fadaa27c904c1",
+      "staticTopLevelTestTitles": [
+        "order progress uses scoped factual results and counts people/events instead of output forms"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "order progress uses scoped factual results and counts people/events instead of output forms",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/organization-names.test.ts",
+      "currentInventorySha256": "76464e8952f66da1908fa4e6ff93be5a16410d210fc1fe2ee76de382ba404480",
+      "staticTopLevelTestTitles": [
+        "structured organization names reach resolved data, group/individual/registry snapshots and preserve previous issuances"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "structured organization names reach resolved data, group/individual/registry snapshots and preserve previous issuances",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/pending-order-linkage.test.ts",
+      "currentInventorySha256": "a5d8903bba7a349bb0892f10b704bdac061802a273ecd92465c9584e177ecc69",
+      "staticTopLevelTestTitles": [
+        "manager links a pending company request to its actual employer while private order details preserve approval and portal isolation"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "manager links a pending company request to its actual employer while private order details preserve approval and portal isolation",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/photo-decoder.test.ts",
+      "currentInventorySha256": "5a27a9ddfd595261064d942d4393f152d8bfe8d33480deab9eeb5205bb90c777",
+      "staticTopLevelTestTitles": [
+        "non-raster photo bytes never reach Sharp metadata, regardless of name or MIME"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "non-raster photo bytes never reach Sharp metadata, regardless of name or MIME",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/portal-evidence-http.test.ts",
+      "currentInventorySha256": "5263a469c6ca63c51285adf693b313ae5911a5556d951080828d4c94f4ba04cd",
+      "staticTopLevelTestTitles": [
+        "HTTP employer evidence and matrix scope: stable recipient, tenant, permission, private file and revoke"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "HTTP employer evidence and matrix scope: stable recipient, tenant, permission, private file and revoke",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/portal-published-scope.test.ts",
+      "currentInventorySha256": "8efc6f62d02b726ae26661a68e0989e5170026ed65ab2c0defee0638362b6e55",
+      "staticTopLevelTestTitles": [
+        "external portal excludes waiting scope and working changes; prior issued batch remains visible and access uses its immutable employer"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "external portal excludes waiting scope and working changes; prior issued batch remains visible and access uses its immutable employer",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/print-sets.test.ts",
+      "currentInventorySha256": "6c506d832ace2d7c4e0e0cd2f30893575ad9ab6add7214f636250bf04d537da1",
+      "staticTopLevelTestTitles": [
+        "print sets use saved batch originals, preserve prior files, deny foreign and incomplete selection"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "print sets use saved batch originals, preserve prior files, deny foreign and incomplete selection",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/profile-lookup.test.ts",
+      "currentInventorySha256": "acf451af321a63c3863a2ef64d7a8a27c6f49671e12f9f556b6b04273d13acf1",
+      "staticTopLevelTestTitles": [
+        "pinned profile lookup reaches older versions and keeps existing role and tenant boundaries"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "pinned profile lookup reaches older versions and keeps existing role and tenant boundaries",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/public-verification.test.ts",
+      "currentInventorySha256": "92708bc752caa03b162e8f4edc90f1468a07963e490e75f348516e4628657ba3",
+      "staticTopLevelTestTitles": [
+        "public record has hashed random tokens, minimal data, real status, bounded corrections and immediate link revocation"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "public record has hashed random tokens, minimal data, real status, bounded corrections and immediate link revocation",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/queue-fairness.test.ts",
+      "currentInventorySha256": "cb0477e00de7e3ad6972be91edde48aaf176423c2904e7f128f09296a531e696",
+      "staticTopLevelTestTitles": [
+        "older eligible deferred bundle precedes newer bulk while future schedules and fences remain enforced"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "older eligible deferred bundle precedes newer bulk while future schedules and fences remain enforced",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/readiness.test.ts",
+      "currentInventorySha256": "41492b83eb5819b5650ae5352495ad0397fa85306cfa32cd8af2dc6d776c4db6",
+      "staticTopLevelTestTitles": [
+        "readiness verifies the latest installed template, including multi-digit version labels"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "readiness verifies the latest installed template, including multi-digit version labels",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/recipient-restore.test.ts",
+      "currentInventorySha256": "6461388d9f79e1c24243e068b5ed5a70f18fe5460905149ddf4dc7fc3199fab4",
+      "staticTopLevelTestTitles": [
+        "committed recipient restore preserves server metadata, rejects forged business facts and remains revision and tenant scoped"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "committed recipient restore preserves server metadata, rejects forged business facts and remains revision and tenant scoped",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/registration.test.ts",
+      "currentInventorySha256": "38c79a4a1aa0f2122e1814e61634da59e29a9c1b1f7ac75ef1cf7ed42e6392e0",
+      "staticTopLevelTestTitles": [
+        "public self-registration isolates a complete unapproved center atomically"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "public self-registration isolates a complete unapproved center atomically",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/renewal-matrix.test.ts",
+      "currentInventorySha256": "fa8614e0660e44d52fcf36c5c3ba4f26b50bbf908309e677efbcdb11acb0547d",
+      "staticTopLevelTestTitles": [
+        "pinned policy requirements, mixed-employer scope, explicit history scan and source-based matrix"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "pinned policy requirements, mixed-employer scope, explicit history scan and source-based matrix",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/request-capacity.test.ts",
+      "currentInventorySha256": "e5cea76e13a1efe4a72ba21c55247a689aa3c69eda77fd438d058cad6c1ab83e",
+      "staticTopLevelTestTitles": [
+        "400 imported recipients save/reload in PostgreSQL; resource overflow is rejected without partial writes"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "400 imported recipients save/reload in PostgreSQL; resource overflow is rejected without partial writes",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/retake.test.ts",
+      "currentInventorySha256": "91f29f0292d6ecd8bc3ba1f85776c8fdb31054ee70855e45c89a4477b88bb4fb",
+      "staticTopLevelTestTitles": [
+        "retake preserves failed issued attempt, creates an explicitly linked unknown attempt with new event and no dates/numbers, isolates references",
+        "failed partial batch remains a frozen retake source while the same request prepares waiting people"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "retake preserves failed issued attempt, creates an explicitly linked unknown attempt with new event and no dates/numbers, isolates references",
+          "observedInLog": true
+        },
+        {
+          "title": "failed partial batch remains a frozen retake source while the same request prepares waiting people",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/security-acceptance.test.ts",
+      "currentInventorySha256": "d1aec68655e216c25716bc05c44e51a3da98d8ef9f50ede3b3467767bd27a284",
+      "staticTopLevelTestTitles": [
+        "commercial security: two tenants, all four genuine roles, HTTP object isolation and credential lifecycle"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "commercial security: two tenants, all four genuine roles, HTTP object isolation and credential lifecycle",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/service-rule-applicability.test.ts",
+      "currentInventorySha256": "a75c232b8a9c5893fc3326b68f881907f70ec7333f477ea84545f489b61d10b0",
+      "staticTopLevelTestTitles": [
+        "request validation enforces tenant-scoped pinned service version and actual applicability before render or issuance"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "request validation enforces tenant-scoped pinned service version and actual applicability before render or issuance",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/staff-directory.test.ts",
+      "currentInventorySha256": "d2ebdd5c46eaa3f5fdd5b877b24c7c826d4279ca672159add3a3196ad4374a20",
+      "staticTopLevelTestTitles": [
+        "staff directory exposes only active own staff names to operators and preserves admin user management"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "staff directory exposes only active own staff names to operators and preserves admin user management",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/target-preview.test.ts",
+      "currentInventorySha256": "9dd13ee851f28fd1a6bf38ef92096ccc15172dfcdcc2f8190389a4c947739a8e",
+      "staticTopLevelTestTitles": [
+        "target preview isolates document fields, retains proposal/group source, reuses jobs and never issues numbers"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "target preview isolates document fields, retains proposal/group source, reuses jobs and never issues numbers",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/tenant-export.test.ts",
+      "currentInventorySha256": "396d8d93bf8a4e9e86eee8c04a5a2d328e3676ea1d33b5a049652ef0778a241c",
+      "staticTopLevelTestTitles": [
+        "tenant export includes new data and verified files, excludes foreign tenant and all auth secrets, refuses partial archive"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "tenant export includes new data and verified files, excludes foreign tenant and all auth secrets, refuses partial archive",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/training-topics.test.ts",
+      "currentInventorySha256": "24a0891edca8d2e3cee106991c599b74867a253e6ec2ed05406e61a475a9c515",
+      "staticTopLevelTestTitles": [
+        "saved course topics are persisted, deduplicated and tenant/category scoped; no old facts transfer"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "saved course topics are persisted, deduplicated and tenant/category scoped; no old facts transfer",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/two-working-roles.test.ts",
+      "currentInventorySha256": "edf4bcb301c92bc594b129f9ed01dbc55205f6773a6d77bd497d57e3bb50f08f",
+      "staticTopLevelTestTitles": [
+        "two working roles own setup, isolate tenants and retain legacy director authority without account rewrites"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "two working roles own setup, isolate tenants and retain legacy director authority without account rewrites",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/worker.test.ts",
+      "currentInventorySha256": "cbc27ef7c8dad0af90df1607010405502e392c5a4dcadbe2a4417f78c5b72740",
+      "staticTopLevelTestTitles": [
+        "20 concurrent durable claims are unique; heartbeat refuses stale fence",
+        "expired owner cannot publish; new fence publishes original bytes once",
+        "crash after final attempt becomes FAILED; retries use same snapshot",
+        "PDF waits for persisted DOCX and never consumes a retry while waiting",
+        "storage rejects traversal and detects corrupted persisted bytes",
+        "bounded child execution terminates and returns no artifact on abort/timeout",
+        "reconstruction records honest provenance without overwriting original bytes",
+        "GC protects active leases, canonical artifacts, immutable templates and backup-pinned bytes",
+        "worker timestamps stay UTC even on a non-UTC PostgreSQL connection"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "20 concurrent durable claims are unique; heartbeat refuses stale fence",
+          "observedInLog": true
+        },
+        {
+          "title": "expired owner cannot publish; new fence publishes original bytes once",
+          "observedInLog": true
+        },
+        {
+          "title": "crash after final attempt becomes FAILED; retries use same snapshot",
+          "observedInLog": true
+        },
+        {
+          "title": "PDF waits for persisted DOCX and never consumes a retry while waiting",
+          "observedInLog": true
+        },
+        {
+          "title": "storage rejects traversal and detects corrupted persisted bytes",
+          "observedInLog": true
+        },
+        {
+          "title": "bounded child execution terminates and returns no artifact on abort/timeout",
+          "observedInLog": true
+        },
+        {
+          "title": "reconstruction records honest provenance without overwriting original bytes",
+          "observedInLog": true
+        },
+        {
+          "title": "GC protects active leases, canonical artifacts, immutable templates and backup-pinned bytes",
+          "observedInLog": true
+        },
+        {
+          "title": "worker timestamps stay UTC even on a non-UTC PostgreSQL connection",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    },
+    {
+      "file": "tests/integration/zip-acceptance.test.ts",
+      "currentInventorySha256": "9681a36693e9ee4de0cc0ca1c3e3b0ec2cee9ac8af8573b14e0d78a60e6c0a47",
+      "staticTopLevelTestTitles": [
+        "ZIP manifests validate actual original bytes and every missing/failed file; unsigned public export remains blocked"
+      ],
+      "mainLogTitleMatches": [
+        {
+          "title": "ZIP manifests validate actual original bytes and every missing/failed file; unsigned public export remains blocked",
+          "observedInLog": true
+        }
+      ],
+      "mainLogStatus": "TITLE_OBSERVED_CHECK_FINAL_EXIT_AND_TEST_OUTCOME",
+      "supplementary": null
+    }
+  ]
+}

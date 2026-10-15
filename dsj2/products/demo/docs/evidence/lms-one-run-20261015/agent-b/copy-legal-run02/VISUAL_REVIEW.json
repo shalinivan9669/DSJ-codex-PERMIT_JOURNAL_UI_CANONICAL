@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-10-15T01:00:41.6530629Z",
+  "reviewer": "Agent B",
+  "result": "PASS",
+  "method": "Actual generated application PDF raster and actual browser screenshots viewed directly",
+  "files": [
+    {
+      "sha256": "4C73FBD9D5FB5F55C6CAF2E3F661386FC04208DC4C4F80A0A6C69E17867AD96F",
+      "path": "copy-legal-run02/lms-copy-original-live/copy-page-1.png"
+    },
+    {
+      "sha256": "599DB0EAC9184A8B797C71B5F4E00EDF217A4E7F7BB3F50C242F73F2DB01F35E",
+      "path": "copy-legal-run02/lms-copy-original-live/03-public-copy-minimal-record.png"
+    },
+    {
+      "sha256": "601F80D18A2A770CB309554CEADFECC8CD773B48A73589472B7DD23FFCC1E46D",
+      "path": "copy-legal-run02/lms-paper-signature-live/03-paper-public-minimal-record.png"
+    }
+  ],
+  "observations": [
+    "Copy PDF is one landscape page with readable RU/KZ legal-form line; long synthetic learner name wraps without clipping.",
+    "External issuer, original number and original document date are visible; exam date is distinct and no numerical score is invented.",
+    "The copy explicitly states that source signatures were not cryptographically verified.",
+    "Public copy and paper pages show the correct legal-form label and registry number without the learner name or private file.",
+    "Public limitation text distinguishes registry verification from electronic signature and altered third-party file integrity."
+  ],
+  "limits": [
+    "DOCX XML and byte hashes were checked by the test; no native Microsoft Word rendering was performed in this scenario.",
+    "No physical print, real signature, real external qualification or real provider authority was asserted.",
+    "These screenshots use production build67WzZeXBqGI1ReRhjqN3k; the subsequently fixed ordinary course-label display requires the planned fresh full-suite build."
+  ]
+}

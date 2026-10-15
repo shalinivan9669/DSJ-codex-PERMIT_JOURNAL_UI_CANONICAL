@@ -1,0 +1,396 @@
+{
+  "status": "REVIEWED_TERMINAL_HISTORY_ONLY_NOT_ACCEPTANCE",
+  "reviewedAtUtc": "2026-10-15T09:09:23.415783+00:00",
+  "scope": "Six explicitly selected completed historical attempts. Current growing G1 and future full07 outputs are not selected or interpreted.",
+  "provenancePolicy": "Named original records remain locally preserved. This sanitized immutable summary publishes exact command/timing/count/source-hash facts; retainedLocalRecord/identifier values identify private provenance and are not evidence download links. Unknown timestamps and execution-time hash captures remain null.",
+  "attempts": [
+    {
+      "runId": "full-e2e-20261015-05",
+      "command": "pnpm test:e2e",
+      "commandStatus": "FAIL",
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-15T01:25:56.3714787Z",
+      "endedAtUtc": "2026-10-15T02:27:56.6435787Z",
+      "timingBasis": "Recorded command wrapper UTC values; no file-mtime reconstruction.",
+      "expectedTests": 219,
+      "provenance": [
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-05/command.json",
+          "sha256": "1cb9c5f574ae8db86ae16b7c71071c8fb03bd7b2cf2891d029ee04094757018f",
+          "bytes": 825
+        },
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-05/command.log",
+          "sha256": "cf76e5480b0064e5ea9c0e60c8295d5a1e2074083ed3d150fa6375842b3665da",
+          "bytes": 29958
+        },
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-05/results.json",
+          "sha256": "f235128b4a46cc034067b835a82534941b62994efa42646f6736b6566a5c2c5c",
+          "bytes": 210766
+        }
+      ],
+      "sourceUnchangedDuringAttempt": true,
+      "wholeSuiteAccepted": false,
+      "sourceBindings": [
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-05/test-source.json",
+          "sha256": "5204c4cab5c8ed658cd59f3e2ff81b406caf940cccc988b4ecdc4043718735af",
+          "bytes": 28692,
+          "fileCount": 177,
+          "relevantTestSources": [
+            {
+              "path": "apps/web/e2e/operator-common-history-helpers.ts",
+              "sha256": "00b2e85bf0bf3770b56be4c25d19cebb53dc65b1b9e45eb9cd7a0d02ddb5022f"
+            },
+            {
+              "path": "apps/web/e2e/operator-common-history-live.spec.ts",
+              "sha256": "1f1b4826f3f60eb472a3a58479929670f63f23c8f9ce723bbd05410a5213aced"
+            },
+            {
+              "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+              "sha256": "4681b58ecec9980baca4f7b2afeec9feaf76f723fa88153b1089db3b4e262f35"
+            },
+            {
+              "path": "apps/web/e2e/operator-g1-helpers.ts",
+              "sha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858"
+            },
+            {
+              "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+              "sha256": "beceb0cd1aa5ee7f418323b41ec1b011461fdc36097f2e8e9de490a5550d81fa"
+            },
+            {
+              "path": "apps/web/e2e/operator-keyboard-helpers.ts",
+              "sha256": "715c8e9054aadda26c22fe3de132941bc922dd9682a47364210be3c2d0b96faf"
+            }
+          ]
+        },
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-05/runtime-source.json",
+          "sha256": "88424bf3f0d372456d9e85f73423a26ff229d9ba1afd91483391b48b31f5e7b4",
+          "bytes": 45752,
+          "fileCount": 292,
+          "relevantTestSources": []
+        }
+      ],
+      "completedCounts": {
+        "passed": 10,
+        "failed": 3,
+        "dependencyNotRun": 206,
+        "flaky": 0
+      },
+      "failureSummary": [
+        "G1 exact original employer assertion differed after import normalization.",
+        "Common rendered protocol wording differed from stale generic literal.",
+        "Domain ITR positive grade exceeded its applicable bound; exact per-category positive value was subsequently reviewed."
+      ]
+    },
+    {
+      "runId": "full-e2e-20261015-06",
+      "command": "pnpm test:e2e",
+      "commandStatus": "FAIL_INTERRUPTED",
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-15T02:34:29.1119028Z",
+      "endedAtUtc": "2026-10-15T02:56:01.1657589Z",
+      "timingBasis": "Recorded command wrapper UTC values; no file-mtime reconstruction.",
+      "expectedTests": 219,
+      "provenance": [
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-06/command.json",
+          "sha256": "68bc6c3ce4da4f2f520e310bc5ca8d01b4c95c8644424f560451de1a00877535",
+          "bytes": 1421
+        },
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-06/command.log",
+          "sha256": "e1630549d42016fc211ab210a611f6607896d5ffafdccdd1a76fc075116ddef0",
+          "bytes": 3837
+        }
+      ],
+      "sourceUnchangedDuringAttempt": true,
+      "wholeSuiteAccepted": false,
+      "sourceBindings": [
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-06/test-source.json",
+          "sha256": "18484a847296376a8f5a17e8ede031407bdd0f54c26df12c7dd4ab9a0092252c",
+          "bytes": 28692,
+          "fileCount": 177,
+          "relevantTestSources": [
+            {
+              "sha256": "0c2e66e0b51d7fe2d0539d85fa443ef251e223142936280b2c0d1cd54c3f8dc2",
+              "path": "apps/web/e2e/operator-common-history-helpers.ts"
+            },
+            {
+              "sha256": "1f1b4826f3f60eb472a3a58479929670f63f23c8f9ce723bbd05410a5213aced",
+              "path": "apps/web/e2e/operator-common-history-live.spec.ts"
+            },
+            {
+              "sha256": "7d43a5942e379fc637d925472d750bb94faf474bb43e4e8df551fdd6baf1319f",
+              "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts"
+            },
+            {
+              "sha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9",
+              "path": "apps/web/e2e/operator-g1-helpers.ts"
+            },
+            {
+              "sha256": "2359ebd2cbe559fa90c8cb7515e00144f49835dc7367bfd9c97948f27b02440b",
+              "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts"
+            },
+            {
+              "sha256": "715c8e9054aadda26c22fe3de132941bc922dd9682a47364210be3c2d0b96faf",
+              "path": "apps/web/e2e/operator-keyboard-helpers.ts"
+            }
+          ]
+        },
+        {
+          "retainedLocalRecord": "agent-c/full-e2e-20261015-06/runtime-source.json",
+          "sha256": "88424bf3f0d372456d9e85f73423a26ff229d9ba1afd91483391b48b31f5e7b4",
+          "bytes": 45752,
+          "fileCount": 292,
+          "relevantTestSources": []
+        }
+      ],
+      "completedCounts": {
+        "passed": 3,
+        "failed": 2,
+        "withoutCompletedResult": 214,
+        "finalSkippedCount": null
+      },
+      "controlledStop": {
+        "finalPlaywrightReportAvailable": false,
+        "runtimePreserved": true,
+        "sessionId": 83240,
+        "method": "Ctrl+C via write_stdin",
+        "reason": "Known G1 failed; subsequent common scenario also failed before render dispatch. Stop authorized by root to preserve failure and avoid redundant heavy producers."
+      },
+      "failureSummary": [
+        "G1 original dates conflicted with inherited strict center date rule;100 validation issues.",
+        "Common UI submission returned a delayed persisted PENDING state after the original poll had already failed."
+      ],
+      "recordedMetadataAnomaly": "Original command record changedTestSourcePaths is [null] despite testSourceUnchanged true; retained as a recorded artifact, not rewritten into a fabricated clean array. No final Playwright results.json exists after controlled stop."
+    },
+    {
+      "runId": "domain-grade-20261015-01",
+      "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=domain-consumer --no-deps --grep '^UX04'",
+      "commandStatus": "FAIL",
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-15T08:49:14.5331657Z",
+      "endedAtUtc": "2026-10-15T08:49:16.3921214Z",
+      "timingBasis": "Recorded command wrapper UTC values; no file-mtime reconstruction.",
+      "expectedTests": 1,
+      "provenance": [
+        {
+          "retainedLocalRecord": "agent-c/domain-grade-20261015-01/command.json",
+          "sha256": "2d1be7d7cfd1b6fcd3e1b3f8af78ef591dcab838a873e85a2eae42666e1f022c",
+          "bytes": 1088
+        },
+        {
+          "retainedLocalRecord": "agent-c/domain-grade-20261015-01/command.log",
+          "sha256": "a6bf2b7a7c9473ad711af676ab87eda91affe65be46517d61299f0d084d47bca",
+          "bytes": 293
+        },
+        {
+          "retainedLocalRecord": "agent-c/domain-grade-20261015-01/results.json",
+          "sha256": "04df41ce92071a5fa2f4d023c76c9aa0056cb6ddb71c19958143d23d1e9f3bd1",
+          "bytes": 10566
+        }
+      ],
+      "sourceUnchangedDuringAttempt": true,
+      "wholeSuiteAccepted": false,
+      "sourceBinding": {
+        "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+        "sha256": "7d43a5942e379fc637d925472d750bb94faf474bb43e4e8df551fdd6baf1319f"
+      },
+      "completedCounts": {
+        "passed": 0,
+        "failedTestCases": 0,
+        "executedTestCases": 0,
+        "globalCommandFailure": true
+      },
+      "failureSummary": [
+        "No tests found: the command selector matched no actual test. Exit1 is not a testcase PASS."
+      ]
+    },
+    {
+      "runId": "domain-grade-20261015-02",
+      "command": "pnpm --filter @demo/web exec playwright test -c playwright.config.ts --project=domain-consumer --no-deps --grep 'UX04 actual fourth-row'",
+      "commandStatus": "FAIL",
+      "exitCode": 1,
+      "startedAtUtc": "2026-10-15T08:50:08.4423439Z",
+      "endedAtUtc": "2026-10-15T08:54:11.6355901Z",
+      "timingBasis": "Recorded command wrapper UTC values; no file-mtime reconstruction.",
+      "expectedTests": 1,
+      "provenance": [
+        {
+          "retainedLocalRecord": "agent-c/domain-grade-20261015-02/command.json",
+          "sha256": "c7769c23dca4c259f596bc05ca0c3f61577dd2f58d53b6015295a00b254c8da0",
+          "bytes": 1105
+        },
+        {
+          "retainedLocalRecord": "agent-c/domain-grade-20261015-02/command.log",
+          "sha256": "e5fabae0d7dc11072bdfac65e72984a557dfabebdd3717334bc5dd0c6073e3bb",
+          "bytes": 6216
+        },
+        {
+          "retainedLocalRecord": "agent-c/domain-grade-20261015-02/results.json",
+          "sha256": "dec01832748a5b1f603f3b4b7767d29cf6adae2513593cfbce0d4f92e15f843b",
+          "bytes": 21654
+        }
+      ],
+      "sourceUnchangedDuringAttempt": true,
+      "wholeSuiteAccepted": false,
+      "sourceBinding": {
+        "path": "apps/web/e2e/operator-domain-acceptance-live.spec.ts",
+        "sha256": "7d43a5942e379fc637d925472d750bb94faf474bb43e4e8df551fdd6baf1319f"
+      },
+      "completedCounts": {
+        "passed": 0,
+        "failed": 1
+      },
+      "failureSummary": [
+        "COMPANY rows retained local BIN/address but lacked explicit employer identity while customer BIN/address were empty. Identity guard correctly left three employer-name requirements. Earlier PERSON stages do not convert this whole testcase to PASS."
+      ]
+    },
+    {
+      "runId": "g1-date-boundary-20261015-01",
+      "command": "pnpm exec playwright test --config .runtime/g1-date-rule-repair/playwright.config.ts",
+      "commandStatus": "FAIL",
+      "exitCode": 1,
+      "startedAtUtc": null,
+      "endedAtUtc": null,
+      "timingBasis": "No process start/end manifest captured; null preserved. File timestamps are not execution timestamps.",
+      "exitAttribution": "Agent B retained terminal tool result; session 32626. Agent A independently read terminal summary in retained command.log.",
+      "completedCounts": {
+        "passed": 0,
+        "failed": 1
+      },
+      "provenance": [
+        {
+          "retainedLocalRecord": "agent-b/BOUNDARY_COMMAND_HISTORY.json",
+          "sha256": "1938cd0d735bf6aaffe1fe9b7372cc830ea3406df2be18064f76592f8bf6530b",
+          "bytes": 4221
+        },
+        {
+          "retainedLocalRecord": "agent-b/g1-date-boundary-20261015-01/command.log",
+          "sha256": "32a1f327c4ddb4192cbf9c1415e811ec2347f7bd7ed6b1f276a7b11ec58f749b",
+          "bytes": 2416
+        },
+        {
+          "retainedLocalRecord": "agent-b/g1-date-boundary-20261015-01/g1-event-schedule-setup.json",
+          "sha256": "393dd4952edaea9c40641c9b7729e337285fb797094679faf33b39833d0cf19a",
+          "bytes": 2313
+        }
+      ],
+      "wholeSuiteAccepted": false,
+      "retainedDiagnosticSources": [
+        {
+          "identifier": ".runtime/g1-date-rule-repair/boundary.spec.ts",
+          "retainedSha256": "9f3ec42733d39942cc31393eace04f484c264aea42251347ada9a95a8008aa7f",
+          "atExecutionSha256Capture": null,
+          "provenance": "These exact diagnostic files were created before their command and not edited afterward in this task; retained bytes archived now. No separate pre-execution hash manifest was captured."
+        },
+        {
+          "identifier": ".runtime/g1-date-rule-repair/playwright.config.ts",
+          "retainedSha256": "1d7f6f8e9a65fbde6e13f6227b7088730c92d6a04a2ed00f33402dce02a88a56",
+          "atExecutionSha256Capture": null,
+          "provenance": "These exact diagnostic files were created before their command and not edited afterward in this task; retained bytes archived now. No separate pre-execution hash manifest was captured."
+        },
+        {
+          "identifier": ".runtime/g1-date-rule-repair/validation-retry.spec.ts",
+          "retainedSha256": "ac9ce93798e1c302bc105a53658b87bf0c849c195618ff280a2917c5caf288b2",
+          "atExecutionSha256Capture": null,
+          "provenance": "These exact diagnostic files were created before their command and not edited afterward in this task; retained bytes archived now. No separate pre-execution hash manifest was captured."
+        },
+        {
+          "identifier": ".runtime/g1-date-rule-repair/retry.config.ts",
+          "retainedSha256": "6d7e7a6860d658fb87e70b98921c05207d01c354e70000f98cd5b15cd0301364",
+          "atExecutionSha256Capture": null,
+          "provenance": "These exact diagnostic files were created before their command and not edited afterward in this task; retained bytes archived now. No separate pre-execution hash manifest was captured."
+        }
+      ],
+      "scope": "Event-only UI schedule and preservation assertions completed; validation wait timed out during the recorded host sleep/clock gap. Attempt remains FAIL; environment correlation does not convert outcome."
+    },
+    {
+      "runId": "g1-date-boundary-20261015-02",
+      "command": "pnpm exec playwright test --config .runtime/g1-date-rule-repair/retry.config.ts",
+      "commandStatus": "PASS_VALIDATION_BOUNDARY_ONLY",
+      "exitCode": 0,
+      "startedAtUtc": null,
+      "endedAtUtc": null,
+      "timingBasis": "No process start/end manifest captured; null preserved. File timestamps are not execution timestamps.",
+      "exitAttribution": "Agent B retained terminal tool result; session 89356. Agent A independently read terminal summary in retained command.log.",
+      "completedCounts": {
+        "passed": 1,
+        "failed": 0
+      },
+      "provenance": [
+        {
+          "retainedLocalRecord": "agent-b/BOUNDARY_COMMAND_HISTORY.json",
+          "sha256": "1938cd0d735bf6aaffe1fe9b7372cc830ea3406df2be18064f76592f8bf6530b",
+          "bytes": 4221
+        },
+        {
+          "retainedLocalRecord": "agent-b/g1-date-boundary-20261015-02/command.log",
+          "sha256": "008e8aded633e564b69a5553aa9a6e85345ef19ea645f6a5b31507eaa97a0799",
+          "bytes": 572
+        },
+        {
+          "retainedLocalRecord": "agent-b/g1-date-boundary-20261015-02/acceptance.json",
+          "sha256": "e435313ac8a241fc92770597f7e3e815b35067df909362ee5d82955ea7ae899c",
+          "bytes": 1107
+        }
+      ],
+      "wholeSuiteAccepted": false,
+      "retainedDiagnosticSources": [
+        {
+          "identifier": ".runtime/g1-date-rule-repair/boundary.spec.ts",
+          "retainedSha256": "9f3ec42733d39942cc31393eace04f484c264aea42251347ada9a95a8008aa7f",
+          "atExecutionSha256Capture": null,
+          "provenance": "These exact diagnostic files were created before their command and not edited afterward in this task; retained bytes archived now. No separate pre-execution hash manifest was captured."
+        },
+        {
+          "identifier": ".runtime/g1-date-rule-repair/playwright.config.ts",
+          "retainedSha256": "1d7f6f8e9a65fbde6e13f6227b7088730c92d6a04a2ed00f33402dce02a88a56",
+          "atExecutionSha256Capture": null,
+          "provenance": "These exact diagnostic files were created before their command and not edited afterward in this task; retained bytes archived now. No separate pre-execution hash manifest was captured."
+        },
+        {
+          "identifier": ".runtime/g1-date-rule-repair/validation-retry.spec.ts",
+          "retainedSha256": "ac9ce93798e1c302bc105a53658b87bf0c849c195618ff280a2917c5caf288b2",
+          "atExecutionSha256Capture": null,
+          "provenance": "These exact diagnostic files were created before their command and not edited afterward in this task; retained bytes archived now. No separate pre-execution hash manifest was captured."
+        },
+        {
+          "identifier": ".runtime/g1-date-rule-repair/retry.config.ts",
+          "retainedSha256": "6d7e7a6860d658fb87e70b98921c05207d01c354e70000f98cd5b15cd0301364",
+          "atExecutionSha256Capture": null,
+          "provenance": "These exact diagnostic files were created before their command and not edited afterward in this task; retained bytes archived now. No separate pre-execution hash manifest was captured."
+        }
+      ],
+      "scope": "Retry only real UI validation on unchanged100-row draft after the recorded OS sleep. No input, approval, issuance or render; full fresh G1 remains required.",
+      "measurement": {
+        "startedAtUtc": "2026-10-15T08:46:45.422Z",
+        "finishedAtUtc": "2026-10-15T08:47:27.126Z",
+        "monotonicElapsedMs": 41703.8109,
+        "wallElapsedMs": 41704,
+        "boundary": "Validation measurement after login, not process duration; terminal total47.5seconds."
+      },
+      "actualValidation": {
+        "httpStatus": 201,
+        "valid": true,
+        "documentCount": 101,
+        "requestUnchanged": true,
+        "original100PeopleAndPhotosUnchanged": true
+      }
+    }
+  ],
+  "overallAcceptance": false,
+  "laterPassDoesNotEraseEarlierFailures": true,
+  "rawTracesFixturesCredentialsPublished": false,
+  "evidencePaths": [
+    "agent-a/TEST_ASSERTION_FINAL_SUPPLEMENT.json",
+    "agent-a/G1_EVENT_CALENDAR_INDEPENDENT_REVIEW.json",
+    "agent-a/COMMON_SUBMIT_SYNCHRONIZATION_REVIEW.json",
+    "agent-a/DOMAIN_EMPLOYER_IDENTITY_INDEPENDENT_REVIEW.json",
+    "agent-c/domain-grade-20261015-02/COMPANY_EMPLOYER_READBACK.json"
+  ]
+}

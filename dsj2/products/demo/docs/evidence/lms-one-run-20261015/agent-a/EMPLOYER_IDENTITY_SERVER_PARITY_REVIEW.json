@@ -1,0 +1,102 @@
+{
+  "status": "PASS_SOURCE_REVIEW_AND_UNIT_REGRESSION_ONLY",
+  "reviewedAt": "2026-10-15T09:28:55.251980+00:00",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "sourcePaths": [
+    "apps/api/src/requests.ts",
+    "tests/request-customer.test.ts",
+    "tests/integration/employer-identity-http.test.ts"
+  ],
+  "sourceFiles": [
+    {
+      "path": "apps/api/src/requests.ts",
+      "sha256": "a02dd878a01dbad2f2b12bd311a15c9adfe27bcb250b60c55511ce9b44ed4a84"
+    },
+    {
+      "path": "tests/request-customer.test.ts",
+      "sha256": "631e39963b68c9d1c82c9773a57d56a1013df437a2a8f024007f3f2c53dd06b5"
+    },
+    {
+      "path": "tests/integration/employer-identity-http.test.ts",
+      "sha256": "e4e1794ebcca7af61eee9e249536a193d570cd49dcf2995189f7bff8333289e7"
+    }
+  ],
+  "productChange": {
+    "scope": "employerFields matchingBin predicate only within this correction",
+    "requiredConditions": [
+      "The row contains an explicit employerId.",
+      "The selected candidate exists and its id equals that employerId.",
+      "Only an empty normalized directory BIN allows the row local BIN to coexist with the linked company identity."
+    ],
+    "preservedGuards": [
+      "Two different nonempty BIN values do not match.",
+      "Implicit unlinked partial BIN/address cannot supply company names.",
+      "Missing and foreign employer references remain rejected by tenant-scoped request reference checks.",
+      "Existing local employer wording and local BIN/address remain intact.",
+      "No UI, schema, migrations, numbering, approval or issue-state change in this correction."
+    ]
+  },
+  "originalUnitTests": {
+    "oldTests": 5,
+    "newTests": 8,
+    "oldTestsUnchanged": true
+  },
+  "actualUnitRegression": {
+    "executor": "Root coordinator",
+    "before": {
+      "tests": 8,
+      "pass": 6,
+      "fail": 2,
+      "exitCode": 1
+    },
+    "after": {
+      "tests": 8,
+      "pass": 8,
+      "fail": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "commands": [
+      {
+        "recordPath": "command-employer-red-01.json",
+        "recordSha256": "af41c65ab136e5cde9f7835ae7c1887caadbddd7f91a55c1c78fa9d6987418e3",
+        "logPath": "command-employer-red-01.log",
+        "logSha256": "ba6d9771d7a4ecfb9c51dbb874b37426943d9311bb34d3c2739bb11335f07bd3",
+        "exitCode": 1,
+        "startedAt": "2026-10-15T09:19:12.2631131Z",
+        "finishedAt": "2026-10-15T09:19:14.5003850Z"
+      },
+      {
+        "recordPath": "command-employer-green-01.json",
+        "recordSha256": "5ce398b75d839efff5ccb7ec42184bc4f5a381d058fcd31f33f0109eac8b01ba",
+        "logPath": "command-employer-green-01.log",
+        "logSha256": "6eaf4e255da42f0db5dfc214d74684f4c7fc06dc87939f753b1e5f46ba5fb7d1",
+        "exitCode": 0,
+        "startedAt": "2026-10-15T09:19:36.7932510Z",
+        "finishedAt": "2026-10-15T09:19:38.7590453Z"
+      }
+    ]
+  },
+  "httpAcceptance": {
+    "state": "NOT_RUN_AT_REVIEW_TIME",
+    "reason": "Actual validation uses the renderer; execution waits for the existing G1 browser operation to finish.",
+    "uses": "Actual Nest bootstrap with session and CSRF, loopback isolated test database, own synthetic tenant and original HTTP endpoints.",
+    "assertions": [
+      "Known own employer identity: three rows validate, four documents are planned, resolved names and local BIN/address are exact.",
+      "Stored rows and revision are unchanged by validation; directory BIN/address remain empty.",
+      "Unlinked partial identity and explicit linked conflicting nonempty BIN each return the exact three missing-workplace paths.",
+      "Foreign and nonexistent employer IDs return HTTP 404 and create no request."
+    ],
+    "boundaries": [
+      "Integration guard rejects non-test database names, non-loopback hosts and browser/first-live-ui database names.",
+      "No issuance, approval, number reservation, external request or running browser API restart."
+    ]
+  },
+  "evidencePaths": [
+    "agent-c/domain-grade-20261015-03/COMPANY_VALIDATION_READBACK.json",
+    "command-employer-red-01.json",
+    "command-employer-green-01.json"
+  ],
+  "findings": []
+}

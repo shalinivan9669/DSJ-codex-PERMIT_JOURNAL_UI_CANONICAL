@@ -1,0 +1,87 @@
+{
+  "status": "PASS",
+  "sourceCommit": "90d5b5e72dba0ac38c89f42fa37925a0b3468561",
+  "forms": [
+    {
+      "templateId": "biot-worker-card",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "a289a31d11bd3123e82e7d8f3e916f7ad358c732480a42409c165b1d3f19245b"
+    },
+    {
+      "templateId": "biot-itr-certificate",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [
+        "Remove active DATE instructions and markers"
+      ],
+      "documentXmlSha256": "4368beca3abe1f2d1dbd67e1dd81c823ec8a36ffc0fab92d9856e7f5e019c2f9"
+    },
+    {
+      "templateId": "biot-protocol",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "99688d23fa73edb005ff82f38b7c3ee3feb3691b245986a72ba8eb10205f246c"
+    },
+    {
+      "templateId": "ptm-card",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "c915c19f8b947fe4e36fbb7a5d4c0b83200a7522c878529c8ce1a48011c762fd"
+    },
+    {
+      "templateId": "ptm-protocol",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "5c9d4c9ab7fb4757c8a8fa0fc90d742461d447c557d7773af8f8dafbf37235d1"
+    },
+    {
+      "templateId": "pb-card",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "0d7d594b5cb63f088422fb42e290ce388a08c50d6cdc4675c01c39755784f1b7"
+    },
+    {
+      "templateId": "pb-protocol",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "0d60015a3d0bdd93f6d2cb5e44418c1810eb724a9dcb6a38ab4a91c36ac187eb"
+    },
+    {
+      "templateId": "ps-card",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "565c89813f449d2b23e10bcba3a1177801843b8a2681f4ab1fd1927232c8493b"
+    },
+    {
+      "templateId": "ps-protocol",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "5c057f6993f936d2b232eae803409d8b3d9a93e90b83c2c90741cf53e48317c3"
+    },
+    {
+      "templateId": "ps-witness",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [
+        "Add one unformatted r/t to the originally empty decision month slot"
+      ],
+      "documentXmlSha256": "dbfa16dbb67fad2a669512451b13e449b94ac3302ecfac9c168ed5a11ff2693e"
+    },
+    {
+      "templateId": "biot-itr-protocol",
+      "preservedOriginalRunsParagraphsStylesGeometryMedia": true,
+      "packageRepairs": "Expanded XML values exact; only OPC namespace serialization, UTF-8 declaration and pinned compatibility aliases",
+      "declaredStructureExceptions": [],
+      "documentXmlSha256": "99688d23fa73edb005ff82f38b7c3ee3feb3691b245986a72ba8eb10205f246c"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "startedAt": "2026-10-14T21:11:02.9770754Z",
+  "log": "lms-regulatory-02.log",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "exitCode": 0,
+  "finishedAt": "2026-10-14T21:11:06.8113847Z",
+  "command": "pnpm exec tsx --tsconfig tsconfig.base.json --test tests/integration/lms-regulatory.test.ts"
+}

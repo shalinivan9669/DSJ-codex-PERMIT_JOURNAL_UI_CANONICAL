@@ -1,0 +1,25 @@
+{
+  "startedAt": "2026-10-15T00:52:30.5450593Z",
+  "preflightObservedAt": "2026-10-15T00:52:51.2456271Z",
+  "apiSession": 20876,
+  "webSession": 50934,
+  "renderWorkerSession": 69867,
+  "integrationWorkerSession": null,
+  "integrationWorkerMode": "First-flow owns real child start/stop/restart; standalone integration worker intentionally absent",
+  "webDist": ".next-lms-final",
+  "webMode": "production next start",
+  "webBuildId": "67WzZeXBqGI1ReRhjqN3k",
+  "origin": "http://127.0.0.1:3159",
+  "apiOrigin": "http://127.0.0.1:4159",
+  "databaseHost": "127.0.0.1:55449",
+  "database": "demo_test_lms_browser_20261015",
+  "sourceSnapshot": "runtime-source.json",
+  "sourceBaseCommit": "8c0833407675d8d31c786f37a55572357d7b9805",
+  "sourceState": "Uncommitted implementation; actual fullbuild03 includes immutable recipient projection fix",
+  "preflight": {
+    "anonymousApiSession": 401,
+    "webLogin": 200
+  },
+  "stoppedAt": "2026-10-15T01:05:10.5430011Z",
+  "stopReason": "Coordinator-requested owned-process pause for allowed-template approval fix and actual fullbuild04; no active browser."
+}

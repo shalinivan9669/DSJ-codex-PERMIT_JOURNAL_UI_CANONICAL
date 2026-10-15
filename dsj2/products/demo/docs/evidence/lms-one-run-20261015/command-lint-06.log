@@ -1,0 +1,25 @@
+$ eslint .
+
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\evidence\lms-one-run-20261015\agent-b\template-upgrade-20261015-01\snapshot.cjs
+   1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   1:14  error  'require' is not defined                 no-undef
+   2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:12  error  'require' is not defined                 no-undef
+   3:24  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   3:24  error  'require' is not defined                 no-undef
+   4:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   4:26  error  'require' is not defined                 no-undef
+   4:44  error  'process' is not defined                 no-undef
+   7:17  error  'URL' is not defined                     no-undef
+   7:21  error  'process' is not defined                 no-undef
+   9:91  error  'process' is not defined                 no-undef
+  17:17  error  'process' is not defined                 no-undef
+  21:57  error  '__dirname' is not defined               no-undef
+  32:28  error  '__dirname' is not defined               no-undef
+  35:3   error  'console' is not defined                 no-undef
+  36:23  error  'console' is not defined                 no-undef
+  36:45  error  'process' is not defined                 no-undef
+
+✖ 18 problems (18 errors, 0 warnings)
+
+[ELIFECYCLE] Command failed with exit code 1.

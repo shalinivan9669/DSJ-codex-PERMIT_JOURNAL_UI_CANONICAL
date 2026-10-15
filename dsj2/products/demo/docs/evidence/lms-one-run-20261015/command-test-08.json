@@ -1,0 +1,13 @@
+{
+  "startedAt": "2026-10-15T01:13:40.3944818Z",
+  "command": "pnpm test",
+  "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "exitCode": 0,
+  "finishedAt": "2026-10-15T01:14:08.4050449Z",
+  "logPath": "command-test-08.log",
+  "environment": {
+    "CI": "true",
+    "DEMO_PYTHON": "local pinned Python 3.12.14",
+    "setup": "lms-test-env.ps1 integration"
+  }
+}

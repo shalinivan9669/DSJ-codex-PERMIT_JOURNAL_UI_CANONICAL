@@ -1,0 +1,178 @@
+{
+  "status": "PASS",
+  "fixtureVersion": "lms-one-run-synthetic-v1",
+  "checkedAt": "2026-10-15T11:09:26.491Z",
+  "measurements": [
+    {
+      "count": 1,
+      "role": "OPERATOR",
+      "phase": "prepared mixed-group assignment and one-row repair",
+      "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+      "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "fixtureSetupNotCountedAsFirstEntry": true,
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "result": {
+        "firstCreated": 0,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "counts": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0
+      },
+      "verificationOnly": {
+        "replayClicks": 1
+      },
+      "elapsedMilliseconds": 275.08729999999923
+    },
+    {
+      "count": 10,
+      "role": "OPERATOR",
+      "phase": "prepared mixed-group assignment and one-row repair",
+      "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+      "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "fixtureSetupNotCountedAsFirstEntry": true,
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "result": {
+        "firstCreated": 9,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "counts": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0
+      },
+      "verificationOnly": {
+        "replayClicks": 1
+      },
+      "elapsedMilliseconds": 345.33160000000134
+    },
+    {
+      "count": 100,
+      "role": "OPERATOR",
+      "phase": "prepared mixed-group assignment and one-row repair",
+      "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+      "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "fixtureSetupNotCountedAsFirstEntry": true,
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "result": {
+        "firstCreated": 99,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "counts": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0
+      },
+      "verificationOnly": {
+        "replayClicks": 1
+      },
+      "elapsedMilliseconds": 433.5133999999998
+    },
+    {
+      "count": 250,
+      "role": "OPERATOR",
+      "phase": "prepared mixed-group assignment and one-row repair",
+      "goal": "Assign the prepared group, preserve successful rows and repair only the missing employer relationship without re-entering known business data",
+      "preconditions": "Synthetic known recipients, published course and prepared request already exist; exactly one recipient lacks the saved employer relationship",
+      "startState": "Prepared known group with one missing employer relationship; published course already selected",
+      "fixtureSetupNotCountedAsFirstEntry": true,
+      "actualSteps": [
+        "Activate one group assignment using keyboard",
+        "Confirm only the failed row's known employer",
+        "Assign only the still selected failed row"
+      ],
+      "result": {
+        "firstCreated": 249,
+        "repairedCreated": 1,
+        "duplicateReplayCreated": 0
+      },
+      "counts": {
+        "clicks": 2,
+        "keyboardActions": 1,
+        "filledFields": 0,
+        "repeatedFields": 0,
+        "decisions": 3,
+        "navigation": 0,
+        "dialogs": 0,
+        "confirmations": 1,
+        "manualRefresh": 0
+      },
+      "verificationOnly": {
+        "replayClicks": 1
+      },
+      "elapsedMilliseconds": 1047.1216000000022
+    }
+  ],
+  "ambiguousSelection": {
+    "role": "OPERATOR",
+    "phase": "explicit selection of existing people with the same name",
+    "goal": "Choose two distinct saved identities by their visible position without merging them or repeating their details",
+    "preconditions": "A published course and two saved recipients with equal names and distinct positions/IDs exist",
+    "startState": "Published version known; two existing recipients share the same name and have different saved positions",
+    "actualSteps": [
+      "Open assignment with known course",
+      "Search the shared name once",
+      "Choose the electrician row by its visible saved position and assign",
+      "Clear that row, choose the welder by visible position and assign separately"
+    ],
+    "counts": {
+      "clicks": 5,
+      "keyboardActions": 0,
+      "filledFields": 1,
+      "repeatedFields": 0,
+      "decisions": 4,
+      "navigation": 1,
+      "dialogs": 0,
+      "confirmations": 2,
+      "manualRefresh": 0
+    },
+    "elapsedMilliseconds": 635.4601000000002,
+    "distinctRecipientIds": [
+      "858cf3be-4ccf-47fd-ab62-3f808a77fe4b",
+      "d37a7bd4-5a0d-4b6c-b122-925eada8a3c6"
+    ],
+    "distinctEnrollmentIds": [
+      "86368c95-592a-43b6-ae68-4ccca3b73785",
+      "42b920ee-f5d6-4d2f-8087-571be94db7b5"
+    ],
+    "automaticIdentityMerge": false,
+    "result": "PASS"
+  }
+}

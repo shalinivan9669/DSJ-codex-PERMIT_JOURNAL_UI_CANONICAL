@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-10-15T01:10:04.1096479Z",
+  "result": "PASS",
+  "source": "scripts/maintenance/register-lms-templates.ts",
+  "sourceSha256": "315949fea31a8b00a6a7289378d35900ff281dfab11cd48c1ce4b56e4e2d23e8",
+  "tenantId": "2aea57c9-25a1-4091-a513-a66c03edd27e",
+  "database": "127.0.0.1:55449/demo_test_lms_browser_20261015",
+  "demoOnly": true,
+  "beforeTemplateCount": 19,
+  "afterTemplateCount": 22,
+  "newLmsCount": 3,
+  "newLmsApproved": false,
+  "dryRun": {
+    "evidence": "dry-run.json",
+    "pending": 3,
+    "created": 0
+  },
+  "apply": {
+    "created": 3,
+    "evidence": "apply.json"
+  },
+  "replay": {
+    "evidence": "replay.json",
+    "pending": 0,
+    "created": 0
+  },
+  "historicalTemplatesUnchanged": true,
+  "numberingAndProfilesUnchanged": true,
+  "staticChecks": {
+    "prettier": "PASS",
+    "invalidTenantCli": "EXPECTED_EXIT_1_EXPLICIT_TENANT_UUID_REQUIRED",
+    "eslint": "PASS"
+  },
+  "concurrencyAndHttpApproval": "Separate C integration test; not claimed by this sequential browser-tenant run",
+  "retainedHarnessFailures": {
+    "path": "before.stderr.log",
+    "reason": "Read-only evidence helper initially requested NumberSequence.id ordering, but model key is namespace; fixed only helper, before any apply. Initial tsx -e snapshot produced no output and no evidence; replaced with explicit snapshot.cjs file and required before.json check."
+  },
+  "boundary": "Only template versions appended by this command. No director approval, password, provision, numbering, issuer-profile edit, production database, external service or browser session."
+}

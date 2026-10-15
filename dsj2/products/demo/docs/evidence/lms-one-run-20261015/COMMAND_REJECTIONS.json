@@ -1,0 +1,32 @@
+{
+  "status": "HISTORICAL_NOT_RUN_REJECTIONS_RETAINED",
+  "recordedAt": "2026-10-15T01:16:19.950457+00:00",
+  "scope": "Sanitized record of two local browser command launch rejections; no raw commands, environment assignments, credentials or session values.",
+  "actions": [
+    {
+      "sourceRecord": "agent-c/first-flow-command-rejection.json",
+      "action": "Run the targeted local lms-first-flow browser acceptance against the existing synthetic database and local production web04.",
+      "toolOutcome": "CreateProcess rejected: blocked by policy",
+      "executionStatus": "NOT_RUN",
+      "processStarted": false,
+      "specificReasonSupplied": false,
+      "productFailure": false
+    },
+    {
+      "sourceRecord": "agent-c/first-flow-command-rejection-02.json",
+      "action": "Run the authorized targeted local lms-first-flow browser acceptance.",
+      "toolOutcome": "CreateProcess rejected: blocked by policy",
+      "executionStatus": "NOT_RUN",
+      "processStarted": false,
+      "specificReasonSupplied": false,
+      "productFailure": false
+    }
+  ],
+  "userInstructionEvidence": {
+    "currentBrowserApprovalQuote": "Разрешаю локальную браузерную приёмку",
+    "baselineExclusionQuote": "Продолжить без исходного браузерного замера",
+    "source": "Exact quotes relayed by coordinator and retained in the original rejection/baseline-scope records. Reviewer did not receive original user-message timestamps.",
+    "userMessageTimestampUtc": null
+  },
+  "interpretation": "These rejected launches prove neither application failure nor browser PASS. They are historical launch events; separately executed later runs retain their own actual outcomes. The excluded original preimplementation browser baseline remains NOT_RUN, not fabricated or relabeled."
+}

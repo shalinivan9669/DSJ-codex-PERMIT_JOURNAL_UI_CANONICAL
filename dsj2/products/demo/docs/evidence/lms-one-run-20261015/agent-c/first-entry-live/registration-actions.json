@@ -1,0 +1,26 @@
+{
+  "result": "PASS",
+  "measuredAt": "2026-10-14T21:23:26.691Z",
+  "role": "NEW_LEARNER",
+  "startState": "Public registration page, empty form, no authenticated session",
+  "actualSteps": [
+    "Enter name, email and password",
+    "Check versioned consent",
+    "Continue; actual server creates LEARNER and opens My learning"
+  ],
+  "counts": {
+    "filledFields": 3,
+    "repeatedFields": 0,
+    "clicks": 2,
+    "decisions": 1,
+    "navigation": 1,
+    "dialogs": 0,
+    "manualRefresh": 0
+  },
+  "instrumentation": {
+    "languageClicks": 8,
+    "viewportChanges": 4,
+    "notIncludedInBusinessCounts": true
+  },
+  "elapsedMilliseconds": 3111.3387
+}

@@ -1,0 +1,22 @@
+{
+  "status": "PASS_SOURCE_REVIEW_ONLY",
+  "reviewer": "Agent A",
+  "overallAcceptance": false,
+  "sourcePath": "apps/web/e2e/operator-g1-keyboard-resume-live.spec.ts",
+  "sourceSha256": "4975e5df3f9d10fc74df29534d6b0a0025b520710bb2988303a33730c0010ce5",
+  "beforeSha256": "4a343f485266b5174d02369dbc7454aa05db8854e8d75a541baebccfca05322d",
+  "assertionsBefore": 11,
+  "assertionsAfter": 12,
+  "removedAssertions": [],
+  "parseErrors": 0,
+  "checks": [
+    "Initial UI selection requires both the existing exact title and the checkpoint request ID in the canonical href.",
+    "Added post-navigation pathname assertion binds the reopened request to that checkpoint.",
+    "All original 11 assertion ASTs remain unchanged, including original-file hash/snapshot checks and no-business-write checks.",
+    "Existing keyboard actions, download paths, time budgets and input values remain unchanged.",
+    "Applied file bytes exactly match the independently reviewed candidate."
+  ],
+  "execution": "Source review only. Full G1 resume browser execution remains separately required.",
+  "findings": [],
+  "reviewedAt": "2026-10-15T09:24:46.059550+00:00"
+}

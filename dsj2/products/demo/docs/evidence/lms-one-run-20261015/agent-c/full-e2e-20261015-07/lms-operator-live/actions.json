@@ -1,0 +1,760 @@
+{
+  "fixtureVersion": "lms-operator-ui-v1",
+  "setup": "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+  "checkedAt": "2026-10-15T11:13:01.351Z",
+  "metrics": [
+    {
+      "scenario": "prepared eligible result to document set",
+      "role": "DIRECTOR",
+      "startBoundary": "Result list already open with one eligible result automatically selected",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Prepare the selected document set",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 19.729699999996228
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 156.7799000000232,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "preparedTypes": 3,
+        "waitingForDirector": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "prepared repeat",
+      "startState": "Result list already open with one eligible result automatically selected",
+      "goal": "Prepare all three applicable document types without re-entering saved facts",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Prepare the selected document set",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 19.729699999996228
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "required director decision",
+      "role": "DIRECTOR",
+      "startBoundary": "Authenticated director has the submitted immutable revision link; approval page not yet opened",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open the submitted revision",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 120.79649999999674
+        },
+        {
+          "kind": "click",
+          "label": "Approve this immutable revision",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 148.16860000000452
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 315.9521999999997,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "approved": true,
+        "requestId": "e2a72d50-76c9-40dd-b3d0-a991649293cc"
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "separate authorized decision",
+      "startState": "Authenticated director has the submitted immutable revision link; approval page not yet opened",
+      "goal": "Review and explicitly approve the submitted revision",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the submitted revision",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 120.79649999999674
+        },
+        {
+          "kind": "click",
+          "label": "Approve this immutable revision",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 148.16860000000452
+        }
+      ],
+      "filledFields": 0,
+      "separateFromPreparedDownloadBudget": true,
+      "reviewBoundary": "Automated browser observes the saved revision and explicit approval; human reading speed is not measured."
+    },
+    {
+      "scenario": "prepared document set download",
+      "role": "DIRECTOR",
+      "startBoundary": "All three approved files ready, remembered default PDF format",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Download the ready set",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 17.65789999999106
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 647.9131999999809,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "validZip": true,
+        "bytes": 214828
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "prepared repeat",
+      "startState": "All three approved files ready, remembered default PDF format",
+      "goal": "Download the whole ready set once without choosing people or forms again",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Download the ready set",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 17.65789999999106
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "open the prepared set print task",
+      "role": "DIRECTOR",
+      "startBoundary": "Director authenticated; the completed three-document request has been automatically archived",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open the completed requests archive",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 120.851800000004
+        }
+      ],
+      "clicks": 0,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 0,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 530.4449999999779,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "requestId": "e2a72d50-76c9-40dd-b3d0-a991649293cc",
+        "readyRowVisible": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "prepared task navigation",
+      "startState": "Director authenticated; the completed three-document request has been automatically archived",
+      "goal": "Reach the existing issued request row without entering or selecting people again",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the completed requests archive",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 120.851800000004
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "prepared whole document set browser print",
+      "role": "DIRECTOR",
+      "startBoundary": "Existing request row visible with all three ready documents; no print plan opened",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Prepare the latest issue as one PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 21.942699999985052
+        },
+        {
+          "kind": "click",
+          "label": "Print the complete prepared part",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 23.868799999996554
+        }
+      ],
+      "clicks": 2,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 2,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 2069.3369999999995,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "nativeBeforePrintObserved": true,
+        "printProof": [
+          {
+            "pages": 3,
+            "decodedImages": 3
+          }
+        ],
+        "nativePrintFunctionOverridden": false,
+        "nativePrintDialogInspected": false,
+        "physicalPrint": false
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "prepared repeat",
+      "startState": "Existing request row visible with all three ready documents; no print plan opened",
+      "goal": "Prepare the full PDF and invoke real browser printing without selecting people or forms again",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Prepare the latest issue as one PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 21.942699999985052
+        },
+        {
+          "kind": "click",
+          "label": "Print the complete prepared part",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 23.868799999996554
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "extend existing learner access",
+      "role": "DIRECTOR",
+      "startBoundary": "Results list open with the known learner visible",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Open the known learner",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 40.46590000001015
+        },
+        {
+          "kind": "click",
+          "label": "Open access dates",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 42.7383999999729
+        },
+        {
+          "kind": "field",
+          "label": "New access date",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 15.051099999982398
+        },
+        {
+          "kind": "click",
+          "label": "Confirm the new access date",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 33.51999999998952
+        }
+      ],
+      "clicks": 3,
+      "keyboardActions": 0,
+      "fields": 1,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 2,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 185.7001000000164,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "dueAt": "2027-12-31T18:59:59.000Z"
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "existing learner administration",
+      "startState": "Results list open with the known learner visible",
+      "goal": "Enter only a new access date for the existing enrollment",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Open the known learner",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 40.46590000001015
+        },
+        {
+          "kind": "click",
+          "label": "Open access dates",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 42.7383999999729
+        },
+        {
+          "kind": "field",
+          "label": "New access date",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 15.051099999982398
+        },
+        {
+          "kind": "click",
+          "label": "Confirm the new access date",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 33.51999999998952
+        }
+      ],
+      "filledFields": 1
+    },
+    {
+      "scenario": "employer own document download",
+      "role": "EMPLOYER",
+      "startBoundary": "Employer authenticated; results page not yet opened",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open results",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 52.63779999999679
+        },
+        {
+          "kind": "click",
+          "label": "Open own employee",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 29.258900000015274
+        },
+        {
+          "kind": "click",
+          "label": "Download the saved PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 34.57600000000093
+        }
+      ],
+      "clicks": 2,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 2,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 503.2728000000061,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "downloaded": true,
+        "foreignEnrollmentStatus": 404
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "other role prepared repeat",
+      "startState": "Employer authenticated; results page not yet opened",
+      "goal": "Find and download the saved document of an own employee",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open results",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 52.63779999999679
+        },
+        {
+          "kind": "click",
+          "label": "Open own employee",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 29.258900000015274
+        },
+        {
+          "kind": "click",
+          "label": "Download the saved PDF",
+          "decision": true,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 34.57600000000093
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "create one-time recovery link for a known learner",
+      "role": "DIRECTOR",
+      "startBoundary": "Director remains on the known learner detail",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "click",
+          "label": "Open learner access controls",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 32.11590000000433
+        },
+        {
+          "kind": "click",
+          "label": "Create one-time recovery link",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 21.181199999991804
+        }
+      ],
+      "clicks": 2,
+      "keyboardActions": 0,
+      "fields": 0,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 0,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 82.27270000000135,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "linkCreated": true,
+        "secretExcluded": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "account recovery authorized role",
+      "startState": "Director remains on the known learner detail",
+      "goal": "Create one recovery link without entering the learner data again",
+      "actualSteps": [
+        {
+          "kind": "click",
+          "label": "Open learner access controls",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 32.11590000000433
+        },
+        {
+          "kind": "click",
+          "label": "Create one-time recovery link",
+          "decision": true,
+          "confirmation": true,
+          "navigation": false,
+          "elapsedMilliseconds": 21.181199999991804
+        }
+      ],
+      "filledFields": 0
+    },
+    {
+      "scenario": "exchange one-time recovery link",
+      "role": "LEARNER",
+      "startBoundary": "Learner has a one-time recovery URL and an unauthenticated browser context",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "navigate",
+          "label": "Open the supplied recovery URL",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 156.10459999999148
+        },
+        {
+          "kind": "field",
+          "label": "New password",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 11.23379999998724
+        },
+        {
+          "kind": "click",
+          "label": "Confirm password change",
+          "decision": true,
+          "confirmation": true,
+          "navigation": true,
+          "elapsedMilliseconds": 25.61789999998291
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 1,
+      "repeatedFields": 0,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 2,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 1,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 312.68169999998645,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "passwordChanged": true,
+        "redirectedToLogin": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "account recovery other participant",
+      "startState": "Learner has a one-time recovery URL and an unauthenticated browser context",
+      "goal": "Choose a new password and return to the ordinary login screen",
+      "actualSteps": [
+        {
+          "kind": "navigate",
+          "label": "Open the supplied recovery URL",
+          "decision": false,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 156.10459999999148
+        },
+        {
+          "kind": "field",
+          "label": "New password",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 11.23379999998724
+        },
+        {
+          "kind": "click",
+          "label": "Confirm password change",
+          "decision": true,
+          "confirmation": true,
+          "navigation": true,
+          "elapsedMilliseconds": 25.61789999998291
+        }
+      ],
+      "filledFields": 1
+    },
+    {
+      "scenario": "authenticate after recovery",
+      "role": "LEARNER",
+      "startBoundary": "Ordinary login form opened after recovery; existing email and new password known",
+      "preconditions": [
+        "Synthetic prerequisite accounts, employer memberships, published course and server-confirmed result were prepared through DB/domain functions. Initial course creation and learning are separate acceptance scenarios.",
+        "Known people, employer relationships, published program and eligible result were prepared through real domain calls. This is a prepared operation, not measured first entry."
+      ],
+      "steps": [
+        {
+          "kind": "field",
+          "label": "Existing login email",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 10.415999999997439
+        },
+        {
+          "kind": "field",
+          "label": "Chosen recovery password",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 7.894900000013877
+        },
+        {
+          "kind": "click",
+          "label": "Log in after recovery",
+          "decision": true,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 26.334600000001956
+        }
+      ],
+      "clicks": 1,
+      "keyboardActions": 0,
+      "fields": 2,
+      "repeatedFields": 2,
+      "selections": 0,
+      "decisions": 1,
+      "navigation": 1,
+      "dialogs": 0,
+      "nativeDialogs": 0,
+      "applicationDialogs": 0,
+      "confirmations": 0,
+      "manualRefresh": 0,
+      "fileSelections": 0,
+      "nativeFilePickerObserved": false,
+      "elapsedMilliseconds": 151.19039999999222,
+      "excludedVerificationMilliseconds": 0,
+      "result": {
+        "existingLearningOpened": true
+      },
+      "boundary": "Counts cover recorded application actions. fill/selectOption/setInputFiles are semantic field actions; native file-picker interactions and physical keystrokes inside fill are not claimed. Repeated fields means re-entry of values already known to the application in this scenario.",
+      "phase": "authentication separate from business data",
+      "startState": "Ordinary login form opened after recovery; existing email and new password known",
+      "goal": "Authenticate and reach the existing learning records",
+      "actualSteps": [
+        {
+          "kind": "field",
+          "label": "Existing login email",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 10.415999999997439
+        },
+        {
+          "kind": "field",
+          "label": "Chosen recovery password",
+          "decision": false,
+          "confirmation": false,
+          "navigation": false,
+          "elapsedMilliseconds": 7.894900000013877
+        },
+        {
+          "kind": "click",
+          "label": "Log in after recovery",
+          "decision": true,
+          "confirmation": false,
+          "navigation": true,
+          "elapsedMilliseconds": 26.334600000001956
+        }
+      ],
+      "filledFields": 2,
+      "authenticationFields": 2,
+      "repeatedBusinessFields": 0,
+      "scopeNote": "Both known credentials are counted as re-entered authentication fields; no name, employer, program or result is entered again. This is separate from all prepared business-action budgets."
+    }
+  ],
+  "measurementConventions": "Every measured application action is recorded through measureLmsActions. Counts are derived from completed actions; JS dialogs and visible application dialogs are observed. Explicit business commits are confirmations; disclosure, navigation and download are not. Semantic fill is counted separately from physical keystrokes. Elapsed time includes required response waits and verification readback; screenshots after finish are excluded. Initial director/employer authentication and fixture construction are preconditions, never claimed as first-entry work.",
+  "checks": {
+    "actualThreeDocumentZip": true,
+    "directorDecision": true,
+    "ownEmployerDownload": true,
+    "foreignEmployer404": true,
+    "extensionPersisted": true,
+    "recoveryLogin": true
+  },
+  "secretsExcluded": true
+}

@@ -1,0 +1,24 @@
+{
+  "start": "2026-10-15T00:57:31.2915619Z",
+  "status": "PASS",
+  "command": "pnpm --filter @demo/web exec playwright test e2e/lms-copy-original-live.spec.ts e2e/lms-paper-signature-live.spec.ts --project=remaining --no-deps",
+  "webBuildId": "67WzZeXBqGI1ReRhjqN3k",
+  "runtime": "../../agent-c/full-e2e-20261015-04/runtime-start.json",
+  "scope": "Two prepared legal-form scenarios after exact fixture/upload and selector corrections; earlier failures retained",
+  "source": [
+    {
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\scripts\\verification\\lms-copy-fixture.ts",
+      "sha256": "9A1206D1C712AF09BB895513B992BD744CE9EFB3B55A4BDF49CB286B270793A4"
+    },
+    {
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-copy-original-live.spec.ts",
+      "sha256": "3FC27E0A466D19BD4B0A3055CF465B03274EAF4AB8E5D522ADFAACE602F49BE0"
+    },
+    {
+      "path": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo\\apps\\web\\e2e\\lms-paper-signature-live.spec.ts",
+      "sha256": "6EC51AB1164AB0AA38EAEE96352A669DFD2C382888D47DE2381E3510101D0FBE"
+    }
+  ],
+  "exitCode": 0,
+  "end": "2026-10-15T00:58:37.2582239Z"
+}

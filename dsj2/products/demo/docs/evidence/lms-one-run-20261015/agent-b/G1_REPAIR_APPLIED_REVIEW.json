@@ -1,0 +1,56 @@
+{
+  "status": "APPLIED_REVIEWED_TEST_ONLY_REPAIRS_ACTUAL_FULL06_NOT_RUN",
+  "reviewer": "Agent B",
+  "checkedAt": "2026-10-15T02:30:40.956Z",
+  "applyGate": {
+    "full05": "Terminal exit1 recorded by Agent C before either application",
+    "sourceManifestPreserved": "Agent C verified177test/292product source hashes unchanged at full05 exit",
+    "failureHistory": "Full05 stays10PASS3FAIL206dependency-notrun; these changes do not revise that result"
+  },
+  "changes": [
+    {
+      "path": "apps/web/e2e/operator-g1-keyboard-live.spec.ts",
+      "candidate": ".runtime/g1-ui-repair/operator-g1-keyboard-live.spec.ts.pending",
+      "beforeSha256": "beceb0cd1aa5ee7f418323b41ec1b011461fdc36097f2e8e9de490a5550d81fa",
+      "afterSha256": "2359ebd2cbe559fa90c8cb7515e00144f49835dc7367bfd9c97948f27b02440b",
+      "appliedBytesEqualReviewedCandidate": true
+    },
+    {
+      "path": "apps/web/e2e/operator-g1-helpers.ts",
+      "candidate": ".runtime/g1-ui-repair/operator-g1-helpers.ts.pending",
+      "beforeSha256": "c4b46e16fe213c64a7bd2d3ab620b73cb7dd6700bf4e9e5a784a700f6dbae858",
+      "afterSha256": "1aa530889c88b4d998aa079acf8bf9ed408be60eb9b81cf118465a4e9b18fbc9",
+      "appliedBytesEqualReviewedCandidate": true
+    }
+  ],
+  "independentReviews": [
+    "agent-a/TEST_ASSERTION_FINAL_SUPPLEMENT.json",
+    "agent-a/G1_PB_ORACLE_INDEPENDENT_REVIEW.json"
+  ],
+  "causeEvidence": [
+    "agent-b/G1_EMPLOYER_DIAGNOSIS.json",
+    "agent-b/G1_PB_RESULT_ORACLE_REVIEW.json"
+  ],
+  "assertionBoundary": {
+    "spec": "All79 original ordinary expect assertions retained;8 additional company precondition assertions. One expect.poll also unchanged.",
+    "helper": "105of106 ordinary assertions unchanged; only stale standalone100×Сдал is replaced by exact bounded100×Тапсырды/сдал. Five expect.poll outer matchers unchanged.",
+    "preserved": "Original100row source, exactRU/KZnames/workplaces/positions, photos,101documents, all byte/hash/snapshot checks, confirmation sources and zero mouse clicks."
+  },
+  "verification": {
+    "prettierAffectedFiles": "PASS",
+    "gitDiffCheckAffectedFiles": "PASS",
+    "typescriptParse": "PASS on exact applied candidate bytes",
+    "eslintAffectedFiles": "Scoped command started and process completed; terminal output was not retained. Do not infer exit code; root coordinated full lint is the authoritative required check.",
+    "globalLintFormatTypecheck": "Pending root single coordinated run"
+  },
+  "newInputMeasurement": {
+    "status": "NOT_RUN",
+    "expectedEvidence": "Next full-suite g1-prepared/g1-company-input-setup.json",
+    "method": "Actual keyboard counter deltas and elapsed wall time from initial company form choice through UI save; no constant fabricated action totals."
+  },
+  "noStandaloneG1Run": true,
+  "noProductChanges": true,
+  "noDatabaseMutationsByRepair": true,
+  "sourceFrozen": true,
+  "overallAcceptance": false
+}

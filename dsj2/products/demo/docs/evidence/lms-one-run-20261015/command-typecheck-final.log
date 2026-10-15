@@ -1,0 +1,32 @@
+$ pnpm db:generate && pnpm -r typecheck
+$ pnpm --filter @demo/database generate
+$ prisma generate
+Prisma schema loaded from prisma\schema.prisma
+
+✔ Generated Prisma Client (v6.19.3) to .\..\..\node_modules\.pnpm\@prisma+client@6.19.3_prism_1d040ab5215f59f0e27ddee7f0cf082e\node_modules\@prisma\client in 292ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+
+Scope: 8 of 9 workspace projects
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+packages/printing typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+packages/printing typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/render-worker typecheck$ tsc --noEmit
+apps/render-worker typecheck: Done
+apps/web typecheck: Done
+apps/api typecheck: Done
+apps/integration-worker typecheck$ tsc --noEmit
+apps/integration-worker typecheck: ../api/src/files.ts(53,17): error TS2694: Namespace 'global.Express' has no exported member 'Multer'.
+apps/integration-worker typecheck: ../api/src/files.ts(278,17): error TS2694: Namespace 'global.Express' has no exported member 'Multer'.
+apps/integration-worker typecheck: Failed
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\integration-worker:
+[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @demo/integration-worker@2.0.0 typecheck: `tsc --noEmit`
+Exit status 2
+[ELIFECYCLE] Command failed with exit code 2.

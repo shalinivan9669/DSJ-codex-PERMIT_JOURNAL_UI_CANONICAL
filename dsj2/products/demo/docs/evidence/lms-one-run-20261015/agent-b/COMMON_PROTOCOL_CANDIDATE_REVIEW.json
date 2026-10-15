@@ -1,0 +1,65 @@
+{
+  "status": "PASS_INDEPENDENT_SOURCE_REVIEW_ONLY_NOT_APPLIED_NOT_RUN",
+  "reviewer": "Agent B",
+  "checkedAt": "2026-10-15T02:22:03.502Z",
+  "target": "apps/web/e2e/operator-common-history-helpers.ts",
+  "sources": [
+    {
+      "path": "apps/web/e2e/operator-common-history-helpers.ts",
+      "sha256": "00b2e85bf0bf3770b56be4c25d19cebb53dc65b1b9e45eb9cd7a0d02ddb5022f"
+    },
+    {
+      "path": ".runtime/common-wording-repair/operator-common-history-helpers.ts.pending",
+      "sha256": "0c2e66e0b51d7fe2d0539d85fa443ef251e223142936280b2c0d1cd54c3f8dc2"
+    },
+    {
+      "path": ".runtime/common-wording-repair/common-protocol-exact-wording.patch",
+      "sha256": "96576ba3cf8a9d3cce52e31421b4b94d0436a1aeadf6daf45bb11fbe85b7eb13"
+    },
+    {
+      "path": "packages/contracts/src/course-defaults.ts",
+      "sha256": "2b5af5f33ff70497c9dec1bb38b12d66b3c4c06c9358d92f761e4aac4b38d8f1"
+    },
+    {
+      "path": "docs/evidence/lms-one-run-20261015/agent-a/COMMON_PROTOCOL_WORDING_REVIEW.json",
+      "sha256": "af77821321e7974e554bd44c3896e13682dd386c4b62df9154aba0865b65b3b9"
+    }
+  ],
+  "staticOracle": {
+    "biot-protocol": "Өтті/прошел",
+    "ptm-protocol": "Прошел/ Өтті"
+  },
+  "assertionPreservation": {
+    "method": "TypeScript AST printer expression multiset, ordinary expect matcher calls, preserving multiplicity",
+    "before": 26,
+    "candidate": 27,
+    "unchanged": 25,
+    "removed": [
+      "expect(text).toContain(\"Сдал\")"
+    ],
+    "added": [
+      "expect(expectedProtocolResult).toBeDefined()",
+      "expect(text).toContain(expectedProtocolResult)"
+    ],
+    "parseDiagnostics": 0
+  },
+  "findings": [
+    "The exact complete BIOT/PTM literals match the unchanged existing course-default policy and Agent A actual saved DOCX roster-cell readback: three files,102 result cells.",
+    "The candidate does not invoke courseResultText or compute expected text from production results; it uses a static independent two-entry literal oracle.",
+    "Unknown protocol IDs fail the explicit defined assertion before exact text containment; no regex alternative or generic success wording fallback.",
+    "All other25 ordinary assertions retain exact AST expressions, including105documents/210files, hash, PDF header, dates, names, numbers, subjects and preserved files.",
+    "Only additive readback metadata is expectedProtocolResult: a static ordinary printed result phrase or undefined for non-protocols. It contains no credentials, tokens, cookie values or LMS exam answer keys.",
+    "No test skip, timeout, network behavior, fixture rows, product renderer or output state was changed."
+  ],
+  "actualProofBoundary": {
+    "artifactReport": "docs/evidence/lms-one-run-20261015/agent-a/COMMON_PROTOCOL_WORDING_REVIEW.json",
+    "actualArtifactFiles": 3,
+    "actualResultCells": 102,
+    "independentBinaryRead": false,
+    "note": "Agent B independently reviewed source and the hashed actual artifact report; Agent A performed the three saved-byte SHA and OOXML cell checks."
+  },
+  "executionStatus": "NOT_RUN",
+  "actualSourceUnchanged": true,
+  "overallAcceptance": false,
+  "followUp": "Apply only after terminal full05 and verify source/candidate hash equality; actual full06 consumer remains required."
+}
