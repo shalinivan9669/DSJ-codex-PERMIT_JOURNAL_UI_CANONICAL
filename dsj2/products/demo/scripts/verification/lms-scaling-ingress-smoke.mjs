@@ -1,11 +1,20 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { join, resolve } from "node:path";
 
 const fixture = JSON.parse(
-  await readFile(".runtime/lms-scaling/browser-fixture.json", "utf8"),
+  await readFile(
+    process.env.DEMO_LMS_SCALING_FIXTURE ||
+      ".runtime/lms-scaling/browser-fixture.json",
+    "utf8",
+  ),
 );
 assert.equal(fixture.fixtureVersion, "lms-tz-scaling-browser-v1");
-const base = "http://127.0.0.1:8315";
+const base = process.env.DEMO_LMS_INGRESS_BASE || "http://127.0.0.1:8315";
+assert.ok(
+  ["127.0.0.1", "localhost", "[::1]"].includes(new URL(base).hostname),
+  "Ingress smoke is restricted to a task-owned loopback service",
+);
 const login = await fetch(base + "/api/auth/login", {
   method: "POST",
   headers: { origin: base, "content-type": "application/json" },
@@ -68,10 +77,10 @@ assert.equal(globalLimit.status, 413);
 const denied = await fetch(base + "/training", { headers });
 assert.equal(denied.status, 404);
 const evidence = {
-  owner: "lms-tz-scaling-20261015",
+  owner: process.env.DEMO_LMS_RUN_ID || "lms-scaling-local",
   base,
   implementation:
-    "Official portable nginx/1.31.7, adapted checked deployment/nginx.conf allowlist and upload limits; localhost upstreams only",
+    "Task-owned ingress, adapted deployment/nginx.conf allowlist and upload limits; localhost upstreams only. Binary version and process ownership are recorded by the runtime launcher.",
   pages,
   upload: {
     route: `/api/lms/courses/${fixture.courseId}/materials`,
@@ -86,9 +95,13 @@ const evidence = {
   limitation:
     "HTTP ingress/stream verification only. Browser interaction and PDF content/render correctness are separate checks. Synthetic PDF transport fixture is never professional course content.",
 };
-await mkdir("docs/evidence/lms-tz-scaling-20261015", { recursive: true });
+const evidenceRoot = resolve(
+  process.env.DEMO_LMS_SCALING_EVIDENCE ||
+    ".runtime/lms-scaling-ingress-evidence",
+);
+await mkdir(evidenceRoot, { recursive: true });
 await writeFile(
-  "docs/evidence/lms-tz-scaling-20261015/INGRESS_SMOKE.json",
+  join(evidenceRoot, "INGRESS_SMOKE.json"),
   JSON.stringify(evidence, null, 2) + "\n",
 );
 console.log(

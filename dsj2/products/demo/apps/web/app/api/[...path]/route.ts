@@ -153,14 +153,17 @@ async function proxy(request: NextRequest) {
       redirect: "manual",
       // Layout checks cover every selected document in bounded renderer batches.
       // Keep the local transport aligned with the external rewrite timeout.
-      signal: AbortSignal.timeout(
-        lmsUploadLimit
-          ? 600000
-          : request.method === "POST" &&
-              /^\/print-requests\/[^/]+\/(?:validate|finalize)$/.test(path)
-            ? 210000
-            : 60000,
-      ),
+      signal: AbortSignal.any([
+        request.signal,
+        AbortSignal.timeout(
+          lmsUploadLimit
+            ? 600000
+            : request.method === "POST" &&
+                /^\/print-requests\/[^/]+\/(?:validate|finalize)$/.test(path)
+              ? 210000
+              : 60000,
+        ),
+      ]),
     };
     const response = await fetch(
       new URL(path + request.nextUrl.search, base),

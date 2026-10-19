@@ -28,7 +28,7 @@ import {
   store,
   readArtifact,
 } from "../../apps/api/src/files";
-import { saveCustomer } from "../../apps/api/src/settings";
+import { bootstrapSuperAdmin, saveCustomer } from "../../apps/api/src/settings";
 import { saveExportProfile } from "../../apps/api/src/delivery";
 import { provision } from "../../scripts/setup";
 import { createApprovalFixture } from "./live-approval-fixture";
@@ -50,13 +50,22 @@ test("immutable stages sign independently, retain exact registry/customer scope 
     name: "Синтетический центр этапов и подписей",
     sample: true,
   });
-  const c: Context = {
+  const provisionedContext: Context = {
     ...seeded,
-    role: "ADMIN",
+    role: "DIRECTOR",
     sessionId: "test",
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  await bootstrapSuperAdmin(provisionedContext, {
+    currentPassword: "Synthetic-Stages-Only-Password!",
+    confirm: true,
+  });
+  const actualActor = await db.user.findUniqueOrThrow({
+    where: { id: seeded.userId },
+  });
+  assert.equal(actualActor.role, "SUPER_ADMIN");
+  const c: Context = { ...provisionedContext, role: actualActor.role };
   const approvals = await createApprovalFixture(c);
   t.after(async () => {
     await approvals.close();

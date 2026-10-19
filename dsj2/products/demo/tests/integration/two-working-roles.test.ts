@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { bootstrap } from "../../apps/api/src/main";
 import { db, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
-import { saveUser } from "../../apps/api/src/settings";
+import { saveUser, bootstrapSuperAdmin } from "../../apps/api/src/settings";
 import {
   createRequest,
   patchRequest,
@@ -15,6 +15,7 @@ import { decideProposal, submitApproval } from "../../apps/api/src/approvals";
 import { draftSchema } from "../../packages/contracts/src";
 import { assertTestDatabase } from "./test-database";
 import { signingState } from "../../apps/api/src/signing";
+import { ownLmsProfile, saveOwnLmsProfile } from "../../apps/api/src/lms/workplace";
 import { store, readArtifact } from "../../apps/api/src/files";
 import {
   claimJob,
@@ -404,14 +405,16 @@ test("two working roles own setup, isolate tenants and retain legacy director au
         );
         await assert.rejects(
           saveUser(director, { role: "OPERATOR" }, director.userId),
-          code("SELF_LOCKOUT"),
+          code("SELF_ROLE_CHANGE_DENIED"),
         );
-        const self = await saveUser(
-          director,
-          { displayName: "Переименованный директор", role: "DIRECTOR" },
-          director.userId,
+        await assert.rejects(
+          saveUser(director, { displayName: "Переименованный директор", role: "DIRECTOR" }, director.userId),
+          code("PRIVILEGED_USER_REQUIRES_SUPER_ADMIN"),
         );
-        assert.equal(self.role, "DIRECTOR");
+        const ownProfile = await ownLmsProfile(director);
+        const self = await saveOwnLmsProfile(director, { revision: ownProfile.revision, displayName: "Переименованный директор", preferences: ownProfile.preferences });
+        assert.equal(self.displayName, "Переименованный директор");
+        assert.equal((await db.user.findUniqueOrThrow({ where: { id: director.userId } })).role, "DIRECTOR");
         assert.equal(
           (await db.user.findUniqueOrThrow({ where: { id: director.userId } }))
             .passwordHash,
@@ -543,17 +546,20 @@ test("two working roles own setup, isolate tenants and retain legacy director au
       },
     );
     await t.test(
-      "concurrent director demotions cannot remove the last effective director",
+      "explicit bootstrap revokes old sessions and concurrent super administrator demotions retain one active authority",
       async () => {
-        const second = await saveUser(director, {
+        await bootstrapSuperAdmin(director, {currentPassword: password, confirm: true});
+        assert.equal(await db.session.count({where:{userId:director.userId}}),0);
+        const firstSuper=context(center.tenantId,director.userId,"SUPER_ADMIN");
+        const second = await saveUser(firstSuper, {
           email: `second-director-${suffix}@example.test`,
           displayName: "Синтетический второй директор",
           password,
-          role: "DIRECTOR",
+          role: "SUPER_ADMIN",
         });
-        const peer = context(center.tenantId, second.id, "DIRECTOR");
+        const peer = context(center.tenantId, second.id, "SUPER_ADMIN");
         const results = await Promise.allSettled([
-          saveUser(director, { role: "OPERATOR" }, peer.userId),
+          saveUser(firstSuper, { role: "OPERATOR" }, peer.userId),
           saveUser(peer, { role: "OPERATOR" }, director.userId),
         ]);
         assert.equal(
@@ -563,13 +569,13 @@ test("two working roles own setup, isolate tenants and retain legacy director au
         const failure = results.find(
           (result) => result.status === "rejected",
         ) as PromiseRejectedResult;
-        code("LAST_DIRECTOR")(failure.reason);
+        assert.ok(["ROLE_DENIED", "LAST_SUPER_ADMIN"].includes(failure.reason.getResponse().code));
         assert.equal(
           await db.user.count({
             where: {
               tenantId: center.tenantId,
               active: true,
-              role: { in: ["ADMIN", "DIRECTOR"] },
+              role: "SUPER_ADMIN",
             },
           }),
           1,

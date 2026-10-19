@@ -27,6 +27,8 @@ export const regulatoryProfileSchema = z
       .array(
         z.object({
           title: z.string().min(1).max(1000),
+          sourceId: z.string().uuid().optional(),
+          sourceRevisionId: z.string().uuid().optional(),
           url: z.string().max(2000),
           revision: label,
           number: z.string().max(300).optional(),
@@ -70,7 +72,11 @@ export const regulatoryProfileSchema = z
     requiredSignatures: z.array(z.string().min(1).max(200)).max(30).default([]),
     requiresApproval: z.boolean().default(true),
     requiresPractice: z.boolean().default(false),
+    practiceEvidenceMode: z
+      .enum(["UNSPECIFIED", "REVIEWED_ASSIGNMENTS", "IN_PERSON"])
+      .optional(),
     requiresProctoring: z.boolean().default(false),
+    proctoringMode: z.enum(["UNSPECIFIED", "LOCAL_SUPERVISED"]).optional(),
     externalEvidenceLevel: z
       .enum(["DOCUMENT_REVIEWED", "MACHINE_VERIFIED"])
       .default("MACHINE_VERIFIED"),
@@ -92,6 +98,101 @@ export const regulatoryProfileSchema = z
   })
   .strict();
 export type RegulatoryProfile = z.infer<typeof regulatoryProfileSchema>;
+
+const answerIds = z.array(z.string().min(1).max(100)).max(20);
+const answerOption = z
+  .object({ id: z.string().min(1).max(100), textRu: label, textKz: label })
+  .strict();
+const responseSpecs = [
+  z.object({ kind: z.literal("SINGLE"), correctOptionIds: answerIds }).strict(),
+  z
+    .object({ kind: z.literal("MULTIPLE"), correctOptionIds: answerIds })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("MATCHING"),
+      pairs: z
+        .array(
+          z
+            .object({
+              leftId: z.string().min(1).max(100),
+              rightId: z.string().min(1).max(100),
+            })
+            .strict(),
+        )
+        .max(20),
+      rightOptions: z.array(answerOption).max(20),
+    })
+    .strict(),
+  z
+    .object({ kind: z.literal("ORDERING"), correctOrderIds: answerIds })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("TEXT"),
+      mode: z.literal("EXACT"),
+      acceptedAnswers: z.array(z.string().max(10000)).max(100),
+      caseSensitive: z.boolean(),
+      collapseWhitespace: z.boolean(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("TEXT"),
+      mode: z.literal("MANUAL"),
+      criteriaRu: z.string().max(10000),
+      criteriaKz: z.string().max(10000),
+    })
+    .strict(),
+] as const;
+export const questionResponseSpecSchema = z.union(responseSpecs);
+export const questionAnswerSpecSchema = z.union([
+  ...responseSpecs,
+  z
+    .object({
+      kind: z.literal("CASE"),
+      contextRu: z.string().max(20000),
+      contextKz: z.string().max(20000),
+      response: questionResponseSpecSchema,
+    })
+    .strict(),
+]);
+export const learningAnswerSchema = z.union([
+  answerIds,
+  z
+    .object({ kind: z.enum(["SINGLE", "MULTIPLE"]), optionIds: answerIds })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("MATCHING"),
+      pairs: z
+        .array(
+          z
+            .object({
+              leftId: z.string().min(1).max(100),
+              rightId: z.string().min(1).max(100),
+            })
+            .strict(),
+        )
+        .max(20),
+    })
+    .strict(),
+  z.object({ kind: z.literal("ORDERING"), optionIds: answerIds }).strict(),
+  z.object({ kind: z.literal("TEXT"), text: z.string().max(10000) }).strict(),
+]);
+export type LearningAnswer = z.infer<typeof learningAnswerSchema>;
+export type LearningAnswers = Record<string, LearningAnswer>;
+export type QuestionAnswerSpec = z.infer<typeof questionAnswerSpecSchema>;
+export const accessPolicySchema = z
+  .object({
+    mode: z.enum(["UNLIMITED", "DAYS", "FIXED"]),
+    days: z.number().int().min(1).max(3650).optional(),
+    startsAt: z.string().datetime().nullable().optional(),
+    endsAt: z.string().datetime().nullable().optional(),
+    timezone: z.string().max(100),
+  })
+  .strict();
+export type AccessPolicy = z.infer<typeof accessPolicySchema>;
 
 export const lmsQuestionSchema = z
   .object({
@@ -118,6 +219,31 @@ export const lmsQuestionSchema = z
       .max(20),
     correctOptionIds: z.array(z.string().min(1).max(100)).max(20),
     multiple: z.boolean().default(false),
+    answerSpec: questionAnswerSpecSchema.optional(),
+  })
+  .strict();
+export const lmsAssessmentSchema = z
+  .object({
+    questions: z.array(lmsQuestionSchema).max(5000),
+    questionCount: z.number().int().min(1).max(500).default(10),
+    durationMinutes: z.number().int().min(1).max(480).default(30),
+    maxAttempts: z.number().int().min(1).max(20).default(3),
+    thresholdPercent: z.number().min(0).max(100).default(80),
+    comparison: z.enum(["GT", "GTE"]).default("GTE"),
+    revealAnswers: z.boolean().default(false),
+    dueAt: z.string().datetime().nullable().optional(),
+  })
+  .strict();
+export const lmsAssignmentSchema = z
+  .object({
+    instructionsRu: z.string().max(30000),
+    instructionsKz: z.string().max(30000),
+    criteriaRu: z.string().max(10000),
+    criteriaKz: z.string().max(10000),
+    allowText: z.boolean(),
+    allowFiles: z.boolean(),
+    maxSubmissions: z.number().int().min(1).max(100),
+    dueAt: z.string().datetime().nullable().optional(),
   })
   .strict();
 export const lmsLessonSchema = z
@@ -125,13 +251,46 @@ export const lmsLessonSchema = z
     id: z.string().min(1).max(100),
     titleRu: label,
     titleKz: label,
-    kind: z.enum(["TEXT", "PDF", "VIDEO"]),
+    kind: z.enum([
+      "TEXT",
+      "PDF",
+      "VIDEO",
+      "FILE",
+      "LINK",
+      "ASSESSMENT",
+      "ASSIGNMENT",
+      "SESSION",
+    ]),
     textRu: z.string().max(100000).default(""),
     textKz: z.string().max(100000).default(""),
     materialId: z.string().max(100).nullable().default(null),
     durationSeconds: z.number().positive().max(86400).nullable().default(null),
     required: z.boolean().default(true),
     prerequisiteLessonIds: z.array(z.string().max(100)).max(1000).default([]),
+    assessment: lmsAssessmentSchema.optional(),
+    assignment: lmsAssignmentSchema.optional(),
+    session: z.object({ attendanceRequired: z.boolean() }).strict().optional(),
+    url: z.string().max(2000).optional(),
+    videoPolicy: z
+      .object({
+        minimumPercent: z.number().min(1).max(100),
+        allowSeekAhead: z.boolean(),
+        playbackRates: z.array(z.number().min(0.25).max(3)).min(1).max(10),
+      })
+      .strict()
+      .optional(),
+    subtitles: z
+      .array(
+        z
+          .object({
+            materialId: z.string().min(1).max(100),
+            language: z.string().min(2).max(20),
+            label: z.string().max(100),
+          })
+          .strict(),
+      )
+      .max(10)
+      .optional(),
   })
   .strict();
 export const courseContentSchema = z
@@ -143,27 +302,55 @@ export const courseContentSchema = z
     category: label,
     hours: z.number().min(0).max(10000).default(1),
     accessDays: z.number().int().min(1).max(3650).default(90),
+    accessPolicy: accessPolicySchema.optional(),
+    learningOutcome: z.enum(["LEARNING", "REGULATED"]).optional(),
+    metadata: z
+      .object({
+        goalRu: z.string().max(10000),
+        goalKz: z.string().max(10000),
+        audienceRu: z.string().max(10000),
+        audienceKz: z.string().max(10000),
+        format: z.enum(["ONLINE", "BLENDED", "IN_PERSON"]),
+        durationDays: z.number().int().min(1).max(3650).optional(),
+        documentValidity: z.string().max(1000),
+        trainingRecurrence: z.string().max(1000),
+        parameterSource: z.string().max(3000),
+        updatedOn: z.string().date().nullable().optional(),
+      })
+      .strict()
+      .optional(),
+    coursePrerequisites: z
+      .array(
+        z
+          .object({
+            courseId: z.string().min(1).max(100),
+            basis: z.enum([
+              "ELEMENTS",
+              "LEARNING_COMPLETION",
+              "OFFICIAL_RESULT",
+            ]),
+            versionPolicy: z.enum(["ANY", "AT_LEAST"]),
+            minimumVersion: z.number().int().positive().optional(),
+          })
+          .strict(),
+      )
+      .max(100)
+      .optional(),
     modules: z
       .array(
         z.object({
           id: z.string().min(1).max(100),
           titleRu: label,
           titleKz: label,
+          prerequisiteModuleIds: z
+            .array(z.string().min(1).max(100))
+            .max(100)
+            .optional(),
           lessons: z.array(lmsLessonSchema).max(1000),
         }),
       )
       .max(100),
-    exam: z
-      .object({
-        questions: z.array(lmsQuestionSchema).max(5000),
-        questionCount: z.number().int().min(1).max(500).default(10),
-        durationMinutes: z.number().int().min(1).max(480).default(30),
-        maxAttempts: z.number().int().min(1).max(20).default(3),
-        thresholdPercent: z.number().min(0).max(100).default(80),
-        comparison: z.enum(["GT", "GTE"]).default("GTE"),
-        revealAnswers: z.boolean().default(false),
-      })
-      .strict(),
+    exam: lmsAssessmentSchema,
   })
   .strict();
 export type CourseContent = z.infer<typeof courseContentSchema>;

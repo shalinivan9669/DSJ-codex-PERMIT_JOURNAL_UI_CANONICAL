@@ -9,6 +9,8 @@ allowBuilds:
 strictPeerDependencies: false
 # A readonly runtime must fail on stale dependencies, never reinstall them.
 verifyDepsBeforeRun: error
+# Preserve the installed local virtual store on this autonomous workspace.
+enableGlobalVirtualStore: false
 overrides:
   multer: 2.4.0
   postcss: 8.5.28

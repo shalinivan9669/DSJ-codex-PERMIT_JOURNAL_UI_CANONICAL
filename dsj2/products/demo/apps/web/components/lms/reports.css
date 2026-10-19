@@ -1,0 +1,24 @@
+.lms-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 12px 18px;
+  margin-bottom: 18px;
+}
+.lms-filter-grid label,
+.lms-filter-grid input,
+.lms-filter-grid select {
+  min-width: 0;
+  width: 100%;
+}
+.lms-report-table {
+  min-width: 950px !important;
+}
+.lms-report-table th,
+.lms-report-table td {
+  max-width: 240px;
+  vertical-align: top;
+}
+.lms-table-scroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

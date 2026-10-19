@@ -1,8 +1,9 @@
 "use client";
+import { useCabinetText, useCabinetError } from "./cabinet-language";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
-import { api, downloadArtifact, errorText, json } from "@/lib/api";
+import { api, downloadArtifact, json } from "@/lib/api";
 import { documentTitle, type Issuance } from "@/lib/types";
 import { signWithNCALayer } from "@/lib/ncalayer";
 
@@ -44,15 +45,18 @@ export function SigningPanel({
   issuances = [],
   role,
   onChanged,
+  commissionIssuanceId,
 }: {
   requestId: string;
   issuances?: Pick<Issuance, "id" | "createdAt">[];
   role: string;
   onChanged: () => void;
+  commissionIssuanceId?: string;
 }) {
+  const tr = useCabinetText();
   const [state, setState] = useState<SigningState | null>(null);
   const [busy, setBusy] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [session, setSession] = useState<Session | null>(null);
   const [success, setSuccess] = useState("");
   const [selectedIssuanceId, setSelectedIssuanceId] = useState("");
@@ -62,7 +66,9 @@ export function SigningPanel({
     [issuances],
   );
   const latestIssuanceId = stages[0]?.id;
-  const signingPath = `/print-requests/${requestId}/signing${selectedIssuanceId ? `?issuanceId=${encodeURIComponent(selectedIssuanceId)}` : ""}`;
+  const signingPath = commissionIssuanceId
+    ? `/lms/commission/${commissionIssuanceId}/signing`
+    : `/print-requests/${requestId}/signing${selectedIssuanceId ? `?issuanceId=${encodeURIComponent(selectedIssuanceId)}` : ""}`;
   const load = useCallback(async () => {
     const scope = loadScope.current;
     const value = await api<SigningState>(signingPath);
@@ -85,7 +91,7 @@ export function SigningPanel({
         )
           timer = setTimeout(() => void poll(), 10000);
       } catch (caught) {
-        if (active && scope === loadScope.current) setError(errorText(caught));
+        if (active && scope === loadScope.current) setError(caught);
       }
     }
     void poll();
@@ -96,12 +102,12 @@ export function SigningPanel({
     };
   }, [signingPath, latestIssuanceId]);
   async function complete(value: Session, signatureBase64?: string) {
-    await api(`/signing/${value.id}/complete`, {
+    await api(commissionIssuanceId ? `/lms/commission/${commissionIssuanceId}/signatures` : `/signing/${value.id}/complete`, {
       method: "POST",
-      body: json(signatureBase64 ? { signatureBase64 } : {}),
+      body: json({ ...(commissionIssuanceId ? { sessionId: value.id } : {}), ...(signatureBase64 ? { signatureBase64 } : {}) }),
     });
     setSession(null);
-    setSuccess("ЭЦП проверена и сохранена для этого документа.");
+    setSuccess(tr("ЭЦП проверена и сохранена для этого документа."));
     await load();
     onChanged();
   }
@@ -111,12 +117,12 @@ export function SigningPanel({
     setSuccess("");
     try {
       const value = await api<Session>(
-        `/print-requests/${requestId}/signing/start`,
+        commissionIssuanceId ? `/lms/commission/${commissionIssuanceId}/signing` : `/print-requests/${requestId}/signing/start`,
         { method: "POST", body: json({ artifactId, provider }) },
       );
       if (provider === "NCALAYER") {
         if (!value.dataBase64)
-          throw new Error("Сервер не передал документ для подписания.");
+          throw new Error(tr("Сервер не передал документ для подписания."));
         const signature = await signWithNCALayer({
           dataBase64: value.dataBase64,
           ...value.ncalayerRequest?.args.signerParams,
@@ -124,7 +130,7 @@ export function SigningPanel({
         await complete(value, signature);
       } else setSession(value);
     } catch (caught) {
-      setError(errorText(caught));
+      setError(caught);
     } finally {
       setBusy("");
     }
@@ -132,20 +138,18 @@ export function SigningPanel({
   return (
     <section className="panel signing-panel">
       <div className="section-heading">
-        <h2>Подписание документов</h2>
+        <h2>{tr("Подписание документов")}</h2>
         <button
           disabled={!!busy || !!session}
           onClick={() =>
-            void load().catch((caught) => setError(errorText(caught)))
+            void load().catch((caught) => setError(caught))
           }
         >
-          Обновить
-        </button>
+          {tr("Обновить")}</button>
       </div>
       {stages.length > 1 && (
         <label>
-          Выпуск для подписания
-          <select
+          {tr("Выпуск для подписания")}<select
             value={selectedIssuanceId || latestIssuanceId}
             disabled={!!busy || !!session}
             onChange={(event) => {
@@ -158,11 +162,11 @@ export function SigningPanel({
           >
             {stages.map((stage, index) => (
               <option key={stage.id} value={stage.id}>
-                Выпуск {stages.length - index}
+                {tr("Выпуск")}{" "}{stages.length - index}
                 {stage.createdAt
-                  ? ` · ${new Date(stage.createdAt).toLocaleString("ru-RU")}`
+                  ? ` · ${new Date(stage.createdAt).toLocaleString(tr("Настройки") === "Настройки" ? "ru-KZ" : "kk-KZ")}`
                   : ""}
-                {index === 0 ? " · последний" : ""}
+                {index === 0 ? tr(" · последний") : ""}
               </option>
             ))}
           </select>
@@ -170,50 +174,41 @@ export function SigningPanel({
       )}
       {error && <Notice>{error}</Notice>}
       {success && <Notice kind="success">{success}</Notice>}
-      {!state && <p role="status">Проверяем готовность документов…</p>}
+      {!state && <p role="status">{tr("Проверяем готовность документов…")}</p>}
       {state?.status === "LEGACY_ISSUED" && (
         <p>
-          Ранее оформленный комплект. Сведения о проверенной ЭЦП в этой версии
-          системы отсутствуют.
-        </p>
+          {tr("Ранее оформленный комплект. Сведения о проверенной ЭЦП в этой версии системы отсутствуют.")}</p>
       )}
       {state?.status === "RENDERING" && (
         <p role="status">
-          Готовятся окончательные файлы с присвоенными номерами. Подписание
-          станет доступно после подготовки.
-        </p>
+          {tr("Готовятся окончательные файлы с присвоенными номерами. Подписание станет доступно после подготовки.")}</p>
       )}
       {state?.status === "FAILED" && (
         <Notice>
-          Часть файлов не подготовлена. Проверьте задания в разделе файлов и
-          повторите неудавшееся формирование.
-        </Notice>
+          {tr("Часть файлов не подготовлена. Проверьте задания в разделе файлов и повторите неудавшееся формирование.")}</Notice>
       )}
       {state?.status === "ISSUED" && (
         <Notice kind="success">
           {state.archived
-            ? "Все необходимые подписи проверены. Комплект выдан и автоматически помещён в архив."
-            : "Все необходимые подписи этого выпуска проверены. Заявка остаётся доступной до завершения всех её выпусков и обучений."}
+            ? tr("Все необходимые подписи проверены. Комплект выдан и автоматически помещён в архив.")
+            : tr("Все необходимые подписи этого выпуска проверены. Заявка остаётся доступной до завершения всех её выпусков и обучений.")}
         </Notice>
       )}
       {state && !["LEGACY_ISSUED", "ISSUED"].includes(state.status || "") && (
         <>
           <p>
-            Каждый подписант подписывает окончательный PDF своим ключом. После
-            проверки всех подписей этот выпуск будет выдан. Заявка попадёт в
-            архив после завершения всех её обучений и выпусков.
-          </p>
+            {tr("Каждый подписант подписывает окончательный PDF своим ключом. После проверки всех подписей этот выпуск будет выдан. Заявка попадёт в архив после завершения всех её обучений и выпусков.")}</p>
           {!state.providers.EGOV_QR.available && (
             <p className="muted">
-              eGov Mobile: {state.providers.EGOV_QR.reason}
+              eGov Mobile: {tr(state.providers.EGOV_QR.reason || "")}
             </p>
           )}
           {!state.providers.NCALAYER.available && (
-            <p className="muted">NCALayer: {state.providers.NCALAYER.reason}</p>
+            <p className="muted">NCALayer: {tr(state.providers.NCALAYER.reason || "")}</p>
           )}
           {state.missingBindings.length > 0 && (
             <Notice>
-              Директору нужно настроить подписантов ЭЦП:{" "}
+              {tr("Директору нужно настроить подписантов ЭЦП:")}{" "}
               {[...new Set(state.missingBindings)].join(", ")}.
             </Notice>
           )}
@@ -223,39 +218,41 @@ export function SigningPanel({
         {state?.documents.map((document) => (
           <article key={document.documentId} className="signing-document">
             <h3>
-              {documentTitle(
+              {tr(documentTitle(
                 document.templateId,
                 document.groupEventId
                   ? true
                   : document.rowId
                     ? false
                     : undefined,
-              )}{" "}
+              ))}{" "}
               · № {document.number}
             </h3>
             <ul>
               {document.requiredSigners.map((signer, index) => (
                 <li key={`${signer.kind}-${index}`}>
                   {signer.displayName} —{" "}
-                  {signer.signed ? "подпись проверена" : "ожидает подписи"}
-                  {signer.canSign && !signer.signed ? " (ваша подпись)" : ""}
+                  {signer.signed ? tr("подпись проверена") : tr("ожидает подписи")}
+                  {signer.canSign && !signer.signed ? tr(" (ваша подпись)") : ""}
                 </li>
               ))}
             </ul>
             <div className="button-row">
-              {document.artifactId && (
+              {document.artifactId && (commissionIssuanceId ? (
+                <a className="button" href={`/api/lms/commission/${commissionIssuanceId}/artifacts/${document.artifactId}`}>
+                  {tr("Скачать PDF")}</a>
+              ) : (
                 <button
                   disabled={!!busy}
                   onClick={() =>
                     void downloadArtifact(
                       document.artifactId!,
                       `${document.number}.pdf`,
-                    ).catch((caught) => setError(errorText(caught)))
+                    ).catch((caught) => setError(caught))
                   }
                 >
-                  Скачать PDF
-                </button>
-              )}
+                  {tr("Скачать PDF")}</button>
+              ))}
               {role !== "VIEWER" &&
                 document.artifactId &&
                 document.requiredSigners.some(
@@ -271,8 +268,8 @@ export function SigningPanel({
                       }
                     >
                       {busy === document.artifactId
-                        ? "Подписание…"
-                        : "Подписать через eGov Mobile"}
+                        ? tr("Подписание…")
+                        : tr("Подписать через eGov Mobile")}
                     </button>
                     <button
                       disabled={!!busy || !state.providers.NCALAYER.available}
@@ -280,8 +277,7 @@ export function SigningPanel({
                         void start(document.artifactId!, "NCALAYER")
                       }
                     >
-                      Подписать через NCALayer
-                    </button>
+                      {tr("Подписать через NCALayer")}</button>
                   </>
                 )}
             </div>
@@ -290,22 +286,20 @@ export function SigningPanel({
       </div>
       {session && (
         <Modal
-          title="Подпись через eGov Mobile"
+          title={tr("Подпись через eGov Mobile")}
           onClose={() => {
             if (!busy) setSession(null);
           }}
         >
           <p>
-            Откройте eGov Mobile и отсканируйте QR подписания. Затем проверьте
-            результат.
-          </p>
+            {tr("Откройте eGov Mobile и отсканируйте QR подписания. Затем проверьте результат.")}</p>
           {session.qrDataUrl && (
             <img
               className="signing-qr"
               width={240}
               height={240}
               src={session.qrDataUrl}
-              alt="QR для подписания документа в eGov Mobile"
+              alt={tr("QR для подписания документа в eGov Mobile")}
             />
           )}
           {(session.signingUrl || session.qrUrl) && (
@@ -315,19 +309,15 @@ export function SigningPanel({
                 target="_blank"
                 rel="noreferrer"
               >
-                Открыть сервис подписания
-              </a>
+                {tr("Открыть сервис подписания")}</a>
             </p>
           )}
           <p className="muted">
-            QR предназначен для подписания этого документа и действует
-            ограниченное время.
-          </p>
+            {tr("QR предназначен для подписания этого документа и действует ограниченное время.")}</p>
           {error && <Notice>{error}</Notice>}
           <div className="modal-actions">
             <button disabled={!!busy} onClick={() => setSession(null)}>
-              Закрыть
-            </button>
+              {tr("Закрыть")}</button>
             <button
               className="primary"
               disabled={!!busy}
@@ -337,13 +327,13 @@ export function SigningPanel({
                 try {
                   await complete(session);
                 } catch (caught) {
-                  setError(errorText(caught));
+                  setError(caught);
                 } finally {
                   setBusy("");
                 }
               }}
             >
-              {busy ? "Проверяем…" : "Проверить подпись"}
+              {busy ? tr("Проверяем…") : tr("Проверить подпись")}
             </button>
           </div>
         </Modal>

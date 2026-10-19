@@ -1,8 +1,8 @@
 {
   "status": "PASS",
-  "checkedAt": "2026-10-15T01:09:29.875Z",
+  "checkedAt": "2026-10-19T08:10:39.806Z",
   "fixtureVersion": "lms-existing-center-template-upgrade-v1",
-  "tenantId": "619ca915-ac20-4f24-8e91-b5d63966475c",
+  "tenantId": "c34bc646-0683-4e15-bcf1-11ffdc5cf445",
   "upgrade": {
     "dryRunPending": 3,
     "concurrentCreated": [
@@ -11,21 +11,21 @@
     ],
     "newForms": [
       {
-        "id": "3b5adac8-f463-4fa2-8008-3556ea5ac67e",
+        "id": "b4b16997-c217-4aa1-8e8c-a97676486cee",
         "templateId": "lms-certificate",
-        "checksum": "bef8b699f63c11b6946e63af6242e7f5f36359246ab7634722ba299cc7dee1cf",
+        "checksum": "ecbc1937d308e7189c2aece6daa1184280a6a197a90c6bbfc8737e3eb7a7d20b",
         "approved": false
       },
       {
-        "id": "c611e76d-9b67-405e-b385-98157ff5c8cf",
+        "id": "79232548-22ba-4686-9c82-96e5f7c6e427",
         "templateId": "lms-credential",
-        "checksum": "86f45fd52dbe976c446f9cacb03727d262706b19d34b1e8604d6431015f6c479",
+        "checksum": "423568aa468116c9780df35d8a7e1f91bfca7edaeb252566e419375fea11f737",
         "approved": false
       },
       {
-        "id": "01a651c3-bf9b-4d7b-80a9-fe432d8bb98f",
+        "id": "2387f853-1ce9-4e6c-bcf3-8940f902c4ae",
         "templateId": "lms-protocol",
-        "checksum": "95a356d5643f757552d424c0b9820f8513fb04ca2676c8fafff8ddc01596b2ca",
+        "checksum": "0289ea597f6f14f9939788d328d02752cf75305d9af5367ef6e533d9fca86d87",
         "approved": false
       }
     ],
@@ -40,28 +40,28 @@
     "approvalEvents": [
       {
         "templateId": "lms-certificate",
-        "eventId": "5b2cfa08-9823-4738-b1e4-e6590fc8d0b2",
-        "actorId": "85e68dfb-3a6d-4ba9-9c76-9aeef24ad8a7",
-        "correlationId": "5d126998-4f23-4315-b039-f57318155d9d"
+        "eventId": "9a6acf32-bb0e-46ed-b4af-0f8341c7e4c4",
+        "actorId": "99383eb2-9ce9-475a-833a-689355c7bc4e",
+        "correlationId": "78ba1398-7b43-4119-afc9-e582c5cd4d27"
       },
       {
         "templateId": "lms-credential",
-        "eventId": "d1d341fa-3644-4f73-a930-b9314d9ed4a5",
-        "actorId": "85e68dfb-3a6d-4ba9-9c76-9aeef24ad8a7",
-        "correlationId": "5ab5f8b7-e2a1-40f7-88ce-f4ad4f2195f1"
+        "eventId": "ba514e0c-ec8c-45bd-8bb6-f831f0c37618",
+        "actorId": "99383eb2-9ce9-475a-833a-689355c7bc4e",
+        "correlationId": "0fdd4756-f844-4c39-b6f9-64f1efa0829b"
       },
       {
         "templateId": "lms-protocol",
-        "eventId": "7f25d22b-21b8-4fcc-863c-d04d33171d8b",
-        "actorId": "85e68dfb-3a6d-4ba9-9c76-9aeef24ad8a7",
-        "correlationId": "74a50387-0930-4c96-890d-c87e00b1aa88"
+        "eventId": "5fb61d6c-57d6-4029-82ab-32377ce90526",
+        "actorId": "99383eb2-9ce9-475a-833a-689355c7bc4e",
+        "correlationId": "43d106d3-5ba2-4ff6-9701-6ee11f047902"
       }
     ],
     "repeatedUpgradePreservesApprovals": true
   },
   "negativeApprovals": [
     {
-      "templateId": "historical-unsupported-01db1dcd-9c37-494f-9442-b7081a32497b",
+      "templateId": "historical-unsupported-1540c1e9-0740-4425-ad56-195f08072b7a",
       "status": 422,
       "code": "TEMPLATE_UNSUPPORTED",
       "approved": false

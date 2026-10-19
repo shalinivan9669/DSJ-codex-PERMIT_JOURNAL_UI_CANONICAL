@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState, type FormEvent } from "react";
 import { Icon, Modal, Notice } from "@demo/ui";
-import { api, errorText, json } from "@/lib/api";
+import { api, json } from "@/lib/api";
 import type { AppContext, Customer, Page } from "@/lib/types";
 import { OrganizationNameFields } from "./organization-name-fields";
+import { useCabinetLanguage, useCabinetError } from "./cabinet-language";
 const emptyCustomer = {
   nameRu: "",
   nameKz: "",
@@ -13,14 +14,16 @@ const emptyCustomer = {
   bin: "",
   addressRu: "",
   addressKz: "",
+  city: "",
   archived: false,
 };
 export function Customers({ context }: { context: AppContext }) {
+  const t = useCabinetLanguage();
   const [rows, setRows] = useState<Page<Customer>>({ items: [], total: 0 });
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [edit, setEdit] = useState<Partial<Customer> | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [refresh, setRefresh] = useState(0);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -37,7 +40,7 @@ export function Customers({ context }: { context: AppContext }) {
           }
         })
         .catch((caught) => {
-          if (active) setError(errorText(caught));
+          if (active) { setError(caught); setRows({ items: [], total: 0 }); }
         })
         .finally(() => {
           if (active) setLoading(false);
@@ -52,16 +55,12 @@ export function Customers({ context }: { context: AppContext }) {
     <>
       <div className="page-heading">
         <div>
-          <h1>Заказчики</h1>
-          <p>
-            Организации внутри вашего центра. Форма и собственное наименование
-            формируют названия RU и KZ для новых документов.
-          </p>
+          <h1>{t("Заказчики", "Тапсырыс берушілер")}</h1>
         </div>
         {context.user.role !== "VIEWER" && (
           <button className="primary" onClick={() => setEdit(emptyCustomer)}>
             <Icon name="plus" />
-            Добавить заказчика
+            {t("Добавить заказчика", "Тапсырыс берушіні қосу")}
           </button>
         )}
       </div>
@@ -72,7 +71,7 @@ export function Customers({ context }: { context: AppContext }) {
             disabled={loading}
             onClick={() => setRefresh((value) => value + 1)}
           >
-            Повторить загрузку
+            {t("Повторить загрузку", "Қайта жүктеу")}
           </button>
         </Notice>
       )}
@@ -81,8 +80,8 @@ export function Customers({ context }: { context: AppContext }) {
           <label className="search-field">
             <Icon name="search" />
             <input
-              aria-label="Поиск заказчиков"
-              placeholder="Название или БИН"
+              aria-label={t("Поиск заказчиков", "Тапсырыс берушілерді іздеу")}
+              placeholder={t("Название или БИН", "Атауы немесе БСН")}
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value);
@@ -97,21 +96,21 @@ export function Customers({ context }: { context: AppContext }) {
                 setPage(1);
               }}
             >
-              Сбросить поиск
+              {t("Сбросить поиск", "Іздеуді тазарту")}
             </button>
           )}
           <span className="count muted" role="status">
-            {loading ? "Загружаем заказчиков…" : `Всего: ${rows.total}`}
+            {loading ? t("Загружаем заказчиков…", "Тапсырыс берушілер жүктелуде…") : error ? t("Список не загружен", "Тізім жүктелмеді") : `${t("Всего", "Барлығы")}: ${rows.total}`}
           </span>
         </div>
         <div className="table-scroll" aria-busy={loading}>
           <table>
             <thead>
               <tr>
-                <th>Название на русском</th>
-                <th>Название на казахском</th>
-                <th>БИН</th>
-                <th>Статус</th>
+                <th>{t("Название на русском", "Орыс тіліндегі атауы")}</th>
+                <th>{t("Название на казахском", "Қазақ тіліндегі атауы")}</th>
+                <th>{t("БИН", "БСН")}</th>
+                <th>{t("Статус", "Күйі")}</th>
                 <th />
               </tr>
             </thead>
@@ -124,11 +123,11 @@ export function Customers({ context }: { context: AppContext }) {
                   </td>
                   <td>{customer.nameKz || "—"}</td>
                   <td>{customer.bin || "—"}</td>
-                  <td>{customer.archived ? "В архиве" : "Активен"}</td>
+                  <td>{customer.archived ? t("В архиве", "Мұрағатта") : t("Активен", "Белсенді")}</td>
                   <td>
                     {context.user.role !== "VIEWER" && (
                       <button onClick={() => setEdit(customer)}>
-                        Изменить
+                        {t("Изменить", "Өзгерту")}
                       </button>
                     )}
                   </td>
@@ -140,11 +139,11 @@ export function Customers({ context }: { context: AppContext }) {
         {!rows.items.length && !loading && !error && (
           <div className="empty-state">
             <Icon name="company" size={36} />
-            <h2>Заказчики не найдены</h2>
+            <h2>{search ? t("Заказчики не найдены", "Тапсырыс берушілер табылмады") : t("Заказчиков ещё нет", "Тапсырыс берушілер әлі жоқ")}</h2>
             <p>
               {search
-                ? "Попробуйте другое название или БИН либо сбросьте поиск."
-                : "Добавьте реквизиты организации один раз и выбирайте её в заявках."}
+                ? t("Попробуйте другое название или БИН либо сбросьте поиск.", "Басқа атауды немесе БСН енгізіңіз не іздеуді тазалаңыз.")
+                : t("Добавьте реквизиты организации один раз и выбирайте её в заявках.", "Ұйым деректемелерін бір рет қосып, өтінімдерде таңдаңыз.")}
             </p>
             {search ? (
               <button
@@ -153,12 +152,12 @@ export function Customers({ context }: { context: AppContext }) {
                   setPage(1);
                 }}
               >
-                Сбросить поиск
+                {t("Сбросить поиск", "Іздеуді тазарту")}
               </button>
             ) : (
               context.user.role !== "VIEWER" && (
                 <button onClick={() => setEdit(emptyCustomer)}>
-                  Добавить заказчика
+                  {t("Добавить заказчика", "Тапсырыс берушіні қосу")}
                 </button>
               )
             )}
@@ -166,25 +165,25 @@ export function Customers({ context }: { context: AppContext }) {
         )}
         {loading && !rows.items.length && (
           <div className="empty-state" aria-hidden="true">
-            Загружаем заказчиков…
+            {t("Загружаем заказчиков…", "Тапсырыс берушілер жүктелуде…")}
           </div>
         )}
         <div className="pagination">
           <span>
-            Страница {page} из {Math.max(1, Math.ceil(rows.total / 20))}
+            {t("Страница", "Бет")} {page} / {Math.max(1, Math.ceil(rows.total / 20))}
           </span>
           <div>
             <button
               disabled={page === 1 || loading}
               onClick={() => setPage((value) => value - 1)}
             >
-              Назад
+              {t("Назад", "Артқа")}
             </button>
             <button
               disabled={page * 20 >= rows.total || loading}
               onClick={() => setPage((value) => value + 1)}
             >
-              Далее
+              {t("Далее", "Келесі")}
             </button>
           </div>
         </div>
@@ -211,6 +210,7 @@ export function CustomerDialog({
   onClose: () => void;
   onSaved: (customer: Customer) => void;
 }) {
+  const t = useCabinetLanguage();
   const [value, setValue] = useState(() => ({
     ...emptyCustomer,
     ...customer,
@@ -225,7 +225,7 @@ export function CustomerDialog({
       : (customer.ownNameKz ?? ""),
   }));
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   async function save(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
@@ -240,6 +240,7 @@ export function CustomerDialog({
         bin,
         addressRu,
         addressKz,
+        city,
         archived,
       } = value;
       const result = await api<Customer>(
@@ -255,21 +256,22 @@ export function CustomerDialog({
             bin,
             addressRu,
             addressKz,
+            city,
             archived,
           }),
         },
       );
       onSaved(result);
     } catch (caught) {
-      setError(errorText(caught));
+      setError(caught);
     } finally {
       setBusy(false);
     }
   }
   return (
     <Modal
-      title={customer.id ? "Реквизиты организации" : "Новая организация"}
-      onClose={onClose}
+      title={customer.id ? t("Реквизиты организации", "Ұйым деректемелері") : t("Новая организация", "Жаңа ұйым")}
+      onClose={() => { if (!busy) onClose(); }}
     >
       <form onSubmit={save}>
         {error && <Notice>{error}</Notice>}
@@ -278,15 +280,16 @@ export function CustomerDialog({
           onChange={(names) => setValue({ ...value, ...names })}
         />
         <details className="customer-extra-fields">
-          <summary>Дополнительные реквизиты</summary>
+          <summary>{t("Дополнительные реквизиты", "Қосымша деректемелер")}</summary>
           <p className="fine-print">
-            БИН и адрес можно добавить сейчас или позже.
+            {t("БИН и адрес можно добавить сейчас или позже.", "БСН мен мекенжайды қазір немесе кейін қосуға болады.")}
           </p>
           <div className="form-grid">
             {[
-              ["bin", "БИН"],
-              ["addressRu", "Адрес на русском"],
-              ["addressKz", "Адрес на казахском"],
+              ["bin", t("БИН", "БСН")],
+              ["addressRu", t("Адрес на русском", "Орыс тіліндегі мекенжай")],
+              ["addressKz", t("Адрес на казахском", "Қазақ тіліндегі мекенжай")],
+              ["city", t("Город (подтверждённый)", "Қала (расталған)")],
             ].map(([key, label]) => (
               <label key={key}>
                 {label}
@@ -309,15 +312,15 @@ export function CustomerDialog({
                 setValue({ ...value, archived: event.target.checked })
               }
             />
-            Перенести в архив
+            {t("Перенести в архив", "Мұрағатқа көшіру")}
           </label>
         )}
         <div className="modal-actions">
-          <button type="button" onClick={onClose}>
-            Отмена
+          <button type="button" disabled={busy} onClick={onClose}>
+            {t("Отмена", "Бас тарту")}
           </button>
           <button className="primary" disabled={busy}>
-            {busy ? "Сохраняем…" : "Сохранить"}
+            {busy ? t("Сохраняем…", "Сақталуда…") : t("Сохранить", "Сақтау")}
           </button>
         </div>
       </form>

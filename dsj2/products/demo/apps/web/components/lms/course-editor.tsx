@@ -7,22 +7,31 @@ import {
   regulatoryProfileSchema,
   type CourseContent,
   type LmsLesson,
-  type LmsQuestion,
   type RegulatoryProfile,
 } from "@demo/contracts/src/lms";
 import {
   ApiError,
   api,
+  json,
   BEFORE_LOGOUT_EVENT,
   NavigationBlockedError,
 } from "@/lib/api";
 import { AutosaveLane } from "@/lib/autosave";
 import { lms, type CourseVersion, type Course } from "@/lib/lms-api";
-import { LmsHeading, Status, lmsError, type Translate } from "./common";
+import {
+  LmsErrorDiagnostic,
+  LmsHeading,
+  Status,
+  lmsError,
+  type Translate,
+} from "./common";
 import { useLmsSaveNavigation } from "./use-save-navigation";
 import type { CalendarVersion } from "./sanitary-settings";
-import { QuestionLibrary, SaveLibraryQuestion } from "./question-library";
+import { AssessmentAuthor } from "./assessment-author";
+import { LessonAuthor } from "./lesson-author";
+import { CourseLearningSettings } from "./course-learning-settings";
 import { CourseAvailability, regulatoryStates } from "./course-availability";
+import { SourcePicker } from "./source-library";
 
 export const emptyCourse = () =>
   courseContentSchema.parse({
@@ -34,8 +43,17 @@ export const emptyCourse = () =>
 export const emptyProfile = (issuer = "") =>
   regulatoryProfileSchema.parse({ title: "Новое основание", issuer });
 type Draft = { content: CourseContent; profile: RegulatoryProfile };
+type AuthorVersion = CourseVersion & {
+  allowedActions?: string[];
+  review?: {
+    state: string;
+    contentHash: string;
+    revision: number;
+    feedback: string;
+  } | null;
+};
 export function CourseEditor({ id, t }: { id: string; t: Translate }) {
-  const [version, setVersion] = useState<CourseVersion | null>(null);
+  const [version, setVersion] = useState<AuthorVersion | null>(null);
   const [versions, setVersions] = useState<CourseVersion[]>([]);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [course, setCourse] = useState<Course | null>(null);
@@ -46,26 +64,35 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
     choices: Record<string, string>;
   } | null>(null);
   const [showValidation, setShowValidation] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<unknown>(null);
   const [saveState, setSaveState] = useState("saved");
   const [busy, setBusy] = useState(false);
   const [conflict, setConflict] = useState(false);
   const [calendars, setCalendars] = useState<CalendarVersion[]>([]);
+  const [recovery, setRecovery] = useState<Draft | null>(null);
+  const [reviewFeedback, setReviewFeedback] = useState("");
+  const [dependencyBlocked, setDependencyBlocked] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const [demoOnly, setDemoOnly] = useState(false);
+  const [section, setSection] = useState<"overview" | "modules" | "exam" | "settings" | "review">("overview");
+  const [dragged, setDragged] = useState<{
+    moduleId: string;
+    lessonId?: string;
+  } | null>(null);
   const lane = useRef<AutosaveLane<Draft> | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const text = useRef(t);
-  text.current = t;
+  const loadRequest = useRef(0);
   useLmsSaveNavigation(
     id,
     () => !!lane.current?.dirty,
     () => lane.current?.flush() || Promise.resolve(),
-    (caught) => setError(lmsError(caught, text.current)),
+    (caught) => setError(caught),
   );
-  function install(value: CourseVersion) {
+  function install(value: AuthorVersion) {
     const next = { content: value.content, profile: value.profile };
     setVersion(value);
     setDraft(next);
-    setError("");
+    setError(null);
     setConflict(false);
     setSaveState("saved");
     setUndo([]);
@@ -76,12 +103,23 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       value.revision,
       async (snapshot, revision) => {
         try {
-          return await lms.saveVersion(
+          const saved = await lms.saveVersion(
             value.id,
             revision,
             snapshot.content,
             snapshot.profile,
           );
+          setVersion((current) =>
+            current?.id === saved.id
+              ? {
+                  ...current,
+                  review: saved.review,
+                  allowedActions: saved.allowedActions,
+                  publicationIssues: saved.publicationIssues,
+                }
+              : current,
+          );
+          return saved;
         } catch (caught) {
           if (caught instanceof ApiError && caught.status === 409) {
             lane.current?.pause(caught);
@@ -93,21 +131,49 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       (state, revision, caught) => {
         setSaveState(state);
         setVersion((current) => (current ? { ...current, revision } : current));
-        if (caught) setError(lmsError(caught, text.current));
-        else if (state === "saved") setError("");
+        if (caught) setError(caught);
+        else if (state === "saved") {
+          setError(null);
+          try {
+            sessionStorage.removeItem(`lms-author-draft:${id}`);
+          } catch {
+            /* Optional local recovery; the server remains the source of truth. */
+          }
+        }
       },
     );
   }
   async function load() {
+    const request = ++loadRequest.current;
     try {
       const data = await lms.course(id);
+      if (request !== loadRequest.current) return;
       setCourse(data.course);
+      setDemoOnly(data.demoOnly === true);
       setVersions(data.versions);
       const latest =
         data.versions.find((v) => v.status === "DRAFT") || data.versions[0];
-      if (latest) install(latest);
+      if (latest) {
+        install(latest);
+        try {
+          const stored = sessionStorage.getItem(`lms-author-draft:${id}`);
+          if (stored) {
+            const cache = JSON.parse(stored) as {
+              versionId: string;
+              draft: Draft;
+            };
+            if (cache.versionId === latest.id)
+              setRecovery({
+                content: courseContentSchema.parse(cache.draft.content),
+                profile: regulatoryProfileSchema.parse(cache.draft.profile),
+              });
+          }
+        } catch {
+          /* Optional local recovery; the server remains the source of truth. */
+        }
+      }
     } catch (caught) {
-      setError(lmsError(caught, text.current));
+      if (request === loadRequest.current) setError(caught);
     }
   }
   useEffect(() => {
@@ -116,6 +182,7 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       .then(setCalendars)
       .catch(() => {});
     return () => {
+      loadRequest.current += 1;
       if (timer.current) clearTimeout(timer.current);
     };
   }, [id]);
@@ -142,10 +209,20 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       window.removeEventListener(BEFORE_LOGOUT_EVENT, logout);
     };
   }, []);
-  function edit(next: Draft) {
-    if (draft)
+  function edit(next: Draft, remember = true) {
+    setDependencyBlocked(false);
+    if (draft && remember)
       setUndo((previous) => [...previous.slice(-49), structuredClone(draft)]);
     setDraft(next);
+    setVersion((current) => (current ? { ...current, review: null } : current));
+    try {
+      sessionStorage.setItem(
+        `lms-author-draft:${id}`,
+        JSON.stringify({ versionId: version?.id, draft: next }),
+      );
+    } catch {
+      /* Optional local recovery; the server remains the source of truth. */
+    }
     lane.current?.edit(next);
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(
@@ -156,7 +233,7 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
   async function businessAction(kind: "publish" | "new") {
     if (!version || busy) return;
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       if (kind === "publish") {
         setShowValidation(true);
@@ -164,7 +241,28 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
         install(await lms.publish(version.id, revision));
       } else install(await lms.newVersion(id));
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function reviewAction(action: "SUBMIT" | "APPROVE" | "RETURN") {
+    if (!version || busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const revision = await lane.current!.flush();
+      await api(
+        `/lms/course-versions/${encodeURIComponent(version.id)}/review`,
+        {
+          method: "POST",
+          body: json({ revision, action, feedback: reviewFeedback }),
+        },
+      );
+      setReviewFeedback("");
+      await load();
+    } catch (caught) {
+      setError(caught);
     } finally {
       setBusy(false);
     }
@@ -174,7 +272,8 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       <section aria-busy={!error}>
         {error ? (
           <Notice>
-            {error}
+            {lmsError(error, t)}
+            <LmsErrorDiagnostic error={error} t={t} />
             <button onClick={() => void load()}>
               {t("Повторить", "Қайталау")}
             </button>
@@ -184,9 +283,73 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
         )}
       </section>
     );
-  const frozen = version.status !== "DRAFT";
+  const allowed = version.allowedActions || [];
+  const canPublish = version.status === "DRAFT" && allowed.includes("publish");
+  const canClone =
+    version.status === "PUBLISHED" &&
+    (allowed.includes("clone") || allowed.includes("create"));
+  const canSubmitReview =
+    version.status === "DRAFT" &&
+    allowed.includes("submitReview") &&
+    !["PENDING", "APPROVED"].includes(version.review?.state || "");
+  const canApproveReview =
+    version.status === "DRAFT" &&
+    version.review?.state === "PENDING" &&
+    allowed.includes("approveReview");
+  const canReturnReview =
+    version.status === "DRAFT" &&
+    version.review?.state === "PENDING" &&
+    allowed.includes("returnReview");
+  const frozen = version.status !== "DRAFT" || !allowed.includes("edit");
   const content = draft.content;
   const profile = draft.profile;
+  const published = version.status === "PUBLISHED" ? version : versions.find((item) => item.status === "PUBLISHED");
+  const issues = version.publicationIssues || [];
+  const canAuthor = [...allowed, ...(course?.allowedActions || [])].some((action) => ["edit", "clone", "publish", "submitReview", "approveReview"].includes(action));
+  if (!canAuthor) return (
+    <>
+      <LmsHeading title={t(content.titleRu, content.titleKz)}>
+        <Link className="button" href="/lms">{t("К программам", "Бағдарламаларға")}</Link>
+      </LmsHeading>
+      <section className="panel lms-panel">
+        <p><Status value={version.status} t={t} /> · {t("Версия", "Нұсқа")} {version.version} · {content.hours} {t("ч.", "сағ.")}</p>
+        {(content.descriptionRu || content.descriptionKz) && <p>{t(content.descriptionRu, content.descriptionKz)}</p>}
+        <p>{t("Доступ к обучению", "Оқуға қолжетімділік")}: {content.accessDays} {t("дней", "күн")} · <Status value={profile.assessmentKind} t={t} /></p>
+        {course?.assignmentPaused && <p role="status">{t("Новые назначения приостановлены", "Жаңа тағайындаулар тоқтатылған")}{course.assignmentPauseReason ? `: ${course.assignmentPauseReason}` : ""}</p>}
+        <div className="lms-actions">
+          {published && course?.allowedActions?.includes("assign") && !course.assignmentPaused && <Link className="button primary lms-primary" href={`/lms/assign?versionId=${encodeURIComponent(published.id)}`}>{t("Назначить обучение", "Оқуды тағайындау")}</Link>}
+          {course?.allowedActions?.includes("reviewResults") && <Link className="button" href={`/lms/teaching?tab=reviews&courseId=${encodeURIComponent(id)}`}>{t("Открыть работы на проверку", "Тексеруге жіберілген жұмыстарды ашу")}</Link>}
+        </div>
+      </section>
+      <section className="panel lms-panel">
+        <h2>{t("Содержание программы", "Бағдарлама мазмұны")}</h2>
+        {content.modules.map((module) => <section key={module.id}>
+          <h3>{t(module.titleRu, module.titleKz)}</h3>
+          <ul className="lms-list">{module.lessons.map((lesson) => <li key={lesson.id}>
+            <span>{t(lesson.titleRu, lesson.titleKz)}</span>
+            <span><Status value={lesson.kind} t={t} />{lesson.required ? ` · ${t("Обязательный", "Міндетті")}` : ""}</span>
+          </li>)}</ul>
+        </section>)}
+        {!content.modules.length && <p>{t("Содержание готовится", "Мазмұн дайындалуда")}</p>}
+      </section>
+    </>
+  );
+  function goToIssue(issue: (typeof issues)[number]) {
+    setSection(issue.target);
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById(issue.questionId ? `author-question-${issue.questionId}` : issue.lessonId ? `author-lesson-${issue.lessonId}` : issue.moduleId ? `author-module-${issue.moduleId}` : `author-${issue.target}`);
+      if (!target) return;
+      let parent: HTMLElement | null = target;
+      while (parent) {
+        if (parent instanceof HTMLDetailsElement) parent.open = true;
+        parent = parent.parentElement;
+      }
+      if (issue.target === "overview" && issue.code !== "COURSE_TITLE_REQUIRED") target.querySelectorAll("details").forEach((item) => { item.open = true; });
+      target.scrollIntoView({ behavior: "auto", block: "start" });
+      const field = target.querySelector<HTMLElement>("input:not(:disabled),textarea:not(:disabled),select:not(:disabled),button:not(:disabled)");
+      (field || target).focus({ preventScroll: true });
+    });
+  }
   const allLessons = content.modules.flatMap((module) => module.lessons);
   const removedIds = deletion
     ? allLessons
@@ -235,16 +398,6 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       ),
     });
   }
-  function questionEdit(questionId: string, patch: Partial<LmsQuestion>) {
-    contentEdit({
-      exam: {
-        ...content.exam,
-        questions: content.exam.questions.map((q) =>
-          q.id === questionId ? { ...q, ...patch } : q,
-        ),
-      },
-    });
-  }
   function applyDeletion(
     moduleId: string,
     lessonId?: string,
@@ -281,6 +434,17 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
     setDeletion(null);
   }
   function requestDeletion(moduleId: string, lessonId?: string) {
+    if (
+      !lessonId &&
+      content.modules.some(
+        (module) =>
+          module.id !== moduleId &&
+          module.prerequisiteModuleIds?.includes(moduleId),
+      )
+    ) {
+      setDependencyBlocked(true);
+      return;
+    }
     const removed = content.modules
       .filter((module) => module.id === moduleId)
       .flatMap((module) => module.lessons)
@@ -298,6 +462,34 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       setDeletion({ moduleId, lessonId, choices: {} });
     else applyDeletion(moduleId, lessonId);
   }
+  function moveModule(from: number, to: number) {
+    if (frozen || busy || conflict || to < 0 || to >= content.modules.length)
+      return;
+    const modules = [...content.modules];
+    const [module] = modules.splice(from, 1);
+    modules.splice(to, 0, module!);
+    contentEdit({ modules });
+  }
+  function moveLesson(moduleId: string, from: number, to: number) {
+    const module = content.modules.find((item) => item.id === moduleId);
+    if (
+      frozen ||
+      busy ||
+      conflict ||
+      !module ||
+      to < 0 ||
+      to >= module.lessons.length
+    )
+      return;
+    const lessons = [...module.lessons];
+    const [lesson] = lessons.splice(from, 1);
+    lessons.splice(to, 0, lesson!);
+    contentEdit({
+      modules: content.modules.map((item) =>
+        item.id === moduleId ? { ...item, lessons } : item,
+      ),
+    });
+  }
   return (
     <>
       <LmsHeading title={t(content.titleRu, content.titleKz)}>
@@ -305,6 +497,11 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
           {t("К курсам", "Курстарға")}
         </Link>
       </LmsHeading>
+      <nav className="lms-author-sections" aria-label={t("Разделы программы", "Бағдарлама бөлімдері")}>
+        {([['overview', t("Сведения", "Мәліметтер")], ['modules', t("Содержание", "Мазмұны")], ['exam', t("Итоговая проверка", "Қорытынды тексеру")], ['settings', t("Условия", "Шарттар")], ['review', t("Публикация", "Жариялау")]] as const).map(([key, label]) => (
+          <button type="button" key={key} aria-current={section === key ? "step" : undefined} onClick={() => { setSection(key); setPreview(false); }}>{label}</button>
+        ))}
+      </nav>
       <div className="lms-editor-actions">
         <span>
           <Status value={version.status} t={t} /> · {t("Версия", "Нұсқа")}{" "}
@@ -320,8 +517,82 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
                 : t("Не сохранено", "Сақталмады")}
         </span>
       </div>
-      {course && (
+      {course && section === "review" && (
         <CourseAvailability course={course} onChange={setCourse} t={t} />
+      )}
+      {published && section === "review" && course?.allowedActions?.includes("assign") && !course.assignmentPaused && (
+        <section className="panel lms-panel">
+          <p>{t("Доступна для назначения версия", "Тағайындауға қолжетімді нұсқа")} {published.version}</p>
+          <Link className="button primary lms-primary" href={`/lms/assign?versionId=${encodeURIComponent(published.id)}`}>
+            {t("Назначить обучение", "Оқуды тағайындау")}
+          </Link>
+        </section>
+      )}
+      {section === "review" && version.status === "DRAFT" && issues.length > 0 && (
+        <section className="panel lms-panel" aria-label={t("До публикации", "Жариялау алдында")}>
+          <h2>{t("Что нужно заполнить", "Нені толтыру қажет")}</h2>
+          <ul className="lms-author-issues">
+            {issues.map((issue, index) => (
+              <li key={`${issue.code}:${issue.lessonId || issue.moduleId || issue.questionId || index}`}>
+                <button type="button" onClick={() => { setShowValidation(true); goToIssue(issue); }}>
+                  {t(issue.messageRu, issue.messageKz)}
+                  {issue.lessonId && ` · ${t(content.modules.flatMap((module) => module.lessons).find((lesson) => lesson.id === issue.lessonId)?.titleRu || "Урок", content.modules.flatMap((module) => module.lessons).find((lesson) => lesson.id === issue.lessonId)?.titleKz || "Сабақ")}`}
+                </button>
+              </li>
+            ))}
+          </ul>
+          {saveState !== "saved" && <p role="status">{t("Список обновится после сохранения изменений.", "Тізім өзгерістер сақталғаннан кейін жаңартылады.")}</p>}
+        </section>
+      )}
+      <details hidden={section !== "modules"} className="panel lms-panel" open={preview} onToggle={(event) => setPreview(event.currentTarget.open)}>
+        <summary>{t("Предварительный вид слушателя", "Тыңдаушы көрінісін алдын ала қарау")}</summary>
+        {preview && <div className="lms-prose">
+          <h2>{t(content.titleRu, content.titleKz)}</h2>
+          <p>{t(content.descriptionRu, content.descriptionKz)}</p>
+          {content.modules.map((module) => <section key={module.id}>
+            <h3>{t(module.titleRu, module.titleKz) || t("Новый модуль", "Жаңа модуль")}</h3>
+            {module.lessons.map((lesson) => <article key={lesson.id}>
+              <h4>{t(lesson.titleRu, lesson.titleKz) || t("Новый урок", "Жаңа сабақ")}{lesson.required ? ` · ${t("Обязательный", "Міндетті")}` : ""}</h4>
+              {lesson.kind === "TEXT" && <p>{t(lesson.textRu, lesson.textKz)}</p>}
+              {lesson.assignment && <p>{t(lesson.assignment.instructionsRu, lesson.assignment.instructionsKz)}</p>}
+              {lesson.kind !== "TEXT" && <p><Status value={lesson.kind} t={t} /></p>}
+            </article>)}
+          </section>)}
+        </div>}
+      </details>
+      {recovery && (
+        <Notice>
+          {t(
+            "Есть локальные несохранённые изменения. Просмотрите актуальную редакцию перед восстановлением.",
+            "Жергілікті сақталмаған өзгерістер бар. Қалпына келтірер алдында соңғы редакцияны тексеріңіз.",
+          )}
+          <button
+            type="button"
+            disabled={frozen || busy || conflict}
+            onClick={() => {
+              edit(recovery);
+              setRecovery(null);
+            }}
+          >
+            {t(
+              "Восстановить локальные изменения",
+              "Жергілікті өзгерістерді қалпына келтіру",
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setRecovery(null);
+              try {
+                sessionStorage.removeItem(`lms-author-draft:${id}`);
+              } catch {
+                /* Optional local recovery; the server remains the source of truth. */
+              }
+            }}
+          >
+            {t("Оставить серверную редакцию", "Сервер редакциясын қалдыру")}
+          </button>
+        </Notice>
       )}
       {!frozen && undo.length > 0 && (
         <button
@@ -330,25 +601,20 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
           onClick={() => {
             const previous = undo[undo.length - 1]!;
             setUndo((values) => values.slice(0, -1));
-            setDraft(previous);
-            lane.current?.edit(previous);
-            if (timer.current) clearTimeout(timer.current);
-            timer.current = setTimeout(
-              () => void lane.current?.flush().catch(() => {}),
-              600,
-            );
+            edit(previous, false);
           }}
         >
           {t("Отменить изменение", "Өзгерісті болдырмау")}
         </button>
       )}
-      {error && (
+      {!!error && (
         <Notice>
-          {error}
+          {lmsError(error, t)}
+          <LmsErrorDiagnostic error={error} t={t} />
           <button
             onClick={() =>
               conflict
-                ? void load()
+                ? (setRecovery(draft), void load())
                 : void lane.current?.flush().catch(() => {})
             }
           >
@@ -356,6 +622,14 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
               ? t("Открыть актуальную редакцию", "Соңғы нұсқаны ашу")
               : t("Повторить", "Қайталау")}
           </button>
+        </Notice>
+      )}
+      {dependencyBlocked && (
+        <Notice>
+          {t(
+            "Сначала снимите или замените требование этого модуля у зависимых модулей.",
+            "Алдымен тәуелді модульдердегі осы модуль талабын алып тастаңыз немесе ауыстырыңыз.",
+          )}
         </Notice>
       )}
       {deletion && (
@@ -428,6 +702,8 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
         </section>
       )}
       <fieldset
+        id="author-overview"
+        hidden={section !== "overview"}
         disabled={frozen || busy || conflict}
         className="panel lms-panel"
         onBlur={() => {
@@ -574,10 +850,14 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
               <input
                 type="date"
                 value={profile.effectiveFrom || ""}
+                aria-label={t("Действует с", "Басталуы")}
+                aria-invalid={content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "PRACTICE" && !profile.effectiveFrom || undefined}
+                aria-describedby={content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "PRACTICE" && !profile.effectiveFrom ? "effective-from-required" : undefined}
                 onChange={(e) =>
                   profileEdit({ effectiveFrom: e.target.value || null })
                 }
               />
+              {content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "PRACTICE" && !profile.effectiveFrom && <small id="effective-from-required" role="status">{t("Укажите дату начала действия основания: без неё результат экзамена не допускает оформление документов.", "Негіздің күшіне ену күнін көрсетіңіз: онсыз емтихан нәтижесі бойынша құжаттарды рәсімдеуге болмайды.")}</small>}
             </label>
             <label>
               {t("Действует до", "Аяқталуы")}
@@ -664,17 +944,7 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
               </label>
             ))}
           </fieldset>
-          <label className="lms-inline-label">
-            <input
-              type="checkbox"
-              checked={profile.synthetic}
-              onChange={(e) => profileEdit({ synthetic: e.target.checked })}
-            />
-            {t(
-              "Синтетическая учебная программа",
-              "Синтетикалық оқу бағдарламасы",
-            )}
-          </label>
+          {demoOnly ? <label className="lms-inline-label"><input type="checkbox" checked={profile.synthetic} onChange={(event) => profileEdit({ synthetic: event.target.checked })} />{t("Учебный пример — без юридической силы", "Оқу үлгісі — заңды күші жоқ")}</label> : profile.synthetic && <p className="muted">{t("Учебный пример — без юридической силы", "Оқу үлгісі — заңды күші жоқ")}</p>}
           <label className="lms-inline-label">
             <input
               type="checkbox"
@@ -746,12 +1016,67 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
                 <input
                   type="checkbox"
                   checked={profile[key]}
+                  aria-describedby={key === "requiresProctoring" && profile.requiresProctoring && content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "EXTERNAL_AUTHORIZED" ? "local-proctoring-limit" : undefined}
                   onChange={(e) => profileEdit({ [key]: e.target.checked })}
                 />
                 {t(ru, kz)}
               </label>
             ))}
           </div>
+          {profile.requiresProctoring && content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "EXTERNAL_AUTHORIZED" && (
+            <label id="local-proctoring-limit">{t("Способ контроля экзамена", "Емтиханды бақылау тәсілі")}<select value={profile.proctoringMode || "UNSPECIFIED"} onChange={event => profileEdit({ proctoringMode: event.target.value as RegulatoryProfile["proctoringMode"] })}><option value="UNSPECIFIED">{t("Требует согласования", "Келісуді қажет етеді")}</option><option value="LOCAL_SUPERVISED">{t("Местный экзамен под наблюдением сотрудника", "Қызметкер бақылауымен жергілікті емтихан")}</option></select><span className="muted">{t("Наблюдатель подтверждает личность и присутствие, ведёт журнал сессии и принимает конкретную попытку перед выставлением оценки.", "Бақылаушы жеке басы мен қатысуды растайды, сессия журналын жүргізеді және баға қойылғанға дейін нақты әрекетті қабылдайды.")}</span></label>
+          )}
+          {profile.requiresPractice && (
+            <label>
+              {t(
+                "Основание подтверждения практики",
+                "Практиканы растау негізі",
+              )}
+              <select
+                value={profile.practiceEvidenceMode || "UNSPECIFIED"}
+                aria-describedby="practice-evidence-help"
+                onChange={(event) =>
+                  profileEdit({
+                    practiceEvidenceMode: event.target
+                      .value as RegulatoryProfile["practiceEvidenceMode"],
+                  })
+                }
+              >
+                <option value="UNSPECIFIED">
+                  {t(
+                    "Не выбрано — допуск закрыт",
+                    "Таңдалмаған — рұқсат жабық",
+                  )}
+                </option>
+                <option value="REVIEWED_ASSIGNMENTS">
+                  {t(
+                    "Проверенные обязательные практические работы",
+                    "Тексерілген міндетті практикалық жұмыстар",
+                  )}
+                </option>
+                <option value="IN_PERSON">
+                  {t(
+                    "Очная практика с оценкой преподавателя",
+                    "Оқытушы бағалайтын күндізгі практика",
+                  )}
+                </option>
+              </select>
+              <span className="muted" id="practice-evidence-help">
+                {t(
+                  "Основание должно соответствовать утверждённой программе. Онлайн-практика засчитывается после принятия всех обязательных практических работ преподавателем.",
+                  "Негіз бекітілген бағдарламаға сәйкес болуы тиіс. Онлайн-практика барлық міндетті практикалық жұмыстарды оқытушы қабылдағаннан кейін есептеледі.",
+                )}
+              </span>
+              {content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "EXTERNAL_AUTHORIZED" && (profile.practiceEvidenceMode === "IN_PERSON" || content.metadata?.format === "IN_PERSON") && (
+                <span role="status">
+                  {t(
+                    "Добавьте обязательное занятие в программу. В группе преподаватель назначит дату, критерии и оценит практику каждого участника.",
+                    "Бағдарламаға міндетті сабақ қосыңыз. Топта оқытушы күн мен критерийлерді белгілеп, әр қатысушының практикасын бағалайды.",
+                  )}
+                </span>
+              )}
+            </label>
+          )}
           <label>
             {t("Комиссия", "Комиссия")}
             <select
@@ -834,8 +1159,10 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
               }
             />
           </label>
+          <SourcePicker t={t} onSelect={source => profileEdit({ status: "NEEDS_LEGAL_REVIEW", sources: [...profile.sources.filter(value => value.sourceId !== source.sourceId), source] })} />
           {profile.sources.map((source, i) => (
-            <fieldset key={i}>
+            <div key={source.sourceId || i}>
+            <fieldset disabled={!!source.sourceRevisionId}>
               <legend>
                 {t("Источник", "Дереккөз")} {i + 1}
               </legend>
@@ -958,6 +1285,10 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
                 </label>
               </div>
             </fieldset>
+            <button type="button" onClick={() => profileEdit({ status: "NEEDS_LEGAL_REVIEW", sources: profile.sources.filter((_, index) => index !== i) })}>
+              {t("Убрать источник из программы", "Дереккөзді бағдарламадан алып тастау")}
+            </button>
+            </div>
           ))}
           <button
             type="button"
@@ -977,11 +1308,43 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       <fieldset
         disabled={frozen || busy || conflict}
         className="panel lms-panel"
+        id="author-settings"
+        hidden={section !== "settings"}
+      >
+        <legend>{t("Учебные настройки", "Оқу параметрлері")}</legend>
+        <CourseLearningSettings
+          content={content}
+          courseId={id}
+          onChange={contentEdit}
+          t={t}
+        />
+      </fieldset>
+      <fieldset
+        disabled={frozen || busy || conflict}
+        className="panel lms-panel"
+        id="author-modules"
+        hidden={section !== "modules"}
       >
         <legend>{t("Модули и уроки", "Модульдер мен сабақтар")}</legend>
         {content.modules.map((module, index) => (
           <details
             key={module.id}
+            id={`author-module-${module.id}`}
+            onDragOver={(event) => {
+              if (dragged && !dragged.lessonId) event.preventDefault();
+            }}
+            onDrop={(event) => {
+              if (dragged && !dragged.lessonId) {
+                event.preventDefault();
+                moveModule(
+                  content.modules.findIndex(
+                    (item) => item.id === dragged.moduleId,
+                  ),
+                  index,
+                );
+                setDragged(null);
+              }
+            }}
             open={
               content.modules.length === 1 ||
               (showValidation &&
@@ -989,9 +1352,27 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
             }
           >
             <summary>
-              {module.titleRu || t("Новый модуль", "Жаңа модуль")} ·{" "}
-              {module.lessons.length}
+              {t(module.titleRu, module.titleKz) ||
+                t("Новый модуль", "Жаңа модуль")}{" "}
+              · {module.lessons.length}
             </summary>
+            <button
+              type="button"
+              className="lms-author-drag"
+              draggable={!frozen && !busy && !conflict}
+              onDragStart={(event) => {
+                event.dataTransfer.effectAllowed = "move";
+                event.dataTransfer.setData("text/plain", module.id);
+                setDragged({ moduleId: module.id });
+              }}
+              onDragEnd={() => setDragged(null)}
+              aria-label={`${t("Перенести модуль", "Модульді жылжыту")}: ${t(module.titleRu, module.titleKz)}`}
+            >
+              {t(
+                "Перетащить модуль · или используйте кнопки ниже",
+                "Модульді сүйреңіз · немесе төмендегі батырмаларды қолданыңыз",
+              )}
+            </button>
             <div className="lms-fields">
               <label>
                 {t("Модуль RU", "Модуль RU")}
@@ -1033,131 +1414,111 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
                   )}
                 </p>
               )}
+            <details>
+              <summary>
+                {t(
+                  "Предыдущие обязательные модули",
+                  "Алдыңғы міндетті модульдер",
+                )}
+              </summary>
+              {content.modules
+                .filter((item) => item.id !== module.id)
+                .map((previous) => (
+                  <label className="lms-inline-label" key={previous.id}>
+                    <input
+                      type="checkbox"
+                      checked={
+                        module.prerequisiteModuleIds?.includes(previous.id) ||
+                        false
+                      }
+                      disabled={
+                        content.modules.indexOf(previous) >= index &&
+                        !module.prerequisiteModuleIds?.includes(previous.id)
+                      }
+                      onChange={(event) =>
+                        contentEdit({
+                          modules: content.modules.map((item) =>
+                            item.id === module.id
+                              ? {
+                                  ...item,
+                                  prerequisiteModuleIds: event.target.checked
+                                    ? [
+                                        ...(item.prerequisiteModuleIds || []),
+                                        previous.id,
+                                      ]
+                                    : item.prerequisiteModuleIds?.filter(
+                                        (dependency) =>
+                                          dependency !== previous.id,
+                                      ),
+                                }
+                              : item,
+                          ),
+                        })
+                      }
+                    />
+                    {t(previous.titleRu, previous.titleKz)}
+                    {content.modules.indexOf(previous) >= index &&
+                    module.prerequisiteModuleIds?.includes(previous.id)
+                      ? ` — ${t("нарушена последовательность", "реттілік бұзылған")}`
+                      : ""}
+                  </label>
+                ))}
+            </details>
             {module.lessons.map((lesson, lessonIndex) => (
-              <fieldset key={lesson.id}>
+              <fieldset
+                key={lesson.id}
+                id={`author-lesson-${lesson.id}`}
+                onDragOver={(event) => {
+                  if (dragged?.lessonId && dragged.moduleId === module.id)
+                    event.preventDefault();
+                }}
+                onDrop={(event) => {
+                  if (dragged?.lessonId && dragged.moduleId === module.id) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    moveLesson(
+                      module.id,
+                      module.lessons.findIndex(
+                        (item) => item.id === dragged.lessonId,
+                      ),
+                      lessonIndex,
+                    );
+                    setDragged(null);
+                  }
+                }}
+              >
                 <legend>
                   {t("Урок", "Сабақ")} {lessonIndex + 1}
                 </legend>
-                <div className="lms-fields">
-                  <label>
-                    {t("Урок RU", "Сабақ RU")}
-                    <input
-                      value={lesson.titleRu}
-                      onChange={(e) =>
-                        lessonEdit(module.id, lesson.id, {
-                          titleRu: e.target.value,
-                        })
-                      }
-                    />
-                  </label>
-                  <label>
-                    {t("Урок KZ", "Сабақ KZ")}
-                    <input
-                      value={lesson.titleKz}
-                      onChange={(e) =>
-                        lessonEdit(module.id, lesson.id, {
-                          titleKz: e.target.value,
-                        })
-                      }
-                    />
-                  </label>
-                  <label>
-                    {t("Материал", "Материал")}
-                    <select
-                      value={lesson.kind}
-                      onChange={(e) =>
-                        lessonEdit(module.id, lesson.id, {
-                          kind: e.target.value as LmsLesson["kind"],
-                        })
-                      }
-                    >
-                      <option value="TEXT">{t("Текст", "Мәтін")}</option>
-                      <option value="PDF">PDF</option>
-                      <option value="VIDEO">{t("Видео", "Бейне")}</option>
-                    </select>
-                  </label>
-                  <label className="lms-inline-label">
-                    <input
-                      type="checkbox"
-                      checked={lesson.required}
-                      onChange={(e) =>
-                        lessonEdit(module.id, lesson.id, {
-                          required: e.target.checked,
-                        })
-                      }
-                    />
-                    {t("Обязательный урок", "Міндетті сабақ")}
-                  </label>
-                  <label>
-                    {t("Текст RU", "Мәтін RU")}
-                    <textarea
-                      rows={5}
-                      value={lesson.textRu}
-                      onChange={(e) =>
-                        lessonEdit(module.id, lesson.id, {
-                          textRu: e.target.value,
-                        })
-                      }
-                    />
-                  </label>
-                  <label>
-                    {t("Текст KZ", "Мәтін KZ")}
-                    <textarea
-                      rows={5}
-                      value={lesson.textKz}
-                      onChange={(e) =>
-                        lessonEdit(module.id, lesson.id, {
-                          textKz: e.target.value,
-                        })
-                      }
-                    />
-                  </label>
-                </div>
-                {lesson.kind !== "TEXT" && (
-                  <label>
-                    {lesson.materialId
-                      ? t("Заменить файл", "Файлды ауыстыру")
-                      : t("Файл урока", "Сабақ файлы")}
-                    <input
-                      type="file"
-                      accept={
-                        lesson.kind === "VIDEO"
-                          ? "video/mp4,video/webm"
-                          : "application/pdf"
-                      }
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        setBusy(true);
-                        try {
-                          const material = await lms.uploadMaterial(id, file);
-                          lessonEdit(module.id, lesson.id, {
-                            materialId: material.id,
-                          });
-                        } catch (caught) {
-                          setError(lmsError(caught, t));
-                        } finally {
-                          setBusy(false);
-                        }
-                      }}
-                    />
-                  </label>
-                )}
-                {lesson.kind === "VIDEO" && (
-                  <label>
-                    {t("Длительность, секунд", "Ұзақтығы, секунд")}
-                    <input
-                      type="number"
-                      min={1}
-                      value={lesson.durationSeconds || ""}
-                      onChange={(e) =>
-                        lessonEdit(module.id, lesson.id, {
-                          durationSeconds: Number(e.target.value) || null,
-                        })
-                      }
-                    />
-                  </label>
-                )}
+                <button
+                  type="button"
+                  className="lms-author-drag"
+                  draggable={!frozen && !busy && !conflict}
+                  onDragStart={(event) => {
+                    event.stopPropagation();
+                    event.dataTransfer.effectAllowed = "move";
+                    event.dataTransfer.setData("text/plain", lesson.id);
+                    setDragged({ moduleId: module.id, lessonId: lesson.id });
+                  }}
+                  onDragEnd={() => setDragged(null)}
+                  aria-label={`${t("Перенести элемент", "Элементті жылжыту")}: ${t(lesson.titleRu, lesson.titleKz)}`}
+                >
+                  {t(
+                    "Перетащить элемент · или используйте кнопки ниже",
+                    "Элементті сүйреңіз · немесе төмендегі батырмаларды қолданыңыз",
+                  )}
+                </button>
+                <LessonAuthor
+                  timezone={content.accessPolicy?.timezone || profile.timezone}
+                  lesson={lesson}
+                  onChange={(patch) => lessonEdit(module.id, lesson.id, patch)}
+                  courseId={id}
+                  disabled={frozen || busy || conflict}
+                  showValidation={showValidation}
+                  flush={() => lane.current!.flush()}
+                  onBusy={setBusy}
+                  t={t}
+                />
                 {lesson.prerequisiteLessonIds.some(
                   (dependency) =>
                     !allLessons
@@ -1260,6 +1621,15 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
                   </button>
                   <button
                     type="button"
+                    disabled={lessonIndex === module.lessons.length - 1}
+                    onClick={() =>
+                      moveLesson(module.id, lessonIndex, lessonIndex + 1)
+                    }
+                  >
+                    {t("Ниже", "Төмен")}
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => requestDeletion(module.id, lesson.id)}
                   >
                     {t("Убрать урок", "Сабақты алып тастау")}
@@ -1313,6 +1683,13 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
               >
                 {t("Модуль выше", "Модульді жоғары")}
               </button>
+              <button
+                type="button"
+                disabled={index === content.modules.length - 1}
+                onClick={() => moveModule(index, index + 1)}
+              >
+                {t("Модуль ниже", "Модульді төмен")}
+              </button>
               <button type="button" onClick={() => requestDeletion(module.id)}>
                 {t("Убрать модуль", "Модульді алып тастау")}
               </button>
@@ -1341,342 +1718,95 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
       <fieldset
         disabled={frozen || busy || conflict}
         className="panel lms-panel"
+        id="author-exam"
+        hidden={section !== "exam"}
       >
         <legend>{t("Вопросы и оценка", "Сұрақтар мен бағалау")}</legend>
-        {!frozen && (
-          <QuestionLibrary
-            t={t}
-            onChoose={(question) =>
-              contentEdit({
-                exam: {
-                  ...content.exam,
-                  questions: [
-                    ...content.exam.questions.filter(
-                      (item) =>
-                        item.id !== question.id &&
-                        item.libraryQuestionId !== question.libraryQuestionId,
-                    ),
-                    question,
-                  ],
-                },
-              })
-            }
-          />
-        )}
-        <details>
-          <summary>{t("Параметры теста", "Тест параметрлері")}</summary>
-          <div className="lms-fields">
-            {(
-              [
-                [
-                  "questionCount",
-                  "Вопросов в попытке",
-                  "Талпыныстағы сұрақтар",
-                ],
-                ["durationMinutes", "Время, минут", "Уақыт, минут"],
-                ["maxAttempts", "Попыток", "Талпыныстар"],
-                ["thresholdPercent", "Порог, %", "Шекті мән, %"],
-              ] as const
-            ).map(([key, ru, kz]) => (
-              <label key={key}>
-                {t(ru, kz)}
-                <input
-                  type="number"
-                  min={key === "thresholdPercent" ? 0 : 1}
-                  value={content.exam[key]}
-                  onChange={(e) =>
-                    contentEdit({
-                      exam: { ...content.exam, [key]: Number(e.target.value) },
-                    })
-                  }
-                />
-              </label>
-            ))}
-            <label>
-              {t("Правило порога", "Шекті мән ережесі")}
-              <select
-                value={content.exam.comparison}
-                onChange={(e) =>
-                  contentEdit({
-                    exam: {
-                      ...content.exam,
-                      comparison: e.target.value as "GT" | "GTE",
-                    },
-                  })
-                }
-              >
-                <option value="GTE">
-                  {t("Не менее порога", "Шекті мәннен кем емес")}
-                </option>
-                <option value="GT">
-                  {t("Строго больше порога", "Шекті мәннен жоғары")}
-                </option>
-              </select>
-            </label>
-          </div>
-        </details>
-        {content.exam.questions.map((q, i) => (
-          <details key={q.id}>
-            <summary>
-              {i + 1}. {q.promptRu || t("Новый вопрос", "Жаңа сұрақ")}
-            </summary>
-            <div className="lms-fields">
-              <label>
-                {t("Вопрос RU", "Сұрақ RU")}
-                <textarea
-                  value={q.promptRu}
-                  onChange={(e) =>
-                    questionEdit(q.id, { promptRu: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                {t("Вопрос KZ", "Сұрақ KZ")}
-                <textarea
-                  value={q.promptKz}
-                  onChange={(e) =>
-                    questionEdit(q.id, { promptKz: e.target.value })
-                  }
-                />
-              </label>
-              <label>
-                {t("Категория", "Санат")}
-                <input
-                  value={q.category}
-                  onChange={(e) =>
-                    questionEdit(q.id, { category: e.target.value })
-                  }
-                />
-              </label>
-              {(
-                [
-                  ["topic", "Тема", "Тақырып"],
-                  ["explanationRu", "Объяснение RU", "Түсіндірме RU"],
-                  ["explanationKz", "Объяснение KZ", "Түсіндірме KZ"],
-                  ["source", "Источник", "Дереккөз"],
-                ] as const
-              ).map(([key, ru, kz]) => (
-                <label key={key}>
-                  {t(ru, kz)}
-                  <textarea
-                    value={q[key] || ""}
-                    onChange={(event) =>
-                      questionEdit(q.id, { [key]: event.target.value })
-                    }
-                  />
-                </label>
-              ))}
-              <label>
-                {t("Сложность", "Күрделілік")}
-                <select
-                  value={q.difficulty || "UNKNOWN"}
-                  onChange={(event) =>
-                    questionEdit(q.id, {
-                      difficulty: event.target
-                        .value as LmsQuestion["difficulty"],
-                    })
-                  }
-                >
-                  {(
-                    [
-                      ["UNKNOWN", "Не указана", "Көрсетілмеген"],
-                      ["EASY", "Лёгкий", "Жеңіл"],
-                      ["MEDIUM", "Средний", "Орташа"],
-                      ["HARD", "Сложный", "Күрделі"],
-                    ] as const
-                  ).map(([value, ru, kz]) => (
-                    <option key={value} value={value}>
-                      {t(ru, kz)}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="lms-inline-label">
-                <input
-                  type="checkbox"
-                  checked={q.multiple}
-                  onChange={(e) =>
-                    questionEdit(q.id, {
-                      multiple: e.target.checked,
-                      correctOptionIds: e.target.checked
-                        ? q.correctOptionIds
-                        : q.correctOptionIds.slice(0, 1),
-                    })
-                  }
-                />
-                {t("Несколько правильных ответов", "Бірнеше дұрыс жауап")}
-              </label>
-            </div>
-            {q.options.map((option, n) => (
-              <fieldset key={option.id}>
-                <legend>
-                  {t("Ответ", "Жауап")} {n + 1}
-                </legend>
-                <div className="lms-fields">
-                  <label>
-                    RU
-                    <input
-                      value={option.textRu}
-                      onChange={(e) =>
-                        questionEdit(q.id, {
-                          options: q.options.map((o) =>
-                            o.id === option.id
-                              ? { ...o, textRu: e.target.value }
-                              : o,
-                          ),
-                        })
-                      }
-                    />
-                  </label>
-                  <label>
-                    KZ
-                    <input
-                      value={option.textKz}
-                      onChange={(e) =>
-                        questionEdit(q.id, {
-                          options: q.options.map((o) =>
-                            o.id === option.id
-                              ? { ...o, textKz: e.target.value }
-                              : o,
-                          ),
-                        })
-                      }
-                    />
-                  </label>
-                </div>
-                <label className="lms-inline-label">
-                  <input
-                    type="checkbox"
-                    checked={q.correctOptionIds.includes(option.id)}
-                    onChange={(e) =>
-                      questionEdit(q.id, {
-                        correctOptionIds: e.target.checked
-                          ? q.multiple
-                            ? [...q.correctOptionIds, option.id]
-                            : [option.id]
-                          : q.correctOptionIds.filter((v) => v !== option.id),
-                      })
-                    }
-                  />
-                  {t("Правильный ответ", "Дұрыс жауап")}
-                </label>
-                <button
-                  type="button"
-                  onClick={() =>
-                    questionEdit(q.id, {
-                      options: q.options.filter(
-                        (item) => item.id !== option.id,
-                      ),
-                      correctOptionIds: q.correctOptionIds.filter(
-                        (answer) => answer !== option.id,
-                      ),
-                    })
-                  }
-                >
-                  {t("Убрать ответ", "Жауапты алып тастау")}
-                </button>
-              </fieldset>
-            ))}
-            <div className="lms-actions">
-              <button
-                type="button"
-                onClick={() =>
-                  questionEdit(q.id, {
-                    options: [
-                      ...q.options,
-                      { id: crypto.randomUUID(), textRu: "", textKz: "" },
-                    ],
-                  })
-                }
-              >
-                {t("Добавить ответ", "Жауап қосу")}
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  contentEdit({
-                    exam: {
-                      ...content.exam,
-                      questions: content.exam.questions.filter(
-                        (v) => v.id !== q.id,
-                      ),
-                    },
-                  })
-                }
-              >
-                {t("Убрать вопрос", "Сұрақты алып тастау")}
-              </button>
-            </div>
-            {showValidation &&
-              (q.options.length < 2 ||
-                !q.correctOptionIds.length ||
-                (!q.multiple && q.correctOptionIds.length !== 1) ||
-                !q.promptRu.trim() ||
-                !q.promptKz.trim() ||
-                q.options.some(
-                  (option) => !option.textRu.trim() || !option.textKz.trim(),
-                )) && (
-                <p role="alert">
-                  {t(
-                    "Проверьте тексты на двух языках, минимум два варианта и правильный ответ",
-                    "Екі тілдегі мәтінді, кемінде екі нұсқаны және дұрыс жауапты тексеріңіз",
-                  )}
-                </p>
-              )}
-            {!frozen && (
-              <SaveLibraryQuestion
-                question={q}
-                courseId={id}
-                flush={() => lane.current!.flush()}
-                saved={(question) => questionEdit(q.id, question)}
-                onBusy={setBusy}
-                t={t}
-              />
-            )}
-          </details>
-        ))}
-        <button
-          type="button"
-          onClick={() => {
-            const first = crypto.randomUUID();
-            contentEdit({
-              exam: {
-                ...content.exam,
-                questions: [
-                  ...content.exam.questions,
-                  {
-                    id: crypto.randomUUID(),
-                    version: 1,
-                    category: "",
-                    promptRu: "",
-                    promptKz: "",
-                    multiple: false,
-                    options: [
-                      { id: first, textRu: "", textKz: "" },
-                      { id: crypto.randomUUID(), textRu: "", textKz: "" },
-                    ],
-                    correctOptionIds: [first],
-                  },
-                ],
-              },
-            });
-          }}
-        >
-          {t("Добавить вопрос", "Сұрақ қосу")}
-        </button>
+        <AssessmentAuthor
+          timezone={content.accessPolicy?.timezone || profile.timezone}
+          value={content.exam}
+          onChange={(exam) => contentEdit({ exam })}
+          courseId={id}
+          disabled={frozen || busy || conflict}
+          showValidation={showValidation}
+          flush={() => lane.current!.flush()}
+          onBusy={setBusy}
+          t={t}
+        />
       </fieldset>
-      <div className="lms-editor-actions">
-        <button
-          className="primary lms-primary"
-          disabled={busy || conflict}
-          onClick={() => void businessAction(frozen ? "new" : "publish")}
-        >
-          {busy
-            ? t("Подождите…", "Күтіңіз…")
-            : frozen
-              ? t("Создать новую версию", "Жаңа нұсқа жасау")
-              : t("Опубликовать", "Жариялау")}
-        </button>
+      <section
+        className="panel lms-panel"
+        id="author-review"
+        hidden={section !== "review"}
+        aria-label={t("Согласование программы", "Бағдарламаны келісу")}
+      >
+        <p role="status">
+          {t("Согласование", "Келісу")}:{" "}
+          {version.review?.state === "PENDING"
+            ? t("На проверке", "Тексеруде")
+            : version.review?.state === "APPROVED"
+              ? t("Одобрена текущая редакция", "Ағымдағы редакция мақұлданған")
+              : version.review?.state === "RETURNED"
+                ? t("Возвращено на доработку", "Түзетуге қайтарылған")
+                : t("Черновик", "Жоба")}
+        </p>
+        {version.review?.feedback && <p>{version.review.feedback}</p>}
+        {version.status === "DRAFT" && !canPublish && ["PENDING", "APPROVED"].includes(version.review?.state || "") && <p>{t("Следующий шаг — администратор согласует и опубликует программу.", "Келесі қадам — әкімші бағдарламаны келісіп, жариялайды.")}</p>}
+        {(canApproveReview || canReturnReview) && (
+          <label>
+            {t("Комментарий к решению", "Шешімге түсініктеме")}
+            <textarea
+              value={reviewFeedback}
+              onChange={(event) => setReviewFeedback(event.target.value)}
+            />
+          </label>
+        )}
+        <div className="lms-actions">
+          {canSubmitReview && (
+            <button
+              type="button"
+              className={canPublish ? undefined : "primary lms-primary"}
+              disabled={busy || conflict}
+              onClick={() => void reviewAction("SUBMIT")}
+            >
+              {t("Отправить на проверку", "Тексеруге жіберу")}
+            </button>
+          )}
+          {canApproveReview && (
+            <button
+              type="button"
+              className={canPublish ? undefined : "primary lms-primary"}
+              disabled={busy || conflict}
+              onClick={() => void reviewAction("APPROVE")}
+            >
+              {t("Одобрить редакцию", "Редакцияны мақұлдау")}
+            </button>
+          )}
+          {canReturnReview && (
+            <button
+              type="button"
+              disabled={busy || conflict || !reviewFeedback.trim()}
+              onClick={() => void reviewAction("RETURN")}
+            >
+              {t("Вернуть на доработку", "Түзетуге қайтару")}
+            </button>
+          )}
+        </div>
+      </section>
+      <div className="lms-editor-actions" hidden={section !== "review"}>
+        {(canPublish || canClone) && (
+          <button
+            className={canPublish ? "primary lms-primary" : "button"}
+            disabled={busy || conflict}
+            onClick={() => void businessAction(canPublish ? "publish" : "new")}
+          >
+            {busy
+              ? t("Подождите…", "Күтіңіз…")
+              : canPublish
+                ? t("Опубликовать", "Жариялау")
+                : t("Создать новую версию", "Жаңа нұсқа жасау")}
+          </button>
+        )}
         {versions.length > 1 && (
           <details>
             <summary>{t("История версий", "Нұсқалар тарихы")}</summary>
@@ -1688,6 +1818,11 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
           </details>
         )}
       </div>
+      {section !== "review" && <div className="lms-editor-actions">
+        <button type="button" className="primary lms-primary" onClick={() => setSection(section === "overview" ? "modules" : section === "modules" ? "exam" : section === "exam" ? "settings" : "review")}>
+          {section === "overview" ? t("К содержанию программы", "Бағдарлама мазмұнына") : section === "modules" ? t("К итоговой проверке", "Қорытынды тексеруге") : section === "exam" ? t("К условиям прохождения", "Өту шарттарына") : t("К публикации", "Жариялауға")}
+        </button>
+      </div>}
     </>
   );
 }

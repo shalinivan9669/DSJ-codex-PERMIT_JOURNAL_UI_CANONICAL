@@ -13,6 +13,8 @@ export type Context = {
   correlationId: string;
   trustedIp?: string;
   source?: string;
+  teachingMode?: boolean;
+  learningMode?: boolean;
 };
 export type DemoRequest = Request & {
   context?: Context;

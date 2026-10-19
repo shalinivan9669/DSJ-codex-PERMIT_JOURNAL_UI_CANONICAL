@@ -55,6 +55,8 @@ test(
       recoverLearner(
         {
           ip: `synthetic-${randomUUID()}`,
+          socket: {remoteAddress: "127.0.0.1"},
+          headers: {},
           correlationId: randomUUID(),
         } as DemoRequest,
         { token, password: passwords[i] },

@@ -1,5 +1,8 @@
 "use client";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import type { AccessPolicy } from "@demo/contracts/src/lms";
+import { AccessPolicyEditor } from "./access-policy-editor";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Notice } from "@demo/ui";
 import { api, downloadExport, json } from "@/lib/api";
@@ -16,6 +19,7 @@ import {
 import type { AppContext } from "@/lib/types";
 import { ExternalEvidence } from "./external-evidence";
 import { LmsDocument } from "./documents";
+import { LearnerAccess } from "./learner-access";
 import {
   LmsHeading,
   PageControls,
@@ -43,6 +47,9 @@ type Prepared = {
   }[];
 };
 export function Results({ t, context }: { t: Translate; context: AppContext }) {
+  const searchParams = useSearchParams();
+  const incomingQuery = searchParams.toString();
+  const writtenQuery = useRef<string | null>(null);
   const [data, setData] = useState<Paged<ResultEnrollment>>({
     items: [],
     total: 0,
@@ -66,7 +73,8 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
   const [downloading, setDownloading] = useState(false);
   const initializedPages = useRef(new Map<number, Set<string>>());
   const pageSelections = useRef(new Map<number, Set<string>>());
-  const staff = context.user.role !== "EMPLOYER";
+  const focusedEnrollment = useRef<string | null>(null);
+  const staff = ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"].includes(context.user.role);
   const filterKey = `demo:lms:results:${context.tenant.id}:${context.user.id}`;
   function filter<K extends keyof ResultFilters>(
     key: K,
@@ -76,33 +84,45 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
     setPage(1);
   }
   useEffect(() => {
+    if (writtenQuery.current === incomingQuery) return;
+    const query = new URLSearchParams(incomingQuery);
+    const contextKeys = ["enrollmentId", "customerId", "groupId", "courseVersionId", "sourceOrderId", "sourceRequestId"];
+    const fromContext = contextKeys.some((name) => query.has(name));
+    const queryFilters = Object.fromEntries(Object.keys({ ...initialResultFilters, enrollmentId: "", sourceOrderId: "", sourceRequestId: "", dateFrom: "", dateTo: "", bin: "", city: "", teacherUserId: "" }).flatMap((name) => query.get(name) ? [[name, name === "expiringDays" ? Number(query.get(name)) : query.get(name)!]] : []));
+    focusedEnrollment.current = query.get("enrollmentId");
     try {
       const saved = JSON.parse(
         localStorage.getItem(filterKey) || "{}",
       ) as Partial<ResultFilters>;
-      const query = new URLSearchParams(window.location.search);
       setFilters({
         ...initialResultFilters,
-        ...saved,
-        ...Object.fromEntries(
-          ["groupId", "sourceOrderId", "sourceRequestId"].flatMap((key) =>
-            query.get(key) ? [[key, query.get(key)!]] : [],
-          ),
-        ),
+        ...(fromContext ? {} : saved),
+        ...queryFilters,
       });
     } catch {
       /* Optional preferences. */
+      setFilters({ ...initialResultFilters, ...queryFilters });
     }
     setFiltersReady(true);
+    setPage(1);
     void resultsApi
       .filters()
       .then(setOptions)
       .catch((caught) => setError(caught));
-  }, [filterKey]);
+  }, [filterKey, incomingQuery]);
+  useEffect(() => {
+    initializedPages.current.clear();
+    pageSelections.current.clear();
+    setSelected(new Set());
+    setActive(null);
+  }, [filters]);
   useEffect(() => {
     if (filtersReady)
       try {
         localStorage.setItem(filterKey, JSON.stringify(filters));
+        const query = new URLSearchParams(Object.entries(resultQuery(filters)).map(([name, value]) => [name, String(value)]));
+        writtenQuery.current = query.toString();
+        window.history.replaceState(window.history.state, "", `${window.location.pathname}?${query}`);
       } catch {
         /* Optional preferences. */
       }
@@ -265,10 +285,9 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
               setActive((current) =>
                 current
                   ? value.items.find((item) => item.id === current.id) ||
-                    current
-                  : null,
+                    null
+                  : value.items.find((item) => item.id === focusedEnrollment.current) || null,
               );
-              const firstLoad = !initializedPages.current.has(page);
               const previousIds =
                 initializedPages.current.get(page) || new Set<string>();
               const currentIds = new Set(
@@ -287,8 +306,6 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                   if (!result) continue;
                   if (!(result.documentEligible ?? result.eligible))
                     next.delete(result.id);
-                  else if (firstLoad && !enrollment.documents?.length)
-                    next.add(result.id);
                 }
                 return next;
               });
@@ -296,7 +313,11 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
             }
           })
           .catch((caught) => {
-            if (alive) setError(caught);
+            if (alive) {
+              setError(caught);
+              setData({ items: [], total: 0 });
+              setActive(null);
+            }
           })
           .finally(() => {
             if (alive) setBusy(false);
@@ -309,6 +330,12 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
       clearTimeout(timer);
     };
   }, [page, refresh, filters, filtersReady]);
+  useEffect(() => {
+    const update = () => { if (!document.hidden) setRefresh((value) => value + 1); };
+    const timer = setInterval(update, 20_000);
+    window.addEventListener("focus", update);
+    return () => { clearInterval(timer); window.removeEventListener("focus", update); };
+  }, []);
   const selectedReady =
     selected.size > 0 &&
     [...selected].every((resultId) => {
@@ -324,17 +351,18 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
         )
       );
     });
-  async function prepare() {
-    if (busy || !selected.size) return;
+  async function prepare(resultIds = [...selected]) {
+    if (busy || !resultIds.length) return;
+    const targets = new Set(resultIds);
     setBusy(true);
     setError("");
     try {
       const value = await api<Prepared>("/lms/results/documents", {
         method: "POST",
-        body: json({ resultIds: [...selected] }),
+        body: json({ resultIds }),
       });
       const continuing = prepared?.errors.some((item) =>
-        selected.has(item.resultId),
+        targets.has(item.resultId),
       );
       const nextPrepared =
         continuing && prepared
@@ -349,7 +377,7 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
               ],
               errors: [
                 ...prepared.errors.filter(
-                  (item) => !selected.has(item.resultId),
+                  (item) => !targets.has(item.resultId),
                 ),
                 ...value.errors,
               ],
@@ -392,21 +420,21 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
     }
   }
   const rowErrors = new Map(prepared?.errors.map((e) => [e.resultId, e]) || []);
-  const downloadable =
-    !!prepared?.items.length &&
-    prepared.items.every(
+  const readyDocuments =
+    prepared?.items.filter(
       (item) =>
         !["VOIDED", "SUPERSEDED", "REJECTED"].includes(item.status) &&
         item.status === "ISSUED" &&
         item.artifacts.some((artifact) => artifact.kind === format),
-    );
+    ) || [];
+  const downloadable = readyDocuments.length > 0;
   async function download() {
-    if (!prepared || downloading) return;
+    if (!prepared || !readyDocuments.length || downloading) return;
     setDownloading(true);
     setError("");
     try {
       const value = await resultsApi.bundle(
-        prepared.items.map((item) => item.id),
+        readyDocuments.map((item) => item.id),
         format,
       );
       setBundle(value);
@@ -431,6 +459,14 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
           </button>
         )}
       </LmsHeading>
+      <nav className="lms-actions" aria-label={t("Контекст обучения", "Оқу контексті")}>
+        <Link href={`/lms/reports?${new URLSearchParams(Object.entries(resultQuery(filters)).map(([name, value]) => [name, String(value)]))}`}>
+          {t("Отчёт по этой выборке", "Осы іріктеу бойынша есеп")}
+        </Link>
+        {filters.groupId && <Link href={`/lms/groups/${filters.groupId}`}>{t("Вернуться к группе", "Топқа оралу")}</Link>}
+        {staff && filters.sourceOrderId && <Link href={`/workbench?orderId=${filters.sourceOrderId}`}>{t("Вернуться к заказу", "Тапсырысқа оралу")}</Link>}
+        {staff && filters.sourceRequestId && <Link href={`/requests/${filters.sourceRequestId}`}>{t("К подготовке документов", "Құжаттарды дайындауға")}</Link>}
+      </nav>
       {!!error && (
         <Notice>
           {lmsError(error, t)}
@@ -718,10 +754,15 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                 disabled={!downloadable || downloading}
                 onClick={() => void download()}
               >
-                {t("Получить комплект", "Жинақты алу")}
+                {readyDocuments.length < prepared.items.length
+                  ? `${t("Получить готовую часть", "Дайын бөлігін алу")} · ${readyDocuments.length}`
+                  : t("Получить комплект", "Жинақты алу")}
               </button>
             </div>
           </div>
+          {readyDocuments.length < prepared.items.length && <p className="lms-list-meta">
+            {t("Готово к скачиванию", "Жүктеуге дайын")}: {readyDocuments.length} · {t("Ожидается", "Күтілуде")}: {prepared.items.length - readyDocuments.length}
+          </p>}
           <ul className="lms-list">
             {[
               ...new Map(
@@ -742,6 +783,13 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
         </details>
       )}
       <section className="panel lms-panel" aria-busy={busy}>
+        {staff && !!data.items.length && <div className="lms-actions">
+          <button onClick={() => setSelected((current) => new Set([...current, ...data.items.flatMap((item) => (item.result?.documentEligible ?? item.result?.eligible) ? [item.result!.id] : [])]))}>
+            {t("Выбрать допустимые результаты на странице", "Беттегі рұқсат етілген нәтижелерді таңдау")}
+          </button>
+          {!!selected.size && <button className="text-button" onClick={() => setSelected(new Set())}>{t("Снять выбор", "Таңдауды алып тастау")}</button>}
+          <span>{t("Выбрано результатов", "Таңдалған нәтижелер")}: {selected.size}</span>
+        </div>}
         <div
           className="lms-table-scroll"
           tabIndex={0}
@@ -822,7 +870,14 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                         )}
                         <button
                           className="text-button"
-                          onClick={() => setActive(enrollment)}
+                          onClick={() => {
+                            setActive(enrollment);
+                            focusedEnrollment.current = enrollment.id;
+                            const url = new URL(window.location.href);
+                            url.searchParams.set("enrollmentId", enrollment.id);
+                            writtenQuery.current = url.searchParams.toString();
+                            window.history.replaceState(window.history.state, "", url);
+                          }}
                         >
                           {t(
                             enrollment.recipient?.data.fullNameRu || "",
@@ -906,16 +961,17 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                       {enrollment.documents?.map((document) => (
                         <p key={document.id}>
                           <Status value={document.legalForm} t={t} />
-                          {staff && (
-                            <Link
-                              className="button"
-                              href={`/requests/${document.requestId}`}
-                            >
-                              {t("Посмотреть", "Қарау")}
-                            </Link>
-                          )}
+                          {" · "}<Status value={document.status} t={t} />
+                          <button className="text-button" onClick={() => setActive(enrollment)}>{t("Открыть документ", "Құжатты ашу")}</button>
                         </p>
                       ))}
+                      {!enrollment.documents?.length && (
+                        <button className="text-button" onClick={() => setActive(enrollment)}>
+                          {(result?.documentEligible ?? result?.eligible)
+                            ? t("Готово к подготовке", "Дайындауға дайын")
+                            : t("Что требуется для документа", "Құжат үшін не қажет")}
+                        </button>
+                      )}
                     </td>
                   </tr>
                 );
@@ -925,7 +981,9 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
         </div>
         {!data.items.length && !busy && (
           <p className="lms-empty">
-            {t("Назначений пока нет.", "Тағайындаулар әлі жоқ.")}
+            {t("В этой выборке назначений нет.", "Бұл іріктеуде тағайындаулар жоқ.")} {" "}
+            <button className="text-button" onClick={() => { setFilters(initialResultFilters); setPage(1); }}>{t("Сбросить фильтры", "Сүзгілерді тазалау")}</button>
+            {staff && <Link href="/lms/assign">{t("Организовать обучение", "Оқуды ұйымдастыру")}</Link>}
           </p>
         )}
         <PageControls
@@ -951,15 +1009,15 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
                   "",
               )}
             </h2>
-            <button onClick={() => setActive(null)}>
+            <button onClick={() => { focusedEnrollment.current = null; setActive(null); }}>
               {t("Закрыть", "Жабу")}
             </button>
           </div>
           {staff && (
-            <InviteAccess
-              enrollment={active}
+            <LearnerAccess
+              recipientIds={[active.recipientId]}
               t={t}
-              canRecover={["ADMIN", "DIRECTOR"].includes(context.user.role)}
+              canRecover={["SUPER_ADMIN", "ADMIN", "DIRECTOR"].includes(context.user.role)}
             />
           )}
           <EnrollmentDetails
@@ -967,7 +1025,10 @@ export function Results({ t, context }: { t: Translate; context: AppContext }) {
             enrollment={active}
             t={t}
             staff={staff}
-            canReview={["ADMIN", "DIRECTOR"].includes(context.user.role)}
+            canReview={["SUPER_ADMIN", "ADMIN", "DIRECTOR"].includes(context.user.role)}
+            revision={refresh}
+            preparing={busy}
+            onPrepare={() => { if (active.result) void prepare([active.result.id]); }}
             onChanged={() => setRefresh((v) => v + 1)}
           />
         </section>
@@ -981,12 +1042,18 @@ function EnrollmentDetails({
   canReview,
   staff,
   onChanged,
+  revision,
+  preparing,
+  onPrepare,
 }: {
   enrollment: Enrollment;
   t: Translate;
   canReview: boolean;
   staff: boolean;
   onChanged: () => void;
+  revision: number;
+  preparing: boolean;
+  onPrepare: () => void;
 }) {
   const [data, setData] = useState<Learning | null>(null),
     [error, setError] = useState<unknown>(null);
@@ -994,21 +1061,28 @@ function EnrollmentDetails({
     [action, setAction] = useState("correct"),
     [busy, setBusy] = useState(false),
     [done, setDone] = useState(false);
-  const [dueAt, setDueAt] = useState(enrollment.dueAt?.slice(0, 10) || "");
+  const [accessPolicy, setAccessPolicy] = useState<AccessPolicy>(
+    () =>
+      enrollment.accessPolicy || {
+        mode: enrollment.expiresAt || enrollment.dueAt ? "FIXED" : "UNLIMITED",
+        endsAt: enrollment.expiresAt || enrollment.dueAt || null,
+        timezone: "Asia/Qyzylorda",
+      },
+  );
   const [extended, setExtended] = useState(false);
   useEffect(() => {
     let alive = true;
     void api<Learning>(`/lms/enrollments/${enrollment.id}`)
       .then((value) => {
-        if (alive) setData(value);
+        if (alive) { setData(value); setError(null); }
       })
       .catch((caught) => {
-        if (alive) setError(caught);
+        if (alive) { setError(caught); setData(null); }
       });
     return () => {
       alive = false;
     };
-  }, [enrollment.id, enrollment.result?.id]);
+  }, [enrollment.id, enrollment.result?.id, revision]);
   async function amend(event: FormEvent) {
     event.preventDefault();
     if (!enrollment.result || busy) return;
@@ -1030,6 +1104,27 @@ function EnrollmentDetails({
   return (
     <>
       {!!error && <Notice>{lmsError(error, t)}</Notice>}
+      {data && !data.documents.some((document) => document.resultId === enrollment.result?.id) && <section className="lms-panel" aria-live="polite">
+        <h3>{t("Следующий шаг к документам", "Құжаттарға келесі қадам")}</h3>
+        <p>{(enrollment.result?.documentEligible ?? enrollment.result?.eligible)
+          ? t("Результат допускает подготовку документов центром.", "Нәтиже орталыққа құжаттарды дайындауға мүмкіндік береді.")
+          : data.attempts.some((attempt) => attempt.state === "SUBMITTED")
+            ? t("Ожидается решение преподавателя или эксперта по отправленной работе.", "Жіберілген жұмыс бойынша оқытушының немесе сарапшының шешімі күтілуде.")
+            : data.examReadiness.missingLessonIds.length
+              ? t(`Слушателю нужно завершить обязательные элементы: ${data.examReadiness.missingLessonIds.length}.`, `Тыңдаушы міндетті элементтерді аяқтауы керек: ${data.examReadiness.missingLessonIds.length}.`)
+              : data.profile.assessmentKind === "EXTERNAL_AUTHORIZED"
+                ? t("Центру нужно внести основание внешнего результата; директору — подтвердить его.", "Орталық сыртқы нәтиженің негізін енгізуі, директор оны растауы керек.")
+                : enrollment.result?.verdict === "FAILED"
+                  ? t("Положительного результата нет. Следующий допуск определяется правилами программы и центром.", "Оң нәтиже жоқ. Келесі рұқсатты бағдарлама ережелері мен орталық анықтайды.")
+                  : t("Нужен положительный подтверждённый результат и выполнение условий программы.", "Оң расталған нәтиже және бағдарлама шарттарының орындалуы қажет.")}</p>
+        {data.examReadiness.reasonCode && <p>{lmsError({ code: data.examReadiness.reasonCode }, t)}</p>}
+        <div className="lms-actions">
+          {staff && (enrollment.result?.documentEligible ?? enrollment.result?.eligible) && <button className="primary" disabled={preparing} onClick={onPrepare}>{preparing ? t("Подготовка…", "Дайындалуда…") : t("Подготовить документы", "Құжаттарды дайындау")}</button>}
+          {enrollment.groupId && <Link href={`/lms/groups/${enrollment.groupId}`}>{t("Открыть группу", "Топты ашу")}</Link>}
+          {staff && enrollment.sourceOrderId && <Link href={`/workbench?orderId=${enrollment.sourceOrderId}`}>{t("Открыть заказ", "Тапсырысты ашу")}</Link>}
+          <Link href={`/lms/reports?enrollmentId=${enrollment.id}`}>{t("Отчёт по назначению", "Тағайындау бойынша есеп")}</Link>
+        </div>
+      </section>}
       {staff && data?.profile.assessmentKind === "EXTERNAL_AUTHORIZED" && (
         <ExternalEvidence
           enrollmentId={enrollment.id}
@@ -1045,6 +1140,7 @@ function EnrollmentDetails({
           t={t}
           canPrepare={staff}
           canAttest={canReview}
+          revision={revision}
           onChanged={onChanged}
         />
       ))}
@@ -1061,7 +1157,7 @@ function EnrollmentDetails({
                 await api(`/lms/enrollments/${enrollment.id}/extend`, {
                   method: "POST",
                   body: json({
-                    dueAt: new Date(`${dueAt}T23:59:59`).toISOString(),
+                    accessPolicy,
                   }),
                 });
                 setExtended(true);
@@ -1073,18 +1169,21 @@ function EnrollmentDetails({
               }
             }}
           >
-            <label>
-              {t("Доступ до", "Қолжетімділік аяқталуы")}
-              <input
-                required
-                type="date"
-                value={dueAt}
-                onChange={(event) => {
-                  setDueAt(event.target.value);
-                  setExtended(false);
-                }}
-              />
-            </label>
+            <AccessPolicyEditor
+              value={accessPolicy}
+              onChange={(value) => {
+                setAccessPolicy(value);
+                setExtended(false);
+              }}
+              t={t}
+              disabled={busy}
+            />
+            <p className="muted">
+              {t(
+                "Индивидуальный период имеет приоритет над настройками группы и курса. Срок выполнения задания проверяется отдельно.",
+                "Жеке кезең топ пен курс параметрлерінен басым. Тапсырманы орындау мерзімі бөлек тексеріледі.",
+              )}
+            </p>
             {extended && (
               <p role="status">{t("Срок обновлён", "Мерзім жаңартылды")}</p>
             )}
@@ -1144,96 +1243,5 @@ function EnrollmentDetails({
         </details>
       )}
     </>
-  );
-}
-function InviteAccess({
-  enrollment,
-  t,
-  canRecover,
-}: {
-  enrollment: Enrollment;
-  t: Translate;
-  canRecover: boolean;
-}) {
-  const [email, setEmail] = useState(""),
-    [url, setUrl] = useState(""),
-    [error, setError] = useState<unknown>(null),
-    [busy, setBusy] = useState(false);
-  async function invite(event: FormEvent) {
-    event.preventDefault();
-    setBusy(true);
-    setError("");
-    try {
-      const value = await api<{ url: string }>(
-        enrollment.learnerUserId ? "/lms/recovery" : "/lms/invites",
-        {
-          method: "POST",
-          body: json(
-            enrollment.learnerUserId
-              ? { userId: enrollment.learnerUserId }
-              : { recipientId: enrollment.recipientId, email },
-          ),
-        },
-      );
-      setUrl(new URL(value.url, window.location.origin).toString());
-    } catch (caught) {
-      setError(caught);
-    } finally {
-      setBusy(false);
-    }
-  }
-  if (enrollment.learnerUserId && !canRecover) return null;
-  return (
-    <details>
-      <summary>{t("Доступ к обучению", "Оқуға қолжетімділік")}</summary>
-      {!!error && <Notice>{lmsError(error, t)}</Notice>}
-      {url ? (
-        <>
-          <label>
-            {enrollment.learnerUserId
-              ? t(
-                  "Ссылка восстановления доступа",
-                  "Қолжетімділікті қалпына келтіру сілтемесі",
-                )
-              : t("Ссылка приглашения", "Шақыру сілтемесі")}
-            <input readOnly value={url} onFocus={(e) => e.target.select()} />
-          </label>
-          <button
-            onClick={() =>
-              void navigator.clipboard
-                .writeText(url)
-                .catch((caught) => setError(caught))
-            }
-          >
-            {t("Скопировать", "Көшіру")}
-          </button>
-        </>
-      ) : (
-        <form onSubmit={invite}>
-          {!enrollment.learnerUserId && (
-            <label>
-              {t(
-                "Электронная почта слушателя",
-                "Тыңдаушының электрондық поштасы",
-              )}
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-          )}
-          <button className="primary" disabled={busy}>
-            {enrollment.learnerUserId
-              ? t(
-                  "Создать ссылку восстановления",
-                  "Қалпына келтіру сілтемесін жасау",
-                )
-              : t("Создать приглашение", "Шақыру жасау")}
-          </button>
-        </form>
-      )}
-    </details>
   );
 }

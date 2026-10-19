@@ -36,5 +36,15 @@ def export_lms_rows(payload, out):
             row = json.loads(line)
             ws.append(list(cells([row.get(column['field'], '') for column in columns])))
             count += 1
+    if payload.get('snapshotAt'):
+        meta = wb.create_sheet('Срез' if payload.get('language') != 'kz' else 'Кесінді')
+        for key, value in [('Отчёт / Есеп', payload.get('title')), ('Определение / Анықтама', payload.get('definition')), ('Срез / Кесінді', payload['snapshotAt']), ('Часовой пояс / Уақыт белдеуі', payload.get('timezone')), ('Строк / Жолдар', count), ('Фильтры / Сүзгілер', json.dumps(payload.get('filters', {}), ensure_ascii=False)), ('Статус / Күйі', 'Отчётный срез, не юридический документ / Есептік кесінді, заңды құжат емес')]:
+            meta.append(list(cells([key, value])))
+        for key, value in payload.get('summary', {}).items():
+            from lms_report import SUMMARY_LABELS
+            label = SUMMARY_LABELS.get(key, (key, key))[1 if payload.get('language') == 'kz' else 0]
+            meta.append(list(cells([label, value])))
+        meta.column_dimensions['A'].width = 32
+        meta.column_dimensions['B'].width = 85
     wb.save(out)
     return {'rows': count, 'columns': [column['title'] for column in columns], 'format': 'XLSX'}

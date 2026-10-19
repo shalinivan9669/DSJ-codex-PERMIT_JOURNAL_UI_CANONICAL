@@ -1,17 +1,19 @@
 "use client";
+import { useCabinetText, useCabinetError } from "./cabinet-language";
 import { useState } from "react";
 import { Notice } from "@demo/ui";
-import { api, errorText, json } from "@/lib/api";
+import { api, json } from "@/lib/api";
 import { templateLabels } from "@/lib/types";
 export function VerificationLink({
   documents,
 }: {
   documents: { id: string; number: string; templateId: string }[];
 }) {
+  const tr = useCabinetText();
   const [documentId, setDocumentId] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [result, setResult] = useState<{
     id: string;
     path: string;
@@ -20,25 +22,22 @@ export function VerificationLink({
   const [revoked, setRevoked] = useState(false);
   return (
     <details className="outcome-entry">
-      <summary>Ссылка и QR для проверки записи</summary>
+      <summary>{tr("Ссылка и QR для проверки записи")}</summary>
       {error && <Notice>{error}</Notice>}
       <p>
-        Открывает минимальную запись эмитента с номером и состоянием документа.
-        ФИО и весь комплект по ссылке не публикуются.
-      </p>
+        {tr("Открывает минимальную запись эмитента с номером и состоянием документа. ФИО и весь комплект по ссылке не публикуются.")}</p>
       <label>
-        Выданный документ
-        <select
+        {tr("Выданный документ")}<select
           value={documentId}
           onChange={(e) => {
             setDocumentId(e.target.value);
             setConfirmed(false);
           }}
         >
-          <option value="">Выберите документ</option>
+          <option value="">{tr("Выберите документ")}</option>
           {documents.map((d) => (
             <option key={d.id} value={d.id}>
-              {templateLabels[d.templateId] || d.templateId} · № {d.number}
+              {tr(templateLabels[d.templateId] || d.templateId)} · № {d.number}
             </option>
           ))}
         </select>
@@ -49,8 +48,7 @@ export function VerificationLink({
           checked={confirmed}
           onChange={(e) => setConfirmed(e.target.checked)}
         />
-        Разрешаю публичную проверку выбранной записи эмитента
-      </label>
+        {tr("Разрешаю публичную проверку выбранной записи эмитента")}</label>
       <button
         disabled={busy || !documentId || !confirmed}
         onClick={async () => {
@@ -69,23 +67,19 @@ export function VerificationLink({
             setRevoked(false);
             setConfirmed(false);
           } catch (c) {
-            setError(errorText(c));
+            setError(c);
           } finally {
             setBusy(false);
           }
         }}
       >
-        Создать ссылку и QR
-      </button>
+        {tr("Создать ссылку и QR")}</button>
       {result && !revoked && (
         <div className="verification-result">
           <p>
-            Сохраните ссылку: секретная часть показывается только после
-            создания.
-          </p>
+            {tr("Сохраните ссылку: секретная часть показывается только после создания.")}</p>
           <a href={result.path} target="_blank" rel="noreferrer">
-            Открыть публичную проверку
-          </a>
+            {tr("Открыть публичную проверку")}</a>
           <button
             onClick={() =>
               void navigator.clipboard
@@ -97,24 +91,22 @@ export function VerificationLink({
                 )
             }
           >
-            Копировать ссылку
-          </button>
+            {tr("Копировать ссылку")}</button>
           {result.qrDataUrl && (
             <>
               <img
                 className="verification-qr"
                 src={result.qrDataUrl}
-                alt="QR для проверки записи эмитента"
+                alt={tr("QR для проверки записи эмитента")}
                 width={240}
                 height={240}
               />
               <a
                 className="button"
                 href={result.qrDataUrl}
-                download="QR-проверка-записи.png"
+                download={tr("QR-проверка-записи.png")}
               >
-                Скачать QR
-              </a>
+                {tr("Скачать QR")}</a>
             </>
           )}
           <button
@@ -128,25 +120,21 @@ export function VerificationLink({
                 });
                 setRevoked(true);
               } catch (c) {
-                setError(errorText(c));
+                setError(c);
               } finally {
                 setBusy(false);
               }
             }}
           >
-            Отозвать публичную ссылку
-          </button>
+            {tr("Отозвать публичную ссылку")}</button>
         </div>
       )}
       {revoked && (
         <Notice kind="success">
-          Ссылка отозвана. Публичная проверка по ней недоступна.
-        </Notice>
+          {tr("Ссылка отозвана. Публичная проверка по ней недоступна.")}</Notice>
       )}
       <p className="fine-print">
-        QR не является ЭЦП или государственным реестром и не подтверждает
-        неизменность изменённого DOCX.
-      </p>
+        {tr("QR не является ЭЦП или государственным реестром и не подтверждает неизменность изменённого DOCX.")}</p>
     </details>
   );
 }

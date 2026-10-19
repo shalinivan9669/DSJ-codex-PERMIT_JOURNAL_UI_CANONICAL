@@ -26,7 +26,13 @@ export type CalendarVersion = {
 type Settings = {
   connection: string;
   dataAccessPolicy: DataAccessPolicy;
-  connections: { destination: string; dataAccessPolicy: DataAccessPolicy }[];
+  connections: {
+    destination: string;
+    dataAccessPolicy: DataAccessPolicy;
+    effectiveState: string;
+    reason: string;
+    manualAvailable: boolean;
+  }[];
   calendarVersions: CalendarVersion[];
 };
 type Subjects = {
@@ -124,6 +130,42 @@ export function SanitarySettings({
               )}
             </summary>
             <AccessPolicy t={t} settings={settings} />
+            <ul className="lms-list">
+              {settings.connections.map((connection) => (
+                <li key={connection.destination}>
+                  <span>
+                    <strong>{connection.destination}</strong>
+                    <br />
+                    <Status value={connection.effectiveState} t={t} />
+                    <br />
+                    {connection.reason === "CONTRACT_REQUIRED"
+                      ? t(
+                          "Нужны договор и параметры получателя для автоматической передачи.",
+                          "Автоматты жіберу үшін шарт пен алушы параметрлері қажет.",
+                        )
+                      : connection.reason === "ACCESS_POLICY_REQUIRED"
+                        ? t(
+                            "Проверьте основания доступа перед автоматической передачей.",
+                            "Автоматты жібермес бұрын қолжетімділік негіздерін тексеріңіз.",
+                          )
+                        : connection.reason === "TEST_ENVIRONMENT_ONLY"
+                          ? t(
+                              "Доступно только тестовое подключение.",
+                              "Тек сынақ қосылымы қолжетімді.",
+                            )
+                          : t(
+                              "Автоматическая передача не настроена.",
+                              "Автоматты жіберу бапталмаған.",
+                            )}
+                    <br />
+                    {t(
+                      "Доступны выгрузка списка и регистрация фактического подтверждения.",
+                      "Тізімді жүктеу және нақты растауды тіркеу қолжетімді.",
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </details>
           {subjects && (
             <details>

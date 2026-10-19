@@ -1,0 +1,25 @@
+.settings-layout, .settings-panel, .settings-panel > *, .own-password-form, .audit-log { min-width: 0; max-width: 100%; }
+.own-password-form label { display: grid; gap: .4rem; margin-block: .75rem; }
+.own-password-form input { width: 100%; min-width: 0; }
+.settings-panel button, .settings-panel .button, .own-password-form button, .own-password-form .button, .audit-log summary { min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
+.settings-panel pre { max-width: 100%; overflow: auto; }
+.settings-panel .hash, .settings-panel .outcome-entry, .audit-log td { overflow-wrap: anywhere; }
+.audit-log .table-scroll { max-width: 100%; }
+.audit-log table { min-width: 760px; }
+.audit-log td { max-width: 320px; vertical-align: top; }
+.audit-log td small { display: block; }
+.audit-values { margin: .5rem 0; }
+.audit-values > div { margin-bottom: .45rem; }
+.audit-values dt { font-weight: 600; }
+.audit-values dd { margin-left: 0; }
+.audit-log h3 { font-size: .95rem; margin-block: .8rem .35rem; }
+@media (max-width: 600px) {
+  .app-header .session { min-width: 0; max-width: 100%; flex-wrap: wrap; gap: 8px; }
+  .app-header .session > a { min-width: 0; overflow-wrap: anywhere; }
+  .settings-panel .commission-row { display: flex; flex-direction: column; align-items: stretch; }
+  .settings-panel .commission-row > * { width: 100%; min-width: 0; }
+  .settings-panel .form-grid { grid-template-columns: minmax(0, 1fr); }
+  .settings-nav { max-width: 100%; }
+  .settings-nav button { min-width: 0; flex-shrink: 0; }
+  .settings-panel .modal-actions, .settings-panel .section-heading { flex-wrap: wrap; }
+}

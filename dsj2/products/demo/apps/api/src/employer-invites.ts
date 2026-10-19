@@ -180,12 +180,20 @@ export async function inspectEmployerInvite(req: DemoRequest, input: unknown) {
       id: invite.createdBy,
       tenantId: invite.tenantId,
       active: true,
-      role: "ADMIN",
     },
   });
-  if (!tenant?.active || !creator) invalid();
+  if (!tenant?.active || !creator || !canManageCenter(creator.role)) invalid();
+  const customer = await db.customerOrganization.findFirst({
+    where: { id: invite.customerId, tenantId: invite.tenantId },
+  });
+  if (!customer) invalid();
   return {
     existingAccount: !!invite.existingUserId,
+    customerNameRu: customer.nameRu,
+    customerNameKz: customer.nameKz,
+    centerName: tenant.name,
+    displayName: invite.displayName,
+    permissions: invite.permissions,
     expiresAt: invite.expiresAt,
     accessExpiresAt: invite.accessExpiresAt,
   };
@@ -230,10 +238,10 @@ export async function exchangeEmployerInvite(
         id: invite.createdBy,
         tenantId: invite.tenantId,
         active: true,
-        role: "ADMIN",
       },
     });
-    if (!tenant?.active || !creator) invalid();
+    if (!tenant?.active || !creator || !canManageCenter(creator.role))
+      invalid();
     let user = await tx.user.findUnique({ where: { email: invite.email } });
     if (invite.existingUserId) {
       // Use the same lock order as membership revocation, then revalidate the principal.

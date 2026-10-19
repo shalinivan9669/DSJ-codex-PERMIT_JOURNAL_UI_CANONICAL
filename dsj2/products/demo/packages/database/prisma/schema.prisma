@@ -1,6 +1,193 @@
 generator client {
   provider = "prisma-client-js"
 }
+
+// Operations pass 02: additive autonomous workflows; old facts keep their defaults.
+model LmsApplication {
+  id String @id @default(uuid())
+  tenantId String
+  kind String
+  courseVersionId String
+  actorId String?
+  recipientId String?
+  customerId String?
+  contact Json
+  quantity Int
+  comment String @default("")
+  state String @default("NEW")
+  revision Int @default(0)
+  assignedTo String?
+  reason String?
+  orderId String?
+  operationId String?
+  enrollmentId String?
+  idempotencyKey String
+  inputHash String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@unique([tenantId,idempotencyKey])
+  @@index([tenantId,state,createdAt,id])
+  @@index([tenantId,actorId,createdAt,id])
+  @@index([tenantId,orderId])
+}
+model LmsEmployerImport {
+  id String @id @default(uuid())
+  tenantId String
+  customerId String
+  actorId String
+  confirmedBy String?
+  courseVersionId String
+  sourceOrderId String?
+  sourceRequestId String?
+  groupId String?
+  groupName String @default("")
+  dueAt DateTime?
+  state String @default("DRAFT")
+  revision Int @default(0)
+  input Json
+  inputHash String
+  operationId String?
+  cursor Int @default(0)
+  errorCode String?
+  leaseToken String?
+  leaseUntil DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@index([tenantId,actorId,updatedAt])
+  @@index([state,leaseUntil])
+}
+model LmsEmployerImportRow {
+  id String @id @default(uuid())
+  tenantId String
+  importId String
+  sourceRow Int
+  recipientId String?
+  outcome String
+  errorCode String?
+  @@unique([tenantId,importId,sourceRow])
+}
+model LmsReportJob {
+  id String @id @default(uuid())
+  tenantId String
+  requestedBy String
+  requestedRole String
+  scopePolicy Json
+  reportKind String
+  format String
+  language String
+  filters Json
+  requestKey String
+  payloadHash String
+  status String @default("PENDING")
+  snapshotAt DateTime @default(now())
+  totalRows Int @default(0)
+  progress Int @default(0)
+  attempts Int @default(0)
+  runAfter DateTime @default(now())
+  leaseUntil DateTime?
+  leaseOwner String?
+  fencingToken Int @default(0)
+  errorCode String?
+  storageKey String?
+  sha256 String?
+  size Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt DateTime
+  @@unique([tenantId,requestedBy,requestKey])
+  @@unique([tenantId,id])
+  @@index([status,runAfter,leaseUntil])
+}
+model LmsReportRow {
+  id String @id @default(uuid())
+  tenantId String
+  jobId String
+  ordinal Int
+  enrollmentId String?
+  payload Json
+  @@unique([jobId,ordinal])
+  @@index([tenantId,jobId,enrollmentId])
+}
+model LmsReportScope {
+  tenantId String
+  jobId String
+  enrollmentId String
+  @@id([jobId,enrollmentId])
+  @@index([tenantId,jobId])
+}
+model MfaFactor {
+  userId String @id
+  tenantId String
+  secretCiphertext String?
+  pendingCiphertext String?
+  pendingExpiresAt DateTime?
+  enabledAt DateTime?
+  lastTotpStep Int @default(-1)
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,userId])
+}
+model MfaRecoveryCode {
+  id String @id @default(uuid())
+  tenantId String
+  userId String
+  codeHash String
+  usedAt DateTime?
+  createdAt DateTime @default(now())
+  @@unique([userId,codeHash])
+}
+model MfaChallenge {
+  id String @id
+  tenantId String
+  userId String
+  sessionVersion Int
+  attempts Int @default(0)
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([userId,createdAt])
+}
+model MfaReauth {
+  id String @id
+  tenantId String
+  userId String
+  sessionId String
+  purpose String
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+}
+model LmsNotificationEvent {
+  id String @id @default(uuid())
+  tenantId String
+  userId String
+  sourceType String
+  sourceId String
+  enrollmentId String?
+  kind String
+  deliveryKey String
+  titleRu String
+  titleKz String
+  href String?
+  state String @default("PENDING")
+  attempts Int @default(0)
+  runAfter DateTime @default(now())
+  leaseUntil DateTime?
+  leaseOwner String?
+  deliveredAt DateTime?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,userId,deliveryKey])
+  @@index([state,runAfter,leaseUntil])
+}
+model LmsNotificationCheckpoint {
+  tenantId String @id
+  activatedAt DateTime @default(now())
+  enrollmentCursor String @default("")
+  renewalCursor String @default("")
+  renewalScannedAt DateTime?
+  scannedAt DateTime?
+}
 datasource db {
   provider = "postgresql"
   url = env("DATABASE_URL")
@@ -12,6 +199,8 @@ model Tenant {
   timezone String @default("Asia/Almaty")
   active Boolean @default(true)
   demoOnly Boolean @default(false)
+  mfaRequiredStaff Boolean @default(false)
+  learnerRegistrationEnabled Boolean?
   createdAt DateTime @default(now())
 }
 
@@ -53,6 +242,11 @@ model LearnerRecovery {
   createdAt DateTime @default(now())
 }
 model Course {
+  publicCatalogEnabled Boolean @default(false)
+  publicSummaryRu String @default("")
+  publicSummaryKz String @default("")
+  teachingBindings LmsTeachingBinding[]
+  learningVersions CourseVersion[]
   id String @id @default(uuid())
   tenantId String
   titleRu String
@@ -80,6 +274,8 @@ model RegulatoryProfileVersion {
   @@unique([tenantId,id])
 }
 model CourseVersion {
+  teachingCourse Course @relation(fields: [tenantId,courseId], references: [tenantId,id], onDelete: Restrict, onUpdate: NoAction)
+  learningEnrollments Enrollment[]
   id String @id @default(uuid())
   tenantId String
   courseId String
@@ -112,6 +308,10 @@ model LmsMaterial {
   @@index([tenantId,courseId])
 }
 model Enrollment {
+  attemptCycle String @default("INITIAL")
+  groupMemberships LmsGroupMember[]
+  learningVersion CourseVersion @relation(fields: [tenantId,courseVersionId], references: [tenantId,id], onDelete: Restrict, onUpdate: NoAction)
+  courseGroup LmsGroup? @relation(fields: [tenantId,groupId], references: [tenantId,id], onDelete: Restrict, onUpdate: NoAction)
   id String @id @default(uuid())
   tenantId String
   courseVersionId String
@@ -124,11 +324,13 @@ model Enrollment {
   sourceOrderId String?
   dueAtOverride Boolean @default(false)
   status String @default("ACTIVE")
-  dueAt DateTime
+  dueAt DateTime?
+  startsAt DateTime?
+  accessPolicy Json?
   assignedBy String
   assignedAt DateTime @default(now())
   completedAt DateTime?
-  @@unique([tenantId,courseVersionId,recipientId])
+  @@unique([tenantId,courseVersionId,recipientId,attemptCycle])
   @@unique([tenantId,id])
   @@index([tenantId,learnerUserId,status])
   @@index([tenantId,customerId,status])
@@ -139,6 +341,9 @@ model Enrollment {
   @@index([tenantId,dueAt,id])
 }
 model LmsGroup {
+  members LmsGroupMember[]
+  teachingBindings LmsTeachingBinding[]
+  learningEnrollments Enrollment[]
   id String @id @default(uuid())
   tenantId String
   name String
@@ -146,7 +351,9 @@ model LmsGroup {
   customerId String?
   sourceRequestId String?
   sourceOrderId String?
-  dueAt DateTime
+  dueAt DateTime?
+  startsAt DateTime?
+  accessPolicy Json?
   createdBy String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -154,6 +361,8 @@ model LmsGroup {
   @@index([tenantId,createdAt,id])
 }
 model LmsGroupMember {
+  group LmsGroup @relation(fields: [tenantId,groupId], references: [tenantId,id], onDelete: Restrict, onUpdate: NoAction)
+  enrollment Enrollment @relation(fields: [tenantId,enrollmentId], references: [tenantId,id], onDelete: Restrict, onUpdate: NoAction)
   id String @id @default(uuid())
   tenantId String
   groupId String
@@ -232,6 +441,8 @@ model LessonProgress {
   positionSeconds Float @default(0)
   intervals Json @default("[]")
   lastSeenAt DateTime?
+  activeSeconds Int @default(0)
+  lastInteractionAt DateTime?
   acknowledgedAt DateTime?
   completedAt DateTime?
   updatedAt DateTime @updatedAt
@@ -244,6 +455,8 @@ model ExamAttempt {
   courseVersionId String
   regulatoryProfileVersionId String
   assessmentKind String
+  assessmentId String @default("FINAL")
+  purpose String @default("FINAL")
   ordinal Int
   state String @default("IN_PROGRESS")
   activeKey String? @unique
@@ -253,12 +466,226 @@ model ExamAttempt {
   startedAt DateTime @default(now())
   deadlineAt DateTime
   finishedAt DateTime?
+  submittedAt DateTime?
+  gradedAt DateTime?
+  grading Json?
   score Int?
   maximum Int?
   verdict String?
-  @@unique([tenantId,enrollmentId,ordinal])
+  @@unique([tenantId,enrollmentId,assessmentId,ordinal])
   @@unique([tenantId,id])
   @@index([state,deadlineAt])
+  @@index([tenantId,enrollmentId,assessmentId,state])
+}
+model LmsTeachingBinding {
+  course Course @relation(fields: [tenantId,courseId], references: [tenantId,id], onDelete: Restrict, onUpdate: NoAction)
+  group LmsGroup? @relation(fields: [tenantId,groupId], references: [tenantId,id], onDelete: Restrict, onUpdate: NoAction)
+  id String @id @default(uuid())
+  tenantId String
+  userId String
+  role String
+  courseId String
+  groupId String?
+  permissions Json
+  createdBy String
+  createdAt DateTime @default(now())
+  revokedBy String?
+  revokedAt DateTime?
+  @@unique([tenantId,id])
+  @@index([tenantId,userId,courseId,revokedAt])
+  @@index([tenantId,groupId,revokedAt])
+}
+model LmsSubmission {
+  id String @id @default(uuid())
+  tenantId String
+  enrollmentId String
+  elementId String
+  currentRevision Int @default(0)
+  state String @default("DRAFT")
+  sequence Int @default(0)
+  draft Json @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@unique([tenantId,enrollmentId,elementId])
+  @@index([tenantId,state,updatedAt])
+}
+model LmsSubmissionRevision {
+  id String @id @default(uuid())
+  tenantId String
+  submissionId String
+  revision Int
+  content Json
+  snapshot Json
+  hash String
+  submittedAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,submissionId,revision])
+}
+model LmsSubmissionAttachment {
+  id String @id @default(uuid())
+  tenantId String
+  enrollmentId String
+  elementId String
+  storageKey String
+  sha256 String
+  size Int
+  mimeType String
+  originalName String
+  uploadedBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,enrollmentId,elementId])
+}
+model LmsReviewDecision {
+  id String @id @default(uuid())
+  tenantId String
+  targetType String
+  targetId String
+  revision Int
+  contentHash String
+  decisionKey String
+  decision String
+  questionScores Json?
+  feedback String
+  actorId String
+  createdAt DateTime @default(now())
+  snapshot Json
+  attemptId String?
+  submissionRevisionId String?
+  @@unique([tenantId,id])
+  @@unique([tenantId,decisionKey])
+  @@unique([tenantId,targetType,targetId,revision])
+}
+model LmsLearningCompletion {
+  id String @id @default(uuid())
+  tenantId String
+  enrollmentId String
+  courseVersionId String
+  snapshot Json
+  snapshotHash String
+  completedAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,enrollmentId])
+}
+model LmsTeachingEvent {
+  id String @id @default(uuid())
+  tenantId String
+  groupId String
+  courseVersionId String
+  requirementId String?
+  titleRu String
+  titleKz String
+  startsAt DateTime
+  endsAt DateTime
+  timezone String
+  teacherUserId String
+  joinUrl String?
+  recordingUrl String?
+  recordingMaterialId String?
+  practiceCriteria Json?
+  location String?
+  status String @default("SCHEDULED")
+  revision Int @default(0)
+  operationId String
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@unique([tenantId,operationId])
+  @@index([tenantId,groupId,startsAt])
+}
+model LmsTeachingEventChange {
+  id String @id @default(uuid())
+  tenantId String
+  eventId String
+  revision Int
+  commandId String
+  payloadHash String
+  kind String
+  actorId String
+  reason String
+  snapshot Json
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,eventId,revision])
+  @@unique([tenantId,commandId])
+}
+model LmsAttendance {
+  id String @id @default(uuid())
+  tenantId String
+  eventId String
+  enrollmentId String
+  revision Int
+  status String
+  method String @default("MANUAL")
+  actorId String
+  reason String
+  commandId String
+  recordedAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,eventId,enrollmentId,revision])
+  @@unique([tenantId,commandId,enrollmentId])
+  @@index([tenantId,enrollmentId,eventId,revision])
+}
+model LmsLearningNotification {
+  id String @id @default(uuid())
+  tenantId String
+  userId String
+  eventId String?
+  eventRevision Int?
+  sourceType String @default("SESSION")
+  sourceId String?
+  enrollmentId String?
+  deliveryKey String?
+  titleRu String @default("")
+  titleKz String @default("")
+  href String?
+  kind String
+  readAt DateTime?
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@unique([tenantId,userId,eventId,eventRevision])
+  @@unique([tenantId,userId,deliveryKey])
+  @@index([tenantId,userId,createdAt])
+}
+model LmsMaterialBinding {
+  id String @id @default(uuid())
+  tenantId String
+  materialId String
+  courseId String
+  createdBy String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,materialId,courseId])
+  @@index([tenantId,courseId])
+}
+model LmsMaterialState {
+  id String @id @default(uuid())
+  tenantId String
+  materialId String
+  title String
+  hidden Boolean @default(false)
+  deleted Boolean @default(false)
+  revision Int @default(0)
+  familyId String
+  supersedesMaterialId String?
+  updatedBy String
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,materialId])
+  @@index([tenantId,familyId])
+}
+model LmsCourseReview {
+  id String @id @default(uuid())
+  tenantId String
+  courseVersionId String
+  revision Int
+  contentHash String
+  state String
+  feedback String @default("")
+  actorId String
+  createdAt DateTime @default(now())
+  @@unique([tenantId,id])
+  @@index([tenantId,courseVersionId,revision,createdAt])
 }
 model LmsExternalEvidence {
   id String @id @default(uuid())
@@ -328,6 +755,10 @@ model LmsDocumentLink {
   issuanceId String?
   status String @default("PREPARED")
   originalReference String?
+  verificationUrl String?
+  verificationTokenHash String? @unique
+  verificationRevokedAt DateTime?
+  verificationExpiresAt DateTime?
   createdAt DateTime @default(now())
   @@index([tenantId,resultId])
   @@unique([tenantId,resultId,documentType])
@@ -473,10 +904,91 @@ model RegulatoryManualEvidence {
   category String @default("OPERATOR_ATTESTED")
   storageKey String?
   sha256 String?
+  supersedesId String?
+  requestKey String?
   createdAt DateTime @default(now())
+  @@unique([tenantId,requestKey])
+  @@unique([tenantId,id])
   @@index([tenantId,deliveryId])
 }
+
+model RegulatorySource {
+  id String @id @default(uuid())
+  tenantId String
+  title String
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@index([tenantId,title])
+}
+
+model RegulatorySourceRevision {
+  id String @id @default(uuid())
+  tenantId String
+  sourceId String
+  version Int
+  definition Json
+  createdBy String
+  createdAt DateTime @default(now())
+  checkedBy String?
+  checkedAt DateTime?
+  reviewNote String?
+  @@unique([tenantId,id])
+  @@unique([tenantId,sourceId,version])
+}
+
+model RegulatorySourceTask {
+  id String @id @default(uuid())
+  tenantId String
+  sourceId String
+  sourceRevisionId String
+  courseId String
+  assigneeId String?
+  dueAt DateTime?
+  status String @default("OPEN")
+  note String @default("")
+  revision Int @default(0)
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,id])
+  @@unique([tenantId,sourceRevisionId,courseId])
+  @@index([tenantId,status,dueAt])
+}
+
+model LmsReportEntityScope {
+  tenantId String
+  jobId String
+  entityKind String
+  entityId String
+  @@id([jobId,entityKind,entityId])
+  @@index([tenantId,jobId])
+}
+
+model EmployerAccessRequest {
+  id String @id @default(uuid())
+  tenantId String
+  userId String
+  organizationName String
+  bin String
+  comment String @default("")
+  status String @default("PENDING")
+  activeKey String? @unique
+  requestKey String
+  decisionNote String?
+  customerId String?
+  membershipId String?
+  resolvedBy String?
+  resolvedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([tenantId,requestKey])
+  @@index([tenantId,userId,createdAt])
+  @@index([tenantId,status,createdAt])
+}
 model User {
+  lmsPreferences Json @default("{}")
   id String @id @default(uuid())
   tenantId String
   email String @unique
@@ -489,6 +1001,7 @@ model User {
   @@unique([tenantId,id])
 }
 model Session {
+  mfaVerifiedAt DateTime?
   id String @id
   tenantId String
   userId String
@@ -509,6 +1022,8 @@ model IssuerProfileVersion {
   @@unique([tenantId,id])
 }
 model CustomerOrganization {
+  city String?
+  citySource String?
   id String @id @default(uuid())
   tenantId String
   nameRu String
@@ -1046,6 +1561,7 @@ model PaymentEvent {
   id String @id @default(uuid())
   tenantId String
   orderId String
+  requestKey String?
   amountMinor String
   occurredOn String
   source String
@@ -1053,6 +1569,7 @@ model PaymentEvent {
   createdBy String
   createdAt DateTime @default(now())
   @@index([tenantId,orderId])
+  @@unique([tenantId,orderId,requestKey])
 }
 model FinancialDocument {
   id String @id @default(uuid())

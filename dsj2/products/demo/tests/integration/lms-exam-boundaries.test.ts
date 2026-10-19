@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { db, hash } from "../../apps/api/src/core";
+import { db, hash, json } from "../../apps/api/src/core";
 import {
   createCourse,
   publishVersion,
@@ -120,24 +120,46 @@ test("E05: deadline worker racing submit finalizes once and a new process replay
     center.context,
     lmsCourse({ sanitary: true, required: false }),
   );
-  await publishVersion(center.context, course.version.id, { revision: 0 });
+  const published = await publishVersion(center.context, course.version.id, {
+    revision: 0,
+  });
   const enrollment = (
     await assignEnrollments(center.context, {
       courseVersionId: course.version.id,
       recipientIds: [learner.recipient.id],
     })
   ).items[0];
-  const attempt = await startAttempt(learner.context, enrollment.id);
-  await saveAnswers(learner.context, attempt.id, {
-    sequence: 1,
-    answers: Object.fromEntries(
-      attempt.questions.map((question) => [question.id, ["a"]]),
-    ),
-  });
   const deadline = new Date(Date.now() - 1);
-  await db.examAttempt.update({
-    where: { id: attempt.id },
-    data: { deadlineAt: deadline },
+  // A synthetic historical attempt is born with its elapsed server deadline;
+  // no immutable deadline or snapshot is rewritten to force expiration.
+  const content = published.content;
+  const attempt = await db.examAttempt.create({
+    data: {
+      tenantId: center.tenant.id,
+      enrollmentId: enrollment.id,
+      courseVersionId: published.id,
+      regulatoryProfileVersionId: published.regulatoryProfileVersionId,
+      assessmentKind: published.profile.assessmentKind,
+      assessmentId: "FINAL",
+      purpose: "FINAL",
+      ordinal: 1,
+      activeKey: `${center.tenant.id}:${enrollment.id}:FINAL`,
+      startedAt: new Date(
+        deadline.getTime() - content.exam.durationMinutes * 60000,
+      ),
+      deadlineAt: deadline,
+      sequence: 1,
+      snapshot: json({
+        questions: content.exam.questions,
+        policy: { ...content.exam, questions: [] },
+        profile: published.profile,
+      }),
+      answers: json(
+        Object.fromEntries(
+          content.exam.questions.map((question) => [question.id, ["a"]]),
+        ),
+      ),
+    },
   });
   await Promise.all([
     submitAttempt(learner.context, attempt.id),

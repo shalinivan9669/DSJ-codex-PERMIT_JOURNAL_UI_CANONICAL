@@ -86,7 +86,7 @@ export function proposalDiff(
 }
 export function assertStaff(c: Context, write = false) {
   if (
-    !["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
+    !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
     (write && c.role === "VIEWER")
   )
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");
@@ -361,6 +361,7 @@ export async function createProposedContainer(
   c: Context,
   input: Draft,
   extra: { correctsIssuanceId?: string; correctionReason?: string } = {},
+  prepareReferences?: (requestId: string) => Promise<void>,
 ) {
   assertStaff(c, true);
   const draft = applyBusinessRules(
@@ -388,6 +389,7 @@ export async function createProposedContainer(
     },
   });
   await audit(tx, c, "DRAFT_CONTAINER_CREATED", record.id);
+  await prepareReferences?.(record.id);
   return submitProposal(tx, c, record.id, draft, 0);
 }
 export async function requestApproval(c: Context, id: string) {

@@ -1,7 +1,8 @@
 "use client";
+import { useCabinetText, useCabinetError } from "./cabinet-language";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
-import { api, errorText, json } from "@/lib/api";
+import { api, json } from "@/lib/api";
 import { PortalEvidence } from "./portal-evidence";
 type Row = {
   id: string;
@@ -36,8 +37,9 @@ type PortalOrder = {
   }[];
 };
 export function EmployerPortal() {
+  const tr = useCabinetText();
   const [orders, setOrders] = useState<PortalOrder[]>([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [busy, setBusy] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [active, setActive] = useState("");
@@ -55,7 +57,7 @@ export function EmployerPortal() {
         }
       })
       .catch((c) => {
-        if (alive) setError(errorText(c));
+        if (alive) setError(c);
       })
       .finally(() => {
         if (alive) setBusy(false);
@@ -104,12 +106,12 @@ export function EmployerPortal() {
         }),
       });
       setSuccess(
-        "Ответ передан учебному центру. Статус рассмотрения появится в истории обращения.",
+        tr("Ответ передан учебному центру. Статус рассмотрения появится в истории обращения."),
       );
       setActive("");
       setRefresh((v) => v + 1);
     } catch (c) {
-      setError(errorText(c));
+      setError(c);
     } finally {
       setBusy(false);
     }
@@ -118,24 +120,22 @@ export function EmployerPortal() {
     <>
       <div className="page-heading">
         <div>
-          <h1>Кабинет заказчика</h1>
+          <h1>{tr("Кабинет заказчика")}</h1>
           <p>
-            Проверьте известный состав, предложите изменения и получите
-            документы вашего заказа.
-          </p>
+            {tr("Проверьте известный состав, предложите изменения и получите документы вашего заказа.")}</p>
         </div>
       </div>
       {error && (
         <Notice>
           {error}
-          <button onClick={() => setRefresh((v) => v + 1)}>Повторить</button>
+          <button onClick={() => setRefresh((v) => v + 1)}>{tr("Повторить")}</button>
         </Notice>
       )}
       {success && <Notice kind="success">{success}</Notice>}
       {orders.map((o) => (
         <section className="panel workbench-detail" key={o.id}>
           <h2>{o.title}</h2>
-          <p>Согласованный срок: {o.dueDate || "не задан"}.</p>
+          <p>{tr("Согласованный срок:")}{" "}{o.dueDate || tr("не задан")}.</p>
           <div className="toolbar-actions">
             {o.requests.map((r) => (
               <button
@@ -147,13 +147,13 @@ export function EmployerPortal() {
                   setMessage("");
                 }}
               >
-                {r.title} · редакция {r.revision}
+                {r.title} {" "}{tr("· редакция")}{" "}{r.revision}
               </button>
             ))}
           </div>
           {o.permissions.includes("DOWNLOAD") && (
             <div className="portal-files">
-              <h3>Выданные документы</h3>
+              <h3>{tr("Выданные документы")}</h3>
               {o.artifacts.length ? (
                 o.artifacts.map((a) => (
                   <a
@@ -166,22 +166,22 @@ export function EmployerPortal() {
                   </a>
                 ))
               ) : (
-                <p>Доступных выданных файлов пока нет.</p>
+                <p>{tr("Доступных выданных файлов пока нет.")}</p>
               )}
             </div>
           )}
           {o.proposals.length > 0 && (
             <details>
-              <summary>Ответы и рассмотрение ({o.proposals.length})</summary>
+              <summary>{tr("Ответы и рассмотрение (")}{o.proposals.length})</summary>
               {o.proposals.map((p) => (
                 <article className="milestone" key={p.id}>
                   <strong>
                     {(
                       {
-                        CONFIRM_LIST: "Подтверждение списка",
-                        UPDATE_LIST: "Изменения списка",
-                        CLARIFICATION: "Уточнение",
-                        REPEAT_REQUEST: "Повторная заявка",
+                        CONFIRM_LIST: tr("Подтверждение списка"),
+                        UPDATE_LIST: tr("Изменения списка"),
+                        CLARIFICATION: tr("Уточнение"),
+                        REPEAT_REQUEST: tr("Повторная заявка"),
                       } as Record<string, string>
                     )[p.kind] || p.kind}
                   </strong>
@@ -189,9 +189,9 @@ export function EmployerPortal() {
                   <small>
                     {(
                       {
-                        PENDING: "Ожидает центра",
-                        ACCEPTED: "Принято",
-                        REJECTED: "Отклонено",
+                        PENDING: tr("Ожидает центра"),
+                        ACCEPTED: tr("Принято"),
+                        REJECTED: tr("Отклонено"),
                       } as Record<string, string>
                     )[p.status] || p.status}
                     {p.resolution ? `: ${p.resolution}` : ""}
@@ -204,11 +204,9 @@ export function EmployerPortal() {
       ))}
       {!orders.length && !busy && !error && (
         <section className="panel workbench-detail">
-          <h2>Нет доступных заказов</h2>
+          <h2>{tr("Нет доступных заказов")}</h2>
           <p>
-            Ваш представитель должен быть привязан к заказчику с действующим
-            доступом. Обратитесь в учебный центр для проверки доступа.
-          </p>
+            {tr("Ваш представитель должен быть привязан к заказчику с действующим доступом. Обратитесь в учебный центр для проверки доступа.")}</p>
         </section>
       )}
       <PortalEvidence
@@ -227,18 +225,16 @@ export function EmployerPortal() {
         <section className="panel workbench-detail">
           <h2>{request.title}</h2>
           <p>
-            Редакция {request.revision}. Меняйте только отличия. Фактические
-            результаты и выпуск документов подтверждает учебный центр.
-          </p>
+            {tr("Редакция")}{" "}{request.revision}{tr(". Меняйте только отличия. Фактические результаты и выпуск документов подтверждает учебный центр.")}</p>
           <div className="table-scroll">
             <table>
               <thead>
                 <tr>
-                  <th>ФИО RU</th>
-                  <th>ФИО KZ</th>
-                  <th>Должность RU</th>
-                  <th>Должность KZ</th>
-                  <th>Актуальность сведений</th>
+                  <th>{tr("ФИО RU")}</th>
+                  <th>{tr("ФИО KZ")}</th>
+                  <th>{tr("Должность RU")}</th>
+                  <th>{tr("Должность KZ")}</th>
+                  <th>{tr("Актуальность сведений")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -254,7 +250,7 @@ export function EmployerPortal() {
                     ).map((key) => (
                       <td key={key}>
                         <input
-                          aria-label={`${{ fullNameRu: "ФИО RU", fullNameKz: "ФИО KZ", positionRu: "Должность RU", positionKz: "Должность KZ" }[key]}, получатель ${index + 1}`}
+                          aria-label={`${{ fullNameRu: tr("ФИО RU"), fullNameKz: tr("ФИО KZ"), positionRu: tr("Должность RU"), positionKz: tr("Должность KZ") }[key]}${tr(", получатель ")}${index + 1}`}
                           disabled={
                             !order.permissions.includes("PROPOSE") || busy
                           }
@@ -273,7 +269,7 @@ export function EmployerPortal() {
                     ))}
                     <td>
                       <select
-                        aria-label={`Актуальность получателя ${index + 1}`}
+                        aria-label={`${tr("Актуальность получателя ")}${index + 1}`}
                         disabled={
                           !order.permissions.includes("PROPOSE") || busy
                         }
@@ -292,12 +288,11 @@ export function EmployerPortal() {
                           )
                         }
                       >
-                        <option value="">Изменения не заявлены</option>
-                        <option value="CURRENT">Продолжает работать</option>
-                        <option value="LEFT">Выбыл из организации</option>
+                        <option value="">{tr("Изменения не заявлены")}</option>
+                        <option value="CURRENT">{tr("Продолжает работать")}</option>
+                        <option value="LEFT">{tr("Выбыл из организации")}</option>
                         <option value="TRAINED_ELSEWHERE">
-                          Обучен у другого поставщика
-                        </option>
+                          {tr("Обучен у другого поставщика")}</option>
                       </select>
                     </td>
                   </tr>
@@ -306,17 +301,14 @@ export function EmployerPortal() {
             </table>
           </div>
           <label>
-            Сообщение учебному центру
-            <textarea
-              aria-label="Сообщение учебному центру"
+            {tr("Сообщение учебному центру")}<textarea
+              aria-label={tr("Сообщение учебному центру")}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
           </label>
           <p>
-            Строк с изменениями: {changes.length}. Отправка предложения
-            сохраняет историю; опубликованные документы остаются неизменными.
-          </p>
+            {tr("Строк с изменениями:")}{" "}{changes.length}{tr(". Отправка предложения сохраняет историю; опубликованные документы остаются неизменными.")}</p>
           <div className="toolbar-actions">
             {order.permissions.includes("APPROVE_DATA") && (
               <button
@@ -325,8 +317,7 @@ export function EmployerPortal() {
                 }
                 onClick={() => void submit("CONFIRM_LIST")}
               >
-                Подтвердить показанную редакцию списка
-              </button>
+                {tr("Подтвердить показанную редакцию списка")}</button>
             )}
             {order.permissions.includes("PROPOSE") && (
               <>
@@ -335,28 +326,23 @@ export function EmployerPortal() {
                   disabled={busy || !changes.length}
                   onClick={() => void submit("UPDATE_LIST")}
                 >
-                  Отправить изменения на проверку
-                </button>
+                  {tr("Отправить изменения на проверку")}</button>
                 <button
                   disabled={busy || !message.trim()}
                   onClick={() => void submit("CLARIFICATION")}
                 >
-                  Отправить уточнение
-                </button>
+                  {tr("Отправить уточнение")}</button>
                 <button
                   disabled={busy || !message.trim()}
                   onClick={() => void submit("REPEAT_REQUEST")}
                 >
-                  Запросить повторную заявку
-                </button>
+                  {tr("Запросить повторную заявку")}</button>
               </>
             )}
           </div>
           {!request.fullRosterAllowed && (
             <p className="fine-print">
-              Ваш доступ охватывает часть списка. Подтвердить весь состав может
-              представитель с доступом ко всем получателям.
-            </p>
+              {tr("Ваш доступ охватывает часть списка. Подтвердить весь состав может представитель с доступом ко всем получателям.")}</p>
           )}
         </section>
       )}

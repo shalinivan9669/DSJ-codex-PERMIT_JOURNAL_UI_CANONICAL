@@ -3,14 +3,21 @@ import { useEffect, useState } from "react";
 import type { LmsQuestion } from "@demo/contracts/src/lms";
 import { api, json } from "@/lib/api";
 import type { LibraryQuestion, LibraryRevision, Paged } from "@/lib/lms-api";
-import { lmsError, PageControls, type Translate } from "./common";
+import {
+  LmsErrorDiagnostic,
+  lmsError,
+  PageControls,
+  type Translate,
+} from "./common";
 
 export function QuestionLibrary({
   t,
   onChoose,
+  courseId,
 }: {
   t: Translate;
   onChoose: (q: LmsQuestion) => void;
+  courseId?: string;
 }) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -20,7 +27,7 @@ export function QuestionLibrary({
     items: [],
     total: 0,
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
   const [revisions, setRevisions] = useState<Record<string, LibraryRevision[]>>(
     {},
@@ -36,15 +43,16 @@ export function QuestionLibrary({
         topic,
         page: String(page),
       });
+      if (courseId) query.set("courseId", courseId);
       void api<Paged<LibraryQuestion>>(`/lms/questions?${query}`)
         .then((result) => {
           if (active) {
             setData(result);
-            setError("");
+            setError(null);
           }
         })
         .catch((caught) => {
-          if (active) setError(lmsError(caught, t));
+          if (active) setError(caught);
         })
         .finally(() => {
           if (active) setBusy(false);
@@ -54,7 +62,7 @@ export function QuestionLibrary({
       active = false;
       clearTimeout(timer);
     };
-  }, [search, category, topic, page]);
+  }, [search, category, topic, page, courseId]);
   return (
     <details
       onToggle={(event) => {
@@ -97,7 +105,12 @@ export function QuestionLibrary({
           />
         </label>
       </div>
-      {error && <p role="alert">{error}</p>}
+      {!!error && (
+        <>
+          <p role="alert">{lmsError(error, t)}</p>
+          <LmsErrorDiagnostic error={error} t={t} />
+        </>
+      )}
       <ul className="lms-list" aria-busy={busy}>
         {data.items.map((item) => {
           const available = revisions[item.id] || [item.latestRevision];
@@ -129,7 +142,7 @@ export function QuestionLibrary({
                             [item.id]: result.revisions,
                           })),
                         )
-                        .catch((caught) => setError(lmsError(caught, t)));
+                        .catch((caught) => setError(caught));
                     }}
                     onChange={(event) =>
                       setChosen((value) => ({
@@ -183,11 +196,11 @@ export function SaveLibraryQuestion({
   t: Translate;
 }) {
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<unknown>(null);
   async function save() {
     setBusy(true);
     onBusy(true);
-    setError("");
+    setError(null);
     try {
       await flush();
       const value = await api<LibraryRevision>(
@@ -206,7 +219,7 @@ export function SaveLibraryQuestion({
       );
       saved(value.question);
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
     } finally {
       setBusy(false);
       onBusy(false);
@@ -221,7 +234,12 @@ export function SaveLibraryQuestion({
             ? t("Сохранить редакцию в банке", "Редакцияны банкте сақтау")
             : t("Добавить в банк вопросов", "Сұрақтар банкіне қосу")}
       </button>
-      {error && <p role="alert">{error}</p>}
+      {!!error && (
+        <>
+          <p role="alert">{lmsError(error, t)}</p>
+          <LmsErrorDiagnostic error={error} t={t} />
+        </>
+      )}
     </div>
   );
 }

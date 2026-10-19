@@ -3,10 +3,29 @@ import type {
   LmsLesson,
   RegulatoryProfile,
   LmsQuestion,
+  LearningAnswers,
+  QuestionAnswerSpec,
+  AccessPolicy,
 } from "@demo/contracts/src/lms";
 import { api, json } from "./api";
 
 export type CourseVersion = {
+  publicationIssues?: {
+    code: string;
+    messageRu: string;
+    messageKz: string;
+    target: "overview" | "settings" | "modules" | "exam" | "review";
+    moduleId?: string;
+    lessonId?: string;
+    questionId?: string;
+  }[];
+  allowedActions?: string[];
+  review?: {
+    state: string;
+    revision: number;
+    contentHash: string;
+    feedback: string;
+  } | null;
   id: string;
   courseId: string;
   version: number;
@@ -17,13 +36,16 @@ export type CourseVersion = {
   publishedAt?: string | null;
 };
 export type Course = {
+  publishedVersion?: Course["latestVersion"] | null;
+  allowedActions?: string[];
+  archived?: boolean;
   id: string;
   titleRu?: string;
   titleKz?: string;
   latestVersion?: Pick<CourseVersion, "id" | "version" | "status"> & {
     content: Pick<
       CourseContent,
-      "titleRu" | "titleKz" | "category" | "hours" | "accessDays"
+      "titleRu" | "titleKz" | "category" | "hours" | "accessDays" | "metadata"
     >;
     profile: Pick<RegulatoryProfile, "status" | "assessmentKind" | "legalForm">;
   };
@@ -32,7 +54,7 @@ export type Course = {
   assignmentPauseReason?: string;
   currentReview?: { status: string; note: string; updatedAt: string } | null;
 };
-export type CourseDetails = { course: Course; versions: CourseVersion[] };
+export type CourseDetails = { course: Course; versions: CourseVersion[]; demoOnly?: boolean };
 export type Paged<T> = {
   items: T[];
   total: number;
@@ -54,6 +76,8 @@ export type LearnerSummary = {
   userId?: string | null;
 };
 export type LessonProgress = {
+  activeSeconds?: number;
+  acknowledgedAt?: string | null;
   lessonId: string;
   positionSeconds: number;
   completed?: boolean;
@@ -64,6 +88,8 @@ export type LessonProgress = {
   sequence?: number;
 };
 export type Enrollment = {
+  accessPolicy?: AccessPolicy | null;
+  startsAt?: string | null;
   id: string;
   courseVersionId: string;
   learnerId?: string;
@@ -80,6 +106,7 @@ export type Enrollment = {
   result?: ExamResult | null;
   documents?: {
     id: string;
+    resultId: string;
     requestId: string;
     legalForm: string;
     status: string;
@@ -90,11 +117,28 @@ export type Enrollment = {
   sourceOrderId?: string | null;
   dueAtOverride?: boolean;
 };
+type PublicSpec<S> = S extends { kind: "CASE"; response: infer R }
+  ? Omit<S, "response"> & { response: PublicSpec<R> }
+  : S extends object
+    ? Omit<
+        S,
+        "correctOptionIds" | "correctOrderIds" | "pairs" | "acceptedAnswers"
+      >
+    : never;
 export type PublicQuestion = Omit<
   CourseContent["exam"]["questions"][number],
-  "correctOptionIds"
->;
+  "correctOptionIds" | "answerSpec"
+> & { answerSpec?: PublicSpec<QuestionAnswerSpec> };
 export type Attempt = {
+  review?: {
+    thresholdPercent: number;
+    comparison: "GT" | "GTE";
+    remainingAttempts: number;
+    revealAnswers: boolean;
+    questionScores: Record<string, number | null>;
+    feedback: string | null;
+    reviewedAt: string | null;
+  } | null;
   id: string;
   enrollmentId: string;
   sequence: number;
@@ -104,11 +148,25 @@ export type Attempt = {
   deadlineAt: string;
   serverNow?: string;
   questions: PublicQuestion[];
-  answers: Record<string, string[]>;
+  answers: LearningAnswers;
+  purpose?: string;
+  assessmentId?: string;
   result?: ExamResult | null;
 };
 export type Learning = Enrollment & {
+  prerequisites?: Array<{
+    courseId: string;
+    satisfied: boolean;
+    basis: string;
+    titleRu?: string;
+    titleKz?: string;
+    enrollmentId?: string | null;
+  }>;
   examReadiness: {
+    remainingAttempts?: number;
+    opensAt?: string | null;
+    closesAt?: string | null;
+    missingSubmissionStates?: Record<string, string>;
     ready: boolean;
     requiredCount: number;
     completedCount: number;
@@ -118,15 +176,22 @@ export type Learning = Enrollment & {
   content: Omit<CourseContent, "modules"> & {
     modules: Array<
       Omit<CourseContent["modules"][number], "lessons"> & {
-        lessons: Array<LmsLesson & { locked?: boolean }>;
+        lessons: Array<
+          LmsLesson & {
+            locked?: boolean;
+            completed?: boolean;
+            lockReason?: string | null;
+          }
+        >;
       }
     >;
   };
-  profile: Pick<RegulatoryProfile, "assessmentKind" | "status">;
+  profile: Pick<RegulatoryProfile, "assessmentKind" | "status" | "requiresProctoring" | "proctoringMode">;
   attempts: Attempt[];
   results: ExamResult[];
   documents: {
     id: string;
+    resultId: string;
     requestId?: string;
     legalForm: string;
     status: string;
@@ -310,7 +375,9 @@ export const lms = {
       sequence: number;
       positionSeconds?: number;
       playing?: boolean;
+      playbackRate?: number;
       acknowledge?: boolean;
+      interacting?: boolean;
     },
   ) =>
     api<LessonProgress>(
@@ -323,7 +390,7 @@ export const lms = {
       body: "{}",
     }),
   attempt: (id: string) => api<Attempt>(`/learn/attempts/${id}`),
-  answers: (id: string, sequence: number, answers: Record<string, string[]>) =>
+  answers: (id: string, sequence: number, answers: LearningAnswers) =>
     api<Attempt>(`/learn/attempts/${id}/answers`, {
       method: "PUT",
       body: json({ sequence, answers }),

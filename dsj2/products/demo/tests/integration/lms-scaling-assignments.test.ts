@@ -147,12 +147,15 @@ test("V2 A3/A4/A5/S1: prepared origin survives chunk pause/resume, replay, roste
   });
   assert.equal(single.state, "PAUSED");
   assert.equal(single.created, 0);
+  const resumedGroupDate = new Date(Date.now() + 95 * 86400000).toISOString();
+  await updateGroup(center.context, groupId, { dueAt: resumedGroupDate });
   await setCoursePause(center.context, created.course.id, { paused: false });
   const completed = await runAssignmentChunk(center.context, input);
   assert.equal(completed.state, "COMPLETED");
   assert.equal(completed.created, 101);
   assert.equal(completed.errors.length, 1);
   assert.equal(completed.errors[0].code, "ORIGIN_RECIPIENT_MISMATCH");
+  assert.equal(completed.items[0].dueAt.toISOString(), resumedGroupDate);
   const replay = await runAssignmentChunk(center.context, input);
   assert.equal(replay.created, 101);
   assert.equal(replay.errors.length, 1);
@@ -195,10 +198,11 @@ test("V2 A3/A4/A5/S1: prepared origin survives chunk pause/resume, replay, roste
   );
   const firstEnrollment = await db.enrollment.findUniqueOrThrow({
     where: {
-      tenantId_courseVersionId_recipientId: {
+      tenantId_courseVersionId_recipientId_attemptCycle: {
         tenantId: center.tenant.id,
         courseVersionId: version.id,
         recipientId: ids[0],
+        attemptCycle: "INITIAL",
       },
     },
   });
@@ -206,10 +210,11 @@ test("V2 A3/A4/A5/S1: prepared origin survives chunk pause/resume, replay, roste
   assert.equal(firstEnrollment.sourceOrderId, order.id);
   const secondEnrollment = await db.enrollment.findUniqueOrThrow({
     where: {
-      tenantId_courseVersionId_recipientId: {
+      tenantId_courseVersionId_recipientId_attemptCycle: {
         tenantId: center.tenant.id,
         courseVersionId: version.id,
         recipientId: ids[1],
+        attemptCycle: "INITIAL",
       },
     },
   });
@@ -242,11 +247,20 @@ test("V2 A3/A4/A5/S1: prepared origin survives chunk pause/resume, replay, roste
     ).dueAt.toISOString(),
     oldDate,
   );
-  const readded = await addGroupMembers(center.context, groupId, {
+  const readdInput = {
     operationId: randomUUID(),
     recipientIds: [ids[1]],
-  });
+  };
+  const readded = await addGroupMembers(center.context, groupId, readdInput);
   assert.equal(readded.duplicates, 1);
+  await updateGroup(center.context, groupId, {
+    name: "Updated synthetic group",
+  });
+  assert.equal(
+    (await addGroupMembers(center.context, groupId, readdInput)).duplicates,
+    1,
+    "an existing operation still replays after a group rename",
+  );
   assert.equal((await groupDetail(center.context, groupId)).total, 101);
   const conflicting = await runAssignmentChunk(center.context, {
     ...input,
@@ -336,6 +350,24 @@ test("V2 A3/A4/A5/S1: prepared origin survives chunk pause/resume, replay, roste
   const ownReplay = await runAssignmentChunk(employer, employerOperation);
   assert.equal(ownReplay.state, "COMPLETED");
   assert.equal(ownReplay.duplicates, 1);
+  assert.equal(ownReplay.items[0].sourceOrderId, null);
+  const secondEmployer = await db.customerOrganization.create({
+    data: { tenantId: center.tenant.id, nameRu: "Synthetic second employer" },
+  });
+  await db.recipientEmployment.create({
+    data: {
+      tenantId: center.tenant.id,
+      recipientId: ids[0],
+      employerId: secondEmployer.id,
+      createdBy: center.user.id,
+    },
+  });
+  const employerContext = await assignmentContext(employer, {
+    search: "Synthetic member 0",
+  });
+  assert.equal(employerContext.total, 1);
+  assert.deepEqual(employerContext.recipients[0].customerIds, [customer.id]);
+  assert.equal((await assignmentContext(employer, { search: "%" })).total, 0);
   await db.employerMembership.update({
     where: {
       tenantId_customerId_userId: {
@@ -344,7 +376,47 @@ test("V2 A3/A4/A5/S1: prepared origin survives chunk pause/resume, replay, roste
         userId: employer.userId,
       },
     },
-    data: { recipientIds: [ids[2]] },
+    data: { active: false },
+  });
+  const secondMembership = await db.employerMembership.create({
+    data: {
+      tenantId: center.tenant.id,
+      customerId: secondEmployer.id,
+      userId: employer.userId,
+      permissions: ["READ", "ASSIGN_TRAINING"],
+      recipientIds: [ids[0]],
+      createdBy: center.user.id,
+    },
+  });
+  const otherCustomerInput = {
+    operationId: randomUUID(),
+    courseVersionId: version.id,
+    recipientIds: [ids[0]],
+    customerId: secondEmployer.id,
+  };
+  const deniedReuse = await runAssignmentChunk(employer, otherCustomerInput);
+  assert.equal(deniedReuse.items.length, 0);
+  assert.equal(deniedReuse.errorCount, 1);
+  assert.equal(deniedReuse.errors[0].code, "RECIPIENT_UNAVAILABLE");
+  const staffConflict = await runAssignmentChunk(center.context, {
+    ...otherCustomerInput,
+    operationId: randomUUID(),
+  });
+  assert.equal(staffConflict.conflicts, 1);
+  assert.equal(staffConflict.items[0].customerId, customer.id);
+  await db.employerMembership.update({
+    where: { id: secondMembership.id },
+    data: { active: false },
+  });
+  await db.employerMembership.update({
+    where: {
+      tenantId_customerId_userId: {
+        tenantId: center.tenant.id,
+        customerId: customer.id,
+        userId: employer.userId,
+      },
+    },
+    data: { recipientIds: [ids[2]], active: true },
   });
   await assert.rejects(
     runAssignmentChunk(employer, employerOperation),

@@ -13,10 +13,12 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Response } from "express";
+import { assertTestAdapterRuntime } from "./delivery";
 import { today, z } from "@demo/contracts";
 import {
   calendarDefinitionSchema,
   dataAccessPolicySchema,
+  dataAccessAllowed,
 } from "@demo/contracts/src/regulatory-results";
 import { exportRegistry, runRender, ArtifactStore } from "@demo/printing";
 import {
@@ -33,6 +35,45 @@ import {
 } from "../core";
 
 const store = new ArtifactStore();
+export function connectionState(
+  connection: {
+    state: string;
+    contractVersion: string | null;
+    dataAccessPolicy: unknown;
+  } | null,
+) {
+  const policy = dataAccessPolicySchema.safeParse(connection?.dataAccessPolicy);
+  if (!connection || !connection.contractVersion)
+    return {
+      effectiveState: "NOT_CONNECTED",
+      reason: "CONTRACT_REQUIRED",
+      manualAvailable: true,
+    };
+  if (!policy.success || !dataAccessAllowed(policy.data))
+    return {
+      effectiveState: "NOT_CONNECTED",
+      reason: "ACCESS_POLICY_REQUIRED",
+      manualAvailable: true,
+    };
+  let runtime = false;
+  try {
+    assertTestAdapterRuntime();
+    runtime = true;
+  } catch {
+    /* External delivery stays unavailable. */
+  }
+  return connection.state === "SANDBOX" && runtime
+    ? {
+        effectiveState: "SANDBOX",
+        reason: "TEST_ENVIRONMENT_ONLY",
+        manualAvailable: true,
+      }
+    : {
+        effectiveState: "NOT_CONNECTED",
+        reason: "PROVIDER_NOT_CONFIGURED",
+        manualAvailable: true,
+      };
+}
 const paging = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(30),
@@ -98,7 +139,7 @@ export async function sanitaryBatch(c: Context, id: string) {
     deliveryState,
     deliveryCounts,
     overdue: !!batch.dueAt && batch.preparedAt > batch.dueAt,
-    connectionState: connection?.state || "NOT_CONNECTED",
+    connectionState: connectionState(connection).effectiveState,
     items: rows.map((row) => ({
       ...row,
       signatureState: journal.find((j) => j.id === row.journalEntryId)
@@ -291,6 +332,8 @@ export async function addManualEvidence(
       .object({
         source: z.string().trim().min(2).max(500),
         reference: z.string().trim().max(1000).default(""),
+        requestKey: z.string().uuid().optional(),
+        supersedesId: z.string().uuid().optional(),
       })
       .strict(),
     body,
@@ -319,6 +362,49 @@ export async function addManualEvidence(
     stored = { storageKey: saved.storageKey, sha256: saved.sha256 };
   }
   return transaction(async (tx) => {
+    await tx.$executeRaw`SELECT id FROM "IntegrationDelivery" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    if (data.requestKey) {
+      const old = await tx.regulatoryManualEvidence.findUnique({
+        where: {
+          tenantId_requestKey: {
+            tenantId: c.tenantId,
+            requestKey: data.requestKey,
+          },
+        },
+      });
+      if (old) {
+        if (
+          old.deliveryId !== id ||
+          old.source !== data.source ||
+          old.reference !== data.reference ||
+          (old.supersedesId || null) !== (data.supersedesId || null) ||
+          (old.sha256 || null) !== (stored?.sha256 || null)
+        )
+          fail(
+            409,
+            "EVIDENCE_RETRY_CONFLICT",
+            "Повторное подтверждение отличается от сохранённого",
+          );
+        return { id: old.id, category: old.category, createdAt: old.createdAt };
+      }
+    }
+    if (data.supersedesId) {
+      const previous = await tx.regulatoryManualEvidence.findFirst({
+        where: { id: data.supersedesId, tenantId: c.tenantId, deliveryId: id },
+      });
+      if (!previous)
+        fail(404, "NOT_FOUND", "Исправляемое подтверждение не найдено");
+      if (
+        await tx.regulatoryManualEvidence.findFirst({
+          where: { tenantId: c.tenantId, supersedesId: previous.id },
+        })
+      )
+        fail(
+          409,
+          "EVIDENCE_ALREADY_CORRECTED",
+          "Подтверждение уже исправлено. Обновите историю",
+        );
+    }
     const record = await tx.regulatoryManualEvidence.create({
       data: {
         tenantId: c.tenantId,
@@ -332,6 +418,7 @@ export async function addManualEvidence(
       deliveryId: id,
       resultRevision: delivery.resultRevision,
       category: "OPERATOR_ATTESTED",
+      supersedesId: data.supersedesId,
     });
     return {
       id: record.id,
@@ -372,11 +459,19 @@ export class RegulatoryResultsController {
   }
   @Get("lms/sanitary/settings") async settings(@Req() req: DemoRequest) {
     const c = requireCapability(req, "center:manage");
-    return {
-      connection: "NOT_CONNECTED",
-      connections: await db.integrationConnection.findMany({
+    const connections = (
+      await db.integrationConnection.findMany({
         where: { tenantId: c.tenantId },
-      }),
+      })
+    ).map((connection) => ({ ...connection, ...connectionState(connection) }));
+    return {
+      connection: connections.some(
+        (entry) => entry.effectiveState === "SANDBOX",
+      )
+        ? "SANDBOX"
+        : "NOT_CONNECTED",
+      connections,
+      manualAvailable: true,
       dataAccessPolicy: dataAccessPolicySchema.parse({}),
       calendarVersions: await db.calendarVersion.findMany({
         where: { tenantId: c.tenantId },
@@ -454,6 +549,7 @@ export class RegulatoryResultsController {
           actorId: true,
           createdAt: true,
           sha256: true,
+          supersedesId: true,
         },
       }),
       history: await db.deliveryAttempt.findMany({
@@ -515,7 +611,7 @@ export class RegulatoryResultsController {
   @Post("lms/sanitary/deliveries/:id/evidence")
   @UseInterceptors(
     FileInterceptor("file", {
-      limits: { fileSize: 5 * 1024 * 1024, files: 1, fields: 2 },
+      limits: { fileSize: 5 * 1024 * 1024, files: 1, fields: 4 },
     }),
   )
   evidence(

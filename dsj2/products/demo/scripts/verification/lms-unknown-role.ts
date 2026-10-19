@@ -16,7 +16,7 @@ async function main() {
   assertTestDatabase();
   const current = new URL(process.env.DATABASE_URL!);
   assert.equal(current.hostname, "127.0.0.1");
-  assert.equal(current.port, "55449");
+  assert.ok(current.port === "55449" || (current.port === "55489" && /^\/demo_test_(mvp_roles_20261019_run01_integration|lms_unknown_role_[a-f0-9]{32})$/.test(current.pathname)), "ISOLATED_VERIFICATION_CLUSTER_REQUIRED");
   assert.equal(current.password, "");
   if (process.argv[2] !== "run") {
     const database = `demo_test_lms_unknown_role_${randomUUID().replaceAll("-", "")}`;

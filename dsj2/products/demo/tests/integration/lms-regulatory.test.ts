@@ -105,7 +105,7 @@ async function preparedFixture(name: string, fullNameRu?: string) {
   await saveAnswers(learner.context, attempt.id, {
     sequence: 1,
     answers: Object.fromEntries(
-      definition.content.exam.questions.map((q) => [q.id, ["a"]]),
+      attempt.questions.map((q) => [q.id, ["a"]]),
     ),
   });
   await submitAttempt(learner.context, attempt.id);
@@ -693,7 +693,7 @@ test("S01-S10: real persisted sanitary preparation, fencing, receipt semantics a
           await saveAnswers(learner.context, attempt.id, {
             sequence: 1,
             answers: Object.fromEntries(
-              lmsCourse().content.exam.questions.map((question) => [
+              attempt.questions.map((question) => [
                 question.id,
                 ["a"],
               ]),

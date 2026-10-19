@@ -170,6 +170,10 @@ test("L01 L02 L03: actual Nest HTTP learner identity, one-time invitation, CSRF,
           ).status,
           404,
         );
+        assert.equal((await director("/lms/invites", "POST", {recipientId:recipient.id,email:`${randomUUID()}@example.test`})).status,409);
+        const inviteCourse=await createCourse(a.context,lmsCourse({kind:"PRACTICE",required:false}));
+        await publishVersion(a.context,inviteCourse.version.id,{revision:0});
+        await assignEnrollments(a.context,{courseVersionId:inviteCourse.version.id,recipientIds:[recipient.id]});
         const invite = await lmsJson(
           await director("/lms/invites", "POST", {
             recipientId: recipient.id,
@@ -211,8 +215,9 @@ test("L01 L02 L03: actual Nest HTTP learner identity, one-time invitation, CSRF,
           410,
         );
         const expiryRecipient = await db.recipient.create({
-          data: { tenantId: a.tenant.id, data: {} },
+          data: { tenantId: a.tenant.id, data: {fullNameRu:"Синтетический срок приглашения"} },
         });
+        await assignEnrollments(a.context,{courseVersionId:inviteCourse.version.id,recipientIds:[expiryRecipient.id]});
         const expired = await lmsJson(
           await director("/lms/invites", "POST", {
             recipientId: expiryRecipient.id,

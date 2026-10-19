@@ -6,7 +6,12 @@ import { LanguageSwitch, useLanguage } from "./lms/common";
 import "./lms/lms.css";
 type Verification = {
   issuer: { nameRu: string; nameKz: string };
-  document: { type: string; number: string; date: string };
+  document: {
+    type: string;
+    number: string;
+    date: string;
+    validUntil?: string | null;
+  };
   status: string;
   replacement: { type: string; number: string; date: string } | null;
   limitation: string;
@@ -17,9 +22,10 @@ type Verification = {
     resultRevision: number;
     originalReference: string | null;
     sourceVerification: string;
+    course?: { titleRu: string; titleKz: string; hours: number } | null;
   };
 };
-export function PublicVerification({ token }: { token: string }) {
+export function PublicVerification({ token }: { token?: string }) {
   const { language, setLanguage, t } = useLanguage("public-verification");
   const [record, setRecord] = useState<Verification | null>(null);
   const [error, setError] = useState("");
@@ -27,7 +33,13 @@ export function PublicVerification({ token }: { token: string }) {
   const [contact, setContact] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [number, setNumber] = useState("");
+  const [issuerName, setIssuerName] = useState("");
+  const [searching, setSearching] = useState(false);
   useEffect(() => {
+    setRecord(null);
+    setError("");
+    if (!token) return;
     let active = true;
     api<Verification>(`/verification/${encodeURIComponent(token)}`)
       .then((r) => {
@@ -56,11 +68,78 @@ export function PublicVerification({ token }: { token: string }) {
             "Құжат берген ұйымның жазбасын тексеру",
           )}
         </h1>
+        {!token && (
+          <form
+            onSubmit={async (event) => {
+              event.preventDefault();
+              if (searching) return;
+              setSearching(true);
+              setError("");
+              setRecord(null);
+              try {
+                setRecord(
+                  await api<Verification>("/verification/search", {
+                    method: "POST",
+                    body: json({
+                      number: number.trim(),
+                      issuerName: issuerName.trim(),
+                    }),
+                  }),
+                );
+              } catch {
+                setError(
+                  t(
+                    "Запись недоступна. Проверьте номер и точное название эмитента или используйте QR документа.",
+                    "Жазба қолжетімсіз. Нөмірді және құжат берген ұйымның нақты атауын тексеріңіз немесе құжаттың QR кодын пайдаланыңыз.",
+                  ),
+                );
+              } finally {
+                setSearching(false);
+              }
+            }}
+          >
+            <label>
+              {t("Номер документа", "Құжат нөмірі")}
+              <input
+                required
+                maxLength={80}
+                value={number}
+                onChange={(event) => setNumber(event.target.value)}
+                autoComplete="off"
+              />
+            </label>
+            <label>
+              {t(
+                "Точное название эмитента",
+                "Құжат берген ұйымның нақты атауы",
+              )}
+              <input
+                required
+                minLength={2}
+                maxLength={300}
+                value={issuerName}
+                onChange={(event) => setIssuerName(event.target.value)}
+                autoComplete="organization"
+              />
+            </label>
+            <button
+              disabled={
+                searching || !number.trim() || issuerName.trim().length < 2
+              }
+            >
+              {searching
+                ? t("Проверяем…", "Тексерілуде…")
+                : t("Проверить документ", "Құжатты тексеру")}
+            </button>
+          </form>
+        )}
         {error && (
           <Notice>
             {t(
               error,
-              "Жазба қолжетімсіз. Сілтемені тексеріңіз немесе құжат берген ұйымға хабарласыңыз.",
+              token
+                ? "Жазба қолжетімсіз. Сілтемені тексеріңіз немесе құжат берген ұйымға хабарласыңыз."
+                : "Жазба қолжетімсіз. Нөмірді және құжат берген ұйымның нақты атауын тексеріңіз немесе құжаттың QR кодын пайдаланыңыз.",
             )}
           </Notice>
         )}
@@ -73,8 +152,30 @@ export function PublicVerification({ token }: { token: string }) {
               <dd>{record.document.number}</dd>
               <dt>{t("Дата", "Күні")}</dt>
               <dd>{record.document.date}</dd>
+              {record.document.validUntil && (
+                <>
+                  <dt>{t("Действует до", "Қолданылу мерзімі")}</dt>
+                  <dd>{record.document.validUntil}</dd>
+                </>
+              )}
               {record.learningDocument && (
                 <>
+                  {record.learningDocument.course && (
+                    <>
+                      <dt>{t("Программа", "Бағдарлама")}</dt>
+                      <dd>
+                        {language === "kz"
+                          ? record.learningDocument.course.titleKz ||
+                            record.learningDocument.course.titleRu
+                          : record.learningDocument.course.titleRu}
+                      </dd>
+                      <dt>{t("Объём обучения", "Оқу көлемі")}</dt>
+                      <dd>
+                        {record.learningDocument.course.hours}{" "}
+                        {t("часов", "сағат")}
+                      </dd>
+                    </>
+                  )}
                   <dt>{t("Форма документа", "Құжат нысаны")}</dt>
                   <dd>
                     {{
@@ -142,6 +243,10 @@ export function PublicVerification({ token }: { token: string }) {
                       "Түзетілген құжатпен ауыстырылған",
                     ),
                     REVOKED: t("Отозвана", "Күші жойылған"),
+                    EXPIRED: t(
+                      "Срок документа истёк",
+                      "Құжаттың қолданылу мерзімі аяқталған",
+                    ),
                   } as Record<string, string>
                 )[record.status] || record.status}
               </dd>
@@ -164,76 +269,81 @@ export function PublicVerification({ token }: { token: string }) {
                 "Жазбаны тексеру электрондық қолтаңба болып саналмайды және бөгде файлдың өзгермегенін растамайды.",
               )}
             </p>
-            <details>
-              <summary>
-                {t(
-                  "Сообщить об ошибке в документе",
-                  "Құжаттағы қате туралы хабарлау",
-                )}
-              </summary>
-              {sent ? (
-                <Notice kind="success">
+            {token && (
+              <details>
+                <summary>
                   {t(
-                    "Обращение принято для проверки эмитентом.",
-                    "Өтініш құжат берген ұйымның тексеруіне қабылданды.",
+                    "Сообщить об ошибке в документе",
+                    "Құжаттағы қате туралы хабарлау",
                   )}
-                </Notice>
-              ) : (
-                <form
-                  onSubmit={async (e) => {
-                    e.preventDefault();
-                    setBusy(true);
-                    try {
-                      await api(
-                        `/verification/${encodeURIComponent(token)}/corrections`,
-                        {
-                          method: "POST",
-                          body: json({
-                            message,
-                            ...(contact ? { replyContact: contact } : {}),
-                          }),
-                        },
-                      );
-                      setSent(true);
-                    } catch (c) {
-                      setError(errorText(c));
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
-                >
-                  <label>
-                    {t("Что требуется проверить", "Нені тексеру қажет")}
-                    <textarea
-                      required
-                      maxLength={2000}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                    />
-                  </label>
-                  <label>
+                </summary>
+                {sent ? (
+                  <Notice kind="success">
                     {t(
-                      "Как связаться для уточнения (необязательно)",
-                      "Нақтылау үшін байланыс (міндетті емес)",
+                      "Обращение принято для проверки эмитентом.",
+                      "Өтініш құжат берген ұйымның тексеруіне қабылданды.",
                     )}
-                    <input
-                      value={contact}
-                      maxLength={500}
-                      onChange={(e) => setContact(e.target.value)}
-                    />
-                  </label>
-                  <button disabled={busy || !message.trim()}>
-                    {t(
-                      "Передать обращение эмитенту",
-                      "Өтінішті құжат берген ұйымға жіберу",
-                    )}
-                  </button>
-                </form>
-              )}
-            </details>
+                  </Notice>
+                ) : (
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setBusy(true);
+                      try {
+                        await api(
+                          `/verification/${encodeURIComponent(token)}/corrections`,
+                          {
+                            method: "POST",
+                            body: json({
+                              message,
+                              ...(contact ? { replyContact: contact } : {}),
+                            }),
+                          },
+                        );
+                        setSent(true);
+                      } catch (c) {
+                        setError(errorText(c));
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    <label>
+                      {t("Что требуется проверить", "Нені тексеру қажет")}
+                      <textarea
+                        required
+                        maxLength={2000}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      {t(
+                        "Как связаться для уточнения (необязательно)",
+                        "Нақтылау үшін байланыс (міндетті емес)",
+                      )}
+                      <input
+                        value={contact}
+                        maxLength={500}
+                        onChange={(e) => setContact(e.target.value)}
+                      />
+                    </label>
+                    <button disabled={busy || !message.trim()}>
+                      {t(
+                        "Передать обращение эмитенту",
+                        "Өтінішті құжат берген ұйымға жіберу",
+                      )}
+                    </button>
+                  </form>
+                )}
+              </details>
+            )}
           </>
         ) : (
-          !error && <p role="status">Проверяем запись…</p>
+          token &&
+          !error && (
+            <p role="status">{t("Проверяем запись…", "Жазба тексерілуде…")}</p>
+          )
         )}
       </section>
     </main>

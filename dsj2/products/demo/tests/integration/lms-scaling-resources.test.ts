@@ -11,7 +11,7 @@ import {
   writeFile,
   type FileHandle,
 } from "node:fs/promises";
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { once } from "node:events";
 import { db } from "../../apps/api/src/core";
 import { bootstrap } from "../../apps/api/src/main";
@@ -55,7 +55,7 @@ test(
       "A task-owned storage root is required",
     );
     const evidence: Record<string, unknown> = {
-      owner: "lms-tz-scaling-20261015",
+      owner: process.env.DEMO_LMS_RUN_ID || "lms-scaling-local",
       apiPid: process.pid,
       externalProvider: "NOT_CONNECTED",
     };
@@ -94,11 +94,14 @@ test(
             return Buffer.concat(parts);
           };
           try {
-            for (let i = 0; i < 4; i++)
-              assert.deepEqual(
-                await read(`bytes=${i * 10}-${i * 10 + 9}`),
-                bytes.subarray(i * 10, i * 10 + 10),
-              );
+            await Promise.all(
+              Array.from({ length: 4 }, async (_, i) =>
+                assert.deepEqual(
+                  await read(`bytes=${i * 10}-${i * 10 + 9}`),
+                  bytes.subarray(i * 10, i * 10 + 10),
+                ),
+              ),
+            );
             assert.equal(fullReads, 1);
             await read("bytes=0-4", true);
             assert.equal(fullReads, 2);
@@ -199,6 +202,7 @@ test(
 
       await t.test(
         "own worker start/PENDING/stop/degraded/resume creates one local sanitary result without provider calls",
+        { skip: process.env.DEMO_LMS_RESOURCE_SCOPE === "io" },
         async () => {
           const center = await lmsTenant("scaling lifecycle");
           const learner = await lmsLearner(center.tenant.id, "lifecycle");
@@ -287,6 +291,33 @@ test(
               ).status,
               "PENDING",
             );
+            // A fresh worker must not mask durable errors after restart or
+            // an idle tick between backoff retries.
+            await db.regulatoryOutbox.update({
+              where: { id: outbox.id },
+              data: { attempts: 1 },
+            });
+            const retrying = await integrationHealth(center.tenant.id);
+            assert.equal(retrying.status, "degraded");
+            assert.equal(retrying.reason, "PREPARATION_RETRY_PENDING");
+            assert.equal(retrying.retryingCount, 1);
+            await db.regulatoryOutbox.update({
+              where: { id: outbox.id },
+              data: { status: "NEEDS_REVIEW" },
+            });
+            const failed = await integrationHealth(center.tenant.id);
+            assert.equal(failed.status, "degraded");
+            assert.equal(failed.reason, "PREPARATION_NEEDS_REVIEW");
+            assert.equal(failed.failedCount, 1);
+            assert.equal(
+              (await integrationHealth("no-such-tenant")).status,
+              "ok",
+              "another tenant's failed preparation must not leak into this queue status",
+            );
+            await db.regulatoryOutbox.update({
+              where: { id: outbox.id },
+              data: { status: "PENDING", attempts: 0 },
+            });
             await stop();
             // Windows SIGTERM ends only this captured process; stale age provides the
             // same health proof when the OS cannot deliver a graceful signal handler.
@@ -361,6 +392,9 @@ test(
               providerAttempts: 0,
               administratorReadinessStatus: healthResponse.status,
               version: INTEGRATION_WORKER_VERSION,
+              durableRetryReason: retrying.reason,
+              durableFailureReason: failed.reason,
+              failureScopeIsolated: true,
             };
           } finally {
             await stop();
@@ -369,9 +403,13 @@ test(
         },
       );
     } finally {
-      await mkdir("docs/evidence/lms-tz-scaling-20261015", { recursive: true });
+      const evidenceRoot = resolve(
+        process.env.DEMO_LMS_SCALING_EVIDENCE ||
+          ".runtime/lms-scaling-resource-evidence",
+      );
+      await mkdir(evidenceRoot, { recursive: true });
       await writeFile(
-        "docs/evidence/lms-tz-scaling-20261015/RESOURCE_LIFECYCLE.json",
+        join(evidenceRoot, "RESOURCE_LIFECYCLE.json"),
         JSON.stringify(evidence, null, 2) + "\n",
       );
       await db.$disconnect();

@@ -1,9 +1,10 @@
 "use client";
+import { useCabinetText, useCabinetError } from "./cabinet-language";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Notice } from "@demo/ui";
 import { isDirectorRole } from "@demo/contracts";
-import { api, errorText, json } from "@/lib/api";
+import { api, json } from "@/lib/api";
 
 type Signatory = {
   id: string;
@@ -21,6 +22,7 @@ const roleNames = {
 };
 
 export function SignatorySettings() {
+  const tr = useCabinetText();
   const [items, setItems] = useState<Signatory[]>([]);
   const [users, setUsers] = useState<
     {
@@ -37,13 +39,13 @@ export function SignatorySettings() {
   const [iin, setIin] = useState("");
   const [bin, setBin] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [saved, setSaved] = useState(false);
   const eligibleUsers = users.filter(
     (user) =>
       user.active !== false &&
       !user.disabled &&
-      ["ADMIN", "DIRECTOR", "OPERATOR"].includes(user.role) &&
+      ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EXPERT"].includes(user.role) &&
       (role !== "DIRECTOR" || isDirectorRole(user.role)),
   );
   const load = useCallback(async () => {
@@ -55,7 +57,7 @@ export function SignatorySettings() {
     setUsers(directory.items);
   }, []);
   useEffect(() => {
-    void load().catch((caught) => setError(errorText(caught)));
+    void load().catch((caught) => setError(caught));
   }, [load]);
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -68,7 +70,7 @@ export function SignatorySettings() {
         displayName.trim().length < 2
       )
         throw new Error(
-          "Выберите действующего сотрудника и укажите ФИО как в документах комиссии.",
+          tr("Выберите действующего сотрудника и укажите ФИО как в документах комиссии."),
         );
       await api("/settings/signatories", {
         method: "POST",
@@ -86,61 +88,52 @@ export function SignatorySettings() {
       setIin("");
       setBin("");
     } catch (caught) {
-      setError(errorText(caught));
+      setError(caught);
     } finally {
       setBusy(false);
     }
   }
   return (
     <>
-      <h2>Подписанты ЭЦП</h2>
+      <h2>{tr("Подписанты ЭЦП")}</h2>
       <Notice kind="info">
-        Согласования директора достаточно для подготовки и печати документов.
-        Этот раздел нужен для официального подписания ЭЦП. ФИО комиссии
-        заполняются в реквизитах центра и не требуют отдельных учётных записей.
-      </Notice>
+        {tr("Согласования директора достаточно для подготовки и печати документов. Этот раздел нужен для официального подписания ЭЦП. ФИО комиссии заполняются в реквизитах центра и не требуют отдельных учётных записей.")}</Notice>
       <p>
-        Свяжите учётную запись подписанта с ИИН владельца ЭЦП. Председатель и
-        члены комиссии должны соответствовать утверждённому профилю учебного
-        центра.
-      </p>
+        {tr("Свяжите учётную запись подписанта с ИИН владельца ЭЦП. Председатель и члены комиссии должны соответствовать утверждённому профилю учебного центра.")}</p>
       <p className="muted">
-        Ключ ЭЦП и пароль остаются у подписанта. Готовность eGov Mobile и
-        проверки подписи настраивается на сервере.
-      </p>
+        {tr("Ключ ЭЦП и пароль остаются у подписанта. Готовность eGov Mobile и проверки подписи настраивается на сервере.")}</p>
       {error && <Notice>{error}</Notice>}
       {saved && (
-        <Notice kind="success">Новая привязка подписанта сохранена.</Notice>
+        <Notice kind="success">{tr("Новая привязка подписанта сохранена.")}</Notice>
       )}
       <div className="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>Подписант</th>
-              <th>Роль</th>
-              <th>ИИН</th>
-              <th>Состояние</th>
+              <th>{tr("Подписант")}</th>
+              <th>{tr("Роль")}</th>
+              <th>{tr("ИИН")}</th>
+              <th>{tr("Состояние")}</th>
             </tr>
           </thead>
           <tbody>
             {items.map((entry) => (
               <tr key={entry.id}>
                 <td>{entry.displayName}</td>
-                <td>{roleNames[entry.role]}</td>
+                <td>{tr(roleNames[entry.role])}</td>
                 <td>
                   {entry.iin.slice(0, 3)}••••••{entry.iin.slice(-3)}
                 </td>
-                <td>{entry.active ? "Действует" : "Предыдущая версия"}</td>
+                <td>{entry.active ? tr("Действует") : tr("Предыдущая версия")}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <form onSubmit={submit} className="approval-decision">
-        <h3>Добавить или обновить привязку</h3>
+        <h3>{tr("Добавить или обновить привязку")}</h3>
         <label>
-          Пользователь
-          <select
+          {tr("Пользователь")}<select
             required
             value={userId}
             onChange={(event) => {
@@ -152,7 +145,7 @@ export function SignatorySettings() {
               setSaved(false);
             }}
           >
-            <option value="">Выберите пользователя</option>
+            <option value="">{tr("Выберите пользователя")}</option>
             {eligibleUsers.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.displayName}
@@ -161,8 +154,7 @@ export function SignatorySettings() {
           </select>
         </label>
         <label>
-          Роль подписанта
-          <select
+          {tr("Роль подписанта")}<select
             value={role}
             onChange={(event) => {
               const nextRole = event.target.value as Signatory["role"];
@@ -181,14 +173,13 @@ export function SignatorySettings() {
           >
             {Object.entries(roleNames).map(([value, label]) => (
               <option key={value} value={value}>
-                {label}
+                {tr(label)}
               </option>
             ))}
           </select>
         </label>
         <label>
-          ФИО в документах / комиссии
-          <input
+          {tr("ФИО в документах / комиссии")}<input
             required
             minLength={2}
             maxLength={255}
@@ -202,13 +193,10 @@ export function SignatorySettings() {
           />
         </label>
         <p className="muted" id="signatory-document-name-help">
-          Укажите ФИО в точности как в утверждённом профиле центра: в составе
-          комиссии или в поле руководителя.
-        </p>
+          {tr("Укажите ФИО в точности как в утверждённом профиле центра: в составе комиссии или в поле руководителя.")}</p>
         <div className="form-grid">
           <label>
-            ИИН владельца ЭЦП
-            <input
+            {tr("ИИН владельца ЭЦП")}<input
               required
               inputMode="numeric"
               autoComplete="off"
@@ -222,8 +210,7 @@ export function SignatorySettings() {
             />
           </label>
           <label>
-            БИН сертификата организации, если требуется
-            <input
+            {tr("БИН сертификата организации, если требуется")}<input
               inputMode="numeric"
               autoComplete="off"
               pattern="[0-9]{12}"
@@ -244,7 +231,7 @@ export function SignatorySettings() {
             iin.length !== 12
           }
         >
-          {busy ? "Сохраняем…" : "Сохранить привязку"}
+          {busy ? tr("Сохраняем…") : tr("Сохранить привязку")}
         </button>
       </form>
     </>

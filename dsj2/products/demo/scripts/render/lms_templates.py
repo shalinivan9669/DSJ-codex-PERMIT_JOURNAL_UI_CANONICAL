@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from io import BytesIO
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,8 @@ from package_xml import normalize_package
 ROOT = Path(__file__).resolve().parents[2]
 W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
 POLICY = 'LMS_CENTER_FORMS_V1'
+CURRENT_POLICY = 'LMS_CENTER_FORMS_V3'
+MODERN_POLICIES = ['LMS_CENTER_FORMS_V2', CURRENT_POLICY]
 TEMPLATES = {
     'lms-protocol': ('Протокол результатов обучения', 'Оқу нәтижелерінің хаттамасы'),
     'lms-certificate': ('Сертификат учебного центра', 'Оқу орталығының сертификаты'),
@@ -35,7 +38,7 @@ def identify_lms(path, template_id):
         if 'demo/lms-form.json' not in archive.namelist():
             return False
         marker = json.loads(archive.read('demo/lms-form.json'))
-    return marker.get('policy') == POLICY and marker.get('templateId') == template_id
+    return marker.get('policy') in [POLICY, *MODERN_POLICIES] and marker.get('templateId') == template_id
 
 
 def _text(value):
@@ -116,10 +119,92 @@ def lms_fields(snapshot, item):
         'LEGAL_MEANING': meaning,
         'ASSESSMENT': 'Внешний уполномоченный экзамен / Уәкілетті сыртқы емтихан' if external else 'Экзамен учебного центра / Оқу орталығының емтиханы',
         'SOURCE': source_description,
+        'REGULATORY': '\n'.join(' · '.join(filter(None, [
+            _text(item.get('title')), _text(item.get('number')), _text(item.get('date')),
+            _text(item.get('authority')), _text(item.get('revision')),
+            ('ст. / бап ' + _text(item.get('article'))) if item.get('article') else '',
+            ('п. / т. ' + _text(item.get('paragraph'))) if item.get('paragraph') else '',
+            ('пп. / тт. ' + _text(item.get('subparagraph'))) if item.get('subparagraph') else '',
+        ])) for item in source.get('regulatorySources', [])),
         'ORIGINAL': _text(lms.get('originalReference') or source.get('documentNumber') or '—'),
         'TRACE': f"Результат / Нәтиже {lms['resultId']} · r{lms.get('resultRevision', 1)}\nВерсия правил / Ереже нұсқасы {lms['profileVersionId']}",
         'SYNTHETIC': 'СИНТЕТИЧЕСКИЙ УЧЕБНЫЙ ПРИМЕР / СИНТЕТИКАЛЫҚ ОҚУ МЫСАЛЫ' if lms.get('synthetic') else '',
     }, lms
+
+
+def enrich_v2(files, lms, template_id):
+    """Add frozen private exam evidence and QR before any signed PDF exists."""
+    from docx import Document
+    from docx.shared import Mm, Pt
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from verification_qr import verification_qr
+    buffer = BytesIO()
+    with ZipFile(buffer, 'w') as archive:
+        for name, content in files.items():
+            archive.writestr(name, content)
+    document = Document(buffer)
+    url = (lms.get('verification') or {}).get('url')
+    for table in document.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    if paragraph.text == 'QR_IMAGE':
+                        paragraph.clear()
+                        if url:
+                            image = BytesIO()
+                            verification_qr({'url': url}, image)
+                            paragraph.add_run().add_picture(image, width=Mm(29), height=Mm(29))
+                            paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    elif paragraph.text == 'QR_LINK':
+                        paragraph.clear()
+                        if url:
+                            paragraph.add_run('Проверка записи / Жазбаны тексеру\n').font.size = Pt(7)
+                            # The full stable URL is both visible and clickable.
+                            from docx.oxml import OxmlElement
+                            from docx.oxml.ns import qn
+                            from docx.opc.constants import RELATIONSHIP_TYPE
+                            hyperlink = OxmlElement('w:hyperlink')
+                            hyperlink.set(qn('r:id'), document.part.relate_to(url, RELATIONSHIP_TYPE.HYPERLINK, is_external=True))
+                            run = OxmlElement('w:r')
+                            props = OxmlElement('w:rPr')
+                            size = OxmlElement('w:sz'); size.set(qn('w:val'), '12'); props.append(size)
+                            run.append(props)
+                            text = OxmlElement('w:t'); text.text = url; run.append(text)
+                            hyperlink.append(run); paragraph._p.append(hyperlink)
+    protocol = lms.get('protocol')
+    if template_id == 'lms-protocol' and protocol:
+        def paragraph(text, bold=False, size=10, keep=False):
+            p = document.add_paragraph()
+            p.paragraph_format.keep_with_next = keep
+            run = p.add_run(text); run.bold = bold; run.font.size = Pt(size)
+            return p
+        p = paragraph('Ведомость итогового экзамена / Қорытынды емтихан ведомосі', bold=True, size=13, keep=True)
+        p.paragraph_format.page_break_before = True
+        percent = f"{protocol['percent']:.2f}".rstrip('0').rstrip('.')
+        comparison = '>' if protocol['comparison'] == 'GT' else '≥'
+        paragraph(f"Попытка / Әрекет № {protocol['ordinal']} · {percent}% · Проходной балл / Өту балы {comparison} {protocol['thresholdPercent']}%", bold=True)
+        paragraph('Завершена / Аяқталған: ' + _text(protocol['finishedAt']), size=9)
+        if protocol.get('commission'):
+            paragraph('Комиссия / Комиссия', bold=True, keep=True)
+            for member in protocol['commission']:
+                paragraph(member['role'] + ' — ' + member['name'])
+        for index, question in enumerate(protocol['questions'], 1):
+            paragraph(f"{index}. " + _both(question['promptRu'], question['promptKz']), bold=True, keep=True)
+            paragraph('Ответ слушателя / Тыңдаушының жауабы: ' + _both(question['responseRu'], question['responseKz']))
+            paragraph('Правильный ответ или критерий / Дұрыс жауап немесе критерий: ' + _both(question['correctAnswerRu'], question['correctAnswerKz']))
+            paragraph('Баллы / Балдар: ' + _text(question['score']) + ' / 1', size=9)
+        paragraph('История попыток / Әрекеттер тарихы', bold=True, keep=True)
+        labels = {'PASSED': 'Сдал / Тапсырды', 'FAILED': 'Не сдал / Тапсырмады', 'EXPIRED': 'Время истекло / Уақыт аяқталды', 'FINISHED': 'Завершено / Аяқталған'}
+        for attempt in protocol['history']:
+            state = labels.get(attempt.get('verdict') or attempt['state'], 'Завершено / Аяқталған')
+            points = '' if attempt.get('score') is None else f" · {attempt['score']}/{attempt['maximum']}"
+            paragraph(f"№ {attempt['ordinal']} · {state}{points} · {_text(attempt['finishedAt'])}", size=9)
+    output = BytesIO(); document.save(output)
+    with ZipFile(output) as archive:
+        rendered = {name: archive.read(name) for name in archive.namelist()}
+    # python-docx discards unreferenced custom metadata. Preserve provenance.
+    rendered.update({name: value for name, value in files.items() if name.startswith('demo/')})
+    return rendered
 
 
 def render_lms_one(snapshot, item, path):
@@ -128,6 +213,7 @@ def render_lms_one(snapshot, item, path):
     values, lms = lms_fields(snapshot, item)
     with ZipFile(path) as archive:
         files = {name: archive.read(name) for name in archive.namelist()}
+    marker = json.loads(files['demo/lms-form.json'])
     root = E.fromstring(files['word/document.xml'])
     for node in root.iter(W + 't'):
         text = node.text or ''
@@ -141,8 +227,10 @@ def render_lms_one(snapshot, item, path):
         if not ''.join(t.text or '' for t in paragraph.iter(W + 't')).strip() and paragraph.getparent().tag == W + 'body':
             paragraph.getparent().remove(paragraph)
     files['word/document.xml'] = E.tostring(root, xml_declaration=True, encoding='utf-8')
+    if marker['policy'] in MODERN_POLICIES:
+        files = enrich_v2(files, lms, snapshot['templateId'])
     files['demo/lms-result.json'] = json.dumps({
-        'policy': POLICY, 'resultId': lms['resultId'], 'resultRevision': lms.get('resultRevision', 1),
+        'policy': marker['policy'], 'resultId': lms['resultId'], 'resultRevision': lms.get('resultRevision', 1),
         'profileVersionId': lms['profileVersionId'], 'legalForm': lms['legalForm'],
         'assessmentKind': lms['assessmentKind'], 'source': lms.get('source'),
         'signatureState': lms.get('signatureState', 'PREPARED'),
@@ -155,6 +243,7 @@ def render_lms_document(snapshot, out, path):
     if not 1 <= len(items) <= 10000:
         raise ValueError('LMS_DOCUMENT_ROW_LIMIT')
     files = render_lms_one(snapshot, items[0], path)
+    policy = json.loads(files['demo/lms-form.json'])['policy']
     root = E.fromstring(files['word/document.xml'])
     body = root.find(W + 'body')
     section = body.find(W + 'sectPr')
@@ -163,6 +252,28 @@ def render_lms_document(snapshot, out, path):
     for item in items[1:]:
         additional = render_lms_one(snapshot, item, path)
         additional_root = E.fromstring(additional['word/document.xml'])
+        # Each participant owns a different QR and hyperlink; remap both when
+        # making a multi-recipient derivative, including DrawingML r:embed.
+        rel_ns = '{http://schemas.openxmlformats.org/package/2006/relationships}'
+        doc_rel = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+        rels = E.fromstring(files['word/_rels/document.xml.rels'])
+        other_rels = E.fromstring(additional['word/_rels/document.xml.rels'])
+        for relation in other_rels:
+            if not relation.get('Type', '').endswith(('/image', '/hyperlink')):
+                continue
+            old_id = relation.get('Id'); new_id = f'rIdLms{len(rels) + 1}'
+            copied = deepcopy(relation); copied.set('Id', new_id)
+            if relation.get('Type', '').endswith('/image'):
+                old_target = relation.get('Target')
+                target = f'media/lms-{len(files)}-{Path(old_target).name}'
+                copied.set('Target', target)
+                files['word/' + target] = additional['word/' + old_target]
+            rels.append(copied)
+            for node in additional_root.iter():
+                for attribute in ['id', 'embed', 'link']:
+                    if node.get(doc_rel + attribute) == old_id:
+                        node.set(doc_rel + attribute, new_id)
+        files['word/_rels/document.xml.rels'] = E.tostring(rels, xml_declaration=True, encoding='utf-8')
         nodes = [n for n in additional_root.find(W + 'body') if n.tag != W + 'sectPr']
         if nodes:
             first = nodes[0]
@@ -177,7 +288,7 @@ def render_lms_document(snapshot, out, path):
         body.append(section)
     files['word/document.xml'] = E.tostring(root, xml_declaration=True, encoding='utf-8')
     deterministic_zip(out, normalize_package(files))
-    return {'format': 'DOCX', 'templateId': snapshot['templateId'], 'templateVersion': snapshot.get('templateVersion', 1), 'renderPolicy': POLICY, 'participants': len(items)}
+    return {'format': 'DOCX', 'templateId': snapshot['templateId'], 'templateVersion': snapshot.get('templateVersion', 1), 'renderPolicy': policy, 'participants': len(items)}
 
 
 def build_templates():
@@ -228,7 +339,7 @@ def build_templates():
         document.core_properties.author = 'Учебный центр'
         document.core_properties.last_modified_by = 'Учебный центр'
         document.core_properties.title = titles[0]
-        document.core_properties.subject = 'LMS_CENTER_FORMS_V1'
+        document.core_properties.subject = CURRENT_POLICY
         document.core_properties.created = datetime(2026, 10, 15)
         document.core_properties.modified = datetime(2026, 10, 15)
 
@@ -282,20 +393,32 @@ def build_templates():
             paragraph('{{HOURS}} ч. / сағ. · {{EXAM_DATE}} · {{RESULT}}', size=10, center=True)
             paragraph('{{ASSESSMENT}}', size=10, center=True)
             paragraph('Источник / Дереккөз: {{SOURCE}}', size=9, center=True)
-        paragraph('{{LEGAL_MEANING}}', size=8 if template_id == 'lms-credential' else 9)
-        paragraph('{{TRACE}}', size=7)
+        footer = document.add_table(rows=1, cols=2)
+        footer.autofit = False
+        usable_width = (section.page_width - section.left_margin - section.right_margin) / 36000
+        for cell, width in zip(footer.rows[0].cells, [usable_width - 32, 32]):
+            cell.width = Mm(width)
+        footer.rows[0].cells[0].text = '{{LEGAL_MEANING}}'
+        footer.rows[0].cells[0].add_paragraph('{{REGULATORY}}')
+        footer.rows[0].cells[0].add_paragraph('{{TRACE}}')
+        footer.rows[0].cells[0].add_paragraph('QR_LINK')
+        footer.rows[0].cells[1].text = 'QR_IMAGE'
+        for cell in footer.rows[0].cells:
+            for p in cell.paragraphs:
+                p.paragraph_format.space_after = Pt(2)
+                for run in p.runs: run.font.size = Pt(7)
         buffer = BytesIO()
         document.save(buffer)
         with ZipFile(BytesIO(buffer.getvalue())) as archive:
             files = {name: archive.read(name) for name in archive.namelist()}
-        files['demo/lms-form.json'] = json.dumps({'policy': POLICY, 'templateId': template_id, 'version': 1, 'legalApproval': 'REQUIRED_BY_ISSUER'}, sort_keys=True).encode()
-        path = ROOT / 'assets/templates' / f'{template_id}.v1.docx'
+        files['demo/lms-form.json'] = json.dumps({'policy': CURRENT_POLICY, 'templateId': template_id, 'version': 3, 'legalApproval': 'REQUIRED_BY_ISSUER'}, sort_keys=True).encode()
+        path = ROOT / 'assets/templates' / f'{template_id}.v3.docx'
         deterministic_zip(path, normalize_package(files))
         with ZipFile(path) as archive:
             fields = sorted(set(re.findall(r'\{\{([A-Z_]+)\}\}', archive.read('word/document.xml').decode())))
             xml = E.fromstring(archive.read('word/document.xml'))
             sections = [dict(node.attrib) for node in xml.iter(W + 'pgSz')]
-        result.append({'id': template_id, 'version': 1, 'file': path.name, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'fields': fields, 'sections': sections, 'languages': ['ru', 'kk'], 'photo': False, 'exports': ['DOCX', 'PDF'], 'ownerKind': 'INDIVIDUAL', 'protocolSemantics': None, 'legalApproval': 'REQUIRED_BY_ISSUER', 'renderPolicy': POLICY, 'formRevision': POLICY, 'verificationStatus': 'ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE'})
+        result.append({'id': template_id, 'version': 3, 'file': path.name, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'fields': fields, 'sections': sections, 'languages': ['ru', 'kk'], 'photo': False, 'exports': ['DOCX', 'PDF'], 'ownerKind': 'INDIVIDUAL', 'protocolSemantics': None, 'legalApproval': 'REQUIRED_BY_ISSUER', 'renderPolicy': CURRENT_POLICY, 'formRevision': CURRENT_POLICY, 'verificationStatus': 'ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE'})
     (ROOT / 'assets/templates/lms-manifest.fragment.json').write_text(json.dumps({'specialTemplates': result}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     return result
 

@@ -579,7 +579,7 @@ def render_one(snapshot,item,template):
 def resolve_template(snapshot):
     manifest=json.loads((ROOT/'assets/templates/manifest.json').read_text(encoding='utf-8'))
     pool=manifest.get('groupTemplates',[]) if snapshot.get('groupEvent') else manifest['templates']
-    pool=[*pool,*[t for t in manifest.get('specialTemplates',[]) if (t.get('ownerKind')=='GROUP')==bool(snapshot.get('groupEvent'))]]
+    pool=[*pool,*[t for t in [*manifest.get('specialTemplates',[]), *manifest.get('archivedTemplates',[])] if (t.get('ownerKind')=='GROUP')==bool(snapshot.get('groupEvent'))]]
     template=next((t for t in pool if t['id']==snapshot['templateId'] and (snapshot.get('templateStorageKey') or str(t['version'])==str(snapshot.get('templateVersion',1)))),None)
     if not template: raise ValueError('TEMPLATE_VERSION_UNKNOWN')
     if snapshot.get('templateStorageKey'):
@@ -891,6 +891,9 @@ def build_bundle(payload,out):
 def main():
     command,out=sys.argv[1:3]; payload=json.loads(sys.stdin.buffer.read().decode('utf8')); Path(out).parent.mkdir(parents=True,exist_ok=True)
     if command=='health': result=runtime_health(out)
+    elif command=='template-validate':
+        from template_validation import validate_template
+        result=validate_template(payload,out)
     elif command=='preflight': result=preflight(payload,out)
     elif command=='docx': result=render_docx(payload,out)
     elif command=='pdf': result=convert_pdf(payload['docxPath'],out)
@@ -904,6 +907,9 @@ def main():
         # hit the bounded metadata channel for legitimate large spreadsheets.
         result={'count':imported['count'],'canApply':imported['canApply']}
     elif command=='xlsx': result=export_registry(payload,out)
+    elif command=='lms-report':
+        from lms_report import render_lms_report
+        result=render_lms_report(payload,out,convert_pdf)
     elif command=='regulatory-list':
         from regulatory_list import render_regulatory_list
         result=render_regulatory_list(payload,out,convert_pdf)

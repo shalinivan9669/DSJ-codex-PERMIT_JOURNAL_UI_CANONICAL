@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "noEmit": true },
+  "files": [
+    "lms-pass02-chain.ts",
+    "lms-pass02-recovery.ts",
+    "lms-pass02-chain-invalidation.ts"
+  ]
+}

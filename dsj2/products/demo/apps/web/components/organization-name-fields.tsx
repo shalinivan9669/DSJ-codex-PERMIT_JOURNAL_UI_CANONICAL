@@ -1,4 +1,5 @@
 "use client";
+import { useCabinetText } from "./cabinet-language";
 import { useId, useState } from "react";
 import {
   formatOrganizationNames,
@@ -28,6 +29,7 @@ export function OrganizationNameFields({
   hideEmptyPreview?: boolean;
   requestEntry?: boolean;
 }) {
+  const tr = useCabinetText();
   const id = useId();
   const [differentKz, setDifferentKz] = useState(!!value.ownNameKz);
   const names = value.legalForm
@@ -41,7 +43,7 @@ export function OrganizationNameFields({
     names?.issue ||
     (showRequiredErrors &&
     !(value.legalForm ? value.ownNameRu : value.nameRu)?.trim()
-      ? "Введите название компании."
+      ? tr("Введите название компании.")
       : "");
   function update(ownNameRu: string, ownNameKz: string) {
     if (!value.legalForm) return;
@@ -61,7 +63,7 @@ export function OrganizationNameFields({
   return (
     <div className="stack organization-name-fields">
       <label>
-        {labels?.legalForm || "Форма организации"}
+        {labels?.legalForm || tr("Форма организации")}
         <select
           value={value.legalForm || ""}
           aria-describedby={requestEntry ? undefined : `${id}-hint`}
@@ -98,11 +100,11 @@ export function OrganizationNameFields({
           }}
         >
           {!value.legalForm && (
-            <option value="">Сохранённое название — как введено</option>
+            <option value="">{tr("Сохранённое название — как введено")}</option>
           )}
           {ORGANIZATION_FORMS.map((form) => (
             <option value={form.value} key={form.value}>
-              {form.label}
+              {tr(form.label)}
             </option>
           ))}
         </select>
@@ -111,16 +113,17 @@ export function OrganizationNameFields({
         <p className="fine-print" id={`${id}-hint`}>
           {compactHints
             ? value.legalForm === "NONE"
-              ? "Название сохранится как введено."
-              : "Введите название без ТОО, ИП, АО. Кавычки сохраняются."
-            : "Название вводится один раз. Меняется только обозначение формы: ТОО / ЖШС, ИП / ЖК, АО / АҚ."}
+              ? tr("Название сохранится как введено.")
+              : tr("Введите название без ТОО, ИП, АО. Кавычки сохраняются.")
+            : tr("Название вводится один раз. Меняется только обозначение формы: ТОО / ЖШС, ИП / ЖК, АО / АҚ.")}
         </p>
       )}
       {value.legalForm ? (
         <>
           <label>
-            {labels?.ownNameRu || "Собственное наименование"}
+            {labels?.ownNameRu || tr("Собственное наименование")}
             <input
+              aria-label={labels?.ownNameRu || tr("Собственное наименование")}
               autoFocus={autoFocus}
               required
               maxLength={500}
@@ -134,8 +137,8 @@ export function OrganizationNameFields({
             {!compactHints && (
               <small>
                 {value.legalForm === "NONE"
-                  ? "Название сохраняется как введено. Обозначение формы не добавляется."
-                  : "Без ТОО, ИП, АО. Кавычки сохраняются так, как вы их ввели."}
+                  ? tr("Название сохраняется как введено. Обозначение формы не добавляется.")
+                  : tr("Без ТОО, ИП, АО. Кавычки сохраняются так, как вы их ввели.")}
               </small>
             )}
           </label>
@@ -144,7 +147,7 @@ export function OrganizationNameFields({
               open={differentKz || undefined}
               className="organization-extra-name"
             >
-              <summary>Другое наименование на казахском</summary>
+              <summary>{tr("Другое наименование на казахском")}</summary>
               <label className="checkbox-label">
                 <input
                   type="checkbox"
@@ -155,12 +158,10 @@ export function OrganizationNameFields({
                       update(value.ownNameRu || "", "");
                   }}
                 />
-                Собственное наименование на казахском отличается
-              </label>
+                {tr("Собственное наименование на казахском отличается")}</label>
               {differentKz && (
                 <label>
-                  Собственное наименование · KZ
-                  <input
+                  {tr("Собственное наименование · KZ")}<input
                     required
                     maxLength={500}
                     value={value.ownNameKz || ""}
@@ -176,25 +177,21 @@ export function OrganizationNameFields({
           )}
           {nameError && (
             <p className="field-error" id={`${id}-error`} role="alert">
-              {nameError}
+              {tr(nameError)}
             </p>
           )}
           {names?.normalized && !names.issue && (
             <p className="fine-print">
-              Отдельное обозначение выбранной формы распознано. В полном
-              названии оно будет только один раз.
-            </p>
+              {tr("Отдельное обозначение выбранной формы распознано. В полном названии оно будет только один раз.")}</p>
           )}
         </>
       ) : (
         <>
           <p className="fine-print">
-            Старые или импортированные названия сохраняются без изменений. Чтобы
-            разделить форму и имя, явно выберите форму и проверьте предпросмотр.
-          </p>
+            {tr("Старые или импортированные названия сохраняются без изменений. Чтобы разделить форму и имя, явно выберите форму и проверьте предпросмотр.")}</p>
           <div className="form-grid">
             <label>
-              {legacyLabels[0]}
+              {tr(legacyLabels[0])}
               <input
                 autoFocus={autoFocus}
                 required
@@ -208,12 +205,12 @@ export function OrganizationNameFields({
               />
               {nameError && (
                 <span className="field-error" id={`${id}-error`} role="alert">
-                  {nameError}
+                  {tr(nameError)}
                 </span>
               )}
             </label>
             <label>
-              {legacyLabels[1]}
+              {tr(legacyLabels[1])}
               <input
                 maxLength={500}
                 value={value.nameKz}
@@ -233,16 +230,16 @@ export function OrganizationNameFields({
         <div
           className="form-grid organization-name-preview"
           aria-live="polite"
-          aria-label="Полные названия для документов"
+          aria-label={tr("Полные названия для документов")}
         >
           <div>
-            <small>Полное название · RU</small>
+            <small>{tr("Полное название · RU")}</small>
             <p>
               <output>{names?.nameRu || value.nameRu || "—"}</output>
             </p>
           </div>
           <div>
-            <small>Полное название · KZ</small>
+            <small>{tr("Полное название · KZ")}</small>
             <p>
               <output>{names?.nameKz || value.nameKz || "—"}</output>
             </p>

@@ -185,7 +185,7 @@ export async function reviewExternalEvidence(
   id: string,
   input: unknown,
 ) {
-  if (!["ADMIN", "DIRECTOR"].includes(c.role))
+  if (!["SUPER_ADMIN", "ADMIN", "DIRECTOR"].includes(c.role))
     fail(403, "REVIEWER_REQUIRED", "Проверка доступна руководителю центра");
   const data = parse(
     z
@@ -247,7 +247,7 @@ export async function clarifyExternalExamDate(
   id: string,
   input: unknown,
 ) {
-  if (!["ADMIN", "DIRECTOR"].includes(c.role))
+  if (!["SUPER_ADMIN", "ADMIN", "DIRECTOR"].includes(c.role))
     fail(403, "REVIEWER_REQUIRED", "Проверка доступна руководителю центра");
   const data = parse(
     z

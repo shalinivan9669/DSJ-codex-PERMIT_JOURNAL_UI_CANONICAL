@@ -82,6 +82,8 @@ type SanitaryBatch = {
     reference: string;
     category: string;
     createdAt: string;
+    sha256?: string | null;
+    supersedesId?: string | null;
   }[];
   history?: {
     id: string;
@@ -285,7 +287,7 @@ export function Sanitary({
           onClose={() => setActive(null)}
         />
       )}
-      {["ADMIN", "DIRECTOR"].includes(context.user.role) && (
+      {["SUPER_ADMIN", "ADMIN", "DIRECTOR"].includes(context.user.role) && (
         <SanitarySettings t={t} timezone={context.tenant.timezone} />
       )}
     </>
@@ -305,6 +307,7 @@ function SanitaryDetails({
   const [detail, setDetail] = useState(batch),
     [error, setError] = useState("");
   const [activeItem, setActiveItem] = useState<SanitaryItem | null>(null);
+  const [supersedesId, setSupersedesId] = useState<string | undefined>();
   const [refresh, setRefresh] = useState(0);
   useEffect(() => {
     let alive = true;
@@ -392,7 +395,10 @@ function SanitaryDetails({
                 <td>
                   <button
                     disabled={!item.delivery}
-                    onClick={() => setActiveItem(item)}
+                    onClick={() => {
+                      setSupersedesId(undefined);
+                      setActiveItem(item);
+                    }}
                   >
                     {t("Добавить подтверждение", "Растауды қосу")}
                   </button>
@@ -404,8 +410,9 @@ function SanitaryDetails({
       </div>
       {activeItem && (
         <ManualEvidence
-          key={activeItem.id}
+          key={activeItem.id + (supersedesId || "")}
           item={activeItem}
+          supersedesId={supersedesId}
           t={t}
           onSaved={() => setRefresh((value) => value + 1)}
         />
@@ -422,6 +429,24 @@ function SanitaryDetails({
                   <Status value={entry.category} t={t} />
                   <br />
                   {entry.source}
+                  {entry.supersedesId && (
+                    <span>
+                      {" "}
+                      ·{" "}
+                      {t(
+                        "Исправление прежнего подтверждения",
+                        "Алдыңғы растауды түзету",
+                      )}
+                    </span>
+                  )}
+                  {detail.evidence?.some(
+                    (next) => next.supersedesId === entry.id,
+                  ) && (
+                    <span>
+                      {" "}
+                      · {t("Заменено исправлением", "Түзетумен ауыстырылған")}
+                    </span>
+                  )}
                   {entry.reference && <> · {entry.reference}</>}
                   <br />
                   <time dateTime={entry.createdAt}>
@@ -429,6 +454,33 @@ function SanitaryDetails({
                       t("ru-KZ", "kk-KZ"),
                     )}
                   </time>
+                  {entry.sha256 && (
+                    <p>
+                      <a
+                        href={`/api/lms/sanitary/evidence/${entry.id}/file`}
+                        download
+                      >
+                        {t("Скачать подтверждение", "Растауды жүктеу")}
+                      </a>
+                    </p>
+                  )}
+                  {!detail.evidence?.some(
+                    (next) => next.supersedesId === entry.id,
+                  ) && (
+                    <button
+                      onClick={() => {
+                        const item = detail.items.find(
+                          (value) => value.delivery?.id === entry.deliveryId,
+                        );
+                        if (item) {
+                          setSupersedesId(entry.id);
+                          setActiveItem(item);
+                        }
+                      }}
+                    >
+                      {t("Исправить подтверждение", "Растауды түзету")}
+                    </button>
+                  )}
                 </span>
               </li>
             ))}
@@ -459,11 +511,14 @@ function ManualEvidence({
   item,
   t,
   onSaved,
+  supersedesId,
 }: {
   item: SanitaryItem;
   t: Translate;
   onSaved: () => void;
+  supersedesId?: string;
 }) {
+  const [requestKey] = useState(() => crypto.randomUUID());
   const [source, setSource] = useState(""),
     [reference, setReference] = useState(""),
     [file, setFile] = useState<File | null>(null),
@@ -479,6 +534,8 @@ function ManualEvidence({
     if (file) body.set("file", file);
     body.set("source", source);
     body.set("reference", reference);
+    body.set("requestKey", requestKey);
+    if (supersedesId) body.set("supersedesId", supersedesId);
     try {
       await api(`/lms/sanitary/deliveries/${item.delivery.id}/evidence`, {
         method: "POST",
@@ -509,7 +566,12 @@ function ManualEvidence({
         <form onSubmit={submit}>
           <div className="lms-fields">
             <label>
-              {t("Источник подтверждения", "Растау дереккөзі")}
+              {supersedesId
+                ? t(
+                    "Источник и причина исправления",
+                    "Дереккөз және түзету себебі",
+                  )
+                : t("Источник подтверждения", "Растау дереккөзі")}
               <input
                 required
                 value={source}

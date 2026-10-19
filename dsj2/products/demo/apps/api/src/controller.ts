@@ -26,12 +26,14 @@ import {
 } from "./core";
 import { login, logout, changePassword, cookies } from "./auth";
 import { registerCenter } from "./tenant-provisioning";
+import { auditDetails } from "./audit-view";
 import {
   context,
   getProfile,
   saveProfile,
   saveCustomer,
   saveUser,
+  bootstrapSuperAdmin,
   updateNumbering,
 } from "./settings";
 import * as requests from "./requests";
@@ -795,6 +797,12 @@ export class DemoController {
         );
       try {
         await files.store.read(template.storageKey, template.checksum);
+        const contract = template.contract as { sourceVersionId?: string; preview?: { docx?: { storageKey: string; sha256: string }; pdf?: { storageKey: string; sha256: string }; sampleOnly?: boolean } };
+        if (contract.sourceVersionId) {
+          if (!contract.preview?.docx || !contract.preview.pdf || !contract.preview.sampleOnly) throw new Error("PREVIEW_REQUIRED");
+          await files.store.read(contract.preview.docx.storageKey, contract.preview.docx.sha256);
+          await files.store.read(contract.preview.pdf.storageKey, contract.preview.pdf.sha256);
+        }
       } catch {
         fail(
           422,
@@ -820,14 +828,15 @@ export class DemoController {
     @Req() req: DemoRequest,
     @Body() body: unknown,
   ) {
-    return updateNumbering(ctx(req, true, true), body);
+    return updateNumbering(requireCapability(req, "system:manage"), body);
   }
   @Get("staff-directory") staffDirectory(@Req() req: DemoRequest) {
     return staffDirectory(ctx(req));
   }
   @Get("users") async users(@Req() req: DemoRequest) {
+    const c = requireCapability(req, "users:manage");
     const items = await db.user.findMany({
-      where: { tenantId: ctx(req, false, true).tenantId },
+      where: { tenantId: c.tenantId },
       select: {
         id: true,
         email: true,
@@ -837,23 +846,32 @@ export class DemoController {
       },
       orderBy: { displayName: "asc" },
     });
-    return { items: items.map((u) => ({ ...u, disabled: !u.active })) };
+    return {
+      items: items.map((u) => ({ ...u, disabled: !u.active })),
+      canBootstrapSuperAdmin: ["ADMIN", "DIRECTOR"].includes(c.role) &&
+        !items.some((u) => u.active && u.role === "SUPER_ADMIN"),
+    };
+  }
+  @Post("users/bootstrap-super-admin") bootstrapSuperAdmin(
+    @Req() req: DemoRequest, @Body() body: unknown,
+  ) {
+    return bootstrapSuperAdmin(requireCapability(req, "users:manage"), body);
   }
   @Post("users") createUser(@Req() req: DemoRequest, @Body() body: unknown) {
-    return saveUser(ctx(req, true, true), body);
+    return saveUser(requireCapability(req, "users:manage"), body);
   }
   @Patch("users/:id") updateUser(
     @Req() req: DemoRequest,
     @Param("id") id: string,
     @Body() body: unknown,
   ) {
-    return saveUser(ctx(req, true, true), body, id);
+    return saveUser(requireCapability(req, "users:manage"), body, id);
   }
   @Get("audit") async audit(
     @Req() req: DemoRequest,
     @Query("page") page = "1",
   ) {
-    const c = ctx(req, false, true);
+    const c = requireCapability(req, "system:manage");
     const number = parse(z.coerce.number().int().positive(), page);
     const [items, total] = await db.$transaction([
       db.auditEvent.findMany({
@@ -864,6 +882,15 @@ export class DemoController {
       }),
       db.auditEvent.count({ where: { tenantId: c.tenantId } }),
     ]);
-    return { items, total, page: number, pageSize: 50 };
+    const actors = await db.user.findMany({
+      where: { tenantId: c.tenantId, id: { in: [...new Set(items.flatMap((item) => item.actorId ? [item.actorId] : []))] } },
+      select: { id: true, displayName: true },
+    });
+    return { items: items.map((item) => ({
+      id: item.id, createdAt: item.createdAt, action: item.action,
+      actorId: item.actorId, entityId: item.entityId,
+      actorDisplayName: actors.find((actor) => actor.id === item.actorId)?.displayName || null,
+      ...auditDetails(item.metadata),
+    })), total, page: number, pageSize: 50 };
   }
 }

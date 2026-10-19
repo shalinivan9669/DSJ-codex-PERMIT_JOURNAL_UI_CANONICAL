@@ -17,6 +17,8 @@ import {
 } from "./core";
 const scrypt = promisify(scryptCallback);
 import { trustedClientIp } from "./proxy-policy";
+import type { User, Tenant } from "@demo/database";
+import { createMfaChallenge, mandatoryMfa } from "./mfa";
 export async function passwordHash(password: string): Promise<string> {
   const salt = randomBytes(24).toString("hex");
   const derived = (await scrypt(password, salt, 64)) as Buffer;
@@ -80,12 +82,18 @@ export async function authenticate(
     rateLimit("api:global", 50000);
     originCheck(req);
     const publicVerification =
+      (req.method === "POST" && req.path === "/verification/search") ||
       (req.method === "GET" &&
         /^\/verification\/[a-f0-9]{64}$/.test(req.path)) ||
       (req.method === "POST" &&
         /^\/verification\/[a-f0-9]{64}\/corrections$/.test(req.path));
     if (
       req.path === "/auth/login" ||
+      (req.method === "GET" && req.path === "/learn/registration") ||
+      (req.method === "POST" && req.path === "/auth/mfa/challenge") ||
+      (req.method === "GET" &&
+        /^\/learn\/catalogue(?:\/[A-Za-z0-9_-]+)?$/.test(req.path)) ||
+      (req.method === "POST" && req.path === "/learn/catalogue/applications") ||
       (req.method === "POST" &&
         [
           "/learn/register",
@@ -129,12 +137,38 @@ export async function authenticate(
       fail(401, "SESSION_REVOKED", "Сессия отозвана");
     rateLimit(`user:${s.tenantId}:${user.id}`, 1200);
     rateLimit(`tenant:${s.tenantId}`, 20000);
+    const factor = await db.mfaFactor.findUnique({
+      where: { userId: user.id },
+      select: { enabledAt: true },
+    });
+    if (
+      !s.mfaVerifiedAt &&
+      (factor?.enabledAt || mandatoryMfa(user.role, tenant.mfaRequiredStaff)) &&
+      !req.path.startsWith("/auth/mfa/") &&
+      !["/auth/logout"].includes(req.path)
+    )
+      fail(
+        403,
+        "MFA_SETUP_REQUIRED",
+        "Подключите второй фактор в настройках безопасности",
+      );
     if (req.path.startsWith("/lms/") || req.path.startsWith("/learn/")) {
       const { assertLmsDeploymentAllowed } =
         await import("./lms/deployment-gate");
       await assertLmsDeploymentAllowed(tenant);
     }
-    if (!roleRouteAllowed(user.role, req.path))
+    const learnerAction =
+      /^\/lms\/enrollments\/[^/]+\/(assessments|assignments)\b/.test(req.path);
+    const teachingMode =
+      req.path.startsWith("/lms/") &&
+      !learnerAction &&
+      roleRouteAllowed("TEACHER", req.path) &&
+      !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EMPLOYER"].includes(user.role) &&
+      !!(await db.lmsTeachingBinding.findFirst({
+        where: { tenantId: s.tenantId, userId: user.id, revokedAt: null },
+        select: { id: true },
+      }));
+    if (!roleRouteAllowed(user.role, req.path) && !teachingMode)
       fail(403, "ROLE_SCOPE", "Недостаточно прав для этой операции");
     if (!["GET", "HEAD", "OPTIONS"].includes(req.method)) {
       const csrf = req.headers["x-csrf-token"];
@@ -150,6 +184,8 @@ export async function authenticate(
       correlationId: req.correlationId,
       trustedIp: trustedClientIp(req),
       source: "browser",
+      teachingMode,
+      learningMode: req.path.startsWith("/learn/") || learnerAction,
     };
     if (
       req.method === "POST" &&
@@ -212,6 +248,17 @@ export async function login(req: DemoRequest, res: Response, input: unknown) {
     : null;
   if (!valid || !user?.active || !tenant?.active || !knownRole(user.role))
     fail(401, "LOGIN_FAILED", "Неверный логин или пароль");
+  const factor = await db.mfaFactor.findUnique({ where: { userId: user.id } });
+  if (factor?.enabledAt) return createMfaChallenge(user);
+  return issueSession(req, res, user, tenant, false);
+}
+export async function issueSession(
+  req: DemoRequest,
+  res: Response,
+  user: User,
+  tenant: Tenant,
+  mfaVerified: boolean,
+) {
   const token = randomBytes(32).toString("hex");
   const csrf = randomBytes(32).toString("hex");
   const id = hash(token);
@@ -222,6 +269,7 @@ export async function login(req: DemoRequest, res: Response, input: unknown) {
       userId: user.id,
       csrfHash: hash(csrf),
       sessionVersion: user.sessionVersion,
+      mfaVerifiedAt: mfaVerified ? new Date() : null,
       expiresAt: new Date(Date.now() + 8 * 3600_000),
     },
   });
@@ -250,6 +298,8 @@ export async function login(req: DemoRequest, res: Response, input: unknown) {
     },
     tenant: { id: tenant.id, name: tenant.name, timezone: tenant.timezone },
     csrfToken: csrf,
+    mfaSetupRequired:
+      !mfaVerified && mandatoryMfa(user.role, tenant.mfaRequiredStaff),
   };
 }
 export async function logout(c: Context, res: Response) {

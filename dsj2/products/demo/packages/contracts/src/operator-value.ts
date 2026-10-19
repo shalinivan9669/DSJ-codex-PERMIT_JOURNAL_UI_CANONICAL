@@ -319,6 +319,7 @@ export function calculateCommercial(input: CommercialInput) {
 }
 export const paymentSchema = z
   .object({
+    requestKey: z.string().uuid().optional(),
     amountMinor: z
       .string()
       .regex(/^-?(0|[1-9]\d{0,15})$/)

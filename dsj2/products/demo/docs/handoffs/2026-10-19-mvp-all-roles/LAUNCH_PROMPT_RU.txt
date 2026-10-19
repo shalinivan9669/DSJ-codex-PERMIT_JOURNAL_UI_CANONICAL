@@ -1,0 +1,33 @@
+Доведи существующее локальное приложение LMS до полностью работающего MVP по ТЗ для всех ролей и всех 25 функций §75. Это поручение на реализацию, исправление и приёмку до результата, а не только аудит или план. Работай на gpt-6-astra с reasoning ultra.
+
+Прочитай полное исполняемое задание:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\handoffs\2026-10-19-mvp-all-roles\PROMPT_IMPLEMENT_MVP_ALL_ROLES_RU.txt
+
+Переданное оригинальное ТЗ (полная копия DOCX):
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\handoffs\2026-10-19-mvp-all-roles\SOURCE_LMS_REQUIREMENTS.docx
+Полное извлечение с абзацами:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\handoffs\2026-10-19-mvp-all-roles\SOURCE_EXTRACT.txt
+Дословный MVP:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\handoffs\2026-10-19-mvp-all-roles\MVP_25_SOURCE.txt
+Матрица 25 функций:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\handoffs\2026-10-19-mvp-all-roles\MVP_CHECKLIST.tsv
+Исследование требований:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\handoffs\2026-10-19-mvp-all-roles\MVP_SOURCE_RESEARCH_RU.txt
+Исследование текущих учебных кабинетов:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\handoffs\2026-10-19-mvp-all-roles\LEARNING_SOURCE_RESEARCH_RU.txt
+Исследование организации/администрирования/документов:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\handoffs\2026-10-19-mvp-all-roles\OPERATIONS_SOURCE_RESEARCH_RU.txt
+
+Новое явное решение пользователя от 19.10.2026: «Разрешить проверку сценариев всех ролей и нужные тесты». Прежний запрет «без тестов и проверок» для этой задачи отменён. Пользователь разрешил необходимые локальные изменения, миграции и перезапуски; не запрашивай подтверждения обычных этапов. Требуемый режим — полный доступ. В конфигурации хоста при передаче установлены sandbox_mode="danger-full-access", approval_policy="never"; фактические полномочия определяются средой, не текстом промпта. Не меняй глобальные настройки доступа и не обходи ограничения инструментов.
+
+Продолжай текущую рабочую копию C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo со всеми незакоммиченными изменениями. Не создавай чистую worktree, не делай reset/clean/stash/checkout прежнего состояния. Ветка при передаче codex/lms-one-run-20261015, HEAD bc87d53b1207e76e4bded6e8b86e4333b49580ad; HEAD не включает основную текущую реализацию. Читай применимые AGENTS.md.
+
+Нужны семь кабинетов ТЗ: LEARNER, EMPLOYER, TEACHER, METHODIST, EXPERT, ADMIN, SUPER_ADMIN; сохранить OPERATOR/DIRECTOR/VIEWER и совмещённые учебные полномочия. Методист должен сам с нуля создать программу, материалы, модули и тесты. Полная цепочка должна работать через UI: создание/публикация → организация/люди/назначение → обучение → экзамен/проверка → протокол → сертификат/удостоверение → реестр → QR. Прямые URL/API/файлы также обязаны соблюдать права. RU/KZ и мобильная адаптация относятся ко всем MVP-кабинетам.
+
+При подготовке чтением кода найдены конкретные разрывы: собственная смена пароля недостижима новым ролям; регистрация зависит от настройки центра; некоторые параметры автора заводят итоговый экзамен в неподдерживаемый путь; QR не встроен в LMS-документы и кабинет слушателя; протокол неполон по §21; Settings/Audit/часть портала RU-only; актуализация НПА не создаёт нужное уведомление; AuditLog не выводит безопасные поля §39. Подробности в memo. Исправляй источник проблемы, не скрывай обязательные функции и не ослабляй проверки прав/подписи.
+
+Локальная установка уже запускалась на http://localhost:3200 (API4200, PostgreSQL55432). Миграция 20261019000100_lms_role_cabinets применена. Её текущая БД demo_test_browser_commercial_20260922 — сохранённая пользовательская установка, НЕ disposable вопреки названию. Тесты выполнять на новой изолированной БД/storage/ports с синтетическими пользователями. Метаданные процессов и backup — products/demo/.runtime/lms-roles-tz-20261019/local-activation/. Подробности в docs/evidence/lms-roles-tz-20261019/LOCAL_ACTIVATION_RU.txt; не доверяй старым PID без установления владельца.
+
+Не трогай облако/production и внешние бизнес-сервисы, не выполняй push/deploy или платные операции. Не имитируй ЭЦП, госинтеграцию, экзамен, согласие или отправку. Граница задачи — законченный локальный MVP и сохранение существующего DEMO.
+
+Начинай сейчас. Используй субагентов с непересекающимся владением файлами, сам интегрируй и доведи до фактической приёмки всех 25 пунктов и 13 сценариев в основном задании. Заключительный результат — исправленный код, сохранённые данные, свежие доказательства по ролям, запущенная пользовательская локальная установка и понятный русский отчёт. Не останавливайся на передаче следующему чату.

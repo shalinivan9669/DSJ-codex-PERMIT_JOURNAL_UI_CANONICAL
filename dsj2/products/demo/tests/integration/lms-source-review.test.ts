@@ -6,6 +6,7 @@ import { bootstrap } from "../../apps/api/src/main";
 import { createCourse, publishVersion } from "../../apps/api/src/lms/courses";
 import { assignEnrollments } from "../../apps/api/src/lms/enrollments";
 import { enrollmentDetail } from "../../apps/api/src/lms/learning";
+import { listEnrollmentPage } from "../../apps/api/src/lms/enrollment-list";
 import { reviewExternalEvidence } from "../../apps/api/src/lms/external";
 import { documentMetadata } from "../../apps/api/src/lms/document-metadata";
 import { lmsStore } from "../../apps/api/src/lms/materials";
@@ -95,6 +96,19 @@ test("S03/S09: unknown external exam date stays null, prepares internal review l
         const detail = await enrollmentDetail(learner.context, enrollment.id);
         assert.equal(detail.results[0].state, "NEEDS_REVIEW");
         assert.equal(detail.results[0].documentEligible, false);
+        assert.equal(
+          (await listEnrollmentPage(center.context, { view: "NEEDS_REVIEW" }))
+            .total,
+          1,
+        );
+        assert.equal(
+          (
+            await listEnrollmentPage(center.context, {
+              view: "WAITING_DOCUMENTS",
+            })
+          ).total,
+          0,
+        );
         const event = await db.regulatoryOutbox.findFirstOrThrow({
           where: { tenantId: center.tenant.id, resultId: result.id },
         });

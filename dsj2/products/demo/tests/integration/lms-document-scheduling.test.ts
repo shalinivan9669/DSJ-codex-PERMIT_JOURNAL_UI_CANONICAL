@@ -63,7 +63,7 @@ test(
       const attempt = await startAttempt(learner.context, enrollment.id);
       await saveAnswers(learner.context, attempt.id, {
         sequence: 1,
-        answers: { "q-0": ["a"] },
+        answers: { [attempt.questions[0].id]: ["a"] },
       });
       const finished = await submitAttempt(learner.context, attempt.id);
       assert.equal(finished.result!.eligible, true);
@@ -94,7 +94,7 @@ test(
             where: { issuanceId: null, status: "PREPARED" },
           });
           for (let tick = 0; tick < Math.ceil(total / 30) + 2; tick++) {
-            await advanceLmsDocuments();
+            await advanceLmsDocuments(30, c.tenantId);
             if (
               (
                 await db.lmsDocumentLink.findUniqueOrThrow({
@@ -135,7 +135,7 @@ test(
             where: { issuanceId: null, status: "PREPARED" },
           });
           for (let tick = 0; tick < Math.ceil(pendingCount / 30) + 2; tick++) {
-            await advanceLmsDocuments();
+            await advanceLmsDocuments(30, c.tenantId);
             if (
               !(await db.lmsDocumentLink.count({
                 where: { id: { in: ownIds }, issuanceId: null },
@@ -229,7 +229,7 @@ test(
             where: { issuanceId: { not: null }, status: "PREPARED" },
           });
           for (let tick = 0; tick < Math.ceil(total / 30) + 2; tick++) {
-            await advanceLmsDocuments();
+            await advanceLmsDocuments(30, c.tenantId);
             if (
               (
                 await db.lmsDocumentLink.findUniqueOrThrow({
@@ -253,6 +253,30 @@ test(
             }),
             32,
             "the other real requests still wait for rendering",
+          );
+          const published =
+            await db.publicDocumentVerification.findUniqueOrThrow({
+              where: { id: ready.id },
+            });
+          await db.publicDocumentVerification.delete({
+            where: { id: ready.id },
+          });
+          await advanceLmsDocuments(30, c.tenantId);
+          const repaired =
+            await db.publicDocumentVerification.findUniqueOrThrow({
+              where: { id: ready.id },
+            });
+          assert.equal(
+            repaired.tokenHash,
+            published.tokenHash,
+            "issued publication recovery is independent of the 32 waiting render requests",
+          );
+          assert.equal(repaired.documentId, published.documentId);
+          assert.equal(
+            await db.publicDocumentVerification.count({
+              where: { tenantId: c.tenantId },
+            }),
+            33,
           );
         },
       );

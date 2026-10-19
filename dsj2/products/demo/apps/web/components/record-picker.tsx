@@ -1,7 +1,8 @@
 "use client";
+import { useCabinetText, useCabinetError } from "./cabinet-language";
 import { useEffect, useState } from "react";
 import { Modal, Notice } from "@demo/ui";
-import { api, errorText } from "@/lib/api";
+import { api } from "@/lib/api";
 import { type Customer, type Page, type Recipient } from "@/lib/types";
 import { recordQueryIsCurrent, recordQueryKey } from "@/lib/record-query";
 import { reuseRecipient, type StoredRecipient } from "@/lib/stored-recipient";
@@ -18,6 +19,7 @@ export function RecordPicker({
   onCustomer?: (customer: Customer) => void;
   onRecipient?: (person: Recipient) => void;
 }) {
+  const tr = useCabinetText();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [result, setResult] = useState<Page<Customer | StoredRecipient>>({
@@ -25,7 +27,7 @@ export function RecordPicker({
     total: 0,
   });
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [loadedQuery, setLoadedQuery] = useState<string>();
   const [failedQuery, setFailedQuery] = useState<string>();
   const [retry, setRetry] = useState(0);
@@ -50,7 +52,7 @@ export function RecordPicker({
         })
         .catch((caught) => {
           if (active) {
-            setError(errorText(caught));
+            setError(caught);
             setFailedQuery(query);
           }
         })
@@ -67,15 +69,14 @@ export function RecordPicker({
     <Modal
       title={
         kind === "customers"
-          ? "Найти заказчика"
-          : "Найти существующего получателя"
+          ? tr("Найти заказчика")
+          : tr("Найти существующего получателя")
       }
       onClose={onClose}
       wide
     >
       <label>
-        Поиск по справочнику
-        <input
+        {tr("Поиск по справочнику")}<input
           autoFocus
           value={search}
           onChange={(e) => {
@@ -86,30 +87,26 @@ export function RecordPicker({
           }}
           placeholder={
             kind === "customers"
-              ? "Название или БИН"
-              : "ФИО, внешний или табельный номер"
+              ? tr("Название или БИН")
+              : tr("ФИО, внешний или табельный номер")
           }
         />
       </label>
       {kind === "recipients" && (
         <p className="fine-print">
-          Используем личные данные и подтверждённое фото. Даты нового события,
-          результаты и документы выбираются заново.
-        </p>
+          {tr("Используем личные данные и подтверждённое фото. Даты нового события, результаты и документы выбираются заново.")}</p>
       )}
       {error && failedQuery === query && (
         <Notice>
-          {error} Результаты этого поиска недоступны; измените запрос или
-          повторите поиск.
-        </Notice>
+          {error} {" "}{tr("Результаты этого поиска недоступны; измените запрос или повторите поиск.")}</Notice>
       )}
-      {loading && <p role="status">Ищем по текущему запросу…</p>}
+      {loading && <p role="status">{tr("Ищем по текущему запросу…")}</p>}
       <div className="table-scroll" aria-busy={loading}>
         <table>
           <thead>
             <tr>
-              <th>{kind === "customers" ? "Организация" : "Получатель"}</th>
-              <th>Идентификатор</th>
+              <th>{kind === "customers" ? tr("Организация") : tr("Получатель")}</th>
+              <th>{tr("Идентификатор")}</th>
               <th />
             </tr>
           </thead>
@@ -136,7 +133,7 @@ export function RecordPicker({
                       ? customer.bin
                       : recipient.data.personnelNumber ||
                         recipient.data.externalId ||
-                        "не указан"}
+                        tr("не указан")}
                   </td>
                   <td>
                     <button
@@ -147,8 +144,7 @@ export function RecordPicker({
                         else onRecipient?.(reuseRecipient(recipient));
                       }}
                     >
-                      Выбрать
-                    </button>
+                      {tr("Выбрать")}</button>
                   </td>
                 </tr>
               );
@@ -157,13 +153,13 @@ export function RecordPicker({
         </table>
       </div>
       {current && !loading && !result.items.length && (
-        <p>Записи не найдены. Измените поиск или добавьте новую запись.</p>
+        <p>{tr("Записи не найдены. Измените поиск или добавьте новую запись.")}</p>
       )}
       <div className="pagination">
         <span>
           {current
-            ? `Найдено: ${result.total} · страница ${page}`
-            : `Страница ${page}`}
+            ? `${tr("Найдено: ")}${result.total}${tr(" · страница ")}${page}`
+            : `${tr("Страница ")}${page}`}
         </span>
         <div>
           <button
@@ -174,8 +170,7 @@ export function RecordPicker({
               setPage(page - 1);
             }}
           >
-            Назад
-          </button>
+            {tr("Назад")}</button>
           <button
             disabled={loading || !current || page * 20 >= result.total}
             onClick={() => {
@@ -184,8 +179,7 @@ export function RecordPicker({
               setPage(page + 1);
             }}
           >
-            Далее
-          </button>
+            {tr("Далее")}</button>
         </div>
         {failedQuery === query && (
           <button
@@ -195,8 +189,7 @@ export function RecordPicker({
               setRetry(retry + 1);
             }}
           >
-            Повторить поиск
-          </button>
+            {tr("Повторить поиск")}</button>
         )}
       </div>
     </Modal>

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { api, json } from "@/lib/api";
 import type { Course } from "@/lib/lms-api";
-import { lmsError, type Translate } from "./common";
+import { LmsErrorDiagnostic, lmsError, type Translate } from "./common";
 
 export const regulatoryStates = [
   ["CURRENT", "Актуален", "Өзекті"],
@@ -25,11 +25,12 @@ export function CourseAvailability({
   const [note, setNote] = useState(course.currentReview?.note || "");
   const [reason, setReason] = useState(course.assignmentPauseReason || "");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<unknown>(null);
+  const allowed = course.allowedActions || [];
   async function saveReview() {
     if (!status) return;
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const review = await api<NonNullable<Course["currentReview"]>>(
         `/lms/courses/${course.id}/regulatory-review`,
@@ -37,14 +38,14 @@ export function CourseAvailability({
       );
       onChange({ ...course, currentReview: review });
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
     } finally {
       setBusy(false);
     }
   }
   async function pause() {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const value = await api<Course>(`/lms/courses/${course.id}/pause`, {
         method: "POST",
@@ -52,7 +53,22 @@ export function CourseAvailability({
       });
       onChange({ ...course, ...value });
     } catch (caught) {
-      setError(lmsError(caught, t));
+      setError(caught);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function archive() {
+    setBusy(true);
+    setError(null);
+    try {
+      const value = await api<Course>(`/lms/courses/${course.id}/archive`, {
+        method: "POST",
+        body: json({ archived: !course.archived, reason }),
+      });
+      onChange({ ...course, ...value });
+    } catch (caught) {
+      setError(caught);
     } finally {
       setBusy(false);
     }
@@ -65,63 +81,106 @@ export function CourseAvailability({
           "Өзектілік және жаңа тағайындаулар",
         )}
         {course.assignmentPaused ? ` · ${t("На паузе", "Тоқтатылған")}` : ""}
+        {course.archived ? ` · ${t("В архиве", "Мұрағатта")}` : ""}
         {course.currentReview && course.currentReview.status !== "CURRENT"
           ? ` · ${t("Нужна актуализация", "Өзектендіру қажет")}`
           : ""}
       </summary>
-      {error && <p role="alert">{error}</p>}
-      <div className="lms-fields">
-        <label>
-          {t("Текущая проверка основания", "Негіздің ағымдағы тексеруі")}
-          <select
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
+      {!!error && (
+        <>
+          <p role="alert">{lmsError(error, t)}</p>
+          <LmsErrorDiagnostic error={error} t={t} />
+        </>
+      )}
+      {allowed.includes("reviewRegulatory") && (
+        <>
+          <div className="lms-fields">
+            <label>
+              {t("Текущая проверка основания", "Негіздің ағымдағы тексеруі")}
+              <select
+                value={status}
+                onChange={(event) => setStatus(event.target.value)}
+              >
+                <option value="">{t("Не проверено", "Тексерілмеген")}</option>
+                {regulatoryStates.map(([value, ru, kz]) => (
+                  <option key={value} value={value}>
+                    {t(ru, kz)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              {t("Примечание к проверке", "Тексеру туралы ескертпе")}
+              <textarea
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+              />
+            </label>
+          </div>
+          <button
+            type="button"
+            disabled={
+              busy ||
+              !status ||
+              (status === course.currentReview?.status &&
+                note === (course.currentReview?.note || ""))
+            }
+            onClick={() => void saveReview()}
           >
-            <option value="">{t("Не проверено", "Тексерілмеген")}</option>
-            {regulatoryStates.map(([value, ru, kz]) => (
-              <option key={value} value={value}>
-                {t(ru, kz)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          {t("Примечание к проверке", "Тексеру туралы ескертпе")}
-          <textarea
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-          />
-        </label>
-      </div>
-      <button
-        type="button"
-        disabled={
-          busy ||
-          !status ||
-          (status === course.currentReview?.status &&
-            note === (course.currentReview?.note || ""))
-        }
-        onClick={() => void saveReview()}
-      >
-        {t("Сохранить проверку", "Тексеруді сақтау")}
-      </button>
-      <div className="lms-fields">
-        <label>
-          {t(
-            "Причина паузы новых назначений",
-            "Жаңа тағайындауларды тоқтату себебі",
+            {t("Сохранить проверку", "Тексеруді сақтау")}
+          </button>
+        </>
+      )}
+      {(allowed.includes("pause") || allowed.includes("archive")) && (
+        <>
+          <div className="lms-fields">
+            <label>
+              {t(
+                "Причина изменения доступности",
+                "Қолжетімділікті өзгерту себебі",
+              )}
+              <input
+                value={reason}
+                onChange={(event) => setReason(event.target.value)}
+              />
+            </label>
+          </div>
+          {allowed.includes("pause") && (
+            <button
+              type="button"
+              disabled={busy || !reason.trim()}
+              onClick={() => void pause()}
+            >
+              {course.assignmentPaused
+                ? t(
+                    "Возобновить новые назначения",
+                    "Жаңа тағайындауларды жалғастыру",
+                  )
+                : t(
+                    "Приостановить новые назначения",
+                    "Жаңа тағайындауларды тоқтату",
+                  )}
+            </button>
           )}
-          <input
-            value={reason}
-            onChange={(event) => setReason(event.target.value)}
-          />
-        </label>
-      </div>
-      <button type="button" disabled={busy} onClick={() => void pause()}>
-        {course.assignmentPaused
-          ? t("Возобновить новые назначения", "Жаңа тағайындауларды жалғастыру")
-          : t("Приостановить новые назначения", "Жаңа тағайындауларды тоқтату")}
-      </button>
+          {allowed.includes("archive") && (
+            <button
+              type="button"
+              disabled={busy || !reason.trim()}
+              onClick={() => void archive()}
+            >
+              {course.archived
+                ? t("Вернуть курс из архива", "Курсты мұрағаттан қайтару")
+                : t("Архивировать курс", "Курсты мұрағаттау")}
+            </button>
+          )}
+          <p className="muted">
+            {t(
+              "История опубликованных версий и обучения сохраняется.",
+              "Жарияланған нұсқалар мен оқу тарихы сақталады.",
+            )}
+          </p>
+        </>
+      )}
     </details>
   );
 }

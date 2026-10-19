@@ -24,6 +24,14 @@ export const reviewSourceLabels: Record<string, string> = {
   INHERITED: "Общие данные",
 };
 
+export function reviewOutcomeSourceLabel(
+  assignment: Draft["items"][number]["assignments"][number],
+) {
+  return assignment.lms && assignment.outcome?.source?.startsWith("LMS:")
+    ? "Результат обучения"
+    : assignment.outcome?.source || "";
+}
+
 /** Summarize exactly the server-resolved submitted scope, not the live editor. */
 export function approvalReviewSummary(
   review: ApprovalReview,
@@ -102,7 +110,7 @@ export function approvalReviewSummary(
         assignment.outcome?.source &&
         !hasAutomaticPositiveOutcome(assignment)
       )
-        group.sources.add(assignment.outcome.source);
+        group.sources.add(reviewOutcomeSourceLabel(assignment));
       const rawRow = submitted.items.find((entry) => entry.id === row.id);
       const rawAssignment = rawRow?.assignments.find(
         (entry) => entry.id === assignment.id,

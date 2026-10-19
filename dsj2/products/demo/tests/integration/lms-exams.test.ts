@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { db, type Context } from "../../apps/api/src/core";
+import { db, json, type Context } from "../../apps/api/src/core";
 import { bootstrap } from "../../apps/api/src/main";
 import { createCourse, publishVersion } from "../../apps/api/src/lms/courses";
 import {
@@ -110,7 +110,9 @@ test("E02–E07: real PostgreSQL exams preserve scope, strict threshold, sequenc
       "tampered score, invalid question and reordered autosave cannot overwrite newer answers",
       async () => {
         const answers = Object.fromEntries(
-          Array.from({ length: 8 }, (_, i) => [`q-${i}`, ["a"]]),
+          (await getAttempt(learner.context, attemptId)).questions
+            .slice(0, 8)
+            .map((question) => [question.id, ["a"]]),
         );
         const saved = await saveAnswers(learner.context, attemptId, {
           sequence: 3,
@@ -183,7 +185,9 @@ test("E02–E07: real PostgreSQL exams preserve scope, strict threshold, sequenc
         await saveAnswers(learner.context, attempt.id, {
           sequence: 1,
           answers: Object.fromEntries(
-            Array.from({ length: 9 }, (_, i) => [`q-${i}`, ["a"]]),
+            attempt.questions
+              .slice(0, 9)
+              .map((question) => [question.id, ["a"]]),
           ),
         });
         const completed = await submitAttempt(learner.context, attempt.id);
@@ -207,17 +211,42 @@ test("E02–E07: real PostgreSQL exams preserve scope, strict threshold, sequenc
     await t.test(
       "closed-browser deadline worker finalizes saved answers once and attempt limit remains enforced",
       async () => {
-        const third = await startAttempt(learner.context, enrollmentId);
-        await saveAnswers(learner.context, third.id, {
-          sequence: 1,
-          answers: { "q-0": ["a"] },
+        const prior = await db.examAttempt.findUniqueOrThrow({
+          where: { id: secondId },
         });
+        const snapshot = prior.snapshot as unknown as {
+          questions: Array<{ id: string }>;
+        };
         const expiredAt = new Date(Date.now() - 1000);
-        // Fixture-only clock advance; no API permits changing the immutable server deadline.
-        await db.examAttempt.update({
-          where: { id: third.id },
-          data: { deadlineAt: expiredAt },
+        // Persist a synthetic historical third attempt with its original expired deadline.
+        const third = await db.examAttempt.create({
+          data: {
+            tenantId: center.tenant.id,
+            enrollmentId,
+            courseVersionId: prior.courseVersionId,
+            regulatoryProfileVersionId: prior.regulatoryProfileVersionId,
+            assessmentKind: prior.assessmentKind,
+            assessmentId: "FINAL",
+            purpose: "FINAL",
+            ordinal: 3,
+            activeKey: `${center.tenant.id}:${enrollmentId}:FINAL`,
+            snapshot: json(prior.snapshot),
+            sequence: 1,
+            answers: json({ [snapshot.questions[0].id]: ["a"] }),
+            startedAt: new Date(
+              expiredAt.getTime() -
+                definition.content.exam.durationMinutes * 60000,
+            ),
+            deadlineAt: expiredAt,
+          },
         });
+        await assert.rejects(
+          db.examAttempt.update({
+            where: { id: third.id },
+            data: { deadlineAt: new Date() },
+          }),
+          /LEARNING_ATTEMPT_SNAPSHOT_IMMUTABLE/,
+        );
         await Promise.all([expireLmsAttempts(), expireLmsAttempts()]);
         const result = await getAttempt(learner.context, third.id);
         assert.equal(result.state, "FINISHED");
@@ -306,7 +335,7 @@ test("E02 E07: practice and unreviewed route never produce eligible official res
       await saveAnswers(learner.context, attempt.id, {
         sequence: 1,
         answers: Object.fromEntries(
-          Array.from({ length: 10 }, (_, i) => [`q-${i}`, ["a"]]),
+          attempt.questions.map((question) => [question.id, ["a"]]),
         ),
       });
       const result = await submitAttempt(learner.context, attempt.id);

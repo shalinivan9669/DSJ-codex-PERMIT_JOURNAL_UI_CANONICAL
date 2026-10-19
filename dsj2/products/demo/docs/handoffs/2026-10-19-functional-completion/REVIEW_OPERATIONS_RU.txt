@@ -1,0 +1,85 @@
+ОБЗОР OPERATIONS / PRINTING / DOCUMENTS / REPORTING / SETTINGS / SANITARY
+Дата: 2026-10-19.
+Метод: проверка текущих исходников и сохранённых доказательств; без новых runtime-тестов, запуска API, обращения к БД или управления процессами.
+При сохранении этого обзора изменён только данный файл. Продуктовый код не изменялся.
+
+Read-only сверка завершена; код, БД и процессы не изменялись. Последний документированный запуск — 19.10.2026, 13:38 Asia/Qyzylorda. В нём пользовательская установка проверена через health, страницу входа, heartbeat, миграции и сохранённые файлы; вход реального пользователя и новый бизнес-процесс в его базе не выполнялись:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\evidence\mvp-all-roles-20261019\run-01\LOCAL_RUN_RU.txt:130
+
+Для нового промпта предлагаются восемь конкретных пунктов. Это различает подтверждённые ограничения реализации, эксплуатационные пробелы и расширение прежнего объёма — не объявляет уже пройденные UI-сценарии неработающими.
+
+1. ПОЛНОЕ ВКЛЮЧЕНИЕ ЛОКАЛЬНОГО ПРОДУКТА ПОСЛЕ ПЕРЕЗАГРУЗКИ КОМПЬЮТЕРА
+
+Источник:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\scripts\verification\mvp-restart.ps1:17
+Скрипт пропускает web; PostgreSQL также не запускает. Это прямо отмечено здесь:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\evidence\mvp-all-roles-20261019\run-01\LOCAL_RUN_RU.txt:95
+
+Приёмка: один документированный способ холодного старта всей установки: PostgreSQL → API → workers → web, проверка готовности, понятная диагностика и безопасное повторное выполнение. Установка должна переживать перезагрузку без ручного восстановления переменных из переписки. Сохранить проверки владельца процессов и разделение user/test.
+
+2. ВОССТАНОВЛЕНИЕ ВСЕЙ УСТАНОВКИ, ВКЛЮЧАЯ ПРИВАТНЫЕ ФАЙЛЫ
+
+Источник:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\evidence\mvp-all-roles-20261019\run-01\LOCAL_RUN_RU.txt:172
+Документ честно фиксирует: полный свежий backup storage и выполненный restore drill не подтверждены.
+
+Приёмка: согласованная резервная копия БД, immutable artifacts/templates, конфигурации и необходимых ключей; восстановление в отдельный каталог/БД; сверка количества записей, связей и checksum файлов; запуск восстановленной копии и скачивание исторического документа. Не восстанавливать поверх пользовательского контура и не переиспользовать номера.
+
+3. ЖИЗНЕННЫЙ ЦИКЛ ФОРМ НАЧИНАЕТСЯ СО СКРИПТА, А НЕ С ОБЫЧНОГО UI
+
+Источник UI списка и утверждения:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\web\components\settings.tsx:410
+Создание версии выполняет:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\scripts\maintenance\register-lms-templates.ts:118
+Пользовательские v3 зарегистрированы, но ещё не утверждены:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\evidence\mvp-all-roles-20261019\run-01\LOCAL_RUN_RU.txt:139
+
+Приёмка: ответственное лицо из UI получает образец DOCX/PDF, видит версию/checksum/назначение и утверждает форму. Для добавления новой формы нужен целостный административный маршрут: загрузка → проверка допустимых полей/структуры → пробный render → новая immutable версия → утверждение. Не переписывать существующие версии.
+
+4. НАСТРОЙКА САНИТАРНОГО ПОДКЛЮЧЕНИЯ ПОКА НЕ ЯВЛЯЕТСЯ РАБОЧИМ АДМИНИСТРАТИВНЫМ ПОДКЛЮЧЕНИЕМ
+
+Источник:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\regulatory-results\controller.ts:373
+Обработчик возвращает верхнеуровневое connection: "NOT_CONNECTED" константой; PUT сохраняет только destination и политику доступа.
+Соответствующий ограниченный UI:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\web\components\lms\sanitary-settings.tsx:365
+Delivery допускает только согласованный SANDBOX-контракт:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\regulatory-results\delivery.ts:33
+
+Приёмка: показывать вычисленное состояние каждого подключения; локальный ручной маршрут должен полностью работать без провайдера: подготовка списка → выгрузка → регистрация фактического подтверждения с файлом/ссылкой → история и исправление. Внешний статус нельзя заменять переключателем в БД. Реальный LMK/госреестр требует контракта и внешнего доступа; медицинские заключения не создавать.
+
+5. ЭЛЕКТРОННОЕ ПОДПИСАНИЕ ИМЕЕТ ЧЕСТНЫЙ ВНЕШНИЙ ПРЕДЕЛ, А НЕ ЛОКАЛЬНО ЗАВЕРШЁННЫЙ РЕЗУЛЬТАТ
+
+Источник:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\signing.ts:315
+Требуются verifier/eGov URL и секреты окружения. Полномочия доказаны реальным HTTP, но провайдер недоступен:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\evidence\mvp-all-roles-20261019\run-01\documents\signing-authority\J08-signing-authority.json
+
+Приёмка: законченный локальный бумажный маршрут, явный статус неподписанного электронного файла, диагностика конфигурации без раскрытия секретов. Реальную ЭЦП принимать только после действительного сертификата, проверки подписи/отзыва и подтверждённого provider flow. Локальный test CA не является выполнением этого требования.
+
+6. «СОТРУДНИКИ» И «ОРГАНИЗАЦИИ» В ОТЧЁТАХ ОХВАТЫВАЮТ ТОЛЬКО НАЗНАЧЕНИЯ ОБУЧЕНИЯ
+
+Общий enrollment cohort:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\lms\report-query.ts:28
+Отчёты EMPLOYEES/ORGANIZATIONS агрегируют именно его:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\lms\report-query.ts:79
+Сотрудник без назначения или организация без обучений туда не попадут.
+
+Приёмка: если новый объём предполагает полный учёт центра, добавить самостоятельные реестры/режим «все», включая нулевые показатели; явно различать фильтры назначения и даты документа. Доказать UI→CSV/XLSX/PDF совпадение на содержательном наборе с неназначенными сотрудниками, пустой организацией и несколькими курсами.
+
+7. LMS-ОТЧЁТ «ДОКУМЕНТЫ» НЕ ЯВЛЯЕТСЯ ОБЩИМ РЕЕСТРОМ ВСЕЙ ПЕЧАТИ
+
+Источник:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\lms\report-query.ts:61
+Документы строятся через VerifiedExamResult и LmsDocumentLink. Обычные выдачи DEMO без LMS-экзамена в этот отчёт не входят.
+
+Приёмка: сохранить раздельное происхождение документов, но предоставить понятный общий поиск/реестр либо явные режимы LMS/обычная печать с одинаковыми операциями просмотра, выгрузки, отзыва и истории. Обычный PASSED/AUTO никогда не преобразовывать в подтверждённый результат LMS.
+
+8. ПРЕДЕЛ ОТЧЁТОВ ШИРЕ ФАКТИЧЕСКИ ИЗМЕРЕННОЙ НАГРУЗКИ
+
+Источник лимита в 50 000 строк:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\apps\api\src\lms\reports.ts:25
+Фактическая нагрузочная проверка — 5 000:
+C:\Users\Admin\Documents\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\dsj2\products\demo\docs\evidence\mvp-all-roles-20261019\run-01\reports\REPORTS_ACCEPTANCE_RU.txt:8
+
+Приёмка: измерить заявленный максимум или установить доказанный предел; проверить память, время, отмену, retry, восстановление worker и отзыв DOWNLOAD после enqueue. Для PDF проверить все страницы/разбиение, для XLSX — отсутствие формульной инъекции. Это расширение доказательств, а не обнаруженное падение текущих отчётов.

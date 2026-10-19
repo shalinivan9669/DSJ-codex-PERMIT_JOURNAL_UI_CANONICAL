@@ -2,10 +2,12 @@ import { Controller, Get, Post, Req, Res, Body, Param } from "@nestjs/common";
 import type { Response } from "express";
 import { ctx, type DemoRequest } from "./core";
 import { rateLimit } from "./auth";
+import { trustedClientIp } from "./proxy-policy";
 import * as verification from "./public-verification";
 
 export const publicVerificationRoutes = [
   ["GET", "/verification/:token"],
+  ["POST", "/verification/search"],
   ["POST", "/verification/:token/corrections"],
   ["GET", "/verification-links"],
   ["POST", "/verification-links"],
@@ -20,6 +22,15 @@ function privacy(res: Response) {
 }
 @Controller()
 export class PublicVerificationController {
+  @Post("verification/search") search(
+    @Req() req: DemoRequest,
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: unknown,
+  ) {
+    privacy(res);
+    rateLimit(`verification-search:${trustedClientIp(req) || "unknown"}`, 20);
+    return verification.searchPublicVerification(body);
+  }
   @Get("verification/:token") record(
     @Req() req: DemoRequest,
     @Res({ passthrough: true }) res: Response,

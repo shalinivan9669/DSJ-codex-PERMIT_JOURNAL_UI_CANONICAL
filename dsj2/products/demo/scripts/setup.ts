@@ -13,6 +13,7 @@ export async function provision(input: {
   password: string;
   name: string;
   sample?: boolean;
+  demonstration?: boolean;
 }) {
   if (input.password.length < 12) throw new Error("ADMIN_PASSWORD_MIN_12");
   let user = await db.user.findUnique({
@@ -23,7 +24,7 @@ export async function provision(input: {
     : null;
   if (!user) {
     tenant = await db.tenant.create({
-      data: { name: input.name, demoOnly: !!input.sample },
+      data: { name: input.name, demoOnly: !!(input.sample || input.demonstration) },
     });
     user = await db.user.create({
       data: {
@@ -149,6 +150,7 @@ if (require.main === module) {
     password,
     name,
     sample: process.env.DEMO_SAMPLE_DATA === "1",
+    demonstration: process.env.DEMO_DEMONSTRATION_MODE === "1",
   })
     .then((result) =>
       console.log(

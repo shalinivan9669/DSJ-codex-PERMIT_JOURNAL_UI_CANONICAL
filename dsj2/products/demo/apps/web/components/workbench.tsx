@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import type { AppContext } from "@/lib/types";
-import { OrderFinance, type Commercial } from "./order-finance";
+import { OrderFinance, type Commercial, type ManualPayment } from "./order-finance";
 import { ValueLibrary } from "./value-library";
 import { OrderCoordination, type Proposal } from "./order-coordination";
 import { OrderEvidence } from "./order-evidence";
@@ -26,6 +26,7 @@ type Order = {
   id: string;
   revision: number;
   commercial: Commercial;
+  payments?: ManualPayment[];
   title: string;
   customer?: { id: string; nameRu: string } | null;
   customerId?: string | null;
@@ -543,6 +544,7 @@ export function Workbench({ context }: { context: AppContext }) {
                 <OrderTraining
                   key={`training-${selected.id}`}
                   orderId={selected.id}
+                  scope={`${context.tenant.id}:${context.user.id}`}
                 />
               )}
               <OrderFinance
@@ -550,6 +552,7 @@ export function Workbench({ context }: { context: AppContext }) {
                 orderId={selected.id}
                 revision={selected.revision}
                 commercial={selected.commercial || {}}
+                payments={selected.commercial?.payments}
                 context={context}
                 onChanged={reloadOrders}
               />

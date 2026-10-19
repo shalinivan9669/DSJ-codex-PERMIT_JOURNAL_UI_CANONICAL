@@ -39,7 +39,7 @@ test("GC retains old template and every new LMS material/evidence reference beyo
     await saveAnswers(learner.context, attempt.id, {
       sequence: 1,
       answers: Object.fromEntries(
-        Array.from({ length: 10 }, (_, i) => [`q-${i}`, ["a"]]),
+        attempt.questions.map((question) => [question.id, ["a"]]),
       ),
     });
     const completed = await submitAttempt(learner.context, attempt.id);

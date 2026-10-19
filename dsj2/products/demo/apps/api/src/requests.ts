@@ -1146,7 +1146,7 @@ async function validation(
       .filter(
         (t) => (t.contract as Record<string, unknown>).ownerKind !== "GROUP",
       )
-      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .sort((a, b) => Number(a.approved) - Number(b.approved) || a.createdAt.getTime() - b.createdAt.getTime())
       .map((t) => [registeredTemplateKey(t), t]),
   );
   for (const item of draft.items)
@@ -1171,7 +1171,7 @@ async function validation(
       .filter(
         (t) => (t.contract as Record<string, unknown>).ownerKind === "GROUP",
       )
-      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .sort((a, b) => Number(a.approved) - Number(b.approved) || a.createdAt.getTime() - b.createdAt.getTime())
       .map((t) => [registeredTemplateKey(t), t]),
   );
   const eventProfiles = new Map<

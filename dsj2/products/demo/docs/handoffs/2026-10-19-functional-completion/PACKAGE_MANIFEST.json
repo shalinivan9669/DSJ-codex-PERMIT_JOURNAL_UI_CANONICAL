@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-19T09:39:25.466556+00:00",
+  "updated_at": "2026-10-19T09:41:47.935681+00:00",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "00_START_HERE_RU.txt",
+      "bytes": 4083,
+      "sha256": "06e6f3ad1a59abbb17b3053e59b0990b3b12e0e3920b3e6c5232dd006ba51f9d"
+    },
+    {
+      "path": "HANDOFF_STATE.json",
+      "bytes": 2159,
+      "sha256": "4b47b912c6b70707840ab4b0199126ee94cd3c79e9f298a58be031f6e00e635e"
+    },
+    {
+      "path": "HISTORICAL_REQUIREMENTS_117.tsv",
+      "bytes": 94899,
+      "sha256": "2c9f0be33ab8b9387d23ac555218edaa39d59e1871f8ca2f0ba731607db5234b"
+    },
+    {
+      "path": "LAUNCH_PROMPT_RU.txt",
+      "bytes": 10398,
+      "sha256": "e1a40104d65aae2cc3ee5f1cc9f47e0a9aa5de4e747ab4e1543548c57e761e36"
+    },
+    {
+      "path": "LAUNCH_RESULT.json",
+      "bytes": 1765,
+      "sha256": "8b05ebdb218316fe92093c1d3bf28307b52614ad6d2b0ab7fdb4975bac9e0f0f"
+    },
+    {
+      "path": "MVP_25_SOURCE.txt",
+      "bytes": 1165,
+      "sha256": "86a9b429d3d2a17e36616c5f7e20102247592339c125a4161330b66e03811bc0"
+    },
+    {
+      "path": "PROMPT_COMPLETE_FUNCTIONAL_PRODUCT_RU.txt",
+      "bytes": 85362,
+      "sha256": "eb8033e29ea946a7977cedfd47fc980c7ee3d9413b0c0a6877189c11e79c90f1"
+    },
+    {
+      "path": "REVIEW_LEARNING_RU.txt",
+      "bytes": 12666,
+      "sha256": "1c39d71544c0b72b39aa2d82b697bd4d61d19f595c16fddbbcfd0ca471188635"
+    },
+    {
+      "path": "REVIEW_OPERATIONS_RU.txt",
+      "bytes": 11290,
+      "sha256": "2dda520fea80e6a562777dc218464e0f3e16ea5746113dcd09f0bda903fa64fe"
+    },
+    {
+      "path": "REVIEW_UI_AND_ONBOARDING_RU.txt",
+      "bytes": 11471,
+      "sha256": "4b70dc90e424dfc1d93aa16672e5c508309a2f987f330561c193e9ad57f6413f"
+    },
+    {
+      "path": "SOURCE_EXTRACT.txt",
+      "bytes": 57479,
+      "sha256": "4f14dae6a08bbc97f14720fbf917d87e89cda8d6ff33421ed12877beadec7cb9"
+    },
+    {
+      "path": "SOURCE_LMS_REQUIREMENTS.docx",
+      "bytes": 33840,
+      "sha256": "dcdae9575ce3fe7e9c3a0e585c637ede8a830745fff86f5509af87d074f10b22"
+    },
+    {
+      "path": "TZ_SECTIONS_76.tsv",
+      "bytes": 5642,
+      "sha256": "c5f896ab64e3c234d268ddfd2dc63a8bdaeeccb9f32b92354f9d166f08478427"
+    }
+  ]
+}

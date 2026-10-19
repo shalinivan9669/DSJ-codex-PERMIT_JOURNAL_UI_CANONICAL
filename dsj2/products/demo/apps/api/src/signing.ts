@@ -1,7 +1,8 @@
 import {
   z,
-  canManageCenter,
+  canManageSystem,
   isDirectorRole,
+  isLmsStaffRole,
   today,
   type Assignment,
 } from "@demo/contracts";
@@ -20,6 +21,7 @@ import { assertStaff } from "./approvals";
 import { readArtifact, store } from "./files";
 import { runRender } from "@demo/printing";
 import { lmsTemplateTypes } from "./lms/document-metadata";
+import { assertCommissionAccess } from "./lms/commission-access";
 
 type RequiredSigner = {
   kind: "DIRECTOR" | "CHAIR" | "MEMBER";
@@ -523,7 +525,7 @@ export async function prepareSigningPolicy(
             staff.some(
               (user) =>
                 user.id === candidate.userId &&
-                ["ADMIN", "DIRECTOR", "OPERATOR"].includes(user.role) &&
+                ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EXPERT"].includes(user.role) &&
                 (candidate.kind !== "DIRECTOR" || isDirectorRole(user.role)),
             ),
         );
@@ -583,8 +585,7 @@ export async function prepareSigningPolicy(
   };
 }
 export async function listSignatories(c: Context) {
-  assertStaff(c);
-  if (c.role === "VIEWER")
+  if (!canManageSystem(c.role))
     fail(
       403,
       "ROLE_DENIED",
@@ -597,8 +598,8 @@ export async function listSignatories(c: Context) {
   return { items: items.map(({ kind, ...item }) => ({ ...item, role: kind })) };
 }
 export async function saveSignatory(c: Context, input: unknown) {
-  if (!canManageCenter(c.role))
-    fail(403, "ROLE_DENIED", "Подписантов назначает директор");
+  if (!canManageSystem(c.role))
+    fail(403, "ROLE_DENIED", "Подписантов назначает суперадминистратор или директор");
   const data = parse(
     z
       .object({
@@ -621,7 +622,7 @@ export async function saveSignatory(c: Context, input: unknown) {
     });
     if (
       !user ||
-      !["ADMIN", "DIRECTOR", "OPERATOR"].includes(user.role) ||
+      !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EXPERT"].includes(user.role) ||
       (data.role === "DIRECTOR" && !isDirectorRole(user.role))
     )
       fail(
@@ -861,7 +862,8 @@ export async function signingState(
   tx: Prisma.TransactionClient = db,
   selectedIssuanceId?: string,
 ) {
-  assertStaff(c);
+  if (isLmsStaffRole(c.role) || c.role === "VIEWER") assertStaff(c);
+  else if (!selectedIssuanceId) fail(403, "COMMISSION_SCOPE_REQUIRED", "Выберите выпуск в кабинете комиссии");
   const selection = parse(z.string().uuid().optional(), selectedIssuanceId);
   const request = await scopedRequest(c, id, tx);
   const workflow = await tx.issuanceWorkflow.findFirst({
@@ -875,6 +877,8 @@ export async function signingState(
   const providers = signingConfiguration().providers;
   if (selection && !workflow)
     fail(404, "NOT_FOUND", "Выпуск не найден в этой заявке");
+  if (workflow && !isLmsStaffRole(c.role) && c.role !== "VIEWER")
+    await assertCommissionAccess(c, workflow.issuanceId, tx);
   if (!workflow)
     return {
       status: request.status === "FINALIZED" ? "LEGACY_ISSUED" : null,
@@ -885,7 +889,7 @@ export async function signingState(
       missingBindings: [],
       signatures: [],
     };
-  const [documents, artifacts, signatures, jobs, invalid] = await Promise.all([
+  const [documents, artifacts, signatures, jobs, invalid, ownBindings] = await Promise.all([
     tx.issuedDocument.findMany({
       where: { tenantId: c.tenantId, issuanceId: workflow.issuanceId },
     }),
@@ -913,6 +917,10 @@ export async function signingState(
         kind: { in: ["CANCELLED", "REPLACED"] },
       },
       orderBy: { createdAt: "desc" },
+    }),
+    tx.signatoryBinding.findMany({
+      where: { tenantId: c.tenantId, userId: c.userId, active: true },
+      select: { id: true },
     }),
   ]);
   const eligible = await requestAllowsSigning(tx, request, workflow.issuanceId);
@@ -951,6 +959,7 @@ export async function signingState(
       userId: signer.userId,
       canSign:
         signer.userId === c.userId &&
+        ownBindings.some((binding) => binding.id === signer.bindingId) &&
         c.role !== "VIEWER" &&
         eligible &&
         !invalid,
@@ -1197,7 +1206,7 @@ export function assertVerification(
   return value;
 }
 export async function startSigning(c: Context, id: string, input: unknown) {
-  assertStaff(c, true);
+  if (isLmsStaffRole(c.role) || c.role === "VIEWER") assertStaff(c, true);
   const data = parse(
     z
       .object({
@@ -1235,14 +1244,8 @@ export async function startSigning(c: Context, id: string, input: unknown) {
       "SIGNING_NOT_READY",
       "Оформите согласованную заявку перед подписанием",
     );
+  if (!isLmsStaffRole(c.role)) await assertCommissionAccess(c, currentWorkflow.issuanceId);
   await assertEligible(c, currentWorkflow.issuanceId);
-  if (!configuration.providers[data.provider].available)
-    fail(
-      503,
-      "SIGNING_PROVIDER_UNAVAILABLE",
-      configuration.providers[data.provider].reason ||
-        "Сервис подписи не подключён",
-    );
   const state = await signingState(c, id, db, currentWorkflow.issuanceId);
   if (state.status !== "AWAITING_SIGNATURE")
     fail(
@@ -1284,6 +1287,14 @@ export async function startSigning(c: Context, id: string, input: unknown) {
       409,
       "SIGNATORY_REVOKED",
       "Назначение подписанта отозвано. Подготовьте новый согласованный выпуск",
+    );
+  // Provider readiness must not hide the caller's missing signer authority.
+  if (!configuration.providers[data.provider].available)
+    fail(
+      503,
+      "SIGNING_PROVIDER_UNAVAILABLE",
+      configuration.providers[data.provider].reason ||
+        "Сервис подписи не подключён",
     );
   const artifact = await readArtifact(c, data.artifactId);
   const session = await db.signingSession.create({
@@ -1376,7 +1387,7 @@ export async function startSigning(c: Context, id: string, input: unknown) {
   };
 }
 export async function completeSigning(c: Context, id: string, input: unknown) {
-  assertStaff(c, true);
+  if (isLmsStaffRole(c.role) || c.role === "VIEWER") assertStaff(c, true);
   const data = parse(
     z
       .object({ signatureBase64: z.string().min(20).max(4_000_000).optional() })
@@ -1387,6 +1398,7 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
     where: { id, tenantId: c.tenantId, createdBy: c.userId },
   });
   if (!session) fail(404, "NOT_FOUND", "Сеанс подписания не найден");
+  if (!isLmsStaffRole(c.role)) await assertCommissionAccess(c, session.issuanceId);
   await assertEligible(c, session.issuanceId);
   if (session.status === "VERIFIED")
     return {
@@ -1501,6 +1513,10 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       where: { id: session.issuanceId, tenantId: c.tenantId },
     });
     await tx.$executeRaw`SELECT id FROM "PrintRequest" WHERE id=${issuance.requestId} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+    if (!isLmsStaffRole(c.role)) {
+      await tx.$executeRaw`SELECT id FROM "LmsTeachingBinding" WHERE "tenantId"=${c.tenantId} AND "userId"=${c.userId} ORDER BY id FOR UPDATE`;
+      await assertCommissionAccess(c, session.issuanceId, tx);
+    }
     await assertEligible(c, session.issuanceId, tx);
     const value = await tx.documentSignature.create({
       data: {

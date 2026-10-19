@@ -4,7 +4,9 @@ import {
   roleSchema,
   z,
   today,
-  canManageCenter,
+  canManageUsers,
+  canManageSystem,
+  isLmsStaffRole,
 } from "@demo/contracts";
 import {
   db,
@@ -16,9 +18,33 @@ import {
   hash,
   type Context,
 } from "./core";
-import { passwordSchema, passwordHash } from "./auth";
+import { passwordSchema, passwordHash, passwordMatches, rateLimit } from "./auth";
 export async function context(c: Context, csrfToken: string) {
-  if (c.role === "EMPLOYER" || c.role === "LEARNER") {
+  const learningBindings = await db.lmsTeachingBinding.findMany({
+    where: { tenantId: c.tenantId, userId: c.userId, revokedAt: null },
+    select: { role: true },
+  });
+  const learningRoles = [...new Set(learningBindings.map((binding) => binding.role))]
+    .filter((role) => ["TEACHER", "METHODIST", "EXPERT"].includes(role));
+  const canTeach = learningRoles.length > 0;
+  const canLearn = !!(await db.learnerProfile.findUnique({
+    where: { tenantId_userId: { tenantId: c.tenantId, userId: c.userId } },
+    select: { id: true },
+  }));
+  const canAssignTraining = isLmsStaffRole(c.role) ||
+    (c.role === "EMPLOYER" && !!(await db.employerMembership.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        userId: c.userId,
+        active: true,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+        permissions: { array_contains: ["ASSIGN_TRAINING"] },
+      },
+      select: { id: true },
+    })));
+  if (
+    ["EMPLOYER", "LEARNER", "TEACHER", "METHODIST", "EXPERT"].includes(c.role)
+  ) {
     const user = await db.user.findFirstOrThrow({
       where: { id: c.userId, tenantId: c.tenantId },
       select: { id: true, email: true, displayName: true, role: true },
@@ -28,7 +54,7 @@ export async function context(c: Context, csrfToken: string) {
       select: { id: true, name: true, timezone: true, demoOnly: true },
     });
     return {
-      user,
+      user: { ...user, canTeach, canLearn, learningRoles, canAssignTraining },
       tenant,
       profile: null,
       profileVersionId: null,
@@ -54,7 +80,7 @@ export async function context(c: Context, csrfToken: string) {
     }),
   ]);
   return {
-    user,
+    user: { ...user, canTeach, canLearn, learningRoles, canAssignTraining },
     tenant: {
       id: tenant.id,
       name: tenant.name,
@@ -76,6 +102,7 @@ export function getProfile(c: Context) {
   });
 }
 export async function saveProfile(c: Context, input: unknown) {
+  if (!canManageSystem(c.role)) fail(403, "ROLE_DENIED", "Настройки центра доступны суперадминистратору или директору");
   const profile = parse(profileSchema, input);
   return transaction(async (tx) => {
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + "profile"},0))`;
@@ -104,6 +131,14 @@ export async function saveCustomer(
   idempotencyKey?: unknown,
 ) {
   const data = parse(customerSchema, input);
+  // Only an explicit city entry is evidence; never derive it from an address.
+  const cityEvidence =
+    data.city === undefined
+      ? {}
+      : {
+          city: data.city || null,
+          citySource: data.city ? "OPERATOR_CONFIRMED" : null,
+        };
   const key =
     typeof idempotencyKey === "string" &&
     /^[a-zA-Z0-9_-]{16,128}$/.test(idempotencyKey)
@@ -154,9 +189,12 @@ export async function saveCustomer(
       }
     }
     const result = id
-      ? await tx.customerOrganization.update({ where: { id }, data })
+      ? await tx.customerOrganization.update({
+          where: { id },
+          data: { ...data, ...cityEvidence },
+        })
       : await tx.customerOrganization.create({
-          data: { tenantId: c.tenantId, ...data },
+          data: { tenantId: c.tenantId, ...data, ...cityEvidence },
         });
     await audit(tx, c, id ? "CUSTOMER_UPDATED" : "CUSTOMER_CREATED", result.id);
     if (!id && key)
@@ -173,8 +211,8 @@ export async function saveCustomer(
   });
 }
 export async function saveUser(c: Context, input: unknown, id?: string) {
-  if (!canManageCenter(c.role))
-    fail(403, "ROLE_DENIED", "Сотрудниками центра управляет директор");
+  if (!canManageUsers(c.role))
+    fail(403, "ROLE_DENIED", "Управление пользователями недоступно для вашей роли");
   const create = z
     .object({
       email: z.email().max(255),
@@ -195,42 +233,50 @@ export async function saveUser(c: Context, input: unknown, id?: string) {
     ? await db.user.findFirst({ where: { id, tenantId: c.tenantId } })
     : null;
   if (id && !target) fail(404, "NOT_FOUND", "Пользователь не найден");
-  if (
-    id === c.userId &&
-    (("disabled" in data && data.disabled) ||
-      (data.role && !canManageCenter(data.role)))
-  )
-    fail(
-      409,
-      "SELF_LOCKOUT",
-      "Для отключения своей учётной записи используйте другого директора",
-    );
   const digest = data.password ? await passwordHash(data.password) : undefined;
   return transaction(async (tx) => {
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":users"},0))`;
+    await tx.$executeRaw`SELECT id FROM "Tenant" WHERE id=${c.tenantId} FOR UPDATE`;
+    const actor = await tx.user.findFirst({ where: { id: c.userId, tenantId: c.tenantId, active: true } });
+    if (!actor || actor.role !== c.role || !canManageUsers(actor.role))
+      fail(403, "ROLE_DENIED", "Полномочия изменились. Войдите заново");
     const currentTarget = id
       ? await tx.user.findFirst({ where: { id, tenantId: c.tenantId } })
       : null;
     if (id && !currentTarget) fail(404, "NOT_FOUND", "Пользователь не найден");
-    if (
-      currentTarget &&
-      canManageCenter(currentTarget.role) &&
-      currentTarget.active &&
-      ((data.role && !canManageCenter(data.role)) ||
-        ("disabled" in data && data.disabled))
-    ) {
+    const privileged = ["SUPER_ADMIN", "ADMIN", "DIRECTOR"];
+    const nextRole = data.role || currentTarget?.role;
+    if (id === c.userId && (data.disabled === true || (data.role && data.role !== actor.role)))
+      fail(409, "SELF_ROLE_CHANGE_DENIED", "Свою роль и доступ нельзя изменить здесь. Первого суперадминистратора назначают отдельным подтверждённым действием");
+    if (actor.role !== "SUPER_ADMIN" &&
+      ((currentTarget && privileged.includes(currentTarget.role)) || (nextRole && privileged.includes(nextRole))))
+      fail(403, "PRIVILEGED_USER_REQUIRES_SUPER_ADMIN", "Администраторами, директорами и суперадминистраторами управляет суперадминистратор");
+    const changesAccess = !currentTarget || (data.role && data.role !== currentTarget.role) || (data.disabled === false && !currentTarget.active);
+    if (changesAccess && nextRole === "LEARNER") {
+      const linked = currentTarget && await tx.learnerProfile.findFirst({ where: { tenantId: c.tenantId, userId: currentTarget.id }, select: { id: true } });
+      if (!linked) fail(422, "LEARNER_PROFILE_REQUIRED", "Откройте человека в назначении обучения и подготовьте личное приглашение. Оно свяжет доступ с его карточкой");
+    }
+    if (changesAccess && nextRole === "EMPLOYER") {
+      const linked = currentTarget && await tx.employerMembership.findFirst({ where: { tenantId: c.tenantId, userId: currentTarget.id, active: true, OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] }, select: { id: true } });
+      if (!linked) fail(422, "EMPLOYER_MEMBERSHIP_REQUIRED", "Создайте приглашение представителю с выбранной организацией и областью доступа");
+    }
+    const removesSuper = currentTarget?.role === "SUPER_ADMIN" && currentTarget.active && (data.disabled === true || (data.role && data.role !== "SUPER_ADMIN"));
+    if (removesSuper && await tx.user.count({ where: { tenantId: c.tenantId, role: "SUPER_ADMIN", active: true } }) <= 1)
+      fail(409, "LAST_SUPER_ADMIN", "В центре должен остаться хотя бы один действующий суперадминистратор");
+    if (currentTarget?.active && ["SUPER_ADMIN", "DIRECTOR"].includes(currentTarget.role) &&
+      (data.disabled === true || (data.role && !["SUPER_ADMIN", "DIRECTOR"].includes(data.role)))) {
       const count = await tx.user.count({
         where: {
           tenantId: c.tenantId,
-          role: { in: ["ADMIN", "DIRECTOR"] },
+          role: { in: ["SUPER_ADMIN", "DIRECTOR"] },
           active: true,
         },
       });
       if (count <= 1)
         fail(
           409,
-          "LAST_DIRECTOR",
-          "В центре должен остаться действующий директор",
+          "LAST_SYSTEM_MANAGER",
+          "В центре должен остаться действующий суперадминистратор или директор",
         );
     }
     const fields = {
@@ -288,7 +334,30 @@ export async function saveUser(c: Context, input: unknown, id?: string) {
     };
   });
 }
+export async function bootstrapSuperAdmin(c: Context, input: unknown) {
+  if (!["ADMIN", "DIRECTOR"].includes(c.role))
+    fail(403, "ROLE_DENIED", "Первое назначение доступно существующему администратору или директору");
+  const data = parse(z.object({ currentPassword: z.string().min(1).max(256), confirm: z.literal(true) }).strict(), input);
+  rateLimit(`super-admin-bootstrap:${c.tenantId}:${c.userId}`, 5, 15 * 60_000);
+  return transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":users"},0))`;
+    await tx.$executeRaw`SELECT id FROM "Tenant" WHERE id=${c.tenantId} FOR UPDATE`;
+    await tx.$executeRaw`SELECT id FROM "User" WHERE "tenantId"=${c.tenantId} AND id=${c.userId} FOR UPDATE`;
+    const actor = await tx.user.findFirst({ where: { tenantId: c.tenantId, id: c.userId, active: true } });
+    if (!actor || actor.role !== c.role || !["ADMIN", "DIRECTOR"].includes(actor.role))
+      fail(403, "ROLE_DENIED", "Полномочия изменились. Войдите заново");
+    if (await tx.user.count({ where: { tenantId: c.tenantId, role: "SUPER_ADMIN", active: true } }))
+      fail(409, "SUPER_ADMIN_ALREADY_EXISTS", "Суперадминистратор уже назначен. Обратитесь к нему для изменения прав");
+    if (!(await passwordMatches(data.currentPassword, actor.passwordHash)))
+      fail(403, "CURRENT_PASSWORD_INVALID", "Текущий пароль не подтверждён");
+    await tx.user.update({ where: { id: actor.id }, data: { role: "SUPER_ADMIN", sessionVersion: { increment: 1 } } });
+    await tx.session.deleteMany({ where: { tenantId: c.tenantId, userId: actor.id } });
+    await audit(tx, c, "FIRST_SUPER_ADMIN_EXPLICITLY_ASSIGNED", actor.id, { previousRole: actor.role, currentRole: "SUPER_ADMIN", sessionsRevoked: true });
+    return { id: actor.id, role: "SUPER_ADMIN", reauthenticate: true };
+  });
+}
 export async function updateNumbering(c: Context, input: unknown) {
+  if (!canManageSystem(c.role)) fail(403, "ROLE_DENIED", "Нумерацией управляет суперадминистратор или директор");
   const data = parse(
     z
       .object({

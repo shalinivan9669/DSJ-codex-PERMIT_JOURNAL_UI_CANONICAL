@@ -229,7 +229,12 @@ test("S11: existing-center LMS template upgrade is append-only and actual HTTP a
           });
           assert.equal(events.length, 1);
           assert.equal(events[0].actorId, tenant.user.id);
-          assert.deepEqual(events[0].metadata, { approved: true });
+          assert.deepEqual(events[0].metadata, {
+            approved: true,
+            source: "browser",
+            requestSource: "browser",
+            trustedIp: "127.0.0.1",
+          });
           approvalEvents.push({
             templateId: row.templateId,
             eventId: events[0].id,

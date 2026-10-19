@@ -1,6 +1,11 @@
 import { randomBytes } from "node:crypto";
 import { runRender } from "@demo/printing";
-import { z } from "@demo/contracts";
+import { today, z } from "@demo/contracts";
+import { Prisma, type PublicDocumentVerification } from "@demo/database";
+import {
+  issuedDocumentValidity,
+  publicDocumentStatus,
+} from "./document-validity";
 import {
   db,
   parse,
@@ -13,9 +18,21 @@ import {
 
 export const PUBLIC_RECORD_LIMITATION =
   "Проверяется запись в реестре этого центра. Страница не подтверждает неизменность любой копии документа и не заменяет проверку подписи.";
+const qrCache = new Map<string, string>();
+export async function verificationQrDataUrl(url: string) {
+  const cached = qrCache.get(url);
+  if (cached) return cached;
+  const qr = await runRender("qr", { url });
+  const data = `data:image/png;base64,${qr.buffer.toString("base64")}`;
+  if (qrCache.size >= 250) qrCache.delete(qrCache.keys().next().value!);
+  qrCache.set(url, data);
+  return data;
+}
 function center(c: Context, write = false) {
   if (
-    !["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
+    !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(
+      c.role,
+    ) ||
     (write && c.role === "VIEWER")
   )
     fail(403, "ROLE_DENIED", "Недостаточно прав сотрудника центра");
@@ -107,8 +124,73 @@ export async function revokeVerificationLink(c: Context, id: string) {
       where: { id },
       data: { active: false },
     });
+    await tx.lmsDocumentLink.updateMany({
+      where: { tenantId: c.tenantId, id },
+      data: { verificationRevokedAt: new Date() },
+    });
     await audit(tx, c, "DOCUMENT_PUBLIC_LINK_REVOKED", id);
     return { revoked: true };
+  });
+}
+/** QR publication can be withdrawn or time-limited without changing a single
+ * byte of the issued original. Learner/employer read scope never grants this. */
+export async function setLmsVerificationPublication(
+  c: Context,
+  id: string,
+  input: unknown,
+) {
+  center(c, true);
+  const data = parse(
+    z.discriminatedUnion("action", [
+      z.object({ action: z.literal("REVOKE") }).strict(),
+      z
+        .object({
+          action: z.literal("SET_EXPIRY"),
+          expiresAt: z.iso.datetime().nullable(),
+        })
+        .strict(),
+    ]),
+    input,
+  );
+  if (
+    data.action === "SET_EXPIRY" &&
+    data.expiresAt &&
+    new Date(data.expiresAt) <= new Date()
+  )
+    fail(400, "EXPIRY_PASSED", "Срок публикации должен быть в будущем");
+  return transaction(async (tx) => {
+    const link = await tx.lmsDocumentLink.findFirst({
+      where: { id, tenantId: c.tenantId },
+    });
+    if (!link?.verificationTokenHash)
+      fail(404, "NOT_FOUND", "Публикация не найдена");
+    const expiresAt =
+      data.action === "SET_EXPIRY" && data.expiresAt
+        ? new Date(data.expiresAt)
+        : null;
+    await tx.lmsDocumentLink.update({
+      where: { id },
+      data:
+        data.action === "REVOKE"
+          ? { verificationRevokedAt: new Date() }
+          : { verificationExpiresAt: expiresAt },
+    });
+    await tx.publicDocumentVerification.updateMany({
+      where: { id, tenantId: c.tenantId },
+      data: data.action === "REVOKE" ? { active: false } : { expiresAt },
+    });
+    await audit(
+      tx,
+      c,
+      data.action === "REVOKE"
+        ? "DOCUMENT_PUBLIC_LINK_REVOKED"
+        : "DOCUMENT_PUBLIC_LINK_EXPIRY_CHANGED",
+      id,
+      {
+        ...(data.action === "SET_EXPIRY" ? { expiresAt } : {}),
+      },
+    );
+    return { updated: true };
   });
 }
 async function published(token: string) {
@@ -127,25 +209,129 @@ async function published(token: string) {
 }
 export async function publicVerificationRecord(token: string) {
   const link = await published(token);
+  return recordForLink(link);
+}
+const printableSearch = (value: string) =>
+  Array.from(value).every(
+    (character) =>
+      character.charCodeAt(0) >= 32 && character.charCodeAt(0) !== 127,
+  );
+const searchSchema = z
+  .object({
+    number: z
+      .string()
+      .trim()
+      .min(1)
+      .max(80)
+      .refine(printableSearch, "Недопустимые символы"),
+    issuerName: z
+      .string()
+      .trim()
+      .min(2)
+      .max(300)
+      .refine(printableSearch, "Недопустимые символы"),
+  })
+  .strict();
+
+/** Exact number + issuer disambiguates centres without publishing a new record
+ * or exposing a private registry. Multiple live links to one document are one
+ * candidate; distinct matching documents remain unavailable. */
+export async function searchPublicVerification(input: unknown) {
+  const data = parse(searchSchema, input);
+  const matches = await db.$queryRaw<
+    Array<{ id: string; documentId: string; tenantId: string }>
+  >(Prisma.sql`
+    SELECT DISTINCT ON (d.id) p.id,d.id AS "documentId",d."tenantId"
+    FROM "IssuedDocument" d
+    JOIN "Issuance" i ON i."tenantId"=d."tenantId" AND i.id=d."issuanceId"
+    JOIN "IssuerProfileVersion" profile ON profile."tenantId"=i."tenantId" AND profile.id=i."profileVersionId"
+    JOIN "PublicDocumentVerification" p ON p."tenantId"=d."tenantId" AND p."documentId"=d.id
+    LEFT JOIN "LmsDocumentLink" dl ON dl."tenantId"=p."tenantId" AND dl."verificationTokenHash"=p."tokenHash"
+    WHERE d.number=${data.number}
+      AND (profile.profile->>'nameRu'=${data.issuerName} OR profile.profile->>'nameKz'=${data.issuerName})
+      AND p.active AND (p."expiresAt" IS NULL OR p."expiresAt">CURRENT_TIMESTAMP)
+      AND dl."verificationRevokedAt" IS NULL AND (dl."verificationExpiresAt" IS NULL OR dl."verificationExpiresAt">CURRENT_TIMESTAMP)
+    ORDER BY d.id,p."createdAt" DESC,p.id DESC LIMIT 2`);
+  if (matches.length !== 1)
+    fail(
+      404,
+      "RECORD_UNAVAILABLE",
+      "Запись недоступна. Проверьте номер и точное название эмитента или используйте QR документа.",
+    );
+  const link = await db.publicDocumentVerification.findFirst({
+    where: {
+      id: matches[0].id,
+      tenantId: matches[0].tenantId,
+      active: true,
+      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+    },
+  });
+  if (!link)
+    fail(
+      404,
+      "RECORD_UNAVAILABLE",
+      "Запись недоступна. Проверьте номер и точное название эмитента или используйте QR документа.",
+    );
+  const record = await recordForLink(link);
+  return record.learningDocument
+    ? {
+        ...record,
+        learningDocument: {
+          ...record.learningDocument,
+          originalReference: null,
+        },
+      }
+    : record;
+}
+
+async function recordForLink(link: PublicDocumentVerification) {
   const document = await db.issuedDocument.findFirstOrThrow({
     where: { tenantId: link.tenantId, id: link.documentId },
   });
   const issuance = await db.issuance.findFirstOrThrow({
     where: { tenantId: link.tenantId, id: document.issuanceId },
   });
-  const [profile, events, replacement] = await Promise.all([
-    db.issuerProfileVersion.findFirstOrThrow({
-      where: { tenantId: link.tenantId, id: issuance.profileVersionId },
-    }),
-    db.issuanceEvent.findMany({
-      where: { tenantId: link.tenantId, issuanceId: issuance.id },
-      orderBy: { createdAt: "desc" },
-    }),
-    db.issuedDocument.findFirst({
-      where: { tenantId: link.tenantId, replacesDocumentId: document.id },
-      orderBy: { createdAt: "desc" },
-    }),
-  ]);
+  const workflow = await db.issuanceWorkflow.findFirst({
+    where: { tenantId: link.tenantId, issuanceId: issuance.id },
+  });
+  const [profile, events, replacement, tenant, request, renewal] =
+    await Promise.all([
+      db.issuerProfileVersion.findFirstOrThrow({
+        where: { tenantId: link.tenantId, id: issuance.profileVersionId },
+      }),
+      db.issuanceEvent.findMany({
+        where: { tenantId: link.tenantId, issuanceId: issuance.id },
+        orderBy: { createdAt: "desc" },
+      }),
+      db.issuedDocument.findFirst({
+        where: { tenantId: link.tenantId, replacesDocumentId: document.id },
+        orderBy: { createdAt: "desc" },
+      }),
+      db.tenant.findUniqueOrThrow({
+        where: { id: link.tenantId },
+        select: { timezone: true },
+      }),
+      db.printRequest.findFirst({
+        where: { tenantId: link.tenantId, id: document.requestId },
+        select: { status: true },
+      }),
+      db.renewalNeed.findFirst({
+        where: {
+          tenantId: link.tenantId,
+          sourceRequestId: document.requestId,
+          assignmentId: document.assignmentId || "missing-issued-assignment",
+          confirmed: true,
+        },
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+        select: { documentValidUntil: true },
+      }),
+    ]);
+  if (
+    workflow &&
+    workflow.status !== "ISSUED" &&
+    !events.some((event) => ["CANCELLED", "REPLACED"].includes(event.kind))
+  )
+    fail(404, "RECORD_UNAVAILABLE", "Сведения по этой ссылке не опубликованы");
   const issuer = profile.profile as { nameRu?: string; nameKz?: string };
   const lmsType =
     document.templateId === "lms-protocol"
@@ -181,9 +367,73 @@ export async function publicVerificationRecord(token: string) {
         where: { tenantId: link.tenantId, id: lmsLink.resultId },
       })
     : null;
+  const resultInvalidation = lmsResult
+    ? await db.lmsResultEvent.findFirst({
+        where: {
+          tenantId: link.tenantId,
+          resultId: lmsResult.id,
+          kind: { in: ["VOIDED", "SUPERSEDED"] },
+        },
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+        select: { kind: true },
+      })
+    : null;
   const lmsSnapshot = lmsResult?.snapshot as
-    | { profile?: { issuer?: string }; source?: { verification?: string } }
+    | {
+        profile?: { issuer?: string };
+        source?: { verification?: string };
+        course?: { titleRu: string; titleKz: string; hours: number };
+      }
     | undefined;
+  // LMS corrections receive a new immutable result/assignment identity. Follow
+  // that explicit lineage as well as the ordinary printing document lineage.
+  let learningReplacement = null;
+  if (lmsResult && !replacement) {
+    const successor = await db.verifiedExamResult.findFirst({
+      where: { tenantId: link.tenantId, supersedesResultId: lmsResult.id },
+      orderBy: { revision: "desc" },
+    });
+    const successorLink = successor
+      ? await db.lmsDocumentLink.findFirst({
+          where: {
+            tenantId: link.tenantId,
+            resultId: successor.id,
+            documentType: lmsType,
+            issuanceId: { not: null },
+          },
+        })
+      : null;
+    if (
+      successorLink?.issuanceId &&
+      (await db.issuanceWorkflow.findFirst({
+        where: {
+          tenantId: link.tenantId,
+          issuanceId: successorLink.issuanceId,
+          status: "ISSUED",
+        },
+      }))
+    )
+      learningReplacement = await db.issuedDocument.findFirst({
+        where: {
+          tenantId: link.tenantId,
+          issuanceId: successorLink.issuanceId,
+          assignmentId: `${successor!.id}-${lmsType}`,
+        },
+      });
+  }
+  const replacementDocument = replacement || learningReplacement;
+  const validUntil = issuedDocumentValidity(
+    issuance.snapshot,
+    document,
+    renewal?.documentValidUntil || null,
+  );
+  if (
+    lmsLink?.verificationTokenHash === link.tokenHash &&
+    (lmsLink.verificationRevokedAt ||
+      (lmsLink.verificationExpiresAt &&
+        lmsLink.verificationExpiresAt <= new Date()))
+  )
+    fail(404, "RECORD_UNAVAILABLE", "Сведения по этой ссылке не опубликованы");
   return {
     ...(lmsLink && lmsResult
       ? {
@@ -192,7 +442,17 @@ export async function publicVerificationRecord(token: string) {
             assessmentKind: lmsResult.assessmentKind,
             sourceIssuer: lmsSnapshot?.profile?.issuer || "",
             resultRevision: lmsResult.revision,
-            originalReference: lmsLink.originalReference,
+            originalReference:
+              lmsLink.verificationTokenHash === link.tokenHash
+                ? null
+                : lmsLink.originalReference,
+            course: lmsSnapshot?.course
+              ? {
+                  titleRu: lmsSnapshot.course.titleRu,
+                  titleKz: lmsSnapshot.course.titleKz,
+                  hours: lmsSnapshot.course.hours,
+                }
+              : null,
             sourceVerification:
               lmsSnapshot?.source?.verification || "CENTER_RECORDED",
           },
@@ -206,18 +466,25 @@ export async function publicVerificationRecord(token: string) {
       type: document.templateId,
       number: document.number,
       date: document.documentDate,
+      validUntil,
     },
-    status:
-      replacement || events.some((event) => event.kind === "REPLACED")
-        ? "REPLACED"
-        : events.some((event) => event.kind === "CANCELLED")
-          ? "REVOKED"
-          : "ACTIVE_RECORD",
-    replacement: replacement
+    status: publicDocumentStatus({
+      replaced:
+        !!replacementDocument ||
+        resultInvalidation?.kind === "SUPERSEDED" ||
+        events.some((event) => event.kind === "REPLACED"),
+      revoked:
+        resultInvalidation?.kind === "VOIDED" ||
+        request?.status === "CANCELLED" ||
+        events.some((event) => event.kind === "CANCELLED"),
+      validUntil,
+      today: today(tenant.timezone),
+    }),
+    replacement: replacementDocument
       ? {
-          type: replacement.templateId,
-          number: replacement.number,
-          date: replacement.documentDate,
+          type: replacementDocument.templateId,
+          number: replacementDocument.number,
+          date: replacementDocument.documentDate,
         }
       : null,
     limitation: PUBLIC_RECORD_LIMITATION,

@@ -1,7 +1,14 @@
 import { Prisma } from "@demo/database";
+import { enrollmentStatusSql } from "./enrollment-state";
 import { db, type Context } from "../core";
 import { effectiveResult } from "./enrollments";
 import { documentViews } from "./document-views";
+import { isLmsStaff } from "./scope";
+import {
+  completedLearningElements,
+  loadLearningElementFacts,
+  type LearningElement,
+} from "./learning-element-facts";
 import {
   enrollmentJoins,
   enrollmentPredicate,
@@ -60,7 +67,7 @@ export async function enrollmentPageFacts(c: Context, ids: string[]) {
       groupId: string | null;
       groupKey: string;
       status: string;
-      dueAt: Date;
+      dueAt: Date | null;
       sourceOrderId: string | null;
       sourceRequestId: string | null;
       assignedAt: Date;
@@ -69,22 +76,25 @@ export async function enrollmentPageFacts(c: Context, ids: string[]) {
       courseStatus: string;
       titleRu: string;
       titleKz: string;
+      durationDays: number | null;
       recipientData: Record<string, string>;
       customer: { id: string; nameRu: string; nameKz: string } | null;
       group: { id: string; name: string } | null;
-      requiredCount: bigint;
-      completedCount: bigint;
+      learningElements: LearningElement[];
+      learningCompletedAt: Date | null;
     }>
-  >(Prisma.sql`SELECT e.id,e."courseVersionId",e."recipientId",e."learnerUserId",e."customerId",e."groupId",e."groupKey",e.status,e."dueAt",e."sourceOrderId",e."sourceRequestId",e."assignedAt",v.version,v."courseId",v.status AS "courseStatus",v.content->>'titleRu' AS "titleRu",v.content->>'titleKz' AS "titleKz",
+  >(Prisma.sql`SELECT e.id,e."courseVersionId",e."recipientId",e."learnerUserId",e."customerId",e."groupId",e."groupKey",${enrollmentStatusSql()} AS status,e."dueAt",e."sourceOrderId",e."sourceRequestId",e."assignedAt",v.version,v."courseId",v.status AS "courseStatus",v.content->>'titleRu' AS "titleRu",v.content->>'titleKz' AS "titleKz",
+    (v.content->'metadata'->>'durationDays')::int AS "durationDays",
     jsonb_build_object('fullNameRu',r.data->>'fullNameRu','fullNameKz',r.data->>'fullNameKz','positionRu',r.data->>'positionRu','positionKz',r.data->>'positionKz') AS "recipientData",
     CASE WHEN co.id IS NOT NULL THEN jsonb_build_object('id',co.id,'nameRu',co."nameRu",'nameKz',co."nameKz") END AS customer,
     CASE WHEN g.id IS NOT NULL THEN jsonb_build_object('id',g.id,'name',g.name) END AS "group",
-    progress.required AS "requiredCount",progress.completed AS "completedCount"
+    progress.elements AS "learningElements", completion."completedAt" AS "learningCompletedAt"
     FROM "Enrollment" e JOIN "CourseVersion" v ON v."tenantId"=e."tenantId" AND v.id=e."courseVersionId"
     JOIN "Recipient" r ON r."tenantId"=e."tenantId" AND r.id=e."recipientId"
     LEFT JOIN "CustomerOrganization" co ON co."tenantId"=e."tenantId" AND co.id=e."customerId"
     LEFT JOIN "LmsGroup" g ON g."tenantId"=e."tenantId" AND g.id=e."groupId"
-    LEFT JOIN LATERAL (SELECT count(*) AS required,count(*) FILTER (WHERE EXISTS (SELECT 1 FROM "LessonProgress" lp WHERE lp."tenantId"=e."tenantId" AND lp."enrollmentId"=e.id AND lp."lessonId"=lesson->>'id' AND lp."completedAt" IS NOT NULL)) AS completed FROM jsonb_array_elements(v.content->'modules') module CROSS JOIN LATERAL jsonb_array_elements(module->'lessons') lesson WHERE COALESCE((lesson->>'required')::boolean,true)) progress ON true
+    LEFT JOIN "LmsLearningCompletion" completion ON completion."tenantId"=e."tenantId" AND completion."enrollmentId"=e.id
+    LEFT JOIN LATERAL (SELECT COALESCE(jsonb_agg(jsonb_build_object('id',lesson->>'id','kind',lesson->>'kind','required',COALESCE((lesson->>'required')::boolean,true),'session',lesson->'session')),'[]'::jsonb) AS elements FROM jsonb_array_elements(v.content->'modules') module CROSS JOIN LATERAL jsonb_array_elements(module->'lessons') lesson) progress ON true
     WHERE e."tenantId"=${c.tenantId} AND e.id IN (${Prisma.join(ids)}) ORDER BY e."assignedAt" DESC,e.id DESC`);
   const results = await db.$queryRaw<
     Array<{
@@ -101,7 +111,7 @@ export async function enrollmentPageFacts(c: Context, ids: string[]) {
   >(
     Prisma.sql`SELECT r.id,r."enrollmentId",r.verdict,r."assessmentKind",r.eligible,r."examAt",r.score,r.maximum,r."confirmedAt" FROM "Enrollment" e CROSS JOIN LATERAL (SELECT * FROM "VerifiedExamResult" result WHERE result."tenantId"=e."tenantId" AND result."enrollmentId"=e.id ORDER BY result.revision DESC LIMIT 1) r WHERE e."tenantId"=${c.tenantId} AND e.id IN (${Prisma.join(ids)})`,
   );
-  const [events, documents] = await Promise.all([
+  const [events, documents, learningFacts] = await Promise.all([
     db.lmsResultEvent.findMany({
       where: {
         tenantId: c.tenantId,
@@ -114,6 +124,7 @@ export async function enrollmentPageFacts(c: Context, ids: string[]) {
       c,
       results.map((r) => r.id),
     ),
+    loadLearningElementFacts(db, c.tenantId, ids),
   ]);
   const resultMap = new Map(
     results.map((r) => [r.enrollmentId, effectiveResult(r, events)]),
@@ -131,21 +142,32 @@ export async function enrollmentPageFacts(c: Context, ids: string[]) {
       courseStatus,
       titleRu,
       titleKz,
+      durationDays,
       recipientData,
-      requiredCount,
-      completedCount,
+      learningElements,
       ...e
     }) => {
       const result = resultMap.get(e.id) || null;
+      const completed = completedLearningElements(
+        learningElements,
+        learningFacts.get(e.id)!,
+      );
+      const requiredCount = learningElements.filter((l) => l.required).length;
+      const completedCount = learningElements.filter(
+        (l) => l.required && completed.has(l.id),
+      ).length;
       return {
         ...e,
+        ...(!isLmsStaff(c)
+          ? { sourceOrderId: null, sourceRequestId: null }
+          : {}),
         recipient: { id: e.recipientId, data: recipientData },
         courseVersion: {
           id: e.courseVersionId,
           courseId,
           version,
           status: courseStatus,
-          content: { titleRu, titleKz },
+          content: { titleRu, titleKz, ...(durationDays ? { metadata: { durationDays } } : {}) },
         },
         progressPercent: Number(requiredCount)
           ? Math.floor((100 * Number(completedCount)) / Number(requiredCount))

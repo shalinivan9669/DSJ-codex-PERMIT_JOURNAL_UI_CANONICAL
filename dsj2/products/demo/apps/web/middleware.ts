@@ -30,7 +30,7 @@ export function middleware(request: NextRequest) {
     });
   const response = NextResponse.next();
   if (
-    ["/invite", "/learn/invite", "/learn/recovery"].includes(path) ||
+    ["/invite", "/learn/invite", "/learn/recovery", "/verify"].includes(path) ||
     path.startsWith("/verify/") ||
     path.startsWith("/api/auth/employer-invite/")
   ) {

@@ -1,3 +1,4 @@
+import { pipePrivateResponse } from "./private-stream-response";
 import {
   Body,
   Controller,
@@ -30,14 +31,15 @@ import {
   openPrivateStream,
 } from "./materials";
 import { privateUpload } from "./uploads";
+import { assertLearningPermission } from "./learning-permissions";
 
 class LmsStaffUploadGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest<DemoRequest>();
     const c = lmsContext(req);
-    assertLmsStaff(c);
     const id = String(req.params.id);
     if (req.path.endsWith("/materials")) {
+      await assertLearningPermission(c, id, null, "MATERIAL");
       if (
         !(await db.course.findFirst({
           where: { id, tenantId: c.tenantId },
@@ -45,7 +47,10 @@ class LmsStaffUploadGuard implements CanActivate {
         }))
       )
         fail(404, "NOT_FOUND", "Курс не найден");
-    } else await scopedEnrollment(c, id);
+    } else {
+      assertLmsStaff(c);
+      await scopedEnrollment(c, id);
+    }
     return true;
   }
 }
@@ -63,34 +68,42 @@ async function streamFile(
   range?: string,
 ) {
   const opened = await openPrivateStream(record, range);
-  res.setHeader("Accept-Ranges", "bytes");
-  res.setHeader("Cache-Control", "private, no-store");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("Content-Security-Policy", "sandbox");
   if (opened.invalid) {
     res.setHeader("Content-Range", `bytes */${opened.size}`);
     res.status(416).end();
     return;
   }
-  res.setHeader("Content-Type", record.mimeType);
-  res.setHeader(
-    "Content-Disposition",
-    `inline; filename*=UTF-8''${encodeURIComponent(record.originalName)}`,
-  );
-  res.setHeader("Content-Length", opened.end - opened.start + 1);
-  if (opened.partial) {
-    res.status(206);
+  pipePrivateResponse(res, opened.stream, () => {
+    res.setHeader("Accept-Ranges", "bytes");
+    res.setHeader("Cache-Control", "private, no-store");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    // Native video documents request their own media URL again. An opaque
+    // sandbox origin would make that authenticated request fail CORS.
     res.setHeader(
-      "Content-Range",
-      `bytes ${opened.start}-${opened.end}/${opened.size}`,
+      "Content-Security-Policy",
+      ["video/mp4", "video/webm"].includes(record.mimeType)
+        ? "sandbox allow-same-origin"
+        : "sandbox",
     );
-  }
-  opened.stream.on("error", () => res.destroy());
-  res.on("close", () => opened.stream.destroy());
-  opened.stream.pipe(res);
+
+    res.setHeader("Content-Type", record.mimeType);
+    res.setHeader(
+      "Content-Disposition",
+      `${["application/pdf", "image/png", "image/jpeg", "image/webp", "video/mp4", "video/webm", "text/vtt"].includes(record.mimeType) ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(record.originalName)}`,
+    );
+    res.setHeader("Content-Length", opened.end - opened.start + 1);
+    if (opened.partial) {
+      res.status(206);
+      res.setHeader(
+        "Content-Range",
+        `bytes ${opened.start}-${opened.end}/${opened.size}`,
+      );
+    }
+  });
 }
 
 export const lmsRoutes = [
+  ["GET", "/lms/regulatory"],
   ["GET", "/lms/courses"],
   ["POST", "/lms/courses"],
   ["GET", "/lms/courses/:id"],
@@ -119,6 +132,12 @@ export const lmsRoutes = [
 
 @Controller()
 export class LmsController {
+  @Get("lms/regulatory") regulatory(
+    @Req() req: DemoRequest,
+    @Query() query: unknown,
+  ) {
+    return courses.listRegulatorySources(lmsContext(req), query);
+  }
   @Get("lms/courses") list(@Req() req: DemoRequest, @Query() query: unknown) {
     return courses.listCourses(lmsContext(req), query);
   }
@@ -158,9 +177,10 @@ export class LmsController {
     @Req() req: DemoRequest,
     @Param("id") id: string,
     @UploadedFile() file: Express.Multer.File,
+    @Body() body: unknown,
   ) {
     try {
-      return await uploadMaterial(lmsContext(req), id, file);
+      return await uploadMaterial(lmsContext(req), id, file, body);
     } finally {
       if (file?.path) await unlink(file.path).catch(() => {});
     }

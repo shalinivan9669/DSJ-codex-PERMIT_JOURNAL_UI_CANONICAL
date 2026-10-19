@@ -1,10 +1,16 @@
 import type { Prisma } from "@demo/database";
 import { db, fail, type Context, type DemoRequest } from "../core";
+import { teachingRoles, isTeachingRole, teachingBindingPermissionWhere } from "./learning-permissions";
 
-const staff = new Set(["ADMIN", "DIRECTOR", "OPERATOR"]);
+const staff = new Set(["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"]);
 export function lmsContext(req: DemoRequest): Context {
   if (!req.context) fail(401, "SESSION_REQUIRED", "Войдите в DEMO");
-  if (![...staff, "LEARNER", "EMPLOYER"].includes(req.context.role))
+  if (
+    ![...staff, ...teachingRoles, "LEARNER", "EMPLOYER"].includes(
+      req.context.role,
+    ) &&
+    !req.context.teachingMode
+  )
     fail(403, "ROLE_DENIED", "Недостаточно прав");
   return req.context;
 }
@@ -36,8 +42,37 @@ export async function enrollmentFilter(
   c: Context,
   tx: Prisma.TransactionClient = db,
 ): Promise<Prisma.EnrollmentWhereInput> {
-  if (isLmsStaff(c)) return { tenantId: c.tenantId };
-  if (c.role === "LEARNER") {
+  if (isLmsStaff(c) && !c.learningMode) return { tenantId: c.tenantId };
+  if (isTeachingRole(c)) {
+    const binding = {
+      tenantId: c.tenantId,
+      userId: c.userId,
+      revokedAt: null,
+      ...teachingBindingPermissionWhere("READ"),
+      role: { in: ["TEACHER", "EXPERT"] },
+    };
+    return {
+      tenantId: c.tenantId,
+      OR: [
+        {
+          learningVersion: {
+            teachingCourse: {
+              teachingBindings: { some: { ...binding, groupId: null } },
+            },
+          },
+        },
+        {
+          groupMemberships: {
+            some: {
+              excludedAt: null,
+              group: { teachingBindings: { some: binding } },
+            },
+          },
+        },
+      ],
+    };
+  }
+  if (c.role === "LEARNER" || c.learningMode) {
     const profile = await tx.learnerProfile.findUnique({
       where: { tenantId_userId: { tenantId: c.tenantId, userId: c.userId } },
     });
@@ -72,17 +107,25 @@ export async function learnerEnrollment(
   id: string,
   tx: Prisma.TransactionClient = db,
 ) {
-  if (c.role !== "LEARNER")
-    fail(403, "LEARNER_ONLY", "Это действие доступно слушателю");
-  const enrollment = await scopedEnrollment(c, id, tx);
+  const profile = await tx.learnerProfile.findUnique({
+    where: { tenantId_userId: { tenantId: c.tenantId, userId: c.userId } },
+  });
+  if (!profile)
+    fail(403, "LEARNER_ONLY", "Это действие доступно связанному слушателю");
+  const enrollment = await tx.enrollment.findFirst({
+    where: { id, tenantId: c.tenantId, recipientId: profile.recipientId },
+  });
+  if (!enrollment) fail(404, "NOT_FOUND", "Назначение не найдено");
   if (
     enrollment.status === "CANCELLED" ||
-    enrollment.dueAt.getTime() < Date.now()
+    (enrollment.dueAt !== null && enrollment.dueAt.getTime() < Date.now())
   )
     fail(
       409,
       "ACCESS_EXPIRED",
       "Срок обучения завершён. Обратитесь в учебный центр",
     );
+  if (enrollment.startsAt && enrollment.startsAt.getTime() > Date.now())
+    fail(409, "ACCESS_NOT_STARTED", "Доступ к обучению ещё не начался");
   return enrollment;
 }

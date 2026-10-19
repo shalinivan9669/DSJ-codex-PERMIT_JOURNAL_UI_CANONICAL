@@ -247,6 +247,7 @@ test("an unsigned paper original remains preparation after PDF completion and ca
       ],
     },
     issuanceEvent: { findFirst: async () => null },
+    signatoryBinding: { findMany: async () => [] },
   } as unknown as Prisma.TransactionClient;
   const state = await signingState(context, "request", tx);
   assert.equal(state.status, "AWAITING_SIGNATURE");

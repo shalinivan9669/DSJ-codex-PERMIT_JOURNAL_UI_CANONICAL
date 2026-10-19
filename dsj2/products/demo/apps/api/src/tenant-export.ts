@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { basename } from "node:path";
 import { Prisma } from "@demo/database";
-import { canManageCenter } from "@demo/contracts";
+import { canManageSystem } from "@demo/contracts";
 import { ArtifactStore, buildZip } from "@demo/printing";
 import { db, audit, fail, hash, type Context } from "./core";
 
@@ -21,7 +21,7 @@ type ExportFile = {
 
 /** Consistent owner export. Session secrets and password/token hashes are deliberately excluded. */
 export async function tenantExportSnapshot(c: Context) {
-  if (!canManageCenter(c.role))
+  if (!canManageSystem(c.role))
     fail(403, "ROLE_DENIED", "Полная выгрузка доступна директору центра");
   return db.$transaction(
     async (tx) => {

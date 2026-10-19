@@ -1,7 +1,8 @@
 "use client";
+import { useCabinetText, useCabinetError } from "./cabinet-language";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
-import { api, errorText, json } from "@/lib/api";
+import { api, json } from "@/lib/api";
 type Evidence = {
   id: string;
   recipientId: string;
@@ -55,13 +56,14 @@ export function PortalEvidence({
 }: {
   customers: { id: string; label: string }[];
 }) {
+  const tr = useCabinetText();
   const [open, setOpen] = useState(false);
   const [customerId, setCustomerId] = useState(customers[0]?.id || "");
   const [data, setData] = useState<Data | null>(null);
   const [matrix, setMatrix] = useState<Matrix | null>(null);
   const [form, setForm] = useState<Record<string, string>>({});
   const [refresh, setRefresh] = useState(0);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [success, setSuccess] = useState("");
   const [busy, setBusy] = useState(false);
   const [attachmentId, setAttachmentId] = useState("");
@@ -98,7 +100,7 @@ export function PortalEvidence({
         }
       })
       .catch((c) => {
-        if (active) setError(errorText(c));
+        if (active) setError(c);
       })
       .finally(() => {
         if (active) setBusy(false);
@@ -115,7 +117,7 @@ export function PortalEvidence({
       setSuccess(message);
       setRefresh((v) => v + 1);
     } catch (c) {
-      setError(errorText(c));
+      setError(c);
     } finally {
       setBusy(false);
     }
@@ -139,11 +141,11 @@ export function PortalEvidence({
   async function upload() {
     if (!file) return;
     if (file.size > 1048576)
-      throw new Error("Размер вложения — не более 1 МБ.");
+      throw new Error(tr("Размер вложения — не более 1 МБ."));
     const contentBase64 = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(String(reader.result).split(",")[1]);
-      reader.onerror = () => reject(new Error("Не удалось прочитать файл"));
+      reader.onerror = () => reject(new Error(tr("Не удалось прочитать файл")));
       reader.readAsDataURL(file);
     });
     await api(`/portal/evidence/${attachmentId}/attachments`, {
@@ -159,14 +161,12 @@ export function PortalEvidence({
     <section className="panel workbench-detail">
       <div className="toolbar">
         <div>
-          <h2>Сведения об обучении у других поставщиков</h2>
+          <h2>{tr("Сведения об обучении у других поставщиков")}</h2>
           <p>
-            Разрешённые люди и программы вашей организации. Учебный центр
-            проверяет источники отдельно.
-          </p>
+            {tr("Разрешённые люди и программы вашей организации. Учебный центр проверяет источники отдельно.")}</p>
         </div>
         <button aria-expanded={open} onClick={() => setOpen(!open)}>
-          {open ? "Свернуть сведения" : "Открыть сведения и матрицу"}
+          {open ? tr("Свернуть сведения") : tr("Открыть сведения и матрицу")}
         </button>
       </div>
       {open && (
@@ -174,8 +174,7 @@ export function PortalEvidence({
           {error && <Notice>{error}</Notice>}
           {success && <Notice kind="success">{success}</Notice>}
           <label>
-            Организация для сверки
-            <select
+            {tr("Организация для сверки")}<select
               value={customerId}
               onChange={(e) => {
                 setCustomerId(e.target.value);
@@ -197,18 +196,18 @@ export function PortalEvidence({
           </label>
           {matrix && (
             <>
-              <h3>Люди и согласованные программы</h3>
-              <p>{matrix.limitation}</p>
+              <h3>{tr("Люди и согласованные программы")}</h3>
+              <p>{tr(matrix.limitation)}</p>
               {matrix.columns.length ? (
                 <div className="table-scroll">
                   <table className="source-data-table">
                     <thead>
                       <tr>
-                        <th>Человек</th>
+                        <th>{tr("Человек")}</th>
                         {matrix.columns.map((c) => (
                           <th key={c.id}>
                             {c.title}
-                            <small>Версия {c.version}</small>
+                            <small>{tr("Версия")}{" "}{c.version}</small>
                           </th>
                         ))}
                       </tr>
@@ -226,27 +225,27 @@ export function PortalEvidence({
                                 {cell ? (
                                   <>
                                     <strong>
-                                      {states[cell.state] || cell.state}
+                                      {tr(states[cell.state] || cell.state)}
                                     </strong>
                                     <small>
                                       {cell.source === "EXTERNAL"
-                                        ? "Другой поставщик"
+                                        ? tr("Другой поставщик")
                                         : cell.source === "OWN"
-                                          ? "Учебный центр"
-                                          : "Источник не известен"}
+                                          ? tr("Учебный центр")
+                                          : tr("Источник не известен")}
                                     </small>
                                     {cell.originalNumber && (
                                       <small>№ {cell.originalNumber}</small>
                                     )}
                                     {cell.validUntil && (
                                       <small>
-                                        Срок документа: {cell.validUntil}
+                                        {tr("Срок документа:")}{" "}{cell.validUntil}
                                       </small>
                                     )}
-                                    <p>{cell.nextAction}</p>
+                                    <p>{tr(cell.nextAction)}</p>
                                   </>
                                 ) : (
-                                  "Сведений нет"
+                                  tr("Сведений нет")
                                 )}
                               </td>
                             );
@@ -258,20 +257,18 @@ export function PortalEvidence({
                 </div>
               ) : (
                 <p>
-                  Учебный центр ещё не связал согласованные программы с заказами
-                  вашей организации.
-                </p>
+                  {tr("Учебный центр ещё не связал согласованные программы с заказами вашей организации.")}</p>
               )}
             </>
           )}
           {data && (
             <>
-              <h3>Переданные внешние документы</h3>
+              <h3>{tr("Переданные внешние документы")}</h3>
               {data.items.map((item) => (
                 <article className="milestone" key={item.id}>
                   <strong>
                     {data.recipients.find((p) => p.id === item.recipientId)
-                      ?.fullNameRu || "Разрешённый получатель"}{" "}
+                      ?.fullNameRu || tr("Разрешённый получатель")}{" "}
                     · {item.program}
                   </strong>
                   <p>
@@ -279,7 +276,7 @@ export function PortalEvidence({
                     {item.documentDate}
                   </p>
                   <small>
-                    {states[item.state] || states[item.status] || item.status}
+                    {tr(states[item.state] || states[item.status] || item.status)}
                   </small>
                   {data.permissions.includes("DOWNLOAD") &&
                     item.attachments.map((attachment) => (
@@ -297,15 +294,14 @@ export function PortalEvidence({
                       disabled={busy}
                       onClick={() => setAttachmentId(item.id)}
                     >
-                      Приложить копию источника
-                    </button>
+                      {tr("Приложить копию источника")}</button>
                   )}
                 </article>
               ))}
-              {!data.items.length && <p>Внешние документы ещё не переданы.</p>}
+              {!data.items.length && <p>{tr("Внешние документы ещё не переданы.")}</p>}
               {data.permissions.includes("PROPOSE") && (
                 <details className="outcome-entry">
-                  <summary>Передать сведения для проверки центром</summary>
+                  <summary>{tr("Передать сведения для проверки центром")}</summary>
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -324,13 +320,12 @@ export function PortalEvidence({
                           }),
                         });
                         setForm({});
-                      }, "Сведения переданы со статусом «Ожидает проверки центра».");
+                      }, tr("Сведения переданы со статусом «Ожидает проверки центра»."));
                     }}
                   >
                     <div className="form-grid">
                       <label>
-                        Человек
-                        <select
+                        {tr("Человек")}<select
                           required
                           value={form.recipientId || ""}
                           onChange={(e) =>
@@ -338,8 +333,7 @@ export function PortalEvidence({
                           }
                         >
                           <option value="">
-                            Выберите разрешённого человека
-                          </option>
+                            {tr("Выберите разрешённого человека")}</option>
                           {data.recipients.map((p) => (
                             <option key={p.id} value={p.id}>
                               {p.fullNameRu}
@@ -348,8 +342,7 @@ export function PortalEvidence({
                         </select>
                       </label>
                       <label>
-                        Программа
-                        <select
+                        {tr("Программа")}<select
                           required
                           value={form.program || ""}
                           onChange={(e) =>
@@ -357,25 +350,24 @@ export function PortalEvidence({
                           }
                         >
                           <option value="">
-                            Выберите согласованную программу
-                          </option>
+                            {tr("Выберите согласованную программу")}</option>
                           {data.programs.map((p) => (
                             <option key={p.id} value={p.serviceKey}>
-                              {p.title} · версия {p.version}
+                              {p.title} {" "}{tr("· версия")}{" "}{p.version}
                             </option>
                           ))}
                         </select>
                       </label>
-                      {field("issuer", "Кем выдан документ")}
-                      {field("originalNumber", "Номер внешнего документа")}
-                      {field("documentDate", "Дата внешнего документа", "date")}
+                      {field("issuer", tr("Кем выдан документ"))}
+                      {field("originalNumber", tr("Номер внешнего документа"))}
+                      {field("documentDate", tr("Дата внешнего документа"), "date")}
                       {field(
                         "validUntil",
-                        "Срок документа (если указан)",
+                        tr("Срок документа (если указан)"),
                         "date",
                         false,
                       )}
-                      {field("source", "Откуда получены сведения")}
+                      {field("source", tr("Откуда получены сведения"))}
                     </div>
                     <button
                       className="primary"
@@ -383,8 +375,7 @@ export function PortalEvidence({
                         busy || !data.recipients.length || !data.programs.length
                       }
                     >
-                      Передать внешний документ на проверку
-                    </button>
+                      {tr("Передать внешний документ на проверку")}</button>
                   </form>
                 </details>
               )}
@@ -395,22 +386,20 @@ export function PortalEvidence({
                     e.preventDefault();
                     void run(
                       upload,
-                      "Копия источника сохранена. Загрузка не означает положительный результат проверки.",
+                      tr("Копия источника сохранена. Загрузка не означает положительный результат проверки."),
                     );
                   }}
                 >
-                  <h3>Копия выбранного внешнего документа</h3>
+                  <h3>{tr("Копия выбранного внешнего документа")}</h3>
                   <label>
-                    Источник копии
-                    <input
+                    {tr("Источник копии")}<input
                       required
                       value={fileSource}
                       onChange={(e) => setFileSource(e.target.value)}
                     />
                   </label>
                   <label>
-                    PDF, PNG или JPEG до 1 МБ
-                    <input
+                    {tr("PDF, PNG или JPEG до 1 МБ")}<input
                       type="file"
                       required
                       accept=".pdf,.png,.jpg,.jpeg"
@@ -419,11 +408,9 @@ export function PortalEvidence({
                   </label>
                   <div className="toolbar-actions">
                     <button type="button" onClick={() => setAttachmentId("")}>
-                      Отмена
-                    </button>
+                      {tr("Отмена")}</button>
                     <button disabled={busy || !file || !fileSource.trim()}>
-                      Сохранить копию источника
-                    </button>
+                      {tr("Сохранить копию источника")}</button>
                   </div>
                 </form>
               )}

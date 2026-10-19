@@ -16,6 +16,7 @@ test("F3 known access, row, material and document errors localize from code and 
     "UPLOAD_BUSY",
     "DOCUMENT_NOT_READY",
     "TEMPLATE_NOT_APPROVED",
+    "REVIEW_CONFLICT",
   ]) {
     const row = {
       code,

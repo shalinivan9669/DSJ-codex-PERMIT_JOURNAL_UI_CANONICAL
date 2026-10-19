@@ -16,6 +16,7 @@ import {
   enrollmentPredicate,
   parseEnrollmentQuery,
 } from "./enrollment-query";
+import { assertEmployerDocumentDownload } from "./employer-document-access";
 
 const selectionSchema = z
   .object({
@@ -30,13 +31,16 @@ async function bundleSources(c: Context, selection: Selection) {
   const rows = await db.$queryRaw<
     Array<{
       documentId: string;
+      resultId: string;
       state: string | null;
       revoked: boolean;
       artifact: Artifact | null;
     }>
   >(Prisma.sql`
-    SELECT dl.id AS "documentId",iw.status AS state,
-      EXISTS (SELECT 1 FROM "LmsResultEvent" ev WHERE ev."tenantId"=e."tenantId" AND ev."resultId"=dl."resultId" AND ev.kind IN ('VOIDED','SUPERSEDED')) AS revoked,
+    SELECT dl.id AS "documentId",vr.id AS "resultId",iw.status AS state,
+      (EXISTS (SELECT 1 FROM "LmsResultEvent" ev WHERE ev."tenantId"=e."tenantId" AND ev."resultId"=dl."resultId" AND ev.kind IN ('VOIDED','SUPERSEDED'))
+       OR EXISTS (SELECT 1 FROM "IssuanceEvent" ev WHERE ev."tenantId"=e."tenantId" AND ev."issuanceId"=dl."issuanceId" AND ev.kind IN ('CANCELLED','REPLACED'))
+       OR EXISTS (SELECT 1 FROM "PrintRequest" pr WHERE pr."tenantId"=e."tenantId" AND pr.id=dl."requestId" AND pr.status='CANCELLED')) AS revoked,
       CASE WHEN a.id IS NOT NULL THEN row_to_json(a) END AS artifact
     ${enrollmentJoins}
     JOIN "VerifiedExamResult" vr ON vr."tenantId"=e."tenantId" AND vr."enrollmentId"=e.id
@@ -47,6 +51,8 @@ async function bundleSources(c: Context, selection: Selection) {
     WHERE ${scope} AND dl.id IN (${Prisma.join(selection.documentIds)}) ORDER BY dl.id`);
   if (rows.length !== selection.documentIds.length)
     fail(404, "NOT_FOUND", "Документ недоступен");
+  // This path also runs for reused jobs, status reads and every part download.
+  await assertEmployerDocumentDownload(c, rows.map((row) => row.resultId));
   if (rows.some((r) => r.revoked))
     fail(409, "RESULT_INELIGIBLE", "Выберите действующие документы");
   if (rows.some((r) => r.state !== "ISSUED" || !r.artifact))
@@ -74,7 +80,11 @@ export async function prepareDocumentBundle(c: Context, input: unknown) {
       parseEnrollmentQuery({ groupId: request.groupId }),
     );
     const rows = await db.$queryRaw<Array<{ id: string }>>(
-      Prisma.sql`SELECT dl.id ${enrollmentJoins} JOIN "LmsDocumentLink" dl ON dl."tenantId"=e."tenantId" AND dl."resultId"=latest.id JOIN "IssuanceWorkflow" iw ON iw."tenantId"=e."tenantId" AND iw."issuanceId"=dl."issuanceId" WHERE ${scope} AND iw.status='ISSUED' AND NOT EXISTS (SELECT 1 FROM "LmsResultEvent" ev WHERE ev."tenantId"=e."tenantId" AND ev."resultId"=latest.id AND ev.kind IN ('VOIDED','SUPERSEDED')) ORDER BY dl.id LIMIT 30001`,
+      Prisma.sql`SELECT dl.id ${enrollmentJoins} JOIN "LmsDocumentLink" dl ON dl."tenantId"=e."tenantId" AND dl."resultId"=latest.id JOIN "IssuanceWorkflow" iw ON iw."tenantId"=e."tenantId" AND iw."issuanceId"=dl."issuanceId" WHERE ${scope} AND iw.status='ISSUED'
+        AND NOT EXISTS (SELECT 1 FROM "LmsResultEvent" ev WHERE ev."tenantId"=e."tenantId" AND ev."resultId"=latest.id AND ev.kind IN ('VOIDED','SUPERSEDED'))
+        AND NOT EXISTS (SELECT 1 FROM "IssuanceEvent" ev WHERE ev."tenantId"=e."tenantId" AND ev."issuanceId"=dl."issuanceId" AND ev.kind IN ('CANCELLED','REPLACED'))
+        AND NOT EXISTS (SELECT 1 FROM "PrintRequest" pr WHERE pr."tenantId"=e."tenantId" AND pr.id=dl."requestId" AND pr.status='CANCELLED')
+        ORDER BY dl.id LIMIT 30001`,
     );
     if (rows.length > 30000)
       fail(

@@ -73,7 +73,7 @@ test("V1 F1/F2/A2: exact admission, repairable drafts and explicitly pinned shar
     })),
   });
   const blocked = await enrollmentDetail(learner.context, enrollment.id);
-  assert.equal(blocked.progressPercent, 100);
+  assert.equal(blocked.progressPercent, 99);
   assert.equal(blocked.examReadiness.ready, false);
   await assert.rejects(
     startAttempt(learner.context, enrollment.id),

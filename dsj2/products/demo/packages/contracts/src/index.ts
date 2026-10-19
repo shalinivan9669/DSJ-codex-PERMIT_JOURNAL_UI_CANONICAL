@@ -48,12 +48,16 @@ export const lmsTemplateIds = [
 ] as const;
 export const allTemplateIds = [...templateIds, ...lmsTemplateIds] as const;
 export const roleSchema = z.enum([
+  "SUPER_ADMIN",
   "ADMIN",
   "DIRECTOR",
   "OPERATOR",
   "VIEWER",
   "EMPLOYER",
   "LEARNER",
+  "TEACHER",
+  "METHODIST",
+  "EXPERT",
 ]);
 export type Role = z.infer<typeof roleSchema>;
 const text = z
@@ -189,6 +193,62 @@ export const assignmentSchema = z
         signatureState: z.literal("PREPARED"),
         synthetic: z.boolean(),
         originalReference: z.string().nullable(),
+        verification: z
+          .object({ url: z.url().max(2048) })
+          .strict()
+          .optional(),
+        protocol: z
+          .object({
+            version: z.literal(1),
+            attemptId: z.string().uuid(),
+            ordinal: z.number().int().positive(),
+            finishedAt: z.iso.datetime(),
+            thresholdPercent: z.number().min(0).max(100),
+            comparison: z.enum(["GT", "GTE"]),
+            percent: z.number().min(0).max(100),
+            questions: z
+              .array(
+                z
+                  .object({
+                    id: z.string().max(100),
+                    promptRu: z.string().max(30000),
+                    promptKz: z.string().max(30000),
+                    correctAnswerRu: z.string().max(1001000),
+                    correctAnswerKz: z.string().max(1001000),
+                    responseRu: z.string().max(50000),
+                    responseKz: z.string().max(50000),
+                    score: z.number().nullable(),
+                  })
+                  .strict(),
+              )
+              .max(1000),
+            history: z
+              .array(
+                z
+                  .object({
+                    ordinal: z.number().int().positive(),
+                    state: z.string().max(30),
+                    score: z.number().nullable(),
+                    maximum: z.number().nullable(),
+                    verdict: z.string().nullable(),
+                    finishedAt: z.iso.datetime().nullable(),
+                  })
+                  .strict(),
+              )
+              .max(1000),
+            commission: z
+              .array(
+                z
+                  .object({
+                    name: z.string().max(300),
+                    role: z.string().max(300),
+                  })
+                  .strict(),
+              )
+              .max(30),
+          })
+          .strict()
+          .optional(),
       })
       .strict()
       .optional(),
@@ -285,6 +345,9 @@ export const assignmentSchema = z
   });
 export const itemSchema = z
   .object({
+    iin: z.string().max(30).optional(),
+    phone: z.string().max(80).optional(),
+    email: z.string().max(255).optional(),
     id: z.string().min(1).max(80),
     employeeCategory: z.enum(["WORKER", "ITR"]).optional(),
     fullNameRu: text,

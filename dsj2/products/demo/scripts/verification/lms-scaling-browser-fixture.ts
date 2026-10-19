@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { provision } from "../setup";
 import { db, type Context } from "../../apps/api/src/core";
 import {
@@ -51,13 +51,23 @@ import {
 } from "../../apps/render-worker/src/queue";
 import { store } from "../../apps/api/src/files";
 
-const output = resolve(".runtime/lms-scaling/browser-fixture.json");
+const output = resolve(
+  process.env.DEMO_LMS_SCALING_FIXTURE ||
+    ".runtime/lms-scaling/browser-fixture.json",
+);
 async function main() {
   assertTestDatabase();
   const url = new URL(process.env.DATABASE_URL!);
   assert.equal(url.hostname, "127.0.0.1");
-  assert.equal(url.port, "55449");
-  assert.equal(url.pathname, "/demo_test_lms_scaling_20261015");
+  const pass01OrdinaryDatabase =
+    url.pathname === "/demo_test_lms_pass01_governance" && url.port === "55479";
+  assert.ok(
+    pass01OrdinaryDatabase ||
+      /^\/demo_test_lms_(?:scaling|completion)[_a-zA-Z0-9]*$/.test(
+        url.pathname,
+      ),
+    "Only the explicitly owned local scaling, completion or pass01 governance database is permitted",
+  );
   assert.equal(process.env.DEMO_LMS_TEST_RUNTIME, "1");
   if (process.argv.includes("--render-ordinary")) {
     const fixture = JSON.parse(await readFile(output, "utf8"));
@@ -416,7 +426,7 @@ async function main() {
     preparedCosts:
       "Synthetic prerequisites prepared via actual product domain functions. First entry is excluded only from explicitly prepared scenarios, never represented as measured first-entry UX. Third person intentionally lacks employment for one repairable row error. No real qualification, signature or external delivery.",
   };
-  await mkdir(resolve(".runtime/lms-scaling"), { recursive: true });
+  await mkdir(dirname(output), { recursive: true });
   await writeFile(output, JSON.stringify(fixture, null, 2) + "\n");
   console.log(
     JSON.stringify({

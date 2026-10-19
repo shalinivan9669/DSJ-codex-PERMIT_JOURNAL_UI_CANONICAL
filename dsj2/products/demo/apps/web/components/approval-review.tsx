@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import {
   approvalReviewSummary,
   reviewSourceLabels,
+  reviewOutcomeSourceLabel,
   type ApprovalReview,
 } from "@/lib/approval-review";
 import { documentTitle } from "@/lib/types";
@@ -156,7 +157,7 @@ export function ApprovalReviewPanel({
                             "Сохранённое значение"}
                           <br />
                           Результат:{" "}
-                          {assignment.outcome?.source ||
+                          {reviewOutcomeSourceLabel(assignment) ||
                             reviewSourceLabels[
                               assignment.fieldOrigins?.result || ""
                             ] ||

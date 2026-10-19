@@ -5,7 +5,10 @@ import { Writable } from "node:stream";
 import { spawnSync } from "node:child_process";
 import type { Response } from "express";
 import { ArtifactStore, BUNDLE_PART_BYTES } from "../../packages/printing/src";
-import { db, hash, type Context } from "../../apps/api/src/core";
+import { draftSchema } from "../../packages/contracts/src";
+import { db, hash, json, type Context } from "../../apps/api/src/core";
+import { cancelRequest } from "../../apps/api/src/requests";
+import { decideProposal } from "../../apps/api/src/approvals";
 import { saveLessonProgress } from "../../apps/api/src/lms/learning";
 import {
   startAttempt,
@@ -23,9 +26,20 @@ import {
   documentBundleStatus,
   documentBundlePart,
 } from "../../apps/api/src/lms/document-bundles";
-import { documentView } from "../../apps/api/src/lms/document-bridge";
+import {
+  artifactAccess,
+  documentView,
+} from "../../apps/api/src/lms/document-bridge";
 import { claimJob, executeJob } from "../../apps/render-worker/src/queue";
 import { lmsCourse, lmsTenant, lmsLearner } from "./lms-fixture";
+
+const deniedDocument = (code: string) => (error: unknown) => {
+  const failure = error as {
+    getStatus(): number;
+    getResponse(): { code: string };
+  };
+  return failure.getStatus() === 409 && failure.getResponse().code === code;
+};
 
 class ExportResponse extends Writable {
   chunks: Buffer[] = [];
@@ -156,7 +170,7 @@ test(
       role: "EMPLOYER",
       userId: employerUser.id,
     };
-    await db.employerMembership.create({
+    const membership = await db.employerMembership.create({
       data: {
         tenantId: c.tenantId,
         customerId: customer.id,
@@ -168,6 +182,66 @@ test(
     });
     assert.equal((await listEnrollmentPage(employer, {})).total, 1);
     assert.equal((await resultFilterOptions(employer)).groups.length, 1);
+    for (const permissions of [["READ"], ["READ", "ASSIGN_TRAINING"]]) {
+      await db.employerMembership.update({
+        where: { id: membership.id },
+        data: { permissions },
+      });
+      const deniedExport = new ExportResponse();
+      await assert.rejects(
+        exportResults(
+          employer,
+          { format: "CSV" },
+          deniedExport as unknown as Response,
+        ),
+        (error: unknown) => {
+          const failure = error as {
+            getStatus(): number;
+            getResponse(): { code: string };
+          };
+          return (
+            failure.getStatus() === 403 &&
+            failure.getResponse().code === "EMPLOYER_DOCUMENT_DOWNLOAD_DENIED"
+          );
+        },
+      );
+      assert.equal(
+        deniedExport.bytes().length,
+        0,
+        "no partial CSV before DOWNLOAD authorization",
+      );
+    }
+    await db.employerMembership.update({
+      where: { id: membership.id },
+      data: { permissions: ["READ", "DOWNLOAD"] },
+    });
+    const ownExport = new ExportResponse();
+    await exportResults(
+      employer,
+      { format: "CSV" },
+      ownExport as unknown as Response,
+    );
+    assert.equal(
+      ownExport.bytes().toString("utf8").split("\r\n").filter(Boolean).length,
+      2,
+    );
+    assert.match(ownExport.bytes().toString("utf8"), /V3-0/);
+    assert.doesNotMatch(ownExport.bytes().toString("utf8"), /V3-[1-4]/);
+    const foreignExport = new ExportResponse();
+    await exportResults(
+      foreign.context,
+      { format: "CSV", filters: { groupId: group.id } },
+      foreignExport as unknown as Response,
+    );
+    assert.equal(
+      foreignExport.bytes().toString("utf8").split("\r\n").filter(Boolean)
+        .length,
+      1,
+    );
+    await db.employerMembership.update({
+      where: { id: membership.id },
+      data: { permissions: ["READ"] },
+    });
     const csv = new ExportResponse();
     await exportResults(
       c,
@@ -206,7 +280,19 @@ test(
         tenantId: c.tenantId,
         kind: "COMPANY",
         customerId: customer.id,
-        draft: {},
+        status: "FINALIZED",
+        revision: 1,
+        workingRevision: 1,
+        draft: json(
+          draftSchema.parse({
+            schemaVersion: 2,
+            kind: "COMPANY",
+            customerId: customer.id,
+            demoMode: true,
+            title: "Synthetic issued LMS documents",
+            items: [],
+          }),
+        ),
         createdBy: c.userId,
       },
     });
@@ -239,6 +325,7 @@ test(
           requestId: request.id,
           revision: 1,
           baseRevision: 0,
+          status: "APPROVED",
           payload: {},
           before: {},
           diff: {},
@@ -354,6 +441,49 @@ test(
       });
     }
     assert.equal((await documentView(c, documentIds[0])).status, "ISSUED");
+    assert.deepEqual(
+      (await documentView(employer, documentIds[0])).artifacts,
+      [],
+    );
+    await db.employerMembership.update({
+      where: { id: membership.id },
+      data: { permissions: ["READ", "DOWNLOAD"] },
+    });
+    const employerDocument = await documentView(employer, documentIds[0]);
+    const employerArtifactId = employerDocument.artifacts[0].id;
+    assert.equal(
+      (await artifactAccess(employer, employerArtifactId)).id,
+      employerArtifactId,
+    );
+    await db.issuanceWorkflow.update({
+      where: {
+        tenantId_issuanceId: { tenantId: c.tenantId, issuanceId: issuance.id },
+      },
+      data: { status: "AWAITING_SIGNATURE" },
+    });
+    assert.equal(
+      (await documentView(employer, documentIds[0])).artifacts.length,
+      0,
+    );
+    assert.equal(
+      (await documentView(learners[0].context, documentIds[0])).artifacts
+        .length,
+      0,
+    );
+    await assert.rejects(
+      artifactAccess(employer, employerArtifactId),
+      deniedDocument("DOCUMENT_NOT_READY"),
+    );
+    await assert.rejects(
+      artifactAccess(learners[0].context, employerArtifactId),
+      deniedDocument("DOCUMENT_NOT_READY"),
+    );
+    await db.issuanceWorkflow.update({
+      where: {
+        tenantId_issuanceId: { tenantId: c.tenantId, issuanceId: issuance.id },
+      },
+      data: { status: "ISSUED", completedAt: new Date() },
+    });
     const targets = [
       [db, "$queryRaw"],
       [db.lmsResultEvent, "findMany"],
@@ -364,15 +494,18 @@ test(
       [db.artifact, "findMany"],
     ] as const;
     let queries = 0;
+    let documentRows = 0;
     const originals = targets.map(([object, key]) => {
       const target = object as unknown as Record<
         string,
         (...args: unknown[]) => unknown
       >;
       const original = target[key];
-      target[key] = function (...args: unknown[]) {
+      target[key] = async function (...args: unknown[]) {
         queries++;
-        return Reflect.apply(original, object, args);
+        const result = await Reflect.apply(original, object, args);
+        if (object === db.issuedDocument) documentRows += result.length;
+        return result;
       };
       return () => {
         target[key] = original;
@@ -381,14 +514,23 @@ test(
     try {
       await listEnrollmentPage(c, { pageSize: 3 });
       const smallPageQueries = queries;
+      assert.equal(
+        documentRows,
+        1,
+        "a page must not hydrate the other documents in the same issuance",
+      );
       queries = 0;
+      documentRows = 0;
       await listEnrollmentPage(c, { pageSize: 5 });
+      assert.equal(documentRows, 3);
       assert.equal(
         queries,
         smallPageQueries,
         "page expansion must not add per-person/document queries",
       );
-      assert.ok(queries <= 11, `bounded page calls: ${queries}`);
+      // Fixed batched accepted-work/attendance reads now feed mixed-element progress.
+      // The equality above still rejects any query growth with the page size.
+      assert.ok(queries <= 12, `bounded page calls: ${queries}`);
       t.diagnostic(`bounded page calls=${queries}; page sizes 3 and 5`);
     } finally {
       originals.forEach((restore) => restore());
@@ -429,6 +571,144 @@ test(
         where: { tenantId: c.tenantId, jobId: bundle.id },
       }),
       2,
+    );
+    const employerBundle = await prepareDocumentBundle(employer, {
+      groupId: group.id,
+    });
+    assert.equal(employerBundle.partCount, 1);
+    assert.equal(employerBundle.directFiles.length, 0);
+    const assertOrdinaryInvalidation = async (
+      status: "VOIDED" | "SUPERSEDED",
+    ) => {
+      assert.equal(
+        await db.lmsResultEvent.count({ where: { tenantId: c.tenantId } }),
+        0,
+        "ordinary issuance invalidation must be enforced without an LMS result event",
+      );
+      for (const viewer of [employer, learners[0].context]) {
+        const view = await documentView(viewer, documentIds[0]);
+        assert.equal(view.status, status);
+        assert.equal(view.artifacts.length, 0);
+        await assert.rejects(
+          artifactAccess(viewer, employerArtifactId),
+          deniedDocument("RESULT_INELIGIBLE"),
+        );
+        await assert.rejects(
+          prepareDocumentBundle(viewer, { documentIds: [documentIds[0]] }),
+          deniedDocument("RESULT_INELIGIBLE"),
+        );
+        await assert.rejects(
+          documentBundleStatus(viewer, employerBundle.id),
+          deniedDocument("RESULT_INELIGIBLE"),
+        );
+        await assert.rejects(
+          documentBundlePart(viewer, employerBundle.id, 0),
+          deniedDocument("RESULT_INELIGIBLE"),
+        );
+      }
+      assert.equal(
+        (await documentView(c, documentIds[0])).artifacts[0].id,
+        employerArtifactId,
+        "staff keeps the historical preview",
+      );
+      assert.equal(
+        (await artifactAccess(c, employerArtifactId)).id,
+        employerArtifactId,
+      );
+      await assert.rejects(
+        prepareDocumentBundle(employer, { groupId: group.id }),
+        deniedDocument("DOCUMENT_NOT_READY"),
+      );
+      await assert.rejects(
+        documentBundlePart(c, bundle.id, 0),
+        deniedDocument("RESULT_INELIGIBLE"),
+      );
+      const workflow = await db.issuanceWorkflow.findUniqueOrThrow({
+        where: {
+          tenantId_issuanceId: {
+            tenantId: c.tenantId,
+            issuanceId: issuance.id,
+          },
+        },
+      });
+      assert.equal(
+        workflow.status,
+        "ISSUED",
+        "completed workflow is historical, not current validity",
+      );
+      assert.ok(workflow.completedAt);
+    };
+    // This is the ordinary signing completion event, independent of LMS exam-result events.
+    await db.issuanceEvent.create({
+      data: {
+        tenantId: c.tenantId,
+        issuanceId: issuance.id,
+        kind: "REPLACED",
+        reason: "Synthetic ordinary replacement",
+        actorId: c.userId,
+      },
+    });
+    await assertOrdinaryInvalidation("SUPERSEDED");
+    // Exercise the actual ordinary cancellation request + director approval path.
+    await cancelRequest(c, request.id, {
+      expectedRevision: request.revision,
+      reason: "Synthetic ordinary cancellation",
+    });
+    const cancellation = await db.requestProposal.findFirstOrThrow({
+      where: {
+        tenantId: c.tenantId,
+        requestId: request.id,
+        operation: "CANCEL",
+      },
+      orderBy: { revision: "desc" },
+    });
+    await decideProposal(c, cancellation.id, {
+      decision: "APPROVE",
+      reason: "Synthetic approval",
+      expectedProposalHash: cancellation.proposalHash,
+    });
+    assert.equal(
+      await db.issuanceEvent.count({
+        where: {
+          tenantId: c.tenantId,
+          issuanceId: issuance.id,
+          kind: "CANCELLED",
+        },
+      }),
+      1,
+    );
+    await assertOrdinaryInvalidation("VOIDED");
+    t.diagnostic(
+      "ordinary request cancellation, issuance replacement and approved cancellation deny learner/employer files and cached/new bundles; LMS result events=0; staff historical preview retained",
+    );
+    const firstLink = await db.lmsDocumentLink.findUniqueOrThrow({
+      where: { id: documentIds[0] },
+    });
+    await db.lmsResultEvent.create({
+      data: {
+        tenantId: c.tenantId,
+        resultId: firstLink.resultId,
+        kind: "VOIDED",
+        reason: "Synthetic revocation",
+        actorId: c.userId,
+        correlationId: c.correlationId,
+      },
+    });
+    assert.equal(
+      (await documentView(employer, documentIds[0])).artifacts.length,
+      0,
+    );
+    await assert.rejects(
+      artifactAccess(employer, employerArtifactId),
+      deniedDocument("RESULT_INELIGIBLE"),
+    );
+    await assert.rejects(
+      artifactAccess(learners[0].context, employerArtifactId),
+      deniedDocument("RESULT_INELIGIBLE"),
+    );
+    await assert.rejects(
+      documentBundleStatus(employer, employerBundle.id),
+      deniedDocument("RESULT_INELIGIBLE"),
     );
     await db.lmsGroupMember.update({
       where: {

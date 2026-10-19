@@ -5,18 +5,18 @@ import path from "node:path";
 import { measureLmsActions } from "./lms-action-measurement";
 
 const product = path.resolve(__dirname, "../../..");
-const output = path.join(product, "docs/evidence/lms-tz-scaling-20261015");
-const fixture = JSON.parse(
-  readFileSync(
-    path.join(product, ".runtime/lms-scaling/browser-fixture.json"),
-    "utf8",
-  ),
-);
+const output = process.env.DEMO_E2E_EVIDENCE
+  ? path.resolve(process.env.DEMO_E2E_EVIDENCE)
+  : path.join(product, "docs/evidence/lms-tz-scaling-20261015");
+const fixturePath =
+  process.env.DEMO_LMS_SCALING_FIXTURE ||
+  path.join(product, ".runtime/lms-scaling/browser-fixture.json");
+const fixture = JSON.parse(readFileSync(fixturePath, "utf8"));
 const records: unknown[] = [];
 function measure(page: Page, name: string, start: string, role = "DIRECTOR") {
   const current = measureLmsActions(page, name, role, start, [
     fixture.preparedCosts,
-    "Only synthetic data in task-owned demo_test_lms_scaling_20261015. First creation of people/order/course/legal profile and prior rendering are prerequisites, not measured first-entry actions.",
+    "Only synthetic data in a task-owned disposable demo_test_lms database. First creation of people/order/course/legal profile and prior rendering are prerequisites, not measured first-entry actions.",
   ]);
   return {
     action: current.action,
@@ -165,19 +165,34 @@ test("V4 order, partial assignment, durable group, Kazakh row/document errors an
         .getByRole("link", { name: /Назначить обучение участникам заявки/ })
         .click(),
   );
+  const program = page.getByRole("combobox", {
+    name: "Программа",
+    exact: true,
+  });
   await expect(
-    page.getByRole("combobox", { name: "Программа", exact: true }),
-  ).toHaveValue(fixture.courseVersionId);
+    program.locator(`option[value="${fixture.courseVersionId}"]`),
+  ).toBeAttached();
+  const programAutomaticallySelected =
+    (await program.inputValue()) === fixture.courseVersionId;
+  if (!programAutomaticallySelected) {
+    await context.action(
+      "select",
+      "Select the intended prepared course among available programs",
+      () => program.selectOption(fixture.courseVersionId),
+      { decision: true },
+    );
+  }
+  await expect(program).toHaveValue(fixture.courseVersionId);
   await expect(
     page.getByRole("button", { name: "Назначить обучение · 3", exact: true }),
   ).toBeEnabled();
   context.finish({
     knownPeopleAutomaticallySelected: 3,
-    programAutomaticallySelected: true,
+    programAutomaticallySelected,
     repeatedFields: 0,
   });
   const replaySource = await readFile(
-    path.join(product, ".runtime/lms-scaling/browser-operation-replay.json"),
+    path.join(path.dirname(fixturePath), "browser-operation-replay.json"),
     "utf8",
   ).catch((error: NodeJS.ErrnoException) => {
     if (error.code === "ENOENT") return null;
@@ -348,10 +363,26 @@ test("V4 order, partial assignment, durable group, Kazakh row/document errors an
     page.getByLabel("Найти слушателя", { exact: true }).fill("Синтетический"),
   );
   await findReady.action(
+    "select",
+    "Restrict ready results to the intended course version",
+    () =>
+      page
+        .getByRole("combobox", { name: "Курс и версия", exact: true })
+        .selectOption(fixture.courseVersionId),
+    { decision: true },
+  );
+  await expect(
+    page.locator('.lms-table tbody input[type="checkbox"]'),
+  ).toHaveCount(1);
+  await findReady.action(
     "click",
     "Select the found permitted ready result",
     () =>
       page
+        .getByRole("row")
+        .filter({
+          has: page.locator(`a[href="/requests/${fixture.documentRequestId}"]`),
+        })
         .getByRole("checkbox", {
           name: "Синтетический слушатель Первый",
           exact: true,
@@ -525,20 +556,36 @@ test("V4 actual expired access speaks Kazakh without creating an attempt", async
       `/api/learn/enrollments/${fixture.expired.enrollmentId}`,
     )
   ).json();
-  await expired.action("click", "Use Kazakh", () =>
-    page.getByRole("button", { name: "KZ", exact: true }).click(),
+  const refusal = page.waitForResponse(
+    (response) =>
+      response
+        .url()
+        .endsWith(
+          `/api/learn/enrollments/${fixture.expired.enrollmentId}/attempts`,
+        ) && response.request().method() === "POST",
   );
   await expired.action(
     "click",
     "Attempt the exam on the expired enrollment",
     () =>
-      page
-        .getByRole("button", { name: "Емтиханды бастау", exact: true })
-        .click(),
+      page.getByRole("button", { name: "Начать экзамен", exact: true }).click(),
+  );
+  const refused = await refusal;
+  expect(refused.status()).toBe(409);
+  expect((await refused.json()).code).toBe("ACCESS_EXPIRED");
+  await expect(
+    page.getByRole("alert").filter({
+      hasText: "Срок обучения завершён. Обратитесь в учебный центр.",
+    }),
+  ).toBeVisible();
+  await expired.action(
+    "click",
+    "Translate the existing refusal to Kazakh",
+    () => page.getByRole("button", { name: "KZ", exact: true }).click(),
   );
   await expect(
-    page.getByText("Оқу мерзімі аяқталды. Оқу орталығына хабарласыңыз.", {
-      exact: true,
+    page.getByRole("alert").filter({
+      hasText: "Оқу мерзімі аяқталды. Оқу орталығына хабарласыңыз.",
     }),
   ).toBeVisible();
   const afterAccess = await (
@@ -549,6 +596,7 @@ test("V4 actual expired access speaks Kazakh without creating an attempt", async
   expect(afterAccess.attempts.length).toBe(beforeAccess.attempts.length);
   expired.finish({
     realCode: "ACCESS_EXPIRED",
+    existingErrorTranslatedWithoutRetry: true,
     attemptsCreated: afterAccess.attempts.length - beforeAccess.attempts.length,
     recovery: "Clear contact-center instruction and enrollment retained",
   });
@@ -577,13 +625,30 @@ test("V4 ordinary prepared printing still opens in a fresh browser context", asy
   await expect(
     staff.getByText("Загружаем заявку…", { exact: true }),
   ).toBeHidden();
+  const visibleArtifacts = fixture.ordinaryPrint.artifacts.filter(
+    (artifact: { format: string }) => artifact.format !== "ZIP",
+  );
   await expect
     .poll(() => staff.locator(".artifact-list > article").count())
-    .toBeGreaterThanOrEqual(fixture.ordinaryPrint.artifacts.length);
-  for (const artifact of fixture.ordinaryPrint.artifacts) {
+    .toBeGreaterThanOrEqual(visibleArtifacts.length);
+  for (const artifact of visibleArtifacts) {
     await expect(
       staff.locator(`.artifact-list a[href="/api/artifacts/${artifact.id}"]`),
     ).toBeVisible();
+  }
+  for (const artifact of fixture.ordinaryPrint.artifacts.filter(
+    (item: { format: string }) => item.format === "ZIP",
+  )) {
+    await expect(
+      staff.locator(`.artifact-list a[href="/api/artifacts/${artifact.id}"]`),
+    ).toHaveCount(0);
+  }
+  for (const artifact of visibleArtifacts.filter(
+    (item: { format: string }) => item.format === "XLSX",
+  )) {
+    await expect(
+      staff.locator(`.artifact-list a[href="/api/artifacts/${artifact.id}"]`),
+    ).toHaveAttribute("aria-disabled", "true");
   }
   await expect(staff.locator("body")).not.toContainText("Application error");
   const pdf = fixture.ordinaryPrint.artifacts.find(
@@ -613,6 +678,7 @@ test("V4 ordinary prepared printing still opens in a fresh browser context", asy
       .count(),
     downloadedIssuedPdfBytes: bytes.length,
     downloadedIssuedPdfSignature: "%PDF-",
+    officialZipAndRegistryAwaitSignatures: true,
     scope:
       "Actual loaded issued-request files and authorized PDF download; physical print and Word/PDF layout remain outside this unchanged path check",
   });
@@ -631,7 +697,18 @@ test("V4 visual followup keeps ready download primary and dates on one line", as
   await page
     .getByLabel("Найти слушателя", { exact: true })
     .fill("Синтетический");
+  await page.getByText("Фильтры и отчёт", { exact: true }).click();
   await page
+    .getByRole("combobox", { name: "Курс и версия", exact: true })
+    .selectOption(fixture.courseVersionId);
+  await expect(
+    page.locator('.lms-table tbody input[type="checkbox"]'),
+  ).toHaveCount(1);
+  await page
+    .getByRole("row")
+    .filter({
+      has: page.locator(`a[href="/requests/${fixture.documentRequestId}"]`),
+    })
     .getByRole("checkbox", {
       name: "Синтетический слушатель Первый",
       exact: true,

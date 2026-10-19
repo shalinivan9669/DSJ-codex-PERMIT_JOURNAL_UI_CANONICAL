@@ -29,7 +29,7 @@ export type TrainingTopic = Pick<
 
 /** Reusable text only. Outcomes, dates, grades and evidence never enter this list. */
 export async function trainingTopics(c: Context, query: unknown) {
-  if (!["ADMIN", "DIRECTOR", "OPERATOR"].includes(c.role))
+  if (!["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"].includes(c.role))
     fail(403, "ROLE_DENIED", "Темы обучения доступны сотрудникам центра");
   const filter = parse(querySchema, query);
   const template =

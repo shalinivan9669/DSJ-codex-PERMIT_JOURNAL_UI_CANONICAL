@@ -1,10 +1,10 @@
 {
   "status": "PASS",
-  "measuredAt": "2026-10-14T22:39:27.663Z",
-  "database": "demo_test_lms_unknown_role_8397668ee0b34ba8857e39516878e0f6",
+  "measuredAt": "2026-10-19T07:58:55.581Z",
+  "database": "demo_test_lms_unknown_role_1fd8956f7cf14d44b8c2d872e6ad5aa3",
   "freshMigrations": [
     {
-      "count": 25
+      "count": 34
     }
   ],
   "roleCheckRejected23514": true,
@@ -53,7 +53,7 @@
     },
     {
       "method": "GET",
-      "route": "/artifacts/06f82c33-59a2-4521-ad7b-0bb7cc7e98e3",
+      "route": "/artifacts/7c961c9b-5ae3-48e6-a385-3cc53eba06ad",
       "status": 403
     },
     {

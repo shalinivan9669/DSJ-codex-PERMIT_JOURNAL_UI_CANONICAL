@@ -49,6 +49,8 @@ export type Draft = DraftInput & {
   }[];
 };
 export type Customer = {
+  city?: string | null;
+  citySource?: string | null;
   id: string;
   nameRu: string;
   nameKz: string;
@@ -78,7 +80,16 @@ export type Profile = IssuerProfile & {
   id?: string;
 };
 export type AppContext = {
-  user: { id: string; displayName: string; email: string; role: Role };
+  user: {
+    id: string;
+    displayName: string;
+    email: string;
+    role: Role;
+    canTeach?: boolean;
+    canAssignTraining?: boolean;
+    learningRoles?: ("TEACHER" | "METHODIST" | "EXPERT")[];
+    canLearn?: boolean;
+  };
   tenant: { id: string; name: string; timezone: string; demoOnly?: boolean };
   csrfToken?: string;
   profile: Profile | null;

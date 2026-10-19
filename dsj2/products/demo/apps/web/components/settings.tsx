@@ -1,8 +1,10 @@
 "use client";
+import { useCabinetText, useCabinetLanguage, useCabinetError } from "./cabinet-language";
 import { useEffect, useState, type FormEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Icon, Modal, Notice } from "@demo/ui";
-import { api, errorText, json } from "@/lib/api";
-import { canManageCenter, profileSchema, roleLabel } from "@demo/contracts";
+import { api, json } from "@/lib/api";
+import { canManageUsers, canManageSystem, profileSchema, roleLabel } from "@demo/contracts";
 import {
   userRoleForEditor,
   userRoleOptions,
@@ -11,6 +13,11 @@ import {
 import { OrganizationNameFields } from "./organization-name-fields";
 import { CenterTrainingSchedule } from "./center-training-schedule";
 import { SignatorySettings } from "./signatory-settings";
+import { PortalAccess } from "./portal-access";
+import { AuditLog } from "./audit-log";
+import { OwnPasswordForm } from "./own-password-form";
+import { RegistrationPolicy } from "./registration-policy";
+import { TemplateManager } from "./template-manager";
 import "./center-onboarding.css";
 import {
   templateLabels,
@@ -28,42 +35,55 @@ export function Settings({
   context: AppContext;
   onContextChange: (context: AppContext) => void;
 }) {
-  const [tab, setTab] = useState(
-    canManageCenter(context.user.role) ? "profile" : "account",
-  );
-  const tabs = canManageCenter(context.user.role)
+  const tr = useCabinetText();
+  const t = useCabinetLanguage();
+  const managesSystem = canManageSystem(context.user.role);
+  const managesUsers = canManageUsers(context.user.role);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabs = managesSystem
     ? [
-        ["profile", "Учебный центр"],
-        ["templates", "Формы"],
-        ["numbering", "Нумерация"],
-        ["users", "Пользователи"],
-        ["signatories", "Подписанты ЭЦП"],
-        ["export", "Полная выгрузка"],
-        ["account", "Мой пароль"],
+        ["profile", tr("Учебный центр")],
+        ["templates", tr("Формы")],
+        ["numbering", tr("Нумерация")],
+        ["users", tr("Пользователи")],
+        ["signatories", tr("Подписанты ЭЦП")],
+        ["audit", tr("Журнал аудита")],
+        ["export", tr("Полная выгрузка")],
+        ["account", tr("Мой пароль")],
       ]
-    : [["account", "Мой пароль"]];
+    : managesUsers
+      ? [["users", tr("Пользователи")], ["templates", tr("Формы")], ["account", tr("Мой пароль")]]
+      : [["account", tr("Мой пароль")]];
+  const tab = searchParams.get("tab");
+  const activeTab = tabs.some(([id]) => id === tab) ? tab : tabs[0]![0];
+  function selectTab(id: string) {
+    const query = new URLSearchParams(searchParams.toString());
+    query.set("tab", id);
+    router.push(`/settings?${query.toString()}`, { scroll: false });
+  }
   return (
     <>
       <div className="page-heading">
         <div>
-          <h1>Настройки</h1>
-          <p>Реквизиты эмитента, формы документов и доступ к центру.</p>
+          <h1>{tr("Настройки")}</h1>
+          <p>{managesSystem ? tr("Реквизиты эмитента, формы документов и доступ к центру.") : managesUsers ? tr("Пользователи, формы документов и доступ к обучению.") : tr("Безопасность вашей учётной записи.")}</p>
         </div>
       </div>
       <div className="settings-layout">
-        <nav className="settings-nav" aria-label="Разделы настроек">
+        <nav className="settings-nav" aria-label={tr("Разделы настроек")}>
           {tabs.map(([id, title]) => (
             <button
               key={id}
-              aria-current={tab === id ? "page" : undefined}
-              onClick={() => setTab(id)}
+              aria-current={activeTab === id ? "page" : undefined}
+              onClick={() => selectTab(id)}
             >
               {title}
             </button>
           ))}
         </nav>
         <section className="panel settings-panel">
-          {tab === "profile" ? (
+          {activeTab === "profile" && managesSystem ? (
             <ProfileForm
               profile={context.profile}
               onSaved={(profile) =>
@@ -74,32 +94,28 @@ export function Settings({
                 })
               }
             />
-          ) : tab === "templates" ? (
+          ) : activeTab === "templates" && managesUsers ? (
             <Templates initial={context.templates} />
-          ) : tab === "numbering" ? (
+          ) : activeTab === "numbering" && managesSystem ? (
             <Numbering />
-          ) : tab === "users" ? (
-            <Users currentUserId={context.user.id} />
-          ) : tab === "signatories" ? (
+          ) : activeTab === "users" && managesUsers ? (
+            <><Users currentUserId={context.user.id} actorRole={context.user.role} /><RegistrationPolicy t={t} /></>
+          ) : activeTab === "signatories" && managesSystem ? (
             <SignatorySettings />
-          ) : tab === "export" && canManageCenter(context.user.role) ? (
+          ) : activeTab === "audit" && managesSystem ? (
+            <AuditLog timezone={context.tenant.timezone} />
+          ) : activeTab === "export" && managesSystem ? (
             <>
-              <h2>Полная копия данных центра</h2>
+              <h2>{tr("Полная копия данных центра")}</h2>
               <p>
-                Архив содержит данные заказчиков и получателей, историю,
-                связанные записи и доступные файлы центра. Сохраните его в
-                защищённом месте с доступом только уполномоченных сотрудников.
-              </p>
+                {tr("Архив содержит данные заказчиков и получателей, историю, связанные записи и доступные файлы центра. Сохраните его в защищённом месте с доступом только уполномоченных сотрудников.")}</p>
               <p className="fine-print">
-                Это выгрузка данных для сохранения и переноса. Проверка
-                восстановления выполняется отдельно.
-              </p>
+                {tr("Это выгрузка данных для сохранения и переноса. Проверка восстановления выполняется отдельно.")}</p>
               <a className="button primary" href="/api/tenant-export" download>
-                Скачать полную копию центра (ZIP)
-              </a>
+                {tr("Скачать полную копию центра (ZIP)")}</a>
             </>
           ) : (
-            <PasswordForm />
+            <OwnPasswordForm />
           )}
         </section>
       </div>
@@ -113,6 +129,7 @@ export function ProfileForm({
   profile: Profile | null;
   onSaved: (profile: Profile) => void;
 }) {
+  const tr = useCabinetText();
   const [value, setValue] = useState<Profile>(
     profile || {
       nameRu: "",
@@ -130,7 +147,7 @@ export function ProfileForm({
     },
   );
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [saved, setSaved] = useState(false);
   function change(patch: Partial<Profile>) {
     setSaved(false);
@@ -157,7 +174,7 @@ export function ProfileForm({
       onSaved(savedProfile);
       setSaved(true);
     } catch (caught) {
-      setError(errorText(caught));
+      setError(caught);
     } finally {
       setBusy(false);
     }
@@ -165,40 +182,36 @@ export function ProfileForm({
   return (
     <form onSubmit={submit}>
       <div className="section-heading">
-        <h2>Реквизиты учебного центра</h2>
+        <h2>{tr("Реквизиты учебного центра")}</h2>
         {value.version && (
-          <span className="status">Версия {value.version}</span>
+          <span className="status">{tr("Версия")}{" "}{value.version}</span>
         )}
       </div>
       <p className="muted">
-        Название DEMO относится к программе. В документы попадают реквизиты
-        вашей организации.
-      </p>
+        {tr("Название DEMO относится к программе. В документы попадают реквизиты вашей организации.")}</p>
       {error && <Notice>{error}</Notice>}
       {saved && (
         <Notice kind="success">
-          Создана новая версия реквизитов. Ранее оформленные документы сохраняют
-          свою версию.
-        </Notice>
+          {tr("Создана новая версия реквизитов. Ранее оформленные документы сохраняют свою версию.")}</Notice>
       )}
       <OrganizationNameFields
         value={value}
         onChange={(names) => change(names)}
         legacyLabels={[
-          "Юридическое название · RU",
-          "Юридическое название · KZ",
+          tr("Юридическое название · RU"),
+          tr("Юридическое название · KZ"),
         ]}
       />
       <div className="form-grid">
         {[
-          ["bin", "БИН учебного центра"],
-          ["headName", "ФИО руководителя учебного центра"],
+          ["bin", tr("БИН учебного центра")],
+          ["headName", tr("ФИО руководителя учебного центра")],
 
-          ["cityRu", "Город · RU"],
-          ["cityKz", "Город · KZ"],
+          ["cityRu", tr("Город · RU")],
+          ["cityKz", tr("Город · KZ")],
 
-          ["addressRu", "Адрес · RU"],
-          ["addressKz", "Адрес · KZ"],
+          ["addressRu", tr("Адрес · RU")],
+          ["addressKz", tr("Адрес · KZ")],
         ].map(([key, label]) => (
           <label key={key}>
             {label}
@@ -211,23 +224,21 @@ export function ProfileForm({
         ))}
       </div>
       <label>
-        Название комиссии / версии профиля
-        <input
+        {tr("Название комиссии / версии профиля")}<input
           value={value.commissionTitle || ""}
           onChange={(event) => change({ commissionTitle: event.target.value })}
-          placeholder="Например: комиссия ПБ, состав от 24.09.2026"
+          placeholder={tr("Например: комиссия ПБ, состав от 24.09.2026")}
         />
       </label>
       <label>
-        Основание утверждения / полномочий
-        <textarea
-          aria-label="Основание утверждения / полномочий"
+        {tr("Основание утверждения / полномочий")}<textarea
+          aria-label={tr("Основание утверждения / полномочий")}
           value={value.approvalBasis}
           onChange={(event) => change({ approvalBasis: event.target.value })}
         />
       </label>
       <div className="section-heading">
-        <h3>Комиссия</h3>
+        <h3>{tr("Комиссия")}</h3>
         <button
           type="button"
           disabled={value.commission.length >= 12}
@@ -239,25 +250,23 @@ export function ProfileForm({
         >
           <Icon name="plus" />
           {value.commission.length
-            ? "Добавить члена комиссии"
-            : "Добавить председателя"}
+            ? tr("Добавить члена комиссии")
+            : tr("Добавить председателя")}
         </button>
       </div>
 
       {value.commission.length === 0 && (
         <p className="muted">
-          Состав комиссии не указан. Внесите фактические утверждённые данные.
-        </p>
+          {tr("Состав комиссии не указан. Внесите фактические утверждённые данные.")}</p>
       )}
       {value.commission.map((person, index) => (
         <div key={index}>
           <p className="center-person-role">
-            {index === 0 ? "Председатель комиссии" : `Член комиссии ${index}`}
+            {index === 0 ? tr("Председатель комиссии") : `${tr("Член комиссии ")}${index}`}
           </p>
           <div className="commission-row">
             <label>
-              ФИО
-              <input
+              {tr("ФИО")}<input
                 required
                 value={person.name}
                 onChange={(event) =>
@@ -270,8 +279,7 @@ export function ProfileForm({
               />
             </label>
             <label>
-              Роль в комиссии / должность
-              <input
+              {tr("Роль в комиссии / должность")}<input
                 value={person.position}
                 onChange={(event) =>
                   change({
@@ -286,7 +294,7 @@ export function ProfileForm({
             </label>
             <button
               type="button"
-              aria-label={`Удалить члена комиссии ${index + 1}`}
+              aria-label={`${tr("Удалить члена комиссии ")}${index + 1}`}
               onClick={() =>
                 change({
                   commission:
@@ -299,22 +307,18 @@ export function ProfileForm({
                 })
               }
             >
-              Удалить
-            </button>
+              {tr("Удалить")}</button>
           </div>
         </div>
       ))}
       <details className="center-extra-people">
-        <summary>Другие преподаватели и подписанты</summary>
+        <summary>{tr("Другие преподаватели и подписанты")}</summary>
         <p className="fine-print">
-          Список имён для работы центра. Состав комиссии выше определяет подписи
-          в текущих формах. Эти записи не предоставляют доступ к приложению.
-        </p>
+          {tr("Список имён для работы центра. Состав комиссии выше определяет подписи в текущих формах. Эти записи не предоставляют доступ к приложению.")}</p>
         {(value.people || []).map((person, index) => (
           <div className="form-grid" key={index}>
             <label>
-              ФИО сотрудника
-              <input
+              {tr("ФИО сотрудника")}<input
                 required
                 maxLength={255}
                 value={person.name}
@@ -328,8 +332,7 @@ export function ProfileForm({
               />
             </label>
             <label>
-              Роль
-              <select
+              {tr("Роль")}<select
                 value={person.role}
                 onChange={(event) =>
                   change({
@@ -344,13 +347,12 @@ export function ProfileForm({
                   })
                 }
               >
-                <option value="TEACHER">Преподаватель</option>
-                <option value="SIGNER">Подписант</option>
+                <option value="TEACHER">{tr("Преподаватель")}</option>
+                <option value="SIGNER">{tr("Подписант")}</option>
               </select>
             </label>
             <label>
-              Должность сотрудника
-              <input
+              {tr("Должность сотрудника")}<input
                 maxLength={255}
                 value={person.position}
                 onChange={(event) =>
@@ -370,7 +372,7 @@ export function ProfileForm({
                 change({ people: value.people!.filter((_, i) => i !== index) })
               }
             >
-              Убрать сотрудника {index + 1}
+              {tr("Убрать сотрудника")}{" "}{index + 1}
             </button>
           </div>
         ))}
@@ -386,8 +388,7 @@ export function ProfileForm({
             })
           }
         >
-          Добавить преподавателя или подписанта
-        </button>
+          {tr("Добавить преподавателя или подписанта")}</button>
       </details>
       <CenterTrainingSchedule
         commonFields={value.commonFields}
@@ -400,15 +401,15 @@ export function ProfileForm({
           checked={value.approved}
           onChange={(event) => change({ approved: event.target.checked })}
         />
-        Реквизиты и состав комиссии проверены уполномоченным сотрудником центра
-      </label>
+        {tr("Реквизиты и состав комиссии проверены уполномоченным сотрудником центра")}</label>
       <button className="primary" disabled={busy}>
-        {busy ? "Сохраняем…" : "Сохранить новую версию"}
+        {busy ? tr("Сохраняем…") : tr("Сохранить новую версию")}
       </button>
     </form>
   );
 }
 export function Templates({ initial }: { initial: Template[] }) {
+  const tr = useCabinetText();
   const [templates, setTemplates] = useState<
     (Template & {
       approved?: boolean;
@@ -416,7 +417,7 @@ export function Templates({ initial }: { initial: Template[] }) {
       pageFormat?: string;
     })[]
   >(initial);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [busy, setBusy] = useState("");
   async function load() {
     const result = await api<Page<Template> | Template[]>(
@@ -425,7 +426,7 @@ export function Templates({ initial }: { initial: Template[] }) {
     setTemplates(Array.isArray(result) ? result : result.items);
   }
   useEffect(() => {
-    void load().catch((caught) => setError(errorText(caught)));
+    void load().catch((caught) => setError(caught));
   }, []);
   async function approve(id: string) {
     setBusy(id);
@@ -437,36 +438,35 @@ export function Templates({ initial }: { initial: Template[] }) {
       });
       await load();
     } catch (caught) {
-      setError(errorText(caught));
+      setError(caught);
     } finally {
       setBusy("");
     }
   }
   return (
     <>
-      <h2>Формы документов</h2>
+      <h2>{tr("Формы документов")}</h2>
       <p className="muted">
-        Версии форм фиксируются при оформлении. Подтверждение формы выполняет
-        ответственный сотрудник центра после проверки её применимости.
-      </p>
+        {tr("Версии форм фиксируются при оформлении. Подтверждение формы выполняет ответственный сотрудник центра после проверки её применимости.")}</p>
       {error && <Notice>{error}</Notice>}
+      <TemplateManager onChanged={load} />
       <div className="template-list">
         {templates.map((template) => (
           <article key={template.id}>
             <div>
               <h3>
                 {template.contract?.ownerKind === "GROUP"
-                  ? `${({ "biot-protocol": "БиОТ рабочих", "biot-itr-protocol": "БиОТ ИТР", "pb-protocol": "ПБ", "ptm-protocol": "ПТМ", "ps-protocol": "ПС" } as Record<string, string>)[template.templateId || template.id] || "Событие"} — групповой протокол`
-                  : templateLabels[template.templateId || template.id] ||
+                  ? `${({ "biot-protocol": tr("БиОТ рабочих"), "biot-itr-protocol": tr("БиОТ ИТР"), "pb-protocol": tr("ПБ"), "ptm-protocol": tr("ПТМ"), "ps-protocol": tr("ПС") } as Record<string, string>)[template.templateId || template.id] || tr("Событие")}${tr(" — групповой протокол")}`
+                  : tr(templateLabels[template.templateId || template.id] || "") ||
                     template.title ||
                     template.name ||
                     template.id}
                 {template.contract?.program === "SPECIAL" &&
-                  " — специальные компетенции"}
+                  tr(" — специальные компетенции")}
               </h3>
               <p>
-                Версия {template.version || "1"} ·{" "}
-                {template.pageFormat || "Геометрия исходной формы"} ·{" "}
+                {tr("Версия")}{" "}{template.version || "1"} ·{" "}
+                {template.pageFormat || tr("Геометрия исходной формы")} ·{" "}
                 {(
                   template.supportedExports ||
                   template.exports || ["DOCX", "PDF"]
@@ -475,12 +475,7 @@ export function Templates({ initial }: { initial: Template[] }) {
               {template.description && <p>{template.description}</p>}
               {template.contract?.program === "SPECIAL" ? (
                 <Notice kind="info">
-                  Этот вариант выбирается только для программы специальных
-                  компетенций. Сертификат содержит отрасль, а протокол — БИН и
-                  адрес работодателя, фактические результаты проверки знаний и
-                  прокторинга. Применимость формы подтверждает ответственный
-                  сотрудник центра.
-                </Notice>
+                  {tr("Этот вариант выбирается только для программы специальных компетенций. Сертификат содержит отрасль, а протокол — БИН и адрес работодателя, фактические результаты проверки знаний и прокторинга. Применимость формы подтверждает ответственный сотрудник центра.")}</Notice>
               ) : typeof (
                   template.contract?.regulatoryReview as
                     | { notice?: unknown }
@@ -494,22 +489,17 @@ export function Templates({ initial }: { initial: Template[] }) {
                 </Notice>
               ) : (template.templateId || template.id).startsWith("biot-") ? (
                 <Notice kind="info">
-                  Исторические макеты БиОТ не подтверждены редакцией правил с
-                  12.07.2026. Текущая форма протокола рабочих профессий содержит
-                  7 колонок. Отметка директора не исправляет несовпадение формы;
-                  требуется актуальный макет, проверенный уполномоченным
-                  сотрудником для соответствующей категории получателей.{" "}
+                  {tr("Исторические макеты БиОТ не подтверждены редакцией правил с 12.07.2026. Текущая форма протокола рабочих профессий содержит 7 колонок. Отметка директора не исправляет несовпадение формы; требуется актуальный макет, проверенный уполномоченным сотрудником для соответствующей категории получателей.")}{" "}
                   <a
                     href="https://old.adilet.zan.kz/rus/docs/V1500012665"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Действующие правила
-                  </a>
+                    {tr("Действующие правила")}</a>
                 </Notice>
               ) : null}
               <details>
-                <summary>Контракт полей и контроль версии</summary>
+                <summary>{tr("Контракт полей и контроль версии")}</summary>
                 <pre>{JSON.stringify(template.contract || {}, null, 2)}</pre>
                 {template.sha256 && (
                   <p className="hash">SHA-256: {template.sha256}</p>
@@ -518,13 +508,13 @@ export function Templates({ initial }: { initial: Template[] }) {
             </div>
             <div>
               {template.approved ? (
-                <span className="status status-ready">Подтверждена</span>
+                <span className="status status-ready">{tr("Подтверждена")}</span>
               ) : (
                 <button
                   disabled={!!busy}
                   onClick={() => void approve(template.id)}
                 >
-                  {busy === template.id ? "Подтверждаем…" : "Подтвердить форму"}
+                  {busy === template.id ? tr("Подтверждаем…") : tr("Подтвердить форму")}
                 </button>
               )}
             </div>
@@ -544,13 +534,14 @@ type NumberingPolicy = {
   padding?: number;
 };
 function Numbering() {
+  const tr = useCabinetText();
   const [items, setItems] = useState<NumberingPolicy[]>([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [message, setMessage] = useState("");
   useEffect(() => {
     api<{ items: NumberingPolicy[] } | NumberingPolicy[]>("/settings/numbering")
       .then((result) => setItems(Array.isArray(result) ? result : result.items))
-      .catch((caught) => setError(errorText(caught)));
+      .catch((caught) => setError(caught));
   }, []);
   async function save(item: NumberingPolicy) {
     setError("");
@@ -566,30 +557,27 @@ function Numbering() {
         }),
       });
       setMessage(
-        "Правило сохранено. Счётчик не сброшен; ранее назначенные номера сохранены.",
+        tr("Правило сохранено. Счётчик не сброшен; ранее назначенные номера сохранены."),
       );
     } catch (caught) {
-      setError(errorText(caught));
+      setError(caught);
     }
   }
   return (
     <>
-      <h2>Нумерация</h2>
+      <h2>{tr("Нумерация")}</h2>
       <p className="muted">
-        Номера назначаются сервером при оформлении. Сохранение, просмотр и
-        повтор генерации не расходуют номера. Отменённые номера не используются
-        повторно.
-      </p>
+        {tr("Номера назначаются сервером при оформлении. Сохранение, просмотр и повтор генерации не расходуют номера. Отменённые номера не используются повторно.")}</p>
       {error && <Notice>{error}</Notice>}
       {message && <Notice kind="success">{message}</Notice>}
       <div className="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>Область</th>
-              <th>Следующий номер</th>
-              <th>Префикс</th>
-              <th>Суффикс / разрядность</th>
+              <th>{tr("Область")}</th>
+              <th>{tr("Следующий номер")}</th>
+              <th>{tr("Префикс")}</th>
+              <th>{tr("Суффикс / разрядность")}</th>
               <th />
             </tr>
           </thead>
@@ -600,11 +588,11 @@ function Numbering() {
                 <td>
                   {item.nextValue ??
                     item.next ??
-                    (item.value != null ? item.value + 1 : "Будет назначен")}
+                    (item.value != null ? item.value + 1 : tr("Будет назначен"))}
                 </td>
                 <td>
                   <input
-                    aria-label={`Префикс ${item.namespace}`}
+                    aria-label={`${tr("Префикс ")}${item.namespace}`}
                     value={item.prefix || ""}
                     onChange={(event) =>
                       setItems(
@@ -619,7 +607,7 @@ function Numbering() {
                 </td>
                 <td>
                   <input
-                    aria-label={`Суффикс ${item.namespace}`}
+                    aria-label={`${tr("Суффикс ")}${item.namespace}`}
                     value={item.suffix || ""}
                     onChange={(event) =>
                       setItems(
@@ -635,7 +623,7 @@ function Numbering() {
                     type="number"
                     min="1"
                     max="12"
-                    aria-label={`Разрядность ${item.namespace}`}
+                    aria-label={`${tr("Разрядность ")}${item.namespace}`}
                     value={item.padding || 5}
                     onChange={(event) =>
                       setItems(
@@ -649,7 +637,7 @@ function Numbering() {
                   />
                 </td>
                 <td>
-                  <button onClick={() => void save(item)}>Сохранить</button>
+                  <button onClick={() => void save(item)}>{tr("Сохранить")}</button>
                 </td>
               </tr>
             ))}
@@ -658,9 +646,7 @@ function Numbering() {
       </div>
       {!items.length && (
         <p className="muted">
-          Счётчики появятся при первом оформлении документов соответствующего
-          направления.
-        </p>
+          {tr("Счётчики появятся при первом оформлении документов соответствующего направления.")}</p>
       )}
     </>
   );
@@ -672,21 +658,25 @@ type User = {
   role: Role;
   disabled: boolean;
 };
-function Users({ currentUserId }: { currentUserId: string }) {
+function Users({ currentUserId, actorRole }: { currentUserId: string; actorRole: Role }) {
+  const tr = useCabinetText();
   const [users, setUsers] = useState<User[]>([]);
   const [edit, setEdit] = useState<Partial<User> | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
+  const [canBootstrap, setCanBootstrap] = useState(false);
+  const [bootstrapOpen, setBootstrapOpen] = useState(false);
   async function load() {
-    const result = await api<Page<User> | User[]>("/users");
+    const result = await api<(Page<User> & { canBootstrapSuperAdmin?: boolean }) | User[]>("/users");
     setUsers(Array.isArray(result) ? result : result.items);
+    setCanBootstrap(!Array.isArray(result) && result.canBootstrapSuperAdmin === true);
   }
   useEffect(() => {
-    void load().catch((caught) => setError(errorText(caught)));
+    void load().catch((caught) => setError(caught));
   }, []);
   return (
     <>
       <div className="section-heading">
-        <h2>Пользователи</h2>
+        <h2>{tr("Пользователи")}</h2>
         <button
           onClick={() =>
             setEdit({
@@ -698,22 +688,20 @@ function Users({ currentUserId }: { currentUserId: string }) {
           }
         >
           <Icon name="plus" />
-          Добавить
-        </button>
+          {tr("Добавить сотрудника")}</button>
       </div>
-      <p className="muted">
-        Менеджер заполняет заявки, отправляет их на согласование и печатает
-        документы. Директор согласует заявки, управляет настройками центра и
-        доступом сотрудников.
-      </p>
+      <div className="actions">
+        <a className="button" href="/lms/learning-roles">{tr("Учебные полномочия")}</a>
+        <a className="button" href="/lms/assign">{tr("Пригласить слушателя")}</a>
+      </div>
       {error && <Notice>{error}</Notice>}
       <div className="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>Пользователь</th>
-              <th>Роль</th>
-              <th>Доступ</th>
+              <th>{tr("Пользователь")}</th>
+              <th>{tr("Роль")}</th>
+              <th>{tr("Доступ")}</th>
               <th />
             </tr>
           </thead>
@@ -724,40 +712,105 @@ function Users({ currentUserId }: { currentUserId: string }) {
                   <strong>{user.displayName}</strong>
                   <small>{user.email}</small>
                 </td>
-                <td>{roleLabel(user.role)}</td>
-                <td>{user.disabled ? "Отключён" : "Активен"}</td>
+                <td>{tr(roleLabel(user.role))}</td>
+                <td>{user.disabled ? tr("Отключён") : tr("Активен")}</td>
                 <td>
-                  <button onClick={() => setEdit(user)}>
-                    Изменить{user.id === currentUserId ? " себя" : ""}
-                  </button>
+                  {actorRole === "SUPER_ADMIN" || !["ADMIN", "DIRECTOR", "SUPER_ADMIN"].includes(user.role) ? (
+                    <button onClick={() => setEdit(user)}>
+                      {tr("Изменить")}{user.id === currentUserId ? tr(" себя") : ""}
+                    </button>
+                  ) : user.id === currentUserId ? (
+                    <span className="muted">{tr("Пароль — в разделе «Мой пароль»")}</span>
+                  ) : (
+                    <span className="muted">{tr("Управляет суперадминистратор")}</span>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <PortalAccess />
+      {canBootstrap && ["ADMIN", "DIRECTOR"].includes(actorRole) && (
+        <p><button type="button" onClick={() => setBootstrapOpen(true)}>{tr("Назначить первого суперадминистратора")}</button></p>
+      )}
+      {bootstrapOpen && <BootstrapSuperAdmin onClose={() => setBootstrapOpen(false)} />}
       {edit && (
         <UserDialog
           user={edit}
+          currentUserId={currentUserId}
+          actorRole={actorRole}
           onClose={() => setEdit(null)}
           onSaved={() => {
+            if (edit.id === currentUserId) {
+              window.location.assign("/login");
+              return;
+            }
             setEdit(null);
-            void load().catch((caught) => setError(errorText(caught)));
+            void load().catch((caught) => setError(caught));
           }}
         />
       )}
     </>
   );
 }
+function BootstrapSuperAdmin({ onClose }: { onClose: () => void }) {
+  const tr = useCabinetText();
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useCabinetError();
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (!confirmed) return;
+    setBusy(true);
+    setError("");
+    try {
+      await api("/users/bootstrap-super-admin", {
+        method: "POST",
+        body: json({ currentPassword, confirm: true }),
+      });
+      setCurrentPassword("");
+      window.location.assign("/login");
+    } catch (caught) {
+      setError(caught);
+      setCurrentPassword("");
+      setBusy(false);
+    }
+  }
+  return (
+    <Modal title={tr("Первый суперадминистратор")} onClose={() => { if (!busy) onClose(); }}>
+      <form onSubmit={submit}>
+        <p>{tr("Назначение даст вашей учётной записи полный доступ к этому учебному центру, включая управление администраторами и системными настройками. После назначения войдите заново.")}</p>
+        {error && <Notice>{error}</Notice>}
+        <label>
+          {tr("Текущий пароль")}<input autoFocus type="password" autoComplete="current-password" required maxLength={256} disabled={busy} value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} />
+        </label>
+        <label className="checkbox">
+          <input type="checkbox" required disabled={busy} checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} />
+          {tr("Назначить меня первым суперадминистратором центра")}</label>
+        <div className="modal-actions">
+          <button type="button" disabled={busy} onClick={onClose}>{tr("Отмена")}</button>
+          <button className="primary" disabled={busy || !confirmed}>{busy ? tr("Назначаем…") : tr("Подтвердить назначение")}</button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
 function UserDialog({
   user,
+  currentUserId,
+  actorRole,
   onClose,
   onSaved,
 }: {
   user: Partial<User>;
+  currentUserId: string;
+  actorRole: Role;
   onClose: () => void;
   onSaved: () => void;
 }) {
+  const tr = useCabinetText();
   const [value, setValue] = useState({
     email: "",
     displayName: "",
@@ -766,8 +819,11 @@ function UserDialog({
     role: userRoleForEditor(user.role),
   });
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [busy, setBusy] = useState(false);
+  const editingSelf = user.id === currentUserId;
+  const roles = userRoleOptions(user.id ? user.role : undefined, actorRole)
+    .filter((role) => !!user.id || !["LEARNER", "EMPLOYER"].includes(role));
   async function submit(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
@@ -785,21 +841,20 @@ function UserDialog({
       });
       onSaved();
     } catch (caught) {
-      setError(errorText(caught));
+      setError(caught);
     } finally {
       setBusy(false);
     }
   }
   return (
     <Modal
-      title={user.id ? "Настройки пользователя" : "Новый пользователь"}
+      title={user.id ? tr("Настройки пользователя") : tr("Новый пользователь")}
       onClose={onClose}
     >
       <form onSubmit={submit}>
         {error && <Notice>{error}</Notice>}
         <label>
-          Имя
-          <input
+          {tr("Имя")}<input
             autoFocus
             required
             value={value.displayName}
@@ -809,8 +864,7 @@ function UserDialog({
           />
         </label>
         <label>
-          Электронная почта
-          <input
+          {tr("Электронная почта")}<input
             type="email"
             required
             disabled={!!user.id}
@@ -821,25 +875,28 @@ function UserDialog({
           />
         </label>
         <label>
-          Роль
-          <select
+          {tr("Роль")}<select
             value={value.role}
+            disabled={editingSelf}
             onChange={(event) =>
               setValue({ ...value, role: event.target.value as Role })
             }
           >
-            {userRoleOptions(user.id ? user.role : undefined).map((role) => (
+            {roles.map((role) => (
               <option key={role} value={role}>
-                {roleLabel(role)}
-                {role === "VIEWER" || role === "EMPLOYER"
-                  ? " (текущий доступ)"
+                {tr(roleLabel(role))}
+                {role === "LEARNER" || role === "EMPLOYER"
+                  ? tr(" (текущий доступ)")
                   : ""}
               </option>
             ))}
           </select>
         </label>
+        {["TEACHER", "METHODIST", "EXPERT"].includes(value.role) && (
+          <p className="fine-print">{tr("Курсы и группы назначаются в «Учебных полномочиях». Подписание документов требует отдельного действующего полномочия подписанта.")}</p>
+        )}
         <label>
-          {user.id ? "Новый пароль (необязательно)" : "Первоначальный пароль"}
+          {user.id ? tr("Новый пароль (необязательно)") : tr("Первоначальный пароль")}
           <input
             type="password"
             autoComplete="new-password"
@@ -850,103 +907,27 @@ function UserDialog({
           />
         </label>
         <small className="muted">
-          Не менее 12 символов. Изменение роли, пароля или отключение отзывает
-          активные сессии.
-        </small>
+          {tr("Не менее 12 символов. Изменение роли, пароля или отключение отзывает активные сессии.")}</small>
         {user.id && (
           <label className="checkbox">
             <input
               type="checkbox"
+              disabled={editingSelf}
               checked={value.disabled}
               onChange={(event) =>
                 setValue({ ...value, disabled: event.target.checked })
               }
             />
-            Отключить доступ
-          </label>
+            {tr("Отключить доступ")}</label>
         )}
         <div className="modal-actions">
           <button type="button" onClick={onClose}>
-            Отмена
-          </button>
+            {tr("Отмена")}</button>
           <button className="primary" disabled={busy}>
-            {busy ? "Сохраняем…" : "Сохранить"}
+            {busy ? tr("Сохраняем…") : tr("Сохранить")}
           </button>
         </div>
       </form>
     </Modal>
-  );
-}
-function PasswordForm() {
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [repeat, setRepeat] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-    setError("");
-    setMessage("");
-    if (repeat !== newPassword) {
-      setError("Новые пароли не совпадают.");
-      return;
-    }
-    setBusy(true);
-    try {
-      await api("/auth/password", {
-        method: "POST",
-        body: json({ currentPassword, newPassword }),
-      });
-      setMessage("Пароль изменён. Войдите заново с новым паролем.");
-      setCurrentPassword("");
-      setNewPassword("");
-      setRepeat("");
-    } catch (caught) {
-      setError(errorText(caught));
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <form className="narrow-form" onSubmit={submit}>
-      <h2>Смена пароля</h2>
-      {error && <Notice>{error}</Notice>}
-      {message && <Notice kind="success">{message}</Notice>}
-      <label>
-        Текущий пароль
-        <input
-          type="password"
-          required
-          autoComplete="current-password"
-          value={currentPassword}
-          onChange={(event) => setCurrentPassword(event.target.value)}
-        />
-      </label>
-      <label>
-        Новый пароль
-        <input
-          type="password"
-          required
-          minLength={12}
-          autoComplete="new-password"
-          value={newPassword}
-          onChange={(event) => setNewPassword(event.target.value)}
-        />
-      </label>
-      <label>
-        Повторите новый пароль
-        <input
-          type="password"
-          required
-          autoComplete="new-password"
-          value={repeat}
-          onChange={(event) => setRepeat(event.target.value)}
-        />
-      </label>
-      <button className="primary" disabled={busy}>
-        {busy ? "Сохраняем…" : "Изменить пароль"}
-      </button>
-    </form>
   );
 }

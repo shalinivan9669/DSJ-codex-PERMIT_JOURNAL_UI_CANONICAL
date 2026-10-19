@@ -38,9 +38,8 @@ def isolated_namespaces(function):
 
 def fill_slots(files,payload,path):
     from legacy_reference import source_literal_values
-    digest=hashlib.sha256(Path(path).read_bytes()).hexdigest()
-    entries=json.loads((ROOT/'neutral_forms_sources.json').read_text(encoding='utf8'))['templates']
-    entry=next(t for t in entries if t['sha256']==digest)
+    entry=neutral_source_entry(path)
+    if entry is None: raise ValueError('NEUTRAL_TEMPLATE_SOURCE_UNKNOWN')
     values={r['matchText']:r['replaceText'] for r in slot_replacements(payload)}
     # The pinned mapper omits old==new literal replacements. The complete
     # versioned slot schema preserves those legitimate user-entered values.
@@ -110,11 +109,22 @@ def combine_neutral_files(documents,snapshot=None):
     files['word/document.xml']=E.tostring(tree,encoding='utf-8',xml_declaration=True)
     return files
 
-def identify_neutral(path, template_id):
+def neutral_source_entry(path):
     registry=ROOT/'neutral_forms_sources.json'
-    if not registry.exists(): return False
+    if not registry.exists(): return None
     digest=hashlib.sha256(Path(path).read_bytes()).hexdigest()
-    return any(t['id']==template_id and t['sha256']==digest for t in json.loads(registry.read_text(encoding='utf8'))['templates'])
+    entries=json.loads(registry.read_text(encoding='utf8'))['templates']
+    entry=next((t for t in entries if t['sha256']==digest),None)
+    if entry is not None:return entry
+    with ZipFile(path) as archive:
+        if 'demo/template-source.json' not in archive.namelist():return None
+        marker=json.loads(archive.read('demo/template-source.json'))
+    if marker.get('policy')!='VALIDATED_TEMPLATE_DERIVATIVE_V1':return None
+    return next((t for t in entries if t['sha256']==marker.get('sourceChecksum') and t['id']==marker.get('templateId')),None)
+
+def identify_neutral(path, template_id):
+    entry=neutral_source_entry(path)
+    return entry is not None and entry['id']==template_id
 
 def neutral_payload(snapshot,item):
     # Every new ITR form prints the frozen selected course, including snapshots

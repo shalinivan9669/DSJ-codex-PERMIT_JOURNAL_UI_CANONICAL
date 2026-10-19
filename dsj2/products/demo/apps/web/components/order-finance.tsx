@@ -1,10 +1,19 @@
 "use client";
 import { canManageCenter } from "@demo/contracts";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Notice } from "@demo/ui";
 import { api, errorText, json } from "@/lib/api";
 import { kztToMinor, minorToKzt } from "@/lib/money";
 import type { AppContext } from "@/lib/types";
+import { useCabinetLanguage } from "./cabinet-language";
+export type ManualPayment = {
+  id: string;
+  amountMinor: string;
+  occurredOn: string;
+  source: string;
+  createdAt: string;
+  reconciliationRequired: boolean;
+};
 type Line = {
   label: string;
   unit: "PERSON_SERVICE" | "GROUP" | "FIXED";
@@ -23,20 +32,25 @@ export type Commercial = {
   totalMinor?: string | null;
   paidMinor?: string;
   paymentState?: string;
+  payments?: ManualPayment[];
 };
 export function OrderFinance({
   orderId,
   revision,
   commercial,
+  payments,
   context,
   onChanged,
 }: {
   orderId: string;
   revision: number;
   commercial: Commercial;
+  payments?: ManualPayment[];
   context: AppContext;
   onChanged: () => void | Promise<void>;
 }) {
+  const t = useCabinetLanguage();
+  const history = payments || commercial.payments || [];
   const [lines, setLines] = useState<Line[]>(commercial.lines || []);
   const [tax, setTax] = useState(
     commercial.taxRateBasisPoints === null ||
@@ -48,12 +62,14 @@ export function OrderFinance({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [payment, setPayment] = useState("");
+  const paymentRequest = useRef<{ identity: string; key: string } | null>(null);
   const [date, setDate] = useState("");
   const [source, setSource] = useState("");
   const [documentType, setDocumentType] = useState("INVOICE");
   const [number, setNumber] = useState("");
   const readonly = context.user.role === "VIEWER";
   async function run(action: () => Promise<unknown>) {
+    if (busy) return;
     setError("");
     setBusy(true);
     try {
@@ -317,7 +333,18 @@ export function OrderFinance({
       )}
       {canManageCenter(context.user.role) && (
         <details>
-          <summary>Зафиксировать подтверждённый платёж</summary>
+          <summary>
+            {t(
+              "Зафиксировать подтверждённый платёж",
+              "Расталған төлемді тіркеу",
+            )}
+          </summary>
+          <p className="fine-print">
+            {t(
+              "Для возврата укажите отрицательную сумму и основание возврата. Сохранённые платежи остаются в истории.",
+              "Қайтару үшін теріс соманы және қайтару негізін көрсетіңіз. Сақталған төлемдер тарихта қалады.",
+            )}
+          </p>
           <label>
             Сумма, KZT
             <input
@@ -341,21 +368,65 @@ export function OrderFinance({
           <button
             disabled={busy || !payment || !date || !source.trim()}
             onClick={() =>
-              void run(() =>
-                api(`/orders/${orderId}/payments`, {
+              void run(async () => {
+                const paymentData = {
+                  amountMinor: kztToMinor(payment, true),
+                  occurredOn: date,
+                  source,
+                  reconciliationRequired: false,
+                };
+                const identity = JSON.stringify(paymentData);
+                if (paymentRequest.current?.identity !== identity)
+                  paymentRequest.current = {
+                    identity,
+                    key: crypto.randomUUID(),
+                  };
+                await api(`/orders/${orderId}/payments`, {
                   method: "POST",
                   body: json({
-                    amountMinor: kztToMinor(payment),
-                    occurredOn: date,
-                    source,
-                    reconciliationRequired: false,
+                    ...paymentData,
+                    requestKey: paymentRequest.current.key,
                   }),
-                }),
-              )
+                });
+                setPayment("");
+                setSource("");
+                paymentRequest.current = null;
+              })
             }
           >
             Зафиксировать платёж
           </button>
+        </details>
+      )}
+      {!!history.length && (
+        <details>
+          <summary>
+            {t(
+              "История платежей и возвратов",
+              "Төлемдер мен қайтарулар тарихы",
+            )}
+          </summary>
+          <ul className="lms-list">
+            {history.map((entry) => (
+              <li key={entry.id}>
+                <div>
+                  <strong>{minorToKzt(entry.amountMinor)} KZT</strong> ·{" "}
+                  {entry.occurredOn}
+                  <p>{entry.source}</p>
+                  <small>
+                    {t("Ручная запись", "Қолмен енгізілген жазба")} ·{" "}
+                    {new Date(entry.createdAt).toLocaleString(
+                      t("ru-KZ", "kk-KZ"),
+                      { timeZone: context.tenant.timezone },
+                    )}
+                    {entry.reconciliationRequired
+                      ? ` · ${t("Нужна сверка", "Салыстыру қажет")}`
+                      : ""}
+                  </small>
+                </div>
+              </li>
+            ))}
+          </ul>
         </details>
       )}
     </details>

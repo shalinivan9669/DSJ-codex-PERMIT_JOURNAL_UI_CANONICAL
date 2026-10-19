@@ -4,8 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Icon, Notice } from "@demo/ui";
 import { registrationSchema, type OrganizationNames } from "@demo/contracts";
-import { api, errorText, json, setCsrf } from "@/lib/api";
+import { api, json, setCsrf } from "@/lib/api";
 import { OrganizationNameFields } from "./organization-name-fields";
+import { CabinetLanguageProvider } from "./cabinet-language";
+import { LanguageSwitch, lmsError, useLanguage } from "./lms/common";
 import "./center-onboarding.css";
 
 export function Register({
@@ -14,6 +16,7 @@ export function Register({
   onRegistered: () => Promise<void>;
 }) {
   const router = useRouter();
+  const { t, language, setLanguage } = useLanguage("public");
   const [names, setNames] = useState<OrganizationNames>({
     legalForm: "NONE",
     ownNameRu: "",
@@ -25,7 +28,8 @@ export function Register({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<unknown>(null);
+  const [invalid, setInvalid] = useState(false);
   async function submit(event: FormEvent) {
     event.preventDefault();
     const parsed = registrationSchema.safeParse({
@@ -37,11 +41,12 @@ export function Register({
       password,
     });
     if (!parsed.success) {
-      setError(parsed.error.issues.map((issue) => issue.message).join(". "));
+      setInvalid(true);
       return;
     }
     setBusy(true);
-    setError("");
+    setError(null);
+    setInvalid(false);
     try {
       const result = await api<{ csrfToken: string }>("/auth/register", {
         method: "POST",
@@ -52,41 +57,41 @@ export function Register({
       await onRegistered();
       router.replace("/onboarding");
     } catch (caught) {
-      setError(errorText(caught));
+      setError(caught);
     } finally {
       setBusy(false);
     }
   }
   return (
-    <main className="center-registration">
+    <CabinetLanguageProvider t={t}><main className="center-registration" lang={language === "kz" ? "kk" : "ru"}>
+      <LanguageSwitch language={language} onChange={setLanguage} />
       <Link href="/login" className="back-link">
-        ← Ко входу
+        ← {t("Ко входу", "Кіруге")}
       </Link>
       <div className="page-heading">
         <div>
           <span className="brand">
             <Icon name="print" /> DEMO
           </span>
-          <h1>Зарегистрировать учебный центр</h1>
+          <h1>{t("Зарегистрировать учебный центр", "Оқу орталығын тіркеу")}</h1>
           <p>
-            Создайте пространство центра. Реквизиты, комиссию и формы заполните
-            следующим шагом.
+            {t("Создайте пространство центра. Реквизиты, комиссию и формы заполните следующим шагом.", "Орталықтың кеңістігін құрыңыз. Келесі қадамда деректемелерді, комиссияны және нысандарды толтырыңыз.")}
           </p>
         </div>
       </div>
       <section className="panel">
         <form onSubmit={submit}>
-          {error && <Notice>{error}</Notice>}
+          {!!error && <Notice>{lmsError(error, t)}</Notice>}
+          {invalid && <Notice>{t("Проверьте название центра, имя директора, адрес почты и пароль от 12 символов.", "Орталық атауын, директордың атын, пошта мекенжайын және кемінде 12 таңбалық құпиясөзді тексеріңіз.")}</Notice>}
           <fieldset className="registration-fields" disabled={busy}>
-            <legend>Название центра</legend>
+            <legend>{t("Название центра", "Орталық атауы")}</legend>
             <OrganizationNameFields value={names} onChange={setNames} />
-            <h2>Директор центра</h2>
+            <h2>{t("Директор центра", "Орталық директоры")}</h2>
             <p className="muted">
-              Вы будете согласовывать заявки и управлять центром. Менеджера
-              можно добавить позже в настройках пользователей.
+              {t("Вы будете согласовывать заявки и управлять центром. Сотрудников можно добавить позже в настройках пользователей.", "Өтінімдерді келісіп, орталықты басқарасыз. Қызметкерлерді кейін пайдаланушы баптауларында қосуға болады.")}
             </p>
             <label>
-              Ваше имя
+              {t("Ваше имя", "Сіздің атыңыз")}
               <input
                 required
                 maxLength={255}
@@ -96,7 +101,7 @@ export function Register({
               />
             </label>
             <label>
-              Электронная почта
+              {t("Электронная почта", "Электрондық пошта")}
               <input
                 required
                 type="email"
@@ -107,7 +112,7 @@ export function Register({
               />
             </label>
             <label>
-              Пароль
+              {t("Пароль", "Құпиясөз")}
               <input
                 required
                 type="password"
@@ -117,17 +122,17 @@ export function Register({
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
-              <small>Не менее 12 символов.</small>
+              <small>{t("Не менее 12 символов.", "Кемінде 12 таңба.")}</small>
             </label>
             <button className="primary" disabled={busy}>
-              {busy ? "Создаём центр…" : "Создать центр и продолжить"}
+              {busy ? t("Создаём центр…", "Орталық құрылуда…") : t("Создать центр и продолжить", "Орталық құрып, жалғастыру")}
             </button>
           </fieldset>
         </form>
       </section>
       <p className="fine-print">
-        Уже есть учётная запись? <Link href="/login">Войти в свой центр</Link>
+        {t("Уже есть учётная запись?", "Тіркелгіңіз бар ма?")} <Link href="/login">{t("Войти в свой центр", "Орталығыңызға кіру")}</Link>
       </p>
-    </main>
+    </main></CabinetLanguageProvider>
   );
 }

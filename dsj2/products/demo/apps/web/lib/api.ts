@@ -59,6 +59,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     if (
       response.status === 401 &&
       path !== "/auth/login" &&
+      path !== "/auth/mfa/challenge" &&
       typeof window !== "undefined"
     )
       window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));

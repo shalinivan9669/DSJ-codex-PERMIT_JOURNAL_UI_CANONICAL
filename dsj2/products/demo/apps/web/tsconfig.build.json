@@ -1,4 +1,27 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", ".next-*", "e2e", "test", "playwright.config.ts"]
+  "exclude": [
+    "node_modules",
+    ".next-*",
+    "e2e",
+    "test",
+    "playwright.config.ts"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next-commercial/types/**/*.ts",
+    ".next-functional-browser/types/**/*.ts",
+    ".next-functional-clean/types/**/*.ts",
+    ".next-functional-restore/types/**/*.ts",
+    ".next-functional-user/types/**/*.ts",
+    ".next-lms-pass01-20261018/types/**/*.ts",
+    ".next-lms-pass01-build-20261018/types/**/*.ts",
+    ".next-lms-pass02-operations-20261018/types/**/*.ts",
+    ".next-mvp-final-build/types/**/*.ts",
+    ".next-mvp-roles-run01/types/**/*.ts",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    ".next-functional-release/types/**/*.ts"
+  ]
 }

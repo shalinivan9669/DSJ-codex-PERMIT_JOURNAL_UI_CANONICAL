@@ -1,9 +1,11 @@
 "use client";
+import { useCabinetText, useCabinetError, useCabinetLanguage } from "./cabinet-language";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
-import { api, errorText, json } from "@/lib/api";
+import { api, json } from "@/lib/api";
 import type { Customer, Recipient } from "@/lib/types";
 import { RecordPicker } from "./record-picker";
+import { EmployerAccessRequests } from "./employer-access-request";
 type User = { id: string; displayName: string; email: string; role: string };
 type Membership = {
   id: string;
@@ -13,6 +15,7 @@ type Membership = {
   expiresAt?: string;
   revokedAt?: string;
   active?: boolean;
+  customer?: { nameRu: string; nameKz?: string; bin?: string };
 };
 type Invite = {
   id: string;
@@ -23,7 +26,9 @@ type Invite = {
   revokedAt?: string;
 };
 export function PortalAccess() {
-  const [mode, setMode] = useState("PASSWORD");
+  const tr = useCabinetText();
+  const t = useCabinetLanguage();
+  const [mode, setMode] = useState("INVITE");
   const [invites, setInvites] = useState<Invite[]>([]);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteName, setInviteName] = useState("");
@@ -40,11 +45,20 @@ export function PortalAccess() {
   const [permissions, setPermissions] = useState(["READ"]);
   const [expiry, setExpiry] = useState("");
   const [confirmed, setConfirmed] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useCabinetError();
   const [busy, setBusy] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+  const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (window.location.hash === "#organization-access") setOpen(true);
+  }, []);
   useEffect(() => {
     let active = true;
+    setLoading(true);
+    setError("");
     Promise.all([
       api<{ items: Membership[] }>("/employer-memberships"),
       api<{ items: User[] }>("/users"),
@@ -55,11 +69,12 @@ export function PortalAccess() {
           setMemberships(m.items);
           setUsers(u.items.filter((user) => user.role === "EMPLOYER"));
           setInvites(i.items);
+          setLoaded(true);
         }
       })
       .catch((c) => {
-        if (active) setError(errorText(c));
-      });
+        if (active) { setError(c); setLoaded(false); }
+      }).finally(() => { if (active) setLoading(false); });
     return () => {
       active = false;
     };
@@ -67,28 +82,28 @@ export function PortalAccess() {
   async function run(action: () => Promise<unknown>) {
     setBusy(true);
     setError("");
+    setMessage("");
     try {
       await action();
       setRefresh((v) => v + 1);
       setConfirmed(false);
+      setMessage(t("Доступ обновлён", "Рұқсат жаңартылды"));
     } catch (c) {
-      setError(errorText(c));
+      setError(c);
     } finally {
       setBusy(false);
     }
   }
   return (
-    <details className="outcome-entry">
-      <summary>Доступ представителей заказчиков</summary>
-      {error && <Notice>{error}</Notice>}
-      <p>
-        Представитель использует отдельную учётную запись с ролью «Представитель
-        заказчика». Здесь доступ ограничивается выбранной организацией и
-        указанными действиями.
-      </p>
+    <details className="outcome-entry" id="organization-access" open={open} onToggle={event => setOpen(event.currentTarget.open)}>
+      <summary>{tr("Доступ представителей заказчиков")}</summary>
+      <EmployerAccessRequests manager />
+      {error && <Notice>{error} <button type="button" disabled={loading} onClick={() => setRefresh(value => value + 1)}>{t("Повторить загрузку", "Қайта жүктеу")}</button></Notice>}
+      {loading && <p role="status">{t("Загружаем доступы…", "Рұқсаттар жүктелуде…")}</p>}
+      {message && <p role="status">{message}</p>}
       <label>
-        Способ предоставления доступа
-        <select
+        {tr("Способ предоставления доступа")}<select
+          aria-label={tr("Способ предоставления доступа")}
           value={mode}
           onChange={(e) => {
             setMode(e.target.value);
@@ -96,19 +111,16 @@ export function PortalAccess() {
             setInviteUrl("");
           }}
         >
-          <option value="PASSWORD">Существующая учётная запись</option>
-          <option value="INVITE">Одноразовое приглашение</option>
+          <option value="INVITE">{tr("Одноразовое приглашение")}</option>
+          <option value="PASSWORD" disabled={loaded && !users.length}>{tr("Существующая учётная запись")}</option>
         </select>
       </label>
       {inviteUrl && (
         <div className="notice" role="status">
           <p>
-            Ссылка показана только сейчас. Передайте её выбранному представителю
-            лично; отправка по почте не выполняется.
-          </p>
+            {tr("Ссылка показана только сейчас. Передайте её выбранному представителю лично; отправка по почте не выполняется.")}</p>
           <label>
-            Одноразовая ссылка
-            <input
+            {tr("Одноразовая ссылка")}<input
               readOnly
               value={inviteUrl}
               onFocus={(e) => e.target.select()}
@@ -124,29 +136,29 @@ export function PortalAccess() {
                 );
             }}
           >
-            {copied ? "Ссылка скопирована" : "Скопировать приглашение"}
+            {copied ? tr("Ссылка скопирована") : tr("Скопировать приглашение")}
           </button>
-          <button onClick={() => setInviteUrl("")}>Скрыть ссылку</button>
+          <button onClick={() => setInviteUrl("")}>{tr("Скрыть ссылку")}</button>
         </div>
       )}
       {invites.length > 0 && (
         <details>
-          <summary>Выданные приглашения ({invites.length})</summary>
+          <summary>{tr("Выданные приглашения (")}{invites.length})</summary>
           {invites.map((invite) => (
             <div className="outcome-entry" key={invite.id}>
               <strong>{invite.displayName}</strong>
               <p>
-                {invite.email} · до{" "}
-                {new Date(invite.expiresAt).toLocaleString("ru-RU")}
+                {invite.email} {" "}{tr("· до")}{" "}
+                {new Date(invite.expiresAt).toLocaleString(tr("Настройки") === "Настройки" ? "ru-KZ" : "kk-KZ")}
               </p>
               <p>
                 {invite.revokedAt
-                  ? "Отозвано"
+                  ? tr("Отозвано")
                   : invite.consumedAt
-                    ? "Принято"
+                    ? tr("Принято")
                     : Date.parse(invite.expiresAt) <= Date.now()
-                      ? "Истекло"
-                      : "Ожидает принятия"}
+                      ? tr("Истекло")
+                      : tr("Ожидает принятия")}
               </p>
               {!invite.revokedAt && (
                 <button
@@ -162,22 +174,23 @@ export function PortalAccess() {
                   }
                 >
                   {invite.consumedAt
-                    ? "Отозвать приглашение и доступ"
-                    : "Отозвать приглашение"}
+                    ? tr("Отозвать приглашение и доступ")
+                    : tr("Отозвать приглашение")}
                 </button>
               )}
             </div>
           ))}
         </details>
       )}
-      <div className="table-scroll">
+      {loaded && <div className="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>Представитель</th>
-              <th>Срок</th>
-              <th>Права</th>
-              <th>Состояние</th>
+              <th>{tr("Представитель")}</th>
+              <th>{t("Организация", "Ұйым")}</th>
+              <th>{tr("Срок")}</th>
+              <th>{tr("Права")}</th>
+              <th>{tr("Состояние")}</th>
             </tr>
           </thead>
           <tbody>
@@ -185,13 +198,14 @@ export function PortalAccess() {
               <tr key={m.id}>
                 <td>
                   {users.find((u) => u.id === m.userId)?.displayName ||
-                    "Представитель"}
+                    tr("Представитель")}
                   <small>{users.find((u) => u.id === m.userId)?.email}</small>
                 </td>
+                <td>{m.customer ? t(m.customer.nameRu, m.customer.nameKz || m.customer.nameRu) : t("Организация недоступна", "Ұйым қолжетімсіз")}{m.customer?.bin && <small>{m.customer.bin}</small>}</td>
                 <td>
                   {m.expiresAt
-                    ? new Date(m.expiresAt).toLocaleDateString("ru-RU")
-                    : "Не задан"}
+                    ? new Date(m.expiresAt).toLocaleDateString(tr("Настройки") === "Настройки" ? "ru-KZ" : "kk-KZ")
+                    : tr("Не задан")}
                 </td>
                 <td>
                   {m.permissions
@@ -199,11 +213,11 @@ export function PortalAccess() {
                       (p) =>
                         (
                           ({
-                            READ: "Просмотр",
-                            PROPOSE: "Предложения",
-                            APPROVE_DATA: "Согласование",
-                            DOWNLOAD: "Скачивание",
-                            ASSIGN_TRAINING: "Назначение обучения",
+                            READ: tr("Просмотр"),
+                            PROPOSE: tr("Предложения"),
+                            APPROVE_DATA: tr("Согласование"),
+                            DOWNLOAD: tr("Скачивание"),
+                            ASSIGN_TRAINING: tr("Назначение обучения"),
                           }) as Record<string, string>
                         )[p] || p,
                     )
@@ -211,9 +225,9 @@ export function PortalAccess() {
                 </td>
                 <td>
                   {m.revokedAt || m.active === false ? (
-                    "Отозван"
+                    tr("Отозван")
                   ) : (
-                    <button
+                    <><span>{m.expiresAt && Date.parse(m.expiresAt) <= Date.now() ? t("Срок истёк", "Мерзімі аяқталды") : t("Действует", "Қолданыста")}</span>{" "}<button
                       disabled={busy}
                       onClick={() =>
                         void run(() =>
@@ -224,33 +238,33 @@ export function PortalAccess() {
                         )
                       }
                     >
-                      Отозвать доступ
-                    </button>
+                      {tr("Отозвать доступ")}</button></>
                   )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </div>}
+      {loaded && !memberships.length && <p>{t("Представителей ещё нет. Создайте приглашение для выбранной организации.", "Өкілдер әлі жоқ. Таңдалған ұйым үшін шақыру жасаңыз.")}</p>}
       <div className="form-grid">
         <div>
-          <label>Организация заказчика</label>
+          <label>{tr("Организация заказчика")}</label>
           <button onClick={() => setPicker("customers")}>
-            {customer?.nameRu || "Выбрать организацию"}
+            {customer?.nameRu || tr("Выбрать организацию")}
           </button>
         </div>
         {mode === "PASSWORD" ? (
           <label>
-            Представитель
-            <select
+            {tr("Представитель")}<select
+              aria-label={tr("Представитель")}
               value={userId}
               onChange={(e) => {
                 setUserId(e.target.value);
                 setConfirmed(false);
               }}
             >
-              <option value="">Выберите учётную запись</option>
+              <option value="">{tr("Выберите учётную запись")}</option>
               {users.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.displayName} · {u.email}
@@ -261,8 +275,7 @@ export function PortalAccess() {
         ) : (
           <>
             <label>
-              Имя представителя
-              <input
+              {tr("Имя представителя")}<input
                 value={inviteName}
                 maxLength={255}
                 onChange={(e) => {
@@ -272,8 +285,7 @@ export function PortalAccess() {
               />
             </label>
             <label>
-              Адрес представителя
-              <input
+              {tr("Адрес представителя")}<input
                 type="email"
                 autoComplete="off"
                 value={inviteEmail}
@@ -285,25 +297,24 @@ export function PortalAccess() {
               />
             </label>
             <label>
-              Срок приглашения
-              <select
+              {tr("Срок приглашения")}<select
+                aria-label={tr("Срок приглашения")}
                 value={inviteHours}
                 onChange={(e) => {
                   setInviteHours(Number(e.target.value));
                   setConfirmed(false);
                 }}
               >
-                <option value={1}>1 час</option>
-                <option value={24}>24 часа</option>
-                <option value={72}>3 суток</option>
-                <option value={168}>7 суток</option>
+                <option value={1}>{tr("1 час")}</option>
+                <option value={24}>{tr("24 часа")}</option>
+                <option value={72}>{tr("3 суток")}</option>
+                <option value={168}>{tr("7 суток")}</option>
               </select>
             </label>
           </>
         )}
         <label>
-          Доступ до
-          <input
+          {tr("Доступ до")}<input
             type="datetime-local"
             value={expiry}
             onChange={(e) => {
@@ -314,27 +325,24 @@ export function PortalAccess() {
         </label>
       </div>
       <label>
-        Область людей представителя
-        <select
+        {tr("Область людей представителя")}<select
+          aria-label={tr("Область людей представителя")}
           value={scope}
           onChange={(e) => {
             setScope(e.target.value);
             setConfirmed(false);
           }}
         >
-          <option value="ALL">Все люди выбранного заказчика</option>
-          <option value="SELECTED">Только выбранные люди заказчика</option>
+          <option value="ALL">{tr("Все люди выбранного заказчика")}</option>
+          <option value="SELECTED">{tr("Только выбранные люди заказчика")}</option>
         </select>
       </label>
       {scope === "SELECTED" && (
         <>
           <button disabled={!customer} onClick={() => setPicker("recipients")}>
-            Добавить человека в область доступа
-          </button>
+            {tr("Добавить человека в область доступа")}</button>
           <p>
-            Файлы и строки дополнительно ограничены выбранным заказчиком.
-            Совпадение ФИО не расширяет доступ.
-          </p>
+            {tr("Файлы и строки дополнительно ограничены выбранным заказчиком. Совпадение ФИО не расширяет доступ.")}</p>
           {recipients.map((person) => (
             <p key={person.recipientId}>
               {person.fullNameRu} {person.personnelNumber || ""}{" "}
@@ -348,19 +356,18 @@ export function PortalAccess() {
                   setConfirmed(false);
                 }}
               >
-                Убрать из доступа
-              </button>
+                {tr("Убрать из доступа")}</button>
             </p>
           ))}
         </>
       )}
       <div className="toolbar-actions">
         {[
-          ["READ", "Просмотр"],
-          ["PROPOSE", "Предложения изменений"],
-          ["APPROVE_DATA", "Подтверждение списка"],
-          ["DOWNLOAD", "Скачивание файлов"],
-          ["ASSIGN_TRAINING", "Назначение обучения"],
+          ["READ", tr("Просмотр")],
+          ["PROPOSE", tr("Предложения изменений")],
+          ["APPROVE_DATA", tr("Подтверждение списка")],
+          ["DOWNLOAD", tr("Скачивание файлов")],
+          ["ASSIGN_TRAINING", tr("Назначение обучения")],
         ].map(([key, title]) => (
           <label className="checkbox" key={key}>
             <input
@@ -386,19 +393,20 @@ export function PortalAccess() {
           checked={confirmed}
           onChange={(e) => setConfirmed(e.target.checked)}
         />
-        Разрешаю доступ к составу и заказам выбранной организации в пределах
-        отмеченных прав
-      </label>
+        {tr("Разрешаю доступ к составу и заказам выбранной организации в пределах отмеченных прав")}</label>
       <button
         className="primary"
         disabled={
           busy ||
+          loading ||
+          !loaded ||
           !confirmed ||
           !customer ||
           (mode === "PASSWORD"
             ? !userId
             : !inviteEmail || !inviteName.trim()) ||
           !expiry ||
+          new Date(expiry).getTime() <= Date.now() ||
           (scope === "SELECTED" && !recipients.length)
         }
         onClick={() =>
@@ -448,11 +456,11 @@ export function PortalAccess() {
         }
       >
         {mode === "INVITE"
-          ? "Создать одноразовое приглашение"
-          : "Открыть доступ представителю"}
+          ? tr("Создать одноразовое приглашение")
+          : tr("Открыть доступ представителю")}
       </button>
       {mode === "PASSWORD" && !users.length && (
-        <p>Создайте учётную запись представителя в настройках пользователей.</p>
+        <p>{t("Для нового представителя выберите одноразовое приглашение.", "Жаңа өкіл үшін бір реттік шақыруды таңдаңыз.")}</p>
       )}
       {picker && (
         <RecordPicker

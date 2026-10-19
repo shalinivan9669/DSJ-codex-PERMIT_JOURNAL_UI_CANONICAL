@@ -251,7 +251,34 @@ test("registered API controller method/path map equals deny-by-default policy", 
     await import("../apps/api/src/lms/document-bridge");
   const { RegulatoryResultsController } =
     await import("../apps/api/src/regulatory-results/controller");
+  const { LmsScalingController } =
+    await import("../apps/api/src/lms/scaling-controller");
+  const { LmsQuestionsController } =
+    await import("../apps/api/src/lms/questions-controller");
+  const { LearningController } =
+    await import("../apps/api/src/lms/learning-controller");
+  const { LmsLearningAdminController } =
+    await import("../apps/api/src/lms/learning-admin-controller");
+  const { LmsTeachingController } =
+    await import("../apps/api/src/lms/teaching-controller");
+  const { MfaController } = await import("../apps/api/src/mfa-controller");
+  const { LmsApplicationsController } = await import("../apps/api/src/lms/application-controller");
+  const { LmsEmployerImportController } = await import("../apps/api/src/lms/employer-import-controller");
+  const { LmsWorkplaceController } = await import("../apps/api/src/lms/workplace-controller");
+  const { LmsReportsController } = await import("../apps/api/src/lms/report-controller");
+  const { LmsCommissionController } = await import("../apps/api/src/lms/commission");
   const routes = [
+    MfaController,
+    LmsApplicationsController,
+    LmsEmployerImportController,
+    LmsWorkplaceController,
+    LmsReportsController,
+    LmsCommissionController,
+    LmsScalingController,
+    LmsQuestionsController,
+    LearningController,
+    LmsLearningAdminController,
+    LmsTeachingController,
     DemoController,
     OperatorValueController,
     DeliveryController,

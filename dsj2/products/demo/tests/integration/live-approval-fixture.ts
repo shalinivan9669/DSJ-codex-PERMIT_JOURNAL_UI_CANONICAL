@@ -24,7 +24,7 @@ async function requestWithRateLimit(
 /** Real session/CSRF + director decision fixture; no signature or provider bypass. */
 export async function createApprovalFixture(admin: Context) {
   assertTestDatabase();
-  assert.equal(admin.role, "ADMIN");
+  assert.ok(["ADMIN", "SUPER_ADMIN"].includes(admin.role));
   const suffix = randomUUID();
   const password = `Synthetic-approval-${suffix}!`;
   const director = await saveUser(admin, {

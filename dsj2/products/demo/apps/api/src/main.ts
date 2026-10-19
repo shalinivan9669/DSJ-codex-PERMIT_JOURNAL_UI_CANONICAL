@@ -11,31 +11,57 @@ import { OperatorValueController } from "./operator-value-controller";
 import { DeliveryController } from "./delivery-controller";
 import { PublicVerificationController } from "./public-verification-controller";
 import { EmployerInviteController } from "./employer-invite-controller";
+import { EmployerAccessController } from "./employer-access";
 import { PrintSetsController } from "./print-sets-controller";
 import { TrainingTopicsController } from "./training-topics-controller";
 import { authenticate } from "./auth";
+import { MfaController } from "./mfa-controller";
+import { LmsApplicationsController } from "./lms/application-controller";
+import { LmsEmployerImportController } from "./lms/employer-import-controller";
+import { LmsWorkplaceController } from "./lms/workplace-controller";
+import { LmsReportsController } from "./lms/report-controller";
+import { TemplateManagementController } from "./template-management";
+import { RegulatorySourcesController } from "./lms/regulatory-sources-controller";
+import { LmsProctoringController } from "./lms/proctoring-controller";
 import { LmsScalingController } from "./lms/scaling-controller";
 import { LmsQuestionsController } from "./lms/questions-controller";
+import { LearningController } from "./lms/learning-controller";
+import { LmsLearningAdminController } from "./lms/learning-admin-controller";
+import { LmsTeachingController } from "./lms/teaching-controller";
 import { LmsController } from "./lms/controller";
 import { LearnerIdentityController } from "./lms/identity";
 import { RegulatoryResultsController } from "./regulatory-results/controller";
 import { LmsDocumentsController } from "./lms/document-bridge";
+import { LmsCommissionController } from "./lms/commission";
 import { db, type DemoRequest } from "./core";
 @Module({
   controllers: [
+    MfaController,
+    LmsApplicationsController,
+    LmsEmployerImportController,
+    LmsWorkplaceController,
+    LmsReportsController,
+    TemplateManagementController,
+    RegulatorySourcesController,
+    LmsProctoringController,
     DemoController,
     OperatorValueController,
     DeliveryController,
     PublicVerificationController,
     EmployerInviteController,
+    EmployerAccessController,
     PrintSetsController,
     TrainingTopicsController,
     LmsController,
     LmsScalingController,
     LmsQuestionsController,
+    LearningController,
+    LmsLearningAdminController,
+    LmsTeachingController,
     LearnerIdentityController,
     RegulatoryResultsController,
     LmsDocumentsController,
+    LmsCommissionController,
   ],
 })
 class DemoModule {}
@@ -124,6 +150,29 @@ export async function bootstrap() {
             level: "error",
             code: "REQUEST_FAILED",
             correlationId: req.correlationId,
+            errorType: error instanceof Error ? error.name : "Unknown",
+            errorCode:
+              typeof (error as { code?: unknown })?.code === "string" &&
+              /^[A-Z0-9_]{1,80}$/.test(
+                String((error as { code?: unknown }).code),
+              )
+                ? (error as { code?: string }).code
+                : undefined,
+            databaseCode:
+              typeof (error as { meta?: { code?: unknown } })?.meta?.code ===
+                "string" &&
+              /^[A-Z0-9]{5}$/.test(
+                String((error as { meta?: { code?: unknown } }).meta?.code),
+              )
+                ? (error as { meta?: { code?: string } }).meta?.code
+                : undefined,
+            frames:
+              error instanceof Error
+                ? error.stack
+                    ?.split("\n")
+                    .filter((line) => /^\s+at /.test(line))
+                    .slice(0, 4)
+                : undefined,
           }),
         );
       res.status(status).json({

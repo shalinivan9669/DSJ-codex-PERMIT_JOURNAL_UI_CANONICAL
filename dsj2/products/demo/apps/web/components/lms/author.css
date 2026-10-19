@@ -1,0 +1,82 @@
+.lms-author-row {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.lms-workspace [hidden] { display: none !important; }
+.lms-author-sections { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.lms-author-sections button { min-height: 44px; }
+.lms-author-sections [aria-current="step"] { border-color: var(--accent); font-weight: 700; background: var(--surface-2, #eef3f7); }
+.lms-author-issues { padding-left: 22px; }
+.lms-author-issues button { text-align: start; min-height: 44px; max-width: 100%; white-space: normal; }
+[id^="author-"] { scroll-margin-top: 24px; }
+.lms-author-row > .lms-fields {
+  flex: 1;
+  min-width: min(100%, 260px);
+}
+.lms-author-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 0;
+}
+.lms-author-order {
+  padding-left: 24px;
+}
+.lms-author-order li {
+  padding: 8px 0;
+}
+.lms-author-order li > span {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-bottom: 6px;
+}
+.lms-author-drag {
+  cursor: grab;
+}
+.lms-author-drag:active {
+  cursor: grabbing;
+}
+.lms-author-drop {
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius);
+}
+.lms-review-answer {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 12px;
+  background: var(--accent-soft);
+  border-radius: var(--radius);
+}
+.lms-review-history {
+  padding-left: 20px;
+}
+.lms-review-history li {
+  padding: 8px 0;
+  overflow-wrap: anywhere;
+}
+.lms-author-selected {
+  background: var(--accent-soft);
+}
+.lms-author-inline-note {
+  color: var(--muted);
+  margin: 6px 0;
+}
+@media (max-width: 600px) {
+  .lms-author-row {
+    display: block;
+  }
+  .lms-author-secondary {
+    align-items: stretch;
+  }
+  .lms-author-secondary > * {
+    max-width: 100%;
+  }
+  .lms-question-author fieldset {
+    padding: 12px;
+  }
+}

@@ -68,7 +68,7 @@ import {
 type Tx = Prisma.TransactionClient;
 function center(c: Context, write = false, admin = false) {
   if (
-    !["ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
+    !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "VIEWER"].includes(c.role) ||
     (write && c.role === "VIEWER") ||
     (admin && !canManageCenter(c.role))
   )
@@ -99,7 +99,7 @@ async function operator(
         tenantId: c.tenantId,
         id,
         active: true,
-        role: { in: ["ADMIN", "DIRECTOR", "OPERATOR"] },
+        role: { in: ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"] },
       },
     }))
   )
@@ -825,6 +825,14 @@ export async function recordPayment(c: Context, id: string, input: unknown) {
   const data = parse(paymentSchema, input);
   return transaction(async (tx) => {
     await lockOrder(c, id, tx);
+    if (data.requestKey) {
+      const previous = await tx.paymentEvent.findFirst({ where: { tenantId: c.tenantId, orderId: id, requestKey: data.requestKey } });
+      if (previous) {
+        if (previous.amountMinor !== data.amountMinor || previous.occurredOn !== data.occurredOn || previous.source !== data.source || previous.reconciliationRequired !== data.reconciliationRequired)
+          fail(409, "IDEMPOTENCY_CONFLICT", "Этот платёж уже сохранён с другими данными. Обновите заказ перед новой записью.");
+        return previous;
+      }
+    }
     const value = await tx.paymentEvent.create({
       data: { ...data, tenantId: c.tenantId, orderId: id, createdBy: c.userId },
     });
@@ -1726,18 +1734,24 @@ export async function exportOrderDossier(c: Context, id: string) {
 
 export async function listEmployerMemberships(c: Context) {
   center(c, false, true);
+  const items = await db.employerMembership.findMany({
+    where: { tenantId: c.tenantId }, orderBy: { createdAt: "desc" }, take: 500,
+  });
+  const customers = await db.customerOrganization.findMany({
+    where: { tenantId: c.tenantId, id: { in: items.map(item => item.customerId) } },
+    select: { id: true, nameRu: true, nameKz: true, bin: true },
+  });
   return {
-    items: await db.employerMembership.findMany({
-      where: { tenantId: c.tenantId },
-      orderBy: { createdAt: "desc" },
-      take: 500,
-    }),
+    items: items.map(item => ({ ...item, customer: customers.find(customer => customer.id === item.customerId) || null })),
   };
 }
 export async function createEmployerMembership(c: Context, input: unknown) {
   center(c, true, true);
   const data = parse(membershipSchema, input);
+  if (data.expiresAt && new Date(data.expiresAt) <= new Date())
+    fail(400, "VALIDATION", "Укажите будущую дату окончания доступа");
   return transaction(async (tx) => {
+    await tx.$executeRaw`SELECT id FROM "User" WHERE "tenantId"=${c.tenantId} AND id=${data.userId} FOR UPDATE`;
     await customer(c, data.customerId, tx);
     if (
       !(await tx.user.findFirst({
@@ -1764,15 +1778,27 @@ export async function createEmployerMembership(c: Context, input: unknown) {
       })) !== new Set(data.recipientIds).size
     )
       fail(404, "RECIPIENT_NOT_FOUND", "Один из получателей не найден");
-    const value = await tx.employerMembership.create({
-      data: {
+    const where = { tenantId_customerId_userId: { tenantId: c.tenantId, customerId: data.customerId, userId: data.userId } };
+    const existing = await tx.employerMembership.findUnique({ where });
+    const samePermissions = existing && JSON.stringify([...(existing.permissions as string[])].sort()) === JSON.stringify([...new Set(data.permissions)].sort());
+    const sameRecipients = existing && JSON.stringify([...(existing.recipientIds as string[])].sort()) === JSON.stringify([...new Set(data.recipientIds)].sort());
+    if (existing?.active && (!existing.expiresAt || existing.expiresAt > new Date())) {
+      if (samePermissions && sameRecipients && (existing.expiresAt?.toISOString() || null) === data.expiresAt) return existing;
+      fail(409, "EMPLOYER_ACCESS_EXISTS", "Доступ уже действует. Сначала отзовите прежний доступ, затем задайте новые права");
+    }
+    const payload = {
         ...data,
         permissions: json([...new Set(data.permissions)]),
         recipientIds: json([...new Set(data.recipientIds)]),
         expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
         tenantId: c.tenantId,
         createdBy: c.userId,
-      },
+        active: true,
+      };
+    const value = await tx.employerMembership.upsert({
+      where,
+      create: payload,
+      update: payload,
     });
     await audit(tx, c, "EMPLOYER_MEMBERSHIP_CREATED", value.id, {
       customerId: value.customerId,

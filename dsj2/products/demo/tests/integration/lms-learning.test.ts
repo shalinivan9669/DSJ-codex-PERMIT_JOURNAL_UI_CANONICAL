@@ -97,7 +97,8 @@ test("L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment 
     await t.test(
       "mixed batch preserves ready rows and identical replay has no duplicate",
       async () => {
-        const result = await assignEnrollments(first.context, {
+        const input = {
+          operationId: randomUUID(),
           courseVersionId: course.version.id,
           recipientIds: [
             learnerA.recipient.id,
@@ -106,9 +107,15 @@ test("L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment 
             learnerA.recipient.id,
           ],
           groupName: "Synthetic mixed",
-        });
+        };
+        const result = await assignEnrollments(first.context, input);
         assert.equal(result.created, 2);
-        assert.equal(result.duplicates, 1);
+        assert.equal(
+          result.total,
+          3,
+          "duplicate input IDs are normalized before assignment",
+        );
+        assert.equal(result.duplicates, 0);
         assert.deepEqual(
           result.errors.map((e) => e.code),
           ["RECIPIENT_UNAVAILABLE"],
@@ -116,6 +123,19 @@ test("L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment 
         enrollmentId = result.items.find(
           (e) => e.recipientId === learnerA.recipient.id,
         )!.id;
+        const replay = await assignEnrollments(first.context, input);
+        assert.equal(replay.operationId, result.operationId);
+        assert.equal(
+          replay.created,
+          2,
+          "a replay returns the persisted operation totals",
+        );
+        assert.equal(
+          await db.lmsAssignmentRow.count({
+            where: { operationId: result.operationId },
+          }),
+          3,
+        );
         const retry = await assignEnrollments(first.context, {
           courseVersionId: course.version.id,
           recipientIds: [learnerA.recipient.id, learnerB.recipient.id],
@@ -163,6 +183,9 @@ test("L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment 
     await t.test(
       "new draft cannot alter the version already assigned",
       async () => {
+        const publishedBefore = await db.courseVersion.findUniqueOrThrow({
+          where: { id: course.version.id },
+        });
         const next = await cloneVersion(first.context, course.course.id);
         assert.equal(next.version, 2);
         assert.equal(
@@ -177,7 +200,8 @@ test("L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment 
           where: { id: course.version.id },
         });
         assert.equal(old.status, "PUBLISHED");
-        assert.deepEqual(old.content, definition.content);
+        assert.deepEqual(old.content, publishedBefore.content);
+        assert.equal(old.snapshotHash, publishedBefore.snapshotHash);
       },
     );
     await t.test(
@@ -196,6 +220,7 @@ test("L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment 
             })),
           });
           const input = {
+            operationId: randomUUID(),
             courseVersionId: course.version.id,
             recipientIds: ids,
             groupName: `scale-${count}`,
@@ -204,11 +229,22 @@ test("L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment 
             assignEnrollments(first.context, input),
             assignEnrollments(first.context, input),
           ]);
-          assert.equal(
-            results.reduce((sum, r) => sum + r.created, 0),
-            count,
+          assert.ok(
+            results.every((result) => result.operationId === input.operationId),
           );
           assert.equal(results[0].errors.length + results[1].errors.length, 0);
+          let completed = await assignEnrollments(first.context, input);
+          while (completed.state === "PENDING")
+            completed = await assignEnrollments(first.context, input);
+          assert.equal(completed.state, "COMPLETED");
+          assert.equal(completed.created, count);
+          assert.equal(completed.duplicates, 0);
+          assert.equal(
+            await db.lmsAssignmentRow.count({
+              where: { operationId: input.operationId },
+            }),
+            count,
+          );
           assert.equal(
             await db.enrollment.count({
               where: {
@@ -302,7 +338,10 @@ test("L03 L04 L08 L10: real PostgreSQL immutable course, scoped bulk enrollment 
         );
         assert.ok(
           await db.auditEvent.count({
-            where: { tenantId: first.tenant.id, action: "LMS_BULK_ASSIGNED" },
+            where: {
+              tenantId: first.tenant.id,
+              action: "LMS_ASSIGNMENT_CHUNK",
+            },
           }),
         );
       },

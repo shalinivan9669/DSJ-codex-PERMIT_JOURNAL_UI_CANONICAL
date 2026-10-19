@@ -1,6 +1,7 @@
 import { api, json } from "./api";
 import type { Enrollment, Paged } from "./lms-api";
 export type ResultFilters = {
+  enrollmentId?: string;
   search: string;
   customerId: string;
   courseVersionId: string;

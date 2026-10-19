@@ -9,6 +9,9 @@ import {
 import { lms, type Attempt } from "@/lib/lms-api";
 import { Status, lmsError, type Translate } from "./common";
 import { useLmsSaveNavigation } from "./use-save-navigation";
+import { QuestionResponse } from "./question-response";
+import type { LearningAnswer } from "@demo/contracts/src/lms";
+import { AttemptReview } from "./attempt-review";
 
 export function Exam({
   initial,
@@ -146,20 +149,10 @@ export function Exam({
       })
       .catch((caught) => setError(lmsError(caught, t)));
   }, [remaining, finished, attempt.id]);
-  function answer(
-    questionId: string,
-    optionId: string,
-    multiple: boolean,
-    checked: boolean,
-  ) {
-    const current = latest.current[questionId] || [];
+  function answer(questionId: string, value: LearningAnswer) {
     const next = {
       ...latest.current,
-      [questionId]: multiple
-        ? checked
-          ? [...current, optionId]
-          : current.filter((id) => id !== optionId)
-        : [optionId],
+      [questionId]: value,
     };
     latest.current = next;
     generation.current++;
@@ -208,7 +201,7 @@ export function Exam({
           </span>
         )}
         <span role="status">
-          {saving
+          {saving || generation.current !== saved.current
             ? t("Сохраняем ответы…", "Жауаптар сақталуда…")
             : !finished && !error
               ? t("Ответы сохранены", "Жауаптар сақталды")
@@ -237,26 +230,35 @@ export function Exam({
           <h2>
             <Status
               value={
-                attempt.result?.state ||
+                (attempt.state === "INVALIDATED" ? "INVALIDATED" : null) || attempt.result?.state ||
                 attempt.result?.verdict ||
                 "NEEDS_REVIEW"
               }
               t={t}
             />
           </h2>
+          {attempt.state === "AWAITING_REVIEW" && <p>{t("Ответы отправлены преподавателю. Результат появится после ручной проверки.", "Жауаптар оқытушыға жіберілді. Нәтиже қолмен тексерілгеннен кейін көрсетіледі.")}</p>}
+          {attempt.state === "INVALIDATED" && <Notice>{t("Наблюдатель не принял эту попытку. Причина сохранена в журнале контроля экзамена в курсе. Для новой попытки нужен новый допуск наблюдателя и доступный лимит пересдач.", "Бақылаушы бұл әрекетті қабылдамады. Себебі курстың емтиханды бақылау журналында сақталған. Жаңа әрекет үшін бақылаушының жаңа рұқсаты және қайта тапсыру лимиті қажет.")}</Notice>}
           {attempt.result && (
             <>
               <p>
-                <Status value={attempt.result.assessmentKind} t={t} />
+                {attempt.purpose === "LEARNING_FINAL" ? (
+                  t("Учебный итог", "Оқу қорытындысы")
+                ) : attempt.purpose === "INTERMEDIATE" ? (
+                  t("Промежуточная проверка", "Аралық тексеру")
+                ) : (
+                  <Status value={attempt.result.assessmentKind} t={t} />
+                )}
               </p>
               {attempt.result.score != null && (
                 <p>
-                  {t("Правильных ответов", "Дұрыс жауаптар")}:{" "}
-                  {attempt.result.score} / {attempt.result.maximum}
+                  {t("Баллы", "Ұпайлар")}: {attempt.result.score} /{" "}
+                  {attempt.result.maximum}
                 </p>
               )}
             </>
           )}
+          <AttemptReview attempt={attempt} t={t} />
           <button className="primary lms-primary" onClick={onFinished}>
             {t("Вернуться к курсу", "Курсқа оралу")}
           </button>
@@ -264,33 +266,15 @@ export function Exam({
       ) : (
         <>
           {attempt.questions.map((question, index) => (
-            <fieldset
-              className="lms-question"
+            <QuestionResponse
               key={question.id}
               disabled={busy || conflict || remaining === 0}
-            >
-              <legend>
-                {index + 1}. {t(question.promptRu, question.promptKz)}
-              </legend>
-              {question.options.map((option) => (
-                <label className="lms-inline-label lms-answer" key={option.id}>
-                  <input
-                    type={question.multiple ? "checkbox" : "radio"}
-                    name={question.id}
-                    checked={answers[question.id]?.includes(option.id) || false}
-                    onChange={(e) =>
-                      answer(
-                        question.id,
-                        option.id,
-                        question.multiple,
-                        e.target.checked,
-                      )
-                    }
-                  />
-                  <span>{t(option.textRu, option.textKz)}</span>
-                </label>
-              ))}
-            </fieldset>
+              question={question}
+              value={answers[question.id]}
+              number={index + 1}
+              onChange={(value) => answer(question.id, value)}
+              t={t}
+            />
           ))}
           <button
             className="primary lms-primary"

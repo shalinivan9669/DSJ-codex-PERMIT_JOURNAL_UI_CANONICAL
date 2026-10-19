@@ -1,9 +1,15 @@
 import { db, type Context } from "../core";
+import { Prisma } from "@demo/database";
 import { lmsTemplateTypes } from "./document-metadata";
+import { isLmsStaff } from "./scope";
+import { employerDownloadableResultIds } from "./employer-document-access";
 
 /** Only call with result IDs from a scoped page or a previously authorized enrollment. */
 export async function documentViews(c: Context, resultIds: string[]) {
   if (!resultIds.length) return [];
+  const downloadable = new Set(
+    await employerDownloadableResultIds(c, resultIds),
+  );
   const [links, events] = await Promise.all([
     db.lmsDocumentLink.findMany({
       where: { tenantId: c.tenantId, resultId: { in: resultIds } },
@@ -25,24 +31,69 @@ export async function documentViews(c: Context, resultIds: string[]) {
   ];
   const [documents, workflows, proposals] = await Promise.all([
     db.issuedDocument.findMany({
-      where: { tenantId: c.tenantId, issuanceId: { in: issuanceIds } },
+      where: {
+        tenantId: c.tenantId,
+        OR: links
+          .filter((link) => link.issuanceId)
+          .map((link) => ({
+            issuanceId: link.issuanceId!,
+            assignmentId: `${link.resultId}-${link.documentType}`,
+          })),
+      },
+      select: {
+        id: true,
+        issuanceId: true,
+        assignmentId: true,
+        templateId: true,
+        number: true,
+      },
     }),
-    db.issuanceWorkflow.findMany({
-      where: { tenantId: c.tenantId, issuanceId: { in: issuanceIds } },
-    }),
-    db.requestProposal.findMany({
-      where: { tenantId: c.tenantId, requestId: { in: requestIds } },
-      orderBy: [{ revision: "desc" }, { id: "desc" }],
-    }),
+    issuanceIds.length
+      ? db.$queryRaw<
+          Array<{
+            issuanceId: string;
+            status: string | null;
+            requestStatus: string;
+            invalidatedBy: string | null;
+            reason: string | null;
+          }>
+        >(Prisma.sql`
+          SELECT i.id AS "issuanceId",w.status,p.status AS "requestStatus",invalid.kind AS "invalidatedBy",invalid.reason
+          FROM "Issuance" i
+          JOIN "PrintRequest" p ON p."tenantId"=i."tenantId" AND p.id=i."requestId"
+          LEFT JOIN "IssuanceWorkflow" w ON w."tenantId"=i."tenantId" AND w."issuanceId"=i.id
+          LEFT JOIN LATERAL (SELECT ev.kind,ev.reason FROM "IssuanceEvent" ev
+            WHERE ev."tenantId"=i."tenantId" AND ev."issuanceId"=i.id AND ev.kind IN ('CANCELLED','REPLACED')
+            ORDER BY ev."createdAt" DESC,ev.id DESC LIMIT 1) invalid ON true
+          WHERE i."tenantId"=${c.tenantId} AND i.id IN (${Prisma.join(issuanceIds)})`)
+      : [],
+    requestIds.length
+      ? db.$queryRaw<
+          Array<{
+            requestId: string;
+            requestStatus: string;
+            status: string | null;
+          }>
+        >(Prisma.sql`
+          SELECT p.id AS "requestId",p.status AS "requestStatus",proposal.status FROM "PrintRequest" p
+          LEFT JOIN LATERAL (SELECT status FROM "RequestProposal" rp WHERE rp."tenantId"=p."tenantId" AND rp."requestId"=p.id
+            ORDER BY revision DESC,id DESC LIMIT 1) proposal ON true
+          WHERE p."tenantId"=${c.tenantId} AND p.id IN (${Prisma.join(requestIds)})`)
+      : [],
   ]);
-  const artifacts = await db.artifact.findMany({
-    where: {
-      tenantId: c.tenantId,
-      documentId: { in: documents.map((d) => d.id) },
-      format: { in: ["PDF", "DOCX"] },
-    },
-    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-  });
+  const artifacts = documents.length
+    ? await db.$queryRaw<
+        Array<{
+          id: string;
+          documentId: string;
+          format: string;
+          fileName: string;
+          mimeType: string;
+        }>
+      >(Prisma.sql`SELECT DISTINCT ON ("documentId",format) id,"documentId",format,"fileName","mimeType"
+        FROM "Artifact" WHERE "tenantId"=${c.tenantId} AND "documentId" IN (${Prisma.join(documents.map((d) => d.id))})
+        AND format IN ('PDF','DOCX') ORDER BY "documentId",format,"createdAt" DESC,id DESC`)
+    : [];
   const eventsByResult = new Map<string, (typeof events)[number]>();
   for (const event of events)
     if (!eventsByResult.has(event.resultId))
@@ -66,6 +117,11 @@ export async function documentViews(c: Context, resultIds: string[]) {
     filesByDocument.set(artifact.documentId!, files);
   }
   return links.map((link) => {
+    const {
+      verificationTokenHash: _tokenHash,
+      verificationUrl,
+      ...safeLink
+    } = link;
     const event = eventsByResult.get(link.resultId);
     const templateId = Object.entries(lmsTemplateTypes).find(
       ([, value]) => value === link.documentType,
@@ -74,33 +130,54 @@ export async function documentViews(c: Context, resultIds: string[]) {
       `${link.issuanceId}:${link.resultId}-${link.documentType}:${templateId}`,
     );
     const proposal = proposalsByRequest.get(link.requestId);
-    const workflowStatus = workflowsById.get(link.issuanceId || "")?.status;
+    const workflow = workflowsById.get(link.issuanceId || "");
+    const workflowStatus = workflow?.status;
+    const invalidatedStatus =
+      workflow?.invalidatedBy === "REPLACED"
+        ? "SUPERSEDED"
+        : workflow?.invalidatedBy === "CANCELLED" ||
+            workflow?.requestStatus === "CANCELLED" ||
+            proposal?.requestStatus === "CANCELLED"
+          ? "VOIDED"
+          : null;
     const documentStatus =
       workflowStatus === "RENDERING"
         ? "PREPARING"
         : workflowStatus === "FAILED"
           ? "NEEDS_REVIEW"
           : workflowStatus;
+    const status =
+      event?.kind ||
+      invalidatedStatus ||
+      documentStatus ||
+      (proposal?.status === "REJECTED"
+        ? "REJECTED"
+        : proposal?.status === "APPROVED"
+          ? "PREPARING"
+          : "AWAITING_APPROVAL");
+    const availableFiles =
+      downloadable.has(link.resultId) && (isLmsStaff(c) || status === "ISSUED")
+        ? filesByDocument.get(document?.id || "") || []
+        : [];
     return {
-      ...link,
+      ...safeLink,
+      verificationManaged: isLmsStaff(c) && Boolean(link.verificationTokenHash),
+      verificationUrl:
+        status === "ISSUED" &&
+        downloadable.has(link.resultId) &&
+        !link.verificationRevokedAt &&
+        (!link.verificationExpiresAt || link.verificationExpiresAt > new Date())
+          ? verificationUrl
+          : null,
       number: document?.number || null,
-      status:
-        event?.kind ||
-        documentStatus ||
-        (proposal?.status === "REJECTED"
-          ? "REJECTED"
-          : proposal?.status === "APPROVED"
-            ? "PREPARING"
-            : "AWAITING_APPROVAL"),
-      reason: event?.reason || null,
-      artifacts: (filesByDocument.get(document?.id || "") || []).map(
-        ({ id, format, fileName, mimeType }) => ({
-          id,
-          kind: format,
-          fileName,
-          mimeType,
-        }),
-      ),
+      status,
+      reason: event?.reason || workflow?.reason || null,
+      artifacts: availableFiles.map(({ id, format, fileName, mimeType }) => ({
+        id,
+        kind: format,
+        fileName,
+        mimeType,
+      })),
     };
   });
 }

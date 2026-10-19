@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { bootstrap } from "../../apps/api/src/main";
-import { db } from "../../apps/api/src/core";
+import { db, hash } from "../../apps/api/src/core";
 import { consentVersion } from "../../packages/contracts/src/lms";
 import {
   lmsCourse,
@@ -113,10 +113,22 @@ test("L10: immutable audit records actual HTTP registration, content, publicatio
       tenant.user.id,
       saved.id,
     );
-    assert.equal(
-      (savedEvent.metadata as { revision: number }).revision,
-      saved.revision,
-    );
+    assert.deepEqual(savedEvent.metadata, {
+      before: {
+        revision: created.version.revision,
+        contentHash: hash(created.version.content),
+        profileHash: hash(created.version.profile),
+      },
+      after: {
+        revision: saved.revision,
+        contentHash: hash(saved.content),
+        profileHash: hash(saved.profile),
+      },
+      source: "browser",
+      requestSource: "browser",
+      trustedIp: "127.0.0.1",
+    });
+    assert.notEqual(hash(saved.content), hash(created.version.content));
     assert.equal(saved.revision, created.version.revision + 1);
     const publishedResponse = await director(
       `/lms/course-versions/${saved.id}/publish`,
@@ -150,15 +162,20 @@ test("L10: immutable audit records actual HTTP registration, content, publicatio
     assert.equal(assignments.created, 1);
     const assignedEvent = await event(
       assignmentResponse,
-      "LMS_BULK_ASSIGNED",
+      "LMS_ASSIGNMENT_CHUNK",
       tenant.user.id,
-      published.id,
+      assignments.operationId,
     );
     assert.deepEqual(assignedEvent.metadata, {
-      created: 1,
-      duplicates: 0,
-      errors: [],
+      before: { cursor: 0 },
+      after: { cursor: 1, state: "COMPLETED" },
+      groupId: null,
+      source: "browser",
+      requestSource: "browser",
+      trustedIp: "127.0.0.1",
     });
+    assert.equal(assignments.duplicates, 0);
+    assert.deepEqual(assignments.errors, []);
     const enrollmentId = assignments.items[0].id;
     const dueAt = new Date(Date.now() + 180 * 86400000).toISOString();
     const extensionResponse = await director(
@@ -173,7 +190,13 @@ test("L10: immutable audit records actual HTTP registration, content, publicatio
       tenant.user.id,
       enrollmentId,
     );
-    assert.equal((extensionEvent.metadata as { dueAt: string }).dueAt, dueAt);
+    assert.deepEqual(extensionEvent.metadata, {
+      before: { dueAt: assignments.items[0].dueAt },
+      after: { dueAt },
+      source: "browser",
+      requestSource: "browser",
+      trustedIp: "127.0.0.1",
+    });
 
     await t.test(
       "role changes are audit facts and invalidate the old persisted session",
@@ -278,9 +301,15 @@ test("L10: immutable audit records actual HTTP registration, content, publicatio
         const foreignAudit = await lmsJson(
           await foreignCall(`/audit?tenantId=${tenant.tenant.id}`),
         );
+        const foreignEvents = await db.auditEvent.findMany({
+          where: { tenantId: foreign.tenant.id },
+          select: { id: true },
+        });
+        const foreignIds = new Set(foreignEvents.map((item) => item.id));
+        assert.equal(foreignAudit.total, foreignIds.size);
         assert.ok(
-          foreignAudit.items.every(
-            (item: { tenantId: string }) => item.tenantId === foreign.tenant.id,
+          foreignAudit.items.every((item: { id: string }) =>
+            foreignIds.has(item.id),
           ),
         );
         assert.ok(
@@ -348,12 +377,39 @@ test("L10: immutable audit records actual HTTP registration, content, publicatio
           "correctOptionIds",
           '"answers"',
           email,
-          "Синтетический аудит",
         ])
           assert.ok(!serialized.includes(forbidden));
+        assert.ok(
+          records.items.every(
+            (item: Record<string, unknown>) => !("metadata" in item),
+          ),
+        );
+        const learnerEvents = records.items.filter(
+          (item: { actorId: string }) => item.actorId === learnerUser.id,
+        );
+        assert.ok(learnerEvents.length > 0);
+        assert.ok(
+          learnerEvents.every(
+            (item: { actorDisplayName: string }) =>
+              item.actorDisplayName === "Синтетический аудит",
+          ),
+        );
+        // Actor identity is deliberately visible to the authorized audit viewer;
+        // arbitrary personal content must not appear in its safe details projection.
+        assert.ok(
+          !JSON.stringify(
+            records.items.map((item: Record<string, unknown>) => ({
+              ...item,
+              actorDisplayName: undefined,
+            })),
+          ).includes("Синтетический аудит"),
+        );
       },
     );
-    const output = resolve("docs/evidence/lms-one-run-20261015/agent-c");
+    const output = resolve(
+      process.env.DEMO_E2E_EVIDENCE ||
+        "docs/evidence/lms-one-run-20261015/agent-c",
+    );
     await mkdir(output, { recursive: true });
     await writeFile(
       resolve(output, "AUDIT_ACCEPTANCE.json"),

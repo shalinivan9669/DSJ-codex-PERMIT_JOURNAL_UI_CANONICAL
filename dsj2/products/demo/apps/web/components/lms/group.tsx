@@ -5,15 +5,22 @@ import { Notice } from "@demo/ui";
 import { api, json } from "@/lib/api";
 import type { ResultEnrollment } from "@/lib/results-api";
 import { LmsHeading, PageControls, lmsError, type Translate } from "./common";
+import { TeachingGroupEvents } from "./teaching-calendar";
+import type { AccessPolicy } from "@demo/contracts/src/lms";
+import { AccessPolicyEditor } from "./access-policy-editor";
+import { LearnerAccess } from "./learner-access";
 
 type GroupData = {
   group: {
     id: string;
     name: string;
     courseVersionId: string;
-    dueAt: string;
+    dueAt: string | null;
+    startsAt?: string | null;
+    accessPolicy?: AccessPolicy | null;
     sourceRequestId?: string | null;
     sourceOrderId?: string | null;
+    customerId?: string | null;
   };
   items: ResultEnrollment[];
   total: number;
@@ -39,9 +46,15 @@ export function TrainingGroup({
     [page, setPage] = useState(1),
     [refresh, setRefresh] = useState(0);
   const [name, setName] = useState(""),
-    [dueAt, setDueAt] = useState(""),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
+  const [accessOpen, setAccessOpen] = useState(false);
+  const [accessPolicy, setAccessPolicy] = useState<AccessPolicy>({
+      mode: "DAYS",
+      days: 90,
+      timezone: "Asia/Qyzylorda",
+    }),
+    [changePolicy, setChangePolicy] = useState(false);
   const locale = t("ru", "kz");
   useEffect(() => {
     let alive = true;
@@ -50,7 +63,15 @@ export function TrainingGroup({
         if (alive) {
           setData(v);
           setName(v.group.name);
-          setDueAt(v.group.dueAt.slice(0, 10));
+          setAccessPolicy(
+            v.group.accessPolicy || {
+              mode: v.group.dueAt ? "FIXED" : "UNLIMITED",
+              startsAt: v.group.startsAt,
+              endsAt: v.group.dueAt,
+              timezone: "Asia/Qyzylorda",
+            },
+          );
+          setChangePolicy(false);
           setError("");
         }
       })
@@ -105,28 +126,53 @@ export function TrainingGroup({
                 {t("Название", "Атауы")}
                 <input value={name} onChange={(e) => setName(e.target.value)} />
               </label>
-              <label>
-                {t("Доступ до", "Қолжетімділік мерзімі")}
+              <p>
+                {t("Текущий срок", "Ағымдағы мерзім")}:{" "}
+                {data.group.dueAt
+                  ? new Date(data.group.dueAt).toLocaleString(
+                      t("ru-RU", "kk-KZ"),
+                      {
+                        timeZone:
+                          data.group.accessPolicy?.timezone || "Asia/Qyzylorda",
+                      },
+                    )
+                  : t("Без ограничения", "Шектеусіз")}
+              </p>
+              <label className="lms-inline-label">
                 <input
-                  type="date"
-                  value={dueAt}
-                  onChange={(e) => setDueAt(e.target.value)}
+                  type="checkbox"
+                  checked={changePolicy}
+                  onChange={(event) => setChangePolicy(event.target.checked)}
                 />
+                {t(
+                  "Изменить общий период доступа",
+                  "Ортақ қолжетімділік мерзімін өзгерту",
+                )}
               </label>
+              {changePolicy && (
+                <>
+                  <AccessPolicyEditor
+                    value={accessPolicy}
+                    onChange={setAccessPolicy}
+                    t={t}
+                    disabled={busy}
+                  />
+                  <p className="lms-save-state">
+                    {t(
+                      "Индивидуальные исключения сохранятся. Новое значение применяется к действующим участникам без исключения.",
+                      "Жеке ерекшеліктер сақталады. Жаңа мән ерекшелігі жоқ белсенді қатысушыларға қолданылады.",
+                    )}
+                  </p>
+                </>
+              )}
               <button
-                disabled={busy || !name.trim() || !dueAt}
+                disabled={busy || !name.trim()}
                 onClick={() =>
                   void act(
                     `/lms/groups/${id}`,
                     {
                       name,
-                      ...(dueAt !== data.group.dueAt.slice(0, 10)
-                        ? {
-                            dueAt: new Date(
-                              `${dueAt}T18:59:59.000Z`,
-                            ).toISOString(),
-                          }
-                        : {}),
+                      ...(changePolicy ? { accessPolicy } : {}),
                     },
                     "PUT",
                   )
@@ -150,7 +196,8 @@ export function TrainingGroup({
               </Link>
             </p>
           )}
-          <div className="lms-table-scroll">
+          {canEdit && <button onClick={() => setAccessOpen((open) => !open)}>{accessOpen ? t("Показать состав и прогресс", "Құрам мен барысты көрсету") : t("Открыть доступ слушателям", "Тыңдаушыларға қолжетімділік ашу")}</button>}
+          {!accessOpen && <div className="lms-table-scroll">
             <table className="lms-table">
               <thead>
                 <tr>
@@ -180,7 +227,10 @@ export function TrainingGroup({
                           ? t("Не сдано", "Өтпеді")
                           : t("Не завершено", "Аяқталмаған")}
                     </td>
-                    <td>{row.dueAt?.slice(0, 10)}</td>
+                    <td>
+                      {row.dueAt?.slice(0, 10) ||
+                        t("Без ограничения", "Шектеусіз")}
+                    </td>
                     {canEdit && (
                       <td>
                         <button
@@ -201,6 +251,8 @@ export function TrainingGroup({
               </tbody>
             </table>
           </div>
+          }
+          {canEdit && accessOpen && <LearnerAccess recipientIds={data.items.map((row) => row.recipientId)} customerId={data.group.customerId || undefined} t={t} />}
           <PageControls
             page={page}
             total={data.total}
@@ -229,6 +281,7 @@ export function TrainingGroup({
           )}
         </section>
       )}
+      {data && <TeachingGroupEvents groupId={id} t={t} />}
     </>
   );
 }

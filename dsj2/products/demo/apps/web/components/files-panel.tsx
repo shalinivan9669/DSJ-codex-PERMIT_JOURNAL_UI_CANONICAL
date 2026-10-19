@@ -297,6 +297,9 @@ export function FilesPanel({
   const awaitingSignatures = issuances.some((issuance) =>
     ["RENDERING", "AWAITING_SIGNATURE"].includes(issuance.status || ""),
   );
+  const signaturesRequired = issuances.some(
+    (issuance) => issuance.status === "AWAITING_SIGNATURE",
+  );
   const printState = (artifact: Artifact) =>
     artifactPrintEligibility({
       artifact,
@@ -355,7 +358,9 @@ export function FilesPanel({
             disabled={!!busy || awaitingSignatures}
             title={
               awaitingSignatures
-                ? "Реестр выданных документов доступен после всех подписей"
+                ? signaturesRequired
+                  ? "Реестр выданных документов доступен после всех подписей"
+                  : "Реестр будет доступен после подготовки документов"
                 : undefined
             }
             onClick={() => {
@@ -376,7 +381,9 @@ export function FilesPanel({
               disabled={!!busy || awaitingSignatures}
               title={
                 awaitingSignatures
-                  ? "Официальный комплект доступен после всех подписей"
+                  ? signaturesRequired
+                    ? "Официальный комплект доступен после всех подписей"
+                    : "Комплект будет доступен после подготовки документов"
                   : undefined
               }
               onClick={() => {
@@ -404,8 +411,9 @@ export function FilesPanel({
           {allowPrint
             ? "Готовые PDF можно просмотреть и распечатать кнопкой «Печать»."
             : "Готовые PDF можно просмотреть и скачать."}{" "}
-          Комплект ожидает электронных подписей; официальный ZIP и реестр выдачи
-          станут доступны после их проверки.
+          {signaturesRequired
+            ? "Комплект ожидает электронных подписей; официальный ZIP и реестр выдачи станут доступны после их проверки."
+            : "Подготовка комплекта продолжается. ZIP и реестр станут доступны после завершения."}
         </Notice>
       )}
       {allowPrint && (
@@ -514,7 +522,9 @@ export function FilesPanel({
                       ["ZIP", "XLSX"].includes(
                         (artifact.format || "").toUpperCase(),
                       )
-                        ? "После подписания"
+                        ? signaturesRequired
+                          ? "После подписания"
+                          : "После подготовки"
                         : "Скачать"}
                     </a>
                     {canManage &&
@@ -780,7 +790,7 @@ export function FilesPanel({
               : viewPrintState?.isPreview
                 ? "Печать макета доступна только для текущей сохранённой и согласованной редакции. После изменения данных создайте новый предпросмотр."
                 : "Редакция выпуска этого файла не подтверждена; доступен просмотр."}{" "}
-            {awaitingSignatures
+            {signaturesRequired
               ? "PDF подготовлен, электронные подписи ещё не получены."
               : ""}
           </p>

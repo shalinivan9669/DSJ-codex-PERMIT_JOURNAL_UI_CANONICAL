@@ -1,4 +1,5 @@
 "use client";
+import { useCabinetText } from "./cabinet-language";
 import { useEffect, useId, useState } from "react";
 import { Notice } from "@demo/ui";
 import {
@@ -40,6 +41,7 @@ export function TrainingDateSettings({
   fieldPath?: string;
   fieldHints?: Record<string, string>;
 }) {
+  const tr = useCabinetText();
   const id = useId();
   const defaults = calendarCandidate(rule);
   const preparation = useDurablePreparation<CalendarCandidate>({
@@ -98,9 +100,9 @@ export function TrainingDateSettings({
         aria-live="polite"
       >
         {visible
-          ? message
+          ? tr(message)
           : appliedCause
-            ? `Применённый график: ${appliedCause}`
+            ? `${tr("Применённый график: ")}${tr(appliedCause)}`
             : fallback || "\u00a0"}
       </small>
     );
@@ -122,47 +124,48 @@ export function TrainingDateSettings({
       "aria-describedby": id + "-" + field,
     };
   }
+  function description() {
+    if (tr("Настройки") === "Настройки") return trainingRuleDescription(rule);
+    if (!rule) return tr(trainingRuleDescription(rule));
+    const hours = rule.hoursSource === "SEPARATE_BLOCKS"
+      ? `Кезекпен: теория күніне ${rule.hoursPerDay} академиялық сағат, содан кейін өндірістік оқу күніне ${rule.productionHoursPerDay} сағат; әр блок бөлек дөңгелектенеді`
+      : `Күніне ${rule.hoursPerDay} бағдарлама сағаты; ${rule.hoursSource === "THEORY" ? "таңдалған оқу сағаттары бойынша, өндірістік оқу бөлек" : "кестеде бірдей бірліктер расталғанда ғана сағаттар қосындысы бойынша"}`;
+    const calendar = rule.calendar === "KZ_FIVE_DAY" ? tr(KZ_TRAINING_CALENDAR_LABEL) : rule.calendar === "CALENDAR" ? "демалысты қоса күнтізбелік күндер" : "дүйсенбі–жұма, мерекелер есептелмейді";
+    const anchor = rule.anchor === "DOCUMENT_AFTER_TRAINING" ? "оқу құжат күніне дейінгі соңғы оқу күнінде аяқталады" : `құжат күні — оқудың ${rule.anchor === "DOCUMENT_IS_END" ? "соңғы" : "бірінші"} күні`;
+    return `${hours}; ${calendar}; ${anchor}. Толық емес күн жоғарыға дөңгелектенеді, оқу күндері қамтылады. Дереккөз: ${rule.source}`;
+  }
   return (
     <details className="field-provenance">
-      <summary>Правило расчёта периода обучения</summary>
-      <p>{trainingRuleDescription(rule)}</p>
+      <summary>{tr("Правило расчёта периода обучения")}</summary>
+      <p>{description()}</p>
       <p className="fine-print">
-        Укажите фактический график программы для «
-        {trainingDisplayTitle(targetTitle)}». Он рассчитывает даты и не
-        подтверждает обучение или экзамен. Срок действия документа определяется
-        отдельно.
-      </p>
+        {tr("Укажите фактический график программы для «")}{trainingDisplayTitle(targetTitle)}{tr("». Он рассчитывает даты и не подтверждает обучение или экзамен. Срок действия документа определяется отдельно.")}</p>
       {preparationIdentity && (
         <p className="preparation-status" role="status" aria-live="polite">
           {preparation.status === "loading"
-            ? "Подготовка графика загружается"
+            ? tr("Подготовка графика загружается")
             : preparation.status === "pending"
-              ? "Подготовка графика сохраняется в этом браузере"
+              ? tr("Подготовка графика сохраняется в этом браузере")
               : preparation.status === "error"
-                ? "Подготовка графика не сохранена"
+                ? tr("Подготовка графика не сохранена")
                 : preparation.record
-                  ? "График подготовлен и сохранён в этом браузере, не применён"
-                  : "Подготовка графика ещё не изменена"}
+                  ? tr("График подготовлен и сохранён в этом браузере, не применён")
+                  : tr("Подготовка графика ещё не изменена")}
           .
         </p>
       )}
       {preparation.error && (
         <Notice kind="error">
-          {preparation.error}
+          {tr(preparation.error)}
           <button type="button" onClick={preparation.retry}>
-            Повторить сохранение графика
-          </button>
+            {tr("Повторить сохранение графика")}</button>
           <button type="button" onClick={preparation.reload}>
-            Загрузить сохранённую подготовку графика
-          </button>
+            {tr("Загрузить сохранённую подготовку графика")}</button>
         </Notice>
       )}
       {preparation.stale && (
         <Notice kind="info">
-          Исходные данные «{trainingDisplayTitle(targetTitle)}» изменились.
-          Кандидат сохранён; проверьте часы, даты и состав участников перед
-          применением.
-          <button
+          {tr("Исходные данные «")}{trainingDisplayTitle(targetTitle)}{tr("» изменились. Кандидат сохранён; проверьте часы, даты и состав участников перед применением.")}<button
             type="button"
             disabled={disabled}
             onClick={() => {
@@ -170,33 +173,30 @@ export function TrainingDateSettings({
               setReviewSignature("");
             }}
           >
-            Подготовить график к текущим данным
-          </button>
+            {tr("Подготовить график к текущим данным")}</button>
         </Notice>
       )}
       <div className="form-grid compact">
         <label>
-          Часов в учебном дне
-          <input
+          {tr("Часов в учебном дне")}<input
             {...attributes("hoursPerDay")}
-            aria-label="Часов в учебном дне"
+            aria-label={tr("Часов в учебном дне")}
             type="text"
             inputMode="decimal"
             disabled={disabled}
             value={candidate.hoursPerDay}
-            placeholder="Например, 8 — по вашей программе"
+            placeholder={tr("Например, 8 — по вашей программе")}
             onChange={(e) => change({ hoursPerDay: e.target.value })}
           />
           {error(
             "hoursPerDay",
-            "Больше 0 и не больше 24; дробные значения допустимы. Это часы в дне, не общий объём программы.",
+            tr("Больше 0 и не больше 24; дробные значения допустимы. Это часы в дне, не общий объём программы."),
           )}
         </label>
         <label>
-          Какие часы учитывать
-          <select
+          {tr("Какие часы учитывать")}<select
             {...attributes("hoursSource")}
-            aria-label="Какие часы учитывать"
+            aria-label={tr("Какие часы учитывать")}
             disabled={disabled}
             value={candidate.hoursSource}
             onChange={(e) =>
@@ -205,30 +205,24 @@ export function TrainingDateSettings({
               })
             }
           >
-            <option value="">Выберите по графику</option>
-            <option value="THEORY">Часы обучения без производственных</option>
+            <option value="">{tr("Выберите по графику")}</option>
+            <option value="THEORY">{tr("Часы обучения без производственных")}</option>
             <option value="THEORY_AND_PRODUCTION">
-              Сумма — только при подтверждённых одинаковых единицах
-            </option>
+              {tr("Сумма — только при подтверждённых одинаковых единицах")}</option>
             <option value="SEPARATE_BLOCKS">
-              Теория и производство — последовательные отдельные блоки
-            </option>
+              {tr("Теория и производство — последовательные отдельные блоки")}</option>
           </select>
           {error("hoursSource")}
         </label>
         {candidate.hoursSource === "THEORY_AND_PRODUCTION" && (
           <p className="fine-print">
-            Академические часы теории и часы производства нельзя складывать без
-            подтверждения одинаковых единиц в графике. Для разных единиц
-            выберите отдельные блоки.
-          </p>
+            {tr("Академические часы теории и часы производства нельзя складывать без подтверждения одинаковых единиц в графике. Для разных единиц выберите отдельные блоки.")}</p>
         )}
         {candidate.hoursSource === "SEPARATE_BLOCKS" && (
           <label>
-            Производственных часов в дне
-            <input
+            {tr("Производственных часов в дне")}<input
               {...attributes("productionHoursPerDay")}
-              aria-label="Производственных часов в дне"
+              aria-label={tr("Производственных часов в дне")}
               type="text"
               inputMode="decimal"
               disabled={disabled}
@@ -239,15 +233,14 @@ export function TrainingDateSettings({
             />
             {error(
               "productionHoursPerDay",
-              "Больше 0 и не больше 24; каждый блок округляется до целого учебного дня отдельно.",
+              tr("Больше 0 и не больше 24; каждый блок округляется до целого учебного дня отдельно."),
             )}
           </label>
         )}
         <label>
-          Учебные дни
-          <select
+          {tr("Учебные дни")}<select
             {...attributes("calendar")}
-            aria-label="Учебные дни"
+            aria-label={tr("Учебные дни")}
             disabled={disabled}
             value={candidate.calendar}
             onChange={(e) =>
@@ -256,44 +249,38 @@ export function TrainingDateSettings({
               })
             }
           >
-            <option value="">Выберите по графику</option>
-            <option value="KZ_FIVE_DAY">{KZ_TRAINING_CALENDAR_LABEL}</option>
-            <option value="CALENDAR">Календарные, включая выходные</option>
+            <option value="">{tr("Выберите по графику")}</option>
+            <option value="KZ_FIVE_DAY">{tr(KZ_TRAINING_CALENDAR_LABEL)}</option>
+            <option value="CALENDAR">{tr("Календарные, включая выходные")}</option>
             <option value="WEEKDAYS">
-              Понедельник–пятница (без календаря праздников)
-            </option>
+              {tr("Понедельник–пятница (без календаря праздников)")}</option>
           </select>
           {error("calendar")}
         </label>
         <label>
-          Связь с датой документа
-          <select
+          {tr("Связь с датой документа")}<select
             {...attributes("anchor")}
-            aria-label="Связь с датой документа"
+            aria-label={tr("Связь с датой документа")}
             disabled={disabled}
             value={candidate.anchor}
             onChange={(e) =>
               change({ anchor: e.target.value as CalendarCandidate["anchor"] })
             }
           >
-            <option value="">Выберите по графику</option>
+            <option value="">{tr("Выберите по графику")}</option>
             <option value="DOCUMENT_AFTER_TRAINING">
-              Обучение до даты документа — по выбранным учебным дням
-            </option>
+              {tr("Обучение до даты документа — по выбранным учебным дням")}</option>
             <option value="DOCUMENT_IS_END">
-              Дата документа — последний день обучения
-            </option>
+              {tr("Дата документа — последний день обучения")}</option>
             <option value="DOCUMENT_IS_START">
-              Дата документа — первый день обучения
-            </option>
+              {tr("Дата документа — первый день обучения")}</option>
           </select>
           {error("anchor")}
         </label>
         <label>
-          Расчёт даты протокола
-          <select
+          {tr("Расчёт даты протокола")}<select
             {...attributes("protocolDate")}
-            aria-label="Расчёт даты протокола"
+            aria-label={tr("Расчёт даты протокола")}
             disabled={disabled}
             value={candidate.protocolDate}
             onChange={(e) =>
@@ -303,41 +290,35 @@ export function TrainingDateSettings({
               })
             }
           >
-            <option value="">Выберите по графику</option>
-            <option value="MANUAL">Вводится отдельно</option>
-            <option value="DOCUMENT_DATE">Совпадает с датой документа</option>
-            <option value="TRAINING_END">Последний день обучения</option>
+            <option value="">{tr("Выберите по графику")}</option>
+            <option value="MANUAL">{tr("Вводится отдельно")}</option>
+            <option value="DOCUMENT_DATE">{tr("Совпадает с датой документа")}</option>
+            <option value="TRAINING_END">{tr("Последний день обучения")}</option>
           </select>
           {error("protocolDate")}
         </label>
         <label>
-          Источник графика
-          <input
+          {tr("Источник графика")}<input
             {...attributes("source")}
-            aria-label="Источник графика"
+            aria-label={tr("Источник графика")}
             disabled={disabled}
             value={candidate.source}
-            placeholder="Название программы, расписание, решение центра"
+            placeholder={tr("Название программы, расписание, решение центра")}
             onChange={(e) => change({ source: e.target.value })}
           />
           {error(
             "source",
-            "От 3 до 500 символов: программа, расписание или решение центра.",
+            tr("От 3 до 500 символов: программа, расписание или решение центра."),
           )}
         </label>
       </div>
       {!parsed.success && (
         <p className="fine-print" role="status">
-          Для применения заполните график по пояснениям у полей. Некорректное
-          правило не записано в заявку.
-        </p>
+          {tr("Для применения заполните график по пояснениям у полей. Некорректное правило не записано в заявку.")}</p>
       )}
       {reviewed && (
         <Notice kind="info">
-          График будет применён только к «{trainingDisplayTitle(targetTitle)}».
-          Подтверждённые результаты не изменятся; ручные и импортированные
-          исключения дат сохраняются.
-        </Notice>
+          {tr("График будет применён только к «")}{trainingDisplayTitle(targetTitle)}{tr("». Подтверждённые результаты не изменятся; ручные и импортированные исключения дат сохраняются.")}</Notice>
       )}
       <button
         type="button"
@@ -354,8 +335,8 @@ export function TrainingDateSettings({
         }}
       >
         {reviewed
-          ? "Применить правило расчёта"
-          : "Проверить применение графика"}
+          ? tr("Применить правило расчёта")
+          : tr("Проверить применение графика")}
       </button>
       {(preparation.record ||
         preparation.status === "error" ||
@@ -371,8 +352,7 @@ export function TrainingDateSettings({
             setTouched([]);
           }}
         >
-          Отменить только подготовку графика
-        </button>
+          {tr("Отменить только подготовку графика")}</button>
       )}
       {rule && (
         <button
@@ -381,27 +361,16 @@ export function TrainingDateSettings({
           disabled={disabled}
           onClick={() => onChange(null)}
         >
-          Отключить применённый автоматический период
-        </button>
+          {tr("Отключить применённый автоматический период")}</button>
       )}
       <details className="fine-print">
-        <summary>Как график рассчитывает даты</summary>
+        <summary>{tr("Как график рассчитывает даты")}</summary>
         <p>
-          Продолжительность учебного дня задаёт центр по программе. Например, 16
-          часов при 8 часах в день — 2 учебных дня; 8 часов здесь не норматив и
-          не заполнено автоматически. Производственные часы учитываются только в
-          выбранном режиме.
-        </p>
+          {tr("Продолжительность учебного дня задаёт центр по программе. Например, 16 часов при 8 часах в день — 2 учебных дня; 8 часов здесь не норматив и не заполнено автоматически. Производственные часы учитываются только в выбранном режиме.")}</p>
         <p>
-          Минимальные часы программ задаются отдельно по категории обучения.
-          График не подтверждает объём, обучение или результат. Выберите
-          календарь, соответствующий фактическому расписанию центра.
-        </p>
+          {tr("Минимальные часы программ задаются отдельно по категории обучения. График не подтверждает объём, обучение или результат. Выберите календарь, соответствующий фактическому расписанию центра.")}</p>
         <p>
-          Календарь Казахстана: версия {KZ_TRAINING_CALENDAR_VERSION}. Для
-          периода вне доступного календаря нужно отдельное проверенное правило;
-          даты не выдумываются.
-        </p>
+          {tr("Календарь Казахстана: версия")}{" "}{KZ_TRAINING_CALENDAR_VERSION}{tr(". Для периода вне доступного календаря нужно отдельное проверенное правило; даты не выдумываются.")}</p>
       </details>
     </details>
   );

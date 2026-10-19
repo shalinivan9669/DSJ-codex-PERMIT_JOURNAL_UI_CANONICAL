@@ -1,26 +1,27 @@
-import { isDirectorRole, type Role } from "@demo/contracts";
+import { type Role } from "@demo/contracts";
 
-/** Legacy accounts keep their stored role unless the director explicitly changes it. */
 export function userRoleForEditor(role?: Role): Role {
-  return role && isDirectorRole(role) ? "DIRECTOR" : role || "OPERATOR";
+  return role || "OPERATOR";
 }
 
-export function userRoleOptions(existingRole?: Role): Role[] {
-  const roles: Role[] = ["OPERATOR", "DIRECTOR"];
-  if (existingRole === "VIEWER" || existingRole === "EMPLOYER")
-    roles.push(existingRole);
+export function userRoleOptions(existingRole?: Role, actorRole?: Role): Role[] {
+  const roles: Role[] = ["OPERATOR", "TEACHER", "METHODIST", "EXPERT", "VIEWER"];
+  if (actorRole === "SUPER_ADMIN") roles.push("ADMIN", "SUPER_ADMIN", "DIRECTOR");
+  if (existingRole && !roles.includes(existingRole)) roles.push(existingRole);
   return roles;
 }
 
 export function userRoleUpdate(existingRole: Role | undefined, selected: Role) {
-  return existingRole && userRoleForEditor(existingRole) === selected
-    ? {}
-    : { role: selected };
+  return existingRole === selected ? {} : { role: selected };
 }
 
 export function workspaceStartPath(role: Role, registering = false): string {
+  if (registering && ["SUPER_ADMIN", "DIRECTOR"].includes(role)) return "/onboarding";
+  if (role === "METHODIST") return "/lms";
+  if (role === "TEACHER" || role === "EXPERT") return "/lms/teaching";
   if (role === "LEARNER") return "/learn";
   if (role === "EMPLOYER") return "/portal";
-  if (registering) return isDirectorRole(role) ? "/onboarding" : "/requests";
-  return isDirectorRole(role) ? "/approvals" : "/requests";
+  if (["ADMIN", "SUPER_ADMIN", "OPERATOR"].includes(role)) return "/lms/workplace";
+  if (role === "DIRECTOR") return registering ? "/onboarding" : "/approvals";
+  return "/requests";
 }

@@ -78,10 +78,38 @@ test("E02/E04/E09/S03: route requirements, private projections and frozen late d
           const definition = lmsCourse({ required: false, sanitary: true });
           definition.profile[requirement] = true;
           const course = await createCourse(center.context, definition);
-          await publishVersion(center.context, course.version.id, {
-            revision: 0,
+          const publication = await lmsJson(
+            await staff(
+              `/lms/course-versions/${course.version.id}/publish`,
+              "POST",
+              { revision: 0 },
+            ),
+            409,
+          );
+          const gateCode =
+            requirement === "requiresPractice"
+              ? "LOCAL_PRACTICE_MODE_REQUIRED"
+              : "LOCAL_PROCTORING_UNAVAILABLE";
+          assert.equal(publication.code, gateCode);
+          // Historical import fixture: retain an old unsupported publication and
+          // assignment to prove that the independent exam gate still protects it.
+          await db.courseVersion.update({
+            where: { id: course.version.id },
+            data: { status: "PUBLISHED", publishedAt: new Date() },
           });
-          const enrollment = await enroll(course.version.id);
+          await assert.rejects(
+            enroll(course.version.id),
+            (error: any) => error.getResponse().code === gateCode,
+          );
+          const enrollment = await db.enrollment.create({
+            data: {
+              tenantId: center.tenant.id,
+              courseVersionId: course.version.id,
+              recipientId: learner.recipient.id,
+              learnerUserId: learner.user.id,
+              assignedBy: center.user.id,
+            },
+          });
           const denied = await lmsJson(
             await student(
               `/learn/enrollments/${enrollment.id}/attempts`,

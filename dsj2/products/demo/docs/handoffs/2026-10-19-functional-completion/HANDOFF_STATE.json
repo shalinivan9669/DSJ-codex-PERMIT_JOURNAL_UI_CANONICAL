@@ -1,0 +1,47 @@
+{
+  "prepared_at": "2026-10-19T09:39:25.332751+00:00",
+  "purpose": "Executable handoff only; no new product implementation or runtime acceptance in the preparation turn",
+  "root": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL",
+  "product": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL\\dsj2\\products\\demo",
+  "branch": "codex/lms-one-run-20261015",
+  "head": "bc87d53b1207e76e4bded6e8b86e4333b49580ad",
+  "baseline_before_handoff_status_rows": 761,
+  "git_status_rows_at_package_preparation": 762,
+  "existing_deleted_rows": 406,
+  "source_sha256": "dcdae9575ce3fe7e9c3a0e585c637ede8a830745fff86f5509af87d074f10b22",
+  "tz_sections": 76,
+  "mvp_items": 25,
+  "historical_requirement_rows": 117,
+  "acceptance_scenarios": 32,
+  "main_prompt_characters": 49366,
+  "project_id": "c47c2478-416f-49f4-9c67-0c9baa2f91e0",
+  "requested_reasoning": "ultra",
+  "requested_environment": "local existing dirty checkout",
+  "model_selection": "inherit user configured default; no explicit model override",
+  "host_config_allowlisted_settings": {
+    "model": "gpt-6-astra",
+    "model_reasoning_effort": "ultra",
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never"
+  },
+  "user_installation": {
+    "web": "http://localhost:3200/login",
+    "api_port": 4200,
+    "postgres_port": 55432,
+    "database": "demo_test_browser_commercial_20260922",
+    "database_kind": "SAVED USER DATA despite name; no seed/reset/test load"
+  },
+  "test_installation": {
+    "web": "http://127.0.0.1:3349/login",
+    "api_port": 4349,
+    "postgres_port": 55489,
+    "databases": [
+      "demo_test_mvp_roles_20261019_run01_browser",
+      "demo_test_mvp_roles_20261019_run01_integration"
+    ]
+  },
+  "runtime_provenance": "Addresses from previous verified local run; recipient must recheck running processes and source before modifications",
+  "previous_evidence": "docs/evidence/mvp-all-roles-20261019/run-01",
+  "review_basis": "Current source read only; limitations and candidates are not blanket runtime failures",
+  "product_changes_in_handoff_preparation": false
+}

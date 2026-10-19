@@ -1,0 +1,36 @@
+{
+  "created_thread_id": "01a15387-e126-7d63-ba1e-d1f91930bf79",
+  "host_id": "local",
+  "supplied_title": "LMS — полный рабочий контур по ТЗ, без заглушек",
+  "request": "Execute functional completion from PROMPT_COMPLETE_FUNCTIONAL_PRODUCT_RU.txt",
+  "environment": "local existing working directory",
+  "launch_prompt": "LAUNCH_PROMPT_RU.txt",
+  "requested_reasoning": "ultra",
+  "explicit_model_override": false,
+  "verified_session": {
+    "cwd": "C:\\Users\\Admin\\Documents\\DSJ-codex-PERMIT_JOURNAL_UI_CANONICAL",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "ultra",
+    "approval_policy": "never",
+    "sandbox_policy": {
+      "type": "danger-full-access"
+    },
+    "source": "C:\\Users\\Admin\\.codex\\sessions\\2026\\10\\19\\rollout-2026-10-19T14-39-36-01a15387-e126-7d63-ba1e-d1f91930bf79.jsonl"
+  },
+  "active_snapshot": {
+    "status": "active",
+    "turn_status": "inProgress",
+    "started_at_unix": 1792402779,
+    "first_progress_message": "Сначала прочитаю полное поручение и правила продукта, проверю текущие изменения и происхождение запущенных процессов. Затем сохраню резервные копии и распределю реализацию по независимым областям. Приёмку буду проводить в изолированном контуре, сохраняя пользовательскую базу на 3200/4200."
+  },
+  "verified": {
+    "thread_created": true,
+    "work_started": true,
+    "ultra": true,
+    "full_access": true,
+    "no_approval_prompts": true,
+    "correct_workspace": true
+  },
+  "product_completion_claimed": false
+}
+

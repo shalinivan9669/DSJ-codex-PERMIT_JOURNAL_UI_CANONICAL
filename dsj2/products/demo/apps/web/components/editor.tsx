@@ -1892,7 +1892,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           ← Все заявки
         </Link>
         {draft.items.some((item) => item.recipientId) &&
-          ["ADMIN", "DIRECTOR", "OPERATOR"].includes(context.user.role) && (
+          ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"].includes(context.user.role) && (
             <Link className="back-link" href={`/lms/assign?requestId=${id}`}>
               Назначить обучение участникам
             </Link>

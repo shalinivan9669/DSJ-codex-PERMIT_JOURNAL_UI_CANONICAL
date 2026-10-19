@@ -30,16 +30,40 @@ export function creditPlayback(input: {
   elapsedSeconds: number;
   duration: number;
   playing: boolean;
+  playbackRate?: number;
+  minimumPercent?: number;
+  allowSeekAhead?: boolean;
+  allowedPlaybackRates?: number[];
 }) {
-  const position = Math.min(input.duration, Math.max(0, input.position));
+  let position = Math.min(input.duration, Math.max(0, input.position));
   const advance = position - input.previousPosition;
   // A delayed/stale heartbeat may save position; at most 30 real seconds can be credited.
   const realSeconds = Math.min(30, Math.max(0, input.elapsedSeconds));
+  const rate = input.playbackRate ?? 1;
+  const allowedRate =
+    Number.isFinite(rate) &&
+    rate >= 0.25 &&
+    rate <= 3 &&
+    (input.allowedPlaybackRates || [1]).includes(rate);
   const plausible =
-    input.playing && advance > 0 && advance <= realSeconds + 0.75;
+    input.playing &&
+    allowedRate &&
+    advance > 0 &&
+    advance <= realSeconds * rate + 0.75;
+  const previousIntervals = mergeWatchedIntervals(
+    input.intervals,
+    input.duration,
+  );
+  const studiedUntil =
+    previousIntervals[0]?.[0] === 0 ? previousIntervals[0][1] : 0;
+  const seekBlocked =
+    input.allowSeekAhead === false &&
+    !plausible &&
+    position > Math.max(studiedUntil, input.previousPosition) + 0.75;
+  if (seekBlocked) position = Math.max(studiedUntil, input.previousPosition);
   const intervals = mergeWatchedIntervals(
     plausible
-      ? [...input.intervals, [input.previousPosition, position]]
+      ? [...previousIntervals, [input.previousPosition, position]]
       : input.intervals,
     input.duration,
   );
@@ -48,7 +72,13 @@ export function creditPlayback(input: {
     position,
     intervals,
     watchedSeconds,
-    completed: input.duration > 0 && watchedSeconds >= input.duration * 0.95,
+    completed:
+      input.duration > 0 &&
+      watchedSeconds >=
+        (input.duration *
+          Math.min(100, Math.max(1, input.minimumPercent ?? 95))) /
+          100,
+    seekBlocked,
   };
 }
 

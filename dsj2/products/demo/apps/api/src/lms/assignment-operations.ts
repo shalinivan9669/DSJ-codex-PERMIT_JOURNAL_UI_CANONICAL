@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { z, draftSchema } from "@demo/contracts";
-import { courseContentSchema } from "@demo/contracts/src/lms";
+import { courseContentSchema, regulatoryProfileSchema } from "@demo/contracts/src/lms";
 import type { Prisma } from "@demo/database";
 import {
   audit,
@@ -15,6 +15,9 @@ import {
 import { employerMemberships, isLmsStaff } from "./scope";
 import { enrollInputSchema } from "./validation";
 import { workingRequest } from "../approvals";
+import { resolveAccessPolicy } from "./access-policy";
+import { enqueueEnrollmentNotification } from "./notification-events";
+import { assertLocalAssessmentSupported } from "./course-validation";
 
 export const ASSIGNMENT_CHUNK_SIZE = 100;
 type Input = z.infer<typeof enrollInputSchema>;
@@ -23,13 +26,17 @@ type Tx = Prisma.TransactionClient;
 /** The origin is explicit. A request linked to several orders never implies one of them. */
 export async function assignmentOrigin(
   c: Context,
-  data: Pick<Input, "sourceRequestId" | "sourceOrderId" | "customerId">,
+  data: Pick<Input, "sourceRequestId" | "sourceOrderId" | "customerId"> & {
+    courseVersionId?: string;
+  },
   tx: Tx = db,
 ) {
   let request = null;
   let order = null;
+  let applicationRecipientId: string | null = null;
   if (data.sourceRequestId || data.sourceOrderId) {
-    if (!isLmsStaff(c)) fail(403, "ROLE_DENIED", "Недостаточно прав");
+    if (!isLmsStaff(c) && (c.role !== "EMPLOYER" || data.sourceRequestId))
+      fail(403, "ROLE_DENIED", "Недостаточно прав");
     if (data.sourceRequestId) {
       request = await tx.printRequest.findFirst({
         where: { tenantId: c.tenantId, id: data.sourceRequestId },
@@ -48,8 +55,32 @@ export async function assignmentOrigin(
         where: { tenantId: c.tenantId, id: data.sourceOrderId },
       });
       if (!order) fail(404, "NOT_FOUND", "Заказ не найден");
-      if (
-        !request ||
+      if (!request) {
+        const application = await tx.lmsApplication.findFirst({
+          where: { tenantId: c.tenantId, orderId: order.id, state: "ACCEPTED" },
+        });
+        if (
+          !application ||
+          (data.courseVersionId &&
+            application.courseVersionId !== data.courseVersionId)
+        )
+          fail(
+            409,
+            "ORDER_REQUEST_MISMATCH",
+            "Проверьте принятую заявку и программу заказа",
+          );
+        if (c.role === "EMPLOYER") {
+          const memberships = await employerMemberships(c, false, tx);
+          if (
+            !application.customerId ||
+            !memberships.some(
+              (member) => member.customerId === application.customerId,
+            )
+          )
+            fail(404, "NOT_FOUND", "Заказ не найден");
+        }
+        applicationRecipientId = application.recipientId;
+      } else if (
         !(await tx.serviceOrderRequest.findUnique({
           where: {
             tenantId_orderId_requestId: {
@@ -77,9 +108,12 @@ export async function assignmentOrigin(
   return {
     request,
     order,
+    personalApplication: !!applicationRecipientId,
     recipientIds: draft
       ? new Set((draft.items || []).map((r) => r.recipientId).filter(Boolean))
-      : null,
+      : applicationRecipientId
+        ? new Set([applicationRecipientId])
+        : null,
     customerId:
       data.customerId ||
       order?.employerId ||
@@ -94,7 +128,11 @@ export function assertAccessDate(dueAt: Date) {
     fail(400, "DUE_DATE_INVALID", "Укажите будущую дату окончания доступа");
 }
 
-export async function runAssignmentChunk(c: Context, input: unknown) {
+export async function runAssignmentChunk(
+  c: Context,
+  input: unknown,
+  options?: { importLease: { id: string; token: string } },
+) {
   if (!isLmsStaff(c) && c.role !== "EMPLOYER")
     fail(403, "ROLE_DENIED", "Недостаточно прав");
   const data = parse(enrollInputSchema, input);
@@ -106,6 +144,20 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
     recipientIds: ids,
   });
   const report = await transaction(async (tx) => {
+    if (options?.importLease) {
+      await tx.$executeRaw`SELECT id FROM "LmsEmployerImport" WHERE id=${options.importLease.id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+      const owner = await tx.lmsEmployerImport.findFirst({
+        where: {
+          id: options.importLease.id,
+          tenantId: c.tenantId,
+          leaseToken: options.importLease.token,
+          state: "ASSIGNING",
+          confirmedBy: c.userId,
+        },
+      });
+      if (!owner)
+        fail(409, "IMPORT_OPERATION_STOPPED", "Обработка списка остановлена");
+    }
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":lms-assignment:" + operationId},0))`;
     // One row lock serializes retries for an operation. Course lock below serializes pause/create.
     let operation = await tx.lmsAssignmentOperation.findFirst({
@@ -181,12 +233,22 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
       }
     }
     const content = courseContentSchema.parse(version.content);
-    const dueAt = data.dueAt
-      ? new Date(data.dueAt)
-      : new Date(operation.createdAt.getTime() + content.accessDays * 86400000);
-    if (data.dueAt && operation.cursor < ids.length) assertAccessDate(dueAt);
+    const profile = await tx.regulatoryProfileVersion.findFirstOrThrow({
+      where: { tenantId: c.tenantId, id: version.regulatoryProfileVersionId },
+    });
+    assertLocalAssessmentSupported(content, regulatoryProfileSchema.parse(profile.definition));
+    const resolvedAccess = resolveAccessPolicy(
+      content,
+      operation.createdAt,
+      data.accessPolicy,
+      data.dueAt,
+    );
+    let dueAt = resolvedAccess.dueAt;
+    let startsAt = resolvedAccess.startsAt;
+    let accessPolicy = resolvedAccess.policy;
     let groupId = operation.groupId;
     if (!groupId && data.groupId) {
+      await tx.$executeRaw`SELECT id FROM "LmsGroup" WHERE id=${data.groupId} AND "tenantId"=${c.tenantId} FOR UPDATE`;
       const group = await tx.lmsGroup.findFirst({
         where: {
           tenantId: c.tenantId,
@@ -211,21 +273,61 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
         data: { groupId },
       });
     }
+    if (groupId) {
+      await tx.$executeRaw`SELECT id FROM "LmsGroup" WHERE id=${groupId} AND "tenantId"=${c.tenantId} FOR UPDATE`;
+      const group = await tx.lmsGroup.findFirstOrThrow({
+        where: { id: groupId, tenantId: c.tenantId },
+      });
+      if (!data.accessPolicy && data.dueAt === undefined) {
+        dueAt = group.dueAt;
+        startsAt = group.startsAt;
+        if (group.accessPolicy)
+          accessPolicy = group.accessPolicy as unknown as typeof accessPolicy;
+      }
+    }
     const chunk = ids.slice(
       operation.cursor,
       operation.cursor + ASSIGNMENT_CHUNK_SIZE,
     );
-    const [recipients, employment, profiles] = await Promise.all([
-      tx.recipient.findMany({
-        where: { tenantId: c.tenantId, id: { in: chunk }, archived: false },
-      }),
-      tx.recipientEmployment.findMany({
-        where: { tenantId: c.tenantId, recipientId: { in: chunk } },
-      }),
-      tx.learnerProfile.findMany({
-        where: { tenantId: c.tenantId, recipientId: { in: chunk } },
-      }),
-    ]);
+    const [recipients, employment, profiles, existingEnrollments] =
+      await Promise.all([
+        tx.recipient.findMany({
+          where: { tenantId: c.tenantId, id: { in: chunk }, archived: false },
+        }),
+        tx.recipientEmployment.findMany({
+          where: { tenantId: c.tenantId, recipientId: { in: chunk } },
+        }),
+        tx.learnerProfile.findMany({
+          where: { tenantId: c.tenantId, recipientId: { in: chunk } },
+        }),
+        tx.enrollment.findMany({
+          where: {
+            tenantId: c.tenantId,
+            courseVersionId: version.id,
+            recipientId: { in: chunk },
+            attemptCycle: data.repeatTraining ? operationId : "INITIAL",
+          },
+        }),
+      ]);
+    // The existing course lock keeps the bounded prefetch valid while this
+    // transaction writes. Reused rows need one read and one outcome insert per
+    // chunk, rather than holding the shared connection pool for 2*N round trips.
+    const existingByRecipient = new Map(
+      existingEnrollments.map((e) => [e.recipientId, e]),
+    );
+    const membershipsByEnrollment = new Map(
+      (data.groupId
+        ? await tx.lmsGroupMember.findMany({
+            where: {
+              tenantId: c.tenantId,
+              groupId: data.groupId,
+              enrollmentId: { in: existingEnrollments.map((e) => e.id) },
+            },
+          })
+        : []
+      ).map((member) => [member.enrollmentId, member]),
+    );
+    const outcomes: Prisma.LmsAssignmentRowCreateManyInput[] = [];
     const items = [];
     let processed = 0;
     let paused = false;
@@ -255,17 +357,20 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
       let outcome = "ERROR";
       let enrollment = errorCode
         ? null
-        : await tx.enrollment.findUnique({
-            where: {
-              tenantId_courseVersionId_recipientId: {
-                tenantId: c.tenantId,
-                courseVersionId: version.id,
-                recipientId,
-              },
-            },
-          });
+        : existingByRecipient.get(recipientId) || null;
+      if (
+        enrollment &&
+        c.role === "EMPLOYER" &&
+        enrollment.customerId !== customerId
+      ) {
+        // The recipient can work for several employers; the existing training still belongs
+        // to its original organization. Do not expose that enrollment through assignment replay.
+        enrollment = null;
+        errorCode = "RECIPIENT_UNAVAILABLE";
+      }
       if (enrollment) {
         outcome =
+          enrollment.customerId !== customerId ||
           (data.sourceRequestId &&
             data.sourceRequestId !== enrollment.sourceRequestId) ||
           (data.sourceOrderId &&
@@ -278,15 +383,7 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
           data.groupId &&
           enrollment.groupId === data.groupId
         ) {
-          const membership = await tx.lmsGroupMember.findUnique({
-            where: {
-              tenantId_groupId_enrollmentId: {
-                tenantId: c.tenantId,
-                groupId: data.groupId,
-                enrollmentId: enrollment.id,
-              },
-            },
-          });
+          const membership = membershipsByEnrollment.get(enrollment.id);
           if (membership?.excludedAt) {
             await tx.lmsGroupMember.update({
               where: { id: membership.id },
@@ -307,7 +404,8 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
           paused = true;
           break;
         }
-        if (!groupId && ids.length > 1) {
+        if (dueAt) assertAccessDate(dueAt);
+        if (!groupId && (ids.length > 1 || data.groupName.trim().length > 0)) {
           // An automatic group exists only when this operation actually adds a new enrollment.
           const group = await tx.lmsGroup.create({
             data: {
@@ -320,6 +418,8 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
               sourceRequestId: data.sourceRequestId,
               sourceOrderId: data.sourceOrderId,
               dueAt,
+              startsAt,
+              accessPolicy: json(accessPolicy),
               createdBy: c.userId,
             },
           });
@@ -339,6 +439,7 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
             tenantId: c.tenantId,
             courseVersionId: version.id,
             recipientId,
+            attemptCycle: data.repeatTraining ? operationId : "INITIAL",
             learnerUserId: profiles.find((p) => p.recipientId === recipientId)
               ?.userId,
             customerId,
@@ -347,9 +448,20 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
             sourceRequestId: data.sourceRequestId,
             sourceOrderId: data.sourceOrderId,
             dueAt,
+            startsAt,
+            accessPolicy: json(accessPolicy),
+            dueAtOverride:
+              (ids.length === 1 || !!data.groupId) &&
+              (data.accessPolicy !== undefined || data.dueAt !== undefined),
             assignedBy: c.userId,
           },
         });
+        await enqueueEnrollmentNotification(
+          tx,
+          enrollment,
+          origin.personalApplication ? "ENROLLED" : "ASSIGNED",
+          { key: `ASSIGNMENT:${enrollment.id}` },
+        );
         if (groupId)
           await tx.lmsGroupMember.create({
             data: {
@@ -360,19 +472,26 @@ export async function runAssignmentChunk(c: Context, input: unknown) {
           });
         outcome = "CREATED";
       }
-      await tx.lmsAssignmentRow.create({
-        data: {
-          tenantId: c.tenantId,
-          operationId,
-          recipientId,
-          enrollmentId: enrollment?.id,
-          outcome,
-          errorCode,
-        },
+      outcomes.push({
+        tenantId: c.tenantId,
+        operationId,
+        recipientId,
+        enrollmentId: enrollment?.id,
+        outcome,
+        errorCode,
       });
-      if (enrollment) items.push({ ...enrollment, outcome });
+      if (enrollment)
+        items.push({
+          ...enrollment,
+          ...(!isLmsStaff(c)
+            ? { sourceOrderId: null, sourceRequestId: null }
+            : {}),
+          outcome,
+        });
       processed++;
     }
+    if (outcomes.length)
+      await tx.lmsAssignmentRow.createMany({ data: outcomes });
     const cursor = operation.cursor + processed;
     const state =
       cursor >= ids.length ? "COMPLETED" : paused ? "PAUSED" : "PENDING";

@@ -2,9 +2,9 @@
   "specialTemplates": [
     {
       "id": "lms-protocol",
-      "version": 1,
-      "file": "lms-protocol.v1.docx",
-      "sha256": "95a356d5643f757552d424c0b9820f8513fb04ca2676c8fafff8ddc01596b2ca",
+      "version": 3,
+      "file": "lms-protocol.v3.docx",
+      "sha256": "0289ea597f6f14f9939788d328d02752cf75305d9af5367ef6e533d9fca86d87",
       "fields": [
         "ASSESSMENT",
         "COURSE",
@@ -18,6 +18,7 @@
         "LEGAL_MEANING",
         "NUMBER",
         "POSITION",
+        "REGULATORY",
         "RESULT",
         "SOURCE",
         "SYNTHETIC",
@@ -41,15 +42,15 @@
       "ownerKind": "INDIVIDUAL",
       "protocolSemantics": null,
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "renderPolicy": "LMS_CENTER_FORMS_V1",
-      "formRevision": "LMS_CENTER_FORMS_V1",
+      "renderPolicy": "LMS_CENTER_FORMS_V3",
+      "formRevision": "LMS_CENTER_FORMS_V3",
       "verificationStatus": "ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE"
     },
     {
       "id": "lms-certificate",
-      "version": 1,
-      "file": "lms-certificate.v1.docx",
-      "sha256": "bef8b699f63c11b6946e63af6242e7f5f36359246ab7634722ba299cc7dee1cf",
+      "version": 3,
+      "file": "lms-certificate.v3.docx",
+      "sha256": "ecbc1937d308e7189c2aece6daa1184280a6a197a90c6bbfc8737e3eb7a7d20b",
       "fields": [
         "ASSESSMENT",
         "COURSE",
@@ -63,6 +64,7 @@
         "LEGAL_MEANING",
         "NUMBER",
         "POSITION",
+        "REGULATORY",
         "RESULT",
         "SOURCE",
         "SYNTHETIC",
@@ -87,15 +89,15 @@
       "ownerKind": "INDIVIDUAL",
       "protocolSemantics": null,
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "renderPolicy": "LMS_CENTER_FORMS_V1",
-      "formRevision": "LMS_CENTER_FORMS_V1",
+      "renderPolicy": "LMS_CENTER_FORMS_V3",
+      "formRevision": "LMS_CENTER_FORMS_V3",
       "verificationStatus": "ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE"
     },
     {
       "id": "lms-credential",
-      "version": 1,
-      "file": "lms-credential.v1.docx",
-      "sha256": "86f45fd52dbe976c446f9cacb03727d262706b19d34b1e8604d6431015f6c479",
+      "version": 3,
+      "file": "lms-credential.v3.docx",
+      "sha256": "423568aa468116c9780df35d8a7e1f91bfca7edaeb252566e419375fea11f737",
       "fields": [
         "ASSESSMENT",
         "COURSE",
@@ -107,6 +109,7 @@
         "LEGAL_FORM",
         "LEGAL_MEANING",
         "NUMBER",
+        "REGULATORY",
         "RESULT",
         "SOURCE",
         "SYNTHETIC",
@@ -131,8 +134,8 @@
       "ownerKind": "INDIVIDUAL",
       "protocolSemantics": null,
       "legalApproval": "REQUIRED_BY_ISSUER",
-      "renderPolicy": "LMS_CENTER_FORMS_V1",
-      "formRevision": "LMS_CENTER_FORMS_V1",
+      "renderPolicy": "LMS_CENTER_FORMS_V3",
+      "formRevision": "LMS_CENTER_FORMS_V3",
       "verificationStatus": "ENGINEERING_TEMPLATE_REQUIRES_RENDER_ACCEPTANCE"
     }
   ]

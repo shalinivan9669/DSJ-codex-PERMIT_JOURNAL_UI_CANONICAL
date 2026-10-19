@@ -1,14 +1,14 @@
 /** Human KZT input to integer tiyn, without binary floating point. */
-export function kztToMinor(value: string): string {
+export function kztToMinor(value: string, allowNegative = false): string {
   const normalized = value.trim().replaceAll(" ", "").replace(",", ".");
-  const match = /^(\d{1,12})(?:\.(\d{1,2}))?$/.exec(normalized);
-  if (!match)
+  const match = /^(−|-)?(\d{1,12})(?:\.(\d{1,2}))?$/.exec(normalized);
+  if (!match || (match[1] && !allowNegative))
     throw new Error(
       "Укажите сумму в тенге: не более двух знаков после запятой.",
     );
   return (
-    BigInt(match[1]) * 100n +
-    BigInt((match[2] || "").padEnd(2, "0"))
+    (match[1] ? -1n : 1n) *
+    (BigInt(match[2]) * 100n + BigInt((match[3] || "").padEnd(2, "0")))
   ).toString();
 }
 export function minorToKzt(value?: string | null): string {

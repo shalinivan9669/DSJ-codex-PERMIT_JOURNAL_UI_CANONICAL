@@ -5,10 +5,15 @@ import {
   today,
   type AssessmentKind,
   type RegulatoryProfile,
+  type LmsQuestion,
+  type LearningAnswers,
 } from "@demo/contracts";
 import { audit, fail, hash, json, type Context } from "../core";
-import { gradeAnswers, type ScoredQuestion } from "./engine";
-import { examReadiness } from "./readiness";
+import { gradeLearningAnswers } from "./assessment-grading";
+import { evaluateLearningEligibility } from "./learning-eligibility";
+import { evaluatePracticeRequirement } from "./practice-requirement";
+import { protocolQuestion, type FrozenProtocol } from "./document-protocol";
+import { proctorApproval } from "./proctoring";
 
 export function routeEligible(
   profile: RegulatoryProfile,
@@ -16,6 +21,8 @@ export function routeEligible(
   verdict: string,
   at: Date | null,
   syntheticAllowed: boolean,
+  practiceSatisfied = false,
+  proctoringSatisfied = false,
 ): boolean {
   let day: string | undefined;
   try {
@@ -41,8 +48,8 @@ export function routeEligible(
       ? day >= profile.effectiveFrom &&
         (!profile.effectiveUntil || day <= profile.effectiveUntil)
       : kind === "EXTERNAL_AUTHORIZED") &&
-    !profile.requiresProctoring &&
-    !profile.requiresPractice &&
+    (!profile.requiresProctoring || (profile.proctoringMode === "LOCAL_SUPERVISED" && proctoringSatisfied)) &&
+    (!profile.requiresPractice || practiceSatisfied) &&
     !(profile.competency === "GENERAL" && kind === "CENTER_EXAM") &&
     (profile.commissionKind === "NONE" || profile.commission.length > 0)
   );
@@ -118,6 +125,8 @@ export async function finalizeLmsResult(
     where: { id: c.tenantId },
   });
   let source: Record<string, unknown>;
+  let proctoringSatisfied = false;
+  let protocol: FrozenProtocol | undefined;
   if (input.assessmentKind === "EXTERNAL_AUTHORIZED") {
     if (input.attemptId || !input.externalEvidenceId)
       fail(422, "RESULT_SOURCE", "Требуется внешнее основание");
@@ -195,6 +204,8 @@ export async function finalizeLmsResult(
         courseVersionId: version.id,
         regulatoryProfileVersionId: policyVersion.id,
         assessmentKind: input.assessmentKind,
+        purpose: "FINAL",
+        assessmentId: "FINAL",
         state: "FINISHED",
       },
     });
@@ -206,14 +217,33 @@ export async function finalizeLmsResult(
       attempt.finishedAt?.getTime() !== input.examAt?.getTime()
     )
       fail(409, "ATTEMPT_NOT_FINAL", "Попытка ещё не завершена");
+    if (profile.requiresProctoring) {
+      const supervision = profile.proctoringMode === "LOCAL_SUPERVISED" && await proctorApproval(tx, c.tenantId, attempt);
+      if (!supervision) fail(409, "PROCTORING_REVIEW_REQUIRED", "Для результата требуется решение наблюдателя по этой попытке");
+      proctoringSatisfied = true;
+    }
     const frozen = attempt.snapshot as unknown as {
-      questions: ScoredQuestion[];
+      questions: LmsQuestion[];
       policy: { thresholdPercent: number; comparison: "GT" | "GTE" };
     };
-    const calculated = gradeAnswers(
+    const review = await tx.lmsReviewDecision.findFirst({
+      where: { tenantId: c.tenantId, attemptId: attempt.id, decision: "GRADE" },
+    });
+    if (
+      review &&
+      review.contentHash !==
+        hash({
+          snapshot: attempt.snapshot,
+          answers: attempt.answers,
+          submittedAt: attempt.submittedAt,
+        })
+    )
+      fail(409, "REVIEW_CONFLICT", "Решение не соответствует исходным ответам");
+    const calculated = gradeLearningAnswers(
       frozen.questions,
-      attempt.answers as Record<string, string[]>,
+      attempt.answers as LearningAnswers,
       frozen.policy,
+      (review?.questionScores || {}) as Record<string, 0 | 1>,
     );
     if (
       calculated.score !== input.score ||
@@ -225,14 +255,69 @@ export async function finalizeLmsResult(
         "RESULT_SCORE_MISMATCH",
         "Оценка не соответствует сохранённым ответам",
       );
+    const history = await tx.examAttempt.findMany({
+      where: {
+        tenantId: c.tenantId,
+        enrollmentId: enrollment.id,
+        purpose: "FINAL",
+        assessmentId: "FINAL",
+        ordinal: { lte: attempt.ordinal },
+      },
+      orderBy: { ordinal: "asc" },
+      select: {
+        ordinal: true,
+        state: true,
+        score: true,
+        maximum: true,
+        verdict: true,
+        finishedAt: true,
+      },
+    });
+    protocol = {
+      version: 1,
+      attemptId: attempt.id,
+      ordinal: attempt.ordinal,
+      finishedAt: attempt.finishedAt!.toISOString(),
+      thresholdPercent: frozen.policy.thresholdPercent,
+      comparison: frozen.policy.comparison,
+      percent: calculated.maxScore
+        ? (calculated.score * 100) / calculated.maxScore
+        : 0,
+      questions: frozen.questions.map((question) =>
+        protocolQuestion(
+          question,
+          (attempt.answers as LearningAnswers)[question.id],
+          calculated.questionScores[question.id] ?? null,
+        ),
+      ),
+      history: history.map((item) => ({
+        ...item,
+        finishedAt: item.finishedAt?.toISOString() || null,
+      })),
+      commission: profile.commission,
+    };
     source = {
       attemptId: attempt.id,
       ordinal: attempt.ordinal,
       startedAt: attempt.startedAt,
       deadlineAt: attempt.deadlineAt,
       finishedAt: attempt.finishedAt,
+      ...(review
+        ? {
+            reviewDecisionId: review.id,
+            submittedAt: attempt.submittedAt,
+            gradedAt: attempt.gradedAt,
+          }
+        : {}),
     };
   }
+  const practiceRequirement = await evaluatePracticeRequirement(
+    tx,
+    c,
+    enrollment,
+    content,
+    profile,
+  );
   let eligible = routeEligible(
     profile,
     input.assessmentKind,
@@ -241,16 +326,28 @@ export async function finalizeLmsResult(
     tenant.demoOnly &&
       process.env.DEMO_LMS_TEST_RUNTIME === "1" &&
       process.env.NODE_ENV !== "production",
+    practiceRequirement.satisfied,
+    proctoringSatisfied,
   );
-  const completed = await tx.lessonProgress.findMany({
-    where: {
-      tenantId: c.tenantId,
-      enrollmentId: enrollment.id,
-      completedAt: { not: null },
-    },
-    select: { lessonId: true, completedAt: true },
-  });
-  if (!examReadiness(content, completed).ready) eligible = false;
+  const eligibility = await evaluateLearningEligibility(
+    tx,
+    c,
+    enrollment,
+    content,
+  );
+  const required = content.modules
+    .flatMap((module) => module.lessons)
+    .filter((lesson) => lesson.required);
+  if (
+    enrollment.status === "CANCELLED" ||
+    !eligibility.prerequisitesSatisfied ||
+    !required.every((lesson) =>
+      eligibility.lessons.some(
+        (item) => item.id === lesson.id && item.complete,
+      ),
+    )
+  )
+    eligible = false;
   if (
     profile.sanitary &&
     input.assessmentKind === "CENTER_EXAM" &&
@@ -277,6 +374,7 @@ export async function finalizeLmsResult(
   });
   const snapshot = {
     version: 1,
+    ...(protocol ? { protocol } : {}),
     course: {
       id: version.courseId,
       versionId: version.id,
@@ -288,6 +386,7 @@ export async function finalizeLmsResult(
     },
     profile,
     regulatoryProfileVersionId: policyVersion.id,
+    practiceRequirement,
     learner: {
       recipientId: recipient.id,
       fullNameRu: person.fullNameRu || "",

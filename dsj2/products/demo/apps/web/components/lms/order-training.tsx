@@ -3,20 +3,19 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import type { ResultEnrollment } from "@/lib/results-api";
-export function OrderTraining({ orderId }: { orderId: string }) {
-  const [data, setData] = useState<{
-    items: ResultEnrollment[];
-    total: number;
-    requests: { requestId: string; title: string }[];
-  } | null>(null);
+import { useLanguage } from "./common";
+type OrderLearning = {
+  items: ResultEnrollment[]; total: number; requests: { requestId: string; title: string }[];
+  application?: { id: string; kind: string; courseVersionId: string; customerId: string | null; recipientId: string | null; enrollmentId: string | null; state: string } | null;
+};
+export function OrderTraining({ orderId, scope = "orders" }: { orderId: string; scope?: string }) {
+  const { t } = useLanguage(scope);
+  const [data, setData] = useState<OrderLearning | null>(null);
   const [error, setError] = useState(false);
+  const [refresh, setRefresh] = useState(0);
   useEffect(() => {
     let alive = true;
-    void api<{
-      items: ResultEnrollment[];
-      total: number;
-      requests: { requestId: string; title: string }[];
-    }>(`/lms/orders/${orderId}`)
+    void api<OrderLearning>(`/lms/orders/${orderId}`)
       .then((v) => {
         if (alive) {
           setData(v);
@@ -29,23 +28,27 @@ export function OrderTraining({ orderId }: { orderId: string }) {
     return () => {
       alive = false;
     };
-  }, [orderId]);
+  }, [orderId, refresh]);
   return (
-    <details className="outcome-entry">
-      <summary>Обучение и документы {data ? `· ${data.total}` : ""}</summary>
+    <section className="outcome-entry">
+      <h3>{t("Обучение и документы", "Оқу және құжаттар")} {data ? `· ${data.total}` : ""}</h3>
       {error && (
         <p role="alert">
-          Не удалось получить обучение. Откройте заказ повторно.
+          {t("Не удалось получить обучение.", "Оқу деректерін алу мүмкін болмады.")} <button onClick={() => setRefresh((value) => value + 1)}>{t("Повторить", "Қайталау")}</button>
         </p>
       )}
       {data && (
         <>
+          {data.application && <div className="lms-toolbar">
+            <Link href={`/lms/applications?id=${data.application.id}`}>{t("Исходная заявка на обучение", "Бастапқы оқу өтінімі")}</Link>
+            {data.application.kind === "B2B" && data.application.state === "ACCEPTED" && <Link className="button primary" href={`/lms/import?orderId=${encodeURIComponent(orderId)}&applicationId=${data.application.id}`}>{t("Заполнить состав и назначить", "Құрамды толтыру және тағайындау")}</Link>}
+          </div>}
           {data.requests.map((r) => (
             <p key={r.requestId}>
               <Link
                 href={`/lms/assign?orderId=${encodeURIComponent(orderId)}&requestId=${encodeURIComponent(r.requestId)}`}
               >
-                Назначить обучение участникам заявки · {r.title}
+                {t("Назначить обучение участникам заявки", "Өтінім қатысушыларына оқуды тағайындау")} · {r.title}
               </Link>
             </p>
           ))}
@@ -54,28 +57,28 @@ export function OrderTraining({ orderId }: { orderId: string }) {
               <Link
                 href={`/lms/results?sourceOrderId=${encodeURIComponent(orderId)}`}
               >
-                Все результаты и готовые документы
+                {t("Все результаты и готовые документы", "Барлық нәтижелер мен дайын құжаттар")}
               </Link>
             </p>
           )}
           {data.items.map((row) => (
             <p key={row.id}>
-              {row.recipient?.data.fullNameRu} · {row.progressPercent || 0}% ·{" "}
+              {t(row.recipient?.data.fullNameRu || "", row.recipient?.data.fullNameKz || row.recipient?.data.fullNameRu || "")} · {row.progressPercent || 0}% ·{" "}
               {row.result?.verdict === "PASSED"
-                ? "Сдано"
+                ? t("Сдано", "Өтті")
                 : row.result?.verdict === "FAILED"
-                  ? "Не сдано"
-                  : "Не завершено"}
+                  ? t("Не сдано", "Өтпеді")
+                  : t("Не завершено", "Аяқталмаған")}
               {row.groupId && (
                 <>
                   {" "}
-                  · <Link href={`/lms/groups/${row.groupId}`}>Группа</Link>
+                  · <Link href={`/lms/groups/${row.groupId}`}>{t("Группа", "Топ")}</Link>
                 </>
               )}
             </p>
           ))}
         </>
       )}
-    </details>
+    </section>
   );
 }

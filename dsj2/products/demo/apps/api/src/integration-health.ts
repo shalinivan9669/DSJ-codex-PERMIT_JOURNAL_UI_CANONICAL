@@ -5,21 +5,27 @@ export const INTEGRATION_STALE_MS = 30_000;
 
 /** Operational details are returned only from the administrator readiness route. */
 export async function integrationHealth(tenantId: string, now = new Date()) {
-  const [beat, pendingCount, oldest, failedCount] = await Promise.all([
-    db.workerHeartbeat.findFirst({
-      where: { version: INTEGRATION_WORKER_VERSION },
-      orderBy: [{ seenAt: "desc" }, { id: "desc" }],
-    }),
-    db.regulatoryOutbox.count({
-      where: { tenantId, status: { in: ["PENDING", "PROCESSING"] } },
-    }),
-    db.regulatoryOutbox.findFirst({
-      where: { tenantId, status: { in: ["PENDING", "PROCESSING"] } },
-      select: { createdAt: true },
-      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
-    }),
-    db.regulatoryOutbox.count({ where: { tenantId, status: "NEEDS_REVIEW" } }),
-  ]);
+  const [beat, pendingCount, oldest, failedCount, retryingCount] =
+    await Promise.all([
+      db.workerHeartbeat.findFirst({
+        where: { version: INTEGRATION_WORKER_VERSION },
+        orderBy: [{ seenAt: "desc" }, { id: "desc" }],
+      }),
+      db.regulatoryOutbox.count({
+        where: { tenantId, status: { in: ["PENDING", "PROCESSING"] } },
+      }),
+      db.regulatoryOutbox.findFirst({
+        where: { tenantId, status: { in: ["PENDING", "PROCESSING"] } },
+        select: { createdAt: true },
+        orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+      }),
+      db.regulatoryOutbox.count({
+        where: { tenantId, status: "NEEDS_REVIEW" },
+      }),
+      db.regulatoryOutbox.count({
+        where: { tenantId, status: "PENDING", attempts: { gt: 0 } },
+      }),
+    ]);
   const ageMs = beat
     ? Math.max(0, now.getTime() - beat.seenAt.getTime())
     : null;
@@ -31,7 +37,11 @@ export async function integrationHealth(tenantId: string, now = new Date()) {
         ? "HEARTBEAT_STALE"
         : beat.lastError
           ? beat.lastError
-          : null;
+          : failedCount > 0
+            ? "PREPARATION_NEEDS_REVIEW"
+            : retryingCount > 0
+              ? "PREPARATION_RETRY_PENDING"
+              : null;
   return {
     status: reason ? "degraded" : "ok",
     reason,
@@ -47,6 +57,7 @@ export async function integrationHealth(tenantId: string, now = new Date()) {
         )
       : null,
     failedCount,
+    retryingCount,
     connection: "NOT_CONNECTED",
   };
 }

@@ -9,7 +9,7 @@ import {
   Res,
 } from "@nestjs/common";
 import type { Response } from "express";
-import { randomUUID } from "node:crypto";
+import { randomUUID, randomBytes } from "node:crypto";
 import {
   draftSchema,
   regulatoryProfileSchema,
@@ -38,6 +38,10 @@ import {
 import { finalize } from "../requests";
 import { openArtifact } from "../storage";
 import { signingState } from "../signing";
+import {
+  verificationQrDataUrl,
+  setLmsVerificationPublication,
+} from "../public-verification";
 import { assertLmsDeploymentAllowed } from "./deployment-gate";
 import { effectiveResult } from "./enrollments";
 import { assertEligibleResult } from "./result-finalization";
@@ -45,8 +49,14 @@ import {
   documentMetadata,
   documentRecipient,
   lmsTemplateTypes,
+  resultWithDocumentProtocol,
 } from "./document-metadata";
-import { assertLmsStaff, lmsContext, scopedEnrollment } from "./scope";
+import {
+  assertLmsStaff,
+  isLmsStaff,
+  lmsContext,
+  scopedEnrollment,
+} from "./scope";
 
 import { documentViews } from "./document-views";
 import {
@@ -94,7 +104,8 @@ export async function prepareResultDocuments(c: Context, input: unknown) {
         const profile = regulatoryProfileSchema.parse(snapshot.profile);
         if (!profile.documentTypes.length)
           fail(409, "NO_DOCUMENT_ROUTE", "Для программы не заданы документы");
-        const metadata = documentMetadata(result);
+        const documentResult = await resultWithDocumentProtocol(tx, result);
+        const metadata = documentMetadata(documentResult);
         const recipient = documentRecipient(result);
         const tenant = await tx.tenant.findUniqueOrThrow({
           where: { id: c.tenantId },
@@ -106,6 +117,21 @@ export async function prepareResultDocuments(c: Context, input: unknown) {
         if (!issuer)
           fail(409, "ISSUER_NOT_CONFIGURED", "Заполните реквизиты центра");
         const date = today(tenant.timezone, result.confirmedAt);
+        const origin = process.env.DEMO_ORIGIN;
+        if (!origin)
+          fail(503, "PUBLIC_ORIGIN_REQUIRED", "Адрес приложения не настроен");
+        const verification = new Map(
+          profile.documentTypes.map((type) => {
+            const token = randomBytes(32).toString("hex");
+            return [
+              type,
+              {
+                verificationUrl: new URL(`/verify/${token}`, origin).toString(),
+                verificationTokenHash: hash(token),
+              },
+            ];
+          }),
+        );
         const draft: Draft = draftSchema.parse({
           kind: recipient.employerId ? "COMPANY" : "PERSON",
           customerId: recipient.employerId || null,
@@ -163,27 +189,40 @@ export async function prepareResultDocuments(c: Context, input: unknown) {
                       "outcome",
                     ].map((key) => [key, "IMPORTED"]),
                   ),
-                  lms: metadata,
+                  lms: documentMetadata(
+                    documentResult,
+                    verification.get(type)!.verificationUrl,
+                  ),
                 };
               }),
             },
           ],
         });
-        const request = await createProposedContainer(tx, c, draft);
-        const created = [];
-        for (const documentType of [...new Set(profile.documentTypes)])
-          created.push(
-            await tx.lmsDocumentLink.create({
-              data: {
-                tenantId: c.tenantId,
-                resultId,
-                documentType,
-                legalForm: profile.legalForm,
-                requestId: request.id,
-                originalReference: metadata.originalReference,
-              },
-            }),
-          );
+        const request = await createProposedContainer(
+          tx,
+          c,
+          draft,
+          {},
+          async (requestId) => {
+            // The request and its server-issued QR references are created in the
+            // same transaction, before ordinary proposal reference validation.
+            for (const documentType of [...new Set(profile.documentTypes)])
+              await tx.lmsDocumentLink.create({
+                data: {
+                  tenantId: c.tenantId,
+                  resultId,
+                  documentType,
+                  legalForm: profile.legalForm,
+                  requestId,
+                  originalReference: metadata.originalReference,
+                  ...verification.get(documentType)!,
+                },
+              });
+          },
+        );
+        const created = await tx.lmsDocumentLink.findMany({
+          where: { tenantId: c.tenantId, resultId },
+        });
         await audit(tx, c, "LMS_DOCUMENTS_PREPARED", resultId, {
           requestId: request.id,
           documentTypes: profile.documentTypes,
@@ -240,25 +279,44 @@ export async function prepareResultDocuments(c: Context, input: unknown) {
 
 // These cursors only schedule bounded work; approval and eligibility remain database facts.
 // Restarting a worker restarts the sweep without changing any document state.
-const documentSweepCursor: Record<"release" | "render", string | null> = {
+const documentSweepCursor: Record<
+  "release" | "render" | "publication",
+  string | null
+> = {
   release: null,
   render: null,
+  publication: null,
 };
-async function nextDocumentSweep(stage: "release" | "render", limit: number) {
+async function nextDocumentSweep(
+  stage: "release" | "render" | "publication",
+  limit: number,
+  tenantId?: string,
+) {
   type Link = Awaited<ReturnType<typeof db.lmsDocumentLink.findMany>>[number];
   const page = (after: string | null) =>
     stage === "release"
       ? db.$queryRaw<Link[]>`
           SELECT DISTINCT ON (l."requestId") l.* FROM "LmsDocumentLink" l
           WHERE l.status='PREPARED' AND l."issuanceId" IS NULL
+            AND (${tenantId ?? null}::text IS NULL OR l."tenantId"=${tenantId ?? null})
             AND (${after}::text IS NULL OR l."requestId">${after})
             AND EXISTS (SELECT 1 FROM "RequestProposal" p
               WHERE p."tenantId"=l."tenantId" AND p."requestId"=l."requestId"
                 AND p.operation='SAVE' AND p.status='APPROVED')
           ORDER BY l."requestId", l.id LIMIT ${limit}`
-      : db.$queryRaw<Link[]>`
+      : stage === "publication"
+        ? db.$queryRaw<Link[]>`
+          SELECT DISTINCT ON (l."requestId") l.* FROM "LmsDocumentLink" l
+          WHERE l."issuanceId" IS NOT NULL AND l."verificationTokenHash" IS NOT NULL
+            AND (${tenantId ?? null}::text IS NULL OR l."tenantId"=${tenantId ?? null})
+            AND (${after}::text IS NULL OR l."requestId">${after})
+            AND NOT EXISTS (SELECT 1 FROM "PublicDocumentVerification" p
+              WHERE p."tenantId"=l."tenantId" AND p.id=l.id)
+          ORDER BY l."requestId", l.id LIMIT ${limit}`
+        : db.$queryRaw<Link[]>`
           SELECT DISTINCT ON (l."requestId") l.* FROM "LmsDocumentLink" l
           WHERE l.status='PREPARED' AND l."issuanceId" IS NOT NULL
+            AND (${tenantId ?? null}::text IS NULL OR l."tenantId"=${tenantId ?? null})
             AND (${after}::text IS NULL OR l."requestId">${after})
           ORDER BY l."requestId", l.id LIMIT ${limit}`;
   let rows = await page(documentSweepCursor[stage]);
@@ -269,11 +327,49 @@ async function nextDocumentSweep(stage: "release" | "render", limit: number) {
 }
 
 /** Approval remains an explicit director decision. Only the following mechanical release is automatic. */
-export async function advanceLmsDocuments(limit = 30) {
+async function ensurePublications(
+  tx: Prisma.TransactionClient,
+  c: Context,
+  requestId: string,
+  issuanceId: string,
+) {
+  const links = await tx.lmsDocumentLink.findMany({
+    where: {
+      tenantId: c.tenantId,
+      requestId,
+      verificationTokenHash: { not: null },
+    },
+  });
+  for (const link of links) {
+    const document = await tx.issuedDocument.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        issuanceId,
+        assignmentId: `${link.resultId}-${link.documentType}`,
+      },
+    });
+    if (document)
+      await tx.publicDocumentVerification.upsert({
+        where: { id: link.id },
+        create: {
+          id: link.id,
+          tenantId: c.tenantId,
+          documentId: document.id,
+          tokenHash: link.verificationTokenHash!,
+          createdBy: c.userId,
+          active: !link.verificationRevokedAt,
+          expiresAt: link.verificationExpiresAt,
+        },
+        update: {},
+      });
+  }
+}
+
+export async function advanceLmsDocuments(limit = 30, tenantId?: string) {
   const batchSize = Number.isFinite(limit)
     ? Math.min(100, Math.max(1, Math.floor(limit)))
     : 30;
-  const pending = await nextDocumentSweep("release", batchSize);
+  const pending = await nextDocumentSweep("release", batchSize, tenantId);
   let advanced = 0;
   for (const link of pending) {
     const approved = await db.requestProposal.findFirst({
@@ -293,7 +389,10 @@ export async function advanceLmsDocuments(limit = 30) {
     const actor = await db.user.findFirst({
       where: { tenantId: link.tenantId, id: request.createdBy, active: true },
     });
-    if (!actor || !["ADMIN", "DIRECTOR", "OPERATOR"].includes(actor.role))
+    if (
+      !actor ||
+      !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"].includes(actor.role)
+    )
       continue;
     const c: Context = {
       tenantId: link.tenantId,
@@ -325,9 +424,13 @@ export async function advanceLmsDocuments(limit = 30) {
           orderBy: { createdAt: "desc" },
         });
       }
-      await db.lmsDocumentLink.updateMany({
-        where: { tenantId: c.tenantId, requestId: request.id },
-        data: { issuanceId: issuance.id },
+      const issuanceId = issuance.id;
+      await transaction(async (tx) => {
+        await tx.lmsDocumentLink.updateMany({
+          where: { tenantId: c.tenantId, requestId: request.id },
+          data: { issuanceId },
+        });
+        await ensurePublications(tx, c, request.id, issuanceId);
       });
       await audit(db, c, "LMS_APPROVED_DOCUMENTS_RELEASED", request.id, {
         issuanceId: issuance.id,
@@ -341,7 +444,19 @@ export async function advanceLmsDocuments(limit = 30) {
       });
     }
   }
-  const rendering = await nextDocumentSweep("render", batchSize);
+  // Repair missing records independently of rendering and of already healthy
+  // issued documents. Each queue is bounded and advances past blocked requests.
+  const publication = await nextDocumentSweep(
+    "publication",
+    batchSize,
+    tenantId,
+  );
+  const renderPage = await nextDocumentSweep("render", batchSize, tenantId);
+  const rendering = [
+    ...new Map(
+      [...publication, ...renderPage].map((link) => [link.requestId, link]),
+    ).values(),
+  ];
   for (const link of rendering) {
     const request = await db.printRequest.findFirst({
       where: { id: link.requestId, tenantId: link.tenantId },
@@ -350,7 +465,10 @@ export async function advanceLmsDocuments(limit = 30) {
     const actor = await db.user.findFirst({
       where: { id: request.createdBy, tenantId: link.tenantId, active: true },
     });
-    if (!actor || !["ADMIN", "DIRECTOR", "OPERATOR"].includes(actor.role))
+    if (
+      !actor ||
+      !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR"].includes(actor.role)
+    )
       continue;
     const c: Context = {
       tenantId: link.tenantId,
@@ -363,6 +481,10 @@ export async function advanceLmsDocuments(limit = 30) {
     try {
       await assertLmsDeploymentAllowed(
         await db.tenant.findUniqueOrThrow({ where: { id: c.tenantId } }),
+      );
+      // Recover an interrupted older release before marking its files issued.
+      await transaction((tx) =>
+        ensurePublications(tx, c, request.id, link.issuanceId!),
       );
       const state = await signingState(c, request.id);
       if (state.status === "ISSUED")
@@ -389,12 +511,31 @@ export async function documentView(c: Context, id: string) {
   const result = await db.verifiedExamResult.findFirstOrThrow({
     where: { id: link.resultId, tenantId: c.tenantId },
   });
-  await scopedEnrollment(c, result.enrollmentId);
+  const enrollment = await scopedEnrollment(c, result.enrollmentId);
   const view = (await documentViews(c, [result.id])).find(
     (item) => item.id === id,
   )!;
   const { artifacts, status, reason, ...projected } = view;
-  return { link: projected, artifacts, status, reason };
+  const verification =
+    projected.verificationUrl && status === "ISSUED" && artifacts.length
+      ? {
+          url: projected.verificationUrl,
+          qrDataUrl: await verificationQrDataUrl(projected.verificationUrl),
+        }
+      : null;
+  return {
+    link: projected,
+    artifacts,
+    status,
+    reason,
+    verification,
+    origin: {
+      enrollmentId: enrollment.id,
+      groupId: enrollment.groupId,
+      sourceOrderId: enrollment.sourceOrderId,
+      sourceRequestId: isLmsStaff(c) ? enrollment.sourceRequestId : null,
+    },
+  };
 }
 
 export async function changeResult(
@@ -403,7 +544,7 @@ export async function changeResult(
   input: unknown,
   correct: boolean,
 ) {
-  if (!["DIRECTOR", "ADMIN"].includes(c.role))
+  if (!["SUPER_ADMIN", "DIRECTOR", "ADMIN"].includes(c.role))
     fail(403, "ROLE_DENIED", "Требуется решение директора");
   const { reason } = parse(
     z.object({ reason: z.string().trim().min(3).max(2000) }).strict(),
@@ -561,6 +702,21 @@ export async function artifactAccess(c: Context, id: string) {
   );
   if (!link) fail(404, "NOT_FOUND", "Файл не найден");
   const view = await documentView(c, link.id);
+  const { assertEmployerDocumentDownload } =
+    await import("./employer-document-access");
+  await assertEmployerDocumentDownload(c, [link.resultId]);
+  if (!isLmsStaff(c) && ["VOIDED", "SUPERSEDED"].includes(view.status))
+    fail(
+      409,
+      "RESULT_INELIGIBLE",
+      "Документ аннулирован или заменён. Обратитесь в учебный центр",
+    );
+  if (!isLmsStaff(c) && view.status !== "ISSUED")
+    fail(
+      409,
+      "DOCUMENT_NOT_READY",
+      "Дождитесь готовности файлов и обязательных подписей",
+    );
   if (!view.artifacts.some((item) => item.id === artifact.id))
     fail(404, "NOT_FOUND", "Файл не найден");
   return artifact;
@@ -662,6 +818,17 @@ export class LmsDocumentsController {
     @Param("id") id: string,
   ) {
     return documentView(lmsContext(req), id);
+  }
+  @Post("lms/documents/:id/verification") verificationPublication(
+    @Req() req: DemoRequest,
+    @Param("id") id: string,
+    @Body() body: unknown,
+  ) {
+    return setLmsVerificationPublication(
+      requireCapability(req, "lms:manage"),
+      id,
+      body,
+    );
   }
   @Get(["learn/artifacts/:id", "lms/artifacts/:id"]) async artifact(
     @Req() req: DemoRequest,

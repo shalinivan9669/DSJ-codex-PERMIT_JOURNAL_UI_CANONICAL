@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Patch, Post, Req, Res } from "@nestjs/common";
 import type { Response } from "express";
 import { consentText, consentVersion, z } from "@demo/contracts";
 import {
@@ -16,12 +16,15 @@ import {
 } from "../core";
 import {
   passwordHash,
-  passwordMatches,
   passwordSchema,
   rateLimit,
   sessionCookies,
 } from "../auth";
 import { assertLmsDeploymentAllowed } from "./deployment-gate";
+import { assertLmsStaff } from "./scope";
+import { learnerAccess } from "./learner-access";
+import { trustedClientIp } from "../proxy-policy";
+import { availableRegistrationCenters, getRegistrationPolicy, registrationIsOpen, registrationTenant, saveRegistrationPolicy } from "./registration-policy";
 
 const registration = z
   .object({
@@ -30,11 +33,12 @@ const registration = z
     displayName: z.string().trim().min(2).max(300),
     consentVersion: z.literal(consentVersion),
     consent: z.literal(true),
+    centerKey: z.string().uuid().optional(),
   })
   .strict();
 const exchange = registration
   .extend({ token: z.string().regex(/^[a-f0-9]{64}$/) })
-  .omit({ email: true, displayName: true });
+  .omit({ email: true, displayName: true, centerKey: true });
 function identityContext(
   tenantId: string,
   userId: string,
@@ -47,6 +51,7 @@ function identityContext(
     sessionId: "",
     csrfHash: "",
     correlationId: req.correlationId,
+    trustedIp: trustedClientIp(req),
   };
 }
 async function establishSession(c: Context, res: Response) {
@@ -75,20 +80,14 @@ export async function registerLearner(
 ) {
   rateLimit(`learner-register:${req.ip}`, 5);
   const data = parse(registration, input);
-  const tenantId = process.env.DEMO_LMS_REGISTRATION_TENANT_ID;
-  const tenant = tenantId
-    ? await db.tenant.findFirst({ where: { id: tenantId, active: true } })
-    : null;
-  if (!tenant)
-    fail(
-      409,
-      "REGISTRATION_CLOSED",
-      "Регистрация закрыта. Используйте приглашение центра",
-    );
+  const tenant = await registrationTenant(data.centerKey);
   await assertLmsDeploymentAllowed(tenant);
   const email = data.email.toLowerCase();
   const encoded = await passwordHash(data.password);
   const c = await transaction(async (tx) => {
+    await tx.$executeRaw`SELECT id FROM "Tenant" WHERE id=${tenant.id} FOR SHARE`;
+    const currentTenant = await tx.tenant.findUniqueOrThrow({ where: { id: tenant.id } });
+    if (!registrationIsOpen(currentTenant)) fail(409, "REGISTRATION_CLOSED", "Регистрация закрыта. Используйте приглашение центра");
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"learner-email:" + email},0))`;
     if (await tx.user.findUnique({ where: { email } }))
       fail(
@@ -127,6 +126,7 @@ export async function registerLearner(
   return establishSession(c, res);
 }
 export async function createLearnerInvite(c: Context, input: unknown) {
+  assertLmsStaff(c);
   const data = parse(
     z
       .object({
@@ -160,6 +160,17 @@ export async function createLearnerInvite(c: Context, input: unknown) {
     fail(409, "ALREADY_LINKED", "У слушателя уже есть доступ");
   const token = randomBytes(32).toString("hex");
   const invite = await transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"learner-recipient:" + c.tenantId + ":" + recipient.id},0))`;
+    if (!(await tx.recipient.findFirst({ where: { id: recipient.id, tenantId: c.tenantId, archived: false }, select: { id: true } })))
+      fail(404, "NOT_FOUND", "Слушатель не найден");
+    if (await tx.learnerProfile.findFirst({ where: { tenantId: c.tenantId, recipientId: recipient.id } }))
+      fail(409, "ALREADY_LINKED", "Доступ уже открыт. Используйте вход в кабинет");
+    if (!(await tx.enrollment.findFirst({ where: { tenantId: c.tenantId, recipientId: recipient.id, status: { not: "CANCELLED" }, ...(data.customerId ? { customerId: data.customerId } : {}), OR: [{ dueAt: null }, { dueAt: { gt: new Date() } }] }, select: { id: true } })))
+      fail(409, "INVITE_ASSIGNMENT_REQUIRED", "Сначала назначьте обучение или продлите срок доступа");
+    const account = await tx.user.findUnique({ where: { email: data.email.toLowerCase() } });
+    if (account && (account.tenantId !== c.tenantId || account.role !== "LEARNER" || !account.active || await tx.learnerProfile.findFirst({ where: { userId: account.id } })))
+      fail(409, "INVITE_ACCOUNT_CONFLICT", "Почта уже связана с другой карточкой или недоступной учётной записью. Выберите подтверждённую карточку слушателя");
+    await tx.learnerInvite.updateMany({ where: { tenantId: c.tenantId, recipientId: recipient.id, usedAt: null, revokedAt: null }, data: { revokedAt: new Date() } });
     const invite = await tx.learnerInvite.create({
       data: {
         tenantId: c.tenantId,
@@ -179,7 +190,7 @@ export async function createLearnerInvite(c: Context, input: unknown) {
   return {
     id: invite.id,
     token,
-    url: `/learn/invite?token=${token}`,
+    url: `/learn/invite#token=${token}`,
     expiresAt: invite.expiresAt,
   };
 }
@@ -213,8 +224,14 @@ export async function inspectLearnerInvite(req: DemoRequest, input: unknown) {
       "Приглашение недействительно. Обратитесь в центр",
     );
   await assertLmsDeploymentAllowed(tenant);
+  const account = await db.user.findUnique({ where: { email: invite.email }, select: { id: true } });
+  const recipient = await db.recipient.findFirst({ where: { tenantId: invite.tenantId, id: invite.recipientId, archived: false } });
+  if (!recipient) fail(410, "INVITE_INVALID", "Приглашение недействительно. Обратитесь в центр");
   return {
     centerName: tenant.name,
+    email: invite.email,
+    accountExists: !!account,
+    recipientName: String((recipient.data as Record<string, unknown>).fullNameRu || ""),
     consentVersion,
     consentText,
     expiresAt: invite.expiresAt,
@@ -243,6 +260,11 @@ export async function exchangeLearnerInvite(
         "INVITE_INVALID",
         "Приглашение недействительно. Обратитесь в центр",
       );
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"learner-recipient:" + invite.tenantId + ":" + invite.recipientId},0))`;
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"learner-email:" + invite.email},0))`;
+    const currentInvite = await tx.learnerInvite.findUniqueOrThrow({ where: { tokenHash } });
+    if (currentInvite.usedAt || currentInvite.revokedAt || currentInvite.expiresAt <= new Date())
+      fail(410, "INVITE_INVALID", "Приглашение недействительно. Запросите новое в центре");
     const tenant = await tx.tenant.findFirst({
       where: { id: invite.tenantId, active: true },
     });
@@ -266,32 +288,12 @@ export async function exchangeLearnerInvite(
       })
     )
       fail(409, "ALREADY_LINKED", "Доступ уже открыт. Войдите в кабинет");
-    let user = await tx.user.findUnique({ where: { email: invite.email } });
-    if (
-      user &&
-      (user.tenantId !== tenant.id ||
-        user.role !== "LEARNER" ||
-        !user.active ||
-        !(await passwordMatches(data.password, user.passwordHash)))
-    )
-      fail(
-        409,
-        "INVITE_UNAVAILABLE",
-        "Не удалось открыть доступ. Обратитесь в центр",
-      );
-    if (
-      user &&
-      (await tx.learnerProfile.findFirst({
-        where: { tenantId: tenant.id, userId: user.id },
-      }))
-    )
-      fail(
-        409,
-        "INVITE_UNAVAILABLE",
-        "Не удалось открыть доступ. Обратитесь в центр",
-      );
+    if (await tx.user.findUnique({ where: { email: invite.email } }))
+      fail(409, "INVITE_SIGN_IN_REQUIRED", "Войдите в существующую учётную запись, чтобы принять приглашение");
+    if (!(await tx.enrollment.findFirst({ where: { tenantId: tenant.id, recipientId: recipient.id, status: { not: "CANCELLED" }, OR: [{ dueAt: null }, { dueAt: { gt: new Date() } }] } })))
+      fail(409, "INVITE_ASSIGNMENT_REQUIRED", "Назначение отменено или срок доступа истёк. Обратитесь в центр");
     const person = recipient.data as Record<string, unknown>;
-    user ??= await tx.user.create({
+    const user = await tx.user.create({
       data: {
         tenantId: tenant.id,
         email: invite.email,
@@ -329,6 +331,32 @@ export async function exchangeLearnerInvite(
   });
   return establishSession(c, res);
 }
+/** Existing accounts must use the normal session/MFA flow before accepting a link. */
+export async function acceptLearnerInvite(c: Context, input: unknown) {
+  const data = parse(z.object({ token: z.string().regex(/^[a-f0-9]{64}$/), consentVersion: z.literal(consentVersion), consent: z.literal(true) }).strict(), input);
+  await transaction(async (tx) => {
+    const tokenHash = hash(data.token);
+    const invite = await tx.learnerInvite.findUnique({ where: { tokenHash } });
+    if (!invite || invite.tenantId !== c.tenantId) fail(410, "INVITE_INVALID", "Приглашение недействительно");
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"learner-recipient:" + invite.tenantId + ":" + invite.recipientId},0))`;
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"learner-email:" + invite.email},0))`;
+    const current = await tx.learnerInvite.findUniqueOrThrow({ where: { tokenHash } });
+    const user = await tx.user.findFirst({ where: { id: c.userId, tenantId: c.tenantId, email: current.email, active: true, role: "LEARNER" } });
+    if (!user) fail(403, "INVITE_ACCOUNT_MISMATCH", "Войдите под учётной записью, указанной в приглашении");
+    const profile = await tx.learnerProfile.findFirst({ where: { tenantId: c.tenantId, OR: [{ recipientId: current.recipientId }, { userId: user.id }] } });
+    if (current.usedAt && profile?.recipientId === current.recipientId && profile.userId === user.id) return;
+    if (current.usedAt || current.revokedAt || current.expiresAt <= new Date()) fail(410, "INVITE_INVALID", "Приглашение недействительно");
+    if (profile) fail(409, "INVITE_ACCOUNT_CONFLICT", "Учётная запись уже связана с карточкой. Обратитесь в центр для выбора существующего слушателя");
+    if (!(await tx.recipient.findFirst({ where: { id: current.recipientId, tenantId: c.tenantId, archived: false } })) ||
+      !(await tx.enrollment.findFirst({ where: { tenantId: c.tenantId, recipientId: current.recipientId, status: { not: "CANCELLED" }, OR: [{ dueAt: null }, { dueAt: { gt: new Date() } }] } })))
+      fail(409, "INVITE_ASSIGNMENT_REQUIRED", "Назначение недоступно. Обратитесь в центр");
+    await tx.learnerProfile.create({ data: { tenantId: c.tenantId, userId: user.id, recipientId: current.recipientId, consentVersion, consentAt: new Date() } });
+    await tx.enrollment.updateMany({ where: { tenantId: c.tenantId, recipientId: current.recipientId, learnerUserId: null }, data: { learnerUserId: user.id } });
+    await tx.learnerInvite.update({ where: { id: current.id }, data: { usedAt: new Date() } });
+    await audit(tx, c, "LMS_INVITE_ACCEPTED", current.id, { consentVersion });
+  });
+  return { ok: true, redirect: "/learn" };
+}
 export async function createLearnerRecovery(c: Context, input: unknown) {
   const { userId } = parse(
     z.object({ userId: z.string().uuid() }).strict(),
@@ -351,7 +379,7 @@ export async function createLearnerRecovery(c: Context, input: unknown) {
     });
     await audit(tx, c, "LMS_RECOVERY_CREATED", userId);
   });
-  return { token, url: `/learn/recovery?token=${token}` };
+  return { token, url: `/learn/recovery#token=${token}` };
 }
 export async function recoverLearner(req: DemoRequest, input: unknown) {
   rateLimit(`learner-recovery:${req.ip}`, 10);
@@ -428,6 +456,21 @@ export async function recoverLearner(req: DemoRequest, input: unknown) {
 }
 @Controller()
 export class LearnerIdentityController {
+  @Get("learn/registration") registrationAvailability() {
+    return availableRegistrationCenters();
+  }
+  @Get("lms/registration-policy") registrationPolicy(@Req() req: DemoRequest) {
+    return getRegistrationPolicy(requireCapability(req, "center:manage"));
+  }
+  @Patch("lms/registration-policy") updateRegistrationPolicy(@Req() req: DemoRequest, @Body() body: unknown) {
+    return saveRegistrationPolicy(requireCapability(req, "center:manage"), body);
+  }
+  @Post("lms/learner-access/query") access(@Req() req: DemoRequest, @Body() body: unknown) {
+    return learnerAccess(requireCapability(req, "lms:manage"), body);
+  }
+  @Post("learn/invite/accept") accept(@Req() req: DemoRequest, @Body() body: unknown) {
+    return acceptLearnerInvite(requireCapability(req, "lms:learn"), body);
+  }
   @Post("learn/register") register(
     @Req() req: DemoRequest,
     @Res({ passthrough: true }) res: Response,

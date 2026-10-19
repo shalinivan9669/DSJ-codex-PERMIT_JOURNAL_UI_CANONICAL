@@ -47,7 +47,9 @@ export type RenderCommand =
   | "health"
   | "preflight"
   | "control-sheet"
-  | "regulatory-list";
+  | "regulatory-list"
+  | "lms-report"
+  | "template-validate";
 export const MIME: Record<string, string> = {
   DOCX: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   PDF: "application/pdf",
@@ -203,9 +205,13 @@ export async function runRender(
   const extension =
     command === "photo" || command === "qr"
       ? "png"
+      : command === "template-validate"
+        ? "docx"
       : command === "import"
         ? "json"
-        : command === "control-sheet" || command === "regulatory-list"
+        : command === "control-sheet" ||
+            command === "regulatory-list" ||
+            command === "lms-report"
           ? "pdf"
           : command;
   const output = join(work, "output." + extension);
@@ -312,7 +318,9 @@ export async function runRender(
       throw new Error("RENDER_FILE_LIMIT");
     return { buffer: await readFile(output), metadata };
   } finally {
-    await rm(work, { recursive: true, force: true });
+    // Windows releases converter handles shortly after tree termination.
+    // Bounded retries avoid replacing the render/abort result with transient EBUSY.
+    await rm(work, { recursive: true, force: true, maxRetries: 6, retryDelay: 200 });
   }
 }
 

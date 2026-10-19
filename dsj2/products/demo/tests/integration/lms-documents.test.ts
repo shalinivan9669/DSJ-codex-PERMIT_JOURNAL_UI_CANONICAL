@@ -112,7 +112,7 @@ test(
           await saveAnswers(learner.context, attempt.id, {
             sequence: 1,
             answers: Object.fromEntries(
-              Array.from({ length: 10 }, (_, i) => [`q-${i}`, ["a"]]),
+              attempt.questions.map((question) => [question.id, ["a"]]),
             ),
           });
           const completed = await submitAttempt(learner.context, attempt.id);
@@ -147,6 +147,9 @@ test(
             assert.deepEqual(blocked.errors, [
               {
                 resultId,
+                code: "TEMPLATE_NOT_APPROVED",
+                params: {},
+                correlationId: c.correlationId,
                 message: "Подтвердите формы документов в настройках центра",
               },
             ]);
@@ -272,7 +275,7 @@ test(
     await saveAnswers(learner.context, attempt.id, {
       sequence: 1,
       answers: Object.fromEntries(
-        Array.from({ length: 10 }, (_, i) => [`q-${i}`, ["a"]]),
+        attempt.questions.map((question) => [question.id, ["a"]]),
       ),
     });
     const completed = await submitAttempt(learner.context, attempt.id);
@@ -351,7 +354,7 @@ test(
             reason: "Синтетическая приёмка",
             expectedProposalHash: proposal.proposalHash,
           });
-          await advanceLmsDocuments();
+          await advanceLmsDocuments(30, c.tenantId);
           const link = await db.lmsDocumentLink.findUniqueOrThrow({
             where: { id: linkId },
           });

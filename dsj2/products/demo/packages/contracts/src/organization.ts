@@ -120,6 +120,7 @@ export const customerSchema = z
     bin: z.string().max(50).default(""),
     addressRu: organizationText,
     addressKz: organizationText,
+    city: z.string().trim().max(200).nullable().optional(),
     archived: z.boolean().default(false),
   })
   .strict()
