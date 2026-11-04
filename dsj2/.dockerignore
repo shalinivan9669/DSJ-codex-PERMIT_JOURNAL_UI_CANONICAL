@@ -14,7 +14,9 @@ coverage
 **/.turbo
 .git
 .env
-.env.local
+.env.*
+**/.env
+**/.env.*
 *.log
 tmp
 .runlogs

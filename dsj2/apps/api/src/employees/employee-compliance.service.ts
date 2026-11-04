@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
@@ -377,9 +378,33 @@ export class EmployeeComplianceService {
       },
     ] as const;
 
-    await Promise.all(
-      definitions.map((definition) =>
-        this.prisma.complianceDocumentType.upsert({
+    const initialize = () => this.prisma.$transaction(async (tx) => {
+      const company = await tx.company.findUnique({ where: { id: organizationId } });
+      if (!company) {
+        throw new NotFoundException("Company not found.");
+      }
+
+      const existing = await tx.organization.findUnique({ where: { id: organizationId } });
+      if (existing && existing.legacyCompanyId !== company.id) {
+        throw new ConflictException("Organization does not match the employee's company.");
+      }
+      if (!existing) {
+        // Create only. Never upsert/update a colliding organization owned by another company.
+        await tx.organization.create({
+          data: {
+            id: company.id,
+            legacyCompanyId: company.id,
+            code: company.bin ? `BIN-${company.bin}` : `LEGACY-${company.id.toUpperCase()}`,
+            name: company.name,
+            bin: company.bin,
+            timezone: company.timezone,
+            isActive: company.isActive,
+          },
+        });
+      }
+
+      for (const definition of definitions) {
+        await tx.complianceDocumentType.upsert({
           where: {
             organizationId_code: {
               organizationId,
@@ -402,9 +427,21 @@ export class EmployeeComplianceService {
             requiresVerification: true,
             isActive: true,
           },
-        }),
-      ),
-    );
+        });
+      }
+    });
+
+    try {
+      await initialize();
+    } catch (error) {
+      // Another request may have created the same organization concurrently.
+      // Retry in a new transaction; an unrelated uniqueness collision still fails.
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        await initialize();
+        return;
+      }
+      throw error;
+    }
   }
 
   private mapBriefingInstructionDocument(
@@ -508,9 +545,9 @@ export class EmployeeComplianceService {
     }
   }
 
-  private async findEmployeeOrThrow(employeeId: string) {
-    const employee = await this.prisma.employee.findUnique({
-      where: { id: employeeId },
+  private async findEmployeeOrThrow(employeeId: string, companyId: string) {
+    const employee = await this.prisma.employee.findFirst({
+      where: { id: employeeId, companyId },
       include: {
         department: true,
         site: true,
@@ -581,8 +618,16 @@ export class EmployeeComplianceService {
     return activeMatrix;
   }
 
-  private async buildAdmissionState(employeeId: string) {
-    const employee = await this.findEmployeeOrThrow(employeeId);
+  private async buildAdmissionState(user: AuthenticatedUser, employeeId: string) {
+    const scope = await this.prisma.employee.findUnique({
+      where: { id: employeeId },
+      select: { companyId: true },
+    });
+    if (!scope) {
+      throw new NotFoundException("Employee not found.");
+    }
+    getCompanyScope(user, scope.companyId);
+    const employee = await this.findEmployeeOrThrow(employeeId, scope.companyId);
     const [documents, protocols, latestEvaluation, matrix, briefings] = await Promise.all([
       this.prisma.employeeDocument.findMany({
         where: { employeeId },
@@ -934,7 +979,7 @@ export class EmployeeComplianceService {
   }
 
   async getCard(user: AuthenticatedUser, employeeId: string) {
-    const state = await this.buildAdmissionState(employeeId);
+    const state = await this.buildAdmissionState(user, employeeId);
     getCompanyScope(user, state.employee.companyId);
     const responsibilityAppointments = await this.prisma.responsibilityAppointment.findMany({
       where: {
@@ -1093,7 +1138,7 @@ export class EmployeeComplianceService {
   }
 
   async recalculate(user: AuthenticatedUser, employeeId: string) {
-    const state = await this.buildAdmissionState(employeeId);
+    const state = await this.buildAdmissionState(user, employeeId);
     getCompanyScope(user, state.employee.companyId);
 
     const nextReviewAt =

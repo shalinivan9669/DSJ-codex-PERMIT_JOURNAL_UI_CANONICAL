@@ -2,6 +2,10 @@
 
 This repository deploys `apps/web` to Vercel and `apps/api` plus `apps/worker` to Railway. The current package scripts are the source of truth. Do not use old docs that mention `build:web:deploy` or `build:vercel`; those scripts are not present in the current `package.json` files.
 
+**Database prerequisite:** the checked-in migration history is incomplete and `prisma migrate deploy` fails on a new empty PostgreSQL database. Do not reset an existing database, mark historical migrations as applied, or bypass this failure. See `docs/migration-recovery-notes.md`; use a separate, tested bootstrap strategy for a new database only when it is ready and explicitly verified.
+
+The Git repository contains `dsj2/` below its root. Platform root directories must therefore include the `dsj2/` prefix when the platform connects directly to the Git repository.
+
 ## Current Script Reality
 
 Run from the `dsj2` repository root unless a platform command explicitly starts inside an app directory.
@@ -20,8 +24,8 @@ pnpm --filter @dsj/worker build
 Current root placeholders:
 
 - `pnpm lint` intentionally exits with a placeholder message.
-- `pnpm test` intentionally exits with a placeholder message.
-- `pnpm verify` is the current compile/build gate and runs database generation, typecheck, and build.
+- `pnpm test` runs database generation and the workspace tests.
+- `pnpm verify` runs the stability checks and workspace tests.
 
 ## Local Services
 
@@ -50,7 +54,7 @@ NCALayer is optional for local development. When enabled, the signer machine mus
 
 Recommended project:
 
-- App: `apps/web`
+- App root: `dsj2/apps/web` relative to the Git repository root.
 - Framework: Next.js
 - Install command: `corepack enable && pnpm install --frozen-lockfile`
 - Build command:
@@ -59,7 +63,7 @@ Recommended project:
 cd ../.. && pnpm --filter @dsj/database db:generate && pnpm --filter @dsj/types build && pnpm --filter @dsj/ui build && pnpm --filter @dsj/utils build && pnpm --filter @dsj/web build
 ```
 
-If the Vercel project is configured from the repository root instead of `apps/web`, use:
+If the Vercel project is configured from the `dsj2` workspace root instead of `apps/web`, use:
 
 ```bash
 pnpm --filter @dsj/database db:generate && pnpm --filter @dsj/types build && pnpm --filter @dsj/ui build && pnpm --filter @dsj/utils build && pnpm --filter @dsj/web build
@@ -84,9 +88,9 @@ Notes:
 
 Recommended service:
 
-- App: `apps/api`
-- Build command: `corepack enable && pnpm install --frozen-lockfile && pnpm build:railway`
-- Start command: `pnpm start:railway`
+- Git root directory: `dsj2`.
+- Use the workspace `Dockerfile`, which supplies Python document-generation dependencies and builds the API and worker. Its default command runs `pnpm --filter @dsj/api start:railway`.
+- The default command fails closed if `db:deploy` fails. It is not a solution for an empty database with the incomplete historical migration chain.
 
 `apps/api/package.json` maps:
 
@@ -106,16 +110,17 @@ JWT_SECRET=...
 JWT_EXPIRES_IN=8h
 COOKIE_NAME=dsj_session
 FIELD_ENCRYPTION_KEY=...
+FIELD_HASH_PEPPER=...
 ```
 
-Current signing environment:
+`JWT_SECRET`, `FIELD_ENCRYPTION_KEY`, and `FIELD_HASH_PEPPER` must each be at least 32 characters and must not be placeholders. Preserve the existing encryption key and hash pepper when connecting to an existing database. Configure signing explicitly only after its deployment path is validated; disable mock and test signing in production:
 
 ```env
-SIGNING_PROVIDER=NCALAYER
-NCALAYER_BRIDGE_URL=http://127.0.0.1:13580
-NCALAYER_BRIDGE_TIMEOUT_MS=15000
 SIGNING_TEST_MODE=false
+SIGNING_MOCK_ENABLED=false
+SIGNING_REQUIRE_LEGAL_PROVIDER_IN_PROD=true
 ALLOW_PUBLIC_INVITE_MOCK_SIGNING=false
+EGOV_MOBILE_QR_ENABLED=false
 ```
 
 Future legal signing environment is documented in `docs/signing.md`. Do not enable eGov QR in production until provider credentials, callback validation, evidence storage, and production mock refusal are implemented.
@@ -124,16 +129,15 @@ Runtime notes:
 
 - API uses the `/v1` global prefix.
 - No dedicated `/v1/health` endpoint is present at this Phase 0 checkpoint.
-- `CORS_ORIGIN` is currently a single origin string. Production, preview, and AB test origins need explicit handling before broad preview deployments.
+- `CORS_ORIGIN` accepts a comma-separated list of allowed origins. Only add intended origins.
 - The Dockerfile installs Python runtime dependencies from `scripts/requirements-runtime.txt` for document generation.
+- A bridge URL using `localhost` from a server-side Vercel function points to that function, not the signer's computer. The real three-signature NCALayer flow has not been verified in this deployment.
 
 ## Railway Worker
 
 Recommended service:
 
-- App: `apps/worker`
-- Build command: `corepack enable && pnpm install --frozen-lockfile && pnpm build:railway`
-- Start command: `pnpm start:railway`
+- Use the same workspace Dockerfile with root directory `dsj2` and override the start command with `pnpm --filter @dsj/worker start:railway`.
 
 `apps/worker/package.json` maps:
 
@@ -153,18 +157,21 @@ The current worker handles:
 
 - `dsj-compliance`
 - `dsj-notifications`
+- `dsj-signing-expiration`
+- `dsj-signing-callback-reconcile`
+- `dsj-work-permit-expiration`
 
-Planned signing queues are documented in `docs/signing.md`; they are not implemented yet.
+Use an isolated Redis instance with a private `redis://` URL. The worker currently does not configure TLS for `rediss://` URLs. Start the worker only after the correct database schema is ready. Email notification transport is not configured.
 
 ## Production Checklist
 
 - PostgreSQL and Redis are provisioned per environment.
 - `DATABASE_URL` points to the intended production or AB test database.
-- API service starts successfully and applies Prisma migrations through `pnpm start:railway`.
+- API service starts only after a verified migration strategy has established the correct database schema.
 - Vercel `APP_URL` matches the public frontend URL.
 - Railway API `APP_URL` and `CORS_ORIGIN` match the frontend URL.
 - Vercel `API_URL` points to the Railway API URL.
-- `JWT_SECRET` and `FIELD_ENCRYPTION_KEY` are real secrets and are not shared with local or AB test deployments.
+- `JWT_SECRET`, `FIELD_ENCRYPTION_KEY`, and `FIELD_HASH_PEPPER` are strong secrets appropriate for the database and are not exposed to the client.
 - Demo seed data is not loaded into production automatically.
 - Mock signing remains disabled in production legal flows.
 - Worker connects to Redis without errors.

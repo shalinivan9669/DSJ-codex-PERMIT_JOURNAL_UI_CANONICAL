@@ -272,6 +272,10 @@ model User {
   company            Company?         @relation(fields: [companyId], references: [id], onDelete: SetNull)
   department         Department?      @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   site               Site?            @relation(fields: [siteId], references: [id], onDelete: SetNull)
+  protocolsCreated Protocol[] @relation("ProtocolCreator")
+  protocolsUpdated Protocol[] @relation("ProtocolUpdater")
+  responsibilityOrdersCreated ResponsibilityOrder[] @relation("ResponsibilityOrderCreator")
+  responsibilityOrdersUpdated ResponsibilityOrder[] @relation("ResponsibilityOrderUpdater")
   employee           Employee?
   instructedBriefing BriefingRecord[] @relation("InstructorBriefings")
   assignedTrainingAssignments TrainingAssignment[] @relation("TrainingAssigner")
@@ -368,6 +372,7 @@ model Employee {
 
   @@unique([companyId, iinHash])
   @@unique([companyId, employeeNumber])
+  @@index([positionId])
   @@index([companyId, fullName])
   @@index([companyId, status])
 }
@@ -448,6 +453,7 @@ model BriefingRecord {
   auditLogs        AuditLog[]      @relation("BriefingAuditLogs")
 
   @@unique([companyId, documentNumber])
+  @@index([briefingBatchId])
   @@index([companyId, status, briefingDate])
   @@index([companyId, employeeStatus, completionDueAt])
   @@index([companyId, briefingType, briefingDate])
@@ -792,6 +798,7 @@ model Signature {
 
   @@index([companyId, briefingRecordId])
   @@index([organizationId, documentEnvelopeId])
+  @@index([briefingJournalEntryId])
   @@index([signingSessionId])
 }
 
@@ -2368,6 +2375,8 @@ model Protocol {
   archiveRecord   ArchiveRecord? @relation("ProtocolArchiveRecord", fields: [archiveRecordId], references: [id], onDelete: SetNull)
   retentionPolicy RetentionPolicy? @relation(fields: [retentionPolicyId], references: [id], onDelete: SetNull)
   replacesProtocol Protocol? @relation("ProtocolReplacement", fields: [replacesProtocolId], references: [id], onDelete: SetNull)
+  createdByUser User? @relation("ProtocolCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  updatedByUser User? @relation("ProtocolUpdater", fields: [updatedByUserId], references: [id], onDelete: SetNull)
   replacements    Protocol[] @relation("ProtocolReplacement")
   employees       ProtocolEmployee[]
   commissionMembers ProtocolCommissionMember[]
@@ -2415,6 +2424,8 @@ model ResponsibilityOrder {
   archiveRecord   ArchiveRecord? @relation("ResponsibilityOrderArchiveRecord", fields: [archiveRecordId], references: [id], onDelete: SetNull)
   retentionPolicy RetentionPolicy? @relation(fields: [retentionPolicyId], references: [id], onDelete: SetNull)
   replacesOrder   ResponsibilityOrder? @relation("ResponsibilityOrderReplacement", fields: [replacesOrderId], references: [id], onDelete: SetNull)
+  createdByUser User? @relation("ResponsibilityOrderCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  updatedByUser User? @relation("ResponsibilityOrderUpdater", fields: [updatedByUserId], references: [id], onDelete: SetNull)
   replacements    ResponsibilityOrder[] @relation("ResponsibilityOrderReplacement")
   appointments    ResponsibilityAppointment[]
 

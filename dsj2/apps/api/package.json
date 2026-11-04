@@ -8,6 +8,7 @@
     "dev": "node --watch --require reflect-metadata --require ts-node/register --require tsconfig-paths/register src/main.ts",
     "start": "node dist/apps/api/src/main.js",
     "start:railway": "corepack pnpm --dir ../.. db:deploy && node dist/apps/api/src/main.js",
+    "start:fresh": "corepack pnpm --dir ../.. --filter @dsj/database db:deploy:fresh && node dist/apps/api/src/main.js",
     "test": "tsx --test src/**/*.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

@@ -11,10 +11,12 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
     "db:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
+    "db:deploy:fresh": "node prisma/deploy-fresh.cjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "db:generate": "prisma generate --schema prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema prisma/schema.prisma",
     "db:seed": "tsx prisma/seed.ts",
+    "db:bootstrap-super-admin": "tsx prisma/bootstrap-super-admin.ts",
     "db:seed:permit-demo": "tsx prisma/seed-permit-demo.ts",
     "test": "tsx --test prisma/**/*.test.ts"
   },
