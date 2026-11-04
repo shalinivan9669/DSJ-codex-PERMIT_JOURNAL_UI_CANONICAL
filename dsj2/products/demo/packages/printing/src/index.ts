@@ -12,7 +12,15 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import {
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
+  toNamespacedPath,
+} from "node:path";
 
 export const RENDERER_VERSION = "demo-ooxml-12/libreoffice-26.2.6.3";
 export const PRODUCT_ROOT = resolve(__dirname, "../../..");
@@ -40,6 +48,7 @@ export type RenderCommand =
   | "photo"
   | "qr"
   | "import"
+  | "import-template"
   | "xlsx"
   | "zip"
   | "merge-pdf"
@@ -207,13 +216,15 @@ export async function runRender(
       ? "png"
       : command === "template-validate"
         ? "docx"
-      : command === "import"
-        ? "json"
-        : command === "control-sheet" ||
-            command === "regulatory-list" ||
-            command === "lms-report"
-          ? "pdf"
-          : command;
+        : command === "import"
+          ? "json"
+          : command === "import-template"
+            ? "xlsx"
+            : command === "control-sheet" ||
+                command === "regulatory-list" ||
+                command === "lms-report"
+              ? "pdf"
+              : command;
   const output = join(work, "output." + extension);
   const input = { ...(payload as Record<string, unknown>) };
   if (options.inputBytes) {
@@ -248,7 +259,8 @@ export async function runRender(
               ...process.env,
               PYTHONUTF8: "1",
               PYTHONDONTWRITEBYTECODE: "1",
-              DEMO_ARTIFACT_ROOT: new ArtifactStore().root,
+              // Python otherwise reports long Windows artifact paths as missing.
+              DEMO_ARTIFACT_ROOT: toNamespacedPath(new ArtifactStore().root),
             },
           },
         );
@@ -320,7 +332,12 @@ export async function runRender(
   } finally {
     // Windows releases converter handles shortly after tree termination.
     // Bounded retries avoid replacing the render/abort result with transient EBUSY.
-    await rm(work, { recursive: true, force: true, maxRetries: 6, retryDelay: 200 });
+    await rm(work, {
+      recursive: true,
+      force: true,
+      maxRetries: 6,
+      retryDelay: 200,
+    });
   }
 }
 
@@ -362,6 +379,10 @@ export async function parseImport(
   );
   return JSON.parse(result.buffer.toString("utf8")) as Record<string, unknown>;
 }
+export async function importTemplate() {
+  return runRender("import-template", {});
+}
+
 export async function exportRegistry(
   items: unknown[],
   columns?: { field: string; title: string }[],

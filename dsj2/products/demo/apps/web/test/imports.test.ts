@@ -467,3 +467,21 @@ test("imported waiting and explicit enum outcomes never inherit a positive defau
     assert.equal(a.fieldOrigins?.resultKz, "IMPORTED");
   }
 });
+
+test("import carries a previewed photo without inventing a training result", () => {
+  const preview: ImportPreview = {
+    importId: "photos",
+    columns: ["ФИО RU"],
+    rows: [],
+    total: 1,
+  };
+  const row = {
+    sourceRow: 2,
+    values: ["Сотрудник Фото"],
+    photoAssetId: "asset-photo",
+  };
+  const mapped = mapImportRow(preview, row, inferMapping(preview.columns), "");
+  assert.equal(mapped.photoAssetId, "asset-photo");
+  assert.equal(mapped.sourceRow, 2);
+  assert.deepEqual(mapped.assignments, []);
+});

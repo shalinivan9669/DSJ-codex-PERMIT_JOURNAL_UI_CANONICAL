@@ -56,7 +56,18 @@ export async function createApprovalFixture(admin: Context) {
           position: index ? "Член комиссии" : "Председатель",
         }));
   const headName = profile.headName?.trim() || director.displayName;
-  await saveProfile(admin, { ...profile, commission, headName });
+  await saveProfile(admin, {
+    ...profile,
+    commission,
+    headName,
+    people: [
+      {
+        name: commission[1].name,
+        position: "Синтетический преподаватель",
+        role: "TEACHER",
+      },
+    ],
+  });
   await saveSignatory(admin, {
     userId: director.id,
     displayName: headName,
@@ -76,6 +87,13 @@ export async function createApprovalFixture(admin: Context) {
       role: index ? "MEMBER" : "CHAIR",
       iin: `00000000000${index + 2}`,
     });
+    if (index === 1)
+      await saveSignatory(admin, {
+        userId: member.id,
+        displayName: member.displayName,
+        role: "TEACHER",
+        iin: `00000000000${index + 2}`,
+      });
   }
   const oldPort = process.env.PORT;
   process.env.PORT = "0";

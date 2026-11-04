@@ -26,6 +26,7 @@ import {
 } from "./core";
 import { login, logout, changePassword, cookies } from "./auth";
 import { registerCenter } from "./tenant-provisioning";
+import { printingOverview } from "./printing-overview";
 import { auditDetails } from "./audit-view";
 import {
   context,
@@ -331,6 +332,9 @@ export class DemoController {
     @Query() query: Record<string, unknown>,
   ) {
     return requests.listRequests(ctx(req), query);
+  }
+  @Get("print-requests/overview") printingOverview(@Req() req: DemoRequest) {
+    return printingOverview(ctx(req));
   }
   @Post("translations/suggest") suggestTranslations(
     @Req() req: DemoRequest,
@@ -735,18 +739,16 @@ export class DemoController {
       return result;
     });
   }
-  @Get("imports/template") importTemplate(
+  @Get("imports/template") async importTemplate(
     @Req() req: DemoRequest,
     @Res() res: Response,
   ) {
     ctx(req);
+    const { importTemplate, MIME } = await import("@demo/printing");
     sendFile(res, {
-      buffer: Buffer.from(
-        "\uFEFFТабельный номер,Категория сотрудника,ФИО RU,ФИО KZ,Должность RU,Должность KZ,Место работы RU,Место работы KZ,ФИО EN,Должность EN,Место работы EN\r\n",
-        "utf8",
-      ),
-      mimeType: "text/csv; charset=utf-8",
-      fileName: "DEMO-import.csv",
+      buffer: (await importTemplate()).buffer,
+      mimeType: MIME.XLSX,
+      fileName: "korochki-import.xlsx",
     });
   }
   @Get("settings/profile") async profile(@Req() req: DemoRequest) {
@@ -797,11 +799,29 @@ export class DemoController {
         );
       try {
         await files.store.read(template.storageKey, template.checksum);
-        const contract = template.contract as { sourceVersionId?: string; preview?: { docx?: { storageKey: string; sha256: string }; pdf?: { storageKey: string; sha256: string }; sampleOnly?: boolean } };
+        const contract = template.contract as {
+          sourceVersionId?: string;
+          preview?: {
+            docx?: { storageKey: string; sha256: string };
+            pdf?: { storageKey: string; sha256: string };
+            sampleOnly?: boolean;
+          };
+        };
         if (contract.sourceVersionId) {
-          if (!contract.preview?.docx || !contract.preview.pdf || !contract.preview.sampleOnly) throw new Error("PREVIEW_REQUIRED");
-          await files.store.read(contract.preview.docx.storageKey, contract.preview.docx.sha256);
-          await files.store.read(contract.preview.pdf.storageKey, contract.preview.pdf.sha256);
+          if (
+            !contract.preview?.docx ||
+            !contract.preview.pdf ||
+            !contract.preview.sampleOnly
+          )
+            throw new Error("PREVIEW_REQUIRED");
+          await files.store.read(
+            contract.preview.docx.storageKey,
+            contract.preview.docx.sha256,
+          );
+          await files.store.read(
+            contract.preview.pdf.storageKey,
+            contract.preview.pdf.sha256,
+          );
         }
       } catch {
         fail(
@@ -848,12 +868,14 @@ export class DemoController {
     });
     return {
       items: items.map((u) => ({ ...u, disabled: !u.active })),
-      canBootstrapSuperAdmin: ["ADMIN", "DIRECTOR"].includes(c.role) &&
+      canBootstrapSuperAdmin:
+        ["ADMIN", "DIRECTOR"].includes(c.role) &&
         !items.some((u) => u.active && u.role === "SUPER_ADMIN"),
     };
   }
   @Post("users/bootstrap-super-admin") bootstrapSuperAdmin(
-    @Req() req: DemoRequest, @Body() body: unknown,
+    @Req() req: DemoRequest,
+    @Body() body: unknown,
   ) {
     return bootstrapSuperAdmin(requireCapability(req, "users:manage"), body);
   }
@@ -883,14 +905,33 @@ export class DemoController {
       db.auditEvent.count({ where: { tenantId: c.tenantId } }),
     ]);
     const actors = await db.user.findMany({
-      where: { tenantId: c.tenantId, id: { in: [...new Set(items.flatMap((item) => item.actorId ? [item.actorId] : []))] } },
+      where: {
+        tenantId: c.tenantId,
+        id: {
+          in: [
+            ...new Set(
+              items.flatMap((item) => (item.actorId ? [item.actorId] : [])),
+            ),
+          ],
+        },
+      },
       select: { id: true, displayName: true },
     });
-    return { items: items.map((item) => ({
-      id: item.id, createdAt: item.createdAt, action: item.action,
-      actorId: item.actorId, entityId: item.entityId,
-      actorDisplayName: actors.find((actor) => actor.id === item.actorId)?.displayName || null,
-      ...auditDetails(item.metadata),
-    })), total, page: number, pageSize: 50 };
+    return {
+      items: items.map((item) => ({
+        id: item.id,
+        createdAt: item.createdAt,
+        action: item.action,
+        actorId: item.actorId,
+        entityId: item.entityId,
+        actorDisplayName:
+          actors.find((actor) => actor.id === item.actorId)?.displayName ||
+          null,
+        ...auditDetails(item.metadata),
+      })),
+      total,
+      page: number,
+      pageSize: 50,
+    };
   }
 }

@@ -188,7 +188,7 @@ export function ProfileForm({
         )}
       </div>
       <p className="muted">
-        {tr("Название DEMO относится к программе. В документы попадают реквизиты вашей организации.")}</p>
+        {tr("В документы попадают реквизиты вашей организации.")}</p>
       {error && <Notice>{error}</Notice>}
       {saved && (
         <Notice kind="success">

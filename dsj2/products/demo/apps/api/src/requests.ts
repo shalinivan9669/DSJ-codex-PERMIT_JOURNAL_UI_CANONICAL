@@ -1673,6 +1673,16 @@ async function checkLayout(
         "PRINT_PREFLIGHT_BUSY",
         "Проверка макетов занята. Повторите оформление через несколько секунд; номера не выделены",
       );
+    console.error(
+      JSON.stringify({
+        level: "error",
+        code: "PRINT_PREFLIGHT_FAILED",
+        reason:
+          error instanceof Error && /^[A-Z_]{1,80}$/.test(error.message)
+            ? error.message
+            : "RENDER_FAILED",
+      }),
+    );
     fail(
       503,
       "PRINT_PREFLIGHT_UNAVAILABLE",

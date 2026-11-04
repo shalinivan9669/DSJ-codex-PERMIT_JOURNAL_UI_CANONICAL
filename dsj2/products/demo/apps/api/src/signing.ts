@@ -24,7 +24,7 @@ import { lmsTemplateTypes } from "./lms/document-metadata";
 import { assertCommissionAccess } from "./lms/commission-access";
 
 type RequiredSigner = {
-  kind: "DIRECTOR" | "CHAIR" | "MEMBER";
+  kind: "DIRECTOR" | "CHAIR" | "MEMBER" | "TEACHER";
   displayName: string;
   bindingId: string | null;
   iin: string | null;
@@ -32,12 +32,14 @@ type RequiredSigner = {
   userId: string | null;
 };
 type SigningPolicy = {
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   signers: RequiredSigner[];
   commission: RequiredSigner[];
   head?: RequiredSigner;
   eventHead?: Record<string, RequiredSigner>;
   eventCommission?: Record<string, RequiredSigner[]>;
+  teacher?: RequiredSigner;
+  eventTeacher?: Record<string, RequiredSigner>;
   assignmentEvents?: Record<string, string>;
   lmsSigners?: Record<string, RequiredSigner[]>;
   lmsLegalForms?: Record<
@@ -54,6 +56,28 @@ const lmsTemplateIds = new Set([
   "lms-certificate",
   "lms-credential",
 ]);
+const threePartyTemplates = new Set([
+  "biot-worker-card",
+  "biot-itr-certificate",
+  "biot-protocol",
+  "biot-itr-protocol",
+  "pb-card",
+  "pb-protocol",
+  "ptm-card",
+  "ptm-protocol",
+]);
+function paperSigningAllowed(
+  policy: SigningPolicy,
+  templateId: string,
+  assignmentId?: string | null,
+) {
+  return (
+    (policy.version === 3 && threePartyTemplates.has(templateId)) ||
+    (lmsTemplateIds.has(templateId) &&
+      !!assignmentId &&
+      policy.lmsLegalForms?.[assignmentId] === "PAPER_ORIGINAL")
+  );
+}
 const lmsSigningSchema = z.object({
   resultId: z.string().uuid(),
   profileVersionId: z.string().uuid(),
@@ -144,10 +168,13 @@ export async function attestPaperSignatures(
         where: { tenantId: c.tenantId, issuanceId: document.issuanceId },
       });
       const policy = workflow.requiredSigners as unknown as SigningPolicy;
+      const manualPaper =
+        policy.version === 3 && threePartyTemplates.has(document.templateId);
+      const action = manualPaper
+        ? "PRINT_PAPER_SIGNATURE_ATTESTED"
+        : "LMS_PAPER_SIGNATURE_ATTESTED";
       if (
-        !lmsTemplateIds.has(document.templateId) ||
-        !document.assignmentId ||
-        policy.lmsLegalForms?.[document.assignmentId] !== "PAPER_ORIGINAL"
+        !paperSigningAllowed(policy, document.templateId, document.assignmentId)
       )
         fail(
           409,
@@ -158,50 +185,59 @@ export async function attestPaperSignatures(
         policy,
         document.templateId,
         document.assignmentId,
+        document.groupEventId,
       ).map((signer) => signer.displayName);
-      const candidates = await tx.lmsDocumentLink.findMany({
-        where: {
-          tenantId: c.tenantId,
-          requestId,
-          issuanceId: document.issuanceId,
-          documentType:
-            lmsTemplateTypes[
-              document.templateId as keyof typeof lmsTemplateTypes
-            ],
-          legalForm: "PAPER_ORIGINAL",
-        },
-      });
-      const link = candidates.find(
-        (candidate) =>
-          document.assignmentId ===
-          `${candidate.resultId}-${candidate.documentType}`,
-      );
-      const linkedResult =
-        link && document.rowId
-          ? await tx.verifiedExamResult.findFirst({
-              where: {
-                id: link.resultId,
-                tenantId: c.tenantId,
-                recipientId: document.rowId,
-              },
-            })
-          : null;
-      if (
-        !link ||
-        !linkedResult ||
-        (await tx.lmsResultEvent.findFirst({
+      if (manualPaper && data.signerNames.length !== 3)
+        fail(
+          422,
+          "PAPER_SIGNERS_REQUIRED",
+          "Укажите ФИО директора, председателя и преподавателя — по одному на строку. Если роли совмещены, повторите ФИО",
+        );
+      if (!manualPaper) {
+        const candidates = await tx.lmsDocumentLink.findMany({
           where: {
             tenantId: c.tenantId,
-            resultId: link.resultId,
-            kind: { in: ["VOIDED", "SUPERSEDED"] },
+            requestId,
+            issuanceId: document.issuanceId,
+            documentType:
+              lmsTemplateTypes[
+                document.templateId as keyof typeof lmsTemplateTypes
+              ],
+            legalForm: "PAPER_ORIGINAL",
           },
-        }))
-      )
-        fail(
-          409,
-          "RESULT_INELIGIBLE",
-          "Аннулированный или исправленный результат недоступен для подписания",
+        });
+        const link = candidates.find(
+          (candidate) =>
+            document.assignmentId ===
+            `${candidate.resultId}-${candidate.documentType}`,
         );
+        const linkedResult =
+          link && document.rowId
+            ? await tx.verifiedExamResult.findFirst({
+                where: {
+                  id: link.resultId,
+                  tenantId: c.tenantId,
+                  recipientId: document.rowId,
+                },
+              })
+            : null;
+        if (
+          !link ||
+          !linkedResult ||
+          (await tx.lmsResultEvent.findFirst({
+            where: {
+              tenantId: c.tenantId,
+              resultId: link.resultId,
+              kind: { in: ["VOIDED", "SUPERSEDED"] },
+            },
+          }))
+        )
+          fail(
+            409,
+            "RESULT_INELIGIBLE",
+            "Аннулированный или исправленный результат недоступен для подписания",
+          );
+      }
       if (data.signedAt < document.documentDate)
         fail(
           422,
@@ -228,7 +264,7 @@ export async function attestPaperSignatures(
         where: {
           tenantId: c.tenantId,
           entityId: document.id,
-          action: "LMS_PAPER_SIGNATURE_ATTESTED",
+          action,
         },
       });
       if (previous) {
@@ -253,13 +289,16 @@ export async function attestPaperSignatures(
         });
         continue;
       }
-      await audit(tx, c, "LMS_PAPER_SIGNATURE_ATTESTED", document.id, {
+      await audit(tx, c, action, document.id, {
         documentId: document.id,
         issuanceId: document.issuanceId,
         artifactSha256: artifact.sha256,
         signedAt: data.signedAt,
         signerNames: data.signerNames,
         requiredSignerNames: requiredSigners,
+        ...(manualPaper
+          ? { signerRoles: ["DIRECTOR", "CHAIR", "TEACHER"] }
+          : {}),
         reason: data.reason,
         category: "OPERATOR_ATTESTED",
         allRequiredSignaturesPresent: true,
@@ -418,7 +457,7 @@ export async function prepareSigningPolicy(
     );
   const director = directors[0];
   const frozen = (
-    binding: typeof director,
+    binding: typeof director | undefined,
     kind: RequiredSigner["kind"],
     displayName: string,
   ): RequiredSigner => ({
@@ -482,6 +521,29 @@ export async function prepareSigningPolicy(
       name,
     );
   };
+  const teacherFor = (value: unknown) => {
+    const names = new Set(
+      ((value as { people?: { name: string; role: string }[] })?.people || [])
+        .filter((person) => person.role === "TEACHER")
+        .map((person) => person.name.trim())
+        .filter(Boolean),
+    );
+    const matches = bindings.filter(
+      (binding) =>
+        binding.kind === "TEACHER" &&
+        (!names.size || names.has(binding.displayName.trim())) &&
+        staff.some(
+          (user) => user.id === binding.userId && isLmsStaffRole(user.role),
+        ),
+    );
+    // Do not guess which of several teachers taught this group. Printing remains
+    // available, while online signing requires an explicit unambiguous binding.
+    const binding = matches.length === 1 ? matches[0] : undefined;
+    const name =
+      binding?.displayName ||
+      (names.size === 1 ? [...names][0] : "Преподаватель");
+    return frozen(binding, "TEACHER", name);
+  };
   const lmsSigners: NonNullable<SigningPolicy["lmsSigners"]> = {};
   const lmsLegalForms: NonNullable<SigningPolicy["lmsLegalForms"]> = {};
   const lmsUnsignedExempt: NonNullable<SigningPolicy["lmsUnsignedExempt"]> = {};
@@ -513,7 +575,9 @@ export async function prepareSigningPolicy(
     lmsLegalForms[assignment.id] = metadata.legalForm;
     lmsSigners[assignment.id] = [...new Set(metadata.requiredSignatures)].map(
       (requirement) => {
-        const role = ["DIRECTOR", "CHAIR", "MEMBER"].includes(requirement)
+        const role = ["DIRECTOR", "CHAIR", "MEMBER", "TEACHER"].includes(
+          requirement,
+        )
           ? (requirement as RequiredSigner["kind"])
           : null;
         const matches = bindings.filter(
@@ -525,7 +589,13 @@ export async function prepareSigningPolicy(
             staff.some(
               (user) =>
                 user.id === candidate.userId &&
-                ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EXPERT"].includes(user.role) &&
+                [
+                  "SUPER_ADMIN",
+                  "ADMIN",
+                  "DIRECTOR",
+                  "OPERATOR",
+                  "EXPERT",
+                ].includes(user.role) &&
                 (candidate.kind !== "DIRECTOR" || isDirectorRole(user.role)),
             ),
         );
@@ -540,6 +610,7 @@ export async function prepareSigningPolicy(
           DIRECTOR: "Директор",
           CHAIR: "Председатель комиссии",
           MEMBER: "Член комиссии",
+          TEACHER: "Преподаватель",
         };
         return frozen(
           binding,
@@ -556,12 +627,27 @@ export async function prepareSigningPolicy(
       lmsUnsignedExempt[assignment.id] = true;
   }
   return {
-    version: 2,
+    version: 3,
     signers: hasLegacyAssignments
-      ? [frozen(director, "DIRECTOR", director?.displayName || "Директор")]
+      ? [
+          frozen(
+            director,
+            "DIRECTOR",
+            director?.displayName ||
+              (profile as { headName?: string })?.headName?.trim() ||
+              "Директор",
+          ),
+        ]
       : [],
     commission: hasLegacyAssignments ? commissionFor(profile) : [],
     head: hasLegacyAssignments ? headFor(profile) : undefined,
+    teacher: hasLegacyAssignments ? teacherFor(profile) : undefined,
+    eventTeacher: Object.fromEntries(
+      (hasLegacyAssignments ? events : []).map((event) => [
+        event.id,
+        teacherFor(event.profile),
+      ]),
+    ),
     eventHead: Object.fromEntries(
       (hasLegacyAssignments ? events : []).map((event) => [
         event.id,
@@ -599,13 +685,17 @@ export async function listSignatories(c: Context) {
 }
 export async function saveSignatory(c: Context, input: unknown) {
   if (!canManageSystem(c.role))
-    fail(403, "ROLE_DENIED", "Подписантов назначает суперадминистратор или директор");
+    fail(
+      403,
+      "ROLE_DENIED",
+      "Подписантов назначает суперадминистратор или директор",
+    );
   const data = parse(
     z
       .object({
         userId: z.string().uuid(),
         displayName: z.string().trim().min(2).max(255),
-        role: z.enum(["DIRECTOR", "CHAIR", "MEMBER"]),
+        role: z.enum(["DIRECTOR", "CHAIR", "MEMBER", "TEACHER"]),
         iin: z.string().regex(/^\d{12}$/),
         bin: z
           .string()
@@ -622,7 +712,10 @@ export async function saveSignatory(c: Context, input: unknown) {
     });
     if (
       !user ||
-      !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EXPERT"].includes(user.role) ||
+      !["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EXPERT"].includes(
+        user.role,
+      ) ||
+      (data.role === "TEACHER" && !isLmsStaffRole(user.role)) ||
       (data.role === "DIRECTOR" && !isDirectorRole(user.role))
     )
       fail(
@@ -716,6 +809,24 @@ export function signersFor(
           index === 0 ? "Председатель комиссии" : `Член комиссии ${index}`,
         ),
     );
+  if (policy.version === 3 && threePartyTemplates.has(templateId)) {
+    const head = (eventId && policy.eventHead?.[eventId]) || policy.head;
+    // The frozen issuer profile names this document's director. A different
+    // tenant-level director must not silently sign in that person's place.
+    const director = head
+      ? head.kind === "DIRECTOR"
+        ? head
+        : missing("DIRECTOR", head.displayName)
+      : policy.signers.find((signer) => signer.kind === "DIRECTOR") ||
+        missing("DIRECTOR", "Директор");
+    return [
+      director,
+      commissionSlots(1)[0],
+      (eventId && policy.eventTeacher?.[eventId]) ||
+        policy.teacher ||
+        missing("TEACHER", "Преподаватель"),
+    ];
+  }
   let source: RequiredSigner[];
   if (templateId.endsWith("protocol") || templateId === "ps-card")
     source = commissionSlots(3);
@@ -863,7 +974,12 @@ export async function signingState(
   selectedIssuanceId?: string,
 ) {
   if (isLmsStaffRole(c.role) || c.role === "VIEWER") assertStaff(c);
-  else if (!selectedIssuanceId) fail(403, "COMMISSION_SCOPE_REQUIRED", "Выберите выпуск в кабинете комиссии");
+  else if (!selectedIssuanceId)
+    fail(
+      403,
+      "COMMISSION_SCOPE_REQUIRED",
+      "Выберите выпуск в кабинете комиссии",
+    );
   const selection = parse(z.string().uuid().optional(), selectedIssuanceId);
   const request = await scopedRequest(c, id, tx);
   const workflow = await tx.issuanceWorkflow.findFirst({
@@ -889,53 +1005,56 @@ export async function signingState(
       missingBindings: [],
       signatures: [],
     };
-  const [documents, artifacts, signatures, jobs, invalid, ownBindings] = await Promise.all([
-    tx.issuedDocument.findMany({
-      where: { tenantId: c.tenantId, issuanceId: workflow.issuanceId },
-    }),
-    tx.artifact.findMany({
-      where: {
-        tenantId: c.tenantId,
-        issuanceId: workflow.issuanceId,
-        provenance: "ORIGINAL",
-      },
-    }),
-    tx.documentSignature.findMany({
-      where: { tenantId: c.tenantId, issuanceId: workflow.issuanceId },
-    }),
-    tx.generationJob.findMany({
-      where: {
-        tenantId: c.tenantId,
-        issuanceId: workflow.issuanceId,
-        kind: { not: "ZIP" },
-      },
-    }),
-    tx.issuanceEvent.findFirst({
-      where: {
-        tenantId: c.tenantId,
-        issuanceId: workflow.issuanceId,
-        kind: { in: ["CANCELLED", "REPLACED"] },
-      },
-      orderBy: { createdAt: "desc" },
-    }),
-    tx.signatoryBinding.findMany({
-      where: { tenantId: c.tenantId, userId: c.userId, active: true },
-      select: { id: true },
-    }),
-  ]);
+  const [documents, artifacts, signatures, jobs, invalid, ownBindings] =
+    await Promise.all([
+      tx.issuedDocument.findMany({
+        where: { tenantId: c.tenantId, issuanceId: workflow.issuanceId },
+      }),
+      tx.artifact.findMany({
+        where: {
+          tenantId: c.tenantId,
+          issuanceId: workflow.issuanceId,
+          provenance: "ORIGINAL",
+        },
+      }),
+      tx.documentSignature.findMany({
+        where: { tenantId: c.tenantId, issuanceId: workflow.issuanceId },
+      }),
+      tx.generationJob.findMany({
+        where: {
+          tenantId: c.tenantId,
+          issuanceId: workflow.issuanceId,
+          kind: { not: "ZIP" },
+        },
+      }),
+      tx.issuanceEvent.findFirst({
+        where: {
+          tenantId: c.tenantId,
+          issuanceId: workflow.issuanceId,
+          kind: { in: ["CANCELLED", "REPLACED"] },
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+      tx.signatoryBinding.findMany({
+        where: { tenantId: c.tenantId, userId: c.userId, active: true },
+        select: { id: true },
+      }),
+    ]);
   const eligible = await requestAllowsSigning(tx, request, workflow.issuanceId);
   const policy = workflow.requiredSigners as unknown as SigningPolicy;
-  const paperDocuments = documents.filter(
-    (document) =>
-      document.assignmentId &&
-      lmsTemplateIds.has(document.templateId) &&
-      policy.lmsLegalForms?.[document.assignmentId] === "PAPER_ORIGINAL",
+  const paperDocuments = documents.filter((document) =>
+    paperSigningAllowed(policy, document.templateId, document.assignmentId),
   );
   const paperRecords = paperDocuments.length
     ? await tx.auditEvent.findMany({
         where: {
           tenantId: c.tenantId,
-          action: "LMS_PAPER_SIGNATURE_ATTESTED",
+          action: {
+            in: [
+              "LMS_PAPER_SIGNATURE_ATTESTED",
+              "PRINT_PAPER_SIGNATURE_ATTESTED",
+            ],
+          },
           entityId: { in: paperDocuments.map((document) => document.id) },
         },
       })
@@ -1001,6 +1120,7 @@ export async function signingState(
       rowId: document.rowId,
       groupEventId: document.groupEventId,
       number: document.number,
+      documentDate: document.documentDate,
       artifactId: artifact?.id || null,
       fileName: artifact?.fileName || null,
       documentSha256: artifact?.sha256 || null,
@@ -1014,6 +1134,22 @@ export async function signingState(
           ((requiredSigners.length > 0 || signatureExempt) &&
             requiredSigners.every((signer) => signer.signed))),
       paperSignature,
+      paperAllowed: paperSigningAllowed(
+        policy,
+        document.templateId,
+        document.assignmentId,
+      ),
+      canAttestPaper:
+        paperSigningAllowed(
+          policy,
+          document.templateId,
+          document.assignmentId,
+        ) &&
+        isDirectorRole(c.role) &&
+        !!artifact &&
+        !paperSignature &&
+        eligible &&
+        !invalid,
       signatureExempt,
       requiredSigners,
     };
@@ -1244,7 +1380,8 @@ export async function startSigning(c: Context, id: string, input: unknown) {
       "SIGNING_NOT_READY",
       "Оформите согласованную заявку перед подписанием",
     );
-  if (!isLmsStaffRole(c.role)) await assertCommissionAccess(c, currentWorkflow.issuanceId);
+  if (!isLmsStaffRole(c.role))
+    await assertCommissionAccess(c, currentWorkflow.issuanceId);
   await assertEligible(c, currentWorkflow.issuanceId);
   const state = await signingState(c, id, db, currentWorkflow.issuanceId);
   if (state.status !== "AWAITING_SIGNATURE")
@@ -1398,7 +1535,8 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
     where: { id, tenantId: c.tenantId, createdBy: c.userId },
   });
   if (!session) fail(404, "NOT_FOUND", "Сеанс подписания не найден");
-  if (!isLmsStaffRole(c.role)) await assertCommissionAccess(c, session.issuanceId);
+  if (!isLmsStaffRole(c.role))
+    await assertCommissionAccess(c, session.issuanceId);
   await assertEligible(c, session.issuanceId);
   if (session.status === "VERIFIED")
     return {

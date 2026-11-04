@@ -6,7 +6,8 @@ const config: NextConfig = {
   distDir: process.env.DEMO_NEXT_DIST_DIR || ".next",
   // Vercel supplies its repository tracing root through Next's own defaults.
   // Overriding it with the nested product root breaks the adapter's app path.
-  ...(process.env.VERCEL === "1"
+  // Local Windows runs can use next start without privileged symlink creation.
+  ...(process.env.VERCEL === "1" || process.env.DEMO_STANDALONE === "0"
     ? {}
     : {
         output: "standalone",

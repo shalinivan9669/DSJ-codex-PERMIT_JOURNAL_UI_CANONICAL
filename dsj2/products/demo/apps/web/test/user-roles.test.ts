@@ -55,12 +55,14 @@ test("teachers and experts start in teaching, while a methodist can create the f
   assert.equal(workspaceStartPath("LEARNER"), "/learn");
 });
 
-test("first system managers open setup, centre operators open their workplace, and legacy read-only and organisation routes remain available", () => {
+test("operators start with document requests while directors, administrators and other roles keep their own entry points", () => {
   for (const role of ["DIRECTOR", "SUPER_ADMIN"] as const) {
     assert.equal(workspaceStartPath(role, true), "/onboarding");
   }
   assert.equal(workspaceStartPath("DIRECTOR"), "/approvals");
-  for (const role of ["ADMIN", "SUPER_ADMIN", "OPERATOR"] as const) assert.equal(workspaceStartPath(role), "/lms/workplace");
+  for (const role of ["ADMIN", "SUPER_ADMIN"] as const) assert.equal(workspaceStartPath(role), "/lms/workplace");
+  assert.equal(workspaceStartPath("OPERATOR"), "/requests");
+  assert.equal(workspaceStartPath("OPERATOR", true), "/requests");
   assert.equal(workspaceStartPath("ADMIN", true), "/lms/workplace");
   assert.equal(workspaceStartPath("VIEWER", true), "/requests");
   assert.equal(workspaceStartPath("EMPLOYER", true), "/portal");

@@ -1,0 +1,26 @@
+.printing-overview {
+  margin-block: 0 20px;
+}
+.printing-overview summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.printing-overview dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  margin-block: 12px;
+}
+.printing-overview dl div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.printing-overview dt {
+  color: var(--muted);
+}
+.printing-overview dd {
+  margin: 0;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}

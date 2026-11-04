@@ -35,7 +35,7 @@ import {
   requireApproved,
   requestActivity,
 } from "../../apps/api/src/approvals";
-import { saveUser } from "../../apps/api/src/settings";
+import { bootstrapSuperAdmin, saveUser } from "../../apps/api/src/settings";
 import { applyImportReconciliation } from "../../apps/api/src/imports";
 import {
   signingState,
@@ -53,7 +53,7 @@ import {
   heartbeat,
 } from "../../apps/render-worker/src/queue";
 
-function context(tenantId: string, userId: string, role = "ADMIN"): Context {
+function context(tenantId: string, userId: string, role = "DIRECTOR"): Context {
   return {
     tenantId,
     userId,
@@ -154,6 +154,11 @@ test("director approval, immutable official versions and real CMS rejection in i
   });
   const admin = context(a.tenantId, a.userId),
     other = context(b.tenantId, b.userId);
+  await bootstrapSuperAdmin(admin, {
+    currentPassword: "Synthetic-approval-password!",
+    confirm: true,
+  });
+  admin.role = "SUPER_ADMIN";
   const operatorUser = await saveUser(admin, {
     email: `operator-${suffix}@example.test`,
     password: "Synthetic-approval-password!",
@@ -485,10 +490,11 @@ test("director approval, immutable official versions and real CMS rejection in i
         });
         const policy = await prepareSigningPolicy(db, admin, profile.profile);
         assert.equal(signersFor(policy, "biot-worker-card").length, 3);
-        assert.equal(signersFor(policy, "biot-itr-certificate").length, 2);
+        assert.equal(signersFor(policy, "biot-itr-certificate").length, 3);
         assert.equal(signersFor(policy, "ps-card").length, 4);
         assert.equal(signersFor(policy, "ps-protocol").length, 4);
-        assert.equal(signersFor(policy, "ptm-card").length, 1);
+        assert.equal(signersFor(policy, "ptm-card").length, 3);
+        assert.equal(signersFor(policy, "ptm-protocol").length, 3);
         assert.equal(connectorUrl("http://example.invalid"), null);
         assert.equal(connectorUrl("https://user:secret@example.invalid"), null);
         assert.equal(connectorUrl("https://example.invalid?secret=x"), null);
@@ -520,7 +526,7 @@ test("director approval, immutable official versions and real CMS rejection in i
         const missing = await prepareSigningPolicy(db, other, {});
         assert.equal(
           signersFor(missing, "pb-protocol").filter((x) => !x.bindingId).length,
-          4,
+          3,
         );
         assert.equal(
           (

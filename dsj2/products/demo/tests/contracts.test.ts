@@ -220,8 +220,7 @@ test("director approval and signing routes stay exact and do not open legacy sig
   assert.equal(allowedRoute("api", "POST", "/translations/suggest"), true);
 });
 test("registered API controller method/path map equals deny-by-default policy", async () => {
-  await import("../apps/api/src/main");
-  const { DemoController } = await import("../apps/api/src/controller");
+  const { DemoModule } = await import("../apps/api/src/main");
   const methods = [
     "GET",
     "POST",
@@ -232,65 +231,12 @@ test("registered API controller method/path map equals deny-by-default policy", 
     "OPTIONS",
     "HEAD",
   ];
-  const { OperatorValueController } =
-    await import("../apps/api/src/operator-value-controller");
-  const { DeliveryController } =
-    await import("../apps/api/src/delivery-controller");
-  const { PublicVerificationController } =
-    await import("../apps/api/src/public-verification-controller");
-  const { EmployerInviteController } =
-    await import("../apps/api/src/employer-invite-controller");
-  const { PrintSetsController } =
-    await import("../apps/api/src/print-sets-controller");
-  const { TrainingTopicsController } =
-    await import("../apps/api/src/training-topics-controller");
-  const { LmsController } = await import("../apps/api/src/lms/controller");
-  const { LearnerIdentityController } =
-    await import("../apps/api/src/lms/identity");
-  const { LmsDocumentsController } =
-    await import("../apps/api/src/lms/document-bridge");
-  const { RegulatoryResultsController } =
-    await import("../apps/api/src/regulatory-results/controller");
-  const { LmsScalingController } =
-    await import("../apps/api/src/lms/scaling-controller");
-  const { LmsQuestionsController } =
-    await import("../apps/api/src/lms/questions-controller");
-  const { LearningController } =
-    await import("../apps/api/src/lms/learning-controller");
-  const { LmsLearningAdminController } =
-    await import("../apps/api/src/lms/learning-admin-controller");
-  const { LmsTeachingController } =
-    await import("../apps/api/src/lms/teaching-controller");
-  const { MfaController } = await import("../apps/api/src/mfa-controller");
-  const { LmsApplicationsController } = await import("../apps/api/src/lms/application-controller");
-  const { LmsEmployerImportController } = await import("../apps/api/src/lms/employer-import-controller");
-  const { LmsWorkplaceController } = await import("../apps/api/src/lms/workplace-controller");
-  const { LmsReportsController } = await import("../apps/api/src/lms/report-controller");
-  const { LmsCommissionController } = await import("../apps/api/src/lms/commission");
-  const routes = [
-    MfaController,
-    LmsApplicationsController,
-    LmsEmployerImportController,
-    LmsWorkplaceController,
-    LmsReportsController,
-    LmsCommissionController,
-    LmsScalingController,
-    LmsQuestionsController,
-    LearningController,
-    LmsLearningAdminController,
-    LmsTeachingController,
-    DemoController,
-    OperatorValueController,
-    DeliveryController,
-    PublicVerificationController,
-    EmployerInviteController,
-    PrintSetsController,
-    TrainingTopicsController,
-    LmsController,
-    LearnerIdentityController,
-    LmsDocumentsController,
-    RegulatoryResultsController,
-  ]
+  // Inspect the registered module itself so new controllers cannot escape this
+  // exact policy comparison through a stale hand-maintained test inventory.
+  const controllers = Reflect.getMetadata("controllers", DemoModule) as {
+    prototype: Record<string, unknown>;
+  }[];
+  const routes = controllers
     .flatMap((controller) =>
       Object.getOwnPropertyNames(controller.prototype)
         .filter((k) => k !== "constructor")

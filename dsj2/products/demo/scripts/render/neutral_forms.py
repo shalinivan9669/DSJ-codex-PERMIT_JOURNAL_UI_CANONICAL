@@ -36,9 +36,9 @@ def isolated_namespaces(function):
             ET._namespace_map.update(previous)
     return wrapped
 
-def fill_slots(files,payload,path):
+def fill_slots(files,payload,path,template_id):
     from legacy_reference import source_literal_values
-    entry=neutral_source_entry(path)
+    entry=neutral_source_entry(path,template_id)
     if entry is None: raise ValueError('NEUTRAL_TEMPLATE_SOURCE_UNKNOWN')
     values={r['matchText']:r['replaceText'] for r in slot_replacements(payload)}
     # The pinned mapper omits old==new literal replacements. The complete
@@ -109,21 +109,23 @@ def combine_neutral_files(documents,snapshot=None):
     files['word/document.xml']=E.tostring(tree,encoding='utf-8',xml_declaration=True)
     return files
 
-def neutral_source_entry(path):
+def neutral_source_entry(path,template_id):
     registry=ROOT/'neutral_forms_sources.json'
     if not registry.exists(): return None
     digest=hashlib.sha256(Path(path).read_bytes()).hexdigest()
     entries=json.loads(registry.read_text(encoding='utf8'))['templates']
-    entry=next((t for t in entries if t['sha256']==digest),None)
+    # Worker and ITR protocols intentionally share source bytes. Their logical
+    # identity must participate in lookup, including for private stored copies.
+    entry=next((t for t in entries if t['sha256']==digest and t['id']==template_id),None)
     if entry is not None:return entry
     with ZipFile(path) as archive:
         if 'demo/template-source.json' not in archive.namelist():return None
         marker=json.loads(archive.read('demo/template-source.json'))
-    if marker.get('policy')!='VALIDATED_TEMPLATE_DERIVATIVE_V1':return None
-    return next((t for t in entries if t['sha256']==marker.get('sourceChecksum') and t['id']==marker.get('templateId')),None)
+    if marker.get('policy')!='VALIDATED_TEMPLATE_DERIVATIVE_V1' or marker.get('templateId')!=template_id:return None
+    return next((t for t in entries if t['sha256']==marker.get('sourceChecksum') and t['id']==template_id),None)
 
 def identify_neutral(path, template_id):
-    entry=neutral_source_entry(path)
+    entry=neutral_source_entry(path,template_id)
     return entry is not None and entry['id']==template_id
 
 def neutral_payload(snapshot,item):
@@ -152,7 +154,7 @@ def fill_files(snapshot,item,path):
     from legacy_reference import source_literal_values
     payload=neutral_payload(snapshot,item)
     with ZipFile(path) as z: files={n:z.read(n) for n in z.namelist()}
-    files=fill_slots(files,payload,path)
+    files=fill_slots(files,payload,path,snapshot['templateId'])
     # Special witness date slots are corrected before their placeholders fill.
     files=prepare_reference_source(files,snapshot,item,{**payload,'sourceLiteralValues':[]})
     with TemporaryDirectory(prefix='demo-neutral-') as directory:
@@ -205,7 +207,7 @@ def render_neutral_group(snapshot,path):
     with ZipFile(path) as z: source=z.read('word/document.xml')
     for item in items:
         payload=neutral_payload(snapshot,item)
-        prepared=fill_slots({'word/document.xml':source},payload,path)['word/document.xml']
+        prepared=fill_slots({'word/document.xml':source},payload,path,snapshot['templateId'])['word/document.xml']
         filled=replace_fields(prepared,payload['fields'],payload.get('fieldStyleOverrides',{}))
         filled=freeze_reference_dates({'word/document.xml':filled},snapshot,item)['word/document.xml']
         table=roster_table(E.fromstring(filled)); roster.append(deepcopy(table.findall(W+'tr')[count]))

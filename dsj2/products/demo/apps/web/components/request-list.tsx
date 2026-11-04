@@ -1,13 +1,20 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Icon, Notice } from "@demo/ui";
-import { today } from "@demo/contracts";
 import { PrintSetDownloads } from "./print-set-downloads";
-import { api, downloadExport, errorText, json } from "@/lib/api";
+import { PrintingOverview } from "./printing-overview";
+import "./request-list.css";
+import { api, downloadExport, errorText } from "@/lib/api";
 import {
-  newRecipient,
+  newRequestStorageKey,
+  prepareNewRequest,
+  restoreNewRequest,
+  type NewRequestAttempt,
+} from "@/lib/new-request";
+import {
+  documentTitle,
   type AppContext,
   type Draft,
   type Page,
@@ -88,6 +95,10 @@ export function RequestList({
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [exportError, setExportError] = useState("");
+  const [exporting, setExporting] = useState(false);
+  const exportInFlight = useRef(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
   useEffect(() => {
     setPage(1);
@@ -121,6 +132,29 @@ export function RequestList({
       clearTimeout(timer);
     };
   }, [page, search, filter, history, refresh]);
+  async function exportRegistry() {
+    if (exportInFlight.current) return;
+    exportInFlight.current = true;
+    setExporting(true);
+    setExportError("");
+    try {
+      await downloadExport(
+        "/print-requests/export",
+        {
+          search,
+          archive: history,
+          ...(filter ? { status: filter } : {}),
+          format: "XLSX",
+        },
+        "КОРОЧКИ-реестр.xlsx",
+      );
+    } catch (caught) {
+      setExportError(errorText(caught));
+    } finally {
+      exportInFlight.current = false;
+      setExporting(false);
+    }
+  }
   return (
     <>
       <div className="page-heading">
@@ -139,6 +173,7 @@ export function RequestList({
           </Link>
         )}
       </div>
+      <PrintingOverview />
       <section className="panel list-panel">
         <div className="toolbar">
           <label className="search-field">
@@ -168,22 +203,9 @@ export function RequestList({
               <option value="CANCELLED">Отменённые</option>
             </select>
           </label>
-          <button
-            onClick={() =>
-              void downloadExport(
-                "/print-requests/export",
-                {
-                  search,
-                  archive: history,
-                  ...(filter ? { status: filter } : {}),
-                  format: "XLSX",
-                },
-                "DEMO-registry.xlsx",
-              ).catch((caught) => setError(errorText(caught)))
-            }
-          >
+          <button disabled={exporting} onClick={() => void exportRegistry()}>
             <Icon name="download" />
-            Реестр XLSX
+            {exporting ? "Готовим реестр…" : "Реестр XLSX"}
           </button>
           {(search || filter) && (
             <button
@@ -208,6 +230,14 @@ export function RequestList({
             </button>
           </Notice>
         )}
+        {exportError && (
+          <Notice>
+            {exportError}{" "}
+            <button disabled={exporting} onClick={() => void exportRegistry()}>
+              Повторить экспорт
+            </button>
+          </Notice>
+        )}
         <div className="table-scroll" aria-busy={loading}>
           <table className="request-table">
             <thead>
@@ -224,44 +254,71 @@ export function RequestList({
             </thead>
             <tbody>
               {rows.items.map((row) => (
-                <tr key={row.id}>
-                  <td>
-                    <Link href={`/requests/${row.id}`} className="row-title">
-                      {row.title || "Без названия"}
-                    </Link>
-                    <small>
-                      {row.kind === "PERSON"
-                        ? "Физическое лицо"
-                        : "Организация"}{" "}
-                      · редакция {row.revision}
-                    </small>
-                  </td>
-                  <td>{row.customerName || row.customer?.nameRu || "—"}</td>
-                  <td>{row.itemCount ?? row.recipientCount ?? "—"}</td>
-                  <td>
-                    <Status
-                      value={
-                        row.lifecycle ||
-                        (row.status === "DRAFT" &&
-                          (row.approval?.needsPreparation
-                            ? "NEEDS_PREPARATION"
-                            : row.approval?.status)) ||
-                        row.status
-                      }
-                    />
-                  </td>
-                  <td>{dateTime(row.updatedAt || row.createdAt)}</td>
-                  <td>
-                    <Link
-                      className="icon-link"
-                      href={`/requests/${row.id}`}
-                      aria-label={`Открыть ${row.title || "заявку"}`}
-                    >
-                      <Icon name="chevron" />
-                    </Link>
-                    <PrintSetDownloads requestId={row.id} compact />
-                  </td>
-                </tr>
+                <Fragment key={row.id}>
+                  <tr>
+                    <td>
+                      <Link href={`/requests/${row.id}`} className="row-title">
+                        {row.title || "Без названия"}
+                      </Link>
+                      <small>
+                        {row.kind === "PERSON"
+                          ? "Физическое лицо"
+                          : "Организация"}{" "}
+                        · редакция {row.revision}
+                      </small>
+                    </td>
+                    <td>{row.customerName || row.customer?.nameRu || "—"}</td>
+                    <td>
+                      <button
+                        className="request-composition-toggle"
+                        aria-expanded={expanded === row.id}
+                        aria-controls={`request-recipients-${row.id}`}
+                        aria-label={`${expanded === row.id ? "Скрыть" : "Показать"} состав заявки «${row.title || "Без названия"}»`}
+                        onClick={() =>
+                          setExpanded(expanded === row.id ? null : row.id)
+                        }
+                      >
+                        {row.itemCount ?? row.recipientCount ?? "—"} ·{" "}
+                        {expanded === row.id ? "Скрыть" : "Состав"}
+                      </button>
+                    </td>
+                    <td>
+                      <Status
+                        value={
+                          row.lifecycle ||
+                          (row.status === "DRAFT" &&
+                            (row.approval?.needsPreparation
+                              ? "NEEDS_PREPARATION"
+                              : row.approval?.status)) ||
+                          row.status
+                        }
+                      />
+                    </td>
+                    <td>{dateTime(row.updatedAt || row.createdAt)}</td>
+                    <td>
+                      <Link
+                        className="icon-link"
+                        href={`/requests/${row.id}`}
+                        aria-label={`Открыть ${row.title || "заявку"}`}
+                      >
+                        <Icon name="chevron" />
+                      </Link>
+                      {(row.status === "FINALIZED" || !!row.lifecycle) && (
+                        <PrintSetDownloads requestId={row.id} compact />
+                      )}
+                    </td>
+                  </tr>
+                  {expanded === row.id && (
+                    <tr id={`request-recipients-${row.id}`}>
+                      <td colSpan={6} className="request-composition-cell">
+                        <RequestRecipients
+                          requestId={row.id}
+                          revision={row.revision}
+                        />
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
               ))}
             </tbody>
           </table>
@@ -272,12 +329,16 @@ export function RequestList({
             <h2>
               {search || filter
                 ? "Заявки не найдены"
-                : "Всё начинается с заявки"}
+                : history
+                  ? "В архиве пока нет документов"
+                  : "Всё начинается с заявки"}
             </h2>
             <p>
               {search || filter
                 ? "Измените поиск или статус."
-                : "Добавьте человека или список сотрудников организации."}
+                : history
+                  ? "Здесь появятся завершённые выпуски и заявки, перенесённые в архив."
+                  : "Добавьте человека или список сотрудников организации."}
             </p>
             {search || filter ? (
               <button
@@ -327,36 +388,148 @@ export function RequestList({
     </>
   );
 }
+
+function RequestRecipients({
+  requestId,
+  revision,
+}: {
+  requestId: string;
+  revision: number;
+}) {
+  const [draft, setDraft] = useState<Draft | null>(null);
+  const [error, setError] = useState("");
+  const [refresh, setRefresh] = useState(0);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    setError("");
+    void api<Draft>(`/print-requests/${requestId}`)
+      .then((value) => {
+        if (active) setDraft(value);
+      })
+      .catch((caught) => {
+        if (active) setError(errorText(caught));
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [requestId, revision, refresh]);
+  if (loading) return <p role="status">Загружаем состав заявки…</p>;
+  if (error)
+    return (
+      <Notice>
+        {error}{" "}
+        <button onClick={() => setRefresh((value) => value + 1)}>
+          Повторить загрузку состава
+        </button>
+      </Notice>
+    );
+  if (!draft?.items.length)
+    return <p className="muted">В заявке пока нет сотрудников.</p>;
+  return (
+    <div className="table-scroll">
+      <table className="request-recipient-table" aria-label="Состав заявки">
+        <thead>
+          <tr>
+            <th>Сотрудник</th>
+            <th>Должность</th>
+            <th>Документы</th>
+          </tr>
+        </thead>
+        <tbody>
+          {draft.items.map((person) => (
+            <tr key={person.id}>
+              <td>
+                <Link
+                  href={`/requests/${encodeURIComponent(requestId)}?recipient=${encodeURIComponent(person.id)}`}
+                >
+                  {person.fullNameRu || person.fullNameKz || "ФИО не заполнено"}
+                </Link>
+              </td>
+              <td>{person.positionRu || person.positionKz || "—"}</td>
+              <td>
+                {person.assignments.length
+                  ? [
+                      ...new Set(
+                        person.assignments.map((assignment) =>
+                          documentTitle(
+                            assignment.templateId,
+                            !!assignment.eventId,
+                          ),
+                        ),
+                      ),
+                    ].join(" · ")
+                  : "Документы не выбраны"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export function NewRequest({ context }: { context: AppContext }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [kind, setKind] = useState<"PERSON" | "COMPANY">("PERSON");
+  const attempt = useRef<NewRequestAttempt | null>(null);
+  const creating = useRef(false);
+  const [restoring, setRestoring] = useState(true);
+  const [pending, setPending] = useState(false);
+  const storageKey = newRequestStorageKey(context);
+  useEffect(() => {
+    attempt.current = null;
+    setPending(false);
+    try {
+      attempt.current = restoreNewRequest(sessionStorage.getItem(storageKey));
+      if (attempt.current) {
+        setKind(attempt.current.kind);
+        setPending(true);
+      }
+    } catch (caught) {
+      setError(errorText(caught));
+    } finally {
+      setRestoring(false);
+    }
+  }, [storageKey]);
   async function create(kind: "PERSON" | "COMPANY") {
+    if (creating.current || restoring) return;
+    creating.current = true;
     setBusy(true);
     setError("");
     try {
+      attempt.current ||= prepareNewRequest(context, kind);
+      setPending(true);
+      try {
+        sessionStorage.setItem(storageKey, JSON.stringify(attempt.current));
+      } catch {
+        /* The same-page retry still retains the exact attempt. */
+      }
       const draft = await api<Draft>("/print-requests", {
         method: "POST",
-        body: json({
-          kind,
-          schemaVersion: 2,
-          businessRuleVersion: "LIVE_V1",
-          englishAppendix: false,
-          commonFields: { documentDate: today(context.tenant.timezone) },
-          title:
-            kind === "PERSON"
-              ? "Новая заявка на человека"
-              : "Новая заявка организации",
-          customerId: null,
-          demoMode: !!context.tenant.demoOnly,
-          items: [{ ...newRecipient(), assignments: [] }],
-        }),
+        headers: { "Idempotency-Key": attempt.current.key },
+        body: attempt.current.body,
       });
-      router.push(`/requests/${draft.id}/edit`);
+      if (!draft || typeof draft.id !== "string" || !draft.id)
+        throw new Error(
+          "Сервер не подтвердил создание заявки. Повторите попытку: новая копия не будет создана.",
+        );
+      try {
+        sessionStorage.removeItem(storageKey);
+      } catch {
+        /* A retained attempt safely reopens the same request. */
+      }
+      router.push(`/requests/${encodeURIComponent(draft.id)}/edit`);
     } catch (caught) {
       setError(errorText(caught));
       setBusy(false);
+      creating.current = false;
     }
   }
   return (
@@ -366,6 +539,12 @@ export function NewRequest({ context }: { context: AppContext }) {
       </Link>
       <h1>Новая заявка</h1>
       {error && <Notice>{error}</Notice>}
+      {pending && !busy && (
+        <Notice kind="info">
+          Создание ещё не подтверждено. Повторите попытку, чтобы открыть ту же
+          заявку без дубликата.
+        </Notice>
+      )}
       {context.user.role === "VIEWER" ? (
         <Notice kind="info">
           Создавать заявки могут менеджер и директор центра.
@@ -378,7 +557,10 @@ export function NewRequest({ context }: { context: AppContext }) {
             if (!busy) void create(kind);
           }}
         >
-          <fieldset className="request-entry-choice" disabled={busy}>
+          <fieldset
+            className="request-entry-choice"
+            disabled={busy || restoring || pending}
+          >
             <legend className="sr-only">Тип заказчика</legend>
             <label>
               <input
@@ -404,9 +586,13 @@ export function NewRequest({ context }: { context: AppContext }) {
           <button
             type="submit"
             className="primary request-entry-next"
-            disabled={busy}
+            disabled={busy || restoring}
           >
-            {busy ? "Создаём заявку…" : "Далее"}
+            {busy
+              ? "Создаём заявку…"
+              : pending
+                ? "Повторить создание"
+                : "Далее"}
             <Icon name="chevron" />
           </button>
         </form>

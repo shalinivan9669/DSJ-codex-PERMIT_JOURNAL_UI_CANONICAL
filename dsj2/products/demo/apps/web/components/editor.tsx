@@ -180,6 +180,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   useEffect(() => {
     if (!draft || draft.id !== id) return;
     const query = new URLSearchParams(window.location.search);
+    const recipient = query.get("recipient");
+    if (recipient && draft.items.some((person) => person.id === recipient)) {
+      setSelectedId(recipient);
+      setPendingRecipientFocus(recipient);
+    }
     const path = query.get("issuePath");
     const signature = id + ":" + query.toString();
     if (!path || consumedIssueQuery.current === signature) return;
@@ -2974,7 +2979,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       )}
       {(draft.status !== "DRAFT" || !!draft.issuances?.length) && (
         <details className="panel">
-          <summary>Электронные подписи</summary>
+                    <summary>Подписание и выдача</summary>
           <SigningPanel
             requestId={id}
             issuances={draft.issuances}

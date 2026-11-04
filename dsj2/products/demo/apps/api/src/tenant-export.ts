@@ -4,8 +4,12 @@ import { Prisma } from "@demo/database";
 import { canManageSystem } from "@demo/contracts";
 import { ArtifactStore, buildZip } from "@demo/printing";
 import { db, audit, fail, hash, type Context } from "./core";
+import {
+  TENANT_EXPORT_EXCLUDED_MODELS,
+  tenantExportFileReferences,
+  tenantExportSelect,
+} from "./tenant-export-policy";
 
-const EXCLUDED_MODELS = new Set(["Session"]);
 const MAX_ROWS_PER_TABLE = 100_000;
 const MAX_FILE_BYTES = 128 * 1024 * 1024;
 type ExportRow = Record<string, unknown>;
@@ -32,7 +36,7 @@ export async function tenantExportSnapshot(c: Context) {
       const models = Prisma.dmmf.datamodel.models.filter(
         (model) =>
           model.fields.some((field) => field.name === "tenantId") &&
-          !EXCLUDED_MODELS.has(model.name),
+          !TENANT_EXPORT_EXCLUDED_MODELS.has(model.name),
       );
       for (const model of models) {
         const delegateName = model.name[0].toLowerCase() + model.name.slice(1);
@@ -44,6 +48,7 @@ export async function tenantExportSnapshot(c: Context) {
         )[delegateName];
         const rows = await delegate.findMany({
           where: { tenantId: c.tenantId },
+          select: tenantExportSelect(model.fields),
           take: MAX_ROWS_PER_TABLE + 1,
         });
         if (rows.length > MAX_ROWS_PER_TABLE)
@@ -52,17 +57,7 @@ export async function tenantExportSnapshot(c: Context) {
             "TENANT_EXPORT_TOO_LARGE",
             "Для этого объёма используйте административную архивную выгрузку с проверкой восстановления",
           );
-        tables[model.name] = rows.map((row) => {
-          const clean = { ...row };
-          for (const secret of [
-            "passwordHash",
-            "tokenHash",
-            "csrfHash",
-            "secretHash",
-          ])
-            delete clean[secret];
-          return clean;
-        });
+        tables[model.name] = rows;
       }
       return {
         contractVersion: 1,
@@ -71,6 +66,7 @@ export async function tenantExportSnapshot(c: Context) {
         tables,
         excluded: [
           "Sessions",
+          "MFA factors, recovery codes, login challenges and reauthentication state",
           "Password hashes",
           "Public bearer token hashes",
           "Invitation secret hashes",
@@ -89,22 +85,28 @@ export async function exportTenant(c: Context) {
   let totalBytes = 0;
   for (const [table, rows] of Object.entries(snapshot.tables)) {
     for (const row of rows) {
-      for (const field of ["storageKey", "originalStorageKey"]) {
-        const key = row[field];
-        if (typeof key !== "string" || !key) continue;
+      for (const {
+        field,
+        key,
+        expectedHash,
+        expectedSize,
+      } of tenantExportFileReferences(row)) {
         const reference = { table, id: String(row.id || ""), field };
-        if (files.has(key)) {
-          files.get(key)!.references.push(reference);
+        const existing = files.get(key);
+        if (existing) {
+          if (
+            (expectedHash && expectedHash !== existing.sha256) ||
+            (expectedSize !== undefined && expectedSize !== existing.size)
+          )
+            fail(
+              409,
+              "TENANT_EXPORT_INCOMPLETE",
+              "Ссылки на один файл содержат разные контрольные суммы или размеры",
+              { table, id: row.id, field },
+            );
+          existing.references.push(reference);
           continue;
         }
-        const expectedHash =
-          field === "originalStorageKey"
-            ? undefined
-            : typeof row.sha256 === "string"
-              ? row.sha256
-              : typeof row.checksum === "string"
-                ? row.checksum
-                : undefined;
         let bytes: Buffer;
         try {
           bytes = await store.read(key, expectedHash);
@@ -116,11 +118,7 @@ export async function exportTenant(c: Context) {
             { table, id: row.id, field },
           );
         }
-        if (
-          field !== "originalStorageKey" &&
-          typeof row.size === "number" &&
-          row.size !== bytes.length
-        )
+        if (expectedSize !== undefined && expectedSize !== bytes.length)
           fail(
             409,
             "TENANT_EXPORT_INCOMPLETE",

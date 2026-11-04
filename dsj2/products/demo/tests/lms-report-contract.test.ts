@@ -8,11 +8,23 @@ import {
 } from "../apps/api/src/lms/report-definitions";
 import { safeCsvCell } from "../apps/api/src/lms/results-export";
 
-test("report schemas preserve eight semantic reports and safe string values", () => {
-  assert.equal(reportKinds.length, 8);
+test("report schemas preserve the existing reports, directories and document registry with safe string values", () => {
+  assert.deepEqual(reportKinds, [
+    "TRAINING",
+    "EMPLOYEES",
+    "TESTING",
+    "DOCUMENTS",
+    "ORGANIZATIONS",
+    "DEADLINES",
+    "CREDENTIALS",
+    "CERTIFICATES",
+    "EMPLOYEE_DIRECTORY",
+    "ORGANIZATION_DIRECTORY",
+    "DOCUMENT_REGISTRY",
+  ]);
   assert.equal(
     new Set(reportKinds.map((k) => reportDefinitions[k].rowRu)).size,
-    8,
+    reportKinds.length,
   );
   for (const kind of reportKinds)
     for (const format of ["PDF", "XLSX", "CSV"]) {

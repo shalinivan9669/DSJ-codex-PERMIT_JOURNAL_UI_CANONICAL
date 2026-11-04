@@ -3,6 +3,7 @@
   "productId": "DEMO",
   "version": 2,
   "demoRoutes": [
+    { "method": "GET", "surface": "api", "path": "/print-requests/overview" },
     { "method": "GET", "surface": "web", "path": "/lms/questions" },
     { "method": "HEAD", "surface": "web", "path": "/lms/questions" },
     { "method": "GET", "surface": "api", "path": "/lms/proctoring" },

@@ -779,7 +779,7 @@ def export_registry(payload,out):
 def import_table(payload,out):
     path=Path(payload['inputPath']); mapping=payload.get('mapping',{}); errors=[]
     if path.stat().st_size>10*1024*1024: raise ValueError('IMPORT_BYTES_LIMIT')
-    suffix=payload.get('format',path.suffix.lstrip('.')).lower(); sheets=[]; selected_sheet=None
+    suffix=payload.get('format',path.suffix.lstrip('.')).lower(); sheets=[]; selected_sheet=None; photos=[]
     if suffix=='xlsx':
         with ZipFile(path) as z:
             if sum(i.file_size for i in z.infolist())>30*1024*1024 or len(z.infolist())>2000: raise ValueError('IMPORT_ARCHIVE_LIMIT')
@@ -825,8 +825,13 @@ def import_table(payload,out):
                 try: date.fromisoformat(record[key])
                 except ValueError: row_errors.append(key+':INVALID_DATE')
         rows.append({'rowNumber':rowno,'sourceId':fingerprint,'values':record,'errors':row_errors})
+    if suffix=='xlsx':
+        from import_photos import workbook_photos
+        with ZipFile(path) as archive:
+            photos, photo_errors=workbook_photos(archive,selected_sheet,headers,raw_rows)
+        errors.extend(photo_errors)
     if len(rows)>MAX_REQUEST_ROWS: errors.append({'code':'ROW_LIMIT','count':len(rows),'limit':MAX_REQUEST_ROWS})
-    result={'headers':headers,'sheets':sheets,'sheet':selected_sheet,'rawRows':raw_rows,'rows':rows,'errors':errors,'count':len(rows),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'canApply':len(rows)<=MAX_REQUEST_ROWS and not errors and not any(r['errors'] for r in rows)}
+    result={'photos':photos,'headers':headers,'sheets':sheets,'sheet':selected_sheet,'rawRows':raw_rows,'rows':rows,'errors':errors,'count':len(rows),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'canApply':len(rows)<=MAX_REQUEST_ROWS and not errors and not any(r['errors'] for r in rows)}
     Path(out).write_text(json.dumps(result,ensure_ascii=False),encoding='utf-8'); return result
 
 def safe_bundle_name(value):
@@ -906,6 +911,9 @@ def main():
         # Full source rows live in output.json. Repeating them on stdout would
         # hit the bounded metadata channel for legitimate large spreadsheets.
         result={'count':imported['count'],'canApply':imported['canApply']}
+    elif command=='import-template':
+        from import_photos import import_template
+        result=import_template(out)
     elif command=='xlsx': result=export_registry(payload,out)
     elif command=='lms-report':
         from lms_report import render_lms_report

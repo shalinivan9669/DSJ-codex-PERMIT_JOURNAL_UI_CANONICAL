@@ -30,6 +30,7 @@ export type ImportRow = {
   values: string[];
   errors?: string[];
   duplicate?: boolean;
+  photoAssetId?: string;
 };
 export type ImportPreview = {
   importId: string;
@@ -67,10 +68,31 @@ export function importIssueText(
     return `В исходном листе ${issue.count ?? `более ${LIMITS.rows}`} строк. Технический объём одной заявки — ${issue.limit ?? LIMITS.rows} получателей. Строки не обрезаны; обратитесь к администратору центра.`;
   return (
     issue.message ||
+    photoIssueText[issue.code || ""] ||
     "Проверьте исходный файл и отмеченные строки перед импортом."
   );
 }
+const photoIssueText: Record<string, string> = {
+  PHOTO_COLUMN_REQUIRED:
+    "Поместите верхний левый угол фото в единственную колонку «Фото» напротив сотрудника.",
+  PHOTO_ROW_MISSING:
+    "У фото нет строки сотрудника. Добавьте данные в эту строку или уберите рисунок.",
+  PHOTO_AMBIGUOUS:
+    "В строке несколько фотографий. Оставьте одну, чтобы не перепутать сотрудников.",
+  PHOTO_ANCHOR_INVALID:
+    "Фото не привязано к строке. Вставьте обычный рисунок в колонку «Фото».",
+  PHOTO_RELATION_INVALID:
+    "Внешняя или повреждённая ссылка на фото. Вставьте JPG или PNG непосредственно в Excel.",
+  PHOTO_UNSUPPORTED:
+    "Поддерживаются обычные рисунки JPG и PNG, по одному на строку; группы и фото внутри ячейки не поддерживаются.",
+  PHOTO_TYPE: "Вставьте обычный JPG или PNG вместо изображения этого формата.",
+  PHOTO_TOO_LARGE:
+    "Фото превышает 5 МиБ. Уменьшите его и загрузите файл снова.",
+  PHOTO_DECODE:
+    "Фото повреждено или превышает 20 Мп. Замените его обычным JPG или PNG.",
+};
 export function importRowIssueText(code: string): string {
+  if (photoIssueText[code]) return photoIssueText[code];
   if (code === "FORMULA_NOT_ALLOWED")
     return "Формула не импортируется. Замените её обычным значением в исходном файле.";
   if (code === "DUPLICATE_ROW") return "Возможный дубль исходной строки.";
@@ -392,7 +414,7 @@ export function mapImportRow(
     positionKz: "",
     workplaceRu: "",
     workplaceKz: "",
-    photoAssetId: null,
+    photoAssetId: row.photoAssetId || null,
     assignments: templateId ? [assignment] : [],
   };
   mapping.forEach((field, index) => {

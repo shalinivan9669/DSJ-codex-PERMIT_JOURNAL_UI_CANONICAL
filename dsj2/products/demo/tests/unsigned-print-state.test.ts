@@ -64,6 +64,7 @@ test("numbered PDFs without bound signers stay printable preparation and never b
         })),
     },
     issuanceEvent: { findFirst: async () => null },
+    auditEvent: { findMany: async () => [] },
   };
   const policy = await prepareSigningPolicy(
     fake as unknown as Prisma.TransactionClient,

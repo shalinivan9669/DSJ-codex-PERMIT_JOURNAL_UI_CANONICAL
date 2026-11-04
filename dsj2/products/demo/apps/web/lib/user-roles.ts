@@ -21,7 +21,7 @@ export function workspaceStartPath(role: Role, registering = false): string {
   if (role === "TEACHER" || role === "EXPERT") return "/lms/teaching";
   if (role === "LEARNER") return "/learn";
   if (role === "EMPLOYER") return "/portal";
-  if (["ADMIN", "SUPER_ADMIN", "OPERATOR"].includes(role)) return "/lms/workplace";
+  if (["ADMIN", "SUPER_ADMIN"].includes(role)) return "/lms/workplace";
   if (role === "DIRECTOR") return registering ? "/onboarding" : "/approvals";
   return "/requests";
 }

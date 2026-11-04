@@ -64,7 +64,7 @@ import { db, type DemoRequest } from "./core";
     LmsCommissionController,
   ],
 })
-class DemoModule {}
+export class DemoModule {}
 export async function bootstrap() {
   if (PRODUCT_POLICY.productId !== "DEMO" || PRODUCT_POLICY.version !== 2)
     throw new Error("PRODUCT_MANIFEST_INVALID");

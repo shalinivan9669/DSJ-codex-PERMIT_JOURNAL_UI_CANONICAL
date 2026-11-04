@@ -208,7 +208,7 @@ export function Workspace() {
         <Link
           href={workspaceStartPath(context.user.role)}
           className="brand-link"
-          aria-label="DEMO"
+          aria-label="КОРОЧКИ"
         >
           <Brand />
         </Link>
@@ -300,8 +300,8 @@ export function Workspace() {
       <footer className="site-footer">
         <span>
           {section === "lms" || context.user.role === "LEARNER" || teachingRole
-            ? tr("DEMO · Обучение и документы", "DEMO · Оқыту және құжаттар")
-            : tr("DEMO · Подготовка и печать документов", "DEMO · Құжаттарды дайындау және басып шығару")}
+            ? tr("КОРОЧКИ · Обучение и документы", "КОРОЧКИ · Оқыту және құжаттар")
+            : tr("КОРОЧКИ · Подготовка и печать документов", "КОРОЧКИ · Құжаттарды дайындау және басып шығару")}
         </span>
         <span>
           {tr("Часовой пояс центра", "Орталықтың уақыт белдеуі")}:{" "}
@@ -317,7 +317,7 @@ function Brand() {
       <span className="brand-mark">
         <Icon name="print" size={24} />
       </span>
-      <span>DEMO</span>
+      <span>КОРОЧКИ</span>
     </span>
   );
 }
@@ -380,7 +380,7 @@ function Login({ onLogin }: { onLogin: () => Promise<void> }) {
       </section>
       <section className="login-form">
         <form onSubmit={submit}>
-          <h2>{t("Войти в DEMO", "DEMO жүйесіне кіру")}</h2>
+          <h2>{t("Войти в КОРОЧКИ", "КОРОЧКИ жүйесіне кіру")}</h2>
           <LanguageSwitch language={language} onChange={setLanguage} />
           <p className="muted">
             {t(

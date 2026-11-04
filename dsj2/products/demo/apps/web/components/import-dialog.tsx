@@ -236,7 +236,7 @@ export function ImportDialog({
         new File([paste], "вставка.tsv", { type: "text/tab-separated-values" });
       if (source.size > LIMITS.importBytes)
         throw new Error(
-          "Файл больше 5 МиБ. Сохраните только таблицу значений без изображений и лишнего оформления; строки не обрезаны.",
+          "Файл больше 5 МиБ. Уменьшите фотографии или разделите файл; строки не обрезаны.",
         );
       const body = new FormData();
       body.set("file", source);
@@ -503,6 +503,14 @@ export function ImportDialog({
         Выберите XLSX / CSV или вставьте таблицу. Знакомые колонки распознаются
         автоматически; проверьте состав и отмеченные проблемы. Неполные строки
         сохраняются в черновик, номера ещё не назначаются.
+      </p>
+      <p className="fine-print">
+        <a href="/api/imports/template" download>
+          Скачать шаблон Excel
+        </a>
+        {" · "}Файл до 5 МиБ, до 250 фото JPG/PNG. Верхний левый угол фото — в
+        колонке «Фото» напротив сотрудника. Отдельное фото можно добавить в
+        карточке сотрудника после импорта.
       </p>
       {error && (
         <div ref={errorRef} tabIndex={-1}>
@@ -1052,6 +1060,7 @@ export function ImportDialog({
                       )}
                     </th>
                   ))}
+                  <th>Фото сотрудника</th>
                   <th>Проверка</th>
                 </tr>
               </thead>
@@ -1206,6 +1215,27 @@ export function ImportDialog({
                         </td>
                       );
                     })}
+                    <td>
+                      {row.photoAssetId ? (
+                        <>
+                          <img
+                            src={`/api/photos/${encodeURIComponent(row.photoAssetId)}`}
+                            alt={`Фото сотрудника, строка ${row.sourceRow}`}
+                            width={60}
+                            height={80}
+                            loading="lazy"
+                            style={{ objectFit: "contain" }}
+                          />
+                          <small>
+                            {revisionMode
+                              ? "Фото существующих сотрудников сохраняются"
+                              : "Фото из Excel"}
+                          </small>
+                        </>
+                      ) : (
+                        <span className="muted">Без фото</span>
+                      )}
+                    </td>
                     <td>
                       {!revisionMode && alreadyAdded.has(row.sourceRow)
                         ? "Уже добавлена · без изменений"

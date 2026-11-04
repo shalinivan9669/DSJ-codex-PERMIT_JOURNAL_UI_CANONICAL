@@ -10,7 +10,7 @@ type Signatory = {
   id: string;
   userId: string;
   displayName: string;
-  role: "DIRECTOR" | "CHAIR" | "MEMBER";
+  role: "DIRECTOR" | "CHAIR" | "MEMBER" | "TEACHER";
   iin: string;
   bin?: string;
   active: boolean;
@@ -19,6 +19,7 @@ const roleNames = {
   DIRECTOR: "Директор",
   CHAIR: "Председатель комиссии",
   MEMBER: "Член комиссии",
+  TEACHER: "Преподаватель",
 };
 
 export function SignatorySettings() {
@@ -45,7 +46,12 @@ export function SignatorySettings() {
     (user) =>
       user.active !== false &&
       !user.disabled &&
-      ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EXPERT"].includes(user.role) &&
+      ["SUPER_ADMIN", "ADMIN", "DIRECTOR", "OPERATOR", "EXPERT"].includes(
+        user.role,
+      ) &&
+      (role !== "TEACHER" ||
+        isDirectorRole(user.role) ||
+        user.role === "OPERATOR") &&
       (role !== "DIRECTOR" || isDirectorRole(user.role)),
   );
   const load = useCallback(async () => {
@@ -70,7 +76,9 @@ export function SignatorySettings() {
         displayName.trim().length < 2
       )
         throw new Error(
-          tr("Выберите действующего сотрудника и укажите ФИО как в документах комиссии."),
+          tr(
+            "Выберите действующего сотрудника и укажите ФИО как в документах комиссии.",
+          ),
         );
       await api("/settings/signatories", {
         method: "POST",
@@ -97,14 +105,30 @@ export function SignatorySettings() {
     <>
       <h2>{tr("Подписанты ЭЦП")}</h2>
       <Notice kind="info">
-        {tr("Согласования директора достаточно для подготовки и печати документов. Этот раздел нужен для официального подписания ЭЦП. ФИО комиссии заполняются в реквизитах центра и не требуют отдельных учётных записей.")}</Notice>
+        {tr(
+          "Согласования директора достаточно для подготовки и печати документов. Этот раздел нужен для официального подписания ЭЦП. ФИО комиссии заполняются в реквизитах центра и не требуют отдельных учётных записей.",
+        )}
+      </Notice>
       <p>
-        {tr("Свяжите учётную запись подписанта с ИИН владельца ЭЦП. Председатель и члены комиссии должны соответствовать утверждённому профилю учебного центра.")}</p>
+        {tr(
+          "Для новых документов БиОТ, ПБ и ПТМ назначьте директора, председателя и преподавателя. ФИО председателя и преподавателя должны соответствовать реквизитам центра или группы.",
+        )}
+      </p>
       <p className="muted">
-        {tr("Ключ ЭЦП и пароль остаются у подписанта. Готовность eGov Mobile и проверки подписи настраивается на сервере.")}</p>
+        {tr(
+          "Для отдельного преподавателя-подписанта создайте сотрудника с доступом «Оператор» и выберите здесь роль подписи «Преподаватель». Директор также может иметь отдельную привязку преподавателя. Учётные записи преподавателей LMS используются для обучения.",
+        )}
+      </p>
+      <p className="muted">
+        {tr(
+          "Ключ ЭЦП и пароль остаются у подписанта. Готовность eGov Mobile и проверки подписи настраивается на сервере.",
+        )}
+      </p>
       {error && <Notice>{error}</Notice>}
       {saved && (
-        <Notice kind="success">{tr("Новая привязка подписанта сохранена.")}</Notice>
+        <Notice kind="success">
+          {tr("Новая привязка подписанта сохранена.")}
+        </Notice>
       )}
       <div className="table-scroll">
         <table>
@@ -124,7 +148,9 @@ export function SignatorySettings() {
                 <td>
                   {entry.iin.slice(0, 3)}••••••{entry.iin.slice(-3)}
                 </td>
-                <td>{entry.active ? tr("Действует") : tr("Предыдущая версия")}</td>
+                <td>
+                  {entry.active ? tr("Действует") : tr("Предыдущая версия")}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -133,7 +159,8 @@ export function SignatorySettings() {
       <form onSubmit={submit} className="approval-decision">
         <h3>{tr("Добавить или обновить привязку")}</h3>
         <label>
-          {tr("Пользователь")}<select
+          {tr("Пользователь")}
+          <select
             required
             value={userId}
             onChange={(event) => {
@@ -154,16 +181,19 @@ export function SignatorySettings() {
           </select>
         </label>
         <label>
-          {tr("Роль подписанта")}<select
+          {tr("Роль подписанта")}
+          <select
             value={role}
             onChange={(event) => {
               const nextRole = event.target.value as Signatory["role"];
               setRole(nextRole);
+              const selectedRole =
+                users.find((user) => user.id === userId)?.role || "";
               if (
-                nextRole === "DIRECTOR" &&
-                !isDirectorRole(
-                  users.find((user) => user.id === userId)?.role || "",
-                )
+                (nextRole === "DIRECTOR" && !isDirectorRole(selectedRole)) ||
+                (nextRole === "TEACHER" &&
+                  !isDirectorRole(selectedRole) &&
+                  selectedRole !== "OPERATOR")
               ) {
                 setUserId("");
                 setDisplayName("");
@@ -179,7 +209,8 @@ export function SignatorySettings() {
           </select>
         </label>
         <label>
-          {tr("ФИО в документах / комиссии")}<input
+          {tr("ФИО в документах / комиссии")}
+          <input
             required
             minLength={2}
             maxLength={255}
@@ -193,10 +224,14 @@ export function SignatorySettings() {
           />
         </label>
         <p className="muted" id="signatory-document-name-help">
-          {tr("Укажите ФИО в точности как в утверждённом профиле центра: в составе комиссии или в поле руководителя.")}</p>
+          {tr(
+            "Укажите ФИО в точности как в утверждённом профиле центра: в составе комиссии или в поле руководителя.",
+          )}
+        </p>
         <div className="form-grid">
           <label>
-            {tr("ИИН владельца ЭЦП")}<input
+            {tr("ИИН владельца ЭЦП")}
+            <input
               required
               inputMode="numeric"
               autoComplete="off"
@@ -210,7 +245,8 @@ export function SignatorySettings() {
             />
           </label>
           <label>
-            {tr("БИН сертификата организации, если требуется")}<input
+            {tr("БИН сертификата организации, если требуется")}
+            <input
               inputMode="numeric"
               autoComplete="off"
               pattern="[0-9]{12}"

@@ -258,7 +258,7 @@ test("an unsigned paper original remains preparation after PDF completion and ca
     { where: { id: "workflow" }, data: { status: "AWAITING_SIGNATURE" } },
   ]);
 });
-test("mixed LMS and existing DEMO documents preserve legacy signer slots", async () => {
+test("mixed new manual and LMS documents keep their independent signing policies", async () => {
   const policy = await prepareSigningPolicy(
     fake,
     context,
@@ -270,11 +270,11 @@ test("mixed LMS and existing DEMO documents preserve legacy signer slots", async
     ],
   );
   assert.equal(signersFor(policy, "lms-certificate", "assignment").length, 0);
-  assert.equal(signersFor(policy, "pb-protocol", "legacy").length, 4);
+  assert.equal(signersFor(policy, "pb-protocol", "legacy").length, 3);
   assert.equal(
     signersFor(policy, "pb-protocol", "legacy").filter(
       (signer) => !signer.bindingId,
     ).length,
-    4,
+    3,
   );
 });

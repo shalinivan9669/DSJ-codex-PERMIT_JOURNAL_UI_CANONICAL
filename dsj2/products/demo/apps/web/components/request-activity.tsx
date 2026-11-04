@@ -44,6 +44,7 @@ export function RequestActivity({
 }) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(0);
   const [action, setAction] = useState("");
   const [actor, setActor] = useState("");
@@ -51,6 +52,8 @@ export function RequestActivity({
   const [to, setTo] = useState("");
   useEffect(() => {
     let active = true;
+    setLoading(true);
+    setError("");
     void api<{ items: Entry[] }>(`/print-requests/${requestId}/activity`)
       .then((value) => {
         if (active) {
@@ -60,6 +63,9 @@ export function RequestActivity({
       })
       .catch((caught) => {
         if (active) setError(errorText(caught));
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
     return () => {
       active = false;
@@ -81,8 +87,11 @@ export function RequestActivity({
             ? "Последние 200 событий. Фильтры применяются к показанным событиям."
             : "Основные события согласования, подписания и выдачи."}
         </p>
-        <button onClick={() => setRefresh((value) => value + 1)}>
-          Обновить историю
+        <button
+          disabled={loading}
+          onClick={() => setRefresh((value) => value + 1)}
+        >
+          {loading ? "Загружаем историю…" : "Обновить историю"}
         </button>
       </div>
       {error && <Notice>{error}</Notice>}
@@ -136,6 +145,9 @@ export function RequestActivity({
           </label>
         </div>
       )}
+      {loading && !entries.length && (
+        <p role="status">Загружаем историю заявки…</p>
+      )}
       {visible.length ? (
         <ol className="activity-list">
           {visible.map((entry) => (
@@ -151,9 +163,9 @@ export function RequestActivity({
             </li>
           ))}
         </ol>
-      ) : (
+      ) : !loading && !error ? (
         <p className="muted">Нет событий по выбранным условиям.</p>
-      )}
+      ) : null}
     </details>
   );
 }

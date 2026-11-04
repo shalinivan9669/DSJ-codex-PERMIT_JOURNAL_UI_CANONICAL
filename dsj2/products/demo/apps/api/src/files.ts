@@ -49,8 +49,7 @@ import {
   type ExportRow,
 } from "./delivery";
 export const store = new ArtifactStore();
-export async function uploadPhoto(
-  c: Context,
+async function preparePhoto(
   file: Express.Multer.File | undefined,
   input: Record<string, unknown>,
 ) {
@@ -131,27 +130,46 @@ export async function uploadPhoto(
     );
   }
   const dimensions = await sharp(normalized).metadata();
-  const original = await store.put(
-    file.buffer,
-    metadata.format === "jpeg" ? "jpg" : "png",
-  );
-  const asset = await store.put(normalized, "png");
-  const photo = await db.photoAsset.create({
+  return {
+    original: file.buffer,
+    extension: metadata.format === "jpeg" ? "jpg" : "png",
+    normalized,
+    width: dimensions.width!,
+    height: dimensions.height!,
+  };
+}
+async function savePreparedPhoto(
+  tx: Parameters<Parameters<typeof transaction>[0]>[0],
+  c: Context,
+  prepared: Awaited<ReturnType<typeof preparePhoto>>,
+) {
+  const original = await store.put(prepared.original, prepared.extension);
+  const asset = await store.put(prepared.normalized, "png");
+  const photo = await tx.photoAsset.create({
     data: {
       tenantId: c.tenantId,
       ownerId: c.userId,
       ...asset,
       originalStorageKey: original.storageKey,
-      width: dimensions.width!,
-      height: dimensions.height!,
+      width: prepared.width,
+      height: prepared.height,
       mimeType: "image/png",
     },
   });
-  await audit(db, c, "PHOTO_UPLOADED", photo.id, {
+  await audit(tx, c, "PHOTO_UPLOADED", photo.id, {
     width: photo.width,
     height: photo.height,
     size: photo.size,
   });
+  return photo;
+}
+export async function uploadPhoto(
+  c: Context,
+  file: Express.Multer.File | undefined,
+  input: Record<string, unknown>,
+) {
+  const prepared = await preparePhoto(file, input);
+  const photo = await transaction((tx) => savePreparedPhoto(tx, c, prepared));
   return {
     assetId: photo.id,
     id: photo.id,
@@ -294,7 +312,14 @@ export async function importPreview(
       undefined,
       sheet,
     );
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (["PHOTO_COUNT_LIMIT", "PHOTO_TOTAL_LIMIT"].includes(message))
+      fail(
+        413,
+        "IMPORT_PHOTOS_LIMIT",
+        "В одном файле допускается до 250 фотографий и до 20 МиБ изображений после распаковки. Разделите файл.",
+      );
     fail(
       400,
       "IMPORT_INVALID",
@@ -308,8 +333,21 @@ export async function importPreview(
     errors: string[];
     sourceId?: string;
   }>;
+  type PreviewRow = {
+    sourceRow: number;
+    values: string[];
+    errors: string[];
+    duplicate: boolean;
+    photoAssetId?: string;
+  };
+  type StoredPreview = {
+    columns: string[];
+    rows: PreviewRow[];
+    errors: unknown[];
+    photoImportVersion: number;
+  };
   const seen = new Set<string>();
-  const rows = source.map((row) => {
+  const rows: PreviewRow[] = source.map((row) => {
     const values = Array.isArray(row.values)
       ? row.values
       : columns.map((h) => (row.values as Record<string, string>)[h] || "");
@@ -326,33 +364,128 @@ export async function importPreview(
   const checksum = hash(
     file.buffer.toString("base64") + "|" + String(parsed.sheet || ""),
   );
-  // Prisma may emulate an empty-update upsert with read/create. Retry the
-  // unique-constraint race so concurrent uploads return the same durable batch.
-  const record = await transaction((tx) =>
-    tx.importBatch.upsert({
-      where: { tenantId_checksum: { tenantId: c.tenantId, checksum } },
-      create: {
-        tenantId: c.tenantId,
-        checksum,
-        rows: json({ columns, rows, errors: parsed.errors || [] }),
-      },
-      update: {},
-    }),
-  );
-  return {
-    importId: record.id,
-    sheets: parsed.sheets || [],
-    sheet: parsed.sheet || "",
-    columns,
-    rows,
-    total: rows.length,
-    checksum: record.checksum,
-    errors: parsed.errors || [],
-    canApply:
-      rows.length <= LIMITS.rows &&
-      !((parsed.errors as unknown[]) || []).length &&
-      !rows.some((row) => row.errors.length),
+  const response = (record: {
+    id: string;
+    checksum: string;
+    rows: unknown;
+  }) => {
+    const stored = record.rows as StoredPreview;
+    return {
+      importId: record.id,
+      sheets: parsed.sheets || [],
+      sheet: parsed.sheet || "",
+      columns: stored.columns,
+      rows: stored.rows,
+      total: stored.rows.length,
+      checksum: record.checksum,
+      errors: stored.errors,
+      canApply:
+        stored.rows.length <= LIMITS.rows &&
+        !stored.errors.length &&
+        !stored.rows.some((row) => row.errors.length),
+    };
   };
+  const previous = await db.importBatch.findUnique({
+    where: { tenantId_checksum: { tenantId: c.tenantId, checksum } },
+  });
+  if ((previous?.rows as unknown as StoredPreview)?.photoImportVersion === 1)
+    return response(previous!);
+
+  const images = (parsed.photos || []) as Array<{
+    sourceRow: number;
+    mimeType: string;
+    base64: string;
+  }>;
+  if (images.length > 250)
+    fail(
+      413,
+      "IMPORT_PHOTOS_LIMIT",
+      "В одном файле поддерживается до 250 фотографий",
+    );
+  const prepared = new Map<number, Awaited<ReturnType<typeof preparePhoto>>>();
+  let bytes = 0;
+  let normalizedBytes = 0;
+  const errors = [...((parsed.errors || []) as unknown[])];
+  // Decode sequentially: a group never requires all source images expanded in memory.
+  for (const image of images) {
+    const row = rows.find((entry) => entry.sourceRow === image.sourceRow);
+    if (!row || prepared.has(image.sourceRow))
+      fail(
+        400,
+        "IMPORT_PHOTO_SOURCE",
+        "Не удалось однозначно сопоставить фото со строкой",
+      );
+    // An invalid text/formula row stays visible and excluded; it must not block
+    // independent valid rows just because both rows have embedded photos.
+    if (row.errors.length) continue;
+    if (
+      typeof image.base64 !== "string" ||
+      image.base64.length > Math.ceil(LIMITS.photoBytes / 3) * 4
+    )
+      fail(413, "IMPORT_PHOTOS_LIMIT", "Фото в Excel превышает 5 МиБ");
+    const buffer = Buffer.from(image.base64, "base64");
+    bytes += buffer.length;
+    if (bytes > 20 * 1024 * 1024)
+      fail(
+        413,
+        "IMPORT_PHOTOS_LIMIT",
+        "Фотографии после распаковки превышают 20 МиБ",
+      );
+    try {
+      const photo = await preparePhoto(
+        { buffer, size: buffer.length } as Express.Multer.File,
+        {},
+      );
+      normalizedBytes += photo.normalized.length;
+      if (normalizedBytes > 30 * 1024 * 1024)
+        fail(
+          413,
+          "IMPORT_PHOTOS_LIMIT",
+          "Обработанные фотографии превышают 30 МиБ; разделите файл",
+        );
+      prepared.set(image.sourceRow, photo);
+    } catch (error) {
+      if (
+        error &&
+        typeof error === "object" &&
+        "getStatus" in error &&
+        (error as { getStatus(): number }).getStatus() === 413
+      )
+        throw error;
+      row.errors.push("PHOTO_DECODE");
+      errors.push({ row: image.sourceRow, code: "PHOTO_DECODE" });
+    }
+  }
+  const record = await transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":import-preview:" + checksum},0))`;
+    const existing = await tx.importBatch.findUnique({
+      where: { tenantId_checksum: { tenantId: c.tenantId, checksum } },
+    });
+    if ((existing?.rows as unknown as StoredPreview)?.photoImportVersion === 1)
+      return existing!;
+    // References, audit events and the batch commit together. A lost response
+    // reuses this batch and its photo IDs, including concurrent previews.
+    const savedRows = rows.map((row) => ({ ...row }));
+    for (const row of savedRows) {
+      const photo = prepared.get(row.sourceRow);
+      if (photo) row.photoAssetId = (await savePreparedPhoto(tx, c, photo)).id;
+    }
+    const data = json({
+      columns,
+      rows: savedRows,
+      errors,
+      photoImportVersion: 1,
+    });
+    return existing
+      ? tx.importBatch.update({
+          where: { id: existing.id },
+          data: { rows: data },
+        })
+      : tx.importBatch.create({
+          data: { tenantId: c.tenantId, checksum, rows: data },
+        });
+  });
+  return response(record);
 }
 export async function applyImport(c: Context, id: string, input: unknown) {
   assertStaff(c, true);

@@ -16,30 +16,30 @@ export async function provision(input: {
   demonstration?: boolean;
 }) {
   if (input.password.length < 12) throw new Error("ADMIN_PASSWORD_MIN_12");
-  let user = await db.user.findUnique({
+  const existingUser = await db.user.findUnique({
     where: { email: input.email.toLowerCase() },
   });
-  let tenant = user
-    ? await db.tenant.findUniqueOrThrow({ where: { id: user.tenantId } })
+  const existingTenant = existingUser
+    ? await db.tenant.findUniqueOrThrow({
+        where: { id: existingUser.tenantId },
+      })
     : null;
-  if (!user) {
-    tenant = await db.tenant.create({
-      data: { name: input.name, demoOnly: !!(input.sample || input.demonstration) },
-    });
-    user = await db.user.create({
-      data: {
-        tenantId: tenant.id,
-        email: input.email.toLowerCase(),
-        displayName: "Директор",
-        role: "DIRECTOR",
-        passwordHash: await passwordHash(input.password),
-      },
-    });
-  }
-  if (input.sample && !tenant!.demoOnly)
+  if (input.sample && existingTenant && !existingTenant.demoOnly)
     throw new Error("EXISTING_PRODUCTION_TENANT_CANNOT_BECOME_DEMO");
   const store = new ArtifactStore();
   const manifest = await templateManifest();
+  const installed = existingTenant
+    ? await db.templateVersion.findMany({
+        where: { tenantId: existingTenant.id },
+      })
+    : [];
+  // Validate and persist every source file before creating an account. A failed
+  // checksum or storage write must never leave a half-configured tenant.
+  const prepared: {
+    template: (typeof manifest.templates)[number];
+    checksum: string;
+    asset: { storageKey: string };
+  }[] = [];
   for (const template of [
     ...manifest.templates,
     ...(manifest.specialTemplates || []),
@@ -57,85 +57,138 @@ export async function provision(input: {
     );
     if (checksum !== template.sha256)
       throw new Error(`TEMPLATE_CHECKSUM_MISMATCH:${template.id}`);
-    const where = {
-      tenantId_templateId_version: {
-        tenantId: tenant!.id,
-        templateId: String(template.id),
-        version: String(template.version),
-      },
-    };
-    const existing = await db.templateVersion.findUnique({ where });
-    if (existing && existing.checksum !== checksum)
+    const installedVersion = installed.find(
+      (row) =>
+        row.templateId === String(template.id) &&
+        row.version === String(template.version),
+    );
+    if (installedVersion && installedVersion.checksum !== checksum)
       throw new Error(`TEMPLATE_VERSION_ALREADY_IMMUTABLE:${template.id}`);
-    if (!existing) {
-      const asset = await store.put(bytes, "docx");
-      await db.templateVersion.create({
-        data: {
-          tenantId: tenant!.id,
-          templateId: String(template.id),
-          version: String(template.version),
-          checksum,
-          storageKey: asset.storageKey,
-          contract: json(template),
-          approved: !!input.sample,
-        },
+    const asset = installedVersion
+      ? { storageKey: installedVersion.storageKey }
+      : await store.put(bytes, "docx");
+    prepared.push({ template, checksum, asset });
+  }
+  const newPasswordHash = existingUser
+    ? null
+    : await passwordHash(input.password);
+  return db.$transaction(
+    async (tx) => {
+      // Two setup processes for the same email must converge without orphan tenants.
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`demo-setup:${input.email.toLowerCase()}`}, 0))`;
+      let user = await tx.user.findUnique({
+        where: { email: input.email.toLowerCase() },
       });
-    }
-  }
-  for (const name of [
-    ...new Set(
-      templateIds.map(
-        (id) =>
-          id.split("-")[0].toUpperCase() +
-          ":" +
-          (id.endsWith("protocol")
-            ? "PROTOCOL"
-            : id.endsWith("witness")
-              ? "WITNESS"
-              : id.endsWith("certificate")
-                ? "CERTIFICATE"
-                : "CARD"),
-      ),
-    ),
-    "PS:REGISTRATION",
-  ])
-    await db.numberSequence.upsert({
-      where: { tenantId_namespace: { tenantId: tenant!.id, namespace: name } },
-      create: {
-        tenantId: tenant!.id,
-        namespace: name,
-        prefix: name.replace(":", "-") + "-",
-      },
-      update: {},
-    });
-  if (
-    input.sample &&
-    !(await db.issuerProfileVersion.findFirst({
-      where: { tenantId: tenant!.id },
-    }))
-  ) {
-    await db.issuerProfileVersion.create({
-      data: {
-        tenantId: tenant!.id,
-        version: 1,
-        createdBy: user.id,
-        profile: {
-          nameRu: "Синтетический учебный центр",
-          nameKz: "Синтетикалық оқу орталығы",
-          addressRu: "Демонстрационный адрес",
-          addressKz: "Көрнекі мекенжай",
-          cityRu: "Кызылорда",
-          cityKz: "Қызылорда",
-          approvalBasis: "Учебный набор — не является выданным документом",
-          commission: [
-            { name: "Тестовый Председатель", position: "Синтетические данные" },
-          ],
-          approved: true,
-        },
-      },
-    });
-  }
-  return { tenantId: tenant!.id, userId: user.id, email: user.email };
+      let tenant = user
+        ? await tx.tenant.findUniqueOrThrow({ where: { id: user.tenantId } })
+        : null;
+      if (!user) {
+        tenant = await tx.tenant.create({
+          data: {
+            name: input.name,
+            demoOnly: !!(input.sample || input.demonstration),
+          },
+        });
+        user = await tx.user.create({
+          data: {
+            tenantId: tenant.id,
+            email: input.email.toLowerCase(),
+            displayName: "Директор",
+            role: "DIRECTOR",
+            passwordHash:
+              newPasswordHash || (await passwordHash(input.password)),
+          },
+        });
+      }
+      if (input.sample && !tenant!.demoOnly)
+        throw new Error("EXISTING_PRODUCTION_TENANT_CANNOT_BECOME_DEMO");
+      for (const { template, checksum, asset } of prepared) {
+        const where = {
+          tenantId_templateId_version: {
+            tenantId: tenant!.id,
+            templateId: String(template.id),
+            version: String(template.version),
+          },
+        };
+        const existing = await tx.templateVersion.findUnique({ where });
+        if (existing && existing.checksum !== checksum)
+          throw new Error(`TEMPLATE_VERSION_ALREADY_IMMUTABLE:${template.id}`);
+        if (!existing) {
+          await tx.templateVersion.create({
+            data: {
+              tenantId: tenant!.id,
+              templateId: String(template.id),
+              version: String(template.version),
+              checksum,
+              storageKey: asset.storageKey,
+              contract: json(template),
+              approved: !!input.sample,
+            },
+          });
+        }
+      }
+      for (const name of [
+        ...new Set(
+          templateIds.map(
+            (id) =>
+              id.split("-")[0].toUpperCase() +
+              ":" +
+              (id.endsWith("protocol")
+                ? "PROTOCOL"
+                : id.endsWith("witness")
+                  ? "WITNESS"
+                  : id.endsWith("certificate")
+                    ? "CERTIFICATE"
+                    : "CARD"),
+          ),
+        ),
+        "PS:REGISTRATION",
+      ])
+        await tx.numberSequence.upsert({
+          where: {
+            tenantId_namespace: { tenantId: tenant!.id, namespace: name },
+          },
+          create: {
+            tenantId: tenant!.id,
+            namespace: name,
+            prefix: name.replace(":", "-") + "-",
+          },
+          update: {},
+        });
+      if (
+        input.sample &&
+        !(await tx.issuerProfileVersion.findFirst({
+          where: { tenantId: tenant!.id },
+        }))
+      ) {
+        await tx.issuerProfileVersion.create({
+          data: {
+            tenantId: tenant!.id,
+            version: 1,
+            createdBy: user.id,
+            profile: {
+              nameRu: "Синтетический учебный центр",
+              nameKz: "Синтетикалық оқу орталығы",
+              addressRu: "Демонстрационный адрес",
+              addressKz: "Көрнекі мекенжай",
+              cityRu: "Кызылорда",
+              cityKz: "Қызылорда",
+              approvalBasis: "Учебный набор — не является выданным документом",
+              commission: [
+                {
+                  name: "Тестовый Председатель",
+                  position: "Синтетические данные",
+                },
+              ],
+              approved: true,
+            },
+          },
+        });
+      }
+      return { tenantId: tenant!.id, userId: user.id, email: user.email };
+    },
+    { timeout: 30000 },
+  );
 }
 if (require.main === module) {
   const email = process.env.DEMO_ADMIN_EMAIL;
