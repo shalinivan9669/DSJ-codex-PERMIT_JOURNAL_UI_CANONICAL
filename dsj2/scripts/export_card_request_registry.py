@@ -19,6 +19,14 @@ def normalize(value):
     return str(value).strip()
 
 
+def write_text(worksheet, row, column, value):
+    # openpyxl treats a leading '=' as a formula unless the type is forced.
+    # Preserve the original text without making it executable in Excel.
+    cell = worksheet.cell(row=row, column=column, value=normalize(value))
+    cell.data_type = "s"
+    return cell
+
+
 def validate_payload(payload):
     if not isinstance(payload, dict):
         raise RuntimeError("Передан некорректный payload реестра.")
@@ -80,7 +88,7 @@ def main():
 
     for index, (label, value) in enumerate(summary_rows, start=1):
         summary.cell(row=index, column=1, value=label).font = header_font
-        summary.cell(row=index, column=2, value=normalize(value))
+        write_text(summary, index, 2, value)
 
     registry_headers = [
         "№",
@@ -101,16 +109,20 @@ def main():
         cell.fill = header_fill
 
     for row_index, item in enumerate(items, start=2):
-        registry.cell(row=row_index, column=1, value=item.get("index", row_index - 1))
-        registry.cell(row=row_index, column=2, value=normalize(request.get("title")))
-        registry.cell(row=row_index, column=3, value=normalize(request.get("certificateTypeLabel")))
-        registry.cell(row=row_index, column=4, value=normalize(item.get("fullName")))
-        registry.cell(row=row_index, column=5, value=normalize(item.get("positionRu")))
-        registry.cell(row=row_index, column=6, value=normalize(item.get("positionKz")))
-        registry.cell(row=row_index, column=7, value=normalize(item.get("workplaceRu")))
-        registry.cell(row=row_index, column=8, value=normalize(item.get("workplaceKz")))
-        registry.cell(row=row_index, column=9, value=normalize(item.get("certificateNumber")))
-        registry.cell(row=row_index, column=10, value=normalize(item.get("protocolNumber")))
+        index_value = item.get("index", row_index - 1)
+        if isinstance(index_value, int) and not isinstance(index_value, bool):
+            registry.cell(row=row_index, column=1, value=index_value)
+        else:
+            write_text(registry, row_index, 1, index_value)
+        write_text(registry, row_index, 2, request.get("title"))
+        write_text(registry, row_index, 3, request.get("certificateTypeLabel"))
+        write_text(registry, row_index, 4, item.get("fullName"))
+        write_text(registry, row_index, 5, item.get("positionRu"))
+        write_text(registry, row_index, 6, item.get("positionKz"))
+        write_text(registry, row_index, 7, item.get("workplaceRu"))
+        write_text(registry, row_index, 8, item.get("workplaceKz"))
+        write_text(registry, row_index, 9, item.get("certificateNumber"))
+        write_text(registry, row_index, 10, item.get("protocolNumber"))
 
     summary.freeze_panes = "A2"
     registry.freeze_panes = "A2"

@@ -1,4 +1,5 @@
 import { getApiUrl, getSessionToken } from "../../../../lib/api";
+import { biotGenerationProxyResponse } from "../../../../lib/biot-generation-response";
 
 export async function POST(request: Request) {
   const token = await getSessionToken();
@@ -18,19 +19,5 @@ export async function POST(request: Request) {
     cache: "no-store",
   });
 
-  const body = await response.arrayBuffer();
-  const contentType = response.headers.get("Content-Type") ?? "text/plain; charset=utf-8";
-  const disposition = response.headers.get("Content-Disposition");
-
-  return new Response(body, {
-    status: response.status,
-    headers: disposition
-      ? {
-          "Content-Type": contentType,
-          "Content-Disposition": disposition,
-        }
-      : {
-          "Content-Type": contentType,
-        },
-  });
+  return biotGenerationProxyResponse(response);
 }

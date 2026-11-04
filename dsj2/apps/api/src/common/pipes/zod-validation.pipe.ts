@@ -19,30 +19,30 @@ function formatCharacterCount(value: number) {
 function formatIssue(issue: ZodIssue) {
   switch (issue.code) {
     case "invalid_type":
-      if (issue.received === "undefined") {
+      if (issue.input === undefined) {
         return "Поле обязательно.";
       }
 
       return issue.message;
     case "too_small":
-      if (issue.type === "string") {
+      if (issue.origin === "string") {
         return `Минимум ${formatCharacterCount(Number(issue.minimum))}.`;
       }
 
       return issue.message;
     case "too_big":
-      if (issue.type === "string") {
+      if (issue.origin === "string") {
         return `Максимум ${formatCharacterCount(Number(issue.maximum))}.`;
       }
 
       return issue.message;
-    case "invalid_string":
-      if (issue.validation === "email") {
+    case "invalid_format":
+      if (issue.format === "email") {
         return "Некорректный email.";
       }
 
       return issue.message;
-    case "invalid_enum_value":
+    case "invalid_value":
       return "Недопустимое значение.";
     default:
       return issue.message || "Ошибка валидации.";
@@ -54,7 +54,7 @@ export class ZodValidationPipe<TSchema> implements PipeTransform {
   constructor(private readonly schema: ZodSchema<TSchema>) {}
 
   transform(value: unknown) {
-    const parsed = this.schema.safeParse(value);
+    const parsed = this.schema.safeParse(value, { reportInput: true });
 
     if (!parsed.success) {
       const flattened = parsed.error.flatten();

@@ -71,6 +71,12 @@ export default async function MyTrainingDetailPage({
     } | null;
   }>(`training-assignments/${id}`);
 
+  const hasMaterialLinks = Boolean(
+    assignment.trainingProgram.materialFileUrl || assignment.trainingProgram.videoUrl,
+  );
+  const expectsDocuments =
+    assignment.trainingProgram.createsDocument || assignment.trainingProgram.createsSafetyCertificate;
+
   return (
     <div className="space-y-6">
       {errorMessage ? (
@@ -128,8 +134,10 @@ export default async function MyTrainingDetailPage({
             <div className="rounded-2xl bg-slate-50 p-4">
               <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Описание и материал</p>
               <p className="mt-2 whitespace-pre-line text-sm text-slate-700">
-                {assignment.trainingProgram.materialContent ??
-                  "Текстовый материал пока не приложен. Используйте внешний файл или видео по ссылкам ниже."}
+                {assignment.trainingProgram.materialContent?.trim() ||
+                  (hasMaterialLinks
+                    ? "Текстовый материал не приложен. Откройте материал по ссылке ниже."
+                    : "Материалы пока не добавлены. Обратитесь к ответственному за обучение.")}
               </p>
               {assignment.trainingProgram.materialFileUrl ? (
                 <a
@@ -236,7 +244,13 @@ export default async function MyTrainingDetailPage({
                   ))}
                 </>
               ) : (
-                <EmptyState>Документы и удостоверения появятся после завершения обучения.</EmptyState>
+                <EmptyState>
+                  {!expectsDocuments
+                    ? "Для этой программы создание документов не предусмотрено."
+                    : assignment.status === "COMPLETED"
+                      ? "Документы пока не появились. Обратитесь к ответственному за обучение."
+                      : "Документы могут появиться после завершения обучения."}
+                </EmptyState>
               )}
             </CardContent>
           </Card>

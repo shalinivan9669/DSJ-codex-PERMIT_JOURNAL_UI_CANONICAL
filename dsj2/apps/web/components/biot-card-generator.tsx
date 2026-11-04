@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   ChangeEvent,
   ClipboardEvent as ReactClipboardEvent,
@@ -25,6 +25,10 @@ import {
   Th,
 } from "@dsj/ui";
 import { requestKazakhJobTitleTranslation } from "../lib/job-title-translation";
+import { readBiotWorkbook, validateBiotPhoto, type BiotImportResult } from "../lib/biot-xlsx-import";
+import { canReuseImportPlaceholder } from "../lib/biot-import-placeholder";
+import { serializeBiotRequest } from "../lib/biot-request-size";
+import { BiotGroupSubmissionError, confirmedBiotHistoryLinks, describeBiotGroupFailure, submitBiotGroups } from "../lib/biot-group-submission";
 import { PhotoUploadInput } from "./photo-upload-input";
 
 type EmployeeOption = {
@@ -118,6 +122,14 @@ type GeneratorRow = RowDocumentSettings & {
   photoDataUrl: string;
   photoFileName: string;
   isPhotoProcessing: boolean;
+};
+
+type ImportPhoto = {
+  status: "processing" | "ready" | "error";
+  source: "excel" | "file";
+  dataUrl?: string;
+  fileName?: string;
+  message?: string;
 };
 
 type GenerationGroup = {
@@ -1016,6 +1028,9 @@ function loadImageFromFile(file: File) {
 
 async function preparePhotoDataUrl(file: File) {
   const image = await loadImageFromFile(file);
+  if (!image.width || !image.height || image.width * image.height > 40_000_000) {
+    throw new Error("Размер изображения превышает 40 миллионов пикселей или изображение повреждено.");
+  }
   const canvas = document.createElement("canvas");
   const targetWidth = 180;
   const targetHeight = 240;
@@ -1322,7 +1337,19 @@ export function BiotCardGenerator({
   );
   const [isRefreshingDefaults, setIsRefreshingDefaults] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [importPreview, setImportPreview] = useState<BiotImportResult | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [isReadingImport, setIsReadingImport] = useState(false);
+  const [isImportApplied, setIsImportApplied] = useState(false);
+  const importReadVersion = useRef(0);
+  const importApplied = useRef(false);
+  const [importPhotos, setImportPhotos] = useState<Record<number, ImportPhoto>>({});
+  const importPhotosRef = useRef<Record<number, ImportPhoto>>({});
+  const importPhotoVersions = useRef<Record<number, number>>({});
+  const importPhotoQueue = useRef<Promise<void>>(Promise.resolve());
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [confirmedRequestLinks, setConfirmedRequestLinks] = useState<Array<{ label: string; requestId: string }>>([]);
+  const historyDetailsRef = useRef<HTMLDetailsElement>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [savedRequests, setSavedRequests] =
     useState<CardGenerationRequestSummary[]>(initialRequests);
@@ -1946,6 +1973,7 @@ export function BiotCardGenerator({
     const nextRequests =
       (await response.json()) as CardGenerationRequestSummary[];
     setSavedRequests(nextRequests);
+    return nextRequests;
   }
 
   function clearRowTranslationError(rowId: string) {
@@ -2133,6 +2161,10 @@ export function BiotCardGenerator({
       setIsRefreshingDefaults(false);
     }
   }
+
+  useEffect(() => () => {
+    importReadVersion.current += 1;
+  }, []);
 
   useEffect(() => {
     setSuccessMessage(null);
@@ -3412,6 +3444,167 @@ export function BiotCardGenerator({
     ]);
   }
 
+  function setImportPhoto(rowNumber: number, photo: ImportPhoto | null) {
+    const next = { ...importPhotosRef.current };
+    if (photo) next[rowNumber] = photo;
+    else delete next[rowNumber];
+    importPhotosRef.current = next;
+    setImportPhotos(next);
+  }
+
+  function queueImportPhoto(rowNumber: number, file: File, source: ImportPhoto["source"]) {
+    if (importApplied.current) return;
+    const workbookVersion = importReadVersion.current;
+    const photoVersion = (importPhotoVersions.current[rowNumber] ?? 0) + 1;
+    importPhotoVersions.current[rowNumber] = photoVersion;
+    const isCurrent = () => workbookVersion === importReadVersion.current &&
+      importPhotoVersions.current[rowNumber] === photoVersion;
+
+    if ((file.type && !["image/jpeg", "image/png"].includes(file.type.toLowerCase())) || !file.size || file.size > MAX_SOURCE_PHOTO_SIZE_BYTES) {
+      setImportPhoto(rowNumber, { status: "error", source, message: "Выберите непустой JPG или PNG размером не более 10 МБ." });
+      return;
+    }
+    setImportPhoto(rowNumber, { status: "processing", source });
+    // Decode one image at a time to limit peak memory use for large workbooks.
+    importPhotoQueue.current = importPhotoQueue.current.then(async () => {
+      if (!isCurrent()) return;
+      try {
+        const photo = validateBiotPhoto(new Uint8Array(await file.arrayBuffer()), file.name);
+        if (file.type && photo.mimeType !== file.type.toLowerCase()) {
+          throw new Error("Неверный формат изображения.");
+        }
+        if (!isCurrent()) return;
+        const imageFile = file.type ? file : new File([file], file.name, { type: photo.mimeType });
+        const dataUrl = await preparePhotoDataUrl(imageFile);
+        if (isCurrent()) setImportPhoto(rowNumber, { status: "ready", source, dataUrl, fileName: toJpegFileName(file.name) });
+      } catch {
+        if (isCurrent()) setImportPhoto(rowNumber, { status: "error", source, message: "Не удалось обработать фото. Выберите корректный JPG или PNG размером до 12 000 пикселей на сторону и до 40 миллионов пикселей." });
+      }
+    });
+  }
+
+  function clearImportPhoto(rowNumber: number) {
+    if (importApplied.current) return;
+    importPhotoVersions.current[rowNumber] = (importPhotoVersions.current[rowNumber] ?? 0) + 1;
+    setImportPhoto(rowNumber, null);
+  }
+
+  async function handleWorkbookSelection(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    const version = ++importReadVersion.current;
+    importApplied.current = false;
+    importPhotoVersions.current = {};
+    importPhotosRef.current = {};
+    setImportPhotos({});
+    setIsImportApplied(false);
+    setImportPreview(null);
+    setImportError(null);
+    setIsReadingImport(true);
+    try {
+      const result = await readBiotWorkbook(file);
+      if (version === importReadVersion.current) {
+        // Keep compressed previews, not the original image bytes, after decoding.
+        setImportPreview({ ...result, rows: result.rows.map((row) => ({ ...row, photo: null })) });
+        for (const row of result.rows) {
+          if (!row.photo) continue;
+          const bytes = new Uint8Array(row.photo.bytes);
+          const extension = row.photo.mimeType === "image/png" ? "png" : "jpg";
+          queueImportPhoto(row.rowNumber, new File([bytes.buffer], `photo-row-${row.rowNumber}.${extension}`, { type: row.photo.mimeType }), "excel");
+        }
+      }
+    } catch (error) {
+      if (version === importReadVersion.current) {
+        setImportError(error instanceof Error ? error.message : "Не удалось прочитать файл Excel.");
+      }
+    } finally {
+      if (version === importReadVersion.current) setIsReadingImport(false);
+    }
+  }
+
+  function cancelWorkbookImport() {
+    importReadVersion.current += 1;
+    importPhotoVersions.current = {};
+    importPhotosRef.current = {};
+    setImportPhotos({});
+    setImportPreview(null);
+    setImportError(null);
+    setIsReadingImport(false);
+    setIsImportApplied(false);
+  }
+
+  function getWorkbookSettingsError(result: BiotImportResult): string | null {
+    const activeCount = rows.filter((row) =>
+      row.fullName.trim() || row.issuedTo.trim() || row.positionRu.trim() || row.positionKz.trim(),
+    ).length;
+    if (activeCount + result.rows.length > 100) {
+      return `В заявке может быть не более 100 заполненных строк. Сейчас: ${activeCount}, в файле: ${result.rows.length}.`;
+    }
+    const hasNumbers = result.rows.some((row) =>
+      row.certificateNumber || row.protocolNumber || row.witnessCertificateNumber || row.witnessRegistrationNumber,
+    );
+    if (selectedCertificateTypes.length > 1 && hasNumbers) {
+      return "В файле указаны номера. Для их импорта выберите один вид документа либо очистите столбцы D–G в файле.";
+    }
+    const hasWitnessNumbers = result.rows.some((row) =>
+      row.witnessCertificateNumber || row.witnessRegistrationNumber,
+    );
+    if (hasWitnessNumbers && certificateType === "PS" && psDocumentKind === "ITR_CERTIFICATE") {
+      return "Для выбранного свидетельства КБ номера указываются в столбцах D–E. Перенесите их туда и очистите F–G.";
+    }
+    if (hasWitnessNumbers && !(certificateType === "PS" && psDocumentKind !== "ITR_CERTIFICATE" && psIncludeWitness)) {
+      return "Столбцы F–G доступны только при выбранном свидетельстве КБ. Измените настройки документа или очистите эти столбцы в файле.";
+    }
+    return null;
+  }
+
+  function handleAddWorkbookRows() {
+    const preview = importPreview;
+    const photos = importPhotosRef.current;
+    if (importApplied.current || !preview || !preview.rows.length || preview.errors.length || getWorkbookSettingsError(preview) || Object.values(photos).some((photo) => photo.status !== "ready")) return;
+    importApplied.current = true;
+    const rowSettings = getCurrentRowSettings();
+    setRows((current) => {
+      const emptyRow = createEmptyRow(
+        certificateType, activeBiotDocumentKind,
+        certificateType === "PS" ? psIncludeWitness : false,
+        0, issueDate, defaults, null, rowSettings,
+      );
+      // Do not leave the untouched initial row consuming the first auto number.
+      // Any entered data or changed row settings make this comparison fail.
+      const reuseFirst = canReuseImportPlaceholder(current, emptyRow);
+      const existing = reuseFirst ? [] : current;
+      const added = preview.rows.map((data, offset) => {
+        const index = existing.length + offset;
+        let row = reuseFirst && offset === 0 ? current[0] : createEmptyRow(
+          certificateType, activeBiotDocumentKind,
+          certificateType === "PS" ? psIncludeWitness : false,
+          index, issueDate, defaults, null, rowSettings,
+        );
+        const fields: BulkPasteColumnKey[] = [
+          "fullName", "positionRu", "positionKz", "certificateNumber", "protocolNumber",
+          "witnessCertificateNumber", "witnessRegistrationNumber",
+        ];
+        for (const key of fields) {
+          // Empty number cells must retain the generated number and automatic mode.
+          if (data[key]) row = applyPastedValueToRow(row, key, data[key]);
+        }
+        const photo = photos[data.rowNumber];
+        if (photo?.status === "ready") {
+          row = { ...row, photoDataUrl: photo.dataUrl ?? "", photoFileName: photo.fileName ?? "" };
+        }
+        return applyRowAutoNumbers(row, index);
+      });
+      return [...existing, ...added];
+    });
+    setIsImportApplied(true);
+    setImportError(null);
+    setErrorMessage(null);
+    setSuccessMessage(`Добавлено строк из Excel: ${preview.rows.length}. Проверьте настройки и обязательные данные заявки.`);
+  }
+
   function applyPastedValueToRow(
     row: GeneratorRow,
     key: BulkPasteColumnKey,
@@ -3671,6 +3864,7 @@ export function BiotCardGenerator({
     event.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
+    setConfirmedRequestLinks([]);
     setSuccessMessage(null);
 
     try {
@@ -3704,19 +3898,23 @@ export function BiotCardGenerator({
       }
 
       activeRows.forEach((row, index) => {
+        // Validation must refer to the visible table, including empty rows.
+        // Keep `index` for the existing generation/numbering calculations.
+        const visibleRowNumber = rows.findIndex((candidate) => candidate.id === row.id) + 1;
+
         if (!row.fullName.trim()) {
-          throw new Error(`Заполните ФИО на русском в строке ${index + 1}.`);
+          throw new Error(`Заполните ФИО на русском в строке ${visibleRowNumber}.`);
         }
 
         if (!row.positionRu.trim() && !row.positionKz.trim()) {
           throw new Error(
-            `Заполните ${roleRequiredLabel} в строке ${index + 1}.`,
+            `Заполните ${roleRequiredLabel} в строке ${visibleRowNumber}.`,
           );
         }
 
         if (row.isPhotoProcessing && rowUsesPhoto(row)) {
           throw new Error(
-            `Фото в строке ${index + 1} ещё обрабатывается. Дождитесь завершения и попробуйте снова.`,
+            `Фото в строке ${visibleRowNumber} ещё обрабатывается. Дождитесь завершения и попробуйте снова.`,
           );
         }
 
@@ -3728,7 +3926,7 @@ export function BiotCardGenerator({
             !getRowTypeTrainingSubject(row, type, index)
           ) {
             throw new Error(
-              `Укажите тему обучения в настройках строки ${index + 1}.`,
+              `Укажите тему обучения в настройках строки ${visibleRowNumber}.`,
             );
           }
 
@@ -3737,7 +3935,7 @@ export function BiotCardGenerator({
             !row.photoDataUrl
           ) {
             throw new Error(
-              `Добавьте фото в строке ${index + 1}. Для ${getCertificateTypeLabel(type, rowDocumentKind)} оно обязательно.`,
+              `Добавьте фото в строке ${visibleRowNumber}. Для ${getCertificateTypeLabel(type, rowDocumentKind)} оно обязательно.`,
             );
           }
         });
@@ -4072,7 +4270,7 @@ export function BiotCardGenerator({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(
+            body: serializeBiotRequest(
               buildRequestPayload(
                 certificateType,
                 activeBiotDocumentKind,
@@ -4101,19 +4299,32 @@ export function BiotCardGenerator({
 
       const generationGroups = await buildGenerationGroups();
 
+      // Check every group before creating any request. Defaults are fetched again
+      // at submission time so number allocation keeps its existing behavior.
       for (const group of generationGroups) {
         const typeDefaults = await fetchDefaultsForType(
           group.certificateType,
           group.issueDate,
           group.biotDocumentKind,
         );
+        serializeBiotRequest(buildGroupedRequestPayload(group, typeDefaults));
+      }
 
+      await submitBiotGroups(generationGroups, async (group, markRequestSent) => {
+        const typeDefaults = await fetchDefaultsForType(
+          group.certificateType,
+          group.issueDate,
+          group.biotDocumentKind,
+        );
+
+        const body = serializeBiotRequest(buildGroupedRequestPayload(group, typeDefaults));
+        markRequestSent();
         const response = await fetch("/api/biot-cards/generate", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(buildGroupedRequestPayload(group, typeDefaults)),
+          body,
         });
 
         if (!response.ok) {
@@ -4126,7 +4337,8 @@ export function BiotCardGenerator({
         }
 
         await response.arrayBuffer();
-      }
+        return response.headers.get("X-Card-Request-Id");
+      }, (group) => `${getCertificateTypeLabel(group.certificateType, group.biotDocumentKind)} (${group.issueDate})`);
 
       setSuccessMessage(
         generationGroups.length === 1
@@ -4148,11 +4360,24 @@ export function BiotCardGenerator({
       await refreshDefaults(issueDate);
       await loadRequests();
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Не удалось сформировать заявки на корочки.",
-      );
+      if (error instanceof BiotGroupSubmissionError) {
+        let historyUpdated = false;
+        try {
+          const history = await loadRequests();
+          historyUpdated = true;
+          setConfirmedRequestLinks(confirmedBiotHistoryLinks(error, history.map((request) => request.id)));
+          if (historyDetailsRef.current) historyDetailsRef.current.open = true;
+        } catch {
+          // The warning still directs the user to check history before retrying.
+        }
+        setErrorMessage(describeBiotGroupFailure(error, historyUpdated));
+      } else {
+        setErrorMessage(
+          error instanceof Error
+            ? error.message
+            : "Не удалось сформировать заявки на корочки.",
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -4162,7 +4387,16 @@ export function BiotCardGenerator({
     <div className="space-y-5">
       {errorMessage ? (
         <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-          {errorMessage}
+          <p>{errorMessage}</p>
+          {confirmedRequestLinks.length ? (
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+              {confirmedRequestLinks.map(({ requestId, label }) => (
+                <a key={requestId} href={`#card-request-${requestId}`} className="font-medium underline underline-offset-2">
+                  Открыть заявку: {label}
+                </a>
+              ))}
+            </div>
+          ) : null}
         </div>
       ) : null}
       {successMessage ? (
@@ -4782,6 +5016,136 @@ export function BiotCardGenerator({
               }
               bodyClassName="p-0"
             >
+              <div className="space-y-4 border-b border-[var(--line)] px-5 py-3">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="space-y-1 text-sm leading-5 text-[var(--muted)]">
+                  <p>
+                    Загрузите заполненный шаблон XLSX для проверки и добавления строк.
+                    Фото можно вставить в столбец «Фото» как рисунок или выбрать отдельно для каждой строки.
+                    Файл XLSX — до 5 МБ, до 100 сотрудников; отдельное фото JPG или PNG — до 10 МБ.
+                  </p>
+                  <p>
+                    Также можно вставить скопированные ячейки в поле «ФИО». Вставка заменяет
+                    выбранные ячейки, включая пустые; для автоматических номеров копируйте только A–C.
+                  </p>
+                </div>
+                <a
+                  href="/templates/biot-table.xlsx"
+                  download
+                  className="inline-flex min-h-10 items-center rounded-md border border-[var(--line)] bg-[var(--surface)] px-3 text-sm font-medium text-[var(--ink)] underline-offset-2 hover:bg-[var(--surface-muted)] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-border)]"
+                >
+                  Скачать шаблон Excel
+                </a>
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="biot-workbook" className="block text-sm font-medium text-[var(--ink)]">
+                    Выбрать файл Excel (.xlsx)
+                  </label>
+                  <input
+                    id="biot-workbook"
+                    type="file"
+                    accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    disabled={isSubmitting}
+                    onChange={handleWorkbookSelection}
+                    aria-describedby="biot-workbook-help"
+                    className="block w-full text-sm text-[var(--muted)] file:mr-3 file:rounded-md file:border file:border-[var(--line)] file:bg-[var(--surface)] file:px-3 file:py-2 file:text-sm file:font-medium file:text-[var(--ink)]"
+                  />
+                  <p id="biot-workbook-help" className="text-xs leading-5 text-[var(--muted)]">
+                    Импорт добавляет строки в конец и не заменяет существующие. Повторный импорт добавит их снова.
+                    Пустые строки в таблице сохранятся и могут влиять на автоматическую нумерацию; при необходимости удалите их.
+                  </p>
+                </div>
+                <div aria-live="polite">
+                  {isReadingImport ? <p className="text-sm text-[var(--muted)]">Проверяем файл…</p> : null}
+                  {importError ? <p role="alert" className="text-sm text-rose-700">{importError}</p> : null}
+                  {importPreview ? (
+                    <div className="space-y-3 rounded-md border border-[var(--line)] bg-[var(--surface-muted)] p-4">
+                      <p className="text-sm font-medium text-[var(--ink)]">
+                        Найдено строк: {importPreview.rows.length}. Ошибок: {importPreview.errors.length}.
+                      </p>
+                      {importPreview.errors.length ? (
+                        <div role="alert" className="text-sm text-rose-700">
+                          <p>Исправьте ошибки в файле и выберите его снова. Заявка не изменена.</p>
+                          <ul className="mt-2 max-h-48 list-disc space-y-1 overflow-y-auto pl-5">
+                            {importPreview.errors.slice(0, 50).map((error, index) => (
+                              <li key={`${error.rowNumber}-${error.field}-${index}`}>
+                                Строка {error.rowNumber}, {error.field}: {error.message}
+                              </li>
+                            ))}
+                          </ul>
+                          {importPreview.errors.length > 50 ? <p>Показаны первые 50 ошибок.</p> : null}
+                        </div>
+                      ) : null}
+                      {!importPreview.rows.length && !importPreview.errors.length ? (
+                        <p className="text-sm text-[var(--muted)]">В файле нет заполненных строк. Добавьте данные и выберите файл снова.</p>
+                      ) : null}
+                      {importPreview.rows.length ? (
+                        <>
+                        <p className="text-xs leading-5 text-[var(--muted)]">В столбце «Фото сотрудника» видно фото из Excel; там же можно выбрать или заменить его отдельным файлом для каждой строки. Прокрутите таблицу вправо и вниз.</p>
+                        <div className="max-h-[32rem] overflow-auto">
+                          <table className="min-w-[1100px] border-collapse text-left text-xs text-[var(--ink)]">
+                            <thead><tr>
+                              {["Строка Excel", "ФИО", "Должность RU", "Должность KZ", "Удостоверение", "Протокол", "КБ", "Рег. номер", "Фото сотрудника"].map((label) => (
+                                <th key={label} scope="col" className="border-b border-[var(--line)] px-2 py-2 font-medium">{label}</th>
+                              ))}
+                            </tr></thead>
+                            <tbody>{importPreview.rows.map((row) => (
+                              <tr key={row.rowNumber}>
+                                {[row.rowNumber, row.fullName, row.positionRu, row.positionKz, row.certificateNumber, row.protocolNumber, row.witnessCertificateNumber, row.witnessRegistrationNumber].map((value, index) => (
+                                  <td key={index} className="max-w-64 break-words border-b border-[var(--line)] px-2 py-2">{value || "—"}</td>
+                                ))}
+                                <td className="min-w-56 border-b border-[var(--line)] px-2 py-2 align-top">
+                                  <div className="space-y-2">
+                                    <p>
+                                      {!importPhotos[row.rowNumber] ? "Фото не выбрано" :
+                                        importPhotos[row.rowNumber].status === "processing" ? "Фото обрабатывается…" :
+                                          importPhotos[row.rowNumber].status === "error" ? "Ошибка фото" :
+                                            importPhotos[row.rowNumber].source === "excel" ? "Фото из Excel" : "Фото из отдельного файла"}
+                                    </p>
+                                    {importPhotos[row.rowNumber]?.status === "ready" ? (
+                                      // A locally prepared data URL never leaves the browser before submission.
+                                      // eslint-disable-next-line @next/next/no-img-element
+                                      <img src={importPhotos[row.rowNumber].dataUrl} alt={`Фото, строка ${row.rowNumber}`} className="h-16 w-12 rounded object-cover" />
+                                    ) : null}
+                                    {importPhotos[row.rowNumber]?.message ? <p role="alert" className="text-rose-700">{importPhotos[row.rowNumber].message}</p> : null}
+                                    <label htmlFor={`import-photo-${row.rowNumber}`} className="block font-medium">Выбрать JPG или PNG для строки {row.rowNumber}</label>
+                                    <input id={`import-photo-${row.rowNumber}`} type="file" accept="image/jpeg,image/png" disabled={isImportApplied || isSubmitting}
+                                      onChange={(event) => {
+                                        const file = event.target.files?.[0];
+                                        event.target.value = "";
+                                        if (file) queueImportPhoto(row.rowNumber, file, "file");
+                                      }}
+                                      className="block max-w-56 text-xs text-[var(--muted)] file:mr-2 file:rounded file:border file:border-[var(--line)] file:bg-[var(--surface)] file:px-2 file:py-1" />
+                                    {importPhotos[row.rowNumber] ? <button type="button" disabled={isImportApplied || isSubmitting} onClick={() => clearImportPhoto(row.rowNumber)} className="underline underline-offset-2 disabled:opacity-50">Убрать фото</button> : null}
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}</tbody>
+                          </table>
+                        </div>
+                        </>
+                      ) : null}
+                      {!isImportApplied && getWorkbookSettingsError(importPreview) ? (
+                        <p role="alert" className="text-sm text-rose-700">{getWorkbookSettingsError(importPreview)}</p>
+                      ) : null}
+                      {!isImportApplied && Object.values(importPhotos).some((photo) => photo.status === "processing") ? <p className="text-sm text-[var(--muted)]">Дождитесь обработки фотографий.</p> : null}
+                      {!isImportApplied && Object.values(importPhotos).some((photo) => photo.status === "error") ? <p role="alert" className="text-sm text-rose-700">Исправьте ошибки фотографий или уберите их из соответствующих строк.</p> : null}
+                      <p className="text-xs leading-5 text-[var(--muted)]">
+                        {isImportApplied
+                          ? "Строки уже добавлены. Закройте просмотр или выберите другой файл."
+                          : "К новым строкам применятся текущие настройки документов. Пустые номера будут автоматическими. Проверьте компанию, вид документа, тему и фото перед формированием заявки."}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <Button type="button" size="sm" onClick={handleAddWorkbookRows}
+                          disabled={isImportApplied || !importPreview.rows.length || !!importPreview.errors.length || !!getWorkbookSettingsError(importPreview) || Object.values(importPhotos).some((photo) => photo.status !== "ready") || isRefreshingDefaults || isSubmitting}>
+                          {isImportApplied ? "Добавлено" : "Добавить строки в заявку"}
+                        </Button>
+                        <Button type="button" size="sm" variant="secondary" onClick={cancelWorkbookImport}>{isImportApplied ? "Закрыть" : "Отменить"}</Button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
               <div className="overflow-x-auto">
                 <table
                   className={cn(
@@ -5136,18 +5500,18 @@ export function BiotCardGenerator({
           </Button>
 
           <section className="w-full rounded-xl border border-[var(--line)] bg-[color:rgba(255,255,255,0.84)] lg:w-[720px] lg:max-w-full">
-            <details>
+            <details ref={historyDetailsRef} open className="group">
               <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 [&::-webkit-details-marker]:hidden">
                 <div className="min-w-0 space-y-1.5">
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="text-base font-semibold text-[var(--ink)]">
-                      Сохраненные заявки
+                      История заявок
                     </h2>
                     <Badge tone="slate">{savedRequests.length}</Badge>
                   </div>
                   <p className="text-sm leading-6 text-[var(--muted)]">
-                    Здесь хранятся все сформированные заявки. Разворачивай
-                    список только когда нужно скачать или исправить документы.
+                    Компания и количество сотрудников в каждой заявке. Откройте
+                    состав, чтобы посмотреть список сотрудников.
                   </p>
                   {!canManageSavedRequests ? (
                     <p className="text-xs text-slate-400">
@@ -5157,7 +5521,8 @@ export function BiotCardGenerator({
                   ) : null}
                 </div>
                 <span className="inline-flex h-9 items-center rounded-md border border-[var(--line)] px-3 text-xs font-medium text-[var(--ink)]">
-                  Открыть список
+                  <span className="group-open:hidden">Открыть список</span>
+                  <span className="hidden group-open:inline">Свернуть список</span>
                 </span>
               </summary>
 
@@ -5168,7 +5533,7 @@ export function BiotCardGenerator({
                       <thead>
                         <tr>
                           <Th className="min-w-[260px] bg-[color:rgba(238,244,255,0.7)] text-xs font-medium text-[var(--muted)]">
-                            Заявка
+                            Компания / заявка
                           </Th>
                           <Th className="min-w-[120px] bg-[color:rgba(238,244,255,0.7)] text-xs font-medium text-[var(--muted)]">
                             Тип
@@ -5177,7 +5542,7 @@ export function BiotCardGenerator({
                             Дата выдачи
                           </Th>
                           <Th className="min-w-[120px] bg-[color:rgba(238,244,255,0.7)] text-xs font-medium text-[var(--muted)]">
-                            Участников
+                            Сотрудников
                           </Th>
                           <Th className="min-w-[240px] bg-[color:rgba(238,244,255,0.7)] text-xs font-medium text-[var(--muted)]">
                             Диапазон номеров
@@ -5194,17 +5559,18 @@ export function BiotCardGenerator({
                         {savedRequests.map((request) => (
                           <tr
                             key={request.id}
+                            id={`card-request-${request.id}`}
                             className="border-t border-[var(--line)]"
                           >
                             <Td>
                               <div>
                                 <p className="font-medium text-[var(--ink)]">
-                                  {request.title}
+                                  {request.requestCompanyRu?.trim() ||
+                                    request.requestCompanyKz?.trim() ||
+                                    "Компания не указана"}
                                 </p>
                                 <p className="mt-1 text-xs text-[var(--muted)]">
-                                  {request.requestCompanyRu ??
-                                    request.requestCompanyKz ??
-                                    "Без отдельной компании"}
+                                  {request.title}
                                 </p>
                                 {getRequestBundleLabel(request) ? (
                                   <p className="mt-1 text-xs text-slate-400">
@@ -5213,7 +5579,7 @@ export function BiotCardGenerator({
                                 ) : null}
                                 <details className="mt-3 rounded-lg border border-[var(--line)] bg-[var(--surface-muted)]">
                                   <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-xs font-medium text-[var(--muted)] [&::-webkit-details-marker]:hidden">
-                                    <span>Состав заявки</span>
+                                    <span>Сотрудники: {request.itemsCount}</span>
                                     <span className="text-slate-400">
                                       Открыть
                                     </span>

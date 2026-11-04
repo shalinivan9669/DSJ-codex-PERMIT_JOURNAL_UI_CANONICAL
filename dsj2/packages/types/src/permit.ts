@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { compatibleOffsetDateTime } from "./compat-datetime";
 import { contractorAccessActSummarySchema } from "./contractor";
 import { scopeTypeSchema } from "./core-identity";
 
 const optionalId = z.string().min(1).nullable().optional();
-const isoDateTime = z.string().datetime({ offset: true });
+const isoDateTime = compatibleOffsetDateTime();
 const optionalLongText = z.string().max(8000).nullable().optional();
 const optionalMediumText = z.string().max(4000).nullable().optional();
 
@@ -157,7 +158,7 @@ export const permitEntrySchema = z.object({
   departmentId: optionalId,
   startAt: isoDateTime,
   endAt: isoDateTime,
-  validUntil: z.string().datetime({ offset: true }).nullable().optional(),
+  validUntil: compatibleOffsetDateTime().nullable().optional(),
   contractorId: optionalId,
   contractorRepresentativeId: optionalId,
   contractorAccessActId: optionalId,
@@ -351,7 +352,7 @@ export const createPpeIssueRecordSchema = z
     itemCode: z.string().min(1).max(120),
     itemName: z.string().min(2).max(255),
     issuedAt: isoDateTime,
-    validUntil: z.string().datetime({ offset: true }).nullable().optional(),
+    validUntil: compatibleOffsetDateTime().nullable().optional(),
     sourceDocumentId: optionalId,
   })
   .refine(

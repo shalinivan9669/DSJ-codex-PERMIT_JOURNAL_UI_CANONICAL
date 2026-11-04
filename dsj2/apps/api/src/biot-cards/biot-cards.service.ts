@@ -14,6 +14,7 @@ import type {
   SafetyCardType,
   UpdateCardGenerationRequestInput,
 } from "@dsj/types";
+import type { Prisma } from "@prisma/client";
 import { randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
@@ -2306,7 +2307,7 @@ export class BiotCardsService {
     trainingSubject: string;
     items: BatchPreparedItem[];
     biotDocumentKind: BiotDocumentKind;
-  }) {
+  }, transaction: Pick<Prisma.TransactionClient, "cardGenerationRequest">) {
     const requestData = this.buildRequestRecordValues({
       certificateType: args.input.certificateType,
       biotDocumentKind: args.biotDocumentKind,
@@ -2322,7 +2323,7 @@ export class BiotCardsService {
       items: args.items,
     });
 
-    return this.prisma.cardGenerationRequest.create({
+    return transaction.cardGenerationRequest.create({
       data: {
         companyId: args.companyId,
         createdByUserId: args.user.userId,
@@ -3859,6 +3860,7 @@ export class BiotCardsService {
     companyId: string,
     artifacts: BatchPreparedItem[],
     requestId?: string,
+    transaction?: Pick<Prisma.TransactionClient, "auditLog">,
   ) {
     for (const artifact of artifacts) {
       await this.auditService.log({
@@ -3885,7 +3887,7 @@ export class BiotCardsService {
             ? BIOT_ITR_CERTIFICATE_TEMPLATE_PATH
             : this.getCardConfig(artifact.certificateType).templatePath,
         },
-      });
+      }, transaction);
     }
   }
 
@@ -4096,16 +4098,21 @@ export class BiotCardsService {
         }),
       );
     }
-    const request = await this.createRequestRecord({
-      user,
-      companyId,
-      issueDate,
-      input,
-      trainingSubject,
-      items: preparedItems,
-      biotDocumentKind,
-    });
-    await this.logArtifacts(user, companyId, preparedItems, request.id);
+    // Persist the request and every existing audit event together. Rendering is
+    // deliberately outside the transaction: it invokes an external process.
+    const request = await this.prisma.$transaction(async (transaction) => {
+      const created = await this.createRequestRecord({
+        user,
+        companyId,
+        issueDate,
+        input,
+        trainingSubject,
+        items: preparedItems,
+        biotDocumentKind,
+      }, transaction);
+      await this.logArtifacts(user, companyId, preparedItems, created.id, transaction);
+      return created;
+    }, { timeout: 30_000 });
 
     const exportResult = bundleOptions.includeCard
       ? await this.exportRequestCardsForCompany(companyId, request.id)

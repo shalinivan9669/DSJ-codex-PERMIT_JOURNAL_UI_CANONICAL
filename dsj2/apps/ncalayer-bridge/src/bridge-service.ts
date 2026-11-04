@@ -66,14 +66,34 @@ function writeJson(response: ServerResponse, statusCode: number, payload: unknow
   response.end(JSON.stringify(payload));
 }
 
+const MAX_REQUEST_BYTES = 1024 * 1024;
+class RequestTooLarge extends Error {}
+
 function readJsonBody(request: IncomingMessage) {
   return new Promise<unknown>((resolve, reject) => {
+    const contentLength = request.headers["content-length"];
+    if (contentLength && /^\d+$/.test(contentLength) && Number(contentLength) > MAX_REQUEST_BYTES) {
+      reject(new RequestTooLarge("Request body exceeds 1 MiB."));
+      return;
+    }
     const chunks: Buffer[] = [];
+    let size = 0;
+    let exceeded = false;
 
     request.on("data", (chunk) => {
-      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+      if (exceeded) return;
+      const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+      size += bytes.length;
+      if (size > MAX_REQUEST_BYTES) {
+        exceeded = true;
+        chunks.length = 0;
+        reject(new RequestTooLarge("Request body exceeds 1 MiB."));
+        return;
+      }
+      chunks.push(bytes);
     });
     request.on("end", () => {
+      if (exceeded) return;
       const rawBody = Buffer.concat(chunks).toString("utf8").trim();
 
       if (!rawBody) {
@@ -153,6 +173,17 @@ export function createBridgeServer(options: BridgeServerOptions): Server {
 
       writeJson(response, 404, { message: "Bridge endpoint not found." });
     } catch (error) {
+      if (error instanceof RequestTooLarge) {
+        // Allow the response to flush and the client to stop writing, but do not
+        // keep a malicious unfinished upload open indefinitely.
+        request.resume();
+        const timeout = setTimeout(() => request.destroy(), 2000);
+        timeout.unref();
+        request.once("end", () => clearTimeout(timeout));
+        request.once("close", () => clearTimeout(timeout));
+        writeJson(response, 413, { message: error.message });
+        return;
+      }
       logger.error(error);
 
       if (error instanceof ZodError) {

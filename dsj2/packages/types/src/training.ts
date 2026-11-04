@@ -78,7 +78,7 @@ export const submitExamSchema = z.object({
       questionId: z.string(),
       optionId: z.string(),
     }),
-  ),
+  ).min(1).max(10),
 });
 
 export const examFilterSchema = z.object({

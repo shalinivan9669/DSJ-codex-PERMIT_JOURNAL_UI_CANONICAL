@@ -1,5 +1,6 @@
 import { getSessionToken } from "@/lib/api";
 import { getSigningConfig } from "@/lib/signing-config";
+import { readLimitedNcalayerBody } from "@/lib/ncalayer-body-limit";
 
 const allowedPaths = new Set(["health", "sign"]);
 
@@ -43,8 +44,12 @@ async function proxyNcalayerBridgeRequest(
 
   const body =
     request.method !== "GET" && request.method !== "HEAD"
-      ? await request.text()
+      ? await readLimitedNcalayerBody(request)
       : undefined;
+
+  if (body === null) {
+    return jsonResponse(413, { message: "Размер запроса превышает 1 МиБ." });
+  }
 
   try {
     const response = await fetch(buildBridgeUrl(signingConfig.bridgeUrl, path), {

@@ -26,8 +26,8 @@ export class AuditService {
     return Math.min(Math.max(Math.trunc(limit), 1), 100);
   }
 
-  async log(payload: AuditPayload) {
-    return this.prisma.auditLog.create({
+  async log(payload: AuditPayload, transaction?: Pick<Prisma.TransactionClient, "auditLog">) {
+    return (transaction ?? this.prisma).auditLog.create({
       data: {
         companyId: payload.companyId ?? null,
         actorUserId: payload.actorUserId ?? null,

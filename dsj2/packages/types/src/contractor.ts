@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { compatibleOffsetDateTime } from "./compat-datetime";
 import { scopeTypeSchema } from "./core-identity";
 
 const optionalId = z.string().min(1).nullable().optional();
-const isoDateTime = z.string().datetime({ offset: true });
+const isoDateTime = compatibleOffsetDateTime();
 const optionalText = z.string().max(8000).nullable().optional();
 
 export const contractorCompanySchema = z.object({

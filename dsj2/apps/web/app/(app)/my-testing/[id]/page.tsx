@@ -53,7 +53,7 @@ export default async function MyTestingDetailPage({
     }>;
   }>(`exams/my/${id}`);
 
-  const canStart = exam.status === "AVAILABLE" || exam.status === "FAILED";
+  const canStart = exam.status === "AVAILABLE" && exam.attemptsRemaining > 0;
   const canSubmit = exam.status === "IN_PROGRESS" && exam.currentAttempt;
 
   return (
@@ -102,9 +102,7 @@ export default async function MyTestingDetailPage({
               <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800">
                 Сначала завершите изучение материала обучения, затем тест станет доступным.
               </div>
-            ) : null}
-
-            {canSubmit ? (
+            ) : canSubmit ? (
               <form action={submitMyExamAction} className="space-y-4">
                 <input type="hidden" name="assignmentId" value={exam.assignmentId} />
                 {exam.questions.map((question, index) => (
@@ -139,7 +137,8 @@ export default async function MyTestingDetailPage({
               </div>
             ) : exam.status === "FAILED" ? (
               <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">
-                Тест не сдан. Последний результат: {exam.result ?? "—"}%. Осталось попыток: {exam.attemptsRemaining}.
+                Тест не сдан. Последний результат: {exam.result ?? "—"}%. Попытки исчерпаны.
+                Обратитесь к ответственному за обучение.
               </div>
             ) : (
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">

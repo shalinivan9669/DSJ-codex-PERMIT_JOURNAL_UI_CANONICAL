@@ -15,6 +15,7 @@ import {
 } from "../common/utils/tenant-scope";
 import { PrismaService } from "../database/prisma.service";
 import { TrainingProgramsService } from "../training-programs/training-programs.service";
+import { lockTrainingAssignment } from "../training-programs/training-assignment-lock";
 
 const employeeExamAssignmentInclude = {
   employee: true,
@@ -155,14 +156,23 @@ export class ExamsService {
     return assignment;
   }
 
-  private async ensureEmployeeAccess(user: AuthenticatedUser, assignment: EmployeeExamAssignment) {
-    const employee = await requireEmployeeScope(this.prisma, user);
+  private async ensureEmployeeAccess(user: AuthenticatedUser, assignment: EmployeeExamAssignment, prisma: PrismaService = this.prisma) {
+    const employee = await requireEmployeeScope(prisma, user);
 
     if (employee.id !== assignment.employeeId) {
       throw new NotFoundException("Назначенный тест не найден.");
     }
 
     return employee;
+  }
+
+  private ensureSameAssignment(
+    before: Pick<EmployeeExamAssignment, "companyId" | "employeeId" | "trainingProgramId">,
+    current: Pick<EmployeeExamAssignment, "companyId" | "employeeId" | "trainingProgramId">,
+  ) {
+    if (before.companyId !== current.companyId || before.employeeId !== current.employeeId || before.trainingProgramId !== current.trainingProgramId) {
+      throw new ConflictException("Назначение изменилось. Обновите страницу.");
+    }
   }
 
   private mapEmployeeExam(assignment: EmployeeExamAssignment) {
@@ -176,6 +186,9 @@ export class ExamsService {
     const currentAttempt = assignment.examAttempts.find((attempt) => attempt.status === "IN_PROGRESS") ?? null;
     const latestSubmittedAttempt =
       assignment.examAttempts.find((attempt) => attempt.status === "SUBMITTED") ?? null;
+    const passedAttempt = assignment.examAttempts.find(
+      (attempt) => attempt.status === "SUBMITTED" && attempt.passed,
+    ) ?? null;
 
     return {
       id: exam.id,
@@ -189,9 +202,10 @@ export class ExamsService {
       dueAt: assignment.dueAt,
       trainingStatus: this.getEffectiveTrainingStatus(assignment),
       status: status?.status ?? "NOT_STARTED",
-      result: latestSubmittedAttempt?.score ?? null,
-      passed: latestSubmittedAttempt?.passed ?? Boolean(assignment.examPassedAt),
-      passedAt: assignment.examPassedAt ?? latestSubmittedAttempt?.submittedAt ?? null,
+      result: assignment.examPassedAt ? passedAttempt?.score ?? null : latestSubmittedAttempt?.score ?? null,
+      passed: assignment.examPassedAt ? true : latestSubmittedAttempt?.passed ?? false,
+      passedAt: assignment.examPassedAt ??
+        (latestSubmittedAttempt?.passed ? latestSubmittedAttempt.submittedAt : null),
       attemptsUsed: status?.attemptsUsed ?? 0,
       attemptsRemaining: Math.max(exam.maxAttempts - (status?.attemptsUsed ?? 0), 0),
       currentAttempt: currentAttempt
@@ -382,7 +396,8 @@ export class ExamsService {
       throw new ConflictException("Для этой программы обучения тест уже создан.");
     }
 
-    const exam = await this.prisma.exam.create({
+    const exam = await this.prisma.$transaction(async (transaction) => {
+      const createdExam = await transaction.exam.create({
       data: {
         companyId,
         trainingProgramId: input.trainingProgramId,
@@ -404,25 +419,21 @@ export class ExamsService {
           })),
         },
       },
-    });
+      });
 
-    await this.prisma.trainingProgram.update({
-      where: { id: trainingProgram.id },
-      data: {
-        requiresExam: true,
-      },
-    });
-
-    await this.auditService.log({
-      actorUserId: user.userId,
-      companyId,
-      action: "exam.created",
-      entityType: "Exam",
-      entityId: exam.id,
-      metadata: {
-        trainingProgramId: exam.trainingProgramId,
-        title: exam.title,
-      },
+      await transaction.trainingProgram.update({
+        where: { id: trainingProgram.id },
+        data: { requiresExam: true },
+      });
+      await this.auditService.log({
+        actorUserId: user.userId,
+        companyId,
+        action: "exam.created",
+        entityType: "Exam",
+        entityId: createdExam.id,
+        metadata: { trainingProgramId: createdExam.trainingProgramId, title: createdExam.title },
+      }, transaction);
+      return createdExam;
     });
 
     return this.findOne(user, exam.id);
@@ -432,53 +443,43 @@ export class ExamsService {
     const assignment = await this.findEmployeeAssignmentById(assignmentId);
     await this.ensureEmployeeAccess(user, assignment);
 
-    const exam = assignment.trainingProgram.exam;
+    const attempt = await this.prisma.$transaction(async (transaction) => {
+      await lockTrainingAssignment(transaction, assignmentId);
+      const current = await transaction.trainingAssignment.findUnique({
+        where: { id: assignmentId }, include: employeeExamAssignmentInclude,
+      });
+      if (!current) throw new NotFoundException("Назначенный тест не найден.");
+      await this.ensureEmployeeAccess(user, current, transaction as unknown as PrismaService);
+      this.ensureSameAssignment(assignment, current);
+      const exam = current.trainingProgram.exam;
+      if (!exam) throw new NotFoundException("Для этого обучения тест не назначен.");
+      if (current.examPassedAt) throw new BadRequestException("Тест уже успешно сдан.");
+      if (current.progressPercent < 80) throw new BadRequestException("Сначала завершите изучение материала обучения.");
+      if (current.examAttempts.some((item) => item.status === "IN_PROGRESS")) return null;
+      const submitted = current.examAttempts.filter((item) => item.status === "SUBMITTED");
+      if (submitted.length >= exam.maxAttempts) throw new BadRequestException("Лимит попыток исчерпан.");
 
-    if (!exam) {
-      throw new NotFoundException("Для этого обучения тест не назначен.");
-    }
-
-    if (assignment.examPassedAt) {
-      throw new BadRequestException("Тест уже успешно сдан.");
-    }
-
-    if (assignment.progressPercent < 80) {
-      throw new BadRequestException("Сначала завершите изучение материала обучения.");
-    }
-
-    const currentAttempt = assignment.examAttempts.find((attempt) => attempt.status === "IN_PROGRESS");
-
-    if (currentAttempt) {
-      return this.findMy(user, assignmentId);
-    }
-
-    const submittedAttempts = assignment.examAttempts.filter((attempt) => attempt.status === "SUBMITTED");
-
-    if (submittedAttempts.length >= exam.maxAttempts) {
-      throw new BadRequestException("Лимит попыток исчерпан.");
-    }
-
-    const attempt = await this.prisma.examAttempt.create({
-      data: {
+      const createdAttempt = await transaction.examAttempt.create({
+        data: {
+          companyId: current.companyId,
+          examId: exam.id,
+          trainingAssignmentId: current.id,
+          employeeId: current.employeeId,
+          status: "IN_PROGRESS",
+        },
+      });
+      await this.auditService.log({
+        actorUserId: user.userId,
         companyId: assignment.companyId,
-        examId: exam.id,
-        trainingAssignmentId: assignment.id,
-        employeeId: assignment.employeeId,
-        status: "IN_PROGRESS",
-      },
+        action: "exam.started",
+        entityType: "ExamAttempt",
+        entityId: createdAttempt.id,
+        metadata: { examId: createdAttempt.examId, trainingAssignmentId: assignment.id },
+      }, transaction);
+      return createdAttempt;
     });
 
-    await this.auditService.log({
-      actorUserId: user.userId,
-      companyId: assignment.companyId,
-      action: "exam.started",
-      entityType: "ExamAttempt",
-      entityId: attempt.id,
-      metadata: {
-        examId: exam.id,
-        trainingAssignmentId: assignment.id,
-      },
-    });
+    if (!attempt) return this.findMy(user, assignmentId);
 
     return this.findMy(user, assignmentId);
   }
@@ -499,6 +500,25 @@ export class ExamsService {
       throw new BadRequestException("Сначала начните попытку тестирования.");
     }
 
+    const questionsById = new Map(exam.questions.map((question) => [question.id, question]));
+    const answeredQuestionIds = new Set<string>();
+
+    if (!exam.questions.length || input.answers.length !== exam.questions.length) {
+      throw new BadRequestException("Ответьте на каждый вопрос, выбрав один из предложенных вариантов.");
+    }
+
+    for (const answer of input.answers) {
+      const question = questionsById.get(answer.questionId);
+      if (
+        !question ||
+        answeredQuestionIds.has(answer.questionId) ||
+        !question.options.some((option) => option.id === answer.optionId)
+      ) {
+        throw new BadRequestException("Ответьте на каждый вопрос, выбрав один из предложенных вариантов.");
+      }
+      answeredQuestionIds.add(answer.questionId);
+    }
+
     const answersByQuestionId = new Map(
       input.answers.map((answer) => [answer.questionId, answer.optionId]),
     );
@@ -517,34 +537,57 @@ export class ExamsService {
     const score = Math.round((correctAnswers / exam.questions.length) * 100);
     const passed = score >= exam.passingScore;
 
-    await this.prisma.examAttempt.update({
-      where: { id: currentAttempt.id },
-      data: {
-        status: "SUBMITTED",
-        score,
-        passed,
-        submittedAt: new Date(),
-        answers: input.answers as Prisma.InputJsonValue,
-      },
-    });
+    const submitAttempt = async (transaction: Pick<Prisma.TransactionClient, "examAttempt" | "trainingAssignment">) => {
+      const current = await transaction.trainingAssignment.findUnique({
+        where: { id: assignmentId },
+        select: { companyId: true, employeeId: true, trainingProgramId: true },
+      });
+      if (!current) throw new NotFoundException("Назначенный тест не найден.");
+      this.ensureSameAssignment(assignment, current);
+      const result = await transaction.examAttempt.updateMany({
+        where: { id: currentAttempt.id, status: "IN_PROGRESS" },
+        data: {
+          status: "SUBMITTED",
+          score,
+          passed,
+          submittedAt: new Date(),
+          answers: input.answers as Prisma.InputJsonValue,
+        },
+      });
+
+      if (result.count !== 1) {
+        throw new ConflictException("Попытка уже завершена. Обновите страницу.");
+      }
+    };
+
+    const auditSubmission = async (transaction: Prisma.TransactionClient) => {
+      await this.auditService.log({
+        actorUserId: user.userId,
+        companyId: assignment.companyId,
+        action: "exam.submitted",
+        entityType: "ExamAttempt",
+        entityId: currentAttempt.id,
+        metadata: { examId: exam.id, trainingAssignmentId: assignment.id, score, passed },
+      }, transaction);
+    };
 
     if (passed) {
-      await this.trainingProgramsService.completeAfterPassedExam(assignmentId, user, true);
+      await this.trainingProgramsService.completeAfterPassedExam(assignmentId, user, true, submitAttempt, auditSubmission);
+    } else {
+      await this.prisma.$transaction(async (transaction) => {
+        await lockTrainingAssignment(transaction, assignmentId);
+        const current = await transaction.trainingAssignment.findUnique({
+          where: { id: assignmentId }, include: employeeExamAssignmentInclude,
+        });
+        if (!current) throw new NotFoundException("Назначенный тест не найден.");
+        await this.ensureEmployeeAccess(user, current, transaction as unknown as PrismaService);
+        if (!assignment.examPassedAt && current.examPassedAt) {
+          throw new ConflictException("Тест уже успешно сдан. Обновите страницу.");
+        }
+        await submitAttempt(transaction);
+        await auditSubmission(transaction);
+      });
     }
-
-    await this.auditService.log({
-      actorUserId: user.userId,
-      companyId: assignment.companyId,
-      action: "exam.submitted",
-      entityType: "ExamAttempt",
-      entityId: currentAttempt.id,
-      metadata: {
-        examId: exam.id,
-        trainingAssignmentId: assignment.id,
-        score,
-        passed,
-      },
-    });
 
     return this.findMy(user, assignmentId);
   }

@@ -14,7 +14,10 @@ const superAdminUser: AuthenticatedUser = {
 
 function createService() {
   return new BiotCardsService(
-    {} as never,
+    {
+      $transaction: async (callback: (transaction: object) => Promise<unknown>) =>
+        callback({}),
+    } as never,
     {
       log: async () => undefined,
     } as never,

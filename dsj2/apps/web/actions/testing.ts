@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { apiFetch } from "../lib/api";
+import { buildQuestionsPayload } from "../lib/exam-form";
 
 function buildTestingUrl(pathname: string, companyId: string | null, error?: string) {
   const params = new URLSearchParams();
@@ -17,35 +18,6 @@ function buildTestingUrl(pathname: string, companyId: string | null, error?: str
 
   const query = params.toString();
   return query ? `${pathname}?${query}` : pathname;
-}
-
-function buildQuestionsPayload(formData: FormData) {
-  const questionCount = Number(formData.get("questionCount") ?? "0");
-  const questions: Array<{
-    prompt: string;
-    options: string[];
-    correctOptionIndex: number;
-  }> = [];
-
-  for (let index = 0; index < questionCount; index += 1) {
-    const prompt = String(formData.get(`questionPrompt_${index}`) ?? "").trim();
-    const options = [0, 1, 2, 3]
-      .map((optionIndex) => String(formData.get(`questionOption_${index}_${optionIndex}`) ?? "").trim())
-      .filter((value) => value.length > 0);
-    const correctOptionIndex = Number(formData.get(`questionCorrectIndex_${index}`) ?? "0");
-
-    if (!prompt || options.length < 2) {
-      continue;
-    }
-
-    questions.push({
-      prompt,
-      options,
-      correctOptionIndex,
-    });
-  }
-
-  return questions;
 }
 
 export async function createExamAction(formData: FormData) {

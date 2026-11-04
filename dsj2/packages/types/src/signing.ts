@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { compatibleOffsetDateTime } from "./compat-datetime";
 
 const normalizeSignatureProviderValue = (value: unknown) => {
   if (typeof value !== "string") {
@@ -75,8 +76,8 @@ export const ncalayerCertificateMetadataSchema = z.object({
   certificateThumbprint: z.string().min(1),
   certificateSubject: z.string().min(1),
   certificateIssuer: z.string().min(1),
-  certificateValidFrom: z.string().datetime({ offset: true }),
-  certificateValidTo: z.string().datetime({ offset: true }),
+  certificateValidFrom: compatibleOffsetDateTime(),
+  certificateValidTo: compatibleOffsetDateTime(),
 });
 
 export const ncalayerBridgeHealthSchema = z.object({
@@ -88,7 +89,7 @@ export const ncalayerBridgeHealthSchema = z.object({
 
 export const ncalayerBridgeSignatureSchema = ncalayerCertificateMetadataSchema.extend({
   signingDigest: documentHashSchema,
-  signedAt: z.string().datetime({ offset: true }),
+  signedAt: compatibleOffsetDateTime(),
   cms: z.string().min(1),
   bridgeVersion: z.string().nullable().optional(),
   bridgeUrl: z.string().url().nullable().optional(),
@@ -154,9 +155,9 @@ export const egovMobileQrCallbackSchema = z
     certificateThumbprint: z.string().min(1).optional(),
     certificateSubject: z.string().min(1).optional(),
     certificateIssuer: z.string().min(1).optional(),
-    certificateValidFrom: z.string().datetime({ offset: true }).optional(),
-    certificateValidTo: z.string().datetime({ offset: true }).optional(),
-    signedAt: z.string().datetime({ offset: true }).optional(),
+    certificateValidFrom: compatibleOffsetDateTime().optional(),
+    certificateValidTo: compatibleOffsetDateTime().optional(),
+    signedAt: compatibleOffsetDateTime().optional(),
     signaturePayload: z.string().optional(),
     errorCode: z.string().optional(),
     errorMessage: z.string().optional(),
