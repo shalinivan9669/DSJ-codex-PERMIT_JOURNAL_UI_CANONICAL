@@ -1,8 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
+import { safeLmsReturnTo } from "@/lib/lms-navigation";
+import { formatLearningDateTime } from "@/lib/learning-date-format";
+import {
+  learningCalendarRange,
+  learningCalendarToday,
+} from "@/lib/learning-calendar-range";
 import {
   teachingApi,
   type CalendarPage,
@@ -57,11 +64,12 @@ function eventDate(
   t: Translate,
 ) {
   return (
-    new Intl.DateTimeFormat(t("ru-RU", "kk-KZ"), {
-      timeZone: event.timezone,
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(event.startsAt)) + ` (${event.timezone})`
+    formatLearningDateTime(
+      event.startsAt,
+      event.timezone,
+      t("ru-KZ", "kk-KZ"),
+    ) +
+    ` (${event.timezone})`
   );
 }
 function EventLinks({ event, t }: { event: TeachingEvent; t: Translate }) {
@@ -603,7 +611,11 @@ export function TeachingEventPanel({
             <summary>{t("История занятия", "Сабақ тарихы")}</summary>
             {data.history.map((row) => (
               <p key={row.id}>
-                {new Date(row.createdAt).toLocaleString(t("ru-RU", "kk-KZ"))} ·{" "}
+                {formatLearningDateTime(
+                  row.createdAt,
+                  data.event.timezone,
+                  t("ru-KZ", "kk-KZ"),
+                )} ·{" "}
                 {row.kind === "CREATED"
                   ? t("Назначено", "Тағайындалды")
                   : row.kind === "CANCELLED"
@@ -820,35 +832,132 @@ function AttendanceEditor({ id, t }: { id: string; t: Translate }) {
   );
 }
 
-export function LearningCalendar({ t }: { t: Translate }) {
-  const [from, setFrom] = useState(() => new Date().toISOString().slice(0, 10)),
+function CalendarLoadError({
+  error,
+  title,
+  t,
+  busy,
+  retry,
+}: {
+  error: unknown;
+  title: string;
+  t: Translate;
+  busy: boolean;
+  retry: () => void;
+}) {
+  if (!error) return null;
+  const details = error instanceof ApiError ? error.details : error;
+  const deploymentBlocked =
+    !!details &&
+    typeof details === "object" &&
+    "code" in details &&
+    details.code === "LMS_DEPLOYMENT_REVIEW_REQUIRED";
+  return (
+    <Notice>
+      <strong>{title}</strong>
+      <p>
+        {deploymentBlocked
+          ? lmsError(error, t)
+          : error instanceof ApiError && error.status === 403
+            ? t(
+                "Нет доступа. Обратитесь к администратору центра, чтобы проверить ваши учебные полномочия.",
+                "Қолжетімділік жоқ. Оқу өкілеттіктеріңізді тексеру үшін орталық әкімшісіне хабарласыңыз.",
+              )
+            : error instanceof ApiError && error.status === 401
+              ? t(
+                  "Сеанс завершён. Войдите снова, чтобы загрузить данные.",
+                  "Сеанс аяқталды. Деректерді жүктеу үшін қайта кіріңіз.",
+                )
+              : error instanceof ApiError && error.status === 0
+                ? t(
+                    "Нет связи с сервером. Проверьте соединение и повторите загрузку.",
+                    "Сервермен байланыс жоқ. Байланысты тексеріп, қайта жүктеңіз.",
+                  )
+                : error instanceof ApiError && error.status === 429
+                  ? t(
+                      "Слишком частые запросы. Подождите немного и повторите загрузку.",
+                      "Сұраулар тым жиі жіберілді. Біраз күтіп, қайта жүктеңіз.",
+                    )
+                  : t(
+                      "Данные временно недоступны. Повторите загрузку; если ошибка сохранится, передайте данные для поддержки администратору.",
+                      "Деректер уақытша қолжетімсіз. Қайта жүктеңіз; қате қайталанса, қолдау қызметіне арналған деректерді әкімшіге беріңіз.",
+                    )}
+      </p>
+      <LmsErrorDiagnostic error={error} t={t} />
+      <button type="button" disabled={busy} onClick={retry}>
+        {deploymentBlocked
+          ? t("Проверить доступ", "Қолжетімділікті тексеру")
+          : t("Повторить загрузку", "Қайта жүктеу")}
+      </button>
+    </Notice>
+  );
+}
+
+export function LearningCalendar({
+  t,
+  timezone = "Asia/Qyzylorda",
+}: {
+  t: Translate;
+  timezone?: string;
+}) {
+  const [from, setFrom] = useState(() => learningCalendarToday(timezone)),
     [page, setPage] = useState(1),
     [data, setData] = useState<CalendarPage | null>(null),
     [error, setError] = useState<unknown>(null),
+    [loading, setLoading] = useState(true),
+    [reload, setReload] = useState(0),
+    [loadedQuery, setLoadedQuery] = useState<string | null>(null),
     [selected, setSelected] = useState<string | null>(null);
+  const eventId = useSearchParams().get("eventId");
+  const range = learningCalendarRange(from, timezone);
+  const query = JSON.stringify([from, timezone, page]);
+  const visible = range && loadedQuery === query ? data : null;
+  const navigationEpoch = useRef(0);
+  const navigationQuery = JSON.stringify([query, eventId]);
+  const previousNavigationQuery = useRef(navigationQuery);
+  if (previousNavigationQuery.current !== navigationQuery) {
+    previousNavigationQuery.current = navigationQuery;
+    navigationEpoch.current += 1;
+  }
+  function selectEvent(id: string) {
+    navigationEpoch.current += 1;
+    setSelected(id);
+  }
   useEffect(() => {
-    setSelected(new URLSearchParams(window.location.search).get("eventId"));
-  }, []);
+    setSelected(eventId);
+  }, [eventId]);
   useEffect(() => {
     let alive = true;
-    const start = new Date(`${from}T00:00:00.000Z`),
-      end = new Date(start.getTime() + 31 * 86400000);
-    if (!Number.isFinite(start.getTime())) return;
+    setError(null);
+    const period = learningCalendarRange(from, timezone);
+    if (!period) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     void teachingApi
-      .calendar(start.toISOString(), end.toISOString(), page)
+      .calendar(period.from, period.to, page)
       .then((value) => {
         if (alive) {
-          setData(value);
+          const lastPage = Math.max(1, Math.ceil(value.total / value.pageSize));
+          if (page > lastPage) setPage(lastPage);
+          else {
+            setData(value);
+            setLoadedQuery(JSON.stringify([from, timezone, page]));
+          }
           setError(null);
         }
       })
       .catch((caught) => {
         if (alive) setError(caught);
+      })
+      .finally(() => {
+        if (alive) setLoading(false);
       });
     return () => {
       alive = false;
     };
-  }, [from, page]);
+  }, [from, timezone, page, reload]);
   const labels: Record<string, [string, string]> = {
     SESSION: ["Занятие", "Сабақ"],
     COURSE_START: ["Начало обучения", "Оқудың басталуы"],
@@ -859,30 +968,85 @@ export function LearningCalendar({ t }: { t: Translate }) {
   return (
     <>
       <LmsHeading title={t("Учебный календарь", "Оқу күнтізбесі")} />
-      <LearningNotifications t={t} onOpen={setSelected} />
-      <section className="panel lms-panel">
+      <LearningNotifications
+        t={t}
+        onOpen={selectEvent}
+        navigationEpoch={() => navigationEpoch.current}
+      />
+      <section className="panel lms-panel lms-calendar" aria-busy={loading}>
         <label>
           {t("31 день начиная с", "31 күн, басталу күні")}
           <input
             type="date"
             value={from}
+            aria-invalid={!range || undefined}
+            aria-describedby={
+              !range
+                ? "calendar-date-error calendar-timezone"
+                : "calendar-timezone"
+            }
             onChange={(event) => {
-              if (event.target.value) {
-                setFrom(event.target.value);
-                setPage(1);
-              }
+              navigationEpoch.current += 1;
+              setLoading(!!event.target.value);
+              setFrom(event.target.value);
+              setPage(1);
             }}
           />
+          {!range && (
+            <small
+              id="calendar-date-error"
+              className="field-error"
+              role="status"
+            >
+              {!from
+                ? t(
+                    "Выберите дату начала периода.",
+                    "Кезеңнің басталу күнін таңдаңыз.",
+                  )
+                : t(
+                    "Проверьте дату начала периода.",
+                    "Кезеңнің басталу күнін тексеріңіз.",
+                  )}
+            </small>
+          )}
+          <small id="calendar-timezone">
+            {t("Период по времени центра", "Кезең орталық уақыты бойынша")}:{" "}
+            {timezone}
+          </small>
         </label>
-        <ErrorNotice error={error} t={t} />
-        {data?.items.map((item) => (
+        <CalendarLoadError
+          error={error}
+          title={t(
+            "Не удалось загрузить календарь",
+            "Күнтізбені жүктеу мүмкін болмады",
+          )}
+          t={t}
+          busy={loading}
+          retry={() => setReload((value) => value + 1)}
+        />
+        {range && loading && (
+          <p role="status">
+            {t("Загружаем календарь…", "Күнтізбе жүктелуде…")}
+          </p>
+        )}
+        {visible && (loading || !!error) && !!visible.items.length && (
+          <p className="lms-save-state">
+            {t(
+              "Показаны ранее загруженные события этого периода.",
+              "Осы кезеңнің бұрын жүктелген оқиғалары көрсетілген.",
+            )}
+          </p>
+        )}
+        {visible?.items.map((item) => (
           <article key={item.id} className="lms-event-row">
             <div>
               <strong>{t(item.titleRu, item.titleKz)}</strong>
               <p>
-                {new Date(item.startsAt).toLocaleString(t("ru-RU", "kk-KZ"), {
-                  timeZone: item.timezone || "UTC",
-                })}{" "}
+                {formatLearningDateTime(
+                  item.startsAt,
+                  item.timezone || "UTC",
+                  t("ru-KZ", "kk-KZ"),
+                )}{" "}
                 ({item.timezone || "UTC"}) ·{" "}
                 {t(...(labels[item.kind] || [item.kind, item.kind]))}
                 {item.status === "CANCELLED"
@@ -891,23 +1055,34 @@ export function LearningCalendar({ t }: { t: Translate }) {
               </p>
             </div>
             {item.kind === "SESSION" ? (
-              <button onClick={() => setSelected(item.id.slice(6))}>
+              <button onClick={() => selectEvent(item.id.slice(6))}>
                 {t("Открыть", "Ашу")}
               </button>
             ) : (
-              <Link href={item.href}>{t("К обучению", "Оқуға өту")}</Link>
+              <Link
+                href={item.href}
+                onClick={() => {
+                  navigationEpoch.current += 1;
+                }}
+              >
+                {t("К обучению", "Оқуға өту")}
+              </Link>
             )}
           </article>
         ))}
-        {data && !data.items.length && (
+        {visible && !loading && !error && !visible.items.length && (
           <p>{t("В этом периоде событий нет", "Бұл кезеңде оқиғалар жоқ")}</p>
         )}
-        {data && (
+        {visible && !loading && !error && (
           <PageControls
             page={page}
-            total={data.total}
-            pageSize={data.pageSize}
-            onPage={setPage}
+            total={visible.total}
+            pageSize={visible.pageSize}
+            onPage={(value) => {
+              navigationEpoch.current += 1;
+              setLoading(true);
+              setPage(value);
+            }}
             t={t}
           />
         )}
@@ -919,70 +1094,189 @@ export function LearningCalendar({ t }: { t: Translate }) {
 function LearningNotifications({
   t,
   onOpen,
+  navigationEpoch,
 }: {
   t: Translate;
   onOpen: (id: string) => void;
+  navigationEpoch: () => number;
 }) {
-  const [items, setItems] = useState<LearningNotification[]>([]),
-    [error, setError] = useState<unknown>(null),
+  const router = useRouter();
+  const [data, setData] = useState<Awaited<
+      ReturnType<typeof teachingApi.notifications>
+    > | null>(null),
+    [loadError, setLoadError] = useState<unknown>(null),
+    [readError, setReadError] = useState<{ id: string; cause: unknown } | null>(
+      null,
+    ),
+    [loading, setLoading] = useState(true),
+    [readingId, setReadingId] = useState<string | null>(null),
     [page, setPage] = useState(1),
-    [total, setTotal] = useState(0),
-    [pageSize, setPageSize] = useState(50);
+    [reload, setReload] = useState(0);
+  const reading = useRef(false);
+  const mounted = useRef(false);
+  const visible = data?.page === page ? data : null;
   useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  useEffect(() => {
+    let alive = true;
+    setLoading(true);
+    setLoadError(null);
     void teachingApi
       .notifications(page)
       .then((value) => {
-        setItems(value.items);
-        setTotal(value.total);
-        setPageSize(value.pageSize);
-        setError(null);
+        if (!alive) return;
+        const lastPage = Math.max(1, Math.ceil(value.total / value.pageSize));
+        if (page > lastPage) setPage(lastPage);
+        else setData(value);
+        setLoadError(null);
       })
-      .catch(setError);
-  }, [page]);
+      .catch((caught) => {
+        if (alive) setLoadError(caught);
+      })
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [page, reload]);
   async function read(item: LearningNotification) {
+    if (reading.current || loading || loadError) return;
+    const navigationAtStart = navigationEpoch();
+    reading.current = true;
+    setReadingId(item.id);
+    setReadError(null);
     try {
-      await teachingApi.readNotification(item.id);
-      setItems((current) =>
-        current.map((row) =>
-          row.id === item.id
-            ? { ...row, readAt: new Date().toISOString() }
-            : row,
-        ),
-      );
-      onOpen(item.eventId);
+      if (!item.readAt) {
+        const saved = await teachingApi.readNotification(item.id);
+        if (!mounted.current) return;
+        setData((current) =>
+          current
+            ? {
+                ...current,
+                items: current.items.map((row) =>
+                  row.id === item.id ? { ...row, readAt: saved.readAt } : row,
+                ),
+              }
+            : current,
+        );
+      }
+      if (!mounted.current || navigationEpoch() !== navigationAtStart) return;
+      if (item.eventId) onOpen(item.eventId);
+      else {
+        const href = safeLmsReturnTo(item.href);
+        if (href) router.push(href);
+      }
     } catch (caught) {
-      setError(caught);
+      if (mounted.current) setReadError({ id: item.id, cause: caught });
+    } finally {
+      reading.current = false;
+      if (mounted.current) setReadingId(null);
     }
   }
   return (
-    <details className="panel lms-panel">
+    <details className="panel lms-panel lms-calendar-notifications">
       <summary>
-        {t("Уведомления об обучении", "Оқу туралы хабарламалар")} · {total}
+        {t("Уведомления об обучении", "Оқу туралы хабарламалар")}
+        {" · "}
+        {loading
+          ? t("Загрузка…", "Жүктелуде…")
+          : loadError
+            ? t("Недоступны", "Қолжетімсіз")
+            : visible
+              ? visible.total
+              : t("Не загружены", "Жүктелмеген")}
       </summary>
-      <ErrorNotice error={error} t={t} />
-      {items.map((item) => (
+      <CalendarLoadError
+        error={loadError}
+        title={t(
+          "Не удалось загрузить уведомления",
+          "Хабарламаларды жүктеу мүмкін болмады",
+        )}
+        t={t}
+        busy={loading || !!readingId}
+        retry={() => {
+          if (!reading.current) setReload((value) => value + 1);
+        }}
+      />
+      {loading && (
+        <p role="status">
+          {t("Загружаем уведомления…", "Хабарламалар жүктелуде…")}
+        </p>
+      )}
+      {visible && (loading || !!loadError) && !!visible.items.length && (
+        <p className="lms-save-state">
+          {t(
+            "Показаны ранее загруженные уведомления.",
+            "Бұрын жүктелген хабарламалар көрсетілген.",
+          )}
+        </p>
+      )}
+      {visible?.items.map((item) => (
         <div key={item.id} className="lms-event-row">
-          <span>
-            {item.kind === "CANCELLED"
-              ? t("Занятие отменено", "Сабақтан бас тартылды")
-              : item.kind === "UPDATED"
-                ? t("Занятие изменено", "Сабақ өзгертілді")
-                : t("Назначено занятие", "Сабақ тағайындалды")}
-            : {t(item.titleRu, item.titleKz)}{" "}
+          <div>
+            {item.eventId && (
+              <>
+                {item.status === "CANCELLED" || item.kind === "CANCELLED"
+                  ? t("Занятие отменено", "Сабақтан бас тартылды")
+                  : item.kind === "UPDATED"
+                    ? t("Занятие изменено", "Сабақ өзгертілді")
+                    : t("Назначено занятие", "Сабақ тағайындалды")}
+                :{" "}
+              </>
+            )}
+            {t(item.titleRu, item.titleKz || item.titleRu)}{" "}
             {item.readAt ? ` · ${t("Прочитано", "Оқылды")}` : ""}
-          </span>
-          <button onClick={() => void read(item)}>
-            {t("Прочитать и открыть", "Оқу және ашу")}
-          </button>
+            {readError?.id === item.id && (
+              <Notice>
+                <strong>
+                  {t(
+                    "Не удалось отметить уведомление прочитанным",
+                    "Хабарламаны оқылған деп белгілеу мүмкін болмады",
+                  )}
+                </strong>
+                <p>{lmsError(readError.cause, t)}</p>
+                <LmsErrorDiagnostic error={readError.cause} t={t} />
+              </Notice>
+            )}
+          </div>
+          {(item.eventId || safeLmsReturnTo(item.href) || !item.readAt) && (
+            <button
+              type="button"
+              disabled={loading || !!loadError || !!readingId}
+              onClick={() => void read(item)}
+            >
+              {readingId === item.id
+                ? t("Открываем…", "Ашылуда…")
+                : item.eventId || safeLmsReturnTo(item.href)
+                  ? item.readAt
+                    ? t("Открыть", "Ашу")
+                    : t("Прочитать и открыть", "Оқу және ашу")
+                  : t("Отметить прочитанным", "Оқылған деп белгілеу")}
+            </button>
+          )}
         </div>
       ))}
-      <PageControls
-        page={page}
-        total={total}
-        pageSize={pageSize}
-        onPage={setPage}
-        t={t}
-      />
+      {visible && !loading && !loadError && !visible.items.length && (
+        <p>{t("Уведомлений пока нет", "Әзірге хабарламалар жоқ")}</p>
+      )}
+      {visible && !loading && !loadError && !readingId && (
+        <PageControls
+          page={page}
+          total={visible.total}
+          pageSize={visible.pageSize}
+          onPage={(value) => {
+            setLoading(true);
+            setReadError(null);
+            setPage(value);
+          }}
+          t={t}
+        />
+      )}
     </details>
   );
 }

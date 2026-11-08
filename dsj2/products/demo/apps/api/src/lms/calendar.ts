@@ -26,8 +26,9 @@ export async function learningCalendar(c: Context, input: unknown) {
     c.learningMode || (c.role === "LEARNER" && !isTeachingRole(c))
       ? Prisma.sql`'/learn/'||n.id`
       : Prisma.sql`CASE WHEN n."groupId" IS NULL THEN '/lms/results' ELSE '/lms/groups/'||n."groupId" END`;
+  // All entries use [from, to); a session ending at from has no overlap.
   const union = Prisma.sql`
-    SELECT 'event:'||e.id AS id,'SESSION' AS kind,e."titleRu",e."titleKz",e."startsAt",e."endsAt",e.timezone,e."groupId",NULL::text AS "enrollmentId",'/lms/calendar?eventId='||e.id AS href,e.status FROM "LmsTeachingEvent" e WHERE (${events}) AND e."startsAt"<${to} AND e."endsAt">=${from}
+    SELECT 'event:'||e.id AS id,'SESSION' AS kind,e."titleRu",e."titleKz",e."startsAt",e."endsAt",e.timezone,e."groupId",NULL::text AS "enrollmentId",'/lms/calendar?eventId='||e.id AS href,e.status FROM "LmsTeachingEvent" e WHERE (${events}) AND e."startsAt"<${to} AND e."endsAt">${from}
     UNION ALL
     SELECT 'start:'||n.id,'COURSE_START',v."content"->>'titleRu',v."content"->>'titleKz',n."startsAt",NULL::timestamp,'UTC',n."groupId",n.id,${destination},n.status FROM "Enrollment" n JOIN "CourseVersion" v ON v."tenantId"=n."tenantId" AND v.id=n."courseVersionId" WHERE (${enrollment}) AND n."startsAt">=${from} AND n."startsAt"<${to}
     UNION ALL

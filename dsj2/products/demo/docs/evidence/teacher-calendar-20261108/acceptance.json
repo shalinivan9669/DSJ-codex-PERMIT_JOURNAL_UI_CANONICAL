@@ -1,0 +1,132 @@
+{
+  "date": "2026-11-08",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "baseCommit": "af2bffc",
+  "status": "LOCAL_TEACHER_CALENDAR_RECOVERY_VERIFIED_PRODUCTION_CONFIGURATION_REQUIRED",
+  "productionDiagnosis": {
+    "mode": "AUTHENTICATED_READ_ONLY",
+    "role": "TEACHER",
+    "loginStatus": 201,
+    "calendarStatus": 503,
+    "notificationsStatus": 503,
+    "code": "LMS_DEPLOYMENT_REVIEW_REQUIRED",
+    "calendarCorrelation": "f64c9866-2428-45dc-ae0a-11274ce57d14",
+    "notificationsCorrelation": "e7bcc8c8-5378-43bf-b248-9d4f93e38056",
+    "logoutStatus": 201,
+    "configurationDetail": "NOT_EXPOSED_BY_CURRENT_DEPLOYMENT",
+    "businessDataChanged": false
+  },
+  "fixes": [
+    "Calendar and embedded notifications distinguish loading, failure and an actual empty list; known deployment blocker names required administrator recovery.",
+    "31-day window begins at centre-local midnight; cleared or invalid dates do not request data; obsolete period responses cannot replace the current period.",
+    "Positive-duration sessions ending at the selected start are excluded; crossing sessions remain visible.",
+    "Unified notifications preserve their own destinations; non-session review messages open their submission rather than an empty event.",
+    "A successful delayed read retains server-confirmed readAt without overriding a newer event, date, page or training navigation choice.",
+    "Narrow date-control and long-text wrapping fixes support mobile layouts.",
+    "Calendar and event history use numeric day-month-year and 24-hour time even when Kazakh locale data is unavailable."
+  ],
+  "verification": {
+    "unit": {
+      "status": "PASS",
+      "root": 328,
+      "web": 310
+    },
+    "integration": {
+      "status": "PASS",
+      "passed": 3,
+      "durationMs": 5395.3141,
+      "suites": [
+        "lms-calendar-scope",
+        "lms-full-teaching",
+        "lms-readiness-http"
+      ]
+    },
+    "boundaryBeforeFix": "REPRODUCED_TEST_FAILURE_FOR_END_EQUALS_FROM",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "designDetector": {
+      "status": "PASS",
+      "findings": 0
+    },
+    "browser": {
+      "status": "PASS",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "durationMs": 19341.843,
+      "viewport": 390,
+      "cases": [
+        "TEACHER real login, bound/foreign scopes and RU/KZ calendar",
+        "Actual non-demo deployment gate with GET-only retry and no false zero",
+        "Clear date, retry failed period, ignore delayed obsolete response",
+        "Centre-local00:30 included and preceding end-midnight excluded",
+        "Notification retry and real immutable review destination",
+        "Delayed read does not replace newer event selection"
+      ]
+    },
+    "build": "PASS_LOCAL_WINDOWS_STANDALONE_DISABLED",
+    "uiMetrics": {
+      "routine": {
+        "fixture": "synthetic separate setup",
+        "loginFields": 2,
+        "loginClicks": 1,
+        "calendarNavigationClicks": 1,
+        "preparedCalendarViewActions": 0,
+        "eventOpenClicks": 1,
+        "overflow": {
+          "body": 390,
+          "root": 390,
+          "viewport": 390
+        },
+        "browser": "Chromium; WebKit not installed; physical Safari unverified"
+      },
+      "dateRecovery": {
+        "dateChangeFields": 1,
+        "retryClicks": 1,
+        "clearRequests": 0,
+        "olderResponseIgnored": true,
+        "latestFrom": "2026-12-12T19:00:00Z",
+        "latestTo": "2027-01-12T19:00:00Z"
+      }
+    },
+    "visualReview": "PASS_RU_KZ_390_AND_REVIEW_DESKTOP"
+  },
+  "evidenceRoot": ".runtime/commission-flow/evidence/teacher-calendar-verified-final",
+  "unchanged": [
+    "Deployment gate and role/tenant authorization rules",
+    "Global notification inbox",
+    "Attendance decisions, exam results and signatures",
+    "Teaching event/group editor behavior",
+    "Database schema and production deployment"
+  ],
+  "limits": {
+    "productionCodeDeployment": "NOT_PERFORMED",
+    "productionLmsEnablement": "STILL_BLOCKED_PENDING_VALID_SERVER_CONFIGURATION",
+    "physicalIphoneSafari": "NOT_VERIFIED_WEBKIT_NOT_INSTALLED",
+    "fullHistoricalIntegrationAndRenderSuite": "NOT_RUN"
+  },
+  "localServicesStopped": true,
+  "correctedTestRuns": [
+    "Selectors were narrowed for nested diagnostic summaries and date label helper text; no acceptance assertion removed.",
+    "KZ date assertion exposed an unconverted event-history timestamp; fixed and full6 rerun passed."
+  ],
+  "changedFiles": [
+    "apps/api/src/lms/calendar.ts",
+    "apps/web/components/lms/common.tsx",
+    "apps/web/components/lms/learning.css",
+    "apps/web/components/lms/teaching-calendar.tsx",
+    "apps/web/components/lms/workspace.tsx",
+    "apps/web/e2e/teacher-calendar-recovery-live.spec.ts",
+    "apps/web/lib/learning-api.ts",
+    "apps/web/lib/learning-calendar-range.ts",
+    "apps/web/lib/learning-date-format.ts",
+    "apps/web/test/learning-calendar-range.test.ts",
+    "apps/web/test/learning-date-format.test.ts",
+    "apps/web/test/lms-errors.test.ts",
+    "docs/evidence/commercial-acceptance/matrix.json",
+    "docs/evidence/progress.md",
+    "docs/evidence/teacher-calendar-20261108/acceptance.json",
+    "tests/integration/lms-calendar-scope.test.ts"
+  ]
+}

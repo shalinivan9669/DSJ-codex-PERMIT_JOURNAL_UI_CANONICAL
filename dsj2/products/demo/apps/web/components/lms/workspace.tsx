@@ -123,7 +123,7 @@ export function LmsWorkspace({
       ) : pathname === "/lms/reports" && canReadReports ? (
         <Reports t={t} context={context} />
       ) : pathname === "/learn/calendar" || (pathname === "/lms/calendar" && (canSchedule || employer)) ? (
-        <LearningCalendar t={t} />
+        <LearningCalendar t={t} timezone={context.tenant.timezone || "Asia/Qyzylorda"} />
       ) : pathname === "/lms/learning-roles" && canManage ? (
         <LearningRoleBindings t={t} canManageAccounts={canManage} />
       ) : pathname === "/lms/regulatory" && (canManage || role === "METHODIST" || expert) ? (

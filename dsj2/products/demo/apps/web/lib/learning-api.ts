@@ -158,14 +158,15 @@ export type CalendarPage = {
 };
 export type LearningNotification = {
   id: string;
-  eventId: string;
+  eventId: string | null;
+  href: string | null;
   kind: string;
   readAt: string | null;
   createdAt: string;
   titleRu: string;
   titleKz: string;
   startsAt: string;
-  status: string;
+  status: string | null;
 };
 export const teachingApi = {
   list: (groupId: string, page = 1) =>
@@ -214,5 +215,8 @@ export const teachingApi = {
       pageSize: number;
     }>(`/lms/notifications?page=${page}`),
   readNotification: (id: string) =>
-    api(`/lms/notifications/${id}/read`, { method: "POST", body: json({}) }),
+    api<{ id: string; readAt: string }>(`/lms/notifications/${id}/read`, {
+      method: "POST",
+      body: json({}),
+    }),
 };

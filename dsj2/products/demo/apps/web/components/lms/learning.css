@@ -29,6 +29,21 @@
   margin: 5px 0;
   overflow-wrap: anywhere;
 }
+.lms-calendar > label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+.lms-calendar input[type="date"] {
+  min-width: 0;
+  max-width: 100%;
+}
+.lms-calendar .lms-event-row strong,
+.lms-calendar-notifications .lms-event-row > div,
+.lms-calendar-notifications summary {
+  overflow-wrap: anywhere;
+}
 .lms-event-detail,
 .lms-event-editor {
   flex-basis: 100%;
