@@ -254,6 +254,9 @@ export async function reviewDetail(
       attempt.answers as LearningAnswers,
       frozen.policy,
     );
+    const savedGrading = attempt.grading as {
+      questionScores?: Record<string, number | null>;
+    } | null;
     return {
       ...common,
       revision: 1,
@@ -264,6 +267,7 @@ export async function reviewDetail(
       questions: frozen.questions.map((question) => publicQuestion(question)),
       answers: attempt.answers,
       pendingQuestionIds: grading.pendingQuestionIds,
+      questionScores: attempt.state === "FINISHED" ? savedGrading?.questionScores || {} : {},
       proctoringPending: attempt.purpose === "FINAL" && frozen.profile.requiresProctoring && !await proctorApproval(tx, c.tenantId, attempt),
       allowedActions:
         attempt.state === "AWAITING_REVIEW" &&

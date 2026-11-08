@@ -1,5 +1,30 @@
 {
   "version": "2026-09-22.2",
+  "syntheticLearning20261109": {
+    "status": "LIVE_SYNTHETIC_FLOW_PASS_LOCAL_REVIEW_FIXES_VERIFIED",
+    "scope": "Separate demoOnly test center on the existing site; ordinary role APIs and browser learning/review; no real-data deployment override",
+    "live": {
+      "methodist": "PASS: create/save/reload draft in browser; authored programme approved and published through ordinary role APIs",
+      "learnerTeacher": "PASS: browser lesson acknowledgement, written final answer, teacher grade, learner PASSED and feedback",
+      "completion": "PASS: LEARNING_FINAL/PRACTICE, COMPLETED; zero verified exam results and documents for this enrollment",
+      "freshPractice": "PASS: published course assigned to a separate fresh learner with zero progress and attempts",
+      "isolation": "PASS: 12 read-only checks; real tenant remains demoOnly=false/NOT_CONFIGURED; cross-tenant reads denied"
+    },
+    "fixes": [
+      "Completed teacher review shows its saved 0/1 score instead of an empty disabled field",
+      "Removed redundant completed-test text referring to documents below"
+    ],
+    "verification": {
+      "unit": "PASS 663 (334 product + 329 web)",
+      "integration": "PASS 2/2 learning-assessment regressions, including saved scores 0 and 1",
+      "lint": "PASS",
+      "typecheck": "PASS",
+      "build": "PASS autonomous workspace build, Windows DEMO_STANDALONE=0",
+      "fixDeployment": "Pending publication; cloud verification is recorded separately after deployment"
+    },
+    "localEvidence": ".runtime/lms-test-center (sanitized reports and screenshots; access file is private and ignored)",
+    "limits": "Real-data learning awaits the KZ server. Official signatures, document issuance, physical Safari and full historical render/integration suites were not exercised. No new explanatory UI text."
+  },
   "operatorUXAnalysisPreparation20261003": {
     "status": "PREPARED_FOR_ANALYSIS_NOT_IMPLEMENTED",
     "baseCommit": "592d15cc331c20ae1b7b97d0b7ad6e1d3a9ef420",

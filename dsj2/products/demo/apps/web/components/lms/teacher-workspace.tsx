@@ -44,6 +44,7 @@ type Detail = Item & {
   questions?: LmsQuestion[];
   answers?: LearningAnswers;
   pendingQuestionIds?: string[];
+  questionScores?: Record<string, number | null>;
   text?: string;
   attachments?: { id: string; name: string; downloadUrl: string }[];
   instructionsRu?: string;
@@ -547,7 +548,7 @@ export function TeacherWorkspace({ t, scope, mode = "teacher", canManageRoles = 
                           loadingDetail ||
                           !detail.allowedActions.includes("GRADE")
                         }
-                        value={form.scores[question.id] ?? ""}
+                        value={(detail.state === "FINISHED" ? detail.questionScores?.[question.id] : form.scores[question.id]) ?? ""}
                         onChange={(event) => {
                           const scores = { ...form.scores };
                           if (event.target.value === "")

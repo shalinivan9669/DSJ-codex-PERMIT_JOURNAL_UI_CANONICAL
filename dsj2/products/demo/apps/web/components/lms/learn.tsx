@@ -46,7 +46,6 @@ function lockExplanation(reason: string | null | undefined, t: Translate) {
 function finalRequirement(reason: string | null | undefined, t: Translate) {
   const messages: Record<string, [string, string]> = {
     AWAITING_REVIEW: ["Итоговая работа отправлена. Решение появится после проверки преподавателем.", "Қорытынды жұмыс жіберілді. Шешім оқытушы тексергеннен кейін көрсетіледі."],
-    FINAL_COMPLETED: ["Итоговая проверка пройдена. Результат и доступные документы показаны ниже.", "Қорытынды тексеру тапсырылды. Нәтиже мен қолжетімді құжаттар төменде көрсетілген."],
     ATTEMPT_LIMIT: ["Попытки исчерпаны. Обратитесь в учебный центр.", "Талпыныстар таусылды. Оқу орталығына хабарласыңыз."],
     ASSESSMENT_EXPIRED: ["Срок итоговой проверки завершён. Учебный центр должен уточнить условия дальнейшего обучения.", "Қорытынды тексеру мерзімі аяқталды. Оқу орталығы әрі қарай оқу шарттарын нақтылауы керек."],
     ROUTE_REVIEW_REQUIRED: ["Учебный центр должен подтвердить условия итоговой аттестации.", "Оқу орталығы қорытынды аттестаттау шарттарын растауы керек."],
@@ -527,7 +526,7 @@ export function LearnerCourse({ id, t }: { id: string; t: Translate }) {
               </button>
               </>
             )}
-            {!data.examReadiness?.ready && (
+            {!data.examReadiness?.ready && data.examReadiness?.reasonCode !== "FINAL_COMPLETED" && (
               <div className="lms-save-state">
                 <p>
                   {finalRequirement(data.examReadiness?.reasonCode, t) ||

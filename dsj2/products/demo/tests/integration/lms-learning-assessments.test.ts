@@ -177,6 +177,41 @@ async function pinned(
   return { course, policy, version, enrollment };
 }
 
+test("review detail preserves saved manual scores including zero after reload", async (t) => {
+  t.after(() => db.$disconnect());
+  const center = await lmsTenant("saved-manual-scores");
+  const learner = await lmsLearner(center.tenant.id, "scores");
+  const definition = lmsCourse({ questions: 2, required: false });
+  const content = courseContentSchema.parse({
+    ...definition.content,
+    learningOutcome: "LEARNING",
+    exam: {
+      ...definition.content.exam,
+      questions: ["accepted", "rejected"].map((id) => ({ ...typedQuestions()[5], id })),
+    },
+  });
+  const fixture = await pinned(center.context, content, learner, "PRACTICE");
+  const attempt = await startAttempt(learner.context, fixture.enrollment.id);
+  await saveAnswers(learner.context, attempt.id, {
+    sequence: 1,
+    answers: { accepted: correct.case, rejected: { kind: "TEXT", text: "Не знаю" } },
+  });
+  await submitAttempt(learner.context, attempt.id);
+  const pending = await reviewDetail(center.context, "ATTEMPT", attempt.id);
+  assert.ok("questionScores" in pending);
+  assert.deepEqual(pending.questionScores, {});
+  const scores = { accepted: 1, rejected: 0 };
+  await decideReview(center.context, "ATTEMPT", attempt.id, decisionInput(pending, "GRADE", { questionScores: scores }));
+  await db.$disconnect();
+  const saved = await reviewDetail(center.context, "ATTEMPT", attempt.id);
+  assert.ok("questionScores" in saved);
+  assert.equal(saved.state, "FINISHED");
+  assert.deepEqual(saved.questionScores, scores);
+  assert.deepEqual(saved.allowedActions, []);
+  assert.equal((await getAttempt(learner.context, attempt.id)).verdict, "FAILED");
+  assert.equal(await db.verifiedExamResult.count({ where: { enrollmentId: fixture.enrollment.id } }), 0);
+});
+
 test("P03/P04: six types, intermediate isolation, immutable resubmissions, scoped concurrent review and nonofficial final", async (t) => {
   t.after(() => db.$disconnect());
   process.env.DEMO_LMS_TEST_RUNTIME = "1";
