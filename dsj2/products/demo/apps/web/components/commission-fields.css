@@ -20,10 +20,33 @@
 .commission-fields > button {
   margin-top: 16px;
 }
-.commission-person input {
+.commission-person input,
+.commission-person select,
+.commission-template-controls select {
   min-width: 0;
   width: 100%;
   font-size: 16px;
+}
+.commission-template-controls {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.commission-template-controls label {
+  flex: 1 1 280px;
+  min-width: 0;
+  margin: 0;
+}
+.commission-template-controls button {
+  margin-bottom: 4px;
+}
+.commission-use-person,
+.commission-person input + select {
+  margin-top: 8px;
+}
+.commission-organization {
+  overflow-wrap: anywhere;
 }
 .profile-commission {
   scroll-margin-top: 96px;

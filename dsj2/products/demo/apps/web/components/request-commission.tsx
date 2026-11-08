@@ -10,7 +10,11 @@ import {
   commissionTarget,
 } from "@/lib/request-commission";
 import type { AppContext, Draft, Profile } from "@/lib/types";
-import { useCabinetError, useCabinetText } from "./cabinet-language";
+import {
+  useCabinetError,
+  useCabinetLanguage,
+  useCabinetText,
+} from "./cabinet-language";
 import "./request-commission.css";
 
 type ProfileVersion = { id: string; version: number; profile: Profile };
@@ -155,7 +159,7 @@ export function RequestCommission({
                 {current ? ` · ${tr("Версия")} ${current.version}` : ""}
               </h3>
               {commissionRequired ? (
-                <CommissionPeople people={current?.profile.commission || []} />
+                <CommissionPeople profile={current?.profile} />
               ) : (
                 <ProfileDetails profile={current?.profile} />
               )}
@@ -186,9 +190,7 @@ export function RequestCommission({
                 </label>
                 {changed &&
                   (commissionRequired ? (
-                    <CommissionPeople
-                      people={selected?.profile.commission || []}
-                    />
+                    <CommissionPeople profile={selected?.profile} />
                   ) : (
                     <ProfileDetails profile={selected?.profile} />
                   ))}
@@ -317,10 +319,18 @@ function ProfileDetails({ profile }: { profile?: Profile }) {
   );
 }
 
-function CommissionPeople({ people }: { people: Profile["commission"] }) {
+function CommissionPeople({ profile }: { profile?: Profile }) {
   const tr = useCabinetText();
+  const t = useCabinetLanguage();
+  const people = profile?.commission || [];
+  const nameRu = profile?.nameRu.trim() || profile?.nameKz.trim() || "";
+  const nameKz = profile?.nameKz.trim() || nameRu;
   return (
     <dl className="request-commission-people">
+      <div>
+        <dt>{tr("Организация комиссии")}</dt>
+        <dd>{t(nameRu, nameKz) || tr("Не указан")}</dd>
+      </div>
       {Array.from({ length: Math.max(3, people.length) }, (_, index) => (
         <div key={index}>
           <dt>

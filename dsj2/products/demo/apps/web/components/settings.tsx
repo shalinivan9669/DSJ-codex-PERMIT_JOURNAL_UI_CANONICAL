@@ -175,6 +175,7 @@ export function ProfileForm({
   returnTo?: string;
 }) {
   const tr = useCabinetText();
+  const t = useCabinetLanguage();
   const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState<Profile>(
     profile || {
@@ -421,6 +422,10 @@ export function ProfileForm({
               {tr("Комиссия для протоколов")}
             </h3>
           </div>
+          <p className="commission-organization">
+            <span>{tr("Организация комиссии")}: </span>
+            <strong>{t(value.nameRu || value.nameKz || "", value.nameKz || value.nameRu || "") || tr("Укажите название учебного центра выше")}</strong>
+          </p>
           <CommissionFields
             value={value.commission}
             onChange={(commission) => change({ commission })}
@@ -428,6 +433,8 @@ export function ProfileForm({
             showErrors={showErrors}
             requiredCount={focusCommission ? 3 : 0}
             disabled={busy}
+            headName={value.headName}
+            people={value.people}
           />
         </section>
         <details className="center-extra-people" id="profile-other-people">

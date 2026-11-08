@@ -4,6 +4,7 @@ Run after the frozen source's data fill.  Historical rendering never imports
 this policy: its floating tables, numbering and package bytes stay pinned.
 """
 from functools import lru_cache
+from copy import deepcopy
 from pathlib import Path
 import math
 
@@ -298,6 +299,59 @@ def _remove_source_company_wrappers(root, template_id):
                 node.text = ''
 
 
+def _commission_header(root, roster, snapshot):
+    """Fill the three source header slots from the same ordered frozen people.
+
+    The retained source hardcodes director/UMO/teacher jobs and, in BIOT/PTM,
+    reverses the two member names. Commission membership is positional; job
+    titles and the separate centre head never change those roles. Only this
+    neutral rendering policy repairs the source header, not historical forms.
+    """
+    body = root.find(W + 'body')
+    paragraphs = [node for node in list(body)[:body.index(roster)]
+                  if node.tag == W + 'p'
+                  and ''.join(t.text or '' for t in node.iter(W + 't')).strip()]
+
+    def labels(paragraph):
+        value = ''.join(t.text or '' for t in paragraph.iter(W + 't'))
+        return {part.strip().rstrip(':').strip().lower() for part in value.split('/')}
+
+    chairs = [index for index, paragraph in enumerate(paragraphs)
+              if labels(paragraph) & {'председатель', 'председатель комиссии'}]
+    members = [index for index, paragraph in enumerate(paragraphs)
+               if labels(paragraph) & {'члены комиссии', 'членов комиссии'}]
+    # An employer/name may itself say "Председатель". Only the source's
+    # adjacent heading/person/heading structure identifies commission slots.
+    pairs = [(chair, member) for chair in chairs for member in members
+             if member == chair + 2 and member + 2 < len(paragraphs)]
+    if len(pairs) != 1:
+        raise ValueError('NEUTRAL_PROTOCOL_COMMISSION_HEADER')
+    chair, member = pairs[0]
+    slots = [paragraphs[chair + 1], *paragraphs[member + 1:member + 3]]
+    issuer = snapshot.get('issuer', {})
+    commission = issuer.get('commission', [])
+    issuer_name = str(issuer.get('nameRu') or issuer.get('nameKz') or '')
+    for index, paragraph in enumerate(slots):
+        person = commission[index] if index < len(commission) else {}
+        name = str(person.get('name') or '')
+        position = str(person.get('position') or '')
+        job = position if position.strip() else ('Председатель комиссии' if index == 0 else 'Член комиссии')
+        value = ' — '.join(part for part in [name, job] if part)
+        if issuer_name:
+            value += ', ' + issuer_name
+        # Keep the paragraph geometry and run typography, but remove the old
+        # source title/issuer/name runs rather than doing global substitutions.
+        run_props = paragraph.find('.//' + W + 'rPr')
+        run_props = deepcopy(run_props) if run_props is not None else None
+        for child in list(paragraph):
+            if child.tag not in [W + 'pPr', W + 'bookmarkStart', W + 'bookmarkEnd']:
+                paragraph.remove(child)
+        run = E.SubElement(paragraph, W + 'r')
+        if run_props is not None:
+            run.append(run_props)
+        E.SubElement(run, W + 't', {'{http://www.w3.org/XML/1998/namespace}space': 'preserve'}).text = value
+
+
 @lru_cache(maxsize=32)
 def _measure_font(size):
     path = Path(__file__).resolve().parents[2] / 'assets/fonts/LiberationSerif-Regular.ttf'
@@ -351,6 +405,7 @@ def repair_protocol_files(files: dict[str, bytes], snapshot: dict) -> dict[str, 
     root = E.fromstring(files['word/document.xml'])
     _remove_source_company_wrappers(root, template_id)
     roster = roster_table(root)
+    _commission_header(root, roster, snapshot)
     header_count = 2 if template_id.startswith('biot-') else 1
     rows = roster.findall(W + 'tr')
     expected = len(snapshot['items']) if snapshot.get('groupEvent') else 1

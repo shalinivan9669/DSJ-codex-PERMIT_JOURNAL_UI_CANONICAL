@@ -25,6 +25,93 @@ def employer(item):
 
 
 class NeutralProtocolValueTests(unittest.TestCase):
+    def test_commission_jobs_follow_frozen_people_in_individual_and_group_headers(self):
+        jobs = [
+            ['Начальник УМО', 'Директор', 'Преподаватель'],
+            ['Председатель правления', 'Инженер по охране труда', 'Внешний эксперт'],
+            ['', '', ''],
+        ]
+        for template_id in [*FORMS, 'ps-protocol']:
+            for grouped in [False, True]:
+                for positions in jobs:
+                    with self.subTest(template=template_id, group=grouped, positions=positions):
+                        snapshot = group_fixture(template_id, 2) if grouped else fixture(template_id)
+                        snapshot['issuer'].update(
+                            nameRu='ТОО «Независимый учебный центр»',
+                            headName='Независимый руководитель центра',
+                            commission=[
+                                {'name': f'Сохранённый участник {index + 1}', 'position': position,
+                                 'nameEn': f'Frozen person {index + 1}', 'positionEn': f'Frozen job {index + 1}'}
+                                for index, position in enumerate(positions)
+                            ],
+                        )
+                        original = deepcopy(snapshot)
+                        records = MANIFEST['groupTemplates' if grouped else 'templates']
+                        record = next(t for t in records if t['id'] == template_id)
+                        path = ROOT / 'assets/templates' / record['file']
+                        files = (render_neutral_group(snapshot, path) if grouped else
+                                 render_neutral_one(snapshot, snapshot['items'][0], path))
+                        document = E.fromstring(files['word/document.xml'])
+                        body = document.find(W + 'body')
+                        roster = roster_table(document)
+                        header = [text(node) for node in list(body)[:body.index(roster)]]
+                        actual = [line for line in header if 'Сохранённый участник' in line]
+                        expected = [
+                            person['name'] + ' — ' + (person['position'] or
+                                ('Председатель комиссии' if index == 0 else 'Член комиссии')) +
+                                ', ' + snapshot['issuer']['nameRu']
+                            for index, person in enumerate(snapshot['issuer']['commission'])
+                        ]
+                        self.assertEqual(actual, expected)
+                        for line in actual:
+                            self.assertIn(snapshot['issuer']['nameRu'], line)
+                            self.assertNotIn(snapshot['items'][0]['workplaceRu'], line)
+                        self.assertNotIn(snapshot['issuer']['headName'], text(document))
+                        for person in snapshot['issuer']['commission']:
+                            self.assertIn(person['name'], text(document))
+                        self.assertEqual(snapshot, original)
+
+    def test_commission_headings_are_not_inferred_from_company_or_person_names(self):
+        snapshot = fixture('biot-protocol')
+        snapshot['items'][0].update(workplaceRu='Председатель', workplaceKz='Члены комиссии')
+        snapshot['issuer'].update(nameRu='Председатель комиссии', commission=[
+            {'name': 'Председатель', 'position': 'Директор'},
+            {'name': 'Члены комиссии', 'position': 'Начальник УМО'},
+            {'name': 'Директор', 'position': 'Преподаватель'},
+        ])
+        original = deepcopy(snapshot)
+        record = next(t for t in MANIFEST['templates'] if t['id'] == 'biot-protocol')
+        files = render_neutral_one(snapshot, snapshot['items'][0], ROOT / 'assets/templates' / record['file'])
+        document = E.fromstring(files['word/document.xml'])
+        paragraphs = [text(paragraph) for paragraph in document.iter(W + 'p')]
+        self.assertIn('Председатель / Члены комиссии', paragraphs)
+        for person in snapshot['issuer']['commission']:
+            self.assertIn(person['name'] + ' — ' + person['position'] + ', Председатель комиссии', paragraphs)
+        self.assertEqual(snapshot, original)
+
+    def test_commission_repair_preserves_legacy_renderer_and_separate_director_slot(self):
+        from legacy_reference import reference_sources, render_reference_group_files
+        snapshot = group_fixture('biot-protocol', 2)
+        snapshot['issuer']['commission'] = [
+            {'name': f'Исторический участник {index + 1}', 'position': position}
+            for index, position in enumerate(['Начальник УМО', 'Директор', 'Преподаватель'])
+        ]
+        record = next(t for t in reference_sources()['templates'] if t['id'] == 'biot-protocol')
+        path = ROOT / 'assets/templates' / record['file']
+        historical = render_reference_group_files(snapshot, path)
+        text_before = text(E.fromstring(historical['word/document.xml']))
+        self.assertIn('Директор', text_before)
+        self.assertNotIn('Исторический участник 1 — Начальник УМО', text_before)
+        self.assertEqual(render_reference_group_files(snapshot, path), historical)
+
+        witness = fixture('ps-witness')
+        witness['issuer'].update(headName='Отдельный директор', commission=deepcopy(snapshot['issuer']['commission']))
+        record = next(t for t in MANIFEST['templates'] if t['id'] == 'ps-witness')
+        files = render_neutral_one(witness, witness['items'][0], ROOT / 'assets/templates' / record['file'])
+        actual = text(E.fromstring(files['word/document.xml']))
+        self.assertIn('Отдельный директор', actual)
+        self.assertNotIn('Исторический участник 1', actual)
+
     def verify_employers(self, files, snapshot, header):
         document = E.fromstring(files['word/document.xml'])
         roster = roster_table(document)

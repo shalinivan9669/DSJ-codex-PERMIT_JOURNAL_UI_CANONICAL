@@ -12,4 +12,8 @@ test("worker expects the renderer version implemented by Python", () => {
   const actual = /^RENDERER_VERSION\s*=\s*['"]([^'"]+)['"]/m.exec(source)?.[1];
   assert.ok(actual, "Python renderer must declare its runtime version");
   assert.equal(RENDERER_VERSION, actual);
+  const manifest = JSON.parse(
+    readFileSync(join(PRODUCT_ROOT, "assets/templates/manifest.json"), "utf8"),
+  ) as { rendererVersion: string };
+  assert.equal(manifest.rendererVersion, actual);
 });

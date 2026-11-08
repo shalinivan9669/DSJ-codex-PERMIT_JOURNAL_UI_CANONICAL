@@ -1,0 +1,138 @@
+{
+  "date": "2026-11-08",
+  "status": "LOCAL_COMMISSION_TEMPLATE_AND_PRINT_VERIFIED",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "previousCommit": "ad7ece9",
+  "userConfirmedDefault": {
+    "chair": "Начальник УМО",
+    "members": [
+      "Директор",
+      "Преподаватель"
+    ]
+  },
+  "scope": "Commission composition presets, organization context, staff reuse and correct frozen name/job pairing in printed protocols",
+  "implemented": [
+    "New commission displays the confirmed three job titles immediately; role remains separate from organizational position.",
+    "Native job selectors with a custom-position option; an alternate director-chair preset is available before filling positions.",
+    "Existing names, order, custom positions, English values and additional members survive; explicit template fill changes only blank first-three positions.",
+    "Center head and saved staff names can be reused explicitly without changing account roles or independent headName.",
+    "Organization is shown from the current profile in settings and from each exact profile version in commission comparison.",
+    "Neutral protocol headers use saved name/position pairs instead of fixed Director/UMO/Teacher text and reversed source member slots.",
+    "Renderer runtime version advanced to demo-ooxml-13/libreoffice-26.2.6.3; bundled template binaries and their checksums are unchanged."
+  ],
+  "findings": [
+    "The issuer commission role is positional: first person chairs; following people are members. Position text must never select the chair or grant signing authority.",
+    "Active neutral source layouts retained fixed job titles; BIOT/PTM header source mappings could pair those titles with the wrong saved member.",
+    "The protocol employer and issuing center are distinct and must remain so in printed composition lines."
+  ],
+  "verification": {
+    "rootUnitTests": {
+      "status": "PASS",
+      "passed": 318,
+      "failed": 0
+    },
+    "webUnitTests": {
+      "status": "PASS",
+      "passed": 274,
+      "failed": 0,
+      "newTemplateTests": 5
+    },
+    "browser": {
+      "status": "PASS",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "durationMs": 87509.73,
+      "files": [
+        "apps/web/e2e/commission-template-live.spec.ts",
+        "apps/web/e2e/commission-recovery-live.spec.ts"
+      ],
+      "newCases": [
+        "Default UMO-chair preset saves/reloads, role/job fields and organization remain separate",
+        "Director-chair alternative, missing-name focus and failed-save recovery on mobile",
+        "Four-member legacy bilingual profile/custom positions and old version remain unchanged",
+        "Untouched template display does not fabricate a saved commission on generic profile save",
+        "Directory and head names reused explicitly; custom job saves; account roles and independent profile data remain unchanged"
+      ],
+      "environment": "Real isolated API and disposable PostgreSQL, Chromium desktop and 390px mobile; synthetic tenants only"
+    },
+    "python": {
+      "status": "PASS",
+      "passed": 13,
+      "failed": 0,
+      "protocolCombinations": 30,
+      "valueCommand": "python -m unittest discover -s tests/render -p test_neutral_protocol_values.py -v",
+      "valueTests": 6,
+      "valueDurationSeconds": 22.593,
+      "layoutTests": 7,
+      "layoutDurationSeconds": 13.772,
+      "layoutCoverage": [
+        "NeutralProtocolTests.test_missing_member_is_rejected_instead_of_silently_printing_a_partial_roster",
+        "NeutralProtocolTests.test_other_forms_are_unchanged",
+        "NeutralProtocolTests.test_a_row_taller_than_a_page_fails_before_a_clipped_document_is_emitted",
+        "NeutralProtocolTests.test_flowing_roster_and_borderless_commission_have_a_real_separator",
+        "NeutralProtocolTests.test_pb_commission_is_one_marked_spanning_row_kept_with_last_participants",
+        "NeutralProtocolTests.test_workplace_source_wrappers_do_not_duplicate_or_remove_real_legal_form_words",
+        "test_neutral_protocol_batch_bookmarks"
+      ],
+      "scope": "Five active protocol families, individual/group, preset/custom/blank positions; issuer/employer distinction; deceptive headings; historical path; director separation; layout/batch regressions"
+    },
+    "artifacts": {
+      "status": "PASS",
+      "forms": [
+        "biot-protocol",
+        "biot-itr-protocol",
+        "ptm-protocol",
+        "pb-protocol",
+        "ps-protocol"
+      ],
+      "generatedDocx": 5,
+      "generatedPdf": 5,
+      "pagesPerTwoLearnerFixture": 1,
+      "checks": [
+        "All OOXML XML parsed",
+        "PDF text contains correct saved jobs and issuer",
+        "Every rendered page visually inspected"
+      ]
+    },
+    "lint": "PASS: pnpm lint and scoped lint after UI review",
+    "typecheck": "PASS: pnpm -r typecheck",
+    "build": "PASS: pnpm build with isolated .next-commission-template-build and DEMO_STANDALONE=0 for local Windows packaging",
+    "rendererVersionConsistency": "PASS: Python runtime, TypeScript runtime and manifest agree",
+    "designDetector": "PASS: zero findings on changed UI",
+    "gitDiffCheck": "PASS"
+  },
+  "preserved": [
+    "Immutable issued files",
+    "Historical LEGACY_REFERENCE_90D5 render path",
+    "Numbering and required signatures",
+    "Authentication and tenant boundaries",
+    "Database schema and company/user data",
+    "Source template package bytes"
+  ],
+  "limits": [
+    "No production deployment or cloud data changes",
+    "No full historical integration/render suite",
+    "No physical iPhone/Safari or paper printing",
+    "Existing footer member ordering retained; no new commission/signature authority inferred"
+  ],
+  "evidence": {
+    "rawBrowser": ".runtime/commission-flow/evidence/commission-template/results.json",
+    "renderChecks": ".runtime/commission-flow/commission-template-render/COMMISSION_RENDER_CHECKS.json",
+    "screenshots": [
+      "umo-template-saved-390-section.png",
+      "umo-template-saved-desktop-section.png",
+      "legacy-custom-commission-preserved-section.png",
+      "directory-names-custom-job-390-section.png"
+    ],
+    "previewImages": [
+      "corrected-biot-protocol-1.png",
+      "corrected-biot-itr-protocol-1.png",
+      "corrected-ptm-protocol-1.png",
+      "corrected-pb-protocol-1.png",
+      "corrected-ps-protocol-1.png"
+    ],
+    "storage": "Local ignored synthetic screenshots and document outputs; acceptance manifest is tracked"
+  }
+}
