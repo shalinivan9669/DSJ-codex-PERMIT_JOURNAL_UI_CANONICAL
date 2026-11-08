@@ -25,7 +25,7 @@ export function VerificationLink({
       <summary>{tr("Ссылка и QR для проверки записи")}</summary>
       {error && <Notice>{error}</Notice>}
       <p>
-        {tr("Открывает минимальную запись эмитента с номером и состоянием документа. ФИО и весь комплект по ссылке не публикуются.")}</p>
+        {tr("По ссылке видны номер и состояние документа, без ФИО.")}</p>
       <label>
         {tr("Выданный документ")}<select
           value={documentId}
@@ -77,7 +77,7 @@ export function VerificationLink({
       {result && !revoked && (
         <div className="verification-result">
           <p>
-            {tr("Сохраните ссылку: секретная часть показывается только после создания.")}</p>
+            {tr("Скопируйте ссылку — повторно она не показывается.")}</p>
           <a href={result.path} target="_blank" rel="noreferrer">
             {tr("Открыть публичную проверку")}</a>
           <button
@@ -134,7 +134,7 @@ export function VerificationLink({
           {tr("Ссылка отозвана. Публичная проверка по ней недоступна.")}</Notice>
       )}
       <p className="fine-print">
-        {tr("QR не является ЭЦП или государственным реестром и не подтверждает неизменность изменённого DOCX.")}</p>
+        {tr("QR проверяет запись центра. Это не ЭЦП.")}</p>
     </details>
   );
 }

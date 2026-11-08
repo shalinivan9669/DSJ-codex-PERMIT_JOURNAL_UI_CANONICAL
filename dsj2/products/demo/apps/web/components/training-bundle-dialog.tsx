@@ -70,10 +70,7 @@ export function TrainingBundleDialog({
           ? recipients[0].fullNameRu || "Новый получатель"
           : `Выбрано сотрудников: ${recipients.length}`}
       </p>
-      <p className="muted">
-        Выберите обучение. Обязательные документы добавятся вместе с протоколом
-        по категории каждого сотрудника.
-      </p>
+
       {error && <Notice>{error}</Notice>}
       <fieldset disabled={busy || disabled} className="training-choices">
         <legend>Направления обучения</legend>
@@ -137,8 +134,7 @@ export function TrainingBundleDialog({
                   {chosen.includes(training.id) && (
                     <small role="status">
                       Будет добавлено отсутствующим:{" "}
-                      {recipients.length - assigned.length}. Изменение ещё не
-                      сохранено.
+                      {recipients.length - assigned.length}.
                     </small>
                   )}
                 </span>
@@ -175,10 +171,7 @@ export function TrainingBundleDialog({
           <option value="INDIVIDUAL">Отдельный протокол на каждого</option>
         </select>
       </label>
-      <p className="fine-print">
-        Группы рабочих и ИТР по БиОТ разделяются автоматически. Режим каждого
-        обучения можно изменить в заявке.
-      </p>
+
       <div className="modal-actions">
         <button type="button" disabled={busy} onClick={onClose}>
           Отмена

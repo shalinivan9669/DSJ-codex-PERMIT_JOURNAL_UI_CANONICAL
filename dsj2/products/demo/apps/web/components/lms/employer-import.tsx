@@ -534,7 +534,7 @@ export function EmployerImport({ t, scope }: { t: Translate; scope: string }) {
       )}
       {!draft ? (
         <section className="panel lms-panel">
-          {context && !context.canPrepare && <p role="status">{t("Доступен просмотр. Подготовить и назначить список может центр или представитель с правом назначения обучения.", "Қарау қолжетімді. Тізімді орталық немесе оқуды тағайындау құқығы бар өкіл дайындай алады.")}</p>}
+          {context && !context.canPrepare && <p role="status">{t("Только просмотр. Для назначения нужны полномочия учебного центра.", "Тек қарау. Тағайындау үшін оқу орталығының өкілеттігі қажет.")}</p>}
           {context?.sourceOrderId && <p><Link href={`/workbench?orderId=${context.sourceOrderId}`}>{t("Вернуться к заказу", "Тапсырысқа оралу")}</Link></p>}
           {context?.canManagePeople && !context.sourceOrderId && <OperatorOrganization value={customerId} t={t} disabled={busy} onChange={(customer) => { setCustomerId(customer?.id || ""); createId.current = ""; }} />}
           <div className="lms-toolbar">
@@ -734,7 +734,7 @@ export function EmployerImport({ t, scope }: { t: Translate; scope: string }) {
                     ))}
                 </select>
               </label>
-              {!groupId && <p className="muted">{t("Один сотрудник — индивидуальное назначение. Несколько сотрудников — новая группа.", "Бір қызметкерге оқу жеке тағайындалады. Бірнеше қызметкерге жаңа топ құрылады.")}</p>}
+
               {!groupId && (
                 <label>
                   {t("Название группы", "Топ атауы")}

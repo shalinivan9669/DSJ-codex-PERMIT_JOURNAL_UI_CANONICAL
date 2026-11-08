@@ -53,11 +53,7 @@ export function ServiceFormDetails({
   return (
     <details>
       <summary>Версии форм, поля и выходные документы</summary>
-      <p>
-        Установленные формы для новых действий. Версии уже оформленных
-        документов сохранены в их истории; этот справочник не меняет выданные
-        файлы.
-      </p>
+
       {ids.map((id) => {
         const versions = templates
           .filter((template) => (template.templateId || template.id) === id)
@@ -106,10 +102,7 @@ export function ServiceFormDetails({
                   <p>
                     Поля данных: {labels.join("; ") || "Состав не подтверждён"}.
                   </p>
-                  <p>
-                    Выпуск требует проверки данных, фактического результата и
-                    действующего разрешения центра для этой формы.
-                  </p>
+
                 </div>
               );
             })}

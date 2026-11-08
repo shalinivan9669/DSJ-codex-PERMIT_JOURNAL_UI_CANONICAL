@@ -129,7 +129,6 @@ export function PrintSetDownloads({
       {plan && (
         <div aria-live="polite">
           <p>
-            Выпуск {plan.issuanceId?.slice(0, 8) || "выбранный состав"}:{" "}
             {plan.files.length} файлов,{" "}
             {
               new Set(
@@ -141,8 +140,7 @@ export function PrintSetDownloads({
               ).size
             }{" "}
             человек, частей {plan.parts.length}. Размер части до{" "}
-            {Math.round(plan.limitBytes / 1024 / 1024)} МиБ. Страницы сохраняют
-            исходный размер.
+            {Math.round(plan.limitBytes / 1024 / 1024)} МиБ.
           </p>
           <details>
             <summary>Проверить состав</summary>
@@ -183,9 +181,7 @@ export function PrintSetDownloads({
             </div>
           ))}
           <p className="fine-print">
-            Комплект — копия оригиналов для печати. Проверяемые подписи
-            относятся к отдельным исходным файлам. Для принтера выберите
-            «Фактический размер».
+            Для печати выберите «Фактический размер». ЭЦП проверяется у отдельных оригиналов.
           </p>
         </div>
       )}

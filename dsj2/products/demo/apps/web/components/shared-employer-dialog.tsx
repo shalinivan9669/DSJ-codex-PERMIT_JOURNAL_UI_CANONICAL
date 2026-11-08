@@ -69,15 +69,11 @@ export function SharedEmployerDialog({
         прежним.
       </p>
       {error && <Notice>{error}</Notice>}
-      {employer ? (
+      {employer && (
         <div className="employer-preview">
           <strong>{employer.nameRu}</strong>
           <span>{employer.nameKz}</span>
         </div>
-      ) : (
-        <p>
-          Выберите работодателя или добавьте организацию по форме и названию.
-        </p>
       )}
       <div className="toolbar-actions">
         <button disabled={busy} onClick={() => setView("picker")}>

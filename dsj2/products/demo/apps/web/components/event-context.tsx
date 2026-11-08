@@ -558,10 +558,7 @@ export function EventContext({
   const topicSettings = event && (
     <details className="training-topic-settings">
       <summary>Выбрать типовую или сохранённую программу</summary>
-      <p className="fine-print">
-        Сохраняются только темы этого направления вашего центра. Выбор программы
-        не переносит результаты, оценки, даты и основания.
-      </p>
+
       {topicStatus === "loading" ? (
         <p role="status">Загружаются программы…</p>
       ) : topicStatus === "error" ? (
@@ -818,9 +815,7 @@ export function EventContext({
           disabled={disabled}
           onChange={(e) => setJoinExisting(e.target.checked)}
         />
-        Присоединить к событию существующее назначение той же формы без
-        результата и основания, если оно одно. Импортированные и ручные
-        исключения сохраняются.
+        Использовать уже назначенную форму без результата и основания.
       </label>
       <label className="checkbox-label">
         <input
@@ -829,9 +824,7 @@ export function EventContext({
           disabled={disabled}
           onChange={(e) => setReplaceEmpty(e.target.checked)}
         />
-        При назначении набора убрать пустые начальные назначения других
-        направлений у выбранных людей. Введённые и импортированные сведения
-        сохраняются.
+        Убрать пустые назначения других курсов. Заполненные сохраняются.
       </label>
     </AdvancedTrainingSettings>
   );
@@ -941,11 +934,7 @@ export function EventContext({
             </option>
           ))}
         </select>
-        <small>
-          В выпуске сохраняется выбранная версия профиля и комиссии. График
-          обучения наследуется от настроек заявки; при необходимости измените
-          его ниже для этой группы.
-        </small>
+
       </label>
     </AdvancedTrainingSettings>
   ) : null;
@@ -1032,10 +1021,7 @@ export function EventContext({
     <details className="outcome-entry">
       <summary>Перенести выбранных участников в другое событие</summary>
       <p>
-        Перенос доступен только в черновике и в совместимое событие.
-        Индивидуальные и импортированные исключения сохраняются; наследуемые
-        значения берутся из нового события. Результаты старого события снимаются
-        и требуют нового подтверждения.
+        При переносе результаты обучения нужно подтвердить заново. Индивидуальные данные сохранятся.
       </p>
       <label>
         Событие назначения
@@ -1135,9 +1121,7 @@ export function EventContext({
     <details open={!primary}>
       <summary>Даты и программа для всей заявки</summary>
       <p>
-        Применяются к документам без индивидуальных изменений. У отдельной
-        группы могут быть свои даты. «Убрать значение» возвращает настройки
-        центра.
+        Для документов без индивидуальных изменений.
       </p>
       <div className="form-grid">
         {bulkFields
@@ -1260,10 +1244,7 @@ export function EventContext({
           }))
         }
       />
-      <p className="fine-print">
-        Общие значения сохраняются автоматически вместе с заявкой.
-        Индивидуальные исключения сохраняются.
-      </p>
+
     </details>
   );
   return (
@@ -1359,9 +1340,7 @@ export function EventContext({
           ))}
           {!primary && (
             <p>
-              Задайте общие даты и программу для группы. Индивидуальные
-              изменения у людей сохраняются. Для отдельного курса можно создать
-              новую группу.
+              Общие даты и программа группы. Индивидуальные значения сохраняются.
             </p>
           )}
           {!primary && requestSettings}
@@ -1423,8 +1402,7 @@ export function EventContext({
                     }
                   />
                   <small>
-                    Необязательно. Без отдельного варианта используется
-                    введённая программа; это не автоматический перевод.
+                    KZ — если отличается от RU.
                   </small>
                 </label>
               </div>
@@ -1464,10 +1442,6 @@ export function EventContext({
                       </label>
                     ))}
                   </div>
-                  <small>
-                    Названия исходной формы подставляются автоматически. Оценки
-                    берутся только из подтверждённых сведений.
-                  </small>
                 </AdvancedTrainingSettings>
               )}
               {primary && (
@@ -1475,10 +1449,7 @@ export function EventContext({
                   primary
                   title="Отдельные даты и основания этого обучения"
                 >
-                  <p className="fine-print">
-                    Здесь можно уточнить период обучения и изменить общую дату
-                    выдачи только для этой группы.
-                  </p>
+
                   <div className="form-grid">
                     {bulkFields
                       .filter(
@@ -1623,11 +1594,7 @@ export function EventContext({
                       }
                     />
                     {fieldHint("validUntil")}
-                    <small>
-                      {draft.businessRuleVersion === "LIVE_V1"
-                        ? "Стандартный срок: рабочий — 1 год, ИТР — 3 года; ПС — бессрочно. Общая дата применяется к людям без индивидуального исключения. Ручные и импортированные даты сохраняются; верните автоматический расчёт, чтобы снова использовать стандартный срок."
-                        : "Расчёт предлагается по категории. Ручная дата сохраняется в этой версии заявки."}
-                    </small>
+
                     {draft.businessRuleVersion === "LIVE_V1" && (
                       <small>
                         Расчётные сроки участников:{" "}
@@ -1705,7 +1672,7 @@ export function EventContext({
                       : "Изменить результаты обучения"
                     : "Подтвердить фактические результаты события"}
                 </summary>
-                <p
+                {(preparation.status !== "saved" || preparation.record) && <p
                   className="preparation-status"
                   role="status"
                   aria-live="polite"
@@ -1714,14 +1681,14 @@ export function EventContext({
                   {preparation.status === "loading"
                     ? "загружается"
                     : preparation.status === "pending"
-                      ? "сохраняется в этом браузере"
+                      ? "сохраняется"
                       : preparation.status === "error"
                         ? "не сохранена"
                         : preparation.record
-                          ? "сохранена в этом браузере, не применена"
+                          ? "сохранена, не применена"
                           : "ещё не заполнена"}
-                  . Подготовка не меняет подтверждённые результаты.
-                </p>
+                  .
+                </p>}
                 {preparation.error && (
                   <Notice kind="error">
                     {preparation.error}
@@ -1836,7 +1803,7 @@ export function EventContext({
                     >
                       {outcomeLengthErrors.source
                         ? `Не больше 500 символов; сейчас ${source.length}. Сократите источник для применения.`
-                        : "Можно указать ведомость. Без неё сохраняется факт явного выбора результата оператором."}
+                        : "Например, ведомость экзамена."}
                     </small>
                   </label>
                 </div>
@@ -1874,9 +1841,7 @@ export function EventContext({
                           </small>
                         )}
                         <small>
-                          Заполненное значение применяется к указанным выше
-                          людям. Пустое поле сохраняет их индивидуальные
-                          результаты.
+                          Оставьте пустым, чтобы сохранить индивидуальные результаты.
                         </small>
                       </label>
                       <label>

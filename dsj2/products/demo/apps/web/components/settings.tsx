@@ -88,13 +88,6 @@ export function Settings({
       <div className="page-heading">
         <div>
           <h1>{tr("Настройки")}</h1>
-          <p>
-            {managesSystem
-              ? tr("Реквизиты эмитента, формы документов и доступ к центру.")
-              : managesUsers
-                ? tr("Пользователи, формы документов и доступ к обучению.")
-                : tr("Безопасность вашей учётной записи.")}
-          </p>
         </div>
       </div>
       <div className="settings-layout">
@@ -156,12 +149,12 @@ export function Settings({
               <h2>{tr("Полная копия данных центра")}</h2>
               <p>
                 {tr(
-                  "Архив содержит данные заказчиков и получателей, историю, связанные записи и доступные файлы центра. Сохраните его в защищённом месте с доступом только уполномоченных сотрудников.",
+                  "Архив содержит персональные данные. Храните его в защищённом месте.",
                 )}
               </p>
               <p className="fine-print">
                 {tr(
-                  "Это выгрузка данных для сохранения и переноса. Проверка восстановления выполняется отдельно.",
+                  "Восстановление из архива требует отдельной проверки.",
                 )}
               </p>
               <a className="button primary" href="/api/tenant-export" download>
@@ -350,9 +343,6 @@ export function ProfileForm({
           </span>
         )}
       </div>
-      <p className="muted">
-        {tr("В документы попадают реквизиты вашей организации.")}
-      </p>
       {error && <Notice>{error}</Notice>}
       {!!issues.length && (
         <Notice>
@@ -454,7 +444,7 @@ export function ProfileForm({
           <summary>{tr("Другие преподаватели и подписанты")}</summary>
           <p className="fine-print">
             {tr(
-              "Список имён для работы центра. Состав комиссии выше определяет подписи в текущих формах. Эти записи не предоставляют доступ к приложению.",
+              "Этот список не меняет комиссию и не предоставляет доступ к приложению.",
             )}
           </p>
           {(value.people || []).map((person, index) => (
@@ -587,13 +577,7 @@ export function ProfileForm({
                 : tr("Сохранить реквизиты")}
           </button>
         )}
-        <p className="fine-print" role="status">
-          {dirty
-            ? tr("Есть несохранённые изменения.")
-            : !saved
-              ? tr("Изменения сохраняются кнопкой внизу формы.")
-              : ""}
-        </p>
+        {dirty && <p className="fine-print" role="status">{tr("Есть несохранённые изменения.")}</p>}
       </div>
     </form>
   );
@@ -637,7 +621,7 @@ export function Templates({ initial }: { initial: Template[] }) {
     <>
       <h2>{tr("Формы документов")}</h2>
       <p className="muted">
-        {tr("Версии форм фиксируются при оформлении. Подтверждение формы выполняет ответственный сотрудник центра после проверки её применимости.")}</p>
+        {tr("Подтвердите форму после проверки её применимости. Выданные документы не изменятся.")}</p>
       {error && <Notice>{error}</Notice>}
       <TemplateManager onChanged={load} />
       <div className="template-list">
@@ -665,7 +649,7 @@ export function Templates({ initial }: { initial: Template[] }) {
               {template.description && <p>{template.description}</p>}
               {template.contract?.program === "SPECIAL" ? (
                 <Notice kind="info">
-                  {tr("Этот вариант выбирается только для программы специальных компетенций. Сертификат содержит отрасль, а протокол — БИН и адрес работодателя, фактические результаты проверки знаний и прокторинга. Применимость формы подтверждает ответственный сотрудник центра.")}</Notice>
+                  {tr("Только для специальных компетенций. Применимость формы подтверждает ответственный сотрудник центра.")}</Notice>
               ) : typeof (
                   template.contract?.regulatoryReview as
                     | { notice?: unknown }
@@ -679,7 +663,7 @@ export function Templates({ initial }: { initial: Template[] }) {
                 </Notice>
               ) : (template.templateId || template.id).startsWith("biot-") ? (
                 <Notice kind="info">
-                  {tr("Исторические макеты БиОТ не подтверждены редакцией правил с 12.07.2026. Текущая форма протокола рабочих профессий содержит 7 колонок. Отметка директора не исправляет несовпадение формы; требуется актуальный макет, проверенный уполномоченным сотрудником для соответствующей категории получателей.")}{" "}
+                  {tr("Эти макеты БиОТ не подтверждены правилами от 12.07.2026. Нужна актуальная форма для выбранной категории; отметка директора не заменяет её проверку.")}{" "}
                   <a
                     href="https://old.adilet.zan.kz/rus/docs/V1500012665"
                     target="_blank"
@@ -747,7 +731,7 @@ function Numbering() {
         }),
       });
       setMessage(
-        tr("Правило сохранено. Счётчик не сброшен; ранее назначенные номера сохранены."),
+        tr("Правило сохранено. Нумерация продолжится с текущего счётчика."),
       );
     } catch (caught) {
       setError(caught);
@@ -757,7 +741,7 @@ function Numbering() {
     <>
       <h2>{tr("Нумерация")}</h2>
       <p className="muted">
-        {tr("Номера назначаются сервером при оформлении. Сохранение, просмотр и повтор генерации не расходуют номера. Отменённые номера не используются повторно.")}</p>
+        {tr("Номер назначается при оформлении и не используется повторно.")}</p>
       {error && <Notice>{error}</Notice>}
       {message && <Notice kind="success">{message}</Notice>}
       <div className="table-scroll">
@@ -836,7 +820,7 @@ function Numbering() {
       </div>
       {!items.length && (
         <p className="muted">
-          {tr("Счётчики появятся при первом оформлении документов соответствующего направления.")}</p>
+          {tr("Счётчики появятся после первого оформления.")}</p>
       )}
     </>
   );
@@ -971,7 +955,7 @@ function BootstrapSuperAdmin({ onClose }: { onClose: () => void }) {
   return (
     <Modal title={tr("Первый суперадминистратор")} onClose={() => { if (!busy) onClose(); }}>
       <form onSubmit={submit}>
-        <p>{tr("Назначение даст вашей учётной записи полный доступ к этому учебному центру, включая управление администраторами и системными настройками. После назначения войдите заново.")}</p>
+        <p>{tr("Вы получите полный доступ к центру, включая управление администраторами. После назначения войдите заново.")}</p>
         {error && <Notice>{error}</Notice>}
         <label>
           {tr("Текущий пароль")}<input autoFocus type="password" autoComplete="current-password" required maxLength={256} disabled={busy} value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} />
@@ -1083,7 +1067,7 @@ function UserDialog({
           </select>
         </label>
         {["TEACHER", "METHODIST", "EXPERT"].includes(value.role) && (
-          <p className="fine-print">{tr("Курсы и группы назначаются в «Учебных полномочиях». Подписание документов требует отдельного действующего полномочия подписанта.")}</p>
+          <p className="fine-print">{tr("Курсы и группы — в «Учебных полномочиях». Для ЭЦП назначьте отдельное полномочие подписанта.")}</p>
         )}
         <label>
           {user.id ? tr("Новый пароль (необязательно)") : tr("Первоначальный пароль")}

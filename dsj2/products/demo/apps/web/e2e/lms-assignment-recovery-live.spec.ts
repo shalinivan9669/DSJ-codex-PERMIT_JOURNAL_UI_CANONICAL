@@ -313,7 +313,7 @@ test("methodist preparation and director publication let the operator assign the
         name: "Согласование программы",
         exact: true,
       }),
-    ).toContainText("На проверке");
+    ).toContainText("Ожидает проверки администратором");
     await screenshot(methodist, "methodist-submitted-for-review");
 
     const director = await directorContext.newPage();
@@ -334,7 +334,7 @@ test("methodist preparation and director publication let the operator assign the
         name: "Согласование программы",
         exact: true,
       }),
-    ).toContainText("Одобрена текущая редакция");
+    ).toContainText("Ожидает публикации");
     await director
       .getByRole("button", { name: "Опубликовать", exact: true })
       .click();
@@ -349,6 +349,12 @@ test("methodist preparation and director publication let the operator assign the
       )
       .toBe("PUBLISHED");
     await expect(
+      director.getByRole("region", { name: "Согласование программы", exact: true }),
+    ).toContainText("Одобрено");
+    await expect(
+      director.getByRole("region", { name: "Согласование программы", exact: true }),
+    ).not.toContainText("Ожидает публикации");
+    await expect(
       director
         .getByRole("link", { name: "Назначить обучение", exact: true })
         .first(),
@@ -358,7 +364,7 @@ test("methodist preparation and director publication let the operator assign the
       .click();
     await expect(
       director
-        .getByRole("link", { name: "Назначить обучение", exact: true })
+        .getByRole("link", { name: "Назначить опубликованную программу", exact: true })
         .first(),
     ).toHaveAttribute("href", `/lms/assign?versionId=${created.version.id}`);
     await expect
@@ -380,7 +386,7 @@ test("methodist preparation and director publication let the operator assign the
     ).toBeVisible();
     await expect(
       director
-        .getByRole("link", { name: "Назначить обучение", exact: true })
+        .getByRole("link", { name: "Назначить опубликованную программу", exact: true })
         .first(),
     ).toHaveAttribute("href", `/lms/assign?versionId=${created.version.id}`);
     expect(
@@ -604,7 +610,7 @@ test("archived organizations cannot be selected and an old link reports unavaila
   await expect(organizations.locator("option")).toHaveCount(1);
   await expect(
     page.getByText(
-      "Доступных организаций не найдено. Измените поиск или создайте организацию. Архивные записи выбрать нельзя.",
+      "Организации не найдены. Измените поиск или создайте новую.",
       { exact: true },
     ),
   ).toBeVisible();

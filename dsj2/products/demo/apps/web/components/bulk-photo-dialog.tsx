@@ -145,9 +145,7 @@ export function BulkPhotoDialog({
       wide
     >
       <p>
-        Назовите файлы по внешнему ID человека (например, DEMO-P001.jpg) или по
-        табельному номеру (000001.png). Проверьте совпадения и примените
-        фотографии к списку.
+        Имя файла — код сотрудника или табельный номер. Например: 000001.jpg.
       </p>
       <div ref={errorRef} tabIndex={-1}>
         {error && <Notice>{error}</Notice>}
@@ -162,7 +160,7 @@ export function BulkPhotoDialog({
             setConfirmed(false);
           }}
         >
-          <option value="EXTERNAL_ID">Внешний ID человека</option>
+          <option value="EXTERNAL_ID">Код сотрудника</option>
           <option value="PERSONNEL_NUMBER">
             Табельный номер у работодателя
           </option>
@@ -272,7 +270,7 @@ export function BulkPhotoDialog({
             <p role="status">
               Загрузка: {Object.keys(uploaded).length} из {selected.length}
               {throttled &&
-                ". Сервер ограничил частоту загрузки. Продолжим автоматически после паузы; загруженные фото сохранены."}
+                ". Загрузка продолжится после короткой паузы."}
             </p>
           )}
         </>

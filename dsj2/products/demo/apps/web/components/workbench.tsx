@@ -224,10 +224,7 @@ export function Workbench({ context }: { context: AppContext }) {
       <div className="page-heading">
         <div>
           <h1>Работа центра</h1>
-          <p>
-            Обязательства по заказам, передача документов и подтверждённые
-            повторные обращения.
-          </p>
+
         </div>
         <Link className="button primary" href="/requests/new">
           Новая заявка
@@ -316,8 +313,7 @@ export function Workbench({ context }: { context: AppContext }) {
               <div className="empty-state">
                 <h3>Нет коммерческих заказов</h3>
                 <p>
-                  Откройте заявку и выберите «Создать связанный заказ», если
-                  нужны контроль обязательств и расчёты.
+                  Создайте заказ из заявки.
                 </p>
                 <Link href="/requests">Открыть заявки</Link>
               </div>
@@ -345,7 +341,7 @@ export function Workbench({ context }: { context: AppContext }) {
                   {selected.summary.legacyAssignments
                     ? ` · ${selected.summary.legacyAssignments} назначений без события`
                     : ""}
-                  . Число файлов не считается числом услуг.
+                  .
                 </p>
               )}
               {selected.completion && (
@@ -411,8 +407,8 @@ export function Workbench({ context }: { context: AppContext }) {
                     <strong>{action.label}</strong>
                     <p>
                       {action.source === "RESULT_REVIEW"
-                        ? "Исход не подтверждается автоматически. Укажите фактический результат и источник в заявке."
-                        : "Проверьте указанные данные в связанной заявке. Сохранённые сведения и документы не изменяются автоматически."}
+                        ? "Укажите результат обучения в заявке."
+                        : "Проверьте данные в связанной заявке."}
                     </p>
                     {action.requestId && (
                       <Link href={`/requests/${action.requestId}`}>
@@ -588,10 +584,7 @@ export function Workbench({ context }: { context: AppContext }) {
                 canManage={!readonly}
                 onChanged={() => setRefresh((v) => v + 1)}
               />
-              <p className="fine-print">
-                Готовый PDF, передача заказчику, фактическое обучение и расчёты
-                имеют отдельные основания завершения.
-              </p>
+
             </section>
           )}
         </div>
@@ -605,10 +598,7 @@ export function Workbench({ context }: { context: AppContext }) {
               onChanged={() => setRefresh((v) => v + 1)}
             />
           )}
-          <p>
-            Перед новой заявкой уточните актуальность человека и направления.
-            Дата документа сама по себе не означает потребность в продаже.
-          </p>
+
           <label className="checkbox">
             <input
               type="checkbox"
@@ -733,8 +723,7 @@ export function Workbench({ context }: { context: AppContext }) {
           </div>
           {!renewalGroups.length && !busy && !error && (
             <p>
-              Потребности пока не подтверждены. Добавляйте их из истории
-              оформленной заявки с проверенным источником срока.
+              Повторных обращений пока нет.
             </p>
           )}
           {contact && (

@@ -1,9 +1,7 @@
 "use client";
 import {
-  BIOT_CATEGORIES,
   calculateDates,
   calculatedDateKeys,
-  trainingRuleDescription,
   trainingBeforeIssueProblems,
   type CalculatedDateKey,
   type DateValues,
@@ -24,7 +22,6 @@ export function DateCalculationStatus({
   onRestore,
   restoreKeys,
   forceValidity = false,
-  validityDescription,
 }: {
   values: DateValues;
   rule?: TrainingDateRule | null;
@@ -46,30 +43,6 @@ export function DateCalculationStatus({
   );
   return (
     <div className="fine-print" aria-live="polite">
-      <p>{trainingRuleDescription(rule)}</p>
-      {calculation.trainingDays && (
-        <p>
-          Продолжительность по выбранным часам: {calculation.trainingDays}{" "}
-          учебных дней. Расчётный период:{" "}
-          {calculation.proposed.trainingStart || "—"} —{" "}
-          {calculation.proposed.trainingEnd || "—"}.
-        </p>
-      )}
-      {forceValidity && (
-        <p>
-          {validityDescription ||
-            "Стандартный срок: рабочий — 1 год, ИТР — 3 года, ПС — бессрочно. Ручные и импортированные исключения сохраняются."}
-        </p>
-      )}
-      {!forceValidity && values.biotCategory && (
-        <p>
-          Срок по категории:{" "}
-          {BIOT_CATEGORIES[values.biotCategory].validityYears
-            ? `${BIOT_CATEGORIES[values.biotCategory].validityYears} ${BIOT_CATEGORIES[values.biotCategory].validityYears === 1 ? "год" : "года"} от даты документа`
-            : "фиксированный срок не установлен"}
-          . Часы не изменяют срок действия.
-        </p>
-      )}
       {calculation.problems.map((message) => (
         <p className="field-error" key={message}>
           {message}
@@ -83,16 +56,7 @@ export function DateCalculationStatus({
       {overrides.map((key) => (
         <p key={key}>
           {labels[key]}:{" "}
-          {origins?.[key] === "IMPORTED" ? "импортированное" : "явно заданное"}{" "}
-          исключение {values[key] || "(пусто)"}; расчёт:{" "}
-          {forceValidity && key === "validUntil"
-            ? "по общему правилу центра"
-            : calculation.proposed[key] || "(не назначается)"}
-          .{" "}
-          {!(forceValidity && key === "validUntil") &&
-          values[key] !== calculation.proposed[key]
-            ? "Отличается от расчёта."
-            : "Сохранится даже при изменении расчёта."}{" "}
+          {values[key] || "не указано"}.{" "}
           {!restoreKeys || restoreKeys.includes(key) ? (
             <button
               type="button"

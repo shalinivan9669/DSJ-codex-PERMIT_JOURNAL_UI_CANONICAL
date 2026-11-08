@@ -40,10 +40,7 @@ export function PrintingOverview() {
   return (
     <details className="printing-overview">
       <summary>Сводка по центру</summary>
-      <p className="muted">
-        За всё время, без фильтров списка. Версии документов учитываются
-        отдельно; подготовка файла ещё не означает выдачу.
-      </p>
+
       {error ? (
         <Notice>
           {error}{" "}

@@ -238,7 +238,7 @@ export function BatchReadyPanel({
       {selectionError && <Notice kind="info">{selectionError}</Notice>}
       {staleFeedback && (
         <p className="batch-recheck" role="status">
-          Данные изменены. Повторите проверку и передачу выбранного состава.
+          Данные изменились. Передайте заявку повторно.
         </p>
       )}
       {currentFeedback && (
@@ -249,10 +249,10 @@ export function BatchReadyPanel({
             <strong>
               {blocked
                 ? currentFeedback.saved
-                  ? "Выбранный состав не передан директору"
+                  ? "Не передано директору"
                   : "Не удалось сохранить изменения"
                 : currentFeedback.kind === "success"
-                  ? "Выбранный состав передан директору"
+                  ? "Передано директору"
                   : currentFeedback.kind === "unknown"
                     ? "Не удалось подтвердить передачу"
                     : currentFeedback.kind === "conflict"
@@ -262,12 +262,12 @@ export function BatchReadyPanel({
             <p>
               {blocked
                 ? currentFeedback.saved
-                  ? "Черновик сохранён. Исправьте замечания ниже и повторите передачу."
-                  : "Данные остались на странице. Исправьте замечания ниже и повторите передачу."
+                  ? "Исправьте замечания и передайте повторно."
+                  : "Исправьте замечания. Ваш ввод остался на странице."
                 : currentFeedback.kind === "success"
                   ? "Дождитесь согласования директора."
                   : currentFeedback.kind === "unknown"
-                    ? "Ответ сервера не получен. Состав мог быть передан. Обновите состояние перед повторной попыткой."
+                    ? "Передача могла завершиться. Сначала обновите состояние."
                     : currentFeedback.message}
             </p>
             {!!issues.length &&
@@ -361,7 +361,7 @@ export function BatchReadyPanel({
         <p className="fine-print" role="status">
           {ready.length
             ? "Выберите хотя бы один готовый курс для передачи директору."
-            : "Пока нет готовых курсов для передачи. Заполните данные и результаты обучения."}
+            : "Заполните данные и результаты обучения."}
         </p>
       )}
       {transferred && !needsRefresh ? (

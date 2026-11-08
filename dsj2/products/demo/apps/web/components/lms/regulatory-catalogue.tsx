@@ -48,7 +48,7 @@ export function RegulatoryCatalogue({ t }: { t: Translate }) {
         <label>{t("Направление", "Бағыт")}<select value={sanitary} onChange={event => { setSanitary(event.target.value); setPage(1); }}><option value="ALL">{t("Все направления", "Барлық бағыттар")}</option><option value="ONLY">{t("Санитарное обучение", "Санитариялық оқыту")}</option></select></label>
         <label>{t("Версии программ", "Бағдарлама нұсқалары")}<select value={status} onChange={event => { setStatus(event.target.value); setPage(1); }}><option value="ALL">{t("Все версии", "Барлық нұсқалар")}</option><option value="PUBLISHED">{t("Опубликованные", "Жарияланған")}</option><option value="DRAFT">{t("Черновики", "Жобалар")}</option></select></label>
       </div>
-      <p className="muted">{t("Источники сохранены в версиях программ. Для изменения опубликованного основания откройте программу и создайте новую версию.", "Дереккөздер бағдарлама нұсқаларында сақталған. Жарияланған негізді өзгерту үшін бағдарламаны ашып, жаңа нұсқа жасаңыз.")}</p>
+
       {busy && <p role="status">{t("Загрузка…", "Жүктелуде…")}</p>}
       {!busy && !error && !data.total && <p>{t("Источники не найдены. Добавьте источник в условиях своей программы или измените поиск.", "Дереккөздер табылмады. Бағдарлама шарттарына дереккөз қосыңыз немесе іздеуді өзгертіңіз.")}</p>}
       <ul className="lms-list">

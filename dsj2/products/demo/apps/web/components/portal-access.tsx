@@ -118,7 +118,7 @@ export function PortalAccess() {
       {inviteUrl && (
         <div className="notice" role="status">
           <p>
-            {tr("Ссылка показана только сейчас. Передайте её выбранному представителю лично; отправка по почте не выполняется.")}</p>
+            {tr("Одноразовая ссылка показана только сейчас. Передайте её представителю лично.")}</p>
           <label>
             {tr("Одноразовая ссылка")}<input
               readOnly
@@ -341,8 +341,6 @@ export function PortalAccess() {
         <>
           <button disabled={!customer} onClick={() => setPicker("recipients")}>
             {tr("Добавить человека в область доступа")}</button>
-          <p>
-            {tr("Файлы и строки дополнительно ограничены выбранным заказчиком. Совпадение ФИО не расширяет доступ.")}</p>
           {recipients.map((person) => (
             <p key={person.recipientId}>
               {person.fullNameRu} {person.personnelNumber || ""}{" "}

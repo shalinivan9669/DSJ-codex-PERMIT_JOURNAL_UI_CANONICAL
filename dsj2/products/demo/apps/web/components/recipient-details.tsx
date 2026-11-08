@@ -480,12 +480,7 @@ export function RecipientDetails({
                   ? " · есть сохранённые данные"
                   : " · при необходимости"}
               </summary>
-              <p className="fine-print">
-                Основные формы всегда KZ/RU. Если отдельный вариант не указан,
-                используется введённый текст без перевода. Сохранённые уточнения
-                остаются самостоятельными и не меняются при редактировании
-                общего ввода.
-              </p>
+
               <div className="form-grid">
                 {(
                   [
@@ -549,12 +544,7 @@ export function RecipientDetails({
                   ? "Исключение по работодателю и история"
                   : "Работодатель, справочник и история"}
               </summary>
-              {requestEmployer && (
-                <p className="fine-print">
-                  Общий работодатель задаётся в заявке. Здесь сохранены только
-                  индивидуальные сведения и исключения из старых заявок.
-                </p>
-              )}
+
               <RecipientRecord
                 recipient={recipient}
                 disabled={disabled}
@@ -592,10 +582,7 @@ export function RecipientDetails({
             ) && (
               <details className="person-fields-wide">
                 <summary>Реквизиты работодателя для форм БиОТ</summary>
-                <p className="muted">
-                  Если в заявке организации реквизиты работодателя не заполнены,
-                  используются сведения выбранного заказчика.
-                </p>
+
                 {[
                   ["departmentRu", "Подразделение · RU"],
                   ["departmentKz", "Подразделение · KZ"],
@@ -716,8 +703,7 @@ export function RecipientDetails({
                 )}
                 {issuedAssignmentIds.includes(assignment.id) && (
                   <p className="fine-print">
-                    Это назначение оформлено. Его данные защищены; изменение
-                    выданного документа доступно через явное исправление.
+                    Документ выдан. Изменения — через исправление выпуска.
                   </p>
                 )}
                 <div
@@ -931,8 +917,7 @@ export function RecipientDetails({
                                 .validityYears === 1
                                 ? "1 год"
                                 : "3 года"}{" "}
-                              от даты документа. Введённая вручную дата
-                              сохраняется.
+                              от даты документа.
                             </small>
                           )}
                       </label>
@@ -1075,7 +1060,7 @@ export function RecipientDetails({
                             BIOT_CATEGORIES[assignment.biotCategory]
                               .minimumHours
                           }{" "}
-                          ч. Укажите фактический объём.
+                          ч.
                         </small>
                       )}
                     </label>
@@ -1108,8 +1093,8 @@ export function RecipientDetails({
                           {assignment.biotCategory &&
                           BIOT_CATEGORIES[assignment.biotCategory]
                             .minimumProductionHours
-                            ? `Не менее ${BIOT_CATEGORIES[assignment.biotCategory].minimumProductionHours} часов производственного обучения. Учитываются отдельно от академических часов теории.`
-                            : "Укажите фактический объём производственного обучения отдельно от теории."}
+                            ? `Не менее ${BIOT_CATEGORIES[assignment.biotCategory].minimumProductionHours} ч. практики.`
+                            : "Часы практики, без теории."}
                         </small>
                       </label>
                     )}
@@ -1225,9 +1210,7 @@ export function RecipientDetails({
                             {fieldError(index, key)}
                             {key === "biotUniqueNumber" && (
                               <small>
-                                Если сертификат оформляется этому получателю в
-                                том же комплекте, поле можно оставить пустым.
-                                Номер протокола не заменяет номер сертификата.
+                                Для сертификата из этого комплекта номер заполнится автоматически.
                               </small>
                             )}
                           </label>
@@ -1286,8 +1269,7 @@ export function RecipientDetails({
                     />
                     {fieldError(index, "trainingSubjectKz")}
                     <small>
-                      KZ необязателен; без отдельного варианта используется
-                      введённый текст без перевода.
+                      KZ — если отличается от RU.
                     </small>
                   </label>
                   {assignment.templateId.startsWith("ps-") && (
@@ -1330,24 +1312,13 @@ export function RecipientDetails({
                           {fieldError(index, key)}
                         </label>
                       ))}
-                      <p className="fine-print">
-                        Эти тексты печатаются в строках дисциплин удостоверения
-                        ПС. Свидетельство сохраняет названия
-                        «Общепрофессиональные дисциплины» и «Специальные
-                        дисциплины» исходного бланка.
-                      </p>
+
                       <details className="assignment-field-wide">
                         <summary>
                           Профессия и квалификация ПС · исключения для этого
                           курса
                         </summary>
-                        <p className="fine-print">
-                          Без исключения используется общий ввод человека.
-                          Профессия печатается в удостоверении ПС; присвоенная
-                          квалификация — в свидетельстве и протоколе ПС. У
-                          смешанных курсов эти значения могут отличаться от
-                          должности.
-                        </p>
+
                         <div className="form-grid">
                           {(
                             [
@@ -1489,10 +1460,7 @@ export function RecipientDetails({
                         {fieldError(index, "outcome.source")}
                       </label>
                       <p className="fine-print assignment-field-wide">
-                        Оценка и подтверждённый исход указываются отдельно.
-                        Удостоверение выдаётся при исходе «Сдал». Эти сведения
-                        применяются ко всем формам этого обучения у выбранного
-                        получателя.
+                        Удостоверение выдаётся при результате «Сдал».
                       </p>
                     </div>
                   )}
@@ -1528,9 +1496,9 @@ export function RecipientDetails({
                       />
                       {fieldError(index, "reason")}
                       <small id={`hint-${recipient.id}-${index}-reason`}>
-                        Укажите фактическую причину, если она применима.
+
                         {assignment.protocolMode === "GROUP" &&
-                          " Для группового документа она должна совпадать с общей причиной обучения. Используйте общее значение, чтобы убрать индивидуальное исключение."}
+                          " Для общего протокола причина должна совпадать у всех участников."}
                       </small>
                       {(!!fieldErrors[
                         `items.${rowIndex}.assignments.${index}.reason`
@@ -1738,10 +1706,7 @@ export function RecipientDetails({
                     />
                     {fieldError(index, "externalBasisNumber")}
                   </label>
-                  <small className="muted">
-                    Номер печатного документа назначит сервер. Внешний номер
-                    основания хранится отдельно.
-                  </small>
+
                 </div>
                 {!documentDisabled && !liveRules && (
                   <button

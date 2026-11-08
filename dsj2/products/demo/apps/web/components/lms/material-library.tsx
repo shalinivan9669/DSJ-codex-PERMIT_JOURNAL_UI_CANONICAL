@@ -118,12 +118,7 @@ export function MaterialLibrary({
             )
           : t("Добавить материал", "Материал қосу")}
       </summary>
-      <p className="muted">
-        {t(
-          "Выбор связывает материал с этим курсом. Замена создаёт отдельную редакцию; опубликованные уроки сохраняют прежний файл.",
-          "Таңдау материалды осы курспен байланыстырады. Ауыстыру жаңа редакция жасайды; жарияланған сабақтар бұрынғы файлды сақтайды.",
-        )}
-      </p>
+
       <label>
         {t("Найти в библиотеке центра", "Орталық кітапханасынан іздеу")}
         <input
@@ -159,7 +154,6 @@ export function MaterialLibrary({
               <strong>{material.title || material.originalName}</strong>
               <p className="muted">
                 {material.originalName} · {Math.ceil(material.size / 1024)} KB ·{" "}
-                {t("Редакция", "Редакция")} {material.revision} ·{" "}
                 {material.state === "VISIBLE"
                   ? t("В библиотеке", "Кітапханада")
                   : material.state === "HIDDEN"

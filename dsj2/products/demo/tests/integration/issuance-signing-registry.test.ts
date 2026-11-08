@@ -390,6 +390,15 @@ test("immutable stages sign independently, retain exact registry/customer scope 
           artifactId: document.artifactId,
           bindingId: binding.id,
         });
+        assert.ok("ncalayerRequest" in session);
+        assert.deepEqual(
+          session.ncalayerRequest.args.signerParams.extKeyUsageOids,
+          ["1.3.6.1.5.5.7.3.4"],
+        );
+        assert.equal(
+          "chain" in session.ncalayerRequest.args.signerParams,
+          false,
+        );
         const persisted = await db.signingSession.findUniqueOrThrow({
           where: { id: session.id },
         });
@@ -414,7 +423,7 @@ test("immutable stages sign independently, retain exact registry/customer scope 
           try {
             const repeated = await Promise.all([
               completeSigning(identity.context, session.id, {
-                signatureBase64: cms,
+                signatureBase64: cms.match(/.{1,64}/g)!.join("\r\n"),
               }),
               completeSigning(identity.context, session.id, {
                 signatureBase64: cms,

@@ -284,8 +284,7 @@ export function QuestionBankWorkspace({ t }: { t: Translate }) {
                   )}
                 </strong>
                 <p>
-                  {row.category} · {row.topic} · {t("Редакция", "Редакция")}{" "}
-                  {row.latestRevision.version}
+                  {row.category} · {row.topic}
                 </p>
               </div>
               {row.canEdit && (

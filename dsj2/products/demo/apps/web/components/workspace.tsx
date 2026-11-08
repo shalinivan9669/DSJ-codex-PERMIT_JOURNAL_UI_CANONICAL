@@ -386,12 +386,7 @@ function Login({ onLogin }: { onLogin: () => Promise<void> }) {
         <form onSubmit={submit}>
           <h2>{t("Войти в КОРОЧКИ", "КОРОЧКИ жүйесіне кіру")}</h2>
           <LanguageSwitch language={language} onChange={setLanguage} />
-          <p className="muted">
-            {t(
-              "Используйте учётную запись вашего центра.",
-              "Орталығыңыздың есептік жазбасын пайдаланыңыз.",
-            )}
-          </p>
+
           {!!error && <Notice>{lmsError(error, t)}</Notice>}
           {!challenge && (
             <>

@@ -71,7 +71,7 @@ function OwnAssessments({ data, t }: { data: Learning; t: Translate }) {
                 ? t("Завершено", "Аяқталды")
                 : lesson.locked
                   ? t("Сначала выполните предыдущие условия программы.", "Алдымен бағдарламаның алдыңғы шарттарын орындаңыз.")
-                  : t("Результат и условия прохождения — в уроке.", "Нәтиже мен өту шарттары сабақта көрсетілген.")}</p>
+                  : t("Откройте урок.", "Сабақты ашыңыз.")}</p>
             </div>
             <Link className="button" href={`/learn/${encodeURIComponent(data.id)}?lessonId=${encodeURIComponent(lesson.id)}`}>
               {t("Открыть урок", "Сабақты ашу")}

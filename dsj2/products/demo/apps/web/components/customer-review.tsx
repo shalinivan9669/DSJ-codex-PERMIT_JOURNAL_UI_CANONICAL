@@ -146,9 +146,6 @@ export function CustomerReview({
         <div className="toolbar">
           <div>
             <h2>Согласование и передача</h2>
-            <span className="muted">
-              Контрольный список, уточнения и факт передачи комплекта
-            </span>
           </div>
           <button onClick={() => setOpen(!open)} aria-expanded={open}>
             {open ? "Свернуть" : "Открыть согласование"}
@@ -300,8 +297,7 @@ export function CustomerReview({
             </div>
           )}
           <p className="fine-print">
-            Контрольный список не является выданным документом. Изменение
-            существенных данных делает прежнее согласование неактуальным.
+            Это контрольный список, а не выданный документ. После изменения существенных данных нужно новое согласование.
           </p>
           {sheet?.confirmations.map((c) => (
             <p key={c.id}>
@@ -363,8 +359,7 @@ export function CustomerReview({
             <details>
               <summary>Зафиксировать передачу или повторную печать</summary>
               <p>
-                Выберите фактически переданные файлы. Эта запись сама не
-                отправляет сообщения заказчику.
+                Выберите переданные файлы. Сообщение заказчику не отправляется.
               </p>
               {artifacts.map((a) => (
                 <label className="checkbox" key={a.id}>

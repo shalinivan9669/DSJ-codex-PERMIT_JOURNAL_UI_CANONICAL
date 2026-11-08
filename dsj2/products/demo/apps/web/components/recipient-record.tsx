@@ -304,7 +304,7 @@ export function RecipientRecord({
             )}
             {recipient.employerId && (
               <p className="fine-print">
-                {t("Связь со справочником", "Анықтамалықпен байланыс")}:{" "}
+                {t("Организация в справочнике", "Анықтамалықтағы ұйым")}:{" "}
                 {employer?.nameRu ||
                   (employerError
                     ? t("Карточка недоступна", "Карточка қолжетімсіз")
@@ -397,8 +397,7 @@ export function RecipientRecord({
             {nameError && <Notice>{nameError}</Notice>}
             {recipient.employerId && (
               <p className="fine-print">
-                Название изменится только в этом обращении. Организация в
-                справочнике сохранится.
+                Название изменится только в этой заявке.
               </p>
             )}
             <div className="toolbar-actions">
@@ -436,8 +435,8 @@ export function RecipientRecord({
         {success && <Notice kind="success">{success}</Notice>}
         <p>
           {recipient.recipientId
-            ? "Человек связан с постоянной записью. Сведения текущего обращения могут отличаться от сохранённой истории."
-            : "При необходимости сохраните человека для следующих обращений. Одинаковое ФИО само по себе не связывает разные записи."}
+            ? "Сведения этой заявки могут отличаться от постоянной записи."
+            : "Сохраните человека для следующих заявок. Совпадение ФИО не объединяет записи."}
         </p>
         <div className="form-grid">
           {[

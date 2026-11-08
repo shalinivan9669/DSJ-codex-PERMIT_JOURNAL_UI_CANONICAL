@@ -27,10 +27,7 @@ export function TrainingOverview({
       aria-label="Обучения и протоколы"
     >
       <h2>Обучения и протоколы</h2>
-      <p className="muted">
-        Дата общего протокола задаётся здесь. Дату выдачи комплекта каждому
-        человеку можно изменить в его карточке.
-      </p>
+
       {events.map((event, eventIndex) => {
         const displayedEvent =
           resolvedEvents?.find((row) => row.id === event.id) || event;

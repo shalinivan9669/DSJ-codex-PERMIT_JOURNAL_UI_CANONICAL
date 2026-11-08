@@ -4,6 +4,7 @@ import {
   signersFor,
   assertSigningPolicy,
   connectorUrl,
+  signingConfiguration,
 } from "../apps/api/src/signing";
 import { proposalDiff } from "../apps/api/src/approvals";
 
@@ -161,4 +162,35 @@ test("connector configuration refuses credential-bearing and insecure remote URL
     connectorUrl("https://example.com/adapter/"),
     "https://example.com/adapter",
   );
+});
+
+test("NCALayer needs its verifier independently of eGov; no provider is enabled by a URL alone", (t) => {
+  const keys = [
+    "DEMO_SIGNATURE_VERIFIER_URL",
+    "DEMO_SIGNATURE_VERIFIER_TOKEN",
+    "DEMO_EGOV_SIGNING_CONNECTOR_URL",
+    "DEMO_EGOV_SIGNING_CONNECTOR_TOKEN",
+  ];
+  const previous = keys.map((key) => [key, process.env[key]] as const);
+  t.after(() => {
+    for (const [key, value] of previous) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  });
+  for (const key of keys) delete process.env[key];
+  assert.equal(signingConfiguration().providers.NCALAYER.available, false);
+  process.env.DEMO_SIGNATURE_VERIFIER_URL = "https://verifier.example.test";
+  assert.equal(signingConfiguration().providers.NCALAYER.available, false);
+  process.env.DEMO_SIGNATURE_VERIFIER_TOKEN = "synthetic-test-token";
+  assert.equal(signingConfiguration().providers.NCALAYER.available, true);
+  assert.equal(signingConfiguration().providers.EGOV_QR.available, false);
+  process.env.DEMO_EGOV_SIGNING_CONNECTOR_URL =
+    "https://egov-adapter.example.test";
+  assert.equal(signingConfiguration().providers.EGOV_QR.available, false);
+  process.env.DEMO_EGOV_SIGNING_CONNECTOR_TOKEN = "synthetic-test-token";
+  assert.equal(signingConfiguration().providers.EGOV_QR.available, true);
+  process.env.DEMO_SIGNATURE_VERIFIER_URL = "http://untrusted.example.test";
+  assert.equal(signingConfiguration().providers.NCALAYER.available, false);
+  assert.equal(signingConfiguration().providers.EGOV_QR.available, false);
 });

@@ -71,7 +71,7 @@ export function CommissionWorkspace({ context }: { context: AppContext }) {
                 {t("Результаты и окончательные PDF просмотрены, протокол подтверждаю", "Нәтижелер мен соңғы PDF қаралды, хаттаманы растаймын")}</label>
               <button className="primary" disabled={!confirmed || busy} onClick={() => void confirm()}>{busy ? t("Сохраняем…", "Сақталуда…") : t("Подтвердить протокол", "Хаттаманы растау")}</button>
             </div>}
-          <p className="muted">{t("Подтверждение комиссии фиксируется в истории. ЭЦП ставится отдельно назначенным подписантом.", "Комиссия растауы тарихта сақталады. ЭЦҚ тағайындалған қол қоюшы арқылы бөлек қойылады.")}</p>
+          <p className="muted">{t("Подтверждение протокола не заменяет ЭЦП.", "Хаттаманы растау ЭЦҚ-ны алмастырмайды.")}</p>
         </section>
         <SigningPanel requestId={detail.requestId} commissionIssuanceId={detail.id} role={context.user.role}
           onChanged={() => { void load().catch((caught) => setError(lmsError(caught, t))); }} />

@@ -1958,11 +1958,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         ? "Ввод компании сохранён"
         : "Ввод компании не сохранён"
     : {
-        saved: `${draft.approval?.status === "APPROVED" ? "Согласовано" : "Рабочая версия сохранена"} · редакция ${draft.revision}`,
+        saved: draft.approval?.status === "APPROVED" ? "Согласовано" : "Сохранено",
         dirty: "Есть изменения",
         saving: "Сохраняем…",
         error: "Не сохранено",
-        paused: "Сохранение приостановлено: конфликт редакций",
+        paused: "Заявку изменил другой сотрудник",
       }[saveState];
   const actions = requestActions({
     draft,
@@ -2371,7 +2371,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               >
                 {fieldErrors["commonFields.documentDate"] ||
                   sharedHints["commonFields.documentDate"] ||
-                  "Для документов без собственной даты; отдельная дата обучения и исключения сохраняются."}
+                  "Для документов без отдельной даты."}
               </small>
             </label>
           </div>
@@ -2835,10 +2835,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               <div className="modal-actions recipient-details-footer">
                 <div className="recipient-details-save" role="status">
                   <strong>{saveLabel}</strong>
-                  <small>
-                    Изменения сохраняются автоматически. Закрытие возвращает к
-                    списку и сохраняет введённое.
-                  </small>
+
                   {saveState === "error" && error && (
                     <span className="field-error">{error}</span>
                   )}
@@ -2923,11 +2920,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
           {unconfirmedResults.trainings > 0 && (
             <p className="operator-result-reminder">
-              Не подтверждены результаты: {unconfirmedResults.trainings}{" "}
-              обучений, получателей — {unconfirmedResults.recipients}. Укажите
-              известные результаты в блоке обучения. Удостоверения, сертификаты
-              и свидетельства выдаются только при «Сдал»; протоколы отражают
-              фактический результат.
+              Укажите результаты: {unconfirmedResults.trainings}{" "}
+              обучений, получателей — {unconfirmedResults.recipients}. Удостоверения выдаются при результате «Сдал».
             </p>
           )}
           <ApprovalBanner
@@ -2976,15 +2970,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               </Link>
             )}
           </div>
-          {actions.showPreview && !readiness.locallyComplete && (
-            <p className="fine-print">
-              Предпросмотр доступен. Для передачи директору исправьте замечания.
-            </p>
-          )}
+
           {actions.showPrepareSigning && (
             <p className="fine-print">
-              При подготовке комплект получит номера. Дальнейшие исправления
-              оформляются отдельно.
+              Документам будут присвоены номера. Изменить их можно через исправление выпуска.
             </p>
           )}
         </section>
@@ -3287,9 +3276,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         >
           <Notice>{restoreConflict.message}</Notice>
           <p>
-            Текущие сохранённые данные остаются на месте. Снятая операция хранит
-            исходные назначения и результаты; восстановление не заменяет
-            сведения, которые изменились позже.
+            Удалённые назначения и результаты будут восстановлены. Последующие изменения сохранятся.
           </p>
           <ul>
             {restoreConflict.conflicts.map((conflict, index) => (
@@ -3347,11 +3334,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             .
           </p>
           <p>
-            Из рабочей редакции будут убраны назначения с программой, датами,
-            индивидуальными исключениями и имеющимися результатами. История и
-            оформленные документы сохраняются. Эта операция доступна для
-            восстановления с исходными идентификаторами и происхождением;
-            последующие несвязанные правки останутся.
+            Обучение, его даты и результаты будут удалены из заявки. Оформленные документы сохранятся. Удаление можно отменить.
           </p>
           {error && <Notice>{error}</Notice>}
           <div className="modal-actions">
@@ -3650,12 +3633,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           onClose={() => setDialog(null)}
         >
           <p>
-            Ваш ввод сохранён на этой странице. Чтобы не затереть изменения
-            коллеги, автоматическое сохранение остановлено.
+            Заявку изменил другой сотрудник. Ваши несохранённые изменения остались на странице.
           </p>
           <p>
-            Можно перенести ваш ввод в отдельную заявку или загрузить актуальную
-            версию с сервера. Загрузка заменит несохранённый ввод.
+            Создайте отдельную заявку или загрузите изменения коллеги. Загрузка заменит ваш несохранённый ввод.
           </p>
           {error && <Notice>{error}</Notice>}
           <div className="modal-actions">

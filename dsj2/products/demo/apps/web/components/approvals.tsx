@@ -310,7 +310,7 @@ export function ApprovalBanner({
               ? "Документы подготовлены и доступны для печати."
               : approvedScopeIssued(draft)
                 ? "Документы готовы. Для следующего выпуска выберите новый состав."
-                : "Сформируйте документы. Изменение согласованных данных потребует нового решения."
+                : "Можно сформировать документы."
             : approval?.status === "PENDING"
               ? "Ожидается решение директора."
               : "Изменения сохраняются автоматически."}
@@ -505,11 +505,7 @@ export function Approvals({ context }: { context: AppContext }) {
       <div className="page-heading">
         <div>
           <h1>{director ? "Кабинет директора" : "Согласование заявок"}</h1>
-          <p>
-            {director
-              ? "Проверьте редакцию и согласуйте её или верните менеджеру. После согласования документы доступны для печати."
-              : "Решения директора по сохранённым рабочим версиям."}
-          </p>
+
         </div>
         <button
           onClick={() => setRefresh((value) => value + 1)}
@@ -615,7 +611,7 @@ export function Approvals({ context }: { context: AppContext }) {
                   <strong>{row.title || "Новая заявка"}</strong>
                   <small>
                     {row.author?.displayName || "Сотрудник центра"} ·{" "}
-                    {dateTime(row.submittedAt)} · редакция {row.requestRevision}
+                    {dateTime(row.submittedAt)}
                   </small>
                   <Status value={row.needsPreparation ? "DRAFT" : row.status} />
                 </button>
@@ -652,7 +648,7 @@ export function Approvals({ context }: { context: AppContext }) {
             <>
               <h2>{detail.request?.title || detail.title || "Новая заявка"}</h2>
               <p>
-                {detail.author?.displayName} · редакция {detail.requestRevision}{" "}
+                {detail.author?.displayName}{" "}
                 ·{" "}
                 <Status
                   value={detail.needsPreparation ? "DRAFT" : detail.status}
@@ -662,11 +658,7 @@ export function Approvals({ context }: { context: AppContext }) {
                 <Notice kind="info">
                   <strong>Предыдущая редакция: требуется подготовка</strong>
                   <p>
-                    У этой редакции ещё не зафиксированы итоговые значения.
-                    Исходная история останется доступна. В актуальном черновике
-                    программы и общие значения подставятся автоматически;
-                    фактические результаты и индивидуальные исключения
-                    сохранятся.
+                    Откройте заявку, проверьте данные и передайте её повторно.
                   </p>
                   {context.user.role !== "VIEWER" && (
                     <button
@@ -734,9 +726,7 @@ export function Approvals({ context }: { context: AppContext }) {
                 (detail.reviewUnavailable ||
                   !!detail.review?.issues.length) && (
                   <Notice kind="info">
-                    Сохранённая редакция не меняется при появлении новых
-                    стандартных значений. Для исправления используется текущая
-                    рабочая версия и новая передача директору.
+                    Исправьте замечания в заявке и передайте её повторно.
                     <div className="action-buttons">
                       {director && (
                         <button
@@ -773,10 +763,7 @@ export function Approvals({ context }: { context: AppContext }) {
               {director && (
                 <details>
                   <summary>Подробное сравнение сохранённых полей</summary>
-                  <p>
-                    Это исходные изменения. Общие и рассчитанные значения
-                    показаны выше в подготовленных данных.
-                  </p>
+
                   {changes.length ? (
                     <div className="table-scroll">
                       <table className="approval-diff">

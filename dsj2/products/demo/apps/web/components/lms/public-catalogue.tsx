@@ -223,15 +223,9 @@ export function PublicCatalogue({ context }: { context?: AppContext | null }) {
       )}
       {receipt ? (
         <section className="panel lms-panel" role="status">
-          <h2>{t("Заявка сохранена", "Өтінім сақталды")}</h2>
+          <h2>{t("Заявка отправлена", "Өтінім жіберілді")}</h2>
           <p>
             {receipt.centerName}
-          </p>
-          <p>
-            {t(
-              "Центр рассмотрит заявку. Зачисление ещё не подтверждено.",
-              "Орталық өтінімді қарайды. Оқуға қабылдау әлі расталған жоқ.",
-            )}
           </p>
           {context && (
             <Link

@@ -109,7 +109,7 @@ export function OperatorApplication({ t, scope, onCreated, onClose }: {
           {published.map((course) => <option key={course.version.id} value={course.version.id}>{t(course.version.content.titleRu, course.version.content.titleKz)} · {course.version.version}</option>)}
         </select></label>
       </div>
-      {!published.length && <p>{t("Для назначения методист или директор должен опубликовать программу.", "Тағайындау үшін әдіскер немесе директор бағдарламаны жариялауы керек.")} <Link href="/lms">{t("Открыть программы", "Бағдарламаларды ашу")}</Link></p>}
+      {!published.length && <p>{t("Нет опубликованных программ.", "Жарияланған бағдарламалар жоқ.")} <Link href="/lms">{t("Открыть программы", "Бағдарламаларды ашу")}</Link></p>}
       <label>{kind === "B2B" ? t("Найти организацию по названию или БИН", "Ұйымды атауы немесе БСН бойынша табу") : t("Найти человека по ФИО", "Адамды аты-жөні бойынша табу")}
         <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} disabled={busy} />
       </label>

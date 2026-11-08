@@ -106,7 +106,7 @@ export function CommissionFields({
       </div>
       {started && !hasEmptyPosition && (
         <p className="fine-print" id={`${idPrefix}-template-hint`}>
-          {tr("Должности уже заполнены. Измените их в строках ниже.")}
+          {tr("Должности можно изменить ниже.")}
         </p>
       )}
       {rows.map((person, index) => {

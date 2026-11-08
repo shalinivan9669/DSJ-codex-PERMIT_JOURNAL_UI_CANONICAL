@@ -300,7 +300,7 @@ test("first course is authored and published through UI, autosave survives navig
     .click();
   expect((await calendar).status()).toBe(201);
   await expect(
-    page.getByText("Версия сохранена. Её можно выбрать в программе курса.", {
+    page.getByText("Календарь сохранён.", {
       exact: true,
     }),
   ).toBeVisible();

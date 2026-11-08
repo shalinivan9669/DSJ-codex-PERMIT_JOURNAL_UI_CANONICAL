@@ -329,12 +329,12 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
         <Link className="button" href="/lms">{t("К программам", "Бағдарламаларға")}</Link>
       </LmsHeading>
       <section className="panel lms-panel">
-        <p><Status value={version.status} t={t} /> · {t("Версия", "Нұсқа")} {version.version} · {content.hours} {t("ч.", "сағ.")}</p>
+        <p><Status value={version.status} t={t} /> · {content.hours} {t("ч.", "сағ.")}</p>
         {(content.descriptionRu || content.descriptionKz) && <p>{t(content.descriptionRu, content.descriptionKz)}</p>}
         <p>{t("Доступ к обучению", "Оқуға қолжетімділік")}: {content.accessDays} {t("дней", "күн")} · <Status value={profile.assessmentKind} t={t} /></p>
         {course?.assignmentPaused && <p role="status">{t("Новые назначения приостановлены", "Жаңа тағайындаулар тоқтатылған")}{course.assignmentPauseReason ? `: ${course.assignmentPauseReason}` : ""}</p>}
         <div className="lms-actions">
-          {published && course?.allowedActions?.includes("assign") && !course.assignmentPaused && <Link className="button primary lms-primary" href={`/lms/assign?versionId=${encodeURIComponent(published.id)}`}>{t("Назначить обучение", "Оқуды тағайындау")}</Link>}
+          {published && course?.allowedActions?.includes("assign") && !course.assignmentPaused && <Link className="button primary lms-primary" href={`/lms/assign?versionId=${encodeURIComponent(published.id)}`}>{published.id !== version.id ? t("Назначить опубликованную программу", "Жарияланған бағдарламаны тағайындау") : t("Назначить обучение", "Оқуды тағайындау")}</Link>}
           {course?.allowedActions?.includes("reviewResults") && <Link className="button" href={`/lms/teaching?tab=reviews&courseId=${encodeURIComponent(id)}`}>{t("Открыть работы на проверку", "Тексеруге жіберілген жұмыстарды ашу")}</Link>}
         </div>
       </section>
@@ -521,8 +521,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
       </nav>
       <div className="lms-editor-actions">
         <span>
-          <Status value={version.status} t={t} /> · {t("Версия", "Нұсқа")}{" "}
-          {version.version}
+          <Status value={version.status} t={t} />
         </span>
         <span className="lms-save-state" role="status">
           {frozen
@@ -539,9 +538,8 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
       )}
       {published && section === "review" && course?.allowedActions?.includes("assign") && !course.assignmentPaused && (
         <section className="panel lms-panel">
-          <p>{t("Доступна для назначения версия", "Тағайындауға қолжетімді нұсқа")} {published.version}</p>
           <Link className="button primary lms-primary" href={`/lms/assign?versionId=${encodeURIComponent(published.id)}`}>
-            {t("Назначить обучение", "Оқуды тағайындау")}
+            {published.id !== version.id ? t("Назначить опубликованную программу", "Жарияланған бағдарламаны тағайындау") : t("Назначить обучение", "Оқуды тағайындау")}
           </Link>
         </section>
       )}
@@ -558,7 +556,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
               </li>
             ))}
           </ul>
-          {saveState !== "saved" && <p role="status">{t("Список обновится после сохранения изменений.", "Тізім өзгерістер сақталғаннан кейін жаңартылады.")}</p>}
+
         </section>
       )}
       <details hidden={section !== "modules"} className="panel lms-panel" open={preview} onToggle={(event) => setPreview(event.currentTarget.open)}>
@@ -580,8 +578,8 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
       {recovery && (
         <Notice>
           {t(
-            "Есть локальные несохранённые изменения. Просмотрите актуальную редакцию перед восстановлением.",
-            "Жергілікті сақталмаған өзгерістер бар. Қалпына келтірер алдында соңғы редакцияны тексеріңіз.",
+            "Есть несохранённые изменения. Сравните их с сохранёнными.",
+            "Сақталмаған өзгерістер бар. Оларды сақталғанымен салыстырыңыз.",
           )}
           <button
             type="button"
@@ -607,7 +605,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
               }
             }}
           >
-            {t("Оставить серверную редакцию", "Сервер редакциясын қалдыру")}
+            {t("Оставить сохранённое", "Сақталғанын қалдыру")}
           </button>
         </Notice>
       )}
@@ -657,8 +655,8 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
         >
           <p>
             {t(
-              "Удаляемый материал используется в следующих уроках. Для каждого выберите новую зависимость или её снятие.",
-              "Жойылатын материал келесі сабақтарда қолданылады. Әр сабақ үшін жаңа тәуелділікті немесе оны жоюды таңдаңыз.",
+              "Материал используется в этих уроках. Выберите замену или уберите связь.",
+              "Материал осы сабақтарда қолданылады. Ауыстырыңыз немесе байланысты алып тастаңыз.",
             )}
           </p>
           {affectedLessons.map((lesson) => (
@@ -874,7 +872,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
                   profileEdit({ effectiveFrom: e.target.value || null })
                 }
               />
-              {content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "PRACTICE" && !profile.effectiveFrom && <small id="effective-from-required" role="status">{t("Укажите дату начала действия основания: без неё результат экзамена не допускает оформление документов.", "Негіздің күшіне ену күнін көрсетіңіз: онсыз емтихан нәтижесі бойынша құжаттарды рәсімдеуге болмайды.")}</small>}
+              {content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "PRACTICE" && !profile.effectiveFrom && <small id="effective-from-required" role="status">{t("Укажите дату начала действия.", "Күшіне ену күнін көрсетіңіз.")}</small>}
             </label>
             <label>
               {t("Действует до", "Аяқталуы")}
@@ -1044,7 +1042,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
             ))}
           </div>
           {profile.requiresProctoring && content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "EXTERNAL_AUTHORIZED" && (
-            <label id="local-proctoring-limit">{t("Способ контроля экзамена", "Емтиханды бақылау тәсілі")}<select value={profile.proctoringMode || "UNSPECIFIED"} onChange={event => profileEdit({ proctoringMode: event.target.value as RegulatoryProfile["proctoringMode"] })}><option value="UNSPECIFIED">{t("Требует согласования", "Келісуді қажет етеді")}</option><option value="LOCAL_SUPERVISED">{t("Местный экзамен под наблюдением сотрудника", "Қызметкер бақылауымен жергілікті емтихан")}</option></select><span className="muted">{t("Наблюдатель подтверждает личность и присутствие, ведёт журнал сессии и принимает конкретную попытку перед выставлением оценки.", "Бақылаушы жеке басы мен қатысуды растайды, сессия журналын жүргізеді және баға қойылғанға дейін нақты әрекетті қабылдайды.")}</span></label>
+            <label id="local-proctoring-limit">{t("Способ контроля экзамена", "Емтиханды бақылау тәсілі")}<select value={profile.proctoringMode || "UNSPECIFIED"} onChange={event => profileEdit({ proctoringMode: event.target.value as RegulatoryProfile["proctoringMode"] })}><option value="UNSPECIFIED">{t("Требует согласования", "Келісуді қажет етеді")}</option><option value="LOCAL_SUPERVISED">{t("Местный экзамен под наблюдением сотрудника", "Қызметкер бақылауымен жергілікті емтихан")}</option></select></label>
           )}
           {profile.requiresPractice && (
             <label>
@@ -1054,7 +1052,6 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
               )}
               <select
                 value={profile.practiceEvidenceMode || "UNSPECIFIED"}
-                aria-describedby="practice-evidence-help"
                 onChange={(event) =>
                   profileEdit({
                     practiceEvidenceMode: event.target
@@ -1081,17 +1078,11 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
                   )}
                 </option>
               </select>
-              <span className="muted" id="practice-evidence-help">
-                {t(
-                  "Основание должно соответствовать утверждённой программе. Онлайн-практика засчитывается после принятия всех обязательных практических работ преподавателем.",
-                  "Негіз бекітілген бағдарламаға сәйкес болуы тиіс. Онлайн-практика барлық міндетті практикалық жұмыстарды оқытушы қабылдағаннан кейін есептеледі.",
-                )}
-              </span>
               {content.learningOutcome !== "LEARNING" && profile.assessmentKind !== "EXTERNAL_AUTHORIZED" && (profile.practiceEvidenceMode === "IN_PERSON" || content.metadata?.format === "IN_PERSON") && (
                 <span role="status">
                   {t(
-                    "Добавьте обязательное занятие в программу. В группе преподаватель назначит дату, критерии и оценит практику каждого участника.",
-                    "Бағдарламаға міндетті сабақ қосыңыз. Топта оқытушы күн мен критерийлерді белгілеп, әр қатысушының практикасын бағалайды.",
+                    "Добавьте обязательное практическое занятие.",
+                    "Міндетті практикалық сабақ қосыңыз.",
                   )}
                 </span>
               )}
@@ -1763,15 +1754,16 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
         <p role="status">
           {t("Согласование", "Келісу")}:{" "}
           {version.review?.state === "PENDING"
-            ? t("На проверке", "Тексеруде")
+            ? t("Ожидает проверки администратором", "Әкімшінің тексеруін күтуде")
             : version.review?.state === "APPROVED"
-              ? t("Одобрена текущая редакция", "Ағымдағы редакция мақұлданған")
+              ? version.status === "DRAFT"
+                ? t("Ожидает публикации", "Жариялауды күтуде")
+                : t("Одобрено", "Мақұлданған")
               : version.review?.state === "RETURNED"
                 ? t("Возвращено на доработку", "Түзетуге қайтарылған")
                 : t("Черновик", "Жоба")}
         </p>
         {version.review?.feedback && <p>{version.review.feedback}</p>}
-        {version.status === "DRAFT" && !canPublish && ["PENDING", "APPROVED"].includes(version.review?.state || "") && <p>{version.review?.state === "PENDING" ? t("Ожидает проверки администратором.", "Әкімшінің тексеруін күтуде.") : t("Ожидает публикации администратором.", "Әкімшінің жариялауын күтуде.")}</p>}
         {(canApproveReview || canReturnReview) && (
           <label>
             {t("Комментарий к решению", "Шешімге түсініктеме")}

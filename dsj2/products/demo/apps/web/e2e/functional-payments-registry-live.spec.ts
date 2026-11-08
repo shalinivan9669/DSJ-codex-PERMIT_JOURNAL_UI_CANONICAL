@@ -133,7 +133,7 @@ test("F24 catalogue application, accepted enrollment, order pricing, manual paym
       progress.applicationId = (await receipt.json()).id;
       await save();
       await expect(
-        learner.getByRole("heading", { name: "Заявка сохранена", exact: true }),
+        learner.getByRole("heading", { name: "Заявка отправлена", exact: true }),
       ).toBeVisible();
       await learner.screenshot({
         path: path.join(output, "catalogue-application.png"),

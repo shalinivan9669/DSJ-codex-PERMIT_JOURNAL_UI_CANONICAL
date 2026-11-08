@@ -279,7 +279,7 @@ test("learner completes authored mixed programme, submits six types, teacher rev
       .click();
     expect((await submit).ok()).toBe(true);
     await expect(
-      learner.getByText("Работа отправлена. Ожидаем преподавателя.", {
+      learner.getByText("Ожидает проверки преподавателя.", {
         exact: true,
       }),
     ).toBeVisible();
@@ -314,7 +314,7 @@ test("learner completes authored mixed programme, submits six types, teacher rev
       .getByRole("button", { name: "Отправить на проверку", exact: true })
       .click();
     await expect(
-      learner.getByText("Работа отправлена. Ожидаем преподавателя.", {
+      learner.getByText("Ожидает проверки преподавателя.", {
         exact: true,
       }),
     ).toBeVisible();

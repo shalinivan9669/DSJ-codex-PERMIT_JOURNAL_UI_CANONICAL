@@ -32,28 +32,37 @@ export function signWithNCALayer(input: {
       if (error) reject(error);
       else if (signature) resolve(signature);
     }
-    socket.onopen = () =>
-      socket.send(
-        JSON.stringify({
-          module: "kz.gov.pki.knca.basics",
-          method: "sign",
-          args: {
-            format: "cms",
-            data: input.dataBase64,
-            signingParams: {
-              decode: true,
-              encapsulate: false,
-              digested: false,
+    socket.onopen = () => {
+      try {
+        socket.send(
+          JSON.stringify({
+            module: "kz.gov.pki.knca.basics",
+            method: "sign",
+            args: {
+              format: "cms",
+              data: input.dataBase64,
+              signingParams: {
+                decode: true,
+                encapsulate: false,
+                digested: false,
+              },
+              signerParams: {
+                extKeyUsageOids: ["1.3.6.1.5.5.7.3.4"],
+                ...(input.iin ? { iin: input.iin } : {}),
+                ...(input.bin ? { bin: input.bin } : {}),
+              },
+              locale: "ru",
             },
-            signerParams: {
-              ...(input.iin ? { iin: input.iin } : {}),
-              ...(input.bin ? { bin: input.bin } : {}),
-              chain: null,
-            },
-            locale: "ru",
-          },
-        }),
-      );
+          }),
+        );
+      } catch {
+        finish(
+          new Error(
+            "Не удалось передать документ в NCALayer. Повторите подключение.",
+          ),
+        );
+      }
+    };
     socket.onmessage = (event) => {
       let response: {
         status?: boolean;
@@ -62,6 +71,12 @@ export function signWithNCALayer(input: {
       };
       try {
         response = JSON.parse(String(event.data)) as typeof response;
+        if (
+          !response ||
+          typeof response !== "object" ||
+          Array.isArray(response)
+        )
+          throw new Error("Invalid NCALayer response");
       } catch {
         finish(
           new Error("NCALayer вернул непонятный ответ. Повторите подключение."),
@@ -87,13 +102,15 @@ export function signWithNCALayer(input: {
           ? signatures[0]
           : null
         : signatures;
+      const compactSignature =
+        typeof signature === "string" ? signature.replace(/[\r\n]/g, "") : null;
       if (
         response.status === true &&
-        typeof signature === "string" &&
-        /^[A-Za-z0-9+/=\r\n]+$/.test(signature) &&
-        signature.length > 100
+        compactSignature !== null &&
+        /^[A-Za-z0-9+/]+={0,2}$/.test(compactSignature) &&
+        compactSignature.length > 100
       )
-        finish(undefined, signature);
+        finish(undefined, compactSignature);
       else if (response.status !== undefined)
         finish(
           new Error(

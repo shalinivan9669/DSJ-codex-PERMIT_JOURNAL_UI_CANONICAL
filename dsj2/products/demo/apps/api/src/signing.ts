@@ -1651,6 +1651,7 @@ export async function startSigning(c: Context, id: string, input: unknown) {
           data: artifact.buffer.toString("base64"),
           signingParams: { decode: true, encapsulate: false, digested: false },
           signerParams: {
+            extKeyUsageOids: ["1.3.6.1.5.5.7.3.4"],
             iin: binding.iin,
             ...(binding.bin ? { bin: binding.bin } : {}),
           },
@@ -1803,6 +1804,9 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       );
     signatureBase64 = result.signatureBase64;
   }
+  // CMS may be base64 line-wrapped. Removing CR/LF preserves its exact bytes;
+  // all other invalid characters still fail before independent verification.
+  signatureBase64 = signatureBase64?.replace(/[\r\n]/g, "");
   if (!signatureBase64 || !/^[A-Za-z0-9+/]+={0,2}$/.test(signatureBase64))
     fail(
       422,

@@ -382,7 +382,7 @@ export function TeacherWorkspace({ t, scope, mode = "teacher", canManageRoles = 
       {notice && (
         <p role="status">{t("Решение сохранено", "Шешім сақталды")}</p>
       )}
-      {revisionChanged && <Notice>{t("Получена новая редакция работы. Ваш комментарий сохранён; оцените новые ответы и выберите решение заново.", "Жұмыстың жаңа редакциясы алынды. Түсініктемеңіз сақталды; жаңа жауаптарды бағалап, шешімді қайта таңдаңыз.")}</Notice>}
+      {revisionChanged && <Notice>{t("Ответы изменились. Комментарий сохранён; проверьте работу заново.", "Жауаптар өзгерді. Түсініктеме сақталды; жұмысты қайта тексеріңіз.")}</Notice>}
       {!detail && view === "proctoring" && <ProctoringQueue t={t} />}
       <section className="panel lms-panel" hidden={!!detail || view !== "reviews"}>
         <h2>{t("Очередь проверки", "Тексеру кезегі")}</h2>
@@ -514,11 +514,8 @@ export function TeacherWorkspace({ t, scope, mode = "teacher", canManageRoles = 
             {detail.learnerName} · {t(detail.titleRu, detail.titleKz)}
           </h2>
           {detail.courseTitleRu && detail.courseTitleRu !== detail.titleRu && <p>{t(detail.courseTitleRu, detail.courseTitleKz || detail.courseTitleRu)}</p>}
-          {detail.proctoringPending && <><Notice>{t("До оценки требуется решение наблюдателя по этой попытке. После подтверждения обновите работу.", "Бағалауға дейін бақылаушының осы әрекет бойынша шешімі қажет. Расталғаннан кейін жұмысты жаңартыңыз.")}</Notice><ProctoringSession enrollmentId={detail.enrollmentId} t={t} /><button type="button" onClick={() => void open(detail)}>{t("Обновить работу после контроля", "Бақылаудан кейін жұмысты жаңарту")}</button></>}
-          <p>
-            {t("Отправленная редакция", "Жіберілген редакция")}{" "}
-            {detail.revision} · {decisionName(detail.state, t)}
-          </p>
+          {detail.proctoringPending && <><Notice>{t("Дождитесь решения наблюдателя и обновите работу.", "Бақылаушының шешімін күтіп, жұмысты жаңартыңыз.")}</Notice><ProctoringSession enrollmentId={detail.enrollmentId} t={t} /><button type="button" onClick={() => void open(detail)}>{t("Обновить работу после контроля", "Бақылаудан кейін жұмысты жаңарту")}</button></>}
+          <p>{decisionName(detail.state, t)}</p>
           {detail.targetType === "ATTEMPT" ? (
             detail.questions?.map((question, index) => {
               const spec =
@@ -673,7 +670,7 @@ export function TeacherWorkspace({ t, scope, mode = "teacher", canManageRoles = 
             </form>
           )}
           {!detail.allowedActions.length && <div className="lms-actions">
-            <p role="status">{t("Решение доступно слушателю в его работе.", "Шешім тыңдаушыға оның жұмысында қолжетімді.")}</p>
+
             <button type="button" className="primary lms-primary" disabled={busy} onClick={() => {
               const next = visibleReviews?.items.find((item) => item.id !== detail.id);
               if (next) void open(next);

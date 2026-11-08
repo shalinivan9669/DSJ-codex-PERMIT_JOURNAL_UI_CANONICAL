@@ -209,9 +209,6 @@ export function CustomerOutput({
         <div className="toolbar">
           <div>
             <h2>Комплект для заказчика</h2>
-            <span className="muted">
-              Колонки, порядок и названия файлов из согласованного профиля
-            </span>
           </div>
           <button onClick={() => setOpen(!open)} aria-expanded={open}>
             {open ? "Свернуть" : "Настроить выдачу"}
@@ -263,8 +260,7 @@ export function CustomerOutput({
           </div>
           {needsCustomer && (
             <p>
-              Выберите организацию: комплект заказчика содержит только
-              относящиеся к ней строки и файлы.
+              Выберите организацию для её комплекта документов.
             </p>
           )}
           {customerId && (
@@ -415,11 +411,6 @@ export function CustomerOutput({
           </div>
           <fieldset>
             <legend>Имена файлов</legend>
-            <p className="fine-print">
-              Поля соединяются в выбранном порядке. Пустые значения
-              пропускаются; расширение, безопасные символы и различимые имена
-              совпадающих файлов система добавляет при сборке комплекта.
-            </p>
             <div className="export-columns">
               {profile.files.nameFields.map((field, index) => {
                 const label =
@@ -658,9 +649,7 @@ export function CustomerOutput({
             </label>
           </fieldset>
           <p className="fine-print">
-            Табельные и регистрационные номера сохраняются как текст. Комплект
-            содержит реестр, опись и подготовленный сопроводительный текст.
-            Отправка фиксируется отдельно.
+            В комплект входят реестр, опись и сопроводительный текст. Передачу заказчику отметьте отдельно.
           </p>
           <div className="toolbar-actions">
             {canManage && (

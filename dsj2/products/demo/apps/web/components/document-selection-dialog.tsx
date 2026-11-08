@@ -111,9 +111,7 @@ export function DocumentSelectionDialog({
             : `Получателей выбрано: ${preview.recipients.length}`}
         </p>
         <p id={`${id}-help`} className="muted">
-          Отметьте нужные документы. Общие даты заявки подставятся
-          автоматически. Индивидуальные сведения можно уточнить в «Даты и
-          детали».
+          Отметьте документы для добавления.
         </p>
         {error && (
           <div ref={errorRef} tabIndex={-1}>
@@ -125,16 +123,12 @@ export function DocumentSelectionDialog({
           {choiceList(false)}
           <details className="document-selection-extra">
             <summary>Протоколы и дополнительные формы</summary>
-            <p className="fine-print">
-              Здесь можно добавить отдельный протокол получателя. Общий протокол
-              уже связанной группы учтён в комплекте.
-            </p>
+
             {choiceList(true)}
           </details>
         </fieldset>
         <p className="fine-print">
-          Отмеченные ранее документы сохраняются. Изменить или удалить их можно
-          в «Даты и детали».
+          Удаление документов — в «Даты и детали».
         </p>
         {preview.overLimit.length > 0 && (
           <Notice>

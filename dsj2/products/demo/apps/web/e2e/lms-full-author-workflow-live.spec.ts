@@ -403,7 +403,7 @@ test("scoped roles, material reuse and immutable replacement, methodist-expert r
       target.version.id,
     );
     await expect(
-      methodist.getByText("Согласование: На проверке", { exact: true }),
+      methodist.getByText("Согласование: Ожидает проверки администратором", { exact: true }),
     ).toBeVisible();
     const submitted = await version(page, target.course.id);
     expect(submitted.review?.state).toBe("PENDING");
@@ -497,7 +497,7 @@ test("scoped roles, material reuse and immutable replacement, methodist-expert r
     });
     await expert.getByRole("button", { name: "KZ", exact: true }).click();
     await expect(
-      expert.getByText("Келісу: Ағымдағы редакция мақұлданған", {
+      expert.getByText("Келісу: Мақұлданған", {
         exact: true,
       }),
     ).toBeVisible();

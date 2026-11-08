@@ -472,8 +472,8 @@ export function LearnerCourse({ id, t }: { id: string; t: Translate }) {
             {data.attempts.some((item) => item.state === "AWAITING_REVIEW") && (
               <p role="status">
                 {t(
-                  "Итоговая работа отправлена. Ожидаем проверку преподавателя.",
-                  "Қорытынды жұмыс жіберілді. Оқытушының тексеруін күтеміз.",
+                  "Ожидает проверки преподавателя.",
+                  "Оқытушының тексеруін күтуде.",
                 )}
               </p>
             )}
@@ -696,7 +696,7 @@ function Lesson({
   return (
     <section className="panel lms-lesson">
       <h2>{t(lesson.titleRu, lesson.titleKz)}</h2>
-      {!!progress?.activeSeconds && <p className="muted">{t("Активное взаимодействие", "Белсенді әрекеттесу")}: {Math.floor(progress.activeSeconds / 60)} {t("мин", "мин")} {progress.activeSeconds % 60} {t("с", "с")}</p>}
+
       {materialError && <Notice>{t("Видео не загрузилось. Ваш прогресс сохранён.", "Бейне жүктелмеді. Оқу барысы сақталған.")} <button type="button" onClick={() => { setMaterialError(false); video.current?.load(); }}>{t("Повторить загрузку видео", "Бейнені қайта жүктеу")}</button></Notice>}
       {!!error && (
         <Notice>

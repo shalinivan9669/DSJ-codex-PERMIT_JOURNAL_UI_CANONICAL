@@ -82,11 +82,7 @@ export function RequestActivity({
     <details className="panel request-activity">
       <summary>История заявки</summary>
       <div className="section-heading">
-        <p>
-          {canManageCenter(role)
-            ? "Последние 200 событий. Фильтры применяются к показанным событиям."
-            : "Основные события согласования, подписания и выдачи."}
-        </p>
+        {entries.length >= 200 && <small className="muted">Последние 200 событий</small>}
         <button
           disabled={loading}
           onClick={() => setRefresh((value) => value + 1)}

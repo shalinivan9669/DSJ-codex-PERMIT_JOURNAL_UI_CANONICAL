@@ -499,18 +499,12 @@ export function ImportDialog({
       }}
       wide
     >
-      <p>
-        Выберите XLSX / CSV или вставьте таблицу. Знакомые колонки распознаются
-        автоматически; проверьте состав и отмеченные проблемы. Неполные строки
-        сохраняются в черновик, номера ещё не назначаются.
-      </p>
+
       <p className="fine-print">
         <a href="/api/imports/template" download>
           Скачать шаблон Excel
         </a>
-        {" · "}Файл до 5 МиБ, до 250 фото JPG/PNG. Верхний левый угол фото — в
-        колонке «Фото» напротив сотрудника. Отдельное фото можно добавить в
-        карточке сотрудника после импорта.
+        {" · "}До 5 МБ. Фото JPG/PNG размещайте в колонке «Фото» напротив сотрудника.
       </p>
       {error && (
         <div ref={errorRef} tabIndex={-1}>
@@ -620,7 +614,7 @@ export function ImportDialog({
               ? "Подходящие сохранённые правила различаются: проверьте сопоставление."
               : editMapping
                 ? "Проверьте нераспознанные и неоднозначные колонки."
-                : "Повторно выбирать поля не требуется."}
+                : ""}
           </p>
           {preview.errors?.map((message, index) => (
             <Notice key={index}>{importIssueText(message)}</Notice>
@@ -644,11 +638,7 @@ export function ImportDialog({
                   </option>
                 </select>
               </label>
-              <p className="fine-print">
-                Сопоставляем по ID человека, внешнему или табельному номеру.
-                Совпадение ФИО не объединяет людей. Назначения и результаты
-                сохраняются.
-              </p>
+
             </>
           )}
           {reconciliation && (
@@ -905,20 +895,13 @@ export function ImportDialog({
                       biotCategory,
                       existingDraft.businessRuleVersion === "LIVE_V1",
                     )}{" "}
-                    Если в таблице есть категория, используются значения строк.
-                    Часы и даты из выбранных колонок сохраняются.
+                    Категория из таблицы имеет приоритет.
                   </small>
                 </label>
               )}
             </div>
           </details>
-          {replacesStarter && (
-            <p className="muted">
-              Нетронутая стартовая строка заменится импортируемым списком. Ранее
-              заполненная и затем очищенная строка сохранится и будет
-              учитываться в лимите.
-            </p>
-          )}
+
           {!!unresolvedEmployerRows.length && (
             <Notice>
               <strong>
@@ -1274,11 +1257,7 @@ export function ImportDialog({
               {Math.min(50, listedRows.length - visibleRows.length)} строк
             </button>
           )}
-          <p className="fine-print">
-            Исходные номера строк и ведущие нули сохраняются. Формулы, макросы и
-            внешние ссылки не исполняются. Повтор этого импорта не добавляет те
-            же строки ещё раз.
-          </p>
+
           <div className="modal-actions">
             <button
               disabled={busy}

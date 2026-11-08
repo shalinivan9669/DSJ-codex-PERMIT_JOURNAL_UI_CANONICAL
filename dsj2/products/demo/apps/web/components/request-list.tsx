@@ -160,11 +160,7 @@ export function RequestList({
       <div className="page-heading">
         <div>
           <h1>{history ? "Архив документов" : "Заявки на печать"}</h1>
-          <p>
-            {history
-              ? "Завершённые выпуски, оригиналы, подписи и история исправлений."
-              : "Рабочие версии, согласование директора, документы и печать."}
-          </p>
+
         </div>
         {context.user.role !== "VIEWER" && (
           <Link className="button primary" href="/requests/new">
@@ -264,7 +260,6 @@ export function RequestList({
                         {row.kind === "PERSON"
                           ? "Физическое лицо"
                           : "Организация"}{" "}
-                        · редакция {row.revision}
                       </small>
                     </td>
                     <td>{row.customerName || row.customer?.nameRu || "—"}</td>

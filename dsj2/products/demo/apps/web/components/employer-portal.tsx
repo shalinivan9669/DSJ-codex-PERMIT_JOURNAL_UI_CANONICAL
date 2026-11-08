@@ -121,8 +121,6 @@ export function EmployerPortal() {
       <div className="page-heading">
         <div>
           <h1>{tr("Кабинет заказчика")}</h1>
-          <p>
-            {tr("Проверьте известный состав, предложите изменения и получите документы вашего заказа.")}</p>
         </div>
       </div>
       {error && (
@@ -206,7 +204,7 @@ export function EmployerPortal() {
         <section className="panel workbench-detail">
           <h2>{tr("Нет доступных заказов")}</h2>
           <p>
-            {tr("Ваш представитель должен быть привязан к заказчику с действующим доступом. Обратитесь в учебный центр для проверки доступа.")}</p>
+            {tr("Обратитесь в учебный центр для проверки доступа к заказам.")}</p>
         </section>
       )}
       <PortalEvidence
@@ -225,7 +223,7 @@ export function EmployerPortal() {
         <section className="panel workbench-detail">
           <h2>{request.title}</h2>
           <p>
-            {tr("Редакция")}{" "}{request.revision}{tr(". Меняйте только отличия. Фактические результаты и выпуск документов подтверждает учебный центр.")}</p>
+            {tr("Редакция")}{" "}{request.revision}{tr(". Результаты и выпуск документов подтверждает учебный центр.")}</p>
           <div className="table-scroll">
             <table>
               <thead>
@@ -308,7 +306,7 @@ export function EmployerPortal() {
             />
           </label>
           <p>
-            {tr("Строк с изменениями:")}{" "}{changes.length}{tr(". Отправка предложения сохраняет историю; опубликованные документы остаются неизменными.")}</p>
+            {tr("Строк с изменениями:")}{" "}{changes.length}{tr(". Выданные документы не изменятся.")}</p>
           <div className="toolbar-actions">
             {order.permissions.includes("APPROVE_DATA") && (
               <button
@@ -342,7 +340,7 @@ export function EmployerPortal() {
           </div>
           {!request.fullRosterAllowed && (
             <p className="fine-print">
-              {tr("Ваш доступ охватывает часть списка. Подтвердить весь состав может представитель с доступом ко всем получателям.")}</p>
+              {tr("Для подтверждения всего списка нужен доступ ко всем получателям.")}</p>
           )}
         </section>
       )}

@@ -152,7 +152,7 @@ export function LearnerIdentity({
         {center && <p>{center}</p>}
         {recipientName && <p><strong>{recipientName}</strong> · {email}</p>}
         {inspecting && <p role="status">{registration ? t("Проверяем доступность регистрации…", "Тіркелу мүмкіндігін тексерудеміз…") : t("Открываем приглашение…", "Шақыруды ашуда…")}</p>}
-        {registration && registrationConfig && !registrationConfig.enabled && <Notice>{t("Самостоятельная регистрация сейчас закрыта. Получите личную ссылку приглашения у своего учебного центра. Если кабинет уже создан, войдите в него.", "Өз бетіңізше тіркелу қазір жабық. Оқу орталығынан жеке шақыру сілтемесін алыңыз. Кабинет бұрын жасалған болса, оған кіріңіз.")} <Link href="/login">{t("Войти", "Кіру")}</Link></Notice>}
+        {registration && registrationConfig && !registrationConfig.enabled && <Notice>{t("Регистрация по приглашению учебного центра.", "Оқу орталығының шақыруы бойынша тіркелу.")} <Link href="/login">{t("Войти", "Кіру")}</Link></Notice>}
         {!registration && !token && <Notice>{t("Откройте личную ссылку, которую передал учебный центр.", "Оқу орталығы берген жеке сілтемені ашыңыз.")}</Notice>}
         {!!error && (
           <Notice>

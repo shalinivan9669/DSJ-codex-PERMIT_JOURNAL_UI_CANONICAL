@@ -70,7 +70,7 @@ export function EmployerAccessRequests({ manager = false, t: suppliedText }: { m
     <h3>{manager ? t("Запросы представителей", "Өкілдердің сұраулары") : t("Доступ к организации", "Ұйымға рұқсат")}</h3>
     {!!error && <Notice><span role="alert">{lmsError(error, t)}</span> <button type="button" disabled={loading || busy} onClick={() => setRefresh(value => value + 1)}>{t("Повторить загрузку", "Қайта жүктеу")}</button></Notice>}
     {loading && <p role="status">{t("Загружаем запросы…", "Сұраулар жүктелуде…")}</p>}
-    {message && <p role="status">{t("Запрос передан администратору центра. Решение появится здесь.", "Сұрау орталық әкімшісіне берілді. Шешім осы жерде көрсетіледі.")}</p>}
+    {message && <p role="status">{t("Запрос отправлен. Ожидаем решения центра.", "Сұрау жіберілді. Орталық шешімі күтілуде.")}</p>}
     {items && <>
       {manager && !pending.length && <p>{t("Новых запросов нет", "Жаңа сұраулар жоқ")}</p>}
       <ul className="lms-list">{items.map(item => <li key={item.id}>
@@ -87,7 +87,6 @@ export function EmployerAccessRequests({ manager = false, t: suppliedText }: { m
         {!manager && item.status === "APPROVED" && <button type="button" onClick={() => window.location.reload()}>{t("Открыть кабинет организации", "Ұйым кабинетін ашу")}</button>}
       </li>)}</ul>
       {!manager && !pending.length && <form onSubmit={submit}>
-        <p>{t("Укажите организацию, которую представляете. Центр проверит полномочия и откроет доступ.", "Өзіңіз өкілдік ететін ұйымды көрсетіңіз. Орталық өкілеттікті тексеріп, рұқсат береді.")}</p>
         <div className="form-grid">
           <label>{t("Название организации", "Ұйым атауы")}<input required maxLength={300} value={organizationName} disabled={busy} onChange={event => setOrganizationName(event.target.value)} /></label>
           <label>{t("БИН · если известен", "БСН · белгілі болса")}<input inputMode="numeric" pattern="[0-9]{12}" maxLength={12} value={bin} disabled={busy} onChange={event => setBin(event.target.value)} /></label>
@@ -125,7 +124,7 @@ function AccessDecision({ request, t, onDone, onClose }: { request: AccessReques
     ] as [string, string][]).map(([permission, label]) => <label className="checkbox" key={permission}><input type="checkbox" checked={permissions.includes(permission)} disabled={busy || permission === "READ"} onChange={event => { setPermissions(previous => event.target.checked ? [...previous, permission] : previous.filter(value => value !== permission)); setConfirmed(false); }} />{label}</label>)}</div>
     <label>{t("Доступ до", "Рұқсат мерзімі")}<input type="datetime-local" value={expiresAt} disabled={busy} onChange={event => { setExpiresAt(event.target.value); setConfirmed(false); }} /></label>
     <label>{t("Комментарий к решению", "Шешімге түсініктеме")}<textarea required minLength={3} maxLength={2000} aria-describedby={`decision-note-${request.id}`} value={note} disabled={busy} onChange={event => setNote(event.target.value)} /></label>
-    <p id={`decision-note-${request.id}`} className="muted">{t("Укажите основание решения: не менее 3 символов. Представитель увидит этот комментарий.", "Шешімнің негізін кемінде 3 таңбамен көрсетіңіз. Өкіл бұл түсініктемені көреді.")}</p>
+    <p id={`decision-note-${request.id}`} className="muted">{t("Укажите причину. Представитель увидит комментарий.", "Себебін көрсетіңіз. Өкіл түсініктемені көреді.")}</p>
     <label className="checkbox"><input type="checkbox" checked={confirmed} disabled={busy} onChange={event => setConfirmed(event.target.checked)} />{t("Полномочия представителя проверены. Предоставить указанные права к данным выбранной организации.", "Өкілдің өкілеттіктері тексерілді. Таңдалған ұйым деректеріне көрсетілген құқықтарды беру.")}</label>
     <div className="actions">
       <button type="button" className="primary" disabled={busy || !confirmed || !customerId || note.trim().length < 3 || !expiresAt || new Date(expiresAt).getTime() <= Date.now()} onClick={() => void decide("APPROVE")}>{busy ? t("Сохраняем…", "Сақталуда…") : t("Предоставить доступ", "Рұқсат беру")}</button>

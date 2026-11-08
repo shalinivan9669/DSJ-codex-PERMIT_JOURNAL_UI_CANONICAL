@@ -115,11 +115,7 @@ export function BulkDialog({
       }}
       wide
     >
-      <p>
-        Выбранные строки остаются выбранными при поиске. Изменение затронет
-        только отмеченных получателей и поля. Данные человека не зависят от
-        направления документов. Перед сохранением проверьте список изменений.
-      </p>
+
       {visibleError && (
         <div ref={errorRef} tabIndex={-1}>
           <Notice>{visibleError}</Notice>
@@ -128,9 +124,7 @@ export function BulkDialog({
       <details className="bulk-recipient-fields">
         <summary>Должность и место работы</summary>
         <p className="fine-print">
-          Заполните общую организацию или должность для выбранной группы. RU и
-          KZ независимы. В режиме «Только пустые» индивидуальные значения
-          сохраняются; замена требует отдельного подтверждения.
+          «Только пустые» сохраняет уже заполненные значения.
         </p>
         <div className="form-grid">
           {bulkRecipientFields.map(([field, label]) => (
@@ -253,14 +247,7 @@ export function BulkDialog({
           </select>
         </label>
       </div>
-      {mode === "INHERITED" && (
-        <p className="fine-print">
-          Ручные, импортированные и явно очищенные значения сохраняются. Новые
-          значения фиксируются как исключения выбранных назначений; общий
-          протокол требует одинаковых сведений события. Должность и место работы
-          в этом режиме не меняются.
-        </p>
-      )}
+
       <div className="form-grid">
         {bulkFields.map(([field, label, type]) => (
           <div key={field} className="bulk-field">
@@ -302,10 +289,7 @@ export function BulkDialog({
           </div>
         ))}
       </div>
-      <p className="fine-print">
-        Фактические результаты подтверждаются отдельно для конкретного события.
-        Эти поля не меняют результат проверки.
-      </p>
+
       {review && (
         <section
           ref={previewRef}

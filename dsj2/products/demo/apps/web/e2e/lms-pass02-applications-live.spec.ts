@@ -62,7 +62,7 @@ test("N01/N02 real B2C and anonymous B2B applications reach accepted order and a
     await learner
       .getByRole("button", { name: "Отправить заявку", exact: true })
       .click();
-    await expect(learner.getByText(/Заявка сохранена/)).toBeVisible();
+    await expect(learner.getByText(/Заявка отправлена/)).toBeVisible();
     const mine = await learner.request
       .get("/api/lms/applications")
       .then((response) => response.json());
@@ -143,7 +143,7 @@ test("N01/N02 real B2C and anonymous B2B applications reach accepted order and a
     await anonymous
       .getByRole("button", { name: "Отправить заявку", exact: true })
       .click();
-    await expect(anonymous.getByText(/Заявка сохранена/)).toBeVisible();
+    await expect(anonymous.getByText(/Заявка отправлена/)).toBeVisible();
     await anonymous.screenshot({
       path: path.join(output, "anonymous-receipt.png"),
       fullPage: true,
@@ -377,7 +377,7 @@ test("N01 confirmed employer applies without reentering organization or verified
     .getByRole("button", { name: "Отправить заявку", exact: true })
     .click();
   await expect(
-    page.getByText("Заявка сохранена", { exact: true }),
+    page.getByText("Заявка отправлена", { exact: true }),
   ).toBeVisible();
   await writeFile(
     path.join(output, "UX_KNOWN_EMPLOYER_APPLICATION.json"),

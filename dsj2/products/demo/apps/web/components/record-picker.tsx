@@ -92,10 +92,7 @@ export function RecordPicker({
           }
         />
       </label>
-      {kind === "recipients" && (
-        <p className="fine-print">
-          {tr("Используем личные данные и подтверждённое фото. Даты нового события, результаты и документы выбираются заново.")}</p>
-      )}
+
       {error && failedQuery === query && (
         <Notice>
           {error} {" "}{tr("Результаты этого поиска недоступны; измените запрос или повторите поиск.")}</Notice>

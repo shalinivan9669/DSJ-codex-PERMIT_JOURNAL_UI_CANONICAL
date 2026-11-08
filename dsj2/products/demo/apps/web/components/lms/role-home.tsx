@@ -14,7 +14,7 @@ export function AdministrativeWorkspace({ context, t }: { context: AppContext; t
     <section className="panel lms-panel">
       <h2>{context.tenant.name}</h2>
       <ul className="lms-list">
-        <li><div><strong>{t("Пользователи и учебные полномочия", "Пайдаланушылар және оқу өкілеттіктері")}</strong><div className="lms-list-meta">{t("Назначения преподавателей, методистов и комиссии", "Оқытушылар, әдіскерлер және комиссия тағайындаулары")}</div></div><Link href="/lms/learning-roles">{t("Управлять полномочиями", "Өкілеттіктерді басқару")}</Link></li>
+        <li><div><strong>{t("Пользователи и учебные полномочия", "Пайдаланушылар және оқу өкілеттіктері")}</strong></div><Link href="/lms/learning-roles">{t("Управлять полномочиями", "Өкілеттіктерді басқару")}</Link></li>
         <li><strong>{t("Программы и материалы", "Бағдарламалар және материалдар")}</strong><Link href="/lms">{t("Открыть библиотеку", "Кітапхананы ашу")}</Link></li>
         <li><strong>{t("Результаты и документы", "Нәтижелер және құжаттар")}</strong><Link href="/lms/results">{t("Открыть результаты", "Нәтижелерді ашу")}</Link></li>
         <li><strong>{t("Статистика обучения", "Оқу статистикасы")}</strong><Link href="/lms/reports">{t("Открыть отчёты", "Есептерді ашу")}</Link></li>
