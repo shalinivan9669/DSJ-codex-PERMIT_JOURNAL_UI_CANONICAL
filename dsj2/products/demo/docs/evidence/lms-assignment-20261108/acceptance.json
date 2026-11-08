@@ -1,0 +1,86 @@
+{
+  "date": "2026-11-08",
+  "status": "LOCAL_ASSIGNMENT_FLOW_VERIFIED",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "previousCommit": "ee2839c",
+  "scope": "Learning assignment loading, empty programme guidance, methodist handoff and safe recovery",
+  "findings": [
+    "A fresh tenant with no published programmes returns HTTP 200. Empty programmes alone did not reproduce the screenshot server failure; its production correlation ID was not traced.",
+    "Context reads, selection failures and assignment failures shared one error and a retry that only reloaded context.",
+    "Archive entries could be selected although assignment rejects archived organizations.",
+    "Completed operations with failed rows were reused and returned cached failures after data was repaired.",
+    "Pre-assignment group/access settings were lost on catalogue navigation; an older draft could override an explicit course choice.",
+    "Pending recovery could change the payload after server group updates or drop a null customerId on reload."
+  ],
+  "implemented": [
+    "Separate context loading/error from successful empty catalogue and assignment outcomes; explicit disabled-action explanations and action-specific retry.",
+    "Methodist preparation/review/publication guidance, safe return from catalogue and explicit programme refresh.",
+    "Scoped, validated session drafts preserve selected people, programme, group and access policy.",
+    "Published-version selection and pause/unavailable guidance; explicit course links take priority over old drafts.",
+    "Unknown assignment results freeze the submitted payload and reuse the same operation; completed failed rows start a new attempt.",
+    "Archived organizations cannot be selected; existing archived context has a visible correction route.",
+    "Loading/submission locks protect selection and async organization changes."
+  ],
+  "verification": {
+    "rootUnitTests": {
+      "status": "PASS",
+      "passed": 318,
+      "failed": 0
+    },
+    "webUnitTests": {
+      "status": "PASS",
+      "passed": 269,
+      "failed": 0,
+      "newHelperTests": 4
+    },
+    "browser": {
+      "status": "PASS",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "durationMs": 74698.421,
+      "file": "apps/web/e2e/lms-assignment-recovery-live.spec.ts",
+      "environment": "Real isolated API and disposable PostgreSQL at local ports 4168/55468; Chromium desktop and 390px mobile viewport",
+      "cases": [
+        "Fresh SUPER_ADMIN: load failure, retry and legitimate empty catalogue",
+        "Fresh DIRECTOR: load failure, retry and legitimate empty catalogue",
+        "Fresh OPERATOR: load failure, retry and legitimate empty catalogue",
+        "Methodist creates programme and submits review; director approves/publishes; operator assigns preserved mobile draft",
+        "Failed context refresh preserves selected people, programme, group and access settings",
+        "Accepted assignment with lost response repeats the same operation without duplicate enrollments",
+        "Archived organization excluded from picker; archived deep-link recovery",
+        "Known assignment rejection remains distinct from failed context refresh and succeeds after correction",
+        "Completed failed rows are retried with a new operation and the same selected set",
+        "Pending group assignment survives group rename/deadline change and page reload with identical submitted payload"
+      ],
+      "authoringBoundary": "Synthetic lesson content populated through methodist authenticated API; create/review/approve/publish and assignment exercised through UI."
+    },
+    "lint": "PASS: pnpm lint",
+    "typecheck": "PASS: pnpm -r typecheck",
+    "build": "PASS: pnpm build (DEMO_STANDALONE=0 for local Windows packaging; isolated .next-assignment-build output)",
+    "visualReview": "PASS: mobile loading failure, empty catalogue, selected draft, unknown outcome and completed assignment",
+    "designDetector": "PASS: zero findings on changed UI",
+    "gitDiffCheck": "PASS",
+    "buildWarnings": "Existing author.css autoprefixer alignment and Next/ESLint configuration warnings; exit 0."
+  },
+  "verificationCorrections": [
+    "Initial load fault injection adjusted for development duplicate effect requests.",
+    "A run interrupted by development hot reload was replaced by a clean settled-source run.",
+    "Test authentication respects the existing HTTP 429 cooldown; server auth policy was not changed.",
+    "Selected recipient IDs compared as a set, preserving server order freedom."
+  ],
+  "notPerformed": [
+    "Production deployment, production log correlation lookup or cloud data changes",
+    "Full historical integration/render suites",
+    "Physical iPhone/Safari testing"
+  ],
+  "screenshotsStorage": "Local ignored synthetic evidence files; raw browser results in .runtime/commission-flow/evidence/lms-assignment/results.json",
+  "screenshots": [
+    "context-failure-OPERATOR-390.png",
+    "empty-OPERATOR-390.png",
+    "published-programme-preserved-draft-390.png",
+    "lost-assignment-response-390.png",
+    "assignment-complete-390.png"
+  ]
+}

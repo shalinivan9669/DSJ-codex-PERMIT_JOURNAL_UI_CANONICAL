@@ -310,6 +310,8 @@ for (const recovery of ["same-page", "settings-return"] as const) {
     const submitted = await detail(page, seeded.request.id);
     expect(submitted.approval.status).toBe("PENDING");
     await expect(transfer).toHaveCount(0);
+    if (!seeded.request.items?.[0])
+      throw new Error("Synthetic request must contain its first recipient");
     expect([
       ...new Set(
         submitted.approval.assignments.map(

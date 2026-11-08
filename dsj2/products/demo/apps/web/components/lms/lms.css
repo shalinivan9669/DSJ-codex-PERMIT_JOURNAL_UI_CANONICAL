@@ -194,6 +194,10 @@
   font-weight: 600;
   padding: 0 6px;
 }
+.lms-workspace .lms-assignment-person {
+  border: 0;
+  padding: 0;
+}
 .lms-editor-actions {
   display: flex;
   flex-wrap: wrap;

@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Notice } from "@demo/ui";
 import { lms, type Course, type Paged } from "@/lib/lms-api";
+import { safeLmsReturnTo } from "@/lib/lms-navigation";
 import { emptyCourse, emptyProfile } from "./course-editor";
 import { PublicityEditor } from "./public-catalogue";
 import {
@@ -27,6 +28,8 @@ export function Catalogue({
   issuer?: string;
 }) {
   const router = useRouter();
+  const returnTo = safeLmsReturnTo(useSearchParams().get("returnTo"));
+  const assignmentReturnTo = returnTo && /^\/lms\/assign(?:\?|$)/.test(returnTo) ? returnTo : null;
   const [data, setData] = useState<Paged<Course>>({ items: [], total: 0 });
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -72,6 +75,7 @@ export function Catalogue({
   return (
     <>
       <LmsHeading title={t("Программы обучения", "Оқу бағдарламалары")}>
+        {assignmentReturnTo && <Link className="button" href={assignmentReturnTo}>{t("Вернуться к назначению", "Тағайындауға оралу")}</Link>}
         {canCreate && (
           <button
             className="primary lms-primary"
