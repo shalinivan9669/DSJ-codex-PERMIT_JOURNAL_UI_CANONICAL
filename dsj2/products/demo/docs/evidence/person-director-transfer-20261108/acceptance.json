@@ -1,0 +1,107 @@
+{
+  "date": "2026-11-08",
+  "status": "LOCAL_TRANSFER_RECOVERY_VERIFIED_AND_REAL_REQUEST_PENDING",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "previousCommit": "5373056",
+  "scope": "Personal-request handoff to director and recovery from unsaved local training preparation in autonomous DEMO",
+  "implemented": [
+    "Current request saves/navigation flush only preparation owned by its tenant, user and request; other pending input is retained.",
+    "Reopening the same preparation replaces a detached failed callback after restoring its candidate; simultaneous inline/modal owners are prevented.",
+    "A failed preparation produces an addressed error: the repair action opens the exact result/calendar and focuses its save retry without applying an exam result.",
+    "Transfer is the primary action; preview is secondary; successful validation describes the actual next step separately from approval and signing."
+  ],
+  "changedFiles": [
+    "apps/web/components/batch-ready-panel.tsx",
+    "apps/web/components/editor.tsx",
+    "apps/web/components/event-context.tsx",
+    "apps/web/components/training-date-settings.tsx",
+    "apps/web/lib/preparation-saves.ts",
+    "apps/web/lib/preparation-storage.ts",
+    "apps/web/lib/use-durable-preparation.ts",
+    "apps/web/test/preparation-saves.test.ts",
+    "apps/web/e2e/person-director-transfer-live.spec.ts"
+  ],
+  "verification": {
+    "unit": {
+      "rootPassed": 327,
+      "webPassed": 303,
+      "failed": 0,
+      "skipped": 0
+    },
+    "browser": {
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "durationMs": 242899.249,
+      "files": [
+        "apps/web/e2e/person-director-transfer-live.spec.ts",
+        "apps/web/e2e/commission-recovery-live.spec.ts"
+      ],
+      "environment": "Disposable PostgreSQL/API, synthetic tenants and Chromium desktop/390px",
+      "evidence": ".runtime/commission-flow/evidence/person-director-verified-final/results.json",
+      "fullPipeline": "OPERATOR validates and submits 3 passed courses / 6 exact document assignments; DIRECTOR reviews and approves; OPERATOR generates 6 real PDFs in AWAITING_SIGNATURE.",
+      "recovery": "Green validation followed by localStorage failure blocks transfer before POST; repair focuses the exact saved candidate, inline/modal roundtrip retains one owner, retry saves without applying outcomes, COMPANY and PERSON then transfer.",
+      "existingRegressions": "Commission repair in current page/settings, unknown accepted response recovery without duplicate, accepted submit plus failed refresh, and addressed data repair."
+    },
+    "serverProbes": {
+      "passed": 2,
+      "evidence": [
+        ".runtime/commission-flow/person-approval-probe.json",
+        ".runtime/commission-flow/person-approval-race-probe.json"
+      ],
+      "scope": "Isolated real DB: PERSON 3/6 handoff/approval/issuance, concurrent identical submits use one proposal, stale revision fails then current-revision retry succeeds."
+    },
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "uiDetectorFindings": 0,
+    "visualReview": "Mobile primary transfer, submitted state, addressed preparation failure/repair, and six rendered originals awaiting signatures inspected.",
+    "buildEnvironment": "Windows local production build in separate .next-transfer-final-build with DEMO_STANDALONE=0; deployment configuration unchanged."
+  },
+  "productionCheck": {
+    "initialRead": "Actual PERSON request was DRAFT, revision 18, approval null; server validation valid with 6 documents, 3 protocols, no issues.",
+    "frontendDryRun": "One intercepted click formed expectedRevision 18 and exact six assignment IDs; no business write forwarded during dry run.",
+    "actualTransfer": {
+      "http": 201,
+      "assignments": 6,
+      "approvalStatus": "PENDING",
+      "revisionBefore": 18,
+      "revisionAfter": 18,
+      "attempts": 1,
+      "decisions": 0,
+      "signatures": 0
+    },
+    "directorRead": {
+      "http": 200,
+      "role": "DIRECTOR",
+      "status": "PENDING",
+      "assignments": 6,
+      "reviewIssues": 0,
+      "needsPreparation": false,
+      "decision": null
+    },
+    "sessions": "Own operator/director sessions logged out.",
+    "originalReportedError": "NOT_REPRODUCED. Actual live transfer succeeded; no claim that an original server exception was identified.",
+    "evidence": [
+      ".runtime/commission-flow/cloud-transfer-result.json",
+      ".runtime/commission-flow/cloud-director-verification.json"
+    ],
+    "businessChange": "The user's existing ready request was submitted for director review; no approval, issuance or signature performed in production."
+  },
+  "preserved": [
+    "Server approval/role/tenant checks",
+    "Numbering and immutable issued files",
+    "Signature requirements",
+    "Stored preparation format and explicit result application",
+    "Database schema and migrations"
+  ],
+  "limits": {
+    "codeDeployment": "NOT_PERFORMED",
+    "physicalIphoneSafari": "NOT_TESTED",
+    "physicalPrinting": "NOT_PERFORMED",
+    "officialEgovAndNcaSignatures": "NOT_PERFORMED",
+    "fullHistoricalIntegrationAndRenderSuites": "NOT_RUN"
+  },
+  "runtime": "Owned API 4168/web 3168/PostgreSQL 55468 stopped and listeners verified absent; test data/evidence retained."
+}

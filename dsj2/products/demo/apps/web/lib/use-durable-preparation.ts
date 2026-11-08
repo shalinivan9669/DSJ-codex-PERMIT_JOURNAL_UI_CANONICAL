@@ -1,48 +1,27 @@
 "use client";
 import { useEffect, useId, useRef, useState } from "react";
 import { BEFORE_LOGOUT_EVENT } from "./api";
+import { PreparationSaves } from "./preparation-saves";
 import {
   parsePreparation,
   preparationKey,
   writePreparation,
   type PreparationIdentity,
   type PreparationRecord,
+  type PreparationScope,
 } from "./preparation-storage";
 
-const activeSaves = new Map<
-  string,
-  { key: string; dirty: () => boolean; flush: () => boolean }
->();
-const pendingRecords = new Map<
-  string,
-  {
-    record: PreparationRecord<unknown> | null;
-    expectedRaw: string | null;
-    error: string;
-  }
->();
-export function preparationsNeedSave() {
-  return (
-    pendingRecords.size > 0 ||
-    [...activeSaves.values()].some((save) => save.dirty())
-  );
+const saves = new PreparationSaves();
+const { pendingRecords } = saves;
+// Omit scope only for leaving the browser/account, where all pending drafts matter.
+export function preparationsNeedSave(scope?: PreparationScope) {
+  return saves.needsSave(scope);
 }
-export function flushPreparations() {
-  const results = [...activeSaves.values()].map((save) => save.flush());
-  // A collapsed/removed target retains failed preparation in memory until retry.
-  for (const [key, pending] of pendingRecords) {
-    if (
-      [...activeSaves.values()].some((save) => save.key === key && save.dirty())
-    )
-      continue;
-    try {
-      writePreparation(localStorage, key, pending.record, pending.expectedRaw);
-      pendingRecords.delete(key);
-    } catch {
-      results.push(false);
-    }
-  }
-  return results.every(Boolean);
+export function flushPreparations(scope?: PreparationScope) {
+  return saves.flush(() => localStorage, scope);
+}
+export function unsavedPreparation(scope: PreparationScope) {
+  return saves.unsaved(scope);
 }
 
 export function useDurablePreparation<T>({
@@ -88,6 +67,8 @@ export function useDurablePreparation<T>({
       if (["pending", "error"].includes(next.status) && !readFailed.current)
         pendingRecords.set(next.key, {
           record: next.record,
+          identity,
+          title,
           expectedRaw: expectedRaw.current,
           error: next.error,
         });
@@ -167,9 +148,11 @@ export function useDurablePreparation<T>({
   useEffect(() => {
     load();
     const saveId = key + ":" + instanceId;
-    if (key)
-      activeSaves.set(saveId, {
+    if (identity)
+      saves.register(saveId, {
         key,
+        identity,
+        title,
         dirty: () =>
           current.current.key === key &&
           ["pending", "error"].includes(current.current.status),
@@ -192,7 +175,7 @@ export function useDurablePreparation<T>({
     window.addEventListener("storage", storageChanged);
     return () => {
       const saved = flush();
-      if (key && saved) activeSaves.delete(saveId);
+      if (key) saves.release(saveId, saved);
       window.removeEventListener("storage", storageChanged);
     };
     // Identity is the storage boundary. Context changes must preserve the candidate.
@@ -214,18 +197,20 @@ export function useDurablePreparation<T>({
       );
     }
     function navigate(event: MouseEvent) {
+      const scope = latest.current.identity;
       const link = (event.target as HTMLElement).closest?.("a");
       if (
+        !scope ||
         !link ||
         link.target === "_blank" ||
         link.hasAttribute("download") ||
         event.ctrlKey ||
         event.metaKey ||
         event.shiftKey ||
-        !preparationsNeedSave()
+        !preparationsNeedSave(scope)
       )
         return;
-      if (!flushPreparations()) {
+      if (!flushPreparations(scope)) {
         event.preventDefault();
         event.stopImmediatePropagation();
       }

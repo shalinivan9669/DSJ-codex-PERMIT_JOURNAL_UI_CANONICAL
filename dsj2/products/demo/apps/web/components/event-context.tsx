@@ -111,6 +111,7 @@ export function EventContext({
   preparationOwner,
   visibleEventIds,
   existingOnly = false,
+  focusPreparation,
 }: {
   draft: Draft;
   centerCommon?: CommonFields;
@@ -126,6 +127,7 @@ export function EventContext({
   preparationOwner?: PreparationOwner;
   visibleEventIds?: string[];
   existingOnly?: boolean;
+  focusPreparation?: { targetId: string; kind: "outcome" | "calendar" };
 }) {
   const [expanded, setExpanded] = useState(embedded || primary);
   const sectionRef = useRef<HTMLElement>(null);
@@ -136,6 +138,17 @@ export function EventContext({
   const [contextBusy, setContextBusy] = useState(false);
   const applying = useRef(false);
   const disabled = externalDisabled || contextBusy;
+  const preparationScope = useRef(
+    preparationOwner ? { ...preparationOwner, requestId: draft.id } : undefined,
+  );
+  preparationScope.current = preparationOwner
+    ? { ...preparationOwner, requestId: draft.id }
+    : undefined;
+  function flushRequestPreparations() {
+    return (
+      !preparationScope.current || flushPreparations(preparationScope.current)
+    );
+  }
   const contextBefore = useRef<TrainingEventInput[] | null>(null);
   async function commitContext() {
     const before = contextBefore.current;
@@ -157,7 +170,12 @@ export function EventContext({
     }
   }
   const [direction, setDirection] = useState("pb");
-  const [activeId, setActiveId] = useState(draft.events?.[0]?.id || "");
+  const [activeId, setActiveId] = useState(
+    draft.events?.find((event) => event.id === focusPreparation?.targetId)
+      ?.id ||
+      draft.events?.[0]?.id ||
+      "",
+  );
 
   const [replaceEmpty, setReplaceEmpty] = useState(false);
   const [joinExisting, setJoinExisting] = useState(false);
@@ -230,6 +248,34 @@ export function EventContext({
   const event =
     visibleEvents.find((e) => e.id === activeId) || visibleEvents[0];
   const activeEventId = event?.id || "";
+  useEffect(() => {
+    if (!focusPreparation) return;
+    if (
+      focusPreparation.targetId !== "request" &&
+      visibleEvents.some((event) => event.id === focusPreparation.targetId) &&
+      activeEventId !== focusPreparation.targetId
+    ) {
+      setActiveId(focusPreparation.targetId);
+      return;
+    }
+    const frame = requestAnimationFrame(() => {
+      const section = sectionRef.current?.querySelector<HTMLElement>(
+        `[data-preparation-target="${CSS.escape(focusPreparation.targetId)}"][data-preparation-kind="${focusPreparation.kind}"]`,
+      );
+      if (!section) return;
+      let parent: HTMLElement | null = section;
+      while (parent && parent !== sectionRef.current) {
+        if (parent instanceof HTMLDetailsElement) parent.open = true;
+        parent = parent.parentElement;
+      }
+      const target =
+        section.querySelector<HTMLElement>("[data-preparation-retry]") ||
+        section.querySelector<HTMLElement>("summary");
+      target?.focus({ preventScroll: true });
+      section.scrollIntoView({ block: "center" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [focusPreparation, activeEventId]);
   const eventIndex = events.findIndex((row) => row.id === activeEventId);
   const [topics, setTopics] = useState<
     (Pick<CommonFields, (typeof courseProgramKeys)[number]> & {
@@ -422,7 +468,8 @@ export function EventContext({
         nativeEvent as CustomEvent<{ eventId: string; field: string }>
       ).detail;
       if (!target?.eventId || !target.field) return;
-      if (target.eventId !== activeEventId && !flushPreparations()) return;
+      if (target.eventId !== activeEventId && !flushRequestPreparations())
+        return;
 
       setActiveId(target.eventId);
       setExpanded(true);
@@ -1251,7 +1298,7 @@ export function EventContext({
           {!primary && (
             <button
               onClick={() => {
-                if (expanded && !flushPreparations()) return;
+                if (expanded && !flushRequestPreparations()) return;
                 setExpanded(!expanded);
               }}
               aria-expanded={expanded}
@@ -1332,7 +1379,7 @@ export function EventContext({
                   value={activeEventId}
                   disabled={disabled}
                   onChange={(e) => {
-                    if (!flushPreparations()) return;
+                    if (!flushRequestPreparations()) return;
                     setActiveId(e.target.value);
                   }}
                 >
@@ -1643,6 +1690,8 @@ export function EventContext({
                 )}
               <details
                 className="outcome-entry"
+                data-preparation-target={activeEventId}
+                data-preparation-kind="outcome"
                 key={`${activeEventId}:${hasUnconfirmedResults}`}
                 open={(primary && hasUnconfirmedResults) || undefined}
               >
@@ -1676,7 +1725,11 @@ export function EventContext({
                 {preparation.error && (
                   <Notice kind="error">
                     {preparation.error}
-                    <button type="button" onClick={preparation.retry}>
+                    <button
+                      type="button"
+                      data-preparation-retry
+                      onClick={preparation.retry}
+                    >
                       Повторить сохранение подготовки
                     </button>
                     <button type="button" onClick={preparation.reload}>

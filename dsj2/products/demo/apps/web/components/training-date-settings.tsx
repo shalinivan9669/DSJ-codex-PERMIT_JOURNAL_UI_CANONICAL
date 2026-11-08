@@ -135,7 +135,7 @@ export function TrainingDateSettings({
     return `${hours}; ${calendar}; ${anchor}. Толық емес күн жоғарыға дөңгелектенеді, оқу күндері қамтылады. Дереккөз: ${rule.source}`;
   }
   return (
-    <details className="field-provenance">
+    <details className="field-provenance" data-preparation-target={preparationIdentity?.targetId} data-preparation-kind="calendar">
       <summary>{tr("Правило расчёта периода обучения")}</summary>
       <p>{description()}</p>
       <p className="fine-print">
@@ -157,7 +157,7 @@ export function TrainingDateSettings({
       {preparation.error && (
         <Notice kind="error">
           {tr(preparation.error)}
-          <button type="button" onClick={preparation.retry}>
+          <button type="button" data-preparation-retry onClick={preparation.retry}>
             {tr("Повторить сохранение графика")}</button>
           <button type="button" onClick={preparation.reload}>
             {tr("Загрузить сохранённую подготовку графика")}</button>

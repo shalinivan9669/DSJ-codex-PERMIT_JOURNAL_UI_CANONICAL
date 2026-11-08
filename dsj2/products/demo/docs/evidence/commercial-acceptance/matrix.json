@@ -1,4 +1,12 @@
 {
+  "personDirectorTransfer20261108": {
+    "date": "2026-11-08",
+    "status": "LOCAL_TRANSFER_RECOVERY_VERIFIED_AND_REAL_REQUEST_PENDING",
+    "branch": "codex/korochki-commission-flow-20261108",
+    "evidence": "../person-director-transfer-20261108/acceptance.json",
+    "deployment": "NOT_PERFORMED",
+    "productionAction": "EXISTING_READY_REQUEST_SUBMITTED_FOR_DIRECTOR_REVIEW"
+  },
   "employerPerson20261108": {
     "date": "2026-11-08",
     "status": "LOCAL_EMPLOYER_PERSON_FLOW_VERIFIED",

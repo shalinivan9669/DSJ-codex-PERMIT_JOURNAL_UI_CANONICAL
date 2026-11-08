@@ -2,8 +2,8 @@ import type { TrainingEventInput } from "@demo/contracts";
 import type { Draft } from "./types";
 
 export type PreparationOwner = { tenantId: string; userId: string };
-export type PreparationIdentity = PreparationOwner & {
-  requestId: string;
+export type PreparationScope = PreparationOwner & { requestId: string };
+export type PreparationIdentity = PreparationScope & {
   targetId: string;
   kind: "outcome" | "calendar";
 };

@@ -225,6 +225,7 @@ export function BatchReadyPanel({
   return (
     <section
       className="outcome-entry batch-ready-panel"
+      id="request-transfer"
       aria-label="Готовность и состав следующего выпуска"
     >
       <h3>Передача директору</h3>
@@ -392,6 +393,10 @@ export function BatchReadyPanel({
       ) : currentFeedback?.kind === "success" ? null : (
         <div className="batch-submit-actions">
           <button
+            type="button"
+            className={
+              draft.approval?.status === "APPROVED" ? undefined : "primary"
+            }
             disabled={controlsDisabled || (!needsRefresh && !chosen.length)}
             onClick={() =>
               needsRefresh

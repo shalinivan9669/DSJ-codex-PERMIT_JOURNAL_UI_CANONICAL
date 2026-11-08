@@ -74,6 +74,7 @@ import {
 import {
   flushPreparations,
   preparationsNeedSave,
+  unsavedPreparation,
 } from "@/lib/use-durable-preparation";
 import { requestActions } from "@/lib/request-actions";
 import { useUnsavedNavigation } from "@/lib/use-unsaved-navigation";
@@ -110,6 +111,16 @@ import type { PreviewTarget } from "@demo/contracts";
 import { Status } from "./request-list";
 
 export function Editor({ id, context }: { id: string; context: AppContext }) {
+  const preparationScope = useRef({
+    tenantId: context.tenant.id,
+    userId: context.user.id,
+    requestId: id,
+  });
+  preparationScope.current = {
+    tenantId: context.tenant.id,
+    userId: context.user.id,
+    requestId: id,
+  };
   const router = useRouter();
   const [draft, setDraft] = useState<Draft | null>(null);
   const current = useRef<Draft | null>(null);
@@ -400,8 +411,13 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
   const [extraPanel, setExtraPanel] = useState<
     "menu" | "dates" | "review" | "output" | "operations" | null
   >(null);
+  const [preparationTarget, setPreparationTarget] = useState<{
+    targetId: string;
+    kind: "outcome" | "calendar";
+  } | null>(null);
   function closeExtraPanel() {
     setExtraPanel(null);
+    setPreparationTarget(null);
   }
   useEffect(() => {
     if (!moreOpen) return;
@@ -806,7 +822,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       const request = event as CustomEvent<{
         waitUntil: (save: Promise<unknown>) => void;
       }>;
-      request.detail.waitUntil(flush(false));
+      request.detail.waitUntil(flush(false, true));
     };
     const navigate = (event: MouseEvent) => {
       const link = (event.target as HTMLElement).closest("a");
@@ -814,7 +830,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         !link ||
         (!lane.current?.dirty &&
           !pendingOrganization.current &&
-          !preparationsNeedSave()) ||
+          !preparationsNeedSave(preparationScope.current)) ||
         link.target === "_blank" ||
         link.hasAttribute("download") ||
         event.ctrlKey ||
@@ -910,12 +926,29 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         ),
       });
   }
-  async function flush(applyOrganization = true) {
+  async function flush(applyOrganization = true, leavingAccount = false) {
     clearTimeout(timer.current);
-    if (!flushPreparations())
+    if (
+      !flushPreparations(leavingAccount ? undefined : preparationScope.current)
+    ) {
+      const target = !leavingAccount
+        ? unsavedPreparation(preparationScope.current)
+        : undefined;
+      if (target)
+        throw new ApiError(422, "Не удалось сохранить подготовку обучения", {
+          details: [
+            {
+              code: "PREPARATION_UNSAVED",
+              path: `preparation.${target.kind}`,
+              eventId: target.targetId,
+              message: `Сохраните или отмените подготовку ${target.kind === "calendar" ? "графика" : "результата"}${target.title ? ` «${trainingDisplayTitle(target.title)}»` : ""}. Введённые данные остаются в этой заявке.`,
+            },
+          ],
+        });
       throw new Error(
         "Подготовка результата или графика не сохранена. Повторите сохранение в блоке обучения перед переходом.",
       );
+    }
     if (pendingOrganization.current && applyOrganization)
       await ensureOrganization();
     if (
@@ -1216,7 +1249,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     dirty: () =>
       !!lane.current?.dirty ||
       pendingOrganization.current ||
-      preparationsNeedSave(),
+      preparationsNeedSave(preparationScope.current),
     flush: () => flush(false),
     onError: (caught) => setError(errorText(caught)),
     replace: (url) => router.replace(url),
@@ -1685,6 +1718,36 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     const path = Array.isArray(issue.path)
       ? issue.path.join(".")
       : issue.path || "";
+    if (path === "preparation.outcome" || path === "preparation.calendar") {
+      const target = {
+        targetId: (issue as AddressedIssue).eventId || "request",
+        kind:
+          path === "preparation.calendar"
+            ? ("calendar" as const)
+            : ("outcome" as const),
+      };
+      // Reuse the live editor so recovery does not mount a second owner of the
+      // same unsaved candidate. Collapsed/unmounted targets reopen in the panel.
+      const section = document.querySelector<HTMLElement>(
+        `[data-preparation-target="${CSS.escape(target.targetId)}"][data-preparation-kind="${target.kind}"]`,
+      );
+      if (section) {
+        let parent: HTMLElement | null = section;
+        while (parent) {
+          if (parent instanceof HTMLDetailsElement) parent.open = true;
+          parent = parent.parentElement;
+        }
+        const action =
+          section.querySelector<HTMLElement>("[data-preparation-retry]") ||
+          section.querySelector<HTMLElement>("summary");
+        action?.focus({ preventScroll: true });
+        section.scrollIntoView({ block: "center" });
+        return;
+      }
+      setPreparationTarget(target);
+      setExtraPanel("dates");
+      return;
+    }
     if (path === "customerId") {
       const field =
         document.querySelector<HTMLElement>(
@@ -2221,25 +2284,29 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   </small>
                 )}
               </label>
-              <EventContext
-                primary
-                embedded
-                existingOnly
-                visibleEventIds={legacyPersonGroupEventIds}
-                preparationOwner={{
-                  tenantId: context.tenant.id,
-                  userId: context.user.id,
-                }}
-                fieldHints={sharedHints}
-                draft={draft}
-                centerCommon={centerCommon}
-                selectedIds={[selectedId || draft.items[0]?.id].filter(Boolean)}
-                disabled={readonly || operationBusy}
-                onChange={edit}
-                onApply={applyOperation}
-                onContextCommit={rememberContextOperation}
-                onBusyChange={setContextBusy}
-              />
+              {extraPanel !== "dates" && (
+                <EventContext
+                  primary
+                  embedded
+                  existingOnly
+                  visibleEventIds={legacyPersonGroupEventIds}
+                  preparationOwner={{
+                    tenantId: context.tenant.id,
+                    userId: context.user.id,
+                  }}
+                  fieldHints={sharedHints}
+                  draft={draft}
+                  centerCommon={centerCommon}
+                  selectedIds={[selectedId || draft.items[0]?.id].filter(
+                    Boolean,
+                  )}
+                  disabled={readonly || operationBusy}
+                  onChange={edit}
+                  onApply={applyOperation}
+                  onContextCommit={rememberContextOperation}
+                  onBusyChange={setContextBusy}
+                />
+              )}
             </details>
           )}
         </section>
@@ -2352,23 +2419,25 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                         );
                     }}
                   />
-                  <EventContext
-                    preparationOwner={{
-                      tenantId: context.tenant.id,
-                      userId: context.user.id,
-                    }}
-                    primary
-                    embedded
-                    fieldHints={sharedHints}
-                    draft={draft}
-                    centerCommon={centerCommon}
-                    selectedIds={checked}
-                    disabled={readonly || operationBusy}
-                    onChange={edit}
-                    onApply={applyOperation}
-                    onContextCommit={rememberContextOperation}
-                    onBusyChange={setContextBusy}
-                  />
+                  {extraPanel !== "dates" && (
+                    <EventContext
+                      preparationOwner={{
+                        tenantId: context.tenant.id,
+                        userId: context.user.id,
+                      }}
+                      primary
+                      embedded
+                      fieldHints={sharedHints}
+                      draft={draft}
+                      centerCommon={centerCommon}
+                      selectedIds={checked}
+                      disabled={readonly || operationBusy}
+                      onChange={edit}
+                      onApply={applyOperation}
+                      onContextCommit={rememberContextOperation}
+                      onBusyChange={setContextBusy}
+                    />
+                  )}
                 </>
               )}
             </div>
@@ -2890,7 +2959,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               </button>
             ) : actions.showPreview ? (
               <button
-                className="primary"
                 disabled={operationBusy}
                 onClick={() => void command("preview")}
               >
@@ -2953,9 +3021,18 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
               {reviewStale &&
                 "После сохранения замечания обновятся автоматически. Можно также проверить заявку повторно."}
               {validation.valid
-                ? `Документов: ${validation.documentCount ?? documentCount}. Проверьте макет перед оформлением.`
+                ? `Документов: ${validation.documentCount ?? documentCount}.`
                 : ""}
             </span>
+            {validation.valid && !reviewStale && !readonly && (
+              <p>
+                {draft.approval?.status === "PENDING"
+                  ? "Состав передан директору. Дождитесь решения по согласованию."
+                  : draft.approval?.status === "APPROVED"
+                    ? "Состав согласован. Сформируйте документы для подписания."
+                    : "Следующий шаг — «Проверить и передать директору» в блоке выше."}
+              </p>
+            )}
             {reviewStale && (
               <button
                 className="text-button"
@@ -3157,6 +3234,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
           {extraPanel === "dates" && (
             <EventContext
+              focusPreparation={preparationTarget || undefined}
               preparationOwner={{
                 tenantId: context.tenant.id,
                 userId: context.user.id,
