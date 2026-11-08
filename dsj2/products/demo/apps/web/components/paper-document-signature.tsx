@@ -2,7 +2,12 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { Notice } from "@demo/ui";
-import { api, json } from "@/lib/api";
+import { ApiError, api, json } from "@/lib/api";
+import {
+  paperSignerDefaults,
+  signingRole,
+  type SigningPerson,
+} from "@/lib/signing-flow";
 import { useCabinetError, useCabinetLanguage } from "./cabinet-language";
 
 /** Observed paper signatures are recorded separately from verified digital signatures. */
@@ -10,45 +15,65 @@ export function PaperDocumentSignature({
   requestId,
   documentId,
   documentDate,
+  requiredSigners = [],
+  disabled = false,
   onSaved,
 }: {
   requestId: string;
   documentId: string;
   documentDate?: string;
+  requiredSigners?: SigningPerson[];
+  disabled?: boolean;
   onSaved: () => Promise<void>;
 }) {
   const t = useCabinetLanguage();
   const [signedAt, setSignedAt] = useState("");
-  const [names, setNames] = useState("");
+  const [names, setNames] = useState(() =>
+    paperSignerDefaults(requiredSigners),
+  );
   const [reason, setReason] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uncertain, setUncertain] = useState(false);
   const [error, setError] = useCabinetError();
   const submitting = useRef(false);
+  const pendingBody = useRef<string | null>(null);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (submitting.current) return;
+    if (submitting.current || disabled) return;
     submitting.current = true;
     setBusy(true);
     setError(null);
     try {
       if (!saved) {
-        await api(`/print-requests/${requestId}/paper-signatures`, {
-          method: "POST",
-          body: json({
-            documentIds: [documentId],
-            signedAt,
-            signerNames: names
-              .split(/\r?\n/)
-              .map((value) => value.trim())
-              .filter(Boolean),
-            reason,
-            allRequiredSignaturesPresent: confirmed,
-          }),
+        pendingBody.current ||= json({
+          documentIds: [documentId],
+          signedAt,
+          signerNames: names.map((value) => value.trim()),
+          reason,
+          allRequiredSignaturesPresent: confirmed,
         });
+        try {
+          await api(`/print-requests/${requestId}/paper-signatures`, {
+            method: "POST",
+            body: pendingBody.current,
+          });
+        } catch (caught) {
+          if (
+            caught instanceof ApiError &&
+            (caught.status === 0 || caught.status >= 500)
+          )
+            setUncertain(true);
+          else {
+            pendingBody.current = null;
+            setUncertain(false);
+          }
+          throw caught;
+        }
         setSaved(true);
+        setUncertain(false);
       }
       await onSaved();
     } catch (caught) {
@@ -71,6 +96,14 @@ export function PaperDocumentSignature({
         )}
       </p>
       {error && <Notice>{error}</Notice>}
+      {uncertain && (
+        <p>
+          {t(
+            "Ответ сервера не получен. Повтор проверит сохранение той же отметки; поля временно заблокированы.",
+            "Сервер жауабы алынбады. Қайталау сол белгінің сақталғанын тексереді; өрістер уақытша бұғатталған.",
+          )}
+        </p>
+      )}
       {saved && (
         <Notice kind="success">
           {t(
@@ -80,7 +113,7 @@ export function PaperDocumentSignature({
         </Notice>
       )}
       <form onSubmit={submit}>
-        <fieldset disabled={busy || saved}>
+        <fieldset disabled={busy || saved || uncertain || disabled}>
           <label>
             {t("Дата подписания", "Қол қойылған күн")}
             <input
@@ -91,19 +124,34 @@ export function PaperDocumentSignature({
               onChange={(event) => setSignedAt(event.target.value)}
             />
           </label>
-          <label>
+          <p className="fine-print">
             {t(
-              "ФИО директора, председателя и преподавателя — в этом порядке, по одному в строке",
-              "Директордың, төрағаның және оқытушының аты-жөні — осы ретпен, әр жолға біреу",
+              "Проверьте ФИО по подписанному оригиналу. Если человек совмещает роли, его ФИО остаётся в каждом поле.",
+              "Аты-жөнін қол қойылған түпнұсқамен салыстырыңыз. Бір адам бірнеше рөл атқарса, оның аты-жөні әр өрісте қалады.",
             )}
-            <textarea
-              required
-              rows={3}
-              maxLength={900}
-              value={names}
-              onChange={(event) => setNames(event.target.value)}
-            />
-          </label>
+          </p>
+          {["DIRECTOR", "CHAIR", "TEACHER"].map((kind, index) => (
+            <label key={kind}>
+              {t(
+                signingRole(kind),
+                ["Директор", "Комиссия төрағасы", "Оқытушы"][index],
+              )}{" "}
+              — {t("ФИО на оригинале", "Түпнұсқадағы аты-жөні")}
+              <input
+                required
+                minLength={2}
+                maxLength={300}
+                value={names[index]}
+                onChange={(event) =>
+                  setNames((current) =>
+                    current.map((name, slot) =>
+                      slot === index ? event.target.value : name,
+                    ),
+                  )
+                }
+              />
+            </label>
+          ))}
           <label>
             {t("Основание проверки оригинала", "Түпнұсқаны тексеру негізі")}
             <textarea
@@ -128,15 +176,17 @@ export function PaperDocumentSignature({
             )}
           </label>
         </fieldset>
-        <button disabled={busy} type="submit">
+        <button disabled={busy || disabled} type="submit">
           {busy
             ? t("Сохраняем…", "Сақталуда…")
             : saved
               ? t("Обновить сведения", "Мәліметтерді жаңарту")
-              : t(
-                  "Зафиксировать бумажные подписи",
-                  "Қағаздағы қолдарды тіркеу",
-                )}
+              : uncertain
+                ? t("Проверить сохранение", "Сақталуын тексеру")
+                : t(
+                    "Зафиксировать бумажные подписи",
+                    "Қағаздағы қолдарды тіркеу",
+                  )}
         </button>
       </form>
     </details>

@@ -3036,7 +3036,10 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           />
         </details>
       )}
-      {(draft.kind !== "PERSON" || personStage === "summary" || readonly) && (
+      {(draft.kind !== "PERSON" ||
+        personStage === "summary" ||
+        readonly ||
+        !!draft.issuances?.length) && (
         <FilesPanel
           requestId={id}
           draft={draft}

@@ -34,9 +34,14 @@ test("a working request exposes earlier immutable signing stages and every signi
   let pendingPatch = false;
   let releaseSave: (() => void) | undefined;
   let requestReads = 0;
+  let delayNextEarlier = false;
+  let earlierHeld = false;
+  let earlierFinished = false;
+  let releaseEarlier!: () => void;
   const selectedQueries: string[] = [];
   const startArtifacts: string[] = [];
   await page.route("**/api/**", async (route) => {
+    let delayed = false;
     const request = route.request();
     const url = new URL(request.url());
     const path = url.pathname.slice(4);
@@ -89,6 +94,14 @@ test("a working request exposes earlier immutable signing stages and every signi
     else if (path === `/print-requests/${draft.id}/signing`) {
       const issuanceId = url.searchParams.get("issuanceId") || latest;
       selectedQueries.push(issuanceId);
+      if (delayNextEarlier && issuanceId === earlier) {
+        delayNextEarlier = false;
+        delayed = true;
+        earlierHeld = true;
+        await new Promise<void>((resolve) => {
+          releaseEarlier = resolve;
+        });
+      }
       const complete = issuanceId === earlier && signedEarlier;
       result = {
         issuanceId,
@@ -134,11 +147,12 @@ test("a working request exposes earlier immutable signing stages and every signi
       result = { status: "ISSUED", archived: false };
     }
     await route.fulfill({ json: result });
+    if (delayed) earlierFinished = true;
   });
   await page.goto(`/requests/${draft.id}/edit`);
   const details = page
     .locator("details")
-    .filter({ has: page.getByText("Электронные подписи", { exact: true }) });
+    .filter({ has: page.getByText("Подписание и выдача", { exact: true }) });
   await details.locator(":scope > summary").click();
   const panel = page.locator(".signing-panel");
   const choice = panel.getByRole("combobox", {
@@ -147,6 +161,22 @@ test("a working request exposes earlier immutable signing stages and every signi
   });
   await expect(choice).toHaveValue(latest);
   await expect(panel.getByRole("heading", { name: /ПТМ-002/ })).toBeVisible();
+  delayNextEarlier = true;
+  await choice.selectOption(earlier);
+  await expect.poll(() => earlierHeld).toBe(true);
+  await choice.selectOption(latest);
+  await expect(panel.getByRole("heading", { name: /ПТМ-002/ })).toBeVisible();
+  releaseEarlier();
+  await expect.poll(() => earlierFinished).toBe(true);
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
+  await expect(choice).toHaveValue(latest);
+  await expect(panel.getByRole("heading", { name: /ПТМ-002/ })).toBeVisible();
+  await expect(panel.getByRole("heading", { name: /ПТМ-001/ })).toHaveCount(0);
   await choice.selectOption(earlier);
   await expect(panel.getByRole("heading", { name: /ПТМ-001/ })).toBeVisible();
   await expect(panel.getByRole("heading", { name: /ПТМ-002/ })).toHaveCount(0);
@@ -200,4 +230,127 @@ test("a working request exposes earlier immutable signing stages and every signi
     }),
   ).toBeEnabled();
   await expect(panel.getByRole("heading", { name: /ПТМ-001/ })).toHaveCount(0);
+});
+
+test("a working draft creates a correction only for the explicitly selected immutable issuance", async ({
+  page,
+}) => {
+  const earlier = "11111111-1111-4111-8111-111111111111";
+  const latest = "22222222-2222-4222-8222-222222222222";
+  const draft: Draft = {
+    id: "correction-stages",
+    revision: 4,
+    status: "DRAFT",
+    kind: "PERSON",
+    schemaVersion: 2,
+    demoMode: true,
+    customerId: null,
+    title: "Синтетическое исправление ранее оформленного выпуска",
+    commonFields: {},
+    items: [
+      {
+        ...newRecipient(),
+        fullNameRu: "Синтетический ожидающий",
+        assignments: [],
+      },
+    ],
+    issuances: [
+      { id: earlier, sourceRevision: 1, createdAt: "2026-10-01T10:00:00Z" },
+      { id: latest, sourceRevision: 3, createdAt: "2026-10-03T11:00:00Z" },
+    ],
+  };
+  const corrections: unknown[] = [];
+  await page.route("**/api/**", async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+    const path = url.pathname.slice(4);
+    let result: unknown = { items: [], total: 0 };
+    if (path === "/auth/session")
+      result = {
+        csrfToken: "synthetic",
+        user: { id: "operator", role: "OPERATOR" },
+      };
+    else if (path === "/context")
+      result = {
+        user: {
+          id: "operator",
+          role: "OPERATOR",
+          displayName: "Синтетический оператор",
+          email: "operator@example.invalid",
+        },
+        tenant: {
+          id: "synthetic",
+          name: "Синтетический центр",
+          timezone: "Asia/Qyzylorda",
+          demoOnly: true,
+        },
+        profile: {
+          nameRu: "Синтетический центр",
+          approved: true,
+          commission: [],
+        },
+        templates: [],
+        numbering: {},
+      };
+    else if (path === `/print-requests/${draft.id}`) result = draft;
+    else if (path === `/print-requests/${draft.id}/resolved`)
+      result = resolveDraft(draft);
+    else if (path === `/print-requests/${draft.id}/signing`)
+      result = {
+        issuanceId: latest,
+        status: "AWAITING_SIGNATURE",
+        archived: false,
+        providers: {
+          EGOV_QR: { available: false },
+          NCALAYER: { available: false },
+        },
+        documents: [],
+        missingBindings: [],
+      };
+    else if (path === `/print-requests/${draft.id}/correct`) {
+      corrections.push(request.postDataJSON());
+      result = { ...draft, id: "correction-result", issuances: [] };
+    } else if (path === "/print-requests/correction-result")
+      result = { ...draft, id: "correction-result", issuances: [] };
+    else if (path === "/print-requests/correction-result/resolved")
+      result = resolveDraft(draft);
+    await route.fulfill({ json: result });
+  });
+  await page.goto(`/requests/${draft.id}/edit`);
+  await page
+    .getByRole("button", { name: "Создать исправление", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog", {
+    name: "Создать связанную заявку на исправление",
+    exact: true,
+  });
+  const submit = dialog.getByRole("button", {
+    name: "Создать исправление",
+    exact: true,
+  });
+  await expect(
+    dialog.getByRole("combobox", { name: "Исходный выпуск", exact: true }),
+  ).toHaveValue("");
+  await dialog
+    .getByLabel("Причина", { exact: true })
+    .fill("Синтетическая проверка исправления состава подписантов");
+  await expect(submit).toBeDisabled();
+  expect(corrections).toHaveLength(0);
+  await dialog
+    .getByRole("combobox", { name: "Исходный выпуск", exact: true })
+    .selectOption(earlier);
+  await submit.click();
+  await expect(page).toHaveURL(/\/requests\/correction-result\/edit$/);
+  expect(corrections).toEqual([
+    {
+      reason: "Синтетическая проверка исправления состава подписантов",
+      expectedRevision: 4,
+      issuanceId: earlier,
+    },
+  ]);
+  expect(draft.issuances?.map((issuance) => issuance.id)).toEqual([
+    earlier,
+    latest,
+  ]);
+  expect(draft.status).toBe("DRAFT");
 });

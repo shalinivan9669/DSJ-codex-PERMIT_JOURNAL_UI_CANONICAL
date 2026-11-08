@@ -379,14 +379,17 @@ test("director can record paper signatures, recover failure with entered data, a
     .getByText("Оформить с подписями на бумаге", { exact: true })
     .click();
   const form = panel.locator(".paper-document-signature");
-  const names =
-    "Тестовый Директор\nТестовый Председатель\nТестовый Преподаватель";
+  const names = [
+    "Тестовый Директор",
+    "Тестовый Председатель",
+    "Тестовый Преподаватель",
+  ];
+  const signerRoles = ["Директор", "Председатель комиссии", "Преподаватель"];
   await form.getByLabel("Дата подписания", { exact: true }).fill("2026-11-04");
-  await form
-    .getByLabel(
-      "ФИО директора, председателя и преподавателя — в этом порядке, по одному в строке",
-    )
-    .fill(names);
+  for (let index = 0; index < signerRoles.length; index++)
+    await form
+      .getByLabel(`${signerRoles[index]} — ФИО на оригинале`, { exact: true })
+      .fill(names[index]);
   await form
     .getByLabel("Основание проверки оригинала", { exact: true })
     .fill("Проверен тестовый бумажный оригинал");
@@ -402,11 +405,18 @@ test("director can record paper signatures, recover failure with entered data, a
   await expect(
     form.getByText("Не удалось сохранить отметку", { exact: true }),
   ).toBeVisible();
-  await expect(
-    form.getByLabel(
-      "ФИО директора, председателя и преподавателя — в этом порядке, по одному в строке",
-    ),
-  ).toHaveValue(names);
+  for (let index = 0; index < signerRoles.length; index++) {
+    await expect(
+      form.getByLabel(`${signerRoles[index]} — ФИО на оригинале`, {
+        exact: true,
+      }),
+    ).toHaveValue(names[index]);
+    await expect(
+      form.getByLabel(`${signerRoles[index]} — ФИО на оригинале`, {
+        exact: true,
+      }),
+    ).toBeDisabled();
+  }
   await expect(form.getByLabel("Дата подписания", { exact: true })).toHaveValue(
     "2026-11-04",
   );
@@ -415,7 +425,7 @@ test("director can record paper signatures, recover failure with entered data, a
   ).toBeChecked();
   await form
     .getByRole("button", {
-      name: "Зафиксировать бумажные подписи",
+      name: "Проверить сохранение",
       exact: true,
     })
     .click();
@@ -430,8 +440,17 @@ test("director can record paper signatures, recover failure with entered data, a
   await expect(
     panel.locator("li").filter({ hasText: "оформлено на бумаге" }),
   ).toHaveCount(3);
+  for (let index = 0; index < signerRoles.length; index++)
+    await expect(
+      panel.locator("li").filter({ hasText: `${signerRoles[index]}:` }),
+    ).toHaveText(
+      `${signerRoles[index]}: ${names[index]} — оформлено на бумаге`,
+    );
   expect(state.paperWrites).toHaveLength(2);
   expect(state.paperWrites[1]).toEqual(state.paperWrites[0]);
-  expect(state.paperWrites[1].signerNames).toEqual(names.split("\n"));
+  expect(state.paperWrites[1].signerNames).toEqual(names);
   expect(state.paperWrites[1].documentIds).toEqual(["document-paper"]);
+  await panel.screenshot({
+    path: test.info().outputPath("attested-paper-role-names.png"),
+  });
 });

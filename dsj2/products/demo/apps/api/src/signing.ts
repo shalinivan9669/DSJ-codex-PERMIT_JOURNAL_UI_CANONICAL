@@ -116,6 +116,42 @@ const paperAttestationSchema = z.object({
   category: z.literal("OPERATOR_ATTESTED"),
   allRequiredSignaturesPresent: z.literal(true),
 });
+async function assertNoPaperAttestation(
+  c: Context,
+  artifact: {
+    documentId: string | null;
+    issuanceId: string | null;
+    sha256: string;
+  },
+  tx: Prisma.TransactionClient = db,
+) {
+  if (!artifact.documentId || !artifact.issuanceId) return;
+  const records = await tx.auditEvent.findMany({
+    where: {
+      tenantId: c.tenantId,
+      entityId: artifact.documentId,
+      action: {
+        in: ["LMS_PAPER_SIGNATURE_ATTESTED", "PRINT_PAPER_SIGNATURE_ATTESTED"],
+      },
+    },
+  });
+  if (
+    records.some((record) => {
+      const value = paperAttestationSchema.safeParse(record.metadata);
+      return (
+        value.success &&
+        value.data.documentId === artifact.documentId &&
+        value.data.issuanceId === artifact.issuanceId &&
+        value.data.artifactSha256 === artifact.sha256
+      );
+    })
+  )
+    fail(
+      409,
+      "DOCUMENT_ALREADY_COMPLETED",
+      "Документ уже оформлен с подписями на бумаге. Обновите сведения о выпуске",
+    );
+}
 /** A separate record of observed signatures on paper; never a cryptographic DocumentSignature. */
 export async function attestPaperSignatures(
   c: Context,
@@ -186,7 +222,7 @@ export async function attestPaperSignatures(
         document.templateId,
         document.assignmentId,
         document.groupEventId,
-      ).map((signer) => signer.displayName);
+      );
       if (manualPaper && data.signerNames.length !== 3)
         fail(
           422,
@@ -289,13 +325,38 @@ export async function attestPaperSignatures(
         });
         continue;
       }
+      const electronicSignatures = await tx.documentSignature.findMany({
+        where: {
+          tenantId: c.tenantId,
+          artifactId: artifact.id,
+          documentSha256: artifact.sha256,
+        },
+        select: { bindingId: true },
+      });
+      if (
+        requiredSigners.length > 0 &&
+        requiredSigners.every(
+          (signer) =>
+            signer.bindingId &&
+            electronicSignatures.some(
+              (signature) => signature.bindingId === signer.bindingId,
+            ),
+        )
+      )
+        fail(
+          409,
+          "DOCUMENT_ALREADY_COMPLETED",
+          "Все ЭЦП документа уже проверены. Обновите сведения о выпуске",
+        );
       await audit(tx, c, action, document.id, {
         documentId: document.id,
         issuanceId: document.issuanceId,
         artifactSha256: artifact.sha256,
         signedAt: data.signedAt,
         signerNames: data.signerNames,
-        requiredSignerNames: requiredSigners,
+        requiredSignerNames: requiredSigners.map(
+          (signer) => signer.displayName,
+        ),
         ...(manualPaper
           ? { signerRoles: ["DIRECTOR", "CHAIR", "TEACHER"] }
           : {}),
@@ -693,6 +754,7 @@ export async function saveSignatory(c: Context, input: unknown) {
   const data = parse(
     z
       .object({
+        bindingId: z.string().uuid().optional(),
         userId: z.string().uuid(),
         displayName: z.string().trim().min(2).max(255),
         role: z.enum(["DIRECTOR", "CHAIR", "MEMBER", "TEACHER"]),
@@ -707,6 +769,47 @@ export async function saveSignatory(c: Context, input: unknown) {
     input,
   );
   return transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":signatory:" + data.userId + ":" + data.role},0))`;
+    if (!data.active) {
+      if (!data.bindingId)
+        fail(
+          422,
+          "SIGNATORY_BINDING_REQUIRED",
+          "Выберите действующую привязку, которую нужно отозвать",
+        );
+      const target = await tx.signatoryBinding.findFirst({
+        where: { tenantId: c.tenantId, id: data.bindingId },
+      });
+      if (!target) fail(404, "NOT_FOUND", "Привязка подписанта не найдена");
+      if (
+        target.userId !== data.userId ||
+        target.kind !== data.role ||
+        target.displayName !== data.displayName ||
+        target.iin !== data.iin ||
+        target.bin !== (data.bin ?? null)
+      )
+        fail(
+          409,
+          "SIGNATORY_TARGET_CHANGED",
+          "Данные привязки изменились. Обновите список подписантов",
+        );
+      // Withdrawal never grants authority, including for a disabled or demoted
+      // user. A stale client may withdraw only the exact version it selected.
+      const binding = target.active
+        ? await tx.signatoryBinding.update({
+            where: { id: target.id },
+            data: { active: false },
+          })
+        : target;
+      if (target.active)
+        await audit(tx, c, "SIGNATORY_CONFIGURED", binding.id, {
+          userId: data.userId,
+          kind: data.role,
+          active: false,
+        });
+      const { kind, ...value } = binding;
+      return { ...value, role: kind };
+    }
     const user = await tx.user.findFirst({
       where: { tenantId: c.tenantId, id: data.userId, active: true },
     });
@@ -723,7 +826,21 @@ export async function saveSignatory(c: Context, input: unknown) {
         "SIGNATORY_ROLE",
         "Подписант должен быть действующим сотрудником соответствующей роли",
       );
-    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":signatory:" + data.userId + ":" + data.role},0))`;
+    const existing = await tx.signatoryBinding.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        userId: data.userId,
+        kind: data.role,
+        displayName: data.displayName,
+        iin: data.iin,
+        bin: data.bin ?? null,
+        active: true,
+      },
+    });
+    if (existing) {
+      const { kind, ...value } = existing;
+      return { ...value, role: kind };
+    }
     await tx.signatoryBinding.updateMany({
       where: {
         tenantId: c.tenantId,
@@ -1003,9 +1120,11 @@ export async function signingState(
       providers,
       documents: [],
       missingBindings: [],
+      unavailableSigners: [],
+      failureReason: null,
       signatures: [],
     };
-  const [documents, artifacts, signatures, jobs, invalid, ownBindings] =
+  const [documents, artifacts, signatures, jobs, invalid, activeBindings] =
     await Promise.all([
       tx.issuedDocument.findMany({
         where: { tenantId: c.tenantId, issuanceId: workflow.issuanceId },
@@ -1016,6 +1135,7 @@ export async function signingState(
           issuanceId: workflow.issuanceId,
           provenance: "ORIGINAL",
         },
+        orderBy: { createdAt: "desc" },
       }),
       tx.documentSignature.findMany({
         where: { tenantId: c.tenantId, issuanceId: workflow.issuanceId },
@@ -1036,8 +1156,8 @@ export async function signingState(
         orderBy: { createdAt: "desc" },
       }),
       tx.signatoryBinding.findMany({
-        where: { tenantId: c.tenantId, userId: c.userId, active: true },
-        select: { id: true },
+        where: { tenantId: c.tenantId, active: true },
+        select: { id: true, userId: true },
       }),
     ]);
   const eligible = await requestAllowsSigning(tx, request, workflow.issuanceId);
@@ -1069,29 +1189,45 @@ export async function signingState(
       document.assignmentId,
       document.groupEventId,
     );
-    const requiredSigners = required.map((signer) => ({
-      kind: signer.kind,
-      role: signer.kind,
-      displayName: signer.displayName,
-      bindingId: signer.bindingId,
-      id: signer.bindingId,
-      userId: signer.userId,
-      canSign:
-        signer.userId === c.userId &&
-        ownBindings.some((binding) => binding.id === signer.bindingId) &&
-        c.role !== "VIEWER" &&
-        eligible &&
-        !invalid,
-      signed: !!(
+    const requiredSigners = required.map((signer) => {
+      const binding = activeBindings.find(
+        (value) => value.id === signer.bindingId,
+      );
+      const bindingState = !signer.bindingId
+        ? ("MISSING" as const)
+        : binding
+          ? ("ACTIVE" as const)
+          : ("REVOKED" as const);
+      const signed = !!(
         artifact &&
         signer.bindingId &&
         signatures.some(
           (signature) =>
             signature.artifactId === artifact.id &&
-            signature.bindingId === signer.bindingId,
+            signature.bindingId === signer.bindingId &&
+            signature.documentSha256 === artifact.sha256,
         )
-      ),
-    }));
+      );
+      return {
+        kind: signer.kind,
+        role: signer.kind,
+        displayName: signer.displayName,
+        bindingId: signer.bindingId,
+        id: signer.bindingId,
+        userId: signer.userId,
+        bindingState,
+        canSign:
+          !!artifact &&
+          !signed &&
+          signer.userId === c.userId &&
+          binding?.userId === c.userId &&
+          c.role !== "VIEWER" &&
+          (signer.kind !== "DIRECTOR" || isDirectorRole(c.role)) &&
+          eligible &&
+          !invalid,
+        signed,
+      };
+    });
     const signatureExempt = unsignedLmsExempt(
       policy,
       document.templateId,
@@ -1114,6 +1250,13 @@ export async function signingState(
           recordedAt: paper.createdAt,
         }
       : null;
+    const complete =
+      !!artifact &&
+      (!!paperSignature ||
+        ((requiredSigners.length > 0 || signatureExempt) &&
+          requiredSigners.every((signer) => signer.signed)));
+    if (paperSignature)
+      for (const signer of requiredSigners) signer.canSign = false;
     return {
       documentId: document.id,
       templateId: document.templateId,
@@ -1128,11 +1271,7 @@ export async function signingState(
         ? policy.lmsLegalForms?.[document.assignmentId] || null
         : null,
       sha256: artifact?.sha256 || null,
-      complete:
-        !!artifact &&
-        (!!paperSignature ||
-          ((requiredSigners.length > 0 || signatureExempt) &&
-            requiredSigners.every((signer) => signer.signed))),
+      complete,
       paperSignature,
       paperAllowed: paperSigningAllowed(
         policy,
@@ -1147,7 +1286,7 @@ export async function signingState(
         ) &&
         isDirectorRole(c.role) &&
         !!artifact &&
-        !paperSignature &&
+        !complete &&
         eligible &&
         !invalid,
       signatureExempt,
@@ -1189,18 +1328,52 @@ export async function signingState(
       intact = false;
     }
   }
-  const status =
-    !eligible || invalid
-      ? "FAILED"
-      : !intact
-        ? "FAILED"
-        : completeFiles && completeSignatures
-          ? "ISSUED"
-          : jobs.some((job) => job.status === "FAILED")
-            ? "FAILED"
-            : completeFiles
-              ? "AWAITING_SIGNATURE"
-              : "RENDERING";
+  const failureReason =
+    invalid?.kind === "CANCELLED" || request.status === "CANCELLED"
+      ? ("ISSUANCE_CANCELLED" as const)
+      : invalid?.kind === "REPLACED"
+        ? ("ISSUANCE_REPLACED" as const)
+        : !eligible
+          ? ("REQUEST_INELIGIBLE" as const)
+          : !intact
+            ? ("ARTIFACT_INTEGRITY_FAILED" as const)
+            : jobs.some((job) => job.status === "FAILED")
+              ? ("GENERATION_FAILED" as const)
+              : null;
+  const status = failureReason
+    ? "FAILED"
+    : completeFiles && completeSignatures
+      ? "ISSUED"
+      : completeFiles
+        ? "AWAITING_SIGNATURE"
+        : "RENDERING";
+  if (status !== "AWAITING_SIGNATURE")
+    for (const document of details)
+      for (const signer of document.requiredSigners) signer.canSign = false;
+  const unavailableSigners = [
+    ...new Map(
+      details
+        .filter((document) => !document.complete)
+        .flatMap((document) => document.requiredSigners)
+        .filter((signer) => !signer.signed && signer.bindingState !== "ACTIVE")
+        .map(
+          (signer) =>
+            [
+              JSON.stringify([
+                signer.kind,
+                signer.displayName,
+                signer.bindingId,
+              ]),
+              {
+                kind: signer.kind,
+                displayName: signer.displayName,
+                bindingState: signer.bindingState as "MISSING" | "REVOKED",
+                recovery: "NEW_ISSUANCE_REQUIRED" as const,
+              },
+            ] as const,
+        ),
+    ).values(),
+  ];
   if (status !== workflow.status && !workflow.completedAt)
     await tx.issuanceWorkflow.update({
       where: { id: workflow.id },
@@ -1263,17 +1436,21 @@ export async function signingState(
     issuanceId: workflow.issuanceId,
     status,
     lifecycle: status,
+    failureReason,
     historicalLifecycle: workflow.completedAt ? "ISSUED" : null,
     invalidatedBy:
       invalid?.kind || (request.status === "CANCELLED" ? "CANCELLED" : null),
     archived,
     providers,
     documents: details,
-    missingBindings: details.flatMap((document) =>
-      document.requiredSigners
-        .filter((signer) => !signer.bindingId)
-        .map((signer) => signer.displayName),
-    ),
+    missingBindings: [
+      ...new Set(
+        unavailableSigners
+          .filter((signer) => signer.bindingState === "MISSING")
+          .map((signer) => signer.displayName),
+      ),
+    ],
+    unavailableSigners,
     signatures: signatures.map(
       ({
         signatureStorageKey: _storageKey,
@@ -1393,10 +1570,16 @@ export async function startSigning(c: Context, id: string, input: unknown) {
   const document = state.documents.find(
     (entry) => entry.artifactId === data.artifactId,
   );
+  if (document?.complete)
+    fail(
+      409,
+      "DOCUMENT_ALREADY_COMPLETED",
+      "Документ уже подписан. Обновите сведения о выпуске",
+    );
   const signer = document?.requiredSigners.find(
     (entry) =>
       entry.userId === c.userId &&
-      (!data.bindingId || entry.bindingId === data.bindingId) &&
+      (data.bindingId ? entry.bindingId === data.bindingId : entry.canSign) &&
       !entry.signed,
   );
   if (!document || !signer?.bindingId)
@@ -1583,6 +1766,7 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       "DIRECTOR_REQUIRED",
       "Подпись директора доступна только действующему директору",
     );
+  await assertNoPaperAttestation(c, artifact);
   let signatureBase64 = data.signatureBase64;
   if (session.provider === "EGOV_QR") {
     if (
@@ -1656,6 +1840,9 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       await assertCommissionAccess(c, session.issuanceId, tx);
     }
     await assertEligible(c, session.issuanceId, tx);
+    // Paper attestation takes the same request lock. Recheck after verification
+    // so an in-flight session cannot append an electronic signature afterwards.
+    await assertNoPaperAttestation(c, artifact, tx);
     const value = await tx.documentSignature.create({
       data: {
         tenantId: c.tenantId,

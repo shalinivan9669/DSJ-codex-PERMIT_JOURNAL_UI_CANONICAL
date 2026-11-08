@@ -1,4 +1,11 @@
 {
+  "signingFlow20261108": {
+    "date": "2026-11-08",
+    "status": "LOCAL_SIGNING_FLOW_VERIFIED",
+    "branch": "codex/korochki-commission-flow-20261108",
+    "evidence": "../signing-flow-20261108/acceptance.json",
+    "deployment": "NOT_PERFORMED"
+  },
   "commissionTemplate20261108": {
     "date": "2026-11-08",
     "status": "LOCAL_COMMISSION_TEMPLATE_AND_PRINT_VERIFIED",

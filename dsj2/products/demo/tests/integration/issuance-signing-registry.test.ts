@@ -21,6 +21,8 @@ import {
   signingState,
   startSigning,
   completeSigning,
+  attestPaperSignatures,
+  saveSignatory,
 } from "../../apps/api/src/signing";
 import {
   collectRegistryRows,
@@ -119,6 +121,7 @@ test("immutable stages sign independently, retain exact registry/customer scope 
     { iin: string; sha256: string; signature: string }
   >();
   let verifiedCms = 0;
+  let beforeVerificationResponse: (() => Promise<void>) | undefined;
   // This isolated adapter verifies real detached CMS against local test CAs.
   // Its trusted-authority response is a synthetic integration contract fixture,
   // not an assertion that these test certificates are NCA RK certificates.
@@ -168,6 +171,7 @@ test("immutable stages sign independently, retain exact registry/customer scope 
       ]);
       assert.deepEqual(await readFile(documentFile + ".verified"), bytes);
       verifiedCms++;
+      await beforeVerificationResponse?.();
       response.writeHead(200, { "content-type": "application/json" });
       response.end(
         JSON.stringify({
@@ -631,4 +635,226 @@ test("immutable stages sign independently, retain exact registry/customer scope 
     await db.documentSignature.count({ where: { tenantId: c.tenantId } }),
   );
   assert.equal((await requestDetail(c, created.id)).issuances.length, 3);
+
+  const digitallyComplete = (
+    await signingState(approvals.directorContext, individual.id)
+  ).documents[0];
+  await assert.rejects(
+    attestPaperSignatures(approvals.directorContext, individual.id, {
+      documentIds: [digitallyComplete.documentId],
+      signedAt: "2026-10-07",
+      signerNames: digitallyComplete.requiredSigners.map(
+        (signer) => signer.displayName,
+      ),
+      reason: "Синтетическая попытка повторного оформления",
+      allRequiredSignaturesPresent: true,
+    }),
+    errorCode("DOCUMENT_ALREADY_COMPLETED"),
+  );
+
+  // The HTTP response can be lost after successful verification. Replaying
+  // that same session returns its original signature, never a duplicate.
+  const verifiedSignature = await db.documentSignature.findFirstOrThrow({
+    where: { tenantId: c.tenantId },
+  });
+  const verifiedIdentity = identities.get(verifiedSignature.signerIin)!;
+  const signatureCount = await db.documentSignature.count({
+    where: { tenantId: c.tenantId },
+  });
+  assert.equal(
+    (
+      await completeSigning(
+        verifiedIdentity.context,
+        verifiedSignature.signingSessionId,
+        {},
+      )
+    ).signatureId,
+    verifiedSignature.id,
+  );
+  assert.equal(
+    await db.documentSignature.count({ where: { tenantId: c.tenantId } }),
+    signatureCount,
+  );
+
+  const paperDraft = draftSchema.parse(individual.draft);
+  paperDraft.items[0].id = "paper-transition-person";
+  paperDraft.items[0].fullNameRu = "SYNTHETIC_PAPER_TRANSITION_PERSON";
+  paperDraft.items[0].assignments[0].id = "paper-transition-credential";
+  const paperRequest = await createRequest(c, paperDraft);
+  await approvals.approve(paperRequest.id);
+  const paperIssued = await finalize(
+    c,
+    paperRequest.id,
+    { expectedRevision: paperRequest.revision },
+    randomUUID(),
+  );
+  await persistByteFixtures(paperIssued.issuanceId, paperRequest.id);
+  const paperState = await signingState(
+    approvals.directorContext,
+    paperRequest.id,
+  );
+  assert.equal(paperState.documents.length, 2);
+  const paperDocument = paperState.documents[0];
+  const pendingSigner = paperDocument.requiredSigners.find(
+    (signer) => signer.canSign,
+  )!;
+  const pendingBinding = bindings.find(
+    (binding) => binding.id === pendingSigner.bindingId,
+  )!;
+  const pendingIdentity = identities.get(pendingBinding.iin)!;
+  const pendingSession = await startSigning(
+    pendingIdentity.context,
+    paperRequest.id,
+    {
+      provider: "NCALAYER",
+      artifactId: paperDocument.artifactId,
+      bindingId: pendingBinding.id,
+    },
+  );
+  const pendingArtifact = await readArtifact(c, paperDocument.artifactId!);
+  const paperFile = join(folder, "paper-transition.pdf");
+  const paperCmsFile = paperFile + ".p7s";
+  await writeFile(paperFile, pendingArtifact.buffer);
+  await run(openssl, [
+    "cms",
+    "-sign",
+    "-binary",
+    "-in",
+    paperFile,
+    "-signer",
+    pendingIdentity.cert,
+    "-inkey",
+    pendingIdentity.key,
+    "-outform",
+    "DER",
+    "-out",
+    paperCmsFile,
+    "-md",
+    "sha256",
+  ]);
+  const paperCms = (await readFile(paperCmsFile)).toString("base64");
+  signedContent.set(paperCms, {
+    iin: pendingBinding.iin,
+    sha256: pendingArtifact.sha256,
+    signature: paperCmsFile,
+  });
+  beforeVerificationResponse = async () => {
+    beforeVerificationResponse = undefined;
+    await attestPaperSignatures(approvals.directorContext, paperRequest.id, {
+      documentIds: [paperDocument.documentId],
+      signedAt: "2026-10-07",
+      signerNames: paperDocument.requiredSigners.map(
+        (signer) => signer.displayName,
+      ),
+      reason: "Синтетическая проверка перехода на бумажный оригинал",
+      allRequiredSignaturesPresent: true,
+    });
+  };
+  await assert.rejects(
+    completeSigning(pendingIdentity.context, pendingSession.id, {
+      signatureBase64: paperCms,
+    }),
+    errorCode("DOCUMENT_ALREADY_COMPLETED"),
+  );
+  const afterPaper = await signingState(
+    approvals.directorContext,
+    paperRequest.id,
+  );
+  assert.equal(
+    afterPaper.status,
+    "AWAITING_SIGNATURE",
+    "another document still awaits signatures",
+  );
+  assert.equal(
+    afterPaper.documents.find(
+      (entry) => entry.documentId === paperDocument.documentId,
+    )!.complete,
+    true,
+  );
+  await assert.rejects(
+    startSigning(pendingIdentity.context, paperRequest.id, {
+      provider: "NCALAYER",
+      artifactId: paperDocument.artifactId,
+    }),
+    errorCode("DOCUMENT_ALREADY_COMPLETED"),
+  );
+  await assert.rejects(
+    completeSigning(pendingIdentity.context, pendingSession.id, {
+      signatureBase64: paperCms,
+    }),
+    errorCode("DOCUMENT_ALREADY_COMPLETED"),
+  );
+  assert.equal(
+    await db.documentSignature.count({
+      where: { tenantId: c.tenantId, issuanceId: paperIssued.issuanceId },
+    }),
+    0,
+  );
+
+  // The same person may have two distinct capacities. Revoking the first
+  // must not prevent starting the other capacity without an explicit slot ID.
+  const directorBinding = bindings.find(
+    (binding) => binding.kind === "DIRECTOR",
+  )!;
+  const originalChair = bindings.find((binding) => binding.kind === "CHAIR")!;
+  await db.signatoryBinding.update({
+    where: { id: originalChair.id },
+    data: { active: false },
+  });
+  const sharedChair = await saveSignatory(c, {
+    userId: directorBinding.userId,
+    displayName: originalChair.displayName,
+    role: "CHAIR",
+    iin: directorBinding.iin,
+  });
+  const sharedDraft = draftSchema.parse(paperDraft);
+  sharedDraft.items[0].id = "shared-signing-capacities-person";
+  sharedDraft.items[0].fullNameRu =
+    "SYNTHETIC_SHARED_SIGNING_CAPACITIES_PERSON";
+  sharedDraft.items[0].assignments[0].id =
+    "shared-signing-capacities-credential";
+  const sharedRequest = await createRequest(c, sharedDraft);
+  await approvals.approve(sharedRequest.id);
+  const sharedIssued = await finalize(
+    c,
+    sharedRequest.id,
+    { expectedRevision: sharedRequest.revision },
+    randomUUID(),
+  );
+  await persistByteFixtures(sharedIssued.issuanceId, sharedRequest.id);
+  await db.signatoryBinding.update({
+    where: { id: directorBinding.id },
+    data: { active: false },
+  });
+  const sharedState = await signingState(
+    approvals.directorContext,
+    sharedRequest.id,
+  );
+  const sharedDocument = sharedState.documents[0];
+  assert.equal(sharedDocument.requiredSigners[0].canSign, false);
+  assert.equal(sharedDocument.requiredSigners[1].canSign, true);
+  const sharedSession = await startSigning(
+    approvals.directorContext,
+    sharedRequest.id,
+    {
+      provider: "NCALAYER",
+      artifactId: sharedDocument.artifactId,
+    },
+  );
+  assert.equal(
+    (
+      await db.signingSession.findUniqueOrThrow({
+        where: { id: sharedSession.id },
+      })
+    ).bindingId,
+    sharedChair.id,
+  );
+  await assert.rejects(
+    startSigning(approvals.directorContext, sharedRequest.id, {
+      provider: "NCALAYER",
+      artifactId: sharedDocument.artifactId,
+      bindingId: directorBinding.id,
+    }),
+    errorCode("SIGNATORY_REVOKED"),
+  );
 });

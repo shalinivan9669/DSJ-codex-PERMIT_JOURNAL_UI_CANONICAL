@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Icon, Modal, Notice } from "@demo/ui";
@@ -25,6 +25,10 @@ import { VerificationLink } from "./verification-link";
 import { SavedPrintSet } from "./saved-print-set";
 import { filePollingRetryDelay } from "@/lib/file-polling";
 import { readyPreviewRevision } from "@/lib/preview-readiness";
+import {
+  issuanceHistoryActions,
+  issuanceHistoryPayload,
+} from "@/lib/issuance-history";
 import { PdfPreview, printPdfArtifact } from "./pdf-preview";
 import {
   artifactPrintEligibility,
@@ -65,6 +69,8 @@ export function FilesPanel({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
   const [dialog, setDialog] = useState<"correct" | "cancel" | null>(null);
+  const [correctionIssuanceId, setCorrectionIssuanceId] = useState("");
+  const historyBusy = useRef(false);
   const [reason, setReason] = useState("");
   const [viewArtifact, setViewArtifact] = useState<Artifact | null>(null);
   const [printing, setPrinting] = useState(false);
@@ -73,6 +79,12 @@ export function FilesPanel({
   );
   const [printError, setPrintError] = useState("");
   const [reload, setReload] = useState(0);
+  const historyActions = issuanceHistoryActions({
+    canManage,
+    readonly,
+    status: draft.status,
+    issuanceIds: issuances.map((issuance) => issuance.id),
+  });
   useEffect(() => {
     onPreviewReady?.(
       readyPreviewRevision(draft.revision, jobs, artifacts, missing),
@@ -219,7 +231,17 @@ export function FilesPanel({
     }
   }
   async function changeHistory() {
-    if (!dialog) return;
+    if (!dialog || busy || historyBusy.current || !historyActions[dialog])
+      return;
+    const payload = issuanceHistoryPayload(
+      dialog,
+      reason,
+      draft.revision,
+      correctionIssuanceId,
+      issuances.map((issuance) => issuance.id),
+    );
+    if (!payload) return;
+    historyBusy.current = true;
     setBusy(dialog);
     setError("");
     try {
@@ -227,7 +249,7 @@ export function FilesPanel({
         `/print-requests/${requestId}/${dialog}`,
         {
           method: "POST",
-          body: json({ reason, expectedRevision: draft.revision }),
+          body: json(payload),
         },
       );
       setDialog(null);
@@ -237,6 +259,7 @@ export function FilesPanel({
     } catch (caught) {
       setError(errorText(caught));
     } finally {
+      historyBusy.current = false;
       setBusy("");
     }
   }
@@ -673,20 +696,43 @@ export function FilesPanel({
           </ul>
         </details>
       ))}
-      {readonly &&
-        draft.status !== "DRAFT" &&
-        draft.status !== "CANCELLED" &&
-        canManage && (
-          <div className="history-actions">
-            <p>Оригиналы сохраняются. Исправление и отмена требуют причины.</p>
-            <button onClick={() => setDialog("correct")}>
+      {(historyActions.correct || historyActions.cancel) && (
+        <div
+          className="history-actions"
+          id="issuance-history-actions"
+          tabIndex={-1}
+        >
+          <p>Оригиналы сохраняются. Исправление и отмена требуют причины.</p>
+          {historyActions.correct && (
+            <button
+              disabled={!!busy}
+              onClick={() => {
+                setCorrectionIssuanceId(
+                  issuances.length === 1 ? issuances[0].id : "",
+                );
+                setReason("");
+                setError("");
+                setDialog("correct");
+              }}
+            >
               Создать исправление
             </button>
-            <button className="danger-text" onClick={() => setDialog("cancel")}>
+          )}
+          {historyActions.cancel && (
+            <button
+              disabled={!!busy}
+              className="danger-text"
+              onClick={() => {
+                setReason("");
+                setError("");
+                setDialog("cancel");
+              }}
+            >
               Отменить выпуск
             </button>
-          </div>
-        )}
+          )}
+        </div>
+      )}
       {dialog && (
         <Modal
           title={
@@ -704,14 +750,38 @@ export function FilesPanel({
               : "Запрос на аннулирование будет отправлен директору. После согласования решение появится в истории; номера и файлы сохранятся."}
           </p>
           {error && <Notice>{error}</Notice>}
+          {dialog === "correct" && (
+            <label>
+              Исходный выпуск
+              <select
+                autoFocus={issuances.length > 1}
+                required
+                disabled={!!busy}
+                value={correctionIssuanceId}
+                onChange={(event) =>
+                  setCorrectionIssuanceId(event.target.value)
+                }
+              >
+                <option value="">Выберите выпуск для исправления</option>
+                {issuances.map((issuance) => (
+                  <option key={issuance.id} value={issuance.id}>
+                    Зарегистрированная редакция {issuance.sourceRevision} ·{" "}
+                    {dateTime(issuance.createdAt)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label>
             Причина
             <textarea
-              autoFocus
+              autoFocus={dialog !== "correct" || issuances.length === 1}
+              disabled={!!busy}
               required
               value={reason}
               onChange={(event) => setReason(event.target.value)}
               minLength={3}
+              maxLength={1000}
             />
           </label>
           <div className="modal-actions">
@@ -720,7 +790,14 @@ export function FilesPanel({
             </button>
             <button
               className="primary"
-              disabled={!!busy || reason.trim().length < 3}
+              disabled={
+                !!busy ||
+                reason.trim().length < 3 ||
+                (dialog === "correct" &&
+                  !issuances.some(
+                    (issuance) => issuance.id === correctionIssuanceId,
+                  ))
+              }
               onClick={() => void changeHistory()}
             >
               {busy

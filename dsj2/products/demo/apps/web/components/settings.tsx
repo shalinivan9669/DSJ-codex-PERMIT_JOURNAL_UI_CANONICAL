@@ -135,7 +135,11 @@ export function Settings({
               <RegistrationPolicy t={t} />
             </>
           ) : activeTab === "signatories" && managesSystem ? (
-            <SignatorySettings />
+            <SignatorySettings
+              focusSetup={searchParams.get("focus") === "signatories"}
+              initialRole={searchParams.get("signerRole")}
+              returnTo={searchParams.get("returnTo")}
+            />
           ) : activeTab === "audit" && managesSystem ? (
             <AuditLog timezone={context.tenant.timezone} />
           ) : activeTab === "export" && managesSystem ? (

@@ -175,10 +175,28 @@ test("two working roles own setup, isolate tenants and retain legacy director au
             displayName: "Синтетический директор",
             role: "DIRECTOR",
             iin: "000000000001",
-            active: false,
+            active: true,
           },
         );
         assert.equal(binding.status, 201, await binding.clone().text());
+        const configured = await binding.json();
+        const revoked = await send(
+          directorSession,
+          "/settings/signatories",
+          "POST",
+          {
+            bindingId: configured.id,
+            userId: director.userId,
+            displayName: "Синтетический директор",
+            role: "DIRECTOR",
+            iin: "000000000001",
+            active: false,
+          },
+        );
+        assert.equal(revoked.status, 201, await revoked.clone().text());
+        const withdrawn = await revoked.json();
+        assert.equal(withdrawn.id, configured.id);
+        assert.equal(withdrawn.active, false);
         const roles = await db.user.findMany({
           where: { tenantId: center.tenantId },
           select: { role: true },

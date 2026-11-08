@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-08",
+  "status": "LOCAL_SIGNING_FLOW_VERIFIED",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "previousCommit": "42d09a7",
+  "scope": "Signing panel, manual paper attestation, signer configuration and correction recovery in autonomous DEMO",
+  "implemented": [
+    "Signers display separate capacities; paper completion displays actual attested names without implying verified EDS.",
+    "Unavailable connectors, missing or revoked frozen bindings, rendering failures and cancelled/replaced issuances have distinct explanations and recovery.",
+    "Settings navigation focuses the signatory section and safely returns to the request's signing panel.",
+    "Paper fields reuse frozen role names, require an explicit date/reason/attestation, preserve input and replay the exact body after an unknown response.",
+    "Signing reads and mutations ignore stale selection responses; active digital signing stays pinned to its issuance; successful mutations are not reported as failures because of refresh errors.",
+    "Signing state and endpoints prevent new digital signatures on paper-completed PDFs and new paper records on fully digitally signed PDFs, including an in-flight verifier race.",
+    "Automatic selection uses an active authority when the same account has a revoked role before another eligible role.",
+    "Identical signatory saves retain the same binding ID; explicit exact-ID revocation works for demoted or disabled accounts without revoking a newer replacement.",
+    "Working requests expose correction recovery; the operator explicitly chooses the frozen source issuance.",
+    "A concise Russian operator guide is included in docs/operator-signing.txt."
+  ],
+  "verification": {
+    "unit": { "rootPassed": 325, "webPassed": 286, "failed": 0, "skipped": 0 },
+    "browser": {
+      "uniqueScenariosPassed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "mainRunMs": 140794.117,
+      "settingsAndCorrectionRunMs": 35690.817,
+      "finalPaperNamesRegressionRerunMs": 3530.019,
+      "files": [
+        "apps/web/e2e/signing-flow-live.spec.ts",
+        "apps/web/e2e/signing-settings-live.spec.ts",
+        "apps/web/e2e/korochki-request-recovery.spec.ts",
+        "apps/web/e2e/remaining-signing-stages.spec.ts"
+      ],
+      "environment": "Isolated PostgreSQL/API and Chromium, synthetic tenants, RU/KZ, desktop and 390px viewport",
+      "evidence": ".runtime/commission-flow/evidence/signing-flow-final/results.json",
+      "supplementalEvidence": [
+        ".runtime/commission-flow/evidence/signing-settings-final/results.json",
+        ".runtime/commission-flow/evidence/signing-paper-final/results.json"
+      ]
+    },
+    "integration": {
+      "passed": 10,
+      "failed": 0,
+      "files": [
+        "tests/integration/issuance-signing-registry.test.ts",
+        "tests/integration/manual-paper-signing.test.ts",
+        "tests/integration/signatory-configuration.test.ts",
+        "tests/integration/two-working-roles.test.ts"
+      ],
+      "scope": "Real disposable DB, local detached CMS verification with synthetic certificates, real PDF rendering, authority and paper/digital concurrency checks; no external government signing"
+    },
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "build": "PASS",
+    "uiDetectorFindings": 0,
+    "visualReview": "RU/KZ mobile and RU desktop signing, explicit blank date/unchecked paper confirmation, final paper state and separate signatory-role revocation inspected"
+  },
+  "measuredRecovery": {
+    "paperNamesRepeatedInput": 0,
+    "explicitFieldsPerOriginal": ["actual signing date", "basis for original inspection", "all signatures present checkbox"],
+    "untouchedPaperFormWrites": 0,
+    "acceptedPaperPostWithFailedRefresh": { "mutationRequests": 1, "retry": "GET_ONLY" },
+    "lostAcceptedPaperResponse": { "identicalMutationAttempts": 2, "auditRecords": 1 },
+    "lostAcceptedBindingResponse": { "attempts": 2, "sameBindingId": true },
+    "concurrentIdenticalBindingSaves": { "attempts": 4, "bindings": 1, "auditRecords": 1 },
+    "realBrowserFinalState": { "status": "ISSUED", "archived": true, "documentSignatures": 0, "paperAuditRecordsPerDocument": 1 },
+    "originalArtifactHashesUnchanged": true,
+    "frozenPolicyUnchanged": true
+  },
+  "preserved": ["Auth and tenant boundaries", "Numbering and immutable original files", "Frozen historical signer identities", "Cryptographic verification requirements", "Database schema and applied migrations"],
+  "limits": {
+    "officialEgovAndNcaServices": "NOT_CONNECTED_OR_VERIFIED",
+    "realHumanSignatures": "NOT_PERFORMED_SYNTHETIC_FIXTURES_ONLY",
+    "physicalIphoneSafari": "NOT_TESTED",
+    "physicalPrinting": "NOT_PERFORMED",
+    "fullHistoricalIntegrationSuite": "NOT_RUN",
+    "productionDeployment": "NOT_PERFORMED",
+    "productionDataChanged": false
+  },
+  "runtime": "Owned API 4168, web 3168 and disposable PostgreSQL 55468 stopped; fixture files retained"
+}
