@@ -27,6 +27,7 @@ import {
 import { login, logout, changePassword, cookies } from "./auth";
 import { registerCenter } from "./tenant-provisioning";
 import { printingOverview } from "./printing-overview";
+import { inspectLmsDeployment } from "./lms/deployment-gate";
 import { auditDetails } from "./audit-view";
 import {
   context,
@@ -74,6 +75,16 @@ function sendFile(
 }
 @Controller()
 export class DemoController {
+  @Get("settings/learning-readiness") async learningReadiness(
+    @Req() req: DemoRequest,
+  ) {
+    const c = requireCapability(req, "center:manage");
+    const tenant = await db.tenant.findUniqueOrThrow({
+      where: { id: c.tenantId },
+      select: { id: true, demoOnly: true },
+    });
+    return inspectLmsDeployment(tenant);
+  }
   @Get("health") health() {
     return { status: "ok", product: "DEMO", version: "2.0.0" };
   }

@@ -26,6 +26,7 @@ import { PortalAccess } from "./portal-access";
 import { AuditLog } from "./audit-log";
 import { OwnPasswordForm } from "./own-password-form";
 import { RegistrationPolicy } from "./registration-policy";
+import { LearningReadiness } from "./learning-readiness";
 import { TemplateManager } from "./template-manager";
 import { CommissionFields } from "./commission-fields";
 import {
@@ -132,7 +133,15 @@ export function Settings({
                 currentUserId={context.user.id}
                 actorRole={context.user.role}
               />
-              <RegistrationPolicy t={t} />
+              <LearningReadiness
+                key={context.tenant.id}
+                t={t}
+                tenantId={context.tenant.id}
+              >
+                {(onBusyChange) => (
+                  <RegistrationPolicy t={t} onBusyChange={onBusyChange} />
+                )}
+              </LearningReadiness>
             </>
           ) : activeTab === "signatories" && managesSystem ? (
             <SignatorySettings

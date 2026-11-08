@@ -52,7 +52,7 @@ type AuthorVersion = CourseVersion & {
     feedback: string;
   } | null;
 };
-export function CourseEditor({ id, t }: { id: string; t: Translate }) {
+export function CourseEditor({ id, t, canManageSanitary = false }: { id: string; t: Translate; canManageSanitary?: boolean }) {
   const [version, setVersion] = useState<AuthorVersion | null>(null);
   const [versions, setVersions] = useState<CourseVersion[]>([]);
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -69,6 +69,9 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
   const [busy, setBusy] = useState(false);
   const [conflict, setConflict] = useState(false);
   const [calendars, setCalendars] = useState<CalendarVersion[]>([]);
+  const [calendarError, setCalendarError] = useState<unknown>(null);
+  const [calendarLoading, setCalendarLoading] = useState(false);
+  const [calendarReload, setCalendarReload] = useState(0);
   const [recovery, setRecovery] = useState<Draft | null>(null);
   const [reviewFeedback, setReviewFeedback] = useState("");
   const [dependencyBlocked, setDependencyBlocked] = useState(false);
@@ -178,14 +181,22 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
   }
   useEffect(() => {
     void load();
-    void api<CalendarVersion[]>("/lms/sanitary/calendars")
-      .then(setCalendars)
-      .catch(() => {});
     return () => {
       loadRequest.current += 1;
       if (timer.current) clearTimeout(timer.current);
     };
   }, [id]);
+  useEffect(() => {
+    if (!canManageSanitary || !draft?.profile.sanitary) return;
+    let alive = true;
+    setCalendarLoading(true);
+    setCalendarError(null);
+    void api<CalendarVersion[]>("/lms/sanitary/calendars")
+      .then((value) => { if (alive) setCalendars(value); })
+      .catch((caught) => { if (alive) setCalendarError(caught); })
+      .finally(() => { if (alive) setCalendarLoading(false); });
+    return () => { alive = false; };
+  }, [canManageSanitary, draft?.profile.sanitary, calendarReload]);
   useEffect(() => {
     const leave = (event: BeforeUnloadEvent) => {
       if (lane.current?.dirty) {
@@ -955,9 +966,10 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
           </label>
           {profile.sanitary && (
             <div className="lms-fields">
-              <label>
+              {canManageSanitary ? <label>
                 {t("Производственный календарь", "Өндірістік күнтізбе")}
                 <select
+                  disabled={calendarLoading || !!calendarError}
                   value={profile.calendarVersionId || ""}
                   onChange={(event) => {
                     const calendar = calendars.find(
@@ -970,8 +982,9 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
                   }}
                 >
                   <option value="">
-                    {t("Выберите календарь", "Күнтізбені таңдаңыз")}
+                    {calendarLoading ? t("Загружаем календари…", "Күнтізбелер жүктелуде…") : t("Выберите календарь", "Күнтізбені таңдаңыз")}
                   </option>
+                  {profile.calendarVersionId && !calendars.some((calendar) => calendar.id === profile.calendarVersionId) && <option value={profile.calendarVersionId}>{t("Сохранённый календарь", "Сақталған күнтізбе")}</option>}
                   {calendars.map((calendar) => (
                     <option key={calendar.id} value={calendar.id}>
                       {calendar.name} · {t("версия", "нұсқа")}{" "}
@@ -979,7 +992,8 @@ export function CourseEditor({ id, t }: { id: string; t: Translate }) {
                     </option>
                   ))}
                 </select>
-              </label>
+              </label> : <p>{t("Производственный календарь для санитарного обучения выбирает директор или администратор центра.", "Санитариялық оқуға арналған өндірістік күнтізбені орталық директоры немесе әкімшісі таңдайды.")} {profile.calendarVersionId && t("Выбранный календарь сохранён.", "Таңдалған күнтізбе сақталды.")}</p>}
+              {canManageSanitary && !!calendarError && <Notice>{t("Не удалось загрузить календари. Сохранённый выбор не изменён.", "Күнтізбелер жүктелмеді. Сақталған таңдау өзгерген жоқ.")}<LmsErrorDiagnostic error={calendarError} t={t} /><button type="button" onClick={() => setCalendarReload((value) => value + 1)}>{t("Повторить загрузку календарей", "Күнтізбелерді қайта жүктеу")}</button></Notice>}
               <label>
                 {t(
                   "Время окончания рабочего дня",

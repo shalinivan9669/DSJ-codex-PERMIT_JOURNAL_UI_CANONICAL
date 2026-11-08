@@ -1,0 +1,128 @@
+{
+  "date": "2026-11-08",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "baseCommit": "e01029b",
+  "status": "LOCAL_METHODIST_RECOVERY_VERIFIED_PRODUCTION_CONFIGURATION_REQUIRED",
+  "productionDiagnosis": {
+    "mode": "READ_ONLY_AUTHENTICATED_API",
+    "role": "METHODIST",
+    "loginStatus": 201,
+    "catalogueRequests": 2,
+    "catalogueStatus": 503,
+    "code": "LMS_DEPLOYMENT_REVIEW_REQUIRED",
+    "originalScreenshotCorrelation": "59342187-b87e-47b3-97a6-b81f87708f79",
+    "freshCorrelation": "24e47dc2-92e1-4f24-bc63-3dc53c4dc360",
+    "exactServerConfigurationReason": "NOT_EXPOSED_BY_CURRENT_DEPLOYMENT",
+    "logoutStatus": 201,
+    "businessDataChanged": false,
+    "deploymentChanged": false
+  },
+  "changes": [
+    "Catalogue reports the actual configuration blocker, responsible administrator and settings path; create is disabled while the gate is closed.",
+    "List loading, stale results, transient errors and create errors use independent states. Unknown create outcome requires a complete first-page refresh and never replays POST.",
+    "Methodist course editor avoids forbidden sanitary calendar fetches; only authorized sanitary course contexts load calendars, and existing selections survive failures.",
+    "Assignment page shows the same deployment blocker instead of an empty programme list or generic retry.",
+    "New read-only administrator readiness endpoint explains bounded server reasons without returning private evidence or paths; the existing real-data gate remains unchanged.",
+    "Administrator settings offer a copyable server task and prevent readiness checks from interrupting pending registration policy updates."
+  ],
+  "verification": {
+    "rootUnit": {
+      "status": "PASS",
+      "passed": 328
+    },
+    "webUnit": {
+      "status": "PASS",
+      "passed": 304
+    },
+    "targetedIntegration": {
+      "status": "PASS",
+      "passed": 7,
+      "durationMs": 17156.4426,
+      "suites": [
+        "lms-readiness-http",
+        "lms-methodist-catalogue",
+        "lms-authoring-regulatory"
+      ]
+    },
+    "lint": "PASS",
+    "workspaceTypecheck": "PASS",
+    "designDetector": {
+      "status": "PASS",
+      "findings": 0
+    },
+    "browser": {
+      "status": "PASS",
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "durationMs": 30718.095,
+      "cases": [
+        "METHODIST login, empty catalogue, create, RU/KZ autosave, reopen without forbidden requests",
+        "Actual non-demo deployment gate and GET-only retry",
+        "Director readiness, copy task, no settings mutations",
+        "Operator assignment configuration blocker",
+        "Transient list failure preserves search and old rows",
+        "Create error survives successful list refresh",
+        "Lost accepted POST plus failed filtered GET reconciles one programme without retry POST",
+        "52 programme pagination and author/tenant scope",
+        "Readiness refresh waits for pending registration PATCH"
+      ],
+      "finalVisualRecheck": {
+        "reason": "Updated button spacing; final captures inspected",
+        "passed": 1,
+        "durationMs": 13809
+      }
+    },
+    "build": "PASS_LOCAL_WINDOWS_STANDALONE_DISABLED",
+    "visualReview": "PASS_RU_KZ_390PX_AND_DESKTOP",
+    "observedUiActions": {
+      "scenario": "Create minimal draft, autosave RU/KZ titles, return to catalogue and reopen",
+      "afterLogin": true,
+      "clicks": 3,
+      "enteredFields": 2,
+      "repeatedFields": 0,
+      "dialogs": 0,
+      "saveClicks": 0,
+      "scope": "Measured executed browser script; full programme content, publication and server setup effort are not included"
+    }
+  },
+  "testEnvironmentNotes": [
+    "Initial full test run lacked the configured Python executable; attachment/archive tests failed. Correct runtime environment yielded 328/328 root tests.",
+    "The local Windows build setting DEMO_STANDALONE=0 affected a Next configuration expectation. Removing that override for web tests yielded 304/304."
+  ],
+  "evidenceRoot": ".runtime/commission-flow/evidence/methodist-verified-final",
+  "scopeLimits": {
+    "productionCodeDeployment": "NOT_PERFORMED",
+    "productionLmsEnablement": "STILL_BLOCKED_PENDING_VALID_SERVER_CONFIGURATION",
+    "gateBypass": false,
+    "realLearnersOrProgrammesCreated": false,
+    "physicalIphoneSafari": "NOT_RUN",
+    "fullHistoricalIntegrationRenderSuite": "NOT_RUN",
+    "schemaMigrations": "NONE"
+  },
+  "localServicesStopped": true,
+  "changedFiles": [
+    "apps/api/src/controller.ts",
+    "apps/api/src/lms/deployment-gate.ts",
+    "apps/web/components/learning-readiness.tsx",
+    "apps/web/components/lms/assignments.tsx",
+    "apps/web/components/lms/catalogue.tsx",
+    "apps/web/components/lms/common.tsx",
+    "apps/web/components/lms/course-editor.tsx",
+    "apps/web/components/lms/workspace.tsx",
+    "apps/web/components/registration-policy.tsx",
+    "apps/web/components/settings.tsx",
+    "apps/web/e2e/methodist-programme-recovery-live.spec.ts",
+    "apps/web/test/lms-errors.test.ts",
+    "docs/evidence/commercial-acceptance/matrix.json",
+    "docs/evidence/methodist-programmes-20261108/acceptance.json",
+    "docs/evidence/progress.md",
+    "docs/LMS_DEPLOYMENT_RECOVERY_RU.md",
+    "packages/contracts/src/lms/deployment-gates.ts",
+    "packages/contracts/src/product-policy.json",
+    "tests/integration/lms-methodist-catalogue.test.ts",
+    "tests/integration/lms-readiness-http.test.ts",
+    "tests/lms-deployment-gates.test.ts"
+  ]
+}

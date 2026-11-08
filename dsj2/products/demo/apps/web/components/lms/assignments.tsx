@@ -62,6 +62,9 @@ export function Assignments({
     recipientId?: string;
   } | null>(null);
   const [contextError, setContextError] = useState<unknown>(null);
+  const deploymentBlocked = contextError instanceof ApiError &&
+    !!contextError.details && typeof contextError.details === "object" &&
+    "code" in contextError.details && contextError.details.code === "LMS_DEPLOYMENT_REVIEW_REQUIRED";
   const [loadingContext, setLoadingContext] = useState(true);
   const [contextReady, setContextReady] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -679,18 +682,18 @@ export function Assignments({
       {!!contextError && (
         <Notice>
           <strong>
-            {t(
+            {deploymentBlocked ? t("Обучение для центра пока недоступно", "Орталық үшін оқу әзірге қолжетімсіз") : t(
               "Не удалось загрузить данные для назначения",
               "Тағайындау деректері жүктелмеді",
             )}
           </strong>
           <p>
-            {t(
+            {deploymentBlocked ? lmsError(contextError, t) : t(
               "Пока нельзя проверить программы и список людей, назначение недоступно. Повторите загрузку — ваш выбор на этой странице сохранится.",
               "Бағдарламалар мен адамдар тізімін тексеру мүмкін болмай тұр, тағайындау қолжетімсіз. Жүктеуді қайталаңыз — осы беттегі таңдауыңыз сақталады.",
             )}
           </p>
-          {contextError instanceof ApiError &&
+          {!deploymentBlocked && contextError instanceof ApiError &&
             contextError.status >= 400 &&
             contextError.status < 500 && <p>{lmsError(contextError, t)}</p>}
           <LmsErrorDiagnostic error={contextError} t={t} />
@@ -700,7 +703,7 @@ export function Assignments({
           >
             {loadingContext
               ? t("Загружаем…", "Жүктелуде…")
-              : t("Повторить загрузку", "Қайта жүктеу")}
+              : deploymentBlocked ? t("Проверить доступ", "Қолжетімділікті тексеру") : t("Повторить загрузку", "Қайта жүктеу")}
           </button>
           {contextError instanceof ApiError &&
             [403, 404].includes(contextError.status) && (

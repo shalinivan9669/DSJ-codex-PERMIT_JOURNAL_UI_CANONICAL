@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
+import { ApiError } from "@/lib/api";
 import { lms, type Course, type Paged } from "@/lib/lms-api";
 import { safeLmsReturnTo } from "@/lib/lms-navigation";
 import { emptyCourse, emptyProfile } from "./course-editor";
@@ -29,30 +30,53 @@ export function Catalogue({
 }) {
   const router = useRouter();
   const returnTo = safeLmsReturnTo(useSearchParams().get("returnTo"));
-  const assignmentReturnTo = returnTo && /^\/lms\/assign(?:\?|$)/.test(returnTo) ? returnTo : null;
+  const assignmentReturnTo =
+    returnTo && /^\/lms\/assign(?:\?|$)/.test(returnTo) ? returnTo : null;
   const [data, setData] = useState<Paged<Course>>({ items: [], total: 0 });
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [error, setError] = useState<unknown>(null);
-  const [busy, setBusy] = useState(false);
+  const [loadError, setLoadError] = useState<unknown>(null);
+  const [createError, setCreateError] = useState<unknown>(null);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [creationCheckPending, setCreationCheckPending] = useState(false);
+  const creatingRef = useRef(false);
+  const [loadedQuery, setLoadedQuery] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
+  const query = JSON.stringify([page, search]);
+  const loadNeedsSetup =
+    catalogueErrorCode(loadError) === "LMS_DEPLOYMENT_REVIEW_REQUIRED";
+  const createNeedsSetup =
+    catalogueErrorCode(createError) === "LMS_DEPLOYMENT_REVIEW_REQUIRED";
+  const creationUncertain =
+    createError instanceof ApiError &&
+    (createError.status === 0 || createError.status >= 500);
+  const setupMessage = lmsError({ code: "LMS_DEPLOYMENT_REVIEW_REQUIRED" }, t);
   useEffect(() => {
     let alive = true;
+    setLoading(true);
+    setLoadError(null);
     const timer = setTimeout(() => {
-      setBusy(true);
       void lms
         .courses(page, search)
         .then((value) => {
           if (alive) {
             setData(value);
-            setError(null);
+            setLoadedQuery(JSON.stringify([page, search]));
+            setLoadError(null);
+            setCreationCheckPending(false);
+            setCreateError((before: unknown) =>
+              catalogueErrorCode(before) === "LMS_DEPLOYMENT_REVIEW_REQUIRED"
+                ? null
+                : before,
+            );
           }
         })
         .catch((caught) => {
-          if (alive) setError(caught);
+          if (alive) setLoadError(caught);
         })
         .finally(() => {
-          if (alive) setBusy(false);
+          if (alive) setLoading(false);
         });
     }, 180);
     return () => {
@@ -60,63 +84,207 @@ export function Catalogue({
       clearTimeout(timer);
     };
   }, [page, search, refresh]);
+  function reload(resetSearch = false) {
+    if (creatingRef.current || loading) return;
+    setLoading(true);
+    if (resetSearch || creationCheckPending) {
+      setSearch("");
+      setPage(1);
+    }
+    setRefresh((value) => value + 1);
+  }
   async function create() {
-    if (busy || !canCreate) return;
-    setBusy(true);
-    setError(null);
+    if (
+      creatingRef.current ||
+      loading ||
+      creationCheckPending ||
+      !canCreate ||
+      loadNeedsSetup ||
+      createNeedsSetup
+    )
+      return;
+    creatingRef.current = true;
+    setCreating(true);
+    setCreateError(null);
     try {
       const value = await lms.createCourse(emptyCourse(), emptyProfile(issuer));
       router.push(`/lms/courses/${value.course.id}`);
     } catch (caught) {
-      setError(caught);
-      setBusy(false);
+      setCreateError(caught);
+      setCreationCheckPending(
+        caught instanceof ApiError &&
+          (caught.status === 0 || caught.status >= 500) &&
+          catalogueErrorCode(caught) !== "LMS_DEPLOYMENT_REVIEW_REQUIRED",
+      );
+      creatingRef.current = false;
+      setCreating(false);
     }
   }
   return (
     <>
       <LmsHeading title={t("Программы обучения", "Оқу бағдарламалары")}>
-        {assignmentReturnTo && <Link className="button" href={assignmentReturnTo}>{t("Вернуться к назначению", "Тағайындауға оралу")}</Link>}
+        {assignmentReturnTo && (
+          <Link className="button" href={assignmentReturnTo}>
+            {t("Вернуться к назначению", "Тағайындауға оралу")}
+          </Link>
+        )}
         {canCreate && (
           <button
             className="primary lms-primary"
-            disabled={busy}
+            disabled={
+              loading ||
+              creating ||
+              creationCheckPending ||
+              loadNeedsSetup ||
+              createNeedsSetup
+            }
             onClick={() => void create()}
           >
-            {t("Создать программу", "Бағдарлама жасау")}
+            {creating
+              ? t("Создаём программу…", "Бағдарлама жасалуда…")
+              : t("Создать программу", "Бағдарлама жасау")}
           </button>
         )}
       </LmsHeading>
-      {!!error && (
+      {!!createError && !(createNeedsSetup && loadNeedsSetup) && (
         <Notice>
-          {lmsError(error, t)}
-          <LmsErrorDiagnostic error={error} t={t} />
-          <button onClick={() => setRefresh((v) => v + 1)}>
-            {t("Повторить", "Қайталау")}
+          <strong>
+            {createNeedsSetup
+              ? t(
+                  "Создание программ пока недоступно",
+                  "Бағдарлама жасау әзірге қолжетімсіз",
+                )
+              : creationUncertain
+                ? t(
+                    "Не удалось подтвердить создание программы",
+                    "Бағдарламаның жасалғанын растау мүмкін болмады",
+                  )
+                : t(
+                    "Не удалось создать программу",
+                    "Бағдарлама жасау мүмкін болмады",
+                  )}
+          </strong>
+          <p>
+            {createNeedsSetup
+              ? setupMessage
+              : creationUncertain
+                ? t(
+                    "Программа могла сохраниться. Обновите список и проверьте его перед новым созданием.",
+                    "Бағдарлама сақталған болуы мүмкін. Жаңасын жасамас бұрын тізімді жаңартып, тексеріңіз.",
+                  )
+                : lmsError(createError, t)}
+          </p>
+          <LmsErrorDiagnostic error={createError} t={t} />
+          <button
+            type="button"
+            disabled={loading || creating}
+            onClick={() => reload(creationCheckPending)}
+          >
+            {createNeedsSetup
+              ? t("Проверить доступ", "Қолжетімділікті тексеру")
+              : t("Обновить список программ", "Бағдарламалар тізімін жаңарту")}
           </button>
         </Notice>
       )}
-      <section className="panel lms-panel" aria-busy={busy}>
+      <section className="panel lms-panel" aria-busy={loading}>
         <div className="lms-toolbar">
           <label>
             {t("Найти курс", "Курсты табу")}
             <input
               type="search"
+              disabled={creating || creationCheckPending}
               value={search}
               onChange={(e) => {
+                setLoading(true);
                 setSearch(e.target.value);
                 setPage(1);
               }}
             />
           </label>
         </div>
+        {!!loadError && (
+          <Notice>
+            <strong>
+              {loadNeedsSetup
+                ? t(
+                    "Доступ к программам пока закрыт",
+                    "Бағдарламаларға қолжетімділік әзірге жабық",
+                  )
+                : t(
+                    "Не удалось загрузить программы",
+                    "Бағдарламаларды жүктеу мүмкін болмады",
+                  )}
+            </strong>
+            <p>
+              {loadNeedsSetup
+                ? setupMessage
+                : loadError instanceof ApiError && loadError.status === 403
+                  ? t(
+                      "Нет доступа к списку программ. Обратитесь к администратору центра.",
+                      "Бағдарламалар тізіміне қолжетімділік жоқ. Орталық әкімшісіне хабарласыңыз.",
+                    )
+                  : loadError instanceof ApiError && loadError.status === 401
+                    ? t(
+                        "Сеанс завершён. Войдите снова, чтобы открыть программы.",
+                        "Сеанс аяқталды. Бағдарламаларды ашу үшін қайта кіріңіз.",
+                      )
+                    : loadError instanceof ApiError && loadError.status === 0
+                      ? t(
+                          "Нет связи с сервером. Проверьте соединение и повторите загрузку списка.",
+                          "Сервермен байланыс жоқ. Байланысты тексеріп, тізімді қайта жүктеңіз.",
+                        )
+                      : loadError instanceof ApiError &&
+                          loadError.status === 429
+                        ? t(
+                            "Слишком частые запросы. Подождите немного и повторите загрузку.",
+                            "Сұраулар тым жиі жіберілді. Біраз күтіп, қайта жүктеңіз.",
+                          )
+                        : t(
+                            "Список временно недоступен. Повторите загрузку; если ошибка сохранится, сообщите администратору центра.",
+                            "Тізім уақытша қолжетімсіз. Қайта жүктеңіз; қате қайталанса, орталық әкімшісіне хабарлаңыз.",
+                          )}
+            </p>
+            <LmsErrorDiagnostic error={loadError} t={t} />
+            <button
+              type="button"
+              disabled={loading || creating}
+              onClick={() => reload()}
+            >
+              {loadNeedsSetup
+                ? t("Проверить доступ", "Қолжетімділікті тексеру")
+                : t("Повторить загрузку", "Қайта жүктеу")}
+            </button>
+          </Notice>
+        )}
+        {loading && (
+          <p role="status" aria-live="polite">
+            {t("Загружаем программы…", "Бағдарламалар жүктелуде…")}
+          </p>
+        )}
+        {!!data.items.length &&
+          (loading || !!loadError || loadedQuery !== query) && (
+            <p className="lms-save-state">
+              {t(
+                "Пока показан ранее загруженный список.",
+                "Әзірге бұрын жүктелген тізім көрсетілген.",
+              )}
+            </p>
+          )}
         <ul className="lms-list">
           {data.items.map((course) => {
             const version = course.latestVersion || course.versions?.[0];
-            const published = course.publishedVersion || (version?.status === "PUBLISHED" ? version : null);
+            const published =
+              course.publishedVersion ||
+              (version?.status === "PUBLISHED" ? version : null);
             const canOpenEditor = course.allowedActions
-              ? course.allowedActions.some((action) => ["edit", "publish", "submitReview"].includes(action))
+              ? course.allowedActions.some((action) =>
+                  ["edit", "publish", "submitReview"].includes(action),
+                )
               : canEdit;
-            const canAssign = course.allowedActions?.includes("assign") && !!published && !course.assignmentPaused;
+            const canAssign =
+              course.allowedActions?.includes("assign") &&
+              !!published &&
+              !course.assignmentPaused;
             if (!version) return null;
             return (
               <li key={course.id}>
@@ -138,12 +306,26 @@ export function Catalogue({
                     <span>
                       {version.content.hours} {t("ч.", "сағ.")}
                     </span>
-                    {version.content.metadata?.durationDays && <span>{t("Продолжительность", "Ұзақтығы")}: {version.content.metadata.durationDays} {t("дней", "күн")}</span>}
+                    {version.content.metadata?.durationDays && (
+                      <span>
+                        {t("Продолжительность", "Ұзақтығы")}:{" "}
+                        {version.content.metadata.durationDays}{" "}
+                        {t("дней", "күн")}
+                      </span>
+                    )}
                     <span>
                       {t("Версия", "Нұсқа")} {version.version}
                     </span>
                   </div>
-                  {published && published.id !== version.id && <p className="lms-save-state">{t("Для назначения доступна опубликованная версия", "Тағайындау үшін жарияланған нұсқа қолжетімді")} {published.version}</p>}
+                  {published && published.id !== version.id && (
+                    <p className="lms-save-state">
+                      {t(
+                        "Для назначения доступна опубликованная версия",
+                        "Тағайындау үшін жарияланған нұсқа қолжетімді",
+                      )}{" "}
+                      {published.version}
+                    </p>
+                  )}
                   <details>
                     <summary>{t("Условия обучения", "Оқу шарттары")}</summary>
                     <p>
@@ -164,7 +346,9 @@ export function Catalogue({
                         : ""}
                     </p>
                   )}
-                  {course.allowedActions?.includes("publish") && <PublicityEditor courseId={course.id} t={t} />}
+                  {course.allowedActions?.includes("publish") && (
+                    <PublicityEditor courseId={course.id} t={t} />
+                  )}
                   {course.currentReview &&
                     course.currentReview.status !== "CURRENT" && (
                       <p>
@@ -184,24 +368,60 @@ export function Catalogue({
                   >
                     {t("Назначить обучение", "Оқуды тағайындау")}
                   </Link>
-                ) : canOpenEditor ? <Link className="button" href={`/lms/courses/${course.id}`}>{t("Продолжить подготовку", "Дайындауды жалғастыру")}</Link> : null}
+                ) : canOpenEditor ? (
+                  <Link className="button" href={`/lms/courses/${course.id}`}>
+                    {t("Продолжить подготовку", "Дайындауды жалғастыру")}
+                  </Link>
+                ) : null}
               </li>
             );
           })}
         </ul>
-        {!data.items.length && !busy && !error && (
-          <p className="lms-empty">
-            {search ? t("Программы не найдены. Измените поиск.", "Бағдарламалар табылмады. Іздеуді өзгертіңіз.") : canCreate ? t("Создайте программу: сведения, содержание и условия прохождения.", "Бағдарлама жасаңыз: мәліметтер, мазмұн және өту шарттары.") : t("Администратор назначит вам программу или опубликует её для обучения.", "Әкімші сізге бағдарламаны бекітеді немесе оны оқу үшін жариялайды.")}
-          </p>
-        )}
-        <PageControls
-          page={page}
-          total={data.total}
-          pageSize={data.pageSize || 50}
-          onPage={setPage}
-          t={t}
-        />
+        {!data.items.length &&
+          !loading &&
+          !loadError &&
+          loadedQuery === query && (
+            <p className="lms-empty">
+              {search
+                ? t(
+                    "Программы не найдены. Измените поиск.",
+                    "Бағдарламалар табылмады. Іздеуді өзгертіңіз.",
+                  )
+                : canCreate
+                  ? t(
+                      "Программ пока нет. Создайте первую: сведения, содержание и условия прохождения.",
+                      "Бағдарламалар әзірге жоқ. Алғашқысын жасаңыз: мәліметтер, мазмұн және өту шарттары.",
+                    )
+                  : t(
+                      "В доступном вам списке пока нет программ. Обратитесь к администратору центра.",
+                      "Сізге қолжетімді тізімде әзірге бағдарламалар жоқ. Орталық әкімшісіне хабарласыңыз.",
+                    )}
+            </p>
+          )}
+        {!loading &&
+          !loadError &&
+          !creating &&
+          !creationCheckPending &&
+          loadedQuery === query && (
+            <PageControls
+              page={page}
+              total={data.total}
+              pageSize={data.pageSize || 50}
+              onPage={(value) => {
+                setLoading(true);
+                setPage(value);
+              }}
+              t={t}
+            />
+          )}
       </section>
     </>
   );
+}
+
+function catalogueErrorCode(error: unknown) {
+  const details = error instanceof ApiError ? error.details : error;
+  return details && typeof details === "object" && "code" in details
+    ? String(details.code || "")
+    : "";
 }

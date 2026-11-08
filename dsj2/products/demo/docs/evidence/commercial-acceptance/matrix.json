@@ -1,4 +1,12 @@
 {
+  "methodistProgrammes20261108": {
+    "date": "2026-11-08",
+    "status": "LOCAL_METHODIST_RECOVERY_VERIFIED_PRODUCTION_CONFIGURATION_REQUIRED",
+    "branch": "codex/korochki-commission-flow-20261108",
+    "evidence": "../methodist-programmes-20261108/acceptance.json",
+    "deployment": "NOT_PERFORMED",
+    "productionDiagnosis": "METHODIST_CATALOGUE_HTTP_503_LMS_DEPLOYMENT_REVIEW_REQUIRED"
+  },
   "personDirectorTransfer20261108": {
     "date": "2026-11-08",
     "status": "LOCAL_TRANSFER_RECOVERY_VERIFIED_AND_REAL_REQUEST_PENDING",

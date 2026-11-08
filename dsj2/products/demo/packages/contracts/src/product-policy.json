@@ -93,6 +93,11 @@
       "path": "/settings/signatories"
     },
     {
+      "method": "GET",
+      "surface": "api",
+      "path": "/settings/learning-readiness"
+    },
+    {
       "method": "POST",
       "surface": "api",
       "path": "/settings/signatories"

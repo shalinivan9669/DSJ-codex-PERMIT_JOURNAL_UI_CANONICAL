@@ -12,6 +12,18 @@ export const personalDataLocations = [
   "EVIDENCE",
   "SUBPROCESSORS",
 ] as const;
+export type LmsDeploymentReadiness =
+  | { available: true; reason: "SYNTHETIC" | "READY" }
+  | {
+      available: false;
+      reason:
+        | "NOT_CONFIGURED"
+        | "UNREADABLE"
+        | "INVALID_DOCUMENT"
+        | "TENANT_MISSING"
+        | "INCOMPLETE"
+        | "PLACEMENT_UNCONFIRMED";
+    };
 export const lmsDeploymentEvidenceSchema = z
   .object({
     tenantId: z.string().uuid(),

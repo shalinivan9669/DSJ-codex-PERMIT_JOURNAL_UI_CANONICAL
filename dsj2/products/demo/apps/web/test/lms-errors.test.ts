@@ -17,6 +17,7 @@ test("F3 known access, row, material and document errors localize from code and 
     "DOCUMENT_NOT_READY",
     "TEMPLATE_NOT_APPROVED",
     "REVIEW_CONFLICT",
+    "LMS_DEPLOYMENT_REVIEW_REQUIRED",
   ]) {
     const row = {
       code,
@@ -42,4 +43,13 @@ test("F3 known access, row, material and document errors localize from code and 
   assert.match(lmsError(unknown, kz), /әрекет|Әрекет/);
   assert.ok(!lmsError(unknown, kz).includes("PRIVATE_DATABASE"));
   assert.ok(!lmsError(unknown, kz).includes("synthetic-correlation"));
+});
+
+test("deployment configuration failures name the administrator recovery instead of a temporary retry", () => {
+  const error = new ApiError(503, "PRIVATE_CONFIG_PATH", { code: "LMS_DEPLOYMENT_REVIEW_REQUIRED" });
+  const message = lmsError(error, (ru) => ru);
+  assert.match(message, /программы, назначения и учебные результаты недоступны/);
+  assert.match(message, /Администратору/);
+  assert.match(message, /Настройки → Пользователи → Доступ к обучению/);
+  assert.doesNotMatch(message, /PRIVATE_CONFIG_PATH|Повторите позже|Ваш ввод и выбор сохранены/);
 });

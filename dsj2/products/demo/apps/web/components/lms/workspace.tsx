@@ -145,7 +145,7 @@ export function LmsWorkspace({
       ) : group && canReadResults ? (
         <TrainingGroup key={group[1]} id={group[1]} t={t} canEdit={canOperate} />
       ) : course && canReadCourses ? (
-        <CourseEditor key={course[1]} id={course[1]} t={t} />
+        <CourseEditor key={course[1]} id={course[1]} t={t} canManageSanitary={canOperate} />
       ) : pathname === "/lms/assign" && canAssign ? (
         <Assignments
           t={t}
