@@ -36,9 +36,7 @@ export function ApprovalReviewPanel({
         </strong>
         {summary.exceptions > 0
           ? ` · индивидуальные значения или исключения у ${summary.exceptions} человек`
-          : " · без индивидуальных исключений"}
-        . Одно решение относится ко всему показанному составу и связанным
-        формам.
+          : ""}
       </p>
       <div className="table-scroll">
         <table className="approval-course-summary">
@@ -98,10 +96,6 @@ export function ApprovalReviewPanel({
         <summary>
           Предпросмотр данных всех людей и документов ({summary.people})
         </summary>
-        <p>
-          Показаны разрешённые значения переданной редакции, включая общие
-          данные и настройки центра.
-        </p>
         {showPeople && (
           <div className="table-scroll">
             <table>

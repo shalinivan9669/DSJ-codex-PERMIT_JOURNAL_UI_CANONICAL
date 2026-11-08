@@ -1,0 +1,97 @@
+{
+  "rendererVersion": "demo-ooxml-14/libreoffice-26.2.6.3",
+  "results": [
+    {
+      "template": "biot-protocol",
+      "commission": 4,
+      "pages": 1,
+      "docx": "biot-protocol-commission-4.docx",
+      "pdf": "biot-protocol-commission-4.pdf",
+      "sha256": "fda06efdb7a319b34521a2e254e39cfc9aa57c1b1b8574481aca3e58bc9099f3",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "biot-protocol",
+      "commission": 12,
+      "pages": 1,
+      "docx": "biot-protocol-commission-12.docx",
+      "pdf": "biot-protocol-commission-12.pdf",
+      "sha256": "c9d9a4ca3f91c7e16806bb81b2991ad100f65b1a2182e100943acaa9865e1fef",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "biot-itr-protocol",
+      "commission": 4,
+      "pages": 1,
+      "docx": "biot-itr-protocol-commission-4.docx",
+      "pdf": "biot-itr-protocol-commission-4.pdf",
+      "sha256": "4407724903e77c5835db164b38275e59de393398eab47128c806159268db789a",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "biot-itr-protocol",
+      "commission": 12,
+      "pages": 1,
+      "docx": "biot-itr-protocol-commission-12.docx",
+      "pdf": "biot-itr-protocol-commission-12.pdf",
+      "sha256": "0bb33cb4b30b54e77bb989a327464b41ac01bc3a4841588c4f1fa1253f5f9af6",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "pb-protocol",
+      "commission": 4,
+      "pages": 1,
+      "docx": "pb-protocol-commission-4.docx",
+      "pdf": "pb-protocol-commission-4.pdf",
+      "sha256": "339b08c53e62371cb8bd50a55a6facfebadd348553f78b0f7d7428afa04d9a9b",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "pb-protocol",
+      "commission": 12,
+      "pages": 1,
+      "docx": "pb-protocol-commission-12.docx",
+      "pdf": "pb-protocol-commission-12.pdf",
+      "sha256": "e4c06e1da8110e5111bf8b4241df8873c9ef159c61c2c713b6d044371fb7954c",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "ptm-protocol",
+      "commission": 4,
+      "pages": 1,
+      "docx": "ptm-protocol-commission-4.docx",
+      "pdf": "ptm-protocol-commission-4.pdf",
+      "sha256": "f0b410820f97253ed4efe3654b1263bff506a95d3e5a23b1dd86d382efc3fc52",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "ptm-protocol",
+      "commission": 12,
+      "pages": 1,
+      "docx": "ptm-protocol-commission-12.docx",
+      "pdf": "ptm-protocol-commission-12.pdf",
+      "sha256": "a6db6531d8b3238fb5fc54f609fca55f2b8154c2b5731984f04fdadcf567e315",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "ps-protocol",
+      "commission": 4,
+      "pages": 1,
+      "docx": "ps-protocol-commission-4.docx",
+      "pdf": "ps-protocol-commission-4.pdf",
+      "sha256": "bce146b6d83d8db05b08b45bfdef43dcfe884d3465f034ca9f4a3ccc34f0648c",
+      "allCompositionNamesPresent": true
+    },
+    {
+      "template": "ps-protocol",
+      "commission": 12,
+      "pages": 1,
+      "docx": "ps-protocol-commission-12.docx",
+      "pdf": "ps-protocol-commission-12.pdf",
+      "sha256": "f527925bfa145275bbdea14880a08384aa73e2b4b3641132097282f5561d9a00",
+      "allCompositionNamesPresent": true
+    }
+  ],
+  "visualReview": "All ten PNG pages inspected: complete composition readable, no clipped composition lines, existing three signature slots preserved.",
+  "signaturePolicy": "Descriptive commission composition only. No additional EDS or paper attestation requirements were introduced; frozen policies and saved artifacts unchanged."
+}

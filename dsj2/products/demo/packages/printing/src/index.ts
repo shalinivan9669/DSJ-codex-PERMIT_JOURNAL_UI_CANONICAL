@@ -22,7 +22,7 @@ import {
   toNamespacedPath,
 } from "node:path";
 
-export const RENDERER_VERSION = "demo-ooxml-13/libreoffice-26.2.6.3";
+export const RENDERER_VERSION = "demo-ooxml-14/libreoffice-26.2.6.3";
 export const PRODUCT_ROOT = resolve(__dirname, "../../..");
 export const BUNDLE_PART_BYTES = 64 * 1024 * 1024;
 export function partitionSavedArtifacts<T extends { size: number }>(

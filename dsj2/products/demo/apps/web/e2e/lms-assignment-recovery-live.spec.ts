@@ -13,11 +13,15 @@ import { saveRecipient } from "../../../apps/api/src/recipients";
 import {
   createCourse,
   publishVersion,
+  setCoursePause,
 } from "../../../apps/api/src/lms/courses";
 import { lmsCourse } from "../../../tests/integration/lms-fixture";
 import { assertTestDatabase } from "../../../tests/integration/test-database";
 
 test.use({ trace: "off" });
+test.beforeEach(async ({ page }) => {
+  await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
+});
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../../.runtime/commission-flow/evidence/lms-assignment",
@@ -260,6 +264,9 @@ test("methodist preparation and director publication let the operator assign the
   });
   try {
     const methodist = await methodistContext.newPage();
+    await methodist.routeWebSocket(/\/_next\/webpack-hmr/, (socket) =>
+      socket.close(),
+    );
     await login(methodist, seeded.accounts.METHODIST);
     await methodist.goto("/lms");
     const createdResponse = methodist.waitForResponse(
@@ -310,6 +317,9 @@ test("methodist preparation and director publication let the operator assign the
     await screenshot(methodist, "methodist-submitted-for-review");
 
     const director = await directorContext.newPage();
+    await director.routeWebSocket(/\/_next\/webpack-hmr/, (socket) =>
+      socket.close(),
+    );
     await login(director, seeded.accounts.DIRECTOR);
     await director.goto(`/lms/courses/${created.course.id}`);
     await director
@@ -338,6 +348,41 @@ test("methodist preparation and director publication let the operator assign the
           ).status,
       )
       .toBe("PUBLISHED");
+    await expect(
+      director
+        .getByRole("link", { name: "Назначить обучение", exact: true })
+        .first(),
+    ).toHaveAttribute("href", `/lms/assign?versionId=${created.version.id}`);
+    await director
+      .getByRole("button", { name: "Создать новую версию", exact: true })
+      .click();
+    await expect(
+      director
+        .getByRole("link", { name: "Назначить обучение", exact: true })
+        .first(),
+    ).toHaveAttribute("href", `/lms/assign?versionId=${created.version.id}`);
+    await expect
+      .poll(async () =>
+        (
+          await db.courseVersion.findMany({
+            where: {
+              tenantId: seeded.context.tenantId,
+              courseId: created.course.id,
+            },
+          })
+        )
+          .map((version) => version.status)
+          .sort(),
+      )
+      .toEqual(["DRAFT", "PUBLISHED"]);
+    await expect(
+      director.getByRole("button", { name: "Опубликовать", exact: true }),
+    ).toBeVisible();
+    await expect(
+      director
+        .getByRole("link", { name: "Назначить обучение", exact: true })
+        .first(),
+    ).toHaveAttribute("href", `/lms/assign?versionId=${created.version.id}`);
     expect(
       await db.enrollment.count({
         where: { tenantId: seeded.context.tenantId },
@@ -439,6 +484,40 @@ test("failed context refresh keeps selected people programme and group until ret
   expect(
     await db.enrollment.count({ where: { tenantId: seeded.context.tenantId } }),
   ).toBe(0);
+  const version = await db.courseVersion.findUniqueOrThrow({
+    where: { id: seeded.versionId },
+  });
+  await setCoursePause(seeded.context, version.courseId, {
+    paused: true,
+    reason: "Синтетическая приостановка назначений",
+  });
+  await page
+    .getByRole("button", { name: "Обновить список", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Назначить обучение · 2", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page
+      .getByRole("combobox", { name: "Программа", exact: true })
+      .locator(`option[value="${seeded.versionId}"]`),
+  ).toBeDisabled();
+  await expect(
+    page.getByText(/Назначения приостановлены\. Для возобновления/),
+  ).toBeVisible();
+  await setCoursePause(seeded.context, version.courseId, {
+    paused: false,
+    reason: "",
+  });
+  await page
+    .getByRole("button", { name: "Обновить список", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Назначить обучение · 2", exact: true }),
+  ).toBeEnabled();
+  await expect(
+    page.getByLabel("Название группы · необязательно", { exact: true }),
+  ).toHaveValue("Состав после сбоя загрузки");
 });
 
 test("lost accepted assignment response resumes the same operation without duplicate enrollments", async ({

@@ -48,8 +48,7 @@ test("F3 known access, row, material and document errors localize from code and 
 test("deployment configuration failures name the administrator recovery instead of a temporary retry", () => {
   const error = new ApiError(503, "PRIVATE_CONFIG_PATH", { code: "LMS_DEPLOYMENT_REVIEW_REQUIRED" });
   const message = lmsError(error, (ru) => ru);
-  assert.match(message, /программы, назначения, календарь, уведомления и учебные результаты недоступны/);
-  assert.match(message, /Администратору/);
-  assert.match(message, /Настройки → Пользователи → Доступ к обучению/);
+  assert.equal(message, "Обучение пока недоступно. Обратитесь к администратору.");
+  assert.equal(lmsError(error, (_ru, kz) => kz), "Оқу әзірге қолжетімсіз. Әкімшіге хабарласыңыз.");
   assert.doesNotMatch(message, /PRIVATE_CONFIG_PATH|Повторите позже|Ваш ввод и выбор сохранены/);
 });

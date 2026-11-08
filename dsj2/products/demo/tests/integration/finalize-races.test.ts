@@ -8,7 +8,7 @@ import {
   patchRequest,
   validateRequest,
 } from "../../apps/api/src/requests";
-import { saveProfile } from "../../apps/api/src/settings";
+import { bootstrapSuperAdmin, saveProfile } from "../../apps/api/src/settings";
 import { draftSchema, type Draft } from "../../packages/contracts/src";
 import { AutosaveLane } from "../../apps/web/lib/autosave";
 import { provision } from "../../scripts/setup";
@@ -85,11 +85,16 @@ test("AT135/AT136 controlled real database races preserve autosave revision and 
   });
   const c: Context = {
     ...seed,
-    role: "ADMIN",
+    role: "DIRECTOR",
     sessionId: "test",
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  await bootstrapSuperAdmin(c, {
+    currentPassword: "Synthetic-Race-Password!",
+    confirm: true,
+  });
+  c.role = "SUPER_ADMIN";
   const secondUser = await db.user.create({
     data: {
       tenantId: c.tenantId,

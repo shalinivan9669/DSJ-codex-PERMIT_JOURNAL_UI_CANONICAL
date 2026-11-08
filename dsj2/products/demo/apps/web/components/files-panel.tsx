@@ -23,6 +23,7 @@ import {
 import { dateTime, Status } from "./request-list";
 import { VerificationLink } from "./verification-link";
 import { SavedPrintSet } from "./saved-print-set";
+import { OperatorError } from "./operator-error";
 import { filePollingRetryDelay } from "@/lib/file-polling";
 import { readyPreviewRevision } from "@/lib/preview-readiness";
 import {
@@ -67,6 +68,7 @@ export function FilesPanel({
   const [issuances, setIssuances] = useState<Issuance[]>(draft.issuances || []);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
   const [busy, setBusy] = useState("");
   const [dialog, setDialog] = useState<"correct" | "cancel" | null>(null);
   const [correctionIssuanceId, setCorrectionIssuanceId] = useState("");
@@ -151,7 +153,7 @@ export function FilesPanel({
               .map((artifact) => artifact.id),
           ]),
         ]);
-        setError("");
+        setLoadError("");
         if (
           result.items.some((job) =>
             ["PENDING", "QUEUED", "RUNNING", "RETRY"].includes(job.status),
@@ -161,7 +163,7 @@ export function FilesPanel({
       } catch (caught) {
         if (!active) return;
         setServerReview(null);
-        setError(errorText(caught));
+        setLoadError(errorText(caught));
         const delay = filePollingRetryDelay(caught, ++failures);
         if (delay !== null) timer = setTimeout(() => void load(), delay);
       }
@@ -337,13 +339,11 @@ export function FilesPanel({
   const panelTitle = allowPrint
     ? "Документы и печать"
     : "Предпросмотр документов";
-  if (!jobs.length && !issuances.length && !error)
+  if (!jobs.length && !issuances.length && !error && !loadError)
     return draft.kind === "PERSON" && draft.items.length === 1 ? null : (
       <section id="request-files" className="files-empty">
         <Icon name={allowPrint ? "print" : "search"} />
-        <p>
-          После предпросмотра или оформления здесь появятся задания и файлы.
-        </p>
+        <p>Создайте предпросмотр, чтобы увидеть документы.</p>
       </section>
     );
   return (
@@ -363,10 +363,7 @@ export function FilesPanel({
         <div>
           <h2>{panelTitle}</h2>
           <p className="muted">
-            Готово {complete} из {jobs.length}. Повторяется только генерация;
-            номера сохраняются.
-            {!allowPrint &&
-              " Предпросмотр можно открыть и скачать. Печать станет доступна после согласования заявки."}
+            Готово {complete} из {jobs.length}.
             {missing.length > 0 && (
               <strong className="danger-text">
                 {" "}
@@ -388,6 +385,7 @@ export function FilesPanel({
             }
             onClick={() => {
               setBusy("registry");
+              setError("");
               void downloadExport(
                 `/print-requests/${requestId}/export`,
                 { format: "XLSX" },
@@ -411,6 +409,7 @@ export function FilesPanel({
               }
               onClick={() => {
                 setBusy("zip");
+                setError("");
                 void downloadExport(
                   `/print-requests/${requestId}/export`,
                   { format: "ZIP", allowPartial: partialBundle },
@@ -428,15 +427,27 @@ export function FilesPanel({
           </button>
         </div>
       </div>
-      {error && <Notice>{error}</Notice>}
+      {error && (
+        <Notice>
+          <OperatorError text={error} />
+        </Notice>
+      )}
+      {loadError && (
+        <Notice>
+          <OperatorError text={loadError} />
+          <button
+            disabled={!!busy}
+            onClick={() => setReload((value) => value + 1)}
+          >
+            Загрузить документы повторно
+          </button>
+        </Notice>
+      )}
       {awaitingSignatures && (
         <Notice kind="info">
-          {allowPrint
-            ? "Готовые PDF можно просмотреть и распечатать кнопкой «Печать»."
-            : "Готовые PDF можно просмотреть и скачать."}{" "}
           {signaturesRequired
-            ? "Комплект ожидает электронных подписей; официальный ZIP и реестр выдачи станут доступны после их проверки."
-            : "Подготовка комплекта продолжается. ZIP и реестр станут доступны после завершения."}
+            ? "ZIP и реестр выдачи будут доступны после подписания документов."
+            : "Документы готовятся. ZIP и реестр будут доступны после завершения."}
         </Notice>
       )}
       {allowPrint && (
@@ -451,8 +462,8 @@ export function FilesPanel({
           lastPreviewRevision !== draft.revision)) && (
         <Notice kind="info">
           {draft.status === "FINALIZED"
-            ? "Предпросмотры относятся к прежней редакции. Для печати подготовленного комплекта используйте сохранённые оригиналы с номерами."
-            : "Данные изменились после создания предпросмотра. Сформируйте новый макет перед оформлением."}
+            ? "Для печати используйте оригиналы с номерами: предпросмотр устарел."
+            : "Данные изменились. Обновите предпросмотр."}
         </Notice>
       )}
       {allArtifacts.length > 0 && (
@@ -593,52 +604,65 @@ export function FilesPanel({
             })}
         </div>
       )}
-      <div className="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Задание</th>
-              <th>Состояние</th>
-              <th>Попытки</th>
-              <th>Обновлено</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {jobs.map((job, index) => (
-              <tr key={job.id}>
-                <td>
-                  {!job.issuanceId ? "Предпросмотр" : "Документ"} · {job.kind}{" "}
-                  {index + 1}
-                  {job.sourceRevision != null && (
-                    <small>Редакция {job.sourceRevision}</small>
-                  )}
-                </td>
-                <td>
-                  {job.status === "PENDING" ? (
-                    <span className="status">В очереди</span>
-                  ) : (
-                    <Status value={job.status} />
-                  )}
-                  {job.errorCode && <small>{job.errorCode}</small>}
-                </td>
-                <td>{job.attempts ?? 0}</td>
-                <td>{dateTime(job.updatedAt || job.createdAt)}</td>
-                <td>
-                  {canManage && ["FAILED", "PARTIAL"].includes(job.status) && (
-                    <button
-                      disabled={!!busy}
-                      onClick={() => void retry(job.id)}
-                    >
-                      {busy === job.id ? "Повторяем…" : "Повторить неготовые"}
-                    </button>
-                  )}
-                </td>
+      <details
+        open={jobs.some((job) => ["FAILED", "PARTIAL"].includes(job.status))}
+      >
+        <summary>Подготовка файлов</summary>
+        <div className="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Задание</th>
+                <th>Состояние</th>
+                <th>Попытки</th>
+                <th>Обновлено</th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {jobs.map((job, index) => (
+                <tr key={job.id}>
+                  <td>
+                    {!job.issuanceId ? "Предпросмотр" : "Документ"} · {job.kind}{" "}
+                    {index + 1}
+                    {job.sourceRevision != null && (
+                      <small>Редакция {job.sourceRevision}</small>
+                    )}
+                  </td>
+                  <td>
+                    {job.status === "PENDING" ? (
+                      <span className="status">В очереди</span>
+                    ) : (
+                      <Status value={job.status} />
+                    )}
+                    {job.errorCode && (
+                      <details>
+                        <summary>Данные для поддержки</summary>
+                        <small>{job.errorCode}</small>
+                      </details>
+                    )}
+                  </td>
+                  <td>{job.attempts ?? 0}</td>
+                  <td>{dateTime(job.updatedAt || job.createdAt)}</td>
+                  <td>
+                    {canManage &&
+                      ["FAILED", "PARTIAL"].includes(job.status) && (
+                        <button
+                          disabled={!!busy}
+                          onClick={() => void retry(job.id)}
+                        >
+                          {busy === job.id
+                            ? "Повторяем…"
+                            : "Повторить неготовые"}
+                        </button>
+                      )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </details>
       {issuances.map((issuance) => (
         <details className="issuance-details" key={issuance.id}>
           <summary>

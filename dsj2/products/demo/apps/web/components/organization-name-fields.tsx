@@ -58,11 +58,13 @@ export function OrganizationNameFields({
       : "");
   const ruFeedback = nameError || fieldHints?.[0];
   const kzFeedback = fieldErrors?.[1] || fieldHints?.[1];
+  const usesRuForKz =
+    alwaysShowKz && value.legalForm && !value.ownNameKz?.trim();
   const kzDescription =
     [
       names?.issue && `${id}-error`,
       kzFeedback && `${id}-kz-feedback`,
-      alwaysShowKz && value.legalForm && `${id}-kz-hint`,
+      usesRuForKz && `${id}-kz-hint`,
     ]
       .filter(Boolean)
       .join(" ") || undefined;
@@ -190,9 +192,11 @@ export function OrganizationNameFields({
                   update(value.ownNameRu || "", event.target.value)
                 }
               />
-              <small id={`${id}-kz-hint`}>
-                {tr("Пусто — используем название RU.")}
-              </small>
+              {usesRuForKz && (
+                <small id={`${id}-kz-hint`}>
+                  {tr("Пусто — используем название RU.")}
+                </small>
+              )}
             </label>
           ) : (
             !requestEntry && (

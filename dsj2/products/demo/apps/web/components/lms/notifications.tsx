@@ -1,9 +1,16 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { api, json } from "@/lib/api";
-import { lmsError, LmsHeading, type Translate } from "./common";
+import { useEffect, useRef, useState } from "react";
+import { ApiError, api, json } from "@/lib/api";
+import { formatLearningDateTime } from "@/lib/learning-date-format";
+import { learningNotificationLink } from "@/lib/learning-notification-link";
+import {
+  lmsError,
+  LmsErrorDiagnostic,
+  LmsHeading,
+  type Translate,
+} from "./common";
 type Notification = {
   id: string;
   kind: string;
@@ -35,22 +42,50 @@ export function LearningInbox({
   const [page, setPage] = useState(1),
     [data, setData] = useState<Inbox | null>(null),
     [error, setError] = useState<unknown>(null),
+    [markError, setMarkError] = useState<{
+      id?: string;
+      error: unknown;
+    } | null>(null),
+    [loading, setLoading] = useState(true),
     [busy, setBusy] = useState(false),
     [badge, setBadge] = useState(true),
     [revision, setRevision] = useState(0);
+  const pending = useRef(false);
+  const mounted = useRef(false);
+  const currentData = data?.page === page ? data : null;
+  const errorDetails = error instanceof ApiError ? error.details : error;
+  const deploymentBlocked =
+    !!errorDetails &&
+    typeof errorDetails === "object" &&
+    "code" in errorDetails &&
+    errorDetails.code === "LMS_DEPLOYMENT_REVIEW_REQUIRED";
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   useEffect(() => {
     let alive = true;
     void api<{ preferences: { showUnreadBadge?: boolean } }>("/lms/profile")
-      .then((v) => { if (alive) setBadge(v.preferences.showUnreadBadge !== false); })
-      .catch(() => { /* Badge preference is optional; inbox data is loaded separately. */ });
-    return () => { alive = false; };
+      .then((v) => {
+        if (alive) setBadge(v.preferences.showUnreadBadge !== false);
+      })
+      .catch(() => {
+        /* Badge preference is optional; inbox data is loaded separately. */
+      });
+    return () => {
+      alive = false;
+    };
   }, []);
   useEffect(() => {
     let alive = true,
-      loading = false;
+      fetching = false;
+    setLoading(true);
+    setError(null);
     async function load() {
-      if (loading || document.hidden) return;
-      loading = true;
+      if (fetching || document.hidden || pending.current) return;
+      fetching = true;
       try {
         const result = await api<Inbox>(
           `/lms/notifications?page=${page}&pageSize=25`,
@@ -67,9 +102,13 @@ export function LearningInbox({
           setError(null);
         }
       } catch (e) {
-        if (alive) { setError(e); setData(null); }
+        if (alive) {
+          setError(e);
+          setData(null);
+        }
       } finally {
-        loading = false;
+        fetching = false;
+        if (alive) setLoading(false);
       }
     }
     void load();
@@ -85,59 +124,93 @@ export function LearningInbox({
     };
   }, [page, revision]);
   async function mark(id?: string) {
+    if (pending.current) return;
+    pending.current = true;
     setBusy(true);
-    setError(null);
+    setMarkError(null);
     try {
       await api(
         id ? `/lms/notifications/${id}/read` : "/lms/notifications/read-all",
         { method: "POST", body: json({}) },
       );
-      setRevision((v) => v + 1);
+      if (mounted.current) setRevision((v) => v + 1);
     } catch (e) {
-      setError(e);
+      if (mounted.current) setMarkError({ id, error: e });
     } finally {
-      setBusy(false);
+      pending.current = false;
+      if (mounted.current) setBusy(false);
     }
   }
   return (
     <>
       <LmsHeading title={t("Уведомления", "Хабарламалар")}>
-        {badge && data && (
+        {badge && currentData && !error && (
           <span aria-live="polite">
-            {t("Непрочитанные", "Оқылмаған")}: {data.unread}
+            {t("Непрочитанные", "Оқылмаған")}: {currentData.unread}
           </span>
         )}
-        {!!data?.unread && (
-          <button disabled={busy} onClick={() => void mark()}>
+        {!!currentData?.unread && !error && (
+          <button disabled={busy || loading} onClick={() => void mark()}>
             {t("Отметить все прочитанными", "Барлығын оқылған деп белгілеу")}
           </button>
         )}
       </LmsHeading>
       {!!error && (
         <div role="alert" className="notice">
-          {lmsError(error, t)}
-          <button onClick={() => setRevision((v) => v + 1)}>
-            {t("Повторить", "Қайталау")}
+          <strong>
+            {t("Уведомления недоступны", "Хабарламалар қолжетімсіз")}
+          </strong>
+          <p>{lmsError(error, t)}</p>
+          <LmsErrorDiagnostic error={error} t={t} />
+          <button
+            disabled={busy || loading}
+            onClick={() => setRevision((v) => v + 1)}
+          >
+            {deploymentBlocked
+              ? t("Проверить доступ", "Қолжетімділікті тексеру")
+              : t("Повторить загрузку", "Қайта жүктеу")}
           </button>
         </div>
       )}
-      {!data && !error && (
+      {markError && (
+        <div role="alert" className="notice">
+          <strong>
+            {t(
+              "Не удалось отметить прочитанным",
+              "Оқылған деп белгілеу мүмкін болмады",
+            )}
+          </strong>
+          <p>{lmsError(markError.error, t)}</p>
+          <LmsErrorDiagnostic error={markError.error} t={t} />
+          <button disabled={busy} onClick={() => void mark(markError.id)}>
+            {t("Повторить отметку", "Белгілеуді қайталау")}
+          </button>
+        </div>
+      )}
+      {loading && !currentData && !error && (
         <p role="status">
           {t("Загружаем уведомления…", "Хабарламалар жүктелуде…")}
         </p>
       )}
-      {data && !data.total && (
+      {currentData && !loading && !error && !currentData.total && (
         <p>{t("Новых событий пока нет", "Әзірше жаңа оқиғалар жоқ")}</p>
       )}
-      <ul className="lms-list">
-        {data?.items.map((n) => (
+      <ul className="lms-list lms-inbox-list">
+        {currentData?.items.map((n) => (
           <li key={n.id}>
             <div>
               <strong>{t(n.titleRu, n.titleKz || n.titleRu)}</strong>
               {!n.readAt && <small>{t("Не прочитано", "Оқылмаған")}</small>}
-              {n.reviewState && <small>{["SUBMITTED", "AWAITING_REVIEW"].includes(n.reviewState)
-                ? t("Ожидает решения проверяющего", "Тексерушінің шешімін күтуде")
-                : t("Состояние работы изменилось — откройте текущую редакцию", "Жұмыс күйі өзгерді — ағымдағы нұсқаны ашыңыз")}</small>}
+              {n.reviewState && (
+                <small>
+                  {["SUBMITTED", "AWAITING_REVIEW"].includes(n.reviewState)
+                    ? t(
+                        "Ожидает решения проверяющего",
+                        "Тексерушінің шешімін күтуде",
+                      )
+                    : t("Работа обновлена", "Жұмыс жаңартылды")}
+                </small>
+              )}
               {n.eventId && (
                 <small>
                   {n.status === "CANCELLED"
@@ -146,25 +219,27 @@ export function LearningInbox({
                       ? t("Занятие изменено", "Сабақ өзгертілді")
                       : t("Занятие назначено", "Сабақ тағайындалды")}
                   {" · "}
-                  {new Date(n.startsAt).toLocaleString(t("ru-KZ", "kk-KZ"), {
-                    timeZone: timezone,
-                    dateStyle: "short",
-                    timeStyle: "short",
-                  })}
+                  {formatLearningDateTime(
+                    n.startsAt,
+                    timezone,
+                    t("ru-KZ", "kk-KZ"),
+                  )}
                 </small>
               )}
-              <small>
-                {new Date(n.createdAt).toLocaleString(t("ru-KZ", "kk-KZ"), {
-                  timeZone: timezone,
-                  dateStyle: "short",
-                  timeStyle: "short",
-                })}
-              </small>
+              {!n.eventId && (
+                <small>
+                  {formatLearningDateTime(
+                    n.createdAt,
+                    timezone,
+                    t("ru-KZ", "kk-KZ"),
+                  )}
+                </small>
+              )}
             </div>
             <div className="lms-actions">
-              {(n.href || n.eventId) && (
+              {learningNotificationLink(n, pathname) && (
                 <Link
-                  href={n.href?.startsWith("/") && !n.href.startsWith("//") ? n.href : `${pathname.startsWith("/learn") ? "/learn" : "/lms"}/calendar?eventId=${encodeURIComponent(n.eventId || "")}`}
+                  href={learningNotificationLink(n, pathname)!}
                   onClick={() => {
                     if (!n.readAt) void mark(n.id);
                   }}
@@ -181,19 +256,26 @@ export function LearningInbox({
           </li>
         ))}
       </ul>
-      {!!data && data.total > data.pageSize && (
+      {!!currentData && !error && currentData.total > currentData.pageSize && (
         <nav
           className="lms-actions"
           aria-label={t("Страницы уведомлений", "Хабарлама беттері")}
         >
-          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
+          <button
+            disabled={busy || loading || page === 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             {t("Назад", "Артқа")}
           </button>
           <span>
-            {page} / {Math.ceil(data.total / data.pageSize)}
+            {page} / {Math.ceil(currentData.total / currentData.pageSize)}
           </span>
           <button
-            disabled={page * data.pageSize >= data.total}
+            disabled={
+              busy ||
+              loading ||
+              page * currentData.pageSize >= currentData.total
+            }
             onClick={() => setPage((p) => p + 1)}
           >
             {t("Далее", "Келесі")}

@@ -395,9 +395,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
     revision: number;
     value: ReturnType<typeof resolveDraft>;
   } | null>(null);
-  const [validationRevision, setValidationRevision] = useState<number | null>(
-    null,
-  );
   const [dialog, setDialog] = useState<
     | "import"
     | "bulk"
@@ -645,7 +642,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         ...result,
         errors: result.errors || result.issues || [],
       });
-      setValidationRevision(revision);
       setReviewStale(false);
     },
     [id],
@@ -724,7 +720,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
             if (errors.length) {
               validationRequested.current = true;
               setValidation({ valid: false, errors });
-              setValidationRevision(revision);
               setReviewStale(capturedVersion !== lane.current?.currentVersion);
             }
             if (caught instanceof ApiError && caught.status === 409) {
@@ -1355,7 +1350,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
         validationRequested.current = true;
         focusValidation.current = true;
         setValidation({ valid: false, errors });
-        setValidationRevision(lane.current?.currentRevision ?? null);
         setReviewStale(false);
         setDialog(null);
       }
@@ -1393,6 +1387,8 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
       if (preserveLocalInput) await flush(false);
       const result = await api<Draft>(`/print-requests/${id}`);
       initialize(result);
+      // Signing changes the release state without advancing the draft revision.
+      setRefreshFiles((value) => value + 1);
       setReferenceRetry((attempt) => attempt + 1);
       setDialog(null);
       setError("");
@@ -2927,13 +2923,11 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           )}
           {unconfirmedResults.trainings > 0 && (
             <p className="operator-result-reminder">
-              Не подтверждены {unconfirmedResults.trainings} результатов по
-              обучениям у {unconfirmedResults.recipients} получателей.
-              Удостоверения, сертификаты и свидетельства по этим обучениям
-              включаются только после результата «Сдал». Протоколы отражают
-              фактические результаты, включая неподтверждённые; подтверждённые
-              направления того же человека сохраняются. Подтвердите результаты в
-              блоке обучения, если они уже известны.
+              Не подтверждены результаты: {unconfirmedResults.trainings}{" "}
+              обучений, получателей — {unconfirmedResults.recipients}. Укажите
+              известные результаты в блоке обучения. Удостоверения, сертификаты
+              и свидетельства выдаются только при «Сдал»; протоколы отражают
+              фактический результат.
             </p>
           )}
           <ApprovalBanner
@@ -2971,14 +2965,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                 Документы и печать
               </a>
             ) : null}
-            {actions.showValidate && (
-              <button
-                disabled={operationBusy}
-                onClick={() => void command("validate")}
-              >
-                {busy === "validate" ? "Проверяем…" : "Проверить данные"}
-              </button>
-            )}
             {draft.approval && (
               <Link
                 className="button"
@@ -2992,8 +2978,7 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
           </div>
           {actions.showPreview && !readiness.locallyComplete && (
             <p className="fine-print">
-              Предпросмотр — черновой макет. Для передачи директору и оформления
-              документов нужно исправить обязательные данные.
+              Предпросмотр доступен. Для передачи директору исправьте замечания.
             </p>
           )}
           {actions.showPrepareSigning && (
@@ -3016,23 +3001,6 @@ export function Editor({ id, context }: { id: string; context: AppContext }) {
                   ? "Данные прошли проверку"
                   : "Исправьте данные перед оформлением"}
             </strong>
-            <span>
-              Редакция {validationRevision}.{" "}
-              {reviewStale &&
-                "После сохранения замечания обновятся автоматически. Можно также проверить заявку повторно."}
-              {validation.valid
-                ? `Документов: ${validation.documentCount ?? documentCount}.`
-                : ""}
-            </span>
-            {validation.valid && !reviewStale && !readonly && (
-              <p>
-                {draft.approval?.status === "PENDING"
-                  ? "Состав передан директору. Дождитесь решения по согласованию."
-                  : draft.approval?.status === "APPROVED"
-                    ? "Состав согласован. Сформируйте документы для подписания."
-                    : "Следующий шаг — «Проверить и передать директору» в блоке выше."}
-              </p>
-            )}
             {reviewStale && (
               <button
                 className="text-button"

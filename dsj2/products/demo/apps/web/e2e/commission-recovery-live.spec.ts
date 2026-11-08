@@ -1,3 +1,4 @@
+import { validateRequestFromMenu } from "./request-validation";
 import { test, expect, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
@@ -15,6 +16,133 @@ import { createRequest } from "../../../apps/api/src/requests";
 import { assertTestDatabase } from "../../../tests/integration/test-database";
 
 test.use({ trace: "off" });
+
+test("a commission error repairs only its separately pinned event and preserves the request and another event", async ({
+  page,
+}) => {
+  const seeded = await fixture();
+  const separate = await saveProfile(seeded.context, {
+    ...(seeded.initial.profile as object),
+    approved: true,
+    commission: [
+      "Отдельный Председатель",
+      "Отдельный Директор",
+      "Отдельный Преподаватель",
+    ].map((name) => ({ name, position: "" })),
+  });
+  const facts = {
+    documentDate: "2026-11-08",
+    protocolDate: "2026-11-08",
+    trainingStart: "2026-11-01",
+    trainingEnd: "2026-11-07",
+    trainingSubject: "Синтетическая программа",
+    hours: "10",
+    productionHours: "16",
+    biotCategory: "WORKER",
+    biotCheckType: "PERIODIC",
+  };
+  const events = [
+    {
+      id: randomUUID(),
+      title: "Закреплённая комиссия с ошибкой",
+      profileVersionId: seeded.initial.id,
+    },
+    {
+      id: randomUUID(),
+      title: "Независимая комиссия без ошибки",
+      profileVersionId: separate.id,
+    },
+  ].map((event) => ({
+    ...event,
+    protocolTemplateId: "biot-protocol",
+    commonFields: facts,
+  }));
+  const created = await createRequest(
+    seeded.context,
+    draftSchema.parse({
+      kind: "PERSON",
+      schemaVersion: 2,
+      demoMode: true,
+      profileVersionId: separate.id,
+      commonFields: facts,
+      events,
+      items: events.map((event, index) => ({
+        id: randomUUID(),
+        fullNameRu: `Синтетический участник ${index + 1}`,
+        workplaceRu: "Синтетическое предприятие",
+        positionRu: "Рабочий",
+        assignments: [
+          {
+            id: randomUUID(),
+            templateId: "biot-worker-card",
+            protocolMode: "GROUP",
+            eventId: event.id,
+            ...facts,
+            result: "Сдал",
+            outcome: { status: "PASSED", source: "Синтетическая ведомость" },
+          },
+        ],
+      })),
+    }),
+  );
+  const repaired = await saveProfile(seeded.context, {
+    ...(separate.profile as object),
+    commission: [
+      "Новый Председатель",
+      "Новый Директор",
+      "Новый Преподаватель",
+    ].map((name) => ({ name, position: "" })),
+  });
+  await login(page, seeded.email, seeded.password);
+  const dialog = await openCommissionError(page, created.id);
+  await expect(dialog).toContainText(events[0].title);
+  await dialog
+    .getByRole("button", { name: "Применить комиссию к заявке", exact: true })
+    .click();
+  await expect(dialog).toHaveCount(0);
+  const after = await detail(page, created.id);
+  expect(after.profileVersionId).toBe(separate.id);
+  expect(
+    after.events.find((event: { id: string }) => event.id === events[0].id)
+      .profileVersionId,
+  ).toBe(repaired.id);
+  expect(
+    after.events.find((event: { id: string }) => event.id === events[1].id)
+      .profileVersionId,
+  ).toBe(separate.id);
+  await page.reload();
+  const check = page.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/print-requests/${created.id}/validate`) &&
+      response.request().method() === "POST",
+  );
+  await validateRequestFromMenu(page);
+  const result = await (await check).json();
+  expect(JSON.stringify(result)).not.toContain("BIOT_COMMISSION_REQUIRED");
+  expect((await detail(page, created.id)).events).toEqual(after.events);
+  expect(
+    (
+      await db.issuerProfileVersion.findUniqueOrThrow({
+        where: { id: seeded.initial.id },
+      })
+    ).profile,
+  ).toEqual(seeded.initial.profile);
+  await fs.mkdir(evidence, { recursive: true });
+  await fs.writeFile(
+    path.join(evidence, "event-commission-source-repair.json"),
+    JSON.stringify(
+      {
+        requestId: created.id,
+        repairedEventId: events[0].id,
+        requestProfileUnchanged: true,
+        independentEventUnchanged: true,
+        historicalProfileUnchanged: true,
+      },
+      null,
+      2,
+    ),
+  );
+});
 test("accepted transfer with failed refresh keeps success and flushes edits before recovery reload", async ({
   page,
 }) => {
@@ -213,7 +341,7 @@ for (const recovery of ["same-page", "settings-return"] as const) {
       .first();
     await expect(issue).toBeVisible();
     await expect(panel).toContainText("Выбранный состав не передан директору");
-    await expect(panel).toContainText("автосохранение работает");
+    await expect(panel).toContainText("Черновик сохранён.");
     await expect(panel.getByText(/Код обращения:/)).not.toBeVisible();
     await expect(
       page.getByRole("button", { name: "Посмотреть документы", exact: true }),
@@ -349,9 +477,7 @@ test("superadmin follows a city validation error through settings and explicitly
   );
   await login(page, seeded.email, seeded.password);
   await page.goto(`/requests/${seeded.request.id}/edit`);
-  await page
-    .getByRole("button", { name: "Проверить данные", exact: true })
-    .click();
+  await validateRequestFromMenu(page);
   await page
     .locator(".validation-result")
     .getByRole("button", {
@@ -518,9 +644,7 @@ async function detail(page: Page, id: string) {
 
 async function openCommissionError(page: Page, id: string) {
   await page.goto(`/requests/${id}/edit`);
-  await page
-    .getByRole("button", { name: "Проверить данные", exact: true })
-    .click();
+  await validateRequestFromMenu(page);
   const errors = page.locator(".validation-result");
   await expect(errors).toContainText("Для протокола БиОТ нужны председатель");
   await errors
@@ -629,9 +753,7 @@ for (const viewport of [
     expect((await detail(page, seeded.request.id)).profileVersionId).toBe(
       applied.profileVersionId,
     );
-    await page
-      .getByRole("button", { name: "Проверить данные", exact: true })
-      .click();
+    await validateRequestFromMenu(page);
     await expect(page.locator(".validation-result")).toContainText(
       "Данные прошли проверку",
     );

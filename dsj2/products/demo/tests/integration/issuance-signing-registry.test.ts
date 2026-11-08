@@ -11,6 +11,7 @@ import { draftSchema } from "@demo/contracts";
 import { db, type Context } from "../../apps/api/src/core";
 import {
   createRequest,
+  cancelRequest,
   finalize,
   listRequests,
   patchRequest,
@@ -121,6 +122,7 @@ test("immutable stages sign independently, retain exact registry/customer scope 
     { iin: string; sha256: string; signature: string }
   >();
   let verifiedCms = 0;
+  let concurrentCompletionChecked = false;
   let beforeVerificationResponse: (() => Promise<void>) | undefined;
   // This isolated adapter verifies real detached CMS against local test CAs.
   // Its trusted-authority response is a synthetic integration contract fixture,
@@ -392,9 +394,72 @@ test("immutable stages sign independently, retain exact registry/customer scope 
           where: { id: session.id },
         });
         assert.equal(persisted.issuanceId, issuanceId);
-        const result = await completeSigning(identity.context, session.id, {
-          signatureBase64: cms,
-        });
+        let result;
+        if (!concurrentCompletionChecked) {
+          concurrentCompletionChecked = true;
+          const otherSession = await startSigning(identity.context, requestId, {
+            provider: "NCALAYER",
+            artifactId: document.artifactId,
+            bindingId: binding.id,
+          });
+          let arrivals = 0;
+          let release!: () => void;
+          const bothVerified = new Promise<void>((resolve) => {
+            release = resolve;
+          });
+          beforeVerificationResponse = async () => {
+            if (++arrivals === 3) release();
+            await bothVerified;
+          };
+          try {
+            const repeated = await Promise.all([
+              completeSigning(identity.context, session.id, {
+                signatureBase64: cms,
+              }),
+              completeSigning(identity.context, session.id, {
+                signatureBase64: cms,
+              }),
+              completeSigning(identity.context, otherSession.id, {
+                signatureBase64: cms,
+              }),
+            ]);
+            assert.equal(repeated[0].signatureId, repeated[1].signatureId);
+            assert.equal(repeated[0].signatureId, repeated[2].signatureId);
+            assert.equal(
+              await db.documentSignature.count({
+                where: {
+                  tenantId: c.tenantId,
+                  artifactId: document.artifactId!,
+                  bindingId: binding.id,
+                },
+              }),
+              1,
+            );
+            assert.equal(
+              (await completeSigning(identity.context, session.id, {}))
+                .signatureId,
+              repeated[0].signatureId,
+            );
+            assert.equal(
+              (await completeSigning(identity.context, otherSession.id, {}))
+                .signatureId,
+              repeated[0].signatureId,
+            );
+            assert.equal(
+              await db.auditEvent.count({
+                where: { tenantId: c.tenantId, action: "SIGNATURE_VERIFIED" },
+              }),
+              1,
+            );
+            result = repeated[0];
+          } finally {
+            beforeVerificationResponse = undefined;
+          }
+        } else {
+          result = await completeSigning(identity.context, session.id, {
+            signatureBase64: cms,
+          });
+        }
         assert.equal(result.status, "VERIFIED");
       }
     return signingState(approvals.directorContext, requestId, db, issuanceId);
@@ -631,7 +696,7 @@ test("immutable stages sign independently, retain exact registry/customer scope 
   assert.equal(credentialRow.protocolDocumentId, individualProtocol.id);
   assert.equal(credentialRow.protocolNumber, individualProtocol.number);
   assert.equal(
-    verifiedCms,
+    verifiedCms - 2,
     await db.documentSignature.count({ where: { tenantId: c.tenantId } }),
   );
   assert.equal((await requestDetail(c, created.id)).issuances.length, 3);
@@ -856,5 +921,103 @@ test("immutable stages sign independently, retain exact registry/customer scope 
       bindingId: directorBinding.id,
     }),
     errorCode("SIGNATORY_REVOKED"),
+  );
+
+  // Revocation while the external verifier is working must win over a new
+  // signature; replaying earlier genuine evidence grants no new authority.
+  const sharedArtifact = await readArtifact(c, sharedDocument.artifactId!);
+  const sharedIdentity = identities.get(directorBinding.iin)!;
+  const sharedFile = join(folder, "revoked-in-flight.pdf");
+  const sharedCmsFile = sharedFile + ".p7s";
+  await writeFile(sharedFile, sharedArtifact.buffer);
+  await run(openssl, [
+    "cms",
+    "-sign",
+    "-binary",
+    "-in",
+    sharedFile,
+    "-signer",
+    sharedIdentity.cert,
+    "-inkey",
+    sharedIdentity.key,
+    "-outform",
+    "DER",
+    "-out",
+    sharedCmsFile,
+    "-md",
+    "sha256",
+  ]);
+  const sharedCms = (await readFile(sharedCmsFile)).toString("base64");
+  signedContent.set(sharedCms, {
+    iin: directorBinding.iin,
+    sha256: sharedArtifact.sha256,
+    signature: sharedCmsFile,
+  });
+  beforeVerificationResponse = async () => {
+    beforeVerificationResponse = undefined;
+    await saveSignatory(c, {
+      bindingId: sharedChair.id,
+      userId: sharedChair.userId,
+      displayName: sharedChair.displayName,
+      role: "CHAIR",
+      iin: sharedChair.iin,
+      active: false,
+    });
+  };
+  await assert.rejects(
+    completeSigning(approvals.directorContext, sharedSession.id, {
+      signatureBase64: sharedCms,
+    }),
+    errorCode("SIGNATORY_REVOKED"),
+  );
+  assert.equal(
+    await db.documentSignature.count({
+      where: { tenantId: c.tenantId, issuanceId: sharedIssued.issuanceId },
+    }),
+    0,
+  );
+  const earlier = await db.documentSignature.findFirstOrThrow({
+    where: { tenantId: c.tenantId, bindingId: directorBinding.id },
+  });
+  const evidenceCount = await db.documentSignature.count({
+    where: { tenantId: c.tenantId },
+  });
+  assert.equal(
+    (
+      await completeSigning(
+        sharedIdentity.context,
+        earlier.signingSessionId,
+        {},
+      )
+    ).signatureId,
+    earlier.id,
+  );
+  assert.equal(
+    await db.documentSignature.count({ where: { tenantId: c.tenantId } }),
+    evidenceCount,
+  );
+  await cancelRequest(c, created.id, {
+    expectedRevision: (await requestDetail(c, created.id)).revision,
+    reason: "Синтетическая проверка отмены подписанного выпуска",
+  });
+  await approvals.approve(created.id);
+  const cancelledEvidence = await db.documentSignature.findFirstOrThrow({
+    where: {
+      tenantId: c.tenantId,
+      issuanceId: first.issuanceId,
+      bindingId: directorBinding.id,
+    },
+  });
+  await assert.rejects(
+    completeSigning(
+      sharedIdentity.context,
+      cancelledEvidence.signingSessionId,
+      {},
+    ),
+    errorCode("SIGNING_TARGET_CANCELLED"),
+  );
+  assert.equal(
+    await db.documentSignature.count({ where: { tenantId: c.tenantId } }),
+    evidenceCount,
   );
 });

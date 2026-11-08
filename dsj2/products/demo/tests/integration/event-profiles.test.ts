@@ -3,7 +3,11 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { db, hash, type Context } from "../../apps/api/src/core";
 import { provision } from "../../scripts/setup";
-import { saveProfile, saveUser } from "../../apps/api/src/settings";
+import {
+  bootstrapSuperAdmin,
+  saveProfile,
+  saveUser,
+} from "../../apps/api/src/settings";
 import { saveSignatory } from "../../apps/api/src/signing";
 import {
   createRequest,
@@ -25,11 +29,16 @@ test("named commissions are pinned per distinct event across credentials/protoco
   });
   const c: Context = {
     ...seeded,
-    role: "ADMIN",
+    role: "DIRECTOR",
     sessionId: "test",
     csrfHash: "test",
     correlationId: randomUUID(),
   };
+  await bootstrapSuperAdmin(c, {
+    currentPassword: "Synthetic-Profile-Password!",
+    confirm: true,
+  });
+  c.role = "SUPER_ADMIN";
   const approvals = await createApprovalFixture(c);
   t.after(() => approvals.close());
   try {

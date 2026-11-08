@@ -1,0 +1,130 @@
+{
+  "date": "2026-11-08",
+  "branch": "codex/korochki-commission-flow-20261108",
+  "baseCommit": "ea16bec",
+  "status": "LOCAL_USER_FLOWS_VERIFIED_NOT_DEPLOYED",
+  "data": "ISOLATED_SYNTHETIC_ONLY",
+  "verification": {
+    "unit": {
+      "status": "PASS",
+      "product": 328,
+      "web": 325,
+      "total": 653,
+      "logs": [
+        "user-flow-audit-tests-final.log",
+        "user-flow-audit-web-verified.log"
+      ]
+    },
+    "integration": {
+      "status": "PASS",
+      "total": 40,
+      "domain": 20,
+      "lms": 20,
+      "logs": [
+        "audit-domain-ad-verified.log",
+        "user-flow-audit-lms-integration.log"
+      ]
+    },
+    "render": {
+      "status": "PASS",
+      "passed": 164,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 4997.12,
+      "log": "user-flow-audit-render.log",
+      "sha256": "864f48f3fdfb04cde56c3de9666409486982783f3f581cfd7a59ff8a17d24b1c"
+    },
+    "browser": {
+      "status": "PASS",
+      "distinctCases": 59,
+      "failed": 0,
+      "skipped": 0,
+      "method": "Latest explicit execution per file/title, not one all-green run",
+      "matrix": "reconciled-results.json",
+      "blocks": {
+        "A": 14,
+        "B": 3,
+        "C": 6,
+        "D": 8,
+        "E": 19,
+        "F": 9
+      },
+      "runner": "Chromium; final affected scenarios use local next start"
+    },
+    "lint": {
+      "status": "PASS",
+      "log": "user-flow-audit-lint-verified.log"
+    },
+    "typecheck": {
+      "status": "PASS",
+      "workspaceLog": "user-flow-audit-typecheck-final.log",
+      "finalWeb": "PASS after scoped draft changes; full final build passed"
+    },
+    "build": {
+      "status": "PASS",
+      "log": "user-flow-audit-build-final.log",
+      "windowsOverride": "DEMO_STANDALONE=0",
+      "dist": ".next-user-flow-audit-final-build"
+    },
+    "designDetector": {
+      "status": "PASS",
+      "findings": 0,
+      "log": "user-flow-audit-design-final.json"
+    },
+    "visual": {
+      "status": "PASS",
+      "originalPdfs": 12,
+      "originalPages": 14,
+      "extendedCommissionPdfs": 10,
+      "viewports": [
+        "390px RU",
+        "390px KZ",
+        "desktop"
+      ],
+      "personHashes": "person-originals.json",
+      "companyHashes": "company-originals.json",
+      "commissionHashes": "commission-render.json"
+    }
+  },
+  "fixes": [
+    "Concurrent digital-signature completion reuses real stored evidence; binding revocation and cancellation remain enforced.",
+    "All configured commission members appear in descriptive protocol composition without changing required signature roles.",
+    "Signing completion refreshes file state and unlocks eligible registry/ZIP automatically.",
+    "File load and action errors are separate; real export retries clear their own errors.",
+    "Published programme remains assignable after the next draft is created.",
+    "Notification retry, pagination and destinations reflect the current operation.",
+    "Teacher queue/detail responses cannot overwrite newer navigation.",
+    "Scoped current-tab review drafts survive reload/back; revision/hash and current rights protect restoration, explicit decision/logout clear the draft.",
+    "Operator guidance is shortened, technical details collapsed, duplicate validation action removed."
+  ],
+  "measuredActions": "observed-routine-actions.json",
+  "detailedReport": "../user-flow-audit-2026-11-08.md",
+  "logRoot": ".runtime/commission-flow/",
+  "fullEvidenceRoot": ".runtime/commission-flow/evidence/user-flow-audit-20261108/",
+  "runtime": {
+    "ownedServicesStopped": true,
+    "portsCleared": [
+      3168,
+      4168,
+      55468
+    ],
+    "generatedNextFilesRestored": true,
+    "rendererVersion": "demo-ooxml-14/libreoffice-26.2.6.3",
+    "verificationDependency": "PyMuPDF==2.1 in isolated environment; production renderer requirements unchanged"
+  },
+  "preserved": [
+    "issued artifact bytes",
+    "signature obligations",
+    "tenant and role boundaries",
+    "real LMS deployment gate",
+    "frozen DSJ modules",
+    "applied migrations"
+  ],
+  "limitations": [
+    "Production not changed or deployed.",
+    "Official eGov/NCA provider integration not exercised.",
+    "Physical iPhone/Safari not tested.",
+    "Dev login hydration timeout not reproduced on built assets; exact initial cause unconfirmed.",
+    "Browser fixtures use separate authenticated synthetic setup; first-entry setup is excluded from prepared routine action counts."
+  ]
+}

@@ -1,3 +1,4 @@
+import { validateRequestFromMenu } from "./request-validation";
 import { test, expect, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
@@ -37,7 +38,7 @@ const evidence = path.resolve(
     "../../../.runtime/commission-flow/evidence/person-director-transfer",
 );
 
-async function fixture() {
+async function fixture(company = false) {
   assertTestDatabase();
   expect(["127.0.0.1", "localhost"]).toContain(
     new URL(process.env.DATABASE_URL!).hostname,
@@ -109,7 +110,18 @@ async function fixture() {
     {},
   );
   const source = draftSchema.parse({
-    kind: "PERSON",
+    kind: company ? "COMPANY" : "PERSON",
+    customerId: company
+      ? (
+          await saveCustomer(context, {
+            nameRu: "Синтетическое ТОО для возврата директором",
+            nameKz: "Директор қайтаруына арналған синтетикалық ЖШС",
+            bin: "000000000129",
+            addressRu: "Синтетический адрес",
+            addressKz: "Синтетикалық мекенжай",
+          })
+        ).id
+      : undefined,
     schemaVersion: 2,
     demoMode: true,
     title: "Синтетическое физлицо: БиОТ ИТР, ПТМ, ПБ",
@@ -250,9 +262,7 @@ test("failed current-request result preparation blocks transfer, preserves input
       response.url().endsWith(`/print-requests/${company.id}/validate`) &&
       response.request().method() === "POST",
   );
-  await page
-    .getByRole("button", { name: "Проверить данные", exact: true })
-    .click();
+  await validateRequestFromMenu(page);
   const validated = await checked;
   expect((await validated.json()).valid).toBe(true);
   await expect(page.locator(".validation-result")).toContainText(
@@ -425,7 +435,7 @@ test("failed current-request result preparation blocks transfer, preserves input
     name: "Готовность и состав следующего выпуска",
     exact: true,
   });
-  await expect(personPanel).toContainText("подтверждена сдача 3");
+  await expect(personPanel).toContainText("Готовы к передаче: 3 из 3 курсов.");
   const personSent = page.waitForResponse(
     (response) =>
       response
@@ -458,257 +468,335 @@ test("failed current-request result preparation blocks transfer, preserves input
   );
 });
 
-test("completed PERSON ITR BIOT, PTM and PB transfers six exact documents through director approval to real signing readiness", async ({
-  page,
-  browser,
-}) => {
-  test.setTimeout(600_000);
-  await fs.mkdir(evidence, { recursive: true });
-  const seeded = await fixture();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await login(page, seeded.operator);
-  await page.goto(`/requests/${seeded.request.id}/edit`);
-  const checked = page.waitForResponse(
-    (response) =>
-      response
-        .url()
-        .endsWith(`/print-requests/${seeded.request.id}/validate`) &&
-      response.request().method() === "POST",
-  );
-  await page
-    .getByRole("button", { name: "Проверить данные", exact: true })
-    .click();
-  const validation = await checked;
-  const validationBody = await validation.json();
-  await fs.writeFile(
-    path.join(evidence, "initial-validation.json"),
-    JSON.stringify({ status: validation.status(), ...validationBody }, null, 2),
-  );
-  await expect(page.locator(".validation-result")).toContainText(
-    "Данные прошли проверку",
-  );
-  const panel = page.getByRole("region", {
-    name: "Готовность и состав следующего выпуска",
-    exact: true,
-  });
-  await expect(panel).toContainText("подтверждена сдача 3");
-  await panel.screenshot({
-    path: path.join(evidence, "person-six-documents-before-transfer-390.png"),
-  });
-  const submitting = page.waitForResponse(
-    (response) =>
-      response
-        .url()
-        .endsWith(`/print-requests/${seeded.request.id}/approval/submit`) &&
-      response.request().method() === "POST",
-  );
-  await panel
-    .getByRole("button", { name: /^Проверить и передать директору/ })
-    .click();
-  const response = await submitting;
-  const body = await response.json();
-  await fs.writeFile(
-    path.join(evidence, "initial-transfer-result.json"),
-    JSON.stringify(
-      {
-        status: response.status(),
-        body,
-        visiblePanel: await panel.innerText(),
-        requestId: seeded.request.id,
-      },
-      null,
-      2,
-    ),
-  );
-  expect(response.ok(), JSON.stringify(body)).toBe(true);
-  await expect(panel).toContainText("Выбранный состав на согласовании");
-  const detail = await page.request.get(
-    `/api/print-requests/${seeded.request.id}`,
-  );
-  expect(detail.ok()).toBe(true);
-  const after = await detail.json();
-  expect(after.approval.status).toBe("PENDING");
-  expect(after.approval.assignments).toHaveLength(6);
-  const expectedIds = seeded.request
-    .items![0].assignments.map((assignment) => assignment.id)
-    .sort();
-  expect(
-    after.approval.assignments
-      .map((assignment: { assignmentId: string }) => assignment.assignmentId)
-      .sort(),
-  ).toEqual(expectedIds);
-  await panel.screenshot({
-    path: path.join(evidence, "person-six-documents-pending-390.png"),
-  });
-  const directorContext = await browser.newContext({
-    baseURL: process.env.DEMO_ORIGIN,
-    viewport: { width: 1366, height: 900 },
-  });
-  try {
-    const director = await directorContext.newPage();
-    await director.routeWebSocket(/\/_next\/webpack-hmr/, (socket) =>
-      socket.close(),
+for (const kind of ["PERSON", "COMPANY"] as const)
+  test(`completed ${kind} ITR BIOT, PTM and PB transfers six exact documents through director approval to real signing readiness`, async ({
+    page,
+    browser,
+  }) => {
+    test.setTimeout(600_000);
+    await fs.mkdir(evidence, { recursive: true });
+    const seeded = await fixture(kind === "COMPANY");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await login(page, seeded.operator);
+    await page.goto(`/requests/${seeded.request.id}/edit`);
+    const checked = page.waitForResponse(
+      (response) =>
+        response
+          .url()
+          .endsWith(`/print-requests/${seeded.request.id}/validate`) &&
+        response.request().method() === "POST",
     );
-    await login(director, seeded.director);
-    await director.goto(`/approvals?proposal=${after.approval.proposalId}`);
-    const review = director.getByRole("region", {
-      name: "Подготовленные данные редакции",
+    await validateRequestFromMenu(page);
+    const validation = await checked;
+    const validationBody = await validation.json();
+    await fs.writeFile(
+      path.join(evidence, "initial-validation.json"),
+      JSON.stringify(
+        { status: validation.status(), ...validationBody },
+        null,
+        2,
+      ),
+    );
+    await expect(page.locator(".validation-result")).toContainText(
+      "Данные прошли проверку",
+    );
+    const panel = page.getByRole("region", {
+      name: "Готовность и состав следующего выпуска",
       exact: true,
     });
-    await expect(review).toContainText("1 человек · 3 обучений");
-    await expect(
-      review.locator(".approval-course-summary tbody tr"),
-    ).toHaveCount(3);
-    const proposalResponse = await director.request.get(
-      `/api/approvals/${after.approval.proposalId}`,
+    await expect(panel).toContainText("Готовы к передаче: 3 из 3 курсов.");
+    await panel.screenshot({
+      path: path.join(evidence, "person-six-documents-before-transfer-390.png"),
+    });
+    const submitting = page.waitForResponse(
+      (response) =>
+        response
+          .url()
+          .endsWith(`/print-requests/${seeded.request.id}/approval/submit`) &&
+        response.request().method() === "POST",
     );
-    expect(proposalResponse.ok()).toBe(true);
-    const proposal = await proposalResponse.json();
+    await panel
+      .getByRole("button", { name: /^Проверить и передать директору/ })
+      .click();
+    const response = await submitting;
+    const body = await response.json();
+    await fs.writeFile(
+      path.join(evidence, "initial-transfer-result.json"),
+      JSON.stringify(
+        {
+          status: response.status(),
+          body,
+          visiblePanel: await panel.innerText(),
+          requestId: seeded.request.id,
+        },
+        null,
+        2,
+      ),
+    );
+    expect(response.ok(), JSON.stringify(body)).toBe(true);
+    await expect(panel).toContainText("Выбранный состав на согласовании");
+    const detail = await page.request.get(
+      `/api/print-requests/${seeded.request.id}`,
+    );
+    expect(detail.ok()).toBe(true);
+    let after = await detail.json();
+    expect(after.approval.status).toBe("PENDING");
+    expect(after.approval.assignments).toHaveLength(6);
+    const expectedIds = seeded.request
+      .items![0].assignments.map((assignment) => assignment.id)
+      .sort();
     expect(
-      proposal.assignments
+      after.approval.assignments
         .map((assignment: { assignmentId: string }) => assignment.assignmentId)
         .sort(),
     ).toEqual(expectedIds);
-    expect(proposal.draft.items).toHaveLength(1);
-    expect(proposal.draft.items[0].assignments).toHaveLength(6);
-    await review.screenshot({
-      path: path.join(
-        evidence,
-        "director-reviews-exact-three-courses-six-documents.png",
-      ),
+    await panel.screenshot({
+      path: path.join(evidence, "person-six-documents-pending-390.png"),
     });
-    await director
-      .getByLabel("Комментарий к решению", { exact: true })
-      .fill(
-        "Синтетическое согласование точного выбранного состава; локальная проверка",
+    const directorContext = await browser.newContext({
+      baseURL: process.env.DEMO_ORIGIN,
+      viewport: { width: 1366, height: 900 },
+    });
+    try {
+      const director = await directorContext.newPage();
+      await director.routeWebSocket(/\/_next\/webpack-hmr/, (socket) =>
+        socket.close(),
       );
-    const decision = director.waitForResponse(
+      await login(director, seeded.director);
+      await director.goto(`/approvals?proposal=${after.approval.proposalId}`);
+      const review = director.getByRole("region", {
+        name: "Подготовленные данные редакции",
+        exact: true,
+      });
+      await expect(review).toContainText("1 человек · 3 обучений");
+      await expect(
+        review.locator(".approval-course-summary tbody tr"),
+      ).toHaveCount(3);
+      const proposalResponse = await director.request.get(
+        `/api/approvals/${after.approval.proposalId}`,
+      );
+      expect(proposalResponse.ok()).toBe(true);
+      const proposal = await proposalResponse.json();
+      expect(
+        proposal.assignments
+          .map(
+            (assignment: { assignmentId: string }) => assignment.assignmentId,
+          )
+          .sort(),
+      ).toEqual(expectedIds);
+      expect(proposal.draft.items).toHaveLength(1);
+      expect(proposal.draft.items[0].assignments).toHaveLength(6);
+      if (kind === "COMPANY") {
+        const returnedProposalId = after.approval.proposalId;
+        const reason = "Уточните ФИО: Синтетический Исправленный Получатель";
+        await director
+          .getByLabel("Комментарий к решению", { exact: true })
+          .fill(reason);
+        const rejected = director.waitForResponse(
+          (r) =>
+            r.url().endsWith(`/approvals/${returnedProposalId}/decision`) &&
+            r.request().method() === "POST",
+        );
+        await director
+          .getByRole("button", { name: "Вернуть на доработку", exact: true })
+          .click();
+        expect((await rejected).status()).toBe(201);
+        await page.reload();
+        await expect(page.locator(".approval-banner")).toContainText(reason);
+        const name = page.locator(
+          '.operator-grid [data-field-path="items.0.fullNameRu"]',
+        );
+        await name.fill("Синтетический Исправленный Получатель");
+        await name.blur();
+        const resend = page.waitForResponse(
+          (r) =>
+            r
+              .url()
+              .endsWith(
+                `/print-requests/${seeded.request.id}/approval/submit`,
+              ) && r.request().method() === "POST",
+        );
+        await panel
+          .getByRole("button", { name: /^Проверить и передать директору/ })
+          .click();
+        expect((await resend).status()).toBe(201);
+        after = await (
+          await page.request.get(`/api/print-requests/${seeded.request.id}`)
+        ).json();
+        expect(after.approval.proposalId).not.toBe(returnedProposalId);
+        expect(after.items[0].fullNameRu).toBe(
+          "Синтетический Исправленный Получатель",
+        );
+        expect(
+          after.approval.assignments
+            .map((a: { assignmentId: string }) => a.assignmentId)
+            .sort(),
+        ).toEqual(expectedIds);
+        await director.goto(`/approvals?proposal=${after.approval.proposalId}`);
+        await review
+          .locator("summary")
+          .filter({ hasText: "Предпросмотр данных всех людей и документов" })
+          .click();
+        await expect(review).toContainText(
+          "Синтетический Исправленный Получатель",
+        );
+        const returned = await (
+          await director.request.get(`/api/approvals/${returnedProposalId}`)
+        ).json();
+        expect(returned.status).toBe("REJECTED");
+        expect(returned.draft.items[0].fullNameRu).toBe(
+          "Синтетический Получатель",
+        );
+        await page.screenshot({
+          path: path.join(evidence, "company-corrected-resubmission.png"),
+          fullPage: true,
+        });
+      }
+      await review.screenshot({
+        path: path.join(
+          evidence,
+          "director-reviews-exact-three-courses-six-documents.png",
+        ),
+      });
+      await director
+        .getByLabel("Комментарий к решению", { exact: true })
+        .fill(
+          "Синтетическое согласование точного выбранного состава; локальная проверка",
+        );
+      const decision = director.waitForResponse(
+        (value) =>
+          value
+            .url()
+            .endsWith(`/approvals/${after.approval.proposalId}/decision`) &&
+          value.request().method() === "POST",
+      );
+      await director
+        .getByRole("button", { name: "Согласовать эту редакцию", exact: true })
+        .click();
+      const approved = await decision;
+      expect(approved.status(), await approved.text()).toBe(201);
+    } finally {
+      await directorContext.close();
+    }
+    await page.reload();
+    const prepare = page.getByRole("button", {
+      name: "Сформировать документы",
+      exact: true,
+    });
+    await expect(prepare).toBeEnabled();
+    const finalizing = page.waitForResponse(
       (value) =>
-        value
-          .url()
-          .endsWith(`/approvals/${after.approval.proposalId}/decision`) &&
+        value.url().endsWith(`/print-requests/${seeded.request.id}/finalize`) &&
         value.request().method() === "POST",
     );
-    await director
-      .getByRole("button", { name: "Согласовать эту редакцию", exact: true })
-      .click();
-    const approved = await decision;
-    expect(approved.status(), await approved.text()).toBe(201);
-  } finally {
-    await directorContext.close();
-  }
-  await page.reload();
-  const prepare = page.getByRole("button", {
-    name: "Сформировать документы",
-    exact: true,
-  });
-  await expect(prepare).toBeEnabled();
-  const finalizing = page.waitForResponse(
-    (value) =>
-      value.url().endsWith(`/print-requests/${seeded.request.id}/finalize`) &&
-      value.request().method() === "POST",
-  );
-  await prepare.click();
-  const finalized = await finalizing;
-  expect(finalized.ok(), await finalized.text()).toBe(true);
-  const issuanceId = (await finalized.json()).issuanceId as string;
-  expect(issuanceId).toBeTruthy();
-  const worker = `person-director-browser-${randomUUID()}`;
-  const deadline = Date.now() + 420_000;
-  while (Date.now() < deadline) {
-    if (
-      !(await db.generationJob.count({
+    await prepare.click();
+    const finalized = await finalizing;
+    expect(finalized.ok(), await finalized.text()).toBe(true);
+    const issuanceId = (await finalized.json()).issuanceId as string;
+    expect(issuanceId).toBeTruthy();
+    const worker = `person-director-browser-${randomUUID()}`;
+    const deadline = Date.now() + 420_000;
+    while (Date.now() < deadline) {
+      if (
+        !(await db.generationJob.count({
+          where: {
+            tenantId: seeded.context.tenantId,
+            issuanceId,
+            status: { not: "SUCCEEDED" },
+          },
+        }))
+      )
+        break;
+      const job = await claimJob(db, worker, seeded.context.tenantId);
+      if (!job) {
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        continue;
+      }
+      const beat = setInterval(() => void heartbeat(db, job, worker), 5000);
+      try {
+        await executeJob(db, store, job, worker, AbortSignal.timeout(210_000));
+      } catch (error) {
+        await settleFailure(db, job, worker, error);
+        if (!(error instanceof DeferredJob)) throw error;
+      } finally {
+        clearInterval(beat);
+      }
+    }
+    expect(
+      await db.generationJob.count({
         where: {
           tenantId: seeded.context.tenantId,
           issuanceId,
           status: { not: "SUCCEEDED" },
         },
-      }))
+      }),
+    ).toBe(0);
+    const signing = await signingState(
+      seeded.context,
+      seeded.request.id,
+      db,
+      issuanceId,
+    );
+    expect(signing.status).toBe("AWAITING_SIGNATURE");
+    expect(signing.documents).toHaveLength(6);
+    expect(
+      signing.documents.every(
+        (document) => document.artifactId && !document.complete,
+      ),
+    ).toBe(true);
+    expect(
+      await db.documentSignature.count({
+        where: { tenantId: seeded.context.tenantId },
+      }),
+    ).toBe(0);
+    expect(
+      await db.auditEvent.count({
+        where: {
+          tenantId: seeded.context.tenantId,
+          action: "PRINT_PAPER_SIGNATURE_ATTESTED",
+        },
+      }),
+    ).toBe(0);
+    await page.reload();
+    const signingDetails = page
+      .locator("details")
+      .filter({ has: page.locator(".signing-panel") })
+      .first();
+    if (
+      !(await signingDetails.evaluate(
+        (node) => (node as HTMLDetailsElement).open,
+      ))
     )
-      break;
-    const job = await claimJob(db, worker, seeded.context.tenantId);
-    if (!job) {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      continue;
-    }
-    const beat = setInterval(() => void heartbeat(db, job, worker), 5000);
-    try {
-      await executeJob(db, store, job, worker, AbortSignal.timeout(210_000));
-    } catch (error) {
-      await settleFailure(db, job, worker, error);
-      if (!(error instanceof DeferredJob)) throw error;
-    } finally {
-      clearInterval(beat);
-    }
-  }
-  expect(
-    await db.generationJob.count({
-      where: {
-        tenantId: seeded.context.tenantId,
-        issuanceId,
-        status: { not: "SUCCEEDED" },
-      },
-    }),
-  ).toBe(0);
-  const signing = await signingState(
-    seeded.context,
-    seeded.request.id,
-    db,
-    issuanceId,
-  );
-  expect(signing.status).toBe("AWAITING_SIGNATURE");
-  expect(signing.documents).toHaveLength(6);
-  expect(
-    signing.documents.every(
-      (document) => document.artifactId && !document.complete,
-    ),
-  ).toBe(true);
-  expect(
-    await db.documentSignature.count({
-      where: { tenantId: seeded.context.tenantId },
-    }),
-  ).toBe(0);
-  expect(
-    await db.auditEvent.count({
-      where: {
-        tenantId: seeded.context.tenantId,
-        action: "PRINT_PAPER_SIGNATURE_ATTESTED",
-      },
-    }),
-  ).toBe(0);
-  await page.reload();
-  const signingDetails = page
-    .locator("details")
-    .filter({ has: page.locator(".signing-panel") })
-    .first();
-  if (
-    !(await signingDetails.evaluate(
-      (node) => (node as HTMLDetailsElement).open,
-    ))
-  )
-    await signingDetails.locator(":scope > summary").click();
-  await expect(page.locator(".signing-panel .signing-document")).toHaveCount(6);
-  await page.locator(".signing-panel").screenshot({
-    path: path.join(
-      evidence,
-      "operator-six-originals-ready-for-signing-390.png",
-    ),
+      await signingDetails.locator(":scope > summary").click();
+    await expect(page.locator(".signing-panel .signing-document")).toHaveCount(
+      6,
+    );
+    await page.locator(".signing-panel").screenshot({
+      path: path.join(
+        evidence,
+        "operator-six-originals-ready-for-signing-390.png",
+      ),
+    });
+    await fs.writeFile(
+      path.join(
+        evidence,
+        `${kind.toLowerCase()}-full-transfer-acceptance.json`,
+      ),
+      JSON.stringify(
+        {
+          requestId: seeded.request.id,
+          kind,
+          rejectionCorrected: kind === "COMPANY",
+          proposalId: after.approval.proposalId,
+          issuanceId,
+          courseCount: 3,
+          documentCount: 6,
+          exactAssignmentIds: expectedIds,
+          status: signing.status,
+          noFabricatedSignatures: true,
+        },
+        null,
+        2,
+      ),
+    );
   });
-  await fs.writeFile(
-    path.join(evidence, "full-transfer-acceptance.json"),
-    JSON.stringify(
-      {
-        requestId: seeded.request.id,
-        proposalId: after.approval.proposalId,
-        issuanceId,
-        courseCount: 3,
-        documentCount: 6,
-        exactAssignmentIds: expectedIds,
-        status: signing.status,
-        noFabricatedSignatures: true,
-      },
-      null,
-      2,
-    ),
-  );
-});

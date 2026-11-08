@@ -68,7 +68,11 @@ export function CommissionFields({
             onChange={(event) =>
               setTemplate(event.target.value as CommissionTemplate)
             }
-            aria-describedby={`${idPrefix}-template-hint`}
+            aria-describedby={
+              started && !hasEmptyPosition
+                ? `${idPrefix}-template-hint`
+                : undefined
+            }
           >
             <option value="umo-chair">
               {tr("Начальник УМО — председатель")}
@@ -100,22 +104,11 @@ export function CommissionFields({
           </button>
         )}
       </div>
-      <p className="fine-print" id={`${idPrefix}-template-hint`}>
-        {started && !hasEmptyPosition
-          ? tr("Должности уже заполнены. Измените их в строках ниже.")
-          : started
-            ? tr(
-                "Шаблон заполняет только пустые должности. ФИО и порядок людей сохраняются.",
-              )
-            : tr(
-                "Должности уже расставлены по шаблону. Укажите ФИО сотрудников вашей организации.",
-              )}
-      </p>
-      <p className="fine-print" id={`${idPrefix}-hint`}>
-        {tr(
-          "Первая строка — председатель, следующие — члены комиссии. Должность в организации выбирается отдельно.",
-        )}
-      </p>
+      {started && !hasEmptyPosition && (
+        <p className="fine-print" id={`${idPrefix}-template-hint`}>
+          {tr("Должности уже заполнены. Измените их в строках ниже.")}
+        </p>
+      )}
       {rows.map((person, index) => {
         const role =
           index === 0
@@ -153,9 +146,7 @@ export function CommissionFields({
                     value={person.name}
                     aria-invalid={missing.includes(index)}
                     aria-describedby={
-                      missing.includes(index)
-                        ? `${nameId}-error`
-                        : `${idPrefix}-hint`
+                      missing.includes(index) ? `${nameId}-error` : undefined
                     }
                     onChange={(event) =>
                       update(index, { name: event.target.value })

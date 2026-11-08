@@ -1,0 +1,49 @@
+{
+  "method": "Counts of explicit Playwright user actions in successfully executed prepared workflow segments; verification-only reloads, screenshots, language switches, synthetic API fixtures and login excluded. These are workflow counts, not timing or human usability-study measurements.",
+  "A_commission_template": {
+    "source": "final/results.json: empty UMO template keeps commission roles distinct from jobs and reuses the director only explicitly",
+    "precondition": "Commission settings already open, director name stored",
+    "typedNameFields": 2,
+    "explicitReuseClicks": 1,
+    "saveClicks": 1,
+    "typedJobFields": 0,
+    "repeatedNameFields": 0
+  },
+  "B_prepared_transfer": {
+    "source": "final/results.json: completed PERSON ITR BIOT, PTM and PB transfers six exact documents",
+    "precondition": "One saved person, three passed courses, six selected documents",
+    "transferClicks": 1,
+    "newInputFields": 0,
+    "confirmationDialogs": 0,
+    "storedPendingProposals": 1
+  },
+  "C_bilingual_employer": {
+    "source": "production-final/results.json: PERSON employer form immediately shows IP and TOO in both languages",
+    "precondition": "Employer section already open",
+    "legalFormSelections": 1,
+    "typedNameFields": 2,
+    "saveOrApplyClicksForRequest": 0,
+    "repeatedFieldsAfterReload": 0,
+    "note": "Additional IP→TOO→IP switches are regression checks, not required steps. Optional directory creation measured separately by its recovery assertions."
+  },
+  "E_prepared_assignment_after_publication": {
+    "source": "production-final/results.json: methodist preparation and director publication let the operator assign the preserved mobile draft",
+    "precondition": "People, group and access period already saved in operator draft; director has published",
+    "refreshClicks": 1,
+    "programmeSelections": 1,
+    "assignClicks": 1,
+    "repeatedPeopleGroupOrPeriodFields": 0,
+    "createdEnrollments": 2
+  },
+  "F_prepared_calendar": {
+    "source": "final/teacher-routine-actions.json and final/teacher-date-recovery.json",
+    "calendarViewActionsAfterOpening": 0,
+    "changePeriodDateFields": 1,
+    "retryCalendarClicks": 1,
+    "openEventClicks": 1,
+    "repeatedFields": 0,
+    "measuredMobileWidth": {"body": 390, "root": 390, "viewport": 390},
+    "separateLogin": {"fields": 2, "submitClicks": 1},
+    "separateNavigationToCalendar": {"clicks": 1}
+  }
+}

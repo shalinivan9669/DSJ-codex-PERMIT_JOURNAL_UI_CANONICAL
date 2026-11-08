@@ -1,5 +1,6 @@
 # Real PDF geometry and page-image acceptance; runtime engine requirements first.
 -r ../render/requirements.txt
+PyMuPDF==2.1
 pdfplumber==0.11.9
 pypdfium2==5.13.0
 pdfminer.six==20251230

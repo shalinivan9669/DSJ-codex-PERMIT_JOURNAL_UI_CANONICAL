@@ -80,6 +80,8 @@ export function BatchReadyPanel({
   const controlsDisabled = busy || disabled || !selectionReady;
   useEffect(() => {
     setSelectionReady(false);
+    setSelected(null);
+    setSelectionError("");
     setFeedback(null);
     setRefreshError("");
     try {
@@ -230,24 +232,9 @@ export function BatchReadyPanel({
     >
       <h3>Передача директору</h3>
       <p aria-live="polite">
-        Назначения: оформлено {courses.filter((course) => course.issued).length}
-        ; подтверждена сдача {ready.length}; ожидает сдачи{" "}
-        {
-          courses.filter(
-            (course) => !course.issued && !course.passed && !course.failed,
-          ).length
-        }
-        ; не сдал или не явился{" "}
-        {courses.filter((course) => !course.issued && course.failed).length}.
+        Готовы к передаче: {ready.length} из{" "}
+        {courses.filter((course) => !course.issued).length} курсов.
       </p>
-      {(draft.kind !== "PERSON" || draft.items.length !== 1) && (
-        <p className="fine-print">
-          Все сданные ещё не оформленные курсы выбраны автоматически. При
-          необходимости измените состав. Несданные курсы остаются в этой же
-          заявке. Передача директору проверяет выбранные данные и обязательные
-          поля.
-        </p>
-      )}
       {selectionError && <Notice kind="info">{selectionError}</Notice>}
       {staleFeedback && (
         <p className="batch-recheck" role="status">
@@ -275,10 +262,10 @@ export function BatchReadyPanel({
             <p>
               {blocked
                 ? currentFeedback.saved
-                  ? "Можно продолжать заполнять заявку — автосохранение работает. Для передачи и оформления выбранных документов исправьте замечания ниже."
-                  : "Введённые данные остаются на странице. Исправьте замечания ниже, затем повторите сохранение и передачу."
+                  ? "Черновик сохранён. Исправьте замечания ниже и повторите передачу."
+                  : "Данные остались на странице. Исправьте замечания ниже и повторите передачу."
                 : currentFeedback.kind === "success"
-                  ? "Дождитесь согласования директора, затем сформируйте документы. Остальные курсы остаются в рабочем черновике."
+                  ? "Дождитесь согласования директора."
                   : currentFeedback.kind === "unknown"
                     ? "Ответ сервера не получен. Состав мог быть передан. Обновите состояние перед повторной попыткой."
                     : currentFeedback.message}
@@ -307,7 +294,7 @@ export function BatchReadyPanel({
               ))}
             {currentFeedback.correlationId && (
               <details className="batch-error-details">
-                <summary>Технические сведения</summary>
+                <summary>Данные для поддержки</summary>
                 <p>Код обращения: {currentFeedback.correlationId}</p>
               </details>
             )}

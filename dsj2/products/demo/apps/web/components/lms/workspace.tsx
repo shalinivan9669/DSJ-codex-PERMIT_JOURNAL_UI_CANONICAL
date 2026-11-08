@@ -133,7 +133,7 @@ export function LmsWorkspace({
       ) : pathname === "/lms/commission" && (canManage || expert) ? (
         <CommissionWorkspace context={context} />
       ) : pathname === "/lms/teaching" && canReview ? (
-        <TeacherWorkspace key={`${context.user.id}:${commissionView ? "expert" : "teacher"}`} t={t} mode={commissionView ? "expert" : "teacher"} canManageRoles={canManage} />
+        <TeacherWorkspace key={`${context.tenant.id}:${context.user.id}:${commissionView ? "expert" : "teacher"}`} scope={`${context.tenant.id}:${context.user.id}`} t={t} mode={commissionView ? "expert" : "teacher"} canManageRoles={canManage} timezone={context.tenant.timezone || "Asia/Qyzylorda"} />
       ) : pathname === "/learn/results" || pathname === "/learn/documents" || pathname === "/learn/tests" ? (
         <OwnLearningRecords key={pathname} t={t} view={pathname === "/learn/results" ? "results" : pathname === "/learn/documents" ? "documents" : "tests"} />
       ) : learnerView ? (

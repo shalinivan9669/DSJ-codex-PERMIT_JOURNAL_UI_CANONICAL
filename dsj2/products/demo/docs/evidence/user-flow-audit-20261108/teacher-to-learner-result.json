@@ -1,0 +1,17 @@
+{
+  "targetId": "701002d2-f2f8-4ebf-808c-6e5509ea7ea9",
+  "decision": "ACCEPTED",
+  "submittedRevision": 1,
+  "decisionCount": 1,
+  "teacherDecisionClicks": 1,
+  "decisionFields": 2,
+  "learnerSawDecisionAndFeedback": true,
+  "unsentFeedbackAndDecisionSurvivedReloadAndNavigationBack": true,
+  "decisionsBeforeExplicitSave": 0,
+  "decisionPostsIncludingPostSaveReload": 1,
+  "clearedOnlyConfirmedReviewDraft": true,
+  "storageSaveFailureExplicitlyRecovered": true,
+  "explicitLogoutClearsOnlyCurrentUserDrafts": true,
+  "confirmedDecisionSurvivesReloginWithoutDraftReplay": true,
+  "syntheticOnly": true
+}

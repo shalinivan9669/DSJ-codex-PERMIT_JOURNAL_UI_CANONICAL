@@ -85,6 +85,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
   const lane = useRef<AutosaveLane<Draft> | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadRequest = useRef(0);
+  const commandPending = useRef(false);
   useLmsSaveNavigation(
     id,
     () => !!lane.current?.dirty,
@@ -94,6 +95,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
   function install(value: AuthorVersion) {
     const next = { content: value.content, profile: value.profile };
     setVersion(value);
+    setVersions(current => [value, ...current.filter(item => item.id !== value.id)].sort((left, right) => right.version - left.version));
     setDraft(next);
     setError(null);
     setConflict(false);
@@ -242,7 +244,8 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
     );
   }
   async function businessAction(kind: "publish" | "new") {
-    if (!version || busy) return;
+    if (!version || busy || commandPending.current) return;
+    commandPending.current = true;
     setBusy(true);
     setError(null);
     try {
@@ -254,11 +257,13 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
     } catch (caught) {
       setError(caught);
     } finally {
+      commandPending.current = false;
       setBusy(false);
     }
   }
   async function reviewAction(action: "SUBMIT" | "APPROVE" | "RETURN") {
-    if (!version || busy) return;
+    if (!version || busy || commandPending.current) return;
+    commandPending.current = true;
     setBusy(true);
     setError(null);
     try {
@@ -275,6 +280,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
     } catch (caught) {
       setError(caught);
     } finally {
+      commandPending.current = false;
       setBusy(false);
     }
   }
@@ -1765,7 +1771,7 @@ export function CourseEditor({ id, t, canManageSanitary = false }: { id: string;
                 : t("Черновик", "Жоба")}
         </p>
         {version.review?.feedback && <p>{version.review.feedback}</p>}
-        {version.status === "DRAFT" && !canPublish && ["PENDING", "APPROVED"].includes(version.review?.state || "") && <p>{t("Следующий шаг — администратор согласует и опубликует программу.", "Келесі қадам — әкімші бағдарламаны келісіп, жариялайды.")}</p>}
+        {version.status === "DRAFT" && !canPublish && ["PENDING", "APPROVED"].includes(version.review?.state || "") && <p>{version.review?.state === "PENDING" ? t("Ожидает проверки администратором.", "Әкімшінің тексеруін күтуде.") : t("Ожидает публикации администратором.", "Әкімшінің жариялауын күтуде.")}</p>}
         {(canApproveReview || canReturnReview) && (
           <label>
             {t("Комментарий к решению", "Шешімге түсініктеме")}

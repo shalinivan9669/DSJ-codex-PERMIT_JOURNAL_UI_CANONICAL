@@ -1,0 +1,12 @@
+{
+  "requestId": "bba2124f-120c-4f21-9055-e6d852c04231",
+  "issuanceId": "bd7f0705-b52d-409e-a0fc-57075dde1111",
+  "status": "ISSUED",
+  "archived": true,
+  "allPaperComplete": true,
+  "digitalSignatures": 0,
+  "lastAttestationPosts": 2,
+  "sameAttestationBodyOnRetry": true,
+  "unchangedOriginalHashes": true,
+  "syntheticOnly": true
+}

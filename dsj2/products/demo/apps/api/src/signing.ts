@@ -1726,7 +1726,12 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
       status: "VERIFIED",
       signatureId: (
         await db.documentSignature.findFirst({
-          where: { signingSessionId: id, tenantId: c.tenantId },
+          where: {
+            tenantId: c.tenantId,
+            artifactId: session.artifactId,
+            bindingId: session.bindingId,
+            documentSha256: session.documentSha256,
+          },
         })
       )?.id,
     };
@@ -1822,10 +1827,28 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
   const signature = await transaction(async (tx) => {
     await tx.$executeRaw`SELECT id FROM "SigningSession" WHERE id=${id} AND "tenantId"=${c.tenantId} FOR UPDATE`;
     const active = await tx.signingSession.findFirst({
-      where: { id, tenantId: c.tenantId, status: "PENDING" },
+      where: { id, tenantId: c.tenantId },
     });
-    if (!active || active.expiresAt.getTime() <= Date.now())
+    // Another copy of this command may have committed while the verifier was
+    // responding. Return that genuine signature instead of asking to restart.
+    if (active?.status === "VERIFIED")
+      return tx.documentSignature.findFirstOrThrow({
+        where: {
+          tenantId: c.tenantId,
+          artifactId: active.artifactId,
+          bindingId: active.bindingId,
+          documentSha256: active.documentSha256,
+        },
+      });
+    if (
+      !active ||
+      active.status !== "PENDING" ||
+      active.expiresAt.getTime() <= Date.now()
+    )
       fail(409, "SIGNING_SESSION_EXPIRED", "Начните новый сеанс подписания");
+    // Serialize the authority check with both replacement and withdrawal of
+    // this role binding, including a revocation during external verification.
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${c.tenantId + ":signatory:" + binding.userId + ":" + binding.kind},0))`;
     const currentBinding = await tx.signatoryBinding.findFirst({
       where: { id: binding.id, tenantId: c.tenantId, active: true },
     });
@@ -1843,6 +1866,24 @@ export async function completeSigning(c: Context, id: string, input: unknown) {
     // Paper attestation takes the same request lock. Recheck after verification
     // so an in-flight session cannot append an electronic signature afterwards.
     await assertNoPaperAttestation(c, artifact, tx);
+    const existing = await tx.documentSignature.findFirst({
+      where: {
+        tenantId: c.tenantId,
+        artifactId: artifact.id,
+        bindingId: binding.id,
+        documentSha256: artifact.sha256,
+      },
+    });
+    if (existing) {
+      // Two tabs can have different sessions for the same required signature.
+      // Both finish with the already verified evidence; only its original
+      // session owns that immutable signature and its audit event.
+      await tx.signingSession.update({
+        where: { id },
+        data: { status: "VERIFIED" },
+      });
+      return existing;
+    }
     const value = await tx.documentSignature.create({
       data: {
         tenantId: c.tenantId,

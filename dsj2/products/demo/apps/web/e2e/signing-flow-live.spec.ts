@@ -35,6 +35,9 @@ import { assertTestDatabase } from "../../../tests/integration/test-database";
 // of one real, locally rendered synthetic issuance. No digital signature is faked.
 test.describe.configure({ mode: "serial" });
 test.use({ trace: "off" });
+test.beforeEach(async ({ page }) => {
+  await page.routeWebSocket(/\/_next\/webpack-hmr/, (socket) => socket.close());
+});
 const evidence = path.resolve(
   process.env.DEMO_E2E_EVIDENCE ||
     "../../../.runtime/commission-flow/evidence/signing-flow",
@@ -327,13 +330,72 @@ test.afterAll(async () => {
   await db.$disconnect();
 });
 
+test("a failed real PDF download remains actionable after successful file refresh and retries without altering the original", async ({
+  page,
+}) => {
+  await login(page, seeded.accounts.DIRECTOR);
+  await open(page);
+  const files = page.locator("#request-files");
+  for (const details of await page
+    .locator("details")
+    .filter({ has: files })
+    .all())
+    if (!(await details.evaluate((node) => (node as HTMLDetailsElement).open)))
+      await details.locator(":scope > summary").click();
+  const download = files
+    .getByRole("link", { name: "Скачать", exact: true })
+    .first();
+  const href = await download.getAttribute("href");
+  if (!href) throw new Error("Original download link missing");
+  let failDownload = true;
+  await page.route(`**${href}`, async (route) => {
+    if (failDownload)
+      await route.fulfill({
+        status: 500,
+        json: {
+          code: "SYNTHETIC_DOWNLOAD_FAILURE",
+          message: "Синтетический отказ скачивания",
+        },
+      });
+    else await route.continue();
+  });
+  await download.click();
+  await expect(files).toContainText("Синтетический отказ скачивания");
+  const refreshed = page.waitForResponse(
+    (r) =>
+      r.url().endsWith(`/print-requests/${seeded.request.id}`) &&
+      r.request().method() === "GET",
+  );
+  await files.getByRole("button", { name: "Обновить", exact: true }).click();
+  expect((await refreshed).status()).toBe(200);
+  await expect(files).toContainText("Синтетический отказ скачивания");
+  failDownload = false;
+  const received = page.waitForEvent("download");
+  await download.click();
+  const original = await received;
+  const target = path.join(evidence, "recovered-original-download.pdf");
+  await original.saveAs(target);
+  const artifactId = href.split("/").at(-1)!;
+  const stored = await db.artifact.findUniqueOrThrow({
+    where: { id: artifactId },
+  });
+  expect(
+    createHash("sha256")
+      .update(await fs.readFile(target))
+      .digest("hex"),
+  ).toBe(stored.sha256);
+  await expect(files).not.toContainText("Синтетический отказ скачивания");
+});
+
 test("real final PDFs keep EDS unavailable and expose role-specific setup without changing a frozen issuance", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await login(page, seeded.accounts.SUPER_ADMIN);
   let panel = await open(page);
-  await expect(panel).toContainText("ЭЦП пока недоступна в этом центре");
+  await expect(panel).toContainText(
+    "ЭЦП недоступна. Подключение настраивает администратор.",
+  );
   await expect(panel).toContainText(
     "Можно оформить документы с подписями на бумаге",
   );
@@ -371,7 +433,9 @@ test("real final PDFs keep EDS unavailable and expose role-specific setup withou
     .locator("summary")
     .filter({ hasText: "ЭЦП: доступность и подписанты" })
     .click();
-  await expect(panel).toContainText("изменение настроек его не обновляет");
+  await expect(panel).toContainText(
+    "Настройки подписантов действуют только для новых выпусков.",
+  );
   await panel
     .getByRole("link", { name: "Настроить подписантов ЭЦП", exact: true })
     .click();
@@ -422,7 +486,9 @@ test("real final PDFs keep EDS unavailable and expose role-specific setup withou
   ).toBe(true);
   await screenshot(page, "signing-unavailable-role-guidance-390");
   await page.getByRole("button", { name: "KZ", exact: true }).click();
-  await expect(panel).toContainText("Бұл орталықта ЭЦҚ әзірге қолжетімсіз");
+  await expect(panel).toContainText(
+    "ЭЦҚ қолжетімсіз. Қосылуды әкімші баптайды.",
+  );
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -441,7 +507,7 @@ for (const role of ["OPERATOR", "VIEWER"] as const) {
     const headers = await login(page, seeded.accounts[role]);
     const panel = await open(page);
     await expect(panel).toContainText(
-      "Бумажные подписи в системе подтверждает директор",
+      "передайте оригиналы директору для подтверждения",
     );
     await expect(panel.locator(".paper-document-signature")).toHaveCount(0);
     await panel
@@ -698,4 +764,85 @@ test("lost accepted paper response retries exactly the same attestation and comp
     0,
   );
   await screenshot(page, "paper-issued-without-false-eds-390");
+  await fs.writeFile(
+    path.join(evidence, "paper-issued-state.json"),
+    JSON.stringify(
+      {
+        requestId: seeded.request.id,
+        issuanceId: seeded.issued.issuanceId,
+        status: current.status,
+        archived: current.archived,
+        allPaperComplete: true,
+        digitalSignatures: 0,
+        lastAttestationPosts: bodies.length,
+        sameAttestationBodyOnRetry: bodies[0] === bodies[1],
+        unchangedOriginalHashes: true,
+        syntheticOnly: true,
+      },
+      null,
+      2,
+    ),
+  );
+  const files = page.locator("#request-files");
+  for (const details of await page
+    .locator("details")
+    .filter({ has: files })
+    .all())
+    if (!(await details.evaluate((node) => (node as HTMLDetailsElement).open)))
+      await details.locator(":scope > summary").click();
+  let failExport = true;
+  await page.route(
+    `**/api/print-requests/${seeded.request.id}/export`,
+    async (route) => {
+      if (failExport)
+        await route.fulfill({
+          status: 500,
+          json: {
+            code: "SYNTHETIC_EXPORT_FAILURE",
+            message: "Синтетический отказ экспорта",
+          },
+        });
+      else await route.continue();
+    },
+  );
+  for (const button of ["Реестр XLSX", "Скачать ZIP"]) {
+    failExport = true;
+    await files.getByRole("button", { name: button, exact: true }).click();
+    await expect(files).toContainText("Синтетический отказ экспорта");
+    failExport = false;
+    const received = page.waitForEvent("download");
+    await files.getByRole("button", { name: button, exact: true }).click();
+    const download = await received;
+    const target = path.join(
+      evidence,
+      button === "Реестр XLSX"
+        ? "recovered-issued-registry.xlsx"
+        : "recovered-issued-bundle.zip",
+    );
+    await download.saveAs(target);
+    expect((await fs.readFile(target)).subarray(0, 2).toString("ascii")).toBe(
+      "PK",
+    );
+    await expect(files).not.toContainText("Синтетический отказ экспорта");
+  }
+  await fs.writeFile(
+    path.join(evidence, "issued-export-recovery.json"),
+    JSON.stringify(
+      {
+        requestId: seeded.request.id,
+        issuanceId: seeded.issued.issuanceId,
+        completedSigningUnlocksExportsWithoutManualRefresh: true,
+        failedThenSuccessfulExports: ["XLSX", "ZIP"],
+        successfulRetryClearsActionError: true,
+        paperRoutine: {
+          typedFields: 2,
+          explicitAttestationCheckboxes: 1,
+          saveClicks: 1,
+          repeatedSignerNames: 0,
+        },
+      },
+      null,
+      2,
+    ),
+  );
 });

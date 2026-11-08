@@ -300,7 +300,7 @@ def _remove_source_company_wrappers(root, template_id):
 
 
 def _commission_header(root, roster, snapshot):
-    """Fill the three source header slots from the same ordered frozen people.
+    """Fill the composition header from all ordered frozen people.
 
     The retained source hardcodes director/UMO/teacher jobs and, in BIOT/PTM,
     reverses the two member names. Commission membership is positional; job
@@ -331,6 +331,17 @@ def _commission_header(root, roster, snapshot):
     issuer = snapshot.get('issuer', {})
     commission = issuer.get('commission', [])
     issuer_name = str(issuer.get('nameRu') or issuer.get('nameKz') or '')
+    # Source forms have three descriptive slots, while profiles support up to
+    # twelve commission members. Extend only this flowing composition header;
+    # the established signature block and signing policy remain independent.
+    for _ in commission[3:]:
+        paragraph = deepcopy(slots[2])
+        # A copied visible line must not duplicate Word's source field IDs.
+        for node in list(paragraph.iter()):
+            if node.tag in [W + 'bookmarkStart', W + 'bookmarkEnd']:
+                node.getparent().remove(node)
+        body.insert(body.index(slots[-1]) + 1, paragraph)
+        slots.append(paragraph)
     for index, paragraph in enumerate(slots):
         person = commission[index] if index < len(commission) else {}
         name = str(person.get('name') or '')

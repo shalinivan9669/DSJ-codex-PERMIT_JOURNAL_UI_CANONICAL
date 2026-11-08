@@ -44,6 +44,14 @@
 .lms-calendar-notifications summary {
   overflow-wrap: anywhere;
 }
+.lms-inbox-list > li > div:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.lms-inbox-list > li > div:first-child > small {
+  display: block;
+  margin-top: 4px;
+}
 .lms-event-detail,
 .lms-event-editor {
   flex-basis: 100%;

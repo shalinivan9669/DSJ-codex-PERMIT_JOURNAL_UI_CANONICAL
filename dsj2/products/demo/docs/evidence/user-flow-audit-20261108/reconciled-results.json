@@ -1,0 +1,409 @@
+{
+  "method": "Latest explicit execution for each distinct test file/title; phase reports retained including failures. This is a reconciled matrix, not a claim of one single all-green run.",
+  "distinctCases": 59,
+  "passed": 59,
+  "failed": 0,
+  "skipped": 0,
+  "phases": [
+    {
+      "source": "final/results.json",
+      "stats": {
+        "startTime": "2026-11-08T15:15:33.762Z",
+        "duration": 705472.955,
+        "expected": 50,
+        "skipped": 5,
+        "unexpected": 4,
+        "flaky": 0
+      }
+    },
+    {
+      "source": "production-final/results.json",
+      "stats": {
+        "startTime": "2026-11-08T15:32:49.352Z",
+        "duration": 258111.054,
+        "expected": 11,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      }
+    },
+    {
+      "source": "production-confirmed/results.json",
+      "stats": {
+        "startTime": "2026-11-08T16:45:32.192Z",
+        "duration": 121282.531,
+        "expected": 15,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "source": "teacher-confirmed/results.json",
+      "stats": {
+        "startTime": "2026-11-08T16:48:07.117Z",
+        "duration": 7948.396,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "blocked director transfer clears after settings-return commission repair without losing the selected recipients or submitting early",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-template-live.spec.ts",
+      "title": "director-chair template on mobile validates names and preserves the draft after a failed save",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "commission error recovers through settings and applies to saved request at 390px",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "fresh OPERATOR distinguishes failed loading from an empty programme catalogue",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "blocked director transfer clears after same-page commission repair without losing the selected recipients or submitting early",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "pending group assignment restores its exact payload after server group changes and page reload",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "fresh SUPER_ADMIN distinguishes failed loading from an empty programme catalogue",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "operator can apply a saved commission without being offered inaccessible settings",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-template-live.spec.ts",
+      "title": "directory reuse copies only names and a custom organization job survives save and reload",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "real non-demo OPERATOR sees training access blocker instead of an empty programme catalogue",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "signing-flow-live.spec.ts",
+      "title": "failed signing state load recovers without retaining a stale error or inventing completion",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "fresh DIRECTOR distinguishes failed loading from an empty programme catalogue",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "employer-person-live.spec.ts",
+      "title": "a PERSONAL request keeps custom bilingual wording and refuses a foreign employer identity",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "employer-person-live.spec.ts",
+      "title": "a linked employer hydrates genuinely empty wording while an imported custom single-language name remains untouched",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "TEACHER login opens its calendar and only bound own events and notifications are visible",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "transient catalogue failure retries GET and preserves search and previously loaded programmes",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "lost successful transfer response recovers existing approval without a duplicate submission",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "employer-person-live.spec.ts",
+      "title": "failed and delayed employer lookups preserve newer locally entered RU and KZ names",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "global inbox retains failed mark across a successful refresh, paginates real rows and opens the exact review",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "person-director-transfer-live.spec.ts",
+      "title": "completed COMPANY ITR BIOT, PTM and PB transfers six exact documents through director approval to real signing readiness",
+      "status": "expected",
+      "source": "production-final/results.json"
+    },
+    {
+      "file": "commission-template-live.spec.ts",
+      "title": "empty UMO template keeps commission roles distinct from jobs and reuses the director only explicitly",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "notification loading failure retries independently and a real review notification opens its immutable submission",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "known create failure survives successful catalogue refresh and explicit retry creates only one programme",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "signing-flow-live.spec.ts",
+      "title": "OPERATOR can inspect originals but cannot configure EDS or attest paper signatures",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "readiness refresh waits for an in-flight registration change and remounts its saved value",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-template-live.spec.ts",
+      "title": "saving organization details leaves an untouched display-only commission template empty",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "lost accepted assignment response resumes the same operation without duplicate enrollments",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "a commission error repairs only its separately pinned event and preserves the request and another event",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "real non-demo gate names the configuration blocker and GET-only access checks never create a programme",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "superadmin follows a city validation error through settings and explicitly applies corrected profile",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "director can diagnose blocked learning and copy an actionable task without opening registration or mutating policy",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "methodist preparation and director publication let the operator assign the preserved mobile draft",
+      "status": "expected",
+      "source": "production-final/results.json"
+    },
+    {
+      "file": "person-director-transfer-live.spec.ts",
+      "title": "failed current-request result preparation blocks transfer, preserves input and explicitly recovers before another PERSON request",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "signing-flow-live.spec.ts",
+      "title": "real final PDFs keep EDS unavailable and expose role-specific setup without changing a frozen issuance",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "employer-person-live.spec.ts",
+      "title": "the real bilingual PDF prints the UI-entered IP employer and an issued original never follows later directory changes",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "employer-person-live.spec.ts",
+      "title": "PERSON employer form immediately shows IP and TOO in both languages and creates a prefilled directory entry",
+      "status": "expected",
+      "source": "production-final/results.json"
+    },
+    {
+      "file": "employer-person-live.spec.ts",
+      "title": "selecting an existing employer fills both languages once and local changes and unlinking preserve document wording",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "archived organizations cannot be selected and an old link reports unavailable context",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "calendar includes center-local 00:30 and excludes an event ending exactly at the first midnight",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "signing-flow-live.spec.ts",
+      "title": "lost accepted paper response retries exactly the same attestation and completes only the real selected issuance",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "signing-flow-live.spec.ts",
+      "title": "a failed real PDF download remains actionable after successful file refresh and retries without altering the original",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "date clear, failed period retry and delayed older response retain the latest requested period",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "signing-flow-live.spec.ts",
+      "title": "director explicitly attests the first original and recovers a failed refresh without another mutation",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "commission-template-live.spec.ts",
+      "title": "applying a template to legacy data fills blank jobs without replacing names custom jobs translations or extra members",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "teacher work queue and exact detail recover their own failed requests without inventing an empty queue",
+      "status": "expected",
+      "source": "teacher-confirmed/results.json"
+    },
+    {
+      "file": "person-director-transfer-live.spec.ts",
+      "title": "completed PERSON ITR BIOT, PTM and PB transfers six exact documents through director approval to real signing readiness",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "signing-settings-live.spec.ts",
+      "title": "one employee's signing roles stay independent through a lost create response and explicit revocation",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "signing-flow-live.spec.ts",
+      "title": "VIEWER can inspect originals but cannot configure EDS or attest paper signatures",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "completed failed rows can be repaired and retried in a new operation with unchanged selection",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "lost accepted create response reconciles the full list without a second POST or duplicate course",
+      "status": "expected",
+      "source": "production-final/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "a delayed notification mark cannot override a newer calendar event choice",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "failed context refresh keeps selected people programme and group until retry succeeds",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "commission error recovers through settings and applies to saved request at 1366px",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "revoked teacher binding denies a direct event link and restored binding recovers the same saved event",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "lms-assignment-recovery-live.spec.ts",
+      "title": "rejected assignment remains visible through context refresh and retries the preserved draft",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "methodist search and pagination show only its own bound programmes",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "commission-recovery-live.spec.ts",
+      "title": "accepted transfer with failed refresh keeps success and flushes edits before recovery reload",
+      "status": "expected",
+      "source": "final/results.json"
+    },
+    {
+      "file": "teacher-calendar-recovery-live.spec.ts",
+      "title": "closed real tenant gate explains both unavailable resources without a false empty calendar or zero notifications",
+      "status": "expected",
+      "source": "production-confirmed/results.json"
+    },
+    {
+      "file": "methodist-programme-recovery-live.spec.ts",
+      "title": "real METHODIST login opens an empty catalogue and can create, autosave and reopen its own programme",
+      "status": "expected",
+      "source": "final/results.json"
+    }
+  ]
+}

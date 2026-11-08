@@ -25,6 +25,49 @@ def employer(item):
 
 
 class NeutralProtocolValueTests(unittest.TestCase):
+    def test_additional_commission_members_are_visible_without_adding_signature_requirements(self):
+        for template_id in [*FORMS, 'ps-protocol']:
+            for grouped in [False, True]:
+                for count in [4, 12]:
+                    with self.subTest(template=template_id, group=grouped, count=count):
+                        snapshot = group_fixture(template_id, 2) if grouped else fixture(template_id)
+                        snapshot['issuer']['commission'] = [
+                            {'name': f'Участник состава {index + 1}', 'position': f'Должность {index + 1}'}
+                            for index in range(count)
+                        ]
+                        # Saved order and matching jobs remain authoritative,
+                        # including roles with coincident names.
+                        snapshot['issuer']['commission'][1], snapshot['issuer']['commission'][3] = (
+                            snapshot['issuer']['commission'][3], snapshot['issuer']['commission'][1])
+                        snapshot['issuer']['commission'][2]['name'] = snapshot['issuer']['commission'][0]['name']
+                        original = deepcopy(snapshot)
+                        records = MANIFEST['groupTemplates' if grouped else 'templates']
+                        record = next(t for t in records if t['id'] == template_id)
+                        path = ROOT / 'assets/templates' / record['file']
+                        def render(value):
+                            files = (render_neutral_group(value, path) if grouped else
+                                     render_neutral_one(value, value['items'][0], path))
+                            return E.fromstring(files['word/document.xml'])
+                        document = render(snapshot)
+                        roster = roster_table(document)
+                        body = document.find(W + 'body')
+                        header = [text(node) for node in list(body)[:body.index(roster)]]
+                        self.assertEqual([line for line in header if 'Участник состава' in line], [
+                            person['name'] + ' — ' + person['position'] + ', ' + snapshot['issuer']['nameRu']
+                            for person in snapshot['issuer']['commission']
+                        ])
+                        baseline = deepcopy(snapshot)
+                        baseline['issuer']['commission'] = baseline['issuer']['commission'][:3]
+                        old = render(baseline)
+                        def footer(root):
+                            table = roster_table(root)
+                            parent = root.find(W + 'body')
+                            if template_id == 'pb-protocol':
+                                return text(table.findall(W + 'tr')[-1])
+                            return ''.join(text(node) for node in list(parent)[parent.index(table) + 1:])
+                        self.assertEqual(footer(document), footer(old))
+                        self.assertEqual(snapshot, original)
+
     def test_commission_jobs_follow_frozen_people_in_individual_and_group_headers(self):
         jobs = [
             ['Начальник УМО', 'Директор', 'Преподаватель'],

@@ -10,7 +10,15 @@ import {
   publishVersion,
 } from "../../../apps/api/src/lms/courses";
 import { createTeachingEvent } from "../../../apps/api/src/lms/teaching-events";
-import { lmsCourse, lmsLearner } from "../../../tests/integration/lms-fixture";
+import {
+  createTeachingBinding,
+  revokeTeachingBinding,
+} from "../../../apps/api/src/lms/teaching-bindings";
+import {
+  lmsCourse,
+  lmsLearner,
+  LMS_PASSWORD,
+} from "../../../tests/integration/lms-fixture";
 import {
   saveSubmission,
   submitSubmission,
@@ -84,6 +92,7 @@ async function fixture(withEvents = true, withReview = false) {
         notificationId: string;
         titleRu: string;
         href: string;
+        learner: { email: string; password: string; enrollmentId: string };
       } | null,
     };
   const otherTeacher = await saveUser(context, {
@@ -232,6 +241,7 @@ async function fixture(withEvents = true, withReview = false) {
     notificationId: string;
     titleRu: string;
     href: string;
+    learner: { email: string; password: string; enrollmentId: string };
   } | null = null;
   if (withReview) {
     const learner = await lmsLearner(context.tenantId, "calendar-notification");
@@ -299,6 +309,11 @@ async function fixture(withEvents = true, withReview = false) {
       notificationId: inbox.id,
       titleRu: inbox.titleRu,
       href: outbox.href,
+      learner: {
+        email: learner.user.email,
+        password: LMS_PASSWORD,
+        enrollmentId: enrollment.id,
+      },
     };
   }
   return {
@@ -311,7 +326,11 @@ async function fixture(withEvents = true, withReview = false) {
   };
 }
 
-async function login(page: Page, account: { email: string; password: string }) {
+async function login(
+  page: Page,
+  account: { email: string; password: string },
+  expectedPath = /\/lms\/teaching$/,
+) {
   await page.goto("/login");
   await page
     .getByLabel("Электронная почта", { exact: true })
@@ -330,7 +349,7 @@ async function login(page: Page, account: { email: string; password: string }) {
       continue;
     }
     expect(response.status()).toBe(201);
-    await expect(page).toHaveURL(/\/lms\/teaching$/);
+    await expect(page).toHaveURL(expectedPath);
     return;
   }
   throw new Error("Synthetic teacher login remained rate-limited");
@@ -523,7 +542,9 @@ test("closed real tenant gate explains both unavailable resources without a fals
   await expect(
     calendar.getByText("Не удалось загрузить календарь", { exact: true }),
   ).toBeVisible();
-  await expect(calendar).toContainText("Обучение для центра ещё не подключено");
+  await expect(calendar).toContainText(
+    "Обучение пока недоступно. Обратитесь к администратору.",
+  );
   await expect(
     page.getByText("В этом периоде событий нет", { exact: true }),
   ).toHaveCount(0);
@@ -711,6 +732,17 @@ test("calendar includes center-local 00:30 and excludes an event ending exactly 
     boundary - 60 * 60000,
     boundary,
   );
+  const periodEnd = boundary + 31 * 24 * 3600000;
+  const last = await createBoundary(
+    "Синтетическое занятие последнего дня 23:30",
+    periodEnd - 30 * 60000,
+    periodEnd + 30 * 60000,
+  );
+  const next = await createBoundary(
+    "Синтетическое занятие следующего периода",
+    periodEnd,
+    periodEnd + 60 * 60000,
+  );
   await openCalendar(page, seeded.account);
   const loaded = page.waitForResponse(
     (r) =>
@@ -726,6 +758,12 @@ test("calendar includes center-local 00:30 and excludes an event ending exactly 
   expect(result.items.map((item: { id: string }) => item.id)).not.toContain(
     `event:${prior.id}`,
   );
+  expect(result.items.map((item: { id: string }) => item.id)).toContain(
+    `event:${last.id}`,
+  );
+  expect(result.items.map((item: { id: string }) => item.id)).not.toContain(
+    `event:${next.id}`,
+  );
   await expect(
     page.locator(".lms-calendar").getByText(early.titleRu, { exact: true }),
   ).toBeVisible();
@@ -738,6 +776,64 @@ test("calendar includes center-local 00:30 and excludes an event ending exactly 
     includedLocalTime: "00:30",
     boundary: new Date(boundary).toISOString(),
     excludesEndEqualFrom: true,
+    includesLastDay2330: true,
+    excludesStartEqualTo: true,
+  });
+});
+
+test("revoked teacher binding denies a direct event link and restored binding recovers the same saved event", async ({
+  page,
+}) => {
+  const seeded = await fixture();
+  await openCalendar(page, seeded.account);
+  await expect(
+    page
+      .locator(".lms-calendar")
+      .getByText(seeded.events[0].titleRu, { exact: true }),
+  ).toBeVisible();
+  const binding = await db.lmsTeachingBinding.findFirstOrThrow({
+    where: {
+      tenantId: seeded.context.tenantId,
+      userId: seeded.teacher.id,
+      groupId: seeded.groupId,
+      revokedAt: null,
+    },
+  });
+  await revokeTeachingBinding(seeded.context, binding.id, {
+    reason: "Синтетическая проверка отзыва полномочий",
+  });
+  await page.goto(`/lms/calendar?eventId=${seeded.events[0].id}`);
+  await expect(page.locator(".lms-calendar article")).toHaveCount(0);
+  const denied = await page.request.get(
+    `/api/lms/teaching-events/${seeded.events[0].id}`,
+  );
+  expect(denied.status()).toBe(404);
+  await expect(
+    page
+      .locator(".lms-event-detail")
+      .getByRole("heading", { name: seeded.events[0].titleRu, exact: true }),
+  ).toHaveCount(0);
+  await createTeachingBinding(seeded.context, {
+    userId: seeded.teacher.id,
+    role: "TEACHER",
+    courseId: binding.courseId,
+    groupId: seeded.groupId,
+  });
+  await page.reload();
+  await expect(
+    page
+      .locator(".lms-event-detail")
+      .getByRole("heading", { name: seeded.events[0].titleRu, exact: true }),
+  ).toBeVisible();
+  expect(
+    await db.lmsAttendance.count({
+      where: { tenantId: seeded.context.tenantId },
+    }),
+  ).toBe(0);
+  await metrics("teacher-revoked-binding-recovery", {
+    directLinkDeniedStatus: 404,
+    restoredSameEvent: true,
+    attendanceWritten: 0,
   });
 });
 
@@ -916,4 +1012,423 @@ test("a delayed notification mark cannot override a newer calendar event choice"
   } finally {
     release();
   }
+});
+
+test("global inbox retains failed mark across a successful refresh, paginates real rows and opens the exact review", async ({
+  page,
+}) => {
+  const seeded = await fixture(true, true);
+  if (!seeded.review) throw new Error("Review fixture missing");
+  const review = seeded.review;
+  for (let index = 0; index < 25; index++)
+    await createTeachingEvent(seeded.context, {
+      operationId: randomUUID(),
+      groupId: seeded.groupId,
+      teacherUserId: seeded.teacher.id,
+      titleRu: `Синтетическое занятие уведомления ${index + 1}`,
+      titleKz: `Хабарламаның синтетикалық сабағы ${index + 1}`,
+      timezone: "Asia/Qyzylorda",
+      startsAt: new Date(day(2).getTime() + index * 60000).toISOString(),
+      endsAt: new Date(day(2).getTime() + (index + 60) * 60000).toISOString(),
+    });
+  await login(page, seeded.account);
+  await page.goto("/lms/notifications");
+  const rows = page.locator("ul.lms-list > li");
+  await expect(rows).toHaveCount(25);
+  const firstHref = await rows
+    .first()
+    .getByRole("link", { name: "Открыть", exact: true })
+    .getAttribute("href");
+  let failMark = true;
+  const markRequests: string[] = [];
+  await page.route("**/api/lms/notifications/*/read", async (route) => {
+    markRequests.push(route.request().url());
+    if (failMark)
+      await route.fulfill({
+        status: 500,
+        json: { code: "SYNTHETIC_INBOX_MARK_FAILURE" },
+      });
+    else await route.continue();
+  });
+  await rows
+    .first()
+    .getByRole("button", { name: "Отметить прочитанным", exact: true })
+    .click();
+  const markError = page
+    .getByRole("alert")
+    .filter({ hasText: "Не удалось отметить прочитанным" });
+  await expect(markError).toBeVisible();
+  const refresh = page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname === "/api/lms/notifications" &&
+      new URL(r.url()).searchParams.get("pageSize") === "25",
+  );
+  await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+  expect((await refresh).status()).toBe(200);
+  await expect(markError).toBeVisible();
+  expect(markRequests).toHaveLength(1);
+  failMark = false;
+  await markError
+    .getByRole("button", { name: "Повторить отметку", exact: true })
+    .click();
+  await expect(markError).toHaveCount(0);
+  await expect(
+    rows
+      .first()
+      .getByRole("button", { name: "Отметить прочитанным", exact: true }),
+  ).toHaveCount(0);
+  expect(markRequests).toHaveLength(2);
+  expect(markRequests[1]).toBe(markRequests[0]);
+  expect(
+    await rows
+      .first()
+      .getByRole("link", { name: "Открыть", exact: true })
+      .getAttribute("href"),
+  ).toBe(firstHref);
+  let release!: () => void;
+  const barrier = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let held = false;
+  await page.route(
+    "**/api/lms/notifications?page=2&pageSize=25",
+    async (route) => {
+      const response = await route.fetch();
+      held = true;
+      await barrier;
+      await route.fulfill({ response });
+    },
+  );
+  await page
+    .getByRole("navigation", { name: "Страницы уведомлений", exact: true })
+    .getByRole("button", { name: "Далее", exact: true })
+    .click();
+  await expect.poll(() => held).toBe(true);
+  try {
+    await expect(rows).toHaveCount(0);
+    await expect(
+      page.getByText("Загружаем уведомления…", { exact: true }),
+    ).toBeVisible();
+    release();
+    await expect(rows).toHaveCount(3);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await overflow(page);
+    await page.screenshot({
+      path: path.join(evidence, "global-inbox-page2-390-ru.png"),
+      fullPage: true,
+    });
+    await page.getByRole("button", { name: "KZ", exact: true }).first().click();
+    await expect(rows.first()).not.toContainText(
+      /\b(?:AM|PM|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/,
+    );
+    await overflow(page);
+    await page.screenshot({
+      path: path.join(evidence, "global-inbox-page2-390-kz.png"),
+      fullPage: true,
+    });
+    await page.getByRole("button", { name: "RU", exact: true }).first().click();
+    const reviewRow = rows.filter({ hasText: review.titleRu });
+    await reviewRow.getByRole("link", { name: "Открыть", exact: true }).click();
+    await expect(page).toHaveURL(
+      new RegExp(`/lms/teaching\\?type=SUBMISSION&reviewId=${review.id}$`),
+    );
+    await expect(
+      page.getByText("Синтетический ответ для проверки перехода из календаря", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await metrics("global-inbox-recovery", {
+      listTotal: 28,
+      pages: [25, 3],
+      failedMarkRetainedAfterGet: true,
+      retrySameNotification: true,
+      exactReviewHref: review.href,
+      noOldRowsDuringPageLoading: true,
+    });
+  } finally {
+    release();
+  }
+});
+
+test("teacher work queue and exact detail recover their own failed requests without inventing an empty queue", async ({
+  page,
+  browser,
+}) => {
+  const seeded = await fixture(true, true);
+  if (!seeded.review) throw new Error("Review fixture missing");
+  const review = seeded.review;
+  let failQueue = true;
+  let failDetail = true;
+  await page.route("**/api/lms/reviews?**", async (route) => {
+    if (failQueue)
+      await route.fulfill({
+        status: 500,
+        json: { code: "SYNTHETIC_REVIEW_LIST_FAILURE" },
+      });
+    else await route.continue();
+  });
+  await page.route(
+    `**/api/lms/reviews/SUBMISSION/${review.id}`,
+    async (route) => {
+      if (failDetail)
+        await route.fulfill({
+          status: 500,
+          json: { code: "SYNTHETIC_REVIEW_DETAIL_FAILURE" },
+        });
+      else await route.continue();
+    },
+  );
+  await login(page, seeded.account);
+  await page
+    .getByRole("button", { name: "Проверка работ", exact: true })
+    .click();
+  const queue = page.locator("section").filter({
+    has: page.getByRole("heading", { name: "Очередь проверки", exact: true }),
+  });
+  await expect(
+    queue.getByRole("button", { name: "Повторить загрузку", exact: true }),
+  ).toBeVisible();
+  await expect(
+    queue.getByText("Работ для проверки нет", { exact: true }),
+  ).toHaveCount(0);
+  failQueue = false;
+  await queue
+    .getByRole("button", { name: "Повторить загрузку", exact: true })
+    .click();
+  await queue
+    .getByRole("button", { name: "Открыть работу", exact: true })
+    .click();
+  const retry = page.getByRole("button", {
+    name: "Обновить данные",
+    exact: true,
+  });
+  await expect(retry).toBeVisible();
+  failDetail = false;
+  await retry.click();
+  await expect(
+    page.getByText("Синтетический ответ для проверки перехода из календаря", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  expect(
+    (await db.lmsSubmission.findUniqueOrThrow({ where: { id: review.id } }))
+      .state,
+  ).toBe("SUBMITTED");
+  await metrics("teacher-review-load-recovery", {
+    queueRetryClicks: 1,
+    detailRetryClicks: 1,
+    submissionState: "SUBMITTED",
+    noDecisionFabricated: true,
+  });
+  const feedback =
+    "Синтетическое решение преподавателя: приведённое обоснование соответствует критериям";
+  const decisionChoice = page.getByRole("combobox", {
+    name: "Решение",
+    exact: true,
+  });
+  const feedbackField = page.getByRole("textbox", {
+    name: "Обратная связь слушателю",
+    exact: true,
+  });
+  await decisionChoice.selectOption("ACCEPTED");
+  const draftKey = `demo:lms:review-draft:${seeded.context.tenantId}:${seeded.teacher.id}:SUBMISSION:${review.id}`;
+  await page.evaluate((key) => {
+    const original = Storage.prototype.setItem;
+    (
+      window as unknown as { restoreReviewStorage: () => void }
+    ).restoreReviewStorage = () => {
+      Storage.prototype.setItem = original;
+    };
+    Storage.prototype.setItem = function (name, value) {
+      if (this === sessionStorage && name === key)
+        throw new DOMException(
+          "Synthetic review draft storage failure",
+          "QuotaExceededError",
+        );
+      original.call(this, name, value);
+    };
+  }, draftKey);
+  await feedbackField.fill(feedback);
+  const storageFailure = page
+    .getByRole("alert")
+    .filter({
+      hasText:
+        "Черновик решения не сохранён на устройстве. Не закрывайте страницу до сохранения черновика или решения.",
+    });
+  await expect(storageFailure).toBeVisible();
+  await page.screenshot({
+    path: path.join(evidence, "teacher-draft-storage-error.png"),
+    fullPage: true,
+  });
+  await page.evaluate(() =>
+    (
+      window as unknown as { restoreReviewStorage: () => void }
+    ).restoreReviewStorage(),
+  );
+  await page
+    .getByRole("button", { name: "Сохранить черновик", exact: true })
+    .click();
+  await expect(storageFailure).toHaveCount(0);
+  const readDraft = () =>
+    page.evaluate((key) => {
+      const value = sessionStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    }, draftKey);
+  await expect
+    .poll(readDraft)
+    .toMatchObject({ feedback, decision: "ACCEPTED" });
+  const beforeReloadDraft = await readDraft();
+  await page.reload();
+  await expect(decisionChoice).toHaveValue("ACCEPTED");
+  await expect(feedbackField).toHaveValue(feedback);
+  expect((await readDraft()).key).toBe(beforeReloadDraft.key);
+  await page.getByRole("link", { name: "Мои курсы", exact: true }).click();
+  await expect(page).toHaveURL(/\/lms$/);
+  await page.goBack();
+  await expect(decisionChoice).toHaveValue("ACCEPTED");
+  await expect(feedbackField).toHaveValue(feedback);
+  await page.screenshot({
+    path: path.join(evidence, "teacher-draft-restored-after-navigation.png"),
+    fullPage: true,
+  });
+  expect(
+    await db.lmsReviewDecision.count({
+      where: { tenantId: seeded.context.tenantId, targetId: review.id },
+    }),
+  ).toBe(0);
+  expect(
+    (await db.lmsSubmission.findUniqueOrThrow({ where: { id: review.id } }))
+      .state,
+  ).toBe("SUBMITTED");
+  let decisionPosts = 0;
+  page.on("request", (request) => {
+    if (
+      request.url().endsWith(`/lms/reviews/SUBMISSION/${review.id}/decision`) &&
+      request.method() === "POST"
+    )
+      decisionPosts++;
+  });
+  const decision = page.waitForResponse(
+    (r) =>
+      r.url().endsWith(`/lms/reviews/SUBMISSION/${review.id}/decision`) &&
+      r.request().method() === "POST",
+  );
+  await page
+    .getByRole("button", { name: "Принять работу", exact: true })
+    .click();
+  expect((await decision).status()).toBe(201);
+  await expect(
+    page.getByText("Решение сохранено", { exact: true }),
+  ).toBeVisible();
+  expect(
+    (await db.lmsSubmission.findUniqueOrThrow({ where: { id: review.id } }))
+      .state,
+  ).toBe("ACCEPTED");
+  const savedDecision = await db.lmsReviewDecision.findMany({
+    where: { tenantId: seeded.context.tenantId, targetId: review.id },
+  });
+  expect(savedDecision).toHaveLength(1);
+  expect(savedDecision[0]).toMatchObject({
+    decision: "ACCEPTED",
+    feedback,
+    actorId: seeded.teacher.id,
+    revision: 1,
+  });
+  await expect.poll(readDraft).toBeNull();
+  await page.reload();
+  await expect(
+    page.getByText("Синтетический ответ для проверки перехода из календаря", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  expect(decisionPosts).toBe(1);
+  expect(
+    await db.lmsReviewDecision.count({
+      where: { tenantId: seeded.context.tenantId, targetId: review.id },
+    }),
+  ).toBe(1);
+  expect(await readDraft()).toBeNull();
+  await page.getByText("История проверки", { exact: true }).click();
+  await expect(page.locator(".lms-review-history")).toContainText(feedback);
+  await page.screenshot({
+    path: path.join(evidence, "teacher-real-decision-history.png"),
+    fullPage: true,
+  });
+  const learnerContext = await browser.newContext({
+    baseURL: process.env.DEMO_ORIGIN,
+    viewport: { width: 390, height: 844 },
+  });
+  try {
+    const learner = await learnerContext.newPage();
+    await learner.routeWebSocket(/\/_next\/webpack-hmr/, (socket) =>
+      socket.close(),
+    );
+    await login(learner, review.learner, /\/learn$/);
+    await learner.goto(
+      `/learn/${review.learner.enrollmentId}?lessonId=calendar-review-work`,
+    );
+    await expect(
+      learner.getByText("Работа принята", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      learner.getByText(feedback, { exact: true }).first(),
+    ).toBeVisible();
+    await overflow(learner);
+    await learner.screenshot({
+      path: path.join(evidence, "learner-accepted-work-390.png"),
+      fullPage: true,
+    });
+  } finally {
+    await learnerContext.close();
+  }
+  const foreignDraftKey = `demo:lms:review-draft:${seeded.context.tenantId}:other-user:SUBMISSION:${review.id}`;
+  // Storage-only sentinel fixture: replay the old local draft after confirmed
+  // acceptance to verify actual logout clears only this user's recovery data.
+  await page.evaluate(
+    ({ ownKey, foreignKey, prior }) => {
+      sessionStorage.setItem(ownKey, JSON.stringify(prior));
+      sessionStorage.setItem(foreignKey, "synthetic-foreign-scope-sentinel");
+    },
+    { ownKey: draftKey, foreignKey: foreignDraftKey, prior: beforeReloadDraft },
+  );
+  await page.getByRole("button", { name: "Выйти", exact: true }).click();
+  await expect(page).toHaveURL(/\/login$/);
+  expect(await readDraft()).toBeNull();
+  expect(
+    await page.evaluate((key) => sessionStorage.getItem(key), foreignDraftKey),
+  ).toBe("synthetic-foreign-scope-sentinel");
+  await login(page, seeded.account);
+  await page.goto(`/lms/teaching?type=SUBMISSION&reviewId=${review.id}`);
+  await expect(
+    page.getByText("Синтетический ответ для проверки перехода из календаря", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.getByText("История проверки", { exact: true }).click();
+  await expect(page.locator(".lms-review-history")).toContainText(feedback);
+  expect(await readDraft()).toBeNull();
+  expect(decisionPosts).toBe(1);
+  expect(
+    await db.lmsReviewDecision.count({
+      where: { tenantId: seeded.context.tenantId, targetId: review.id },
+    }),
+  ).toBe(1);
+  await page.evaluate((key) => sessionStorage.removeItem(key), foreignDraftKey);
+  await metrics("teacher-to-learner-result", {
+    targetId: review.id,
+    decision: "ACCEPTED",
+    submittedRevision: 1,
+    decisionCount: 1,
+    teacherDecisionClicks: 1,
+    decisionFields: 2,
+    learnerSawDecisionAndFeedback: true,
+    unsentFeedbackAndDecisionSurvivedReloadAndNavigationBack: true,
+    decisionsBeforeExplicitSave: 0,
+    decisionPostsIncludingPostSaveReload: decisionPosts,
+    clearedOnlyConfirmedReviewDraft: true,
+    storageSaveFailureExplicitlyRecovered: true,
+    explicitLogoutClearsOnlyCurrentUserDrafts: true,
+    confirmedDecisionSurvivesReloginWithoutDraftReplay: true,
+    syntheticOnly: true,
+  });
 });

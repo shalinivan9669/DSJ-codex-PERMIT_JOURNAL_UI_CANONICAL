@@ -266,28 +266,20 @@ export function ApprovalBanner({
   ]);
   const reason = rejectionReason(draft, returnedProposal);
   if (!approval && draft.status !== "DRAFT") return null;
-  if (
-    compact &&
-    draft.kind === "PERSON" &&
-    draft.items.length === 1 &&
-    draft.status === "DRAFT" &&
-    !approval &&
-    !error
-  )
-    return null;
+  if (compact && draft.status === "DRAFT" && !approval && !error) return null;
   return (
     <section className="approval-banner" aria-label="Согласование заявки">
       <div className="approval-summary">
         <strong>
           {needsPreparation
-            ? "Старая редакция требует подготовки"
+            ? "Обновите заявку перед передачей"
             : approval?.status === "APPROVED"
-              ? "Редакция согласована директором"
+              ? "Состав согласован директором"
               : approval?.status === "REJECTED"
-                ? "Директор вернул редакцию на доработку"
+                ? "Директор вернул заявку на доработку"
                 : approval?.status === "PENDING"
                   ? "Выбранный состав передан директору"
-                  : "Рабочий черновик сохраняется"}
+                  : "Черновик"}
         </strong>
         {approval && (
           <Status value={needsPreparation ? "DRAFT" : approval.status} />
@@ -312,16 +304,16 @@ export function ApprovalBanner({
         ))}
       <p>
         {needsPreparation
-          ? "У сохранённой редакции ещё не зафиксированы итоговые значения. Подготовьте актуальный черновик, проверьте людей и передайте готовый состав."
+          ? "Подготовьте актуальный черновик и передайте его директору."
           : approval?.status === "APPROVED"
             ? draft.status === "FINALIZED"
               ? "Документы подготовлены и доступны для печати."
               : approvedScopeIssued(draft)
-                ? "Согласованная партия уже оформлена; документы доступны для печати. Для следующего выпуска подтвердите и передайте новый состав выше."
-                : "Можно оформить согласованный состав. Следующие люди и курсы продолжат работу в этой заявке. Изменение согласованных данных потребует нового решения."
+                ? "Документы готовы. Для следующего выпуска выберите новый состав."
+                : "Сформируйте документы. Изменение согласованных данных потребует нового решения."
             : approval?.status === "PENDING"
-              ? "Директор рассматривает выбранных людей и курсы. Остальные назначения остаются рабочим черновиком."
-              : "Ввод сохраняется автоматически. Готовый состав передаётся директору отдельной командой после проверки."}
+              ? "Ожидается решение директора."
+              : "Изменения сохраняются автоматически."}
       </p>
       {!compact && (
         <div className="action-buttons">

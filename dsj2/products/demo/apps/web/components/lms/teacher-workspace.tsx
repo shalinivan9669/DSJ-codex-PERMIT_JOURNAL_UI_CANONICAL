@@ -1,9 +1,13 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Notice } from "@demo/ui";
 import type { LearningAnswers, LmsQuestion } from "@demo/contracts/src/lms";
-import { ApiError, api, json } from "@/lib/api";
+import { ApiError, api, json, BEFORE_LOGOUT_EVENT, NavigationBlockedError } from "@/lib/api";
+import { formatLearningDateTime } from "@/lib/learning-date-format";
+import { safeLmsReturnTo } from "@/lib/lms-navigation";
+import { teachingReviewPath } from "@/lib/teaching-review-path";
+import { ReviewDecisionDrafts, recoverReviewDecision, type ReviewDecisionDraft, type ReviewTarget } from "@/lib/review-decision-draft";
 import {
   LmsErrorDiagnostic,
   LmsHeading,
@@ -13,6 +17,7 @@ import {
 import { TeachingChoiceSearch, useTeachingContext } from "./teaching-context";
 import { QuestionResponse } from "./question-response";
 import { ProctoringQueue, ProctoringSession } from "./proctoring";
+import { useLmsSaveNavigation } from "./use-save-navigation";
 
 type TargetType = "ATTEMPT" | "SUBMISSION";
 type Item = {
@@ -63,16 +68,7 @@ type CalendarItem = {
   href: string;
   timezone?: string;
 };
-type DecisionDraft = {
-  feedback: string;
-  scores: Record<string, 0 | 1>;
-  decision: string;
-  key: string;
-  contentHash?: string;
-};
-function emptyDecision(): DecisionDraft {
-  return { feedback: "", scores: {}, decision: "", key: crypto.randomUUID() };
-}
+type DecisionDraft = ReviewDecisionDraft;
 function decisionName(value: string, t: Translate) {
   return value === "GRADE"
     ? t("Оценка выставлена", "Баға қойылды")
@@ -88,7 +84,13 @@ function decisionName(value: string, t: Translate) {
             ? t("Ожидает проверки", "Тексеруді күтуде")
             : t("Обработано", "Өңделді");
 }
-export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }: { t: Translate; mode?: "teacher" | "expert"; canManageRoles?: boolean }) {
+function retryLabel(error: unknown, t: Translate) {
+  const details = error instanceof ApiError ? error.details : error;
+  return details && typeof details === "object" && "code" in details && details.code === "LMS_DEPLOYMENT_REVIEW_REQUIRED"
+    ? t("Проверить доступ", "Қолжетімділікті тексеру")
+    : t("Повторить загрузку", "Қайта жүктеу");
+}
+export function TeacherWorkspace({ t, scope, mode = "teacher", canManageRoles = false, timezone = "Asia/Qyzylorda" }: { t: Translate; scope: string; mode?: "teacher" | "expert"; canManageRoles?: boolean; timezone?: string }) {
   const expert = mode === "expert";
   const [view, setView] = useState<"reviews" | "groups" | "events" | "proctoring">(expert ? "groups" : "reviews");
   const [events, setEvents] = useState<CalendarItem[]>([]);
@@ -109,13 +111,49 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
   const context = choices.error ? null : choices.context;
   const [detail, setDetail] = useState<Detail | null>(null);
   const [form, setForm] = useState<DecisionDraft | null>(null);
-  const drafts = useRef(new Map<string, DecisionDraft>());
+  const drafts = useMemo(() => new ReviewDecisionDrafts(scope, () => window.sessionStorage), [scope]);
+  const [storageIssue, setStorageIssue] = useState<"read" | "write" | "clear" | null>(null);
   const selection = useRef(0);
   const [error, setError] = useState<unknown>(null);
+  const [reviewError, setReviewError] = useState<unknown>(null);
+  const [eventsError, setEventsError] = useState<unknown>(null);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [loadedQuery, setLoadedQuery] = useState("");
+  const reviewQuery = JSON.stringify([type, courseId, groupId, page]);
+  const visibleReviews = loadedQuery === reviewQuery && !reviewError ? data : null;
+  const selectedReview = useRef<Pick<Item, "targetType" | "id"> | null>(null);
+  const decisionPending = useRef(false);
+  const queueContext = useRef({ courseId, groupId, type });
+  queueContext.current = { courseId, groupId, type };
   const [busy, setBusy] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [notice, setNotice] = useState(false);
   const [revisionChanged, setRevisionChanged] = useState(false);
+  function saveDraft(target: ReviewTarget, value: DecisionDraft) {
+    try { drafts.write(target, value); setStorageIssue(drafts.unsaved ? "write" : null); }
+    catch { setStorageIssue("write"); }
+  }
+  function clearDraft(target: ReviewTarget) {
+    try { drafts.clear(target); setStorageIssue(drafts.unsaved ? "write" : null); }
+    catch { setStorageIssue("clear"); }
+  }
+  async function flushDrafts() {
+    try { drafts.flush(); setStorageIssue(null); }
+    catch { setStorageIssue(drafts.unsaved ? "write" : "clear"); throw new NavigationBlockedError(); }
+  }
+  useLmsSaveNavigation(`teacher-review:${scope}:${detail?.id || "queue"}`, () => drafts.unsaved, flushDrafts, () => setStorageIssue("write"));
+  useEffect(() => {
+    const unload = (event: BeforeUnloadEvent) => {
+      if (drafts.unsaved) { event.preventDefault(); event.returnValue = ""; }
+    };
+    const logout = (event: Event) => {
+      if (drafts.unsaved) (event as CustomEvent<{ waitUntil: (promise: Promise<unknown>) => void }>).detail.waitUntil(flushDrafts());
+    };
+    window.addEventListener("beforeunload", unload);
+    window.addEventListener(BEFORE_LOGOUT_EVENT, logout);
+    return () => { window.removeEventListener("beforeunload", unload); window.removeEventListener(BEFORE_LOGOUT_EVENT, logout); };
+  }, [drafts]);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const initialCourseId = params.get("courseId"), initialGroupId = params.get("groupId");
@@ -124,32 +162,36 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
     const initialView = params.get("tab");
     if (initialView === "reviews" || initialView === "groups" || (initialView === "events" && !expert)) setView(initialView);
     const targetType = params.get("type"), reviewId = params.get("reviewId");
+    if (targetType === "ATTEMPT" || targetType === "SUBMISSION") setType(targetType);
     if (reviewId && (targetType === "ATTEMPT" || targetType === "SUBMISSION")) {
       setView("reviews");
-      setType(targetType);
       void open({ id: reviewId, targetType });
     }
+    return () => { selection.current++; };
   }, []);
   useEffect(() => {
     if (expert) return;
     let live = true;
+    setLoadingEvents(true);
     const from = new Date();
     const to = new Date(from.getTime() + 14 * 86400000);
     void api<{ items: CalendarItem[] }>(
       `/lms/calendar?from=${encodeURIComponent(from.toISOString())}&to=${encodeURIComponent(to.toISOString())}&page=1&pageSize=10`,
     )
       .then((value) => {
-        if (live) setEvents(value.items);
+        if (live) { setEvents(value.items); setEventsError(null); }
       })
       .catch((caught) => {
-        if (live) receiveError(caught);
-      });
+        if (live) { setEventsError(caught); setEvents([]); clearUnauthorized(caught); }
+      })
+      .finally(() => { if (live) setLoadingEvents(false); });
     return () => {
       live = false;
     };
   }, [refresh, expert]);
   useEffect(() => {
     let live = true;
+    setLoadingReviews(true);
     const params = new URLSearchParams({
       page: String(page),
       pageSize: "20",
@@ -159,11 +201,16 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
     if (groupId) params.set("groupId", groupId);
     void api<{ items: Item[]; total: number }>(`/lms/reviews?${params}`)
       .then((value) => {
-        if (live) setData(value);
+        if (!live) return;
+        const lastPage = Math.max(1, Math.ceil(value.total / 20));
+        if (page > lastPage) setPage(lastPage);
+        else { setData(value); setLoadedQuery(reviewQuery); }
+        setReviewError(null);
       })
       .catch((caught) => {
-        if (live) receiveError(caught);
-      });
+        if (live) { setReviewError(caught); setData(null); clearUnauthorized(caught); }
+      })
+      .finally(() => { if (live) setLoadingReviews(false); });
     return () => {
       live = false;
     };
@@ -176,6 +223,9 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
   }, [busy, loadingDetail]);
   function receiveError(caught: unknown) {
     setError(caught);
+    clearUnauthorized(caught);
+  }
+  function clearUnauthorized(caught: unknown) {
     if (caught instanceof ApiError && [401, 403].includes(caught.status)) {
       selection.current++;
       setDetail(null);
@@ -184,28 +234,39 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
       setData(null);
       setEvents([]);
       setNotice(false);
-      drafts.current.clear();
     }
   }
   async function open(item: Pick<Item, "targetType" | "id">) {
+    selectedReview.current = item;
     setView("reviews");
     const token = ++selection.current;
     setLoadingDetail(true);
     setError(null);
     setNotice(false);
+    setDetail(null);
+    setForm(null);
     try {
       const value = await api<Detail>(
         `/lms/reviews/${item.targetType}/${encodeURIComponent(item.id)}`,
       );
       if (token !== selection.current) return;
       setDetail(value);
-      window.history.replaceState(window.history.state, "", `/lms/teaching?type=${item.targetType}&reviewId=${encodeURIComponent(item.id)}`);
-      const previous = drafts.current.get(`${item.targetType}:${item.id}`);
-      const changed = !!previous?.contentHash && previous.contentHash !== value.contentHash;
-      setRevisionChanged(changed);
-      setForm({ ...(changed ? { ...emptyDecision(), feedback: previous?.feedback || "" } : previous || emptyDecision()), contentHash: value.contentHash });
+      window.history.replaceState(window.history.state, "", teachingReviewPath(queueContext.current, item));
+      let previous: DecisionDraft | null = null;
+      if (!value.allowedActions.length) clearDraft(item);
+      else {
+        try { previous = drafts.read(item); setStorageIssue(drafts.unsaved ? "write" : null); }
+        catch { setStorageIssue("read"); }
+      }
+      const recovered = recoverReviewDecision(previous, value);
+      setRevisionChanged(recovered.changed);
+      setForm(recovered.draft);
+      if (previous && value.allowedActions.length) saveDraft(item, recovered.draft);
     } catch (caught) {
-      if (token === selection.current) receiveError(caught);
+      if (token === selection.current) {
+        if (caught instanceof ApiError && [403, 404].includes(caught.status)) clearDraft(item);
+        receiveError(caught);
+      }
     } finally {
       if (token === selection.current) setLoadingDetail(false);
     }
@@ -214,10 +275,12 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
     if (!form || !detail) return;
     const next = { ...form, ...patch, key: crypto.randomUUID() };
     setForm(next);
-    drafts.current.set(`${detail.targetType}:${detail.id}`, next);
+    saveDraft(detail, next);
   }
   async function submit() {
-    if (!detail || !form || busy) return;
+    if (!detail || !form || decisionPending.current || loadingDetail) return;
+    decisionPending.current = true;
+    const token = selection.current;
     setBusy(true);
     setError(null);
     try {
@@ -246,13 +309,15 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
           }),
         },
       );
-      drafts.current.delete(`${detail.targetType}:${detail.id}`);
+      clearDraft(detail);
+      if (token !== selection.current) return;
       await open(detail);
       setNotice(true);
       setRefresh((value) => value + 1);
     } catch (caught) {
-      receiveError(caught);
+      if (token === selection.current) receiveError(caught);
     } finally {
+      decisionPending.current = false;
       setBusy(false);
     }
   }
@@ -278,6 +343,17 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
         </Link>
         {expert && <Link className="button" href="/lms/commission">{t("Протоколы и подпись", "Хаттамалар және қол қою")}</Link>}
       </LmsHeading>
+      {storageIssue && <Notice>
+        {storageIssue === "read"
+          ? t("Не удалось восстановить черновик решения. Повторите загрузку черновика.", "Шешімнің жобасын қалпына келтіру мүмкін болмады. Жобаны қайта жүктеңіз.")
+          : storageIssue === "clear"
+            ? t("Не удалось удалить черновик с этого устройства. Сохранённое решение не изменено.", "Бұл құрылғыдан жобаны жою мүмкін болмады. Сақталған шешім өзгерген жоқ.")
+            : t("Черновик решения не сохранён на устройстве. Не закрывайте страницу до сохранения черновика или решения.", "Шешімнің жобасы құрылғыда сақталмады. Жоба немесе шешім сақталғанша бетті жаппаңыз.")}
+        <button type="button" disabled={busy || loadingDetail} onClick={() => {
+          if (storageIssue === "read" && selectedReview.current) void open(selectedReview.current);
+          else void flushDrafts().catch(() => {});
+        }}>{storageIssue === "read" ? t("Загрузить черновик", "Жобаны жүктеу") : storageIssue === "clear" ? t("Удалить черновик", "Жобаны жою") : t("Сохранить черновик", "Жобаны сақтау")}</button>
+      </Notice>}
       {!detail && <div className="lms-actions" role="group" aria-label={expert ? t("Задачи комиссии", "Комиссия міндеттері") : t("Задачи преподавателя", "Оқытушы міндеттері")}>
         <button type="button" aria-pressed={view === "groups"} onClick={() => setView("groups")}>{expert ? t("Группы аттестации", "Аттестаттау топтары") : t("Мои группы", "Менің топтарым")}</button>
         <button type="button" aria-pressed={view === "reviews"} onClick={() => setView("reviews")}>{expert ? t("Работы комиссии", "Комиссия жұмыстары") : t("Проверка работ", "Жұмыстарды тексеру")}</button>
@@ -293,12 +369,12 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
             disabled={busy}
             onClick={() => {
               setRefresh((value) => value + 1);
-              if (detail) void open(detail);
+              if (selectedReview.current) void open(selectedReview.current);
             }}
           >
             {t(
-              "Обновить данные, сохранив ввод",
-              "Енгізілгенді сақтап, деректерді жаңарту",
+              "Обновить данные",
+              "Деректерді жаңарту",
             )}
           </button>
         </Notice>
@@ -310,6 +386,8 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
       {!detail && view === "proctoring" && <ProctoringQueue t={t} />}
       <section className="panel lms-panel" hidden={!!detail || view !== "reviews"}>
         <h2>{t("Очередь проверки", "Тексеру кезегі")}</h2>
+        {!!reviewError && <Notice>{lmsError(reviewError, t)}<LmsErrorDiagnostic error={reviewError} t={t} /><button disabled={loadingReviews} onClick={() => setRefresh(value => value + 1)}>{retryLabel(reviewError, t)}</button></Notice>}
+        {loadingReviews && <p role="status">{t("Загружаем работы…", "Жұмыстар жүктелуде…")}</p>}
         <div className="lms-fields">
           <label>
             {t("Работы", "Жұмыстар")}
@@ -373,7 +451,7 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
           </label>
         </div>
         <ul className="lms-list">
-          {data?.items.map((item) => (
+          {visibleReviews?.items.map((item) => (
             <li
               key={`${item.targetType}:${item.id}`}
               className={
@@ -385,9 +463,7 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
                 <p>
                   {t(item.titleRu, item.titleKz)} ·{" "}
                   {decisionName(item.state, t)} ·{" "}
-                  {new Date(item.submittedAt).toLocaleString(
-                    t("ru-KZ", "kk-KZ"),
-                  )}
+                  {formatLearningDateTime(item.submittedAt, timezone, t("ru-KZ", "kk-KZ"))}
                 </p>
                 {item.elementTitleRu && <p>{t(item.elementTitleRu, item.elementTitleKz || item.elementTitleRu)}</p>}
               </div>
@@ -401,24 +477,24 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
             </li>
           ))}
         </ul>
-        {data && !data.items.length && (
+        {visibleReviews && !loadingReviews && !visibleReviews.items.length && (
           <p>{t("Работ для проверки нет", "Тексерілетін жұмыстар жоқ")}</p>
         )}
-        {data && data.total > 20 && (
+        {visibleReviews && visibleReviews.total > 20 && (
           <div className="lms-actions">
             <button
               type="button"
-              disabled={page === 1}
+              disabled={loadingReviews || page === 1}
               onClick={() => setPage((value) => value - 1)}
             >
               {t("Назад", "Артқа")}
             </button>
             <span>
-              {page} / {Math.ceil(data.total / 20)}
+              {page} / {Math.ceil(visibleReviews.total / 20)}
             </span>
             <button
               type="button"
-              disabled={page * 20 >= data.total}
+              disabled={loadingReviews || page * 20 >= visibleReviews.total}
               onClick={() => setPage((value) => value + 1)}
             >
               {t("Далее", "Әрі қарай")}
@@ -433,7 +509,7 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
       )}
       {detail && form && (
         <section className="panel lms-panel" aria-busy={loadingDetail}>
-          <button type="button" disabled={busy} onClick={() => { selection.current++; setDetail(null); setForm(null); setNotice(false); window.history.replaceState(window.history.state, "", "/lms/teaching"); }}>{t("К очереди работ", "Жұмыстар кезегіне")}</button>
+          <button type="button" disabled={busy} onClick={() => { selection.current++; selectedReview.current = null; setDetail(null); setForm(null); setError(null); setNotice(false); window.history.replaceState(window.history.state, "", teachingReviewPath(queueContext.current)); }}>{t("К очереди работ", "Жұмыстар кезегіне")}</button>
           <h2>
             {detail.learnerName} · {t(detail.titleRu, detail.titleKz)}
           </h2>
@@ -571,6 +647,7 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
                   {t("Обратная связь слушателю", "Тыңдаушыға кері байланыс")}
                   <textarea
                     rows={4}
+                    maxLength={10000}
                     value={form.feedback}
                     onChange={(event) =>
                       change({ feedback: event.target.value })
@@ -588,8 +665,8 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
                 </button>
                 <p className="muted">
                   {t(
-                    "Решение относится к показанной отправленной редакции. После принятия итоговая оценка сохраняется неизменной.",
-                    "Шешім көрсетілген жіберілген редакцияға қатысты. Қабылданған соң қорытынды баға өзгермейді.",
+                    "После принятия итоговую оценку изменить нельзя.",
+                    "Қабылданған соң қорытынды бағаны өзгертуге болмайды.",
                   )}
                 </p>
               </fieldset>
@@ -598,9 +675,9 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
           {!detail.allowedActions.length && <div className="lms-actions">
             <p role="status">{t("Решение доступно слушателю в его работе.", "Шешім тыңдаушыға оның жұмысында қолжетімді.")}</p>
             <button type="button" className="primary lms-primary" disabled={busy} onClick={() => {
-              const next = data?.items.find((item) => item.id !== detail.id);
+              const next = visibleReviews?.items.find((item) => item.id !== detail.id);
               if (next) void open(next);
-              else { setDetail(null); setForm(null); window.history.replaceState(window.history.state, "", "/lms/teaching"); }
+              else { selectedReview.current = null; setDetail(null); setForm(null); window.history.replaceState(window.history.state, "", teachingReviewPath(queueContext.current)); }
             }}>{t("К следующей работе", "Келесі жұмысқа")}</button>
           </div>}
           <details>
@@ -610,9 +687,7 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
                 <li key={`${entry.createdAt}-${index}`}>
                   <strong>{decisionName(entry.decision, t)}</strong> ·{" "}
                   {entry.reviewerName} ·{" "}
-                  {new Date(entry.createdAt).toLocaleString(
-                    t("ru-KZ", "kk-KZ"),
-                  )}
+                  {formatLearningDateTime(entry.createdAt, timezone, t("ru-KZ", "kk-KZ"))}
                   <p className="lms-review-answer">{entry.feedback}</p>
                 </li>
               ))}
@@ -647,25 +722,25 @@ export function TeacherWorkspace({ t, mode = "teacher", canManageRoles = false }
         <h2>
           {t("Ближайшие занятия и сроки", "Алдағы сабақтар мен мерзімдер")}
         </h2>
+        {!!eventsError && <Notice>{lmsError(eventsError, t)}<LmsErrorDiagnostic error={eventsError} t={t} /><button disabled={loadingEvents} onClick={() => setRefresh(value => value + 1)}>{retryLabel(eventsError, t)}</button></Notice>}
+        {loadingEvents && <p role="status">{t("Загружаем занятия…", "Сабақтар жүктелуде…")}</p>}
         <ul className="lms-list">
           {events.map((event) => (
             <li key={event.id}>
               <Link
                 href={
-                  event.href.startsWith("/lms/") ? event.href : "/lms/calendar"
+                  safeLmsReturnTo(event.href) || "/lms/calendar"
                 }
               >
                 {t(event.titleRu, event.titleKz)}
               </Link>
               <time dateTime={event.startsAt}>
-                {new Date(event.startsAt).toLocaleString(t("ru-KZ", "kk-KZ"), {
-                  timeZone: event.timezone || "Asia/Qyzylorda",
-                })}
+                {formatLearningDateTime(event.startsAt, event.timezone || timezone, t("ru-KZ", "kk-KZ"))}
               </time>
             </li>
           ))}
         </ul>
-        {!events.length && (
+        {!loadingEvents && !eventsError && !events.length && (
           <p>
             {t(
               "На ближайшие две недели событий нет",

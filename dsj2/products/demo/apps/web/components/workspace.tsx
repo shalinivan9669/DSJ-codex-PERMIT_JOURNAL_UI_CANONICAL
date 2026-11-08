@@ -6,6 +6,7 @@ import { Icon, Notice } from "@demo/ui";
 import { roleLabel, isLmsStaffRole } from "@demo/contracts";
 import { workspaceStartPath } from "@/lib/user-roles";
 import { safeLmsReturnTo } from "@/lib/lms-navigation";
+import { clearReviewDecisionStorage } from "@/lib/review-decision-draft";
 import {
   api,
   ApiError,
@@ -104,6 +105,9 @@ export function Workspace() {
       );
       await Promise.all(pending);
       await api("/auth/logout", { method: "POST", body: "{}" });
+      try {
+        if (context) clearReviewDecisionStorage(sessionStorage, `${context.tenant.id}:${context.user.id}`);
+      } catch { /* Storage restrictions must not undo a successful server logout. */ }
       setContext(null);
       setCsrf("");
       setUnauthorized(true);

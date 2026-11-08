@@ -6,6 +6,10 @@ import { provision } from "../../../scripts/setup";
 import { db, type Context } from "../../../apps/api/src/core";
 import { bootstrapSuperAdmin, saveUser } from "../../../apps/api/src/settings";
 import { createCourse } from "../../../apps/api/src/lms/courses";
+import {
+  createTeachingBinding,
+  revokeTeachingBinding,
+} from "../../../apps/api/src/lms/teaching-bindings";
 import { lmsCourse } from "../../../tests/integration/lms-fixture";
 import { assertTestDatabase } from "../../../tests/integration/test-database";
 
@@ -73,10 +77,38 @@ async function login(
   account: { email: string; password: string },
   expectedPath = /\/lms$/,
 ) {
+  const diagnostics: Array<Record<string, unknown>> = [];
+  page.on("pageerror", (error) => {
+    diagnostics.push({ type: "pageerror", message: error.message });
+  });
+  page.on("requestfailed", (request) => {
+    diagnostics.push({
+      type: "requestfailed",
+      path: new URL(request.url()).pathname,
+      reason: request.failure()?.errorText,
+    });
+  });
+  page.on("response", (response) => {
+    const pathname = new URL(response.url()).pathname;
+    if (pathname.startsWith("/api/auth/") || response.status() >= 400)
+      diagnostics.push({
+        type: "response",
+        path: pathname,
+        status: response.status(),
+      });
+  });
   await page.goto("/login");
-  await page
-    .getByLabel("Электронная почта", { exact: true })
-    .fill(account.email);
+  try {
+    await page
+      .getByLabel("Электронная почта", { exact: true })
+      .fill(account.email);
+  } catch (error) {
+    await test.info().attach("login-hydration-diagnostics", {
+      body: JSON.stringify(diagnostics, null, 2),
+      contentType: "application/json",
+    });
+    throw error;
+  }
   await page.getByLabel("Пароль", { exact: true }).fill(account.password);
   for (let attempt = 0; attempt < 3; attempt++) {
     const loggingIn = page.waitForResponse(
@@ -257,10 +289,9 @@ test("real non-demo gate names the configuration blocker and GET-only access che
     page.getByText("Доступ к программам пока закрыт", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText(/Настройки → Пользователи → Доступ к обучению/),
-  ).toBeVisible();
-  await expect(
-    page.getByText(/Повторный вход не устранит эту причину/),
+    page.getByText("Обучение пока недоступно. Обратитесь к администратору.", {
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Создать программу", exact: true }),
@@ -777,6 +808,44 @@ test("methodist search and pagination show only its own bound programmes", async
         searchResetPage: true,
         unboundCourseHidden: true,
         directUnboundReadStatus: 404,
+      },
+      null,
+      2,
+    ),
+  );
+  const own = seeded.seeded[50];
+  const binding = await db.lmsTeachingBinding.findFirstOrThrow({
+    where: {
+      tenantId: seeded.context.tenantId,
+      userId: seeded.author.userId,
+      courseId: own.course.id,
+      revokedAt: null,
+    },
+  });
+  await revokeTeachingBinding(seeded.context, binding.id, {
+    reason: "Синтетическая проверка отзыва методиста",
+  });
+  expect(
+    (await page.request.get(`/api/lms/courses/${own.course.id}`)).status(),
+  ).toBe(404);
+  await page.goto(`/lms/courses/${own.course.id}`);
+  await expect(page.getByLabel("Название RU", { exact: true })).toHaveCount(0);
+  await createTeachingBinding(seeded.context, {
+    userId: seeded.author.userId,
+    courseId: own.course.id,
+    role: "METHODIST",
+  });
+  await page.reload();
+  await expect(page.getByLabel("Название RU", { exact: true })).toHaveValue(
+    "Синтетическая программа 051",
+  );
+  await fs.writeFile(
+    path.join(evidence, "methodist-revoked-binding-recovery.json"),
+    JSON.stringify(
+      {
+        revokedDirectReadStatus: 404,
+        hiddenEditing: true,
+        restoredOriginalTitle: true,
       },
       null,
       2,
